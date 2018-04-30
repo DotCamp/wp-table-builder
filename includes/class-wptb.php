@@ -117,6 +117,11 @@ class WPTB {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wptb-admin.php';
 
 		/**
+		 * The class responsible for defining all actions that occur in table class.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wptb-tables.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
@@ -152,6 +157,7 @@ class WPTB {
 	 */
 	private function define_admin_hooks() {
 
+		$wptb_table = new WPTB_Table_Handler();
 		$plugin_admin = new WPTB_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
