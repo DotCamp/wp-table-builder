@@ -6,8 +6,8 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  */
 
 /**
@@ -17,11 +17,11 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  * @author     Imtiaz Rayhan <irayhan.asif@gmail.com>
  */
-class WP_Table_Builder_Loader {
+class WPTB_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

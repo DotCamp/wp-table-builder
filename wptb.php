@@ -10,18 +10,18 @@
  *
  * @link              http://imtiazrayhan.com
  * @since             1.0.0
- * @package           WP_Table_Builder
+ * @package           WPTB
  *
  * @wordpress-plugin
  * Plugin Name:       WP Table Builder
  * Plugin URI:        http://wptablebuilder.com
- * Description:       Table Builder Plugin for WordPress.
+ * Description:       Table Builder for WordPress.
  * Version:           1.0.0
  * Author:            Imtiaz Rayhan
  * Author URI:        http://imtiazrayhan.com
- * License:           GPL-2.0+
+ * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-table-builder
+ * Text Domain:       wptb
  * Domain Path:       /languages
  */
 
@@ -35,34 +35,34 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'WP_TABLE_BUILDER', '1.0.0' );
+define( 'WPTB_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-table-builder-activator.php
+ * This action is documented in includes/class-wptb-activator.php
  */
-function activate_WP_Table_Builder() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-table-builder-activator.php';
-	WP_Table_Builder_Activator::activate();
+function activate_wptb() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wptb-activator.php';
+	WPTB_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-table-builder-deactivator.php
+ * This action is documented in includes/class-wptb-deactivator.php
  */
-function deactivate_WP_Table_Builder() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-table-builder-deactivator.php';
-	WP_Table_Builder_Deactivator::deactivate();
+function deactivate_wptb() {
+	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wptb-deactivator.php';
+	WPTB_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_WP_Table_Builder' );
-register_deactivation_hook( __FILE__, 'deactivate_WP_Table_Builder' );
+register_activation_hook( __FILE__, 'activate_wptb' );
+register_deactivation_hook( __FILE__, 'deactivate_wptb' );
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-table-builder.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-wptb.php';
 
 /**
  * Begins execution of the plugin.
@@ -73,10 +73,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-table-builder.php';
  *
  * @since    1.0.0
  */
-function run_WP_Table_Builder() {
+function run_wptb() {
 
-	$plugin = new WP_Table_Builder();
+	$plugin = new WPTB();
 	$plugin->run();
 
 }
-run_WP_Table_Builder();
+run_wptb();

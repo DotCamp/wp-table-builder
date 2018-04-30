@@ -9,8 +9,8 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  */
 
 /**
@@ -20,11 +20,11 @@
  * so that it is ready for translation.
  *
  * @since      1.0.0
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  * @author     Imtiaz Rayhan <irayhan.asif@gmail.com>
  */
-class WP_Table_Builder_i18n {
+class WPTB_i18n {
 
 
 	/**
@@ -35,7 +35,7 @@ class WP_Table_Builder_i18n {
 	public function load_plugin_textdomain() {
 
 		load_plugin_textdomain(
-			'wp-table-builder',
+			'wptb',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);

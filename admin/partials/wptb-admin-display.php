@@ -8,8 +8,8 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/admin/partials
+ * @package    WPTB
+ * @subpackage WPTB/admin/partials
  */
 ?>
 

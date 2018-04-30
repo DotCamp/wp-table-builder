@@ -6,8 +6,8 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  */
 
 /**
@@ -16,11 +16,11 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  * @author     Imtiaz Rayhan <irayhan.asif@gmail.com>
  */
-class WP_Table_Builder_Activator {
+class WPTB_Activator {
 
 	/**
 	 * Short Description. (use period)

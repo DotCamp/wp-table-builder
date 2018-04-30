@@ -9,8 +9,8 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    WP_Table_Builder
- * @subpackage WP_Table_Builder/includes
+ * @package    WPTB
+ * @subpackage WPTB/includes
  * @author     Imtiaz Rayhan <irayhan.asif@gmail.com>
  */
-class WP_Table_Builder {
+class WPTB {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class WP_Table_Builder {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      WP_Table_Builder_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      WPTB_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -67,12 +67,12 @@ class WP_Table_Builder {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'WP_TABLE_BUILDER' ) ) {
-			$this->version = WP_TABLE_BUILDER;
+		if ( defined( 'WPTB_VERSION' ) ) {
+			$this->version = WPTB_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'wp-table-builder';
+		$this->plugin_name = 'wptb';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -86,10 +86,10 @@ class WP_Table_Builder {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - WP_Table_Builder_Loader. Orchestrates the hooks of the plugin.
-	 * - WP_Table_Builder_i18n. Defines internationalization functionality.
-	 * - WP_Table_Builder_Admin. Defines all hooks for the admin area.
-	 * - WP_Table_Builder_Public. Defines all hooks for the public side of the site.
+	 * - WPTB_Loader. Orchestrates the hooks of the plugin.
+	 * - WPTB_i18n. Defines internationalization functionality.
+	 * - WPTB_Admin. Defines all hooks for the admin area.
+	 * - WPTB_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -103,33 +103,33 @@ class WP_Table_Builder {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-table-builder-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wptb-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-table-builder-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wptb-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-table-builder-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wptb-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-table-builder-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wptb-public.php';
 
-		$this->loader = new WP_Table_Builder_Loader();
+		$this->loader = new WPTB_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the WP_Table_Builder_i18n class in order to set the domain and to register the hook
+	 * Uses the WPTB_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -137,7 +137,7 @@ class WP_Table_Builder {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new WP_Table_Builder_i18n();
+		$plugin_i18n = new WPTB_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -152,7 +152,7 @@ class WP_Table_Builder {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new WP_Table_Builder_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new WPTB_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -168,7 +168,7 @@ class WP_Table_Builder {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new WP_Table_Builder_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new WPTB_Public( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -199,7 +199,7 @@ class WP_Table_Builder {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    WP_Table_Builder_Loader    Orchestrates the hooks of the plugin.
+	 * @return    WPTB_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

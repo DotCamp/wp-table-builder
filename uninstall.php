@@ -22,7 +22,7 @@
  * @link       http://imtiazrayhan.com
  * @since      1.0.0
  *
- * @package    WP_Table_Builder
+ * @package    WPTB
  */
 
 // If uninstall not called from WordPress, then exit.
