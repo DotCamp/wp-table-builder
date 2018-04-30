@@ -103,29 +103,29 @@ class WPTB {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wptb-loader.php';
+		require_once WPTB_PLUGIN_DIR . 'includes/class-wptb-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wptb-i18n.php';
+		require_once WPTB_PLUGIN_DIR . 'includes/class-wptb-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wptb-admin.php';
+		require_once WPTB_PLUGIN_DIR . 'admin/class-wptb-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in table class.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wptb-tables.php';
+		require_once WPTB_PLUGIN_DIR . 'admin/class-wptb-tables.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wptb-public.php';
+		require_once WPTB_PLUGIN_DIR . 'public/class-wptb-public.php';
 
 		$this->loader = new WPTB_Loader();
 

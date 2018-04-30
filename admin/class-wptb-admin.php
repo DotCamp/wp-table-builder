@@ -73,7 +73,7 @@ class WPTB_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wptb-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, WPTB_PLUGIN_URL . 'admin/css/wptb-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -96,7 +96,7 @@ class WPTB_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wptb-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, WPTB_PLUGIN_URL . 'admin/js/wptb-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 

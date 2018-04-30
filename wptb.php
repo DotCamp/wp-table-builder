@@ -30,19 +30,30 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
+// Current Plugin Version
 define( 'WPTB_VERSION', '1.0.0' );
+
+// Plugin Folder Path.
+if ( ! defined( 'WPTB_PLUGIN_DIR' ) ) {
+	define( 'WPTB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+}
+
+// Plugin Folder URL.
+if ( ! defined( 'WPTB_PLUGIN_URL' ) ) {
+	define( 'WPTB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+}
+
+// Plugin Root File.
+if ( ! defined( 'WPTB_PLUGIN_FILE' ) ) {
+	define( 'WPTB_PLUGIN_FILE', __FILE__ );
+}
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wptb-activator.php
  */
 function activate_wptb() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wptb-activator.php';
+	require_once WPTB_PLUGIN_DIR . 'includes/class-wptb-activator.php';
 	WPTB_Activator::activate();
 }
 
@@ -51,7 +62,7 @@ function activate_wptb() {
  * This action is documented in includes/class-wptb-deactivator.php
  */
 function deactivate_wptb() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wptb-deactivator.php';
+	require_once WPTB_PLUGIN_DIR . 'includes/class-wptb-deactivator.php';
 	WPTB_Deactivator::deactivate();
 }
 
@@ -62,7 +73,7 @@ register_deactivation_hook( __FILE__, 'deactivate_wptb' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wptb.php';
+require WPTB_PLUGIN_DIR . 'includes/class-wptb.php';
 
 /**
  * Begins execution of the plugin.
