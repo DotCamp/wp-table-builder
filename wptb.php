@@ -70,6 +70,14 @@ register_activation_hook( __FILE__, 'activate_wptb' );
 register_deactivation_hook( __FILE__, 'deactivate_wptb' );
 
 /**
+ * Functions that will be used throughout the plugin
+ * 
+ * @since 1.0.0
+ * @package WPTB
+ */
+require WPTB_PLUGIN_DIR . 'includes/functions.php';
+
+/**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */

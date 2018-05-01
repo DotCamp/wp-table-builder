@@ -122,6 +122,11 @@ class WPTB {
 		require_once WPTB_PLUGIN_DIR . 'admin/class-wptb-tables.php';
 
 		/**
+		 * Adds Admin Menu items for Table Builder.
+		 */
+		require_once WPTB_PLUGIN_DIR . 'admin/class-wptb-admin-menu.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
@@ -158,6 +163,7 @@ class WPTB {
 	private function define_admin_hooks() {
 
 		$wptb_table = new WPTB_Table_Handler();
+		$wptb_admin_menu = new WPTB_Admin_Menu();
 		$plugin_admin = new WPTB_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
