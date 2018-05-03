@@ -19,10 +19,10 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       http://imtiazrayhan.com
+ * @link       http://wptablebuilder.com/
  * @since      1.0.0
  *
- * @package    WPTB
+ * @package    WP_Table_Builder
  */
 
 // If uninstall not called from WordPress, then exit.
