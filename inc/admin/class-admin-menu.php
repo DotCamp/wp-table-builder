@@ -36,8 +36,8 @@ class Admin_Menu {
 
 		// Default Tables top level menu item.
 		add_menu_page(
-			esc_html__( 'WP Table Builder', 'wptb' ),
-			esc_html__( 'Table Builder', 'wptb' ),
+			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
+			esc_html__( 'Table Builder', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-overview',
 			array( $this, 'tables_list' ),
@@ -48,8 +48,8 @@ class Admin_Menu {
 		// All Tables sub menu item.
 		add_submenu_page(
 			'wptb-overview',
-			esc_html__( 'WP Table Builder', 'wptb' ),
-			esc_html__( 'All Tables', 'wptb' ),
+			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
+			esc_html__( 'All Tables', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-overview',
 			array( $this, 'tables_list' )
@@ -58,8 +58,8 @@ class Admin_Menu {
 		// Add New Table sub menu item.
 		add_submenu_page(
 			'wptb-overview',
-			esc_html__( 'Table Builder', 'wptb' ),
-			esc_html__( 'Add New', 'wptb' ),
+			esc_html__( 'Table Builder', 'wp-table-builder' ),
+			esc_html__( 'Add New', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-builder',
 			array( $this, 'table_builder' )
