@@ -4,6 +4,10 @@
  * The file is enqueued from inc/admin/class-admin.php.
  */
 
+body {
+    overflow: hidden;
+}
+
 .wptb-admin-container {
     background: #fff;
     color: #444;
@@ -50,7 +54,7 @@
     background-color: #fff;
     border-left: 1px solid #d3d3d3;
     display: inline-block;
-    padding: 24px 26px 19px 26px;
+    padding: 30px 26px 28px 26px;
 }
 
 .wptb-close:hover {
@@ -186,8 +190,9 @@ ul.wptb-tabs {
 }
 
 .wptb-element {
-    background: #0e6cad;
-    color: #fff;
+    background: #fff;
+    color: #000;
+    font-size: 15px;
     cursor: move;
     display: flex;
     align-items: center;
@@ -206,13 +211,13 @@ ul.wptb-tabs {
 .left {
     width: 47.5%;
     float: left;
-    margin: 6px 0 -4px 4px;
+    margin: 6px 0 -4px 6px;
 }
 
 .right {
     width: 47.5%;
     float: right;
-    margin: 6px 4px -4px 0;
+    margin: 6px 5px -4px 0;
 }
 
 

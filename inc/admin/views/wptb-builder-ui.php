@@ -1,9 +1,13 @@
-<?php ?>
+<?php 
+
+use WP_Table_Builder as NS;
+
+?>
 
 <div class="wptb-admin-container">
     <div class="wptb-header">
         <div class="wptb-logo">
-            <h1>WP Table Builder</h1>
+            <img src="<?php echo NS\WP_TABLE_BUILDER_URL . 'assets/images/1.png' ?>" alt="">
         </div>
         <div class="wptb-right">
             <div class="wptb-close">
