@@ -4,16 +4,11 @@
  * The file is enqueued from inc/admin/class-admin.php.
  */
 
-body {
-    overflow: hidden;
-}
-
 .wptb-admin-container {
     background: #fff;
     color: #444;
     z-index: 100099;
     position: fixed;
-    overflow: hidden;
     top: 0;
     bottom: 0;
     left: 0;
@@ -35,7 +30,7 @@ body {
 
 .wptb-header {
     width: 100%;
-    background-color: #ffffff;
+    background-color: #f8f8f8;
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
 }
@@ -78,7 +73,7 @@ body {
     width: 300px;
     z-index: 9999;
     border-right: 1px solid #ccc;
-    background-color: #ebf3fb;
+    background-color: #f0f3f3;
     display: flex;
     flex-direction: column;
 }
@@ -197,11 +192,17 @@ ul.wptb-tabs {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     height: 100px;
     text-align: center;
     border-radius: 4px;
     border: 1px solid #ccc;
     transition: all .25s;
+}
+
+.wptb-element p {
+    margin: 0;
+    font-size: 15px;
 }
 
 .wptb-element:hover {
@@ -229,6 +230,7 @@ ul.wptb-tabs {
     left: 300px;
     right: 0;
     position: absolute;
+    overflow-y: auto;
 }
 
 .wptb-table-name {
