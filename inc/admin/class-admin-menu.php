@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
+use WP_Table_Builder as NS;
 Use WP_Table_Builder\Inc\Common\Helpers;
 
 /**
@@ -86,8 +87,7 @@ class Admin_Menu {
 	 * @since 1.0.0
 	 */
 	public function table_builder() {
-        echo "<h1>New Table Builder</h1>";
-		do_action( 'wptb_table_builder' );
+        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
 	}
 
 }

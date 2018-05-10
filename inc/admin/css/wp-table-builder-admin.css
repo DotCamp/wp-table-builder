@@ -3,3 +3,331 @@
  *
  * The file is enqueued from inc/admin/class-admin.php.
  */
+
+.wptb-admin-container {
+    background: #fff;
+    color: #444;
+    z-index: 100099;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    min-width: 0;
+    cursor: default;
+    margin: 0 !important;
+}
+
+.wptb-container * {
+    box-sizing: border-box;
+}
+
+
+/**
+* Header Section
+*/
+
+.wptb-header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.wptb-logo {
+    padding-left: 30px;
+}
+
+.wptb-right {
+    top: 0;
+    right: 0;
+    position: absolute;
+}
+
+.wptb-close {
+    background-color: #fff;
+    border-left: 1px solid #d3d3d3;
+    display: inline-block;
+    padding: 24px 26px 19px 26px;
+}
+
+.wptb-close:hover {
+    background: #e4e4e4;
+}
+
+.wptb-close a {
+    color: #909090;
+    text-decoration: none;
+}
+
+
+/**
+* Left Panel
+*/
+
+.wptb-left-panel {
+    box-sizing: border-box;
+    height: 100%;
+    position: fixed;
+    width: 300px;
+    z-index: 9999;
+    border-right: 1px solid #ccc;
+    background-color: #ebf3fb;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/**
+* Settings Section
+*/
+
+.wptb-settings-section p {
+    font-size: 16px;
+    padding: 16px 0 16px 20px;
+}
+
+.wptb-settings-dropdown {
+    font-size: 16px;
+    padding: 16px 0 16px 20px;
+    position: relative;
+    background-color: #fff;
+    color: #186cba;
+    border-top: .5px solid #ccc;
+    border-bottom: .5px solid #ccc;
+}
+
+
+/**
+* Element Section
+*/
+
+.wptb-elements-section {
+    height: auto;
+}
+
+.wptb-tabs {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    border-bottom: .5px solid #ccc;
+    max-width: 349px;
+    z-index: 10;
+}
+
+ul.wptb-tabs {
+    list-style: none;
+}
+
+.wptb-tabs li {
+    float: left;
+    width: 49.3%;
+    margin: 0;
+}
+
+.wptb-tabs li:last-of-type {
+    float: right;
+}
+
+.wptb-tabs li a {
+    display: block;
+    text-align: center;
+    padding: 18px 10px;
+    font-size: 16px;
+    color: #186cba;
+    text-decoration: none;
+}
+
+.wptb-tabs li a:hover {
+    color: #186cba;
+    text-decoration: none;
+}
+
+.wptb-tabs li a:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.wptb-tabs li .active,
+.wptb-tabs li .active:hover {
+    color: #186cba;
+}
+
+.wptb-tabs #add-elements .active {
+    background: #fff;
+}
+
+.wptb-tabs #element-options .active {
+    background: #fff;
+}
+
+
+/**
+* Tabs Content
+*/
+
+.wptb-tab-content {
+    padding: 0;
+}
+
+
+/**
+* Elements
+*/
+
+.wptb-elements-container {
+    width: 100%;
+    max-height: inherit;
+    display: table;
+    padding: 0 0 60px 0;
+}
+
+.wptb-element {
+    background: #0e6cad;
+    color: #fff;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    text-align: center;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    transition: all .25s;
+}
+
+.wptb-element:hover {
+    box-shadow: 0px 1px 2px 0.5px #cececc;
+}
+
+.left {
+    width: 47.5%;
+    float: left;
+    margin: 6px 0 -4px 4px;
+}
+
+.right {
+    width: 47.5%;
+    float: right;
+    margin: 6px 4px -4px 0;
+}
+
+
+/**
+* Builder Panel
+*/
+
+.wptb-builder-panel {
+    left: 300px;
+    right: 0;
+    position: absolute;
+}
+
+.wptb-table-name {
+    display: none;
+    vertical-align: middle;
+    font-size: 21px;
+    padding: 14px 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+.wptb-table-name input {
+    vertical-align: middle;
+    padding: 15px;
+    width: 60%;
+}
+
+
+/**
+* Table
+*/
+
+table.wptb-table {
+    border-collapse: collapse
+}
+
+.wrapper {
+    margin: 0 auto;
+    padding: 40px;
+    max-width: 900px;
+}
+
+.wptb-table {
+    margin: 60px 0 40px 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: table;
+}
+
+@media screen and (max-width: 580px) {
+    .wptb-table {
+        display: block;
+    }
+}
+
+.wptb-row {
+    display: table-row;
+    background: #f6f6f6;
+}
+
+.wptb-row:nth-of-type(odd) {
+    background: #e9e9e9;
+}
+
+.wptb-row.wptb-table-header {
+    font-weight: 900;
+    color: #ffffff;
+    background: #ea6153;
+}
+
+.wptb-row.green {
+    background: #27ae60;
+}
+
+.wptb-row.blue {
+    background: #2980b9;
+}
+
+@media screen and (max-width: 580px) {
+    .wptb-row {
+        padding: 14px 0 7px;
+        display: block;
+    }
+    .wptb-row.wptb-table-header {
+        padding: 0;
+        height: 6px;
+    }
+    .wptb-row.wptb-table-header .wptb-cell {
+        display: none;
+    }
+    .wptb-row .wptb-cell {
+        margin-bottom: 10px;
+    }
+    .wptb-row .wptb-cell:before {
+        margin-bottom: 3px;
+        content: attr(data-title);
+        min-width: 98px;
+        font-size: 10px;
+        line-height: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #969696;
+        display: block;
+    }
+}
+
+.wptb-cell {
+    padding: 12px 12px;
+    display: table-wptb-cell;
+}
+
+@media screen and (max-width: 580px) {
+    .wptb-cell {
+        padding: 2px 16px;
+        display: block;
+    }
+}
