@@ -2,6 +2,10 @@
 
 use WP_Table_Builder as NS;
 
+/**
+ * Table Builde UI
+ */
+
 ?>
 
 <div class="wptb-admin-container">
