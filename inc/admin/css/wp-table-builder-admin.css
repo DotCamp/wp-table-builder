@@ -233,18 +233,44 @@ ul.wptb-tabs {
     overflow-y: auto;
 }
 
-.wptb-table-name {
-    display: none;
-    vertical-align: middle;
-    font-size: 21px;
-    padding: 14px 30px;
-    border-bottom: 1px solid #ccc;
+
+/**
+* Table name Setup
+*/
+
+.wptb-name-setup {
+    border-bottom: 1px solid #d6d6d6;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
 }
 
-.wptb-table-name input {
-    vertical-align: middle;
-    padding: 15px;
-    width: 60%;
+.wptb-name-setup span {
+    display: inline-block;
+    font-size: 24px;
+    height: 90px;
+    line-height: 90px;
+    padding: 0 30px;
+}
+
+#wptb-setup-name {
+    margin: 17px 0 18px 18px;
+    height: 55px;
+    box-shadow: none;
+    border: 1px solid #d6d6d6;
+    font-size: 18px;
+    width: 420px;
+    padding: 0 20px;
+}
+
+
+/**
+*
+*/
+
+.wptb-table-setup {
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -259,7 +285,7 @@ table.wptb-table {
 .wrapper {
     margin: 0 auto;
     padding: 40px;
-    max-width: 900px;
+    max-width: 960px;
 }
 
 .wptb-table {

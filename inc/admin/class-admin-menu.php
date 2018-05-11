@@ -87,7 +87,7 @@ class Admin_Menu {
 	 * @since 1.0.0
 	 */
 	public function table_builder() {
-        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
+        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-ui.php';
 	}
 
 }
