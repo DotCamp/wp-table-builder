@@ -23,6 +23,8 @@ class Admin_Menu {
 
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         
 	}
 
@@ -33,6 +35,7 @@ class Admin_Menu {
 	 */
 	public function register_menus() {
 
+		global $builder_page;
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
@@ -57,7 +60,7 @@ class Admin_Menu {
 		);
 
 		// Add New Table sub menu item.
-		add_submenu_page(
+		$builder_page = add_submenu_page(
 			'wptb-overview',
 			esc_html__( 'Table Builder', 'wp-table-builder' ),
 			esc_html__( 'Add New', 'wp-table-builder' ),
@@ -68,7 +71,32 @@ class Admin_Menu {
 
 		do_action( 'wptb_admin_menu', $this );
 
-        
+	}
+
+	public function enqueue_scripts( $hook ) {
+		/*
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+		global $builder_page;
+
+		if ( $hook != $builder_page ) {
+			return;
+		}
+
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-admin.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script( 'wptb-vue', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/vue.js', '', $this->version, false );
+
+		wp_enqueue_script( 'wptb-functions', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/functions.js', array( 'jquery' ), $this->version, false );
+
 	}
 
 	/**

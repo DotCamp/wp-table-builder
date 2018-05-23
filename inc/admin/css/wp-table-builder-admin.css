@@ -17,6 +17,12 @@
     min-width: 0;
     cursor: default;
     margin: 0 !important;
+    overflow-y: auto;
+}
+
+.wptb-container {
+    top: 89px;
+    position: relative;
 }
 
 .wptb-container * {
@@ -33,6 +39,8 @@
     background-color: #f8f8f8;
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
+    position: fixed;
+    z-index: 99999;
 }
 
 .wptb-logo {
@@ -363,4 +371,92 @@ table.wptb-table {
         padding: 2px 16px;
         display: block;
     }
+}
+
+.wptb-preview-table {
+    margin-top: 30px;
+    max-width: 880px;
+    width: 100%;
+    text-align: center;
+}
+
+td:empty::before {
+    content: 'Cell';
+    display: block;
+    padding: 15px;
+    font-weight: normal;
+    font-size: 80%;
+    text-align: center;
+}
+
+td:empty {
+    border: 1px dashed #969fa6;
+}
+
+.wptb-table-head td:empty::before {
+    content: 'Header';
+}
+
+
+/**
+* Table Generator
+*/
+
+.wptb-table-generator {
+    text-align: center;
+    margin: 60px auto 20px auto;
+}
+
+.wptb-table-generator input {
+    margin: 0;
+}
+
+.wptb-generator-btn {
+    width: 92%;
+    padding: 15px;
+    background: green;
+    color: white;
+    cursor: pointer;
+}
+
+.wptb-input-number {
+    width: 80px;
+    padding: 0 12px;
+    vertical-align: top;
+    text-align: center;
+    outline: none;
+}
+
+.wptb-input-number,
+.wptb-input-number-decrement,
+.wptb-input-number-increment {
+    border: 1px solid #ccc;
+    height: 40px;
+}
+
+.wptb-input-number-decrement,
+.wptb-input-number-increment {
+    display: inline-block;
+    width: 30px;
+    line-height: 38px;
+    background: #f1f1f1;
+    color: #444;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.wptb-input-number-decrement:active,
+.wptb-input-number-increment:active {
+    background: #ddd;
+}
+
+.wptb-input-number-decrement {
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-input-number-increment {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
 }

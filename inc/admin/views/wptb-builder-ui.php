@@ -8,7 +8,7 @@ use WP_Table_Builder as NS;
 
 ?>
 
-<div class="wptb-admin-container">
+<div id="wptb_builder" class="wptb-admin-container">
     
     <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-header.php'; ?>
 
@@ -21,7 +21,7 @@ use WP_Table_Builder as NS;
             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-setup.php'; ?>  
 
             <div class="wrapper">
-                <table class="wptb-table" style="text-align: center">
+                <table class="wptb-table" style="display: none; text-align: center">
                     <thead>
                         <tr class="wptb-row wptb-table-header green">
                             <th class="wptb-cell">Rank</th>
@@ -58,4 +58,4 @@ use WP_Table_Builder as NS;
             </div>
         </div>
     </div>
-</div>
+</div> 
