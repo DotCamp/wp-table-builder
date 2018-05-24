@@ -95,8 +95,6 @@ class Admin_Menu {
 
 		wp_enqueue_script( 'wptb-vue', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/vue.js', '', $this->version, false );
 
-		wp_enqueue_script( 'wptb-functions', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/functions.js', array( 'jquery' ), $this->version, false );
-
 	}
 
 	/**
