@@ -1,44 +1,44 @@
-(function() {
+jQuery(document).ready(function($) {
 
-    window.inputNumber = function(el) {
+    (function() {
 
-        var min = el.attr('min') || false;
-        var max = el.attr('max') || false;
-
-        var els = {};
-
-        els.dec = el.prev();
-        els.inc = el.next();
-
-        el.each(function() {
-            init($(this));
-        });
-
-        function init(el) {
-
-            els.dec.on('click', decrement);
-            els.inc.on('click', increment);
-
-            function decrement() {
-                var value = el[0].value;
-                value--;
-                if (!min || value >= min) {
-                    el[0].value = value;
+        window.inputNumber = function(el) {
+    
+            var min = el.attr('min') || false;
+            var max = el.attr('max') || false;
+    
+            var els = {};
+    
+            els.dec = el.prev();
+            els.inc = el.next();
+    
+            el.each(function() {
+                init($(this));
+            });
+    
+            function init(el) {
+    
+                els.dec.on('click', decrement);
+                els.inc.on('click', increment);
+    
+                function decrement() {
+                    var value = el[0].value;
+                    value--;
+                    if (!min || value >= min) {
+                        el[0].value = value;
+                    }
                 }
-            }
-
-            function increment() {
-                var value = el[0].value;
-                value++;
-                if (!max || value <= max) {
-                    el[0].value = value++;
+    
+                function increment() {
+                    var value = el[0].value;
+                    value++;
+                    if (!max || value <= max) {
+                        el[0].value = value++;
+                    }
                 }
             }
         }
-    }
-})();
-
-jQuery(document).ready(function($) {
+    })();
 
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
@@ -61,6 +61,7 @@ jQuery(document).ready(function($) {
             var row = $(table[0].insertRow(-1));
             for (var i = 0; i < columnCount; i++) {
                 var headerCell = $("<td />");
+                headerCell.addClass('droppable');
                 row.append(headerCell);
                 row.addClass('wptb-table-head');
             }
@@ -70,6 +71,7 @@ jQuery(document).ready(function($) {
                 row = $(table[0].insertRow(-1));
                 for (var j = 0; j < columnCount; j++) {
                     var cell = $("<td />");
+                    cell.addClass('droppable');
                     row.append(cell);
                 }
             }
@@ -79,5 +81,6 @@ jQuery(document).ready(function($) {
             wptbTable.append(table);
         });
     });
+
 
 });
