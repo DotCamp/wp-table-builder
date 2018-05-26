@@ -53,6 +53,23 @@
     position: absolute;
 }
 
+.wptb-save {
+    display: inline-block;
+    margin-right: 25px;
+}
+
+.wptb-save-btn {
+    background: #1d9b2a;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.wptb-save-btn:hover {
+    color: white;
+}
+
 .wptb-close {
     background-color: #fff;
     border-left: 1px solid #d3d3d3;
@@ -414,7 +431,7 @@ td:empty {
 .wptb-generator-btn {
     width: 92%;
     padding: 15px;
-    background: green;
+    background: #1d9b2a;
     color: white;
     cursor: pointer;
 }
@@ -444,6 +461,7 @@ td:empty {
     text-align: center;
     font-weight: bold;
     cursor: pointer;
+    user-select: none;
 }
 
 .wptb-input-number-decrement:active,

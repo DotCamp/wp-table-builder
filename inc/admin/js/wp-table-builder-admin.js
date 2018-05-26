@@ -20,6 +20,14 @@ jQuery(document).ready(function($) {
     
                 els.dec.on('click', decrement);
                 els.inc.on('click', increment);
+
+                els.dec.on('mousedown', function(e) {
+                    e.preventDefault();
+                });
+
+                els.inc.on('mousedown', function(e) {
+                    e.preventDefault();
+                });
     
                 function decrement() {
                     var value = el[0].value;
