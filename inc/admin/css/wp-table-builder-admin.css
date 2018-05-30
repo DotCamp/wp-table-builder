@@ -397,10 +397,13 @@ table.wptb-table {
     text-align: center;
 }
 
+.wptb-preview-table td {
+    padding: 15px;
+}
+
 td:empty::before {
     content: 'Cell';
     display: block;
-    padding: 15px;
     font-weight: normal;
     font-size: 80%;
     text-align: center;
