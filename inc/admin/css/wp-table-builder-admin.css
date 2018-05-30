@@ -478,3 +478,7 @@ td:empty {
     border-left: none;
     border-radius: 0 4px 4px 0;
 }
+
+.wptb-allow-drop {
+    background: #b5e0d7;
+}

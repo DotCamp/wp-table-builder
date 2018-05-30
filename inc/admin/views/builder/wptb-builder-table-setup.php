@@ -34,3 +34,5 @@ use WP_Table_Builder as NS;
 <div class="wptb-table-setup">
 
 </div>
+<div class="testDiv" style="width: 200px; height: 200px;">
+</div>

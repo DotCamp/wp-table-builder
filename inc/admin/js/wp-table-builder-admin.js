@@ -1,5 +1,7 @@
-jQuery(document).ready(function($) {
+var wptbElement;
 
+jQuery(document).ready(function($) {
+    
     (function() {
 
         window.inputNumber = function(el) {
@@ -69,8 +71,8 @@ jQuery(document).ready(function($) {
             var row = $(table[0].insertRow(-1));
             for (var i = 0; i < columnCount; i++) {
                 var headerCell = $("<td />");
-                headerCell.addClass('droppable');
                 row.append(headerCell);
+                headerCell.addClass('wptb-droppable');  
                 row.addClass('wptb-table-head');
             }
 
@@ -78,8 +80,8 @@ jQuery(document).ready(function($) {
             for (var i = 1; i < rowCount; i++) {
                 row = $(table[0].insertRow(-1));
                 for (var j = 0; j < columnCount; j++) {
-                    var cell = $("<td />");
-                    cell.addClass('droppable');
+                    var cell = $("<td />"); 
+                    cell.addClass('wptb-droppable');              
                     row.append(cell);
                 }
             }
@@ -87,8 +89,71 @@ jQuery(document).ready(function($) {
             var wptbTable = $(".wptb-table-setup");
             wptbTable.html("");
             wptbTable.append(table);
+
+            $('.wptb-droppable').bind('dragenter', function(event){
+                event.target.classList.add('wptb-allow-drop');
+                event.currentTarget.classList.add('wptb-allow-drop');
+            });
+
+            $('.wptb-droppable').bind('dragleave', function(event){
+                event.target.classList.remove('wptb-allow-drop');
+            });
+
+            $('.wptb-droppable').on("dragover", function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                return true;
+            });
+
+            $('.wptb-droppable').on('drop', function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                event.target.classList.remove('wptb-allow-drop');
+                if ( wptbElement == 'text' ) {
+                    event.target.innerHTML = 'Text';
+                } else if ( wptbElement == 'image' ) {
+                    event.target.innerHTML = 'Image';
+                } else if ( wptbElement == 'button' ) {
+                    event.target.innerHTML = 'Button';
+                } else if ( wptbElement == 'list') {
+                    event.target.innerHTML = 'List';
+                }
+            });
+
         });
     });
 
+    function textDragStart(event) {
+        wptbElement = 'text';
+        var el = $(this);
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
+        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+    }
+
+    function imageDragStart(event) {
+        wptbElement = 'image';
+        var el = $(this);
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
+        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+    }
+
+    function buttonDragStart(event) {
+        wptbElement = 'button';
+        var el = $(this);
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
+        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+    }
+
+    function listDragStart(event) {
+        wptbElement = 'list';
+        var el = $(this);
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
+        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+    }
+
+    $('#wptb-text').on('dragstart', textDragStart);
+    $('#wptb-image').on('dragstart', imageDragStart);
+    $('#wptb-button').on('dragstart', buttonDragStart);
+    $('#wptb-list').on('dragstart', listDragStart);
 
 });

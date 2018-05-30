@@ -91,13 +91,9 @@ class Admin_Menu {
 			return;
 		}
 
-		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-admin.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-admin.js', array( 'jquery' ), $this->version, false );
 
-		//wp_enqueue_script( 'wptb-jquery-ui', plugin_dir_url( __FILE__ ) . 'js/jquery-ui.min.js', array( 'jquery' ), $this->version, false );
-
-		//wp_enqueue_script( 'jquery-ui-draggable' );
-		//wp_enqueue_script( 'jquery-ui-droppable' );
-
+		wp_enqueue_script( 'wptb-admin-builder-js' );
 	}
 
 	/**
