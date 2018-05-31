@@ -136,14 +136,6 @@ jQuery(document).ready(function($) {
                 $('.wptb-preview-table').css(styles);
             }
 
-            //Triggers when cell padding setting changes.
-            function addCellPadding(value) {
-                var styles = {
-                    padding: value + 'px'
-                };
-                $('td').css(styles);
-            }
-
             //Binds the range slider and input, also triggers table border change.
             $('#wptb-table-border-slider').bind('input change', function() {
                 $('#wptb-table-border-number').val($(this).val());
@@ -156,6 +148,14 @@ jQuery(document).ready(function($) {
                 addBorder($(this).val());
             });
 
+            //Triggers when cell padding setting changes.
+            function addCellPadding(value) {
+                var styles = {
+                    padding: value + 'px'
+                };
+                $('td').css(styles);
+            }
+
             //Binds the range slider and input, also triggers cell padding change.
             $('#wptb-table-cell-slider').bind('input change', function() {
                 $('#wptb-table-cell-number').val($(this).val());
@@ -166,6 +166,27 @@ jQuery(document).ready(function($) {
             $('#wptb-table-cell-number').bind('input change', function() {
                 $('#wptb-table-cell-slider').val($(this).val());
                 addCellPadding($(this).val());
+            });
+
+            //Triggers when apply inner border setting changes.
+            function addInnerBorder(checked) {
+                var styles; 
+                
+                if ( checked == 'checked' ) {
+                    styles = {
+                        border: 1 + 'px solid'
+                    }
+                    $('.wptb-preview-table td').css( styles );
+                } else {
+                    $('.wptb-preview-table td').css( 'border', '' )
+                }
+                
+            }
+
+            //Binding Checkbox Change, triggers inner border add.
+            $('#wptb-inner-border-check').bind('change', function(){
+                var _val = $(this).is(':checked') ? 'checked' : 'unchecked';
+                addInnerBorder(_val);
             });
 
         });
