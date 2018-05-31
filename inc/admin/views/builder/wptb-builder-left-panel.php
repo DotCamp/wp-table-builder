@@ -51,6 +51,25 @@
                 <div class="wptb-settings-dropdown">
                     <?php echo __( 'Table Settings', 'wp-table-builder' ); ?>
                 </div>
-                <p><?php echo __( 'Settings Items will go here', 'wp-table-builder' ); ?></p>
+                <div class="wptb-settings-items">
+                    <p><?php echo __( 'Table Border', 'wp-table-builder' ); ?></p>
+                    <div class="wptb-settings-row wptb-settings-middle-xs">
+                        <div class="wptb-settings-col-xs-8">
+                            <input type="range" min="0" max="10" step="1" value="0">
+                        </div>
+                        <div class="wptb-settings-col-xs-4">
+                            <input class="wptb-number-input" type="number" min="0" max="10" step="1" placeholder="0"><span class="wptb-input-px">px</span>
+                        </div>
+                    </div>
+                    <p><?php echo __( 'Cell Padding', 'wp-table-builder' ); ?></p>
+                    <div class="wptb-settings-row wptb-settings-middle-xs">
+                        <div class="wptb-settings-col-xs-8">
+                            <input type="range" min="10" max="50" step="1" value="15">
+                        </div>
+                        <div class="wptb-settings-col-xs-4">
+                            <input class="wptb-number-input" type="number" min="10" max="50" step="1" placeholder="15"><span class="wptb-input-px">px</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
