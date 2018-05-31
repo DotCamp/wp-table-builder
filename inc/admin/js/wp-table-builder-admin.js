@@ -2,6 +2,7 @@ var wptbElement;
 
 jQuery(document).ready(function($) {
     
+    //Increase/Decrease Rows and Columns Number.
     (function() {
 
         window.inputNumber = function(el) {
@@ -50,9 +51,11 @@ jQuery(document).ready(function($) {
         }
     })();
 
+    //Column and Row number Selector.
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
 
+    //Generate table and bind associated functions.
     $(function() {
         $("#wptb-generate-table").click(function() {
 
@@ -86,25 +89,30 @@ jQuery(document).ready(function($) {
                 }
             }
 
+            //Appending the table to the container in UI
             var wptbTable = $(".wptb-table-setup");
             wptbTable.html("");
             wptbTable.append(table);
 
+            //Adds/Removes Class to Droppable Cell when element enters.
             $('.wptb-droppable').bind('dragenter', function(event){
                 event.target.classList.add('wptb-allow-drop');
                 event.currentTarget.classList.add('wptb-allow-drop');
             });
 
+            //Removes class when element is out of the droppable zone.
             $('.wptb-droppable').bind('dragleave', function(event){
                 event.target.classList.remove('wptb-allow-drop');
             });
 
+            //Allowing the drop
             $('.wptb-droppable').bind("dragover", function (event) {
                 event.stopPropagation();
                 event.preventDefault();
                 return true;
             });
 
+            //Runs when an element is dropped on a cell.
             $('.wptb-droppable').bind('drop', function(event){
                 event.preventDefault();
                 event.stopPropagation();
@@ -120,6 +128,7 @@ jQuery(document).ready(function($) {
                 }
             });
 
+            //Triggers when table border setting changes.
             function addBorder(value) {
                 var styles = {
                     border: value + 'px solid'
@@ -127,6 +136,7 @@ jQuery(document).ready(function($) {
                 $('.wptb-preview-table').css(styles);
             }
 
+            //Triggers when cell padding setting changes.
             function addCellPadding(value) {
                 var styles = {
                     padding: value + 'px'
@@ -134,21 +144,25 @@ jQuery(document).ready(function($) {
                 $('td').css(styles);
             }
 
+            //Binds the range slider and input, also triggers table border change.
             $('#wptb-table-border-slider').bind('input change', function() {
                 $('#wptb-table-border-number').val($(this).val());
                 addBorder($(this).val());
             });
 
+            //Binds the range slider and input, also triggers table border change.
             $('#wptb-table-border-number').bind('input change', function() {
                 $('#wptb-table-border-slider').val($(this).val());
                 addBorder($(this).val());
             });
 
+            //Binds the range slider and input, also triggers cell padding change.
             $('#wptb-table-cell-slider').bind('input change', function() {
                 $('#wptb-table-cell-number').val($(this).val());
                 addCellPadding($(this).val());
             });
 
+            //Binds the range slider and input, also triggers cell padding change.
             $('#wptb-table-cell-number').bind('input change', function() {
                 $('#wptb-table-cell-slider').val($(this).val());
                 addCellPadding($(this).val());
@@ -158,13 +172,15 @@ jQuery(document).ready(function($) {
 
     });
 
+    //When dragging starts for Text element
     function textDragStart(event) {
         wptbElement = 'text';
         var el = $(this);
         event.originalEvent.dataTransfer.effectAllowed = 'move';
         event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
-
+    
+    //When dragging starts for Image element
     function imageDragStart(event) {
         wptbElement = 'image';
         var el = $(this);
@@ -172,6 +188,7 @@ jQuery(document).ready(function($) {
         event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
 
+    //When dragging starts for Button element
     function buttonDragStart(event) {
         wptbElement = 'button';
         var el = $(this);
@@ -179,6 +196,7 @@ jQuery(document).ready(function($) {
         event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
 
+    //When dragging starts for List element
     function listDragStart(event) {
         wptbElement = 'list';
         var el = $(this);
@@ -186,6 +204,7 @@ jQuery(document).ready(function($) {
         event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
 
+    //On drag elements.
     $('#wptb-text').on('dragstart', textDragStart);
     $('#wptb-image').on('dragstart', imageDragStart);
     $('#wptb-button').on('dragstart', buttonDragStart);
