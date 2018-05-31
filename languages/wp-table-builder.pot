@@ -1,0 +1,93 @@
+# Copyright (C) 2018 wptb
+# This file is distributed under the same license as the wptb package.
+msgid ""
+msgstr ""
+"Project-Id-Version: wptb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: WP Table Builder <irayhan.asif@gmail.com>\n"
+"Last-Translator: Imtiaz Rayhan <irayhan.asif@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://github.com/imtiazrayhan/wp-table-builder/issues\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../inc/admin/class-admin-menu.php:43, ../inc/admin/class-admin-menu.php:55
+msgid "WP Table Builder"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:44, ../inc/admin/class-admin-menu.php:65
+msgid "Table Builder"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:56
+msgid "All Tables"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:66
+msgid "Add New"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:22
+msgid "Save Table"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:13
+msgid "Add Elements"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:19
+msgid "Element Options"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:28
+msgid "Text"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:32
+msgid "Image"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:36
+msgid "Button"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:41
+msgid "List"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:47
+msgid "Elements Options Goes Here"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:52
+msgid "Table Settings"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:54
+msgid "Settings Items will go here"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:12
+msgid "Table Name"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:13
+msgid "Enter Table Name Here"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:17
+msgid "Columns"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:18
+msgid "Rows"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:31
+msgid "Generate"
+msgstr ""

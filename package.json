@@ -1,0 +1,24 @@
+{
+    "name": "wp-table-builder",
+    "version": "1.0.0",
+    "description": "Best Table Builder Plugin for WordPress",
+    "scripts": {
+        "pot": "wp-pot --src '**/*.php' --dest-file 'languages/wp-table-builder.pot' --package 'wptb' --domain 'wp-table-builder' --last-translator 'Imtiaz Rayhan <irayhan.asif@gmail.com>' --team 'WP Table Builder <irayhan.asif@gmail.com>' --bug-report 'https://github.com/imtiazrayhan/wp-table-builder/issues'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/imtiazrayhan/wp-table-builder.git"
+    },
+    "author": "Imtiaz Rayhan",
+    "license": "GPL-3.0+",
+    "bugs": {
+        "url": "https://github.com/imtiazrayhan/wp-table-builder/issues"
+    },
+    "homepage": "https://github.com/imtiazrayhan/wp-table-builder.git",
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-notify": "^3.0.0",
+        "gulp-sort": "^2.0.0",
+        "gulp-wp-pot": "^2.0.4"
+    }
+}

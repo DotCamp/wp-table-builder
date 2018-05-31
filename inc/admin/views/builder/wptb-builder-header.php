@@ -18,7 +18,9 @@
     </div>
     <div class="wptb-right">
         <div class="wptb-save">
-            <a href="#" class="wptb-save-btn">Save Table</a>
+            <a href="#" class="wptb-save-btn">
+                <?php echo __( 'Save Table', 'wp-table-builder' ); ?>
+            </a>
         </div>
         <div class="wptb-close">
             <a href="<?php echo admin_url('admin.php?page=wptb-overview'); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>

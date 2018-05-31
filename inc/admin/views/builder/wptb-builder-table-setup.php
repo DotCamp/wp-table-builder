@@ -9,13 +9,13 @@ use WP_Table_Builder as NS;
  ?>
 
  <div class="wptb-name-setup">
-    <span>Table Name</span>
-    <input type="text" name="" id="wptb-setup-name" placeholder="Enter Table Name Here">
+    <span><?php echo __( 'Table Name', 'wp-table-builder' ); ?></span>
+    <input type="text" name="" id="wptb-setup-name" placeholder="<?php echo __( 'Enter Table Name Here', 'wp-table-builder' ); ?>">
 </div>
 <table class="wptb-table-generator">
     <tr>
-        <td style="font-size: 20px">Columns</td>
-        <td style="font-size: 20px">Rows</td>
+        <td style="font-size: 20px"><?php echo __( 'Columns', 'wp-table-builder' ); ?></td>
+        <td style="font-size: 20px"><?php echo __( 'Rows', 'wp-table-builder' ); ?></td>
     </tr>
     <tr>
         <td style="padding: 15px">
@@ -27,7 +27,9 @@ use WP_Table_Builder as NS;
     </tr>
     <tr>
         <td colspan="2">
-            <button id="wptb-generate-table" class="wptb-generator-btn">Generate</button>
+            <button id="wptb-generate-table" class="wptb-generator-btn">
+                <?php echo __( 'Generate', 'wp-table-builder' ); ?>
+            </button>
         </td>
     </tr>
 </table>
