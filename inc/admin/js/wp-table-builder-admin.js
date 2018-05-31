@@ -61,7 +61,6 @@ jQuery(document).ready(function($) {
 
             //Create a HTML Table element.
             var table = $("<table />");
-            table[0].border = "0";
             table.addClass('wptb-preview-table');
 
             //Get the count of columns and rows.
@@ -121,7 +120,42 @@ jQuery(document).ready(function($) {
                 }
             });
 
+            function addBorder(value) {
+                var styles = {
+                    border: value + 'px solid'
+                };
+                $('.wptb-preview-table').css(styles);
+            }
+
+            function addCellPadding(value) {
+                var styles = {
+                    padding: value + 'px'
+                };
+                $('td').css(styles);
+            }
+
+            $('#wptb-table-border-slider').bind('input change', function() {
+                $('#wptb-table-border-number').val($(this).val());
+                addBorder($(this).val());
+            });
+
+            $('#wptb-table-border-number').bind('input change', function() {
+                $('#wptb-table-border-slider').val($(this).val());
+                addBorder($(this).val());
+            });
+
+            $('#wptb-table-cell-slider').bind('input change', function() {
+                $('#wptb-table-cell-number').val($(this).val());
+                addCellPadding($(this).val());
+            });
+
+            $('#wptb-table-cell-number').bind('input change', function() {
+                $('#wptb-table-cell-slider').val($(this).val());
+                addCellPadding($(this).val());
+            });
+
         });
+
     });
 
     function textDragStart(event) {
