@@ -61,6 +61,13 @@
                             <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0"><span class="wptb-input-px">px</span>
                         </div>
                     </div>
+                    <div class="wptb-settings-row wptb-settings-middle-xs">
+                        <label class="wptb-inner-border">
+                            <span style="font-size: 16px"><?php echo __( 'Apply Inner Border', 'wp-table-builder' ); ?></span>
+                            <input id="wptb-inner-border-check" type="checkbox"/>
+                            <i></i>
+                        </label>
+                    </div>
                     <p><?php echo __( 'Cell Padding', 'wp-table-builder' ); ?></p>
                     <div class="wptb-settings-row wptb-settings-middle-xs">
                         <div class="wptb-settings-col-xs-8">

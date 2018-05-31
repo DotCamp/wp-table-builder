@@ -139,6 +139,7 @@
     flex: 0 1 auto;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: 25px;
 }
 
 .wptb-settings-middle-xs {
@@ -261,6 +262,51 @@ input[type="range"]::-ms-thumb {
     border: 1px solid #1d9b2a;
     background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
     /* W3C */
+}
+
+.wptb-inner-border {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.wptb-inner-border input {
+    display: none;
+}
+
+.wptb-inner-border input:checked+i::after {
+    -webkit-transform: translateX(20px);
+    transform: translateX(20px);
+}
+
+.wptb-inner-border input:checked+i {
+    background: #1d9b2a;
+}
+
+.wptb-inner-border i {
+    display: inline-block;
+    float: right;
+    padding: 2px;
+    width: 40px;
+    height: 20px;
+    border-radius: 13px;
+    vertical-align: middle;
+    transition: .25s .09s;
+    position: relative;
+    background: #d8d9db;
+    box-sizing: initial;
+}
+
+.wptb-inner-border i::after {
+    content: " ";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    left: 2px;
+    transition: .25s;
 }
 
 
