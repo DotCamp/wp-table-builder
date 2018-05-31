@@ -51,7 +51,7 @@
                 <div class="wptb-settings-dropdown">
                     <?php echo __( 'Table Settings', 'wp-table-builder' ); ?>
                 </div>
-                <div class="wptb-settings-items">
+                <div class="wptb-settings-items" style="display: none;">
                     <p><?php echo __( 'Table Border', 'wp-table-builder' ); ?></p>
                     <div class="wptb-settings-row wptb-settings-middle-xs">
                         <div class="wptb-settings-col-xs-8">

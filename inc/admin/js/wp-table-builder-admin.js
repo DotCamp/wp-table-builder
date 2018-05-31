@@ -57,6 +57,7 @@ jQuery(document).ready(function($) {
         $("#wptb-generate-table").click(function() {
 
             $('.wptb-table-generator').hide();
+            $('.wptb-settings-items').fadeIn();
 
             //Create a HTML Table element.
             var table = $("<table />");
