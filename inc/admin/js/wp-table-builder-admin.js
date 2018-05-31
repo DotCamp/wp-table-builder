@@ -99,13 +99,13 @@ jQuery(document).ready(function($) {
                 event.target.classList.remove('wptb-allow-drop');
             });
 
-            $('.wptb-droppable').on("dragover", function (event) {
+            $('.wptb-droppable').bind("dragover", function (event) {
                 event.stopPropagation();
                 event.preventDefault();
                 return true;
             });
 
-            $('.wptb-droppable').on('drop', function(event){
+            $('.wptb-droppable').bind('drop', function(event){
                 event.preventDefault();
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');

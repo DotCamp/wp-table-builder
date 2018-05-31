@@ -395,6 +395,16 @@ table.wptb-table {
     max-width: 880px;
     width: 100%;
     text-align: center;
+    display: table;
+}
+
+.wptb-preview-table tr {
+    display: table-row;
+    background: #f6f6f6;
+}
+
+.wptb-preview-table tr:nth-of-type(odd) {
+    background: #f6f6f6;
 }
 
 .wptb-preview-table td {
