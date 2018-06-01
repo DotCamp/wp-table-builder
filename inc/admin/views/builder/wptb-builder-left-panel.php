@@ -63,7 +63,7 @@
                             <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0"><span class="wptb-input-px">px</span>
                         </div>
                     </div>
-                    <div id="wptb-apply-inner-border" class="wptb-settings-row wptb-settings-middle-xs">
+                    <div id="wptb-apply-inner-border" style="max-width: 96%;" class="wptb-settings-row wptb-settings-middle-xs">
                         <label class="wptb-inner-border">
                             <span style="font-size: 16px"><?php echo __( 'Apply Inner Border', 'wp-table-builder' ); ?></span>
                             <input id="wptb-inner-border-check" type="checkbox"/>
