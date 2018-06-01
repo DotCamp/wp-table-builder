@@ -176,9 +176,12 @@ jQuery(document).ready(function($) {
                     styles = {
                         border: 1 + 'px solid'
                     }
+                    $('#wptb-apply-inner-border').css('margin-bottom', '0');
                     $('.wptb-preview-table td').css( styles );
+                    $('#wptb-inner-border-settings').fadeIn();
                 } else {
-                    $('.wptb-preview-table td').css( 'border', '' )
+                    $('#wptb-inner-border-settings').fadeOut();
+                    $('.wptb-preview-table td').css( 'border', '' );
                 }
                 
             }
@@ -188,6 +191,26 @@ jQuery(document).ready(function($) {
                 var _val = $(this).is(':checked') ? 'checked' : 'unchecked';
                 addInnerBorder(_val);
             });
+
+            //Triggers when cell padding setting changes.
+            function addInnerBorderSize(value) {
+                var styles = {
+                    border: value + 'px solid'
+                };
+                $('.wptb-preview-table td').css(styles);
+            }
+
+            //Binds the range slider and input, also triggers cell padding change.
+            $('#wptb-table-inner-border-slider').bind('input change', function() {
+                $('#wptb-table-inner-border-number').val($(this).val());
+                addInnerBorderSize($(this).val());
+            });
+
+            //Binds the range slider and input, also triggers cell padding change.
+            $('#wptb-table-inner-border-number').bind('input change', function() {
+                $('#wptb-table-inner-border-slider').val($(this).val());
+                addInnerBorderSize($(this).val());
+            });            
 
         });
 

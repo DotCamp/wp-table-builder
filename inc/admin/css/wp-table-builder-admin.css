@@ -93,6 +93,7 @@
 
 .wptb-left-panel {
     box-sizing: border-box;
+    left: 0;
     height: 100%;
     position: fixed;
     width: 300px;
@@ -101,7 +102,15 @@
     background-color: #f0f3f3;
     display: flex;
     flex-direction: column;
+}
+
+.wptb-left-scroll-panel {
+    flex-grow: 1;
     overflow: auto;
+}
+
+.wptb-panel-left {
+    position: relative;
 }
 
 
