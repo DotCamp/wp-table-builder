@@ -118,7 +118,9 @@ jQuery(document).ready(function($) {
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');
                 if ( wptbElement == 'text' ) {
-                    event.target.innerHTML = 'Text';
+                    var el = event.target;
+                    var elText = '<p class="editable">Text</p>';
+                    el.append($.parseHTML(elText));
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
