@@ -594,6 +594,10 @@ table.wptb-table {
     border-collapse: collapse;
 }
 
+.wptb-preview-table p {
+    margin: 0;
+}
+
 .wptb-preview-table tr {
     display: table-row;
     background: #f5f5f5;

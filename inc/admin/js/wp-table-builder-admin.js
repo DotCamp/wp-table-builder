@@ -1,5 +1,15 @@
 var wptbElement;
 
+function init_tinymce() {
+    tinyMCE.init({
+        selector: '.editable',
+        inline: true,
+        menubar: false,
+        theme: 'simple',
+        toolbar: 'bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify ',
+    });
+}
+
 jQuery(document).ready(function($) {
     
     //Increase/Decrease Rows and Columns Number.
@@ -112,13 +122,19 @@ jQuery(document).ready(function($) {
                 return true;
             });
 
+            //Text Element to be dropped in Cell.
+            var elText = document.createElement('p');
+            elText.classList.add('editable');
+            elText.innerHTML = 'Text';
+
             //Runs when an element is dropped on a cell.
             $('.wptb-droppable').bind('drop', function(event){
                 event.preventDefault();
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');
                 if ( wptbElement == 'text' ) {
-                    event.target.innerHTML = 'Text';
+                    event.target.appendChild(elText);
+                    init_tinymce();
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
