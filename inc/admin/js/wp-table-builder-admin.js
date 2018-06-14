@@ -133,7 +133,8 @@ jQuery(document).ready(function($) {
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');
                 if ( wptbElement == 'text' ) {
-                    event.target.appendChild(elText);
+                    var textEl = elText.cloneNode(true);
+                    event.target.appendChild(textEl);
                     init_tinymce();
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
