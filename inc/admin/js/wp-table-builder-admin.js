@@ -1,8 +1,8 @@
 var wptbElement;
 
-function init_tinymce() {
+function init_tinymce(el) {
     tinyMCE.init({
-        selector: '.editable',
+        target: el,
         inline: true,
         menubar: false,
         theme: 'simple',
@@ -123,9 +123,11 @@ jQuery(document).ready(function($) {
             });
 
             //Text Element to be dropped in Cell.
-            var elText = document.createElement('p');
+            var elText = document.createElement('div');
             elText.classList.add('editable');
-            elText.innerHTML = 'Text';
+            var elP = document.createElement('p');
+            elP.innerHTML = 'Text';
+            elText.appendChild(elP);
 
             //Runs when an element is dropped on a cell.
             $('.wptb-droppable').bind('drop', function(event){
@@ -135,7 +137,16 @@ jQuery(document).ready(function($) {
                 if ( wptbElement == 'text' ) {
                     var textEl = elText.cloneNode(true);
                     event.target.appendChild(textEl);
-                    init_tinymce();
+                    tinyMCE.init({
+                        target: textEl,
+                        inline: true,
+                        plugins: "link",
+                        dialog_type : "modal",
+                        theme: 'modern',
+                        menubar: false,
+                        fixed_toolbar_container: '#fixed_toolbar',
+                        toolbar: 'bold italic strikethrough link | alignleft aligncenter alignright alignjustify',
+                    });
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {

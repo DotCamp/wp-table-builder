@@ -119,12 +119,12 @@ class WP_Table_Builder {
  * can interact with the plugin's hooks contained within.
  **/
 function wp_table_builder_init() {
-		return WP_Table_Builder::init();
+	return WP_Table_Builder::init();
 }
 
 $min_php = '5.6.0';
 
 // Check the minimum required PHP version and run the plugin.
 if ( version_compare( PHP_VERSION, $min_php, '>=' ) ) {
-		wp_table_builder_init();
+	wp_table_builder_init();
 }

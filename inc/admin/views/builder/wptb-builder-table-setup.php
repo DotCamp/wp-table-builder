@@ -12,6 +12,8 @@ use WP_Table_Builder as NS;
     <span><?php echo __( 'Table Name', 'wp-table-builder' ); ?></span>
     <input type="text" name="" id="wptb-setup-name" placeholder="<?php echo __( 'Enter Table Name Here', 'wp-table-builder' ); ?>">
 </div>
+<div id="fixed_toolbar" style="text-align: center">
+</div>
 <table class="wptb-table-generator">
     <tr>
         <td style="font-size: 20px"><?php echo __( 'Columns', 'wp-table-builder' ); ?></td>
