@@ -1,15 +1,5 @@
 var wptbElement;
 
-function init_tinymce(el) {
-    tinyMCE.init({
-        target: el,
-        inline: true,
-        menubar: false,
-        theme: 'simple',
-        toolbar: 'bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify ',
-    });
-}
-
 jQuery(document).ready(function($) {
     
     //Increase/Decrease Rows and Columns Number.

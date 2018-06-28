@@ -695,3 +695,12 @@ td:empty {
 .wptb-allow-drop {
     background: #b5e0d7;
 }
+
+/* customize tinymce Editor */
+.mce-tinymce.mce-tinymce-inline.mce-container.mce-panel{
+    left:50% !important;
+    transform: translate(-50%,0);
+}
+.mce-container.mce-panel.mce-floatpanel.mce-window.mce-in{
+    z-index: 100100 !important;
+}
