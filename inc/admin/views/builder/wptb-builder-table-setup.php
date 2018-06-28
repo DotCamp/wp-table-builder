@@ -12,7 +12,7 @@ use WP_Table_Builder as NS;
     <span><?php echo __( 'Table Name', 'wp-table-builder' ); ?></span>
     <input type="text" name="" id="wptb-setup-name" placeholder="<?php echo __( 'Enter Table Name Here', 'wp-table-builder' ); ?>">
 </div>
-<div id="fixed_toolbar" style="text-align: center">
+<div id="wpcd_fixed_toolbar">
 </div>
 <table class="wptb-table-generator">
     <tr>

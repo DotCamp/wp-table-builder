@@ -134,8 +134,8 @@ jQuery(document).ready(function($) {
                         dialog_type : "modal",
                         theme: 'modern',
                         menubar: false,
-                        fixed_toolbar_container: '#fixed_toolbar',
-                        toolbar: 'bold italic strikethrough link | alignleft aligncenter alignright alignjustify',
+                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
                     });
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';

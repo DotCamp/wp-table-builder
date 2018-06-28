@@ -600,11 +600,11 @@ table.wptb-table {
 
 .wptb-preview-table tr {
     display: table-row;
-    background: #f5f5f5;
+    background: #fcfcfc;
 }
 
 .wptb-preview-table tr:nth-of-type(odd) {
-    background: #f5f5f5;
+    background: #fcfcfc;
 }
 
 .wptb-preview-table td {
@@ -696,11 +696,36 @@ td:empty {
     background: #b5e0d7;
 }
 
-/* customize tinymce Editor */
-.mce-tinymce.mce-tinymce-inline.mce-container.mce-panel{
-    left:50% !important;
-    transform: translate(-50%,0);
+#wpcd_fixed_toolbar {
+    text-align: center;
+    min-height: 55px;
 }
-.mce-container.mce-panel.mce-floatpanel.mce-window.mce-in{
+
+
+/* customize tinymce Editor */
+
+.mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
+    left: 50% !important;
+    transform: translate(-50%, 0);
+    border: 0px !important;
+}
+
+.mce-container.mce-panel.mce-floatpanel.mce-window.mce-in {
     z-index: 100100 !important;
+}
+
+.mce-edit-focus {
+    outline: none;
+}
+
+.mce-btn button {
+    padding: 14px 18px;
+}
+
+.mce-ico {
+    font-size: 20px;
+}
+
+.mce-content-body [data-mce-selected="inline-boundary"] {
+    background: transparent;
 }
