@@ -586,6 +586,7 @@ table.wptb-table {
 }
 
 .wptb-preview-table {
+    table-layout: fixed;
     margin-top: 70px;
     max-width: 880px;
     width: 100%;
