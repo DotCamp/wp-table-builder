@@ -714,7 +714,9 @@ td:empty {
 .mce-container.mce-panel.mce-floatpanel.mce-window.mce-in {
     z-index: 100100 !important;
 }
-
+.mce-container.mce-panel.mce-floatpanel.mce-menu.mce-animate.mce-fixed.mce-menu-align.mce-in{
+    z-index: 100101 !important;
+}
 .mce-edit-focus {
     outline: none;
 }
