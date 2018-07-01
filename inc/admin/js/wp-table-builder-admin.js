@@ -118,7 +118,14 @@ jQuery(document).ready(function($) {
             var elP = document.createElement('p');
             elP.innerHTML = 'Text';
             elText.appendChild(elP);
-
+            
+            //numbers of elemnets that have been added
+            var wptb_num = new Array();
+            wptb_num["text"] = 0;
+            wptb_num["image"] = 0;
+            wptb_num["list"] = 0;
+            wptb_num["button"] = 0;
+            
             //Runs when an element is dropped on a cell.
             $('.wptb-droppable').bind('drop', function(event){
                 event.preventDefault();
@@ -137,6 +144,9 @@ jQuery(document).ready(function($) {
                         fixed_toolbar_container: '#wpcd_fixed_toolbar',
                         toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
                     });
+                    
+                    // adding element options
+                    addElementOptions(wptbElement,textEl);
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
@@ -145,7 +155,29 @@ jQuery(document).ready(function($) {
                     event.target.innerHTML = 'List';
                 }
             });
+            
+            /**
+             * adding Options to each element and related this option to it
+             * by Class also give the element its events
+             * 
+             * @param {string} wptbElement name of the element
+             * @param {opject} el the element itself
+             * @returns {void}
+             */
+            function addElementOptions(wptbElement,el){
+                var prop = $(".wptb-"+wptbElement+"-options-prototype.wptb-settings-section").clone();
+                prop.removeClass("wptb-"+wptbElement+"-options-prototype"); // remove prototype from the class
+                prop.addClass(wptbElement+"-"+wptb_num[wptbElement]);
+                $("#element-options-group").append(prop);
+                wptb_num[wptbElement]++;
 
+                //Show elment's options when clicking 
+                $(el).click(function(e){
+                    e.preventDefault();
+                    $(".wptb-elements-container").hide();
+                });
+            }
+            
             //Triggers when table border setting changes.
             function addBorder(value) {
                 var styles = {
