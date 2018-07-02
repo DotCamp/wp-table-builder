@@ -43,13 +43,11 @@
                         <p><?php echo __( 'List', 'wp-table-builder' ); ?></p>
                         </div>
                     </div>
-                <div id="element-options-group" class="wptb-tab-content">
-                    <!-- all copies of properties will be here -->
-                </div>
-
+                
                 </div>
 
             </div>
+            
             <div class="wptb-settings-section">
                 <div class="wptb-settings-dropdown">
                     <?php echo __( 'Table Settings', 'wp-table-builder' ); ?>
@@ -91,18 +89,22 @@
                 </div>
             </div>
             
+            <div id="element-options-group" class="wptb-tab-content" style="display: none;">
+                <!-- all copies of properties will be here -->
+            </div>
+            
             <div class='wptb-protoypes-options' style='display: none;'>
                 <!-- Here's a prototype of each Elements's option -->
-                <div class='wptb-text-options wptb-text-options-prototype wptb-settings-section'>
+                <div class='wptb-element-options wptb-text-options wptb-text-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Text Options', 'wp-table-builder' ); ?>
                     </div>
-                    <div class="wptb-settings-items" >
+                    <div class="wptb-element-options wptb-settings-items" >
                         <div class='wptb-settings-col-xs-4'>Choose color  </div>
                         <div class='wptb-settings-col-xs-8'><input type="color" /></div>
                     </div>
                 </div>
-                <div class='wptb-image-options wptb-image-options-prototype wptb-settings-section'>
+                <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
                     </div>
@@ -111,7 +113,7 @@
                         <div class='wptb-settings-col-xs-8'><input type="text" /></div>
                     </div>
                 </div>
-                <div class='wptb-button-options wptb-button-options-prototype  wptb-settings-section'>
+                <div class='wptb-element-options wptb-button-options wptb-button-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Button Options', 'wp-table-builder' ); ?>
                     </div>
@@ -120,7 +122,7 @@
                         <div class='wptb-settings-col-xs-8'><input type="color" /></div>
                     </div>
                 </div>
-                <div class='wptb-list-options wptb-list-options-prototype wptb-settings-section'>
+                <div class='wptb-element-options wptb-list-options wptb-list-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'List Options', 'wp-table-builder' ); ?>
                     </div>

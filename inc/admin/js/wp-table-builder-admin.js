@@ -119,7 +119,7 @@ jQuery(document).ready(function($) {
             elP.innerHTML = 'Text';
             elText.appendChild(elP);
             
-            //numbers of elemnets that have been added
+            //numbers of elements that have been added
             var wptb_num = new Array();
             wptb_num["text"] = 0;
             wptb_num["image"] = 0;
@@ -132,7 +132,7 @@ jQuery(document).ready(function($) {
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');
                 if ( wptbElement == 'text' ) {
-                    var textEl = elText.cloneNode(true);
+                    var textEl = elText.cloneNode(true);                    
                     event.target.appendChild(textEl);
                     tinyMCE.init({
                         target: textEl,
@@ -145,8 +145,12 @@ jQuery(document).ready(function($) {
                         toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
                     });
                     
+                    $(textEl).addClass('wptb-ph-element wptb-element-'+wptbElement+"-"+wptb_num[wptbElement]);
+                    
                     // adding element options
                     addElementOptions(wptbElement,textEl);
+                    $(textEl).click();
+                    
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
@@ -165,17 +169,88 @@ jQuery(document).ready(function($) {
              * @returns {void}
              */
             function addElementOptions(wptbElement,el){
-                var prop = $(".wptb-"+wptbElement+"-options-prototype.wptb-settings-section").clone();
+                var prop = $(".wptb-"+wptbElement+"-options-prototype").clone();
                 prop.removeClass("wptb-"+wptbElement+"-options-prototype"); // remove prototype from the class
-                prop.addClass(wptbElement+"-"+wptb_num[wptbElement]);
+                prop.addClass('wptb-options-'+wptbElement+"-"+wptb_num[wptbElement]);
                 $("#element-options-group").append(prop);
                 wptb_num[wptbElement]++;
+            }
+            
+            /*
+             * event click to the whole document and then check if it's to one
+             * the created element to show it's option
+             */
+            $(document).bind('click',function(e) {
+                var $this = $(e.target);
+                var el_options = false; // this var will carry the element that will be shown its options
+                
+                //if($this.hasClass('wptb-element-options'))
+                // check if this element or one of it's parent should display its options
+                if($this.hasClass('wptb-ph-element')){
+                    el_options = $this;
+                }else if($this.parents().hasClass('wptb-ph-element')){
+                    el_options = $this.parents('.wptb-ph-element');
+                }
+                
+                // check to show element's options
+                if( el_options && el_options.length != 0){
+                    Element_options_tab();
+                    
+                    /**
+                     * will carry the extracted infotrmation from the class
+                     * @example class => wptb-ph-element wptb-element-text-0
+                     *          result => [
+                     *              0 => wptb-element-text-0
+                     *              1 => text-0
+                     *              2 => text-
+                     *          ]
+                     * @type array
+                     */
+                    var infArr = el_options.attr('class').match(/wptb-element-((.+)\d)/i);
+                    
+                    
+                    /*
+                     * will carry the class name of the element's options
+                     * @example wptb-text-options wptb-options-text-0
+                     * @type String
+                     */
+                    var optionsClass = '.wptb-'+infArr[2]+'options'+
+                                        '.wptb-options-'+infArr[1];
+                    
+                    $(optionsClass).show();
+                }else{
+                    //show the add elements option
+                    if( $this.is('#add-elements') ||
+                        $this.parents('#add-elements').length !== 0 || 
+                        $this.hasClass('wptb-builder-panel') ||
+                        $this.parents('.wptb-builder-panel').length !== 0  ){
+                        add_Elements_tab();
+                    }
+                }
+            });
+            
+            // active add Elements tab and it's options
+            function add_Elements_tab(){
+                $('.wptb-tab#element-options  a').removeClass('active');
+                $('.wptb-tab#add-elements a').addClass('active');
 
-                //Show elment's options when clicking 
-                $(el).click(function(e){
-                    e.preventDefault();
-                    $(".wptb-elements-container").hide();
-                });
+                $('.wptb-elements-container').show();
+                $('.wptb-settings-section').show();
+                $("#element-options-group").hide();
+                
+            }
+            
+            // active Element options tab and it's options
+            function Element_options_tab(){
+                $('.wptb-tab#add-elements a').removeClass('active');
+                $('.wptb-tab#element-options a').addClass('active');
+
+                $('.wptb-elements-container').hide();
+                $('.wptb-settings-section').hide();
+                $("#element-options-group").show();
+                
+                //Hide all elements' options before showing the selected one
+                $('#element-options-group').children().hide(); 
             }
             
             //Triggers when table border setting changes.

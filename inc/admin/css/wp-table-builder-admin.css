@@ -105,12 +105,13 @@
 }
 
 .wptb-left-scroll-panel {
-    flex-grow: 1;
     overflow: auto;
+    height: calc( 100% - 89px);
 }
 
 .wptb-panel-left {
     position: relative;
+    height:100%;
 }
 
 
@@ -403,7 +404,9 @@ ul.wptb-tabs {
     display: table;
     padding: 0 0 60px 0;
 }
-
+#element-options-group{
+    margin-top: 54px;
+}
 .wptb-element {
     background: #fff;
     color: #000;
