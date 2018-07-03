@@ -99,9 +99,22 @@
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Text Options', 'wp-table-builder' ); ?>
                     </div>
+                    <div class="wptb-element-options wptb-settings-items">
+                        <div class="wptb-settings-row wptb-settings-middle-xs">
+                            <div class='wptb-settings-col-xs-8'><?php echo __( 'Font Color', 'wp-table-builder' ); ?></div>
+                            <div class='wptb-settings-col-xs-4'><input type="color" /></div>
+                        </div>
+                    </div>
                     <div class="wptb-element-options wptb-settings-items" >
-                        <div class='wptb-settings-col-xs-4'>Choose color  </div>
-                        <div class='wptb-settings-col-xs-8'><input type="color" /></div>
+                        <p><?php echo __( 'Font Size', 'wp-table-builder' ); ?></p>
+                        <div class="wptb-settings-row wptb-settings-middle-xs">
+                            <div class="wptb-settings-col-xs-8">
+                                <input id="wptb-text-font-size-slider" type="range" min="10" max="50" step="1" value="15">
+                            </div>
+                            <div class="wptb-settings-col-xs-4">
+                                <input id="wptb-text-font-size-number" class="wptb-number-input" type="number" min="10" max="50" step="1" placeholder="15"><span class="wptb-input-px">px</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
@@ -109,7 +122,7 @@
                         <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
-                        <div class='wptb-settings-col-xs-4'>Image Url </div>
+                        <div class='wptb-settings-col-xs-4'>Image Url</div>
                         <div class='wptb-settings-col-xs-8'><input type="text" /></div>
                     </div>
                 </div>

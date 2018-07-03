@@ -168,7 +168,7 @@ jQuery(document).ready(function($) {
              * @param {opject} el the element itself
              * @returns {void}
              */
-            function addElementOptions(wptbElement,el){
+            function addElementOptions(wptbElement,el) {
                 var prop = $(".wptb-"+wptbElement+"-options-prototype").clone();
                 prop.removeClass("wptb-"+wptbElement+"-options-prototype"); // remove prototype from the class
                 prop.addClass('wptb-options-'+wptbElement+"-"+wptb_num[wptbElement]);
@@ -186,14 +186,14 @@ jQuery(document).ready(function($) {
                 
                 //if($this.hasClass('wptb-element-options'))
                 // check if this element or one of it's parent should display its options
-                if($this.hasClass('wptb-ph-element')){
+                if ($this.hasClass('wptb-ph-element')) {
                     el_options = $this;
-                }else if($this.parents().hasClass('wptb-ph-element')){
+                } else if ($this.parents().hasClass('wptb-ph-element')) {
                     el_options = $this.parents('.wptb-ph-element');
                 }
                 
                 // check to show element's options
-                if( el_options && el_options.length != 0){
+                if ( el_options && el_options.length != 0) {
                     Element_options_tab();
                     
                     /**
@@ -218,9 +218,20 @@ jQuery(document).ready(function($) {
                                         '.wptb-options-'+infArr[1];
                     
                     $(optionsClass).show();
-                }else{
+
+                    //Binds the range slider and input for text font size.
+                    $('#wptb-text-font-size-slider').bind('input change', function() {
+                        $('#wptb-text-font-size-number').val($(this).val());
+                    });
+
+                    //Binds the range slider and input for text font size.
+                    $('#wptb-text-font-size-number').bind('input change', function() {
+                        $('#wptb-text-font-size-slider').val($(this).val());
+                    });
+
+                } else {
                     //show the add elements option
-                    if( $this.is('#add-elements') ||
+                    if ( $this.is('#add-elements') ||
                         $this.parents('#add-elements').length !== 0 || 
                         $this.hasClass('wptb-builder-panel') ||
                         $this.parents('.wptb-builder-panel').length !== 0  ){
@@ -230,7 +241,8 @@ jQuery(document).ready(function($) {
             });
             
             // active add Elements tab and it's options
-            function add_Elements_tab(){
+            function add_Elements_tab() {
+
                 $('.wptb-tab#element-options  a').removeClass('active');
                 $('.wptb-tab#add-elements a').addClass('active');
 
@@ -241,7 +253,8 @@ jQuery(document).ready(function($) {
             }
             
             // active Element options tab and it's options
-            function Element_options_tab(){
+            function Element_options_tab() {
+
                 $('.wptb-tab#add-elements a').removeClass('active');
                 $('.wptb-tab#element-options a').addClass('active');
 
@@ -251,6 +264,7 @@ jQuery(document).ready(function($) {
                 
                 //Hide all elements' options before showing the selected one
                 $('#element-options-group').children().hide(); 
+
             }
             
             //Triggers when table border setting changes.
@@ -335,7 +349,7 @@ jQuery(document).ready(function($) {
             $('#wptb-table-inner-border-number').bind('input change', function() {
                 $('#wptb-table-inner-border-slider').val($(this).val());
                 addInnerBorderSize($(this).val());
-            });            
+            });
 
         });
 
