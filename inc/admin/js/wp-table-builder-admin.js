@@ -206,7 +206,7 @@ jQuery(document).ready(function($) {
                      *          ]
                      * @type array
                      */
-                    var infArr = el_options.attr('class').match(/wptb-element-((.+)\d)/i);
+                    var infArr = el_options.attr('class').match(/wptb-element-((.+)\d+)/i);
                     
                     
                     /*
@@ -266,6 +266,59 @@ jQuery(document).ready(function($) {
                 $('#element-options-group').children().hide(); 
 
             }
+            
+            /**
+             * this function will be called 
+             * when a property of any elemnet is changed
+             * to determine which element that we should edit
+             * and then call edititng_property Function
+             * @returns {void}
+             */
+            function detect_element_for_property(){
+                var option = $(this);
+                var parent = option.closest(".wptb-element-options");
+                var classes = parent.attr("class");
+                
+                /**
+                * will carry the extracted infotrmation from the class
+                * @example class =>wptb-options-text-0
+                *          result => [
+                *              0 => wptb-options-text-0
+                *              1 => text
+                *              2 => 0
+                *          ]
+                * @type array
+                */
+                var infArr = classes.match(/wptb-options-(.+)-(\d+)/i);
+                
+                var type = infArr[1];
+                var num = infArr[2];
+                var element = $('.wptb-ph-element.wptb-element-'+type+'-'+num);
+                editing_property(element,option);
+            }
+            
+            /**
+             * will change the element according to the value of option
+             * 
+             * @param {object} element that will change according to the value of option
+             * @param {object} option input element
+             * @returns {void}
+             */
+            function editing_property(element,option){
+                // type of property @Ex: font-size,color
+                var type = option.data('type'); 
+                var val = option.val();
+                switch(type){
+                    case 'font-size':
+                        element.children("p").css('font-size',val+'px');
+                        console.log(val);
+                        break;
+                    case 'color':
+                        
+                        break;
+                }
+            }
+            $(document.body).on('change input','.wptb-element-property',detect_element_for_property);
             
             //Triggers when table border setting changes.
             function addBorder(value) {
