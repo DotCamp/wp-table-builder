@@ -592,16 +592,22 @@ table.wptb-table {
 
 .wptb-preview-table {
     table-layout: fixed;
+    font-size: 15px;
     margin-top: 70px;
     max-width: 880px;
     width: 100%;
-    text-align: center;
     display: table;
     border-collapse: collapse;
 }
 
 .wptb-preview-table p {
     margin: 0;
+    font-size: 15px;
+}
+
+.wptb-preview-table ul {
+    list-style-type: disc;
+    margin-left: 15px;
 }
 
 .wptb-preview-table tr {
@@ -727,7 +733,7 @@ td:empty {
 
 .mce-edit-focus {
     outline: none !important;
-} 
+}
 
 .mce-btn button {
     padding: 14px 18px !important;

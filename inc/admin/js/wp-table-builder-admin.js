@@ -118,6 +118,13 @@ jQuery(document).ready(function($) {
             var elP = document.createElement('p');
             elP.innerHTML = 'Text';
             elText.appendChild(elP);
+
+            //Text Element to be dropped in Cell.
+            var elList = document.createElement('div');
+            elList.classList.add('editable');
+            var el_L = document.createElement('ul');
+            el_L.innerHTML = '<li>Text</li>';
+            elList.appendChild(el_L);
             
             //numbers of elements that have been added
             var wptb_num = new Array();
@@ -156,7 +163,18 @@ jQuery(document).ready(function($) {
                 } else if ( wptbElement == 'button' ) {
                     event.target.innerHTML = 'Button';
                 } else if ( wptbElement == 'list') {
-                    event.target.innerHTML = 'List';
+                    var listEl = elList.cloneNode(true);                    
+                    event.target.appendChild(listEl);
+                    tinyMCE.init({
+                        target: listEl,
+                        inline: true,
+                        plugins: "link",
+                        dialog_type : "modal",
+                        theme: 'modern',
+                        menubar: false,
+                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                    });
                 }
             });
             
@@ -224,6 +242,7 @@ jQuery(document).ready(function($) {
                         $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-number').val($(this).val());
                     });
 
+                    //Initializing the color picker.
                     $('.wptb-color-picker').wpColorPicker();
 
                     //Binds the range slider and input for text font size.
