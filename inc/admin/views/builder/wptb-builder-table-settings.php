@@ -49,6 +49,14 @@
     </div>
     <div class="wptb-settings-row wptb-settings-middle-xs">
         <div class='wptb-settings-col-xs-8'>
+            <p><?php echo __( 'Header Background', 'wp-table-builder' ); ?></p>
+        </div>
+        <div class='wptb-settings-col-xs-8'>
+            <input type="text" id="wptb-table-header-bg" value=""/>
+        </div>
+    </div>
+    <div class="wptb-settings-row wptb-settings-middle-xs">
+        <div class='wptb-settings-col-xs-8'>
             <p><?php echo __( 'Even Row Background', 'wp-table-builder' ); ?></p>
         </div>
         <div class='wptb-settings-col-xs-8'>

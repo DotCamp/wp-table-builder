@@ -62,9 +62,10 @@ jQuery(document).ready(function($) {
             $('.wptb-table-generator').hide();
             $('.wptb-settings-items').fadeIn();
 
-            //Add Color Picker for Row Background Colors
+            //Add Color Picker for Row and Header Background Colors
             $('#wptb-even-row-bg').wpColorPicker();
             $('#wptb-odd-row-bg').wpColorPicker();
+            $('#wptb-table-header-bg').wpColorPicker();
 
             //Create a HTML Table element.
             var table = $("<table />");

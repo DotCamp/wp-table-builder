@@ -95,8 +95,7 @@ class Admin_Menu {
 		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 		wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
-		wp_enqueue_style( 'wp-color-picker' ); 
-
+		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 		wp_enqueue_script( 'wptb-admin-builder-js' );
