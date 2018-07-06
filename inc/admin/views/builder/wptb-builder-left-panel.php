@@ -98,8 +98,10 @@ use WP_Table_Builder as NS;
                     </div>
                     <div class="wptb-element-option wptb-settings-items">
                         <div class="wptb-settings-row wptb-settings-middle-xs">
-                            <div class='wptb-settings-col-xs-8'><?php echo __( 'Font Color', 'wp-table-builder' ); ?></div>
-                            <div class='wptb-settings-col-xs-4'><input type="color" /></div>
+                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;"><?php echo __( 'Font Color', 'wp-table-builder' ); ?></div>
+                            <div class='wptb-settings-col-xs-8'>
+                                <input type="text" class="wptb-color-picker" data-type="color"/>
+                            </div>
                         </div>
                     </div>
                     <div class="wptb-element-option wptb-settings-items" >

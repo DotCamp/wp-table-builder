@@ -224,6 +224,8 @@ jQuery(document).ready(function($) {
                         $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-number').val($(this).val());
                     });
 
+                    $('.wptb-color-picker').wpColorPicker();
+
                     //Binds the range slider and input for text font size.
                     $('.wptb-text-font-size-number' ).bind('input change', function() {
                         $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-slider').val($(this).val());
@@ -313,7 +315,7 @@ jQuery(document).ready(function($) {
                         element.children("p").css('font-size',val+'px');
                         break;
                     case 'color':
-                        
+                        console.log('o');
                         break;
                 }
             }
