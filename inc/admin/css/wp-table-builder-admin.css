@@ -59,7 +59,7 @@
 }
 
 .wptb-save-btn {
-    background: #1d9b2a;
+    background: #3B7EC0;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -235,7 +235,7 @@ input[type=range]::-webkit-slider-thumb:before {
 }
 
 input[type=range]::-moz-range-progress {
-    background-color: #1d9b2a;
+    background-color: #3B7EC0;
     height: 6px;
 }
 
@@ -244,9 +244,9 @@ input[type=range]::-moz-range-progress {
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
-    border: 1px solid #1d9b2a;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #3B7EC0;
     border-radius: 50%;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #ffffff));
     /* android <= 2.2 */
@@ -258,19 +258,19 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #1d9b2a;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #3B7EC0;
     border-radius: 50%;
     background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
     /* W3C */
 }
 
 input[type="range"]::-ms-thumb {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    border: 1px solid #1d9b2a;
+    border: 1px solid #3B7EC0;
     background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
     /* W3C */
 }
@@ -291,7 +291,7 @@ input[type="range"]::-ms-thumb {
 }
 
 .wptb-inner-border input:checked+i {
-    background: #1d9b2a;
+    background: #3B7EC0;
 }
 
 .wptb-inner-border i {
@@ -530,11 +530,11 @@ table.wptb-table {
 
 .wptb-row {
     display: table-row;
-    background: #f6f6f6;
+    background: #bebebe;
 }
 
 .wptb-row:nth-of-type(odd) {
-    background: #e9e9e9;
+    background: #bebebe;
 }
 
 .wptb-row.wptb-table-header {
@@ -617,7 +617,7 @@ table.wptb-table {
 }
 
 .wptb-preview-table tr:nth-of-type(odd) {
-    background: #fcfcfc;
+    background: #eeeeee;
 }
 
 .wptb-preview-table td {
@@ -642,6 +642,27 @@ td:empty {
 }
 
 
+/*
+** Button Style
+*/
+
+.wptb-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wptb-button {
+    padding: 16px;
+    background: #329d3f;
+    color: #ffffff;
+}
+
+.wptb-button:hover {
+    color: #ffffff;
+}
+
+
 /**
 * Table Generator
 */
@@ -658,7 +679,7 @@ td:empty {
 .wptb-generator-btn {
     width: 92%;
     padding: 15px;
-    background: #1d9b2a;
+    background: #3B7EC0;
     color: white;
     cursor: pointer;
 }
@@ -713,6 +734,52 @@ td:empty {
 #wpcd_fixed_toolbar {
     text-align: center;
     min-height: 55px;
+}
+
+
+/*
+ ** Button Size Selector Style
+ */
+
+.wptb-btn-size-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-btn-size-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-btn-size-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-btn-size-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-btn-size-switcher:hover {
+    background: #fff;
+}
+
+.wptb-btn-size-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-btn-size-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+    cursor: default;
 }
 
 

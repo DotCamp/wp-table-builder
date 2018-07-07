@@ -80,8 +80,8 @@ jQuery(document).ready(function($) {
             for (var i = 0; i < columnCount; i++) {
                 var headerCell = $("<td />");
                 row.append(headerCell);
-                headerCell.addClass('wptb-droppable');  
-                row.addClass('wptb-table-head');
+                headerCell.addClass('wptb-droppable wptb-cell');  
+                row.addClass('wptb-table-head wptb-row');
             }
 
             //Add the data rows.
@@ -89,8 +89,9 @@ jQuery(document).ready(function($) {
                 row = $(table[0].insertRow(-1));
                 for (var j = 0; j < columnCount; j++) {
                     var cell = $("<td />"); 
-                    cell.addClass('wptb-droppable');              
+                    cell.addClass('wptb-droppable wptb-cell');              
                     row.append(cell);
+                    row.addClass('wptb-row')
                 }
             }
 
@@ -124,12 +125,20 @@ jQuery(document).ready(function($) {
             elP.innerHTML = 'Text';
             elText.appendChild(elP);
 
-            //Text Element to be dropped in Cell.
+            //List Element to be dropped in Cell.
             var elList = document.createElement('div');
             elList.classList.add('editable');
             var el_L = document.createElement('ul');
             el_L.innerHTML = '<li>Text</li>';
             elList.appendChild(el_L);
+
+            //Button Element to be dropped in Cell
+            var elButton = document.createElement('div');
+            elButton.classList.add('wptb-button-wrapper');
+            var el_B = document.createElement('a');
+            el_B.classList.add('wptb-button');
+            el_B.innerHTML = 'Button Text';
+            elButton.appendChild(el_B);
             
             //numbers of elements that have been added
             var wptb_num = new Array();
