@@ -153,7 +153,7 @@ jQuery(document).ready(function($) {
                 event.stopPropagation();
                 event.target.classList.remove('wptb-allow-drop');
                 if ( wptbElement == 'text' ) {
-                    var textEl = elText.cloneNode(true);                    
+                    var textEl = elText.cloneNode(true);            
                     event.target.appendChild(textEl);
                     tinyMCE.init({
                         target: textEl,
@@ -176,10 +176,45 @@ jQuery(document).ready(function($) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
                     // create the button element with text button
-                    var button  = $('<button></button>', { text: "button"});
-
+                    var button  = $('<button></button>');
+                    
+                    // this part is very important 
+                    button.click(function(e){
+                        e.preventDefault();
+                    });
+                    
                     //append it to the cell
                     $(event.target).append(button);
+                    
+                    //using tinymce
+                    tinyMCE.init({
+                        target: button[0],
+                        inline: true,
+                        plugins: "link",
+                        dialog_type : "modal",
+                        theme: 'modern',
+                        menubar: false,
+                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                        setup: function(ed){
+                                ed.on("init",
+                                      function(ed) {
+                                        // the initital value of the element is button
+                                        tinyMCE.activeEditor.setContent('button');
+                                        tinyMCE.execCommand('mceRepaint');
+
+                                      }
+                                );
+                            },
+                        init_instance_callback: function (editor) {
+                            editor.on('change', function (e) {
+                                // check if it becomes empty because if there's no value it's hard to edit the editor in button element
+                                if(editor.getContent() == ""){
+                                    editor.setContent('Empty');
+                                }
+                            });
+                          }
+                    });
                     
                     //Give it a class That will help us to relate it to its properties
                     $(button).addClass('wptb-ph-element wptb-element-'+wptbElement+"-"+wptb_num[wptbElement]);
