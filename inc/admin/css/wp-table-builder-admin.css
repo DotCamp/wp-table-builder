@@ -642,6 +642,27 @@ td:empty {
 }
 
 
+/*
+** Button Style
+*/
+
+.wptb-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wptb-button {
+    padding: 16px;
+    background: #329d3f;
+    color: #ffffff;
+}
+
+.wptb-button:hover {
+    color: #ffffff;
+}
+
+
 /**
 * Table Generator
 */

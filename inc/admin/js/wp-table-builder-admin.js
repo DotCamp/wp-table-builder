@@ -125,12 +125,20 @@ jQuery(document).ready(function($) {
             elP.innerHTML = 'Text';
             elText.appendChild(elP);
 
-            //Text Element to be dropped in Cell.
+            //List Element to be dropped in Cell.
             var elList = document.createElement('div');
             elList.classList.add('editable');
             var el_L = document.createElement('ul');
             el_L.innerHTML = '<li>Text</li>';
             elList.appendChild(el_L);
+
+            //Button Element to be dropped in Cell
+            var elButton = document.createElement('div');
+            elButton.classList.add('wptb-button-wrapper');
+            var el_B = document.createElement('a');
+            el_B.classList.add('wptb-button');
+            el_B.innerHTML = 'Button Text';
+            elButton.appendChild(el_B);
             
             //numbers of elements that have been added
             var wptb_num = new Array();
@@ -167,7 +175,17 @@ jQuery(document).ready(function($) {
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
-                    event.target.innerHTML = 'Button';
+                    var buttonEL = elButton.cloneNode(true);
+                    event.target.appendChild(buttonEL);
+                    tinyMCE.init({
+                        target: buttonEL.childNodes[0],
+                        inline: true,
+                        dialog_type : "modal",
+                        theme: 'modern',
+                        menubar: false,
+                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                        toolbar: 'bold italic strikethrough',
+                    });
                 } else if ( wptbElement == 'list') {
                     var listEl = elList.cloneNode(true);                    
                     event.target.appendChild(listEl);
