@@ -196,6 +196,14 @@ jQuery(document).ready(function($) {
                 prop.removeClass("wptb-"+wptbElement+"-options-prototype"); // remove prototype from the class
                 prop.addClass('wptb-options-'+wptbElement+"-"+wptb_num[wptbElement]);
                 $("#element-options-group").append(prop);
+                
+                //special cases to elements if needed
+                switch(wptbElement){
+                    case 'text':
+                    listener_to_element(prop.find('.wptb-color-picker'));
+                    prop.find('.wptb-color-picker').wpColorPicker();
+                    break;
+                }  
                 wptb_num[wptbElement]++;
             }
             
@@ -247,8 +255,6 @@ jQuery(document).ready(function($) {
                         $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-number').val($(this).val());
                     });
 
-                    //Initializing the color picker.
-                    $('.wptb-color-picker').wpColorPicker();
 
                     //Binds the range slider and input for text font size.
                     $('.wptb-text-font-size-number' ).bind('input change', function() {
@@ -331,7 +337,7 @@ jQuery(document).ready(function($) {
              * @returns {void}
              */
             function editing_property(element,option){
-                // type of property @Ex: font-size,color
+                // type of property @Ex: font-size,color ....
                 var type = option.data('type'); 
                 var val = option.val();
                 switch(type){
@@ -339,11 +345,30 @@ jQuery(document).ready(function($) {
                         element.children("p").css('font-size',val+'px');
                         break;
                     case 'color':
-                        console.log('o');
+                        element.children("p").css('color',val);
                         break;
                 }
             }
             $(document.body).on('change input','.wptb-element-property',detect_element_for_property);
+            
+            /**
+             * to listen to the elements that will change dynamically
+             * change by other javascript code then will trigger the change event to them
+             * 
+             * @param {string} element
+             * @returns {void}
+             */
+            function listener_to_element(element){
+                element.data('old_value',element.val());
+                window.setInterval(function(){
+                    var value = element.val();
+                    var old_value = element.data('old_value');
+                    if(value != old_value){
+                        old_value = value;
+                        element.trigger('change');
+                    }
+                }, 300);
+            }
             
             //Triggers when table border setting changes.
             function addBorder(value) {

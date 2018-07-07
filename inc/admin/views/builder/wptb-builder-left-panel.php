@@ -66,7 +66,7 @@ use WP_Table_Builder as NS;
                         <div class="wptb-settings-row wptb-settings-middle-xs">
                             <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;"><?php echo __( 'Font Color', 'wp-table-builder' ); ?></div>
                             <div class='wptb-settings-col-xs-8'>
-                                <input type="text" class="wptb-color-picker" data-type="color"/>
+                                <input type="text" class="wptb-element-property wptb-color-picker" data-type="color"/>
                             </div>
                         </div>
                     </div>
