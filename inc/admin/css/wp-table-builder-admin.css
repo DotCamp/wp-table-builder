@@ -59,7 +59,7 @@
 }
 
 .wptb-save-btn {
-    background: #1d9b2a;
+    background: #3B7EC0;
     color: white;
     padding: 16px;
     font-size: 16px;
@@ -235,7 +235,7 @@ input[type=range]::-webkit-slider-thumb:before {
 }
 
 input[type=range]::-moz-range-progress {
-    background-color: #1d9b2a;
+    background-color: #3B7EC0;
     height: 6px;
 }
 
@@ -244,9 +244,9 @@ input[type=range]::-moz-range-progress {
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
-    border: 1px solid #1d9b2a;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #3B7EC0;
     border-radius: 50%;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #ffffff));
     /* android <= 2.2 */
@@ -258,19 +258,19 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #1d9b2a;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #3B7EC0;
     border-radius: 50%;
     background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
     /* W3C */
 }
 
 input[type="range"]::-ms-thumb {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    border: 1px solid #1d9b2a;
+    border: 1px solid #3B7EC0;
     background-image: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
     /* W3C */
 }
@@ -291,7 +291,7 @@ input[type="range"]::-ms-thumb {
 }
 
 .wptb-inner-border input:checked+i {
-    background: #1d9b2a;
+    background: #3B7EC0;
 }
 
 .wptb-inner-border i {
@@ -658,7 +658,7 @@ td:empty {
 .wptb-generator-btn {
     width: 92%;
     padding: 15px;
-    background: #1d9b2a;
+    background: #3B7EC0;
     color: white;
     cursor: pointer;
 }
