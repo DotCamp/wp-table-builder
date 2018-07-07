@@ -166,7 +166,21 @@ jQuery(document).ready(function($) {
                 } else if ( wptbElement == 'image' ) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
-                    event.target.innerHTML = 'Button';
+                    // create the button element with text button
+                    var button  = $('<button></button>', { text: "button"});
+
+                    //append it to the cell
+                    $(event.target).append(button);
+                    
+                    //Give it a class That will help us to relate it to its properties
+                    $(button).addClass('wptb-ph-element wptb-element-'+wptbElement+"-"+wptb_num[wptbElement]);
+                    
+                    // To take a copy from the options prototype and relate it to the button
+                    addElementOptions(wptbElement,button);
+                    
+                    // click the element to show it's option to focus the page on it
+                    $(button).click();
+                    
                 } else if ( wptbElement == 'list') {
                     var listEl = elList.cloneNode(true);                    
                     event.target.appendChild(listEl);
