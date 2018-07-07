@@ -737,6 +737,52 @@ td:empty {
 }
 
 
+/*
+ ** Button Size Selector Style
+ */
+
+.wptb-btn-size-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-btn-size-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-btn-size-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-btn-size-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-btn-size-switcher:hover {
+    background: #fff;
+}
+
+.wptb-btn-size-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-btn-size-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+    cursor: default;
+}
+
+
 /* customize tinymce Editor */
 
 .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {

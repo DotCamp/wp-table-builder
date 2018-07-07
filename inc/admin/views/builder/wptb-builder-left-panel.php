@@ -81,6 +81,19 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>
                     </div>
+                    <div class="wptb-element-option wptb-settings-items">
+                        <div class="wptb-settings-row wptb-settings-middle-xs">
+                            <div class='wptb-settings-col-xs-8' >
+                                <?php echo __( 'Button Size', 'wp-table-builder' ); ?>
+                            </div>
+                            <ul>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">S</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">M</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">L</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">XL</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
