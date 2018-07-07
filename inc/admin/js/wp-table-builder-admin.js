@@ -80,8 +80,8 @@ jQuery(document).ready(function($) {
             for (var i = 0; i < columnCount; i++) {
                 var headerCell = $("<td />");
                 row.append(headerCell);
-                headerCell.addClass('wptb-droppable');  
-                row.addClass('wptb-table-head');
+                headerCell.addClass('wptb-droppable wptb-cell');  
+                row.addClass('wptb-table-head wptb-row');
             }
 
             //Add the data rows.
@@ -89,8 +89,9 @@ jQuery(document).ready(function($) {
                 row = $(table[0].insertRow(-1));
                 for (var j = 0; j < columnCount; j++) {
                     var cell = $("<td />"); 
-                    cell.addClass('wptb-droppable');              
+                    cell.addClass('wptb-droppable wptb-cell');              
                     row.append(cell);
+                    row.addClass('wptb-row')
                 }
             }
 
