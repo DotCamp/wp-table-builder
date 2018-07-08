@@ -176,7 +176,7 @@ jQuery(document).ready(function($) {
                     event.target.innerHTML = 'Image';
                 } else if ( wptbElement == 'button' ) {
                     // create the button element with text button
-                    var button  = $('<button></button>');
+                    var button  = elButton.cloneNode(true);
                     
                     // this part is very important 
                     button.click(function(e){
@@ -188,19 +188,19 @@ jQuery(document).ready(function($) {
                     
                     //using tinymce
                     tinyMCE.init({
-                        target: button[0],
+                        target: button.childNodes[0],
                         inline: true,
                         plugins: "link",
                         dialog_type : "modal",
                         theme: 'modern',
                         menubar: false,
                         fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                        toolbar: 'bold italic strikethrough',
                         setup: function(ed){
                                 ed.on("init",
                                       function(ed) {
                                         // the initital value of the element is button
-                                        tinyMCE.activeEditor.setContent('button');
+                                        tinyMCE.activeEditor.setContent('Button Text');
                                         tinyMCE.execCommand('mceRepaint');
 
                                       }

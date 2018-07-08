@@ -81,19 +81,6 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>
                     </div>
-                    <div class="wptb-element-option wptb-settings-items">
-                        <div class="wptb-settings-row wptb-settings-middle-xs">
-                            <div class='wptb-settings-col-xs-8' >
-                                <?php echo __( 'Button Size', 'wp-table-builder' ); ?>
-                            </div>
-                            <ul>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">S</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">M</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">L</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">XL</li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
                 <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
@@ -108,9 +95,26 @@ use WP_Table_Builder as NS;
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Button Options', 'wp-table-builder' ); ?>
                     </div>
+                    <div class="wptb-element-option wptb-settings-items">
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <div class='wptb-settings-col-xs-8' >
+                                <?php echo __( 'Button Size', 'wp-table-builder' ); ?>
+                            </div>
+                            <ul>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">S</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">M</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">L</li>
+                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">XL</li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="wptb-settings-items" >
-                        <div class='wptb-settings-col-xs-4'>Value </div>
-                        <div class='wptb-settings-col-xs-8'><input type="color" /></div>
+                        <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;">
+                            <?php echo __( 'Button Color', 'wp-table-builder' ); ?>
+                        </div>
+                        <div class='wptb-settings-col-xs-8'>
+                            <input type="color" />
+                        </div>
                     </div>
                 </div>
                 <div class='wptb-element-options wptb-list-options wptb-list-options-prototype' style='display: none;'>
