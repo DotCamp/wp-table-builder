@@ -135,7 +135,7 @@ jQuery(document).ready(function ($) {
             //Button Element to be dropped in Cell
             var elButton = document.createElement('div');
             elButton.classList.add('wptb-button-wrapper');
-            var el_B = document.createElement('a');
+            var el_B = document.createElement('p');
             el_B.classList.add('wptb-button');
             el_B.innerHTML = 'Button Text';
             elButton.appendChild(el_B);
@@ -188,7 +188,7 @@ jQuery(document).ready(function ($) {
 
                     //using tinymce
                     tinyMCE.init({
-                        target: button.childNodes[0],
+                        target: button,
                         inline: true,
                         plugins: "link",
                         dialog_type: "modal",
@@ -199,8 +199,6 @@ jQuery(document).ready(function ($) {
                         setup: function (ed) {
                             ed.on("init",
                                 function (ed) {
-                                    // the initital value of the element is button
-                                    tinyMCE.activeEditor.setContent("<p id='#imThePlaceholder'>Your nice text here!</p>");
                                     tinyMCE.execCommand('mceRepaint');
                                 }
                             );
@@ -209,12 +207,19 @@ jQuery(document).ready(function ($) {
                             editor.on('change', function (e) {
                                 // check if it becomes empty because if there's no value it's hard to edit the editor in button element
                                 if (editor.getContent() == "") {
-                                    editor.setContent("<p id='#imThePlaceholder'>Your nice text here!</p>");;
+                                    editor.setContent("<p class='wptb-button'>Your nice text here!</p>");
                                 }
                             });
-                            //and remove it on focus
-                            editor.on('focus', function () {
-                                $('iframe').contents().find('#imThePlaceholder').remove();
+                            editor.on('KeyDown',function (e){
+                                var range = editor.selection.getRng();
+                                console.log(range);
+                                var KeyID = e.keyCode;
+                                console.log(KeyID);
+                                if(range.startOffset == 0 && (KeyID == 8 || KeyID == 46)){
+                                    e.preventDefault();
+                                    editor.setContent("<p class='wptb-button'></p>");
+                                }
+                                
                             });
                         }
                     });
