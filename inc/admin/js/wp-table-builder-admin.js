@@ -240,8 +240,8 @@ jQuery(document).ready(function ($) {
                         .mouseenter(function (event) {
                             var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                                 btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                actions = $('<span class="actions">List Actions </span>');
-                            $('.actions').remove();
+                                actions = $('<span class="wptb-actions">List Actions </span>');
+                            $('.wptb-actions').remove();
                             $('.directlyhovered').removeClass('directlyhovered');
                             $(this).addClass('directlyhovered');
                             $(this).append();
@@ -259,7 +259,7 @@ jQuery(document).ready(function ($) {
                         })
                         .mouseleave(function (event) {
                             $(this).removeClass('directlyhovered');
-                            $(this).find('.actions').remove();
+                            $(this).find('.wptb-actions').remove();
                         })
                         .find('li .list-item-content').each(function (index, value) {
 
@@ -271,9 +271,9 @@ jQuery(document).ready(function ($) {
                             $(value).parent().mouseenter(function (event) {
                                 var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                                     btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                    actions = $('<span class="actions">Item Actions </span>');
+                                    actions = $('<span class="wptb-actions">Item Actions </span>');
 
-                                $('.actions').remove();
+                                $('.wptb-actions').remove();
                                 $('.directlyhovered').removeClass('directlyhovered');
                                 $(this).addClass('directlyhovered');
 
@@ -296,7 +296,7 @@ jQuery(document).ready(function ($) {
 
                             $(value).parent().mouseleave(function (event) {
                                 $(this).removeClass('directlyhovered');
-                                $(this).find('.actions').remove();
+                                $(this).find('.wptb-actions').remove();
                             });
 
                             tinyMCE.init({

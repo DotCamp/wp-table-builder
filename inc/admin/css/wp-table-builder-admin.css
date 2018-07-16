@@ -295,7 +295,6 @@ input[type="range"]::-ms-thumb {
 }
 
 .wptb-inner-border i {
-    display: inline-block;
     float: right;
     padding: 2px;
     width: 40px;
@@ -815,7 +814,7 @@ td:empty {
     background: transparent !important;
 }
 
-.wptb-droppable.wptb-cell ul{
+.wptb-droppable.wptb-cell ul {
     border: 1px solid transparent;
     list-style-type: none;
     margin: 0;
@@ -835,16 +834,16 @@ td:empty {
     background: url(../img/square.jpg);
 }
 
-.wptb-droppable.wptb-cell ul li{
+.wptb-droppable.wptb-cell ul li {
     border: 1px solid transparent;
     display: flex;
     align-items: center;
     justify-content: start;
     margin-bottom: 0;
-    width:100%;
+    width: 100%;
 }
 
-.wptb-droppable.wptb-cell ul li:hover{ 
+.wptb-droppable.wptb-cell ul li:hover {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -852,30 +851,28 @@ td:empty {
 }
 
 .wptb-droppable.wptb-cell ul li .list-item-content,
-.wptb-droppable.wptb-cell ul li .list-item-style-dot
-{
+.wptb-droppable.wptb-cell ul li .list-item-style-dot {
     border: 1px solid transparent;
     height: 30px;
 }
 
 .wptb-droppable.wptb-cell ul li .list-item-content:hover,
-.wptb-droppable.wptb-cell ul li .list-item-style-dot:hover
-{ 
-    cursor:pointer;
+.wptb-droppable.wptb-cell ul li .list-item-style-dot:hover {
+    cursor: pointer;
 }
 
-.wptb-droppable.wptb-cell ul li .list-item-style-dot{
-    width:30px;
+.wptb-droppable.wptb-cell ul li .list-item-style-dot {
+    width: 30px;
 }
 
-.wptb-droppable.wptb-cell  .directlyhovered{
+.wptb-droppable.wptb-cell .directlyhovered {
     border: 1px solid #1ea5e5 !important;
     position: relative;
 }
 
-.actions{
+.wptb-actions {
     background-color: #1ea5e5;
-    color:white;
+    color: white;
     position: absolute;
     top: -20px;
     right: 0;
