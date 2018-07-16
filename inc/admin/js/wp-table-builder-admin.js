@@ -129,7 +129,7 @@ jQuery(document).ready(function ($) {
             var elList = document.createElement('div');
             //elList.classList.add('editable');
             var el_L = document.createElement('ul');
-            el_L.innerHTML = '<li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 1</div></li>            <li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 2</div></li>            <li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 3</div></li>';
+            el_L.innerHTML = '<li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 1</div></li>            <li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 2</div></li>            <li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 3</div></li>';
             elList.appendChild(el_L);
 
             //Button Element to be dropped in Cell
@@ -242,8 +242,8 @@ jQuery(document).ready(function ($) {
                                 btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
                                 actions = $('<span class="wptb-actions">List Actions </span>');
                             $('.wptb-actions').remove();
-                            $('.directlyhovered').removeClass('directlyhovered');
-                            $(this).addClass('directlyhovered');
+                            $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
+                            $(this).addClass('wptb-directlyhovered');
                             $(this).append();
 
                             btnDelete.click(function () {
@@ -258,14 +258,32 @@ jQuery(document).ready(function ($) {
                             $(this).append(actions);
                         })
                         .mouseleave(function (event) {
-                            $(this).removeClass('directlyhovered');
+                            $(this).removeClass('wptb-directlyhovered');
                             $(this).find('.wptb-actions').remove();
                         })
-                        .find('li .list-item-content').each(function (index, value) {
+                        .find('li .wptb-list-item-content').each(function (index, value) {
 
                             $(value).mouseenter(function (event) {
-                                $('.directlyhovered').removeClass('directlyhovered');
-                                $(this).addClass('directlyhovered');
+                                $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
+                                $(this).addClass('wptb-directlyhovered');
+                            });
+
+                            $(value).keyup(function (event) {
+                                console.log('fsefg');
+                                var key = (event.which != undefined) ? event.which
+                                    : event.keyCode,
+                                    liEl = $(this).parent(),
+                                    duplicate;
+                                if (key !== 13) {
+                                    return;
+                                }
+                                event.preventDefault();
+                                duplicate = liEl.clone(true, true);
+                                duplicate.find('.wptb-list-item-content').html('');
+                                liEl.after(duplicate);
+                                duplicate.find('.wptb-list-item-content').focus();
+                                $(this).children().last('p').remove();
+                                return false;
                             });
 
                             $(value).parent().mouseenter(function (event) {
@@ -274,8 +292,8 @@ jQuery(document).ready(function ($) {
                                     actions = $('<span class="wptb-actions">Item Actions </span>');
 
                                 $('.wptb-actions').remove();
-                                $('.directlyhovered').removeClass('directlyhovered');
-                                $(this).addClass('directlyhovered');
+                                $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
+                                $(this).addClass('wptb-directlyhovered');
 
                                 btnDelete.click(function () {
                                     $(this).parent().parent().remove();
@@ -291,11 +309,11 @@ jQuery(document).ready(function ($) {
                             });
 
                             $(value).mouseleave(function (event) {
-                                $(this).removeClass('directlyhovered');
+                                $(this).removeClass('wptb-directlyhovered');
                             });
 
                             $(value).parent().mouseleave(function (event) {
-                                $(this).removeClass('directlyhovered');
+                                $(this).removeClass('wptb-directlyhovered');
                                 $(this).find('.wptb-actions').remove();
                             });
 
@@ -489,7 +507,7 @@ jQuery(document).ready(function ($) {
                         if (val === 'circle') svg = '​<svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg> ';
                         if (val === 'square') svg = '​<svg width="10" height="10">  <rect width="5" height="5" style="fill:rgb(0,0,0);stroke-width:1;stroke:rgb(0,0,0)" /></svg> ';
                         if (val === 'disc') svg = '​<svg height="12" width="12">  <circle cx="4" cy="4" r="3" stroke="black" stroke-width="0.5" fill="white" /></svg> ';
-                        element.find("li .list-item-style-dot").html(svg);
+                        element.find("li .wptb-list-item-style-dot").html(svg);
                         break;
                 }
             }
