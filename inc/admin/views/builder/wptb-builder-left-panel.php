@@ -122,7 +122,17 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'List Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
-                        <div class='wptb-settings-col-xs-4'>Here's List options</div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <div class='wptb-settings-col-xs-8' >
+                                <?php echo __( 'List Bullet Icon', 'wp-table-builder' ); ?>
+                            </div>
+                            <select data-type="list-style-type" class="wptb-element-property">
+                                <option value="circle">Circle</option>
+                                <option value="square">Square</option>
+                                <option value="disc">Disc</option>
+                            </select>
+                            
+                        </div>
                     </div>
                 </div>
             </div>     

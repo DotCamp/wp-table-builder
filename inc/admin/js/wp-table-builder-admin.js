@@ -127,9 +127,9 @@ jQuery(document).ready(function ($) {
 
             //List Element to be dropped in Cell.
             var elList = document.createElement('div');
-            elList.classList.add('editable');
+            //elList.classList.add('editable');
             var el_L = document.createElement('ul');
-            el_L.innerHTML = '<li>Text</li>';
+            el_L.innerHTML = '<li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 1</div></li>            <li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 2</div></li>            <li><div class="list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="list-item-content editable" >List Item 3</div></li>';
             elList.appendChild(el_L);
 
             //Button Element to be dropped in Cell
@@ -207,19 +207,19 @@ jQuery(document).ready(function ($) {
                             editor.on('change', function (e) {
                                 // check if it becomes empty because if there's no value it's hard to edit the editor in button element
                                 if (editor.getContent() == "") {
-                                    editor.setContent("<p class='wptb-button'>Your nice text here!</p>");
+                                    editor.setContent("<p class='wptb-button'>Button Text</p>");
                                 }
                             });
-                            editor.on('KeyDown',function (e){
+                            editor.on('KeyDown', function (e) {
                                 var range = editor.selection.getRng();
                                 console.log(range);
                                 var KeyID = e.keyCode;
                                 console.log(KeyID);
-                                if(range.startOffset == 0 && (KeyID == 8 || KeyID == 46)){
+                                if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
                                     e.preventDefault();
                                     editor.setContent("<p class='wptb-button'></p>");
                                 }
-                                
+
                             });
                         }
                     });
@@ -236,16 +236,85 @@ jQuery(document).ready(function ($) {
                 } else if (wptbElement == 'list') {
                     var listEl = elList.cloneNode(true);
                     event.target.appendChild(listEl);
-                    tinyMCE.init({
-                        target: listEl,
-                        inline: true,
-                        plugins: "link",
-                        dialog_type: "modal",
-                        theme: 'modern',
-                        menubar: false,
-                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                    });
+                    $(listEl)
+                        .mouseenter(function (event) {
+                            var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
+                                btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
+                                actions = $('<span class="actions">List Actions </span>');
+                            $('.actions').remove();
+                            $('.directlyhovered').removeClass('directlyhovered');
+                            $(this).addClass('directlyhovered');
+                            $(this).append();
+
+                            btnDelete.click(function () {
+                                $(this).parent().parent().remove();
+                            });
+                            btnCopy.click(function () {
+                                var duplicate = $(this).parent().parent().clone(true, true);
+                                $(this).parent().parent().parent().append(duplicate);
+                            });
+
+                            actions.append(btnCopy, btnDelete);
+                            $(this).append(actions);
+                        })
+                        .mouseleave(function (event) {
+                            $(this).removeClass('directlyhovered');
+                            $(this).find('.actions').remove();
+                        })
+                        .find('li .list-item-content').each(function (index, value) {
+
+                            $(value).mouseenter(function (event) {
+                                $('.directlyhovered').removeClass('directlyhovered');
+                                $(this).addClass('directlyhovered');
+                            });
+
+                            $(value).parent().mouseenter(function (event) {
+                                var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
+                                    btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
+                                    actions = $('<span class="actions">Item Actions </span>');
+
+                                $('.actions').remove();
+                                $('.directlyhovered').removeClass('directlyhovered');
+                                $(this).addClass('directlyhovered');
+
+                                btnDelete.click(function () {
+                                    $(this).parent().parent().remove();
+                                });
+                                btnCopy.click(function () {
+                                    var duplicate = $(this).parent().parent().clone(true, true);
+                                    $(this).parent().parent().parent().append(duplicate);
+                                });
+
+                                actions.append(btnCopy, btnDelete);
+                                $(this).append(actions);
+
+                            });
+
+                            $(value).mouseleave(function (event) {
+                                $(this).removeClass('directlyhovered');
+                            });
+
+                            $(value).parent().mouseleave(function (event) {
+                                $(this).removeClass('directlyhovered');
+                                $(this).find('.actions').remove();
+                            });
+
+                            tinyMCE.init({
+                                target: value,
+                                inline: true,
+                                plugins: "link",
+                                dialog_type: "modal",
+                                theme: 'modern',
+                                menubar: false,
+                                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                            });
+                        });
+                    /*  */
+
+                    $(listEl).addClass('wptb-ph-element wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
+                    addElementOptions(wptbElement, listEl);
+                    $(listEl).click();
                 }
             });
 
@@ -262,7 +331,6 @@ jQuery(document).ready(function ($) {
                 prop.removeClass("wptb-" + wptbElement + "-options-prototype"); // remove prototype from the class
                 prop.addClass('wptb-options-' + wptbElement + "-" + wptb_num[wptbElement]);
                 $("#element-options-group").append(prop);
-
                 //special cases to elements if needed
                 switch (wptbElement) {
                     case 'text':
@@ -392,6 +460,8 @@ jQuery(document).ready(function ($) {
                 var type = infArr[1];
                 var num = infArr[2];
                 var element = $('.wptb-ph-element.wptb-element-' + type + '-' + num);
+                console.log('Element', element);
+                console.log('Option', option);
                 editing_property(element, option);
             }
 
@@ -406,6 +476,8 @@ jQuery(document).ready(function ($) {
                 // type of property @Ex: font-size,color ....
                 var type = option.data('type');
                 var val = option.val();
+                console.log('Type', type);
+                console.log('Value', val);
                 switch (type) {
                     case 'font-size':
                         element.children("p").css('font-size', val + 'px');
@@ -413,9 +485,15 @@ jQuery(document).ready(function ($) {
                     case 'color':
                         element.children("p").css('color', val);
                         break;
+                    case 'list-style-type':
+                        if (val === 'circle') svg = '​<svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg> ';
+                        if (val === 'square') svg = '​<svg width="10" height="10">  <rect width="5" height="5" style="fill:rgb(0,0,0);stroke-width:1;stroke:rgb(0,0,0)" /></svg> ';
+                        if (val === 'disc') svg = '​<svg height="12" width="12">  <circle cx="4" cy="4" r="3" stroke="black" stroke-width="0.5" fill="white" /></svg> ';
+                        element.find("li .list-item-style-dot").html(svg);
+                        break;
                 }
             }
-            $(document.body).on('change input', '.wptb-element-property', detect_element_for_property);
+            $(document.body).on('change input, change select', '.wptb-element-property', detect_element_for_property);
 
             /**
              * to listen to the elements that will change dynamically
