@@ -567,10 +567,10 @@ jQuery(document).ready(function ($) {
                 var val = option.val();
                 switch (type) {
                     case 'font-size':
-                        element.children("p").css('font-size', val + 'px');
+                        element.find("p").css('font-size', val + 'px');
                         break;
                     case 'color':
-                        element.children("p").css('color', val);
+                        element.find("p").css('color', val);
                         break;
                     case 'list-class': if (val == 'unordered') {
                         $('[data-type=numbering-list-style-type]').parent().css('display', 'none');
