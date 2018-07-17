@@ -196,6 +196,48 @@ jQuery(document).ready(function ($) {
                         btnCopy.click(function () {
                             var duplicate = $(this).parent().parent().clone(true, true);
                             $(this).parent().parent().parent().append(duplicate);
+                            
+                            /*************************************************
+                             *            Give it separated options          *
+                             *************************************************/
+                            /**
+                            * will carry the extracted infotrmation from the class
+                            * @example class => wptb-ph-element wptb-element-text-0
+                            *          result => [
+                            *              0 => wptb-element-text-0
+                            *              1 => text
+                            *              2 => 0
+                            *          ]
+                            * @type array
+                            */
+                            var infArr = duplicate.attr('class').match(/wptb-element-(.+)-(\d)+/i),
+                            wptbElement = infArr[1],
+                            oldClass = infArr[0],
+                            oldClassOption = "wptb-options-"+wptbElement+"-"+infArr[2],
+                            classOption = ".wptb-element-options"+
+                                             ".wptb-"+wptbElement+"-options"+
+                                             "."+oldClassOption;
+                            var duplicateOption = $(classOption).clone(true,true);
+                            $(classOption).parent().append(duplicateOption);
+                            
+                            // creating the new class name and deleting the old class 
+                            var newClass = "wptb-element-"+wptbElement+"-"+wptb_num[wptbElement];
+                            var newClassOption = "wptb-options-"+wptbElement+"-"+wptb_num[wptbElement];
+                            
+                            duplicate.addClass(newClass);
+                            duplicate.removeClass(oldClass);
+                            
+                            duplicateOption.addClass(newClassOption);
+                            duplicateOption.removeClass(oldClassOption);
+                            wptb_num[wptbElement]++;
+                            
+                            // Exceptions 
+                            switch(wptbElement){
+                                case 'text':
+                                    listener_to_element(duplicateOption.find('.wptb-color-picker'));
+                                    duplicateOption.find('.wptb-color-picker').wpColorPicker();
+                                    break;  
+                            }
                         });
 
                         actions.append(btnCopy, btnDelete);
