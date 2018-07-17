@@ -120,10 +120,12 @@ jQuery(document).ready(function ($) {
 
             //Text Element to be dropped in Cell.
             var elText = document.createElement('div');
-            elText.classList.add('editable');
+            var elText2 = document.createElement('div');
+            elText2.classList.add('editable');
             var elP = document.createElement('p');
             elP.innerHTML = 'Text';
-            elText.appendChild(elP);
+            elText2.appendChild(elP);
+            elText.appendChild(elText2);
 
             //List Element to be dropped in Cell.
             var elList = document.createElement('div');
@@ -152,11 +154,15 @@ jQuery(document).ready(function ($) {
 
             //Button Element to be dropped in Cell
             var elButton = document.createElement('div');
-            elButton.classList.add('wptb-button-wrapper');
+            elButton.classList.add('wptb-button-container');
+            var elButton2 = document.createElement('div');
+            elButton2.classList.add('wptb-button-wrapper');
             var el_B = document.createElement('p');
             el_B.classList.add('wptb-button');
+            el_B.classList.add('editable');
             el_B.innerHTML = 'Button Text';
-            elButton.appendChild(el_B);
+            elButton2.appendChild(el_B);
+            elButton.appendChild(elButton2);
 
             //numbers of elements that have been added
             var wptb_num = new Array();
@@ -173,8 +179,36 @@ jQuery(document).ready(function ($) {
                 if (wptbElement == 'text') {
                     var textEl = elText.cloneNode(true);
                     event.target.appendChild(textEl);
+
+
+                    $(textEl).mouseenter(function (event) {
+                        var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
+                            btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
+
+                        $('.wptb-actions').remove();
+                        $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
+                        $(this).addClass('wptb-directlyhovered');
+
+                        btnDelete.click(function () {
+                            $(this).parent().parent().remove();
+                        });
+                        btnCopy.click(function () {
+                            var duplicate = $(this).parent().parent().clone(true, true);
+                            $(this).parent().parent().parent().append(duplicate);
+                        });
+
+                        actions.append(btnCopy, btnDelete);
+                        $(this).append(actions);
+
+                    }).mouseleave(function (event) {
+                        $(this).removeClass('wptb-directlyhovered');
+                        $(this).find('.wptb-actions').remove();
+                    });
+
+
                     tinyMCE.init({
-                        target: textEl,
+                        target: textEl.childNodes[0],
                         inline: true,
                         plugins: "link",
                         dialog_type: "modal",
@@ -201,12 +235,36 @@ jQuery(document).ready(function ($) {
                         e.preventDefault();
                     });
 
+                    $(button).mouseenter(function (event) {
+                        var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
+                            btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
+
+                        $('.wptb-actions').remove();
+                        $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
+                        $(this).addClass('wptb-directlyhovered');
+
+                        btnDelete.click(function () {
+                            $(this).parent().parent().remove();
+                        });
+                        btnCopy.click(function () {
+                            var duplicate = $(this).parent().parent().clone(true, true);
+                            $(this).parent().parent().parent().append(duplicate);
+                        });
+
+                        actions.append(btnCopy, btnDelete);
+                        $(this).append(actions);
+
+                    }).mouseleave(function (event) {
+                        $(this).removeClass('wptb-directlyhovered');
+                        $(this).find('.wptb-actions').remove();
+                    });
                     //append it to the cell
                     $(event.target).append(button);
-
+                    console.log($(button).children().find('.wptb-button-wrapper'));
                     //using tinymce
                     tinyMCE.init({
-                        target: button,
+                        target: button.childNodes[0],
                         inline: true,
                         plugins: "link",
                         dialog_type: "modal",
