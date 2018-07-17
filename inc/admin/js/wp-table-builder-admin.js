@@ -129,7 +129,25 @@ jQuery(document).ready(function ($) {
             var elList = document.createElement('div');
             //elList.classList.add('editable');
             var el_L = document.createElement('ul');
-            el_L.innerHTML = '<li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 1</div></li>            <li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 2</div></li>            <li><div class="wptb-list-item-style-dot"><svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg></div>            <div class="wptb-list-item-content editable" >List Item 3</div></li>';
+            el_L.innerHTML = "<article>\
+                <div class=\"wptb-list-item-style-dot\">\
+                    <li class=\"wptb-bullet\">\
+                    </li>\
+                </div>\
+                <div class=\"wptb-list-item-content editable\" >List Item 1</div>\
+            </article><article>\
+                <div class=\"wptb-list-item-style-dot\">\
+                    <li class=\"wptb-bullet\">\
+                    </li>\
+                </div>\
+                <div class=\"wptb-list-item-content editable\" >List Item 2</div>\
+            </article><article>\
+                <div class=\"wptb-list-item-style-dot\">\
+                    <li class=\"wptb-bullet\">\
+                    </li>\
+                </div>\
+                <div class=\"wptb-list-item-content editable\" >List Item 3</div>\
+            </article>";
             elList.appendChild(el_L);
 
             //Button Element to be dropped in Cell
@@ -261,7 +279,7 @@ jQuery(document).ready(function ($) {
                             $(this).removeClass('wptb-directlyhovered');
                             $(this).find('.wptb-actions').remove();
                         })
-                        .find('li .wptb-list-item-content').each(function (index, value) {
+                        .find('article .wptb-list-item-content').each(function (index, value) {
 
                             $(value).mouseenter(function (event) {
                                 $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -269,7 +287,6 @@ jQuery(document).ready(function ($) {
                             });
 
                             $(value).keyup(function (event) {
-                                console.log('fsefg');
                                 var key = (event.which != undefined) ? event.which
                                     : event.keyCode,
                                     liEl = $(this).parent(),
@@ -279,7 +296,7 @@ jQuery(document).ready(function ($) {
                                 }
                                 event.preventDefault();
                                 duplicate = liEl.clone(true, true);
-                                duplicate.find('.wptb-list-item-content').html('');
+                                duplicate.find('.wptb-list-item-content').html('List Item');
                                 liEl.after(duplicate);
                                 duplicate.find('.wptb-list-item-content').focus();
                                 $(this).children().last('p').remove();
@@ -503,11 +520,19 @@ jQuery(document).ready(function ($) {
                     case 'color':
                         element.children("p").css('color', val);
                         break;
+                    case 'list-class': if (val == 'unordered') {
+                        $('[data-type=numbering-list-style-type]').parent().css('display', 'none');
+                        $('[data-type=list-style-type]').parent().css('display', 'flex');
+                    }
+                    else {
+                        $('[data-type=list-style-type]').parent().css('display', 'none');
+                        $('[data-type=numbering-list-style-type]').parent().css('display', 'flex');
+                    }
+                        break;
+                    case 'numbering-list-style-type':
                     case 'list-style-type':
-                        if (val === 'circle') svg = '​<svg height="10" width="10">  <circle cx="3" cy="3" r="1" stroke="black" stroke-width="3" fill="black" /></svg> ';
-                        if (val === 'square') svg = '​<svg width="10" height="10">  <rect width="5" height="5" style="fill:rgb(0,0,0);stroke-width:1;stroke:rgb(0,0,0)" /></svg> ';
-                        if (val === 'disc') svg = '​<svg height="12" width="12">  <circle cx="4" cy="4" r="3" stroke="black" stroke-width="0.5" fill="white" /></svg> ';
-                        element.find("li .wptb-list-item-style-dot").html(svg);
+                        console.log(element);
+                        element.find('article .wptb-list-item-style-dot li').css('list-style-type', val.toLowerCase());
                         break;
                 }
             }
