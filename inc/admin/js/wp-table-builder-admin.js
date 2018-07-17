@@ -230,9 +230,7 @@ jQuery(document).ready(function ($) {
                             });
                             editor.on('KeyDown', function (e) {
                                 var range = editor.selection.getRng();
-                                console.log(range);
                                 var KeyID = e.keyCode;
-                                console.log(KeyID);
                                 if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
                                     e.preventDefault();
                                     editor.setContent("<p class='wptb-button'></p>");
@@ -406,7 +404,7 @@ jQuery(document).ready(function ($) {
                      *          ]
                      * @type array
                      */
-                    var infArr = el_options.attr('class').match(/wptb-element-((.+)\d+)/i);
+                    var infArr = el_options.attr('class').match(/wptb-element-((.+-)\d+)/i);
 
 
                     /*
@@ -416,7 +414,7 @@ jQuery(document).ready(function ($) {
                      */
                     var optionsClass = '.wptb-' + infArr[2] + 'options' +
                         '.wptb-options-' + infArr[1];
-
+                
                     $(optionsClass).show();
 
                     //Binds the range slider and input for text font size.
@@ -495,8 +493,6 @@ jQuery(document).ready(function ($) {
                 var type = infArr[1];
                 var num = infArr[2];
                 var element = $('.wptb-ph-element.wptb-element-' + type + '-' + num);
-                console.log('Element', element);
-                console.log('Option', option);
                 editing_property(element, option);
             }
 
@@ -511,8 +507,6 @@ jQuery(document).ready(function ($) {
                 // type of property @Ex: font-size,color ....
                 var type = option.data('type');
                 var val = option.val();
-                console.log('Type', type);
-                console.log('Value', val);
                 switch (type) {
                     case 'font-size':
                         element.children("p").css('font-size', val + 'px');
@@ -531,7 +525,6 @@ jQuery(document).ready(function ($) {
                         break;
                     case 'numbering-list-style-type':
                     case 'list-style-type':
-                        console.log(element);
                         element.find('article .wptb-list-item-style-dot li').css('list-style-type', val.toLowerCase());
                         break;
                 }
