@@ -122,22 +122,22 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'List Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
-                            <div class='wptb-settings-col-xs-8' >
-                                <?php echo __( 'List Type', 'wp-table-builder' ); ?>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-4' style="flex-basis: 58.333%; max-width: 58.333%;">
+                                <?php echo __( 'Type', 'wp-table-builder' ); ?>
                             </div>
                             <select data-type="list-class" class="wptb-element-property"> 
                                 <option value="numbered">
                                     <?php echo __( 'Ordered', 'wp-table-builder' ); ?>
                                 </option>
                                 <option value="unordered">
-                                    <?php echo __( 'Unrdered', 'wp-table-builder' ); ?>
+                                    <?php echo __( 'Unordered', 'wp-table-builder' ); ?>
                                 </option>
                             </select>              
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; display: none;">
                             <div class='wptb-settings-col-xs-8' >
-                                <?php echo __( 'List Bullet Icon', 'wp-table-builder' ); ?>
+                                <?php echo __( 'Bullet Icon', 'wp-table-builder' ); ?>
                             </div>
                             <select data-type="list-style-type" class="wptb-element-property">
                                 <option value="circle">
