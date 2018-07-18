@@ -184,7 +184,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -280,7 +280,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -356,7 +356,7 @@ jQuery(document).ready(function ($) {
                         .mouseenter(function (event) {
                             var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                                 btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                actions = $('<span class="wptb-actions">List Actions </span>');
+                                actions = $('<span class="wptb-actions"></span>');
                             $('.wptb-actions').remove();
                             $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
                             $(this).addClass('wptb-directlyhovered');
@@ -404,7 +404,7 @@ jQuery(document).ready(function ($) {
                             $(value).parent().mouseenter(function (event) {
                                 var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                                     btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                    actions = $('<span class="wptb-actions">Item Actions </span>');
+                                    actions = $('<span class="wptb-actions"></span>');
 
                                 $('.wptb-actions').remove();
                                 $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
