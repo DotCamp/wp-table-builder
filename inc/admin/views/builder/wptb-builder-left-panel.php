@@ -127,21 +127,29 @@ use WP_Table_Builder as NS;
                                 <?php echo __( 'List Type', 'wp-table-builder' ); ?>
                             </div>
                             <select data-type="list-class" class="wptb-element-property"> 
-                                <option value="numbered">Numbered</option>
-                                <option value="unordered">Unordered</option>
-                            </select>
-                            
+                                <option value="numbered">
+                                    <?php echo __( 'Ordered', 'wp-table-builder' ); ?>
+                                </option>
+                                <option value="unordered">
+                                    <?php echo __( 'Unrdered', 'wp-table-builder' ); ?>
+                                </option>
+                            </select>              
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; display: none;">
                             <div class='wptb-settings-col-xs-8' >
                                 <?php echo __( 'List Bullet Icon', 'wp-table-builder' ); ?>
                             </div>
                             <select data-type="list-style-type" class="wptb-element-property">
-                                <option value="circle">Circle</option>
-                                <option value="square">Square</option>
-                                <option value="disc">Disc</option>
+                                <option value="circle">
+                                    <?php echo __( 'Circle', 'wp-table-builder' ); ?>
+                                </option>
+                                <option value="square">
+                                    <?php echo __( 'Square', 'wp-table-builder' ); ?>
+                                </option>
+                                <option value="disc">
+                                    <?php echo __( 'Disc', 'wp-table-builder' ); ?>
+                                </option>
                             </select>
-                            
                         </div>
                     </div>
                 </div>
