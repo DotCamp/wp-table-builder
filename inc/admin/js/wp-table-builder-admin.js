@@ -196,7 +196,7 @@ jQuery(document).ready(function ($) {
                         btnCopy.click(function () {
                             var duplicate = $(this).parent().parent().clone(true, true);
                             $(this).parent().parent().parent().append(duplicate);
-                            
+
                             /*************************************************
                              *            Give it separated options          *
                              *************************************************/
@@ -211,32 +211,32 @@ jQuery(document).ready(function ($) {
                             * @type array
                             */
                             var infArr = duplicate.attr('class').match(/wptb-element-(.+)-(\d)+/i),
-                            wptbElement = infArr[1],
-                            oldClass = infArr[0],
-                            oldClassOption = "wptb-options-"+wptbElement+"-"+infArr[2],
-                            classOption = ".wptb-element-options"+
-                                             ".wptb-"+wptbElement+"-options"+
-                                             "."+oldClassOption;
-                            var duplicateOption = $(classOption).clone(true,true);
+                                wptbElement = infArr[1],
+                                oldClass = infArr[0],
+                                oldClassOption = "wptb-options-" + wptbElement + "-" + infArr[2],
+                                classOption = ".wptb-element-options" +
+                                    ".wptb-" + wptbElement + "-options" +
+                                    "." + oldClassOption;
+                            var duplicateOption = $(classOption).clone(true, true);
                             $(classOption).parent().append(duplicateOption);
-                            
+
                             // creating the new class name and deleting the old class 
-                            var newClass = "wptb-element-"+wptbElement+"-"+wptb_num[wptbElement];
-                            var newClassOption = "wptb-options-"+wptbElement+"-"+wptb_num[wptbElement];
-                            
+                            var newClass = "wptb-element-" + wptbElement + "-" + wptb_num[wptbElement];
+                            var newClassOption = "wptb-options-" + wptbElement + "-" + wptb_num[wptbElement];
+
                             duplicate.addClass(newClass);
                             duplicate.removeClass(oldClass);
-                            
+
                             duplicateOption.addClass(newClassOption);
                             duplicateOption.removeClass(oldClassOption);
                             wptb_num[wptbElement]++;
-                            
+
                             // Exceptions 
-                            switch(wptbElement){
+                            switch (wptbElement) {
                                 case 'text':
                                     listener_to_element(duplicateOption.find('.wptb-color-picker'));
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
-                                    break;  
+                                    break;
                             }
                         });
 
@@ -514,7 +514,7 @@ jQuery(document).ready(function ($) {
                      */
                     var optionsClass = '.wptb-' + infArr[2] + 'options' +
                         '.wptb-options-' + infArr[1];
-                
+
                     $(optionsClass).show();
 
                     //Binds the range slider and input for text font size.
@@ -615,12 +615,13 @@ jQuery(document).ready(function ($) {
                         element.find("p").css('color', val);
                         break;
                     case 'list-class': if (val == 'unordered') {
-                        $('[data-type=numbering-list-style-type]').parent().css('display', 'none');
                         $('[data-type=list-style-type]').parent().css('display', 'flex');
+                        element.find('article .wptb-list-item-style-dot li').css('list-style-type', 'disc');
+                        $('[data-type=list-style-type]').val('disc');
                     }
                     else {
                         $('[data-type=list-style-type]').parent().css('display', 'none');
-                        $('[data-type=numbering-list-style-type]').parent().css('display', 'flex');
+                        element.find('article .wptb-list-item-style-dot li').css('list-style-type', 'decimal');
                     }
                         break;
                     case 'numbering-list-style-type':
