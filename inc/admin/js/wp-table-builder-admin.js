@@ -226,7 +226,17 @@ jQuery(document).ready(function ($) {
 
                             duplicate.addClass(newClass);
                             duplicate.removeClass(oldClass);
-
+                            tinyMCE.init({
+                                target: duplicate.get(0),
+                                inline: true,
+                                plugins: "link",
+                                dialog_type: "modal",
+                                theme: 'modern',
+                                menubar: false,
+                                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                            });
+                            
                             duplicateOption.addClass(newClassOption);
                             duplicateOption.removeClass(oldClassOption);
                             wptb_num[wptbElement]++;
@@ -234,6 +244,11 @@ jQuery(document).ready(function ($) {
                             // Exceptions 
                             switch (wptbElement) {
                                 case 'text':
+                                    /**
+                                     * getting a new color picker from option prototype
+                                     */
+                                    var new_picker = $('.wptb-protoypes-options .wptb-element-property.wptb-color-picker').clone();
+                                    duplicateOption.find('.wp-picker-container').replaceWith(new_picker);
                                     listener_to_element(duplicateOption.find('.wptb-color-picker'));
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
                                     break;
