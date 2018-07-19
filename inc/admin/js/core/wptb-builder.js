@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
             elButton.appendChild(elButton2);
 
             //numbers of elements that have been added
-            var wptb_num = new Array();
+            window.wptb_num = new Array();
             wptb_num["text"] = 0;
             wptb_num["image"] = 0;
             wptb_num["list"] = 0;
@@ -135,7 +135,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -177,16 +177,6 @@ jQuery(document).ready(function ($) {
 
                             duplicate.addClass(newClass);
                             duplicate.removeClass(oldClass);
-                            tinyMCE.init({
-                                target: duplicate.get(0),
-                                inline: true,
-                                plugins: "link",
-                                dialog_type: "modal",
-                                theme: 'modern',
-                                menubar: false,
-                                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                            });
 
                             duplicateOption.addClass(newClassOption);
                             duplicateOption.removeClass(oldClassOption);
@@ -195,15 +185,12 @@ jQuery(document).ready(function ($) {
                             // Exceptions 
                             switch (wptbElement) {
                                 case 'text':
-                                    /**
-                                     * getting a new color picker from option prototype
-                                     */
-                                    var new_picker = $('.wptb-protoypes-options .wptb-element-property.wptb-color-picker').clone();
-                                    duplicateOption.find('.wp-picker-container').replaceWith(new_picker);
                                     listener_to_element(duplicateOption.find('.wptb-color-picker'));
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
                                     break;
                             }
+                            duplicate[0].id = '';
+                            tinyFastCall(duplicate[0].childNodes[0]);
                         });
 
                         actions.append(btnCopy, btnDelete);
@@ -246,7 +233,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -257,7 +244,30 @@ jQuery(document).ready(function ($) {
                         });
                         btnCopy.click(function () {
                             var duplicate = $(this).parent().parent().clone(true, true);
-                            $(this).parent().parent().parent().append(duplicate);
+
+                            var infArr = duplicate[0].className.match(/wptb-element-(.+)-(\d)+/i),
+                                elName = infArr[1],
+                                oldClass = infArr[0],
+                                oldClassOptionsPanelClass = "wptb-options-" + elName + "-" + infArr[2];
+
+                            var newOptionsPanel = $('.' + oldClassOptionsPanelClass).clone(true, true),
+                                oldOptionsPanel = document.querySelector('.' + oldClassOptionsPanelClass);
+                            oldOptionsPanel.parentNode.appendChild(newOptionsPanel[0]);
+
+                            var newClass = "wptb-element-" + elName + "-" + wptb_num['button'];
+                            var newClassOptionsPanelClass = "wptb-options-" + elName + "-" + wptb_num['button'];
+
+                            duplicate[0].classList.add(newClass);
+                            duplicate[0].classList.remove(oldClass);
+
+                            newOptionsPanel.removeClass(oldClassOptionsPanelClass);
+                            newOptionsPanel.addClass(newClassOptionsPanelClass);
+
+                            wptb_num['button']++;
+
+                            duplicate[0].id = '';
+                            tinyFastCall(duplicate[0]);
+                            $(this).parent().parent().parent().append(duplicate[0]);
                         });
 
                         actions.append(btnCopy, btnDelete);
@@ -269,7 +279,7 @@ jQuery(document).ready(function ($) {
                     });
                     //append it to the cell
                     $(event.target).append(button);
-                    console.log($(button).children().find('.wptb-button-wrapper'));
+                    console.log('Something', $(button).children().find('.wptb-button-wrapper'));
                     //using tinymce
                     tinyMCE.init({
                         target: button.childNodes[0],
@@ -316,104 +326,24 @@ jQuery(document).ready(function ($) {
                     $(button).click();
 
                 } else if (wptbElement == 'list') {
-                    var listEl = elList.cloneNode(true);
+                    var listEl = elList.cloneNode(true), contentCollection;
+
                     event.target.appendChild(listEl);
-                    $(listEl)
-                        .mouseenter(function (event) {
-                            var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
-                                btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                actions = $('<span class="wptb-actions"></span>');
-                            $('.wptb-actions').remove();
-                            $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
-                            $(this).addClass('wptb-directlyhovered');
-                            $(this).append();
 
-                            btnDelete.click(function () {
-                                $(this).parent().parent().remove();
-                            });
-                            btnCopy.click(function () {
-                                var duplicate = $(this).parent().parent().clone(true, true);
-                                $(this).parent().parent().parent().append(duplicate);
-                            });
+                    listEl.onmouseenter = showListSettings;
+                    listEl.onmouseleave = hideListSettings;
+                    contentCollection = listEl
+                        .querySelectorAll('article .wptb-list-item-content');
+                    for (var i = 0; i < contentCollection.length; i++) {
+                        contentCollection[i].onmouseenter = showListItemSettings;
+                        contentCollection[i].onmouseleave = hideListItemSettings;
+                        contentCollection[i].onkeyup = listItemKeyListener;
+                        tinyFastCall(contentCollection[i]);
+                    }
 
-                            actions.append(btnCopy, btnDelete);
-                            $(this).append(actions);
-                        })
-                        .mouseleave(function (event) {
-                            $(this).removeClass('wptb-directlyhovered');
-                            $(this).find('.wptb-actions').remove();
-                        })
-                        .find('article .wptb-list-item-content').each(function (index, value) {
-
-                            $(value).mouseenter(function (event) {
-                                $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
-                                $(this).addClass('wptb-directlyhovered');
-                            });
-
-                            $(value).keyup(function (event) {
-                                var key = (event.which != undefined) ? event.which
-                                    : event.keyCode,
-                                    liEl = $(this).parent(),
-                                    duplicate;
-                                if (key !== 13) {
-                                    return;
-                                }
-                                event.preventDefault();
-                                duplicate = liEl.clone(true, true);
-                                duplicate.find('.wptb-list-item-content').html('List Item');
-                                liEl.after(duplicate);
-                                duplicate.find('.wptb-list-item-content').focus();
-                                $(this).children().last('p').remove();
-                                return false;
-                            });
-
-                            $(value).parent().mouseenter(function (event) {
-                                var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
-                                    btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                                    actions = $('<span class="wptb-actions"></span>');
-
-                                $('.wptb-actions').remove();
-                                $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
-                                $(this).addClass('wptb-directlyhovered');
-
-                                btnDelete.click(function () {
-                                    $(this).parent().parent().remove();
-                                });
-                                btnCopy.click(function () {
-                                    var duplicate = $(this).parent().parent().clone(true, true);
-                                    $(this).parent().parent().parent().append(duplicate);
-                                });
-
-                                actions.append(btnCopy, btnDelete);
-                                $(this).append(actions);
-
-                            });
-
-                            $(value).mouseleave(function (event) {
-                                $(this).removeClass('wptb-directlyhovered');
-                            });
-
-                            $(value).parent().mouseleave(function (event) {
-                                $(this).removeClass('wptb-directlyhovered');
-                                $(this).find('.wptb-actions').remove();
-                            });
-
-                            tinyMCE.init({
-                                target: value,
-                                inline: true,
-                                plugins: "link",
-                                dialog_type: "modal",
-                                theme: 'modern',
-                                menubar: false,
-                                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                            });
-                        });
-                    /*  */
-
-                    $(listEl).addClass('wptb-ph-element wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
+                    listEl.classList.add('wptb-ph-element', 'wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
                     addElementOptions(wptbElement, listEl);
-                    $(listEl).click();
+
                 }
             });
 
