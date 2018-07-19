@@ -16,9 +16,14 @@
     },
     "homepage": "https://github.com/imtiazrayhan/wp-table-builder.git",
     "devDependencies": {
+        "babel-preset-env": "^1.4.0",
         "gulp": "^3.9.1",
+        "gulp-babel": "^6.1.2",
+        "gulp-concat": "^2.5.2",
         "gulp-notify": "^3.0.0",
         "gulp-sort": "^2.0.0",
+        "gulp-sourcemaps": "^2.6.0",
+        "gulp-watch": "^4.2.4",
         "gulp-wp-pot": "^2.0.4"
     }
 }
