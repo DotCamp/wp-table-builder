@@ -26,7 +26,7 @@ sudo npm install --global gulp
 npm install --global gulp
 ```
 
-### → STEP #4: Installing Node Dependencies
+### → Installing Node Dependencies
 
 We are in the root folder of our WordPress plugin, let's install the Node Dependencies. In the terminal run this command and wait for it to download all the NodeJS dependencies. It's a one-time process and can take about 5 minutes depending on the internet speed of your connection.
 
@@ -38,7 +38,7 @@ sudo npm install
 npm install
 ```
 
-### → STEP #5: Just run `Gulp`
+### → Just run `Gulp`
 
 Once the NodeJS dependencies are downloaded just run the following command to combine the JavaScript Files.
 
