@@ -1,4 +1,4 @@
-(function () {
+(function ($) {
 
     window.tinyFastCall = function (obj) {
         tinyMCE.init({
@@ -74,6 +74,13 @@
             var list = this.parentNode.parentNode,
                 tdContainer = list.parentNode;
             tdContainer.removeChild(list);
+
+            $('.wptb-tab#element-options  a').removeClass('active');
+            $('.wptb-tab#add-elements a').addClass('active');
+
+            $('.wptb-elements-container').show();
+            $('.wptb-settings-section').show();
+            $("#element-options-group").hide();
         };
         btnCopy.onclick = copyList;
 
@@ -127,8 +134,8 @@
         };
 
         actions.append(btnCopy, btnDelete);
-
-        $(this).closest('article').append(actions);
+        console.log('Esto', this);
+        this.parentNode.appendChild(actions);
 
     };
 
@@ -166,8 +173,8 @@
         divcontent.onmouseleave = function (event) {
             this.classList.remove('wptb-directlyhovered');
         };
-        divcontent.parentNode.onmouseenter = showListItemSettings;
-        divcontent.parentNode.onmouseleave = hideListItemSettings;
+        divcontent.onmouseenter = showListItemSettings;
+        divcontent.onmouseleave = hideListItemSettings;
         return duplicate;
     }
 
@@ -203,37 +210,37 @@
         els.inc = el.next();
 
         el.each(function () {
-            init($(this));
+            init(this);
         });
 
         function init(el) {
 
-            els.dec.on('click', decrement);
-            els.inc.on('click', increment);
+            els.dec[0].onclick = decrement;
+            els.inc[0].onclick = increment;
 
-            els.dec.on('mousedown', function (e) {
+            els.dec.onmousedown = function (e) {
                 e.preventDefault();
-            });
+            };
 
-            els.inc.on('mousedown', function (e) {
+            els.inc.onmousedown = function (e) {
                 e.preventDefault();
-            });
+            };
 
             function decrement() {
-                var value = el[0].value;
+                var value = el.value;
                 value--;
                 if (!min || value >= min) {
-                    el[0].value = value;
+                    el.value = value;
                 }
             }
 
             function increment() {
-                var value = el[0].value;
+                var value = el.value;
                 value++;
                 if (!max || value <= max) {
-                    el[0].value = value++;
+                    el.value = value++;
                 }
             }
         }
     }
-})();
+})(jQuery);

@@ -189,7 +189,7 @@ jQuery(document).ready(function ($) {
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
                                     break;
                             }
-                            duplicate[0].id = '';
+                            duplicate[0].childNodes[0].id = '';
                             tinyFastCall(duplicate[0].childNodes[0]);
                         });
 
