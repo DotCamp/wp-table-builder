@@ -135,7 +135,6 @@
         };
 
         actions.append(btnCopy, btnDelete);
-        console.log('Esto', this);
         this.parentNode.appendChild(actions);
     };
 
@@ -183,7 +182,7 @@
             liEl = $(this).parent(),
             duplicate,
             lastP;
-        if (key !== 13) {
+        if (key !== 13 || window.dontAddItems !== undefined && window.dontAddItems === true) {
             return;
         }
         event.preventDefault();
@@ -604,12 +603,29 @@ jQuery(document).ready(function ($) {
                 wptb_num[wptbElement]++;
             }
 
+            $(document).bind('keydown', function (e) {
+                if (e.target.className === 'mce-textbox') {
+                    window.dontAddItems = true;
+                    if (event.which === 13 || event.which === 27) {
+                        setTimeout(function () {
+                            window.dontAddItems = false;
+                            document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
+                        }, 250);
+                    }
+                }
+            });
+
             /*
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
                 var $this = $(e.target);
+
+                if (e.target.id.match(/mceu_([0-9])*-button/)) {
+                    window.dontAddItems = false;
+                }
+
                 var el_options = false; // this var will carry the element that will be shown its options
 
                 //if($this.hasClass('wptb-element-options'))

@@ -134,7 +134,6 @@
         };
 
         actions.append(btnCopy, btnDelete);
-        console.log('Esto', this);
         this.parentNode.appendChild(actions);
 
     };
@@ -183,7 +182,8 @@
             : event.keyCode,
             liEl = $(this).parent(),
             duplicate, lastP;
-        if (key !== 13) {
+        if (key !== 13 ||
+            (window.dontAddItems !== undefined && window.dontAddItems === true)) {
             return;
         }
         event.preventDefault();
