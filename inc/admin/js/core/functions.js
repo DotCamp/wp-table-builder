@@ -88,8 +88,7 @@
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
             previous, i;
-        actions.classList.add('wptb-actions');
-        actions.innerHTML = 'List Actions';
+        actions.classList.add('wptb-actions'); 
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -126,8 +125,7 @@
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
             previous, i;
-        actions.classList.add('wptb-actions');
-        actions.innerHTML = 'Item Actions';
+        actions.classList.add('wptb-actions'); 
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
 

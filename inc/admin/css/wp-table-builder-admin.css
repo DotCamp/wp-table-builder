@@ -886,15 +886,21 @@ table.wptb-table {
     padding: 0px 5px;
     position: absolute;
     right: 0;
-    top: -25px;
-    height: 25px;
-    font-size: 11pt;
+    top: -15px;
+    height: 15px;
+    font-size: 9pt;
 }
 
 .wptb-actions .dashicons.dashicons-admin-page.duplicate-action {
-    margin: 0em 0.1em 0 0.2em;
+    font-size: 10pt;
+    margin: 0em 0.05em 0 0.1em;
+    width: 15px;
+    height: 15px;
 }
 
 .wptb-actions .dashicons.dashicons-trash.delete-action {
-    margin: 0em 0.2em 0 0.1em;
+    font-size: 10pt;
+    margin: 0em 0.1em 0 0.05em;
+    width: 15px;
+    height: 15px;
 }

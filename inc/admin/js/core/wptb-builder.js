@@ -137,7 +137,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -235,7 +235,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -374,31 +374,37 @@ jQuery(document).ready(function ($) {
                 wptb_num[wptbElement]++;
             }
 
-            $(document).bind('keydown', function (e) {
-                if (e.target.className === 'mce-textbox') {
-                    window.dontAddItems = true;
-                    if (event.which === 13 || event.which === 27) {
-                        setTimeout(function () {
+            $(document).bind('keydown',function(e){
+                if(e.target.className==='mce-textbox')
+                {  
+                    window.dontAddItems=true;
+                    if(event.which===13 || event.which === 27){
+                        setTimeout(function(){
                             window.dontAddItems = false;
                             document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
                         }, 250);
                     }
                 }
-            });
+            }); 
 
             /*
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
+                console.log('target',e.target);
                 setTimeout(
-                    function () {
+                    function(){
                         window.tryToChangeMCEWidth();
                     }
-                    , 500);
+                    ,500); 
                 var $this = $(e.target);
-
-                if (e.target.id.match(/mceu_([0-9])*-button/)) {
+                if(e.target.className.match(/delete-action/) ){
+                    console.log('button');
+                    return;
+                }
+                if(e.target.id.match(/mceu_([0-9])*-button/) )
+                {
                     window.dontAddItems = false;
                 }
 
@@ -456,22 +462,11 @@ jQuery(document).ready(function ($) {
                         $this.parents('#add-elements').length !== 0 ||
                         $this.hasClass('wptb-builder-panel') ||
                         $this.parents('.wptb-builder-panel').length !== 0) {
-                        add_Elements_tab();
+                        window.add_Elements_tab();
                     }
                 }
             });
 
-            // active add Elements tab and it's options
-            function add_Elements_tab() {
-
-                $('.wptb-tab#element-options  a').removeClass('active');
-                $('.wptb-tab#add-elements a').addClass('active');
-
-                $('.wptb-elements-container').show();
-                $('.wptb-settings-section').show();
-                $("#element-options-group").hide();
-
-            }
 
             // active Element options tab and it's options
             function Element_options_tab() {
