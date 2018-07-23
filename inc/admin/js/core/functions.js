@@ -1,7 +1,16 @@
 (function ($) {
 
-    window.tryToChangeMCEWidth = function(e){
-        console.log('Im being called!');
+    window.add_Elements_tab = function() { 
+                $('.wptb-tab#element-options  a').removeClass('active');
+                $('.wptb-tab#add-elements a').addClass('active');
+
+                $('.wptb-elements-container').show();
+                $('.wptb-settings-section').show();
+                $("#element-options-group").hide(); 
+
+            };
+
+    window.tryToChangeMCEWidth = function(e){ 
                 var container = document.getElementById('wpcd_fixed_toolbar'),
                     trueBar = container.childNodes[1],
                     totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
@@ -91,16 +100,11 @@
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
+
             var list = this.parentNode.parentNode,
                 tdContainer = list.parentNode;
-            tdContainer.removeChild(list);
-
-            $('.wptb-tab#element-options  a').removeClass('active');
-            $('.wptb-tab#add-elements a').addClass('active');
-
-            $('.wptb-elements-container').show();
-            $('.wptb-settings-section').show();
-            $("#element-options-group").hide();
+            $('#add-elements a').trigger('click');
+            tdContainer.removeChild(list); 
         };
         btnCopy.onclick = copyList;
 

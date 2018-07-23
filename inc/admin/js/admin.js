@@ -1,7 +1,15 @@
 (function ($) {
 
+    window.add_Elements_tab = function () {
+        $('.wptb-tab#element-options  a').removeClass('active');
+        $('.wptb-tab#add-elements a').addClass('active');
+
+        $('.wptb-elements-container').show();
+        $('.wptb-settings-section').show();
+        $("#element-options-group").hide();
+    };
+
     window.tryToChangeMCEWidth = function (e) {
-        console.log('Im being called!');
         var container = document.getElementById('wpcd_fixed_toolbar'),
             trueBar = container.childNodes[1],
             totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
@@ -90,16 +98,11 @@
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
+
             var list = this.parentNode.parentNode,
                 tdContainer = list.parentNode;
+            $('#add-elements a').trigger('click');
             tdContainer.removeChild(list);
-
-            $('.wptb-tab#element-options  a').removeClass('active');
-            $('.wptb-tab#add-elements a').addClass('active');
-
-            $('.wptb-elements-container').show();
-            $('.wptb-settings-section').show();
-            $("#element-options-group").hide();
         };
         btnCopy.onclick = copyList;
 
@@ -641,11 +644,15 @@ jQuery(document).ready(function ($) {
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
+                console.log('target', e.target);
                 setTimeout(function () {
                     window.tryToChangeMCEWidth();
                 }, 500);
                 var $this = $(e.target);
-
+                if (e.target.className.match(/delete-action/)) {
+                    console.log('button');
+                    return;
+                }
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {
                     window.dontAddItems = false;
                 }
@@ -697,21 +704,10 @@ jQuery(document).ready(function ($) {
                 } else {
                     //show the add elements option
                     if ($this.is('#add-elements') || $this.parents('#add-elements').length !== 0 || $this.hasClass('wptb-builder-panel') || $this.parents('.wptb-builder-panel').length !== 0) {
-                        add_Elements_tab();
+                        window.add_Elements_tab();
                     }
                 }
             });
-
-            // active add Elements tab and it's options
-            function add_Elements_tab() {
-
-                $('.wptb-tab#element-options  a').removeClass('active');
-                $('.wptb-tab#add-elements a').addClass('active');
-
-                $('.wptb-elements-container').show();
-                $('.wptb-settings-section').show();
-                $("#element-options-group").hide();
-            }
 
             // active Element options tab and it's options
             function Element_options_tab() {

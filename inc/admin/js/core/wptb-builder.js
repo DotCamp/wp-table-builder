@@ -374,18 +374,17 @@ jQuery(document).ready(function ($) {
                 wptb_num[wptbElement]++;
             }
 
-            $(document).bind('keydown',function(e){
-                if(e.target.className==='mce-textbox')
-                {  
-                    window.dontAddItems=true;
-                    if(event.which===13 || event.which === 27){
-                        setTimeout(function(){
+            $(document).bind('keydown', function (e) {
+                if (e.target.className === 'mce-textbox') {
+                    window.dontAddItems = true;
+                    if (event.which === 13 || event.which === 27) {
+                        setTimeout(function () {
                             window.dontAddItems = false;
                             document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
                         }, 250);
                     }
                 }
-            }); 
+            });
 
             /*
              * event click to the whole document and then check if it's to one
@@ -393,14 +392,13 @@ jQuery(document).ready(function ($) {
              */
             $(document).bind('click', function (e) {
                 setTimeout(
-                    function(){
+                    function () {
                         window.tryToChangeMCEWidth();
                     }
-                    ,500); 
+                    , 500);
                 var $this = $(e.target);
 
-                if(e.target.id.match(/mceu_([0-9])*-button/) )
-                {
+                if (e.target.id.match(/mceu_([0-9])*-button/)) {
                     window.dontAddItems = false;
                 }
 
