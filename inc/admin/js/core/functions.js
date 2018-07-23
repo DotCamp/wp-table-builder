@@ -60,7 +60,7 @@
             actions = document.createElement('span'),
             previous, i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = 'List Actions';
+        actions.innerHTML = '';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -103,7 +103,7 @@
             actions = document.createElement('span'),
             previous, i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = 'Item Actions';
+        actions.innerHTML = '';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
 
@@ -148,7 +148,7 @@
     };
 
     window.newListItem = function (text) {
-        if (text == undefined) text = 'New List Item';
+        if (text == undefined) text = 'List Item';
         var duplicate = document.createElement('article');
         var divdot = document.createElement('div'),
             divcontent = document.createElement('div'),
@@ -194,7 +194,7 @@
         lastP = this.childNodes[this.childNodes.length - 1];
         this.removeChild(lastP);
         if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-            this.innerHTML = 'New List Item';
+            this.innerHTML = 'List Item';
         }
         return false;
     };

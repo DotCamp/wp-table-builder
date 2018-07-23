@@ -60,7 +60,7 @@
             previous,
             i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = 'List Actions';
+        actions.innerHTML = '';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -104,7 +104,7 @@
             previous,
             i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = 'Item Actions';
+        actions.innerHTML = '';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
 
@@ -148,7 +148,7 @@
     };
 
     window.newListItem = function (text) {
-        if (text == undefined) text = 'New List Item';
+        if (text == undefined) text = 'List Item';
         var duplicate = document.createElement('article');
         var divdot = document.createElement('div'),
             divcontent = document.createElement('div'),
@@ -193,7 +193,7 @@
         lastP = this.childNodes[this.childNodes.length - 1];
         this.removeChild(lastP);
         if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-            this.innerHTML = 'New List Item';
+            this.innerHTML = 'List Item';
         }
         return false;
     };
@@ -360,6 +360,14 @@ jQuery(document).ready(function ($) {
             elButton2.appendChild(el_B);
             elButton.appendChild(elButton2);
 
+            //Image 
+            var imgWrap = document.createElement('div');
+            imgWrap.classList.add('wptb-img-wrapper');
+            var buttonUpload = document.createElement('button');
+            buttonUpload.classList.add('button');
+            buttonUpload.innerHTML = "Choose Image";
+            imgWrap.appendChild(buttonUpload);
+
             //numbers of elements that have been added
             window.wptb_num = new Array();
             wptb_num["text"] = 0;
@@ -379,7 +387,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -459,7 +467,8 @@ jQuery(document).ready(function ($) {
                     addElementOptions(wptbElement, textEl);
                     $(textEl).click();
                 } else if (wptbElement == 'image') {
-                    event.target.innerHTML = 'Image';
+                    var imgBtn = imgWrap.cloneNode(true);
+                    event.target.appendChild(imgBtn);
                 } else if (wptbElement == 'button') {
                     // create the button element with text button
                     var button = elButton.cloneNode(true);
@@ -472,7 +481,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');

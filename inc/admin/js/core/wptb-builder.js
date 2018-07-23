@@ -115,6 +115,14 @@ jQuery(document).ready(function ($) {
             elButton2.appendChild(el_B);
             elButton.appendChild(elButton2);
 
+            //Image 
+            var imgWrap = document.createElement('div');
+            imgWrap.classList.add('wptb-img-wrapper');
+            var buttonUpload = document.createElement('button');
+            buttonUpload.classList.add('button');
+            buttonUpload.innerHTML = "Choose Image";
+            imgWrap.appendChild(buttonUpload);
+
             //numbers of elements that have been added
             window.wptb_num = new Array();
             wptb_num["text"] = 0;
@@ -135,7 +143,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -220,7 +228,8 @@ jQuery(document).ready(function ($) {
                     $(textEl).click();
 
                 } else if (wptbElement == 'image') {
-                    event.target.innerHTML = 'Image';
+                    var imgBtn = imgWrap.cloneNode(true);
+                    event.target.appendChild(imgBtn);
                 } else if (wptbElement == 'button') {
                     // create the button element with text button
                     var button = elButton.cloneNode(true);
@@ -233,7 +242,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
