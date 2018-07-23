@@ -401,7 +401,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -449,6 +449,9 @@ jQuery(document).ready(function ($) {
                             // Exceptions 
                             switch (wptbElement) {
                                 case 'text':
+                                    //getting a new color picker from option prototype
+                                    var new_picker = $('.wptb-protoypes-options .wptb-element-property.wptb-color-picker').clone();
+                                    duplicateOption.find('.wp-picker-container').replaceWith(new_picker);
                                     listener_to_element(duplicateOption.find('.wptb-color-picker'));
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
                                     break;
@@ -494,7 +497,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions">Item Actions </span>');
+                            actions = $('<span class="wptb-actions"></span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');

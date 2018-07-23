@@ -187,6 +187,9 @@ jQuery(document).ready(function ($) {
                             // Exceptions 
                             switch (wptbElement) {
                                 case 'text':
+                                    //getting a new color picker from option prototype
+                                    var new_picker = $('.wptb-protoypes-options .wptb-element-property.wptb-color-picker').clone();
+                                    duplicateOption.find('.wp-picker-container').replaceWith(new_picker);
                                     listener_to_element(duplicateOption.find('.wptb-color-picker'));
                                     duplicateOption.find('.wptb-color-picker').wpColorPicker();
                                     break;
@@ -374,37 +377,35 @@ jQuery(document).ready(function ($) {
                 wptb_num[wptbElement]++;
             }
 
-            $(document).bind('keydown',function(e){
-                if(e.target.className==='mce-textbox')
-                {  
-                    window.dontAddItems=true;
-                    if(event.which===13 || event.which === 27){
-                        setTimeout(function(){
+            $(document).bind('keydown', function (e) {
+                if (e.target.className === 'mce-textbox') {
+                    window.dontAddItems = true;
+                    if (event.which === 13 || event.which === 27) {
+                        setTimeout(function () {
                             window.dontAddItems = false;
                             document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
                         }, 250);
                     }
                 }
-            }); 
+            });
 
             /*
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
-                console.log('target',e.target);
+                console.log('target', e.target);
                 setTimeout(
-                    function(){
+                    function () {
                         window.tryToChangeMCEWidth();
                     }
-                    ,500); 
+                    , 500);
                 var $this = $(e.target);
-                if(e.target.className.match(/delete-action/) ){
+                if (e.target.className.match(/delete-action/)) {
                     console.log('button');
                     return;
                 }
-                if(e.target.id.match(/mceu_([0-9])*-button/) )
-                {
+                if (e.target.id.match(/mceu_([0-9])*-button/)) {
                     window.dontAddItems = false;
                 }
 
