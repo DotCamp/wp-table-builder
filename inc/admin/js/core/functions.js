@@ -1,5 +1,25 @@
 (function ($) {
 
+    window.tryToChangeMCEWidth = function(e){
+        console.log('Im being called!');
+                var container = document.getElementById('wpcd_fixed_toolbar'),
+                    trueBar = container.childNodes[1],
+                    totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+               if(trueBar && document.getElementById('wptb_builder').scrollTop >= 55 && trueBar.style.display!='none'){
+                console.log(totalWidth);
+                container.style.position='fixed'; 
+                container.style.right = (totalWidth / 2 - container.offsetWidth / 2)+'px';
+                container.style.top = '100px';
+                }
+                else{
+                container.style.position='static';
+                delete container.style.right; 
+                delete container.style.top; 
+                }
+                //if(this.scrollTop > && )
+//                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
+            };
+
     window.tinyFastCall = function (obj) {
         tinyMCE.init({
             target: obj,
@@ -60,7 +80,7 @@
             actions = document.createElement('span'),
             previous, i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = '';
+        actions.innerHTML = 'List Actions';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -103,7 +123,7 @@
             actions = document.createElement('span'),
             previous, i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = '';
+        actions.innerHTML = 'Item Actions';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
 
@@ -133,7 +153,7 @@
             article.parentNode.appendChild(duplicate);
         };
 
-        actions.append(btnCopy, btnDelete);
+        actions.append(btnCopy, btnDelete); 
         this.parentNode.appendChild(actions);
 
     };
@@ -148,7 +168,7 @@
     };
 
     window.newListItem = function (text) {
-        if (text == undefined) text = 'List Item';
+        if (text == undefined) text = 'New List Item';
         var duplicate = document.createElement('article');
         var divdot = document.createElement('div'),
             divcontent = document.createElement('div'),
@@ -177,13 +197,13 @@
         return duplicate;
     }
 
-    window.listItemKeyListener = function (event) {
+    window.listItemKeyListener = function (event) { 
         var key = (event.which != undefined) ? event.which
             : event.keyCode,
             liEl = $(this).parent(),
             duplicate, lastP;
-        if (key !== 13 ||
-            (window.dontAddItems !== undefined && window.dontAddItems === true)) {
+        if (key !== 13 || 
+        (window.dontAddItems !== undefined && window.dontAddItems === true) ){
             return;
         }
         event.preventDefault();
@@ -194,7 +214,7 @@
         lastP = this.childNodes[this.childNodes.length - 1];
         this.removeChild(lastP);
         if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-            this.innerHTML = 'List Item';
+            this.innerHTML = 'New List Item';
         }
         return false;
     };
@@ -218,7 +238,7 @@
             els.dec[0].onclick = decrement;
             els.inc[0].onclick = increment;
 
-            els.dec.onmousedown = function (e) {
+            els.dec.onmousedown= function (e) {
                 e.preventDefault();
             };
 
@@ -226,7 +246,7 @@
                 e.preventDefault();
             };
 
-            function decrement() {
+            function decrement() { 
                 var value = el.value;
                 value--;
                 if (!min || value >= min) {
@@ -234,7 +254,7 @@
                 }
             }
 
-            function increment() {
+            function increment() { 
                 var value = el.value;
                 value++;
                 if (!max || value <= max) {

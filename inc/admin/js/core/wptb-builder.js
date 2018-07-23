@@ -6,6 +6,8 @@ jQuery(document).ready(function ($) {
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
 
+    document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
+
     //Generate table and bind associated functions.
     $(function () {
         $("#wptb-generate-table").click(function () {
@@ -115,14 +117,6 @@ jQuery(document).ready(function ($) {
             elButton2.appendChild(el_B);
             elButton.appendChild(elButton2);
 
-            //Image 
-            var imgWrap = document.createElement('div');
-            imgWrap.classList.add('wptb-img-wrapper');
-            var buttonUpload = document.createElement('button');
-            buttonUpload.classList.add('button');
-            buttonUpload.innerHTML = "Choose Image";
-            imgWrap.appendChild(buttonUpload);
-
             //numbers of elements that have been added
             window.wptb_num = new Array();
             wptb_num["text"] = 0;
@@ -143,7 +137,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -228,8 +222,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).click();
 
                 } else if (wptbElement == 'image') {
-                    var imgBtn = imgWrap.cloneNode(true);
-                    event.target.appendChild(imgBtn);
+                    event.target.innerHTML = 'Image';
                 } else if (wptbElement == 'button') {
                     // create the button element with text button
                     var button = elButton.cloneNode(true);
@@ -242,7 +235,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -381,26 +374,33 @@ jQuery(document).ready(function ($) {
                 wptb_num[wptbElement]++;
             }
 
-            $(document).bind('keydown', function (e) {
-                if (e.target.className === 'mce-textbox') {
-                    window.dontAddItems = true;
-                    if (event.which === 13 || event.which === 27) {
-                        setTimeout(function () {
+            $(document).bind('keydown',function(e){
+                if(e.target.className==='mce-textbox')
+                {  
+                    window.dontAddItems=true;
+                    if(event.which===13 || event.which === 27){
+                        setTimeout(function(){
                             window.dontAddItems = false;
                             document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
                         }, 250);
                     }
                 }
-            });
+            }); 
 
             /*
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
+                setTimeout(
+                    function(){
+                        window.tryToChangeMCEWidth();
+                    }
+                    ,500); 
                 var $this = $(e.target);
 
-                if (e.target.id.match(/mceu_([0-9])*-button/)) {
+                if(e.target.id.match(/mceu_([0-9])*-button/) )
+                {
                     window.dontAddItems = false;
                 }
 

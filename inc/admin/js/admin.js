@@ -1,5 +1,24 @@
 (function ($) {
 
+    window.tryToChangeMCEWidth = function (e) {
+        console.log('Im being called!');
+        var container = document.getElementById('wpcd_fixed_toolbar'),
+            trueBar = container.childNodes[1],
+            totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+        if (trueBar && document.getElementById('wptb_builder').scrollTop >= 55 && trueBar.style.display != 'none') {
+            console.log(totalWidth);
+            container.style.position = 'fixed';
+            container.style.right = totalWidth / 2 - container.offsetWidth / 2 + 'px';
+            container.style.top = '100px';
+        } else {
+            container.style.position = 'static';
+            delete container.style.right;
+            delete container.style.top;
+        }
+        //if(this.scrollTop > && )
+        //                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
+    };
+
     window.tinyFastCall = function (obj) {
         tinyMCE.init({
             target: obj,
@@ -60,7 +79,7 @@
             previous,
             i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = '';
+        actions.innerHTML = 'List Actions';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -104,7 +123,7 @@
             previous,
             i;
         actions.classList.add('wptb-actions');
-        actions.innerHTML = '';
+        actions.innerHTML = 'Item Actions';
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
 
@@ -148,7 +167,7 @@
     };
 
     window.newListItem = function (text) {
-        if (text == undefined) text = 'List Item';
+        if (text == undefined) text = 'New List Item';
         var duplicate = document.createElement('article');
         var divdot = document.createElement('div'),
             divcontent = document.createElement('div'),
@@ -193,7 +212,7 @@
         lastP = this.childNodes[this.childNodes.length - 1];
         this.removeChild(lastP);
         if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-            this.innerHTML = 'List Item';
+            this.innerHTML = 'New List Item';
         }
         return false;
     };
@@ -250,6 +269,8 @@ jQuery(document).ready(function ($) {
     //Column and Row number Selector.
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
+
+    document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
 
     //Generate table and bind associated functions.
     $(function () {
@@ -360,14 +381,6 @@ jQuery(document).ready(function ($) {
             elButton2.appendChild(el_B);
             elButton.appendChild(elButton2);
 
-            //Image 
-            var imgWrap = document.createElement('div');
-            imgWrap.classList.add('wptb-img-wrapper');
-            var buttonUpload = document.createElement('button');
-            buttonUpload.classList.add('button');
-            buttonUpload.innerHTML = "Choose Image";
-            imgWrap.appendChild(buttonUpload);
-
             //numbers of elements that have been added
             window.wptb_num = new Array();
             wptb_num["text"] = 0;
@@ -387,7 +400,7 @@ jQuery(document).ready(function ($) {
                     $(textEl).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -467,8 +480,7 @@ jQuery(document).ready(function ($) {
                     addElementOptions(wptbElement, textEl);
                     $(textEl).click();
                 } else if (wptbElement == 'image') {
-                    var imgBtn = imgWrap.cloneNode(true);
-                    event.target.appendChild(imgBtn);
+                    event.target.innerHTML = 'Image';
                 } else if (wptbElement == 'button') {
                     // create the button element with text button
                     var button = elButton.cloneNode(true);
@@ -481,7 +493,7 @@ jQuery(document).ready(function ($) {
                     $(button).mouseenter(function (event) {
                         var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
                             btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
+                            actions = $('<span class="wptb-actions">Item Actions </span>');
 
                         $('.wptb-actions').remove();
                         $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
@@ -629,6 +641,9 @@ jQuery(document).ready(function ($) {
              * the created element to show it's option
              */
             $(document).bind('click', function (e) {
+                setTimeout(function () {
+                    window.tryToChangeMCEWidth();
+                }, 500);
                 var $this = $(e.target);
 
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {

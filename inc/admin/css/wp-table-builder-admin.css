@@ -623,7 +623,7 @@ table.wptb-table {
     padding: 15px;
 }
 
-td:empty::before {
+.wptb-row td:empty::before {
     content: 'Cell';
     display: block;
     font-weight: normal;
@@ -632,7 +632,7 @@ td:empty::before {
     color: #969fa6;
 }
 
-td:empty {
+.wptb-row td:empty {
     border: 1px dashed #969fa6;
 }
 
@@ -731,8 +731,8 @@ td:empty {
 }
 
 #wpcd_fixed_toolbar {
+    min-height: 55px; 
     text-align: center;
-    min-height: 55px;
 }
 
 
