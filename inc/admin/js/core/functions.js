@@ -11,19 +11,19 @@
             };
 
     window.tryToChangeMCEWidth = function(e){ 
-                var container = document.getElementById('wpcd_fixed_toolbar'),
-                    trueBar = container.childNodes[1],
-                    totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-               if(trueBar && document.getElementById('wptb_builder').scrollTop >= 55 && trueBar.style.display!='none'){
-                console.log(totalWidth);
-                container.style.position='fixed'; 
-                container.style.right = (totalWidth / 2 - container.offsetWidth / 2)+'px';
-                container.style.top = '100px';
+                var  totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+ 
+               if(window.currentEditor && 
+                document.getElementById('wptb_builder').scrollTop >= 55 
+                && window.currentEditor.bodyElement.style.display!='none'){  
+                document.getElementById('wpcd_fixed_toolbar').style.position='fixed'; 
+                document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - container.offsetWidth / 2)+'px';
+                document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
                 }
                 else{
-                container.style.position='static';
-                delete container.style.right; 
-                delete container.style.top; 
+                document.getElementById('wpcd_fixed_toolbar').style.position='static';
+                delete document.getElementById('wpcd_fixed_toolbar').style.right; 
+                delete document.getElementById('wpcd_fixed_toolbar').style.top; 
                 }
                 //if(this.scrollTop > && )
 //                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
@@ -39,6 +39,12 @@
             menubar: false,
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
             toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            init_instance_callback: function (editor) {
+                window.currentEditor= editor;
+                editor.on('focus', function (e) {
+                  window.tryToChangeMCEWidth();
+                });
+              }
         });
     }
 
@@ -50,8 +56,7 @@
         newList.onmouseenter = showListSettings;
         newList.onmouseleave = hideListSettings;
         for (var i = listItems.length - 1; i >= 0; i--) {
-            let cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0];
-            console.log(cont);
+            let cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0]; 
             listItems[i].onmouseenter = showListItemSettings;
             listItems[i].onmouseleave = hideListItemSettings;
             cont.id = '';

@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
 
-    document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
+    //document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
 
     //Generate table and bind associated functions.
     $(function () {
@@ -283,8 +283,7 @@ jQuery(document).ready(function ($) {
                         $(this).find('.wptb-actions').remove();
                     });
                     //append it to the cell
-                    $(event.target).append(button);
-                    console.log('Something', $(button).children().find('.wptb-button-wrapper'));
+                    $(event.target).append(button); 
                     //using tinymce
                     tinyMCE.init({
                         target: button.childNodes[0],
@@ -393,16 +392,18 @@ jQuery(document).ready(function ($) {
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
-            $(document).bind('click', function (e) {
-                console.log('target', e.target);
+ 
+            $(document).bind('click', function (e) { 
                 setTimeout(
-                    function () {
-                        window.tryToChangeMCEWidth();
+                    function(){
+                        //window.tryToChangeMCEWidth();
+ 
                     }
                     , 500);
                 var $this = $(e.target);
-                if (e.target.className.match(/delete-action/)) {
-                    console.log('button');
+ 
+                if(e.target.className.match(/delete-action/) ){ 
+ 
                     return;
                 }
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {

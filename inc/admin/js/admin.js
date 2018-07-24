@@ -10,18 +10,16 @@
     };
 
     window.tryToChangeMCEWidth = function (e) {
-        var container = document.getElementById('wpcd_fixed_toolbar'),
-            trueBar = container.childNodes[1],
-            totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-        if (trueBar && document.getElementById('wptb_builder').scrollTop >= 55 && trueBar.style.display != 'none') {
-            console.log(totalWidth);
-            container.style.position = 'fixed';
-            container.style.right = totalWidth / 2 - container.offsetWidth / 2 + 'px';
-            container.style.top = '100px';
+        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+
+        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - container.offsetWidth / 2 + 'px';
+            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
         } else {
-            container.style.position = 'static';
-            delete container.style.right;
-            delete container.style.top;
+            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+            delete document.getElementById('wpcd_fixed_toolbar').style.top;
         }
         //if(this.scrollTop > && )
         //                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
@@ -36,7 +34,13 @@
             theme: 'modern',
             menubar: false,
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
-            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify'
+            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            init_instance_callback: function init_instance_callback(editor) {
+                window.currentEditor = editor;
+                editor.on('focus', function (e) {
+                    window.tryToChangeMCEWidth();
+                });
+            }
         });
     };
 
@@ -49,7 +53,6 @@
         newList.onmouseleave = hideListSettings;
         for (var i = listItems.length - 1; i >= 0; i--) {
             var cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0];
-            console.log(cont);
             listItems[i].onmouseenter = showListItemSettings;
             listItems[i].onmouseleave = hideListItemSettings;
             cont.id = '';
@@ -271,7 +274,7 @@ jQuery(document).ready(function ($) {
     inputNumber(jQuery('#wptb-columns-number'));
     inputNumber(jQuery('#wptb-rows-number'));
 
-    document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
+    //document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
 
     //Generate table and bind associated functions.
     $(function () {
@@ -542,7 +545,6 @@ jQuery(document).ready(function ($) {
                     });
                     //append it to the cell
                     $(event.target).append(button);
-                    console.log('Something', $(button).children().find('.wptb-button-wrapper'));
                     //using tinymce
                     tinyMCE.init({
                         target: button.childNodes[0],
@@ -644,14 +646,16 @@ jQuery(document).ready(function ($) {
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
+
             $(document).bind('click', function (e) {
-                console.log('target', e.target);
                 setTimeout(function () {
-                    window.tryToChangeMCEWidth();
+                    //window.tryToChangeMCEWidth();
+
                 }, 500);
                 var $this = $(e.target);
+
                 if (e.target.className.match(/delete-action/)) {
-                    console.log('button');
+
                     return;
                 }
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {
