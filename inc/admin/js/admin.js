@@ -1,50 +1,97 @@
 (function ($) {
 
-    window.add_Elements_tab = function () {
-        $('.wptb-tab#element-options  a').removeClass('active');
-        $('.wptb-tab#add-elements a').addClass('active');
-
-        $('.wptb-elements-container').show();
-        $('.wptb-settings-section').show();
-        $("#element-options-group").hide();
+    window.deleteButton = function (event) {
+        var act = this.parentNode.parentNode,
+            el = act.parentNode;
+        el.removeChild(act);
     };
 
-    window.tryToChangeMCEWidth = function (e) {
-        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+    window.copyButton = function (event) {
+        var td = event.target.parentNode.parentNode.parentNode,
+            copy = newButton(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+        td.appendChild(copy);
+    };
 
-        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - container.offsetWidth / 2 + 'px';
-            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-        } else {
-            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-            delete document.getElementById('wpcd_fixed_toolbar').style.right;
-            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+    window.showButtonSettings = function (event) {
+        this.classList.add('wptb-directlyhovered');
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnDelete.onclick = window.deleteButton;
+        btnCopy.onclick = window.copyButton;
+        actions.appendChild(btnCopy);
+        actions.appendChild(btnDelete);
+        this.appendChild(actions);
+    };
+
+    window.hideButtonSettings = function (event) {
+        var formerActions = this.getElementsByClassName('wptb-actions');
+        if (formerActions && formerActions[0]) {
+            var par = formerActions[0].parentNode;
+            par.removeChild(formerActions[0]);
         }
-        //if(this.scrollTop > && )
-        //                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
+        this.classList.remove('wptb-directlyhovered');
     };
 
-    window.tinyFastCall = function (obj) {
+    window.newButton = function (text) {
+        var elButton = document.createElement('div');
+        elButton.classList.add('wptb-button-container');
+        var elButton2 = document.createElement('div');
+        elButton2.classList.add('wptb-button-wrapper');
+        var el_B = document.createElement('p');
+        el_B.classList.add('wptb-button');
+        el_B.classList.add('editable');
+        el_B.innerHTML = text != undefined ? text : 'Button Text';
+        elButton2.appendChild(el_B);
+        elButton.appendChild(elButton2);
+        elButton.onmouseenter = showButtonSettings;
+        elButton.onmouseleave = hideButtonSettings;
+        elButton.classList.add('wptb-ph-element', 'wptb-element-button-' + window.wptb_num['button']);
+        window.addElementOptions('button', elButton);
+        window.wptb_num['button']++;
         tinyMCE.init({
-            target: obj,
+            target: el_B,
             inline: true,
             plugins: "link",
             dialog_type: "modal",
             theme: 'modern',
             menubar: false,
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
-            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            toolbar: 'bold italic strikethrough',
+            setup: function setup(ed) {
+                ed.on("init", function (ed) {
+                    tinyMCE.execCommand('mceRepaint');
+                });
+            },
             init_instance_callback: function init_instance_callback(editor) {
-                window.currentEditor = editor;
-                editor.on('focus', function (e) {
-                    window.tryToChangeMCEWidth();
+                editor.on('change', function (e) {
+                    // check if it becomes empty because if there's no value it's hard to edit the editor in button element
+                    if (editor.getContent() == "") {
+                        editor.setContent("<p class='wptb-button'>Button Text</p>");
+                    }
+                });
+                editor.on('KeyDown', function (e) {
+                    var range = editor.selection.getRng();
+                    var KeyID = e.keyCode;
+                    if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
+                        e.preventDefault();
+                        editor.setContent("<p class='wptb-button'></p>");
+                    }
                 });
             }
         });
-    };
 
-    window.copyList = function (event) {
+        return elButton;
+    };
+})(jQuery);
+(function ($) {
+
+    window.copyImage = function (event) {
         var srcList = event.target.parentNode.parentNode,
             newList = srcList.cloneNode(true),
             container = srcList.parentNode,
@@ -83,7 +130,7 @@
         container.appendChild(newList);
     };
 
-    window.showListSettings = function (event) {
+    window.showImageSettings = function (event) {
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
@@ -112,7 +159,7 @@
         this.append(actions);
     };
 
-    window.hideListSettings = function (event) {
+    window.hideImageSettings = function (event) {
         this.classList.remove('wptb-directlyhovered');
         var actions = this.getElementsByClassName('wptb-actions')[0];
         if (actions != undefined) {
@@ -121,56 +168,7 @@
         }
     };
 
-    window.showListItemSettings = function (event) {
-        var btnDelete = document.createElement('span'),
-            btnCopy = document.createElement('span'),
-            actions = document.createElement('span'),
-            previous,
-            i;
-        actions.classList.add('wptb-actions');
-        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-
-        previousAct = document.getElementsByClassName('wptb-actions');
-        for (i = 0; i < previousAct.length; i++) {
-            var par = previousAct[i].parentNode;
-            par.removeChild(previousAct[i]);
-        };
-
-        previous = document.getElementsByClassName('wptb-directlyhovered');
-        for (i = 0; i < previous.length; i++) {
-            previous[i].classList.remove('wptb-directlyhovered');
-        };
-        this.classList.add('wptb-directlyhovered');
-
-        btnDelete.onclick = function () {
-            var item = this.parentNode.parentNode,
-                parent = item.parentNode;
-            parent.removeChild(item);
-        };
-
-        btnCopy.onclick = function (event) {
-            var article = event.target.parentNode.parentNode,
-                content = article.querySelector('.wptb-list-item-content'),
-                html = content.innerHTML;
-            var duplicate = newListItem(html);
-            article.parentNode.appendChild(duplicate);
-        };
-
-        actions.append(btnCopy, btnDelete);
-        this.parentNode.appendChild(actions);
-    };
-
-    window.hideListItemSettings = function (event) {
-        this.classList.remove('wptb-directlyhovered');
-        var actions = this.querySelector('.wptb-actions');
-        if (actions != undefined) {
-            var parent = actions.parentNode;
-            parent.removeChild(actions);
-        }
-    };
-
-    window.newListItem = function (text) {
+    window.newImage = function (text) {
         if (text == undefined) text = 'New List Item';
         var duplicate = document.createElement('article');
         var divdot = document.createElement('div'),
@@ -199,6 +197,136 @@
         divcontent.onmouseleave = hideListItemSettings;
         return duplicate;
     };
+})(jQuery);
+(function ($) {
+
+    window.copyList = function (event) {
+        var td = event.target.parentNode.parentNode.parentNode,
+            temp = [],
+            srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+
+        for (var i = 0; i < srcList.length; i++) {
+            temp.push(srcList[i].innerHTML);
+        }
+        var copy = newList(temp);
+        td.appendChild(copy);
+    };
+
+    window.showListSettings = function (event) {
+        this.classList.add('wptb-directlyhovered');
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnDelete.onclick = window.deleteList;
+        btnCopy.onclick = window.copyList;
+        actions.appendChild(btnCopy);
+        actions.appendChild(btnDelete);
+        this.appendChild(actions);
+    };
+
+    window.hideListSettings = function (event) {
+        this.classList.remove('wptb-directlyhovered');
+        var actions = this.querySelector('.wptb-actions');
+        if (actions != undefined) {
+            var parent = actions.parentNode;
+            parent.removeChild(actions);
+        }
+    };
+
+    window.showListItemSettings = function (event) {
+        console.log(';)');
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+
+        this.classList.add('wptb-directlyhovered');
+
+        btnDelete.onclick = function () {
+            var item = this.parentNode.parentNode,
+                parent = item.parentNode;
+            parent.removeChild(item);
+        };
+
+        btnCopy.onclick = function (event) {
+            var article = event.target.parentNode.parentNode,
+                content = article.querySelector('.wptb-list-item-content'),
+                html = content.innerHTML;
+            var duplicate = newListItem(html);
+            article.parentNode.appendChild(duplicate);
+        };
+
+        actions.append(btnCopy, btnDelete);
+        this.parentNode.appendChild(actions);
+    };
+
+    window.hideListItemSettings = function (event) {
+        this.classList.remove('wptb-directlyhovered');
+        var actions = this.parentNode.querySelector('.wptb-actions');
+        if (actions != undefined) {
+            var parent = actions.parentNode;
+            parent.removeChild(actions);
+        }
+    };
+
+    window.newList = function (innerElements) {
+        var elList = document.createElement('div');
+        //elList.classList.add('editable');
+        var el_L = document.createElement('ul');
+        if (!innerElements) for (var i = 0; i < 3; i++) {
+            el_L.appendChild(newListItem('List Item ' + (i + 1)));
+        } else {
+            for (var i = 0; i < innerElements.length; i++) {
+                el_L.appendChild(newListItem(innerElements[i]));
+            }
+        }
+        elList.appendChild(el_L);
+        elList.onmouseenter = showListSettings;
+        elList.onmouseleave = hideListSettings;
+
+        var contentCollection = elList.querySelectorAll('article .wptb-list-item-content');
+        for (var i = 0; i < contentCollection.length; i++) {
+            contentCollection[i].onmouseenter = showListItemSettings;
+            contentCollection[i].onmouseleave = hideListItemSettings;
+            contentCollection[i].onkeyup = window.listItemKeyListener;
+            window.tinyFastCall(contentCollection[i]);
+        }
+
+        elList.classList.add('wptb-ph-element', 'wptb-element-list-' + window.wptb_num['list']);
+        window.addElementOptions('list', elList);
+        window.wptb_num['list']++;
+
+        return elList;
+    };
+
+    window.newListItem = function (text) {
+        if (text == undefined) text = 'New List Item';
+        var duplicate = document.createElement('article');
+        var divdot = document.createElement('div'),
+            divcontent = document.createElement('div'),
+            libullet = document.createElement('li');
+        divdot.classList.add('wptb-list-item-style-dot');
+        divcontent.classList.add('wptb-list-item-content');
+        libullet.classList.add('wptb-bullet');
+        duplicate.appendChild(divdot);
+        duplicate.appendChild(divcontent);
+        divdot.appendChild(libullet);
+        divcontent.innerHTML = text;
+        tinyFastCall(divcontent);
+        divcontent.onkeyup = window.listItemKeyListener;
+        divcontent.onmouseenter = window.showListItemSettings;
+        divcontent.onmouseleave = window.hideListItemSettings;
+        return duplicate;
+    };
 
     window.listItemKeyListener = function (event) {
         var key = event.which != undefined ? event.which : event.keyCode,
@@ -220,25 +348,104 @@
         }
         return false;
     };
+})(jQuery);
+(function ($) {
+
+    window.add_Elements_tab = function () {
+        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
+        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
+
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+        document.getElementById("element-options-group").style.display = 'none';
+    };
+
+    window.addElementOptions = function (wptbElement, el) {
+        var prop = $(".wptb-" + wptbElement + "-options-prototype").clone();
+        prop.removeClass("wptb-" + wptbElement + "-options-prototype"); // remove prototype from the class
+        prop.addClass('wptb-options-' + wptbElement + "-" + wptb_num[wptbElement]);
+        document.getElementById("element-options-group").appendChild(prop[0]);
+        console.log('Prop 0', prop[0]);
+        //special cases to elements if needed
+        switch (wptbElement) {
+            case 'text':
+                listener_to_element(prop.find('.wptb-color-picker'));
+                prop.find('.wptb-color-picker').wpColorPicker();
+                break;
+        }
+        wptb_num[wptbElement]++;
+    };
+
+    /**
+     * to listen to the elements that will change dynamically
+     * change by other javascript code then will trigger the change event to them
+     * 
+     * @param {string} element
+     * @returns {void}
+     */
+    window.listener_to_element = function (element) {
+        element.data('old_value', element.val());
+        window.setInterval(function () {
+            var value = element.val();
+            var old_value = element.data('old_value');
+            if (value != old_value) {
+                old_value = value;
+                element.trigger('change');
+            }
+        }, 300);
+    };
+
+    window.tryToChangeMCEWidth = function (e) {
+        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+
+        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+        } else {
+            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+        }
+        //if(this.scrollTop > && )
+        //                document.getElementById('wpcd_fixed_toolbar').style.left = 'calc(50% - '+width+')';  
+    };
+
+    window.tinyFastCall = function (obj) {
+        tinyMCE.init({
+            target: obj,
+            inline: true,
+            plugins: "link",
+            dialog_type: "modal",
+            theme: 'modern',
+            menubar: false,
+            fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            init_instance_callback: function init_instance_callback(editor) {
+                window.currentEditor = editor;
+                editor.on('focus', function (e) {
+                    window.tryToChangeMCEWidth();
+                });
+            }
+        });
+    };
 
     window.inputNumber = function (el) {
 
-        var min = el.attr('min') || false;
-        var max = el.attr('max') || false;
+        var min = el.min || false;
+        var max = el.max || false;
 
         var els = {};
 
-        els.dec = el.prev();
-        els.inc = el.next();
+        els.dec = el.previousSibling;
+        els.inc = el.nextSibling;
 
-        el.each(function () {
-            init(this);
-        });
+        init(el);
 
         function init(el) {
 
-            els.dec[0].onclick = decrement;
-            els.inc[0].onclick = increment;
+            els.dec.onclick = decrement;
+            els.inc.onclick = increment;
 
             els.dec.onmousedown = function (e) {
                 e.preventDefault();
@@ -266,22 +473,90 @@
         }
     };
 })(jQuery);
+(function ($) {
+
+    window.copyText = function (event) {
+        var td = event.target.parentNode.parentNode.parentNode,
+            copy = newText(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+        td.appendChild(copy);
+    };
+
+    window.deleteText = function (evt) {
+        var act = this.parentNode.parentNode,
+            el = act.parentNode;
+        el.removeChild(act);
+    };
+
+    window.showTextSettings = function (event) {
+        this.classList.add('wptb-directlyhovered');
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnDelete.onclick = window.deleteText;
+        btnCopy.onclick = window.copyText;
+        actions.appendChild(btnCopy);
+        actions.appendChild(btnDelete);
+        this.appendChild(actions);
+    };
+
+    window.hideTextSettings = function (event) {
+        var formerActions = this.getElementsByClassName('wptb-actions');
+        if (formerActions && formerActions[0]) {
+            var par = formerActions[0].parentNode;
+            par.removeChild(formerActions[0]);
+        }
+        this.classList.remove('wptb-directlyhovered');
+    };
+
+    window.newText = function (text) {
+        var elText = document.createElement('div');
+        var elText2 = document.createElement('div');
+        elText2.classList.add('editable');
+        var elP = document.createElement('p');
+        elP.innerHTML = text != undefined ? text : 'Text';
+        elText2.appendChild(elP);
+        elText.appendChild(elText2);
+        elText.onmouseenter = showTextSettings;
+        elText.onmouseleave = hideTextSettings;
+        elText.classList.add('wptb-ph-element', 'wptb-element-text-' + window.wptb_num['text']);
+        window.addElementOptions('text', elText);
+        window.wptb_num['text']++;
+        window.tinyFastCall(elText.childNodes[0]);
+        $(elText).click();
+        return elText;
+    };
+})(jQuery);
 var wptbElement;
+
+//numbers of elements that have been added
+window.wptb_num = new Array();
+window.wptb_num["text"] = 0;
+window.wptb_num["image"] = 0;
+window.wptb_num["list"] = 0;
+window.wptb_num["button"] = 0;
 
 jQuery(document).ready(function ($) {
 
     //Column and Row number Selector.
-    inputNumber(jQuery('#wptb-columns-number'));
-    inputNumber(jQuery('#wptb-rows-number'));
+    inputNumber(document.getElementById('wptb-columns-number'));
+    inputNumber(document.getElementById('wptb-rows-number'));
 
     //document.getElementById('wptb_builder').onscroll = tryToChangeMCEWidth;
 
     //Generate table and bind associated functions.
-    $(function () {
-        $("#wptb-generate-table").click(function () {
+    document.onready = function () {
+        document.getElementById("wptb-generate-table").onclick = function () {
 
-            $('.wptb-table-generator').hide();
-            $('.wptb-settings-items').fadeIn();
+            document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+            var settings = document.getElementsByClassName('wptb-settings-items');
+            for (var i = 0; i < settings.length; i++) {
+                settings[i].classList.add('visible');
+            }
 
             //Add Color Picker for Row and Header Background Colors
             $('#wptb-even-row-bg').wpColorPicker();
@@ -289,348 +564,88 @@ jQuery(document).ready(function ($) {
             $('#wptb-table-header-bg').wpColorPicker();
 
             //Create a HTML Table element.
-            var table = $("<table />");
-            table.addClass('wptb-preview-table');
+            var table = document.createElement('table');
+            table.classList.add('wptb-preview-table');
 
             //Get the count of columns and rows.
-            var columnCount = parseInt($('#wptb-columns-number').val());
-            var rowCount = parseInt($('#wptb-rows-number').val());
+            var columnCount = parseInt(document.getElementById('wptb-columns-number').value);
+            var rowCount = parseInt(document.getElementById('wptb-rows-number').value);
 
             //Add the header row.
-            var row = $(table[0].insertRow(-1));
+            var row = table.insertRow(-1);
             for (var i = 0; i < columnCount; i++) {
-                var headerCell = $("<td />");
-                row.append(headerCell);
-                headerCell.addClass('wptb-droppable wptb-cell');
-                row.addClass('wptb-table-head wptb-row');
+                var headerCell = document.createElement("td");
+                row.appendChild(headerCell);
+                headerCell.classList.add('wptb-droppable', 'wptb-cell');
+                row.classList.add('wptb-table-head', 'wptb-row');
             }
 
             //Add the data rows.
             for (var i = 1; i < rowCount; i++) {
-                row = $(table[0].insertRow(-1));
+                row = table.insertRow(-1);
                 for (var j = 0; j < columnCount; j++) {
-                    var cell = $("<td />");
-                    cell.addClass('wptb-droppable wptb-cell');
-                    row.append(cell);
-                    row.addClass('wptb-row');
+                    var headerCell = document.createElement("td");
+                    headerCell.classList.add('wptb-droppable', 'wptb-cell');
+                    row.appendChild(headerCell);
+                    row.classList.add('wptb-row');
                 }
             }
 
             //Appending the table to the container in UI
-            var wptbTable = $(".wptb-table-setup");
-            wptbTable.html("");
-            wptbTable.append(table);
+            var wptbTable = document.getElementsByClassName("wptb-table-setup")[0];
+            wptbTable.innerHTML = '';
+            wptbTable.appendChild(table);
 
             //Adds/Removes Class to Droppable Cell when element enters.
-            $('.wptb-droppable').bind('dragenter', function (event) {
+            var droppableItems = document.getElementsByClassName('wptb-droppable'),
+                allowDrop = function allowDrop(event) {
                 event.target.classList.add('wptb-allow-drop');
                 event.currentTarget.classList.add('wptb-allow-drop');
-            });
-
-            //Removes class when element is out of the droppable zone.
-            $('.wptb-droppable').bind('dragleave', function (event) {
-                event.target.classList.remove('wptb-allow-drop');
-            });
-
-            //Allowing the drop
-            $('.wptb-droppable').bind("dragover", function (event) {
-                event.stopPropagation();
-                event.preventDefault();
-                return true;
-            });
-
-            //Text Element to be dropped in Cell.
-            var elText = document.createElement('div');
-            var elText2 = document.createElement('div');
-            elText2.classList.add('editable');
-            var elP = document.createElement('p');
-            elP.innerHTML = 'Text';
-            elText2.appendChild(elP);
-            elText.appendChild(elText2);
-
-            //List Element to be dropped in Cell.
-            var elList = document.createElement('div');
-            //elList.classList.add('editable');
-            var el_L = document.createElement('ul');
-            el_L.innerHTML = "<article>\
-                <div class=\"wptb-list-item-style-dot\">\
-                    <li class=\"wptb-bullet\">\
-                    </li>\
-                </div>\
-                <div class=\"wptb-list-item-content editable\" >List Item 1</div>\
-            </article><article>\
-                <div class=\"wptb-list-item-style-dot\">\
-                    <li class=\"wptb-bullet\">\
-                    </li>\
-                </div>\
-                <div class=\"wptb-list-item-content editable\" >List Item 2</div>\
-            </article><article>\
-                <div class=\"wptb-list-item-style-dot\">\
-                    <li class=\"wptb-bullet\">\
-                    </li>\
-                </div>\
-                <div class=\"wptb-list-item-content editable\" >List Item 3</div>\
-            </article>";
-            elList.appendChild(el_L);
-
-            //Button Element to be dropped in Cell
-            var elButton = document.createElement('div');
-            elButton.classList.add('wptb-button-container');
-            var elButton2 = document.createElement('div');
-            elButton2.classList.add('wptb-button-wrapper');
-            var el_B = document.createElement('p');
-            el_B.classList.add('wptb-button');
-            el_B.classList.add('editable');
-            el_B.innerHTML = 'Button Text';
-            elButton2.appendChild(el_B);
-            elButton.appendChild(elButton2);
-
-            //numbers of elements that have been added
-            window.wptb_num = new Array();
-            wptb_num["text"] = 0;
-            wptb_num["image"] = 0;
-            wptb_num["list"] = 0;
-            wptb_num["button"] = 0;
-
-            //Runs when an element is dropped on a cell.
-            $('.wptb-droppable').bind('drop', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                event.target.classList.remove('wptb-allow-drop');
-                if (wptbElement == 'text') {
-                    var textEl = elText.cloneNode(true);
-                    event.target.appendChild(textEl);
-
-                    $(textEl).mouseenter(function (event) {
-                        var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
-                            btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
-
-                        $('.wptb-actions').remove();
-                        $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
-                        $(this).addClass('wptb-directlyhovered');
-
-                        btnDelete.click(function () {
-                            $(this).parent().parent().remove();
-                        });
-                        btnCopy.click(function () {
-                            var duplicate = $(this).parent().parent().clone(true, true);
-                            $(this).parent().parent().parent().append(duplicate);
-
-                            /*************************************************
-                             *            Give it separated options          *
-                             *************************************************/
-                            /**
-                            * will carry the extracted infotrmation from the class
-                            * @example class => wptb-ph-element wptb-element-text-0
-                            *          result => [
-                            *              0 => wptb-element-text-0
-                            *              1 => text
-                            *              2 => 0
-                            *          ]
-                            * @type array
-                            */
-                            var infArr = duplicate.attr('class').match(/wptb-element-(.+)-(\d)+/i),
-                                wptbElement = infArr[1],
-                                oldClass = infArr[0],
-                                oldClassOption = "wptb-options-" + wptbElement + "-" + infArr[2],
-                                classOption = ".wptb-element-options" + ".wptb-" + wptbElement + "-options" + "." + oldClassOption;
-                            var duplicateOption = $(classOption).clone(true, true);
-                            $(classOption).parent().append(duplicateOption);
-
-                            // creating the new class name and deleting the old class 
-                            var newClass = "wptb-element-" + wptbElement + "-" + wptb_num[wptbElement];
-                            var newClassOption = "wptb-options-" + wptbElement + "-" + wptb_num[wptbElement];
-
-                            duplicate.addClass(newClass);
-                            duplicate.removeClass(oldClass);
-
-                            duplicateOption.addClass(newClassOption);
-                            duplicateOption.removeClass(oldClassOption);
-                            wptb_num[wptbElement]++;
-
-                            // Exceptions 
-                            switch (wptbElement) {
-                                case 'text':
-                                    //getting a new color picker from option prototype
-                                    var new_picker = $('.wptb-protoypes-options .wptb-element-property.wptb-color-picker').clone();
-                                    duplicateOption.find('.wp-picker-container').replaceWith(new_picker);
-                                    listener_to_element(duplicateOption.find('.wptb-color-picker'));
-                                    duplicateOption.find('.wptb-color-picker').wpColorPicker();
-                                    break;
-                            }
-                            duplicate[0].childNodes[0].id = '';
-                            tinyFastCall(duplicate[0].childNodes[0]);
-                        });
-
-                        actions.append(btnCopy, btnDelete);
-                        $(this).append(actions);
-                    }).mouseleave(function (event) {
-                        $(this).removeClass('wptb-directlyhovered');
-                        $(this).find('.wptb-actions').remove();
-                    });
-
-                    tinyMCE.init({
-                        target: textEl.childNodes[0],
-                        inline: true,
-                        plugins: "link",
-                        dialog_type: "modal",
-                        theme: 'modern',
-                        menubar: false,
-                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                        toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify'
-                    });
-
-                    $(textEl).addClass('wptb-ph-element wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
-
-                    // adding element options
-                    addElementOptions(wptbElement, textEl);
-                    $(textEl).click();
-                } else if (wptbElement == 'image') {
-                    event.target.innerHTML = 'Image';
-                } else if (wptbElement == 'button') {
-                    // create the button element with text button
-                    var button = elButton.cloneNode(true);
-
-                    // this part is very important 
-                    button.click(function (e) {
-                        e.preventDefault();
-                    });
-
-                    $(button).mouseenter(function (event) {
-                        var btnDelete = $('<span class="dashicons dashicons-trash delete-action"></span>'),
-                            btnCopy = $('<span class="dashicons dashicons-admin-page duplicate-action"></span>'),
-                            actions = $('<span class="wptb-actions"></span>');
-
-                        $('.wptb-actions').remove();
-                        $('.wptb-directlyhovered').removeClass('wptb-directlyhovered');
-                        $(this).addClass('wptb-directlyhovered');
-
-                        btnDelete.click(function () {
-                            $(this).parent().parent().remove();
-                        });
-                        btnCopy.click(function () {
-                            var duplicate = $(this).parent().parent().clone(true, true);
-
-                            var infArr = duplicate[0].className.match(/wptb-element-(.+)-(\d)+/i),
-                                elName = infArr[1],
-                                oldClass = infArr[0],
-                                oldClassOptionsPanelClass = "wptb-options-" + elName + "-" + infArr[2];
-
-                            var newOptionsPanel = $('.' + oldClassOptionsPanelClass).clone(true, true),
-                                oldOptionsPanel = document.querySelector('.' + oldClassOptionsPanelClass);
-                            oldOptionsPanel.parentNode.appendChild(newOptionsPanel[0]);
-
-                            var newClass = "wptb-element-" + elName + "-" + wptb_num['button'];
-                            var newClassOptionsPanelClass = "wptb-options-" + elName + "-" + wptb_num['button'];
-
-                            duplicate[0].classList.add(newClass);
-                            duplicate[0].classList.remove(oldClass);
-
-                            newOptionsPanel.removeClass(oldClassOptionsPanelClass);
-                            newOptionsPanel.addClass(newClassOptionsPanelClass);
-
-                            wptb_num['button']++;
-
-                            duplicate[0].id = '';
-                            tinyFastCall(duplicate[0]);
-                            $(this).parent().parent().parent().append(duplicate[0]);
-                        });
-
-                        actions.append(btnCopy, btnDelete);
-                        $(this).append(actions);
-                    }).mouseleave(function (event) {
-                        $(this).removeClass('wptb-directlyhovered');
-                        $(this).find('.wptb-actions').remove();
-                    });
-                    //append it to the cell
-                    $(event.target).append(button);
-                    //using tinymce
-                    tinyMCE.init({
-                        target: button.childNodes[0],
-                        inline: true,
-                        plugins: "link",
-                        dialog_type: "modal",
-                        theme: 'modern',
-                        menubar: false,
-                        fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                        toolbar: 'bold italic strikethrough',
-                        setup: function setup(ed) {
-                            ed.on("init", function (ed) {
-                                tinyMCE.execCommand('mceRepaint');
-                            });
-                        },
-                        init_instance_callback: function init_instance_callback(editor) {
-                            editor.on('change', function (e) {
-                                // check if it becomes empty because if there's no value it's hard to edit the editor in button element
-                                if (editor.getContent() == "") {
-                                    editor.setContent("<p class='wptb-button'>Button Text</p>");
-                                }
-                            });
-                            editor.on('KeyDown', function (e) {
-                                var range = editor.selection.getRng();
-                                var KeyID = e.keyCode;
-                                if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
-                                    e.preventDefault();
-                                    editor.setContent("<p class='wptb-button'></p>");
-                                }
-                            });
-                        }
-                    });
-
-                    //Give it a class That will help us to relate it to its properties
-                    $(button).addClass('wptb-ph-element wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
-
-                    // To take a copy from the options prototype and relate it to the button
-                    addElementOptions(wptbElement, button);
-
-                    // click the element to show it's option to focus the page on it
-                    $(button).click();
-                } else if (wptbElement == 'list') {
-                    var listEl = elList.cloneNode(true),
-                        contentCollection;
-
-                    event.target.appendChild(listEl);
-
-                    listEl.onmouseenter = showListSettings;
-                    listEl.onmouseleave = hideListSettings;
-                    contentCollection = listEl.querySelectorAll('article .wptb-list-item-content');
-                    for (var i = 0; i < contentCollection.length; i++) {
-                        contentCollection[i].onmouseenter = showListItemSettings;
-                        contentCollection[i].onmouseleave = hideListItemSettings;
-                        contentCollection[i].onkeyup = listItemKeyListener;
-                        tinyFastCall(contentCollection[i]);
-                    }
-
-                    listEl.classList.add('wptb-ph-element', 'wptb-element-' + wptbElement + "-" + wptb_num[wptbElement]);
-                    addElementOptions(wptbElement, listEl);
+                if (event.type == 'dragover') {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    return true;
                 }
-            });
+            };
 
-            /**
-             * adding Options to each element and related this option to it
-             * by Class also give the element its events
-             * 
-             * @param {string} wptbElement name of the element
-             * @param {opject} el the element itself
-             * @returns {void}
-             */
-            function addElementOptions(wptbElement, el) {
-                var prop = $(".wptb-" + wptbElement + "-options-prototype").clone();
-                prop.removeClass("wptb-" + wptbElement + "-options-prototype"); // remove prototype from the class
-                prop.addClass('wptb-options-' + wptbElement + "-" + wptb_num[wptbElement]);
-                $("#element-options-group").append(prop);
-                //special cases to elements if needed
-                switch (wptbElement) {
-                    case 'text':
-                        listener_to_element(prop.find('.wptb-color-picker'));
-                        prop.find('.wptb-color-picker').wpColorPicker();
-                        break;
-                }
-                wptb_num[wptbElement]++;
+            for (var i = 0; i < droppableItems.length; i++) {
+                droppableItems[i].ondragenter = allowDrop;
+                droppableItems[i].ondragleave = function (event) {
+                    event.target.classList.remove('wptb-allow-drop');
+                };
+                droppableItems[i].ondragover = allowDrop;
             }
 
-            $(document).bind('keydown', function (e) {
+            //Text Element to be dropped in Cell.
+            var elList = window.newList();
+
+            //Runs when an element is dropped on a cell.
+            var drop = document.getElementsByClassName('wptb-droppable');
+            for (i = 0; i < drop.length; i++) {
+                drop[i].ondrop = function (event) {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.target.classList.remove('wptb-allow-drop');
+
+                    if (wptbElement == 'text') {
+                        var textEl = window.newText();
+                        event.target.appendChild(textEl);
+                    } else if (wptbElement == 'image') {
+                        event.target.innerHTML = 'Image';
+                    } else if (wptbElement == 'button') {
+                        var button = window.newButton();
+
+                        event.target.appendChild(button);
+                    } else if (wptbElement == 'list') {
+                        var listEl = window.newList();
+
+                        event.target.appendChild(listEl);
+                    }
+                }; //of drop
+            };
+
+            document.onkeydown = function (e) {
                 if (e.target.className === 'mce-textbox') {
                     window.dontAddItems = true;
                     if (event.which === 13 || event.which === 27) {
@@ -640,14 +655,14 @@ jQuery(document).ready(function ($) {
                         }, 250);
                     }
                 }
-            });
+            };
 
             /*
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
 
-            $(document).bind('click', function (e) {
+            document.onclick = function (e) {
                 setTimeout(function () {
                     //window.tryToChangeMCEWidth();
 
@@ -664,7 +679,6 @@ jQuery(document).ready(function ($) {
 
                 var el_options = false; // this var will carry the element that will be shown its options
 
-                //if($this.hasClass('wptb-element-options'))
                 // check if this element or one of it's parent should display its options
                 if ($this.hasClass('wptb-ph-element')) {
                     el_options = $this;
@@ -694,38 +708,45 @@ jQuery(document).ready(function ($) {
                      * @type String
                      */
                     var optionsClass = '.wptb-' + infArr[2] + 'options' + '.wptb-options-' + infArr[1];
-
+                    console.log('optionsClass', optionsClass);
                     $(optionsClass).show();
 
                     //Binds the range slider and input for text font size.
-                    $('.wptb-text-font-size-slider').bind('input change', function () {
-                        $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-number').val($(this).val());
-                    });
+                    var sliders = document.getElementsByClassName('wptb-text-font-size-slider');
+                    for (var i = 0; i < sliders.length; i++) {
+                        sliders[i].onchange = function () {
+                            this.parentNode.parentNode.childNodes[3].childNodes[1].value = this.value;
+                        };
+                    }
 
                     //Binds the range slider and input for text font size.
-                    $('.wptb-text-font-size-number').bind('input change', function () {
-                        $(this).parents('.wptb-settings-row').find('.wptb-text-font-size-slider').val($(this).val());
-                    });
+                    var numbers = document.getElementsByClassName('wptb-text-font-size-number');
+                    for (var i = 0; i < numbers.length; i++) {
+                        numbers[i].onchange = function () {
+                            this.parentNode.parentNode.childNodes[1].childNodes[1].value = this.value;
+                        };
+                    }
                 } else {
                     //show the add elements option
                     if ($this.is('#add-elements') || $this.parents('#add-elements').length !== 0 || $this.hasClass('wptb-builder-panel') || $this.parents('.wptb-builder-panel').length !== 0) {
                         window.add_Elements_tab();
                     }
                 }
-            });
+            };
 
             // active Element options tab and it's options
             function Element_options_tab() {
+                console.log('Element options tab has been called');
+                document.getElementById('add-elements').getElementsByTagName('a')[0].classList.remove('active');
+                document.getElementById('element-options').getElementsByTagName('a')[0].classList.add('active');
 
-                $('.wptb-tab#add-elements a').removeClass('active');
-                $('.wptb-tab#element-options a').addClass('active');
-
-                $('.wptb-elements-container').hide();
-                $('.wptb-settings-section').hide();
-                $("#element-options-group").show();
-
-                //Hide all elements' options before showing the selected one
-                $('#element-options-group').children().hide();
+                document.getElementsByClassName('wptb-elements-container')[0].style.display = 'none';
+                document.getElementsByClassName('wptb-settings-section')[0].style.display = 'none';
+                document.getElementById("element-options-group").style.display = 'block';
+                var children = document.getElementById("element-options-group").childNodes;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i].style) children[i].style.display = 'none';
+                }
             }
 
             /**
@@ -794,146 +815,108 @@ jQuery(document).ready(function ($) {
             }
             $(document.body).on('change input, change select', '.wptb-element-property', detect_element_for_property);
 
-            /**
-             * to listen to the elements that will change dynamically
-             * change by other javascript code then will trigger the change event to them
-             * 
-             * @param {string} element
-             * @returns {void}
-             */
-            function listener_to_element(element) {
-                element.data('old_value', element.val());
-                window.setInterval(function () {
-                    var value = element.val();
-                    var old_value = element.data('old_value');
-                    if (value != old_value) {
-                        old_value = value;
-                        element.trigger('change');
-                    }
-                }, 300);
-            }
-
             //Triggers when table border setting changes.
             function addBorder(value) {
-                var styles = {
-                    border: value + 'px solid'
-                };
-                $('.wptb-preview-table').css(styles);
+
+                document.getElementsByClassName('wptb-preview-table')[0].style.border = value + 'px solid';
             }
 
             //Binds the range slider and input, also triggers table border change.
-            $('#wptb-table-border-slider').bind('input change', function () {
-                $('#wptb-table-border-number').val($(this).val());
-                addBorder($(this).val());
-            });
+            document.getElementById('wptb-table-border-slider').onchange = function () {
+                document.getElementById('wptb-table-border-number').value = this.value;
+                addBorder(this.value);
+            };
 
             //Binds the range slider and input, also triggers table border change.
-            $('#wptb-table-border-number').bind('input change', function () {
-                $('#wptb-table-border-slider').val($(this).val());
-                addBorder($(this).val());
-            });
+            document.getElementById('wptb-table-border-number').onchange = function () {
+                document.getElementById('wptb-table-border-slider').value = this.value;
+                addBorder(this.value);
+            };
 
             //Triggers when cell padding setting changes.
             function addCellPadding(value) {
-                var styles = {
-                    padding: value + 'px'
-                };
-                $('td').css(styles);
+
+                var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+                for (var i = 0; i < tableCells.length; i++) {
+                    tableCells[i].style.padding = value + 'px';
+                }
             }
 
             //Binds the range slider and input, also triggers cell padding change.
-            $('#wptb-table-cell-slider').bind('input change', function () {
-                $('#wptb-table-cell-number').val($(this).val());
-                addCellPadding($(this).val());
-            });
+            document.getElementById('wptb-table-cell-slider').onchange = function () {
+                document.getElementById('wptb-table-cell-number').value = this.value;
+                addCellPadding(this.value);
+            };
 
             //Binds the range slider and input, also triggers cell padding change.
-            $('#wptb-table-cell-number').bind('input change', function () {
-                $('#wptb-table-cell-slider').val($(this).val());
-                addCellPadding($(this).val());
-            });
+            document.getElementById('wptb-table-cell-number').onchange = function () {
+                document.getElementById('wptb-table-cell-slider').value = this.value;
+                addCellPadding(this.value);
+            };
 
             //Triggers when apply inner border setting changes.
             function addInnerBorder(checked) {
                 var styles;
 
                 if (checked == 'checked') {
-                    styles = {
-                        border: 1 + 'px solid'
-                    };
-                    $('#wptb-apply-inner-border').css('margin-bottom', '0');
-                    $('.wptb-preview-table td').css(styles);
-                    $('#wptb-inner-border-settings').fadeIn();
+                    document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
+                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+                    for (var i = 0; i < tableCells.length; i++) {
+                        tableCells[i].style.border = '1px solid';
+                    }
+
+                    document.getElementById('wptb-inner-border-settings').classList.add('visible');
                 } else {
-                    $('#wptb-inner-border-settings').fadeOut();
-                    $('.wptb-preview-table td').css('border', '');
+                    document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+                    for (var i = 0; i < tableCells.length; i++) {
+                        tableCells[i].style.border = '';
+                    }
                 }
             }
 
             //Binding Checkbox Change, triggers inner border add.
-            $('#wptb-inner-border-check').bind('change', function () {
-                var _val = $(this).is(':checked') ? 'checked' : 'unchecked';
+            document.getElementById('wptb-inner-border-check').onchange = function () {
+                var _val = this.checked ? 'checked' : 'unchecked';
                 addInnerBorder(_val);
-            });
+            };
 
             //Triggers when cell padding setting changes.
             function addInnerBorderSize(value) {
-                var styles = {
-                    border: value + 'px solid'
-                };
-                $('.wptb-preview-table td').css(styles);
+
+                var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+                for (var i = 0; i < tableCells.length; i++) {
+                    tableCells[i].style.border = value + 'px solid';
+                }
             }
 
             //Binds the range slider and input, also triggers cell padding change.
-            $('#wptb-table-inner-border-slider').bind('input change', function () {
-                $('#wptb-table-inner-border-number').val($(this).val());
-                addInnerBorderSize($(this).val());
-            });
+            document.getElementById('wptb-table-inner-border-slider').onchange = function () {
+                document.getElementById('wptb-table-inner-border-number').value = this.value;
+                addInnerBorderSize(this.value);
+            };
 
             //Binds the range slider and input, also triggers cell padding change.
-            $('#wptb-table-inner-border-number').bind('input change', function () {
-                $('#wptb-table-inner-border-slider').val($(this).val());
-                addInnerBorderSize($(this).val());
-            });
-        });
-    });
+            document.getElementById('wptb-table-inner-border-number').onchange = function () {
+                document.getElementById('wptb-table-inner-border-slider').value = this.value;
+                addInnerBorderSize(this.value);
+            };
+        };
+    }; // Of document.onready
 
     //When dragging starts for Text element
-    function textDragStart(event) {
-        wptbElement = 'text';
-        var el = $(this);
-        event.originalEvent.dataTransfer.effectAllowed = 'move';
-        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
-    }
+    function itemDragStart(event) {
+        wptbElement = event.target.id.substring(5, event.target.id.length);
 
-    //When dragging starts for Image element
-    function imageDragStart(event) {
-        wptbElement = 'image';
-        var el = $(this);
-        event.originalEvent.dataTransfer.effectAllowed = 'move';
-        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
-    }
-
-    //When dragging starts for Button element
-    function buttonDragStart(event) {
-        wptbElement = 'button';
-        var el = $(this);
-        event.originalEvent.dataTransfer.effectAllowed = 'move';
-        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
-    }
-
-    //When dragging starts for List element
-    function listDragStart(event) {
-        wptbElement = 'list';
-        var el = $(this);
-        event.originalEvent.dataTransfer.effectAllowed = 'move';
-        event.originalEvent.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+        //var el = $(this);
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
 
     //On drag elements.
-    $('#wptb-text').on('dragstart', textDragStart);
-    $('#wptb-image').on('dragstart', imageDragStart);
-    $('#wptb-button').on('dragstart', buttonDragStart);
-    $('#wptb-list').on('dragstart', listDragStart);
+    document.getElementById('wptb-text').ondragstart = itemDragStart;
+    document.getElementById('wptb-image').ondragstart = itemDragStart;
+    document.getElementById('wptb-button').ondragstart = itemDragStart;
+    document.getElementById('wptb-list').ondragstart = itemDragStart;
 });
 //# sourceMappingURL=admin.js.map
