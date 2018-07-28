@@ -64,11 +64,12 @@
         tinyMCE.init({
             target: obj,
             inline: true,
-            plugins: "link",
+            plugins: "link, paste",
             dialog_type: "modal",
             theme: 'modern',
             menubar: false,
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            paste_as_text: true,
             toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
             init_instance_callback: function (editor) {
                 window.currentEditor = editor;

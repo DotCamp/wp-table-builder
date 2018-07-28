@@ -410,11 +410,12 @@
         tinyMCE.init({
             target: obj,
             inline: true,
-            plugins: "link",
+            plugins: "link, paste",
             dialog_type: "modal",
             theme: 'modern',
             menubar: false,
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            paste_as_text: true,
             toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
             init_instance_callback: function init_instance_callback(editor) {
                 window.currentEditor = editor;
@@ -632,7 +633,6 @@ jQuery(document).ready(function ($) {
                         event.target.innerHTML = 'Image';
                     } else if (wptbElement == 'button') {
                         var button = window.newButton();
-
                         event.target.appendChild(button);
                         button.click();
                     } else if (wptbElement == 'list') {

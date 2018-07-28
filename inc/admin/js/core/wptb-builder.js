@@ -104,7 +104,6 @@ jQuery(document).ready(function ($) {
                         event.target.innerHTML = 'Image';
                     } else if (wptbElement == 'button') {
                         var button = window.newButton();
-
                         event.target.appendChild(button);
                         button.click();
                     } else if (wptbElement == 'list') {
