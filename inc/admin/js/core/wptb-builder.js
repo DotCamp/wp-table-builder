@@ -101,7 +101,8 @@ jQuery(document).ready(function ($) {
                         event.target.appendChild(textEl);
                         textEl.click();
                     } else if (wptbElement == 'image') {
-                        event.target.innerHTML = 'Image';
+                        var img = window.newImage()
+                        event.target.appendChild(img);
                     } else if (wptbElement == 'button') {
                         var button = window.newButton();
                         event.target.appendChild(button);

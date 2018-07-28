@@ -169,33 +169,14 @@
     };
 
     window.newImage = function (text) {
-        if (text == undefined) text = 'New List Item';
-        var duplicate = document.createElement('article');
-        var divdot = document.createElement('div'),
-            divcontent = document.createElement('div'),
-            libullet = document.createElement('li');
-        divdot.classList.add('wptb-list-item-style-dot');
-        divcontent.classList.add('wptb-list-item-content');
-        libullet.classList.add('wptb-bullet');
-        duplicate.appendChild(divdot);
-        duplicate.appendChild(divcontent);
-        divdot.appendChild(libullet);
-        divcontent.innerHTML = text;
-        tinyFastCall(divcontent);
-        divcontent.onkeyup = window.listItemKeyListener;
-        divcontent.onmouseenter = function (event) {
-            var previous = document.getElementsByClassName('wptb-directlyhovered');
-            for (i = 0; i < previous.length; i++) {
-                previous[i].classList.remove('wptb-directlyhovered');
-            };
-            this.classList.add('wptb-directlyhovered');
-        };
-        divcontent.onmouseleave = function (event) {
-            this.classList.remove('wptb-directlyhovered');
-        };
-        divcontent.onmouseenter = showListItemSettings;
-        divcontent.onmouseleave = hideListItemSettings;
-        return duplicate;
+        var imgWrap = document.createElement('div');
+        imgWrap.classList.add('wptb-img-wrapper');
+        var imgBtn = document.createElement('button');
+        imgBtn.classList.add('button');
+        imgBtn.classList.add('wptb-img-btn');
+        imgBtn.innerHTML = text != undefined ? text : 'Choose Image';
+        imgWrap.appendChild(imgBtn);
+        return imgWrap;
     };
 })(jQuery);
 (function ($) {
@@ -630,7 +611,8 @@ jQuery(document).ready(function ($) {
                         event.target.appendChild(textEl);
                         textEl.click();
                     } else if (wptbElement == 'image') {
-                        event.target.innerHTML = 'Image';
+                        var img = window.newImage();
+                        event.target.appendChild(img);
                     } else if (wptbElement == 'button') {
                         var button = window.newButton();
                         event.target.appendChild(button);

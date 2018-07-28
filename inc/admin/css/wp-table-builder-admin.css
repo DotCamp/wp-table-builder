@@ -912,3 +912,15 @@ table.wptb-table {
     width: 15px;
     height: 15px;
 }
+
+
+/** Image Styles */
+
+.wptb-img-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.wptb-img-btn {
+    margin: 15px auto !important;
+}
