@@ -77,8 +77,6 @@ class Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-admin.css', array(), $this->version, 'all' );
-
 	}
 
 	/**
