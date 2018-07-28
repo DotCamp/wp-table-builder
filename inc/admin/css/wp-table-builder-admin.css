@@ -148,7 +148,7 @@
 
 .wptb-settings-items.visible,
 #wptb-inner-border-settings.visible {
-    display:block;
+    display: block !important;
     opacity: 1;
 }
 
@@ -739,7 +739,7 @@ table.wptb-table {
 }
 
 #wpcd_fixed_toolbar {
-    min-height: 55px; 
+    min-height: 55px;
     text-align: center;
 }
 
