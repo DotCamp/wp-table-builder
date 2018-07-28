@@ -8,14 +8,13 @@
         newList.onmouseenter = showListSettings;
         newList.onmouseleave = hideListSettings;
         for (var i = listItems.length - 1; i >= 0; i--) {
-            let cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0]; 
+            let cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0];
             listItems[i].onmouseenter = showListItemSettings;
             listItems[i].onmouseleave = hideListItemSettings;
             cont.id = '';
             tinyFastCall(cont);
             cont.onkeyup = listItemKeyListener;
         }
-
 
         var infArr = newList.className.match(/wptb-element-(.+)-(\d)+/i),
             elName = infArr[1],
@@ -45,7 +44,7 @@
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
             previous, i;
-        actions.classList.add('wptb-actions'); 
+        actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
         delete document.getElementsByClassName('wptb-actions');
@@ -56,11 +55,10 @@
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
-
             var list = this.parentNode.parentNode,
                 tdContainer = list.parentNode;
             $('#add-elements a').trigger('click');
-            tdContainer.removeChild(list); 
+            tdContainer.removeChild(list);
         };
         btnCopy.onclick = copyList;
 

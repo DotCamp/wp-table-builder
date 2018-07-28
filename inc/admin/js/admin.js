@@ -148,7 +148,6 @@
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
-
             var list = this.parentNode.parentNode,
                 tdContainer = list.parentNode;
             $('#add-elements a').trigger('click');
@@ -352,7 +351,6 @@
     window.add_Elements_tab = function () {
         document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
         document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
-
         document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
         document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
         document.getElementById("element-options-group").style.display = 'none';
@@ -661,16 +659,13 @@ jQuery(document).ready(function ($) {
              * event click to the whole document and then check if it's to one
              * the created element to show it's option
              */
-
             document.onclick = function (e) {
                 setTimeout(function () {
                     //window.tryToChangeMCEWidth();
-
                 }, 500);
                 var $this = $(e.target);
 
                 if (e.target.className.match(/delete-action/)) {
-
                     return;
                 }
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {
@@ -760,15 +755,15 @@ jQuery(document).ready(function ($) {
                 var classes = parent.attr("class");
 
                 /**
-                * will carry the extracted infotrmation from the class
-                * @example class =>wptb-options-text-0
-                *          result => [
-                *              0 => wptb-options-text-0
-                *              1 => text
-                *              2 => 0
-                *          ]
-                * @type array
-                */
+                 * will carry the extracted infotrmation from the class
+                 * @example class =>wptb-options-text-0
+                 *          result => [
+                 *              0 => wptb-options-text-0
+                 *              1 => text
+                 *              2 => 0
+                 *          ]
+                 * @type array
+                 */
                 var infArr = classes.match(/wptb-options-(.+)-(\d+)/i);
 
                 var type = infArr[1];
@@ -815,7 +810,6 @@ jQuery(document).ready(function ($) {
 
             //Triggers when table border setting changes.
             function addBorder(value) {
-
                 document.getElementsByClassName('wptb-preview-table')[0].style.border = value + 'px solid';
             }
 
@@ -833,7 +827,6 @@ jQuery(document).ready(function ($) {
 
             //Triggers when cell padding setting changes.
             function addCellPadding(value) {
-
                 var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
                 for (var i = 0; i < tableCells.length; i++) {
                     tableCells[i].style.padding = value + 'px';
@@ -881,7 +874,6 @@ jQuery(document).ready(function ($) {
 
             //Triggers when cell padding setting changes.
             function addInnerBorderSize(value) {
-
                 var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
                 for (var i = 0; i < tableCells.length; i++) {
                     tableCells[i].style.border = value + 'px solid';
