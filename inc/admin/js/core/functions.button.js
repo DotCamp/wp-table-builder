@@ -4,6 +4,7 @@
         var act=this.parentNode.parentNode,
             el = act.parentNode;
         el.removeChild(act); 
+        window.add_Elements_tab();
     };
 
     window.copyButton = function (event) { 

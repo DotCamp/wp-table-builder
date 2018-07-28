@@ -4,6 +4,7 @@
         var act = this.parentNode.parentNode,
             el = act.parentNode;
         el.removeChild(act);
+        window.add_Elements_tab();
     };
 
     window.copyButton = function (event) {
@@ -212,6 +213,13 @@
         td.appendChild(copy);
     };
 
+    window.deleteList = function () {
+        var act = this.parentNode.parentNode,
+            el = act.parentNode;
+        el.removeChild(act);
+        window.add_Elements_tab();
+    };
+
     window.showListSettings = function (event) {
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
@@ -239,7 +247,7 @@
     };
 
     window.showListItemSettings = function (event) {
-        console.log(';)');
+        //el Article
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
@@ -248,7 +256,6 @@
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
@@ -266,7 +273,7 @@
         };
 
         actions.append(btnCopy, btnDelete);
-        this.parentNode.appendChild(actions);
+        this.appendChild(actions);
     };
 
     window.hideListItemSettings = function (event) {
@@ -292,15 +299,6 @@
         elList.appendChild(el_L);
         elList.onmouseenter = showListSettings;
         elList.onmouseleave = hideListSettings;
-
-        var contentCollection = elList.querySelectorAll('article .wptb-list-item-content');
-        for (var i = 0; i < contentCollection.length; i++) {
-            contentCollection[i].onmouseenter = showListItemSettings;
-            contentCollection[i].onmouseleave = hideListItemSettings;
-            contentCollection[i].onkeyup = window.listItemKeyListener;
-            window.tinyFastCall(contentCollection[i]);
-        }
-
         elList.classList.add('wptb-ph-element', 'wptb-element-list-' + window.wptb_num['list']);
         window.addElementOptions('list', elList);
         window.wptb_num['list']++;
@@ -323,8 +321,8 @@
         divcontent.innerHTML = text;
         tinyFastCall(divcontent);
         divcontent.onkeyup = window.listItemKeyListener;
-        divcontent.onmouseenter = window.showListItemSettings;
-        divcontent.onmouseleave = window.hideListItemSettings;
+        divcontent.parentNode.onmouseenter = window.showListItemSettings;
+        divcontent.parentNode.onmouseleave = window.hideListItemSettings;
         return duplicate;
     };
 
@@ -365,7 +363,6 @@
         prop.removeClass("wptb-" + wptbElement + "-options-prototype"); // remove prototype from the class
         prop.addClass('wptb-options-' + wptbElement + "-" + wptb_num[wptbElement]);
         document.getElementById("element-options-group").appendChild(prop[0]);
-        console.log('Prop 0', prop[0]);
         //special cases to elements if needed
         switch (wptbElement) {
             case 'text':
@@ -485,6 +482,7 @@
         var act = this.parentNode.parentNode,
             el = act.parentNode;
         el.removeChild(act);
+        window.add_Elements_tab();
     };
 
     window.showTextSettings = function (event) {
@@ -631,16 +629,18 @@ jQuery(document).ready(function ($) {
                     if (wptbElement == 'text') {
                         var textEl = window.newText();
                         event.target.appendChild(textEl);
+                        textEl.click();
                     } else if (wptbElement == 'image') {
                         event.target.innerHTML = 'Image';
                     } else if (wptbElement == 'button') {
                         var button = window.newButton();
 
                         event.target.appendChild(button);
+                        button.click();
                     } else if (wptbElement == 'list') {
                         var listEl = window.newList();
-
                         event.target.appendChild(listEl);
+                        listEl.click();
                     }
                 }; //of drop
             };
@@ -708,7 +708,6 @@ jQuery(document).ready(function ($) {
                      * @type String
                      */
                     var optionsClass = '.wptb-' + infArr[2] + 'options' + '.wptb-options-' + infArr[1];
-                    console.log('optionsClass', optionsClass);
                     $(optionsClass).show();
 
                     //Binds the range slider and input for text font size.
@@ -736,7 +735,6 @@ jQuery(document).ready(function ($) {
 
             // active Element options tab and it's options
             function Element_options_tab() {
-                console.log('Element options tab has been called');
                 document.getElementById('add-elements').getElementsByTagName('a')[0].classList.remove('active');
                 document.getElementById('element-options').getElementsByTagName('a')[0].classList.add('active');
 

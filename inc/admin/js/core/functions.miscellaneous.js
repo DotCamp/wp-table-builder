@@ -14,8 +14,7 @@
                 var prop = $(".wptb-" + wptbElement + "-options-prototype").clone();
                 prop.removeClass("wptb-" + wptbElement + "-options-prototype"); // remove prototype from the class
                 prop.addClass('wptb-options-' + wptbElement + "-" + wptb_num[wptbElement]);
-                document.getElementById("element-options-group").appendChild(prop[0]);
-                console.log('Prop 0',prop[0]);
+                document.getElementById("element-options-group").appendChild(prop[0]); 
                 //special cases to elements if needed
                 switch (wptbElement) {
                     case 'text':

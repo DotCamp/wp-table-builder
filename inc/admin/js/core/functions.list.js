@@ -12,6 +12,13 @@
         td.appendChild(copy);
     }
 
+    window.deleteList = function(){
+        var act=this.parentNode.parentNode,
+            el = act.parentNode;
+        el.removeChild(act); 
+        window.add_Elements_tab();
+    }
+
     window.showListSettings = function (event) {
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
@@ -38,7 +45,7 @@
     };
 
     window.showListItemSettings = function (event) { 
-        console.log(';)');
+        //el Article
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
@@ -46,7 +53,6 @@
         actions.classList.add('wptb-actions'); 
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
- 
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
@@ -64,7 +70,7 @@
         };
 
         actions.append(btnCopy, btnDelete); 
-        this.parentNode.appendChild(actions);
+        this.appendChild(actions);
     };
 
     window.hideListItemSettings = function (event) { 
@@ -92,16 +98,6 @@
             elList.appendChild(el_L);
             elList.onmouseenter = showListSettings;
             elList.onmouseleave = hideListSettings;
-
-            var contentCollection = elList
-                        .querySelectorAll('article .wptb-list-item-content');
-            for (var i = 0; i < contentCollection.length; i++) {
-                contentCollection[i].onmouseenter = showListItemSettings;
-                contentCollection[i].onmouseleave = hideListItemSettings;
-                contentCollection[i].onkeyup = window.listItemKeyListener;
-                window.tinyFastCall(contentCollection[i]);
-            }
-
             elList.classList.add('wptb-ph-element', 'wptb-element-list-' + window.wptb_num['list']);
             window.addElementOptions('list', elList);
             window.wptb_num['list']++;
@@ -124,8 +120,8 @@
         divcontent.innerHTML = text;
         tinyFastCall(divcontent);
         divcontent.onkeyup = window.listItemKeyListener;
-        divcontent.onmouseenter = window.showListItemSettings;
-        divcontent.onmouseleave = window.hideListItemSettings;
+        divcontent.parentNode.onmouseenter = window.showListItemSettings;
+        divcontent.parentNode.onmouseleave = window.hideListItemSettings;
         return duplicate;
     }
 
