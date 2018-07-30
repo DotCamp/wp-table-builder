@@ -8,19 +8,19 @@
         document.getElementById("element-options-group").style.display = 'none';
     };
 
-    window.Element_options_tab = function(){
-                document.getElementById('add-elements').getElementsByTagName('a')[0].classList.remove('active');
-                document.getElementById('element-options').getElementsByTagName('a')[0].classList.add('active');
+    window.Element_options_tab = function () {
+        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.remove('active');
+        document.getElementById('element-options').getElementsByTagName('a')[0].classList.add('active');
 
-                document.getElementsByClassName('wptb-elements-container')[0].style.display = 'none';
-                document.getElementsByClassName('wptb-settings-section')[0].style.display = 'none';
-                document.getElementById("element-options-group").style.display = 'block';
-                var children = document.getElementById("element-options-group").childNodes;
-                for (var i = 0; i < children.length; i++) {
-                    if (children[i].style)
-                        children[i].style.display = 'none';
-                }
-            }
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'none';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'none';
+        document.getElementById("element-options-group").style.display = 'block';
+        var children = document.getElementById("element-options-group").childNodes;
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].style)
+                children[i].style.display = 'none';
+        }
+    }
 
     window.addElementOptions = function (wptbElement, el) {
         var prop = $(".wptb-" + wptbElement + "-options-prototype").clone();

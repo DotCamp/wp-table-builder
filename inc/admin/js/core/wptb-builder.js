@@ -18,11 +18,11 @@ jQuery(document).ready(function ($) {
     //Generate table and bind associated functions.
     document.onready = function () {
         document.getElementById("wptb-generate-table").onclick = function () {
- 
+
             //Runs when an element is dropped on a cell.
             initTable();
-           
- 
+
+
             /**
              * this function will be called 
              * when a property of any elemnet is changed
@@ -126,17 +126,16 @@ jQuery(document).ready(function ($) {
                 addCellPadding(this.value);
             };
 
-            document.getElementById('wptb-activate-cell-management-mode').onclick = function(){
-                if(this.value=="Manage Cells"){
+            document.getElementById('wptb-activate-cell-management-mode').onclick = function () {
+                if (this.value == "Manage Cells") {
                     document.getElementsByClassName('wptb-cell-management')[0].classList.add('visible');
-                    this.value= "Close Cell Management Mode";
+                    this.value = "Close Cell Management Mode";
                 }
-                else{
+                else {
                     document.getElementsByClassName('wptb-cell-management')[0].classList.remove('visible');
                     this.value = "Manage Cells";
                 }
-                
-                
+
             }
 
             //Triggers when apply inner border setting changes.
