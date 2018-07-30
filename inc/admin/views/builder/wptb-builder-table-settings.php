@@ -6,6 +6,20 @@
 
 <div class="wptb-settings-items" style="display: none;">
     <div class="wptb-settings-row wptb-settings-middle-xs">
+        
+        <div class="wptb-settings-col-xs-12">
+            <input type="button" id="wptb-activate-cell-management-mode" name="wptb-activate-cell-management-mode" class="wptb-button" value="<?php echo __('Manage Cells','wp_table_builder'); ?>" title="<?php echo __('Manage Cells','wp_table_builder'); ?>">
+        </div> 
+    </div>
+    <div class="wptb-cell-management">
+        <input type="button" id="wptb-add-end-row" name="wptb-add-end-row" class="wptb-button" value="<?php echo __('Add row at the end','wp_table_builder'); ?>" title="<?php echo __('Add row at the end','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-start-row" name="wptb-add-start-row" class="wptb-button" value="<?php echo __('Add row at the start','wp_table_builder'); ?>" title="<?php echo __('Add row at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-end-column" name="wptb-add-end-column" class="wptb-button" value="<?php echo __('Add column at the end','wp_table_builder'); ?>" title="<?php echo __('Add column at the end','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-start-column" name="wptb-add-start-column" class="wptb-button" value="<?php echo __('Add column at the start','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button" value="<?php echo __('Delete Row','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button" value="<?php echo __('Delete Column','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+    </div>
+    <div class="wptb-settings-row wptb-settings-middle-xs">
         <p>
             <?php echo __( 'Table Border', 'wp-table-builder' ); ?>
         </p>
