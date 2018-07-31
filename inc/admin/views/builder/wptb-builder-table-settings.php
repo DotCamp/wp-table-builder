@@ -12,12 +12,22 @@
         </div> 
     </div>
     <div class="wptb-cell-management">
-        <input type="button" id="wptb-add-end-row" name="wptb-add-end-row" class="wptb-button" value="<?php echo __('Add row at the end','wp_table_builder'); ?>" title="<?php echo __('Add row at the end','wp_table_builder'); ?>">
-        <input type="button" id="wptb-add-start-row" name="wptb-add-start-row" class="wptb-button" value="<?php echo __('Add row at the start','wp_table_builder'); ?>" title="<?php echo __('Add row at the start','wp_table_builder'); ?>">
-        <input type="button" id="wptb-add-end-column" name="wptb-add-end-column" class="wptb-button" value="<?php echo __('Add column at the end','wp_table_builder'); ?>" title="<?php echo __('Add column at the end','wp_table_builder'); ?>">
-        <input type="button" id="wptb-add-start-column" name="wptb-add-start-column" class="wptb-button" value="<?php echo __('Add column at the start','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
-        <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button" value="<?php echo __('Delete Row','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
-        <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button" value="<?php echo __('Delete Column','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-end-row" name="wptb-add-end-row" class="wptb-button none" value="<?php echo __('Add row at the end','wp_table_builder'); ?>" title="<?php echo __('Add row at the end','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-start-row" name="wptb-add-start-row" class="wptb-button none"  value="<?php echo __('Add row at the start','wp_table_builder'); ?>" title="<?php echo __('Add row at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-end-column" name="wptb-add-end-column" class="wptb-button none"  value="<?php echo __('Add column at the end','wp_table_builder'); ?>" title="<?php echo __('Add column at the end','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-start-column" name="wptb-add-start-column" class="wptb-button none"  value="<?php echo __('Add column at the start','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+
+
+        <input type="button" id="wptb-add-row-before" name="wptb-add-row-before" class="wptb-button individual wptb-relative-action" value="<?php echo __('Add row before this one','wp_table_builder'); ?>" title="<?php echo __('Add row before this one','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-row-after" name="wptb-add-row-after" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add row after this one','wp_table_builder'); ?>" title="<?php echo __('Add row after this one','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-column-before" name="wptb-add-column-before" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add column before this one','wp_table_builder'); ?>" title="<?php echo __('Add column before this one','wp_table_builder'); ?>">
+        <input type="button" id="wptb-add-column-after" name="wptb-add-column-after" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add column after this one','wp_table_builder'); ?>" title="<?php echo __('Add column after this one','wp_table_builder'); ?>">
+
+
+        <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button individual"  value="<?php echo __('Delete Row','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button individual"  value="<?php echo __('Delete Column','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
+        <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button group"  value="<?php echo __('Merge Cells','wp_table_builder'); ?>" title="<?php echo __('Merge Cells','wp_table_builder'); ?>">
+        <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button merged"  value="<?php echo __('Split Cell','wp_table_builder'); ?>" title="<?php echo __('Split cell','wp_table_builder'); ?>">
     </div>
     <div class="wptb-settings-row wptb-settings-middle-xs">
         <p>

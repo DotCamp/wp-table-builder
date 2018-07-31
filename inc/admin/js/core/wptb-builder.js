@@ -31,8 +31,11 @@ jQuery(document).ready(function ($) {
              * @returns {void}
              */
             function detect_element_for_property() {
-                var option = $(this);
-                var parent = option.closest(".wptb-element-options");
+                var option = this,
+                    parent = option;
+                while (!parent.classList.contains('.wptb-element-options')) {
+                    parent = parent.parentNode;
+                }
                 var classes = parent.attr("class");
 
                 /**
@@ -49,7 +52,7 @@ jQuery(document).ready(function ($) {
 
                 var type = infArr[1];
                 var num = infArr[2];
-                var element = $('.wptb-ph-element.wptb-element-' + type + '-' + num);
+                var element = document.querySelector('.wptb-ph-element.wptb-element-' + type + '-' + num);
                 editing_property(element, option);
             }
 
@@ -73,17 +76,26 @@ jQuery(document).ready(function ($) {
                         break;
                     case 'list-class':
                         if (val == 'unordered') {
-                            $('[data-type=list-style-type]').parent().css('display', 'flex');
-                            element.find('article .wptb-list-item-style-dot li').css('list-style-type', 'disc');
-                            $('[data-type=list-style-type]').val('disc');
+                            element.querySelector('[data-type=list-style-type]').parentNode.style.display = 'flex';
+                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            for (var i = 0; i < bullets.length; i++) {
+                                bullets[i].style.listStyleType = 'disc';
+                            }
+                            document.querySelector('[data-type=list-style-type]').value = 'disc';
                         } else {
-                            $('[data-type=list-style-type]').parent().css('display', 'none');
-                            element.find('article .wptb-list-item-style-dot li').css('list-style-type', 'decimal');
+                            element.querySelector('[data-type=list-style-type]').parentNode.style.display = 'none';
+                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            for (var i = 0; i < bullets.length; i++) {
+                                bullets[i].style.listStyleType = 'decimal';
+                            }
                         }
                         break;
                     case 'numbering-list-style-type':
                     case 'list-style-type':
-                        element.find('article .wptb-list-item-style-dot li').css('list-style-type', val.toLowerCase());
+                        var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                        for (var i = 0; i < bullets.length; i++) {
+                            bullets[i].style.listStyleType = val.toLowerCase();
+                        }
                         break;
                 }
             }
@@ -136,6 +148,7 @@ jQuery(document).ready(function ($) {
                     this.value = "Manage Cells";
                 }
 
+
             }
 
             //Triggers when apply inner border setting changes.
@@ -187,13 +200,16 @@ jQuery(document).ready(function ($) {
 
         };
 
+        document.getElementById('wptb-add-row-before').onclick = window.addRowBefore;
+        document.getElementById('wptb-add-row-after').onclick = window.addRowAfter;
+        document.getElementById('wptb-add-column-before').onclick = window.addColumnBefore;
+        document.getElementById('wptb-add-column-after').onclick = window.addColumnAfter;
     }; // Of document.onready
 
     //When dragging starts for Text element
     function itemDragStart(event) {
         wptbElement = event.target.id.substring(5, event.target.id.length);
 
-        //var el = $(this);
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
     }
