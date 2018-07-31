@@ -76,14 +76,58 @@
     };
 
     window.newImage = function (text) {
-        var imgWrap = document.createElement('div')
-        imgWrap.classList.add('wptb-img-wrapper')
-        var imgBtn = document.createElement('button')
-        imgBtn.classList.add('button')
-        imgBtn.classList.add('wptb-img-btn')
-        imgBtn.innerHTML = text != undefined ? text : 'Choose Image'
-        imgWrap.appendChild(imgBtn)
+        var imgWrap = document.createElement('div');
+        imgWrap.classList.add('wptb-img-wrapper');
+        var imgBtn = document.createElement('button');
+        imgBtn.classList.add('button');
+        imgBtn.classList.add('wptb-img-btn');
+        imgBtn.innerHTML = text != undefined ? text : 'Choose Image';
+        imgWrap.appendChild(imgBtn);
+        
+        Medialibrary(imgBtn);
+        $(imgBtn).click(function(){
+            Medialibrary(this);
+        });
         return imgWrap
+    }
+    
+    window.Medialibrary = function (button){
+        // Set all variables to be used in scope
+        button.frame;
+        
+        if( button.frame ){
+            button.frame.open();
+            return;
+        }
+        
+        // Create a new media frame
+        button.frame = wp.media({
+            title: 'Select The image',
+            button:{
+                text: 'Use this media'
+            },
+            multiple: false
+        });
+        
+        // When an image is selected in the media frame...
+        button.frame.on('select', function(){
+            
+            var attachment = button.frame.state().get('selection').first().toJSON(),
+            url = attachment.url,
+            wrapper = button.parentNode,
+            img = document.createElement('img');
+            img.classList.add('wptb-ph-element');
+            img.classList.add('wptb-element-img-'+window.wptb_num["image"]);
+            $(img).prop('src',url);
+            $(img).css('width','100%');
+            
+            wrapper.innerHTML = '';
+            wrapper.appendChild(img);
+            
+            window.wptb_num["image"]++;
+        });
+        
+        
     }
 
 })(jQuery);
