@@ -90,6 +90,8 @@
         return elButton;
     };
 })(jQuery);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 (function ($) {
 
     window.copyImage = function (event) {
@@ -187,8 +189,12 @@
     window.Medialibrary = function (button) {
         // Set all variables to be used in scope
         button.frame;
-
         if (button.frame) {
+            if (button.selectedId) {
+                // choose the selected image
+                var selection = button.frame.state().get('selection');
+                selection.add(wp.media.attachment(button.selectedId));
+            }
             button.frame.open();
             return;
         }
@@ -204,22 +210,32 @@
 
         // When an image is selected in the media frame...
         button.frame.on('select', function () {
-
+            button.selectedId = button.frame.state().get('selection').models[0].id;
             var attachment = button.frame.state().get('selection').first().toJSON(),
                 url = attachment.url,
-                wrapper = button.parentNode,
-                img = document.createElement('img');
-            img.classList.add('wptb-ph-element');
-            img.classList.add('wptb-element-img-' + window.wptb_num["image"]);
-            $(img).prop('src', url);
-            $(img).css('width', '100%');
+                wrapper = button.parentNode;
 
-            wrapper.innerHTML = '';
-            wrapper.appendChild(img);
+            // if there's already an image
+            if (_typeof(button.img) == 'object') {
+                $(button.img).prop('src', url);
+                return;
+            }
+
+            // making image relative to the button in its objec
+            button.img = document.createElement('img');
+            button.img.classList.add('wptb-ph-element');
+            button.img.classList.add('wptb-element-img-' + window.wptb_num["image"]);
+            $(button.img).prop('src', url);
+            $(button.img).css('width', '100%');
+
+            button.innerHTML = 'Change Image';
+            wrapper.appendChild(button.img);
 
             window.wptb_num["image"]++;
         });
     };
+
+    window.changeImageBtn = function (button, frame) {};
 })(jQuery);
 (function ($) {
 
