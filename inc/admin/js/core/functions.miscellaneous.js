@@ -35,6 +35,8 @@
                 break;
         }
         wptb_num[wptbElement]++;
+        
+        return prop;
     };
 
     /**

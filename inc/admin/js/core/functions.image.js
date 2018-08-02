@@ -88,7 +88,7 @@
         $(imgBtn).click(function(){
             Medialibrary(this);
         });
-        return imgWrap
+        return imgWrap;
     }
     
     window.Medialibrary = function (button){
@@ -123,25 +123,24 @@
             // if there's already an image
            if(typeof button.img == 'object'){
                $(button.img).prop('src',url);
+               $(button.img).click();
                return;
            }
             
             // making image relative to the button in its objec
-            button.img = document.createElement('img');            
-            button.img.classList.add('wptb-ph-element');
-            button.img.classList.add('wptb-element-img-'+window.wptb_num["image"]);
+            button.img = document.createElement('img');
             $(button.img).prop('src',url);
             $(button.img).css('width','100%');
-            
-            button.innerHTML = 'Change Image';
+            button.img.classList.add('wptb-ph-element', 'wptb-element-image-'+window.wptb_num["image"]);
+            var prop = window.addElementOptions('image', button.img);
             wrapper.appendChild(button.img);
             
-            window.wptb_num["image"]++;
+            // convert add image button to change and append it to properties
+            button.innerHTML = 'Change Image';
+            prop.children('.wptb-settings-items').append(button);
+            
+            $(button.img).click();
         });
     }
     
-    window.changeImageBtn = function (button,frame){
-        
-    }
-
 })(jQuery);

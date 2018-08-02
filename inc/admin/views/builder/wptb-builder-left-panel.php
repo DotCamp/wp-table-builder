@@ -87,8 +87,6 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
-                        <div class='wptb-settings-col-xs-4'>Image Url</div>
-                        <div class='wptb-settings-col-xs-8'><input type="text" /></div>
                     </div>
                 </div>
                 <div class='wptb-element-options wptb-button-options wptb-button-options-prototype' style='display: none;'>
