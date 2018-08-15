@@ -25,21 +25,21 @@ use WP_Table_Builder as NS;
                 </ul>
                 <div class="add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
-                        <div class="wptb-element left" draggable="true" id="wptb-text">
+                        <div class="wptb-element left wptb-draggable-prototype" id="wptb-text">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.php'; ?>
-                            <p><?php echo __( 'Text', 'wp-table-builder' ); ?></p>
+                            <p class="wptb-draggable"><?php echo __( 'Text', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element right" draggable="true" id="wptb-image">
+                        <div class="wptb-element right wptb-draggable-prototype" id="wptb-image">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.php'; ?>
-                            <p><?php echo __( 'Image', 'wp-table-builder' ); ?></p>
+                            <p class="wptb-draggable-prototype"><?php echo __( 'Image', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element left" draggable="true" id="wptb-button">
+                        <div class="wptb-element left wptb-draggable-prototype" id="wptb-button">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.php'; ?>
-                            <p><?php echo __( 'Button', 'wp-table-builder' ); ?></p>
+                            <p class="wptb-draggable-prototype"><?php echo __( 'Button', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element right" draggable="true" id="wptb-list">
+                        <div class="wptb-element right wptb-draggable-prototype" id="wptb-list">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
-                            <p><?php echo __( 'List', 'wp-table-builder' ); ?></p>
+                            <p class="wptb-draggable-prototype"><?php echo __( 'List', 'wp-table-builder' ); ?></p>
                         </div>
                     </div>              
                 </div>
@@ -87,6 +87,8 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
+                        <div class='wptb-settings-col-xs-4'>Image Url</div>
+                        <div class='wptb-settings-col-xs-8'><input type="text" /></div>
                     </div>
                 </div>
                 <div class='wptb-element-options wptb-button-options wptb-button-options-prototype' style='display: none;'>

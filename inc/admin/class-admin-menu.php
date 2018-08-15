@@ -101,9 +101,6 @@ class Admin_Menu {
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 		wp_enqueue_script( 'wptb-admin-builder-js' );
-                
-                // adding the scripts of The media library
-                wp_enqueue_media();
 	
 	}
 

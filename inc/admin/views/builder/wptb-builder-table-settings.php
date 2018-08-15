@@ -26,8 +26,8 @@
 
         <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button individual"  value="<?php echo __('Delete Row','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
         <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button individual"  value="<?php echo __('Delete Column','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
-        <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button group"  value="<?php echo __('Merge Cells','wp_table_builder'); ?>" title="<?php echo __('Merge Cells','wp_table_builder'); ?>">
-        <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button merged"  value="<?php echo __('Split Cell','wp_table_builder'); ?>" title="<?php echo __('Split cell','wp_table_builder'); ?>">
+        <input type="button" id="wptb-merge-cells" name="wptb-merge-cells" class="wptb-button group"  value="<?php echo __('Merge Cells','wp_table_builder'); ?>" title="<?php echo __('Merge Cells','wp_table_builder'); ?>">
+        <input type="button" id="wptb-split-cell" name="wptb-split-cell" class="wptb-button merged"  value="<?php echo __('Split Cell','wp_table_builder'); ?>" title="<?php echo __('Split cell','wp_table_builder'); ?>">
     </div>
     <div class="wptb-settings-row wptb-settings-middle-xs">
         <p>

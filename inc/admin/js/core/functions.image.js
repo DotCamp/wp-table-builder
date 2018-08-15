@@ -76,71 +76,14 @@
     };
 
     window.newImage = function (text) {
-        var imgWrap = document.createElement('div');
-        imgWrap.classList.add('wptb-img-wrapper');
-        var imgBtn = document.createElement('button');
-        imgBtn.classList.add('button');
-        imgBtn.classList.add('wptb-img-btn');
-        imgBtn.innerHTML = text != undefined ? text : 'Choose Image';
-        imgWrap.appendChild(imgBtn);
-        
-        Medialibrary(imgBtn);
-        $(imgBtn).click(function(){
-            Medialibrary(this);
-        });
-        return imgWrap;
+        var imgWrap = document.createElement('div')
+        imgWrap.classList.add('wptb-img-wrapper')
+        var imgBtn = document.createElement('button')
+        imgBtn.classList.add('button')
+        imgBtn.classList.add('wptb-img-btn')
+        imgBtn.innerHTML = text != undefined ? text : 'Choose Image'
+        imgWrap.appendChild(imgBtn)
+        return imgWrap
     }
-    
-    window.Medialibrary = function (button){
-        // Set all variables to be used in scope
-        button.frame;
-        if( button.frame ){
-            if(button.selectedId){
-                // choose the selected image
-                var selection =  button.frame.state().get('selection');
-                selection.add(wp.media.attachment(button.selectedId));
-            }
-            button.frame.open();
-            return;
-        }
-        
-        // Create a new media frame
-        button.frame = wp.media({
-            title: 'Select The image',
-            button:{
-                text: 'Use this media'
-            },
-            multiple: false
-        });
-        
-        // When an image is selected in the media frame...
-        button.frame.on('select', function(){
-            button.selectedId = button.frame.state().get('selection').models[0].id;
-            var attachment = button.frame.state().get('selection').first().toJSON(),
-            url = attachment.url,
-            wrapper = button.parentNode;
-            
-            // if there's already an image
-           if(typeof button.img == 'object'){
-               $(button.img).prop('src',url);
-               $(button.img).click();
-               return;
-           }
-            
-            // making image relative to the button in its objec
-            button.img = document.createElement('img');
-            $(button.img).prop('src',url);
-            $(button.img).css('width','100%');
-            button.img.classList.add('wptb-ph-element', 'wptb-element-image-'+window.wptb_num["image"]);
-            var prop = window.addElementOptions('image', button.img);
-            wrapper.appendChild(button.img);
-            
-            // convert add image button to change and append it to properties
-            button.innerHTML = 'Change Image';
-            prop.children('.wptb-settings-items').append(button);
-            
-            $(button.img).click();
-        });
-    }
-    
+
 })(jQuery);

@@ -4,6 +4,10 @@
  * The file is enqueued from inc/admin/class-admin.php.
  */
 
+.wptb-state-dragging *{
+    cursor: no-drop;
+}
+
 .wptb-admin-container {
     background: #fff;
     color: #444;
@@ -633,12 +637,17 @@ table.wptb-table {
     background: #eeeeee;
 }
 
+.wptb-state-dragging td{
+    cursor: all-scroll;
+}
+
 .wptb-preview-table td {
     padding: 15px;
 }
 
-.wptb-preview-table .wptb-row td.highlighted{
-    border: 1px solid lightgreen;
+.wptb-preview-table .wptb-row td.highlighted,
+.wptb-state-dragging td:hover{
+    border: 1px solid lightgreen !important;
 }
 
 .wptb-preview-table .wptb-row.highlighted-row{
@@ -988,4 +997,35 @@ table.wptb-table {
 
 .wptb-cell-management .wptb-button[disabled]{
     display: none;
+}
+
+.wptb-space-between{
+    background-color: yellow;
+    min-height: 20px;
+    width: 100%;
+}
+
+.wptb-insert-here{
+    border: 1px solid lightgreen;
+    display: none;
+    height: 20px;
+    margin: 2px 5%;
+    position: relative;
+    width: 90%;
+}
+
+.wptb-insert-here span{
+    background: lightgreen;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: -14pt;
+}
+
+.wptb-draggable{
+    border:none;
+}
+
+.wptb-actions .dashicons.dashicons-move.move-action{
+    font-size: 17px !important;
 }

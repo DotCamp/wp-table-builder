@@ -1,448 +1,246 @@
 (function ($) {
+
     window.selectedCells = [];
+
+    // Before this turns out to be a hell of code, we better comment it.
+
+    /**
+    * First function running after the user clicks on Generate button.
+    * 
+    * @returns {void}
+    */
+
     window.initTable = function () {
 
-        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-        var settings = document.getElementsByClassName('wptb-settings-items');
-        for (var i = 0; i < settings.length; i++) {
-            settings[i].classList.add('visible');
-        }
+            document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+            var settings = document.getElementsByClassName('wptb-settings-items');
+            for (var i = 0; i < settings.length; i++) {
+                settings[i].classList.add('visible');
+            }
 
-        //Add Color Picker for Row and Header Background Colors
-        $('#wptb-even-row-bg').wpColorPicker();
-        $('#wptb-odd-row-bg').wpColorPicker();
-        $('#wptb-table-header-bg').wpColorPicker();
+            //Add Color Picker for Row and Header Background Colors
+            $('#wptb-even-row-bg').wpColorPicker();
+            $('#wptb-odd-row-bg').wpColorPicker();
+            $('#wptb-table-header-bg').wpColorPicker();
 
-        //Create a HTML Table element.
-        var table = document.createElement('table');
-        table.classList.add('wptb-preview-table');
+            //Create a HTML Table element.
+            var table = document.createElement('table');
+            table.classList.add('wptb-preview-table');
 
-        //Get the count of columns and rows.
-        var columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        var rowCount = parseInt(document.getElementById('wptb-rows-number').value);
+            //Get the count of columns and rows.
+            var columnCount = parseInt(document.getElementById('wptb-columns-number').value);
+            var rowCount = parseInt(document.getElementById('wptb-rows-number').value);
 
-        //Add the header row.
-        var row = table.insertRow(-1);
-        for (var i = 0; i < columnCount; i++) {
-            var headerCell = createCell();
-            row.appendChild(headerCell);
-            row.classList.add('wptb-table-head', 'wptb-row');
-            headerCell.dataset.yIndex = 0;
-            headerCell.dataset.xIndex = i;
-        }
-
-        //Add the data rows.
-        for (var i = 1; i < rowCount; i++) {
-            row = table.insertRow(-1);
-            for (var j = 0; j < columnCount; j++) {
+            //Add the header row.
+            var row = table.insertRow(-1);
+            for (var i = 0; i < columnCount; i++) {
                 var headerCell = createCell();
-                row.appendChild(headerCell);
-                row.classList.add('wptb-row');
-                headerCell.dataset.yIndex = i;
-                headerCell.dataset.xIndex = j;
-            }
-        }
-
-        //Appending the table to the container in UI
-        var wptbTable = document.getElementsByClassName("wptb-table-setup")[0];
-        wptbTable.innerHTML = '';
-        wptbTable.appendChild(table);
-
-        window.bindKeydownHandler();
-        window.bindClickHandler();
-
-    }
-
-    window.createCell = function () {
-        var cell = document.createElement("td"),
-            allowDrop = function (event) {
-                event.target.classList.add('wptb-allow-drop');
-                event.currentTarget.classList.add('wptb-allow-drop');
-                if (event.type == 'dragover') {
-                    event.stopPropagation();
-                    event.preventDefault();
-                    return true;
-                }
-            };
-        cell.classList.add('wptb-droppable', 'wptb-cell');
-        cell.ondrop = function (event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-            event.target.classList.remove('wptb-allow-drop');
-
-            if (wptbElement == 'text') {
-                var textEl = window.newText();
-                event.target.appendChild(textEl);
-                textEl.click();
-            } else if (wptbElement == 'image') {
-                var img = window.newImage()
-                event.target.appendChild(img);
-            } else if (wptbElement == 'button') {
-                var button = window.newButton();
-                event.target.appendChild(button);
-                button.click();
-            } else if (wptbElement == 'list') {
-                var listEl = window.newList();
-                event.target.appendChild(listEl);
-                listEl.click();
-            }
-        };
-        cell.ondragenter = allowDrop;
-        cell.ondragleave = function (event) {
-            event.target.classList.remove('wptb-allow-drop');
-        };
-        cell.ondragover = allowDrop;
-        cell.onclick = selectIndividualCell;
-        cell.onmousedown = startCellSelection;
-        cell.onmouseover = goOnWithCellSelection;
-        cell.onmouseup = endCellSelection;
-        return cell;
-    }
-
-    window.selectIndividualCell = function () {
-
-        for (var i = 0; i < selectedCells.length; i++) {
-            selectedCells[i].classList.remove('highlighted');
-        }
-
-        window.selectedCells = [this];
-        window.activeColumn = this.dataset.xIndex;
-        window.activeRow = this.dataset.yIndex;
-        undoAllPreviousHighlights();
-        activateIndividualActions();
-        deactivateNoneActions();
-        deactivateGroupActions();
-        highlightRow(this);
-        highlightColumn(this);
-        this.classList.add('highlighted');
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.xIndex = this.dataset.xIndex;
-            buttons[i].dataset.yIndex = this.dataset.yIndex;
-        }
-    }
-
-    window.undoAllPreviousHighlights = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var row = table.getElementsByTagName('tr')[i];
-            for (var j = 0; j < columnCount; j++) {
-                row.getElementsByTagName('td')[j].classList.remove(
-                    'highlighted',
-                    'highlighted-row-first',
-                    'highlighted-row-inner',
-                    'highlighted-row-last',
-                    'highlighted-column-first',
-                    'highlighted-column-inner',
-                    'highlighted-column-last'
-                );
-                //window.activeRow = window.activeColumn = undefined;
-                window.selectedCells = [];
-            }
-        }
-    };
-
-    window.activateNoneActions = function () {
-
-        var inputs = document.getElementsByClassName('none');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-    };
-
-    window.deactivateNoneActions = function () {
-
-        var inputs = document.getElementsByClassName('none');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.activateIndividualActions = function () {
-
-        var inputs = document.getElementsByClassName('individual');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-
-    };
-
-    window.deactivateGroupActions = function () {
-
-        var inputs = document.getElementsByClassName('group');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.activateGroupActions = function () {
-
-        var inputs = document.getElementsByClassName('group');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-    };
-
-    window.deactivateIndividualActions = function () {
-
-        var inputs = document.getElementsByClassName('individual');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.highlightRow = function (td) {
-        var parentRow = td.parentNode,
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < columnCount; i++) {
-            var classToAdd = (i == 0 ? 'highlighted-row-first' :
-                (i == columnCount - 1 ? 'highlighted-row-last'
-                    : 'highlighted-row-inner'));
-            var ttd = parentRow.getElementsByTagName('td')[i];
-            if (ttd !== td) {
-                ttd.classList.add(classToAdd);
-            }
-        }
-    };
-
-    window.highlightColumn = function (td) {
-
-        var index,
-            parentRow = td.parentNode;
-        columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-            table = document.getElementsByClassName('wptb-preview-table')[0];
-        for (var i = 0; i < columnCount; i++) {
-            if (parentRow.getElementsByTagName('td')[i] === td) {
-                index = i;
-                break;
-            }
-        }
-
-        console.log('Actual value of index', index);
-
-        for (var i = 0; i < rowCount; i++) {
-            var classToAdd = (i == 0 ? 'highlighted-column-first' :
-                (i == rowCount - 1 ? 'highlighted-column-last'
-                    : 'highlighted-column-inner'));
-            var tr = table.getElementsByTagName('tr')[i];
-            if (tr.getElementsByTagName('td')[index] !== td) {
-                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
-            }
-        }
-    };
-
-    window.startCellSelection = function () {
-        this.classList.add('highlighted');
-        window.selectMode = true;
-        window.selectedCells.push(this);
-    };
-
-    window.goOnWithCellSelection = function () {
-        if (window.selectMode) {
-            this.classList.add('highlighted');
-            window.selectedCells.push(this);
-        }
-    };
-
-    window.endCellSelection = function () {
-        window.selectMode = false;
-    };
-
-
-
-    window.bindKeydownHandler = function () {
-        document.onkeydown = function (e) {
-            if (e.target.className === 'mce-textbox') {
-                window.dontAddItems = true;
-                if (event.which === 13 || event.which === 27) {
-                    setTimeout(function () {
-                        window.dontAddItems = false;
-                        document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
-                    }, 250);
-                }
-            }
-        };
-    };
-
-    window.bindClickHandler = function () {
-
-        /*
-            * event click to the whole document and then check if it's to one
-            * the created element to show it's option
-            */
-        document.onclick = function (e) {
-            setTimeout(
-                function () {
-                    //window.tryToChangeMCEWidth();
-                }, 500);
-            var $this = $(e.target);
-
-            if (e.target.classList.contains('wptb-admin-container')) {
-                console.log('Click out of the table');
-                undoAllPreviousHighlights();
-                activateNoneActions();
-                deactivateIndividualActions();
-                deactivateGroupActions();
+                row.appendChild(headerCell); 
+                row.classList.add('wptb-table-head', 'wptb-row');
+                headerCell.dataset.yIndex = 0;
+                headerCell.dataset.xIndex = i;
             }
 
-            if (e.target.className.match(/delete-action/)) {
-                return;
-            }
-            if (e.target.id.match(/mceu_([0-9])*-button/)) {
-                window.dontAddItems = false;
-            }
-
-            var el_options = false; // this var will carry the element that will be shown its options
-
-            // check if this element or one of it's parent should display its options
-            if ($this.hasClass('wptb-ph-element')) {
-                el_options = $this;
-            } else if ($this.parents().hasClass('wptb-ph-element')) {
-                el_options = $this.parents('.wptb-ph-element');
-            }
-
-            // check to show element's options
-            if (el_options && el_options.length != 0) {
-                window.Element_options_tab();
-
-                /**
-                 * will carry the extracted infotrmation from the class
-                 * @example class => wptb-ph-element wptb-element-text-0
-                 *          result => [
-                 *              0 => wptb-element-text-0
-                 *              1 => text-0
-                 *              2 => text-
-                 *          ]
-                 * @type array
-                 */
-                var infArr = el_options.attr('class').match(/wptb-element-((.+-)\d+)/i);
-
-                /*
-                 * will carry the class name of the element's options
-                 * @example wptb-text-options wptb-options-text-0
-                 * @type String
-                 */
-                var optionsClass = '.wptb-' + infArr[2] + 'options' +
-                    '.wptb-options-' + infArr[1];
-                $(optionsClass).show();
-
-                //Binds the range slider and input for text font size.
-                var sliders = document.getElementsByClassName('wptb-text-font-size-slider');
-                for (var i = 0; i < sliders.length; i++) {
-                    sliders[i].onchange = function () {
-                        this.parentNode.parentNode.childNodes[3].childNodes[1].value = this.value;
-                    }
-                }
-
-                //Binds the range slider and input for text font size.
-                var numbers = document.getElementsByClassName('wptb-text-font-size-number');
-                for (var i = 0; i < numbers.length; i++) {
-                    numbers[i].onchange = function () {
-                        this.parentNode.parentNode.childNodes[1].childNodes[1].value = this.value;
-                    }
-                }
-            } else {
-                //show the add elements option
-                if ($this.is('#add-elements') ||
-                    $this.parents('#add-elements').length !== 0 ||
-                    $this.hasClass('wptb-builder-panel') ||
-                    $this.parents('.wptb-builder-panel').length !== 0) {
-                    window.add_Elements_tab();
-                }
-            }
-        };
-
-        document.getElementById('wptb-add-end-row').onclick = addRow('end');
-        document.getElementById('wptb-add-start-row').onclick = addRow('start');
-        document.getElementById('wptb-add-end-column').onclick = addColumn('end');
-        document.getElementById('wptb-add-start-column').onclick = addColumn('start');
-        document.getElementById('wptb-delete-row').onclick = deleteRow;
-        document.getElementById('wptb-delete-column').onclick = deleteColumn;
-
-    };
-
-    window.addRow = function (pos) {
-
-        if (typeof pos == 'string' && pos == 'end')
-            return function (evt) {
-                var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                    rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                    table = document.getElementsByClassName('wptb-preview-table')[0];
+            //Add the data rows.
+            for (var i = 1; i < rowCount; i++) {
                 row = table.insertRow(-1);
                 for (var j = 0; j < columnCount; j++) {
                     var headerCell = createCell();
                     row.appendChild(headerCell);
-                    headerCell.dataset.yIndex = rowCount;
+                    row.classList.add('wptb-row');
+                    headerCell.dataset.yIndex = i;
                     headerCell.dataset.xIndex = j;
                 }
-                row.classList.add('wptb-row');
-                document.getElementById('wptb-rows-number').value = rowCount + 1;
             }
-        if (typeof pos == 'string' && pos == 'start')
-            return function (evt) {
-                var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                    rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                    table = document.getElementsByClassName('wptb-preview-table')[0];
-                row = table.insertRow(0);
-                for (var j = 0; j < columnCount; j++) {
-                    var headerCell = createCell();
-                    row.appendChild(headerCell);
-                    headerCell.dataset.yIndex = rowCount;
-                    headerCell.dataset.xIndex = j;
+
+            //Appending the table to the container in UI
+            var wptbTable = document.getElementsByClassName("wptb-table-setup")[0];
+            wptbTable.innerHTML = '';
+            wptbTable.appendChild(table);
+
+            window.bindKeydownHandler();
+            window.bindClickHandler();
+            //On drag elements.
+            document.getElementById('wptb-text').onmousedown = window.itemDragStart;
+            document.getElementById('wptb-image').onmousedown = window.itemDragStart;
+            document.getElementById('wptb-button').onmousedown = window.itemDragStart;
+            document.getElementById('wptb-list').onmousedown = window.itemDragStart;
+            
+    }
+
+
+
+    /**
+    * A handler for click event in the page.
+    * 
+    * @returns {void}
+    */
+
+    window.bindClickHandler = function(){
+
+         /*
+             * event click to the whole document and then check if it's to one
+             * the created element to show it's option
+             */
+            document.onclick = function (e) {
+                setTimeout(
+                    function () {
+                        //window.tryToChangeMCEWidth();
+                    }, 500);
+                var $this = $(e.target);
+
+                if(e.target.classList.contains('wptb-admin-container')
+                    || e.target.id == 'wpcd_fixed_toolbar'
+                    || e.target.classList.contains('wrapper')){
+                    window.selectionWidth = window.selectionHeight = 0;
+                    undoAllPreviousHighlights();
+                    activateNoneActions();
+                    deactivateIndividualActions();
+                    deactivateGroupActions();
                 }
-                row.classList.add('wptb-row');
-                document.getElementById('wptb-rows-number').value = rowCount + 1;
-            }
+
+                if (e.target.className!==undefined 
+                    && e.target.className.match(/delete-action/)) {
+                    return;
+                }
+                if (e.target.id.match(/mceu_([0-9])*-button/)) {
+                    window.dontAddItems = false;
+                }
+
+                var el_options = false; // this var will carry the element that will be shown its options
+
+                // check if this element or one of it's parent should display its options
+                if ($this.hasClass('wptb-ph-element')) {
+                    el_options = $this;
+                } else if ($this.parents().hasClass('wptb-ph-element')) {
+                    el_options = $this.parents('.wptb-ph-element');
+                }
+
+                // check to show element's options
+                if (el_options && el_options.length != 0) {
+                    window.Element_options_tab();
+
+                    /**
+                     * will carry the extracted infotrmation from the class
+                     * @example class => wptb-ph-element wptb-element-text-0
+                     *          result => [
+                     *              0 => wptb-element-text-0
+                     *              1 => text-0
+                     *              2 => text-
+                     *          ]
+                     * @type array
+                     */
+                    var infArr = el_options.attr('class').match(/wptb-element-((.+-)\d+)/i);
+
+                    /*
+                     * will carry the class name of the element's options
+                     * @example wptb-text-options wptb-options-text-0
+                     * @type String
+                     */
+                    var optionsClass = '.wptb-' + infArr[2] + 'options' +
+                        '.wptb-options-' + infArr[1];
+                    $(optionsClass).show();
+
+                    //Binds the range slider and input for text font size.
+                    var sliders = document.getElementsByClassName('wptb-text-font-size-slider');
+                    for (var i = 0; i < sliders.length; i++) {
+                        sliders[i].onchange = function () {
+                            this.parentNode.parentNode.childNodes[3].childNodes[1].value = this.value;
+                        }
+                    }
+
+                    //Binds the range slider and input for text font size.
+                    var numbers = document.getElementsByClassName('wptb-text-font-size-number');
+                    for (var i = 0; i < numbers.length; i++) {
+                        numbers[i].onchange = function () {
+                            this.parentNode.parentNode.childNodes[1].childNodes[1].value = this.value;
+                        }
+                    }
+                } else {
+                    //show the add elements option
+                    if ($this.is('#add-elements') ||
+                        $this.parents('#add-elements').length !== 0 ||
+                        $this.hasClass('wptb-builder-panel') ||
+                        $this.parents('.wptb-builder-panel').length !== 0) {
+                        window.add_Elements_tab();
+                    }
+                }
+            };
+
+            document.getElementById('wptb-add-end-row').onclick = addRowToTheEnd;
+            document.getElementById('wptb-add-start-row').onclick = addRowToTheStart;
+            document.getElementById('wptb-add-end-column').onclick = addColumnToTheEnd;
+            document.getElementById('wptb-add-start-column').onclick = addColumnToTheStart;
+            document.getElementById('wptb-delete-row').onclick = deleteRow;
+            document.getElementById('wptb-delete-column').onclick = deleteColumn;
+            document.getElementById('wptb-merge-cells').onclick = mergeCells;
+
     };
 
-    window.addColumn = function (pos) {
+    /**
+    * This functions calculates table dimensions by counting its elements
+    * rather than trusting in current value of rows and columns number input elements.
+    * 
+    * @returns object with rows and columns number
+    */
 
-        if (typeof pos == 'string' && pos == 'end')
-            return function (evt) {
-                var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                    rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                    table = document.getElementsByClassName('wptb-preview-table')[0];
-                for (var i = 0; i < rowCount; i++) {
-                    var headerCell = createCell();
-                    table.getElementsByTagName('tr')[i].appendChild(headerCell);
-                    headerCell.dataset.yIndex = i;
-                    headerCell.dataset.xIndex = columnCount;
+    window.getActualTableDimensions = function(){
+            var table = document.getElementsByClassName('wptb-preview-table')[0],
+                rows = table.getElementsByTagName('tr'),
+                tds, cols = 0, dimensions;
+            for (var i = 0; i < rows.length; i++) {
+                tds = rows[i].getElementsByTagName('td');
+                if(tds.length > cols){
+                    cols = tds.length;
                 }
-                document.getElementById('wptb-columns-number').value = columnCount + 1;
             }
-        if (typeof pos == 'string' && pos == 'start')
-            return function (evt) {
-                var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                    rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                    table = document.getElementsByClassName('wptb-preview-table')[0];
-                for (var i = 0; i < rowCount; i++) {
-                    var headerCell = createCell();
-                    table.getElementsByTagName('tr')[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + table.getElementsByTagName('tr')[i].innerHTML;
-                    headerCell.dataset.yIndex = i;
-                    headerCell.dataset.xIndex = 0;
-                }
-                document.getElementById('wptb-columns-number').value = columnCount + 1;
-            }
+            dimensions = {
+                    rows : rows.length,
+                    columns : cols 
+                };
+            return dimensions;
     };
 
-    window.recalculateIndexes = function () {
+    /**
+    * This part of code is used often in add rows and columns functions,
+    * so I decided to put it apart.
+    * 
+    * @returns object with table DOM object, all TRs DOM objects, table dimensions and tobdy DOM object
+    * @see getActualTableDimensions
+    */
+
+    window.getParameters = function(){
+        var t = document.getElementsByClassName('wptb-preview-table')[0];
+        return {
+            table : t,
+            dimensions : getActualTableDimensions(),
+            trs : t.getElementsByTagName('tr'),
+            tbody : t.childNodes[0]
+        };
+    };
+
+    /**
+    * A lot of functionality of the tables relies on current cell position,
+    + so each time we alter the dimensions by adding or deleting rows/columns,
+    * we must reassign to each cell its coordinates.
+    *
+    * @returns void
+    */
+
+    window.recalculateIndexes = function(){
         var table = document.getElementsByClassName('wptb-preview-table')[0],
             trs = table.getElementsByTagName('tr');
         for (var i = 0; i < trs.length; i++) {
             var tds = trs[i].getElementsByTagName('td');
             for (var j = 0; j < tds.length; j++) {
 
-                if (i == 0) {
-                    tds[j].parentNode.class = '';
-                    tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
+                if(i==0){ 
+                    tds[j].parentNode.className=''; 
+                    tds[j].parentNode.classList.add('wptb-row','wptb-table-head');
                 }
-                else {
-                    tds[j].parentNode.class = '';
-                    tds[j].parentNode.classList.add('wptb-row');
+                else{
+                    tds[j].parentNode.className=''; 
+                    tds[j].parentNode.classList.add('wptb-row'); 
                 }
 
                 tds[j].dataset.xIndex = j;
@@ -451,84 +249,140 @@
         }
     };
 
+    /**
+    * this function is able to add a row at the start,
+    * at the end of the table, or in a relative position
+    * respect to the current cell.
+    * @param string it defines the behavior of the function.
+    * @param object since it was ambigous the use of this,
+    *       it was the best option to pass it as a parameter.
+    *
+    * @returns void
+    */
 
-    window.addRowBefore = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            referenceRow = table.getElementsByTagName('tr')[this.dataset.yIndex],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            newrow = document.createElement('tr');
-        for (var j = 0; j < columnCount; j++) {
+
+    addRow = function(pos, _this){
+        var params = getParameters(),
+            row, referenceRow = undefined;
+            
+        if(pos == 'end' || pos == 'start'){
+            row = params.table.insertRow( pos == 'end' ? -1 : 0);
+        }else{
+            row = document.createElement('tr');
+        }
+            
+        for (var j = 0; j < params.dimensions.columns; j++) {
             var headerCell = createCell();
-            newrow.appendChild(headerCell);
+            row.appendChild(headerCell);
         }
-        table.childNodes[0].insertBefore(newrow, referenceRow);
+
+        row.classList.add('wptb-row');
+        document.getElementById('wptb-rows-number').value = params.dimensions.rows +1;
+
+        if(pos == 'before' || pos == 'after' ){
+            referenceRow = params.trs[_this.dataset.yIndex];
+            if(pos == "before"){
+                params.tbody.insertBefore(row,referenceRow);
+                var buttons = document.getElementsByClassName('wptb-relative-action');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].dataset.yIndex++;
+                } 
+            }else{
+                params.tbody.insertBefore(row,referenceRow.nextSibling);
+            }
+        }
+
         recalculateIndexes();
-        document.getElementById('wptb-rows-number').value = rowCount + 1;
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.yIndex++;
-        }
+        
     };
 
-    window.addRowAfter = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            referenceRow = table.getElementsByTagName('tr')[this.dataset.yIndex];
-        newrow = document.createElement('tr');
-        for (var j = 0; j < columnCount; j++) {
-            var headerCell = createCell();
-            newrow.appendChild(headerCell);
-        }
-        table.childNodes[0].insertBefore(newrow, referenceRow.nextSibling);
-        recalculateIndexes();
-        document.getElementById('wptb-rows-number').value = rowCount + 1;
+    window.addRowToTheEnd = function(evt){
+        addRow('end',this);
     };
 
-    window.addColumnBefore = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var referenceTd = table
-                .getElementsByTagName('tr')[i]
-                .getElementsByTagName('td')[this.dataset.xIndex],
-                newTd = createCell();
-            table.getElementsByTagName('tr')[i].insertBefore(newTd, referenceTd);
-        }
-        recalculateIndexes();
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.xIndex++;
-        }
-        document.getElementById('wptb-columns-number').value = columnCount + 1;
+    window.addRowToTheStart = function(evt){
+        addRow('start',this);
     };
 
-    window.addColumnAfter = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var referenceTd = table
-                .getElementsByTagName('tr')[i]
-                .getElementsByTagName('td')[this.dataset.xIndex],
-                newTd = createCell();
-            table.getElementsByTagName('tr')[i].insertBefore(newTd, referenceTd.nextSibling);
-        }
-        recalculateIndexes();
-        document.getElementById('wptb-columns-number').value = columnCount + 1;
+    window.addRowBefore = function(){
+        addRow('before',this);
     };
 
-    window.deleteRow = function () {
+    window.addRowAfter = function(){
+        addRow('after',this);
+    };
+
+    /**
+    * this function is able to add a colum at the start,
+    * at the end of the table, or in a relative position
+    * respect to the current cell.
+    * @param string it defines the behavior of the function.
+    * @param object since it was ambigous the use of this,
+    *       it was the best option to pass it as a parameter.
+    *
+    * @returns void
+    */
+
+    addColumn = function(pos,_this){
+        var params = getParameters(),
+            referenceTd, newTd;
+        for (var i = 0; i < params.dimensions.rows; i++) {
+            
+            var newTd = createCell();
+            params.trs[i].appendChild(newTd);  
+            if(pos == 'before' || pos == 'after')
+            {
+                referenceTd = params.trs[i]
+                        .getElementsByTagName('td')[_this.dataset.xIndex];
+                if(pos=='before'){
+                    params.trs[i].insertBefore(newTd,referenceTd);
+                    var buttons = document.getElementsByClassName('wptb-relative-action');
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].dataset.xIndex++;
+                    } 
+                }
+                else{
+                    params.trs[i].insertBefore(newTd,referenceTd.nextSibling);
+                }
+            }
+            else if(pos=='end'){
+                params.trs[i].appendChild(newTd);  
+            }
+            else{
+                params.trs[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + params.trs[i].innerHTML; 
+            }
+        }
+        document.getElementById('wptb-columns-number').value = params.dimensions.columns +1;
+        recalculateIndexes();
+    };
+
+    window.addColumnToTheEnd = function(evt){
+        addColumn('end',this);
+    }
+
+    window.addColumnToTheStart = function(evt){
+        addColumn('start',this);
+        };
+
+    window.addColumnBefore = function(){
+        addColumn('before',this);
+    };
+
+    window.addColumnAfter = function(){
+        addColumn('after',this)
+    };
+
+    window.deleteRow = function () { 
         var num = window.activeRow,
             table = document.getElementsByClassName('wptb-preview-table')[0],
             row = table.getElementsByTagName('tr')[num],
             rowCount = parseInt(document.getElementById('wptb-rows-number').value),
             tbody = row.parentNode;
-        if ((rowCount == 1 && columnCount == 1) || tbody == undefined) {
-            return;
-        }
+        if((rowCount==1 && columnCount==1) || tbody == undefined){
+             return;
+         }
         tbody.removeChild(row);
-        document.getElementById('wptb-rows-number').value = rowCount - 1;
+        document.getElementById('wptb-rows-number').value = rowCount -1;
         undoAllPreviousHighlights();
     };
 
@@ -537,24 +391,16 @@
             num = window.activeColumn,
             rowCount = parseInt(document.getElementById('wptb-rows-number').value),
             columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        if ((rowCount == 1 && columnCount == 1)) {
-            return;
-        }
+            if((rowCount==1 && columnCount==1)){
+             return;
+         }
         for (var i = 0; i < rowCount; i++) {
-            var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
+             var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
                 tr = td.parentNode;
-            tr.removeChild(td);
+             tr.removeChild(td);
         }
-        document.getElementById('wptb-columns-number').value = columnCount - 1;
+        document.getElementById('wptb-columns-number').value = columnCount -1;
         undoAllPreviousHighlights();
-    }
-
-    window.mergeCells = function () {
-
-    }
-
-    window.splitCells = function () {
-
-    }
+    };
 
 })(jQuery);

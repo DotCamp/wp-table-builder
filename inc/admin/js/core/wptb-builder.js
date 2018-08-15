@@ -18,11 +18,11 @@ jQuery(document).ready(function ($) {
     //Generate table and bind associated functions.
     document.onready = function () {
         document.getElementById("wptb-generate-table").onclick = function () {
-
+ 
             //Runs when an element is dropped on a cell.
             initTable();
-
-
+           
+ 
             /**
              * this function will be called 
              * when a property of any elemnet is changed
@@ -33,9 +33,9 @@ jQuery(document).ready(function ($) {
             function detect_element_for_property() {
                 var option = this,
                     parent = option;
-                while (!parent.classList.contains('.wptb-element-options')) {
+                while(!parent.classList.contains('wptb-element-options')){
                     parent = parent.parentNode;
-                }
+                } 
                 var classes = parent.attr("class");
 
                 /**
@@ -76,26 +76,26 @@ jQuery(document).ready(function ($) {
                         break;
                     case 'list-class':
                         if (val == 'unordered') {
-                            element.querySelector('[data-type=list-style-type]').parentNode.style.display = 'flex';
+                            element.querySelector('[data-type=list-style-type]').parentNode.style.display= 'flex';
                             var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
                             for (var i = 0; i < bullets.length; i++) {
-                                bullets[i].style.listStyleType = 'disc';
+                                bullets[i].style.listStyleType= 'disc';
                             }
                             document.querySelector('[data-type=list-style-type]').value = 'disc';
                         } else {
-                            element.querySelector('[data-type=list-style-type]').parentNode.style.display = 'none';
+                            element.querySelector('[data-type=list-style-type]').parentNode.style.display= 'none'; 
                             var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
                             for (var i = 0; i < bullets.length; i++) {
-                                bullets[i].style.listStyleType = 'decimal';
-                            }
+                                bullets[i].style.listStyleType= 'decimal';
+                            } 
                         }
                         break;
                     case 'numbering-list-style-type':
                     case 'list-style-type':
-                        var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
-                        for (var i = 0; i < bullets.length; i++) {
-                            bullets[i].style.listStyleType = val.toLowerCase();
-                        }
+                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            for (var i = 0; i < bullets.length; i++) {
+                                bullets[i].style.listStyleType= val.toLowerCase();
+                            } 
                         break;
                 }
             }
@@ -138,17 +138,17 @@ jQuery(document).ready(function ($) {
                 addCellPadding(this.value);
             };
 
-            document.getElementById('wptb-activate-cell-management-mode').onclick = function () {
-                if (this.value == "Manage Cells") {
+            document.getElementById('wptb-activate-cell-management-mode').onclick = function(){
+                if(this.value=="Manage Cells"){
                     document.getElementsByClassName('wptb-cell-management')[0].classList.add('visible');
-                    this.value = "Close Cell Management Mode";
+                    this.value= "Close Cell Management Mode";
                 }
-                else {
+                else{
                     document.getElementsByClassName('wptb-cell-management')[0].classList.remove('visible');
                     this.value = "Manage Cells";
                 }
-
-
+                
+                
             }
 
             //Triggers when apply inner border setting changes.
@@ -201,23 +201,10 @@ jQuery(document).ready(function ($) {
         };
 
         document.getElementById('wptb-add-row-before').onclick = window.addRowBefore;
-        document.getElementById('wptb-add-row-after').onclick = window.addRowAfter;
+        document.getElementById('wptb-add-row-after').onclick = window.addRowAfter; 
         document.getElementById('wptb-add-column-before').onclick = window.addColumnBefore;
-        document.getElementById('wptb-add-column-after').onclick = window.addColumnAfter;
+        document.getElementById('wptb-add-column-after').onclick = window.addColumnAfter; 
     }; // Of document.onready
 
-    //When dragging starts for Text element
-    function itemDragStart(event) {
-        wptbElement = event.target.id.substring(5, event.target.id.length);
-
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
-    }
-
-    //On drag elements.
-    document.getElementById('wptb-text').ondragstart = itemDragStart;
-    document.getElementById('wptb-image').ondragstart = itemDragStart;
-    document.getElementById('wptb-button').ondragstart = itemDragStart;
-    document.getElementById('wptb-list').ondragstart = itemDragStart;
 
 });

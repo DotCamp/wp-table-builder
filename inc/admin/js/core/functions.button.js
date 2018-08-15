@@ -14,16 +14,25 @@
     };
 
     window.showButtonSettings = function (event) {
+
+        if(window.currentlyDragging != undefined){
+            return;
+        }
+
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
+            btnMove = document.createElement('span'),
             actions = document.createElement('span'),
             previous, i;
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnMove.classList.add("dashicons","dashicons-move", 'move-action');
         btnDelete.onclick = window.deleteButton;
         btnCopy.onclick = window.copyButton;
+        btnMove.onmousedown = window.putItemDragStart;
+        actions.appendChild(btnMove);
         actions.appendChild(btnCopy);
         actions.appendChild(btnDelete);
         this.appendChild(actions);

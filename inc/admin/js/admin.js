@@ -14,17 +14,26 @@
     };
 
     window.showButtonSettings = function (event) {
+
+        if (window.currentlyDragging != undefined) {
+            return;
+        }
+
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
+            btnMove = document.createElement('span'),
             actions = document.createElement('span'),
             previous,
             i;
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
         btnDelete.onclick = window.deleteButton;
         btnCopy.onclick = window.copyButton;
+        btnMove.onmousedown = window.putItemDragStart;
+        actions.appendChild(btnMove);
         actions.appendChild(btnCopy);
         actions.appendChild(btnDelete);
         this.appendChild(actions);
@@ -90,8 +99,525 @@
         return elButton;
     };
 })(jQuery);
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+(function ($) {
 
+    window.selectionWidth = 0;
+    window.selectionHeight = 0;
+
+    window.createCell = function () {
+        var cell = document.createElement("td"),
+            allowDrop = function allowDrop(event) {
+            event.target.classList.add('wptb-allow-drop');
+            event.currentTarget.classList.add('wptb-allow-drop');
+            if (event.type == 'dragover') {
+                //event.stopPropagation();
+                event.preventDefault();
+                return true;
+            }
+        };
+        cell.classList.add('wptb-droppable', 'wptb-cell');
+
+        cell.onclick = selectIndividualCell;
+        cell.onmousedown = startCellSelection;
+        cell.onmouseover = goOnWithCellSelection;
+        cell.onmouseup = endCellSelection;
+        return cell;
+    };
+
+    window.selectIndividualCell = function () {
+
+        for (var i = 0; i < selectedCells.length; i++) {
+            selectedCells[i].classList.remove('highlighted');
+        }
+
+        window.selectedCells = [this];
+        window.activeColumn = this.dataset.xIndex;
+        window.activeRow = this.dataset.yIndex;
+        undoAllPreviousHighlights();
+        activateIndividualActions();
+        deactivateNoneActions();
+        deactivateGroupActions();
+        highlightRow(this);
+        highlightColumn(this);
+        this.classList.add('highlighted');
+        console.log('Coords', parseInt(this.dataset.xIndex), parseInt(this.dataset.yIndex));
+        console.log(this);
+        var buttons = document.getElementsByClassName('wptb-relative-action');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].dataset.xIndex = this.dataset.xIndex;
+            buttons[i].dataset.yIndex = this.dataset.yIndex;
+        }
+    };
+
+    window.undoAllPreviousHighlights = function () {
+        var params = window.getParameters(),
+            tds;
+        for (var i = 0; i < params.trs.length; i++) {
+            tds = params.trs[i].getElementsByTagName('td');
+            for (var j = 0; j < tds.length; j++) {
+                tds[j].classList.remove('highlighted');
+                tds[j].classList.remove('highlighted-row-first');
+                tds[j].classList.remove('highlighted-row-inner');
+                tds[j].classList.remove('highlighted-row-last');
+                tds[j].classList.remove('highlighted-column-first');
+                tds[j].classList.remove('highlighted-column-inner');
+                tds[j].classList.remove('highlighted-column-last');
+            }
+        }
+        window.selectedCells = [];
+    };
+
+    window.activateNoneActions = function () {
+
+        var inputs = document.getElementsByClassName('none');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+    };
+
+    window.deactivateNoneActions = function () {
+
+        var inputs = document.getElementsByClassName('none');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+    };
+
+    window.activateIndividualActions = function () {
+
+        var inputs = document.getElementsByClassName('individual');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+    };
+
+    window.deactivateGroupActions = function () {
+
+        var inputs = document.getElementsByClassName('group');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+    };
+
+    window.activateGroupActions = function () {
+
+        var inputs = document.getElementsByClassName('group');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = false;
+        }
+    };
+
+    window.deactivateIndividualActions = function () {
+
+        var inputs = document.getElementsByClassName('individual');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
+    };
+
+    window.highlightRow = function (td) {
+        var parentRow = td.parentNode,
+            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
+        for (var i = 0; i < columnCount; i++) {
+            var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
+            var ttd = parentRow.getElementsByTagName('td')[i];
+            if (ttd !== td) {
+                ttd.classList.add(classToAdd);
+            }
+        }
+    };
+
+    window.highlightColumn = function (td) {
+
+        var index,
+            parentRow = td.parentNode;
+        columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
+        for (var i = 0; i < columnCount; i++) {
+            if (parentRow.getElementsByTagName('td')[i] === td) {
+                index = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < rowCount; i++) {
+            var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
+            var tr = table.getElementsByTagName('tr')[i];
+            if (tr.getElementsByTagName('td')[index] !== td) {
+                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
+            }
+        }
+    };
+
+    window.startCellSelection = function () {
+        this.classList.add('highlighted');
+        window.selectMode = true;
+        window.selectedCells.push(this);
+    };
+
+    window.goOnWithCellSelection = function () {
+        if (window.selectMode) {
+            this.classList.add('highlighted');
+            window.selectedCells.push(this);
+        }
+    };
+
+    window.endCellSelection = function () {
+        window.selectMode = false;
+        activateGroupActions();
+        deactivateIndividualActions();
+        deactivateNoneActions();
+    };
+
+    window.mergeCells = function () {
+        var firstCell = window.selectedCells[0],
+            lastCell = window.selectedCells[window.selectedCells.length - 1],
+            colspan = Math.abs(lastCell.dataset.xIndex - firstCell.dataset.xIndex) + 1,
+            rowspan = Math.abs(lastCell.dataset.yIndex - firstCell.dataset.yIndex) + 1;
+
+        for (var i = 1; i < window.selectedCells.length; i++) {
+            var p = window.selectedCells[i].parentNode;
+            p.removeChild(window.selectedCells[i]);
+            delete window.selectedCells[i];
+        }
+
+        if (colspan > 1) {
+            firstCell.colSpan = colspan;
+        }
+
+        if (rowspan > 1) {
+            firstCell.rowSpan = rowspan;
+        }
+    };
+
+    window.splitCells = function () {};
+
+    /*
+     * This function finds the table cell DOM element for its coordinates
+     *
+     * @param int the number of row
+     * @param int the number of column
+     * @returns object
+     */
+
+    window.getCellByCoords = function (x, y) {
+        return document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('tr')[y].getElementsByTagName('td')[x];
+    };
+
+    /*
+     * This function checks wether we should make the selection squared 
+     *
+     * @returns boolean
+     * @see makeSquareSelection
+     */
+
+    window.makeSelection = function (startPoint) {
+        var cell;
+
+        undoAllPreviousHighlights();
+
+        selectedCells = [];
+
+        selectedCells.push(cell);
+
+        for (var i = 0; i < selectionHeight; i++) {
+            for (var j = 0; j < selectionWidth; j++) {
+                cell = getCellByCoords(parseInt(startPoint.dataset.xIndex) + j, parseInt(startPoint.dataset.yIndex) + i);
+                if (cell.colSpan && cell.colSpan > 1) {
+                    j += cel.colSpan - 1; //Let's remember j is incremented by 1 at each iteration anyways. 
+                }
+                cell.classList.add('highlighted');
+                selectedCells.push(cell);
+            }
+        }
+    };
+})(jQuery);
+(function ($) {
+
+    //When dragging starts for all elements from Add Items panel
+
+    window.itemDragStart = function (event) {
+
+        event.preventDefault();
+
+        if (!event.target.classList.contains('wptb-draggable-prototype')) {
+            return;
+        }
+
+        var dragEl = event.target;
+
+        while (!dragEl.classList.contains('wptb-element')) {
+            dragEl = dragEl.parentNode;
+        }
+
+        window.currentlyDragging = true;
+        window.elementToDrag = dragEl.cloneNode(true);
+        window.elementToDrag.style.position = 'absolute';
+        window.elementToDrag.style.zIndex = '110000';
+        window.elementToDrag.style.left = event.clientX + 'px';
+        window.elementToDrag.style.top = event.clientY + 'px';
+        window.elementToDrag.style.width = 'auto';
+        window.elementToDrag.classList.remove('wptb-draggable-prototype');
+        window.elementToDrag.classList.add('wptb-draggable');
+        document.body.classList.add('wptb-state-dragging');
+        document.body.appendChild(window.elementToDrag);
+        /* window.currentlyDragging = true;
+         wptbElement = event.target.id.substring(5, event.target.id.length);
+            event.dataTransfer.effectAllowed = 'move';
+         event.dataTransfer.setData("text/plain", event.target.getAttribute('id')); */
+    };
+
+    window.putItemDragStart = function () {
+        var temp = this;
+
+        while (!temp.classList.contains('wptb-ph-element')) {
+            temp = temp.parentNode;
+        }
+
+        window.alreadyPut = true;
+        window.currentlyDragging = true;
+        window.elementToDrag = temp;
+        window.elementToDrag.style.position = 'absolute';
+        window.elementToDrag.style.zIndex = '110000';
+        window.elementToDrag.style.left = event.clientX + 'px';
+        window.elementToDrag.style.top = event.clientY + 'px';
+        window.elementToDrag.style.width = 'auto';
+        document.body.classList.add('wptb-state-dragging');
+        window.nextSpace = temp.nextSibling;
+    };
+
+    /*
+    This function, checking if there is currently an element being dragged,
+    updates its position on the screen. I see coming the hardest part: to put it inside
+    a droppable element, but without using droppable.
+    */
+
+    window.onmousemove = function (event) {
+        event.preventDefault();
+
+        if (window.currentlyDragging === undefined) {
+            return;
+        }
+        if (window.alreadyPut) {
+            var offsetX = document.getElementsByClassName('wptb-builder-panel')[0].getBoundingClientRect().x,
+                offsetY = document.getElementsByClassName('wptb-builder-panel')[0].getBoundingClientRect().y;
+
+            window.elementToDrag.style.left = event.clientX - offsetX + 15 + 'px';
+            window.elementToDrag.style.top = event.clientY - offsetY + 15 + 'px';
+        } else {
+            window.elementToDrag.style.left = event.clientX + 'px';
+            window.elementToDrag.style.top = event.clientY + 'px';
+        }
+    };
+
+    window.makeSpace = function () {
+        var spaceBetween = document.createElement('div'),
+            insertHere = document.createElement('div'),
+            spanInsert = document.createElement('span'),
+            newNode,
+            el = window.elementToDrag.id.substring(5, window.elementToDrag.id.length);
+
+        spaceBetween.onmouseover = function (evt) {
+            if (window.currentlyDragging) this.childNodes[0].style.display = 'block';
+        };
+
+        spaceBetween.onmouseout = function (evt) {
+            this.childNodes[0].style.display = 'none';
+        };
+
+        spanInsert.innerHTML = 'Insert Here';
+        spaceBetween.classList.add('wptb-space-between');
+        insertHere.classList.add('wptb-insert-here');
+        spaceBetween.appendChild(insertHere);
+        insertHere.appendChild(spanInsert);
+        return spaceBetween;
+    };
+
+    /*
+     * This deletes absolute positioning and z-index from dragging item
+     * 
+     * @param object the node to cleanse
+     */
+
+    window.trimInlineStyle = function (el) {
+        el.style.top = 'auto';
+        el.style.left = 'auto';
+        el.style.position = 'relative';
+        el.style.width = '100%';
+        el.style.zIndex = 'auto';
+    };
+
+    /*
+     * Here we save ourselves a few code lines since this is made twice in next function
+     * 
+     * @param string the currently selected new item to create
+     * @return object the new node
+     */
+
+    window.newItemProxy = function (el) {
+        if (el == 'list') {
+            return window.newList();
+        } else if (el == 'image') {
+            return window.newImage();
+        } else if (el == 'text') {
+            return window.newText();
+        } else if (el == 'button') {
+            return window.newButton();
+        }
+    };
+
+    /* Well, this function has turned out to be so complicated
+     * for me keeping track of it without notes.
+     *
+     */
+
+    window.onmouseup = function (event) {
+
+        // There's nothing to do on mouse button being released if there is no item being dragged
+
+        if (window.currentlyDragging == undefined) {
+            return;
+        }
+
+        var p = window.elementToDrag.parentNode;
+
+        // Item just can be dropped in spaces between elements or in empty cells
+
+        if (!event.target.classList.contains('wptb-droppable') && !event.target.classList.contains('wptb-space-between') && !event.target.classList.contains('wptb-insert-here')) {
+            window.currentlyDragging = undefined;
+
+            if (alreadyPut == undefined) {
+                p.removeChild(window.elementToDrag);
+            } else {
+                window.trimInlineStyle(window.elementToDrag);
+                alreadyPut = undefined;
+            }
+
+            window.elementToDrag = undefined;
+            document.body.classList.remove('wptb-state-dragging');
+            return;
+        }
+
+        //If item is being released in a cell
+
+        if (event.target.classList.contains('wptb-droppable')) {
+
+            var sp2 = window.makeSpace();
+
+            console.log('Item is being released in a cell');
+
+            if (event.target.innerHTML == '') {
+                var sp1 = window.makeSpace();
+                event.target.appendChild(sp1);
+            }
+
+            if (window.alreadyPut == undefined) {
+                var newNode = window.newItemProxy(window.elementToDrag.id.substring(5, window.elementToDrag.id.length));
+                event.target.appendChild(newNode);
+                event.target.appendChild(sp2);
+                p.removeChild(window.elementToDrag);
+                console.log('Additionally, we are creating a new item');
+            } else {
+                console.log('We are just moving an item');
+                window.trimInlineStyle(window.elementToDrag);
+                event.target.appendChild(window.elementToDrag);
+                event.target.appendChild(sp2);
+
+                if (window.nextSpace != undefined) {
+                    var p = window.nextSpace.parentNode;
+                    p.removeChild(window.nextSpace);
+                    window.nextSpace = undefined;
+                }
+            }
+        } else {
+            // If item is being released in a space
+            console.log('Item is being released in space');
+
+            var p = event.target.parentNode.nextSibling,
+                td = event.target;
+
+            while (!td.classList.contains('wptb-droppable')) {
+                td = td.parentNode;
+            }
+
+            if (window.alreadyPut == undefined) {
+                var newNode = window.newItemProxy(window.elementToDrag.id.substring(5, window.elementToDrag.id.length));
+
+                if (p == null) {
+                    td.appendChild(newNode);
+                    td.appendChild(window.makeSpace());
+                } else {
+                    td.insertBefore(newNode, p);
+                    td.insertBefore(window.makeSpace(), p);
+                }
+                document.body.removeChild(window.elementToDrag);
+
+                console.log('Additionally, we are creating a new item');
+            } else {
+                console.log('We are just moving an item');
+
+                if (p == null) {
+                    td.appendChild(window.elementToDrag);
+                    td.appendChild(window.makeSpace());
+                } else {
+                    td.insertBefore(window.elementToDrag, p);
+                    td.insertBefore(window.makeSpace(), p);
+                }
+                window.trimInlineStyle(window.elementToDrag);
+
+                if (window.nextSpace != undefined) {
+                    var p = window.nextSpace.parentNode;
+                    p.removeChild(window.nextSpace);
+                    window.nextSpace = undefined;
+                }
+            }
+        }
+
+        /*
+        if(window.alreadyPut == undefined )
+        { 
+            
+              if(! event.target.classList.contains('wptb-space-between')){
+            event.target.appendChild(spaceBetween);  
+            }
+            else{
+                var p = event.target.parentNode;
+                   if(event.target.nextSibling != undefined){
+                    p.insertBefore(newNode,event.target.nextSibling);
+                }
+                else{
+                    p.appendChild(newNode);
+                }
+            }
+        }
+        else
+        {
+            window.elementToDrag.style.top='auto';
+            window.elementToDrag.style.left='auto';
+            window.elementToDrag.style.position='relative';
+            window.elementToDrag.style.width='100%';
+            window.elementToDrag.style.zIndex='auto';
+            if(! event.target.classList.contains('wptb-space-between'))
+            {
+                event.target.appendChild(spaceBetween);  
+            }
+            else
+            {  
+                var p = event.target.parentNode;
+                if(event.target.nextSibling != undefined){
+                    p.insertBefore(window.elementToDrag,event.target.nextSibling);
+                }
+                else{
+                    p.appendChild(window.elementToDrag);
+                }
+                
+            }
+        } */
+        window.alreadyPut = undefined;
+        document.body.classList.remove('wptb-state-dragging');
+        window.currentlyDragging = undefined;
+        window.elementToDrag = undefined;
+    };
+})(jQuery);
 (function ($) {
 
     window.copyImage = function (event) {
@@ -178,64 +704,252 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         imgBtn.classList.add('wptb-img-btn');
         imgBtn.innerHTML = text != undefined ? text : 'Choose Image';
         imgWrap.appendChild(imgBtn);
-
-        Medialibrary(imgBtn);
-        $(imgBtn).click(function () {
-            Medialibrary(this);
-        });
         return imgWrap;
     };
+})(jQuery);
+(function ($) {
 
-    window.Medialibrary = function (button) {
-        // Set all variables to be used in scope
-        button.frame;
-        if (button.frame) {
-            if (button.selectedId) {
-                // choose the selected image
-                var selection = button.frame.state().get('selection');
-                selection.add(wp.media.attachment(button.selectedId));
-            }
-            button.frame.open();
-            return;
+    window.tinyFastCall = function (obj) {
+        tinyMCE.init({
+            target: obj,
+            inline: true,
+            plugins: "link",
+            dialog_type: "modal",
+            theme: 'modern',
+            menubar: false,
+            fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify'
+        });
+    };
+
+    window.copyList = function (event) {
+        var srcList = event.target.parentNode.parentNode,
+            newList = srcList.cloneNode(true),
+            container = srcList.parentNode,
+            listItems = newList.querySelectorAll('article');
+        newList.onmouseenter = showListSettings;
+        newList.onmouseleave = hideListSettings;
+        for (var i = listItems.length - 1; i >= 0; i--) {
+            var cont = listItems[i].getElementsByClassName('wptb-list-item-content')[0];
+            console.log(cont);
+            listItems[i].onmouseenter = showListItemSettings;
+            listItems[i].onmouseleave = hideListItemSettings;
+            cont.id = '';
+            tinyFastCall(cont);
+            cont.onkeyup = listItemKeyListener;
         }
 
-        // Create a new media frame
-        button.frame = wp.media({
-            title: 'Select The image',
-            button: {
-                text: 'Use this media'
-            },
-            multiple: false
+        var infArr = newList.className.match(/wptb-element-(.+)-(\d)+/i),
+            elName = infArr[1],
+            oldClass = infArr[0],
+            oldClassOptionsPanelClass = "wptb-options-" + elName + "-" + infArr[2];
+
+        var newOptionsPanel = $('.' + oldClassOptionsPanelClass).clone(true, true),
+            oldOptionsPanel = document.querySelector('.' + oldClassOptionsPanelClass);
+        oldOptionsPanel.parentNode.appendChild(newOptionsPanel[0]);
+
+        var newClass = "wptb-element-" + elName + "-" + wptb_num['list'];
+        var newClassOptionsPanelClass = "wptb-options-" + elName + "-" + wptb_num['list'];
+
+        newList.classList.add(newClass);
+        newList.classList.remove(oldClass);
+
+        newOptionsPanel.removeClass(oldClassOptionsPanelClass);
+        newOptionsPanel.addClass(newClassOptionsPanelClass);
+
+        wptb_num['list']++;
+
+        container.appendChild(newList);
+    };
+
+    window.showListSettings = function (event) {
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        actions.innerHTML = 'List Actions';
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        delete document.getElementsByClassName('wptb-actions');
+        previous = document.getElementsByClassName('wptb-directlyhovered');
+        for (i = 0; i < previous.length; i++) {
+            previous[i].classList.remove('wptb-directlyhovered');
+        };
+        this.classList.add('wptb-directlyhovered');
+
+        btnDelete.onclick = function () {
+            var list = this.parentNode.parentNode,
+                tdContainer = list.parentNode;
+            tdContainer.removeChild(list);
+
+            $('.wptb-tab#element-options  a').removeClass('active');
+            $('.wptb-tab#add-elements a').addClass('active');
+
+            $('.wptb-elements-container').show();
+            $('.wptb-settings-section').show();
+            $("#element-options-group").hide();
+        };
+        btnCopy.onclick = copyList;
+
+        actions.append(btnCopy, btnDelete);
+        this.append(actions);
+    };
+
+    window.hideListSettings = function (event) {
+        this.classList.remove('wptb-directlyhovered');
+        var actions = this.getElementsByClassName('wptb-actions')[0];
+        if (actions != undefined) {
+            var parent = actions.parentNode;
+            parent.removeChild(actions);
+        }
+    };
+
+    window.showListItemSettings = function (event) {
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            actions = document.createElement('span'),
+            previous,
+            i;
+        actions.classList.add('wptb-actions');
+        actions.innerHTML = 'Item Actions';
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+
+        previousAct = document.getElementsByClassName('wptb-actions');
+        for (i = 0; i < previousAct.length; i++) {
+            var par = previousAct[i].parentNode;
+            par.removeChild(previousAct[i]);
+        };
+
+        previous = document.getElementsByClassName('wptb-directlyhovered');
+        for (i = 0; i < previous.length; i++) {
+            previous[i].classList.remove('wptb-directlyhovered');
+        };
+        this.classList.add('wptb-directlyhovered');
+
+        btnDelete.onclick = function () {
+            var item = this.parentNode.parentNode,
+                parent = item.parentNode;
+            parent.removeChild(item);
+        };
+
+        btnCopy.onclick = function (event) {
+            var article = event.target.parentNode.parentNode,
+                content = article.querySelector('.wptb-list-item-content'),
+                html = content.innerHTML;
+            var duplicate = newListItem(html);
+            article.parentNode.appendChild(duplicate);
+        };
+
+        actions.append(btnCopy, btnDelete);
+        this.parentNode.appendChild(actions);
+    };
+
+    window.hideListItemSettings = function (event) {
+        this.classList.remove('wptb-directlyhovered');
+        var actions = this.querySelector('.wptb-actions');
+        if (actions != undefined) {
+            var parent = actions.parentNode;
+            parent.removeChild(actions);
+        }
+    };
+
+    window.newListItem = function (text) {
+        if (text == undefined) text = 'New List Item';
+        var duplicate = document.createElement('article');
+        var divdot = document.createElement('div'),
+            divcontent = document.createElement('div'),
+            libullet = document.createElement('li');
+        divdot.classList.add('wptb-list-item-style-dot');
+        divcontent.classList.add('wptb-list-item-content');
+        libullet.classList.add('wptb-bullet');
+        duplicate.appendChild(divdot);
+        duplicate.appendChild(divcontent);
+        divdot.appendChild(libullet);
+        divcontent.innerHTML = text;
+        tinyFastCall(divcontent);
+        divcontent.onkeyup = window.listItemKeyListener;
+        divcontent.onmouseenter = function (event) {
+            var previous = document.getElementsByClassName('wptb-directlyhovered');
+            for (i = 0; i < previous.length; i++) {
+                previous[i].classList.remove('wptb-directlyhovered');
+            };
+            this.classList.add('wptb-directlyhovered');
+        };
+        divcontent.onmouseleave = function (event) {
+            this.classList.remove('wptb-directlyhovered');
+        };
+        divcontent.onmouseenter = showListItemSettings;
+        divcontent.onmouseleave = hideListItemSettings;
+        return duplicate;
+    };
+
+    window.listItemKeyListener = function (event) {
+        var key = event.which != undefined ? event.which : event.keyCode,
+            liEl = $(this).parent(),
+            duplicate,
+            lastP;
+        if (key !== 13 || window.dontAddItems !== undefined && window.dontAddItems === true) {
+            return;
+        }
+        event.preventDefault();
+        duplicate = newListItem();
+        liEl.after(duplicate);
+        duplicate.querySelector('.wptb-list-item-content').focus();
+
+        lastP = this.childNodes[this.childNodes.length - 1];
+        this.removeChild(lastP);
+        if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
+            this.innerHTML = 'New List Item';
+        }
+        return false;
+    };
+
+    window.inputNumber = function (el) {
+
+        var min = el.attr('min') || false;
+        var max = el.attr('max') || false;
+
+        var els = {};
+
+        els.dec = el.prev();
+        els.inc = el.next();
+
+        el.each(function () {
+            init(this);
         });
 
-        // When an image is selected in the media frame...
-        button.frame.on('select', function () {
-            button.selectedId = button.frame.state().get('selection').models[0].id;
-            var attachment = button.frame.state().get('selection').first().toJSON(),
-                url = attachment.url,
-                wrapper = button.parentNode;
+        function init(el) {
 
-            // if there's already an image
-            if (_typeof(button.img) == 'object') {
-                $(button.img).prop('src', url);
-                $(button.img).click();
-                return;
+            els.dec[0].onclick = decrement;
+            els.inc[0].onclick = increment;
+
+            els.dec.onmousedown = function (e) {
+                e.preventDefault();
+            };
+
+            els.inc.onmousedown = function (e) {
+                e.preventDefault();
+            };
+
+            function decrement() {
+                var value = el.value;
+                value--;
+                if (!min || value >= min) {
+                    el.value = value;
+                }
             }
 
-            // making image relative to the button in its objec
-            button.img = document.createElement('img');
-            $(button.img).prop('src', url);
-            $(button.img).css('width', '100%');
-            button.img.classList.add('wptb-ph-element', 'wptb-element-image-' + window.wptb_num["image"]);
-            var prop = window.addElementOptions('image', button.img);
-            wrapper.appendChild(button.img);
-
-            // convert add image button to change and append it to properties
-            button.innerHTML = 'Change Image';
-            prop.children('.wptb-settings-items').append(button);
-
-            $(button.img).click();
-        });
+            function increment() {
+                var value = el.value;
+                value++;
+                if (!max || value <= max) {
+                    el.value = value++;
+                }
+            }
+        }
     };
 })(jQuery);
 (function ($) {
@@ -260,17 +974,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     window.showListSettings = function (event) {
+
+        if (window.currentlyDragging != undefined) {
+            return;
+        }
+
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
+            btnMove = document.createElement('span'),
             actions = document.createElement('span'),
             previous,
             i;
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
         btnDelete.onclick = window.deleteList;
         btnCopy.onclick = window.copyList;
+        btnMove.onmousedown = window.putItemDragStart;
+        actions.appendChild(btnMove);
         actions.appendChild(btnCopy);
         actions.appendChild(btnDelete);
         this.appendChild(actions);
@@ -286,6 +1009,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     window.showListItemSettings = function (event) {
+
+        if (window.currentlyDragging != undefined) {
+            return;
+        }
         //el Article
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
@@ -422,8 +1149,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 break;
         }
         wptb_num[wptbElement]++;
+    };
 
-        return prop;
+    /**
+    * This function is a fix for allowing us to send the add link form with an enter...
+    * 
+    * @returns {void}
+    */
+
+    window.bindKeydownHandler = function () {
+        document.onkeydown = function (e) {
+            if (e.target.className === 'mce-textbox') {
+                window.dontAddItems = true;
+                if (event.which === 13 || event.which === 27) {
+                    setTimeout(function () {
+                        window.dontAddItems = false;
+                        document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
+                    }, 250);
+                }
+            }
+        };
     };
 
     /**
@@ -525,7 +1270,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 })(jQuery);
 (function ($) {
+
     window.selectedCells = [];
+
+    // Before this turns out to be a hell of code, we better comment it.
+
+    /**
+    * First function running after the user clicks on Generate button.
+    * 
+    * @returns {void}
+    */
+
     window.initTable = function () {
 
         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
@@ -576,205 +1331,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         window.bindKeydownHandler();
         window.bindClickHandler();
+        //On drag elements.
+        document.getElementById('wptb-text').onmousedown = window.itemDragStart;
+        document.getElementById('wptb-image').onmousedown = window.itemDragStart;
+        document.getElementById('wptb-button').onmousedown = window.itemDragStart;
+        document.getElementById('wptb-list').onmousedown = window.itemDragStart;
     };
 
-    window.createCell = function () {
-        var cell = document.createElement("td"),
-            allowDrop = function allowDrop(event) {
-            event.target.classList.add('wptb-allow-drop');
-            event.currentTarget.classList.add('wptb-allow-drop');
-            if (event.type == 'dragover') {
-                event.stopPropagation();
-                event.preventDefault();
-                return true;
-            }
-        };
-        cell.classList.add('wptb-droppable', 'wptb-cell');
-        cell.ondrop = function (event) {
-
-            event.preventDefault();
-            event.stopPropagation();
-            event.target.classList.remove('wptb-allow-drop');
-
-            if (wptbElement == 'text') {
-                var textEl = window.newText();
-                event.target.appendChild(textEl);
-                textEl.click();
-            } else if (wptbElement == 'image') {
-                var img = window.newImage();
-                event.target.appendChild(img);
-            } else if (wptbElement == 'button') {
-                var button = window.newButton();
-                event.target.appendChild(button);
-                button.click();
-            } else if (wptbElement == 'list') {
-                var listEl = window.newList();
-                event.target.appendChild(listEl);
-                listEl.click();
-            }
-        };
-        cell.ondragenter = allowDrop;
-        cell.ondragleave = function (event) {
-            event.target.classList.remove('wptb-allow-drop');
-        };
-        cell.ondragover = allowDrop;
-        cell.onclick = selectIndividualCell;
-        cell.onmousedown = startCellSelection;
-        cell.onmouseover = goOnWithCellSelection;
-        cell.onmouseup = endCellSelection;
-        return cell;
-    };
-
-    window.selectIndividualCell = function () {
-
-        for (var i = 0; i < selectedCells.length; i++) {
-            selectedCells[i].classList.remove('highlighted');
-        }
-
-        window.selectedCells = [this];
-        window.activeColumn = this.dataset.xIndex;
-        window.activeRow = this.dataset.yIndex;
-        undoAllPreviousHighlights();
-        activateIndividualActions();
-        deactivateNoneActions();
-        deactivateGroupActions();
-        highlightRow(this);
-        highlightColumn(this);
-        this.classList.add('highlighted');
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.xIndex = this.dataset.xIndex;
-            buttons[i].dataset.yIndex = this.dataset.yIndex;
-        }
-    };
-
-    window.undoAllPreviousHighlights = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var row = table.getElementsByTagName('tr')[i];
-            for (var j = 0; j < columnCount; j++) {
-                row.getElementsByTagName('td')[j].classList.remove('highlighted', 'highlighted-row-first', 'highlighted-row-inner', 'highlighted-row-last', 'highlighted-column-first', 'highlighted-column-inner', 'highlighted-column-last');
-                //window.activeRow = window.activeColumn = undefined;
-                window.selectedCells = [];
-            }
-        }
-    };
-
-    window.activateNoneActions = function () {
-
-        var inputs = document.getElementsByClassName('none');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-    };
-
-    window.deactivateNoneActions = function () {
-
-        var inputs = document.getElementsByClassName('none');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.activateIndividualActions = function () {
-
-        var inputs = document.getElementsByClassName('individual');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-    };
-
-    window.deactivateGroupActions = function () {
-
-        var inputs = document.getElementsByClassName('group');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.activateGroupActions = function () {
-
-        var inputs = document.getElementsByClassName('group');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = false;
-        }
-    };
-
-    window.deactivateIndividualActions = function () {
-
-        var inputs = document.getElementsByClassName('individual');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
-        }
-    };
-
-    window.highlightRow = function (td) {
-        var parentRow = td.parentNode,
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < columnCount; i++) {
-            var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
-            var ttd = parentRow.getElementsByTagName('td')[i];
-            if (ttd !== td) {
-                ttd.classList.add(classToAdd);
-            }
-        }
-    };
-
-    window.highlightColumn = function (td) {
-
-        var index,
-            parentRow = td.parentNode;
-        columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
-        for (var i = 0; i < columnCount; i++) {
-            if (parentRow.getElementsByTagName('td')[i] === td) {
-                index = i;
-                break;
-            }
-        }
-
-        console.log('Actual value of index', index);
-
-        for (var i = 0; i < rowCount; i++) {
-            var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
-            var tr = table.getElementsByTagName('tr')[i];
-            if (tr.getElementsByTagName('td')[index] !== td) {
-                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
-            }
-        }
-    };
-
-    window.startCellSelection = function () {
-        this.classList.add('highlighted');
-        window.selectMode = true;
-        window.selectedCells.push(this);
-    };
-
-    window.goOnWithCellSelection = function () {
-        if (window.selectMode) {
-            this.classList.add('highlighted');
-            window.selectedCells.push(this);
-        }
-    };
-
-    window.endCellSelection = function () {
-        window.selectMode = false;
-    };
-
-    window.bindKeydownHandler = function () {
-        document.onkeydown = function (e) {
-            if (e.target.className === 'mce-textbox') {
-                window.dontAddItems = true;
-                if (event.which === 13 || event.which === 27) {
-                    setTimeout(function () {
-                        window.dontAddItems = false;
-                        document.querySelector('.wptb-list-item-content.mce-edit-focus').click();
-                    }, 250);
-                }
-            }
-        };
-    };
+    /**
+    * A handler for click event in the page.
+    * 
+    * @returns {void}
+    */
 
     window.bindClickHandler = function () {
 
@@ -788,15 +1356,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }, 500);
             var $this = $(e.target);
 
-            if (e.target.classList.contains('wptb-admin-container')) {
-                console.log('Click out of the table');
+            if (e.target.classList.contains('wptb-admin-container') || e.target.id == 'wpcd_fixed_toolbar' || e.target.classList.contains('wrapper')) {
+                window.selectionWidth = window.selectionHeight = 0;
                 undoAllPreviousHighlights();
                 activateNoneActions();
                 deactivateIndividualActions();
                 deactivateGroupActions();
             }
 
-            if (e.target.className.match(/delete-action/)) {
+            if (e.target.className !== undefined && e.target.className.match(/delete-action/)) {
                 return;
             }
             if (e.target.id.match(/mceu_([0-9])*-button/)) {
@@ -859,73 +1427,66 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         };
 
-        document.getElementById('wptb-add-end-row').onclick = addRow('end');
-        document.getElementById('wptb-add-start-row').onclick = addRow('start');
-        document.getElementById('wptb-add-end-column').onclick = addColumn('end');
-        document.getElementById('wptb-add-start-column').onclick = addColumn('start');
+        document.getElementById('wptb-add-end-row').onclick = addRowToTheEnd;
+        document.getElementById('wptb-add-start-row').onclick = addRowToTheStart;
+        document.getElementById('wptb-add-end-column').onclick = addColumnToTheEnd;
+        document.getElementById('wptb-add-start-column').onclick = addColumnToTheStart;
         document.getElementById('wptb-delete-row').onclick = deleteRow;
         document.getElementById('wptb-delete-column').onclick = deleteColumn;
+        document.getElementById('wptb-merge-cells').onclick = mergeCells;
     };
 
-    window.addRow = function (pos) {
+    /**
+    * This functions calculates table dimensions by counting its elements
+    * rather than trusting in current value of rows and columns number input elements.
+    * 
+    * @returns object with rows and columns number
+    */
 
-        if (typeof pos == 'string' && pos == 'end') return function (evt) {
-            var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                table = document.getElementsByClassName('wptb-preview-table')[0];
-            row = table.insertRow(-1);
-            for (var j = 0; j < columnCount; j++) {
-                var headerCell = createCell();
-                row.appendChild(headerCell);
-                headerCell.dataset.yIndex = rowCount;
-                headerCell.dataset.xIndex = j;
+    window.getActualTableDimensions = function () {
+        var table = document.getElementsByClassName('wptb-preview-table')[0],
+            rows = table.getElementsByTagName('tr'),
+            tds,
+            cols = 0,
+            dimensions;
+        for (var i = 0; i < rows.length; i++) {
+            tds = rows[i].getElementsByTagName('td');
+            if (tds.length > cols) {
+                cols = tds.length;
             }
-            row.classList.add('wptb-row');
-            document.getElementById('wptb-rows-number').value = rowCount + 1;
+        }
+        dimensions = {
+            rows: rows.length,
+            columns: cols
         };
-        if (typeof pos == 'string' && pos == 'start') return function (evt) {
-            var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                table = document.getElementsByClassName('wptb-preview-table')[0];
-            row = table.insertRow(0);
-            for (var j = 0; j < columnCount; j++) {
-                var headerCell = createCell();
-                row.appendChild(headerCell);
-                headerCell.dataset.yIndex = rowCount;
-                headerCell.dataset.xIndex = j;
-            }
-            row.classList.add('wptb-row');
-            document.getElementById('wptb-rows-number').value = rowCount + 1;
+        return dimensions;
+    };
+
+    /**
+    * This part of code is used often in add rows and columns functions,
+    * so I decided to put it apart.
+    * 
+    * @returns object with table DOM object, all TRs DOM objects, table dimensions and tobdy DOM object
+    * @see getActualTableDimensions
+    */
+
+    window.getParameters = function () {
+        var t = document.getElementsByClassName('wptb-preview-table')[0];
+        return {
+            table: t,
+            dimensions: getActualTableDimensions(),
+            trs: t.getElementsByTagName('tr'),
+            tbody: t.childNodes[0]
         };
     };
 
-    window.addColumn = function (pos) {
-
-        if (typeof pos == 'string' && pos == 'end') return function (evt) {
-            var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                table = document.getElementsByClassName('wptb-preview-table')[0];
-            for (var i = 0; i < rowCount; i++) {
-                var headerCell = createCell();
-                table.getElementsByTagName('tr')[i].appendChild(headerCell);
-                headerCell.dataset.yIndex = i;
-                headerCell.dataset.xIndex = columnCount;
-            }
-            document.getElementById('wptb-columns-number').value = columnCount + 1;
-        };
-        if (typeof pos == 'string' && pos == 'start') return function (evt) {
-            var columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-                table = document.getElementsByClassName('wptb-preview-table')[0];
-            for (var i = 0; i < rowCount; i++) {
-                var headerCell = createCell();
-                table.getElementsByTagName('tr')[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + table.getElementsByTagName('tr')[i].innerHTML;
-                headerCell.dataset.yIndex = i;
-                headerCell.dataset.xIndex = 0;
-            }
-            document.getElementById('wptb-columns-number').value = columnCount + 1;
-        };
-    };
+    /**
+    * A lot of functionality of the tables relies on current cell position,
+    + so each time we alter the dimensions by adding or deleting rows/columns,
+    * we must reassign to each cell its coordinates.
+    *
+    * @returns void
+    */
 
     window.recalculateIndexes = function () {
         var table = document.getElementsByClassName('wptb-preview-table')[0],
@@ -935,10 +1496,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             for (var j = 0; j < tds.length; j++) {
 
                 if (i == 0) {
-                    tds[j].parentNode.class = '';
+                    tds[j].parentNode.className = '';
                     tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
                 } else {
-                    tds[j].parentNode.class = '';
+                    tds[j].parentNode.className = '';
                     tds[j].parentNode.classList.add('wptb-row');
                 }
 
@@ -948,66 +1509,122 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    window.addRowBefore = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            referenceRow = table.getElementsByTagName('tr')[this.dataset.yIndex],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            newrow = document.createElement('tr');
-        for (var j = 0; j < columnCount; j++) {
+    /**
+    * this function is able to add a row at the start,
+    * at the end of the table, or in a relative position
+    * respect to the current cell.
+    * @param string it defines the behavior of the function.
+    * @param object since it was ambigous the use of this,
+    *       it was the best option to pass it as a parameter.
+    *
+    * @returns void
+    */
+
+    addRow = function addRow(pos, _this) {
+        var params = getParameters(),
+            row,
+            referenceRow = undefined;
+
+        if (pos == 'end' || pos == 'start') {
+            row = params.table.insertRow(pos == 'end' ? -1 : 0);
+        } else {
+            row = document.createElement('tr');
+        }
+
+        for (var j = 0; j < params.dimensions.columns; j++) {
             var headerCell = createCell();
-            newrow.appendChild(headerCell);
+            row.appendChild(headerCell);
         }
-        table.childNodes[0].insertBefore(newrow, referenceRow);
+
+        row.classList.add('wptb-row');
+        document.getElementById('wptb-rows-number').value = params.dimensions.rows + 1;
+
+        if (pos == 'before' || pos == 'after') {
+            referenceRow = params.trs[_this.dataset.yIndex];
+            if (pos == "before") {
+                params.tbody.insertBefore(row, referenceRow);
+                var buttons = document.getElementsByClassName('wptb-relative-action');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].dataset.yIndex++;
+                }
+            } else {
+                params.tbody.insertBefore(row, referenceRow.nextSibling);
+            }
+        }
+
         recalculateIndexes();
-        document.getElementById('wptb-rows-number').value = rowCount + 1;
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.yIndex++;
-        }
+    };
+
+    window.addRowToTheEnd = function (evt) {
+        addRow('end', this);
+    };
+
+    window.addRowToTheStart = function (evt) {
+        addRow('start', this);
+    };
+
+    window.addRowBefore = function () {
+        addRow('before', this);
     };
 
     window.addRowAfter = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            referenceRow = table.getElementsByTagName('tr')[this.dataset.yIndex];
-        newrow = document.createElement('tr');
-        for (var j = 0; j < columnCount; j++) {
-            var headerCell = createCell();
-            newrow.appendChild(headerCell);
+        addRow('after', this);
+    };
+
+    /**
+    * this function is able to add a colum at the start,
+    * at the end of the table, or in a relative position
+    * respect to the current cell.
+    * @param string it defines the behavior of the function.
+    * @param object since it was ambigous the use of this,
+    *       it was the best option to pass it as a parameter.
+    *
+    * @returns void
+    */
+
+    addColumn = function addColumn(pos, _this) {
+        var params = getParameters(),
+            referenceTd,
+            newTd;
+        for (var i = 0; i < params.dimensions.rows; i++) {
+
+            var newTd = createCell();
+            params.trs[i].appendChild(newTd);
+            if (pos == 'before' || pos == 'after') {
+                referenceTd = params.trs[i].getElementsByTagName('td')[_this.dataset.xIndex];
+                if (pos == 'before') {
+                    params.trs[i].insertBefore(newTd, referenceTd);
+                    var buttons = document.getElementsByClassName('wptb-relative-action');
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].dataset.xIndex++;
+                    }
+                } else {
+                    params.trs[i].insertBefore(newTd, referenceTd.nextSibling);
+                }
+            } else if (pos == 'end') {
+                params.trs[i].appendChild(newTd);
+            } else {
+                params.trs[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + params.trs[i].innerHTML;
+            }
         }
-        table.childNodes[0].insertBefore(newrow, referenceRow.nextSibling);
+        document.getElementById('wptb-columns-number').value = params.dimensions.columns + 1;
         recalculateIndexes();
-        document.getElementById('wptb-rows-number').value = rowCount + 1;
+    };
+
+    window.addColumnToTheEnd = function (evt) {
+        addColumn('end', this);
+    };
+
+    window.addColumnToTheStart = function (evt) {
+        addColumn('start', this);
     };
 
     window.addColumnBefore = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var referenceTd = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[this.dataset.xIndex],
-                newTd = createCell();
-            table.getElementsByTagName('tr')[i].insertBefore(newTd, referenceTd);
-        }
-        recalculateIndexes();
-        var buttons = document.getElementsByClassName('wptb-relative-action');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].dataset.xIndex++;
-        }
-        document.getElementById('wptb-columns-number').value = columnCount + 1;
+        addColumn('before', this);
     };
 
     window.addColumnAfter = function () {
-        var table = document.getElementsByClassName('wptb-preview-table')[0],
-            rowCount = parseInt(document.getElementById('wptb-rows-number').value),
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value);
-        for (var i = 0; i < rowCount; i++) {
-            var referenceTd = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[this.dataset.xIndex],
-                newTd = createCell();
-            table.getElementsByTagName('tr')[i].insertBefore(newTd, referenceTd.nextSibling);
-        }
-        recalculateIndexes();
-        document.getElementById('wptb-columns-number').value = columnCount + 1;
+        addColumn('after', this);
     };
 
     window.deleteRow = function () {
@@ -1040,10 +1657,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         document.getElementById('wptb-columns-number').value = columnCount - 1;
         undoAllPreviousHighlights();
     };
-
-    window.mergeCells = function () {};
-
-    window.splitCells = function () {};
 })(jQuery);
 (function ($) {
 
@@ -1061,17 +1674,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     window.showTextSettings = function (event) {
+
+        if (window.currentlyDragging != undefined) {
+            return;
+        }
         this.classList.add('wptb-directlyhovered');
         var btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
             actions = document.createElement('span'),
+            btnMove = document.createElement('span'),
             previous,
             i;
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
         btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
         btnDelete.onclick = window.deleteText;
         btnCopy.onclick = window.copyText;
+        btnMove.onmousedown = window.putItemDragStart;
+        actions.appendChild(btnMove);
         actions.appendChild(btnCopy);
         actions.appendChild(btnDelete);
         this.appendChild(actions);
@@ -1138,7 +1759,7 @@ jQuery(document).ready(function ($) {
             function detect_element_for_property() {
                 var option = this,
                     parent = option;
-                while (!parent.classList.contains('.wptb-element-options')) {
+                while (!parent.classList.contains('wptb-element-options')) {
                     parent = parent.parentNode;
                 }
                 var classes = parent.attr("class");
@@ -1307,18 +1928,5 @@ jQuery(document).ready(function ($) {
         document.getElementById('wptb-add-column-after').onclick = window.addColumnAfter;
     }; // Of document.onready
 
-    //When dragging starts for Text element
-    function itemDragStart(event) {
-        wptbElement = event.target.id.substring(5, event.target.id.length);
-
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
-    }
-
-    //On drag elements.
-    document.getElementById('wptb-text').ondragstart = itemDragStart;
-    document.getElementById('wptb-image').ondragstart = itemDragStart;
-    document.getElementById('wptb-button').ondragstart = itemDragStart;
-    document.getElementById('wptb-list').ondragstart = itemDragStart;
 });
 //# sourceMappingURL=admin.js.map
