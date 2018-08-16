@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
                 while(!parent.classList.contains('wptb-element-options')){
                     parent = parent.parentNode;
                 } 
-                var classes = parent.attr("class");
+                var classes = parent.className;
 
                 /**
                  * will carry the extracted infotrmation from the class
@@ -65,14 +65,21 @@ jQuery(document).ready(function ($) {
              */
             function editing_property(element, option) {
                 // type of property @Ex: font-size,color ....
-                var type = option.data('type');
-                var val = option.val();
+                var type = option.dataset.type;
+                var val = option.value;
                 switch (type) {
                     case 'font-size':
-                        element.find("p").css('font-size', val + 'px');
+                        var ps = element.getElementsByTagName("p");
+                        for (var i = 0; i < ps.length; i++) {
+                            ps[i].style.fontSize =  val + 'px';
+                        }
+                        
                         break;
                     case 'color':
-                        element.find("p").css('color', val);
+                        var ps = element.getElementsByTagName("p");
+                        for (var i = 0; i < ps.length; i++) {
+                            ps[i].style.color =  val;
+                        } 
                         break;
                     case 'list-class':
                         if (val == 'unordered') {
@@ -117,6 +124,10 @@ jQuery(document).ready(function ($) {
                 document.getElementById('wptb-table-border-slider').value = this.value;
                 addBorder(this.value);
             };
+
+
+
+
 
             //Triggers when cell padding setting changes.
             function addCellPadding(value) {

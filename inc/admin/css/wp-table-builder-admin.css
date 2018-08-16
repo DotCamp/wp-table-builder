@@ -999,27 +999,25 @@ table.wptb-table {
     display: none;
 }
 
-.wptb-space-between{
-    background-color: yellow;
+.wptb-space-between{ 
     min-height: 20px;
     width: 100%;
 }
 
 .wptb-insert-here{
-    border: 1px solid lightgreen;
+    background-color: lightgreen;
+    border: 1px solid lightgreen;  
     display: none;
-    height: 20px;
     margin: 2px 5%;
+    padding: 0.5em 0;
     position: relative;
+    text-align: center;
     width: 90%;
 }
 
 .wptb-insert-here span{
     background: lightgreen;
-    color: white;
-    position: absolute;
-    right: 0;
-    top: -14pt;
+    color: white; 
 }
 
 .wptb-draggable{
@@ -1028,4 +1026,33 @@ table.wptb-table {
 
 .wptb-actions .dashicons.dashicons-move.move-action{
     font-size: 17px !important;
+}
+
+
+.wptb-range-input{
+        height: 20px;
+        position: relative;
+}
+        
+.wptb-range-input .slider{
+            background-color: white;
+            border: 1px solid #4b88c4;
+            border-radius: 200px;
+            box-sizing: border-box;
+            height: 20px;
+            left: 2px;
+            position: absolute;
+            top: 0;
+            width: 20px;
+            z-index: 10;
+}
+
+.wptb-range-input .rail{
+            background: #cccccc;
+            border-radius: 14px;
+            bottom: 6px;
+            height: 8px;
+            position: absolute;
+            width: 100%;
+            z-index: 1;
 }

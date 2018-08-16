@@ -4,6 +4,7 @@
     window.selectionHeight=0;
 
     window.createCell = function(){
+        var space = window.makeSpace();
         var cell = document.createElement("td"),
             allowDrop = function (event) {
                     event.target.classList.add('wptb-allow-drop');
@@ -20,6 +21,7 @@
         cell.onmousedown = startCellSelection;
         cell.onmouseover = goOnWithCellSelection;
         cell.onmouseup = endCellSelection;
+        cell.appendChild(space);
         return cell;
     }
 

@@ -34,22 +34,22 @@
             //Add the header row.
             var row = table.insertRow(-1);
             for (var i = 0; i < columnCount; i++) {
-                var headerCell = createCell();
+                window.headerCell = createCell();
                 row.appendChild(headerCell); 
                 row.classList.add('wptb-table-head', 'wptb-row');
                 headerCell.dataset.yIndex = 0;
-                headerCell.dataset.xIndex = i;
+                headerCell.dataset.xIndex = i; 
             }
 
             //Add the data rows.
             for (var i = 1; i < rowCount; i++) {
                 row = table.insertRow(-1);
                 for (var j = 0; j < columnCount; j++) {
-                    var headerCell = createCell();
-                    row.appendChild(headerCell);
+                    var cell = createCell();
+                    row.appendChild(cell);
                     row.classList.add('wptb-row');
-                    headerCell.dataset.yIndex = i;
-                    headerCell.dataset.xIndex = j;
+                    cell.dataset.yIndex = i;
+                    cell.dataset.xIndex = j; 
                 }
             }
 
@@ -101,7 +101,7 @@
 
                 if (e.target.className!==undefined 
                     && e.target.className.match(/delete-action/)) {
-                    return;
+                    return true;
                 }
                 if (e.target.id.match(/mceu_([0-9])*-button/)) {
                     window.dontAddItems = false;
@@ -153,7 +153,10 @@
                     var numbers = document.getElementsByClassName('wptb-text-font-size-number');
                     for (var i = 0; i < numbers.length; i++) {
                         numbers[i].onchange = function () {
-                            this.parentNode.parentNode.childNodes[1].childNodes[1].value = this.value;
+                            var rail =this.parentNode.parentNode.childNodes[1].childNodes[1].childNodes[1],
+                             it =this.parentNode.parentNode.childNodes[1].childNodes[1].childNodes[3];
+                            console.log('Element we should change width is:',rail);
+                            it.style.left = ((this.value - 10) * rail.getBoundingClientRect().width / 40)+'px';
                         }
                     }
                 } else {

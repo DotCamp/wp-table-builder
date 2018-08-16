@@ -105,6 +105,7 @@
     window.selectionHeight = 0;
 
     window.createCell = function () {
+        var space = window.makeSpace();
         var cell = document.createElement("td"),
             allowDrop = function allowDrop(event) {
             event.target.classList.add('wptb-allow-drop');
@@ -121,6 +122,7 @@
         cell.onmousedown = startCellSelection;
         cell.onmouseover = goOnWithCellSelection;
         cell.onmouseup = endCellSelection;
+        cell.appendChild(space);
         return cell;
     };
 
@@ -337,10 +339,11 @@
 
     window.itemDragStart = function (event) {
 
-        event.preventDefault();
+        console.log('Yes, even for this is called');
+        //event.preventDefault();
 
         if (!event.target.classList.contains('wptb-draggable-prototype')) {
-            return;
+            return true;
         }
 
         var dragEl = event.target;
@@ -362,7 +365,7 @@
         document.body.appendChild(window.elementToDrag);
         /* window.currentlyDragging = true;
          wptbElement = event.target.id.substring(5, event.target.id.length);
-            event.dataTransfer.effectAllowed = 'move';
+           event.dataTransfer.effectAllowed = 'move';
          event.dataTransfer.setData("text/plain", event.target.getAttribute('id')); */
     };
 
@@ -412,9 +415,7 @@
     window.makeSpace = function () {
         var spaceBetween = document.createElement('div'),
             insertHere = document.createElement('div'),
-            spanInsert = document.createElement('span'),
-            newNode,
-            el = window.elementToDrag.id.substring(5, window.elementToDrag.id.length);
+            spanInsert = document.createElement('span');
 
         spaceBetween.onmouseover = function (evt) {
             if (window.currentlyDragging) this.childNodes[0].style.display = 'block';
@@ -503,21 +504,12 @@
 
             var sp2 = window.makeSpace();
 
-            console.log('Item is being released in a cell');
-
-            if (event.target.innerHTML == '') {
-                var sp1 = window.makeSpace();
-                event.target.appendChild(sp1);
-            }
-
             if (window.alreadyPut == undefined) {
                 var newNode = window.newItemProxy(window.elementToDrag.id.substring(5, window.elementToDrag.id.length));
                 event.target.appendChild(newNode);
                 event.target.appendChild(sp2);
                 p.removeChild(window.elementToDrag);
-                console.log('Additionally, we are creating a new item');
             } else {
-                console.log('We are just moving an item');
                 window.trimInlineStyle(window.elementToDrag);
                 event.target.appendChild(window.elementToDrag);
                 event.target.appendChild(sp2);
@@ -529,8 +521,7 @@
                 }
             }
         } else {
-            // If item is being released in a space
-            console.log('Item is being released in space');
+            // If item is being released in a space 
 
             var p = event.target.parentNode.nextSibling,
                 td = event.target;
@@ -550,11 +541,7 @@
                     td.insertBefore(window.makeSpace(), p);
                 }
                 document.body.removeChild(window.elementToDrag);
-
-                console.log('Additionally, we are creating a new item');
             } else {
-                console.log('We are just moving an item');
-
                 if (p == null) {
                     td.appendChild(window.elementToDrag);
                     td.appendChild(window.makeSpace());
@@ -572,46 +559,6 @@
             }
         }
 
-        /*
-        if(window.alreadyPut == undefined )
-        { 
-            
-              if(! event.target.classList.contains('wptb-space-between')){
-            event.target.appendChild(spaceBetween);  
-            }
-            else{
-                var p = event.target.parentNode;
-                   if(event.target.nextSibling != undefined){
-                    p.insertBefore(newNode,event.target.nextSibling);
-                }
-                else{
-                    p.appendChild(newNode);
-                }
-            }
-        }
-        else
-        {
-            window.elementToDrag.style.top='auto';
-            window.elementToDrag.style.left='auto';
-            window.elementToDrag.style.position='relative';
-            window.elementToDrag.style.width='100%';
-            window.elementToDrag.style.zIndex='auto';
-            if(! event.target.classList.contains('wptb-space-between'))
-            {
-                event.target.appendChild(spaceBetween);  
-            }
-            else
-            {  
-                var p = event.target.parentNode;
-                if(event.target.nextSibling != undefined){
-                    p.insertBefore(window.elementToDrag,event.target.nextSibling);
-                }
-                else{
-                    p.appendChild(window.elementToDrag);
-                }
-                
-            }
-        } */
         window.alreadyPut = undefined;
         document.body.classList.remove('wptb-state-dragging');
         window.currentlyDragging = undefined;
@@ -1305,7 +1252,7 @@
         //Add the header row.
         var row = table.insertRow(-1);
         for (var i = 0; i < columnCount; i++) {
-            var headerCell = createCell();
+            window.headerCell = createCell();
             row.appendChild(headerCell);
             row.classList.add('wptb-table-head', 'wptb-row');
             headerCell.dataset.yIndex = 0;
@@ -1316,11 +1263,11 @@
         for (var i = 1; i < rowCount; i++) {
             row = table.insertRow(-1);
             for (var j = 0; j < columnCount; j++) {
-                var headerCell = createCell();
-                row.appendChild(headerCell);
+                var cell = createCell();
+                row.appendChild(cell);
                 row.classList.add('wptb-row');
-                headerCell.dataset.yIndex = i;
-                headerCell.dataset.xIndex = j;
+                cell.dataset.yIndex = i;
+                cell.dataset.xIndex = j;
             }
         }
 
@@ -1365,7 +1312,7 @@
             }
 
             if (e.target.className !== undefined && e.target.className.match(/delete-action/)) {
-                return;
+                return true;
             }
             if (e.target.id.match(/mceu_([0-9])*-button/)) {
                 window.dontAddItems = false;
@@ -1416,7 +1363,10 @@
                 var numbers = document.getElementsByClassName('wptb-text-font-size-number');
                 for (var i = 0; i < numbers.length; i++) {
                     numbers[i].onchange = function () {
-                        this.parentNode.parentNode.childNodes[1].childNodes[1].value = this.value;
+                        var rail = this.parentNode.parentNode.childNodes[1].childNodes[1].childNodes[1],
+                            it = this.parentNode.parentNode.childNodes[1].childNodes[1].childNodes[3];
+                        console.log('Element we should change width is:', rail);
+                        it.style.left = (this.value - 10) * rail.getBoundingClientRect().width / 40 + 'px';
                     };
                 }
             } else {
@@ -1762,7 +1712,7 @@ jQuery(document).ready(function ($) {
                 while (!parent.classList.contains('wptb-element-options')) {
                     parent = parent.parentNode;
                 }
-                var classes = parent.attr("class");
+                var classes = parent.className;
 
                 /**
                  * will carry the extracted infotrmation from the class
@@ -1791,14 +1741,21 @@ jQuery(document).ready(function ($) {
              */
             function editing_property(element, option) {
                 // type of property @Ex: font-size,color ....
-                var type = option.data('type');
-                var val = option.val();
+                var type = option.dataset.type;
+                var val = option.value;
                 switch (type) {
                     case 'font-size':
-                        element.find("p").css('font-size', val + 'px');
+                        var ps = element.getElementsByTagName("p");
+                        for (var i = 0; i < ps.length; i++) {
+                            ps[i].style.fontSize = val + 'px';
+                        }
+
                         break;
                     case 'color':
-                        element.find("p").css('color', val);
+                        var ps = element.getElementsByTagName("p");
+                        for (var i = 0; i < ps.length; i++) {
+                            ps[i].style.color = val;
+                        }
                         break;
                     case 'list-class':
                         if (val == 'unordered') {

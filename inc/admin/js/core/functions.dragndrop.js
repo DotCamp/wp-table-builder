@@ -4,10 +4,11 @@
 
     window.itemDragStart = function(event) {
 
-        event.preventDefault();
+            console.log('Yes, even for this is called');
+        //event.preventDefault();
 
         if ( ! event.target.classList.contains('wptb-draggable-prototype')  ) {
-                    return;
+                    return true;
                 }
         
         var dragEl = event.target;
@@ -83,9 +84,7 @@
     window.makeSpace = function(){
         var spaceBetween = document.createElement('div'),
                         insertHere = document.createElement('div'),
-                        spanInsert = document.createElement('span'),
-                        newNode, el =window.elementToDrag.id.substring(5,
-            window.elementToDrag.id.length);
+                        spanInsert = document.createElement('span');
 
                     spaceBetween.onmouseover = function(evt){
                         if(window.currentlyDragging)
@@ -180,13 +179,7 @@
         if(event.target.classList.contains('wptb-droppable')){
             
             var sp2 = window.makeSpace();
-
-            console.log('Item is being released in a cell');
             
-            if(event.target.innerHTML==''){
-                var sp1 = window.makeSpace();
-                event.target.appendChild(sp1);
-            }
             
             if(window.alreadyPut == undefined)
             {
@@ -194,13 +187,11 @@
                         window.elementToDrag.id.length));
                 event.target.appendChild(newNode);
                 event.target.appendChild(sp2);
-                p.removeChild(window.elementToDrag);
-                console.log('Additionally, we are creating a new item');
+                p.removeChild(window.elementToDrag); 
             }
 
             else
-            {
-                console.log('We are just moving an item');
+            { 
                 window.trimInlineStyle(window.elementToDrag);
                 event.target.appendChild(window.elementToDrag);
                 event.target.appendChild(sp2);
@@ -213,8 +204,7 @@
             }
 
         }
-        else{ // If item is being released in a space
-            console.log('Item is being released in space');
+        else{ // If item is being released in a space 
 
             var p = event.target.parentNode.nextSibling,
                 td = event.target; 
@@ -239,15 +229,12 @@
                 td.insertBefore(window.makeSpace(),p);
             }
             document.body.removeChild(window.elementToDrag);
-
-            console.log('Additionally, we are creating a new item');
+ 
 
             }
 
             else
-            {
-            console.log('We are just moving an item');
-
+            { 
             if(p == null){
                 td.appendChild(window.elementToDrag);
                 td.appendChild(window.makeSpace());
@@ -268,49 +255,6 @@
 
         }
 
-
-        /*
-        if(window.alreadyPut == undefined )
-        { 
-            
-
-            if(! event.target.classList.contains('wptb-space-between')){
-            event.target.appendChild(spaceBetween);  
-            }
-            else{
-                var p = event.target.parentNode;
-
-                 if(event.target.nextSibling != undefined){
-                    p.insertBefore(newNode,event.target.nextSibling);
-                }
-                else{
-                    p.appendChild(newNode);
-                }
-            }
-        }
-        else
-        {
-            window.elementToDrag.style.top='auto';
-            window.elementToDrag.style.left='auto';
-            window.elementToDrag.style.position='relative';
-            window.elementToDrag.style.width='100%';
-            window.elementToDrag.style.zIndex='auto';
-            if(! event.target.classList.contains('wptb-space-between'))
-            {
-                event.target.appendChild(spaceBetween);  
-            }
-            else
-            {  
-                var p = event.target.parentNode;
-                if(event.target.nextSibling != undefined){
-                    p.insertBefore(window.elementToDrag,event.target.nextSibling);
-                }
-                else{
-                    p.appendChild(window.elementToDrag);
-                }
-                
-            }
-        } */
             window.alreadyPut = undefined;
             document.body.classList.remove('wptb-state-dragging');
             window.currentlyDragging = undefined;
