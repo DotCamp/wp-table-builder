@@ -57,7 +57,7 @@ use WP_Table_Builder as NS;
             </div>
             
             <div class='wptb-protoypes-options' style='display: none;'>
-                <!-- Here's a prototype of each Elements's option --><!--  <input id="wptb-text-font-size-slider" data-type="font-size" class="wptb-text-font-size-slider wptb-element-property" type="range" oninput="console.log('This is working!');" min="10" max="50" step="1" value="13"> -->
+                <!-- Here's a prototype of each Elements's option --> 
                 <div class='wptb-element-options wptb-text-options wptb-text-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Text Options', 'wp-table-builder' ); ?>
@@ -66,11 +66,7 @@ use WP_Table_Builder as NS;
                         <p><?php echo __( 'Font Size', 'wp-table-builder' ); ?></p>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 5px;">
                             <div class="wptb-settings-col-xs-8">
-                              
-                              <div class="wptb-range-input">
-                                    <div class="rail"></div>
-                                    <div class="slider" draggable="true" data-dragging="false"  ></div>
-                                </div>
+                              <input   data-type="font-size" class="wptb-text-font-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="13"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
                                 <input id="wptb-text-font-size-number" data-type="font-size"  class="wptb-text-font-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10"><span class="wptb-input-px">px</span>
@@ -92,7 +88,7 @@ use WP_Table_Builder as NS;
                     </div>
                     <div class="wptb-settings-items" >
                         <div class='wptb-settings-col-xs-4'>Image Url</div>
-                        <div class='wptb-settings-col-xs-8'><input type="text" /></div>
+                        <div class='wptb-settings-col-xs-8'><input class="wptb-element-property" type="text" /></div>
                     </div>
                 </div>
                 <div class='wptb-element-options wptb-button-options wptb-button-options-prototype' style='display: none;'>
@@ -117,7 +113,7 @@ use WP_Table_Builder as NS;
                             <?php echo __( 'Button Color', 'wp-table-builder' ); ?>
                         </div>
                         <div class='wptb-settings-col-xs-8'>
-                            <input type="color" />
+                            <input type="color" class="wptb-element-property wptb-color-picker" />
                         </div>
                     </div>
                 </div>
