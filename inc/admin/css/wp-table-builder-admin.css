@@ -3,10 +3,12 @@
  *
  * The file is enqueued from inc/admin/class-admin.php.
  */
-
-.wptb-state-dragging *{
-    cursor: no-drop;
+body > img{
+    position: absolute;
+    z-index: 1000001;
 }
+ 
+ 
 
 .wptb-admin-container {
     background: #fff;
@@ -18,8 +20,7 @@
     left: 0;
     right: 0;
     height: 100%;
-    min-width: 0;
-    cursor: default;
+    min-width: 0; 
     margin: 0 !important;
     overflow-y: auto;
 }
@@ -431,7 +432,7 @@ ul.wptb-tabs {
     background: #fff;
     color: #000;
     font-size: 15px;
-    cursor: move;
+     
     display: flex;
     align-items: center;
     justify-content: center;
@@ -645,7 +646,7 @@ table.wptb-table {
     padding: 15px;
 }
 
-.wptb-preview-table .wptb-row td.highlighted,
+.wptb-preview-table .wptb-row td.wptb-highlighted,
 .wptb-state-dragging td:hover{
     border: 1px solid lightgreen !important;
 }
@@ -1028,6 +1029,17 @@ table.wptb-table {
     font-size: 17px !important;
 }
 
+.wptb-item-dragging {
+    background-color: purple;
+    min-height: 30px;
+    min-width: 30px;
+    position: absolute;
+    transition: all 0.2s ease;
+    transition-property: left, top;
+    width: auto;
+    z-index: 110000;
+}
+
 
 .wptb-range-input{
         height: 20px;
@@ -1055,4 +1067,19 @@ table.wptb-table {
             position: absolute;
             width: 100%;
             z-index: 1;
+}
+
+.wptb-table-head td.wptb-drop-here-empty:empty::before,
+.wptb-row td.wptb-drop-here-empty:empty::before{
+    background-color: dodgerblue;
+    border: 1px solid dodgerblue;
+    box-sizing: border-box;
+    color: white;
+    content: 'drop here';
+    display: block;
+    font-size: 1em;
+    font-variant: small-caps;
+    padding: 0.2em 0.4em;
+    text-align: center;
+    width:100%;
 }

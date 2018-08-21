@@ -37,4 +37,4 @@ use WP_Table_Builder as NS;
 </table>
 <div class="wptb-table-setup">
 
-</div>
+</div>       

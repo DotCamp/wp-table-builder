@@ -23,9 +23,18 @@ class Admin_Menu {
 
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
-
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-        
+		add_action( 'wp_footer', array( $this, 'custom_code' ) );
+	}
+
+	/**
+	 * Echoes additional dragging element.
+	 *
+	 * @since 1.0.0
+	 */
+
+	public function custom_code(){   
+		include plugin_dir_url(__FILE__).'views/additional_element.php';
 	}
 
 	/**
@@ -91,7 +100,7 @@ class Admin_Menu {
 			return;
 		}
 
-		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, false );
+		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
 		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 		wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
