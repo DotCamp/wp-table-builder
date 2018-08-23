@@ -1,5 +1,4 @@
 var WPTB_Initializer = function () {
-
 	const MIN_COLUMNS = 1,
 		MIN_ROWS = 1,
 		MAX_COLUMNS = 10,
@@ -12,6 +11,7 @@ var WPTB_Initializer = function () {
 		rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1],
 		columnsInput = document.getElementById('wptb-columns-number'),
 		rowsInput = document.getElementById('wptb-rows-number');
+
 
 	columnsDecrementButton.onclick = function () {
 		if (columnsInput.value > MIN_COLUMNS) {

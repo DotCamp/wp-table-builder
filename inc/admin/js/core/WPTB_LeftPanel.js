@@ -13,7 +13,7 @@ var WPTB_LeftPanel = function () {
 				}
 			}
 		}
-	});
+	}); //3MNRVA96 
 
 	jQuery('#wptb-odd-row-bg').wpColorPicker({
 		change: function (event, ui) {
@@ -51,6 +51,26 @@ var WPTB_LeftPanel = function () {
 		}
 	}
 
+	function addInnerBorder(checked) {
+		var styles;
+
+		if (checked == 'checked') {
+			document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
+			var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+			for (var i = 0; i < tableCells.length; i++) {
+				tableCells[i].style.border = '1px solid';
+			}
+
+			document.getElementById('wptb-inner-border-settings').classList.add('visible');
+		} else {
+			document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+			var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+			for (var i = 0; i < tableCells.length; i++) {
+				tableCells[i].style.border = '';
+			}
+		}
+	}
+
 	function addBorderSize(value) {
 		table.style.border = value + 'px solid';
 	}
@@ -83,6 +103,11 @@ var WPTB_LeftPanel = function () {
 	document.getElementById('wptb-table-inner-border-number').onchange = function () {
 		document.getElementById('wptb-table-inner-border-slider').value = this.value;
 		addInnerBorderSize(this.value);
+	};
+
+	document.getElementById('wptb-inner-border-check').onchange = function () {
+		var _val = this.checked ? 'checked' : 'unchecked';
+		addInnerBorder(_val);
 	};
 
 	for (var i = 0; i < wptbElementButtons.length; i++) {

@@ -43,6 +43,9 @@ var WPTB_ElementOptions = function (element, index) {
             jQuery(optionControls[i]).wpColorPicker({
                 change: function (event, ui) {
                     var parent = event.target, classe, type, ps, number;
+
+
+
                     classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
                     type = classe[1];
                     number = classe[2];
@@ -74,6 +77,25 @@ var WPTB_ElementOptions = function (element, index) {
                 val = this.value;
 
             switch (this.dataset.type) {
+                case 'src':
+                    var img = affectedEl.getElementsByTagName("img");
+                    img.src = this.value;
+                    break;
+                    break;
+                case 'alternative-text':
+                    var img = affectedEl.getElementsByTagName("img");
+                    img.alt = this.value;
+                    break;
+                case 'image-width':
+                    var img = affectedEl.getElementsByTagName("img");
+                    img.width = this.value + 'px';
+                    break;
+                    break;
+                case 'image-height':
+                    var img = affectedEl.getElementsByTagName("img");
+                    img.height = this.value + 'px';
+                    break;
+                    break;
                 case 'font-size':
                     var ps = affectedEl.getElementsByTagName("p");
                     for (var i = 0; i < ps.length; i++) {

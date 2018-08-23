@@ -30,16 +30,17 @@ var applyGenericItemSettings = function (element) {
 				parent = parent.parentNode;
 			}
 
+
 			infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
 			type = infArr[1];
 
-			console.log('Moving already put item');
 			var img = document.createElement("img");
 			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
 			console.log(img.src);
 			event.dataTransfer.setDragImage(img, 0, 0);
-			event.dataTransfer.setData('node', parent);
+			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
 		};
+
 
 		if (element.kind === 'button') {
 			tinyMCE.init({
@@ -142,7 +143,18 @@ var applyGenericItemSettings = function (element) {
 					init_instance_callback: function (editor) {
 						window.currentEditor = editor;
 						editor.on('focus', function (e) {
-							window.tryToChangeMCEWidth();
+							var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+							if (window.currentEditor &&
+								document.getElementById('wptb_builder').scrollTop >= 55 &&
+								window.currentEditor.bodyElement.style.display != 'none') {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+								document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
+								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+							} else {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+								delete document.getElementById('wpcd_fixed_toolbar').style.right;
+								delete document.getElementById('wpcd_fixed_toolbar').style.top;
+							}
 						});
 					}
 				});
