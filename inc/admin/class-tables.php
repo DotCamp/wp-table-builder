@@ -51,7 +51,13 @@ class Tables {
 
 		// Register the post type
         register_post_type( 'wptb-tables', $args );
+		add_shortcode('wp_table',array($this, 'get_table'));
         
+    }
+
+    public function get_table($args){  
+    	$html = get_page_by_title($args['title'] , ARRAY_A, 'wptb-tables');
+    	return $html['post_content'];
     }
 
 }

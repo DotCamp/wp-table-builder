@@ -23,19 +23,20 @@ class Admin_Menu {
 
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'wp_footer', array( $this, 'custom_code' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); 
+		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
+		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
 	}
 
-	/**
-	 * Echoes additional dragging element.
-	 *
-	 * @since 1.0.0
-	 */
-
-	public function custom_code(){   
-		include plugin_dir_url(__FILE__).'views/additional_element.php';
+	public function save_table(){
+		$id = wp_insert_post([
+			'post_title' => $_POST['title'],
+			'post_content' => $_POST['content'],
+			'post_type' => 'wptb-tables'
+		]); 
+		wp_die('Holi'.$id);
 	}
+
 
 	/**
 	 * Register our menus.
