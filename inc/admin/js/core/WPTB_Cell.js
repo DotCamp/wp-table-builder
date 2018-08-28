@@ -63,16 +63,32 @@ var WPTB_Cell = function(DOMElement){
         }
 
         DOMElement.ondrop = function(e){
-        	var element,classId;
+        	var element, classId, space, t_space, spaceParent;
         	e.preventDefault();
+            space = new WPTB_Space();
+
             if(e.dataTransfer.getData('wptbElement')){
         	   element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+                if(this.innerHTML==''){
+                    this.appendChild(new WPTB_Space());
+                }
                 this.appendChild(element.getDOMElement());
+                this.appendChild(space);
         	}
             else{
+
                 classId = e.dataTransfer.getData('node');
                 element = document.getElementsByClassName(classId)[0];
+                if(this.innerHTML==''){
+                    t_space = element.nextSibling;
+                    spaceParent = element.parentNode;
+                    if(t_space != undefined){
+                        spaceParent.removeChild(t_space);
+                    }
+                    this.appendChild(new WPTB_Space());
+                }
                 this.appendChild(element);
+                this.appendChild(space);
             }
         	this.classList.remove('wptb-drop-here-empty');
         	return true;

@@ -181,4 +181,5 @@ var applyGenericItemSettings = function(element){
 	new WPTB_ElementOptions(element,index);
 
 	document.counter.increment(element.kind);
+     
 };

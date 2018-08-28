@@ -7,7 +7,8 @@ use WP_Table_Builder as NS;
  */
 
  ?>
-
+<div class="wptb-messaging"> 
+</div>
  <div class="wptb-name-setup">
     <span><?php echo __( 'Table Name', 'wp-table-builder' ); ?></span>
     <input type="text" name="" id="wptb-setup-name" placeholder="<?php echo __( 'Enter Table Name Here', 'wp-table-builder' ); ?>">
