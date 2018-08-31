@@ -20,7 +20,6 @@ class Admin_Menu {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); 
@@ -46,6 +45,8 @@ class Admin_Menu {
 	public function register_menus() {
 
 		global $builder_page;
+		global $submenu;
+		//die(var_dump($submenu));
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
@@ -79,6 +80,8 @@ class Admin_Menu {
 			array( $this, 'table_builder' )
 		);
 
+		remove_menu_page('edit.php?post_type=wptb-tables');
+
 		do_action( 'wptb_admin_menu', $this );
 
 	}
@@ -94,14 +97,19 @@ class Admin_Menu {
 		 * The Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
-		 */
+		 */ 
 		global $builder_page;
+		global $submenu;
+		unset($submenu["edit.php?post_type=wptb-tables"]);
+		wp_register_script( 'wptb-patchs-js', plugin_dir_url( __FILE__ ) . 'js/patchs.js', [], NS\PLUGIN_VERSION, true );
+		wp_enqueue_script( 'wptb-patchs-js' );
 
 		if ( $hook != $builder_page ) {
 			return;
 		}
 
 		wp_enqueue_media();
+
 
 		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
 		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );

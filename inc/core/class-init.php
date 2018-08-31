@@ -105,7 +105,6 @@ class Init {
 	 * @access    private
 	 */
 	private function define_admin_hooks() {
-
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$tables = new Admin\Tables;

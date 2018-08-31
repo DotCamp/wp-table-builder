@@ -80,24 +80,22 @@ var WPTB_ElementOptions = function(element,index){
 
     		switch(this.dataset.type){
                 case 'src':
-                        var img = affectedEl.getElementsByTagName("img");
+                        var img = affectedEl.getElementsByTagName("img")[0];
                         img.src=this.value;
-                        break;
-                        break;
+                        break; 
                     case 'alternative-text':
-                        var img = affectedEl.getElementsByTagName("img");
+                        var img = affectedEl.getElementsByTagName("img")[0];
                         img.alt=this.value;
                         break;
                     case 'image-width':
-                        var img = affectedEl.getElementsByTagName("img");
-                        img.width=this.value+'px';
-                        break;
-                        break;
+                        var img = affectedEl.getElementsByTagName("img")[0];
+                        console.log(img,this.value);
+                        img.width=this.value;
+                        break; 
                     case 'image-height':
-                        var img = affectedEl.getElementsByTagName("img");
-                        img.height=this.value+'px';
-                        break;
-                        break;
+                        var img = affectedEl.getElementsByTagName("img")[0];
+                        img.height=this.value;
+                        break; 
     			case 'font-size':
                         var ps = affectedEl.getElementsByTagName("p");
                         for (var i = 0; i < ps.length; i++) {
