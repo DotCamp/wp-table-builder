@@ -25,7 +25,16 @@ class Tables {
 		$this->register_cpt();
 		// Add the custom columns to the book post type: 
 		add_filter( 'manage_wptb-tables_posts_columns', [$this,'addHeader'] );
+		add_filter('post_row_actions', [$this,'customizeActions'], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column' , [$this,'addContent'], 10, 2 );
+	}
+
+	function customizeActions($actions,$post){ 
+    if ($post->post_type =="wptb-tables"){
+    	unset($actions['inline hide-if-no-js']);
+        $actions['edit'] = '<a href="'.menu_page_url('wptb-builder',false).'&table='.$post->ID.'">'.__('Edit','wptb').'</a>';
+    }
+    return $actions;
 	}
 
 	function addHeader($columns) { 
@@ -84,7 +93,7 @@ class Tables {
     }
 
     public function get_table($args){  
-    	$html = get_page_by_title($args['id'] , ARRAY_A, 'wptb-tables');
+    	$html = get_post($args['id'] , ARRAY_A);
     	return $html['post_content'];
     }
 

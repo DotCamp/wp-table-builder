@@ -1,6 +1,29 @@
 (function () {
 
+	function detectMode() {
+		var url = window.location.href,
+		    regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
+		    results = regex.exec(url);
+		if (!results) return false;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
 	var WPTB_Builder = function WPTB_Builder() {
+		var table_id = detectMode();
+		if (table_id) {
+			var http = new XMLHttpRequest(),
+			    url = ajaxurl + "?action=get_table" + '&id=' + table_id;
+			http.open('GET', url, true);
+			http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			http.onreadystatechange = function (d) {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+					document.getElementsByClassName('wrapper')[0].innerHTML = http.responseText;
+				}
+			};
+			http.send(null);
+		}
 		document.counter = new ElementCounters();
 
 		var initializer = WPTB_Initializer();
@@ -315,7 +338,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
         };
     }
 };
-var WPTB_Image = function WPTB_Image(text) {
+var WPTB_Image = function WPTB_Image(src) {
         var DOMElement = document.createElement('div'),
             img = document.createElement('img');
 
@@ -341,7 +364,11 @@ var WPTB_Image = function WPTB_Image(text) {
                 img.src = attachment.url;
         });
         // Finally, open the modal
-        file_frame.open();
+        if (src == undefined) {
+                file_frame.open();
+        } else {
+                img.src = src;
+        }
 
         return this;
 };
@@ -746,173 +773,177 @@ var WPTB_Space = function WPTB_Space(text) {
 };
 var WPTB_Table = function WPTB_Table(columns, rows) {
 
-				var settings = document.getElementsByClassName('wptb-settings-items'),
-				    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
-				    table,
-				    row,
-				    cell;
+		var settings = document.getElementsByClassName('wptb-settings-items'),
+		    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
+		    table,
+		    row,
+		    cell;
 
-				for (var i = 0; i < settings.length; i++) {
-								settings[i].classList.add('visible');
-				}
+		for (var i = 0; i < settings.length; i++) {
+				settings[i].classList.add('visible');
+		}
 
-				document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+		document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 
-				//Create a HTML Table element.
-				table = document.createElement('table');
-				table.classList.add('wptb-preview-table');
+		//Create a HTML Table element.
+		table = document.createElement('table');
+		table.classList.add('wptb-preview-table');
 
-				//Add the header row.
+		//Add the header row.
+		row = table.insertRow(-1);
+		row.classList.add('wptb-table-head', 'wptb-row');
+
+		for (var i = 0; i < columns; i++) {
+				cell = new WPTB_Cell();
+				cell.setCoords(0, i);
+				row.appendChild(cell.getDOMElement());
+		}
+
+		//Add the data rows.
+		for (var i = 1; i < rows; i++) {
+
 				row = table.insertRow(-1);
-				row.classList.add('wptb-table-head', 'wptb-row');
+				row.classList.add('wptb-row');
 
-				for (var i = 0; i < columns; i++) {
-								cell = new WPTB_Cell();
-								cell.setCoords(0, i);
-								row.appendChild(cell.getDOMElement());
+				for (var j = 0; j < columns; j++) {
+						cell = new WPTB_Cell();
+						cell.setCoords(i, j);
+						row.appendChild(cell.getDOMElement());
 				}
+		}
 
-				//Add the data rows.
-				for (var i = 1; i < rows; i++) {
+		table.recalculateIndexes = function () {
+				var trs = this.getElementsByTagName('tr'),
+				    tds;
 
-								row = table.insertRow(-1);
-								row.classList.add('wptb-row');
+				for (var i = 0; i < trs.length; i++) {
+						tds = trs[i].getElementsByTagName('td');
+						for (var j = 0; j < tds.length; j++) {
 
-								for (var j = 0; j < columns; j++) {
-												cell = new WPTB_Cell();
-												cell.setCoords(i, j);
-												row.appendChild(cell.getDOMElement());
-								}
-				}
-
-				table.recalculateIndexes = function () {
-								var trs = this.getElementsByTagName('tr'),
-								    tds;
-
-								for (var i = 0; i < trs.length; i++) {
-												tds = trs[i].getElementsByTagName('td');
-												for (var j = 0; j < tds.length; j++) {
-
-																if (i == 0) {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
-																} else {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row');
-																}
-
-																tds[j].dataset.xIndex = j;
-																tds[j].dataset.yIndex = i;
-												}
-								}
-				};
-
-				table.addColumn = function (pos) {
-								var referenceTd, newTd, _this;
-								for (var i = 0; i < this.rows.length; i++) {
-
-												var newTd = new WPTB_Cell();
-
-												if (pos == 'before' || pos == 'after') {
-																referenceTd = this.rows.getElementsByTagName('td')[_this.dataset.xIndex];
-																if (pos == 'before') {
-																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
-																				var buttons = document.getElementsByClassName('wptb-relative-action');
-																				for (var i = 0; i < buttons.length; i++) {
-																								buttons[i].dataset.xIndex++;
-																				}
-																} else {
-																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
-																}
-												} else if (pos == 'end') {
-																this.rows[i].appendChild(newTd.getDOMElement());
-												} else {
-																this.rows[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + this.rows[i].innerHTML;
-												}
-								}
-
-								this.recalculateIndexes();
-				};
-
-				table.addColumnToTheEnd = function (evt) {
-								table.addColumn('end', this.dataset.activeCell);
-				};
-
-				table.addColumnToTheStart = function (evt) {
-								table.addColumn('start', this.dataset.activeCell);
-				};
-
-				table.addColumnBefore = function () {
-								table.addColumn('before', this.dataset.activeCell);
-				};
-
-				table.addColumnAfter = function () {
-								table.addColumn('after', this.dataset.activeCell);
-				};
-
-				table.addRow = function (pos) {
-								var _this,
-								    row,
-								    referenceRow = undefined;
-
-								if (pos == 'end' || pos == 'start') {
-												row = this.insertRow(pos == 'end' ? -1 : 0);
+								if (i == 0) {
+										tds[j].parentNode.className = '';
+										tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
 								} else {
-												row = document.createElement('tr');
+										tds[j].parentNode.className = '';
+										tds[j].parentNode.classList.add('wptb-row');
 								}
 
-								for (var j = 0; j < this.columns; j++) {
-												var cell = new WPTB_Cell();
-												row.appendChild(cell.getDOMElement());
+								tds[j].dataset.xIndex = j;
+								tds[j].dataset.yIndex = i;
+						}
+				}
+		};
+
+		table.addColumn = function (pos) {
+				var referenceTd, newTd, _this;
+				for (var i = 0; i < this.rows.length; i++) {
+
+						var newTd = new WPTB_Cell();
+
+						if (pos == 'before' || pos == 'after') {
+								referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
+								/*		                referenceTd = document.getElementsByClassName('wptb-table-setup')[0].rows[_this.dataset.yIndex]
+        		                        .getElementsByTagName('td')[_this.dataset.xIndex];*/
+								if (pos == 'before') {
+										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
+										var buttons = document.getElementsByClassName('wptb-relative-action');
+										for (var i = 0; i < buttons.length; i++) {
+												buttons[i].dataset.xIndex++;
+										}
+								} else {
+										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
 								}
+						} else if (pos == 'end') {
+								this.rows[i].appendChild(newTd.getDOMElement());
+						} else {
+								referenceTd = this.rows[i].getElementsByTagName('td')[0];
+								this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
+						}
+						table.columns++;
+				}
 
-								row.classList.add('wptb-row');
+				this.recalculateIndexes();
+		};
 
-								if (pos == 'before' || pos == 'after') {
-												_this = this.getElementsByClassName('wptb-highlighted')[0];
-												referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
-												if (pos == "before") {
-																params.tbody.insertBefore(row, referenceRow);
-																var buttons = document.getElementsByClassName('wptb-relative-action');
-																for (var i = 0; i < buttons.length; i++) {
-																				buttons[i].dataset.yIndex++;
-																}
-												} else {
-																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
-												}
+		table.addColumnToTheEnd = function (evt) {
+				table.addColumn('end', this.dataset.activeCell);
+		};
+
+		table.addColumnToTheStart = function (evt) {
+				table.addColumn('start', this.dataset.activeCell);
+		};
+
+		table.addColumnBefore = function () {
+				table.addColumn('before', this.dataset.activeCell);
+		};
+
+		table.addColumnAfter = function () {
+				table.addColumn('after', this.dataset.activeCell);
+		};
+
+		table.addRow = function (pos) {
+				var _this,
+				    row,
+				    referenceRow = undefined;
+
+				if (pos == 'end' || pos == 'start') {
+						row = this.insertRow(pos == 'end' ? -1 : 0);
+				} else {
+						row = document.createElement('tr');
+				}
+
+				for (var j = 0; j < this.columns; j++) {
+						var cell = new WPTB_Cell();
+						row.appendChild(cell.getDOMElement());
+				}
+
+				row.classList.add('wptb-row');
+
+				if (pos == 'before' || pos == 'after') {
+						_this = this.getElementsByClassName('wptb-highlighted')[0];
+						referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
+						if (pos == "before") {
+								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
+								var buttons = document.getElementsByClassName('wptb-relative-action');
+								for (var i = 0; i < buttons.length; i++) {
+										buttons[i].dataset.yIndex++;
 								}
+						} else {
+								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
+						}
+				}
 
-								if (pos == 'before' || pos == 'start') {
-												var active = document.querySelector('wptb-highlighted');
-												if (active) {
-																active.onclick();
-												}
-								}
+				if (pos == 'before' || pos == 'start') {
+						var active = document.querySelector('wptb-highlighted');
+						if (active) {
+								active.onclick();
+						}
+				}
 
-								this.recalculateIndexes();
-				};
+				this.recalculateIndexes();
+		};
 
-				table.addRowToTheEnd = function (evt) {
-								table.addRow('end');
-				};
+		table.addRowToTheEnd = function (evt) {
+				table.addRow('end');
+		};
 
-				table.addRowToTheStart = function (evt) {
-								table.addRow('start');
-				};
+		table.addRowToTheStart = function (evt) {
+				table.addRow('start');
+		};
 
-				table.addRowBefore = function () {
-								table.addRow('before');
-				};
+		table.addRowBefore = function () {
+				table.addRow('before');
+		};
 
-				table.addRowAfter = function () {
-								table.addRow('after');
-				};
+		table.addRowAfter = function () {
+				table.addRow('after');
+		};
 
-				table.columns = columns;
+		table.columns = columns;
 
-				wptbTableSetup.appendChild(table);
+		wptbTableSetup.appendChild(table);
 
-				WPTB_LeftPanel();
+		WPTB_LeftPanel();
 };
 var WPTB_Text = function WPTB_Text(text) {
         var DOMElement = document.createElement('div'),
@@ -956,7 +987,32 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 																					    el = act.parentNode;
 																					el.removeChild(act);
 														};
-														//btnCopy.onclick = window.copyButton;
+														btnCopy.onclick = function (event) {
+																					if (element.kind == 'list') {
+
+																												var td = event.target.parentNode.parentNode.parentNode,
+																												    temp = [],
+																												    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+
+																												for (var i = 0; i < srcList.length; i++) {
+																																			temp.push(srcList[i].innerHTML);
+																												}
+																												var copy = new WPTB_List(temp);
+																												td.appendChild(copy.getDOMElement());
+																					} else if (element.kind == 'text') {
+																												var td = event.target.parentNode.parentNode.parentNode,
+																												    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+																												td.appendChild(copy.getDOMElement());
+																					} else if (element.kind == 'image') {
+																												var td = event.target.parentNode.parentNode.parentNode,
+																												    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
+																												td.appendChild(copy.getDOMElement());
+																					} else {
+																												var td = event.target.parentNode.parentNode.parentNode,
+																												    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+																												td.appendChild(copy.getDOMElement());
+																					}
+														};
 														btnMove.ondragstart = function (event) {
 																					var parent = this,
 																					    infArr,

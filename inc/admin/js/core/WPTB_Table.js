@@ -69,8 +69,9 @@ var WPTB_Table = function(columns, rows){
 
 		            if(pos == 'before' || pos == 'after')
 		            {
-		                referenceTd = this.rows
-		                        .getElementsByTagName('td')[_this.dataset.xIndex];
+		        		referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
+/*		                referenceTd = document.getElementsByClassName('wptb-table-setup')[0].rows[_this.dataset.yIndex]
+		                        .getElementsByTagName('td')[_this.dataset.xIndex];*/
 		                if(pos=='before'){
 		                    this.rows[i].insertBefore(newTd.getDOMElement(),referenceTd);
 		                    var buttons = document.getElementsByClassName('wptb-relative-action');
@@ -86,8 +87,10 @@ var WPTB_Table = function(columns, rows){
 		                this.rows[i].appendChild(newTd.getDOMElement());  
 		            }
 		            else{
-		                this.rows[i].innerHTML = '<td class="wptb-droppable wptb-cell"></td>' + this.rows[i].innerHTML; 
+		            	referenceTd = this.rows[i].getElementsByTagName('td')[0];
+		            	this.rows[i].insertBefore(newTd.getDOMElement(),referenceTd);
 		            }
+		            table.columns++;
 		        }
 
 		        this.recalculateIndexes();
@@ -129,7 +132,7 @@ var WPTB_Table = function(columns, rows){
 		        	_this = this.getElementsByClassName('wptb-highlighted')[0];
 		            referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
 		            if(pos == "before"){
-		                params.tbody.insertBefore(row,referenceRow);
+		                this.getElementsByTagName('tbody')[0].insertBefore(row,referenceRow);
 		                var buttons = document.getElementsByClassName('wptb-relative-action');
 		                for (var i = 0; i < buttons.length; i++) {
 		                    buttons[i].dataset.yIndex++;

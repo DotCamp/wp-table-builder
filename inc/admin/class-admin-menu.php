@@ -25,6 +25,8 @@ class Admin_Menu {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); 
 		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
+		add_action( 'wp_ajax_get_table', array( $this, 'get_table' ) );
+		add_action( 'wp_ajax_nopriv_get_table', array( $this, 'get_table' ) );
 	}
 
 	public function save_table(){
@@ -34,6 +36,11 @@ class Admin_Menu {
 			'post_type' => 'wptb-tables'
 		]); 
 		wp_die('Holi'.$id);
+	}
+
+	public function get_table(){  
+		$html = get_post($_REQUEST['id'] , ARRAY_A);
+		die($html['post_content']);
 	}
 
 

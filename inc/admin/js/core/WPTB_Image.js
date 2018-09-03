@@ -1,4 +1,4 @@
-var WPTB_Image = function(text){
+var WPTB_Image = function(src){
         var DOMElement = document.createElement('div'),
         	img = document.createElement('img');
 
@@ -24,7 +24,12 @@ var WPTB_Image = function(text){
                                         img.src = attachment.url; 
                                 });
                                         // Finally, open the modal
-        file_frame.open();
+        if(src==undefined){
+                file_frame.open();
+        }
+        else{
+                img.src=src;
+        }
 
         return this;
 };

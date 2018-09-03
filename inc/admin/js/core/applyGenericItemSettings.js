@@ -20,7 +20,35 @@ var applyGenericItemSettings = function(element){
 	            el = act.parentNode;
 	        el.removeChild(act); 
 	    };
-        //btnCopy.onclick = window.copyButton;
+        btnCopy.onclick = function(event){
+        	if(element.kind=='list'){
+
+		        var td = event.target.parentNode.parentNode.parentNode,
+		            temp = [],
+		            srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+
+		        for (var i = 0; i < srcList.length; i++) {
+		            temp.push(srcList[i].innerHTML);
+		        }
+		        var copy = new WPTB_List(temp);
+		        td.appendChild(copy.getDOMElement());
+    
+        	}
+        	else if(element.kind=='text'){
+        		var td = event.target.parentNode.parentNode.parentNode,
+	            	copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+	        	td.appendChild(copy.getDOMElement());
+        	}else if(element.kind=='image'){
+				var td = event.target.parentNode.parentNode.parentNode,
+	            	copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
+	        	td.appendChild(copy.getDOMElement());
+        	}
+        	else{
+        		var td = event.target.parentNode.parentNode.parentNode,
+		            copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+		        td.appendChild(copy.getDOMElement());
+        	}
+        };
         btnMove.ondragstart = function(event){
         	var parent = this,infArr,type;
 
