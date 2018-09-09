@@ -111,24 +111,36 @@ var WPTB_ElementOptions = function(element,index){
                             ps[i].style.color =  val;
                         } 
                         break;
-                    case 'list-class':
+                    case 'list-class': 
                         if (val == 'unordered') {
-                            affectedEl.querySelector('[data-type=list-style-type]').parentNode.style.display= 'flex';
-                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            event.target
+                                .parentNode
+                                .parentNode
+                                .querySelector('[data-type=list-style-type]')
+                                .parentNode
+                                .style
+                                .display= 'flex';
+                            var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                             for (var i = 0; i < bullets.length; i++) {
                                 bullets[i].style.listStyleType= 'disc';
                             }
                             document.querySelector('[data-type=list-style-type]').value = 'disc';
                         } else {
-                            affectedEl.querySelector('[data-type=list-style-type]').parentNode.style.display= 'none'; 
-                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            event.target
+                                .parentNode
+                                .parentNode
+                                .querySelector('[data-type=list-style-type]')
+                                .parentNode
+                                .style
+                                .display= 'none';
+                            var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                             for (var i = 0; i < bullets.length; i++) {
                                 bullets[i].style.listStyleType= 'decimal';
                             } 
                         }
                         break; 
                     case 'list-style-type':
-                            var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                            var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                             for (var i = 0; i < bullets.length; i++) {
                                 bullets[i].style.listStyleType= val.toLowerCase();
                             } 

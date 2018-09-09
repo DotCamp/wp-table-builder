@@ -25,6 +25,7 @@
 			http.send(null);
 		}
 		document.counter = new ElementCounters();
+		document.select = new MultipleSelect();
 
 		var initializer = WPTB_Initializer();
 			settings = WPTB_Settings();

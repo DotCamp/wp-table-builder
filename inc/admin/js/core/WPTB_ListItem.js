@@ -32,6 +32,7 @@ var WPTB_ListItem = function(text){
             };
 
             btnCopy.onclick = function (event) {
+                console.log('Clicking item');
                 var article = event.target.parentNode.parentNode,
                     content = article.querySelector('.wptb-list-item-content'),
                     html = content.innerHTML;
@@ -61,22 +62,13 @@ var WPTB_ListItem = function(text){
                 return;
             }
             event.preventDefault();
-            duplicate = new WPTB_ListItem();
-            if(DOMElement.nextSibling != undefined){
-                DOMElement.parentNode.insertBefore(duplicate.getDOMElement(),DOMElement.nextSibling);
-            }
-            else{
-                DOMElement.parentNode.appendChild(duplicate.getDOMElement());
-            }
-            
-
+            duplicate = new WPTB_ListItem(this.innerHTML);
+            console.log('duplicate',duplicate.getDOMElement());
+            DOMElement.parentNode.insertBefore(duplicate.getDOMElement(),DOMElement);
+            console.log(divcontent);
+            divcontent.innerHTML = 'New List Item';
             duplicate.getDOMElement().querySelector('.wptb-list-item-content').focus();
 
-            lastP = this.childNodes[this.childNodes.length - 1];
-            this.removeChild(lastP);
-            if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-                this.innerHTML = 'New List Item';
-            }
             return false;
         };
 

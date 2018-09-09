@@ -25,6 +25,7 @@
 			http.send(null);
 		}
 		document.counter = new ElementCounters();
+		document.select = new MultipleSelect();
 
 		var initializer = WPTB_Initializer();
 		settings = WPTB_Settings();
@@ -69,7 +70,47 @@ var WPTB_Cell = function WPTB_Cell(DOMElement) {
         }
     }
 
+    function highlightRow(td) {
+        var parentRow = td.parentNode,
+            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
+            tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+        for (var i = 0; i < tds.length; i++) {
+            tds[i].classList.remove('highlighted-row-first', 'highlighted-row-last', 'highlighted-row-inner', 'highlighted-column-first', 'highlighted-column-last', 'highlighted-column-inner');
+        }
+        for (var i = 0; i < columnCount; i++) {
+
+            var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
+            var ttd = parentRow.getElementsByTagName('td')[i];
+            if (ttd !== td) {
+                ttd.classList.add(classToAdd);
+            }
+        }
+    }
+
+    function highlightColumn(td) {
+
+        var index,
+            parentRow = td.parentNode;
+        columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
+        for (var i = 0; i < columnCount; i++) {
+            if (parentRow.getElementsByTagName('td')[i] === td) {
+                index = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < rowCount; i++) {
+            var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
+            var tr = table.getElementsByTagName('tr')[i];
+            if (tr.getElementsByTagName('td')[index] !== td) {
+                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
+            }
+        }
+    }
+
     DOMElement = document.createElement("td");
+
+    DOMElement.draggable = false;
 
     DOMElement.classList.add('wptb-droppable', 'wptb-cell');
 
@@ -81,13 +122,12 @@ var WPTB_Cell = function WPTB_Cell(DOMElement) {
             return;
         }
         if (this.classList.contains('wptb-highlighted')) {
-            this.classList.remove('wptb-highlighted');
+            //this.classList.remove('wptb-highlighted');
         } else {
             relativeActions = document.getElementsByClassName('wptb-relative-action');
             cells = document.getElementsByTagName('td');
 
             for (var i = 0; i < relativeActions.length; i++) {
-                console.log(relativeActions[i]);
                 relativeActions[i].dataset.activeCell = this;
             }
 
@@ -96,11 +136,16 @@ var WPTB_Cell = function WPTB_Cell(DOMElement) {
             }
 
             this.classList.add('wptb-highlighted');
+            highlightRow(this);
+            highlightColumn(this);
         }
     };
 
-    DOMElement.ondragenter = function () {
+    DOMElement.ondragenter = function (e) {
         var div;
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
         this.classList.add('wptb-drop-here-empty');
     };
 
@@ -116,6 +161,12 @@ var WPTB_Cell = function WPTB_Cell(DOMElement) {
         var element, classId, space, t_space, spaceParent;
         e.preventDefault();
         space = new WPTB_Space();
+
+        console.log(e.dataTransfer);
+
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
 
         if (e.dataTransfer.getData('wptbElement')) {
             element = newElementProxy(e.dataTransfer.getData('wptbElement'));
@@ -143,11 +194,20 @@ var WPTB_Cell = function WPTB_Cell(DOMElement) {
         return true;
     };
 
-    DOMElement.onmousedown = function () {};
+    DOMElement.onmousedown = function () {
+        console.log("MOUSE DOWN!");
+        document.select.activateMultipleSelectMode();
+        document.select.pushSelectedCell(this);
+    };
 
-    DOMElement.onmouseover = function () {};
+    DOMElement.onmouseover = function () {
+        document.select.pushSelectedCell(this);
+    };
 
-    DOMElement.onmouseup = function () {};
+    DOMElement.onmouseup = function () {
+        console.log("MOUSE UP!");
+        document.select.deactivateMultipleSelectMode();
+    };
 
     this.getDOMElement = function () {
         return DOMElement;
@@ -314,22 +374,22 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
-                        affectedEl.querySelector('[data-type=list-style-type]').parentNode.style.display = 'flex';
-                        var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                        event.target.parentNode.parentNode.querySelector('[data-type=list-style-type]').parentNode.style.display = 'flex';
+                        var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                         for (var i = 0; i < bullets.length; i++) {
                             bullets[i].style.listStyleType = 'disc';
                         }
                         document.querySelector('[data-type=list-style-type]').value = 'disc';
                     } else {
-                        affectedEl.querySelector('[data-type=list-style-type]').parentNode.style.display = 'none';
-                        var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                        event.target.parentNode.parentNode.querySelector('[data-type=list-style-type]').parentNode.style.display = 'none';
+                        var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                         for (var i = 0; i < bullets.length; i++) {
                             bullets[i].style.listStyleType = 'decimal';
                         }
                     }
                     break;
                 case 'list-style-type':
-                    var bullets = element.querySelectorAll('article .wptb-list-item-style-dot li');
+                    var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                     for (var i = 0; i < bullets.length; i++) {
                         bullets[i].style.listStyleType = val.toLowerCase();
                     }
@@ -536,6 +596,10 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             document.getElementById('wptb-add-start-column').onclick = table.addColumnToTheStart;
             document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
             document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+            document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
+            document.getElementById('wptb-delete-row').onclick = table.deleteRow;
+            document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
+            document.getElementById('wptb-split-cell').onclick = table.splitCell;
             document.getElementById('add-elements').onclick = function () {
                         document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
                         document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
@@ -605,6 +669,7 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
         };
 
         btnCopy.onclick = function (event) {
+            console.log('Clicking item');
             var article = event.target.parentNode.parentNode,
                 content = article.querySelector('.wptb-list-item-content'),
                 html = content.innerHTML;
@@ -633,20 +698,13 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
             return;
         }
         event.preventDefault();
-        duplicate = new WPTB_ListItem();
-        if (DOMElement.nextSibling != undefined) {
-            DOMElement.parentNode.insertBefore(duplicate.getDOMElement(), DOMElement.nextSibling);
-        } else {
-            DOMElement.parentNode.appendChild(duplicate.getDOMElement());
-        }
-
+        duplicate = new WPTB_ListItem(this.innerHTML);
+        console.log('duplicate', duplicate.getDOMElement());
+        DOMElement.parentNode.insertBefore(duplicate.getDOMElement(), DOMElement);
+        console.log(divcontent);
+        divcontent.innerHTML = 'New List Item';
         duplicate.getDOMElement().querySelector('.wptb-list-item-content').focus();
 
-        lastP = this.childNodes[this.childNodes.length - 1];
-        this.removeChild(lastP);
-        if (this.innerHTML.trim() == '<p><br data-mce-bogus="1"></p>') {
-            this.innerHTML = 'New List Item';
-        }
         return false;
     };
 
@@ -655,6 +713,153 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
     };
 
     return this;
+};
+var MultipleSelect = function MultipleSelect() {
+
+	var selectedCells = [],
+	    multipleCellMode = false;
+
+	this.activateMultipleSelectMode = function () {
+		selectedCells = [];
+		var tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+		for (var i = 0; i < tds.length; i++) {
+			tds[i].classList.remove('wptb-highlighted');
+		}
+		multipleCellMode = true;
+	};
+
+	this.deactivateMultipleSelectMode = function () {
+		console.log(selectedCells);
+		multipleCellMode = false;
+	};
+
+	this.pushSelectedCell = function (cell) {
+		if (!multipleCellMode) {
+			return;
+		}
+		selectedCells.push(cell);
+		console.log(cell);
+		cell.classList.add('wptb-highlighted');
+	};
+
+	this.selectedCells = function () {
+		return selectedCells;
+	};
+
+	this.flushSelectedCells = function () {
+		selectedCells = [];
+	};
+
+	this.getFirst = function () {
+		var minXIndex = 1000,
+		    minYIndex = 1000,
+		    first;
+		for (var i = selectedCells.length - 1; i >= 0; i--) {
+			if (minXIndex >= selectedCells[i].dataset.xIndex && minYIndex >= selectedCells[i].dataset.yIndex) {
+				first = selectedCells[i];
+				minXIndex = selectedCells[i].dataset.xIndex;
+				minYIndex = selectedCells[i].dataset.yIndex;
+			}
+		}
+		return first;
+	};
+
+	this.getLast = function () {
+		var maxXIndex = -1,
+		    maxYIndex = -1,
+		    last;
+		for (var i = selectedCells.length - 1; i >= 0; i--) {
+			if (maxXIndex <= selectedCells[i].dataset.xIndex && maxYIndex <= selectedCells[i].dataset.yIndex) {
+				last = selectedCells[i];
+				maxXIndex = selectedCells[i].dataset.xIndex;
+				maxYIndex = selectedCells[i].dataset.yIndex;
+			}
+		}
+		return last;
+	};
+
+	this.removeAllButFirst = function () {
+		var td = this.getFirst();
+		for (var i = 1; i < selectedCells.length; i++) {
+			selectedCells[i].classList.add('wptb-fused-cell-' + td.dataset.xIndex + '-' + td.dataset.yIndex);
+		}
+	};
+
+	return this;
+};
+var WPTB_Parser = function WPTB_Parser(code) {
+	var node,
+	    pos = 0;
+
+	function getChar() {
+		if (pos >= code.length) {
+			return -1;
+		}
+		return code[pos++];
+	}
+
+	function getToken() {
+		var char = getChar(),
+		    token = char;
+
+		if (char !== '[') {
+			return;
+		}
+
+		do {
+			char = getChar();
+			if (char === -1) {
+				return -1;
+			}
+			token += char;
+		} while (char != ']');
+
+		return true;
+	}
+
+	function getCurrentToken() {
+		return ctoken;
+	}
+
+	function checkAndPass(expected) {
+		if (ctoken !== expected) {
+			console.error('There was an error with the file and therefore the table could not be rendere');
+			exit();
+		}
+
+		ctoken = getToken();
+	}
+
+	function getWordFromToken(token) {
+		var pos = token.indexOf(' '),
+		    word = token.substring(1, pos);
+		return '[' + word + ']';
+	}
+
+	function analizeHeader() {
+		getExpectedToken('[tr]');
+		analizeTds();
+		getExpectedToken('[/tr]');
+	}
+
+	function analizeRows() {
+		getExpectedToken('[tr]');
+		analizeTds();
+		getExpectedToken('[/tr]');
+	}
+
+	function analizeRoot() {
+		var n = document.createElement('table');
+		getExpectedToken('[table]');
+		analizeHeader();
+		analizeRows();
+		getExpectedToken('[/table]');
+		return n;
+	}
+
+	node = analizeRoot();
+
+	return node;
 };
 var WPTB_Settings = function WPTB_Settings() {
 
@@ -671,8 +876,10 @@ var WPTB_Settings = function WPTB_Settings() {
 		var http = new XMLHttpRequest(),
 		    url = ajaxurl + "?action=save_table",
 		    t = document.getElementById('wptb-setup-name').value.trim(),
-		    code = document.getElementsByClassName('wptb-table-setup')[0].innerHTML,
-		    messagingArea;
+		    messagingArea,
+		    code = WPTB_Stringifier(document.getElementsByClassName('wptb-preview-table')[0]);
+		console.log(code);
+		return;
 		if (t === '') {
 			messagingArea = document.getElementsByClassName('wptb-messaging')[0];
 			messagingArea.innerHTML = 'Error: You must assign a name to the table before saving it.';
@@ -771,179 +978,388 @@ var WPTB_Space = function WPTB_Space(text) {
 
     return spaceBetween;
 };
+var WPTB_Stringifier = function WPTB_Stringifier(node) {
+
+	if (node == undefined || node.tagName == undefined) {
+		return '';
+	}
+
+	var code = '',
+	    children = node.childNodes,
+	    padding,
+	    margin,
+	    bg1,
+	    bg2,
+	    bg3,
+	    border;
+
+	switch (node.tagName.toLowerCase()) {
+		case 'table':
+			margin = node.style.margin;
+			padding = node.style.padding;
+			padding = node.style.padding;
+			if (node.rows.length > 1) {}
+			if (node.rows.length > 2) {}
+			code += '[table border="' + margin + '" padding="' + padding + '" enable-border="' + border + '" data-bg1="' + bg1 + '" data-bg2="' + bg2 + '" data-bg3="' + bg3 + '"]';
+
+			for (var i = 0; i < children.length; i++) {
+				code += WPTB_Stringifier(children[i]);
+			}
+
+			code += '[/table]';
+			break;
+		case 'tbody':
+			for (var i = 0; i < children.length; i++) {
+				code += WPTB_Stringifier(children[i]);
+			}
+			break;
+		case 'tr':
+			code += '[tr]';
+
+			for (var i = 0; i < children.length; i++) {
+				code += WPTB_Stringifier(children[i]);
+			}
+
+			code += '[/tr]';
+			break;
+		case 'td':
+			code += '[td]';
+
+			for (var i = 0; i < children.length; i++) {
+				code += WPTB_Stringifier(children[i]);
+			}
+
+			code += '[/td]';
+			break;
+		case 'div':
+			if (node.classList.contains('wptb-ph-element')) {
+				console.log('We reached div code!');
+
+				var infArr = node.className.match(/wptb-element-(.+)-(\d+)/i),
+				    optionsClass,
+				    trueNode,
+				    nodeContent;
+				if (infArr == undefined) {
+					return;
+				}
+				switch (infArr[1]) {
+					case 'list':
+						code += '[list type=""';
+						trueNode = node.getElementsByTagName('ul')[0];
+						if (!trueNode) {
+							return ''; //We ignore the node in case of error
+						}
+						code += ']';
+						listitems = trueNode.getElementsByTagName('article');
+						for (var i = 0; i < listitems.length; i++) {
+							code += '[item]';
+							code += listitems[i].getElementsByClassName('wptb-list-item-content')[0].innerHTML;
+							code += '[/item]';
+						}
+						code += '[/list]';
+						break;
+					case 'image':
+						trueNode = node.getElementsByTagName('img')[0];
+						if (!trueNode) {
+							return ''; //We ignore the node in case of error
+						}
+						code += '[img src="' + trueNode.src + ' width="' + trueNode.width + ' height="' + trueNode.height + ' alternative="' + +'"]';
+						break;
+					case 'text':
+						code += '[text]';
+						trueNode = node.getElementsByClassName('editable')[0];
+						if (!trueNode) {
+							return ''; //We ignore the node in case of error
+						}
+						code += trueNode.innerHTML;
+						code += '[/text]';
+						break;
+					case 'button':
+						trueNode = node.getElementsByClassName('editable')[0];
+						if (!trueNode) {
+							return ''; //We ignore the node in case of error
+						}
+						code += '[button]';
+						code += trueNode.innerHTML;
+						code += '[/button]';
+						break;
+				}
+			} else {
+				return '';
+			}
+			break;
+		default:
+			code += '';
+			break;
+	}
+
+	if (node.nextSibling != undefined) {
+		WPTB_Stringifier(node.nextSibling);
+	}
+
+	return code;
+};
 var WPTB_Table = function WPTB_Table(columns, rows) {
 
-		var settings = document.getElementsByClassName('wptb-settings-items'),
-		    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
-		    table,
-		    row,
-		    cell;
-
-		for (var i = 0; i < settings.length; i++) {
-				settings[i].classList.add('visible');
-		}
-
-		document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-
-		//Create a HTML Table element.
-		table = document.createElement('table');
-		table.classList.add('wptb-preview-table');
-
-		//Add the header row.
-		row = table.insertRow(-1);
-		row.classList.add('wptb-table-head', 'wptb-row');
-
-		for (var i = 0; i < columns; i++) {
-				cell = new WPTB_Cell();
-				cell.setCoords(0, i);
-				row.appendChild(cell.getDOMElement());
-		}
-
-		//Add the data rows.
-		for (var i = 1; i < rows; i++) {
-
-				row = table.insertRow(-1);
-				row.classList.add('wptb-row');
-
-				for (var j = 0; j < columns; j++) {
-						cell = new WPTB_Cell();
-						cell.setCoords(i, j);
-						row.appendChild(cell.getDOMElement());
-				}
-		}
-
-		table.recalculateIndexes = function () {
-				var trs = this.getElementsByTagName('tr'),
-				    tds;
-
-				for (var i = 0; i < trs.length; i++) {
-						tds = trs[i].getElementsByTagName('td');
-						for (var j = 0; j < tds.length; j++) {
-
-								if (i == 0) {
-										tds[j].parentNode.className = '';
-										tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
-								} else {
-										tds[j].parentNode.className = '';
-										tds[j].parentNode.classList.add('wptb-row');
-								}
-
-								tds[j].dataset.xIndex = j;
-								tds[j].dataset.yIndex = i;
-						}
-				}
-		};
-
-		table.addColumn = function (pos) {
-				var referenceTd, newTd, _this;
-				for (var i = 0; i < this.rows.length; i++) {
-
-						var newTd = new WPTB_Cell();
-
-						if (pos == 'before' || pos == 'after') {
-								referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
-								/*		                referenceTd = document.getElementsByClassName('wptb-table-setup')[0].rows[_this.dataset.yIndex]
-        		                        .getElementsByTagName('td')[_this.dataset.xIndex];*/
-								if (pos == 'before') {
-										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
-										var buttons = document.getElementsByClassName('wptb-relative-action');
-										for (var i = 0; i < buttons.length; i++) {
-												buttons[i].dataset.xIndex++;
-										}
-								} else {
-										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
-								}
-						} else if (pos == 'end') {
-								this.rows[i].appendChild(newTd.getDOMElement());
-						} else {
-								referenceTd = this.rows[i].getElementsByTagName('td')[0];
-								this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
-						}
-						table.columns++;
-				}
-
-				this.recalculateIndexes();
-		};
-
-		table.addColumnToTheEnd = function (evt) {
-				table.addColumn('end', this.dataset.activeCell);
-		};
-
-		table.addColumnToTheStart = function (evt) {
-				table.addColumn('start', this.dataset.activeCell);
-		};
-
-		table.addColumnBefore = function () {
-				table.addColumn('before', this.dataset.activeCell);
-		};
-
-		table.addColumnAfter = function () {
-				table.addColumn('after', this.dataset.activeCell);
-		};
-
-		table.addRow = function (pos) {
-				var _this,
+				var settings = document.getElementsByClassName('wptb-settings-items'),
+				    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
+				    table,
 				    row,
-				    referenceRow = undefined;
+				    cell;
 
-				if (pos == 'end' || pos == 'start') {
-						row = this.insertRow(pos == 'end' ? -1 : 0);
-				} else {
-						row = document.createElement('tr');
+				for (var i = 0; i < settings.length; i++) {
+								settings[i].classList.add('visible');
 				}
 
-				for (var j = 0; j < this.columns; j++) {
-						var cell = new WPTB_Cell();
-						row.appendChild(cell.getDOMElement());
+				document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+
+				//Create a HTML Table element.
+				table = document.createElement('table');
+				table.classList.add('wptb-preview-table');
+
+				//Add the header row.
+				row = table.insertRow(-1);
+				row.classList.add('wptb-table-head', 'wptb-row');
+
+				for (var i = 0; i < columns; i++) {
+								cell = new WPTB_Cell();
+								cell.setCoords(0, i);
+								row.appendChild(cell.getDOMElement());
 				}
 
-				row.classList.add('wptb-row');
+				//Add the data rows.
+				for (var i = 1; i < rows; i++) {
 
-				if (pos == 'before' || pos == 'after') {
-						_this = this.getElementsByClassName('wptb-highlighted')[0];
-						referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
-						if (pos == "before") {
-								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
-								var buttons = document.getElementsByClassName('wptb-relative-action');
-								for (var i = 0; i < buttons.length; i++) {
-										buttons[i].dataset.yIndex++;
+								row = table.insertRow(-1);
+								row.classList.add('wptb-row');
+
+								for (var j = 0; j < columns; j++) {
+												cell = new WPTB_Cell();
+												cell.setCoords(i, j);
+												row.appendChild(cell.getDOMElement());
 								}
-						} else {
-								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
-						}
 				}
 
-				if (pos == 'before' || pos == 'start') {
-						var active = document.querySelector('wptb-highlighted');
-						if (active) {
-								active.onclick();
-						}
-				}
+				table.recalculateIndexes = function () {
+								var trs = this.getElementsByTagName('tr'),
+								    tds,
+								    maxCols = 0;
 
-				this.recalculateIndexes();
-		};
+								for (var i = 0; i < trs.length; i++) {
+												tds = trs[i].getElementsByTagName('td');
+												for (var j = 0; j < tds.length; j++) {
 
-		table.addRowToTheEnd = function (evt) {
-				table.addRow('end');
-		};
+																if (i == 0) {
+																				tds[j].parentNode.className = '';
+																				tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
+																} else {
+																				tds[j].parentNode.className = '';
+																				tds[j].parentNode.classList.add('wptb-row');
+																}
 
-		table.addRowToTheStart = function (evt) {
-				table.addRow('start');
-		};
+																tds[j].dataset.xIndex = j;
+																tds[j].dataset.yIndex = i;
+												}
+												if (j > maxCols) {
+																maxCols = j;
+												}
+								}
+								this.columns = maxCols;
+								console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
+				};
 
-		table.addRowBefore = function () {
-				table.addRow('before');
-		};
+				table.addColumn = function (pos) {
+								var referenceTd, newTd, _this, xCoord;
+								referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
+								console.log('Table', this.rows.length);
+								for (var i = 0; i < this.rows.length; i++) {
+												console.log('Iteration ' + (i + 1));
+												var newTd = new WPTB_Cell();
 
-		table.addRowAfter = function () {
-				table.addRow('after');
-		};
+												if (pos == 'before' || pos == 'after') {
+																xCoord = referenceTd.dataset.xIndex;
+																referenceTd = this.rows[i].getElementsByTagName('td')[0];
+																for (var j = 0; j < xCoord; j++) {
+																				referenceTd = this.rows[i].childNodes[j];
+																}
 
-		table.columns = columns;
+																if (pos == 'before') {
+																				console.log('referenceTd', referenceTd);
+																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
 
-		wptbTableSetup.appendChild(table);
+																				var buttons = document.getElementsByClassName('wptb-relative-action');
+																				for (var k = 0; k < buttons.length; k++) {
+																								buttons[k].dataset.xIndex++;
+																				}
+																} else {
+																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
+																}
+												} else if (pos == 'end') {
+																this.rows[i].appendChild(newTd.getDOMElement());
+												} else {
+																referenceTd = this.rows[i].getElementsByTagName('td')[0];
+																this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
+												}
+												table.columns++;
+								}
 
-		WPTB_LeftPanel();
+								this.recalculateIndexes();
+				};
+
+				table.addColumnToTheEnd = function (evt) {
+								table.addColumn('end', this.dataset.activeCell);
+				};
+
+				table.addColumnToTheStart = function (evt) {
+								table.addColumn('start', this.dataset.activeCell);
+				};
+
+				table.addColumnBefore = function () {
+								table.addColumn('before', this.dataset.activeCell);
+				};
+
+				table.addColumnAfter = function () {
+								table.addColumn('after', this.dataset.activeCell);
+				};
+
+				table.addRow = function (pos) {
+								var _this,
+								    row,
+								    referenceRow = undefined;
+
+								if (pos == 'end' || pos == 'start') {
+												row = this.insertRow(pos == 'end' ? -1 : 0);
+								} else {
+												row = document.createElement('tr');
+								}
+
+								for (var j = 0; j < this.columns; j++) {
+												var cell = new WPTB_Cell();
+												row.appendChild(cell.getDOMElement());
+								}
+
+								row.classList.add('wptb-row');
+
+								if (pos == 'before' || pos == 'after') {
+												_this = this.getElementsByClassName('wptb-highlighted')[0];
+												referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
+												if (pos == "before") {
+																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
+																var buttons = document.getElementsByClassName('wptb-relative-action');
+																for (var i = 0; i < buttons.length; i++) {
+																				buttons[i].dataset.yIndex++;
+																}
+												} else {
+																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
+												}
+								}
+
+								if (pos == 'before' || pos == 'start') {
+												var active = document.querySelector('wptb-highlighted');
+												if (active) {
+																active.onclick();
+												}
+								}
+
+								this.recalculateIndexes();
+				};
+
+				table.addRowToTheEnd = function (evt) {
+								table.addRow('end');
+				};
+
+				table.addRowToTheStart = function (evt) {
+								table.addRow('start');
+				};
+
+				table.addRowBefore = function () {
+								table.addRow('before');
+				};
+
+				table.addRowAfter = function () {
+								table.addRow('after');
+				};
+
+				table.deleteRow = function (e) {
+								var cell = document.getElementsByClassName('wptb-highlighted')[0],
+								    index = cell.dataset.yIndex,
+								    table = document.getElementsByClassName('wptb-preview-table')[0],
+								    row = table.getElementsByTagName('tr')[index],
+								    rowCount = table.rows.length,
+								    tbody = row.parentNode;
+								if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
+												return;
+								}
+								tbody.removeChild(row);
+								this.recalculateIndexes();
+				};
+
+				table.deleteColumn = function (e) {
+								var cell = document.getElementsByClassName('wptb-highlighted')[0],
+								    num = cell.dataset.xIndex,
+								    table = document.getElementsByClassName('wptb-preview-table')[0],
+								    rowCount = table.rows.length;
+
+								if (rowCount == 1 && columnCount == 1) {
+												return;
+								}
+								for (var i = 0; i < rowCount; i++) {
+												var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
+												    tr = td.parentNode;
+												tr.removeChild(td);
+								}
+								this.recalculateIndexes();
+				};
+
+				table.mergeCells = function () {
+								var firstCell = document.select.getFirst(),
+								    lastCell = document.select.getLast(),
+								    colspan = Math.abs(lastCell.dataset.xIndex - firstCell.dataset.xIndex) + 1,
+								    rowspan = Math.abs(lastCell.dataset.yIndex - firstCell.dataset.yIndex) + 1;
+
+								console.log(firstCell);
+								console.log(lastCell);
+								console.log(colspan + ' ' + rowspan);
+
+								document.select.removeAllButFirst();
+
+								if (colspan > 1) {
+												firstCell.colSpan = colspan;
+								}
+
+								if (rowspan > 1) {
+												firstCell.rowSpan = rowspan;
+								}
+								table.recalculateIndexes();
+				};
+
+				table.splitCell = function () {
+								var cell = document.getElementsByClassName('wptb-highlighted')[0],
+								    classn,
+								    hidden;
+								if (cell.colSpan == 1 && cell.rowSpan == 1) {
+												return;
+								}
+
+								cell.colSpan = 1;
+								cell.rowSpan = 1;
+
+								classn = 'wptb-fused-cell-' + cell.dataset.xIndex + '-' + cell.dataset.yIndex;
+								hidden = document.getElementsByClassName(classn);
+								console.log('Initial:', hidden);
+
+								for (; hidden.length;) {
+												console.log(hidden[0]);
+												hidden[0].classList.remove(classn);
+								}
+								table.recalculateIndexes();
+				};
+
+				wptbTableSetup.appendChild(table);
+
+				table.recalculateIndexes();
+
+				WPTB_LeftPanel();
 };
 var WPTB_Text = function WPTB_Text(text) {
         var DOMElement = document.createElement('div'),

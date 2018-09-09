@@ -13,8 +13,10 @@ var WPTB_Settings = function(){
 		var http = new XMLHttpRequest(),
         	url = ajaxurl+"?action=save_table",
         	t = document.getElementById('wptb-setup-name').value.trim(), 
-        	code = document.getElementsByClassName('wptb-table-setup')[0].innerHTML,
-			messagingArea;
+			messagingArea,
+			code = WPTB_Stringifier(document.getElementsByClassName('wptb-preview-table')[0]);
+			console.log(code);
+			return;
 		if(t === ''){
 			messagingArea = document.getElementsByClassName('wptb-messaging')[0];
 			messagingArea.innerHTML = 'Error: You must assign a name to the table before saving it.';

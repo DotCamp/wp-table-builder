@@ -124,6 +124,10 @@ var WPTB_LeftPanel = function(){
 	document.getElementById('wptb-add-start-column').onclick = table.addColumnToTheStart;
 	document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
 	document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+    document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
+    document.getElementById('wptb-delete-row').onclick = table.deleteRow;
+    document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
+    document.getElementById('wptb-split-cell').onclick = table.splitCell;
 	document.getElementById('add-elements').onclick = function(){
         document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
         document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');

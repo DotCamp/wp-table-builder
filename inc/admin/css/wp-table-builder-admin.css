@@ -1107,3 +1107,7 @@ table.wptb-table {
     text-align: center;
     width:100%;
 }
+
+td[class*="wptb-fused-cell"]{
+    display: none !important;
+}
