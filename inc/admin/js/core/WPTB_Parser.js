@@ -1,64 +1,65 @@
-var WPTB_Parser = function(code){
-	var node, pos=0;
+var WPTB_Parser = function (code) {
 
-	function getChar(){
-		if(pos>=code.length){
+	var node, pos = 0;
+
+	function getChar() {
+		if (pos >= code.length) {
 			return -1;
 		}
 		return code[pos++];
 	}
 
-	function getToken(){
+	function getToken() {
 		var char = getChar(),
-			token=char;
+			token = char;
 
-		if(char !== '['){
+		if (char !== '[') {
 			return;
 		}
 
-		do{
+		do {
 			char = getChar();
-			if(char === -1){
+			if (char === -1) {
 				return -1;
 			}
-			token+=char;
-		}while(char != ']');
-		
+			token += char;
+		} while (char != ']');
+
 		return true;
 	}
 
-	function getCurrentToken(){
+	function getCurrentToken() {
 		return ctoken;
 	}
 
-	function checkAndPass(expected){
-		if(ctoken !== expected){
+	function checkAndPass(expected) {
+		if (ctoken !== expected) {
 			console.error('There was an error with the file and therefore the table could not be rendere');
 			exit();
 		}
-		
+
 		ctoken = getToken();
 	}
 
-	function getWordFromToken(token){
+	function getWordFromToken(token) {
 		var pos = token.indexOf(' '),
-		word = token.substring(1,pos);
-		return '['+word+']';
+			word = token.substring(1, pos);
+		return '[' + word + ']';
 	}
 
-	function analizeHeader(){
+	function analizeHeader() {
 		getExpectedToken('[tr]');
 		analizeTds();
 		getExpectedToken('[/tr]');
 	}
 
-	function analizeRows(){
+	function analizeRows() {
 		getExpectedToken('[tr]');
 		analizeTds();
 		getExpectedToken('[/tr]');
 	}
 
-	function analizeRoot(){
+	function analizeRoot() {
 		var n = document.createElement('table');
 		getExpectedToken('[table]');
 		analizeHeader();
@@ -70,4 +71,5 @@ var WPTB_Parser = function(code){
 	node = analizeRoot();
 
 	return node;
+
 };
