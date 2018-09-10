@@ -1,3 +1,200 @@
+var applyGenericItemSettings = function applyGenericItemSettings(element) {
+	var node = element.getDOMElement(),
+	    index = document.counter.nextIndex(element.kind),
+	    listItems;
+
+	node.onmouseenter = function (event) {
+		this.classList.add('wptb-directlyhovered');
+		var btnDelete = document.createElement('span'),
+		    btnCopy = document.createElement('span'),
+		    btnMove = document.createElement('span'),
+		    actions = document.createElement('span'),
+		    previous,
+		    i;
+		actions.classList.add('wptb-actions');
+		btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+		btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+		btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
+		btnMove.draggable = true;
+		btnDelete.onclick = function (event) {
+			var act = this.parentNode.parentNode,
+			    el = act.parentNode;
+			el.removeChild(act);
+		};
+		btnCopy.onclick = function (event) {
+			if (element.kind == 'list') {
+
+				var td = event.target.parentNode.parentNode.parentNode,
+				    temp = [],
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+
+				for (var i = 0; i < srcList.length; i++) {
+					temp.push(srcList[i].innerHTML);
+				}
+				var copy = new WPTB_List(temp);
+				td.appendChild(copy.getDOMElement());
+			} else if (element.kind == 'text') {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+				td.appendChild(copy.getDOMElement());
+			} else if (element.kind == 'image') {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
+				td.appendChild(copy.getDOMElement());
+			} else {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+				td.appendChild(copy.getDOMElement());
+			}
+		};
+		btnMove.ondragstart = function (event) {
+			var parent = this,
+			    infArr,
+			    type;
+
+			while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
+				parent = parent.parentNode;
+			}
+
+			infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
+			type = infArr[1];
+
+			var img = document.createElement("img");
+			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
+			console.log(img.src);
+			event.dataTransfer.setDragImage(img, 0, 0);
+			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
+		};
+
+		if (element.kind === 'button') {
+			tinyMCE.init({
+				target: node.childNodes[0].childNodes[0],
+				inline: true,
+				plugins: "link",
+				dialog_type: "modal",
+				theme: 'modern',
+				menubar: false,
+				fixed_toolbar_container: '#wpcd_fixed_toolbar',
+				toolbar: 'bold italic strikethrough',
+				setup: function setup(ed) {
+					ed.on("init", function (ed) {
+						tinyMCE.execCommand('mceRepaint');
+					});
+				},
+				init_instance_callback: function init_instance_callback(editor) {
+					editor.on('change', function (e) {
+						// check if it becomes empty because if there's no value it's hard to edit the editor in button element
+						if (editor.getContent() == "") {
+							editor.setContent("<p class='wptb-button'>Button Text</p>");
+						}
+					});
+					editor.on('KeyDown', function (e) {
+						var range = editor.selection.getRng();
+						var KeyID = e.keyCode;
+						if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
+							e.preventDefault();
+							editor.setContent("<p class='wptb-button'></p>");
+						}
+					});
+
+					window.currentEditor = editor;
+					editor.on('focus', function (e) {
+
+						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+						} else {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+							delete document.getElementById('wpcd_fixed_toolbar').style.right;
+							delete document.getElementById('wpcd_fixed_toolbar').style.top;
+						}
+					});
+				}
+			});
+		} else if (element.kind === 'text') {
+			tinyMCE.init({
+				target: node.childNodes[0],
+				inline: true,
+				plugins: "link, paste",
+				dialog_type: "modal",
+				theme: 'modern',
+				menubar: false,
+				fixed_toolbar_container: '#wpcd_fixed_toolbar',
+				paste_as_text: true,
+				toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+				init_instance_callback: function init_instance_callback(editor) {
+					window.currentEditor = editor;
+					editor.on('focus', function (e) {
+
+						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+						} else {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+							delete document.getElementById('wpcd_fixed_toolbar').style.right;
+							delete document.getElementById('wpcd_fixed_toolbar').style.top;
+						}
+					});
+				}
+			});
+		} else {
+			listItems = node.getElementsByClassName('wptb-list-item-content');
+			for (var i = 0; i < listItems.length; i++) {
+				tinyMCE.init({
+					target: listItems[i],
+					inline: true,
+					plugins: "link, paste",
+					dialog_type: "modal",
+					theme: 'modern',
+					menubar: false,
+					fixed_toolbar_container: '#wpcd_fixed_toolbar',
+					paste_as_text: true,
+					toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+					init_instance_callback: function init_instance_callback(editor) {
+						window.currentEditor = editor;
+						editor.on('focus', function (e) {
+							var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+							if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+								document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+							} else {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+								delete document.getElementById('wpcd_fixed_toolbar').style.right;
+								delete document.getElementById('wpcd_fixed_toolbar').style.top;
+							}
+						});
+					}
+				});
+			}
+		}
+
+		actions.appendChild(btnMove);
+		actions.appendChild(btnCopy);
+		actions.appendChild(btnDelete);
+		this.appendChild(actions);
+	};
+
+	node.onmouseleave = function (event) {
+		var formerActions = this.getElementsByClassName('wptb-actions');
+		if (formerActions && formerActions[0]) {
+			var par = formerActions[0].parentNode;
+			par.removeChild(formerActions[0]);
+		}
+		this.classList.remove('wptb-directlyhovered');
+	};
+
+	node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' + index);
+
+	new WPTB_ElementOptions(element, index);
+
+	document.counter.increment(element.kind);
+};
+
 (function () {
 
 	function detectMode() {
@@ -19,7 +216,7 @@
 			http.onreadystatechange = function (d) {
 				if (this.readyState == 4 && this.status == 200) {
 					document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-					document.getElementsByClassName('wrapper')[0].innerHTML = http.responseText;
+					document.getElementsByClassName('wptb-table-setup')[0].appendChild(WPTB_Parser(http.responseText));
 				}
 			};
 			http.send(null);
@@ -58,180 +255,180 @@ var WPTB_Button = function WPTB_Button(text) {
 };
 var WPTB_Cell = function WPTB_Cell(DOMElement) {
 
-    function newElementProxy(el) {
-        if (el == 'list') {
-            return new WPTB_List();
-        } else if (el == 'image') {
-            return new WPTB_Image();
-        } else if (el == 'text') {
-            return new WPTB_Text();
-        } else if (el == 'button') {
-            return new WPTB_Button();
-        }
-    }
-
-    function highlightRow(td) {
-        var parentRow = td.parentNode,
-            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-            tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-        for (var i = 0; i < tds.length; i++) {
-            tds[i].classList.remove('highlighted-row-first', 'highlighted-row-last', 'highlighted-row-inner', 'highlighted-column-first', 'highlighted-column-last', 'highlighted-column-inner');
-        }
-        for (var i = 0; i < columnCount; i++) {
-
-            var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
-            var ttd = parentRow.getElementsByTagName('td')[i];
-            if (ttd !== td) {
-                ttd.classList.add(classToAdd);
-            }
-        }
-    }
-
-    function highlightColumn(td) {
-
-        var index,
-            parentRow = td.parentNode;
-        columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
-        for (var i = 0; i < columnCount; i++) {
-            if (parentRow.getElementsByTagName('td')[i] === td) {
-                index = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < rowCount; i++) {
-            var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
-            var tr = table.getElementsByTagName('tr')[i];
-            if (tr.getElementsByTagName('td')[index] !== td) {
-                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
-            }
-        }
-    }
-
-    DOMElement = document.createElement("td");
-
-    DOMElement.draggable = false;
-
-    DOMElement.classList.add('wptb-droppable', 'wptb-cell');
-
-    DOMElement.onclick = function () {
-
-        var relativeActions, cells;
-
-        if (window._wptbManagementModeActive) {
-            return;
-        }
-        if (this.classList.contains('wptb-highlighted')) {
-            //this.classList.remove('wptb-highlighted');
-        } else {
-            relativeActions = document.getElementsByClassName('wptb-relative-action');
-            cells = document.getElementsByTagName('td');
-
-            for (var i = 0; i < relativeActions.length; i++) {
-                relativeActions[i].dataset.activeCell = this;
-            }
-
-            for (var i = 0; i < cells.length; i++) {
-                cells[i].classList.remove('wptb-highlighted');
-            }
-
-            this.classList.add('wptb-highlighted');
-            highlightRow(this);
-            highlightColumn(this);
-        }
-    };
-
-    DOMElement.ondragenter = function (e) {
-        var div;
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-        this.classList.add('wptb-drop-here-empty');
-    };
-
-    DOMElement.ondragover = function (e) {
-        e.preventDefault();
-    };
-
-    DOMElement.ondragleave = function () {
-        this.classList.remove('wptb-drop-here-empty');
-    };
-
-    DOMElement.ondrop = function (e) {
-        var element, classId, space, t_space, spaceParent;
-        e.preventDefault();
-        space = new WPTB_Space();
-
-        console.log(e.dataTransfer);
-
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-
-        if (e.dataTransfer.getData('wptbElement')) {
-            element = newElementProxy(e.dataTransfer.getData('wptbElement'));
-            if (this.innerHTML == '') {
-                this.appendChild(new WPTB_Space());
-            }
-            this.appendChild(element.getDOMElement());
-            this.appendChild(space);
-        } else {
-
-            classId = e.dataTransfer.getData('node');
-            element = document.getElementsByClassName(classId)[0];
-            if (this.innerHTML == '') {
-                t_space = element.nextSibling;
-                spaceParent = element.parentNode;
-                if (t_space != undefined) {
-                    spaceParent.removeChild(t_space);
+        function newElementProxy(el) {
+                if (el == 'list') {
+                        return new WPTB_List();
+                } else if (el == 'image') {
+                        return new WPTB_Image();
+                } else if (el == 'text') {
+                        return new WPTB_Text();
+                } else if (el == 'button') {
+                        return new WPTB_Button();
                 }
-                this.appendChild(new WPTB_Space());
-            }
-            this.appendChild(element);
-            this.appendChild(space);
         }
-        this.classList.remove('wptb-drop-here-empty');
-        return true;
-    };
 
-    DOMElement.onmousedown = function () {
-        console.log("MOUSE DOWN!");
-        document.select.activateMultipleSelectMode();
-        document.select.pushSelectedCell(this);
-    };
+        function highlightRow(td) {
+                var parentRow = td.parentNode,
+                    columnCount = parseInt(document.getElementById('wptb-columns-number').value),
+                    tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+                for (var i = 0; i < tds.length; i++) {
+                        tds[i].classList.remove('highlighted-row-first', 'highlighted-row-last', 'highlighted-row-inner', 'highlighted-column-first', 'highlighted-column-last', 'highlighted-column-inner');
+                }
+                for (var i = 0; i < columnCount; i++) {
 
-    DOMElement.onmouseover = function () {
-        document.select.pushSelectedCell(this);
-    };
+                        var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
+                        var ttd = parentRow.getElementsByTagName('td')[i];
+                        if (ttd !== td) {
+                                ttd.classList.add(classToAdd);
+                        }
+                }
+        }
 
-    DOMElement.onmouseup = function () {
-        console.log("MOUSE UP!");
-        document.select.deactivateMultipleSelectMode();
-    };
+        function highlightColumn(td) {
 
-    this.getDOMElement = function () {
-        return DOMElement;
-    };
+                var index,
+                    parentRow = td.parentNode;
+                columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
+                for (var i = 0; i < columnCount; i++) {
+                        if (parentRow.getElementsByTagName('td')[i] === td) {
+                                index = i;
+                                break;
+                        }
+                }
 
-    this.setCoords = function (y, x) {
-        var el = this.getDOMElement();
-        el.dataset.yIndex = y;
-        el.dataset.xIndex = x;
-    };
+                for (var i = 0; i < rowCount; i++) {
+                        var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
+                        var tr = table.getElementsByTagName('tr')[i];
+                        if (tr.getElementsByTagName('td')[index] !== td) {
+                                tr.getElementsByTagName('td')[index].classList.add(classToAdd);
+                        }
+                }
+        }
 
-    this.getCoords = function () {
-        var coords,
-            el = this.getDOMElement();
-        coords.x = el.dataset.xIndex;
-        coords.y = el.dataset.yIndex;
-        return coords;
-    };
+        DOMElement = document.createElement("td");
 
-    this.appendElement = function (node) {
-        getDOMElement().appendChild(node);
-    };
+        DOMElement.draggable = false;
 
-    return this;
+        DOMElement.classList.add('wptb-droppable', 'wptb-cell');
+
+        DOMElement.onclick = function () {
+
+                var relativeActions, cells;
+
+                if (window._wptbManagementModeActive) {
+                        return;
+                }
+                if (this.classList.contains('wptb-highlighted')) {
+                        //this.classList.remove('wptb-highlighted');
+                } else {
+                        relativeActions = document.getElementsByClassName('wptb-relative-action');
+                        cells = document.getElementsByTagName('td');
+
+                        for (var i = 0; i < relativeActions.length; i++) {
+                                relativeActions[i].dataset.activeCell = this;
+                        }
+
+                        for (var i = 0; i < cells.length; i++) {
+                                cells[i].classList.remove('wptb-highlighted');
+                        }
+
+                        this.classList.add('wptb-highlighted');
+                        highlightRow(this);
+                        highlightColumn(this);
+                }
+        };
+
+        DOMElement.ondragenter = function (e) {
+                var div;
+                if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+                        return;
+                }
+                this.classList.add('wptb-drop-here-empty');
+        };
+
+        DOMElement.ondragover = function (e) {
+                e.preventDefault();
+        };
+
+        DOMElement.ondragleave = function () {
+                this.classList.remove('wptb-drop-here-empty');
+        };
+
+        DOMElement.ondrop = function (e) {
+                var element, classId, space, t_space, spaceParent;
+                e.preventDefault();
+                space = new WPTB_Space();
+
+                console.log(e.dataTransfer);
+
+                if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+                        return;
+                }
+
+                if (e.dataTransfer.getData('wptbElement')) {
+                        element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+                        if (this.innerHTML == '') {
+                                this.appendChild(new WPTB_Space());
+                        }
+                        this.appendChild(element.getDOMElement());
+                        this.appendChild(space);
+                } else {
+
+                        classId = e.dataTransfer.getData('node');
+                        element = document.getElementsByClassName(classId)[0];
+                        if (this.innerHTML == '') {
+                                t_space = element.nextSibling;
+                                spaceParent = element.parentNode;
+                                if (t_space != undefined) {
+                                        spaceParent.removeChild(t_space);
+                                }
+                                this.appendChild(new WPTB_Space());
+                        }
+                        this.appendChild(element);
+                        this.appendChild(space);
+                }
+                this.classList.remove('wptb-drop-here-empty');
+                return true;
+        };
+
+        DOMElement.onmousedown = function () {
+                console.log("MOUSE DOWN!");
+                document.select.activateMultipleSelectMode();
+                document.select.pushSelectedCell(this);
+        };
+
+        DOMElement.onmouseover = function () {
+                document.select.pushSelectedCell(this);
+        };
+
+        DOMElement.onmouseup = function () {
+                console.log("MOUSE UP!");
+                document.select.deactivateMultipleSelectMode();
+        };
+
+        this.getDOMElement = function () {
+                return DOMElement;
+        };
+
+        this.setCoords = function (y, x) {
+                var el = this.getDOMElement();
+                el.dataset.yIndex = y;
+                el.dataset.xIndex = x;
+        };
+
+        this.getCoords = function () {
+                var coords,
+                    el = this.getDOMElement();
+                coords.x = el.dataset.xIndex;
+                coords.y = el.dataset.yIndex;
+                return coords;
+        };
+
+        this.appendElement = function (node) {
+                getDOMElement().appendChild(node);
+        };
+
+        return this;
 };
 var ElementCounters = function ElementCounters() {
 	var priv = [];
@@ -295,8 +492,35 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
         document.querySelector(optionsClass).style.display = 'block';
     };
 
+    if (element.kind == 'button') {
+        //We must add this special kind of property, since it is triggered with click event
+        var buttons = prop.getElementsByClassName('wptb-btn-size-btn');
+
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].onclick = function () {
+                console.log('Now we should change button size');
+                var size = this.innerHTML,
+                    n_Class = this.dataset.element,
+                    infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                    type = infArr[1],
+                    num = infArr[2],
+                    affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+                affectedEl.classList.remove('wptb-size-S');
+                affectedEl.classList.remove('wptb-size-M');
+                affectedEl.classList.remove('wptb-size-L');
+                affectedEl.classList.remove('wptb-size-XL');
+                affectedEl.classList.add('wptb-size-' + size);
+                var b = prop.getElementsByClassName('wptb-btn-size-btn');
+                for (var i = 0; i < b.length; i++) {
+                    b[i].classList.remove('selected');
+                }
+                this.classList.add('selected');
+            };
+        }
+    }
+
     var optionControls = prop.getElementsByClassName('wptb-element-property');
-    console.log(optionControls);
+
     for (var i = 0; i < optionControls.length; i++) {
         if (optionControls[i].classList.contains('wptb-color-picker')) {
             jQuery(optionControls[i]).wpColorPicker({
@@ -310,11 +534,14 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
                     type = classe[1];
                     number = classe[2];
-                    console.log('Element', 'wptb-element-' + type + '-' + number);
                     affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
-                    ps = affectedEl.getElementsByTagName("p");
-                    for (var i = 0; i < ps.length; i++) {
-                        ps[i].style.color = ui.color.toString();
+                    if (type == 'button') {
+                        affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
+                    } else {
+                        ps = affectedEl.getElementsByTagName("p");
+                        for (var i = 0; i < ps.length; i++) {
+                            ps[i].style.color = ui.color.toString();
+                        }
                     }
                 }
             });
@@ -336,8 +563,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                 num = infArr[2],
                 affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0],
                 val = this.value;
-
-            console.log('Event triggered', this.dataset.type, this.value);
 
             switch (this.dataset.type) {
                 case 'src':
@@ -371,6 +596,9 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     for (var i = 0; i < ps.length; i++) {
                         ps[i].style.color = val;
                     }
+                    break;
+                case 'button-color':
+                    console.log('Event called!');
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
@@ -474,139 +702,139 @@ var WPTB_Initializer = function WPTB_Initializer() {
 	};
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
-            var table = document.getElementsByClassName('wptb-preview-table')[0],
-                wptbElementButtons = document.getElementsByClassName('wptb-element');
+    var table = document.getElementsByClassName('wptb-preview-table')[0],
+        wptbElementButtons = document.getElementsByClassName('wptb-element');
 
-            jQuery('#wptb-even-row-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableRows = table.getElementsByTagName('tr');
-                                    for (var i = 1; i < tableRows.length; i += 2) {
-                                                tds = tableRows[i].getElementsByTagName('td');
-                                                for (var j = 0; j < tds.length; j++) {
-                                                            tds[j].style.backgroundColor = ui.color.toString();
-                                                }
-                                    }
-                        }
-            }); //3MNRVA96 
-            jQuery('#wptb-odd-row-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableRows = table.getElementsByTagName('tr');
-                                    for (var i = 2; i < tableRows.length; i += 2) {
-                                                tds = tableRows[i].getElementsByTagName('td');
-                                                for (var j = 0; j < tds.length; j++) {
-                                                            tds[j].style.backgroundColor = ui.color.toString();
-                                                }
-                                    }
-                        }
-            });
-            jQuery('#wptb-table-header-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableHeader = table.getElementsByTagName('tr')[0],
-                                        tds = tableHeader.getElementsByTagName('td');
-                                    for (var j = 0; j < tds.length; j++) {
-                                                tds[j].style.backgroundColor = ui.color.toString();
-                                    }
-                        }
-            });
+    jQuery('#wptb-even-row-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var i = 1; i < tableRows.length; i += 2) {
+                tds = tableRows[i].getElementsByTagName('td');
+                for (var j = 0; j < tds.length; j++) {
+                    tds[j].style.backgroundColor = ui.color.toString();
+                }
+            }
+        }
+    });
+    jQuery('#wptb-odd-row-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var i = 2; i < tableRows.length; i += 2) {
+                tds = tableRows[i].getElementsByTagName('td');
+                for (var j = 0; j < tds.length; j++) {
+                    tds[j].style.backgroundColor = ui.color.toString();
+                }
+            }
+        }
+    });
+    jQuery('#wptb-table-header-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableHeader = table.getElementsByTagName('tr')[0],
+                tds = tableHeader.getElementsByTagName('td');
+            for (var j = 0; j < tds.length; j++) {
+                tds[j].style.backgroundColor = ui.color.toString();
+            }
+        }
+    });
 
-            function addInnerBorderSize(value) {
-                        var tableCells = table.getElementsByTagName('td');
-                        for (var i = 0; i < tableCells.length; i++) {
-                                    tableCells[i].style.border = value + 'px solid';
-                        }
+    function addInnerBorderSize(value) {
+        var tableCells = table.getElementsByTagName('td');
+        for (var i = 0; i < tableCells.length; i++) {
+            tableCells[i].style.border = value + 'px solid';
+        }
+    }
+
+    function addCellPadding(value) {
+        var tableCells = table.getElementsByTagName('td');
+        for (var i = 0; i < tableCells.length; i++) {
+            tableCells[i].style.padding = value + 'px';
+        }
+    }
+
+    function addInnerBorder(checked) {
+        var styles;
+
+        if (checked == 'checked') {
+            document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
+            var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.border = '1px solid';
             }
 
-            function addCellPadding(value) {
-                        var tableCells = table.getElementsByTagName('td');
-                        for (var i = 0; i < tableCells.length; i++) {
-                                    tableCells[i].style.padding = value + 'px';
-                        }
+            document.getElementById('wptb-inner-border-settings').classList.add('visible');
+        } else {
+            document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+            var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.border = '';
             }
+        }
+    }
 
-            function addInnerBorder(checked) {
-                        var styles;
+    function addBorderSize(value) {
+        table.style.border = value + 'px solid';
+    }
 
-                        if (checked == 'checked') {
-                                    document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
-                                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-                                    for (var i = 0; i < tableCells.length; i++) {
-                                                tableCells[i].style.border = '1px solid';
-                                    }
+    document.getElementById('wptb-table-cell-slider').oninput = function () {
+        document.getElementById('wptb-table-cell-number').value = this.value;
+        addCellPadding(this.value);
+    };
 
-                                    document.getElementById('wptb-inner-border-settings').classList.add('visible');
-                        } else {
-                                    document.getElementById('wptb-inner-border-settings').classList.remove('visible');
-                                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-                                    for (var i = 0; i < tableCells.length; i++) {
-                                                tableCells[i].style.border = '';
-                                    }
-                        }
-            }
+    document.getElementById('wptb-table-cell-number').onchange = function () {
+        document.getElementById('wptb-table-cell-slider').value = this.value;
+        addCellPadding(this.value);
+    };
 
-            function addBorderSize(value) {
-                        table.style.border = value + 'px solid';
-            }
+    document.getElementById('wptb-table-border-slider').oninput = function () {
+        document.getElementById('wptb-table-border-number').value = this.value;
+        addBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-cell-slider').oninput = function () {
-                        document.getElementById('wptb-table-cell-number').value = this.value;
-                        addCellPadding(this.value);
-            };
+    document.getElementById('wptb-table-border-number').onchange = function () {
+        document.getElementById('wptb-table-border-slider').value = this.value;
+        addBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-cell-number').onchange = function () {
-                        document.getElementById('wptb-table-cell-slider').value = this.value;
-                        addCellPadding(this.value);
-            };
+    document.getElementById('wptb-table-inner-border-slider').oninput = function () {
+        document.getElementById('wptb-table-inner-border-number').value = this.value;
+        addInnerBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-border-slider').oninput = function () {
-                        document.getElementById('wptb-table-border-number').value = this.value;
-                        addBorderSize(this.value);
-            };
+    document.getElementById('wptb-table-inner-border-number').onchange = function () {
+        document.getElementById('wptb-table-inner-border-slider').value = this.value;
+        addInnerBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-border-number').onchange = function () {
-                        document.getElementById('wptb-table-border-slider').value = this.value;
-                        addBorderSize(this.value);
-            };
+    document.getElementById('wptb-inner-border-check').onchange = function () {
+        var _val = this.checked ? 'checked' : 'unchecked';
+        addInnerBorder(_val);
+    };
 
-            document.getElementById('wptb-table-inner-border-slider').oninput = function () {
-                        document.getElementById('wptb-table-inner-border-number').value = this.value;
-                        addInnerBorderSize(this.value);
-            };
+    for (var i = 0; i < wptbElementButtons.length; i++) {
+        wptbElementButtons[i].ondragstart = function (e) {
+            e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
+        };
+    }
 
-            document.getElementById('wptb-table-inner-border-number').onchange = function () {
-                        document.getElementById('wptb-table-inner-border-slider').value = this.value;
-                        addInnerBorderSize(this.value);
-            };
-
-            document.getElementById('wptb-inner-border-check').onchange = function () {
-                        var _val = this.checked ? 'checked' : 'unchecked';
-                        addInnerBorder(_val);
-            };
-
-            for (var i = 0; i < wptbElementButtons.length; i++) {
-                        wptbElementButtons[i].ondragstart = function (e) {
-                                    e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
-                        };
-            }
-
-            document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
-            document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
-            document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
-            document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
-            document.getElementById('wptb-add-end-column').onclick = table.addColumnToTheEnd;
-            document.getElementById('wptb-add-start-column').onclick = table.addColumnToTheStart;
-            document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
-            document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
-            document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
-            document.getElementById('wptb-delete-row').onclick = table.deleteRow;
-            document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
-            document.getElementById('wptb-split-cell').onclick = table.splitCell;
-            document.getElementById('add-elements').onclick = function () {
-                        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
-                        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
-                        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-                        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-                        document.getElementById("element-options-group").style.display = 'none';
-            };
+    document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
+    document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
+    document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
+    document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
+    document.getElementById('wptb-add-end-column').onclick = table.addColumnToTheEnd;
+    document.getElementById('wptb-add-start-column').onclick = table.addColumnToTheStart;
+    document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
+    document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+    document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
+    document.getElementById('wptb-delete-row').onclick = table.deleteRow;
+    document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
+    document.getElementById('wptb-split-cell').onclick = table.splitCell;
+    document.getElementById('add-elements').onclick = function () {
+        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
+        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+        document.getElementById("element-options-group").style.display = 'none';
+    };
 };
 var WPTB_List = function WPTB_List(innerElements) {
     var el_L = document.createElement('ul'),
@@ -738,7 +966,6 @@ var MultipleSelect = function MultipleSelect() {
 			return;
 		}
 		selectedCells.push(cell);
-		console.log(cell);
 		cell.classList.add('wptb-highlighted');
 	};
 
@@ -814,6 +1041,8 @@ var WPTB_Parser = function WPTB_Parser(code) {
 			token += char;
 		} while (char != ']');
 
+		ctoken = token;
+
 		return true;
 	}
 
@@ -821,38 +1050,143 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		return ctoken;
 	}
 
-	function checkAndPass(expected) {
-		if (ctoken !== expected) {
-			console.error('There was an error with the file and therefore the table could not be rendere');
-			exit();
+	function getExpectedToken(expected) {
+		if (getWordFromToken(ctoken) !== expected) {
+			throw 'There was an error with the file and therefore the table could not be rendered';
 		}
 
-		ctoken = getToken();
+		getToken();
 	}
 
 	function getWordFromToken(token) {
-		var pos = token.indexOf(' '),
-		    word = token.substring(1, pos);
+		var p = token.indexOf(' '),
+		    word = token.substring(1, p);
+		if (p == -1) {
+			//This is, if token tag has no attributes
+			return token;
+		}
 		return '[' + word + ']';
 	}
 
-	function analizeHeader() {
-		getExpectedToken('[tr]');
-		analizeTds();
-		getExpectedToken('[/tr]');
+	function getAttributesFromToken() {
+		var elems = ctoken.split(' '),
+		    pair,
+		    key,
+		    value,
+		    attr = [];
+
+		for (var i = 1; i < elems.length; i++) {
+			pair = elems[i].trim().split('=');
+			key = pair[0];
+			value = pair[1].substring(1, pair[1].length - 1);
+			attr[key] = value;
+		}
+
+		return attr;
 	}
 
-	function analizeRows() {
+	function parseAllHTML() {
+		var html = '';
+		pos--;
+
+		do {
+			char = getChar();
+			if (char === -1) {
+				return -1;
+			}
+			html += char;
+		} while (char != '[');
+
+		html = html.substring(0, html.length - 1);
+
+		pos--;
+
+		return html;
+	}
+
+	function analizeElement() {
+		var t = getWordFromToken(getCurrentToken()),
+		    html,
+		    node;
+
+		switch (t) {
+			case '[text]':
+				attr = getAttributesFromToken();
+				console.log('Attributes', attr);
+				getExpectedToken('[text]');
+				html = parseAllHTML();
+				node = new WPTB_Text(html);
+				console.log(html);
+				getToken();
+				getExpectedToken('[/text]');
+				break;
+			case '[button]':
+				attr = getAttributesFromToken();
+				console.log('Attributes', attr);
+				getExpectedToken('[button]');
+				html = parseAllHTML();
+				node = new WPTB_Button(html);
+				getToken();
+				getExpectedToken('[/button]');
+				break;
+			case '[img]':
+				attr = getAttributesFromToken();
+				console.log('Attributes', attr);
+				node = new WPTB_Image(attr['src']);
+				getExpectedToken('[img]');
+				break;
+		}
+
+		return node.getDOMElement();
+	}
+
+	function analizeElements(td) {
+		do {
+			td.appendChild(analizeElement());
+		} while (getCurrentToken() == '[image]' || getCurrentToken() == '[text]' || getCurrentToken() == '[list]' || getCurrentToken() == '[button]');
+	}
+
+	function analizeRows(tableNode) {
+		console.log('Tr', tr);
+		do {
+			var tr = tableNode.insertRow();
+			tr.classList.add('wptb-row');
+			getExpectedToken('[tr]');
+			analizeTds(tr);
+			getExpectedToken('[/tr]');
+		} while (getWordFromToken(getCurrentToken()) === '[tr]');
+	}
+
+	function analizeTd() {
+		var td = new WPTB_Cell();
+		getExpectedToken('[td]');
+		analizeElements(td.getDOMElement());
+		getExpectedToken('[/td]');
+		return td.getDOMElement();
+	}
+
+	function analizeTds(row) {
+		do {
+			row.appendChild(analizeTd());
+		} while (getCurrentToken() == '[td]');
+	}
+
+	function analizeHeader(tableNode) {
+		var header = tableNode.insertRow();
+		header.classList.add('wptb-row', 'wptb-table-head');
+		console.log('Tr', header);
 		getExpectedToken('[tr]');
-		analizeTds();
+		analizeTds(header);
 		getExpectedToken('[/tr]');
 	}
 
 	function analizeRoot() {
+		getToken();
 		var n = document.createElement('table');
+		n.classList.add('wptb-preview-table');
 		getExpectedToken('[table]');
-		analizeHeader();
-		analizeRows();
+		analizeHeader(n);
+		analizeRows(n);
 		getExpectedToken('[/table]');
 		return n;
 	}
@@ -878,8 +1212,7 @@ var WPTB_Settings = function WPTB_Settings() {
 		    t = document.getElementById('wptb-setup-name').value.trim(),
 		    messagingArea,
 		    code = WPTB_Stringifier(document.getElementsByClassName('wptb-preview-table')[0]);
-		console.log(code);
-		return;
+
 		if (t === '') {
 			messagingArea = document.getElementsByClassName('wptb-messaging')[0];
 			messagingArea.innerHTML = 'Error: You must assign a name to the table before saving it.';
@@ -991,16 +1324,46 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 	    bg1,
 	    bg2,
 	    bg3,
-	    border;
+	    border,
+	    colSpan,
+	    rowSpan,
+	    isHidden,
+	    // Table Attributes
+	listClass,
+	    listStyleType,
+	    //list attributes
+	buttonSize,
+	    buttonColor,
+	    buttonBorder,
+	    //button attributes
+	fontSize,
+	    fontColor,
+	    fontFamily,
+	    //text attributes
+	src,
+	    width,
+	    height,
+	    //image attributes
+	additionalCSS,
+	    additionalClass,
+	    additionalID; // A few global attributes I wanted to add.
 
 	switch (node.tagName.toLowerCase()) {
 		case 'table':
-			margin = node.style.margin;
-			padding = node.style.padding;
-			padding = node.style.padding;
-			if (node.rows.length > 1) {}
-			if (node.rows.length > 2) {}
-			code += '[table border="' + margin + '" padding="' + padding + '" enable-border="' + border + '" data-bg1="' + bg1 + '" data-bg2="' + bg2 + '" data-bg3="' + bg3 + '"]';
+			border = node.style.borderSize;
+			margin = node.getElementsByTagName('td')[0].style.margin;
+			padding = node.getElementsByTagName('td')[0].style.padding;
+			innerBorder = node.getElementsByTagName('td')[0].style.borderSize;
+			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor;
+
+			if (node.rows.length > 1) {
+				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor;
+			}
+			if (node.rows.length > 2) {
+				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor;
+			}
+			console.log(innerBorder);
+			code += '[table' + (margin != undefined && margin != '' ? ' margin="' + margin + '"' : '') + (padding != undefined && padding != '' ? ' padding="' + padding + '"' : '') + (innerBorder != undefined ? ' inner-border="' + innerBorder + '"' : '') + (bg1 != undefined ? ' data-bg1="' + bg1 + '"' : '') + (bg2 != undefined ? ' data-bg2="' + bg2 + '"' : '') + (bg3 != undefined ? ' data-bg3="' + bg3 + '"' : '') + ']';
 
 			for (var i = 0; i < children.length; i++) {
 				code += WPTB_Stringifier(children[i]);
@@ -1023,7 +1386,10 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 			code += '[/tr]';
 			break;
 		case 'td':
-			code += '[td]';
+			colspan = node.colSpan;
+			rowspan = node.rowSpan;
+			isHidden = node.classList.contains(/^wptb-fused-cell-(\d+)$/);
+			code += '[td' + (colspan != undefined && colspan > 1 ? ' colspan="' + colspan + '"' : '') + (rowspan != undefined && rowspan > 1 ? ' rowspan="' + rowspan + '"' : '') + (isHidden ? ' hidden="true"' : '') + ']';
 
 			for (var i = 0; i < children.length; i++) {
 				code += WPTB_Stringifier(children[i]);
@@ -1033,7 +1399,6 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 			break;
 		case 'div':
 			if (node.classList.contains('wptb-ph-element')) {
-				console.log('We reached div code!');
 
 				var infArr = node.className.match(/wptb-element-(.+)-(\d+)/i),
 				    optionsClass,
@@ -1044,12 +1409,15 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 				}
 				switch (infArr[1]) {
 					case 'list':
-						code += '[list type=""';
 						trueNode = node.getElementsByTagName('ul')[0];
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
-						code += ']';
+
+						listStyleType = trueNode.getElementsByTagName('li')[0].style.listStyleType;
+						listClass = listStyleType == 'decimal' ? 'numbered' : 'unordered';
+
+						code += '[list' + (listClass != undefined ? ' class="' + listClass + '"' : 'class="unordered"') + (listStyleType != undefined ? ' style-type="' + listStyleType + '"' : '') + ']';
 						listitems = trueNode.getElementsByTagName('article');
 						for (var i = 0; i < listitems.length; i++) {
 							code += '[item]';
@@ -1059,18 +1427,25 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						code += '[/list]';
 						break;
 					case 'image':
+
 						trueNode = node.getElementsByTagName('img')[0];
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
-						code += '[img src="' + trueNode.src + ' width="' + trueNode.width + ' height="' + trueNode.height + ' alternative="' + +'"]';
+						src = trueNode.src;
+						width = trueNode.width;
+						height = trueNode.height;
+						alt = trueNode.alt;
+						code += '[img' + +(src != undefined ? ' src="' + src + '"' : '') + (width != undefined ? ' width="' + width + '"' : '') + (height != undefined ? ' height="' + height + '"' : '') + ']';
 						break;
 					case 'text':
-						code += '[text]';
 						trueNode = node.getElementsByClassName('editable')[0];
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
+						fontSize = trueNode.getElementsByTagName('p')[0].style.fontSize;
+						fontColor = trueNode.getElementsByTagName('p')[0].style.color;
+						code += '[text' + (fontSize != undefined ? ' size="' + fontSize + '"' : '') + (fontColor != undefined ? ' color="' + fontColor + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/text]';
 						break;
@@ -1079,7 +1454,12 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
-						code += '[button]';
+
+						buttonColor = trueNode.style.backgroundColor;
+						console.log(node);
+						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
+
+						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';
 						break;
@@ -1101,265 +1481,265 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 };
 var WPTB_Table = function WPTB_Table(columns, rows) {
 
-				var settings = document.getElementsByClassName('wptb-settings-items'),
-				    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
-				    table,
-				    row,
-				    cell;
+		var settings = document.getElementsByClassName('wptb-settings-items'),
+		    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
+		    table,
+		    row,
+		    cell;
 
-				for (var i = 0; i < settings.length; i++) {
-								settings[i].classList.add('visible');
-				}
+		for (var i = 0; i < settings.length; i++) {
+				settings[i].classList.add('visible');
+		}
 
-				document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+		document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 
-				//Create a HTML Table element.
-				table = document.createElement('table');
-				table.classList.add('wptb-preview-table');
+		//Create a HTML Table element.
+		table = document.createElement('table');
+		table.classList.add('wptb-preview-table');
 
-				//Add the header row.
+		//Add the header row.
+		row = table.insertRow(-1);
+		row.classList.add('wptb-table-head', 'wptb-row');
+
+		for (var i = 0; i < columns; i++) {
+				cell = new WPTB_Cell();
+				cell.setCoords(0, i);
+				row.appendChild(cell.getDOMElement());
+		}
+
+		//Add the data rows.
+		for (var i = 1; i < rows; i++) {
+
 				row = table.insertRow(-1);
-				row.classList.add('wptb-table-head', 'wptb-row');
+				row.classList.add('wptb-row');
 
-				for (var i = 0; i < columns; i++) {
-								cell = new WPTB_Cell();
-								cell.setCoords(0, i);
-								row.appendChild(cell.getDOMElement());
+				for (var j = 0; j < columns; j++) {
+						cell = new WPTB_Cell();
+						cell.setCoords(i, j);
+						row.appendChild(cell.getDOMElement());
 				}
+		}
 
-				//Add the data rows.
-				for (var i = 1; i < rows; i++) {
+		table.recalculateIndexes = function () {
+				var trs = this.getElementsByTagName('tr'),
+				    tds,
+				    maxCols = 0;
 
-								row = table.insertRow(-1);
-								row.classList.add('wptb-row');
+				for (var i = 0; i < trs.length; i++) {
+						tds = trs[i].getElementsByTagName('td');
+						for (var j = 0; j < tds.length; j++) {
 
-								for (var j = 0; j < columns; j++) {
-												cell = new WPTB_Cell();
-												cell.setCoords(i, j);
-												row.appendChild(cell.getDOMElement());
-								}
-				}
-
-				table.recalculateIndexes = function () {
-								var trs = this.getElementsByTagName('tr'),
-								    tds,
-								    maxCols = 0;
-
-								for (var i = 0; i < trs.length; i++) {
-												tds = trs[i].getElementsByTagName('td');
-												for (var j = 0; j < tds.length; j++) {
-
-																if (i == 0) {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
-																} else {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row');
-																}
-
-																tds[j].dataset.xIndex = j;
-																tds[j].dataset.yIndex = i;
-												}
-												if (j > maxCols) {
-																maxCols = j;
-												}
-								}
-								this.columns = maxCols;
-								console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
-				};
-
-				table.addColumn = function (pos) {
-								var referenceTd, newTd, _this, xCoord;
-								referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
-								console.log('Table', this.rows.length);
-								for (var i = 0; i < this.rows.length; i++) {
-												console.log('Iteration ' + (i + 1));
-												var newTd = new WPTB_Cell();
-
-												if (pos == 'before' || pos == 'after') {
-																xCoord = referenceTd.dataset.xIndex;
-																referenceTd = this.rows[i].getElementsByTagName('td')[0];
-																for (var j = 0; j < xCoord; j++) {
-																				referenceTd = this.rows[i].childNodes[j];
-																}
-
-																if (pos == 'before') {
-																				console.log('referenceTd', referenceTd);
-																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
-
-																				var buttons = document.getElementsByClassName('wptb-relative-action');
-																				for (var k = 0; k < buttons.length; k++) {
-																								buttons[k].dataset.xIndex++;
-																				}
-																} else {
-																				this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
-																}
-												} else if (pos == 'end') {
-																this.rows[i].appendChild(newTd.getDOMElement());
-												} else {
-																referenceTd = this.rows[i].getElementsByTagName('td')[0];
-																this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
-												}
-												table.columns++;
-								}
-
-								this.recalculateIndexes();
-				};
-
-				table.addColumnToTheEnd = function (evt) {
-								table.addColumn('end', this.dataset.activeCell);
-				};
-
-				table.addColumnToTheStart = function (evt) {
-								table.addColumn('start', this.dataset.activeCell);
-				};
-
-				table.addColumnBefore = function () {
-								table.addColumn('before', this.dataset.activeCell);
-				};
-
-				table.addColumnAfter = function () {
-								table.addColumn('after', this.dataset.activeCell);
-				};
-
-				table.addRow = function (pos) {
-								var _this,
-								    row,
-								    referenceRow = undefined;
-
-								if (pos == 'end' || pos == 'start') {
-												row = this.insertRow(pos == 'end' ? -1 : 0);
+								if (i == 0) {
+										tds[j].parentNode.className = '';
+										tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
 								} else {
-												row = document.createElement('tr');
+										tds[j].parentNode.className = '';
+										tds[j].parentNode.classList.add('wptb-row');
 								}
 
-								for (var j = 0; j < this.columns; j++) {
-												var cell = new WPTB_Cell();
-												row.appendChild(cell.getDOMElement());
+								tds[j].dataset.xIndex = j;
+								tds[j].dataset.yIndex = i;
+						}
+						if (j > maxCols) {
+								maxCols = j;
+						}
+				}
+				this.columns = maxCols;
+				console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
+		};
+
+		table.addColumn = function (pos) {
+				var referenceTd, newTd, _this, xCoord;
+				referenceTd = this.getElementsByClassName('wptb-highlighted')[0];
+				console.log('Table', this.rows.length);
+				for (var i = 0; i < this.rows.length; i++) {
+						console.log('Iteration ' + (i + 1));
+						var newTd = new WPTB_Cell();
+
+						if (pos == 'before' || pos == 'after') {
+								xCoord = referenceTd.dataset.xIndex;
+								referenceTd = this.rows[i].getElementsByTagName('td')[0];
+								for (var j = 0; j < xCoord; j++) {
+										referenceTd = this.rows[i].childNodes[j];
 								}
 
-								row.classList.add('wptb-row');
+								if (pos == 'before') {
+										console.log('referenceTd', referenceTd);
+										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
 
-								if (pos == 'before' || pos == 'after') {
-												_this = this.getElementsByClassName('wptb-highlighted')[0];
-												referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
-												if (pos == "before") {
-																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
-																var buttons = document.getElementsByClassName('wptb-relative-action');
-																for (var i = 0; i < buttons.length; i++) {
-																				buttons[i].dataset.yIndex++;
-																}
-												} else {
-																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
-												}
+										var buttons = document.getElementsByClassName('wptb-relative-action');
+										for (var k = 0; k < buttons.length; k++) {
+												buttons[k].dataset.xIndex++;
+										}
+								} else {
+										this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd.nextSibling);
 								}
+						} else if (pos == 'end') {
+								this.rows[i].appendChild(newTd.getDOMElement());
+						} else {
+								referenceTd = this.rows[i].getElementsByTagName('td')[0];
+								this.rows[i].insertBefore(newTd.getDOMElement(), referenceTd);
+						}
+						table.columns++;
+				}
 
-								if (pos == 'before' || pos == 'start') {
-												var active = document.querySelector('wptb-highlighted');
-												if (active) {
-																active.onclick();
-												}
+				this.recalculateIndexes();
+		};
+
+		table.addColumnToTheEnd = function (evt) {
+				table.addColumn('end', this.dataset.activeCell);
+		};
+
+		table.addColumnToTheStart = function (evt) {
+				table.addColumn('start', this.dataset.activeCell);
+		};
+
+		table.addColumnBefore = function () {
+				table.addColumn('before', this.dataset.activeCell);
+		};
+
+		table.addColumnAfter = function () {
+				table.addColumn('after', this.dataset.activeCell);
+		};
+
+		table.addRow = function (pos) {
+				var _this,
+				    row,
+				    referenceRow = undefined;
+
+				if (pos == 'end' || pos == 'start') {
+						row = this.insertRow(pos == 'end' ? -1 : 0);
+				} else {
+						row = document.createElement('tr');
+				}
+
+				for (var j = 0; j < this.columns; j++) {
+						var cell = new WPTB_Cell();
+						row.appendChild(cell.getDOMElement());
+				}
+
+				row.classList.add('wptb-row');
+
+				if (pos == 'before' || pos == 'after') {
+						_this = this.getElementsByClassName('wptb-highlighted')[0];
+						referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
+						if (pos == "before") {
+								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
+								var buttons = document.getElementsByClassName('wptb-relative-action');
+								for (var i = 0; i < buttons.length; i++) {
+										buttons[i].dataset.yIndex++;
 								}
+						} else {
+								this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
+						}
+				}
 
-								this.recalculateIndexes();
-				};
+				if (pos == 'before' || pos == 'start') {
+						var active = document.querySelector('wptb-highlighted');
+						if (active) {
+								active.onclick();
+						}
+				}
 
-				table.addRowToTheEnd = function (evt) {
-								table.addRow('end');
-				};
+				this.recalculateIndexes();
+		};
 
-				table.addRowToTheStart = function (evt) {
-								table.addRow('start');
-				};
+		table.addRowToTheEnd = function (evt) {
+				table.addRow('end');
+		};
 
-				table.addRowBefore = function () {
-								table.addRow('before');
-				};
+		table.addRowToTheStart = function (evt) {
+				table.addRow('start');
+		};
 
-				table.addRowAfter = function () {
-								table.addRow('after');
-				};
+		table.addRowBefore = function () {
+				table.addRow('before');
+		};
 
-				table.deleteRow = function (e) {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    index = cell.dataset.yIndex,
-								    table = document.getElementsByClassName('wptb-preview-table')[0],
-								    row = table.getElementsByTagName('tr')[index],
-								    rowCount = table.rows.length,
-								    tbody = row.parentNode;
-								if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
-												return;
-								}
-								tbody.removeChild(row);
-								this.recalculateIndexes();
-				};
+		table.addRowAfter = function () {
+				table.addRow('after');
+		};
 
-				table.deleteColumn = function (e) {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    num = cell.dataset.xIndex,
-								    table = document.getElementsByClassName('wptb-preview-table')[0],
-								    rowCount = table.rows.length;
+		table.deleteRow = function (e) {
+				var cell = document.getElementsByClassName('wptb-highlighted')[0],
+				    index = cell.dataset.yIndex,
+				    table = document.getElementsByClassName('wptb-preview-table')[0],
+				    row = table.getElementsByTagName('tr')[index],
+				    rowCount = table.rows.length,
+				    tbody = row.parentNode;
+				if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
+						return;
+				}
+				tbody.removeChild(row);
+				this.recalculateIndexes();
+		};
 
-								if (rowCount == 1 && columnCount == 1) {
-												return;
-								}
-								for (var i = 0; i < rowCount; i++) {
-												var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
-												    tr = td.parentNode;
-												tr.removeChild(td);
-								}
-								this.recalculateIndexes();
-				};
+		table.deleteColumn = function (e) {
+				var cell = document.getElementsByClassName('wptb-highlighted')[0],
+				    num = cell.dataset.xIndex,
+				    table = document.getElementsByClassName('wptb-preview-table')[0],
+				    rowCount = table.rows.length;
 
-				table.mergeCells = function () {
-								var firstCell = document.select.getFirst(),
-								    lastCell = document.select.getLast(),
-								    colspan = Math.abs(lastCell.dataset.xIndex - firstCell.dataset.xIndex) + 1,
-								    rowspan = Math.abs(lastCell.dataset.yIndex - firstCell.dataset.yIndex) + 1;
+				if (rowCount == 1 && columnCount == 1) {
+						return;
+				}
+				for (var i = 0; i < rowCount; i++) {
+						var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
+						    tr = td.parentNode;
+						tr.removeChild(td);
+				}
+				this.recalculateIndexes();
+		};
 
-								console.log(firstCell);
-								console.log(lastCell);
-								console.log(colspan + ' ' + rowspan);
+		table.mergeCells = function () {
+				var firstCell = document.select.getFirst(),
+				    lastCell = document.select.getLast(),
+				    colspan = Math.abs(lastCell.dataset.xIndex - firstCell.dataset.xIndex) + 1,
+				    rowspan = Math.abs(lastCell.dataset.yIndex - firstCell.dataset.yIndex) + 1;
 
-								document.select.removeAllButFirst();
+				console.log(firstCell);
+				console.log(lastCell);
+				console.log(colspan + ' ' + rowspan);
 
-								if (colspan > 1) {
-												firstCell.colSpan = colspan;
-								}
+				document.select.removeAllButFirst();
 
-								if (rowspan > 1) {
-												firstCell.rowSpan = rowspan;
-								}
-								table.recalculateIndexes();
-				};
+				if (colspan > 1) {
+						firstCell.colSpan = colspan;
+				}
 
-				table.splitCell = function () {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    classn,
-								    hidden;
-								if (cell.colSpan == 1 && cell.rowSpan == 1) {
-												return;
-								}
-
-								cell.colSpan = 1;
-								cell.rowSpan = 1;
-
-								classn = 'wptb-fused-cell-' + cell.dataset.xIndex + '-' + cell.dataset.yIndex;
-								hidden = document.getElementsByClassName(classn);
-								console.log('Initial:', hidden);
-
-								for (; hidden.length;) {
-												console.log(hidden[0]);
-												hidden[0].classList.remove(classn);
-								}
-								table.recalculateIndexes();
-				};
-
-				wptbTableSetup.appendChild(table);
-
+				if (rowspan > 1) {
+						firstCell.rowSpan = rowspan;
+				}
 				table.recalculateIndexes();
+		};
 
-				WPTB_LeftPanel();
+		table.splitCell = function () {
+				var cell = document.getElementsByClassName('wptb-highlighted')[0],
+				    classn,
+				    hidden;
+				if (cell.colSpan == 1 && cell.rowSpan == 1) {
+						return;
+				}
+
+				cell.colSpan = 1;
+				cell.rowSpan = 1;
+
+				classn = 'wptb-fused-cell-' + cell.dataset.xIndex + '-' + cell.dataset.yIndex;
+				hidden = document.getElementsByClassName(classn);
+				console.log('Initial:', hidden);
+
+				for (; hidden.length;) {
+						console.log(hidden[0]);
+						hidden[0].classList.remove(classn);
+				}
+				table.recalculateIndexes();
+		};
+
+		wptbTableSetup.appendChild(table);
+
+		table.recalculateIndexes();
+
+		WPTB_LeftPanel();
 };
 var WPTB_Text = function WPTB_Text(text) {
         var DOMElement = document.createElement('div'),
@@ -1380,201 +1760,4 @@ var WPTB_Text = function WPTB_Text(text) {
 
         return this;
 };
-var applyGenericItemSettings = function applyGenericItemSettings(element) {
-							var node = element.getDOMElement(),
-							    index = document.counter.nextIndex(element.kind),
-							    listItems;
-
-							node.onmouseenter = function (event) {
-														this.classList.add('wptb-directlyhovered');
-														var btnDelete = document.createElement('span'),
-														    btnCopy = document.createElement('span'),
-														    btnMove = document.createElement('span'),
-														    actions = document.createElement('span'),
-														    previous,
-														    i;
-														actions.classList.add('wptb-actions');
-														btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-														btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-														btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
-														btnMove.draggable = true;
-														btnDelete.onclick = function (event) {
-																					var act = this.parentNode.parentNode,
-																					    el = act.parentNode;
-																					el.removeChild(act);
-														};
-														btnCopy.onclick = function (event) {
-																					if (element.kind == 'list') {
-
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    temp = [],
-																												    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
-
-																												for (var i = 0; i < srcList.length; i++) {
-																																			temp.push(srcList[i].innerHTML);
-																												}
-																												var copy = new WPTB_List(temp);
-																												td.appendChild(copy.getDOMElement());
-																					} else if (element.kind == 'text') {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-																												td.appendChild(copy.getDOMElement());
-																					} else if (element.kind == 'image') {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
-																												td.appendChild(copy.getDOMElement());
-																					} else {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-																												td.appendChild(copy.getDOMElement());
-																					}
-														};
-														btnMove.ondragstart = function (event) {
-																					var parent = this,
-																					    infArr,
-																					    type;
-
-																					while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
-																												parent = parent.parentNode;
-																					}
-
-																					infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-																					type = infArr[1];
-
-																					var img = document.createElement("img");
-																					img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-																					console.log(img.src);
-																					event.dataTransfer.setDragImage(img, 0, 0);
-																					event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
-														};
-
-														if (element.kind === 'button') {
-																					tinyMCE.init({
-																												target: node.childNodes[0].childNodes[0],
-																												inline: true,
-																												plugins: "link",
-																												dialog_type: "modal",
-																												theme: 'modern',
-																												menubar: false,
-																												fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																												toolbar: 'bold italic strikethrough',
-																												setup: function setup(ed) {
-																																			ed.on("init", function (ed) {
-																																										tinyMCE.execCommand('mceRepaint');
-																																			});
-																												},
-																												init_instance_callback: function init_instance_callback(editor) {
-																																			editor.on('change', function (e) {
-																																										// check if it becomes empty because if there's no value it's hard to edit the editor in button element
-																																										if (editor.getContent() == "") {
-																																																	editor.setContent("<p class='wptb-button'>Button Text</p>");
-																																										}
-																																			});
-																																			editor.on('KeyDown', function (e) {
-																																										var range = editor.selection.getRng();
-																																										var KeyID = e.keyCode;
-																																										if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
-																																																	e.preventDefault();
-																																																	editor.setContent("<p class='wptb-button'></p>");
-																																										}
-																																			});
-
-																																			window.currentEditor = editor;
-																																			editor.on('focus', function (e) {
-
-																																										var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																										if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																										} else {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																										}
-																																			});
-																												}
-																					});
-														} else if (element.kind === 'text') {
-																					tinyMCE.init({
-																												target: node.childNodes[0],
-																												inline: true,
-																												plugins: "link, paste",
-																												dialog_type: "modal",
-																												theme: 'modern',
-																												menubar: false,
-																												fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																												paste_as_text: true,
-																												toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-																												init_instance_callback: function init_instance_callback(editor) {
-																																			window.currentEditor = editor;
-																																			editor.on('focus', function (e) {
-
-																																										var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																										if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																										} else {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																										}
-																																			});
-																												}
-																					});
-														} else {
-																					listItems = node.getElementsByClassName('wptb-list-item-content');
-																					for (var i = 0; i < listItems.length; i++) {
-																												tinyMCE.init({
-																																			target: listItems[i],
-																																			inline: true,
-																																			plugins: "link, paste",
-																																			dialog_type: "modal",
-																																			theme: 'modern',
-																																			menubar: false,
-																																			fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																																			paste_as_text: true,
-																																			toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-																																			init_instance_callback: function init_instance_callback(editor) {
-																																										window.currentEditor = editor;
-																																										editor.on('focus', function (e) {
-																																																	var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																																	if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																								document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																																	} else {
-																																																								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																								delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																								delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																																	}
-																																										});
-																																			}
-																												});
-																					}
-														}
-
-														actions.appendChild(btnMove);
-														actions.appendChild(btnCopy);
-														actions.appendChild(btnDelete);
-														this.appendChild(actions);
-							};
-
-							node.onmouseleave = function (event) {
-														var formerActions = this.getElementsByClassName('wptb-actions');
-														if (formerActions && formerActions[0]) {
-																					var par = formerActions[0].parentNode;
-																					par.removeChild(formerActions[0]);
-														}
-														this.classList.remove('wptb-directlyhovered');
-							};
-
-							node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' + index);
-
-							new WPTB_ElementOptions(element, index);
-
-							document.counter.increment(element.kind);
-};
-
 //# sourceMappingURL=admin.js.map

@@ -125,10 +125,10 @@ use WP_Table_Builder as NS;
                                 <?php echo __( 'Button Size', 'wp-table-builder' ); ?>
                             </div>
                             <ul>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">S</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">M</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">L</li>
-                                <li class="wptb-btn-size-btn wptb-btn-size-switcher">XL</li>
+                                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher">S</li>
+                                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher selected">M</li>
+                                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher">L</li>
+                                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher">XL</li>
                             </ul>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ use WP_Table_Builder as NS;
                             <?php echo __( 'Button Color', 'wp-table-builder' ); ?>
                         </div>
                         <div class='wptb-settings-col-xs-8'>
-                            <input type="color" class="wptb-element-property wptb-color-picker" />
+                            <input data-type="button-color" class="wptb-element-property wptb-color-picker" />
                         </div>
                     </div>
                 </div>

@@ -77,7 +77,7 @@ class Tables {
 				'label'               => 'WPTB Tables',
 				'public'              => false,
 				'exclude_from_search' => true,
-				'show_ui'             => true,
+				'show_ui'             => false,
 				'show_in_admin_bar'   => false,
 				'rewrite'             => false,
 				'query_var'           => true,

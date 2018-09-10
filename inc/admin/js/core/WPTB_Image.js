@@ -1,37 +1,35 @@
-var WPTB_Image = function (src) {
+var WPTB_Image = function(src){
+        var DOMElement = document.createElement('div'),
+        	img = document.createElement('img');
 
-	var DOMElement = document.createElement('div'),
-		img = document.createElement('img');
+		this.kind = 'image';
 
-	this.kind = 'image';
+        DOMElement.appendChild(img);
 
-	DOMElement.appendChild(img);
+        this.getDOMElement = function (){ 
+        	return DOMElement;
+        }
+        applyGenericItemSettings(this);
 
-	this.getDOMElement = function () {
-		return DOMElement;
-	}
-	applyGenericItemSettings(this);
+        file_frame = wp.media.frames.file_frame = wp.media({
+                                        title: 'Select a image to upload',
+                                        button: {
+                                                text: 'Use this image',
+                                        },
+                                        multiple: false  
+                                });
+                                // When an image is selected, run a callback.
+                                file_frame.on( 'select', function() {
+                                        attachment = file_frame.state().get('selection').first().toJSON();
+                                        img.src = attachment.url; 
+                                });
+                                        // Finally, open the modal
+        if(src==undefined){
+                file_frame.open();
+        }
+        else{
+                img.src=src;
+        }
 
-	file_frame = wp.media.frames.file_frame = wp.media({
-		title: 'Select a image to upload',
-		button: {
-			text: 'Use this image',
-		},
-		multiple: false
-	});
-	// When an image is selected, run a callback.
-	file_frame.on('select', function () {
-		attachment = file_frame.state().get('selection').first().toJSON();
-		img.src = attachment.url;
-	});
-	// Finally, open the modal
-	if (src == undefined) {
-		file_frame.open();
-	}
-	else {
-		img.src = src;
-	}
-
-	return this;
-
+        return this;
 };

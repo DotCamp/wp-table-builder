@@ -51,9 +51,7 @@ class Admin_Menu {
 	 */
 	public function register_menus() {
 
-		global $builder_page;
-		global $submenu;
-		//die(var_dump($submenu));
+		global $builder_page;  
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
@@ -86,9 +84,7 @@ class Admin_Menu {
 			'wptb-builder',
 			array( $this, 'table_builder' )
 		);
-
-		remove_menu_page('edit.php?post_type=wptb-tables');
-
+ 
 		do_action( 'wptb_admin_menu', $this );
 
 	}
@@ -105,11 +101,7 @@ class Admin_Menu {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */ 
-		global $builder_page;
-		global $submenu;
-		unset($submenu["edit.php?post_type=wptb-tables"]);
-		wp_register_script( 'wptb-patchs-js', plugin_dir_url( __FILE__ ) . 'js/patchs.js', [], NS\PLUGIN_VERSION, true );
-		wp_enqueue_script( 'wptb-patchs-js' );
+		global $builder_page; 
 
 		if ( $hook != $builder_page ) {
 			return;
@@ -136,9 +128,11 @@ class Admin_Menu {
 	 *
 	 * @since 1.0.0
 	 */
-	public function tables_list() {
-        echo "<h1>New Table List</h1>";
-		do_action( 'wptb_tables_list' );
+	public function tables_list() { 
+		$table_list = new WPTB_Listing();
+        echo "<h1>WPTB Tables List</h1>";
+		$table_list->prepare_items();
+		$table_list->display();
     }
     
     /**
