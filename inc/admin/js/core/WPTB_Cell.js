@@ -1,39 +1,39 @@
-var WPTB_Cell = function(DOMElement){
+var WPTB_Cell = function (DOMElement) {
 
-		function newElementProxy(el){
-			if(el == 'list'){
-                return new WPTB_List();
-            }
-            else if(el == 'image'){
-                return new WPTB_Image();
-            }   
-            else if(el == 'text'){
-                return new WPTB_Text();
-            }
-            else if(el == 'button'){
-                return new WPTB_Button();
-            }
-		}
-
-        function highlightRow(td){
-            var parentRow = td.parentNode,
-                columnCount = parseInt(document.getElementById('wptb-columns-number').value),
-                tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-                for (var i = 0; i < tds.length; i++) {
-                    tds[i].classList.remove('highlighted-row-first','highlighted-row-last','highlighted-row-inner',
-                                            'highlighted-column-first','highlighted-column-last','highlighted-column-inner');
-                }
-                for (var i = 0; i < columnCount; i++) {
-
-                    var classToAdd = (i == 0 ? 'highlighted-row-first' : 
-                                    (i == columnCount-1 ? 'highlighted-row-last' 
-                                        : 'highlighted-row-inner'));
-                    var ttd = parentRow.getElementsByTagName('td')[i];
-                    if(ttd!==td){
-                    ttd.classList.add(classToAdd);
-                    }
-                }
+    function newElementProxy(el) {
+        if (el == 'list') {
+            return new WPTB_List();
         }
+        else if (el == 'image') {
+            return new WPTB_Image();
+        }
+        else if (el == 'text') {
+            return new WPTB_Text();
+        }
+        else if (el == 'button') {
+            return new WPTB_Button();
+        }
+    }
+
+    function highlightRow(td) {
+        var parentRow = td.parentNode,
+            columnCount = parseInt(document.getElementById('wptb-columns-number').value),
+            tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+        for (var i = 0; i < tds.length; i++) {
+            tds[i].classList.remove('highlighted-row-first', 'highlighted-row-last', 'highlighted-row-inner',
+                'highlighted-column-first', 'highlighted-column-last', 'highlighted-column-inner');
+        }
+        for (var i = 0; i < columnCount; i++) {
+
+            var classToAdd = (i == 0 ? 'highlighted-row-first' :
+                (i == columnCount - 1 ? 'highlighted-row-last'
+                    : 'highlighted-row-inner'));
+            var ttd = parentRow.getElementsByTagName('td')[i];
+            if (ttd !== td) {
+                ttd.classList.add(classToAdd);
+            }
+        }
+    }
 
         function highlightColumn(td){
            
@@ -60,136 +60,143 @@ var WPTB_Cell = function(DOMElement){
                 }
         }
         
-        DOMElement = document.createElement("td");
+       
+    DOMElement = document.createElement("td");
 
-        DOMElement.draggable = false;
-        
-        DOMElement.classList.add('wptb-droppable', 'wptb-cell');  
+    DOMElement.draggable = false;
 
-        DOMElement.onclick = function(){
+    DOMElement.classList.add('wptb-droppable', 'wptb-cell');
 
-        	var relativeActions, cells;
+    DOMElement.onclick = function () {
 
-        	if(window._wptbManagementModeActive){
-        		return;
-        	}
-        	if(this.classList.contains('wptb-highlighted')){
-        		//this.classList.remove('wptb-highlighted');
-        	}
-        	else{
-        		relativeActions = document.getElementsByClassName('wptb-relative-action');
-        		cells = document.getElementsByTagName('td');
+        var relativeActions, cells;
 
-        		for (var i = 0; i < relativeActions.length; i++) {        			 
-        			relativeActions[i].dataset.activeCell = this;
-        		}
-
-        		for (var i = 0; i < cells.length; i++) {
-        			cells[i].classList.remove('wptb-highlighted');
-        		}
-
-        		this.classList.add('wptb-highlighted');    
-                highlightRow(this);
-                highlightColumn(this);
-
-        	}
-        	
-        };
-
-        DOMElement.ondragenter = function(e){
-        	var div;
-            if(!e.dataTransfer.getData('wptbElement') 
-                && !e.dataTransfer.getData('node')){
-                return;
-            }
-        	this.classList.add('wptb-drop-here-empty');
+        if (window._wptbManagementModeActive) {
+            return;
         }
-
-        DOMElement.ondragover = function(e){
-        	e.preventDefault();
+        if (this.classList.contains('wptb-highlighted')) {
+            //this.classList.remove('wptb-highlighted');
         }
+        else {
+            relativeActions = document.getElementsByClassName('wptb-relative-action');
+            cells = document.getElementsByTagName('td');
 
-        DOMElement.ondragleave = function(){
-        	this.classList.remove('wptb-drop-here-empty');
-
-        }
-
-        DOMElement.ondrop = function(e){
-        	var element, classId, space, t_space, spaceParent;
-        	e.preventDefault();
-            space = new WPTB_Space();
-
-            console.log(e.dataTransfer);
-
-            if(!e.dataTransfer.getData('wptbElement') 
-                && !e.dataTransfer.getData('node')){
-                return;
+            for (var i = 0; i < relativeActions.length; i++) {
+                relativeActions[i].dataset.activeCell = this;
             }
 
-            if(e.dataTransfer.getData('wptbElement')){
-        	   element = newElementProxy(e.dataTransfer.getData('wptbElement'));
-                if(this.innerHTML==''){
-                    this.appendChild(new WPTB_Space());
-                }
-                this.appendChild(element.getDOMElement());
-                this.appendChild(space);
-        	}
-            else{
-
-                classId = e.dataTransfer.getData('node');
-                element = document.getElementsByClassName(classId)[0];
-                if(this.innerHTML==''){
-                    t_space = element.nextSibling;
-                    spaceParent = element.parentNode;
-                    if(t_space != undefined){
-                        spaceParent.removeChild(t_space);
-                    }
-                    this.appendChild(new WPTB_Space());
-                }
-                this.appendChild(element);
-                this.appendChild(space);
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].classList.remove('wptb-highlighted');
             }
-        	this.classList.remove('wptb-drop-here-empty');
-        	return true;
-        }
 
-        DOMElement.onmousedown = function(){
-            console.log("MOUSE DOWN!");
+        }
+    };
+
+        DOMElement.onmousedown = function(){ 
             document.select.activateMultipleSelectMode();
             document.select.pushSelectedCell(this);
         };
 
-        DOMElement.onmouseover = function(){
-            document.select.pushSelectedCell(this);
-        };
 
-        DOMElement.onmouseup = function(){
-            console.log("MOUSE UP!");
+
+        DOMElement.onmouseup = function(){ 
             document.select.deactivateMultipleSelectMode();
         };
 
-        this.getDOMElement = function (){ 
-        	return DOMElement;
+    DOMElement.ondragenter = function (e) {
+        var div;
+        if (!e.dataTransfer.getData('wptbElement')
+            && !e.dataTransfer.getData('node')) {
+            return;
+        }
+        this.classList.add('wptb-drop-here-empty');
+    }
+
+    DOMElement.ondragover = function (e) {
+        e.preventDefault();
+    }
+
+    DOMElement.ondragleave = function () {
+        this.classList.remove('wptb-drop-here-empty');
+
+    }
+
+    DOMElement.ondrop = function (e) {
+        var element, classId, space, t_space, spaceParent;
+        e.preventDefault();
+        space = new WPTB_Space();
+
+        console.log(e.dataTransfer);
+
+        if (!e.dataTransfer.getData('wptbElement')
+            && !e.dataTransfer.getData('node')) {
+            return;
         }
 
-        this.setCoords = function(y,x){
-        	var el = this.getDOMElement();
-        	el.dataset.yIndex = y;
-        	el.dataset.xIndex = x;
+        if (e.dataTransfer.getData('wptbElement')) {
+            element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+            if (this.innerHTML == '') {
+                this.appendChild(new WPTB_Space());
+            }
+            this.appendChild(element.getDOMElement());
+            this.appendChild(space);
         }
+        else {
 
-        this.getCoords = function(){
-        	var coords,
-        		el = this.getDOMElement();
-        	coords.x = el.dataset.xIndex;
-        	coords.y = el.dataset.yIndex;
-        	return coords;
+            classId = e.dataTransfer.getData('node');
+            element = document.getElementsByClassName(classId)[0];
+            if (this.innerHTML == '') {
+                t_space = element.nextSibling;
+                spaceParent = element.parentNode;
+                if (t_space != undefined) {
+                    spaceParent.removeChild(t_space);
+                }
+                this.appendChild(new WPTB_Space());
+            }
+            this.appendChild(element);
+            this.appendChild(space);
         }
+        this.classList.remove('wptb-drop-here-empty');
+        return true;
+    }
 
-        this.appendElement = function(node){
-        	getDOMElement().appendChild(node);
-        }
+    DOMElement.onmousedown = function () {
+        console.log("MOUSE DOWN!");
+        document.select.activateMultipleSelectMode();
+        document.select.pushSelectedCell(this);
+    };
 
-        return this;
+    DOMElement.onmouseover = function () {
+        document.select.pushSelectedCell(this);
+    };
+
+    DOMElement.onmouseup = function () {
+        console.log("MOUSE UP!");
+        document.select.deactivateMultipleSelectMode();
+    };
+
+    this.getDOMElement = function () {
+        return DOMElement;
+    }
+
+    this.setCoords = function (y, x) {
+        var el = this.getDOMElement();
+        el.dataset.yIndex = y;
+        el.dataset.xIndex = x;
+    }
+
+    this.getCoords = function () {
+        var coords,
+            el = this.getDOMElement();
+        coords.x = el.dataset.xIndex;
+        coords.y = el.dataset.yIndex;
+        return coords;
+    }
+
+    this.appendElement = function (node) {
+        getDOMElement().appendChild(node);
+    }
+
+    return this;
 
 };

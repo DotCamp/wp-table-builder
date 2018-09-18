@@ -1,23 +1,25 @@
-var WPTB_Button = function(text){
-        var DOMElement = document.createElement('div'),
-        	elButton2 = document.createElement('div'),
-        	el_B = document.createElement('p');
+var WPTB_Button = function (text) {
 
-		this.kind = 'button';
+	var DOMElement = document.createElement('div'),
+		elButton2 = document.createElement('div'),
+		el_B = document.createElement('p');
 
-        DOMElement.classList.add('wptb-button-container');
-        elButton2.classList.add('wptb-button-wrapper');
-        el_B.classList.add('wptb-button');
-        el_B.classList.add('editable');
-        el_B.innerHTML = text != undefined ? text : 'Button Text';
-        elButton2.appendChild(el_B);
-        DOMElement.appendChild(elButton2);
+	this.kind = 'button';
 
-        this.getDOMElement = function (){ 
-        	return DOMElement;
-        }
+	DOMElement.classList.add('wptb-button-container');
+	elButton2.classList.add('wptb-button-wrapper');
+	el_B.classList.add('wptb-button');
+	el_B.classList.add('editable');
+	el_B.innerHTML = text != undefined ? text : 'Button Text';
+	elButton2.appendChild(el_B);
+	DOMElement.appendChild(elButton2);
 
-        applyGenericItemSettings(this);
+	this.getDOMElement = function () {
+		return DOMElement;
+	}
 
-        return this;
+	applyGenericItemSettings(this);
+
+	return this;
+
 };
