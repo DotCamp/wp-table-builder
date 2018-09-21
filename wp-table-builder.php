@@ -12,7 +12,7 @@
  * @package           WP_Table_Builder
  *
  * @wordpress-plugin
- * Plugin Name:       WP Table Builder
+ * Plugin Name:       WP Table Builder 2
  * Plugin URI:        http://wptablebuilder.com/
  * Description:       Table Builder Plugin for WordPress
  * Version:           1.0.0

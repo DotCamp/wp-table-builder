@@ -17,10 +17,12 @@
         <input type="button" id="wptb-add-end-column" name="wptb-add-end-column" class="wptb-button none"  value="<?php echo __('Add column at the end','wp_table_builder'); ?>" title="<?php echo __('Add column at the end','wp_table_builder'); ?>">
         <input type="button" id="wptb-add-start-column" name="wptb-add-start-column" class="wptb-button none"  value="<?php echo __('Add column at the start','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
 
+
         <input type="button" id="wptb-add-row-before" name="wptb-add-row-before" class="wptb-button individual wptb-relative-action" value="<?php echo __('Add row before this one','wp_table_builder'); ?>" title="<?php echo __('Add row before this one','wp_table_builder'); ?>">
         <input type="button" id="wptb-add-row-after" name="wptb-add-row-after" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add row after this one','wp_table_builder'); ?>" title="<?php echo __('Add row after this one','wp_table_builder'); ?>">
         <input type="button" id="wptb-add-column-before" name="wptb-add-column-before" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add column before this one','wp_table_builder'); ?>" title="<?php echo __('Add column before this one','wp_table_builder'); ?>">
         <input type="button" id="wptb-add-column-after" name="wptb-add-column-after" class="wptb-button individual wptb-relative-action"  value="<?php echo __('Add column after this one','wp_table_builder'); ?>" title="<?php echo __('Add column after this one','wp_table_builder'); ?>">
+
 
         <input type="button" id="wptb-delete-row" name="wptb-delete-row" class="wptb-button individual"  value="<?php echo __('Delete Row','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">
         <input type="button" id="wptb-delete-column" name="wptb-delete-column" class="wptb-button individual"  value="<?php echo __('Delete Column','wp_table_builder'); ?>" title="<?php echo __('Add column at the start','wp_table_builder'); ?>">

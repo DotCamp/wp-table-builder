@@ -23,24 +23,21 @@ use WP_Table_Builder as NS;
                         </a>
                     </li>
                 </ul>
-    <span class="line">
-      <span class="blue"></span>
-    </span>
                 <div class="add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
-                        <div class="wptb-element left "  id="wptb-text">
+                        <div class="wptb-element left " draggable="true" data-wptb-element="text"  id="wptb-text">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.php'; ?>
                             <p class="wptb-draggable"><?php echo __( 'Text', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element right  "  id="wptb-image">
+                        <div class="wptb-element right  " draggable="true" data-wptb-element="image"  id="wptb-image">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.php'; ?>
                             <p class="wptb-draggable-prototype"><?php echo __( 'Image', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element left "  id="wptb-button">
+                        <div class="wptb-element left " draggable="true" data-wptb-element="button"  id="wptb-button">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.php'; ?>
                             <p class="wptb-draggable-prototype"><?php echo __( 'Button', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element right "  id="wptb-list">
+                        <div class="wptb-element right " draggable="true" data-wptb-element="list"  id="wptb-list">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
                             <p class="wptb-draggable-prototype"><?php echo __( 'List', 'wp-table-builder' ); ?></p>
                         </div>

@@ -420,14 +420,14 @@
         }
 
         for (var i = 0; i <= row; i++) { 
-          console.log('Fila '+(i+1));
+          //console.log('Fila '+(i+1));
           tds = table.rows[i].getElementsByTagName('td');
           cols = 0,
           items = 0;  
 
           for (colspansAcumulados=0;colspansAcumulados<maxAmountOfCells && items < tds.length;) {
             if(carried[colspansAcumulados]){
-              console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
+              //console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
               carried[colspansAcumulados]--;
               colspansAcumulados++;
               continue;
@@ -440,13 +440,67 @@
             }
             if(carried[colspansAcumulados])
             carried[colspansAcumulados]--;
-            console.log('Celda del colspan numero'+colspansAcumulados);
+            //console.log('Celda del colspan numero'+colspansAcumulados);
             colspansAcumulados += cell.colSpan;
           }
 
         }
         console.log(carried);
         return carried;
+      };
+
+
+
+      realTimeArray = function(){
+        var carried = [],tds,cols, matriz = [];
+
+        for (var i = 0; i < maxAmountOfCells; i++) {
+          carried[i] = 0;
+        }
+
+        for (var i = 0; i < table.rows.length; i++) { 
+          cols = [];
+
+          var tds = table.rows[i].getElementsByTagName('td');
+
+          for (items=0; items < tds.length;items++) {
+
+              for (var k = 0; k < tds[items].colSpan; k++) {
+            cols.push(1);
+            }
+
+            if(tds[items].rowSpan > 1){
+              for (var k = 0; k < tds[items].colSpan; k++) {
+                carried[items+k]={
+                  justAssigned : true,
+                  amount : tds[items].rowSpan
+                };
+              }
+
+            
+            }
+
+          }
+
+
+          for (var k = 0; k < maxAmountOfCells; k++) {
+          if(typeof carried[k] == 'object' && carried[k].amount > 0){
+            
+            carried[k].amount--;
+
+            if(carried[k].justAssigned){
+              carried[k].justAssigned = false;
+            }
+            else{            
+              cols.push(1);
+            }
+          }
+        }
+ 
+          matriz.push(cols);
+
+        } 
+        return matriz;
       };
 
       addRowBefore = function(){
@@ -464,6 +518,26 @@
         for (var i = 0; i < noPending.length; i++) {
           td = document.createElement('td');
           r.appendChild(td);
+        }
+
+        arr = realTimeArray();
+
+        console.log('Arr',arr);
+
+        for (var i = 0; i < arr.length; i++) {
+          console.log('Loop iteration');
+
+          if(arr[i].length > maxAmountOfCells){
+            //Still not watched
+          }
+
+          if(arr[i].length < maxAmountOfCells){
+
+            for (var j = arr[i].length; j < maxAmountOfCells; j++) {
+              td = document.createElement('td');
+              table.rows[i].appendChild(td);
+            }
+          }
         }
 
       

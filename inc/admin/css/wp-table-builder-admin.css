@@ -507,6 +507,32 @@ ul.wptb-tabs {
     padding: 0 20px;
 }
 
+.wptb-messaging{
+    color: white;
+    height: 0;
+    margin: 0 auto;
+    padding: 5px;
+    transition: all 1s 0s;
+    width: 90%;
+}
+
+.wptb-messaging.success{ 
+background: #4caf50;  
+background: -moz-linear-gradient(45deg, #4caf50 0%, #8bc34a 100%);  
+background: -webkit-linear-gradient(45deg, #4caf50 0%,#8bc34a 100%);  
+background: linear-gradient(45deg, #4caf50 0%,#8bc34a 100%);  
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4caf50', endColorstr='#8bc34a',GradientType=1 );  
+height: auto;
+}
+
+.wptb-messaging.warning{
+background: #f44336; 
+background: -moz-linear-gradient(45deg, #f44336 0%, #ff5722 100%);
+background: -webkit-linear-gradient(45deg, #f44336 0%,#ff5722 100%); 
+background: linear-gradient(45deg, #f44336 0%,#ff5722 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f44336', endColorstr='#ff5722',GradientType=1 ); 
+height: auto;
+}
 
 /**
 *
@@ -646,7 +672,7 @@ table.wptb-table {
     padding: 15px;
 }
 
-.wptb-preview-table .wptb-row td.highlighted,
+.wptb-preview-table .wptb-row td.wptb-highlighted,
 .wptb-state-dragging td:hover{
     border: 1px solid lightgreen !important;
 }
@@ -703,8 +729,8 @@ table.wptb-table {
     border-right: 1px solid pink;
     border-top: inherit;
 }
-/*:empty*/
-.wptb-row td::before {
+
+.wptb-row td:empty::before {
     content: 'Cell';
     display: block;
     font-weight: normal;
@@ -713,11 +739,11 @@ table.wptb-table {
     color: #969fa6;
 }
 
-.wptb-row td/*:empty*/ {
+.wptb-row td:empty {
     border: 1px dashed #969fa6;
 }
-/*:empty*/
-.wptb-table-head td::before {
+
+.wptb-table-head td:empty::before {
     content: 'Header';
 }
 
@@ -858,7 +884,7 @@ table.wptb-table {
 
 .wptb-btn-size-switcher.selected {
     background: #fff;
-    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
     cursor: default;
 }
 
@@ -1005,20 +1031,18 @@ table.wptb-table {
     width: 100%;
 }
 
-.wptb-insert-here{
-    background-color: lightgreen;
-    border: 1px solid lightgreen;  
-    display: none;
+.wptb-space-between.visible:empty::before{
+    background-color: dodgerblue;
+    border: 1px solid dodgerblue;  
+    color: white; 
+    content: 'drop here';
+    display: block;
+    font-variant: small-caps;
     margin: 2px 5%;
     padding: 0.5em 0;
     position: relative;
     text-align: center;
     width: 90%;
-}
-
-.wptb-insert-here span{
-    background: lightgreen;
-    color: white; 
 }
 
 .wptb-draggable{
