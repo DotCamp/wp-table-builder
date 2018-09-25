@@ -91,10 +91,51 @@ body > img{
     text-decoration: none;
 }
 
+ #edit-bar ul{
+  display: flex;
+  display:-webkit-flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+ } 
+
+ #edit-bar{
+  background-color: #263238;
+  border-radius: 2px;
+  bottom: 2em;
+  display: none;
+  padding: .3em .4em 0em .4em;
+  position: fixed;
+  right: 2em;
+  width: auto;
+ }
+
+ #edit-bar.visible{
+    display: inline-flex;
+ }
+
+ #edit-bar ul li{
+  height: auto;
+  margin:0;
+  padding: 0;
+ }
+
+ #edit-bar svg{
+  cursor: pointer;
+ }
+
+ #edit-bar svg * {
+  fill:rgba(0,0,0,0) !important;
+  stroke:#fff !important;
+ }
+
+
 
 /**
 * Left Panel
 */
+
+
 
 .wptb-left-panel {
     box-sizing: border-box;

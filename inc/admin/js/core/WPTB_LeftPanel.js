@@ -116,16 +116,17 @@ var WPTB_LeftPanel = function(){
 		}
 	}
 
+    document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
 	document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
 	document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
 	document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
 	document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
-	document.getElementById('wptb-add-end-column').onclick = table.addColumnToTheEnd;
-	document.getElementById('wptb-add-start-column').onclick = table.addColumnToTheStart;
-	document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
-	document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
-    document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
-    document.getElementById('wptb-delete-row').onclick = table.deleteRow;
+	document.getElementById('wptb-add-end-column').onclick = table.addColumnEnd;
+	document.getElementById('wptb-add-start-column').onclick = table.addColumnStart;
+	//document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
+	//document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+    //document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
+    //document.getElementById('wptb-delete-row').onclick = table.deleteRow;
     document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
     document.getElementById('wptb-split-cell').onclick = table.splitCell;
 	document.getElementById('add-elements').onclick = function(){

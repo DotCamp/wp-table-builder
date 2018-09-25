@@ -256,44 +256,32 @@
   <div class="wptb work area">
 <button id="togglebar">Add</button>
    <table border="1">
-     <tr>
-       <td></td> 
-       <td rowspan="2"></td> 
-       <td rowspan="3"></td> 
-       <td></td>
-     </tr>
-     <tr>
-       <td></td>
-       <td></td>
-     </tr>
-     <tr>
-       <td></td>
-       <td></td> 
-       <td></td>
-     </tr>
+    <tr>
+      <td></td>
+    </tr>
    </table>
   </div>
 <nav class="table management bar">
   <ul>
-    <li>
+    <li id="add-column-end" class="no-cell-action">
       <svg width="48" height="36">
         <rect x="3" y="3" width="30" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
         <rect x="36" y="3" width="4" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
       </svg>
     </li>
-    <li>
+    <li id="add-column-start" class="no-cell-action">
       <svg width="48" height="36">
         <rect x="10" y="3" width="30" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
         <rect x="3" y="3" width="4" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
       </svg>
     </li>
-    <li>
+    <li id="add-row-start" class="no-cell-action">
       <svg width="48" height="36">
         <rect x="3" y="3" width="37" height="4" style="fill:#fff;stroke-width:2;stroke:#003;"/>
         <rect x="3" y="10" width="37" height="22" style="fill:#fff;stroke-width:2;stroke:#003;"/>
       </svg>
     </li>
-    <li>
+    <li id="add-row-end" class="no-cell-action">
       <svg width="48" height="36">
         <rect x="3" y="3" width="37" height="22" style="fill:#fff;stroke-width:2;stroke:#003;"/>
         <rect x="3" y="28" width="37" height="4" style="fill:#fff;stroke-width:2;stroke:#003;"/>
@@ -313,8 +301,22 @@
         <rect x="22" y="3" width="20" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
       </svg>
     </li>
-    <li>
+    <li id="add-row-end2">
       <svg width="48" height="36">
+        <rect x="3" y="3" width="37" height="12" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        <rect x="3" y="19" width="37" height="3" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        <rect x="3" y="26" width="37" height="6" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+      </svg>
+    </li>
+    <li id="add-row-end3">
+      <svg width="48" height="36">
+        <rect x="3" y="3" width="37" height="6" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        <rect x="3" y="13" width="37" height="3" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        <rect x="3" y="20" width="37" height="12" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+      </svg>
+    </li>
+    <li>
+      <svg width="48" height="36" id="merge" class="multiple-select-action">
         <rect x="3" y="3" width="37" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>  
         <line x1="21" y1="7" x2="21" y2="32" style="stroke:#000;stroke-width:2" stroke-dasharray="1 2" />
         <line x1="5" y1="17" x2="18" y2="17" style="stroke:#000;stroke-width:2"  />
@@ -325,7 +327,7 @@
       </svg>
     </li>
     <li>
-      <svg width="48" height="36">
+      <svg width="48" height="36" id="unmerge" class="single-action">
         <rect x="3" y="3" width="37" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>  
         <line x1="21" y1="7" x2="21" y2="32" style="stroke:#000;stroke-width:2" stroke-dasharray="1 2" />
         <line x1="5" y1="17" x2="18" y2="17" style="stroke:#000;stroke-width:2"  />
@@ -363,17 +365,18 @@
         
         for (var i = 0; i < table.rows.length; i++) {
           td = document.createElement('td');
+          td.onclick = mark;
           table.rows[i].appendChild(td);
         }
-        for (var i = 0; i < array.length; i++) {
-          array[i].push(0);
-        }
+        array[0].push(0);
+        maxAmountOfCells++; 
         undoSelect();
       };
 
       addColumnStart = function(){
         for (var i = 0; i < table.rows.length; i++) {
           td = document.createElement('td');
+          td.onclick = mark;
           firstCell = table.rows[i].getElementsByTagName('td')[0];
           if(firstCell){
           table.rows[i].insertBefore(td,firstCell);
@@ -381,10 +384,9 @@
           else{
             table.rows[i].appendChild(td);
           }
-        }
-        for (var i = 0; i < array.length; i++) {
-          array[i].push(0);
-        }
+        }  
+        array[0].push(0);
+        maxAmountOfCells++;  
         undoSelect();
       };
 
@@ -394,10 +396,12 @@
         aux;
         for (var i = 0; i < maxAmountOfCells; i++) {
           td = document.createElement('td');
+          td.onclick = mark;
           r.appendChild(td);
         }
         aux = Object.create(array[0]);
         array.push(aux);
+        drawTable(array);
         undoSelect();
       };
 
@@ -405,10 +409,12 @@
         var r = table.insertRow(0);
         for (var i = 0; i < maxAmountOfCells; i++) {
           td = document.createElement('td');
+          td.onclick = mark;
           r.appendChild(td);
         }
         aux = Object.create(array[0]);
         array.push(aux);
+        drawTable(array);
         undoSelect();
       }
 
@@ -517,6 +523,7 @@
 
         for (var i = 0; i < noPending.length; i++) {
           td = document.createElement('td');
+          td.onclick = mark;
           r.appendChild(td);
         }
 
@@ -535,6 +542,7 @@
 
             for (var j = arr[i].length; j < maxAmountOfCells; j++) {
               td = document.createElement('td');
+          td.onclick = mark;
               table.rows[i].appendChild(td);
             }
           }
@@ -543,17 +551,56 @@
       
         aux = Object.create(array[0]);
         array.push(aux);
+        drawTable(array);
         undoSelect();
 
       }
 
       addRowAfter = function(){
+
         var cell = document.querySelector('.marked'),
             row = getCoords(cell)[0],
             r = table.insertRow(row+1),
             aux,
             rowspans = carriedRowspans(row);
 
+        noPending = rowspans.filter(function(elem){
+          return elem == 0;
+        });
+ 
+
+        for (var i = 0; i < noPending.length; i++) {
+          td = document.createElement('td');
+          td.onclick = mark;
+          r.appendChild(td);
+        }
+
+        arr = realTimeArray();
+
+        console.log('Arr',arr);
+
+        for (var i = 0; i < arr.length; i++) {
+          console.log('Loop iteration');
+
+          if(arr[i].length > maxAmountOfCells){
+            //Still not watched
+          }
+
+          if(arr[i].length < maxAmountOfCells){
+
+            for (var j = arr[i].length; j < maxAmountOfCells; j++) {
+              td = document.createElement('td');
+          td.onclick = mark;
+              table.rows[i].appendChild(td);
+            }
+          }
+        }
+
+      
+        aux = Object.create(array[0]);
+        array.push(aux);
+        drawTable(array);
+        undoSelect();
       }
         
 
@@ -608,6 +655,7 @@
                 continue;
               }
               newCell = document.createElement('td');
+          newCell.onclick = mark;
               if(refCell && refCell.nextSibling){
                 p.insertBefore(newCell,refCell.nextSibling)
               }
@@ -622,12 +670,13 @@
 
       fillTableArray = function(){ 
         var  colspansSums = [], a = [];
+
         //calculate max amount of cells inside a row
         for (var i = 0; i < table.rows.length; i++) {
           var cells = table.rows[i].getElementsByTagName('td'),
               colspanSumInRow=0;
-          for (var i = 0; i < cells.length; i++) {
-            colspanSumInRow += cells[i].colSpan;
+          for (var j = 0; j < cells.length; j++) {
+            colspanSumInRow += cells[j].colSpan;
           }
               colspansSums.push(colspanSumInRow);
         }
@@ -770,7 +819,11 @@
 
       var mark = function(event){
         var rs = this.rowSpan,
-            cs = this.colSpan;
+            cs = this.colSpan,
+            markedCells,
+            noCells = document.getElementsByClassName('no-cell-action'),
+            singleCells = document.getElementsByClassName('single-action'),
+            multipleCells = document.getElementsByClassName('multiple-select-action'),
             position = getCoords(this),
             row = position[0],
             column = position[1];
@@ -780,11 +833,37 @@
                 }
             }
         this.classList.add('marked'); 
+        markedCells = document.getElementsByClassName('marked').length;
+        if(markedCells === 1){
+          for (var i = 0; i < singleCells.length; i++) {
+            singleCells[i].classList.add('visible');
+            multipleCells[i].classList.remove('visible');
+            noCells[i].classList.remove('visible');
+          }
+        }
+        else{
+            singleCells[i].classList.remove('visible');
+            multipleCells[i].classList.add('visible');
+            noCells[i].classList.remove('visible');
+        }
       }
 
 
       var cells = document.getElementsByTagName('td');
-      var toggleBarBtn = document.getElementById('togglebar');
+      var toggleBarBtn = document.getElementById('togglebar'),
+          addRowEndBtn = document.getElementById('add-row-end'),
+          addRowStartBtn = document.getElementById('add-row-start'),
+          addColumnEndBtn = document.getElementById('add-column-end'),
+          addColumnStartBtn = document.getElementById('add-column-start'),
+          mergeBtn = document.getElementById('merge'),
+          unmergeBtn = document.getElementById('unmerge');
+
+      addRowEndBtn.onclick = addRowEnd;
+      addRowStartBtn.onclick = addRowStart;
+      addColumnEndBtn.onclick = addColumnEnd;
+      addColumnStartBtn.onclick = addColumnStart;
+      mergeBtn.onclick = mergeCells;
+      unmergeBtn.onclick = splitCells;
 
       toggleBarBtn.onclick = function(){
         var bar = document.getElementsByClassName('left')[0],

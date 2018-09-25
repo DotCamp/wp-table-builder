@@ -1,5 +1,5 @@
-var WPTB_Cell = function(DOMElement){
-
+var WPTB_Cell = function(callback,DOMElement){
+        console.log('CB',callback);
 		function newElementProxy(el){
 			if(el == 'list'){
                 return new WPTB_List();
@@ -66,35 +66,29 @@ var WPTB_Cell = function(DOMElement){
         
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');  
 
-        DOMElement.onclick = function(){
+        DOMElement.onclick = callback; /*function(){
 
         	var relativeActions, cells;
 
-        	if(window._wptbManagementModeActive){
+        	if(!document.select.isActivated()){
         		return;
         	}
-        	if(this.classList.contains('wptb-highlighted')){
-        		//this.classList.remove('wptb-highlighted');
-        	}
         	else{
-        		relativeActions = document.getElementsByClassName('wptb-relative-action');
-        		cells = document.getElementsByTagName('td');
+        	 
 
-        		for (var i = 0; i < relativeActions.length; i++) {        			 
-        			relativeActions[i].dataset.activeCell = this;
-        		}
-
-        		for (var i = 0; i < cells.length; i++) {
-        			cells[i].classList.remove('wptb-highlighted');
-        		}
-
+            if(this.classList.contains('wptb-highlighted')){
+                this.classList.remove('wptb-highlighted');
+            }
+            else{
+                console.log('Not contains');
         		this.classList.add('wptb-highlighted');    
-                highlightRow(this);
-                highlightColumn(this);
+                //highlightRow(this);
+                //highlightColumn(this);
+            }
 
         	}
         	
-        };
+        };*/;
 
         DOMElement.ondragenter = function(e){
         	var div;
@@ -152,21 +146,6 @@ var WPTB_Cell = function(DOMElement){
         	this.classList.remove('wptb-drop-here-empty');
         	return true;
         }
-
-        DOMElement.onmousedown = function(){
-            console.log("MOUSE DOWN!");
-            document.select.activateMultipleSelectMode();
-            document.select.pushSelectedCell(this);
-        };
-
-        DOMElement.onmouseover = function(){
-            document.select.pushSelectedCell(this);
-        };
-
-        DOMElement.onmouseup = function(){
-            console.log("MOUSE UP!");
-            document.select.deactivateMultipleSelectMode();
-        };
 
         this.getDOMElement = function (){ 
         	return DOMElement;

@@ -17,6 +17,10 @@ var MultipleSelect = function(){
 		multipleCellMode = false;
 	}
 
+	this.isActivated = function(){
+		return multipleCellMode;
+	}
+
 	this.pushSelectedCell = function(cell){ 
 		if(!multipleCellMode){ 
 			return;
