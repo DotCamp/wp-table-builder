@@ -1,19 +1,21 @@
-var WPTB_Text = function(text){
-        var DOMElement = document.createElement('div'),
-                elText2 = document.createElement('div'),
-                elP = document.createElement('p');
+var WPTB_Text = function (text) {
 
-                this.kind = 'text';
+	var DOMElement = document.createElement('div'),
+		elText2 = document.createElement('div'),
+		elP = document.createElement('p');
 
-        elText2.classList.add('editable');
-        elP.innerHTML = text != undefined ? text : 'Text';
-        elText2.appendChild(elP);
-        DOMElement.appendChild(elText2);
+	this.kind = 'text';
 
-        this.getDOMElement = function (){ 
-                return DOMElement;
-        }
-        applyGenericItemSettings(this);
+	elText2.classList.add('editable');
+	elP.innerHTML = text != undefined ? text : 'Text';
+	elText2.appendChild(elP);
+	DOMElement.appendChild(elText2);
 
-        return this;
+	this.getDOMElement = function () {
+		return DOMElement;
+	}
+	applyGenericItemSettings(this);
+
+	return this;
+
 };

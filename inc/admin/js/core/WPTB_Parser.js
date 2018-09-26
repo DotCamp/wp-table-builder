@@ -1,145 +1,146 @@
-var WPTB_Parser = function(code){
-	var node, pos=0;
+var WPTB_Parser = function (code) {
 
-	function getChar(){
-		if(pos>=code.length){
+	var node, pos = 0;
+
+	function getChar() {
+		if (pos >= code.length) {
 			return -1;
 		}
 		return code[pos++];
 	}
 
-	function getToken(){
+	function getToken() {
 		var char = getChar(),
-			token=char; 
+			token = char;
 
-		if(char !== '['){
+		if (char !== '[') {
 			return;
 		}
 
-		do{
+		do {
 			char = getChar();
-			if(char === -1){
+			if (char === -1) {
 				return -1;
 			}
-			token+=char;
-		}while(char != ']');
- 
-		ctoken = token; 
-		
+			token += char;
+		} while (char != ']');
+
+		ctoken = token;
+
 		return true;
 	}
 
-	function getCurrentToken(){
+	function getCurrentToken() {
 		return ctoken;
 	}
 
-	function getExpectedToken(expected){ 
-		if(getWordFromToken(ctoken) !== expected){
-			throw 'There was an error with the file and therefore the table could not be rendered'; 
+	function getExpectedToken(expected) {
+		if (getWordFromToken(ctoken) !== expected) {
+			throw 'There was an error with the file and therefore the table could not be rendered';
 		}
-		
+
 		getToken();
 	}
 
-	function getWordFromToken(token){ 
+	function getWordFromToken(token) {
 		var p = token.indexOf(' '),
-		word = token.substring(1,p);
-		if(p == -1){ //This is, if token tag has no attributes
+			word = token.substring(1, p);
+		if (p == -1) { //This is, if token tag has no attributes
 			return token;
 		}
-		return '['+word+']';
+		return '[' + word + ']';
 	}
 
-	function getAttributesFromToken(){
+	function getAttributesFromToken() {
 		var elems = ctoken.split(' '),
 			pair,
 			key,
 			value,
 			attr = [];
-		
+
 		for (var i = 1; i < elems.length; i++) {
-			pair = elems[i].trim().split('='); 
+			pair = elems[i].trim().split('=');
 			key = pair[0];
-			value = pair[1].substring(1,pair[1].length-1);
+			value = pair[1].substring(1, pair[1].length - 1);
 			attr[key] = value;
 		}
- 
+
 
 		return attr;
 	}
 
-	function parseAllHTML(){
-		var html='';
+	function parseAllHTML() {
+		var html = '';
 		pos--;
 
-		do{
+		do {
 			char = getChar();
-			if(char === -1){
+			if (char === -1) {
 				return -1;
 			}
-			html+=char;
-		}while(char != '[');
+			html += char;
+		} while (char != '[');
 
-		html = html.substring(0,html.length-1);
+		html = html.substring(0, html.length - 1);
 
 		pos--;
- 
+
 		return html;
-		
+
 	}
 
-	function analizeElement(){
+	function analizeElement() {
 		var t = getWordFromToken(getCurrentToken()), html, node;
-			
-		switch(t){
+
+		switch (t) {
 			case '[text]': attr = getAttributesFromToken();
-							console.log('Attributes',attr);
-							 getExpectedToken('[text]'); 
-							html = parseAllHTML();
-							node = new WPTB_Text(html);
-							console.log(html);
-							getToken();
-							getExpectedToken('[/text]'); 
-							break;
+				console.log('Attributes', attr);
+				getExpectedToken('[text]');
+				html = parseAllHTML();
+				node = new WPTB_Text(html);
+				console.log(html);
+				getToken();
+				getExpectedToken('[/text]');
+				break;
 			case '[button]': attr = getAttributesFromToken();
-							console.log('Attributes',attr);
-							getExpectedToken('[button]'); 
-							html = parseAllHTML();
-							node = new WPTB_Button(html);
-							getToken();
-							getExpectedToken('[/button]'); 
-							break;
+				console.log('Attributes', attr);
+				getExpectedToken('[button]');
+				html = parseAllHTML();
+				node = new WPTB_Button(html);
+				getToken();
+				getExpectedToken('[/button]');
+				break;
 			case '[img]': attr = getAttributesFromToken();
-							console.log('Attributes',attr);
-							node = new WPTB_Image(attr['src']);
-							getExpectedToken('[img]'); 
-							break;
+				console.log('Attributes', attr);
+				node = new WPTB_Image(attr['src']);
+				getExpectedToken('[img]');
+				break;
 		}
 
 		return node.getDOMElement();
 	}
 
-	function analizeElements(td){
-		do{
+	function analizeElements(td) {
+		do {
 			td.appendChild(analizeElement());
-		}while(getCurrentToken()=='[image]' 
-				|| getCurrentToken()=='[text]' 
-				|| getCurrentToken()=='[list]'
-				|| getCurrentToken()=='[button]' );
+		} while (getCurrentToken() == '[image]'
+		|| getCurrentToken() == '[text]'
+		|| getCurrentToken() == '[list]'
+			|| getCurrentToken() == '[button]');
 	}
 
-	function analizeRows(tableNode){
-		console.log('Tr',tr);
-		do{
-			var tr = tableNode.insertRow();  
+	function analizeRows(tableNode) {
+		console.log('Tr', tr);
+		do {
+			var tr = tableNode.insertRow();
 			tr.classList.add('wptb-row');
 			getExpectedToken('[tr]');
 			analizeTds(tr);
 			getExpectedToken('[/tr]');
-		}while(getWordFromToken(getCurrentToken()) === '[tr]');
+		} while (getWordFromToken(getCurrentToken()) === '[tr]');
 	}
 
-	function analizeTd(){
+	function analizeTd() {
 		var td = new WPTB_Cell();
 		getExpectedToken('[td]');
 		analizeElements(td.getDOMElement());
@@ -147,22 +148,22 @@ var WPTB_Parser = function(code){
 		return td.getDOMElement();
 	}
 
-	function analizeTds(row){
-		do{
+	function analizeTds(row) {
+		do {
 			row.appendChild(analizeTd());
-		}while(getCurrentToken()=='[td]');
+		} while (getCurrentToken() == '[td]');
 	}
 
-	function analizeHeader(tableNode){ 
-		var header = tableNode.insertRow(); 
-		header.classList.add('wptb-row','wptb-table-head');
-		console.log('Tr',header); 
+	function analizeHeader(tableNode) {
+		var header = tableNode.insertRow();
+		header.classList.add('wptb-row', 'wptb-table-head');
+		console.log('Tr', header);
 		getExpectedToken('[tr]');
 		analizeTds(header);
 		getExpectedToken('[/tr]');
 	}
 
-	function analizeRoot(){
+	function analizeRoot() {
 		getToken();
 		var n = document.createElement('table');
 		n.classList.add('wptb-preview-table');
@@ -176,4 +177,5 @@ var WPTB_Parser = function(code){
 	node = analizeRoot();
 
 	return node;
+
 };

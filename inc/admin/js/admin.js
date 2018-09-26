@@ -34,29 +34,31 @@
 	document.addEventListener('DOMContentLoaded', WPTB_Builder);
 })();
 var WPTB_Button = function WPTB_Button(text) {
-        var DOMElement = document.createElement('div'),
-            elButton2 = document.createElement('div'),
-            el_B = document.createElement('p');
 
-        this.kind = 'button';
+	var DOMElement = document.createElement('div'),
+	    elButton2 = document.createElement('div'),
+	    el_B = document.createElement('p');
 
-        DOMElement.classList.add('wptb-button-container');
-        elButton2.classList.add('wptb-button-wrapper');
-        el_B.classList.add('wptb-button');
-        el_B.classList.add('editable');
-        el_B.innerHTML = text != undefined ? text : 'Button Text';
-        elButton2.appendChild(el_B);
-        DOMElement.appendChild(elButton2);
+	this.kind = 'button';
 
-        this.getDOMElement = function () {
-                return DOMElement;
-        };
+	DOMElement.classList.add('wptb-button-container');
+	elButton2.classList.add('wptb-button-wrapper');
+	el_B.classList.add('wptb-button');
+	el_B.classList.add('editable');
+	el_B.innerHTML = text != undefined ? text : 'Button Text';
+	elButton2.appendChild(el_B);
+	DOMElement.appendChild(elButton2);
 
-        applyGenericItemSettings(this);
+	this.getDOMElement = function () {
+		return DOMElement;
+	};
 
-        return this;
+	applyGenericItemSettings(this);
+
+	return this;
 };
 var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
+
     console.log('CB', callback);
     function newElementProxy(el) {
         if (el == 'list') {
@@ -210,6 +212,7 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
     return this;
 };
 var ElementCounters = function ElementCounters() {
+
 	var priv = [];
 	priv['text'] = 0;
 	priv['image'] = 0;
@@ -232,6 +235,7 @@ var ElementCounters = function ElementCounters() {
 
 		return priv[key] + 1;
 	};
+
 	return this;
 };
 var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
@@ -309,7 +313,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                         type,
                         ps,
                         number;
-
                     classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
                     type = classe[1];
                     number = classe[2];
@@ -406,40 +409,42 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
     }
 };
 var WPTB_Image = function WPTB_Image(src) {
-        var DOMElement = document.createElement('div'),
-            img = document.createElement('img');
 
-        this.kind = 'image';
+	var DOMElement = document.createElement('div'),
+	    img = document.createElement('img');
 
-        DOMElement.appendChild(img);
+	this.kind = 'image';
 
-        this.getDOMElement = function () {
-                return DOMElement;
-        };
-        applyGenericItemSettings(this);
+	DOMElement.appendChild(img);
 
-        file_frame = wp.media.frames.file_frame = wp.media({
-                title: 'Select a image to upload',
-                button: {
-                        text: 'Use this image'
-                },
-                multiple: false
-        });
-        // When an image is selected, run a callback.
-        file_frame.on('select', function () {
-                attachment = file_frame.state().get('selection').first().toJSON();
-                img.src = attachment.url;
-        });
-        // Finally, open the modal
-        if (src == undefined) {
-                file_frame.open();
-        } else {
-                img.src = src;
-        }
+	this.getDOMElement = function () {
+		return DOMElement;
+	};
+	applyGenericItemSettings(this);
 
-        return this;
+	file_frame = wp.media.frames.file_frame = wp.media({
+		title: 'Select a image to upload',
+		button: {
+			text: 'Use this image'
+		},
+		multiple: false
+	});
+	// When an image is selected, run a callback.
+	file_frame.on('select', function () {
+		attachment = file_frame.state().get('selection').first().toJSON();
+		img.src = attachment.url;
+	});
+	// Finally, open the modal
+	if (src == undefined) {
+		file_frame.open();
+	} else {
+		img.src = src;
+	}
+
+	return this;
 };
 var WPTB_Initializer = function WPTB_Initializer() {
+
 	var MIN_COLUMNS = 1,
 	    MIN_ROWS = 1,
 	    MAX_COLUMNS = 10,
@@ -481,142 +486,144 @@ var WPTB_Initializer = function WPTB_Initializer() {
 	};
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
-            var table = document.getElementsByClassName('wptb-preview-table')[0],
-                wptbElementButtons = document.getElementsByClassName('wptb-element');
 
-            jQuery('#wptb-even-row-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableRows = table.getElementsByTagName('tr');
-                                    for (var i = 1; i < tableRows.length; i += 2) {
-                                                tds = tableRows[i].getElementsByTagName('td');
-                                                for (var j = 0; j < tds.length; j++) {
-                                                            tds[j].style.backgroundColor = ui.color.toString();
-                                                }
-                                    }
-                        }
-            });
-            jQuery('#wptb-odd-row-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableRows = table.getElementsByTagName('tr');
-                                    for (var i = 2; i < tableRows.length; i += 2) {
-                                                tds = tableRows[i].getElementsByTagName('td');
-                                                for (var j = 0; j < tds.length; j++) {
-                                                            tds[j].style.backgroundColor = ui.color.toString();
-                                                }
-                                    }
-                        }
-            });
-            jQuery('#wptb-table-header-bg').wpColorPicker({
-                        change: function change(event, ui) {
-                                    var tableHeader = table.getElementsByTagName('tr')[0],
-                                        tds = tableHeader.getElementsByTagName('td');
-                                    for (var j = 0; j < tds.length; j++) {
-                                                tds[j].style.backgroundColor = ui.color.toString();
-                                    }
-                        }
-            });
+    var table = document.getElementsByClassName('wptb-preview-table')[0],
+        wptbElementButtons = document.getElementsByClassName('wptb-element');
 
-            function addInnerBorderSize(value) {
-                        var tableCells = table.getElementsByTagName('td');
-                        for (var i = 0; i < tableCells.length; i++) {
-                                    tableCells[i].style.border = value + 'px solid';
-                        }
+    jQuery('#wptb-even-row-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var i = 1; i < tableRows.length; i += 2) {
+                tds = tableRows[i].getElementsByTagName('td');
+                for (var j = 0; j < tds.length; j++) {
+                    tds[j].style.backgroundColor = ui.color.toString();
+                }
+            }
+        }
+    });
+    jQuery('#wptb-odd-row-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var i = 2; i < tableRows.length; i += 2) {
+                tds = tableRows[i].getElementsByTagName('td');
+                for (var j = 0; j < tds.length; j++) {
+                    tds[j].style.backgroundColor = ui.color.toString();
+                }
+            }
+        }
+    });
+    jQuery('#wptb-table-header-bg').wpColorPicker({
+        change: function change(event, ui) {
+            var tableHeader = table.getElementsByTagName('tr')[0],
+                tds = tableHeader.getElementsByTagName('td');
+            for (var j = 0; j < tds.length; j++) {
+                tds[j].style.backgroundColor = ui.color.toString();
+            }
+        }
+    });
+
+    function addInnerBorderSize(value) {
+        var tableCells = table.getElementsByTagName('td');
+        for (var i = 0; i < tableCells.length; i++) {
+            tableCells[i].style.border = value + 'px solid';
+        }
+    }
+
+    function addCellPadding(value) {
+        var tableCells = table.getElementsByTagName('td');
+        for (var i = 0; i < tableCells.length; i++) {
+            tableCells[i].style.padding = value + 'px';
+        }
+    }
+
+    function addInnerBorder(checked) {
+        var styles;
+
+        if (checked == 'checked') {
+            document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
+            var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.border = '1px solid';
             }
 
-            function addCellPadding(value) {
-                        var tableCells = table.getElementsByTagName('td');
-                        for (var i = 0; i < tableCells.length; i++) {
-                                    tableCells[i].style.padding = value + 'px';
-                        }
+            document.getElementById('wptb-inner-border-settings').classList.add('visible');
+        } else {
+            document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+            var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.border = '';
             }
+        }
+    }
 
-            function addInnerBorder(checked) {
-                        var styles;
+    function addBorderSize(value) {
+        table.style.border = value + 'px solid';
+    }
 
-                        if (checked == 'checked') {
-                                    document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
-                                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-                                    for (var i = 0; i < tableCells.length; i++) {
-                                                tableCells[i].style.border = '1px solid';
-                                    }
+    document.getElementById('wptb-table-cell-slider').oninput = function () {
+        document.getElementById('wptb-table-cell-number').value = this.value;
+        addCellPadding(this.value);
+    };
 
-                                    document.getElementById('wptb-inner-border-settings').classList.add('visible');
-                        } else {
-                                    document.getElementById('wptb-inner-border-settings').classList.remove('visible');
-                                    var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
-                                    for (var i = 0; i < tableCells.length; i++) {
-                                                tableCells[i].style.border = '';
-                                    }
-                        }
-            }
+    document.getElementById('wptb-table-cell-number').onchange = function () {
+        document.getElementById('wptb-table-cell-slider').value = this.value;
+        addCellPadding(this.value);
+    };
 
-            function addBorderSize(value) {
-                        table.style.border = value + 'px solid';
-            }
+    document.getElementById('wptb-table-border-slider').oninput = function () {
+        document.getElementById('wptb-table-border-number').value = this.value;
+        addBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-cell-slider').oninput = function () {
-                        document.getElementById('wptb-table-cell-number').value = this.value;
-                        addCellPadding(this.value);
-            };
+    document.getElementById('wptb-table-border-number').onchange = function () {
+        document.getElementById('wptb-table-border-slider').value = this.value;
+        addBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-cell-number').onchange = function () {
-                        document.getElementById('wptb-table-cell-slider').value = this.value;
-                        addCellPadding(this.value);
-            };
+    document.getElementById('wptb-table-inner-border-slider').oninput = function () {
+        document.getElementById('wptb-table-inner-border-number').value = this.value;
+        addInnerBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-border-slider').oninput = function () {
-                        document.getElementById('wptb-table-border-number').value = this.value;
-                        addBorderSize(this.value);
-            };
+    document.getElementById('wptb-table-inner-border-number').onchange = function () {
+        document.getElementById('wptb-table-inner-border-slider').value = this.value;
+        addInnerBorderSize(this.value);
+    };
 
-            document.getElementById('wptb-table-border-number').onchange = function () {
-                        document.getElementById('wptb-table-border-slider').value = this.value;
-                        addBorderSize(this.value);
-            };
+    document.getElementById('wptb-inner-border-check').onchange = function () {
+        var _val = this.checked ? 'checked' : 'unchecked';
+        addInnerBorder(_val);
+    };
 
-            document.getElementById('wptb-table-inner-border-slider').oninput = function () {
-                        document.getElementById('wptb-table-inner-border-number').value = this.value;
-                        addInnerBorderSize(this.value);
-            };
+    for (var i = 0; i < wptbElementButtons.length; i++) {
+        wptbElementButtons[i].ondragstart = function (e) {
+            e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
+        };
+    }
 
-            document.getElementById('wptb-table-inner-border-number').onchange = function () {
-                        document.getElementById('wptb-table-inner-border-slider').value = this.value;
-                        addInnerBorderSize(this.value);
-            };
-
-            document.getElementById('wptb-inner-border-check').onchange = function () {
-                        var _val = this.checked ? 'checked' : 'unchecked';
-                        addInnerBorder(_val);
-            };
-
-            for (var i = 0; i < wptbElementButtons.length; i++) {
-                        wptbElementButtons[i].ondragstart = function (e) {
-                                    e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
-                        };
-            }
-
-            document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
-            document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
-            document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
-            document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
-            document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
-            document.getElementById('wptb-add-end-column').onclick = table.addColumnEnd;
-            document.getElementById('wptb-add-start-column').onclick = table.addColumnStart;
-            //document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
-            //document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
-            //document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
-            //document.getElementById('wptb-delete-row').onclick = table.deleteRow;
-            document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
-            document.getElementById('wptb-split-cell').onclick = table.splitCell;
-            document.getElementById('add-elements').onclick = function () {
-                        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
-                        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
-                        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-                        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-                        document.getElementById("element-options-group").style.display = 'none';
-            };
+    document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
+    document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
+    document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
+    document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
+    document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
+    document.getElementById('wptb-add-end-column').onclick = table.addColumnEnd;
+    document.getElementById('wptb-add-start-column').onclick = table.addColumnStart;
+    //document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
+    //document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+    //document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
+    //document.getElementById('wptb-delete-row').onclick = table.deleteRow;
+    document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
+    document.getElementById('wptb-split-cell').onclick = table.splitCell;
+    document.getElementById('add-elements').onclick = function () {
+        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
+        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+        document.getElementById("element-options-group").style.display = 'none';
+    };
 };
 var WPTB_List = function WPTB_List(innerElements) {
+
     var el_L = document.createElement('ul'),
         item,
         DOMElement = document.createElement('div');
@@ -799,6 +806,7 @@ var MultipleSelect = function MultipleSelect() {
 	return this;
 };
 var WPTB_Parser = function WPTB_Parser(code) {
+
 	var node,
 	    pos = 0;
 
@@ -1268,868 +1276,870 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var array = [],
     WPTB_Table = function WPTB_Table(columns, rows) {
 
-				var settings = document.getElementsByClassName('wptb-settings-items'),
-				    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
-				    table,
-				    row,
-				    cell,
-				    maxAmountOfCells,
-				    maxAmountOfRows;
+	var settings = document.getElementsByClassName('wptb-settings-items'),
+	    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
+	    table,
+	    row,
+	    cell,
+	    maxAmountOfCells,
+	    maxAmountOfRows;
 
-				var mark = function mark(event) {
-								var rs = this.rowSpan,
-								    cs = this.colSpan,
-								    markedCells,
+	var mark = function mark(event) {
+		var rs = this.rowSpan,
+		    cs = this.colSpan,
+		    markedCells,
 
-								//   noCells = document.getElementsByClassName('no-cell-action'),
-								//   singleCells = document.getElementsByClassName('single-action'),
-								//   multipleCells = document.getElementsByClassName('multiple-select-action'),
-								position = getCoords(this),
-								    row = position[0],
-								    column = position[1];
-								for (var i = 0; i < rs; i++) {
-												for (var j = 0; j < cs; j++) {
-																array[row + i][column + j] = 1;
-												}
-								}
-								this.classList.add('wptb-highlighted');
-								markedCells = document.getElementsByClassName('wptb-highlighted').length;
-								/*    if(markedCells === 1){
-              for (var i = 0; i < singleCells.length; i++) {
-                singleCells[i].classList.add('visible');
-                multipleCells[i].classList.remove('visible');
-                noCells[i].classList.remove('visible');
-              }
-            }
-            else{
-                singleCells[i].classList.remove('visible');
-                multipleCells[i].classList.add('visible');
-                noCells[i].classList.remove('visible');
-            }*/
-				};
+		//   noCells = document.getElementsByClassName('no-cell-action'),
+		//   singleCells = document.getElementsByClassName('single-action'),
+		//   multipleCells = document.getElementsByClassName('multiple-select-action'),
+		position = getCoords(this),
+		    row = position[0],
+		    column = position[1];
+		for (var i = 0; i < rs; i++) {
+			for (var j = 0; j < cs; j++) {
+				array[row + i][column + j] = 1;
+			}
+		}
+		this.classList.add('wptb-highlighted');
+		markedCells = document.getElementsByClassName('wptb-highlighted').length;
+		/*    if(markedCells === 1){
+  			for (var i = 0; i < singleCells.length; i++) {
+  				singleCells[i].classList.add('visible');
+  				multipleCells[i].classList.remove('visible');
+  				noCells[i].classList.remove('visible');
+  			}
+  		}
+  		else{
+  				singleCells[i].classList.remove('visible');
+  				multipleCells[i].classList.add('visible');
+  				noCells[i].classList.remove('visible');
+  		}*/
+	};
 
-				for (var i = 0; i < settings.length; i++) {
-								settings[i].classList.add('visible');
+	for (var i = 0; i < settings.length; i++) {
+		settings[i].classList.add('visible');
+	}
+
+	document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+
+	//Create a HTML Table element.
+	table = document.createElement('table');
+	table.classList.add('wptb-preview-table');
+
+	//Add the header row.
+	row = table.insertRow(-1);
+	row.classList.add('wptb-table-head', 'wptb-row');
+
+	for (var i = 0; i < columns; i++) {
+		console.log(mark);
+		cell = new WPTB_Cell(mark);
+		cell.setCoords(0, i);
+		row.appendChild(cell.getDOMElement());
+	}
+
+	//Add the data rows.
+	for (var i = 1; i < rows; i++) {
+
+		row = table.insertRow(-1);
+		row.classList.add('wptb-row');
+
+		for (var j = 0; j < columns; j++) {
+			cell = new WPTB_Cell(mark);
+			cell.setCoords(i, j);
+			row.appendChild(cell.getDOMElement());
+		}
+	}
+
+	var realTimeArray = function realTimeArray() {
+		var carried = [],
+		    tds,
+		    cols,
+		    matriz = [];
+
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			carried[i] = 0;
+		}
+
+		for (var i = 0; i < table.rows.length; i++) {
+			cols = [];
+
+			var tds = table.rows[i].getElementsByTagName('td');
+
+			for (items = 0; items < tds.length; items++) {
+
+				for (var k = 0; k < tds[items].colSpan; k++) {
+					cols.push(1);
 				}
 
-				document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+				if (tds[items].rowSpan > 1) {
+					for (var k = 0; k < tds[items].colSpan; k++) {
+						carried[items + k] = {
+							justAssigned: true,
+							amount: tds[items].rowSpan
+						};
+					}
+				}
+			}
 
-				//Create a HTML Table element.
-				table = document.createElement('table');
-				table.classList.add('wptb-preview-table');
+			for (var k = 0; k < maxAmountOfCells; k++) {
+				if (_typeof(carried[k]) == 'object' && carried[k].amount > 0) {
 
-				//Add the header row.
-				row = table.insertRow(-1);
-				row.classList.add('wptb-table-head', 'wptb-row');
+					carried[k].amount--;
 
-				for (var i = 0; i < columns; i++) {
-								console.log(mark);
-								cell = new WPTB_Cell(mark);
-								cell.setCoords(0, i);
-								row.appendChild(cell.getDOMElement());
+					if (carried[k].justAssigned) {
+						carried[k].justAssigned = false;
+					} else {
+						cols.push(1);
+					}
+				}
+			}
+
+			matriz.push(cols);
+		}
+		return matriz;
+	};
+
+	var carriedRowspans = function carriedRowspans(row) {
+		var carried = [],
+		    tds,
+		    cols;
+
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			carried[i] = 0;
+		}
+
+		for (var i = 0; i <= row; i++) {
+			//console.log('Fila '+(i+1));
+			tds = table.rows[i].getElementsByTagName('td');
+			cols = 0, items = 0;
+
+			for (colspansAcumulados = 0; colspansAcumulados < maxAmountOfCells && items < tds.length;) {
+				if (carried[colspansAcumulados]) {
+					//console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
+					carried[colspansAcumulados]--;
+					colspansAcumulados++;
+					continue;
+				}
+				cell = tds[items++];
+				if (cell.rowSpan > 1) {
+					for (var k = 0; k < cell.colSpan; k++) {
+						carried[colspansAcumulados + k] = cell.rowSpan;
+					}
+				}
+				if (carried[colspansAcumulados]) carried[colspansAcumulados]--;
+				//console.log('Celda del colspan numero'+colspansAcumulados);
+				colspansAcumulados += cell.colSpan;
+			}
+		}
+		console.log(carried);
+		return carried;
+	};
+
+	table.toggleTableEditMode = function () {
+		var bar = document.getElementById('edit-bar');
+		console.log('Bar', bar);
+		if (bar.classList.contains('visible')) {
+			document.select.deactivateMultipleSelectMode();
+			bar.classList.remove('visible');
+		} else {
+			document.select.activateMultipleSelectMode();
+			bar.classList.add('visible');
+		}
+	};
+
+	table.recalculateIndexes = function () {
+		var trs = this.getElementsByTagName('tr'),
+		    tds,
+		    maxCols = 0;
+
+		for (var i = 0; i < trs.length; i++) {
+			tds = trs[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+
+				if (i == 0) {
+					tds[j].parentNode.className = '';
+					tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
+				} else {
+					tds[j].parentNode.className = '';
+					tds[j].parentNode.classList.add('wptb-row');
 				}
 
-				//Add the data rows.
-				for (var i = 1; i < rows; i++) {
+				tds[j].dataset.xIndex = j;
+				tds[j].dataset.yIndex = i;
+			}
+			if (j > maxCols) {
+				maxCols = j;
+			}
+		}
+		this.columns = maxCols;
+		console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
+	};
 
-								row = table.insertRow(-1);
-								row.classList.add('wptb-row');
+	table.addColumnEnd = function () {
 
-								for (var j = 0; j < columns; j++) {
-												cell = new WPTB_Cell(mark);
-												cell.setCoords(i, j);
-												row.appendChild(cell.getDOMElement());
-								}
+		console.log('add to the end');
+		for (var i = 0; i < table.rows.length; i++) {
+			td = new WPTB_Cell(mark);
+			table.rows[i].appendChild(td.getDOMElement());
+			array[i].push(0);
+		}
+		maxAmountOfCells++;
+		undoSelect();
+	};
+
+	table.addColumnStart = function () {
+		console.log('add to the start');
+		for (var i = 0; i < table.rows.length; i++) {
+			td = new WPTB_Cell(mark);
+			firstCell = table.rows[i].getElementsByTagName('td')[0];
+			if (firstCell) {
+				table.rows[i].insertBefore(td.getDOMElement(), firstCell);
+			} else {
+				table.rows[i].appendChild(td.getDOMElement());
+			}
+			array[i].push(0);
+		}
+
+		maxAmountOfCells++;
+		undoSelect();
+	};
+
+	table.addColumnBefore = function () {};
+
+	table.addColumnAfter = function () {};
+
+	table.addRow = function (pos) {
+		var _this,
+		    row,
+		    referenceRow = undefined;
+
+		if (pos == 'end' || pos == 'start') {
+			row = this.insertRow(pos == 'end' ? -1 : 0);
+		} else {
+			row = document.createElement('tr');
+		}
+
+		for (var j = 0; j < this.columns; j++) {
+			var cell = new WPTB_Cell(mark);
+			row.appendChild(cell.getDOMElement());
+		}
+
+		row.classList.add('wptb-row');
+
+		if (pos == 'before' || pos == 'after') {
+			_this = this.getElementsByClassName('wptb-highlighted')[0];
+			referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
+			if (pos == "before") {
+				this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
+				var buttons = document.getElementsByClassName('wptb-relative-action');
+				for (var i = 0; i < buttons.length; i++) {
+					buttons[i].dataset.yIndex++;
+				}
+			} else {
+				this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
+			}
+		}
+
+		if (pos == 'before' || pos == 'start') {
+			var active = document.querySelector('wptb-highlighted');
+			if (active) {
+				active.onclick();
+			}
+		}
+
+		table.recalculateIndexes();
+	};
+
+	table.addRowToTheEnd = function (evt) {
+		var r = table.insertRow(-1),
+		    td,
+		    aux;
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			td = new WPTB_Cell(mark);
+			r.appendChild(td.getDOMElement());
+		}
+		aux = Array.from(array[0]);
+		array.push(aux);
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
+
+	table.addRowToTheStart = function (evt) {
+		var r = table.insertRow(0);
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			td = new WPTB_Cell(mark);
+			r.appendChild(td.getDOMElement());
+		}
+		aux = Array.from(array[0]);
+		array.push(aux);
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
+
+	table.addRowBefore = function () {
+		var cell = document.querySelector('.wptb-highlighted'),
+		    row = getCoords(cell)[0],
+		    r = table.insertRow(row),
+		    aux,
+		    rowspans = carriedRowspans(row - 1);
+
+		noPending = rowspans.filter(function (elem) {
+			return elem == 0;
+		});
+
+		for (var i = 0; i < noPending.length; i++) {
+			var td = new WPTB_Cell(mark);
+			r.appendChild(td.getDOMElement());
+		}
+
+		arr = realTimeArray();
+
+		for (var i = 0; i < arr.length; i++) {
+			console.log('Loop iteration');
+
+			if (arr[i].length > maxAmountOfCells) {
+				//Still not watched
+			}
+
+			if (arr[i].length < maxAmountOfCells) {
+
+				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
+					td = new WPTB_Cell(mark);
+					table.rows[i].appendChild(td.getDOMElement());
+				}
+			}
+		}
+
+		aux = Array.from(array[0]);
+		array.push(aux);
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
+
+	table.addRowAfter = function () {
+
+		var cell = document.querySelector('.wptb-highlighted'),
+		    row = getCoords(cell)[0],
+		    r = table.insertRow(row + 1),
+		    aux,
+		    rowspans = carriedRowspans(row);
+
+		noPending = rowspans.filter(function (elem) {
+			return elem == 0;
+		});
+
+		for (var i = 0; i < noPending.length; i++) {
+			td = new WPTB_Cell(mark);
+			r.appendChild(td.getDOMElement());
+		}
+
+		arr = realTimeArray();
+
+		console.log('Arr', arr);
+
+		for (var i = 0; i < arr.length; i++) {
+			console.log('Loop iteration');
+
+			if (arr[i].length > maxAmountOfCells) {
+				//Still not watched
+			}
+
+			if (arr[i].length < maxAmountOfCells) {
+
+				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
+					td = new WPTB_Cell(mark);
+					table.rows[i].appendChild(td);
+				}
+			}
+		}
+
+		aux = Array.from(array[0]);
+		array.push(aux);
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
+
+	var isSquare = function isSquare(a) {
+		var rowStart = -1,
+		    columnStart = -1,
+		    rowEnd = -1,
+		    columnEnd = -1,
+		    height,
+		    width,
+		    itemsEstimate = 0,
+		    items = 0;
+
+		for (var i = 0; i < a.length; i++) {
+			for (var j = 0; j < a[i].length; j++) {
+				if (a[i][j] == 1) {
+					rowStart = i;
+					columnStart = j;
+					break;
+				}
+			}
+			if (rowStart !== -1 && columnStart !== -1) {
+				break;
+			}
+		}
+
+		for (var i = a.length - 1; i > -1; i--) {
+			for (var j = a[i].length - 1; j > -1; j--) {
+				if (a[i][j] == 1) {
+					rowEnd = i;
+					columnEnd = j;
+					break;
+				}
+			}
+			if (rowEnd !== -1 && columnEnd !== -1) {
+				break;
+			}
+		}
+
+		for (var i = rowStart; i < rowEnd; i++) {
+			for (var j = columnStart; j < columnEnd; j++) {
+				if (a[i][j] == 0 || a[i][j] == undefined) {
+					return false;
+				}
+			}
+		}
+
+		for (var i = 0; i < a.length; i++) {
+			for (var j = 0; j < a[i].length; j++) {
+				if (a[i][j] == 1) {
+					items++;
+				}
+			}
+		}
+
+		height = rowEnd - rowStart + 1;
+		width = columnEnd - columnStart + 1;
+		itemsEstimate = height * width;
+
+		if (itemsEstimate !== items) {
+			return false;
+		}
+		return [height, width];
+	};
+
+	var drawTable = function drawTable(a) {
+		var string = 'DRAWING TABLE:\n';
+		for (var i = 0; i < a.length; i++) {
+
+			for (var j = 0; j < a[i].length; j++) {
+				string += ' ' + a[i][j];
+			}
+			string += '\n';
+		}
+		console.log(string);
+		isSquare(a);
+	};
+
+	var undoSelect = function undoSelect() {
+		var tds = table.getElementsByClassName('marked');
+		while (tds.length) {
+			tds[0].classList.remove('marked');
+		}
+		for (var i = 0; i < array.length; i++) {
+
+			for (var j = 0; j < array[i].length; j++) {
+				array[i][j] = 0;
+			}
+		}
+	};
+
+	var fillTableArray = function fillTableArray() {
+		var colspansSums = [],
+		    a = [];
+
+		//calculate max amount of cells inside a row
+		for (var i = 0; i < table.rows.length; i++) {
+			var cells = table.rows[i].getElementsByTagName('td'),
+			    colspanSumInRow = 0;
+			for (var j = 0; j < cells.length; j++) {
+				colspanSumInRow += cells[j].colSpan;
+			}
+			colspansSums.push(colspanSumInRow);
+		}
+
+		console.log(colspanSumInRow);
+
+		maxAmountOfCells = Math.max.apply(null, colspansSums);
+		//calculate max rows
+		var maxAmountOfRows = table.rows.length; /* I'm feeling like I'm gonna go crazy if I don't assume 
+                                                     the table starts having a fixed amount of rows,
+                                                     therefore no matter if I vertically fuse all cells from the
+                                                     first row to the last row, the TR nodes won't dissapear
+                                                     (tough they will run empty after the merging function deletes
+                                                     all of its tds for increasing the first row tds rowspan),
+                                                     so its length remains as a confident max rows amount.
+                                                     */
+		// fill with zeros from both values
+		for (var i = 0; i < maxAmountOfRows; i++) {
+			a[i] = [];
+			for (var j = 0; j < maxAmountOfCells; j++) {
+				a[i].push(0);
+			}
+		}
+		drawTable(a);
+		return a;
+	};
+
+	var getCoords = function getCoords(search) {
+		var skipInCols = [],
+		    cell;
+
+		for (var i = 0; i < table.rows.length; i++) {
+
+			var tds = [].slice.call(table.rows[i].getElementsByTagName('td'));
+
+			for (var j = 0; j < maxAmountOfCells;) {
+
+				if (skipInCols[j] !== undefined && skipInCols[j] > 0) {
+					j++;
+					skipInCols[j]--;
+					continue;
 				}
 
-				var realTimeArray = function realTimeArray() {
-								var carried = [],
-								    tds,
-								    cols,
-								    matriz = [];
-
-								for (var i = 0; i < maxAmountOfCells; i++) {
-												carried[i] = 0;
-								}
-
-								for (var i = 0; i < table.rows.length; i++) {
-												cols = [];
-
-												var tds = table.rows[i].getElementsByTagName('td');
-
-												for (items = 0; items < tds.length; items++) {
-
-																for (var k = 0; k < tds[items].colSpan; k++) {
-																				cols.push(1);
-																}
-
-																if (tds[items].rowSpan > 1) {
-																				for (var k = 0; k < tds[items].colSpan; k++) {
-																								carried[items + k] = {
-																												justAssigned: true,
-																												amount: tds[items].rowSpan
-																								};
-																				}
-																}
-												}
-
-												for (var k = 0; k < maxAmountOfCells; k++) {
-																if (_typeof(carried[k]) == 'object' && carried[k].amount > 0) {
-
-																				carried[k].amount--;
-
-																				if (carried[k].justAssigned) {
-																								carried[k].justAssigned = false;
-																				} else {
-																								cols.push(1);
-																				}
-																}
-												}
-
-												matriz.push(cols);
-								}
-								return matriz;
-				};
-
-				var carriedRowspans = function carriedRowspans(row) {
-								var carried = [],
-								    tds,
-								    cols;
-
-								for (var i = 0; i < maxAmountOfCells; i++) {
-												carried[i] = 0;
-								}
-
-								for (var i = 0; i <= row; i++) {
-												//console.log('Fila '+(i+1));
-												tds = table.rows[i].getElementsByTagName('td');
-												cols = 0, items = 0;
-
-												for (colspansAcumulados = 0; colspansAcumulados < maxAmountOfCells && items < tds.length;) {
-																if (carried[colspansAcumulados]) {
-																				//console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
-																				carried[colspansAcumulados]--;
-																				colspansAcumulados++;
-																				continue;
-																}
-																cell = tds[items++];
-																if (cell.rowSpan > 1) {
-																				for (var k = 0; k < cell.colSpan; k++) {
-																								carried[colspansAcumulados + k] = cell.rowSpan;
-																				}
-																}
-																if (carried[colspansAcumulados]) carried[colspansAcumulados]--;
-																//console.log('Celda del colspan numero'+colspansAcumulados);
-																colspansAcumulados += cell.colSpan;
-												}
-								}
-								console.log(carried);
-								return carried;
-				};
-
-				table.toggleTableEditMode = function () {
-								var bar = document.getElementById('edit-bar');
-								console.log('Bar', bar);
-								if (bar.classList.contains('visible')) {
-												document.select.deactivateMultipleSelectMode();
-												bar.classList.remove('visible');
-								} else {
-												document.select.activateMultipleSelectMode();
-												bar.classList.add('visible');
-								}
-				};
-
-				table.recalculateIndexes = function () {
-								var trs = this.getElementsByTagName('tr'),
-								    tds,
-								    maxCols = 0;
-
-								for (var i = 0; i < trs.length; i++) {
-												tds = trs[i].getElementsByTagName('td');
-												for (var j = 0; j < tds.length; j++) {
-
-																if (i == 0) {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
-																} else {
-																				tds[j].parentNode.className = '';
-																				tds[j].parentNode.classList.add('wptb-row');
-																}
-
-																tds[j].dataset.xIndex = j;
-																tds[j].dataset.yIndex = i;
-												}
-												if (j > maxCols) {
-																maxCols = j;
-												}
-								}
-								this.columns = maxCols;
-								console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
-				};
-
-				table.addColumnEnd = function () {
-
-								console.log('add to the end');
-								for (var i = 0; i < table.rows.length; i++) {
-												td = new WPTB_Cell(mark);
-												table.rows[i].appendChild(td.getDOMElement());
-												array[i].push(0);
-								}
-								maxAmountOfCells++;
-								undoSelect();
-				};
-
-				table.addColumnStart = function () {
-								console.log('add to the start');
-								for (var i = 0; i < table.rows.length; i++) {
-												td = new WPTB_Cell(mark);
-												firstCell = table.rows[i].getElementsByTagName('td')[0];
-												if (firstCell) {
-																table.rows[i].insertBefore(td.getDOMElement(), firstCell);
-												} else {
-																table.rows[i].appendChild(td.getDOMElement());
-												}
-												array[i].push(0);
-								}
-
-								maxAmountOfCells++;
-								undoSelect();
-				};
-
-				table.addColumnBefore = function () {};
-
-				table.addColumnAfter = function () {};
-
-				table.addRow = function (pos) {
-								var _this,
-								    row,
-								    referenceRow = undefined;
-
-								if (pos == 'end' || pos == 'start') {
-												row = this.insertRow(pos == 'end' ? -1 : 0);
-								} else {
-												row = document.createElement('tr');
-								}
-
-								for (var j = 0; j < this.columns; j++) {
-												var cell = new WPTB_Cell(mark);
-												row.appendChild(cell.getDOMElement());
-								}
-
-								row.classList.add('wptb-row');
-
-								if (pos == 'before' || pos == 'after') {
-												_this = this.getElementsByClassName('wptb-highlighted')[0];
-												referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
-												if (pos == "before") {
-																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
-																var buttons = document.getElementsByClassName('wptb-relative-action');
-																for (var i = 0; i < buttons.length; i++) {
-																				buttons[i].dataset.yIndex++;
-																}
-												} else {
-																this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
-												}
-								}
-
-								if (pos == 'before' || pos == 'start') {
-												var active = document.querySelector('wptb-highlighted');
-												if (active) {
-																active.onclick();
-												}
-								}
-
-								table.recalculateIndexes();
-				};
-
-				table.addRowToTheEnd = function (evt) {
-								var r = table.insertRow(-1),
-								    td,
-								    aux;
-								for (var i = 0; i < maxAmountOfCells; i++) {
-												td = new WPTB_Cell(mark);
-												r.appendChild(td.getDOMElement());
-								}
-								aux = Array.from(array[0]);
-								array.push(aux);
-								drawTable(array);
-								table.recalculateIndexes();
-								undoSelect();
-				};
-
-				table.addRowToTheStart = function (evt) {
-								var r = table.insertRow(0);
-								for (var i = 0; i < maxAmountOfCells; i++) {
-												td = new WPTB_Cell(mark);
-												r.appendChild(td.getDOMElement());
-								}
-								aux = Array.from(array[0]);
-								array.push(aux);
-								drawTable(array);
-								table.recalculateIndexes();
-								undoSelect();
-				};
-
-				table.addRowBefore = function () {
-								var cell = document.querySelector('.wptb-highlighted'),
-								    row = getCoords(cell)[0],
-								    r = table.insertRow(row),
-								    aux,
-								    rowspans = carriedRowspans(row - 1);
-
-								noPending = rowspans.filter(function (elem) {
-												return elem == 0;
-								});
-
-								for (var i = 0; i < noPending.length; i++) {
-												var td = new WPTB_Cell(mark);
-												r.appendChild(td.getDOMElement());
-								}
-
-								arr = realTimeArray();
-
-								for (var i = 0; i < arr.length; i++) {
-												console.log('Loop iteration');
-
-												if (arr[i].length > maxAmountOfCells) {
-																//Still not watched
-												}
-
-												if (arr[i].length < maxAmountOfCells) {
-
-																for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-																				td = new WPTB_Cell(mark);
-																				table.rows[i].appendChild(td.getDOMElement());
-																}
-												}
-								}
-
-								aux = Array.from(array[0]);
-								array.push(aux);
-								drawTable(array);
-								table.recalculateIndexes();
-								undoSelect();
-				};
-
-				table.addRowAfter = function () {
-
-								var cell = document.querySelector('.wptb-highlighted'),
-								    row = getCoords(cell)[0],
-								    r = table.insertRow(row + 1),
-								    aux,
-								    rowspans = carriedRowspans(row);
-
-								noPending = rowspans.filter(function (elem) {
-												return elem == 0;
-								});
-
-								for (var i = 0; i < noPending.length; i++) {
-												td = new WPTB_Cell(mark);
-												r.appendChild(td.getDOMElement());
-								}
-
-								arr = realTimeArray();
-
-								console.log('Arr', arr);
-
-								for (var i = 0; i < arr.length; i++) {
-												console.log('Loop iteration');
-
-												if (arr[i].length > maxAmountOfCells) {
-																//Still not watched
-												}
-
-												if (arr[i].length < maxAmountOfCells) {
-
-																for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-																				td = new WPTB_Cell(mark);
-																				table.rows[i].appendChild(td);
-																}
-												}
-								}
-
-								aux = Array.from(array[0]);
-								array.push(aux);
-								drawTable(array);
-								table.recalculateIndexes();
-								undoSelect();
-				};
-
-				var isSquare = function isSquare(a) {
-								var rowStart = -1,
-								    columnStart = -1,
-								    rowEnd = -1,
-								    columnEnd = -1,
-								    height,
-								    width,
-								    itemsEstimate = 0,
-								    items = 0;
-
-								for (var i = 0; i < a.length; i++) {
-												for (var j = 0; j < a[i].length; j++) {
-																if (a[i][j] == 1) {
-																				rowStart = i;
-																				columnStart = j;
-																				break;
-																}
-												}
-												if (rowStart !== -1 && columnStart !== -1) {
-																break;
-												}
-								}
-
-								for (var i = a.length - 1; i > -1; i--) {
-												for (var j = a[i].length - 1; j > -1; j--) {
-																if (a[i][j] == 1) {
-																				rowEnd = i;
-																				columnEnd = j;
-																				break;
-																}
-												}
-												if (rowEnd !== -1 && columnEnd !== -1) {
-																break;
-												}
-								}
-
-								for (var i = rowStart; i < rowEnd; i++) {
-												for (var j = columnStart; j < columnEnd; j++) {
-																if (a[i][j] == 0 || a[i][j] == undefined) {
-																				return false;
-																}
-												}
-								}
-
-								for (var i = 0; i < a.length; i++) {
-												for (var j = 0; j < a[i].length; j++) {
-																if (a[i][j] == 1) {
-																				items++;
-																}
-												}
-								}
-
-								height = rowEnd - rowStart + 1;
-								width = columnEnd - columnStart + 1;
-								itemsEstimate = height * width;
-
-								if (itemsEstimate !== items) {
-												return false;
-								}
-								return [height, width];
-				};
-
-				var drawTable = function drawTable(a) {
-								var string = 'DRAWING TABLE:\n';
-								for (var i = 0; i < a.length; i++) {
-
-												for (var j = 0; j < a[i].length; j++) {
-																string += ' ' + a[i][j];
-												}
-												string += '\n';
-								}
-								console.log(string);
-								isSquare(a);
-				};
-
-				var undoSelect = function undoSelect() {
-								var tds = table.getElementsByClassName('marked');
-								while (tds.length) {
-												tds[0].classList.remove('marked');
-								}
-								for (var i = 0; i < array.length; i++) {
-
-												for (var j = 0; j < array[i].length; j++) {
-																array[i][j] = 0;
-												}
-								}
-				};
-
-				var fillTableArray = function fillTableArray() {
-								var colspansSums = [],
-								    a = [];
-
-								//calculate max amount of cells inside a row
-								for (var i = 0; i < table.rows.length; i++) {
-												var cells = table.rows[i].getElementsByTagName('td'),
-												    colspanSumInRow = 0;
-												for (var j = 0; j < cells.length; j++) {
-																colspanSumInRow += cells[j].colSpan;
-												}
-												colspansSums.push(colspanSumInRow);
-								}
-
-								console.log(colspanSumInRow);
-
-								maxAmountOfCells = Math.max.apply(null, colspansSums);
-								//calculate max rows
-								var maxAmountOfRows = table.rows.length; /* I'm feeling like I'm gonna go crazy if I don't assume 
-                                                  the table starts having a fixed amount of rows,
-                                                  therefore no matter if I vertically fuse all cells from the
-                                                  first row to the last row, the TR nodes won't dissapear
-                                                  (tough they will run empty after the merging function deletes
-                                                  all of its tds for increasing the first row tds rowspan),
-                                                  so its length remains as a confident max rows amount.
-                                                  */
-								// fill with zeros from both values
-								for (var i = 0; i < maxAmountOfRows; i++) {
-												a[i] = [];
-												for (var j = 0; j < maxAmountOfCells; j++) {
-																a[i].push(0);
-												}
-								}
-								drawTable(a);
-								return a;
-				};
-
-				var getCoords = function getCoords(search) {
-								var skipInCols = [],
-								    cell;
-
-								for (var i = 0; i < table.rows.length; i++) {
-
-												var tds = [].slice.call(table.rows[i].getElementsByTagName('td'));
-
-												for (var j = 0; j < maxAmountOfCells;) {
-
-																if (skipInCols[j] !== undefined && skipInCols[j] > 0) {
-																				j++;
-																				skipInCols[j]--;
-																				continue;
-																}
-
-																cell = tds.shift();
-
-																if (cell.rowSpan > 1) {
-																				for (k = 0; k < cell.colSpan; k++) {
-																								skipInCols[j + k] = cell.rowSpan - 1;
-																				}
-																}
-
-																if (cell == search) {
-																				return [i, j];
-																}
-
-																j += cell.colSpan;
-												}
-								}
-				};
-
-				table.deleteRow = function (e) {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    index = cell.dataset.yIndex,
-								    table = document.getElementsByClassName('wptb-preview-table')[0],
-								    row = table.getElementsByTagName('tr')[index],
-								    rowCount = table.rows.length,
-								    tbody = row.parentNode;
-								if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
-												return;
-								}
-								tbody.removeChild(row);
-								this.recalculateIndexes();
-				};
-
-				table.deleteColumn = function (e) {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    num = cell.dataset.xIndex,
-								    table = document.getElementsByClassName('wptb-preview-table')[0],
-								    rowCount = table.rows.length;
-
-								if (rowCount == 1 && columnCount == 1) {
-												return;
-								}
-								for (var i = 0; i < rowCount; i++) {
-												var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
-												    tr = td.parentNode;
-												tr.removeChild(td);
-								}
-								this.recalculateIndexes();
-				};
-
-				table.mergeCells = function () {
-								console.log('Meging');
-								var dimensions = isSquare(array),
-								    rowspan = dimensions[0],
-								    colspan = dimensions[1],
-								    first = document.querySelector('.wptb-highlighted'),
-								    tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
-
-								console.log('Dimensions:', dimensions);
-								console.log('First:', first);
-								console.log('Cells without the first one:', tds);
-
-								for (var i = 0; i < tds.length; i++) {
-												var p = tds[i].parentNode;
-												p.removeChild(tds[i]);
-								}
-
-								first.colSpan = colspan;
-								first.rowSpan = rowspan;
-								undoSelect();
-				};
-
-				table.splitCell = function () {
-								var cell = document.getElementsByClassName('wptb-highlighted')[0],
-								    rowspan = cell.rowSpan,
-								    colspan = cell.colSpan;
-								cell.rowSpan = 1;
-								cell.colSpan = 1;
-								console.log('Cell', cell.rowSpan, cell.rowspan);
-								for (var i = 0; i < rowspan; i++) {
-												console.log('Let"s split it!', cell);
-												if (i == 0) {
-																console.log('Iteration 1');
-																refCell = cell;
-												} else {
-																console.log('Conter');
-																for (var k = 0, pt = 0; k < colspan; k += refCell.colSpan, pt++) {
-																				console.log('Increasing Conter');
-																				refCell = table.rows[i].getElementsByTagName('td')[pt];
-																				if (!refCell) {
-																								break;
-																				}
-																}
-												}
-												console.log(refCell);
-
-												var p = refCell ? refCell.parentNode : table.rows[i];
-												for (var j = 0; j < colspan; j++) {
-																if (!i && !j) {
-																				continue;
-																}
-																newCell = document.createElement('td');
-																newCell.onclick = mark;
-																if (refCell && refCell.nextSibling) {
-																				p.insertBefore(newCell, refCell.nextSibling);
-																} else {
-																				p.appendChild(newCell);
-																}
-																refCell = newCell;
-												}
-								}
-								undoSelect();
-				};
-
-				array = fillTableArray();
-
-				wptbTableSetup.appendChild(table);
-
-				table.recalculateIndexes();
-
-				WPTB_LeftPanel();
+				cell = tds.shift();
+
+				if (cell.rowSpan > 1) {
+					for (k = 0; k < cell.colSpan; k++) {
+						skipInCols[j + k] = cell.rowSpan - 1;
+					}
+				}
+
+				if (cell == search) {
+					return [i, j];
+				}
+
+				j += cell.colSpan;
+			}
+		}
+	};
+
+	table.deleteRow = function (e) {
+		var cell = document.getElementsByClassName('wptb-highlighted')[0],
+		    index = cell.dataset.yIndex,
+		    table = document.getElementsByClassName('wptb-preview-table')[0],
+		    row = table.getElementsByTagName('tr')[index],
+		    rowCount = table.rows.length,
+		    tbody = row.parentNode;
+		if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
+			return;
+		}
+		tbody.removeChild(row);
+		this.recalculateIndexes();
+	};
+
+	table.deleteColumn = function (e) {
+		var cell = document.getElementsByClassName('wptb-highlighted')[0],
+		    num = cell.dataset.xIndex,
+		    table = document.getElementsByClassName('wptb-preview-table')[0],
+		    rowCount = table.rows.length;
+
+		if (rowCount == 1 && columnCount == 1) {
+			return;
+		}
+		for (var i = 0; i < rowCount; i++) {
+			var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
+			    tr = td.parentNode;
+			tr.removeChild(td);
+		}
+		this.recalculateIndexes();
+	};
+
+	table.mergeCells = function () {
+		console.log('Meging');
+		var dimensions = isSquare(array),
+		    rowspan = dimensions[0],
+		    colspan = dimensions[1],
+		    first = document.querySelector('.wptb-highlighted'),
+		    tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
+
+		console.log('Dimensions:', dimensions);
+		console.log('First:', first);
+		console.log('Cells without the first one:', tds);
+
+		for (var i = 0; i < tds.length; i++) {
+			var p = tds[i].parentNode;
+			p.removeChild(tds[i]);
+		}
+
+		first.colSpan = colspan;
+		first.rowSpan = rowspan;
+		undoSelect();
+	};
+
+	table.splitCell = function () {
+		var cell = document.getElementsByClassName('wptb-highlighted')[0],
+		    rowspan = cell.rowSpan,
+		    colspan = cell.colSpan;
+		cell.rowSpan = 1;
+		cell.colSpan = 1;
+		console.log('Cell', cell.rowSpan, cell.rowspan);
+		for (var i = 0; i < rowspan; i++) {
+			console.log('Let"s split it!', cell);
+			if (i == 0) {
+				console.log('Iteration 1');
+				refCell = cell;
+			} else {
+				console.log('Conter');
+				for (var k = 0, pt = 0; k < colspan; k += refCell.colSpan, pt++) {
+					console.log('Increasing Conter');
+					refCell = table.rows[i].getElementsByTagName('td')[pt];
+					if (!refCell) {
+						break;
+					}
+				}
+			}
+			console.log(refCell);
+
+			var p = refCell ? refCell.parentNode : table.rows[i];
+			for (var j = 0; j < colspan; j++) {
+				if (!i && !j) {
+					continue;
+				}
+				newCell = document.createElement('td');
+				newCell.onclick = mark;
+				if (refCell && refCell.nextSibling) {
+					p.insertBefore(newCell, refCell.nextSibling);
+				} else {
+					p.appendChild(newCell);
+				}
+				refCell = newCell;
+			}
+		}
+		undoSelect();
+	};
+
+	array = fillTableArray();
+
+	wptbTableSetup.appendChild(table);
+
+	table.recalculateIndexes();
+
+	WPTB_LeftPanel();
 };
 var WPTB_Text = function WPTB_Text(text) {
-        var DOMElement = document.createElement('div'),
-            elText2 = document.createElement('div'),
-            elP = document.createElement('p');
 
-        this.kind = 'text';
+	var DOMElement = document.createElement('div'),
+	    elText2 = document.createElement('div'),
+	    elP = document.createElement('p');
 
-        elText2.classList.add('editable');
-        elP.innerHTML = text != undefined ? text : 'Text';
-        elText2.appendChild(elP);
-        DOMElement.appendChild(elText2);
+	this.kind = 'text';
 
-        this.getDOMElement = function () {
-                return DOMElement;
-        };
-        applyGenericItemSettings(this);
+	elText2.classList.add('editable');
+	elP.innerHTML = text != undefined ? text : 'Text';
+	elText2.appendChild(elP);
+	DOMElement.appendChild(elText2);
 
-        return this;
+	this.getDOMElement = function () {
+		return DOMElement;
+	};
+	applyGenericItemSettings(this);
+
+	return this;
 };
 var applyGenericItemSettings = function applyGenericItemSettings(element) {
-							var node = element.getDOMElement(),
-							    index = document.counter.nextIndex(element.kind),
-							    listItems;
 
-							node.onmouseenter = function (event) {
-														this.classList.add('wptb-directlyhovered');
-														var btnDelete = document.createElement('span'),
-														    btnCopy = document.createElement('span'),
-														    btnMove = document.createElement('span'),
-														    actions = document.createElement('span'),
-														    previous,
-														    i;
-														actions.classList.add('wptb-actions');
-														btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-														btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-														btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
-														btnMove.draggable = true;
-														btnDelete.onclick = function (event) {
-																					var act = this.parentNode.parentNode,
-																					    el = act.parentNode;
-																					el.removeChild(act);
-														};
-														btnCopy.onclick = function (event) {
-																					if (element.kind == 'list') {
+	var node = element.getDOMElement(),
+	    index = document.counter.nextIndex(element.kind),
+	    listItems;
 
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    temp = [],
-																												    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+	node.onmouseenter = function (event) {
+		this.classList.add('wptb-directlyhovered');
+		var btnDelete = document.createElement('span'),
+		    btnCopy = document.createElement('span'),
+		    btnMove = document.createElement('span'),
+		    actions = document.createElement('span'),
+		    previous,
+		    i;
+		actions.classList.add('wptb-actions');
+		btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+		btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+		btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
+		btnMove.draggable = true;
+		btnDelete.onclick = function (event) {
+			var act = this.parentNode.parentNode,
+			    el = act.parentNode;
+			el.removeChild(act);
+		};
+		btnCopy.onclick = function (event) {
+			if (element.kind == 'list') {
 
-																												for (var i = 0; i < srcList.length; i++) {
-																																			temp.push(srcList[i].innerHTML);
-																												}
-																												var copy = new WPTB_List(temp);
-																												td.appendChild(copy.getDOMElement());
-																					} else if (element.kind == 'text') {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-																												td.appendChild(copy.getDOMElement());
-																					} else if (element.kind == 'image') {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
-																												td.appendChild(copy.getDOMElement());
-																					} else {
-																												var td = event.target.parentNode.parentNode.parentNode,
-																												    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-																												td.appendChild(copy.getDOMElement());
-																					}
-														};
-														btnMove.ondragstart = function (event) {
-																					var parent = this,
-																					    infArr,
-																					    type;
+				var td = event.target.parentNode.parentNode.parentNode,
+				    temp = [],
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
 
-																					while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
-																												parent = parent.parentNode;
-																					}
+				for (var i = 0; i < srcList.length; i++) {
+					temp.push(srcList[i].innerHTML);
+				}
+				var copy = new WPTB_List(temp);
+				td.appendChild(copy.getDOMElement());
+			} else if (element.kind == 'text') {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+				td.appendChild(copy.getDOMElement());
+			} else if (element.kind == 'image') {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
+				td.appendChild(copy.getDOMElement());
+			} else {
+				var td = event.target.parentNode.parentNode.parentNode,
+				    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
+				td.appendChild(copy.getDOMElement());
+			}
+		};
+		btnMove.ondragstart = function (event) {
+			var parent = this,
+			    infArr,
+			    type;
 
-																					infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-																					type = infArr[1];
+			while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
+				parent = parent.parentNode;
+			}
 
-																					var img = document.createElement("img");
-																					img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-																					console.log(img.src);
-																					event.dataTransfer.setDragImage(img, 0, 0);
-																					event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
-														};
+			infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
+			type = infArr[1];
 
-														if (element.kind === 'button') {
-																					tinyMCE.init({
-																												target: node.childNodes[0].childNodes[0],
-																												inline: true,
-																												plugins: "link",
-																												dialog_type: "modal",
-																												theme: 'modern',
-																												menubar: false,
-																												fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																												toolbar: 'bold italic strikethrough',
-																												setup: function setup(ed) {
-																																			ed.on("init", function (ed) {
-																																										tinyMCE.execCommand('mceRepaint');
-																																			});
-																												},
-																												init_instance_callback: function init_instance_callback(editor) {
-																																			editor.on('change', function (e) {
-																																										// check if it becomes empty because if there's no value it's hard to edit the editor in button element
-																																										if (editor.getContent() == "") {
-																																																	editor.setContent("<p class='wptb-button'>Button Text</p>");
-																																										}
-																																			});
-																																			editor.on('KeyDown', function (e) {
-																																										var range = editor.selection.getRng();
-																																										var KeyID = e.keyCode;
-																																										if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
-																																																	e.preventDefault();
-																																																	editor.setContent("<p class='wptb-button'></p>");
-																																										}
-																																			});
+			var img = document.createElement("img");
+			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
+			console.log(img.src);
+			event.dataTransfer.setDragImage(img, 0, 0);
+			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
+		};
 
-																																			window.currentEditor = editor;
-																																			editor.on('focus', function (e) {
+		if (element.kind === 'button') {
+			tinyMCE.init({
+				target: node.childNodes[0].childNodes[0],
+				inline: true,
+				plugins: "link",
+				dialog_type: "modal",
+				theme: 'modern',
+				menubar: false,
+				fixed_toolbar_container: '#wpcd_fixed_toolbar',
+				toolbar: 'bold italic strikethrough',
+				setup: function setup(ed) {
+					ed.on("init", function (ed) {
+						tinyMCE.execCommand('mceRepaint');
+					});
+				},
+				init_instance_callback: function init_instance_callback(editor) {
+					editor.on('change', function (e) {
+						// check if it becomes empty because if there's no value it's hard to edit the editor in button element
+						if (editor.getContent() == "") {
+							editor.setContent("<p class='wptb-button'>Button Text</p>");
+						}
+					});
+					editor.on('KeyDown', function (e) {
+						var range = editor.selection.getRng();
+						var KeyID = e.keyCode;
+						if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
+							e.preventDefault();
+							editor.setContent("<p class='wptb-button'></p>");
+						}
+					});
 
-																																										var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																										if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																										} else {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																										}
-																																			});
-																												}
-																					});
-														} else if (element.kind === 'text') {
-																					tinyMCE.init({
-																												target: node.childNodes[0],
-																												inline: true,
-																												plugins: "link, paste",
-																												dialog_type: "modal",
-																												theme: 'modern',
-																												menubar: false,
-																												fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																												paste_as_text: true,
-																												toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-																												init_instance_callback: function init_instance_callback(editor) {
-																																			window.currentEditor = editor;
-																																			editor.on('focus', function (e) {
+					window.currentEditor = editor;
+					editor.on('focus', function (e) {
 
-																																										var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																										if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																	document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																										} else {
-																																																	document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																	delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																										}
-																																			});
-																												}
-																					});
-														} else {
-																					listItems = node.getElementsByClassName('wptb-list-item-content');
-																					for (var i = 0; i < listItems.length; i++) {
-																												tinyMCE.init({
-																																			target: listItems[i],
-																																			inline: true,
-																																			plugins: "link, paste",
-																																			dialog_type: "modal",
-																																			theme: 'modern',
-																																			menubar: false,
-																																			fixed_toolbar_container: '#wpcd_fixed_toolbar',
-																																			paste_as_text: true,
-																																			toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-																																			init_instance_callback: function init_instance_callback(editor) {
-																																										window.currentEditor = editor;
-																																										editor.on('focus', function (e) {
-																																																	var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-																																																	if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-																																																								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-																																																								document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-																																																								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-																																																	} else {
-																																																								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-																																																								delete document.getElementById('wpcd_fixed_toolbar').style.right;
-																																																								delete document.getElementById('wpcd_fixed_toolbar').style.top;
-																																																	}
-																																										});
-																																			}
-																												});
-																					}
-														}
+						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+						} else {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+							delete document.getElementById('wpcd_fixed_toolbar').style.right;
+							delete document.getElementById('wpcd_fixed_toolbar').style.top;
+						}
+					});
+				}
+			});
+		} else if (element.kind === 'text') {
+			tinyMCE.init({
+				target: node.childNodes[0],
+				inline: true,
+				plugins: "link, paste",
+				dialog_type: "modal",
+				theme: 'modern',
+				menubar: false,
+				fixed_toolbar_container: '#wpcd_fixed_toolbar',
+				paste_as_text: true,
+				toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+				init_instance_callback: function init_instance_callback(editor) {
+					window.currentEditor = editor;
+					editor.on('focus', function (e) {
 
-														actions.appendChild(btnMove);
-														actions.appendChild(btnCopy);
-														actions.appendChild(btnDelete);
-														this.appendChild(actions);
-							};
+						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+						} else {
+							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+							delete document.getElementById('wpcd_fixed_toolbar').style.right;
+							delete document.getElementById('wpcd_fixed_toolbar').style.top;
+						}
+					});
+				}
+			});
+		} else {
+			listItems = node.getElementsByClassName('wptb-list-item-content');
+			for (var i = 0; i < listItems.length; i++) {
+				tinyMCE.init({
+					target: listItems[i],
+					inline: true,
+					plugins: "link, paste",
+					dialog_type: "modal",
+					theme: 'modern',
+					menubar: false,
+					fixed_toolbar_container: '#wpcd_fixed_toolbar',
+					paste_as_text: true,
+					toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+					init_instance_callback: function init_instance_callback(editor) {
+						window.currentEditor = editor;
+						editor.on('focus', function (e) {
+							var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+							if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+								document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+							} else {
+								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+								delete document.getElementById('wpcd_fixed_toolbar').style.right;
+								delete document.getElementById('wpcd_fixed_toolbar').style.top;
+							}
+						});
+					}
+				});
+			}
+		}
 
-							node.onmouseleave = function (event) {
-														var formerActions = this.getElementsByClassName('wptb-actions');
-														if (formerActions && formerActions[0]) {
-																					var par = formerActions[0].parentNode;
-																					par.removeChild(formerActions[0]);
-														}
-														this.classList.remove('wptb-directlyhovered');
-							};
+		actions.appendChild(btnMove);
+		actions.appendChild(btnCopy);
+		actions.appendChild(btnDelete);
+		this.appendChild(actions);
+	};
 
-							node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' + index);
+	node.onmouseleave = function (event) {
+		var formerActions = this.getElementsByClassName('wptb-actions');
+		if (formerActions && formerActions[0]) {
+			var par = formerActions[0].parentNode;
+			par.removeChild(formerActions[0]);
+		}
+		this.classList.remove('wptb-directlyhovered');
+	};
 
-							new WPTB_ElementOptions(element, index);
+	node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' + index);
 
-							document.counter.increment(element.kind);
+	new WPTB_ElementOptions(element, index);
+
+	document.counter.increment(element.kind);
 };
 
 //# sourceMappingURL=admin.js.map

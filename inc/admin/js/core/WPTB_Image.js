@@ -1,35 +1,37 @@
-var WPTB_Image = function(src){
-        var DOMElement = document.createElement('div'),
-        	img = document.createElement('img');
+var WPTB_Image = function (src) {
 
-		this.kind = 'image';
+	var DOMElement = document.createElement('div'),
+		img = document.createElement('img');
 
-        DOMElement.appendChild(img);
+	this.kind = 'image';
 
-        this.getDOMElement = function (){ 
-        	return DOMElement;
-        }
-        applyGenericItemSettings(this);
+	DOMElement.appendChild(img);
 
-        file_frame = wp.media.frames.file_frame = wp.media({
-                                        title: 'Select a image to upload',
-                                        button: {
-                                                text: 'Use this image',
-                                        },
-                                        multiple: false  
-                                });
-                                // When an image is selected, run a callback.
-                                file_frame.on( 'select', function() {
-                                        attachment = file_frame.state().get('selection').first().toJSON();
-                                        img.src = attachment.url; 
-                                });
-                                        // Finally, open the modal
-        if(src==undefined){
-                file_frame.open();
-        }
-        else{
-                img.src=src;
-        }
+	this.getDOMElement = function () {
+		return DOMElement;
+	}
+	applyGenericItemSettings(this);
 
-        return this;
+	file_frame = wp.media.frames.file_frame = wp.media({
+		title: 'Select a image to upload',
+		button: {
+			text: 'Use this image',
+		},
+		multiple: false
+	});
+	// When an image is selected, run a callback.
+	file_frame.on('select', function () {
+		attachment = file_frame.state().get('selection').first().toJSON();
+		img.src = attachment.url;
+	});
+	// Finally, open the modal
+	if (src == undefined) {
+		file_frame.open();
+	}
+	else {
+		img.src = src;
+	}
+
+	return this;
+
 };

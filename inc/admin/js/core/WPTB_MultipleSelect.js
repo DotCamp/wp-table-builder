@@ -1,9 +1,9 @@
-var MultipleSelect = function(){
-	
-	var selectedCells = [],
-		multipleCellMode = false; 
+var MultipleSelect = function () {
 
-	this.activateMultipleSelectMode = function(){
+	var selectedCells = [],
+		multipleCellMode = false;
+
+	this.activateMultipleSelectMode = function () {
 		selectedCells = [];
 		var tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
 		for (var i = 0; i < tds.length; i++) {
@@ -12,65 +12,64 @@ var MultipleSelect = function(){
 		multipleCellMode = true;
 	}
 
-	this.deactivateMultipleSelectMode = function(){
+	this.deactivateMultipleSelectMode = function () {
 		console.log(selectedCells);
 		multipleCellMode = false;
 	}
 
-	this.isActivated = function(){
+	this.isActivated = function () {
 		return multipleCellMode;
 	}
 
-	this.pushSelectedCell = function(cell){ 
-		if(!multipleCellMode){ 
+	this.pushSelectedCell = function (cell) {
+		if (!multipleCellMode) {
 			return;
 		}
-		selectedCells.push(cell); 
+		selectedCells.push(cell);
 		cell.classList.add('wptb-highlighted');
 	};
 
-	this.selectedCells = function(){
+	this.selectedCells = function () {
 		return selectedCells;
 	}
 
-	this.flushSelectedCells = function(){
+	this.flushSelectedCells = function () {
 		selectedCells = [];
 	}
 
-	this.getFirst = function(){
+	this.getFirst = function () {
 		var minXIndex = 1000, minYIndex = 1000, first;
-		for (var i = selectedCells.length - 1; i >= 0; i--) { 
-			if(minXIndex >= selectedCells[i].dataset.xIndex 
-				&& minYIndex >= selectedCells[i].dataset.yIndex)
-			{ 
+		for (var i = selectedCells.length - 1; i >= 0; i--) {
+			if (minXIndex >= selectedCells[i].dataset.xIndex
+				&& minYIndex >= selectedCells[i].dataset.yIndex) {
 				first = selectedCells[i];
-				minXIndex = selectedCells[i].dataset.xIndex ;
-				minYIndex = selectedCells[i].dataset.yIndex ;
+				minXIndex = selectedCells[i].dataset.xIndex;
+				minYIndex = selectedCells[i].dataset.yIndex;
 			}
-		} 
+		}
 		return first;
 	}
 
-	this.getLast = function(){
+	this.getLast = function () {
 		var maxXIndex = -1, maxYIndex = -1, last;
-		for (var i = selectedCells.length - 1; i >= 0; i--) { 
-			if(maxXIndex <= selectedCells[i].dataset.xIndex 
-				&& maxYIndex <= selectedCells[i].dataset.yIndex)
-			{  
+		for (var i = selectedCells.length - 1; i >= 0; i--) {
+			if (maxXIndex <= selectedCells[i].dataset.xIndex
+				&& maxYIndex <= selectedCells[i].dataset.yIndex) {
 				last = selectedCells[i];
-				maxXIndex = selectedCells[i].dataset.xIndex ;
-				maxYIndex = selectedCells[i].dataset.yIndex ;
+				maxXIndex = selectedCells[i].dataset.xIndex;
+				maxYIndex = selectedCells[i].dataset.yIndex;
 			}
-		} 
+		}
 		return last;
 	}
 
-	this.removeAllButFirst = function(){
+	this.removeAllButFirst = function () {
 		var td = this.getFirst();
 		for (var i = 1; i < selectedCells.length; i++) {
-		    selectedCells[i].classList.add('wptb-fused-cell-'+td.dataset.xIndex+'-'+td.dataset.yIndex);
+			selectedCells[i].classList.add('wptb-fused-cell-' + td.dataset.xIndex + '-' + td.dataset.yIndex);
 		}
 	}
 
 	return this;
+
 };
