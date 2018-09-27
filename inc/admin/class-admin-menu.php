@@ -51,11 +51,11 @@ class Admin_Menu {
 	 */
 	public function register_menus() {
 
-		global $builder_page;  
+		global $builder_page, $tables_overview, $table_list;  
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
-		add_menu_page(
+		$tables_overview = add_menu_page(
 			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
 			esc_html__( 'Table Builder', 'wp-table-builder' ),
 			$menu_cap,
@@ -66,7 +66,7 @@ class Admin_Menu {
 		);
 
 		// All Tables sub menu item.
-		add_submenu_page(
+		$table_list = add_submenu_page(
 			'wptb-overview',
 			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
 			esc_html__( 'All Tables', 'wp-table-builder' ),
@@ -101,14 +101,13 @@ class Admin_Menu {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */ 
-		global $builder_page; 
-
-		if ( $hook != $builder_page ) {
-			return;
-		}
+		global $builder_page, $tables_overview, $table_list; 
 
 		wp_enqueue_media();
 
+		if ( $hook != ( $builder_page || $table_list || $hook != $tables_overview ) ) {
+			return;
+		}
 
 		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
 		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
@@ -130,7 +129,19 @@ class Admin_Menu {
 	 */
 	public function tables_list() { 
 		$table_list = new WPTB_Listing();
-        echo "<h1>WPTB Tables List</h1>";
+		?>
+			<div class="wrap">
+				<div style="margin-bottom: 30px;">
+					<h1 class="wp-heading-inline">
+						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
+					</h1>
+					<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="wptb-button-add-new">
+						<?php esc_html_e( 'Add New Table', 'wp-table-builder' ); ?>
+					</a>
+				</div>
+			</div>
+			
+		<?
 		$table_list->prepare_items();
 		$table_list->display();
     }
