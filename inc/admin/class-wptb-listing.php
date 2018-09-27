@@ -32,7 +32,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	  global $wpdb;
 
-	  $sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='wptb_tables'";
+	  $sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='wptb-tables' AND post_status<>'trash'";
 
 	  if ( ! empty( $_REQUEST['orderby'] ) ) {
 	    $sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
@@ -44,8 +44,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	  $sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
 
 
-	  $result = $wpdb->get_results( $sql, 'ARRAY_A' );
-
+	  $result = $wpdb->get_results( $sql, 'ARRAY_A' ); 
 	  return $result;
 	}
 
@@ -62,7 +61,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	public static function record_count() {
 	  global $wpdb;
 
-	  $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_type='wptb_tables'";
+	  $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_type='wptb_tables' AND post_status<>'trash'";
   	return $wpdb->get_var( $sql );
  
 	}
@@ -76,7 +75,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	  // create a nonce
 	  $delete_nonce = wp_create_nonce( 'wptb_delete_table' );
 
-	  $title = '<strong>' . $item['name'] . '</strong>';
+	  $title = '<strong>' . $item['post_title'] . '</strong>';
 
 	  $actions = [
 	    'delete' => sprintf( '<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['ID'] ), $delete_nonce ),
@@ -88,12 +87,11 @@ class WPTB_Listing  extends \WP_List_Table{
 	}
 
 	public function column_default( $item, $column_name ) {
-	  switch ( $column_name ) {
-	    case 'address':
-	    case 'city':
-	      return $item[ $column_name ];
-	    default:
-	      return print_r( $item, true ); //Show the whole array for troubleshooting purposes
+	  switch ( $column_name ) { 
+	  	case 'id': return $item['ID'];
+	  	//case 'title':return $item['post_title'];
+	    case 'shortcode': return '[wptb id='.$item[ 'ID' ].']';
+	       
 	  }
 	}
 
@@ -104,10 +102,9 @@ class WPTB_Listing  extends \WP_List_Table{
 	}
 
 	function get_columns() {
-	  $columns = [
-	    'cb'      => '<input type="checkbox" />',
-	    'id'    => __( 'ID', 'sp' ),
-	    'name' => __( 'Name', 'sp' ),
+	  $columns = ['cb' => '',
+        'id'          => 'ID',
+        'name'       => 'Title', 
 	    'shortcode'    => __( 'Shortcode', 'sp' )
 	  ];
 
@@ -116,8 +113,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	public function get_sortable_columns() {
 	  $sortable_columns = array(
-	    'Name' => array( 'name', true ),
-	    'ID' => array( 'ID', false )
+	    'title' => array( 'title', true ) 
 	  );
 
 	  return $sortable_columns;
@@ -133,7 +129,10 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	public function prepare_items() {
 
-	  $this->_column_headers = $this->get_column_info();
+	  $columns = $this->get_columns();
+	  $hidden = array();
+	  $sortable = $this->get_sortable_columns();
+	  $this->_column_headers = array($columns, $hidden, $sortable);
 
 	  /** Process bulk action */
 	  $this->process_bulk_action();
@@ -148,7 +147,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	  ] );
 
 
-	  $this->items = self::get_customers( $per_page, $current_page );
+	  $this->items = $this->get_tables( $per_page, $current_page );
 	}
 
 	public function process_bulk_action() {
@@ -187,3 +186,5 @@ class WPTB_Listing  extends \WP_List_Table{
 	  }
 	}
 }
+
+$table = new WPTB_Listing();
