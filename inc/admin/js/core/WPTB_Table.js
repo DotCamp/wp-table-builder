@@ -224,9 +224,128 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	table.addColumnBefore = function () {
 
+		var cell = document.querySelector('.wptb-highlighted'),
+			pos = getCoords(cell)[1];
+
+		if (pos == 0) {
+			table.addColumnStart();
+			return;
+		}
+
+		pos--;
+
+		for (var i = 0; i < table.rows.length; i++) {
+			cellCount = 0;
+
+			arr = carriedRowspans(i);
+			for (var j = 0; j < maxAmountOfCells;) {
+				if (arr[j] != 0) {
+					arr[j]--;
+					j++;
+					continue;
+				}
+				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
+				if (currentCell.colSpan > 1) {
+					var insertAfterSkip = false;
+					for (var k = 0; k < currentCell.colSpan - 1; k++) {
+						if (pos === j + k) {
+							insertAfterSkip = true;
+							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
+						}
+						j++;
+					}
+					if (insertAfterSkip) {
+						var bro = currentCell.nextSibling,
+							td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					}
+				} else {
+					if (pos == j) {
+						var bro = currentCell.nextSibling,
+							td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					} else {
+					}
+					j++;
+				}
+			}
+		}
+
+		for (var i = 0; i < array.length; i++) {
+			array[i].push(0);
+		}
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+
 	};
 
 	table.addColumnAfter = function () {
+		var cell = document.querySelector('.wptb-highlighted'),
+			pos = getCoords(cell)[1];
+
+		for (var i = 0; i < table.rows.length; i++) {
+			cellCount = 0;
+
+			arr = carriedRowspans(i);
+			for (var j = 0; j < maxAmountOfCells;) {
+				if (arr[j] != 0) {
+					continue;
+					arr[j]--;
+				}
+				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
+				if (currentCell.colSpan > 1) {
+					var insertAfterSkip = false;
+					for (var k = 0; k < currentCell.colSpan - 1; k++) {
+						if (pos === j + k) {
+							insertAfterSkip = true;
+							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
+						}
+						j++;
+					}
+					if (insertAfterSkip) {
+						var bro = currentCell.nextSibling,
+							td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					}
+				} else {
+					if (pos == j) {
+						var bro = currentCell.nextSibling,
+							td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					} else {
+					}
+					j++;
+				}
+			}
+		}
+
+		for (var i = 0; i < array.length; i++) {
+			array[i].push(0);
+		}
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
 
 	};
 
@@ -459,9 +578,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	var undoSelect = function () {
-		var tds = table.getElementsByClassName('marked');
+		var tds = table.getElementsByClassName('wptb-highlighted');
 		while (tds.length) {
-			tds[0].classList.remove('marked');
+			tds[0].classList.remove('wptb-highlighted');
 		}
 		for (var i = 0; i < array.length; i++) {
 

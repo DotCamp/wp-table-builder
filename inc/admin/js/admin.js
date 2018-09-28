@@ -584,8 +584,8 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     document.getElementById('wptb-add-row-after').onclick = table.addRowAfter;
     document.getElementById('wptb-add-end-column').onclick = table.addColumnEnd;
     document.getElementById('wptb-add-start-column').onclick = table.addColumnStart;
-    //document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
-    //document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
+    document.getElementById('wptb-add-column-before').onclick = table.addColumnBefore;
+    document.getElementById('wptb-add-column-after').onclick = table.addColumnAfter;
     //document.getElementById('wptb-delete-column').onclick = table.deleteColumn;
     //document.getElementById('wptb-delete-row').onclick = table.deleteRow;
     document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
@@ -1457,9 +1457,128 @@ var array = [],
 		undoSelect();
 	};
 
-	table.addColumnBefore = function () {};
+	table.addColumnBefore = function () {
 
-	table.addColumnAfter = function () {};
+		var cell = document.querySelector('.wptb-highlighted'),
+		    pos = getCoords(cell)[1];
+
+		if (pos == 0) {
+			table.addColumnStart();
+			return;
+		}
+
+		pos--;
+
+		for (var i = 0; i < table.rows.length; i++) {
+			cellCount = 0;
+
+			arr = carriedRowspans(i);
+			for (var j = 0; j < maxAmountOfCells;) {
+				if (arr[j] != 0) {
+					arr[j]--;
+					j++;
+					continue;
+				}
+				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
+				if (currentCell.colSpan > 1) {
+					var insertAfterSkip = false;
+					for (var k = 0; k < currentCell.colSpan - 1; k++) {
+						if (pos === j + k) {
+							insertAfterSkip = true;
+							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
+						}
+						j++;
+					}
+					if (insertAfterSkip) {
+						var bro = currentCell.nextSibling,
+						    td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					}
+				} else {
+					if (pos == j) {
+						var bro = currentCell.nextSibling,
+						    td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					} else {}
+					j++;
+				}
+			}
+		}
+
+		for (var i = 0; i < array.length; i++) {
+			array[i].push(0);
+		}
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
+
+	table.addColumnAfter = function () {
+		var cell = document.querySelector('.wptb-highlighted'),
+		    pos = getCoords(cell)[1];
+
+		for (var i = 0; i < table.rows.length; i++) {
+			cellCount = 0;
+
+			arr = carriedRowspans(i);
+			for (var j = 0; j < maxAmountOfCells;) {
+				if (arr[j] != 0) {
+					continue;
+					arr[j]--;
+				}
+				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
+				if (currentCell.colSpan > 1) {
+					var insertAfterSkip = false;
+					for (var k = 0; k < currentCell.colSpan - 1; k++) {
+						if (pos === j + k) {
+							insertAfterSkip = true;
+							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
+						}
+						j++;
+					}
+					if (insertAfterSkip) {
+						var bro = currentCell.nextSibling,
+						    td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					}
+				} else {
+					if (pos == j) {
+						var bro = currentCell.nextSibling,
+						    td = new WPTB_Cell(mark);
+						if (bro) {
+							table.rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							table.rows[i].appendChild(td.getDOMElement());
+						}
+						break;
+					} else {}
+					j++;
+				}
+			}
+		}
+
+		for (var i = 0; i < array.length; i++) {
+			array[i].push(0);
+		}
+		drawTable(array);
+		table.recalculateIndexes();
+		undoSelect();
+	};
 
 	table.addRow = function (pos) {
 		var _this,
@@ -1687,9 +1806,9 @@ var array = [],
 	};
 
 	var undoSelect = function undoSelect() {
-		var tds = table.getElementsByClassName('marked');
+		var tds = table.getElementsByClassName('wptb-highlighted');
 		while (tds.length) {
-			tds[0].classList.remove('marked');
+			tds[0].classList.remove('wptb-highlighted');
 		}
 		for (var i = 0; i < array.length; i++) {
 
