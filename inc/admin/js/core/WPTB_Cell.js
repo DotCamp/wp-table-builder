@@ -1,6 +1,5 @@
 var WPTB_Cell = function (callback, DOMElement) {
 
-    console.log('CB', callback);
     function newElementProxy(el) {
         if (el == 'list') {
             return new WPTB_List();
@@ -67,29 +66,7 @@ var WPTB_Cell = function (callback, DOMElement) {
 
     DOMElement.classList.add('wptb-droppable', 'wptb-cell');
 
-    DOMElement.onclick = callback; /*function(){
-
-        	var relativeActions, cells;
-
-        	if(!document.select.isActivated()){
-        		return;
-        	}
-        	else{
-        	 
-
-            if(this.classList.contains('wptb-highlighted')){
-                this.classList.remove('wptb-highlighted');
-            }
-            else{
-                console.log('Not contains');
-        		this.classList.add('wptb-highlighted');    
-                //highlightRow(this);
-                //highlightColumn(this);
-            }
-
-        	}
-        	
-        };*/;
+    DOMElement.onclick = callback;
 
     DOMElement.ondragenter = function (e) {
         var div;
@@ -113,8 +90,6 @@ var WPTB_Cell = function (callback, DOMElement) {
         var element, classId, space, t_space, spaceParent;
         e.preventDefault();
         space = new WPTB_Space();
-
-        console.log(e.dataTransfer);
 
         if (!e.dataTransfer.getData('wptbElement')
             && !e.dataTransfer.getData('node')) {

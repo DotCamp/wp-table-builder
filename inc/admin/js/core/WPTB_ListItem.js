@@ -32,7 +32,6 @@ var WPTB_ListItem = function (text) {
         };
 
         btnCopy.onclick = function (event) {
-            console.log('Clicking item');
             var article = event.target.parentNode.parentNode,
                 content = article.querySelector('.wptb-list-item-content'),
                 html = content.innerHTML;
@@ -63,9 +62,7 @@ var WPTB_ListItem = function (text) {
         }
         event.preventDefault();
         duplicate = new WPTB_ListItem(this.innerHTML);
-        console.log('duplicate', duplicate.getDOMElement());
         DOMElement.parentNode.insertBefore(duplicate.getDOMElement(), DOMElement);
-        console.log(divcontent);
         divcontent.innerHTML = 'New List Item';
         duplicate.getDOMElement().querySelector('.wptb-list-item-content').focus();
 

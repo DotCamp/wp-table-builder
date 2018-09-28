@@ -94,16 +94,13 @@ var WPTB_Parser = function (code) {
 
 		switch (t) {
 			case '[text]': attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				getExpectedToken('[text]');
 				html = parseAllHTML();
 				node = new WPTB_Text(html);
-				console.log(html);
 				getToken();
 				getExpectedToken('[/text]');
 				break;
 			case '[button]': attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				getExpectedToken('[button]');
 				html = parseAllHTML();
 				node = new WPTB_Button(html);
@@ -111,7 +108,6 @@ var WPTB_Parser = function (code) {
 				getExpectedToken('[/button]');
 				break;
 			case '[img]': attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				node = new WPTB_Image(attr['src']);
 				getExpectedToken('[img]');
 				break;
@@ -130,7 +126,6 @@ var WPTB_Parser = function (code) {
 	}
 
 	function analizeRows(tableNode) {
-		console.log('Tr', tr);
 		do {
 			var tr = tableNode.insertRow();
 			tr.classList.add('wptb-row');
@@ -157,7 +152,6 @@ var WPTB_Parser = function (code) {
 	function analizeHeader(tableNode) {
 		var header = tableNode.insertRow();
 		header.classList.add('wptb-row', 'wptb-table-head');
-		console.log('Tr', header);
 		getExpectedToken('[tr]');
 		analizeTds(header);
 		getExpectedToken('[/tr]');

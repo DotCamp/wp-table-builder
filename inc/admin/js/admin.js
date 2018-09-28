@@ -59,7 +59,6 @@ var WPTB_Button = function WPTB_Button(text) {
 };
 var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 
-    console.log('CB', callback);
     function newElementProxy(el) {
         if (el == 'list') {
             return new WPTB_List();
@@ -116,23 +115,7 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 
     DOMElement.classList.add('wptb-droppable', 'wptb-cell');
 
-    DOMElement.onclick = callback; /*function(){
-                                   var relativeActions, cells;
-                                   if(!document.select.isActivated()){
-                                   return;
-                                   }
-                                   else{
-                                   if(this.classList.contains('wptb-highlighted')){
-                                   this.classList.remove('wptb-highlighted');
-                                   }
-                                   else{
-                                   console.log('Not contains');
-                                   this.classList.add('wptb-highlighted');    
-                                   //highlightRow(this);
-                                   //highlightColumn(this);
-                                   }
-                                   }
-                                   };*/;
+    DOMElement.onclick = callback;
 
     DOMElement.ondragenter = function (e) {
         var div;
@@ -154,8 +137,6 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         var element, classId, space, t_space, spaceParent;
         e.preventDefault();
         space = new WPTB_Space();
-
-        console.log(e.dataTransfer);
 
         if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
             return;
@@ -281,7 +262,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
 
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].onclick = function () {
-                console.log('Now we should change button size');
                 var size = this.innerHTML,
                     n_Class = this.dataset.element,
                     infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
@@ -357,7 +337,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     break;
                 case 'image-width':
                     var img = affectedEl.getElementsByTagName("img")[0];
-                    console.log(img, this.value);
                     img.width = this.value;
                     break;
                 case 'image-height':
@@ -369,9 +348,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     for (var i = 0; i < ps.length; i++) {
                         ps[i].style.fontSize = val + 'px';
                     }
-
                     this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0].value = this.value;
-
                     break;
                 case 'color':
                     var ps = affectedEl.getElementsByTagName("p");
@@ -380,7 +357,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     }
                     break;
                 case 'button-color':
-                    console.log('Event called!');
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
@@ -684,7 +660,6 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
         };
 
         btnCopy.onclick = function (event) {
-            console.log('Clicking item');
             var article = event.target.parentNode.parentNode,
                 content = article.querySelector('.wptb-list-item-content'),
                 html = content.innerHTML;
@@ -714,9 +689,7 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
         }
         event.preventDefault();
         duplicate = new WPTB_ListItem(this.innerHTML);
-        console.log('duplicate', duplicate.getDOMElement());
         DOMElement.parentNode.insertBefore(duplicate.getDOMElement(), DOMElement);
-        console.log(divcontent);
         divcontent.innerHTML = 'New List Item';
         duplicate.getDOMElement().querySelector('.wptb-list-item-content').focus();
 
@@ -744,7 +717,6 @@ var MultipleSelect = function MultipleSelect() {
 	};
 
 	this.deactivateMultipleSelectMode = function () {
-		console.log(selectedCells);
 		multipleCellMode = false;
 	};
 
@@ -904,17 +876,14 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		switch (t) {
 			case '[text]':
 				attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				getExpectedToken('[text]');
 				html = parseAllHTML();
 				node = new WPTB_Text(html);
-				console.log(html);
 				getToken();
 				getExpectedToken('[/text]');
 				break;
 			case '[button]':
 				attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				getExpectedToken('[button]');
 				html = parseAllHTML();
 				node = new WPTB_Button(html);
@@ -923,7 +892,6 @@ var WPTB_Parser = function WPTB_Parser(code) {
 				break;
 			case '[img]':
 				attr = getAttributesFromToken();
-				console.log('Attributes', attr);
 				node = new WPTB_Image(attr['src']);
 				getExpectedToken('[img]');
 				break;
@@ -939,7 +907,6 @@ var WPTB_Parser = function WPTB_Parser(code) {
 	}
 
 	function analizeRows(tableNode) {
-		console.log('Tr', tr);
 		do {
 			var tr = tableNode.insertRow();
 			tr.classList.add('wptb-row');
@@ -966,7 +933,6 @@ var WPTB_Parser = function WPTB_Parser(code) {
 	function analizeHeader(tableNode) {
 		var header = tableNode.insertRow();
 		header.classList.add('wptb-row', 'wptb-table-head');
-		console.log('Tr', header);
 		getExpectedToken('[tr]');
 		analizeTds(header);
 		getExpectedToken('[/tr]');
@@ -1013,7 +979,6 @@ var WPTB_Settings = function WPTB_Settings() {
 				messagingArea.classList.remove('warning');
 			}, 5000);
 		}
-		console.log('Ajax called');
 		var params = 'title=' + t + '&content=' + code;
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -1154,7 +1119,6 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 			if (node.rows.length > 2) {
 				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor;
 			}
-			console.log(innerBorder);
 			code += '[table' + (margin != undefined && margin != '' ? ' margin="' + margin + '"' : '') + (padding != undefined && padding != '' ? ' padding="' + padding + '"' : '') + (innerBorder != undefined ? ' inner-border="' + innerBorder + '"' : '') + (bg1 != undefined ? ' data-bg1="' + bg1 + '"' : '') + (bg2 != undefined ? ' data-bg2="' + bg2 + '"' : '') + (bg3 != undefined ? ' data-bg3="' + bg3 + '"' : '') + ']';
 
 			for (var i = 0; i < children.length; i++) {
@@ -1248,7 +1212,6 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						}
 
 						buttonColor = trueNode.style.backgroundColor;
-						console.log(node);
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
 						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + ']';
@@ -1331,7 +1294,6 @@ var array = [],
 	row.classList.add('wptb-table-head', 'wptb-row');
 
 	for (var i = 0; i < columns; i++) {
-		console.log(mark);
 		cell = new WPTB_Cell(mark);
 		cell.setCoords(0, i);
 		row.appendChild(cell.getDOMElement());
@@ -1409,13 +1371,11 @@ var array = [],
 		}
 
 		for (var i = 0; i <= row; i++) {
-			//console.log('Fila '+(i+1));
 			tds = table.rows[i].getElementsByTagName('td');
 			cols = 0, items = 0;
 
 			for (colspansAcumulados = 0; colspansAcumulados < maxAmountOfCells && items < tds.length;) {
 				if (carried[colspansAcumulados]) {
-					//console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
 					carried[colspansAcumulados]--;
 					colspansAcumulados++;
 					continue;
@@ -1427,17 +1387,14 @@ var array = [],
 					}
 				}
 				if (carried[colspansAcumulados]) carried[colspansAcumulados]--;
-				//console.log('Celda del colspan numero'+colspansAcumulados);
 				colspansAcumulados += cell.colSpan;
 			}
 		}
-		console.log(carried);
 		return carried;
 	};
 
 	table.toggleTableEditMode = function () {
 		var bar = document.getElementById('edit-bar');
-		console.log('Bar', bar);
 		if (bar.classList.contains('visible')) {
 			document.select.deactivateMultipleSelectMode();
 			bar.classList.remove('visible');
@@ -1472,12 +1429,9 @@ var array = [],
 			}
 		}
 		this.columns = maxCols;
-		console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
 	};
 
 	table.addColumnEnd = function () {
-
-		console.log('add to the end');
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
 			table.rows[i].appendChild(td.getDOMElement());
@@ -1488,7 +1442,6 @@ var array = [],
 	};
 
 	table.addColumnStart = function () {
-		console.log('add to the start');
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
 			firstCell = table.rows[i].getElementsByTagName('td')[0];
@@ -1597,7 +1550,6 @@ var array = [],
 		arr = realTimeArray();
 
 		for (var i = 0; i < arr.length; i++) {
-			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -1638,10 +1590,7 @@ var array = [],
 
 		arr = realTimeArray();
 
-		console.log('Arr', arr);
-
 		for (var i = 0; i < arr.length; i++) {
-			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -1734,7 +1683,6 @@ var array = [],
 			}
 			string += '\n';
 		}
-		console.log(string);
 		isSquare(a);
 	};
 
@@ -1764,8 +1712,6 @@ var array = [],
 			}
 			colspansSums.push(colspanSumInRow);
 		}
-
-		console.log(colspanSumInRow);
 
 		maxAmountOfCells = Math.max.apply(null, colspansSums);
 		//calculate max rows
@@ -1853,16 +1799,11 @@ var array = [],
 	};
 
 	table.mergeCells = function () {
-		console.log('Meging');
 		var dimensions = isSquare(array),
 		    rowspan = dimensions[0],
 		    colspan = dimensions[1],
 		    first = document.querySelector('.wptb-highlighted'),
 		    tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
-
-		console.log('Dimensions:', dimensions);
-		console.log('First:', first);
-		console.log('Cells without the first one:', tds);
 
 		for (var i = 0; i < tds.length; i++) {
 			var p = tds[i].parentNode;
@@ -1880,23 +1821,17 @@ var array = [],
 		    colspan = cell.colSpan;
 		cell.rowSpan = 1;
 		cell.colSpan = 1;
-		console.log('Cell', cell.rowSpan, cell.rowspan);
 		for (var i = 0; i < rowspan; i++) {
-			console.log('Let"s split it!', cell);
 			if (i == 0) {
-				console.log('Iteration 1');
 				refCell = cell;
 			} else {
-				console.log('Conter');
 				for (var k = 0, pt = 0; k < colspan; k += refCell.colSpan, pt++) {
-					console.log('Increasing Conter');
 					refCell = table.rows[i].getElementsByTagName('td')[pt];
 					if (!refCell) {
 						break;
 					}
 				}
 			}
-			console.log(refCell);
 
 			var p = refCell ? refCell.parentNode : table.rows[i];
 			for (var j = 0; j < colspan; j++) {
@@ -2008,7 +1943,6 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 
 			var img = document.createElement("img");
 			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-			console.log(img.src);
 			event.dataTransfer.setDragImage(img, 0, 0);
 			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
 		};

@@ -64,7 +64,6 @@ var applyGenericItemSettings = function (element) {
 
 			var img = document.createElement("img");
 			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-			console.log(img.src);
 			event.dataTransfer.setDragImage(img, 0, 0);
 			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
 		};

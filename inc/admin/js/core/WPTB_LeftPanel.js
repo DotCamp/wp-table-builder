@@ -35,8 +35,6 @@ var WPTB_LeftPanel = function () {
         }
     });
 
-
-
     function addInnerBorderSize(value) {
         var tableCells = table.getElementsByTagName('td');
         for (var i = 0; i < tableCells.length; i++) {
@@ -50,7 +48,6 @@ var WPTB_LeftPanel = function () {
             tableCells[i].style.padding = value + 'px';
         }
     }
-
 
     function addInnerBorder(checked) {
         var styles;

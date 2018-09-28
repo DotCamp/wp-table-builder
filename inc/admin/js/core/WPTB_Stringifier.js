@@ -27,7 +27,6 @@ var WPTB_Stringifier = function (node) {
 			if (node.rows.length > 2) {
 				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor;
 			}
-			console.log(innerBorder);
 			code += '[table'
 				+ (margin != undefined && margin != '' ? ' margin="' + margin + '"' : '')
 				+ (padding != undefined && padding != '' ? ' padding="' + padding + '"' : '')
@@ -142,7 +141,6 @@ var WPTB_Stringifier = function (node) {
 						}
 
 						buttonColor = trueNode.style.backgroundColor;
-						console.log(node);
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
 						code += '[button'

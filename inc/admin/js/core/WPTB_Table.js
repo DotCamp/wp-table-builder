@@ -54,7 +54,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 	row.classList.add('wptb-table-head', 'wptb-row');
 
 	for (var i = 0; i < columns; i++) {
-		console.log(mark);
 		cell = new WPTB_Cell(mark);
 		cell.setCoords(0, i);
 		row.appendChild(cell.getDOMElement());
@@ -104,7 +103,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 			}
 
-
 			for (var k = 0; k < maxAmountOfCells; k++) {
 				if (typeof carried[k] == 'object' && carried[k].amount > 0) {
 
@@ -133,14 +131,12 @@ var array = [], WPTB_Table = function (columns, rows) {
 		}
 
 		for (var i = 0; i <= row; i++) {
-			//console.log('Fila '+(i+1));
 			tds = table.rows[i].getElementsByTagName('td');
 			cols = 0,
 				items = 0;
 
 			for (colspansAcumulados = 0; colspansAcumulados < maxAmountOfCells && items < tds.length;) {
 				if (carried[colspansAcumulados]) {
-					//console.log('En '+colspansAcumulados+' va la prolongacion vertical de una celda');
 					carried[colspansAcumulados]--;
 					colspansAcumulados++;
 					continue;
@@ -153,18 +149,15 @@ var array = [], WPTB_Table = function (columns, rows) {
 				}
 				if (carried[colspansAcumulados])
 					carried[colspansAcumulados]--;
-				//console.log('Celda del colspan numero'+colspansAcumulados);
 				colspansAcumulados += cell.colSpan;
 			}
 
 		}
-		console.log(carried);
 		return carried;
 	};
 
 	table.toggleTableEditMode = function () {
 		var bar = document.getElementById('edit-bar');
-		console.log('Bar', bar);
 		if (bar.classList.contains('visible')) {
 			document.select.deactivateMultipleSelectMode();
 			bar.classList.remove('visible');
@@ -200,12 +193,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 		}
 		this.columns = maxCols;
-		console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
 	}
 
 	table.addColumnEnd = function () {
-
-		console.log('add to the end');
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
 			table.rows[i].appendChild(td.getDOMElement());
@@ -216,7 +206,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	table.addColumnStart = function () {
-		console.log('add to the start');
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
 			firstCell = table.rows[i].getElementsByTagName('td')[0];
@@ -329,7 +318,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 		arr = realTimeArray();
 
 		for (var i = 0; i < arr.length; i++) {
-			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -372,10 +360,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 		arr = realTimeArray();
 
-		console.log('Arr', arr);
-
 		for (var i = 0; i < arr.length; i++) {
-			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -470,7 +455,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 			string += '\n';
 		}
-		console.log(string);
 		isSquare(a);
 	};
 
@@ -500,8 +484,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 			colspansSums.push(colspanSumInRow);
 		}
-
-		console.log(colspanSumInRow);
 
 		maxAmountOfCells = Math.max.apply(null, colspansSums);
 		//calculate max rows
@@ -595,17 +577,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	table.mergeCells = function () {
-		console.log('Meging');
 		var dimensions = isSquare(array),
 			rowspan = dimensions[0],
 			colspan = dimensions[1],
 			first = document.querySelector('.wptb-highlighted'),
 			tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
-
-		console.log('Dimensions:', dimensions);
-		console.log('First:', first);
-		console.log('Cells without the first one:', tds);
-
 
 		for (var i = 0; i < tds.length; i++) {
 			var p = tds[i].parentNode;
@@ -623,24 +599,18 @@ var array = [], WPTB_Table = function (columns, rows) {
 			colspan = cell.colSpan;
 		cell.rowSpan = 1;
 		cell.colSpan = 1;
-		console.log('Cell', cell.rowSpan, cell.rowspan);
 		for (var i = 0; i < rowspan; i++) {
-			console.log('Let"s split it!', cell);
 			if (i == 0) {
-				console.log('Iteration 1');
 				refCell = cell;
 			}
 			else {
-				console.log('Conter');
 				for (var k = 0, pt = 0; k < colspan; k += refCell.colSpan, pt++) {
-					console.log('Increasing Conter');
 					refCell = table.rows[i].getElementsByTagName('td')[pt];
 					if (!refCell) {
 						break;
 					}
 				}
 			}
-			console.log(refCell);
 
 			var p = refCell ? refCell.parentNode : table.rows[i];
 			for (var j = 0; j < colspan; j++) {

@@ -13,7 +13,6 @@ var MultipleSelect = function () {
 	}
 
 	this.deactivateMultipleSelectMode = function () {
-		console.log(selectedCells);
 		multipleCellMode = false;
 	}
 

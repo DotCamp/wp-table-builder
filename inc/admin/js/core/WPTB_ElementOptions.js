@@ -42,7 +42,6 @@ var WPTB_ElementOptions = function (element, index) {
 
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].onclick = function () {
-                console.log('Now we should change button size');
                 var size = this.innerHTML,
                     n_Class = this.dataset.element,
                     infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
@@ -116,7 +115,6 @@ var WPTB_ElementOptions = function (element, index) {
                     break;
                 case 'image-width':
                     var img = affectedEl.getElementsByTagName("img")[0];
-                    console.log(img, this.value);
                     img.width = this.value;
                     break;
                 case 'image-height':
@@ -128,9 +126,7 @@ var WPTB_ElementOptions = function (element, index) {
                     for (var i = 0; i < ps.length; i++) {
                         ps[i].style.fontSize = val + 'px';
                     }
-
                     this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0].value = this.value;
-
                     break;
                 case 'color':
                     var ps = affectedEl.getElementsByTagName("p");
@@ -138,7 +134,7 @@ var WPTB_ElementOptions = function (element, index) {
                         ps[i].style.color = val;
                     }
                     break;
-                case 'button-color': console.log('Event called!');
+                case 'button-color':
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
