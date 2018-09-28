@@ -1178,7 +1178,8 @@ td[class*="wptb-fused-cell"] {
 .wptb-button-add-new {
     padding: 8px;
     margin: 10px;
-    background: rgb(0, 115, 170);
+    background: rgb(0, 133, 186);
+    box-shadow: 0 2px 0 #006799;
     color: #fff;
     border-radius: 5px;
     text-decoration: none;
@@ -1186,5 +1187,5 @@ td[class*="wptb-fused-cell"] {
 
 .wptb-button-add-new:hover {
     color: #fff !important;
-    background: rgb(0, 105, 190);
+    background: rgb(3, 141, 196);
 }
