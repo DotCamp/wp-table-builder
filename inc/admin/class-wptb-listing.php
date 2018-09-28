@@ -100,7 +100,7 @@ class WPTB_Listing  extends \WP_List_Table{
 			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
 			add_query_arg(
 				array(
-					'id' => $item['ID'],
+					'table' => $item['ID'],
 				),
 				admin_url( 'admin.php?page=wptb-builder' )
 			),
@@ -110,7 +110,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	  	$actions = [
 	    	'delete' => sprintf( '<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['ID'] ), $delete_nonce ),
-			'edit' => sprintf( '<a href="?page=wptb-builder&id=%d">Edit</a>',  absint( $item['ID'] ) )
+			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item['ID'] ) )
 	  	];
 
 	  	return $title . $this->row_actions( $actions );
