@@ -43,11 +43,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 
-
 	//Create a HTML Table element.
 	table = document.createElement('table');
 	table.classList.add('wptb-preview-table');
-
 
 	//Add the header row.
 	row = table.insertRow(-1);
@@ -97,10 +95,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 							amount: tds[items].rowSpan
 						};
 					}
-
-
 				}
-
 			}
 
 			for (var k = 0; k < maxAmountOfCells; k++) {
@@ -250,7 +245,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 					for (var k = 0; k < currentCell.colSpan - 1; k++) {
 						if (pos === j + k) {
 							insertAfterSkip = true;
-							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
 						}
 						j++;
 					}
@@ -631,7 +625,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 		for (var i = 0; i < table.rows.length; i++) {
 
-
 			var tds = [].slice.call(table.rows[i].getElementsByTagName('td'));
 
 			for (var j = 0; j < maxAmountOfCells;) {
@@ -657,12 +650,8 @@ var array = [], WPTB_Table = function (columns, rows) {
 				j += cell.colSpan;
 
 			}
-
-
-
 		}
 	};
-
 
 	table.deleteRow = function (e) {
 		var cell = document.getElementsByClassName('wptb-highlighted')[0],

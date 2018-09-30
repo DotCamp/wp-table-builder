@@ -24,6 +24,7 @@ var WPTB_Settings = function () {
 				messagingArea.classList.remove('warning');
 			}, 5000);
 		}
+
 		var params = 'title=' + t + '&content=' + code;
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

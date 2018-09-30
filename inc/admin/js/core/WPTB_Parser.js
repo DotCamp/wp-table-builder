@@ -38,7 +38,6 @@ var WPTB_Parser = function (code) {
 		if (getWordFromToken(ctoken) !== expected) {
 			throw 'There was an error with the file and therefore the table could not be rendered';
 		}
-
 		getToken();
 	}
 
@@ -64,7 +63,6 @@ var WPTB_Parser = function (code) {
 			value = pair[1].substring(1, pair[1].length - 1);
 			attr[key] = value;
 		}
-
 
 		return attr;
 	}

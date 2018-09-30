@@ -14,6 +14,7 @@ var WPTB_LeftPanel = function () {
             }
         }
     });
+
     jQuery('#wptb-odd-row-bg').wpColorPicker({
         change: function (event, ui) {
             var tableRows = table.getElementsByTagName('tr');
@@ -25,6 +26,7 @@ var WPTB_LeftPanel = function () {
             }
         }
     });
+
     jQuery('#wptb-table-header-bg').wpColorPicker({
         change: function (event, ui) {
             var tableHeader = table.getElementsByTagName('tr')[0],

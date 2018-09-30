@@ -13,7 +13,6 @@ var WPTB_Initializer = function () {
 		columnsInput = document.getElementById('wptb-columns-number'),
 		rowsInput = document.getElementById('wptb-rows-number');
 
-
 	columnsDecrementButton.onclick = function () {
 		if (columnsInput.value > MIN_COLUMNS) {
 			columnsInput.value--;
@@ -39,12 +38,10 @@ var WPTB_Initializer = function () {
 	};
 
 	document.getElementById('wptb-generate-table').onclick = function () {
-
 		var columns = document.getElementById('wptb-columns-number').value,
 			rows = document.getElementById('wptb-rows-number').value;
 
 		WPTB_Table(columns, rows);
-
 	}
 
 };

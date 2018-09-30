@@ -58,7 +58,6 @@ var applyGenericItemSettings = function (element) {
 				parent = parent.parentNode;
 			}
 
-
 			infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
 			type = infArr[1];
 
@@ -67,7 +66,6 @@ var applyGenericItemSettings = function (element) {
 			event.dataTransfer.setDragImage(img, 0, 0);
 			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
 		};
-
 
 		if (element.kind === 'button') {
 			tinyMCE.init({

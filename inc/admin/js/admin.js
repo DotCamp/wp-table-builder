@@ -201,19 +201,16 @@ var ElementCounters = function ElementCounters() {
 	priv['button'] = 0;
 
 	this.increment = function (key) {
-
 		if (!(key in priv)) {
 			return;
 		}
-
 		priv[key]++;
 	};
-	this.nextIndex = function (key) {
 
+	this.nextIndex = function (key) {
 		if (!(key in priv)) {
 			return undefined;
 		}
-
 		return priv[key] + 1;
 	};
 
@@ -454,7 +451,6 @@ var WPTB_Initializer = function WPTB_Initializer() {
 	};
 
 	document.getElementById('wptb-generate-table').onclick = function () {
-
 		var columns = document.getElementById('wptb-columns-number').value,
 		    rows = document.getElementById('wptb-rows-number').value;
 
@@ -477,6 +473,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             }
         }
     });
+
     jQuery('#wptb-odd-row-bg').wpColorPicker({
         change: function change(event, ui) {
             var tableRows = table.getElementsByTagName('tr');
@@ -488,6 +485,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             }
         }
     });
+
     jQuery('#wptb-table-header-bg').wpColorPicker({
         change: function change(event, ui) {
             var tableHeader = table.getElementsByTagName('tr')[0],
@@ -818,7 +816,6 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		if (getWordFromToken(ctoken) !== expected) {
 			throw 'There was an error with the file and therefore the table could not be rendered';
 		}
-
 		getToken();
 	}
 
@@ -979,6 +976,7 @@ var WPTB_Settings = function WPTB_Settings() {
 				messagingArea.classList.remove('warning');
 			}, 5000);
 		}
+
 		var params = 'title=' + t + '&content=' + code;
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -1485,7 +1483,6 @@ var array = [],
 					for (var k = 0; k < currentCell.colSpan - 1; k++) {
 						if (pos === j + k) {
 							insertAfterSkip = true;
-							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
 						}
 						j++;
 					}

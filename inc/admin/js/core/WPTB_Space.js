@@ -44,8 +44,6 @@ var WPTB_Space = function (text) {
             element = newElementProxy(event.dataTransfer.getData('wptbElement'));
             this.classList.remove('visible');
 
-
-
             if (p == null) {
                 td.appendChild(element.getDOMElement());
                 td.appendChild(new WPTB_Space());
@@ -54,7 +52,6 @@ var WPTB_Space = function (text) {
                 td.insertBefore(element.getDOMElement(), p);
                 td.insertBefore(new WPTB_Space(), p);
             }
-
 
         }
 

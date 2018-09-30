@@ -83,7 +83,6 @@ var WPTB_Cell = function (callback, DOMElement) {
 
     DOMElement.ondragleave = function () {
         this.classList.remove('wptb-drop-here-empty');
-
     }
 
     DOMElement.ondrop = function (e) {

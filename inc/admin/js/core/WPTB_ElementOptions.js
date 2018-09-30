@@ -103,7 +103,6 @@ var WPTB_ElementOptions = function (element, index) {
                 affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0],
                 val = this.value;
 
-
             switch (this.dataset.type) {
                 case 'src':
                     var img = affectedEl.getElementsByTagName("img")[0];

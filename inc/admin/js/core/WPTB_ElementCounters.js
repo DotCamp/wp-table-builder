@@ -7,19 +7,16 @@ var ElementCounters = function () {
 	priv['button'] = 0;
 
 	this.increment = function (key) {
-
 		if (!(key in priv)) {
 			return;
 		}
-
 		priv[key]++;
 	}
-	this.nextIndex = function (key) {
 
+	this.nextIndex = function (key) {
 		if (!(key in priv)) {
 			return undefined;
 		}
-
 		return priv[key] + 1;
 	}
 
