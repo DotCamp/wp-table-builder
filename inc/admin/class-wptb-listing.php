@@ -24,26 +24,40 @@ class WPTB_Listing  extends \WP_List_Table{
 			'plural'   => __( 'WPTB Tables', 'wp-table-builder' ), 
 			'ajax'     => false 
 		] );
+		if(isset($_GET['success']))
+		{ 
+	    ?>
+	    <div class="notice notice-success is-dismissible">
+	        <p><?php _e( 'Table deleted successfully.', 'wptb-builder' ); ?></p>
+	    </div>
+	    <?php 
+	    unset($_GET['success']);
+		} 
+		if(isset($_GET['bulksuccess']))
+		{ 
+	    ?>
+	    <div class="notice notice-success is-dismissible">
+	        <p><?php _e( 'Bulk delete performed successfully.', 'wptb-builder' ); ?></p>
+	    </div>
+	    <?php 
+	    unset($_GET['bulksuccess']);
+		} 
 
 	}
-
+ 
 	public static function get_tables( $per_page = 5, $page_number = 1 ) {
 
-		global $wpdb;
+		global $post;
 
-	  	$sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='wptb-tables' AND post_status<>'trash'";
+		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
 
-	  	if ( ! empty( $_REQUEST['orderby'] ) ) {
-	    	$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-	    	$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
-	  	}
-
-	  	$sql .= " LIMIT $per_page";
-
-	  	$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
-
-	  	$result = $wpdb->get_results( $sql, 'ARRAY_A' ); 
-
+	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
+	  	$params['order'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'DESC';
+	  	
+	  	$loop = new \WP_Query( $params ); 
+		$result=[];
+		while ( $loop->have_posts() ) { $loop->the_post(); $result[] = $post; } 
+	  	
 		return $result;
 		 
 	}
@@ -92,7 +106,7 @@ class WPTB_Listing  extends \WP_List_Table{
 		// create a nonce
 		$delete_nonce = wp_create_nonce( 'wptb_delete_table' );
 		  
-		$table_title = $item['post_title'];
+		$table_title = $item->post_title;
 
 		$title = ! empty( $table_title ) ? $table_title : __( '(no title)', 'wp-table-builder' );
 		  
@@ -100,7 +114,7 @@ class WPTB_Listing  extends \WP_List_Table{
 			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
 			add_query_arg(
 				array(
-					'table' => $item['ID'],
+					'table' => $item->ID,
 				),
 				admin_url( 'admin.php?page=wptb-builder' )
 			),
@@ -109,8 +123,8 @@ class WPTB_Listing  extends \WP_List_Table{
 		);
 
 	  	$actions = [
-	    	'delete' => sprintf( '<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['ID'] ), $delete_nonce ),
-			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item['ID'] ) )
+	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $delete_nonce ),
+			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) )
 	  	];
 
 	  	return $title . $this->row_actions( $actions );
@@ -121,11 +135,11 @@ class WPTB_Listing  extends \WP_List_Table{
 		
 		switch ( $column_name ) { 
 			case 'id': 
-				return $item['ID'];
+				return $item->ID;
 			case 'shortcode': 
-				return '[wptb id='.$item[ 'ID' ].']';
+				return '[wptb id='.$item->ID.']';
 			case 'created':
-				return get_the_date( '', $item['ID'] );
+				return get_the_date( '', $item->ID );
 				break;     
 	  	}
 	
@@ -134,7 +148,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	function column_cb( $item ) {
 		
 		return sprintf(
-	    	'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['ID']
+	    	'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item->ID
 	  	);
 	
 	}
@@ -202,11 +216,12 @@ class WPTB_Listing  extends \WP_List_Table{
  
 	    	$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 
-	    	if ( ! wp_verify_nonce( $nonce, 'sp_delete_customer' ) ) {
+	    	if ( ! wp_verify_nonce( $nonce, 'wptb_delete_table' ) ) {
 	      		die( 'Go get a life script kiddies' );
 			} else {
-	      		self::delete_customer( absint( $_GET['customer'] ) );
-	      		wp_redirect( esc_url( add_query_arg() ) );
+
+	      		$this->delete_table( absint( $_GET['table_id'] ) );
+	      	die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&success=1";</script>');
 	      		exit;
 	    	}
 
@@ -219,13 +234,13 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	    	// loop over the array of record IDs and delete them
 	    	foreach ( $delete_ids as $id ) {
-	      		self::delete_customer( $id );
+	      		$this->delete_table( $id );
 	    	}
 
-	    	wp_redirect( esc_url( add_query_arg() ) );
+	      	die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&bulksuccess=1";</script>');
 	    	exit;
 	  	}
 	}
 }
 
-$table = new WPTB_Listing();
+$table = new WPTB_Listing(); 

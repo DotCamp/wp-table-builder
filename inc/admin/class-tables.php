@@ -94,7 +94,21 @@ class Tables {
 
     public function get_table($args){  
     	$html = get_post($args['id'] , ARRAY_A);
-    	return $html['post_content'];
+    	$code =  $html['post_content'];
+    	$code = preg_replace( '/\[tr\]/','<tr>', $code);
+    	$code = preg_replace( '/\[\/tr\]/','</tr>', $code);
+    	$code = preg_replace( '/\[td\]/','<td>', $code);
+    	$code = preg_replace( '/\[\/td\]/','</td>', $code);
+    	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")?(\s+data\-bg2\=\"\")?\]/','<table>', $code);
+    	$code = preg_replace( '/\[\/table\]/','</table>', $code);
+    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"\")?\]/','', $code);
+    	$code = preg_replace( '/\[\/text\]/','', $code);
+    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?(\s+size\=\"[A-Z]\")?\]/','<a class="wptb-button">', $code);
+    	$code = preg_replace( '/\[\/button\]/','</a>', $code);
+    	$code = preg_replace( '/\[list(\s+class\=\"unordered\")?(\s+style\-type\=\"\")?\](.*)\[\/list\]/','<ul>$3</ul>', $code);
+    	$code = preg_replace( '/\[item\]/','<li>', $code);
+    	$code = preg_replace( '/\[\/item\]/','</li>', $code);
+    	return ($code);
     }
 
 }

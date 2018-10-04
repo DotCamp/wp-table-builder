@@ -17,6 +17,9 @@
     </g></g> </svg>
     </div>
     <div class="wptb-right">
+        <div id="wptb-messaging-area">
+            
+        </div>
         <div class="wptb-save">
             <a href="#" class="wptb-save-btn">
                 <?php echo __( 'Save Table', 'wp-table-builder' ); ?>

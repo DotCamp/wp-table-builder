@@ -114,8 +114,8 @@ var WPTB_Stringifier = function (node) {
 						width = trueNode.width;
 						height = trueNode.height;
 						alt = trueNode.alt;
-						code += '[img' +
-							+(src != undefined ? ' src="' + src + '"' : '')
+						code += '[img'
+							+ (src != undefined ? ' src="' + src + '"' : '')
 							+ (width != undefined ? ' width="' + width + '"' : '')
 							+ (height != undefined ? ' height="' + height + '"' : '')
 							+ ']';

@@ -1190,7 +1190,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						width = trueNode.width;
 						height = trueNode.height;
 						alt = trueNode.alt;
-						code += '[img' + +(src != undefined ? ' src="' + src + '"' : '') + (width != undefined ? ' width="' + width + '"' : '') + (height != undefined ? ' height="' + height + '"' : '') + ']';
+						code += '[img' + (src != undefined ? ' src="' + src + '"' : '') + (width != undefined ? ' width="' + width + '"' : '') + (height != undefined ? ' height="' + height + '"' : '') + ']';
 						break;
 					case 'text':
 						trueNode = node.getElementsByClassName('editable')[0];
@@ -1249,32 +1249,67 @@ var array = [],
 		var rs = this.rowSpan,
 		    cs = this.colSpan,
 		    markedCells,
-
-		//   noCells = document.getElementsByClassName('no-cell-action'),
-		//   singleCells = document.getElementsByClassName('single-action'),
-		//   multipleCells = document.getElementsByClassName('multiple-select-action'),
-		position = getCoords(this),
+		    noCells = document.getElementsByClassName('no-cell-action'),
+		    singleCells = document.getElementsByClassName('single-action'),
+		    multipleCells = document.getElementsByClassName('multiple-select-action'),
+		    position = getCoords(this),
 		    row = position[0],
 		    column = position[1];
-		for (var i = 0; i < rs; i++) {
-			for (var j = 0; j < cs; j++) {
-				array[row + i][column + j] = 1;
+		if (!document.select.isActivated()) {
+			return;
+		}
+		if (this.className.match(/wptb-highlighted/)) {
+			this.classList.remove('wptb-highlighted');
+			for (var i = 0; i < rs; i++) {
+				for (var j = 0; j < cs; j++) {
+					array[row + i][column + j] = 0;
+				}
+			}
+		} else {
+			this.classList.add('wptb-highlighted');
+			for (var i = 0; i < rs; i++) {
+				for (var j = 0; j < cs; j++) {
+					array[row + i][column + j] = 1;
+				}
 			}
 		}
-		this.classList.add('wptb-highlighted');
+
 		markedCells = document.getElementsByClassName('wptb-highlighted').length;
-		/*    if(markedCells === 1){
-  			for (var i = 0; i < singleCells.length; i++) {
-  				singleCells[i].classList.add('visible');
-  				multipleCells[i].classList.remove('visible');
-  				noCells[i].classList.remove('visible');
-  			}
-  		}
-  		else{
-  				singleCells[i].classList.remove('visible');
-  				multipleCells[i].classList.add('visible');
-  				noCells[i].classList.remove('visible');
-  		}*/
+		if (markedCells === 0) {
+			for (var i = 0; i < multipleCells.length; i++) {
+				multipleCells[i].classList.remove('visible');
+			}
+			for (var i = 0; i < noCells.length; i++) {
+				noCells[i].classList.add('visible');
+			}
+			for (var i = 0; i < singleCells.length; i++) {
+				singleCells[i].classList.remove('visible');
+			}
+		} else if (markedCells === 1) {
+			for (var i = 0; i < multipleCells.length; i++) {
+				multipleCells[i].classList.remove('visible');
+			}
+			for (var i = 0; i < noCells.length; i++) {
+				noCells[i].classList.remove('visible');
+			}
+			for (var i = 0; i < singleCells.length; i++) {
+				singleCells[i].classList.add('visible');
+			}
+		} else {
+			for (var i = 0; i < multipleCells.length; i++) {
+				if (table.isSquare(array)) {
+					multipleCells[i].classList.add('visible');
+				} else {
+					multipleCells[i].classList.remove('visible');
+				}
+			}
+			for (var i = 0; i < noCells.length; i++) {
+				noCells[i].classList.remove('visible');
+			}
+			for (var i = 0; i < singleCells.length; i++) {
+				singleCells[i].classList.remove('visible');
+			}
+		}
 	};
 
 	for (var i = 0; i < settings.length; i++) {
@@ -1368,24 +1403,30 @@ var array = [],
 			carried[i] = 0;
 		}
 
-		for (var i = 0; i <= row; i++) {
-			tds = table.rows[i].getElementsByTagName('td');
-			cols = 0, items = 0;
+		if (row == -1) {
+			return carried;
+		}
 
-			for (colspansAcumulados = 0; colspansAcumulados < maxAmountOfCells && items < tds.length;) {
-				if (carried[colspansAcumulados]) {
-					carried[colspansAcumulados]--;
-					colspansAcumulados++;
-					continue;
-				}
-				cell = tds[items++];
-				if (cell.rowSpan > 1) {
-					for (var k = 0; k < cell.colSpan; k++) {
-						carried[colspansAcumulados + k] = cell.rowSpan;
+		for (var i = 0; i <= row; i++) {
+			bufferDeCeldas = table.rows[i].getElementsByTagName('td');
+			punteroDeCelda = 0;
+
+			for (var posicionEnPuntos = 0; posicionEnPuntos < maxAmountOfCells; posicionEnPuntos += desplazamiento) {
+				desplazamiento = 1;
+
+				if (carried[posicionEnPuntos]) {
+					carried[posicionEnPuntos]--;
+				} else {
+					celda = bufferDeCeldas[punteroDeCelda++];
+					if (celda.rowSpan > 1) {
+						for (k = 0; k < celda.colSpan; k++) {
+							carried[posicionEnPuntos + k] = celda.rowSpan - 1;
+						}
+						desplazamiento = celda.colSpan;
+					} else if (celda.colSpan > 1) {
+						desplazamiento = celda.colSpan;
 					}
 				}
-				if (carried[colspansAcumulados]) carried[colspansAcumulados]--;
-				colspansAcumulados += cell.colSpan;
 			}
 		}
 		return carried;
@@ -1460,163 +1501,90 @@ var array = [],
 		var cell = document.querySelector('.wptb-highlighted'),
 		    pos = getCoords(cell)[1];
 
-		if (pos == 0) {
+		if (pos === 0) {
 			table.addColumnStart();
-			return;
-		}
-
-		pos--;
-
-		for (var i = 0; i < table.rows.length; i++) {
-			cellCount = 0;
-
-			arr = carriedRowspans(i);
-			for (var j = 0; j < maxAmountOfCells;) {
-				if (arr[j] != 0) {
-					arr[j]--;
-					j++;
-					continue;
-				}
-				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
-				if (currentCell.colSpan > 1) {
-					var insertAfterSkip = false;
-					for (var k = 0; k < currentCell.colSpan - 1; k++) {
-						if (pos === j + k) {
-							insertAfterSkip = true;
-						}
-						j++;
-					}
-					if (insertAfterSkip) {
-						var bro = currentCell.nextSibling,
-						    td = new WPTB_Cell(mark);
-						if (bro) {
-							table.rows[i].insertBefore(td.getDOMElement(), bro);
-						} else {
-							table.rows[i].appendChild(td.getDOMElement());
-						}
-						break;
-					}
-				} else {
-					if (pos == j) {
-						var bro = currentCell.nextSibling,
-						    td = new WPTB_Cell(mark);
-						if (bro) {
-							table.rows[i].insertBefore(td.getDOMElement(), bro);
-						} else {
-							table.rows[i].appendChild(td.getDOMElement());
-						}
-						break;
-					} else {}
-					j++;
-				}
-			}
-		}
-
-		for (var i = 0; i < array.length; i++) {
-			array[i].push(0);
-		}
-		drawTable(array);
-		table.recalculateIndexes();
-		undoSelect();
-	};
-
-	table.addColumnAfter = function () {
-		var cell = document.querySelector('.wptb-highlighted'),
-		    pos = getCoords(cell)[1];
-
-		for (var i = 0; i < table.rows.length; i++) {
-			cellCount = 0;
-
-			arr = carriedRowspans(i);
-			for (var j = 0; j < maxAmountOfCells;) {
-				if (arr[j] != 0) {
-					continue;
-					arr[j]--;
-				}
-				currentCell = table.rows[i].getElementsByTagName('td')[cellCount++];
-				if (currentCell.colSpan > 1) {
-					var insertAfterSkip = false;
-					for (var k = 0; k < currentCell.colSpan - 1; k++) {
-						if (pos === j + k) {
-							insertAfterSkip = true;
-							console.log('Sadly, we must procrastinate ' + (currentCell.colSpan - 1) + ' spaces');
-						}
-						j++;
-					}
-					if (insertAfterSkip) {
-						var bro = currentCell.nextSibling,
-						    td = new WPTB_Cell(mark);
-						if (bro) {
-							table.rows[i].insertBefore(td.getDOMElement(), bro);
-						} else {
-							table.rows[i].appendChild(td.getDOMElement());
-						}
-						break;
-					}
-				} else {
-					if (pos == j) {
-						var bro = currentCell.nextSibling,
-						    td = new WPTB_Cell(mark);
-						if (bro) {
-							table.rows[i].insertBefore(td.getDOMElement(), bro);
-						} else {
-							table.rows[i].appendChild(td.getDOMElement());
-						}
-						break;
-					} else {}
-					j++;
-				}
-			}
-		}
-
-		for (var i = 0; i < array.length; i++) {
-			array[i].push(0);
-		}
-		drawTable(array);
-		table.recalculateIndexes();
-		undoSelect();
-	};
-
-	table.addRow = function (pos) {
-		var _this,
-		    row,
-		    referenceRow = undefined;
-
-		if (pos == 'end' || pos == 'start') {
-			row = this.insertRow(pos == 'end' ? -1 : 0);
 		} else {
-			row = document.createElement('tr');
+			table.addColumnAfter(pos - 1);
+		}
+	};
+
+	table.addColumnAfter = function (c_pos) {
+		var rows = table.rows,
+		    bufferDeCeldas,
+		    cell = document.querySelector('.wptb-highlighted'),
+		    pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
+		    insercionPendiente = false,
+		    desplazamiento,
+		    td,
+		    bro,
+		    carriedRowspans = [],
+		    currentCell;
+
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			carriedRowspans.push(0);
 		}
 
-		for (var j = 0; j < this.columns; j++) {
-			var cell = new WPTB_Cell(mark);
-			row.appendChild(cell.getDOMElement());
-		}
+		for (var i = 0; i < rows.length; i++) {
+			punteroDeCelda = 0;
+			bufferDeCeldas = rows[i].getElementsByTagName('td');
+			insercionPendiente = false;
+			for (var posicionEnPuntos = 0; posicionEnPuntos < maxAmountOfCells; posicionEnPuntos += desplazamiento) {
+				desplazamiento = 1;
 
-		row.classList.add('wptb-row');
+				if (insercionPendiente) {
+					td = new WPTB_Cell(mark);
+					td.getDOMElement().style.backgroundColor = 'black';
 
-		if (pos == 'before' || pos == 'after') {
-			_this = this.getElementsByClassName('wptb-highlighted')[0];
-			referenceRow = this.getElementsByTagName('tr')[_this.dataset.yIndex];
-			if (pos == "before") {
-				this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow);
-				var buttons = document.getElementsByClassName('wptb-relative-action');
-				for (var i = 0; i < buttons.length; i++) {
-					buttons[i].dataset.yIndex++;
+					if (currentCell && rows[i].contains(currentCell)) {
+						bro = currentCell.nextSibling;
+						if (bro) {
+							rows[i].insertBefore(td.getDOMElement(), bro);
+						} else {
+							rows[i].appendChild(td.getDOMElement());
+						}
+					} else {
+						rows[i].insertBefore(td.getDOMElement(), bufferDeCeldas[0]);
+					}
+					break;
+				} else if (carriedRowspans[posicionEnPuntos] > 0) {
+					if (pos == posicionEnPuntos) {
+						insercionPendiente = true;
+					}
+				} else {
+					currentCell = bufferDeCeldas[punteroDeCelda++];
+					if (currentCell.rowSpan > 1) {
+						desplazamiento = currentCell.colSpan;
+						for (var k = 0; k < currentCell.colSpan; k++) {
+							carriedRowspans[posicionEnPuntos + k] = currentCell.rowSpan;
+							if (posicionEnPuntos + k == pos) {
+								insercionPendiente = true;
+							}
+						}
+					} else if (currentCell.colSpan > 1) {
+						desplazamiento = currentCell.colSpan;
+						for (var k = 0; k < currentCell.colSpan; k++) {
+							if (posicionEnPuntos + k == pos) {
+								insercionPendiente = true;
+							}
+						}
+					} else if (posicionEnPuntos == pos) {
+						insercionPendiente = true;
+					}
 				}
-			} else {
-				this.getElementsByTagName('tbody')[0].insertBefore(row, referenceRow.nextSibling);
+			}
+
+			for (var l = 0; l < maxAmountOfCells; l++) {
+				if (carriedRowspans[l] > 0) carriedRowspans[l]--;
 			}
 		}
 
-		if (pos == 'before' || pos == 'start') {
-			var active = document.querySelector('wptb-highlighted');
-			if (active) {
-				active.onclick();
-			}
+		for (var i = 0; i < array.length; i++) {
+			array[i].push(0);
 		}
-
+		maxAmountOfCells++;
+		drawTable(array);
 		table.recalculateIndexes();
+		undoSelect();
 	};
 
 	table.addRowToTheEnd = function (evt) {
@@ -1660,6 +1628,7 @@ var array = [],
 
 		for (var i = 0; i < noPending.length; i++) {
 			var td = new WPTB_Cell(mark);
+			td.getDOMElement().style.backgroundColor = 'black';
 			r.appendChild(td.getDOMElement());
 		}
 
@@ -1675,6 +1644,7 @@ var array = [],
 
 				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
 					td = new WPTB_Cell(mark);
+					td.getDOMElement().style.backgroundColor = 'black';
 					table.rows[i].appendChild(td.getDOMElement());
 				}
 			}
@@ -1701,6 +1671,7 @@ var array = [],
 
 		for (var i = 0; i < noPending.length; i++) {
 			td = new WPTB_Cell(mark);
+			td.getDOMElement().style.backgroundColor = 'black';
 			r.appendChild(td.getDOMElement());
 		}
 
@@ -1716,7 +1687,8 @@ var array = [],
 
 				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
 					td = new WPTB_Cell(mark);
-					table.rows[i].appendChild(td);
+					td.getDOMElement().style.backgroundColor = 'black';
+					table.rows[i].appendChild(td.getDOMElement());
 				}
 			}
 		}
@@ -1728,7 +1700,7 @@ var array = [],
 		undoSelect();
 	};
 
-	var isSquare = function isSquare(a) {
+	table.isSquare = function (a) {
 		var rowStart = -1,
 		    columnStart = -1,
 		    rowEnd = -1,
@@ -1799,7 +1771,7 @@ var array = [],
 			}
 			string += '\n';
 		}
-		isSquare(a);
+		table.isSquare(a);
 	};
 
 	var undoSelect = function undoSelect() {
@@ -1831,15 +1803,7 @@ var array = [],
 
 		maxAmountOfCells = Math.max.apply(null, colspansSums);
 		//calculate max rows
-		var maxAmountOfRows = table.rows.length; /* I'm feeling like I'm gonna go crazy if I don't assume 
-                                                     the table starts having a fixed amount of rows,
-                                                     therefore no matter if I vertically fuse all cells from the
-                                                     first row to the last row, the TR nodes won't dissapear
-                                                     (tough they will run empty after the merging function deletes
-                                                     all of its tds for increasing the first row tds rowspan),
-                                                     so its length remains as a confident max rows amount.
-                                                     */
-		// fill with zeros from both values
+		var maxAmountOfRows = table.rows.length;
 		for (var i = 0; i < maxAmountOfRows; i++) {
 			a[i] = [];
 			for (var j = 0; j < maxAmountOfCells; j++) {
@@ -1854,68 +1818,38 @@ var array = [],
 		var skipInCols = [],
 		    cell;
 
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			skipInCols[i] = 0;
+		}
+
 		for (var i = 0; i < table.rows.length; i++) {
+			var bufferDeCeldas = table.rows[i].getElementsByTagName('td');
+			punteroDeCelda = 0;
+			for (var posicionEnPuntos = 0; posicionEnPuntos < maxAmountOfCells; posicionEnPuntos += desplazamiento) {
+				desplazamiento = 1;
 
-			var tds = [].slice.call(table.rows[i].getElementsByTagName('td'));
-
-			for (var j = 0; j < maxAmountOfCells;) {
-
-				if (skipInCols[j] !== undefined && skipInCols[j] > 0) {
-					j++;
-					skipInCols[j]--;
-					continue;
-				}
-
-				cell = tds.shift();
-
-				if (cell.rowSpan > 1) {
-					for (k = 0; k < cell.colSpan; k++) {
-						skipInCols[j + k] = cell.rowSpan - 1;
+				if (skipInCols[posicionEnPuntos]) {
+					skipInCols[posicionEnPuntos]--;
+				} else {
+					var td = bufferDeCeldas[punteroDeCelda++];
+					if (td == search) {
+						return [i, posicionEnPuntos];
+					}
+					if (td.rowSpan > 1) {
+						for (k = 0; k < td.colSpan; k++) {
+							skipInCols[posicionEnPuntos + k] = td.rowSpan - 1;
+						}
+						desplazamiento = td.colSpan;
+					} else if (td.colSpan > 1) {
+						desplazamiento = td.colSpan;
 					}
 				}
-
-				if (cell == search) {
-					return [i, j];
-				}
-
-				j += cell.colSpan;
 			}
 		}
 	};
 
-	table.deleteRow = function (e) {
-		var cell = document.getElementsByClassName('wptb-highlighted')[0],
-		    index = cell.dataset.yIndex,
-		    table = document.getElementsByClassName('wptb-preview-table')[0],
-		    row = table.getElementsByTagName('tr')[index],
-		    rowCount = table.rows.length,
-		    tbody = row.parentNode;
-		if (rowCount == 1 && columnCount == 1 || tbody == undefined) {
-			return;
-		}
-		tbody.removeChild(row);
-		this.recalculateIndexes();
-	};
-
-	table.deleteColumn = function (e) {
-		var cell = document.getElementsByClassName('wptb-highlighted')[0],
-		    num = cell.dataset.xIndex,
-		    table = document.getElementsByClassName('wptb-preview-table')[0],
-		    rowCount = table.rows.length;
-
-		if (rowCount == 1 && columnCount == 1) {
-			return;
-		}
-		for (var i = 0; i < rowCount; i++) {
-			var td = table.getElementsByTagName('tr')[i].getElementsByTagName('td')[num],
-			    tr = td.parentNode;
-			tr.removeChild(td);
-		}
-		this.recalculateIndexes();
-	};
-
 	table.mergeCells = function () {
-		var dimensions = isSquare(array),
+		var dimensions = table.isSquare(array),
 		    rowspan = dimensions[0],
 		    colspan = dimensions[1],
 		    first = document.querySelector('.wptb-highlighted'),
@@ -1967,7 +1901,155 @@ var array = [],
 		undoSelect();
 	};
 
+	var getActualPointsInRow = function getActualPointsInRow(row) {
+		var tds = table.rows[row].getElementsByTagName('td'),
+		    points = 0;
+		for (var i = 0; i < tds.length; i++) {
+			points += tds[i].colSpan;
+		}
+		return points;
+	};
+
+	table.findRowspannedCells = function (row) {
+		var array = [],
+		    difference;
+		actualPoints = getActualPointsInRow(row);
+		if (actualPoints === maxAmountOfCells) {
+			return [];
+		}
+		difference = maxAmountOfCells - actualPoints;
+
+		for (var i = row - 1; i >= 0 && difference; i--) {
+			var tds = table.rows[i].getElementsByTagName('td');
+			for (var i = 0; i < tds.length; i++) {
+				if (tds[i].rowSpan > 1) {
+					array.push(tds[i]);
+					difference -= tds[i].colSpan;
+				}
+			}
+		}
+		return array;
+	};
+
+	table.addLackingCells = function () {
+		var sumRows = [];
+		for (var i = 0; i < table.rows.length; i++) {
+			sumRows.push(0);
+		}
+
+		for (var i = 0; i < table.rows.length; i++) {
+			var tds = table.rows[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+				if (tds[j].rowSpan > 1) {
+					for (var k = 1; k < tds[j].rowSpan; k++) {
+						sumRows[i + k]++;
+					}
+				}
+			}
+		}
+
+		for (var i = 0; i < table.rows.length; i++) {
+			var tds = table.rows[i].getElementsByTagName('td'),
+			    totalColspan = 0;
+			for (var j = 0; j < tds.length; j++) {
+				totalColspan += tds[j].colSpan;
+			}
+			totalColspan += sumRows[i];
+			difference = maxAmountOfCells - totalColspan;
+			for (var j = 0; j < difference; j++) {
+				var td = new WPTB_Cell(mark);
+				table.rows[i].appendChild(td.getDOMElement());
+			}
+		}
+	};
+
+	table.deleteRow = function () {
+
+		var cell = document.querySelector('.wptb-highlighted'),
+		    row = getCoords(cell)[0],
+		    reduct = table.findRowspannedCells(row);
+
+		for (i = 0; i < reduct.length; i++) {
+			reduct[i].rowSpan--;
+		}
+
+		table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
+		array.pop();
+		undoSelect();
+		table.addLackingCells();
+	};
+
+	table.deleteColumn = function () {
+
+		var cell_ref = document.querySelector('.wptb-highlighted'),
+		    column = getCoords(cell_ref)[1],
+		    buffer,
+		    cell,
+		    carriedRowspans = [];
+
+		for (var i = 0; i < maxAmountOfCells; i++) {
+			carriedRowspans.push(0);
+		}
+
+		for (var i = 0; i < table.rows.length; i++) {
+			buffer = table.rows[i].getElementsByTagName('td');
+			desplazamiento = 1;
+			punteroDeCelda = 0;
+			for (var j = 0; j < maxAmountOfCells; j += desplazamiento) {
+
+				desplazamiento = 1;
+
+				if (carriedRowspans[j] == 0) {
+					cell = buffer[punteroDeCelda++];
+					if (cell.rowSpan > 1) {
+						desplazamiento = cell.colSpan;
+						for (var k = 0; k < cell.colSpan; k++) {
+							carriedRowspans[j + k] = cell.rowSpan;
+						}
+						if (column > j && column <= j + k - 1) {
+							//cell.style.backgroundColor = 'pink';
+							cell.colSpan--;
+							break;
+						}
+					} else if (cell.colSpan > 1) {
+						desplazamiento = cell.colSpan;
+
+						if (column > j && column <= j + cell.colSpan - 1) {
+							//cell.style.backgroundColor = 'pink';
+							cell.colSpan--;
+							break;
+						}
+					}
+					{
+						if (column == j) {
+							table.rows[i].removeChild(cell);
+							//cell.style.backgroundColor = 'pink';
+							break;
+						}
+					}
+				} else {
+					continue;
+				}
+			}
+
+			for (var l = 0; l < carriedRowspans.length; l++) {
+				if (carriedRowspans[l] > 0) {
+					carriedRowspans[l]--;
+				}
+			}
+		}
+		maxAmountOfCells--;
+
+		for (var i = 0; i < table.rows.length; i++) {
+			if (array[i] != undefined) array[i].pop();
+		}
+		undoSelect();
+	};
+
 	array = fillTableArray();
+
+	undoSelect();
+	drawTable(array);
 
 	wptbTableSetup.appendChild(table);
 
@@ -1996,7 +2078,6 @@ var WPTB_Text = function WPTB_Text(text) {
 	return this;
 };
 var applyGenericItemSettings = function applyGenericItemSettings(element) {
-
 	var node = element.getDOMElement(),
 	    index = document.counter.nextIndex(element.kind),
 	    listItems;
@@ -2016,8 +2097,19 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 		btnMove.draggable = true;
 		btnDelete.onclick = function (event) {
 			var act = this.parentNode.parentNode,
-			    el = act.parentNode;
+			    el = act.parentNode,
+			    space = act.nextSibling,
+			    num,
+			    space2;
 			el.removeChild(act);
+			el.removeChild(space);
+			num = el.getElementsByClassName('wptb-ph-element').length;
+			if (!num) {
+				space2 = el.getElementsByClassName('wptb-space-between')[0];
+				if (space2) {
+					el.removeChild(space2);
+				}
+			}
 		};
 		btnCopy.onclick = function (event) {
 			if (element.kind == 'list') {

@@ -1,5 +1,4 @@
 var applyGenericItemSettings = function (element) {
-
 	var node = element.getDOMElement(),
 		index = document.counter.nextIndex(element.kind),
 		listItems;
@@ -18,8 +17,18 @@ var applyGenericItemSettings = function (element) {
 		btnMove.draggable = true;
 		btnDelete.onclick = function (event) {
 			var act = this.parentNode.parentNode,
-				el = act.parentNode;
+				el = act.parentNode,
+				space = act.nextSibling,
+				num, space2;
 			el.removeChild(act);
+			el.removeChild(space);
+			num = el.getElementsByClassName('wptb-ph-element').length;
+			if (!num) {
+				space2 = el.getElementsByClassName('wptb-space-between')[0];
+				if (space2) {
+					el.removeChild(space2);
+				}
+			}
 		};
 		btnCopy.onclick = function (event) {
 			if (element.kind == 'list') {

@@ -118,7 +118,10 @@ class Admin_Menu {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
 		wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
+		if(isset($_GET['page']) && $_GET['page']=='wptb-builder')
+		{
 		wp_enqueue_script( 'wptb-admin-builder-js' );
+		}
 	
 	}
 
@@ -141,9 +144,12 @@ class Admin_Menu {
 				</div>
 			</div>
 			
-		<?
+		<?php
 		$table_list->prepare_items();
-		$table_list->display();
+		?>
+		<form method="post"><?php
+		$table_list->display();?>
+		</form><?php
     }
     
     /**
@@ -155,4 +161,4 @@ class Admin_Menu {
         require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
 	}
 
-}
+}; 
