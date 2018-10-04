@@ -76,11 +76,16 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	public static function record_count() {
 		
-		global $wpdb;
+		global $post;
 
-	  	$sql = "SELECT COUNT(*) FROM {$wpdb->prefix}posts WHERE post_type='wptb_tables' AND post_status<>'trash'";
-		  
-		return $wpdb->get_var( $sql );
+		$per_page = 5;
+
+		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
+	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
+	  	$params['order'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'DESC';
+	  	
+	  	$loop = new \WP_Query( $params ); 
+	  	return $loop->found_posts;
  
 	}
 
