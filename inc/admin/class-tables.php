@@ -97,14 +97,27 @@ class Tables {
     	$code =  $html['post_content'];
     	$code = preg_replace( '/\[tr\]/','<tr>', $code);
     	$code = preg_replace( '/\[\/tr\]/','</tr>', $code);
+    	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")(\s+rowspan\=\"(\d+)?\")\]/','<td colspan="$2" rowspan="$4">', $code);
+    	$code = preg_replace( '/\[td(\s+rowspan\=\"(\d+)?\")\]/','<td rowspan="$2">', $code);
+    	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")\]/','<td colspan="$2">', $code);
     	$code = preg_replace( '/\[td\]/','<td>', $code);
     	$code = preg_replace( '/\[\/td\]/','</td>', $code);
+
     	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")?(\s+data\-bg2\=\"\")?\]/','<table>', $code);
     	$code = preg_replace( '/\[\/table\]/','</table>', $code);
+
     	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"\")?\]/','', $code);
+    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?\]/','', $code);
+    	$code = preg_replace( '/\[text(\s+color\=\"\")?\]/','', $code);
+    	$code = preg_replace( '/\[text\]/','', $code);
     	$code = preg_replace( '/\[\/text\]/','', $code);
-    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?(\s+size\=\"[A-Z]\")?\]/','<a class="wptb-button">', $code);
+
+    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?(\s+size\=\"([A-Z])\")?\]/','<a class="wptb-button wptb-size-$4" style="background-color:rgb($2);">', $code);
+    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?\]/','<a class="wptb-button">', $code);
+    	$code = preg_replace( '/\[button(\s+size\=\"[A-Z]\")?\]/','<a class="wptb-button">', $code);
+    	$code = preg_replace( '/\[button\]/','<a class="wptb-button">', $code);
     	$code = preg_replace( '/\[\/button\]/','</a>', $code);
+    	
     	$code = preg_replace( '/\[list(\s+class\=\"unordered\")?(\s+style\-type\=\"\")?\](.*)\[\/list\]/','<ul>$3</ul>', $code);
     	$code = preg_replace( '/\[item\]/','<li>', $code);
     	$code = preg_replace( '/\[\/item\]/','</li>', $code);

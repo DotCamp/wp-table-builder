@@ -17,21 +17,21 @@ var WPTB_Settings = function () {
 			code = WPTB_Stringifier(document.getElementsByClassName('wptb-preview-table')[0]);
 
 		if (t === '') {
-			messagingArea = document.getElementsByClassName('wptb-messaging')[0];
-			messagingArea.innerHTML = 'Error: You must assign a name to the table before saving it.';
+			messagingArea = document.getElementById('wptb-messaging-area');
+			messagingArea.innerHTML = '<div class="error message">Error: You must assign a name to the table before saving it.</div>';
 			messagingArea.classList.add('warning');
 			setTimeout(function () {
 				messagingArea.classList.remove('warning');
 			}, 5000);
+			return;
 		}
-
 		var params = 'title=' + t + '&content=' + code;
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		http.onreadystatechange = function (d) {
 			if (this.readyState == 4 && this.status == 200) {
 				messagingArea = document.getElementById('wptb-messaging-area');
-				messagingArea.innerHTML = 'Success: table "' + t + '" was successfully saved.';
+				messagingArea.innerHTML = '<div class="success message">Success: table "' + t + '" was successfully saved.</div>';
 				messagingArea.classList.add('success');
 				setTimeout(function () {
 					messagingArea.classList.remove('success');

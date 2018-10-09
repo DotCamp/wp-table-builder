@@ -137,7 +137,7 @@ var WPTB_Stringifier = function (node) {
 					case 'button':
 						trueNode = node.getElementsByClassName('editable')[0];
 						if (!trueNode) {
-							return ''; //We ignore the node in case of error
+							return '';
 						}
 
 						buttonColor = trueNode.style.backgroundColor;
