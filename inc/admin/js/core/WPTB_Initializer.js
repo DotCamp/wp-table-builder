@@ -19,11 +19,19 @@ var WPTB_Initializer = function () {
 		}
 	};
 
+	columnsDecrementButton.onmousedown = function (event) {
+		event.preventDefault();
+	}
+
 	columnsIncrementButton.onclick = function () {
 		if (columnsInput.value < MAX_COLUMNS) {
 			columnsInput.value++;
 		}
 	};
+
+	columnsIncrementButton.onmousedown = function (event) {
+		event.preventDefault();
+	}
 
 	rowsDecrementButton.onclick = function () {
 		if (rowsInput.value > MIN_ROWS) {
@@ -31,11 +39,19 @@ var WPTB_Initializer = function () {
 		}
 	};
 
+	rowsDecrementButton.onmousedown = function (event) {
+		event.preventDefault();
+	}
+
 	rowsIncrementButton.onclick = function () {
 		if (rowsInput.value < MAX_ROWS) {
 			rowsInput.value++;
 		}
 	};
+
+	rowsIncrementButton.onmousedown = function (event) {
+		event.preventDefault();
+	}
 
 	document.getElementById('wptb-generate-table').onclick = function () {
 		var columns = document.getElementById('wptb-columns-number').value,
