@@ -45,6 +45,7 @@ body>img {
     border-bottom: 1px solid #ccc;
     position: fixed;
     z-index: 99999;
+    display: flex;
 }
 
 .wptb-logo {
@@ -61,20 +62,27 @@ body>img {
     justify-content: space-around;
 }
 
-.wptb-messaging-area .message {
+#wptb-messaging-area {
+    align-self: center;
+    margin: 0 auto;
+}
+
+#wptb-messaging-area .wptb-message {
     border-radius: 4px;
-    max-width: 300px;
-    padding: 4px;
+    max-width: 410px;
+    padding: 20px;
 }
 
-.wptb-messaging-area .success.message {
-    color: red;
-    background-color: coral;
-}
-
-.wptb-messaging-area .error.message {
+#wptb-messaging-area .wptb-success {
     color: green;
     background-color: lightgreen;
+    font-size: 15px;
+}
+
+#wptb-messaging-area .wptb-error {
+    color: red;
+    background-color: rgb(255, 213, 213);
+    font-size: 15px;
 }
 
 .wptb-save {
@@ -497,6 +505,7 @@ ul.wptb-tabs {
     border-radius: 4px;
     border: 1px solid #ccc;
     transition: all .25s;
+    cursor: move;
 }
 
 .wptb-element p {

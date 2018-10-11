@@ -16,10 +16,10 @@
 	<path style="fill:#0D557E" d="M373.996,456.673c0,3.631-2.954,6.585-6.585,6.585h-15.722c-3.631,0-6.585-2.954-6.585-6.585   V352.839c0-3.647,2.954-6.585,6.585-6.585h15.722c3.631,0,6.585,2.938,6.585,6.585V456.673z" data-original="#FFB600" class="" data-old_color="#0D567F"/>
     </g></g> </svg>
     </div>
-    <div class="wptb-right">
-        <div id="wptb-messaging-area">
+    <div id="wptb-messaging-area">
             
-        </div>
+    </div>
+    <div class="wptb-right">
         <div class="wptb-save">
             <a href="#" class="wptb-save-btn">
                 <?php echo __( 'Save Table', 'wp-table-builder' ); ?>

@@ -986,11 +986,11 @@ var WPTB_Settings = function WPTB_Settings() {
 
 		if (t === '') {
 			messagingArea = document.getElementById('wptb-messaging-area');
-			messagingArea.innerHTML = '<div class="error message">Error: You must assign a name to the table before saving it.</div>';
-			messagingArea.classList.add('warning');
+			messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: You must assign a name to the table before saving it.</div>';
+			messagingArea.classList.add('wptb-warning');
 			setTimeout(function () {
-				messagingArea.classList.remove('warning');
-			}, 5000);
+				messagingArea.removeChild(messagingArea.firstChild);
+			}, 4000);
 			return;
 		}
 		var params = 'title=' + t + '&content=' + code;
@@ -999,11 +999,11 @@ var WPTB_Settings = function WPTB_Settings() {
 		http.onreadystatechange = function (d) {
 			if (this.readyState == 4 && this.status == 200) {
 				messagingArea = document.getElementById('wptb-messaging-area');
-				messagingArea.innerHTML = '<div class="success message">Success: table "' + t + '" was successfully saved.</div>';
-				messagingArea.classList.add('success');
+				messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table: "' + t + '" was successfully saved!</div>';
+				messagingArea.classList.add('wptb-success');
 				setTimeout(function () {
-					messagingArea.classList.remove('success');
-				}, 5000);
+					messagingArea.removeChild(messagingArea.firstChild);
+				}, 4000);
 			}
 		};
 		http.send(params);
@@ -1281,9 +1281,7 @@ var array = [],
 		    position = getCoords(this),
 		    row = position[0],
 		    column = position[1];
-		console.log('Clicked');
 		if (!document.select.isActivated()) {
-			console.log('activ');
 			return;
 		}
 		if (this.className.match(/wptb-highlighted/)) {

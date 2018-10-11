@@ -26,9 +26,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 			position = getCoords(this),
 			row = position[0],
 			column = position[1];
-		console.log('Clicked');
 		if (!document.select.isActivated()) {
-			console.log('activ');
 			return;
 		}
 		if (this.className.match(/wptb-highlighted/)) {
