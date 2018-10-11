@@ -1116,6 +1116,7 @@ table.wptb-table {
 
 .wptb-actions .dashicons.dashicons-move.move-action {
     font-size: 17px !important;
+    cursor: move;
 }
 
 .no-cell-action:not(.visible),
