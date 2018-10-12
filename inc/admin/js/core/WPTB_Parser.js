@@ -115,12 +115,12 @@ var WPTB_Parser = function (code) {
 	}
 
 	function analizeElements(td) {
-		do {
+		while (getCurrentToken() == '[image]'
+			|| getCurrentToken() == '[text]'
+			|| getCurrentToken() == '[list]'
+			|| getCurrentToken() == '[button]') {
 			td.appendChild(analizeElement());
-		} while (getCurrentToken() == '[image]'
-		|| getCurrentToken() == '[text]'
-		|| getCurrentToken() == '[list]'
-			|| getCurrentToken() == '[button]');
+		}
 	}
 
 	function analizeRows(tableNode) {
@@ -135,7 +135,12 @@ var WPTB_Parser = function (code) {
 
 	function analizeTd() {
 		var td = new WPTB_Cell();
+		var attrs = getAttributesFromToken();
 		getExpectedToken('[td]');
+		if (attrs['colspan'] != undefined)
+			td.getDOMElement().colSpan = parseInt(attrs['colspan']);
+		if (attrs['rowspan'] != undefined)
+			td.getDOMElement().rowSpan = parseInt(attrs['rowspan']);
 		analizeElements(td.getDOMElement());
 		getExpectedToken('[/td]');
 		return td.getDOMElement();

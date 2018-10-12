@@ -914,9 +914,9 @@ var WPTB_Parser = function WPTB_Parser(code) {
 	}
 
 	function analizeElements(td) {
-		do {
+		while (getCurrentToken() == '[image]' || getCurrentToken() == '[text]' || getCurrentToken() == '[list]' || getCurrentToken() == '[button]') {
 			td.appendChild(analizeElement());
-		} while (getCurrentToken() == '[image]' || getCurrentToken() == '[text]' || getCurrentToken() == '[list]' || getCurrentToken() == '[button]');
+		}
 	}
 
 	function analizeRows(tableNode) {
@@ -931,7 +931,10 @@ var WPTB_Parser = function WPTB_Parser(code) {
 
 	function analizeTd() {
 		var td = new WPTB_Cell();
+		var attrs = getAttributesFromToken();
 		getExpectedToken('[td]');
+		if (attrs['colspan'] != undefined) td.getDOMElement().colSpan = parseInt(attrs['colspan']);
+		if (attrs['rowspan'] != undefined) td.getDOMElement().rowSpan = parseInt(attrs['rowspan']);
 		analizeElements(td.getDOMElement());
 		getExpectedToken('[/td]');
 		return td.getDOMElement();
@@ -970,6 +973,15 @@ var WPTB_Settings = function WPTB_Settings() {
 
 	var elems = document.getElementsByClassName('wptb-element');
 
+	function detectMode() {
+		var url = window.location.href,
+		    regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
+		    results = regex.exec(url);
+		if (!results) return false;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
 	for (var i = 0; i < elems.length; i++) {
 		elems[i].ondragstart = function (event) {
 			event.dataTransfer.effectAllowed = 'move';
@@ -994,6 +1006,9 @@ var WPTB_Settings = function WPTB_Settings() {
 			return;
 		}
 		var params = 'title=' + t + '&content=' + code;
+		if (rs = detectMode()) {
+			params += '&id=' + rs;
+		}
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		http.onreadystatechange = function (d) {

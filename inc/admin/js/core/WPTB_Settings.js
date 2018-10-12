@@ -2,6 +2,15 @@ var WPTB_Settings = function () {
 
 	var elems = document.getElementsByClassName('wptb-element');
 
+	function detectMode() {
+		var url = window.location.href,
+			regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
+			results = regex.exec(url);
+		if (!results) return false;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	}
+
 	for (var i = 0; i < elems.length; i++) {
 		elems[i].ondragstart = function (event) {
 			event.dataTransfer.effectAllowed = 'move';
@@ -26,6 +35,9 @@ var WPTB_Settings = function () {
 			return;
 		}
 		var params = 'title=' + t + '&content=' + code;
+		if (rs = detectMode()) {
+			params += '&id=' + rs;
+		}
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		http.onreadystatechange = function (d) {
