@@ -30,17 +30,30 @@ class Admin_Menu {
 	}
 
 	public function save_table(){
-		$id = wp_insert_post([
-			'post_title' => $_POST['title'],
-			'post_content' => $_POST['content'],
-			'post_type' => 'wptb-tables'
-		]); 
-		wp_die('Holi'.$id);
+
+		if ( !isset( $_POST['id' ]) || $_POST['id'] === '-1' ) {
+			$id = wp_insert_post([
+				'post_title' => $_POST['title'],
+				'post_content' => '',
+				'post_type' => 'wptb-tables'
+			]);
+			add_post_meta( $id, '_wptb_content_', $_POST['content'] ); 
+		} else {
+			wp_update_post([
+				'ID' => $_POST['id'],
+				'post_title' => $_POST['title'],
+				'post_content' => '',
+				'post_type' => 'wptb-tables'
+			]);
+			update_post_meta( $_POST['id'], '_wptb_content_', $_POST['content' ]); 
+		}
+
+		wp_die( 'Holi'.$id );
 	}
 
 	public function get_table(){  
-		$html = get_post($_REQUEST['id'] , ARRAY_A);
-		die($html['post_content']);
+		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_' );
+		die( $html[0] );
 	}
 
 

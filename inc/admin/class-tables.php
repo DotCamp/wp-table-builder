@@ -25,16 +25,19 @@ class Tables {
 		$this->register_cpt();
 		// Add the custom columns to the book post type: 
 		add_filter( 'manage_wptb-tables_posts_columns', [$this,'addHeader'] );
-		add_filter('post_row_actions', [$this,'customizeActions'], 10, 2 );
+		add_filter( 'post_row_actions', [$this,'customizeActions'], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column' , [$this,'addContent'], 10, 2 );
 	}
 
-	function customizeActions($actions,$post){ 
-    if ($post->post_type =="wptb-tables"){
-    	unset($actions['inline hide-if-no-js']);
-        $actions['edit'] = '<a href="'.menu_page_url('wptb-builder',false).'&table='.$post->ID.'">'.__('Edit','wptb').'</a>';
-    }
-    return $actions;
+	function customizeActions( $actions,$post ) { 
+
+    	if ( $post->post_type =="wptb-tables" ) {
+    		unset( $actions['inline hide-if-no-js'] );
+        	$actions['edit'] = '<a href="'. menu_page_url( 'wptb-builder',false ).'&table='.$post->ID.'">'.__('Edit','wptb').'</a>';
+    	}
+	
+		return $actions;
+	
 	}
 
 	function addHeader($columns) { 
@@ -52,17 +55,18 @@ class Tables {
 	function addContent( $column, $post_id ) {
 	    switch ( $column ) {
 
-	        case 'title' :  $post = get_post($post_id);
-	        				$title = $post->post_title;
-	        				echo "$title";
-	        				break;
-	        case 'shortcode' : echo '<input class="wptb_shortcode" value="[wptb id='.$post_id.']" readonly style="border:none;display:inline;"><button onclick="event.preventDefault();var s=this.parentNode.getElementsByClassName(\'wptb_shortcode\')[0];s.select();document.execCommand(\'copy\');var elem = document.createElement(\'div\');elem.classList.add(\'notice\',\'notice-success\',\'is-dismissible\');elem.innerHTML = \'<p>Selected!</p><button onclick=\\\'var n = this.parentNode,p= n.parentNode;p.removeChild(n);\\\' type=\\\'button\\\' class=\\\'notice-dismiss\\\'><span class=\\\'screen-reader-text\\\'>Descartar este aviso.</span></button>\'; document.getElementsByClassName(\'wrap\')[0].prepend(elem);" class="button wptb-edit-button">Copy</button>'; 
+			case 'title' :  
+				$post = get_post($post_id);
+	        	$title = $post->post_title;
+	        	echo "$title";
+	        	break;
+			case 'shortcode' : 
+				echo '<input class="wptb_shortcode" value="[wptb id='.$post_id.']" readonly style="border:none;display:inline;"><button onclick="event.preventDefault();var s=this.parentNode.getElementsByClassName(\'wptb_shortcode\')[0];s.select();document.execCommand(\'copy\');var elem = document.createElement(\'div\');elem.classList.add(\'notice\',\'notice-success\',\'is-dismissible\');elem.innerHTML = \'<p>Selected!</p><button onclick=\\\'var n = this.parentNode,p= n.parentNode;p.removeChild(n);\\\' type=\\\'button\\\' class=\\\'notice-dismiss\\\'><span class=\\\'screen-reader-text\\\'>Descartar este aviso.</span></button>\'; document.getElementsByClassName(\'wrap\')[0].prepend(elem);" class="button wptb-edit-button">Copy</button>'; 
 	            break;
- 
 
 	    }
 	}
-
+ 
 	/**
 	 * Registers the custom post type to be used for table.
 	 *
@@ -93,17 +97,26 @@ class Tables {
     }
 
     public function get_table($args){  
-    	$html = get_post($args['id'] , ARRAY_A);
-    	$code =  $html['post_content'];
+
+    	$uniqueSequence = 't'.substr( md5( time() ), 0, 8 );
+    	$html = get_post_meta( $args['id'] , '_wptb_content_' );
+    	$code =  $html[0];
     	$code = preg_replace( '/\[tr\]/','<tr>', $code);
     	$code = preg_replace( '/\[\/tr\]/','</tr>', $code);
+
     	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")(\s+rowspan\=\"(\d+)?\")\]/','<td colspan="$2" rowspan="$4">', $code);
     	$code = preg_replace( '/\[td(\s+rowspan\=\"(\d+)?\")\]/','<td rowspan="$2">', $code);
     	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")\]/','<td colspan="$2">', $code);
     	$code = preg_replace( '/\[td\]/','<td>', $code);
     	$code = preg_replace( '/\[\/td\]/','</td>', $code);
 
-    	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")?(\s+data\-bg2\=\"\")?\]/','<table>', $code);
+    	$code = preg_replace( '/\[table\s+data\-bg1\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\s+data\-bg2\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\s+data\-bg3\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\]/','<style type="text/css">#'.$uniqueSequence.' tr:nth-child(even) td{background-color:rgb($2)} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:rgb($3)} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:rgb($1)}</style><table id="'.$uniqueSequence.'">', $code);
+    //	$code = preg_replace( '/\[table\s+data\-bg1\=\"\")(\s+data\-bg2\=\"\")\]/','<table>', $code);
+    //	$code = preg_replace( '/\[table(\s+data\-bg2\=\"\")(\s+data\-bg3\=\"\")\]/','<table>', $code);
+    //	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")(\s+data\-bg3\=\"\")\]/','<table>', $code);
+    	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")\]/','<table>', $code);
+    	$code = preg_replace( '/\[table(\s+data\-bg2\=\"\")\]/','<table>', $code);
+    	$code = preg_replace( '/\[table(\s+data\-bg3\=\"\")\]/','<table>', $code);
     	$code = preg_replace( '/\[\/table\]/','</table>', $code);
 
     	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"\")?\]/','', $code);
