@@ -202,7 +202,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 			string += '\n';
 		}
-		console.log(string);
 		table.isSquare(a);
 	};
 
@@ -212,7 +211,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 */
 
 	var undoSelect = function () {
-		var tds = table.getElementsByClassName('wptb-highlighted');
+		var noCells = document.getElementsByClassName('no-cell-action'),
+			singleCells = document.getElementsByClassName('single-action'),
+			multipleCells = document.getElementsByClassName('multiple-select-action'),
+			tds = table.getElementsByClassName('wptb-highlighted');
 		while (tds.length) {
 			tds[0].classList.remove('wptb-highlighted');
 		}
@@ -221,7 +223,15 @@ var array = [], WPTB_Table = function (columns, rows) {
 			for (var j = 0; j < array[i].length; j++) {
 				array[i][j] = 0;
 			}
-
+		}
+		for (var i = 0; i < multipleCells.length; i++) {
+			multipleCells[i].classList.remove('visible');
+		}
+		for (var i = 0; i < noCells.length; i++) {
+			noCells[i].classList.add('visible');
+		}
+		for (var i = 0; i < singleCells.length; i++) {
+			singleCells[i].classList.remove('visible');
 		}
 	};
 
@@ -353,7 +363,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	table.toggleTableEditMode = function () {
 		var bar = document.getElementById('edit-bar');
-		console.log('Bar', bar);
 		if (bar.classList.contains('visible')) {
 			document.select.deactivateMultipleSelectMode();
 			bar.classList.remove('visible');
@@ -394,7 +403,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 		}
 		this.columns = maxCols;
-		console.log('Table dimensions: ' + trs.length + ' rows ,' + maxCols + ' columns');
 	}
 
 	/*
@@ -413,6 +421,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	/*
 	 * As simple as it looks: adds a column to the start of table.
 	 */
+
 	table.addColumnStart = function () {
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
@@ -436,6 +445,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * @param integer the column number to be used as reference.
 	 *	If empty, then the first highlighted cell is used as reference.
 	 */
+
 	table.addColumnAfter = function (c_pos) {
 		var rows = table.rows,
 			cellsBuffer,
@@ -446,6 +456,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 			td, bro,
 			carriedRowspans = [],
 			currentCell;
+
+		console.log('Position to add after:', pos);
+
 
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			carriedRowspans.push(0);
@@ -462,7 +475,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 				if (pendingInsertion) {
 					td = new WPTB_Cell(mark);
-					td.getDOMElement().style.backgroundColor = 'black';
 
 					if (currentCell && rows[i].contains(currentCell)) {
 						bro = currentCell.nextSibling;
@@ -481,17 +493,22 @@ var array = [], WPTB_Table = function (columns, rows) {
 				else if (carriedRowspans[xPosition] > 0)
 				// If no pending insertion, let's check if no rowspan from upper cells is pending in current position
 				{
+					console.log('We must skip position ' + xPosition + ' of row ' + i);
 					if (pos == xPosition) {
+						console.log('In next iteration we insert , position:' + pos);
 						pendingInsertion = true;
 					}
 				}
 				else {
 					currentCell = cellsBuffer[cellPointer++];
+					console.log('Cell', currentCell, i, cellPointer);
 					if (currentCell.rowSpan > 1) {
 						stepsToMove = currentCell.colSpan;
 						for (var k = 0; k < currentCell.colSpan; k++) {
 							carriedRowspans[xPosition + k] = currentCell.rowSpan;
+							console.log('xPosition,k,xPosition+k,pos', xPosition, k, xPosition + k, pos)
 							if (xPosition + k == pos) {
+								console.log('Yes');
 								pendingInsertion = true;
 							}
 						}
@@ -507,13 +524,18 @@ var array = [], WPTB_Table = function (columns, rows) {
 					else if (xPosition == pos) {
 						pendingInsertion = true;
 					}
+
 				}
+
+
+
 			}
 
 			for (var l = 0; l < maxAmountOfCells; l++) {
 				if (carriedRowspans[l] > 0)
 					carriedRowspans[l]--;
 			}
+
 
 		}
 
@@ -533,6 +555,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * using the previous column to current one as reference.
 	 * @see addColumnAfter
 	 */
+
 	table.addColumnBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
 			pos = getCoords(cell)[1];
@@ -546,9 +569,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * Luckily, this function is simple, 
+	 * Luckily, thisfunction is simple, 
 	 * it just add a row to the end of table.
 	 */
+
 	table.addRowToTheEnd = function () {
 		var r = table.insertRow(-1),
 			td,
@@ -568,6 +592,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * Yet another simple function, 
 	 * it just add a row to the start of table.
 	 */
+
 	table.addRowToTheStart = function () {
 		var r = table.insertRow(0);
 		for (var i = 0; i < maxAmountOfCells; i++) {
@@ -586,6 +611,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * Since the biggest factor of problem is a not-started but ongoing rowspan,
 	 * the most of the troubles is not here.
 	 */
+
 	table.addRowBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
 			row = getCoords(cell)[0],
@@ -597,9 +623,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 			return elem == 0;
 		});
 
+
 		for (var i = 0; i < noPending.length; i++) {
 			var td = new WPTB_Cell(mark);
-			td.getDOMElement().style.backgroundColor = 'black';
 			r.appendChild(td.getDOMElement());
 		}
 
@@ -615,11 +641,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
 					td = new WPTB_Cell(mark);
-					td.getDOMElement().style.backgroundColor = 'black';
 					table.rows[i].appendChild(td.getDOMElement());
 				}
 			}
 		}
+
 
 		aux = Array.from(array[0]);
 		array.push(aux);
@@ -637,6 +663,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * it was created the function realTimeArray.
 	 * @see realTimeArray
 	 */
+
 	table.addRowAfter = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
@@ -649,15 +676,18 @@ var array = [], WPTB_Table = function (columns, rows) {
 			return elem == 0;
 		});
 
+
 		for (var i = 0; i < noPending.length; i++) {
 			td = new WPTB_Cell(mark);
-			td.getDOMElement().style.backgroundColor = 'black';
 			r.appendChild(td.getDOMElement());
 		}
 
 		arr = realTimeArray();
 
+		console.log('Arr', arr);
+
 		for (var i = 0; i < arr.length; i++) {
+			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -667,11 +697,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 				for (var j = arr[i].length; j < maxAmountOfCells; j++) {
 					td = new WPTB_Cell(mark);
-					td.getDOMElement().style.backgroundColor = 'black';
 					table.rows[i].appendChild(td.getDOMElement());
 				}
 			}
 		}
+
 
 		aux = Array.from(array[0]);
 		array.push(aux);
@@ -685,8 +715,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * make a rectangular shape.
 	 * @param Array the abstract table.
 	 * @return false, if not making a rectangle, or
-	 * Array an array containing number of rows and columns, if selection makes a rectangle.
+	 *			Array an array containing number of rows and columns, if 
+					selection makes a rectangle.
 	 */
+
 	table.isSquare = function (a) {
 		var rowStart = -1,
 			columnStart = -1,
@@ -723,6 +755,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 		}
 
+
 		for (var i = rowStart; i < rowEnd; i++) {
 			for (var j = columnStart; j < columnEnd; j++) {
 				if (a[i][j] == 0 || a[i][j] == undefined) {
@@ -754,12 +787,19 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * Well, actually sets the colspan and rowspan of first 
 	 * upper left  cell in selection and deletes the another selected cells.
 	 */
+
 	table.mergeCells = function () {
+		console.log('Meging');
 		var dimensions = table.isSquare(array),
 			rowspan = dimensions[0],
 			colspan = dimensions[1],
 			first = document.querySelector('.wptb-highlighted'),
 			tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
+
+		console.log('Dimensions:', dimensions);
+		console.log('First:', first);
+		console.log('Cells without the first one:', tds);
+
 
 		for (var i = 0; i < tds.length; i++) {
 			var p = tds[i].parentNode;
@@ -777,6 +817,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * the same amount in cells to the table.
 	 * @bug
 	 */
+
 	table.splitCell = function () {
 		var cell = document.getElementsByClassName('wptb-highlighted')[0],
 			rowspan = cell.rowSpan,
@@ -787,40 +828,40 @@ var array = [], WPTB_Table = function (columns, rows) {
 		/*
 		console.log('Cell',cell.rowSpan,cell.rowspan);
 		for (var i = 0; i<rowspan; i++) {
-			  console.log('Let"s split it!',cell);
-			if(i == 0){
-				  console.log('Iteration 1');
-			refCell = cell;
-			}
-			else
-			{
-				  console.log('Conter');
-			  for (var k = 0, pt= 0; k < colspan; k+=refCell.colSpan,pt++)
-			  { 
-				  console.log('Increasing Conter');
-				refCell = table.rows[i].getElementsByTagName('td')[pt];
-				if(!refCell){
-				  break;
+			console.log('Let"s split it!',cell);
+				if(i == 0){
+					console.log('Iteration 1');
+				refCell = cell;
 				}
-			  }
-			}
-			  console.log(refCell);
+				else
+				{
+					console.log('Conter');
+					for (var k = 0, pt= 0; k < colspan; k+=refCell.colSpan,pt++)
+					{ 
+					console.log('Increasing Conter');
+						refCell = table.rows[i].getElementsByTagName('td')[pt];
+						if(!refCell){
+							break;
+						}
+					}
+				}
+	console.log(refCell);
 
-			  var p = refCell ? refCell.parentNode : table.rows[i];
-		  for (var j = 0; j<colspan; j++) {
-			if(!i && !j){
-			  continue;
-			}
-			newCell = document.createElement('td');
+					var p = refCell ? refCell.parentNode : table.rows[i];
+			for (var j = 0; j<colspan; j++) {
+				if(!i && !j){
+					continue;
+				}
+				newCell = document.createElement('td');
 		newCell.onclick = mark;
-			if(refCell && refCell.nextSibling){
-			  p.insertBefore(newCell,refCell.nextSibling)
+				if(refCell && refCell.nextSibling){
+					p.insertBefore(newCell,refCell.nextSibling)
+				}
+				else{
+					p.appendChild(newCell);
+				}
+				refCell = newCell;
 			}
-			else{
-			  p.appendChild(newCell);
-			}
-			refCell = newCell;
-		  }
 		}
 */
 		undoSelect();
@@ -831,6 +872,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * @param number the number of row where the function
 	 * must search up to.
 	 */
+
 	table.findRowspannedCells = function (row) {
 		var array = [],
 			difference;
@@ -840,9 +882,12 @@ var array = [], WPTB_Table = function (columns, rows) {
 		}
 		difference = maxAmountOfCells - actualPoints;
 
+		console.log('Difference', difference);
 		for (var i = row - 1; i >= 0 && difference; i--) {
+			console.log('Searching in row', i);
 			var tds = table.rows[i].getElementsByTagName('td');
 			for (var i = 0; i < tds.length; i++) {
+				console.log('Exploring td', tds[i]);
 				if (tds[i].rowSpan > 1) {
 					array.push(tds[i]);
 					difference -= tds[i].colSpan;
@@ -858,6 +903,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * a cell for each lacking one for each row
 	 * to meet an even amount of cells.
 	 */
+
 	table.addLackingCells = function () {
 		var sumRows = [];
 		for (var i = 0; i < table.rows.length; i++) {
@@ -875,6 +921,8 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 		}
 
+		console.log('SumRows', sumRows);
+
 		for (var i = 0; i < table.rows.length; i++) {
 			var tds = table.rows[i].getElementsByTagName('td'),
 				totalColspan = 0;
@@ -883,7 +931,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 			totalColspan += sumRows[i];
 			difference = maxAmountOfCells - totalColspan;
+			console.log('Difference', difference);
 			for (var j = 0; j < difference; j++) {
+				console.log('Filling in row ' + i);
 				var td = new WPTB_Cell(mark);
 				table.rows[i].appendChild(td.getDOMElement());
 			}
@@ -895,13 +945,17 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * This function deletes the row of currently
 	 * selected cell. 
 	 */
+
 	table.deleteRow = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
 			row = getCoords(cell)[0],
 			reduct = table.findRowspannedCells(row);
 
+		console.log(reduct);
+
 		for (i = 0; i < reduct.length; i++) {
+			console.log('reducting', reduct[i]);
 			reduct[i].rowSpan--;
 		}
 
@@ -916,6 +970,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 	 * selected cell. Again, this is way more complicated than
 	 * delete row case.
 	 */
+
 	table.deleteColumn = function () {
 
 		var cell_ref = document.querySelector('.wptb-highlighted'),
@@ -927,13 +982,16 @@ var array = [], WPTB_Table = function (columns, rows) {
 			carriedRowspans.push(0);
 		}
 
+
 		for (var i = 0; i < table.rows.length; i++) {
+			console.log('Estado de carriedspan en ' + i, carriedRowspans);
 			buffer = table.rows[i].getElementsByTagName('td');
 			stepsToMove = 1;
 			cellPointer = 0;
-
 			for (var j = 0; j < maxAmountOfCells; j += stepsToMove) {
+
 				stepsToMove = 1;
+
 				if (carriedRowspans[j] == 0) {
 					cell = buffer[cellPointer++];
 					if (cell.rowSpan > 1) {
@@ -942,12 +1000,17 @@ var array = [], WPTB_Table = function (columns, rows) {
 							carriedRowspans[j + k] = cell.rowSpan;
 						}
 						if (column > j && column <= j + k - 1) {
+							//cell.style.backgroundColor = 'pink';
 							cell.colSpan--;
 							break;
 						}
-					} else if (cell.colSpan > 1) {
+					}
+					else if (cell.colSpan > 1) {
+						console.log(cell, j, column, k);
 						stepsToMove = cell.colSpan;
+
 						if (column > j && column <= j + cell.colSpan - 1) {
+							//cell.style.backgroundColor = 'pink';
 							cell.colSpan--;
 							break;
 						}
@@ -961,6 +1024,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 					}
 				}
 				else {
+					console.log('Prolongacion rowspan detectada en celda ' + cellPointer + ', posicion ' + j)
 					continue;
 				}
 			}
@@ -969,18 +1033,23 @@ var array = [], WPTB_Table = function (columns, rows) {
 				if (carriedRowspans[l] > 0) {
 					carriedRowspans[l]--;
 				}
+
 			}
 		}
 		maxAmountOfCells--;
 
+
 		for (var i = 0; i < table.rows.length; i++) {
+			console.log(array);
 			if (array[i] != undefined)
 				array[i].pop();
 		}
 		undoSelect();
 	};
 
+
 	document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+
 	array = fillTableArray();
 
 	undoSelect();
@@ -991,5 +1060,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 	table.recalculateIndexes();
 
 	WPTB_LeftPanel();
+
 
 };

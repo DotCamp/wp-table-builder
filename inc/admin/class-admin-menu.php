@@ -31,29 +31,35 @@ class Admin_Menu {
 
 	public function save_table(){
 
-		if ( !isset( $_POST['id' ]) || $_POST['id'] === '-1' ) {
+		if(!isset($_POST['id']) || $_POST['id']==='-1')
+		{
 			$id = wp_insert_post([
 				'post_title' => $_POST['title'],
 				'post_content' => '',
 				'post_type' => 'wptb-tables'
 			]);
-			add_post_meta( $id, '_wptb_content_', $_POST['content'] ); 
-		} else {
+			add_post_meta($id, '_wptb_content_',$_POST['content']); 
+			wp_die(json_encode(['saved',$id]));
+		}
+		else
+		{
 			wp_update_post([
 				'ID' => $_POST['id'],
 				'post_title' => $_POST['title'],
 				'post_content' => '',
 				'post_type' => 'wptb-tables'
 			]);
-			update_post_meta( $_POST['id'], '_wptb_content_', $_POST['content' ]); 
+			update_post_meta($_POST['id'], '_wptb_content_',$_POST['content']);  
+			wp_die(['edited','']);
 		}
-
-		wp_die( 'Holi'.$id );
+ 
 	}
 
 	public function get_table(){  
-		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_' );
-		die( $html[0] );
+		$post = get_post($_REQUEST['id']);
+		$html = get_post_meta($_REQUEST['id'] , '_wptb_content_');
+		$name = $post->post_title;
+		die(json_encode([$name,$html[0]]));
 	}
 
 

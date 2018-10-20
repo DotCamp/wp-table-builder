@@ -17,9 +17,10 @@
 			http.open('GET', url, true);
 			http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			http.onreadystatechange = function (d) {
+				var ans = JSON.parse(http.responseText);
 				if (this.readyState == 4 && this.status == 200) {
 					document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-					document.getElementsByClassName('wptb-table-setup')[0].appendChild(WPTB_Parser(http.responseText));
+					document.getElementsByClassName('wptb-table-setup')[0].appendChild(WPTB_Parser(ans[1]));
 				}
 			}
 			http.send(null);

@@ -6,7 +6,7 @@ var WPTB_Button = function (text) {
 
 	this.kind = 'button';
 
-	DOMElement.classList.add('wptb-button-container');
+	DOMElement.classList.add('wptb-button-container', 'wptb-size-M');
 	elButton2.classList.add('wptb-button-wrapper');
 	el_B.classList.add('wptb-button');
 	el_B.classList.add('editable');

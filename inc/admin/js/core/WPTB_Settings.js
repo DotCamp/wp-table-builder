@@ -34,16 +34,29 @@ var WPTB_Settings = function () {
 			}, 4000);
 			return;
 		}
+
 		var params = 'title=' + t + '&content=' + code;
-		if (rs = detectMode()) {
+
+		if ((rs = detectMode()) || (rs = document.wptbId)) {
 			params += '&id=' + rs;
 		}
+
 		http.open('POST', url, true);
 		http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		http.onreadystatechange = function (d) {
+		http.onreadystatechange = function (action) {
 			if (this.readyState == 4 && this.status == 200) {
+
+				var data = JSON.parse(http.responseText);
 				messagingArea = document.getElementById('wptb-messaging-area');
-				messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table: "' + t + '" was successfully saved!</div>';
+
+				if (typeof data == 'object') {
+					document.wptbId = data[1];
+					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+				}
+				else {
+					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
+
+				}
 				messagingArea.classList.add('wptb-success');
 				setTimeout(function () {
 					messagingArea.removeChild(messagingArea.firstChild);
