@@ -212,7 +212,7 @@ body>img {
 
 .wptb-settings-items,
 .wptb-cell-management {
-    margin: 16px;
+    margin: 16px 2px;
     transition: 1s 0s ease;
 }
 
@@ -238,6 +238,11 @@ body>img {
 
 .wptb-settings-middle-xs {
     align-items: center;
+    background: #fff;
+    padding: 20px 10px;
+    margin: 5px 0;
+    border: 1px solid #e5dfdf;
+    border-radius: 2px;
 }
 
 .wptb-settings-col-xs-8 {

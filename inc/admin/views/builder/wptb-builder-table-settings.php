@@ -7,8 +7,8 @@
 <div class="wptb-settings-items" style="display: block;">
     <div class="wptb-settings-row wptb-settings-middle-xs">
         
-        <div class="wptb-settings-col-xs-12">
-            <input type="button" id="wptb-activate-cell-management-mode" name="wptb-activate-cell-management-mode" class="wptb-button" value="<?php echo __('Edit Cells','wp_table_builder'); ?>" title="<?php echo __('Edit Cells','wp_table_builder'); ?>">
+        <div class="wptb-settings-col-xs-12" style="margin: auto;">
+            <input type="button" id="wptb-activate-cell-management-mode" name="wptb-activate-cell-management-mode" class="wptb-button" value="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>" title="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>">
         </div> 
     </div>
     <div class="wptb-settings-row wptb-settings-middle-xs">
@@ -23,7 +23,7 @@
             <span class="wptb-input-px">px</span>
         </div>
     </div>
-    <div id="wptb-apply-inner-border" style="max-width: 96%;" class="wptb-settings-row wptb-settings-middle-xs">
+    <div id="wptb-apply-inner-border" class="wptb-settings-row wptb-settings-middle-xs">
         <label class="wptb-inner-border">
             <span style="font-size: 16px">
                 <?php echo __( 'Apply Inner Border', 'wp-table-builder' ); ?>
@@ -31,16 +31,17 @@
             <input id="wptb-inner-border-check" type="checkbox" />
             <i></i>
         </label>
-    </div>
-    <div style="display:none" id="wptb-inner-border-settings" class="wptb-settings-row wptb-settings-middle-xs">
-        <div class="wptb-settings-col-xs-8">
-            <input id="wptb-table-inner-border-slider" type="range" min="0" max="50" step="1" value="0">
+        <div style="display:none" id="wptb-inner-border-settings" class="wptb-settings-middle-xs">
+            <div class="wptb-settings-col-xs-8">
+                <input id="wptb-table-inner-border-slider" type="range" min="0" max="50" step="1" value="0">
+            </div>
+            <div class="wptb-settings-col-xs-4">
+                <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0">
+                <span class="wptb-input-px">px</span>
+            </div>
         </div>
-        <div class="wptb-settings-col-xs-4">
-            <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0">
-            <span class="wptb-input-px">px</span>
-        </div>
     </div>
+
     <div class="wptb-settings-row wptb-settings-middle-xs">
         <p>
             <?php echo __( 'Cell Padding', 'wp-table-builder' ); ?>
