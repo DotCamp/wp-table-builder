@@ -227,6 +227,24 @@ body>img {
     opacity: 1;
 }
 
+.wptb-settings-item-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.wptb-settings-item-header {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 14px;
+    padding: 14px 0 14px 10px;
+    position: relative;
+    border: 1px solid #ddd;
+    background: #fff;
+    margin-top: 5px;
+    margin-bottom: -10px;
+}
+
 .wptb-settings-row {
     box-sizing: border-box !important;
     display: flex;
@@ -239,8 +257,8 @@ body>img {
 .wptb-settings-middle-xs {
     align-items: center;
     background: #fff;
-    padding: 15px 10px 20px 10px;
-    margin: 5px 0;
+    padding: 10px 10px 20px 10px;
+    margin: 0px 0 6px 0;
     border: 1px solid #e5dfdf;
     border-radius: 2px;
 }

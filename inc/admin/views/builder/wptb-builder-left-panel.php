@@ -120,10 +120,10 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'Button Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-element-option wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Size', 'wp-table-builder' ); ?></p>
+                        </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
-                            <div class='wptb-settings-col-xs-8' >
-                                <?php echo __( 'Button Size', 'wp-table-builder' ); ?>
-                            </div>
                             <ul>
                                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher">S</li>
                                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher selected">M</li>
@@ -133,21 +133,21 @@ use WP_Table_Builder as NS;
                         </div>
                     </div>
                     <div class="wptb-settings-items">
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;">
-                                <?php echo __( 'Button Color', 'wp-table-builder' ); ?>
-                            </div>
-                            <div class='wptb-settings-col-xs-8'>
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Color', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="margin-top: 9px; padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 5px;">
                                 <input data-type="button-color" class="wptb-element-property wptb-color-picker" />
                             </div>
                         </div>    
                     </div>
                     <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Link', 'wp-table-builder' ); ?></p>
+                        </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;">
-                                <?php echo __( 'Button Link', 'wp-table-builder' ); ?>
-                            </div>
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px">
+                            <div class='wptb-settings-col-xs-8' style="margin: 15px 0;">
                                 <input type="text" data-type="button-link" placeholder="<?php echo __( 'Insert Link Here', 'wp-table-builder' ); ?>" class="wptb-element-property" />
                             </div>
                             <div class='wptb-settings-col-xs-8'>
@@ -157,11 +157,11 @@ use WP_Table_Builder as NS;
                         </div>    
                     </div>
                     <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Link', 'wp-table-builder' ); ?></p>
+                        </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;">
-                                <?php echo __( 'Button Alignment', 'wp-table-builder' ); ?>
-                            </div>
-                            <div class='wptb-settings-col-xs-8'>
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
                                 <select>
                                     <option value="left"><?php echo __( 'Left', 'wp-table-builder' ); ?></option>
                                     <option value="center"><?php echo __( 'Center', 'wp-table-builder' ); ?></option>
