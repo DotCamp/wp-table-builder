@@ -90,6 +90,20 @@ use WP_Table_Builder as NS;
                     <div class="wptb-settings-dropdown">
                         <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
                     </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Image Alignment', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
+                                <select>
+                                    <option value="left"><?php echo __( 'Left', 'wp-table-builder' ); ?></option>
+                                    <option value="center"><?php echo __( 'Center', 'wp-table-builder' ); ?></option>
+                                    <option value="right"><?php echo __( 'Right', 'wp-table-builder' ); ?></option>
+                                </select>
+                            </div>
+                        </div>    
+                    </div>
                     <div class="wptb-element-option wptb-settings-items" style="margin-top: 5px;">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php echo __( 'Image Size', 'wp-table-builder' ); ?></p>
@@ -171,7 +185,7 @@ use WP_Table_Builder as NS;
                     </div>
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php echo __( 'Button Link', 'wp-table-builder' ); ?></p>
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Alignment', 'wp-table-builder' ); ?></p>
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
                             <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
