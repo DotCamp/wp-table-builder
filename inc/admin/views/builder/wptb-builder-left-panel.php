@@ -63,8 +63,10 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'Text Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-element-option wptb-settings-items" >
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 5px;">
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;"><?php echo __( 'Font Size', 'wp-table-builder' ); ?></div> 
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Font Size', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="margin: 9px 0; padding-bottom: 10px;">
                             <div class="wptb-settings-col-xs-8">
                               <input   data-type="font-size" class="wptb-text-font-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="13"> 
                             </div>
@@ -74,8 +76,10 @@ use WP_Table_Builder as NS;
                         </div>
                     </div>
                     <div class="wptb-element-option wptb-settings-items">
-                        <div class="wptb-settings-row wptb-settings-middle-xs">
-                            <div class='wptb-settings-col-xs-8' style="margin-bottom: 15px;"><?php echo __( 'Font Color', 'wp-table-builder' ); ?></div>
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Font Color', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
                             <div class='wptb-settings-col-xs-8'>
                                 <input type="text" class="wptb-element-property wptb-color-picker" data-type="color"/>
                             </div>
