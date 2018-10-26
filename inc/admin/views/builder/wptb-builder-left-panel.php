@@ -87,34 +87,43 @@ use WP_Table_Builder as NS;
                     </div>
                 </div>
                 <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
-                    
-                    <div class="wptb-element-option wptb-settings-items" >
-                        <p><?php echo __( 'Image Width', 'wp-table-builder' ); ?></p>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 5px;">
-                           
+                    <div class="wptb-settings-dropdown">
+                        <?php echo __( 'Image Options', 'wp-table-builder' ); ?>
+                    </div>
+                    <div class="wptb-element-option wptb-settings-items" style="margin-top: 5px;">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Image Size', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
+                            <div class="wptb-settings-col-xs-8">
+                              <input data-type="image-size" class="wptb-image-width wptb-element-property" type="range" min="10" max="100" step="1" value="100"> 
+                            </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-width" data-type="image-width"  class="wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10"><span class="wptb-input-px">px</span>
+                                <input id="wptb-image-width" data-type="image-size"  class="wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
                             </div>
                         </div>
                     </div>
-
-                    <div class="wptb-element-option wptb-settings-items" >
-                        <p><?php echo __( 'Image Height', 'wp-table-builder' ); ?></p>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 5px;">
-                            
-                            <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-height" data-type="image-height"  class="wptb-image-height wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10"><span class="wptb-input-px">px</span>
-                            </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Image Link', 'wp-table-builder' ); ?></p>
                         </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin: 15px 0;">
+                                <input type="text" data-type="image-link" placeholder="<?php echo __( 'Insert Link Here', 'wp-table-builder' ); ?>" class="wptb-element-property" />
+                            </div>
+                            <div class='wptb-settings-col-xs-8'>
+                                <input type="checkbox" data-type="image-link-target" id="image-link-target" class="wptb-element-property" />
+                                <label for="image-link-target"><?php echo __( 'Open Link in New Tab', 'wp-table-builder' ); ?></label>
+                            </div>
+                        </div>    
                     </div>
-
-
-                    <div class="wptb-element-option wptb-settings-items" >
-                        <p><?php echo __( 'Image Alternative Text', 'wp-table-builder' ); ?></p>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 5px;">
-                           
+                    <div class="wptb-element-option wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Image Alternative Text', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 14px; padding-top: 25px;">
                             <div class="wptb-settings-col-xs-12">
-                                <input id="wptb-image-alternative-text" data-type="alternative-text"  class="wptb-image-height " type="text"  placeholder="10">
+                                <input id="wptb-image-alternative-text" data-type="alternative-text"  class="wptb-image-height" type="text"  placeholder="Image Alt Text">
                             </div>
                         </div>
                     </div>
