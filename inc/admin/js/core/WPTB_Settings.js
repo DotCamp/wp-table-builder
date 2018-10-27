@@ -49,7 +49,7 @@ var WPTB_Settings = function () {
 				var data = JSON.parse(http.responseText);
 				messagingArea = document.getElementById('wptb-messaging-area');
 
-				if (typeof data == 'object') {
+				if (data[0] == 'saved') {
 					document.wptbId = data[1];
 					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
 				}

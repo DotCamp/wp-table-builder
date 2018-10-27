@@ -24,30 +24,30 @@ class Tables {
 		// Register wptb-tables custom post type
 		$this->register_cpt();
 		// Add the custom columns to the book post type: 
-		add_filter( 'manage_wptb-tables_posts_columns', [$this,'addHeader'] );
-		add_filter( 'post_row_actions', [$this,'customizeActions'], 10, 2 );
-		add_action( 'manage_wptb-tables_posts_custom_column' , [$this,'addContent'], 10, 2 );
+		add_filter( 'manage_wptb-tables_posts_columns', [ $this,'addHeader' ] );
+		add_filter( 'post_row_actions', [ $this,'customizeActions' ], 10, 2 );
+		add_action( 'manage_wptb-tables_posts_custom_column' , [ $this,'addContent' ], 10, 2 );
 	}
 
 	function customizeActions( $actions,$post ) { 
 
     	if ( $post->post_type =="wptb-tables" ) {
     		unset( $actions['inline hide-if-no-js'] );
-        	$actions['edit'] = '<a href="'. menu_page_url( 'wptb-builder',false ).'&table='.$post->ID.'">'.__('Edit','wptb').'</a>';
+        	$actions['edit'] = '<a href="'. menu_page_url( 'wptb-builder',false ).'&table='.$post->ID.'">'.__( 'Edit','wptb' ).'</a>';
     	}
 	
 		return $actions;
 	
 	}
 
-	function addHeader($columns) { 
+	function addHeader( $columns ) { 
 	    $columns['shortcode'] = __( 'Shortcode', 'wptb' ); 
 
 	    return array(
 	        'cb' => '<input type="checkbox" />',
-	        'title' => __('Title'), 
-	        'shortcode' => __('Shortcode'),
-	        'date' => __('Date'),
+	        'title' => __( 'Title' ), 
+	        'shortcode' => __( 'Shortcode' ),
+	        'date' => __( 'Date' ),
 	    );
 	}
 
@@ -56,7 +56,7 @@ class Tables {
 	    switch ( $column ) {
 
 			case 'title' :  
-				$post = get_post($post_id);
+				$post = get_post( $post_id );
 	        	$title = $post->post_title;
 	        	echo "$title";
 	        	break;
@@ -92,39 +92,28 @@ class Tables {
 
 		// Register the post type
         register_post_type( 'wptb-tables', $args );
-		add_shortcode('wptb',array($this, 'get_table'));
+		add_shortcode( 'wptb', array( $this, 'get_table' ) );
         
     }
 
-    public function get_table($args){  
-
-    	$uniqueSequence = 't'.substr( md5( time() ), 0, 8 );
-    	$html = get_post_meta( $args['id'] , '_wptb_content_' );
+        public function get_table($args) {  
+    	$uniqueSequence = 't'.substr(md5(time()),0,8);
+    	$html = get_post_meta($args['id'] , '_wptb_content_');
     	$code =  $html[0];
     	$code = preg_replace( '/\[tr\]/','<tr>', $code);
     	$code = preg_replace( '/\[\/tr\]/','</tr>', $code);
-
     	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")(\s+rowspan\=\"(\d+)?\")\]/','<td colspan="$2" rowspan="$4">', $code);
     	$code = preg_replace( '/\[td(\s+rowspan\=\"(\d+)?\")\]/','<td rowspan="$2">', $code);
     	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")\]/','<td colspan="$2">', $code);
     	$code = preg_replace( '/\[td\]/','<td>', $code);
     	$code = preg_replace( '/\[\/td\]/','</td>', $code);
-
-    	$code = preg_replace( '/\[table\s+data\-bg1\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\s+data\-bg2\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\s+data\-bg3\=\"rgb\((\d+\,\s\d+\,\s\d+)\)\"\]/','<style type="text/css">#'.$uniqueSequence.' tr:nth-child(even) td{background-color:rgb($2)} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:rgb($3)} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:rgb($1)}</style><table id="'.$uniqueSequence.'">', $code);
-    //	$code = preg_replace( '/\[table\s+data\-bg1\=\"\")(\s+data\-bg2\=\"\")\]/','<table>', $code);
-    //	$code = preg_replace( '/\[table(\s+data\-bg2\=\"\")(\s+data\-bg3\=\"\")\]/','<table>', $code);
-    //	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")(\s+data\-bg3\=\"\")\]/','<table>', $code);
-    	$code = preg_replace( '/\[table(\s+data\-bg1\=\"\")\]/','<table>', $code);
-    	$code = preg_replace( '/\[table(\s+data\-bg2\=\"\")\]/','<table>', $code);
-    	$code = preg_replace( '/\[table(\s+data\-bg3\=\"\")\]/','<table>', $code);
+    	$code = preg_replace( '/\[table\s+margin\=\"((\d+)px)?\"\s+padding\=\"((\d+)px)?\"\s+inner\-border\=\"((\d+)px)?\"\s+outer\-border\=\"((\d+)px)?\"\s+data\-bg1\=\"rgb\((\d+\,\d+\,\d+)\)\"\s+data\-bg2\=\"rgb\((\d+\,\d+\,\d+)\)\"\s+data\-bg3\=\"rgb\((\d+\,\d+\,\d+)\)\"\]/','<style type="text/css">#'.$uniqueSequence.'{border:$8px solid black;} #'.$uniqueSequence.' tr:nth-child(even) td{background-color:rgb($10)} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:rgb($11)} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:rgb($9)} #'.$uniqueSequence.' td{border:$6px solid black; padding:$4px;}</style><table id="'.$uniqueSequence.'">', $code);  
     	$code = preg_replace( '/\[\/table\]/','</table>', $code);
-
     	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"\")?\]/','', $code);
     	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?\]/','', $code);
     	$code = preg_replace( '/\[text(\s+color\=\"\")?\]/','', $code);
     	$code = preg_replace( '/\[text\]/','', $code);
     	$code = preg_replace( '/\[\/text\]/','', $code);
-
     	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?(\s+size\=\"([A-Z])\")?\]/','<a class="wptb-button wptb-size-$4" style="background-color:rgb($2);">', $code);
     	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?\]/','<a class="wptb-button">', $code);
     	$code = preg_replace( '/\[button(\s+size\=\"[A-Z]\")?\]/','<a class="wptb-button">', $code);
@@ -134,7 +123,7 @@ class Tables {
     	$code = preg_replace( '/\[list(\s+class\=\"unordered\")?(\s+style\-type\=\"\")?\](.*)\[\/list\]/','<ul>$3</ul>', $code);
     	$code = preg_replace( '/\[item\]/','<li>', $code);
     	$code = preg_replace( '/\[\/item\]/','</li>', $code);
-    	return ($code);
+    	return ($code); //This shoul
     }
 
 }

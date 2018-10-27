@@ -56,11 +56,10 @@ var WPTB_Parser = function (code) {
 			key,
 			value,
 			attr = [];
-
 		for (var i = 1; i < elems.length; i++) {
 			pair = elems[i].trim().split('=');
 			key = pair[0];
-			value = pair[1].substring(1, pair[1].length - 1);
+			value = pair[1].substring(1, pair[1].length - 1).split('\"').join('');
 			attr[key] = value;
 		}
 
@@ -164,10 +163,35 @@ var WPTB_Parser = function (code) {
 		getToken();
 		var n = document.createElement('table');
 		n.classList.add('wptb-preview-table');
+		var attributes = getAttributesFromToken();
 		getExpectedToken('[table]');
 		analizeHeader(n);
 		analizeRows(n);
 		getExpectedToken('[/table]');
+		var tableHeader = n.getElementsByTagName('tr')[0],
+			tds = tableHeader.getElementsByTagName('td');
+		for (var j = 0; j < tds.length; j++) {
+			tds[j].style.backgroundColor = attributes['data-bg1'];
+		}
+		var tableRows = n.getElementsByTagName('tr');
+		for (var i = 1; i < tableRows.length; i += 2) {
+			tds = tableRows[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+				tds[j].style.backgroundColor = attributes['data-bg2'];
+			}
+		}
+		for (var i = 2; i < tableRows.length; i += 2) {
+			tds = tableRows[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+				tds[j].style.backgroundColor = attributes['data-bg3'];
+			}
+		}
+		var tableCells = n.getElementsByTagName('td');
+		for (var i = 0; i < tableCells.length; i++) {
+			tableCells[i].style.padding = attributes['padding'];
+			tableCells[i].style.border = attributes['inner-border'] + ' solid black';
+		}
+		n.style.border = attributes['outer-border'] + ' solid black';
 		return n;
 	}
 

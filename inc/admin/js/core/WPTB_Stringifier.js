@@ -15,26 +15,27 @@ var WPTB_Stringifier = function (node) {
 
 	switch (node.tagName.toLowerCase()) {
 		case 'table':
-			border = node.style.borderSize;
+			border = node.style.borderWidth;
 			margin = node.getElementsByTagName('td')[0].style.margin;
 			padding = node.getElementsByTagName('td')[0].style.padding;
-			innerBorder = node.getElementsByTagName('td')[0].style.borderSize;
-			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor;
+			innerBorder = node.getElementsByTagName('td')[0].style.borderWidth;
+			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 
 			if (node.rows.length > 1) {
-				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor;
+				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
 			if (node.rows.length > 2) {
-				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor;
+				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
-			code += '[table'
-				+ (margin != undefined && margin != '' ? ' margin="' + margin + '"' : '')
-				+ (padding != undefined && padding != '' ? ' padding="' + padding + '"' : '')
-				+ (innerBorder != undefined ? ' inner-border="' + innerBorder + '"' : '')
-				+ (bg1 != undefined ? ' data-bg1="' + bg1 + '"' : '')
-				+ (bg2 != undefined ? ' data-bg2="' + bg2 + '"' : '')
-				+ (bg3 != undefined ? ' data-bg3="' + bg3 + '"' : '')
-				+ ']';
+			code += '[table margin="'
+				+ (margin != undefined && margin != '' ? margin : '')
+				+ '" padding="' + (padding != undefined && padding != '' ? padding : '')
+				+ '" inner-border="' + (innerBorder != undefined && innerBorder != '' ? innerBorder : '')
+				+ '" outer-border="' + (border != undefined && border != '' ? border : '')
+				+ '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : '')
+				+ '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : '')
+				+ '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : '')
+				+ '"]';
 
 			for (var i = 0; i < children.length; i++) {
 				code += WPTB_Stringifier(children[i]);

@@ -854,11 +854,10 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		    key,
 		    value,
 		    attr = [];
-
 		for (var i = 1; i < elems.length; i++) {
 			pair = elems[i].trim().split('=');
 			key = pair[0];
-			value = pair[1].substring(1, pair[1].length - 1);
+			value = pair[1].substring(1, pair[1].length - 1).split('\"').join('');
 			attr[key] = value;
 		}
 
@@ -961,10 +960,35 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		getToken();
 		var n = document.createElement('table');
 		n.classList.add('wptb-preview-table');
+		var attributes = getAttributesFromToken();
 		getExpectedToken('[table]');
 		analizeHeader(n);
 		analizeRows(n);
 		getExpectedToken('[/table]');
+		var tableHeader = n.getElementsByTagName('tr')[0],
+		    tds = tableHeader.getElementsByTagName('td');
+		for (var j = 0; j < tds.length; j++) {
+			tds[j].style.backgroundColor = attributes['data-bg1'];
+		}
+		var tableRows = n.getElementsByTagName('tr');
+		for (var i = 1; i < tableRows.length; i += 2) {
+			tds = tableRows[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+				tds[j].style.backgroundColor = attributes['data-bg2'];
+			}
+		}
+		for (var i = 2; i < tableRows.length; i += 2) {
+			tds = tableRows[i].getElementsByTagName('td');
+			for (var j = 0; j < tds.length; j++) {
+				tds[j].style.backgroundColor = attributes['data-bg3'];
+			}
+		}
+		var tableCells = n.getElementsByTagName('td');
+		for (var i = 0; i < tableCells.length; i++) {
+			tableCells[i].style.padding = attributes['padding'];
+			tableCells[i].style.border = attributes['inner-border'] + ' solid black';
+		}
+		n.style.border = attributes['outer-border'] + ' solid black';
 		return n;
 	}
 
@@ -972,8 +996,6 @@ var WPTB_Parser = function WPTB_Parser(code) {
 
 	return node;
 };
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var WPTB_Settings = function WPTB_Settings() {
 
 	var elems = document.getElementsByClassName('wptb-element');
@@ -1025,7 +1047,7 @@ var WPTB_Settings = function WPTB_Settings() {
 				var data = JSON.parse(http.responseText);
 				messagingArea = document.getElementById('wptb-messaging-area');
 
-				if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) == 'object') {
+				if (data[0] == 'saved') {
 					document.wptbId = data[1];
 					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
 				} else {
@@ -1152,19 +1174,19 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 
 	switch (node.tagName.toLowerCase()) {
 		case 'table':
-			border = node.style.borderSize;
+			border = node.style.borderWidth;
 			margin = node.getElementsByTagName('td')[0].style.margin;
 			padding = node.getElementsByTagName('td')[0].style.padding;
-			innerBorder = node.getElementsByTagName('td')[0].style.borderSize;
-			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor;
+			innerBorder = node.getElementsByTagName('td')[0].style.borderWidth;
+			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 
 			if (node.rows.length > 1) {
-				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor;
+				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
 			if (node.rows.length > 2) {
-				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor;
+				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
-			code += '[table' + (margin != undefined && margin != '' ? ' margin="' + margin + '"' : '') + (padding != undefined && padding != '' ? ' padding="' + padding + '"' : '') + (innerBorder != undefined ? ' inner-border="' + innerBorder + '"' : '') + (bg1 != undefined ? ' data-bg1="' + bg1 + '"' : '') + (bg2 != undefined ? ' data-bg2="' + bg2 + '"' : '') + (bg3 != undefined ? ' data-bg3="' + bg3 + '"' : '') + ']';
+			code += '[table margin="' + (margin != undefined && margin != '' ? margin : '') + '" padding="' + (padding != undefined && padding != '' ? padding : '') + '" inner-border="' + (innerBorder != undefined && innerBorder != '' ? innerBorder : '') + '" outer-border="' + (border != undefined && border != '' ? border : '') + '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : '') + '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : '') + '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : '') + '"]';
 
 			for (var i = 0; i < children.length; i++) {
 				code += WPTB_Stringifier(children[i]);
