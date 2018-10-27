@@ -359,6 +359,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                 case 'list-class':
                     if (val == 'unordered') {
                         event.target.parentNode.parentNode.querySelector('[data-type=list-style-type]').parentNode.style.display = 'flex';
+                        document.querySelector('#wptb-list-icon-select-label').style.display = 'flex';
                         var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                         for (var i = 0; i < bullets.length; i++) {
                             bullets[i].style.listStyleType = 'disc';
@@ -366,6 +367,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                         document.querySelector('[data-type=list-style-type]').value = 'disc';
                     } else {
                         event.target.parentNode.parentNode.querySelector('[data-type=list-style-type]').parentNode.style.display = 'none';
+                        document.querySelector('#wptb-list-icon-select-label').style.display = 'none';
                         var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
                         for (var i = 0; i < bullets.length; i++) {
                             bullets[i].style.listStyleType = 'decimal';

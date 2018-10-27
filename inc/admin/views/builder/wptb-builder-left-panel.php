@@ -203,10 +203,10 @@ use WP_Table_Builder as NS;
                         <?php echo __( 'List Options', 'wp-table-builder' ); ?>
                     </div>
                     <div class="wptb-settings-items" >
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-4' style="flex-basis: 58.333%; max-width: 58.333%;">
-                                <?php echo __( 'Type', 'wp-table-builder' ); ?>
-                            </div>
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'List Type', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px;">
                             <select data-type="list-class" class="wptb-element-property"> 
                                 <option value="numbered">
                                     <?php echo __( 'Ordered', 'wp-table-builder' ); ?>
@@ -216,10 +216,10 @@ use WP_Table_Builder as NS;
                                 </option>
                             </select>              
                         </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; display: none;">
-                            <div class='wptb-settings-col-xs-8' >
-                                <?php echo __( 'Bullet Icon', 'wp-table-builder' ); ?>
-                            </div>
+                        <div class='wptb-settings-item-header' id="wptb-list-icon-select-label" style="display: none">
+                            <p class="wptb-settings-item-title"><?php echo __( 'List Icon', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px; display: none;">
                             <select data-type="list-style-type" class="wptb-element-property">
                                 <option value="circle">
                                     <?php echo __( 'Circle', 'wp-table-builder' ); ?>
@@ -231,6 +231,22 @@ use WP_Table_Builder as NS;
                                     <?php echo __( 'Disc', 'wp-table-builder' ); ?>
                                 </option>
                             </select>
+                        </div>
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'List Alignment', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px;">
+                            <select data-type="list-alignment" class="wptb-element-property"> 
+                                <option value="left">
+                                    <?php echo __( 'Left', 'wp-table-builder' ); ?>
+                                </option>
+                                <option value="center">
+                                    <?php echo __( 'Center', 'wp-table-builder' ); ?>
+                                </option>
+                                <option value="right">
+                                    <?php echo __( 'Right', 'wp-table-builder' ); ?>
+                                </option>
+                            </select>              
                         </div>
                     </div>
                 </div>
