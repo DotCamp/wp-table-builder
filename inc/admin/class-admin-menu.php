@@ -157,9 +157,11 @@ class Admin_Menu {
 					<h1 class="wp-heading-inline">
 						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
 					</h1>
-					<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="wptb-button-add-new">
-						<?php esc_html_e( 'Add New Table', 'wp-table-builder' ); ?>
-					</a>
+					<span class="wptb-split-page-title-action">
+						<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="wptb-button-add-new">
+							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
+						</a>
+					</span>
 				</div>
 			</div>
 			

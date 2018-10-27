@@ -1232,3 +1232,27 @@ td[class*="wptb-fused-cell"] {
     display: block;
     width: 100%;
 }
+
+.wptb-split-page-title-action a,
+.wptb-split-page-title-action a:active,
+.wptb-split-page-title-action .expander::after {
+    padding: 6px 10px;
+    position: relative;
+    top: -3px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: #f7f7f7;
+    text-shadow: none;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: normal;
+    color: #0073aa;
+    cursor: pointer;
+    outline: 0;
+}
+
+.wptb-split-page-title-action a:hover {
+    color: #fff;
+    background-color: #1f8abb;
+}
