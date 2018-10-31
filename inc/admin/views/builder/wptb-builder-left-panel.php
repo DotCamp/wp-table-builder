@@ -96,7 +96,7 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
                             <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select>
+                                <select data-type="image-alignment" class="wptb-element-property">
                                     <option value="left"><?php echo __( 'Left', 'wp-table-builder' ); ?></option>
                                     <option value="center"><?php echo __( 'Center', 'wp-table-builder' ); ?></option>
                                     <option value="right"><?php echo __( 'Right', 'wp-table-builder' ); ?></option>
@@ -189,7 +189,7 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
                             <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select>
+                                <select data-type="button-alignment">
                                     <option value="left"><?php echo __( 'Left', 'wp-table-builder' ); ?></option>
                                     <option value="center"><?php echo __( 'Center', 'wp-table-builder' ); ?></option>
                                     <option value="right"><?php echo __( 'Right', 'wp-table-builder' ); ?></option>

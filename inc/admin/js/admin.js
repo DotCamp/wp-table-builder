@@ -19,6 +19,7 @@
 			http.onreadystatechange = function (d) {
 				var ans = JSON.parse(http.responseText);
 				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById('wptb-setup-name').value = ans[0];
 					document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 					document.getElementsByClassName('wptb-table-setup')[0].appendChild(WPTB_Parser(ans[1]));
 				}
@@ -333,13 +334,22 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     var img = affectedEl.getElementsByTagName("img")[0];
                     img.alt = this.value;
                     break;
-                case 'image-width':
-                    var img = affectedEl.getElementsByTagName("img")[0];
-                    img.width = this.value;
+                case 'image-link-target':
                     break;
-                case 'image-height':
-                    var img = affectedEl.getElementsByTagName("img")[0];
-                    img.height = this.value;
+                case 'image-size':
+                    affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
+                    affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
+                    break;
+                case 'image-alignment':
+                    if (this.value != 'center') {
+                        affectedEl.getElementsByTagName('img')[0].style.display = 'inline';
+                        affectedEl.getElementsByTagName('img')[0].style.float = this.value;
+                        affectedEl.getElementsByTagName('img')[0].style.margin = 'inherit';
+                    } else {
+                        affectedEl.getElementsByTagName('img')[0].style.float = 'none';
+                        affectedEl.getElementsByTagName('img')[0].style.display = 'block';
+                        affectedEl.getElementsByTagName('img')[0].style.margin = '0 auto';
+                    }
                     break;
                 case 'font-size':
                     var ps = affectedEl.getElementsByTagName("p");
@@ -354,7 +364,17 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                         ps[i].style.color = val;
                     }
                     break;
+                case 'button-alignment':
+                    affectedEl.style.textAlign = val;
+                    break;
+                case 'button-link':
+                    affectedEl.href = this.value;
+                    break;
                 case 'button-color':
+                    //Kind of redundan
+                    break;
+                case 'list-alignment':
+                    affectedEl.style.textAlign = val;
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
