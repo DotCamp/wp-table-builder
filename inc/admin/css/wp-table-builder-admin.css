@@ -1045,6 +1045,7 @@ table.wptb-table {
 .wptb-droppable.wptb-cell ul article .wptb-list-item-content,
 .wptb-droppable.wptb-cell ul article .wptb-list-item-style-dot {
     border: 1px solid transparent;
+    position: relative;
 }
 
 .wptb-droppable.wptb-cell article .wptb-list-item-content:hover,
@@ -1066,6 +1067,12 @@ table.wptb-table {
     border: 1px solid #1ea5e5 !important;
     display: table;
     position: relative;
+    width: 100%;
+}
+
+.wptb-droppable.wptb-cell .wptb-directlyhovered .wptb-directlyhovered {
+    display: flex;
+    width: 100%;
 }
 
 .wptb-actions {

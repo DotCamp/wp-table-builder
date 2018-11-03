@@ -374,7 +374,18 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     //Kind of redundan
                     break;
                 case 'list-alignment':
-                    affectedEl.style.textAlign = val;
+                    var jc = '';
+                    if (this.value == 'left') {
+                        jc = 'start';
+                    } else if (this.value == 'right') {
+                        jc = 'flex-end';
+                    } else {
+                        jc = 'center';
+                    }
+                    var articles = affectedEl.querySelectorAll('article');
+                    for (var i = 0; i < articles.length; i++) {
+                        articles[i].style.justifyContent = jc;
+                    }
                     break;
                 case 'list-class':
                     if (val == 'unordered') {
