@@ -9,7 +9,7 @@ use WP_Table_Builder as NS;
  ?>
 <div class="wptb-messaging"> 
 </div>
- <div class="wptb-name-setup">
+<div class="wptb-name-setup">
     <span><?php echo __( 'Table Name', 'wp-table-builder' ); ?></span>
     <input type="text" name="" id="wptb-setup-name" placeholder="<?php echo __( 'Enter Table Name Here', 'wp-table-builder' ); ?>">
 </div>
@@ -76,8 +76,7 @@ use WP_Table_Builder as NS;
         <line x1="5" y1="17" x2="18" y2="17" style="stroke:#000;stroke-width:2"  />
         <line x1="24" y1="17" x2="37" y2="17" style="stroke:#000;stroke-width:2"  />
         <polygon points="18,17 15,14 15,20" style="fill:#000;stroke:#000;stroke-width:0.5" />
-        <polygon points="24,17 27,14 27,20" style="fill:#000;stroke:#000;stroke-width:0.5" />
-      
+		<polygon points="24,17 27,14 27,20" style="fill:#000;stroke:#000;stroke-width:0.5" /> 
       </svg>
     </li>
     <li class="single-action" id="wptb-split-cell" class="single-action" title="Unmerge selected cell">
@@ -88,10 +87,22 @@ use WP_Table_Builder as NS;
         <line x1="24" y1="17" x2="37" y2="17" style="stroke:#000;stroke-width:2"  />
         <polygon points="5,17 8,14 8,20" style="fill:#000;stroke:#000;stroke-width:0.5" />
         <polygon points="37,17 34,14 34,20" style="fill:#000;stroke:#000;stroke-width:0.5" />
-      
       </svg>
     </li>
-    
+    <li class="single-action" id="wptb-delete-column" title="Delete highlighted column">
+        <svg width="48" height="36">
+          <rect x="3" y="3" width="20" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+          <rect x="26" y="3" width="4" height="29" style="fill:#fff;stroke-width:2;stroke:#ea4335 !important;"/>
+          <rect x="33" y="3" width="9" height="29" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        </svg>
+    </li> 
+    <li class="single-action" id="wptb-delete-row" title="Delete highlighted row">
+        <svg width="48" height="36"">
+          <rect x="3" y="3" width="37" height="12" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+          <rect x="3" y="19" width="37" height="3" style="fill:#fff;stroke-width:2;stroke:#ea4335 !important;"/>
+          <rect x="3" y="26" width="37" height="6" style="fill:#fff;stroke-width:2;stroke:#003;"/>
+        </svg>
+    </li>
   </ul>
 </nav>
 <table class="wptb-table-generator">
