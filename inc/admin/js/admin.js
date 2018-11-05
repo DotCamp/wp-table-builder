@@ -365,6 +365,14 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     }
                     break;
                 case 'button-alignment':
+                    var jc = '';
+                    if (this.value == 'left') {
+                        jc = 'start';
+                    } else if (this.value == 'right') {
+                        jc = 'flex-end';
+                    } else {
+                        jc = 'center';
+                    }
                     affectedEl.style.textAlign = val;
                     break;
                 case 'button-link':

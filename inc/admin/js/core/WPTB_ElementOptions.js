@@ -143,7 +143,15 @@ var WPTB_ElementOptions = function (element, index) {
                     }
                     break;
                 case 'button-alignment':
-                    affectedEl.style.textAlign = val;
+                    var jc = '';
+                    if (this.value == 'left') {
+                        jc = 'start';
+                    } else if (this.value == 'right') {
+                        jc = 'flex-end';
+                    } else {
+                        jc = 'center';
+                    }
+                    affectedEl.style.textAlign = jc;
                     break;
                 case 'button-link':
                     affectedEl.href = this.value;
