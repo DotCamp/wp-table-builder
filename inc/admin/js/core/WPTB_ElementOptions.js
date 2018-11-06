@@ -109,10 +109,11 @@ var WPTB_ElementOptions = function (element, index) {
                     img.src = this.value;
                     break;
                 case 'alternative-text':
-                    var img = affectedEl.getElementsByTagName("img")[0];
+                    var img = affectedEl.getElementsByTagName('img')[0].getElementsByTagName("img")[0];
                     img.alt = this.value;
                     break;
-                case 'image-link-target':
+                case 'image-link':
+                    affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
                 case 'image-size':
                     affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';

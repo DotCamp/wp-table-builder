@@ -1,10 +1,12 @@
 var WPTB_Image = function (src) {
 
 	var DOMElement = document.createElement('div'),
+		anchor = document.createElement('a'),
 		img = document.createElement('img');
 
 	this.kind = 'image';
 
+	anchor.appendChild(img);
 	DOMElement.appendChild(img);
 
 	this.getDOMElement = function () {

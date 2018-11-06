@@ -331,10 +331,11 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     img.src = this.value;
                     break;
                 case 'alternative-text':
-                    var img = affectedEl.getElementsByTagName("img")[0];
+                    var img = affectedEl.getElementsByTagName('img')[0].getElementsByTagName("img")[0];
                     img.alt = this.value;
                     break;
-                case 'image-link-target':
+                case 'image-link':
+                    affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
                 case 'image-size':
                     affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
@@ -373,7 +374,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     } else {
                         jc = 'center';
                     }
-                    affectedEl.style.textAlign = val;
+                    affectedEl.style.textAlign = jc;
                     break;
                 case 'button-link':
                     affectedEl.href = this.value;
@@ -426,10 +427,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
 var WPTB_Image = function WPTB_Image(src) {
 
 	var DOMElement = document.createElement('div'),
+	    anchor = document.createElement('a'),
 	    img = document.createElement('img');
 
 	this.kind = 'image';
 
+	anchor.appendChild(img);
 	DOMElement.appendChild(img);
 
 	this.getDOMElement = function () {
