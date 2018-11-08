@@ -580,7 +580,6 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '1px solid';
             }
-
             document.getElementById('wptb-inner-border-settings').classList.add('visible');
         } else {
             document.getElementById('wptb-inner-border-settings').classList.remove('visible');
@@ -1197,10 +1196,13 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 	    // Table Attributes
 	listClass,
 	    listStyleType,
+	    listAlignment,
 	    //list attributes
 	buttonSize,
 	    buttonColor,
 	    buttonBorder,
+	    buttonLink,
+	    buttonAlignment,
 	    //button attributes
 	fontSize,
 	    fontColor,
@@ -1209,6 +1211,9 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 	src,
 	    width,
 	    height,
+	    imageAlignment,
+	    imageLink,
+	    openInNewTab,
 	    //image attributes
 	additionalCSS,
 	    additionalClass,
@@ -1281,8 +1286,9 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 
 						listStyleType = trueNode.getElementsByTagName('li')[0].style.listStyleType;
 						listClass = listStyleType == 'decimal' ? 'numbered' : 'unordered';
+						listAlignment = trueNode.getElementsByTagName('article')[0].style.justifyContent;
 
-						code += '[list' + (listClass != undefined ? ' class="' + listClass + '"' : 'class="unordered"') + (listStyleType != undefined ? ' style-type="' + listStyleType + '"' : '') + ']';
+						code += '[list' + (listAlignment != undefined ? ' align="' + listAlignment + '"' : 'align="left"') + (listClass != undefined ? ' class="' + listClass + '"' : 'class="unordered"') + (listStyleType != undefined ? ' style-type="' + listStyleType + '"' : '') + ']';
 						listitems = trueNode.getElementsByTagName('article');
 						for (var i = 0; i < listitems.length; i++) {
 							code += '[item]';
@@ -1301,7 +1307,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						width = trueNode.width;
 						height = trueNode.height;
 						alt = trueNode.alt;
-						code += '[img' + (src != undefined ? ' src="' + src + '"' : '') + (width != undefined ? ' width="' + width + '"' : '') + (height != undefined ? ' height="' + height + '"' : '') + ']';
+						code += '[img' + (src != undefined ? ' src="' + src + '"' : 'src=""') + (width != undefined ? ' width="' + width + '"' : 'width="100%;"') + (alt != undefined ? ' alt="' + alt + '"' : 'alt=""') + (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"') + (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""') + ']';
 						break;
 					case 'text':
 						trueNode = node.getElementsByClassName('editable')[0];
@@ -1323,7 +1329,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						buttonColor = trueNode.style.backgroundColor;
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
-						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + ']';
+						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + (buttonAlignment != undefined ? ' alignment="' + buttonSize + '"' : '') + (buttonLink != undefined ? ' link="' + buttonSize + '"' : '') + (buttonOpenInNewTab != undefined ? ' newtab="' + buttonSize + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';
 						break;
@@ -1474,9 +1480,7 @@ var array = [],
 
 			for (var k = 0; k < maxAmountOfCells; k++) {
 				if (_typeof(carried[k]) == 'object' && carried[k].amount > 0) {
-
 					carried[k].amount--;
-
 					if (carried[k].justAssigned) {
 						carried[k].justAssigned = false;
 					} else {
@@ -1565,7 +1569,6 @@ var array = [],
 			tds[0].classList.remove('wptb-highlighted');
 		}
 		for (var i = 0; i < array.length; i++) {
-
 			for (var j = 0; j < array[i].length; j++) {
 				array[i][j] = 0;
 			}
@@ -1654,7 +1657,6 @@ var array = [],
 				} else {
 					var td = cellsBuffer[cellPointer++];
 					if (td == search) {
-						console.log('Coordenada', [i, xPosition]);
 						return [i, xPosition];
 					}
 					if (td.rowSpan > 1) {
@@ -1802,8 +1804,6 @@ var array = [],
 		    carriedRowspans = [],
 		    currentCell;
 
-		console.log('Position to add after:', pos);
-
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			carriedRowspans.push(0);
 		}
@@ -1829,24 +1829,18 @@ var array = [],
 						rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
 					}
 					break;
-				} else if (carriedRowspans[xPosition] > 0)
+				} else if (carriedRowspans[xPosition] > 0) {
 					// If no pending insertion, let's check if no rowspan from upper cells is pending in current position
-					{
-						console.log('We must skip position ' + xPosition + ' of row ' + i);
-						if (pos == xPosition) {
-							console.log('In next iteration we insert , position:' + pos);
-							pendingInsertion = true;
-						}
-					} else {
+					if (pos == xPosition) {
+						pendingInsertion = true;
+					}
+				} else {
 					currentCell = cellsBuffer[cellPointer++];
-					console.log('Cell', currentCell, i, cellPointer);
 					if (currentCell.rowSpan > 1) {
 						stepsToMove = currentCell.colSpan;
 						for (var k = 0; k < currentCell.colSpan; k++) {
 							carriedRowspans[xPosition + k] = currentCell.rowSpan;
-							console.log('xPosition,k,xPosition+k,pos', xPosition, k, xPosition + k, pos);
 							if (xPosition + k == pos) {
-								console.log('Yes');
 								pendingInsertion = true;
 							}
 						}
@@ -2008,10 +2002,7 @@ var array = [],
 
 		arr = realTimeArray();
 
-		console.log('Arr', arr);
-
 		for (var i = 0; i < arr.length; i++) {
-			console.log('Loop iteration');
 
 			if (arr[i].length > maxAmountOfCells) {
 				//Still not watched
@@ -2038,8 +2029,7 @@ var array = [],
   * make a rectangular shape.
   * @param Array the abstract table.
   * @return false, if not making a rectangle, or
-  *			Array an array containing number of rows and columns, if 
- 				selection makes a rectangle.
+  *	Array an array containing number of rows and columns, if selection makes a rectangle.
   */
 
 	table.isSquare = function (a) {
@@ -2111,16 +2101,11 @@ var array = [],
   */
 
 	table.mergeCells = function () {
-		console.log('Meging');
 		var dimensions = table.isSquare(array),
 		    rowspan = dimensions[0],
 		    colspan = dimensions[1],
 		    first = document.querySelector('.wptb-highlighted'),
 		    tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
-
-		console.log('Dimensions:', dimensions);
-		console.log('First:', first);
-		console.log('Cells without the first one:', tds);
 
 		for (var i = 0; i < tds.length; i++) {
 			var p = tds[i].parentNode;
@@ -2146,44 +2131,7 @@ var array = [],
 		cell.rowSpan = 1;
 		cell.colSpan = 1;
 		table.addLackingCells();
-		/*
-  console.log('Cell',cell.rowSpan,cell.rowspan);
-  for (var i = 0; i<rowspan; i++) {
-  	console.log('Let"s split it!',cell);
-  		if(i == 0){
-  			console.log('Iteration 1');
-  		refCell = cell;
-  		}
-  		else
-  		{
-  			console.log('Conter');
-  			for (var k = 0, pt= 0; k < colspan; k+=refCell.colSpan,pt++)
-  			{ 
-  			console.log('Increasing Conter');
-  				refCell = table.rows[i].getElementsByTagName('td')[pt];
-  				if(!refCell){
-  					break;
-  				}
-  			}
-  		}
-  console.log(refCell);
-  				var p = refCell ? refCell.parentNode : table.rows[i];
-  	for (var j = 0; j<colspan; j++) {
-  		if(!i && !j){
-  			continue;
-  		}
-  		newCell = document.createElement('td');
-  newCell.onclick = mark;
-  		if(refCell && refCell.nextSibling){
-  			p.insertBefore(newCell,refCell.nextSibling)
-  		}
-  		else{
-  			p.appendChild(newCell);
-  		}
-  		refCell = newCell;
-  	}
-  }
-  */
+
 		undoSelect();
 	};
 
@@ -2202,12 +2150,9 @@ var array = [],
 		}
 		difference = maxAmountOfCells - actualPoints;
 
-		console.log('Difference', difference);
 		for (var i = row - 1; i >= 0 && difference; i--) {
-			console.log('Searching in row', i);
 			var tds = table.rows[i].getElementsByTagName('td');
 			for (var i = 0; i < tds.length; i++) {
-				console.log('Exploring td', tds[i]);
 				if (tds[i].rowSpan > 1) {
 					array.push(tds[i]);
 					difference -= tds[i].colSpan;
@@ -2240,8 +2185,6 @@ var array = [],
 			}
 		}
 
-		console.log('SumRows', sumRows);
-
 		for (var i = 0; i < table.rows.length; i++) {
 			var tds = table.rows[i].getElementsByTagName('td'),
 			    totalColspan = 0;
@@ -2250,9 +2193,7 @@ var array = [],
 			}
 			totalColspan += sumRows[i];
 			difference = maxAmountOfCells - totalColspan;
-			console.log('Difference', difference);
 			for (var j = 0; j < difference; j++) {
-				console.log('Filling in row ' + i);
 				var td = new WPTB_Cell(mark);
 				table.rows[i].appendChild(td.getDOMElement());
 			}
@@ -2270,10 +2211,7 @@ var array = [],
 		    row = getCoords(cell)[0],
 		    reduct = table.findRowspannedCells(row);
 
-		console.log(reduct);
-
 		for (i = 0; i < reduct.length; i++) {
-			console.log('reducting', reduct[i]);
 			reduct[i].rowSpan--;
 		}
 
@@ -2302,7 +2240,6 @@ var array = [],
 		}
 
 		for (var i = 0; i < table.rows.length; i++) {
-			console.log('Estado de carriedspan en ' + i, carriedRowspans);
 			buffer = table.rows[i].getElementsByTagName('td');
 			stepsToMove = 1;
 			cellPointer = 0;
@@ -2323,7 +2260,6 @@ var array = [],
 							break;
 						}
 					} else if (cell.colSpan > 1) {
-						console.log(cell, j, column, k);
 						stepsToMove = cell.colSpan;
 
 						if (column > j && column <= j + cell.colSpan - 1) {
@@ -2340,7 +2276,6 @@ var array = [],
 						}
 					}
 				} else {
-					console.log('Prolongacion rowspan detectada en celda ' + cellPointer + ', posicion ' + j);
 					continue;
 				}
 			}
@@ -2354,7 +2289,6 @@ var array = [],
 		maxAmountOfCells--;
 
 		for (var i = 0; i < table.rows.length; i++) {
-			console.log(array);
 			if (array[i] != undefined) array[i].pop();
 		}
 		undoSelect();
@@ -2504,7 +2438,6 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 
 					window.currentEditor = editor;
 					editor.on('focus', function (e) {
-
 						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
 						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
 							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';

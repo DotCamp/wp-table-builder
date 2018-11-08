@@ -7,10 +7,10 @@ var WPTB_Stringifier = function (node) {
 	var code = '', children = node.childNodes,
 		padding, margin, bg1, bg2, bg3, border,
 		colSpan, rowSpan, isHidden, // Table Attributes
-		listClass, listStyleType, //list attributes
-		buttonSize, buttonColor, buttonBorder, //button attributes
+		listClass, listStyleType, listAlignment, //list attributes
+		buttonSize, buttonColor, buttonBorder, buttonLink, buttonAlignment, //button attributes
 		fontSize, fontColor, fontFamily, //text attributes
-		src, width, height, //image attributes
+		src, width, height, imageAlignment, imageLink, openInNewTab, //image attributes
 		additionalCSS, additionalClass, additionalID; // A few global attributes I wanted to add.
 
 	switch (node.tagName.toLowerCase()) {
@@ -90,8 +90,10 @@ var WPTB_Stringifier = function (node) {
 
 						listStyleType = trueNode.getElementsByTagName('li')[0].style.listStyleType;
 						listClass = listStyleType == 'decimal' ? 'numbered' : 'unordered';
+						listAlignment = trueNode.getElementsByTagName('article')[0].style.justifyContent;
 
 						code += '[list'
+							+ (listAlignment != undefined ? ' align="' + listAlignment + '"' : 'align="left"')
 							+ (listClass != undefined ? ' class="' + listClass + '"' : 'class="unordered"')
 							+ (listStyleType != undefined ? ' style-type="' + listStyleType + '"' : '')
 							+ ']';
@@ -116,9 +118,11 @@ var WPTB_Stringifier = function (node) {
 						height = trueNode.height;
 						alt = trueNode.alt;
 						code += '[img'
-							+ (src != undefined ? ' src="' + src + '"' : '')
-							+ (width != undefined ? ' width="' + width + '"' : '')
-							+ (height != undefined ? ' height="' + height + '"' : '')
+							+ (src != undefined ? ' src="' + src + '"' : 'src=""')
+							+ (width != undefined ? ' width="' + width + '"' : 'width="100%;"')
+							+ (alt != undefined ? ' alt="' + alt + '"' : 'alt=""')
+							+ (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"')
+							+ (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""')
 							+ ']';
 						break;
 					case 'text':
@@ -147,6 +151,9 @@ var WPTB_Stringifier = function (node) {
 						code += '[button'
 							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : '')
 							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : '')
+							+ (buttonAlignment != undefined ? ' alignment="' + buttonSize + '"' : '')
+							+ (buttonLink != undefined ? ' link="' + buttonSize + '"' : '')
+							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonSize + '"' : '')
 							+ ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';

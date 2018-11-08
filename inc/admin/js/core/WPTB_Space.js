@@ -3,14 +3,11 @@ var WPTB_Space = function (text) {
     function newElementProxy(el) {
         if (el == 'list') {
             return new WPTB_List();
-        }
-        else if (el == 'image') {
+        } else if (el == 'image') {
             return new WPTB_Image();
-        }
-        else if (el == 'text') {
+        } else if (el == 'text') {
             return new WPTB_Text();
-        }
-        else if (el == 'button') {
+        } else if (el == 'button') {
             return new WPTB_Button();
         }
     }
@@ -47,15 +44,12 @@ var WPTB_Space = function (text) {
             if (p == null) {
                 td.appendChild(element.getDOMElement());
                 td.appendChild(new WPTB_Space());
-            }
-            else {
+            } else {
                 td.insertBefore(element.getDOMElement(), p);
                 td.insertBefore(new WPTB_Space(), p);
             }
 
-        }
-
-        else {
+        } else {
             element = document.getElementsByClassName(event.dataTransfer.getData('node'))[0];
 
             t_space = element.nextSibling;
@@ -67,8 +61,7 @@ var WPTB_Space = function (text) {
             if (p == null) {
                 td.appendChild(element);
                 td.appendChild(new WPTB_Space());
-            }
-            else {
+            } else {
                 td.insertBefore(element, p);
                 td.insertBefore(new WPTB_Space(), p);
             }

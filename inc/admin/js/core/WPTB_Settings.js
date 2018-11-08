@@ -52,8 +52,7 @@ var WPTB_Settings = function () {
 				if (data[0] == 'saved') {
 					document.wptbId = data[1];
 					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
-				}
-				else {
+				} else {
 					messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
 
 				}

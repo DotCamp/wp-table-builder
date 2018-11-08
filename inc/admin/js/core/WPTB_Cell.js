@@ -3,14 +3,11 @@ var WPTB_Cell = function (callback, DOMElement) {
     function newElementProxy(el) {
         if (el == 'list') {
             return new WPTB_List();
-        }
-        else if (el == 'image') {
+        } else if (el == 'image') {
             return new WPTB_Image();
-        }
-        else if (el == 'text') {
+        } else if (el == 'text') {
             return new WPTB_Text();
-        }
-        else if (el == 'button') {
+        } else if (el == 'button') {
             return new WPTB_Button();
         }
     }

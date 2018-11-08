@@ -60,7 +60,6 @@ var WPTB_LeftPanel = function () {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '1px solid';
             }
-
             document.getElementById('wptb-inner-border-settings').classList.add('visible');
         } else {
             document.getElementById('wptb-inner-border-settings').classList.remove('visible');
