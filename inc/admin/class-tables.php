@@ -96,7 +96,7 @@ class Tables {
         
     }
 
-        public function get_table($args) {  
+    public function get_table($args) {  
     	$uniqueSequence = 't'.substr(md5(time()),0,8);
     	$html = get_post_meta($args['id'] , '_wptb_content_');
     	$code =  $html[0];
@@ -107,22 +107,18 @@ class Tables {
     	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")\]/','<td colspan="$2">', $code);
     	$code = preg_replace( '/\[td\]/','<td>', $code);
     	$code = preg_replace( '/\[\/td\]/','</td>', $code);
-    	$code = preg_replace( '/\[table\s+margin\=\"((\d+)px)?\"\s+padding\=\"((\d+)px)?\"\s+inner\-border\=\"((\d+)px)?\"\s+outer\-border\=\"((\d+)px)?\"\s+data\-bg1\=\"rgb\((\d+\,\d+\,\d+)\)\"\s+data\-bg2\=\"rgb\((\d+\,\d+\,\d+)\)\"\s+data\-bg3\=\"rgb\((\d+\,\d+\,\d+)\)\"\]/','<style type="text/css">#'.$uniqueSequence.'{border:$8px solid black;} #'.$uniqueSequence.' tr:nth-child(even) td{background-color:rgb($10)} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:rgb($11)} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:rgb($9)} #'.$uniqueSequence.' td{border:$6px solid black; padding:$4px;}</style><table id="'.$uniqueSequence.'">', $code);  
+    	$code = preg_replace( '/\[table\s+margin\=\"((\d+)px)?\"\s+padding\=\"((\d+)px)?\"\s+inner\-border\=\"((\d+)px)?\"\s+outer\-border\=\"((\d+)px)?\"\s+data\-bg1\=\"(rgb\((\d+\,\d+\,\d+)\))?\"\s+data\-bg2\=\"(rgb\((\d+\,\d+\,\d+)\))?\"\s+data\-bg3\=\"(rgb\((\d+\,\d+\,\d+)\))?\"\]/','<style type="text/css">#'.$uniqueSequence.'{border:$8px solid black;} #'.$uniqueSequence.' tr:nth-child(even) td{background-color:rgb($12)} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:rgb($14)} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:rgb($10)} #'.$uniqueSequence.' td{border:$6px solid black; padding:$4px;}</style><table id="'.$uniqueSequence.'">', $code);  
     	$code = preg_replace( '/\[\/table\]/','</table>', $code);
-    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"\")?\]/','', $code);
-    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?\]/','', $code);
-    	$code = preg_replace( '/\[text(\s+color\=\"\")?\]/','', $code);
-    	$code = preg_replace( '/\[text\]/','', $code);
+    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"(rgb\((\d+\,\s?\d+\,\s?\d+)\))?\")?\]/','', $code);
     	$code = preg_replace( '/\[\/text\]/','', $code);
-    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?(\s+size\=\"([A-Z])\")?\]/','<a class="wptb-button wptb-size-$4" style="background-color:rgb($2);">', $code);
-    	$code = preg_replace( '/\[button(\s+color\=\"(rgb\(\d+\,\d+\,\d+\))?\")?\]/','<a class="wptb-button">', $code);
-    	$code = preg_replace( '/\[button(\s+size\=\"[A-Z]\")?\]/','<a class="wptb-button">', $code);
-    	$code = preg_replace( '/\[button\]/','<a class="wptb-button">', $code);
+    	$code = preg_replace( '/\[img\s+src\=\"((http(s)?\:\/\/)?[a-zA-z0-9\.\/\-]+)?\"\s+width\=\"([0-9]+\%)\"\s+alt\=\"([a-zA-Z\s0-9]+)\"\s+alignment\=\"([a-z]*)\"\s+link\=\"((http(s)?\:\/\/)?[a-z0-9A-z\.\/\-]+)\"\s+newtab\=\"([a-z]+)\"\]/','<a href="$7" target="$10"><img class="$6-aligned" src="$1" target="$7" style="width:$4;" alt="$5"/></a>', $code);
+    	$code = preg_replace( '/\[button\s+color\=\"(rgb\(\d+\,\s?\d+\,\s?\d+\))?\"\s+size\=\"([A-Z])\"\s+alignment\=\"([a-z]*)\"\s+link\=\"((http(s)?\:\/\/)?[a-zA-z\.\/]+)\"\s+newtab\=\"([a-z]+)\"\]/','<a class="wptb-button $3-aligned wptb-size-$2" href="$4" target="$7" style="background-color:$1;">', $code);
     	$code = preg_replace( '/\[\/button\]/','</a>', $code);
     	
-    	$code = preg_replace( '/\[list(\s+class\=\"unordered\")?(\s+style\-type\=\"\")?\](.*)\[\/list\]/','<ul>$3</ul>', $code);
+    	$code = preg_replace( '/\[list\s+align\=\"([a-z]+)?\"\s+class\=\"([a-z]+)?\"\s+style\-type\=\"([a-z]+)?\"\](.*)\[\/list\]/','<ul>$4</ul>', $code);
     	$code = preg_replace( '/\[item\]/','<li>', $code);
     	$code = preg_replace( '/\[\/item\]/','</li>', $code);
+    	die(var_dump($code));
     	return ($code); //This shoul
     }
 
