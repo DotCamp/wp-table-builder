@@ -27,6 +27,7 @@ var WPTB_Stringifier = function (node) {
 			if (node.rows.length > 2) {
 				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
+
 			code += '[table margin="'
 				+ (margin != undefined && margin != '' ? margin : '')
 				+ '" padding="' + (padding != undefined && padding != '' ? padding : '')
@@ -114,15 +115,30 @@ var WPTB_Stringifier = function (node) {
 							return ''; //We ignore the node in case of error
 						}
 						src = trueNode.src;
-						width = trueNode.width;
-						height = trueNode.height;
+						width = trueNode.style.width;
 						alt = trueNode.alt;
+						imageLink = undefined;
+						if (node.getElementsByTagName('a')[0] &&
+							node.getElementsByTagName('a')[0].href != '') {
+							imageLink = node.getElementsByTagName('a')[0].href;
+						}
+						if (trueNode.style.display != 'inline') {
+							imageAlignment = 'center';
+						} else {
+							imageAlignment = trueNode.style.float;
+						}
+						openInNewTab = undefined;
+						if (node.getElementsByTagName('a')[0] &&
+							node.getElementsByTagName('a')[0].target == '_blank') {
+							openInNewTab = 'true';
+						}
 						code += '[img'
 							+ (src != undefined ? ' src="' + src + '"' : 'src=""')
 							+ (width != undefined ? ' width="' + width + '"' : 'width="100%;"')
 							+ (alt != undefined ? ' alt="' + alt + '"' : 'alt=""')
 							+ (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"')
 							+ (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""')
+							+ (openInNewTab != undefined ? ' newtab="' + openInNewTab + '"' : 'newtab="false"')
 							+ ']';
 						break;
 					case 'text':
@@ -148,12 +164,24 @@ var WPTB_Stringifier = function (node) {
 						buttonColor = trueNode.style.backgroundColor;
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
+						buttonLink = undefined;
+						if (node.getElementsByTagName('a')[0] &&
+							node.getElementsByTagName('a')[0].href != '') {
+							buttonLink = node.getElementsByTagName('a')[0].href;
+						}
+						buttonAlignment = node.parentNode.style.justifyContent;
+						buttonOpenInNewTab = undefined;
+						if (node.getElementsByTagName('a')[0] &&
+							node.getElementsByTagName('a')[0].target == '_blank') {
+							buttonOpenInNewTab = 'true';
+						}
+
 						code += '[button'
 							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : '')
 							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : '')
-							+ (buttonAlignment != undefined ? ' alignment="' + buttonSize + '"' : '')
-							+ (buttonLink != undefined ? ' link="' + buttonSize + '"' : '')
-							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonSize + '"' : '')
+							+ (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : '')
+							+ (buttonLink != undefined ? ' link="' + buttonLink + '"' : '')
+							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : '')
 							+ ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';

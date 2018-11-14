@@ -2,7 +2,7 @@ var WPTB_Button = function (text) {
 
 	var DOMElement = document.createElement('div'),
 		elButton2 = document.createElement('div'),
-		el_B = document.createElement('p');
+		el_B = document.createElement('a');
 
 	this.kind = 'button';
 

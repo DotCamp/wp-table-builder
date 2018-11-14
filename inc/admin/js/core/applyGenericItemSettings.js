@@ -84,6 +84,7 @@ var applyGenericItemSettings = function (element) {
 				menubar: false,
 				fixed_toolbar_container: '#wpcd_fixed_toolbar',
 				toolbar: 'bold italic strikethrough',
+				verify_html: false,
 				setup: function (ed) {
 					ed.on("init",
 						function (ed) {
@@ -94,8 +95,8 @@ var applyGenericItemSettings = function (element) {
 				init_instance_callback: function (editor) {
 					editor.on('change', function (e) {
 						// check if it becomes empty because if there's no value it's hard to edit the editor in button element
-						if (editor.getContent() == "") {
-							editor.setContent("<p class='wptb-button'>Button Text</p>");
+						if (editor.getContent().trim() == "") {
+							editor.setContent("<a class='wptb-button'>Button Text</a>");
 						}
 					});
 					editor.on('KeyDown', function (e) {

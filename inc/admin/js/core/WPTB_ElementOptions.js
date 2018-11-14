@@ -94,6 +94,14 @@ var WPTB_ElementOptions = function (element, index) {
             }
         }
 
+        if (optionControls[i].dataset.type === 'image-size') {
+            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0];
+            slider.oninput = function () {
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].value = this.value;
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange();
+            }
+        }
+
         optionControls[i].onchange = function (event) {
 
             var n_Class = this.dataset.element,
@@ -109,15 +117,22 @@ var WPTB_ElementOptions = function (element, index) {
                     img.src = this.value;
                     break;
                 case 'alternative-text':
-                    var img = affectedEl.getElementsByTagName('img')[0].getElementsByTagName("img")[0];
+                    var img = affectedEl.getElementsByTagName('img')[0];
                     img.alt = this.value;
                     break;
-                case 'image-link':
-                    affectedEl.getElementsByTagName('a')[0].href = this.value;
+                case 'image-link': affectedEl.getElementsByTagName('a')[0].href = this.value;
+                    break;
+                case 'button-link-target':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].target = '_blank';
+                    } else {
+                        affectedEl.getElementsByTagName('a')[0].target = '_self';
+                    }
                     break;
                 case 'image-size':
                     affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
                     affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
+                    this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
                     if (this.value != 'center') {
@@ -152,23 +167,28 @@ var WPTB_ElementOptions = function (element, index) {
                     } else {
                         jc = 'center';
                     }
-                    affectedEl.style.textAlign = jc;
+                    affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
                 case 'button-link':
-                    affectedEl.href = this.value;
+                    affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
-                case 'button-color':
-                    //Kind of redundan
+                case 'button-link-target':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].target = '_blank';
+                    }
+                    else {
+                        affectedEl.getElementsByTagName('a')[0].target = '_self';
+                    }
+                    break;
+                case 'button-color': //Kind of redundan
                     break;
                 case 'list-alignment':
                     var jc = '';
                     if (this.value == 'left') {
-                        jc = 'start';
-                    }
-                    else if (this.value == 'right') {
+                        jc = 'flex-start';
+                    } else if (this.value == 'right') {
                         jc = 'flex-end';
-                    }
-                    else {
+                    } else {
                         jc = 'center';
                     }
                     var articles = affectedEl.querySelectorAll('article');

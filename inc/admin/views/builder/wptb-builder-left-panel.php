@@ -110,10 +110,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="image-size" class="wptb-image-width wptb-element-property" type="range" min="10" max="100" step="1" value="100"> 
+                              <input data-type="image-size" class="wptb-image-width wptb-element-property  wptb-image-size-slider" type="range" min="10" max="100" step="1" value="100"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-width" data-type="image-size"  class="wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
+                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 14px; padding-top: 25px;">
                             <div class="wptb-settings-col-xs-12">
-                                <input id="wptb-image-alternative-text" data-type="alternative-text"  class="wptb-image-height" type="text"  placeholder="Image Alt Text">
+                                <input id="wptb-image-alternative-text" data-type="alternative-text"  class="wptb-element-property wptb-image-height" type="text"  placeholder="Image Alt Text">
                             </div>
                         </div>
                     </div>

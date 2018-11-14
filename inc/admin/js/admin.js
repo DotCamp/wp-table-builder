@@ -39,7 +39,7 @@ var WPTB_Button = function WPTB_Button(text) {
 
 	var DOMElement = document.createElement('div'),
 	    elButton2 = document.createElement('div'),
-	    el_B = document.createElement('p');
+	    el_B = document.createElement('a');
 
 	this.kind = 'button';
 
@@ -316,6 +316,14 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
             };
         }
 
+        if (optionControls[i].dataset.type === 'image-size') {
+            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0];
+            slider.oninput = function () {
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].value = this.value;
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange();
+            };
+        }
+
         optionControls[i].onchange = function (event) {
 
             var n_Class = this.dataset.element,
@@ -331,15 +339,23 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     img.src = this.value;
                     break;
                 case 'alternative-text':
-                    var img = affectedEl.getElementsByTagName('img')[0].getElementsByTagName("img")[0];
+                    var img = affectedEl.getElementsByTagName('img')[0];
                     img.alt = this.value;
                     break;
                 case 'image-link':
                     affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
+                case 'button-link-target':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].target = '_blank';
+                    } else {
+                        affectedEl.getElementsByTagName('a')[0].target = '_self';
+                    }
+                    break;
                 case 'image-size':
                     affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
                     affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
+                    this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
                     if (this.value != 'center') {
@@ -374,10 +390,17 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     } else {
                         jc = 'center';
                     }
-                    affectedEl.style.textAlign = jc;
+                    affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
                 case 'button-link':
-                    affectedEl.href = this.value;
+                    affectedEl.getElementsByTagName('a')[0].href = this.value;
+                    break;
+                case 'button-link-target':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].target = '_blank';
+                    } else {
+                        affectedEl.getElementsByTagName('a')[0].target = '_self';
+                    }
                     break;
                 case 'button-color':
                     //Kind of redundan
@@ -385,7 +408,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                 case 'list-alignment':
                     var jc = '';
                     if (this.value == 'left') {
-                        jc = 'start';
+                        jc = 'flex-start';
                     } else if (this.value == 'right') {
                         jc = 'flex-end';
                     } else {
@@ -1233,6 +1256,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 			if (node.rows.length > 2) {
 				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
+
 			code += '[table margin="' + (margin != undefined && margin != '' ? margin : '') + '" padding="' + (padding != undefined && padding != '' ? padding : '') + '" inner-border="' + (innerBorder != undefined && innerBorder != '' ? innerBorder : '') + '" outer-border="' + (border != undefined && border != '' ? border : '') + '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : '') + '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : '') + '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : '') + '"]';
 
 			for (var i = 0; i < children.length; i++) {
@@ -1304,10 +1328,22 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 							return ''; //We ignore the node in case of error
 						}
 						src = trueNode.src;
-						width = trueNode.width;
-						height = trueNode.height;
+						width = trueNode.style.width;
 						alt = trueNode.alt;
-						code += '[img' + (src != undefined ? ' src="' + src + '"' : 'src=""') + (width != undefined ? ' width="' + width + '"' : 'width="100%;"') + (alt != undefined ? ' alt="' + alt + '"' : 'alt=""') + (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"') + (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""') + ']';
+						imageLink = undefined;
+						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].href != '') {
+							imageLink = node.getElementsByTagName('a')[0].href;
+						}
+						if (trueNode.style.display != 'inline') {
+							imageAlignment = 'center';
+						} else {
+							imageAlignment = trueNode.style.float;
+						}
+						openInNewTab = undefined;
+						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].target == '_blank') {
+							openInNewTab = 'true';
+						}
+						code += '[img' + (src != undefined ? ' src="' + src + '"' : 'src=""') + (width != undefined ? ' width="' + width + '"' : 'width="100%;"') + (alt != undefined ? ' alt="' + alt + '"' : 'alt=""') + (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"') + (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""') + (openInNewTab != undefined ? ' newtab="' + openInNewTab + '"' : 'newtab="false"') + ']';
 						break;
 					case 'text':
 						trueNode = node.getElementsByClassName('editable')[0];
@@ -1329,7 +1365,17 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						buttonColor = trueNode.style.backgroundColor;
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
-						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + (buttonAlignment != undefined ? ' alignment="' + buttonSize + '"' : '') + (buttonLink != undefined ? ' link="' + buttonSize + '"' : '') + (buttonOpenInNewTab != undefined ? ' newtab="' + buttonSize + '"' : '') + ']';
+						buttonLink = undefined;
+						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].href != '') {
+							buttonLink = node.getElementsByTagName('a')[0].href;
+						}
+						buttonAlignment = node.parentNode.style.justifyContent;
+						buttonOpenInNewTab = undefined;
+						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].target == '_blank') {
+							buttonOpenInNewTab = 'true';
+						}
+
+						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : '') + (buttonLink != undefined ? ' link="' + buttonLink + '"' : '') + (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';
 						break;
@@ -2415,6 +2461,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 				menubar: false,
 				fixed_toolbar_container: '#wpcd_fixed_toolbar',
 				toolbar: 'bold italic strikethrough',
+				verify_html: false,
 				setup: function setup(ed) {
 					ed.on("init", function (ed) {
 						tinyMCE.execCommand('mceRepaint');
@@ -2423,8 +2470,8 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 				init_instance_callback: function init_instance_callback(editor) {
 					editor.on('change', function (e) {
 						// check if it becomes empty because if there's no value it's hard to edit the editor in button element
-						if (editor.getContent() == "") {
-							editor.setContent("<p class='wptb-button'>Button Text</p>");
+						if (editor.getContent().trim() == "") {
+							editor.setContent("<a class='wptb-button'>Button Text</a>");
 						}
 					});
 					editor.on('KeyDown', function (e) {
