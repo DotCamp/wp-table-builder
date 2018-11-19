@@ -313,7 +313,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	//END OF PRIVATE FUNCTIONS
 	for (var i = 0; i < settings.length; i++) {
-		settings[i].classList.add('visible');
+		if (settings[i].id !== 'wptb-apply-inner-border') {
+			settings[i].classList.add('visible');
+		}
 	}
 
 	//Create a HTML Table element.

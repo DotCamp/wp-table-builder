@@ -212,7 +212,7 @@ body>img {
 
 .wptb-settings-items,
 .wptb-cell-management {
-    margin: 0px 2px;
+    margin: 0px 1px;
     transition: 1s 0s ease;
 }
 
@@ -383,8 +383,8 @@ input[type="range"]::-ms-thumb {
 
 .wptb-inner-border {
     display: inline-block;
-    width: 100%;
-    padding: 10px 0;
+    width: 95%;
+    padding: 25px 0 10px 0;
 }
 
 .wptb-inner-border input {

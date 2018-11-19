@@ -60,9 +60,9 @@ var WPTB_LeftPanel = function () {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '1px solid';
             }
-            document.getElementById('wptb-inner-border-settings').classList.add('visible');
+            document.getElementById('wptb-apply-inner-border').classList.add('visible');
         } else {
-            document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+            document.getElementById('wptb-apply-inner-border').classList.remove('visible');
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '';
