@@ -75,12 +75,8 @@ var WPTB_ElementOptions = function (element, index) {
                     affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
                     if (type == 'button') {
                         affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
-                    }
-                    else {
-                        ps = affectedEl.getElementsByTagName("p");
-                        for (var i = 0; i < ps.length; i++) {
-                            ps[i].style.color = ui.color.toString();
-                        }
+                    } else {
+                        affectedEl.style.color = ui.color.toString();
                     }
                 }
             });
@@ -146,17 +142,7 @@ var WPTB_ElementOptions = function (element, index) {
                     }
                     break;
                 case 'font-size':
-                    var ps = affectedEl.getElementsByTagName("p");
-                    for (var i = 0; i < ps.length; i++) {
-                        ps[i].style.fontSize = val + 'px';
-                    }
-                    this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0].value = this.value;
-                    break;
-                case 'color':
-                    var ps = affectedEl.getElementsByTagName("p");
-                    for (var i = 0; i < ps.length; i++) {
-                        ps[i].style.color = val;
-                    }
+                    affectedEl.style.fontSize = val + 'px';
                     break;
                 case 'button-alignment':
                     var jc = '';
@@ -175,12 +161,12 @@ var WPTB_ElementOptions = function (element, index) {
                 case 'button-link-target':
                     if (this.checked == true) {
                         affectedEl.getElementsByTagName('a')[0].target = '_blank';
-                    }
-                    else {
+                    } else {
                         affectedEl.getElementsByTagName('a')[0].target = '_self';
                     }
                     break;
-                case 'button-color': //Kind of redundan
+                case 'button-color':
+                    //Kind of redundan
                     break;
                 case 'list-alignment':
                     var jc = '';

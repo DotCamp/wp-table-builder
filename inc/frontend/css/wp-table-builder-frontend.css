@@ -3,11 +3,10 @@
  *
  * The file is enqueued from inc/frontend/class-frontend.php.
  */
-.wptb-table img
-{
-	max-width: 100%;
-}
 
+.wptb-table img {
+    max-width: 100%;
+}
 
 .wptb-button {
     padding: 16px;
@@ -15,29 +14,76 @@
     color: #ffffff;
 }
 
-.wptb-size-S{
+.wptb-size-S {
     border-radius: .2rem;
     font-size: .875rem;
     line-height: 1.5;
-     padding: .25rem .5rem;
+    padding: .25rem .5rem;
 }
 
-.wptb-size-M{
+.wptb-size-M {
     border-radius: .3rem;
     font-size: 1.125rem;
     line-height: 1.5;
     padding: .375rem .75rem;
 }
 
-.wptb-size-L{
+.wptb-size-L {
     border-radius: .3rem;
     font-size: 1.25rem;
     line-height: 1.5;
     padding: .5rem 1rem;
 }
 
-.wptb-size-XL{
+.wptb-size-XL {
     border-radius: .4rem;
     display: block;
     width: 100%;
+}
+
+.cneter-aligned {
+    display: block;
+    margin: 0 auto;
+}
+
+.left-aligned {
+    float: left;
+}
+
+.right-aligned {
+    float: right;
+}
+
+[class*=wptb-element-text-] p {
+    color: inherit !important;
+    font-size: inherit !important;
+}
+
+.flex-start-aligned-list li {
+    float: left;
+}
+
+.flex-end-aligned-list li {
+    float: right;
+}
+
+.center-aligned-list li {
+    list-style-position: inside;
+    text-align: center;
+}
+
+.center-aligned-list li p {
+    display: inline-block;
+}
+
+.disc-list li {
+    list-style-type: disc;
+}
+
+.circle-list li {
+    list-style-type: circle;
+}
+
+.square-list li {
+    list-style-type: square;
 }

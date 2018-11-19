@@ -135,6 +135,7 @@ body>img {
     position: fixed;
     right: 2em;
     width: auto;
+    z-index: 10;
 }
 
 #edit-bar.visible {
@@ -1241,6 +1242,11 @@ td[class*="wptb-fused-cell"] {
     text-align: center;
     display: block;
     width: 80%;
+}
+
+[class*=wptb-element-text-] p {
+    color: inherit !important;
+    font-size: inherit !important;
 }
 
 .wptb-split-page-title-action a,

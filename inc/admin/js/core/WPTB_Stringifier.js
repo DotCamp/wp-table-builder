@@ -109,7 +109,6 @@ var WPTB_Stringifier = function (node) {
 						code += '[/list]';
 						break;
 					case 'image':
-
 						trueNode = node.getElementsByTagName('img')[0];
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
@@ -127,11 +126,7 @@ var WPTB_Stringifier = function (node) {
 						} else {
 							imageAlignment = trueNode.style.float;
 						}
-						openInNewTab = undefined;
-						if (node.getElementsByTagName('a')[0] &&
-							node.getElementsByTagName('a')[0].target == '_blank') {
-							openInNewTab = 'true';
-						}
+						openInNewTab = node.getElementsByTagName('a')[0].target;
 						code += '[img'
 							+ (src != undefined ? ' src="' + src + '"' : 'src=""')
 							+ (width != undefined ? ' width="' + width + '"' : 'width="100%;"')
@@ -146,8 +141,8 @@ var WPTB_Stringifier = function (node) {
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
-						fontSize = trueNode.getElementsByTagName('p')[0].style.fontSize;
-						fontColor = trueNode.getElementsByTagName('p')[0].style.color;
+						fontSize = trueNode.parentNode.style.fontSize;
+						fontColor = trueNode.parentNode.style.color.replace(/\s/g, '');
 						code += '[text'
 							+ (fontSize != undefined ? ' size="' + fontSize + '"' : '')
 							+ (fontColor != undefined ? ' color="' + fontColor + '"' : '')
@@ -161,7 +156,7 @@ var WPTB_Stringifier = function (node) {
 							return '';
 						}
 
-						buttonColor = trueNode.style.backgroundColor;
+						buttonColor = trueNode.style.backgroundColor.replace(/\s/g, '');
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
 						buttonLink = undefined;
@@ -170,11 +165,7 @@ var WPTB_Stringifier = function (node) {
 							buttonLink = node.getElementsByTagName('a')[0].href;
 						}
 						buttonAlignment = node.parentNode.style.justifyContent;
-						buttonOpenInNewTab = undefined;
-						if (node.getElementsByTagName('a')[0] &&
-							node.getElementsByTagName('a')[0].target == '_blank') {
-							buttonOpenInNewTab = 'true';
-						}
+						buttonOpenInNewTab = node.getElementsByTagName('a')[0].target;
 
 						code += '[button'
 							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : '')
@@ -187,8 +178,7 @@ var WPTB_Stringifier = function (node) {
 						code += '[/button]';
 						break;
 				}
-			}
-			else {
+			} else {
 				return '';
 			}
 			break;

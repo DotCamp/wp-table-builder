@@ -299,10 +299,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     if (type == 'button') {
                         affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
                     } else {
-                        ps = affectedEl.getElementsByTagName("p");
-                        for (var i = 0; i < ps.length; i++) {
-                            ps[i].style.color = ui.color.toString();
-                        }
+                        affectedEl.style.color = ui.color.toString();
                     }
                 }
             });
@@ -369,17 +366,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     }
                     break;
                 case 'font-size':
-                    var ps = affectedEl.getElementsByTagName("p");
-                    for (var i = 0; i < ps.length; i++) {
-                        ps[i].style.fontSize = val + 'px';
-                    }
-                    this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0].value = this.value;
-                    break;
-                case 'color':
-                    var ps = affectedEl.getElementsByTagName("p");
-                    for (var i = 0; i < ps.length; i++) {
-                        ps[i].style.color = val;
-                    }
+                    affectedEl.style.fontSize = val + 'px';
                     break;
                 case 'button-alignment':
                     var jc = '';
@@ -687,9 +674,13 @@ var WPTB_List = function WPTB_List(innerElements) {
 
     this.kind = 'list';
 
-    if (!innerElements) for (var i = 0; i < 3; i++) {
-        item = new WPTB_ListItem('List Item ' + (i + 1));
-        el_L.appendChild(item.getDOMElement());
+    if (innerElements === '') {
+        //Case for edit mode list
+    } else if (!innerElements) {
+        for (var i = 0; i < 3; i++) {
+            item = new WPTB_ListItem('List Item ' + (i + 1));
+            el_L.appendChild(item.getDOMElement());
+        }
     } else {
         for (var i = 0; i < innerElements.length; i++) {
             item = new WPTB_ListItem(innerElements[i]);
@@ -947,6 +938,67 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		return html;
 	}
 
+	function analizeText(attributes) {
+		var node;
+		getExpectedToken('[text]');
+		html = parseAllHTML();
+		node = new WPTB_Text(html);
+		node.getDOMElement().style.fontSize = attributes.size;
+		node.getDOMElement().style.color = attributes.color;
+		getToken();
+		getExpectedToken('[/text]');
+		return node;
+	}
+
+	function analizeButton(attributes) {
+		var node;
+		getExpectedToken('[button]');
+		html = parseAllHTML();
+		node = new WPTB_Button(html);
+		node.getDOMElement().className = 'wptb-size-' + attributes['size'] + ' ' + attributes['size'] + '-aligned-button';
+		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.backgroundColor = attributes.color;
+		getToken();
+		getExpectedToken('[/button]');
+		return node;
+	}
+
+	function analizeListItem() {
+		var node;
+		getExpectedToken('[item]');
+		html = parseAllHTML();
+		node = new WPTB_ListItem(html);
+		getToken();
+		getExpectedToken('[/item]');
+		return node;
+	}
+
+	function analizeList(attributes) {
+		var node = new WPTB_List(''),
+		    stylety;
+		getExpectedToken('[list]');
+		if (attributes['class'] == 'numbered') {
+			stylety = 'decimal';
+		} else {
+			stylety = attributes['style-type'];
+		}
+		do {
+			node.getDOMElement().getElementsByTagName('ul')[0].appendChild(analizeListItem().getDOMElement());
+		} while (getWordFromToken(ctoken) == '[item]');
+
+		getExpectedToken('[/list]');
+
+		var articles = node.getDOMElement().querySelectorAll('article');
+		for (var i = 0; i < articles.length; i++) {
+			articles[i].style.justifyContent = attributes['align'];
+		}
+
+		var bullets = node.getDOMElement().querySelectorAll('article .wptb-list-item-style-dot li');
+		for (var i = 0; i < bullets.length; i++) {
+			bullets[i].style.listStyleType = stylety;
+		}
+		return node;
+	}
+
 	function analizeElement() {
 		var t = getWordFromToken(getCurrentToken()),
 		    html,
@@ -955,19 +1007,15 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		switch (t) {
 			case '[text]':
 				attr = getAttributesFromToken();
-				getExpectedToken('[text]');
-				html = parseAllHTML();
-				node = new WPTB_Text(html);
-				getToken();
-				getExpectedToken('[/text]');
+				node = analizeText(attr);
+				break;
+			case '[list]':
+				attr = getAttributesFromToken();
+				node = analizeList(attr);
 				break;
 			case '[button]':
 				attr = getAttributesFromToken();
-				getExpectedToken('[button]');
-				html = parseAllHTML();
-				node = new WPTB_Button(html);
-				getToken();
-				getExpectedToken('[/button]');
+				node = analizeButton(attr);
 				break;
 			case '[img]':
 				attr = getAttributesFromToken();
@@ -980,19 +1028,19 @@ var WPTB_Parser = function WPTB_Parser(code) {
 	}
 
 	function analizeElements(td) {
-		while (getCurrentToken() == '[image]' || getCurrentToken() == '[text]' || getCurrentToken() == '[list]' || getCurrentToken() == '[button]') {
+		while (getWordFromToken(ctoken) == '[img]' || getWordFromToken(ctoken) == '[text]' || getWordFromToken(ctoken) == '[list]' || getWordFromToken(ctoken) == '[button]') {
 			td.appendChild(analizeElement());
 		}
 	}
 
 	function analizeRows(tableNode) {
-		do {
+		while (getWordFromToken(getCurrentToken()) === '[tr]') {
 			var tr = tableNode.insertRow();
 			tr.classList.add('wptb-row');
 			getExpectedToken('[tr]');
 			analizeTds(tr);
 			getExpectedToken('[/tr]');
-		} while (getWordFromToken(getCurrentToken()) === '[tr]');
+		}
 	}
 
 	function analizeTd() {
@@ -1322,7 +1370,6 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						code += '[/list]';
 						break;
 					case 'image':
-
 						trueNode = node.getElementsByTagName('img')[0];
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
@@ -1339,10 +1386,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						} else {
 							imageAlignment = trueNode.style.float;
 						}
-						openInNewTab = undefined;
-						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].target == '_blank') {
-							openInNewTab = 'true';
-						}
+						openInNewTab = node.getElementsByTagName('a')[0].target;
 						code += '[img' + (src != undefined ? ' src="' + src + '"' : 'src=""') + (width != undefined ? ' width="' + width + '"' : 'width="100%;"') + (alt != undefined ? ' alt="' + alt + '"' : 'alt=""') + (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"') + (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""') + (openInNewTab != undefined ? ' newtab="' + openInNewTab + '"' : 'newtab="false"') + ']';
 						break;
 					case 'text':
@@ -1350,8 +1394,8 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						if (!trueNode) {
 							return ''; //We ignore the node in case of error
 						}
-						fontSize = trueNode.getElementsByTagName('p')[0].style.fontSize;
-						fontColor = trueNode.getElementsByTagName('p')[0].style.color;
+						fontSize = trueNode.parentNode.style.fontSize;
+						fontColor = trueNode.parentNode.style.color.replace(/\s/g, '');
 						code += '[text' + (fontSize != undefined ? ' size="' + fontSize + '"' : '') + (fontColor != undefined ? ' color="' + fontColor + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/text]';
@@ -1362,7 +1406,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 							return '';
 						}
 
-						buttonColor = trueNode.style.backgroundColor;
+						buttonColor = trueNode.style.backgroundColor.replace(/\s/g, '');
 						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
 
 						buttonLink = undefined;
@@ -1370,10 +1414,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 							buttonLink = node.getElementsByTagName('a')[0].href;
 						}
 						buttonAlignment = node.parentNode.style.justifyContent;
-						buttonOpenInNewTab = undefined;
-						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].target == '_blank') {
-							buttonOpenInNewTab = 'true';
-						}
+						buttonOpenInNewTab = node.getElementsByTagName('a')[0].target;
 
 						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : '') + (buttonLink != undefined ? ' link="' + buttonLink + '"' : '') + (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : '') + ']';
 						code += trueNode.innerHTML;

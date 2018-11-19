@@ -5,12 +5,14 @@ var WPTB_List = function (innerElements) {
 
     this.kind = 'list';
 
-    if (!innerElements)
+    if (innerElements === '') {
+        //Case for edit mode list
+    } else if (!innerElements) {
         for (var i = 0; i < 3; i++) {
             item = new WPTB_ListItem('List Item ' + (i + 1));
             el_L.appendChild(item.getDOMElement());
         }
-    else {
+    } else {
         for (var i = 0; i < innerElements.length; i++) {
             item = new WPTB_ListItem(innerElements[i]);
             el_L.appendChild(item.getDOMElement());

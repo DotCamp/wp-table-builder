@@ -86,23 +86,79 @@ var WPTB_Parser = function (code) {
 
 	}
 
+	function analizeText(attributes) {
+		var node;
+		getExpectedToken('[text]');
+		html = parseAllHTML();
+		node = new WPTB_Text(html);
+		node.getDOMElement().style.fontSize = attributes.size;
+		node.getDOMElement().style.color = attributes.color;
+		getToken();
+		getExpectedToken('[/text]');
+		return node;
+	}
+
+	function analizeButton(attributes) {
+		var node;
+		getExpectedToken('[button]');
+		html = parseAllHTML();
+		node = new WPTB_Button(html);
+		node.getDOMElement().className = 'wptb-size-' + attributes['size'] + ' ' + attributes['size'] + '-aligned-button';
+		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.backgroundColor = attributes.color;
+		getToken();
+		getExpectedToken('[/button]');
+		return node;
+	}
+
+	function analizeListItem() {
+		var node;
+		getExpectedToken('[item]');
+		html = parseAllHTML();
+		node = new WPTB_ListItem(html);
+		getToken();
+		getExpectedToken('[/item]');
+		return node;
+	}
+
+	function analizeList(attributes) {
+		var node = new WPTB_List(''), stylety;
+		getExpectedToken('[list]');
+		if (attributes['class'] == 'numbered') {
+			stylety = 'decimal';
+		} else {
+			stylety = attributes['style-type'];
+		}
+		do {
+			node.getDOMElement().getElementsByTagName('ul')[0]
+				.appendChild(analizeListItem().getDOMElement());
+		} while (getWordFromToken(ctoken) == '[item]');
+
+		getExpectedToken('[/list]');
+
+		var articles = node.getDOMElement().querySelectorAll('article');
+		for (var i = 0; i < articles.length; i++) {
+			articles[i].style.justifyContent = attributes['align'];
+		}
+
+		var bullets = node.getDOMElement().querySelectorAll('article .wptb-list-item-style-dot li');
+		for (var i = 0; i < bullets.length; i++) {
+			bullets[i].style.listStyleType = stylety;
+		}
+		return node;
+	}
+
 	function analizeElement() {
 		var t = getWordFromToken(getCurrentToken()), html, node;
 
 		switch (t) {
 			case '[text]': attr = getAttributesFromToken();
-				getExpectedToken('[text]');
-				html = parseAllHTML();
-				node = new WPTB_Text(html);
-				getToken();
-				getExpectedToken('[/text]');
+				node = analizeText(attr);
+				break;
+			case '[list]': attr = getAttributesFromToken();
+				node = analizeList(attr);
 				break;
 			case '[button]': attr = getAttributesFromToken();
-				getExpectedToken('[button]');
-				html = parseAllHTML();
-				node = new WPTB_Button(html);
-				getToken();
-				getExpectedToken('[/button]');
+				node = analizeButton(attr);
 				break;
 			case '[img]': attr = getAttributesFromToken();
 				node = new WPTB_Image(attr['src']);
@@ -114,22 +170,22 @@ var WPTB_Parser = function (code) {
 	}
 
 	function analizeElements(td) {
-		while (getCurrentToken() == '[image]'
-			|| getCurrentToken() == '[text]'
-			|| getCurrentToken() == '[list]'
-			|| getCurrentToken() == '[button]') {
+		while (getWordFromToken(ctoken) == '[img]'
+			|| getWordFromToken(ctoken) == '[text]'
+			|| getWordFromToken(ctoken) == '[list]'
+			|| getWordFromToken(ctoken) == '[button]') {
 			td.appendChild(analizeElement());
 		}
 	}
 
 	function analizeRows(tableNode) {
-		do {
+		while (getWordFromToken(getCurrentToken()) === '[tr]') {
 			var tr = tableNode.insertRow();
 			tr.classList.add('wptb-row');
 			getExpectedToken('[tr]');
 			analizeTds(tr);
 			getExpectedToken('[/tr]');
-		} while (getWordFromToken(getCurrentToken()) === '[tr]');
+		}
 	}
 
 	function analizeTd() {
