@@ -44,7 +44,7 @@ var WPTB_Parser = function (code) {
 	function getWordFromToken(token) {
 		var p = token.indexOf(' '),
 			word = token.substring(1, p);
-		if (p == -1) { //This is, if token tag has no attributes
+		if (p == -1) { //This is, if token tag has no attributes 
 			return token;
 		}
 		return '[' + word + ']';
@@ -86,6 +86,29 @@ var WPTB_Parser = function (code) {
 
 	}
 
+	function analizeImage(attributes) {
+		var node;
+		node = new WPTB_Image(attr['src']);
+		getExpectedToken('[img]');
+		node.getDOMElement().getElementsByTagName('img')[0].style.width = attr['width'];
+		node.getDOMElement().getElementsByTagName('img')[0].alt = attr['alt'];
+		node.getDOMElement().getElementsByTagName('a')[0].href = attr['link'];
+		node.getDOMElement().getElementsByTagName('a')[0].target = attr['newtab'];
+
+		if (attr['alignment'] != 'center') {
+			node.getDOMElement().getElementsByTagName('img')[0].style.display = 'inline';
+			node.getDOMElement().getElementsByTagName('img')[0].style.float = this.value;
+			node.getDOMElement().getElementsByTagName('img')[0].style.margin = 'inherit';
+		} else {
+			node.getDOMElement().getElementsByTagName('img')[0].style.float = 'none';
+			node.getDOMElement().getElementsByTagName('img')[0].style.display = 'block';
+			node.getDOMElement().getElementsByTagName('img')[0].style.margin = '0 auto';
+		}
+
+		return node;
+
+	}
+
 	function analizeText(attributes) {
 		var node;
 		getExpectedToken('[text]');
@@ -103,8 +126,11 @@ var WPTB_Parser = function (code) {
 		getExpectedToken('[button]');
 		html = parseAllHTML();
 		node = new WPTB_Button(html);
-		node.getDOMElement().className = 'wptb-size-' + attributes['size'] + ' ' + attributes['size'] + '-aligned-button';
+		node.getDOMElement().classList.add('wptb-size-' + attributes['size']);
+		node.getDOMElement().getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = attributes['alignment'];
 		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.backgroundColor = attributes.color;
+		node.getDOMElement().querySelector('.wptb-button-wrapper a').href = attributes['link'];
+		node.getDOMElement().querySelector('.wptb-button-wrapper a').target = attributes['newtab'];
 		getToken();
 		getExpectedToken('[/button]');
 		return node;
@@ -161,8 +187,7 @@ var WPTB_Parser = function (code) {
 				node = analizeButton(attr);
 				break;
 			case '[img]': attr = getAttributesFromToken();
-				node = new WPTB_Image(attr['src']);
-				getExpectedToken('[img]');
+				node = analizeImage();
 				break;
 		}
 

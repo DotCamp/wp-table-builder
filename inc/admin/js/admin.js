@@ -253,6 +253,29 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
         }
 
         document.querySelector(optionsClass).style.display = 'block';
+
+        var listStyleType, listJustifyContent;
+
+        switch (element.kind) {
+
+            case 'text':
+                jQuery(prop).find('[data-type=color]').wpColorPicker({ defaultColor: node.style.color });
+                prop.querySelector('[type=number][data-type=font-size]').value = prop.querySelector('[type=ran][data-type=font-size]').value = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
+                break;
+            case 'list':
+                listJustifyContent = node.querySelector('article').style.justifyContent;
+                listStyleType = node.querySelector('article .wptb-list-item-style-dot li').style.listStyleType;
+                prop.querySelector('[type=ran][data-type=list-class]').selectedIndex = listStyleType == 'decimal' ? 0 : 1;
+                prop.querySelector('[type=ran][data-type=list-style-type]').selectedIndex = listStyleType == 'circle' ? 0 : listStyleType == 'square' ? 1 : 2;
+                prop.querySelector('[type=ran][data-type=list-alignment]').selectedIndex = listJustifyContent == 'flex-start' ? 0 : listJustifyContent == 'center' ? 1 : 2;
+                break;
+            case 'image':
+                break;
+            case 'button':
+                jQuery(prop).find('[data-type=button-color]').wpColorPicker({ defaultColor: node.style.backgroundColor });
+                break;
+
+        }
     };
 
     if (element.kind == 'button') {
@@ -897,7 +920,7 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		var p = token.indexOf(' '),
 		    word = token.substring(1, p);
 		if (p == -1) {
-			//This is, if token tag has no attributes
+			//This is, if token tag has no attributes 
 			return token;
 		}
 		return '[' + word + ']';
@@ -938,6 +961,28 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		return html;
 	}
 
+	function analizeImage(attributes) {
+		var node;
+		node = new WPTB_Image(attr['src']);
+		getExpectedToken('[img]');
+		node.getDOMElement().getElementsByTagName('img')[0].style.width = attr['width'];
+		node.getDOMElement().getElementsByTagName('img')[0].alt = attr['alt'];
+		node.getDOMElement().getElementsByTagName('a')[0].href = attr['link'];
+		node.getDOMElement().getElementsByTagName('a')[0].target = attr['newtab'];
+
+		if (attr['alignment'] != 'center') {
+			node.getDOMElement().getElementsByTagName('img')[0].style.display = 'inline';
+			node.getDOMElement().getElementsByTagName('img')[0].style.float = this.value;
+			node.getDOMElement().getElementsByTagName('img')[0].style.margin = 'inherit';
+		} else {
+			node.getDOMElement().getElementsByTagName('img')[0].style.float = 'none';
+			node.getDOMElement().getElementsByTagName('img')[0].style.display = 'block';
+			node.getDOMElement().getElementsByTagName('img')[0].style.margin = '0 auto';
+		}
+
+		return node;
+	}
+
 	function analizeText(attributes) {
 		var node;
 		getExpectedToken('[text]');
@@ -955,8 +1000,11 @@ var WPTB_Parser = function WPTB_Parser(code) {
 		getExpectedToken('[button]');
 		html = parseAllHTML();
 		node = new WPTB_Button(html);
-		node.getDOMElement().className = 'wptb-size-' + attributes['size'] + ' ' + attributes['size'] + '-aligned-button';
+		node.getDOMElement().classList.add('wptb-size-' + attributes['size']);
+		node.getDOMElement().getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = attributes['alignment'];
 		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.backgroundColor = attributes.color;
+		node.getDOMElement().querySelector('.wptb-button-wrapper a').href = attributes['link'];
+		node.getDOMElement().querySelector('.wptb-button-wrapper a').target = attributes['newtab'];
 		getToken();
 		getExpectedToken('[/button]');
 		return node;
@@ -1019,8 +1067,7 @@ var WPTB_Parser = function WPTB_Parser(code) {
 				break;
 			case '[img]':
 				attr = getAttributesFromToken();
-				node = new WPTB_Image(attr['src']);
-				getExpectedToken('[img]');
+				node = analizeImage();
 				break;
 		}
 
@@ -1413,9 +1460,11 @@ var WPTB_Stringifier = function WPTB_Stringifier(node) {
 						if (node.getElementsByTagName('a')[0] && node.getElementsByTagName('a')[0].href != '') {
 							buttonLink = node.getElementsByTagName('a')[0].href;
 						}
-						buttonAlignment = node.parentNode.style.justifyContent;
+						buttonAlignment = node.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent;
 						buttonOpenInNewTab = node.getElementsByTagName('a')[0].target;
-
+						if (buttonOpenInNewTab == '') {
+							buttonOpenInNewTab = '_self';
+						}
 						code += '[button' + (buttonColor != undefined ? ' color="' + buttonColor + '"' : '') + (buttonSize != undefined ? ' size="' + buttonSize + '"' : '') + (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : '') + (buttonLink != undefined ? ' link="' + buttonLink + '"' : '') + (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : '') + ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';

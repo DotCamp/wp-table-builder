@@ -34,6 +34,31 @@ var WPTB_ElementOptions = function (element, index) {
         }
 
         document.querySelector(optionsClass).style.display = 'block';
+
+        var listStyleType, listJustifyContent;
+
+        switch (element.kind) {
+
+            case 'text':
+                jQuery(prop).find('[data-type=color]').wpColorPicker({ defaultColor: node.style.color });
+                prop.querySelector('[type=number][data-type=font-size]').value
+                    = prop.querySelector('[type=ran][data-type=font-size]').value
+                    = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
+                break;
+            case 'list':
+                listJustifyContent = node.querySelector('article').style.justifyContent;
+                listStyleType = node.querySelector('article .wptb-list-item-style-dot li').style.listStyleType;
+                prop.querySelector('[type=ran][data-type=list-class]').selectedIndex = (listStyleType == 'decimal' ? 0 : 1);
+                prop.querySelector('[type=ran][data-type=list-style-type]').selectedIndex = (listStyleType == 'circle' ? 0 : (listStyleType == 'square' ? 1 : 2));
+                prop.querySelector('[type=ran][data-type=list-alignment]').selectedIndex = (listJustifyContent == 'flex-start' ? 0 : (listJustifyContent == 'center' ? 1 : 2));
+                break;
+            case 'image':
+                break;
+            case 'button':
+                jQuery(prop).find('[data-type=button-color]').wpColorPicker({ defaultColor: node.style.backgroundColor });
+                break;
+
+        }
     };
 
     if (element.kind == 'button') {

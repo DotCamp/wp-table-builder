@@ -164,9 +164,11 @@ var WPTB_Stringifier = function (node) {
 							node.getElementsByTagName('a')[0].href != '') {
 							buttonLink = node.getElementsByTagName('a')[0].href;
 						}
-						buttonAlignment = node.parentNode.style.justifyContent;
+						buttonAlignment = node.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent;
 						buttonOpenInNewTab = node.getElementsByTagName('a')[0].target;
-
+						if (buttonOpenInNewTab == '') {
+							buttonOpenInNewTab = '_self';
+						}
 						code += '[button'
 							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : '')
 							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : '')
