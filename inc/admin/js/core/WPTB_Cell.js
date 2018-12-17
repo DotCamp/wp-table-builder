@@ -59,6 +59,16 @@ var WPTB_Cell = function (callback, DOMElement) {
 
     DOMElement = document.createElement("td");
 
+    DOMElement.style.padding = jQuery('#wptb-table-padding-number').val() + 'px';
+
+    var innerBorderWidth = jQuery('#wptb-table-inner-border-number').val();
+
+    if (innerBorderWidth != '' && parseInt(innerBorderWidth) != 0) {
+        DOMElement.style.border = innerBorderWidth + 'px solid ' + jQuery('#wptb-table-border-color').val();
+    } else {
+        DOMElement.style.border = '1px dashed #969fa6';
+    }
+
     DOMElement.draggable = false;
 
     DOMElement.classList.add('wptb-droppable', 'wptb-cell');

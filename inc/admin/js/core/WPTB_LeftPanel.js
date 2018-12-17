@@ -3,6 +3,11 @@ var WPTB_LeftPanel = function () {
     var table = document.getElementsByClassName('wptb-preview-table')[0],
         wptbElementButtons = document.getElementsByClassName('wptb-element');
 
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? 'rgb(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16) + ')' : null;
+    }
+
     jQuery('#wptb-even-row-bg').wpColorPicker({
         change: function (event, ui) {
             var tableRows = table.getElementsByTagName('tr');
@@ -37,10 +42,21 @@ var WPTB_LeftPanel = function () {
         }
     });
 
+    jQuery('#wptb-table-border-color').wpColorPicker({
+        change: function (event, ui) {
+            var tableCells = table.getElementsByTagName('td');
+            table.style.border = document.querySelector('#wptb-table-border-number').value + 'px solid ' + ui.color.toString();
+
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.border = document.querySelector('#wptb-table-inner-border-number').value + 'px solid ' + ui.color.toString();
+            }
+        }
+    });
+
     function addInnerBorderSize(value) {
         var tableCells = table.getElementsByTagName('td');
         for (var i = 0; i < tableCells.length; i++) {
-            tableCells[i].style.border = value + 'px solid';
+            tableCells[i].style.border = document.querySelector('#wptb-table-inner-border-number').value + 'px solid ' + hexToRgb(jQuery('#wptb-table-border-color').val());
         }
     }
 
@@ -52,20 +68,21 @@ var WPTB_LeftPanel = function () {
     }
 
     function addInnerBorder(checked) {
-        var styles;
+        var styles, color = document.querySelector('#wptb-table-border-color').value != undefined ?
+            document.querySelector('#wptb-table-border-color').value : 'rgb(0,0,0)';
 
         if (checked == 'checked') {
             document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
-                tableCells[i].style.border = '1px solid';
+                tableCells[i].style.border = '1px solid ' + color;
             }
             document.getElementById('wptb-apply-inner-border').classList.add('visible');
         } else {
             document.getElementById('wptb-apply-inner-border').classList.remove('visible');
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
-                tableCells[i].style.border = '';
+                tableCells[i].style.border = '0px solid ' + color;
             }
         }
     }

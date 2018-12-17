@@ -99,7 +99,11 @@ var WPTB_ElementOptions = function (element, index) {
                     number = classe[2];
                     affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
                     if (type == 'button') {
-                        affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
+                        if (parent.dataset.type == 'button-text-color') {
+                            affectedEl.getElementsByClassName('wptb-button')[0].style.color = ui.color.toString();
+                        } else {
+                            affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
+                        }
                     } else {
                         affectedEl.style.color = ui.color.toString();
                     }

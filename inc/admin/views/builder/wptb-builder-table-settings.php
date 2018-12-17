@@ -34,6 +34,14 @@
             </label>  
         </div>  
     </div>
+    <div class="wptb-settings-row wptb-settings-middle-xs">
+        <div class='wptb-settings-col-xs-8'>
+            <p><?php echo __( 'Border Color', 'wp-table-builder' ); ?></p>
+        </div>
+        <div class='wptb-settings-col-xs-8'>
+            <input type="text" id="wptb-table-border-color" value=""/>
+        </div>
+    </div>
     <div id="wptb-apply-inner-border" style="display:none" class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">

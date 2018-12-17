@@ -105,6 +105,8 @@ var WPTB_Parser = function (code) {
 			node.getDOMElement().getElementsByTagName('img')[0].style.margin = '0 auto';
 		}
 
+		node.getDOMElement().getElementsByTagName('img')[0]
+
 		return node;
 
 	}
@@ -129,6 +131,7 @@ var WPTB_Parser = function (code) {
 		node.getDOMElement().classList.add('wptb-size-' + attributes['size']);
 		node.getDOMElement().getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = attributes['alignment'];
 		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.backgroundColor = attributes.color;
+		node.getDOMElement().getElementsByClassName('wptb-button')[0].style.color = attributes.textcolor;
 		node.getDOMElement().querySelector('.wptb-button-wrapper a').href = attributes['link'];
 		node.getDOMElement().querySelector('.wptb-button-wrapper a').target = attributes['newtab'];
 		getToken();
@@ -195,11 +198,21 @@ var WPTB_Parser = function (code) {
 	}
 
 	function analizeElements(td) {
-		while (getWordFromToken(ctoken) == '[img]'
+		var space;
+		if (getWordFromToken(ctoken) == '[img]'
 			|| getWordFromToken(ctoken) == '[text]'
 			|| getWordFromToken(ctoken) == '[list]'
 			|| getWordFromToken(ctoken) == '[button]') {
-			td.appendChild(analizeElement());
+			space = new WPTB_Space();
+			td.appendChild(space);
+			while (getWordFromToken(ctoken) == '[img]'
+				|| getWordFromToken(ctoken) == '[text]'
+				|| getWordFromToken(ctoken) == '[list]'
+				|| getWordFromToken(ctoken) == '[button]') {
+				td.appendChild(analizeElement());
+				space = new WPTB_Space();
+				td.appendChild(space);
+			}
 		}
 	}
 
@@ -267,12 +280,21 @@ var WPTB_Parser = function (code) {
 				tds[j].style.backgroundColor = attributes['data-bg3'];
 			}
 		}
+
 		var tableCells = n.getElementsByTagName('td');
 		for (var i = 0; i < tableCells.length; i++) {
 			tableCells[i].style.padding = attributes['padding'];
-			tableCells[i].style.border = attributes['inner-border'] + ' solid black';
+			tableCells[i].style.border = attributes['inner-border'] + ' solid ' + attributes['border-color'];
+			n.style.border = attributes['outer-border'] + ' solid ' + attributes['border-color'];
 		}
-		n.style.border = attributes['outer-border'] + ' solid black';
+
+		jQuery('#wptb-table-header-bg').val(attributes['data-bg1']);
+		jQuery('#wptb-even-row-bg').val(attributes['data-bg2']);
+		jQuery('#wptb-odd-row-bg').val(attributes['data-bg3']);
+		jQuery('#wptb-table-border-color').val(attributes['border-color']);
+		jQuery('#wptb-table-inner-border-number,#wptb-table-inner-border-slider').val(attributes['inner-border']);
+		jQuery('#wptb-table-border-number,#wptb-table-border-slider').val(attributes['outer-border']);
+
 		return n;
 	}
 

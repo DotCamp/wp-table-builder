@@ -161,6 +161,16 @@ use WP_Table_Builder as NS;
                     </div>
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button Text Color', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="margin-top: 9px; padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 5px;">
+                                <input data-type="button-text-color" class="wptb-element-property wptb-color-picker" />
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php echo __( 'Button Color', 'wp-table-builder' ); ?></p>
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="margin-top: 9px; padding-bottom: 10px">

@@ -14,7 +14,7 @@ var WPTB_Settings = function () {
 	for (var i = 0; i < elems.length; i++) {
 		elems[i].ondragstart = function (event) {
 			event.dataTransfer.effectAllowed = 'move';
-			event.dataTransfer.setData("text/plain", event.target.getAttribute('id'));
+			event.dataTransfer.setData('wptbElement', event.target.dataset.wptbElement);
 		}
 	};
 

@@ -6,9 +6,9 @@ var WPTB_Stringifier = function (node) {
 
 	var code = '', children = node.childNodes,
 		padding, margin, bg1, bg2, bg3, border,
-		colSpan, rowSpan, isHidden, // Table Attributes
+		colSpan, rowSpan, isHidden, borderColor, // Table Attributes
 		listClass, listStyleType, listAlignment, //list attributes
-		buttonSize, buttonColor, buttonBorder, buttonLink, buttonAlignment, //button attributes
+		buttonSize, buttonColor, buttonBorder, buttonTextColor, buttonLink, buttonAlignment, //button attributes
 		fontSize, fontColor, fontFamily, //text attributes
 		src, width, height, imageAlignment, imageLink, openInNewTab, //image attributes
 		additionalCSS, additionalClass, additionalID; // A few global attributes I wanted to add.
@@ -16,10 +16,10 @@ var WPTB_Stringifier = function (node) {
 	switch (node.tagName.toLowerCase()) {
 		case 'table':
 			border = node.style.borderWidth;
-			margin = node.getElementsByTagName('td')[0].style.margin;
 			padding = node.getElementsByTagName('td')[0].style.padding;
 			innerBorder = node.getElementsByTagName('td')[0].style.borderWidth;
 			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
+			borderColor = node.style.borderColor.replace(/\s/g, '');
 
 			if (node.rows.length > 1) {
 				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
@@ -27,15 +27,16 @@ var WPTB_Stringifier = function (node) {
 			if (node.rows.length > 2) {
 				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
 			}
-
-			code += '[table margin="'
-				+ (margin != undefined && margin != '' ? margin : '')
-				+ '" padding="' + (padding != undefined && padding != '' ? padding : '')
-				+ '" inner-border="' + (innerBorder != undefined && innerBorder != '' ? innerBorder : '')
-				+ '" outer-border="' + (border != undefined && border != '' ? border : '')
-				+ '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : '')
-				+ '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : '')
-				+ '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : '')
+			code += '[table border-color="'
+				+ (borderColor != undefined && borderColor != '' ? borderColor : 'transparent')
+				+ '" padding="' + (padding != undefined && padding != '' ? padding : '0px')
+				+ '" inner-border="' + (innerBorder != undefined && innerBorder != ''
+					&& node.getElementsByTagName('td')[0].style.borderStyle == 'solid' ?
+					innerBorder : '0px')
+				+ '" outer-border="' + (border != undefined && border != '' ? border : '0px')
+				+ '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : 'transparent')
+				+ '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : 'transparent')
+				+ '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : 'transparent')
 				+ '"]';
 
 			for (var i = 0; i < children.length; i++) {
@@ -132,7 +133,7 @@ var WPTB_Stringifier = function (node) {
 							+ (width != undefined ? ' width="' + width + '"' : 'width="100%;"')
 							+ (alt != undefined ? ' alt="' + alt + '"' : 'alt=""')
 							+ (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"')
-							+ (imageLink != undefined ? ' link="' + imageLink + '"' : 'href=""')
+							+ (imageLink != undefined ? ' link="' + imageLink + '"' : 'href="#"')
 							+ (openInNewTab != undefined ? ' newtab="' + openInNewTab + '"' : 'newtab="false"')
 							+ ']';
 						break;
@@ -157,7 +158,12 @@ var WPTB_Stringifier = function (node) {
 						}
 
 						buttonColor = trueNode.style.backgroundColor.replace(/\s/g, '');
-						buttonSize = node.className.match(/wptb-size-(.+)/i)[1];
+						buttonSize = node.className.match(/wptb-size-(\w)/i)[1];
+						buttonTextColor = node.getElementsByTagName('a')[0].style.color;
+
+						if (!buttonTextColor) {
+							buttonTextColor = 'rgb(255,255,255)';
+						}
 
 						buttonLink = undefined;
 						if (node.getElementsByTagName('a')[0] &&
@@ -169,12 +175,14 @@ var WPTB_Stringifier = function (node) {
 						if (buttonOpenInNewTab == '') {
 							buttonOpenInNewTab = '_self';
 						}
+
 						code += '[button'
-							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : '')
-							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : '')
-							+ (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : '')
-							+ (buttonLink != undefined ? ' link="' + buttonLink + '"' : '')
-							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : '')
+							+ (buttonTextColor != undefined ? ' textcolor="' + buttonTextColor + '"' : 'textcolor="rgb(255,255,255)"')
+							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : 'rgb(50,157,63)')
+							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : ' size="M"')
+							+ (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : ' alignment="center"')
+							+ (buttonLink != undefined ? ' link="' + buttonLink + '"' : ' link="#"')
+							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : 'newtab="_self"')
 							+ ']';
 						code += trueNode.innerHTML;
 						code += '[/button]';

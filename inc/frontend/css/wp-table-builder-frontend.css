@@ -60,10 +60,10 @@
 }
 
 .flex-start-aligned-list li {
-    float: left;
+    text-align: left;
 }
 
-.flex-end-aligned-list li {
+.flex-end-aligned-list {
     float: right;
 }
 

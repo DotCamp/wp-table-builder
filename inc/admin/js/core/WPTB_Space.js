@@ -1,13 +1,13 @@
 var WPTB_Space = function (text) {
 
     function newElementProxy(el) {
-        if (el == 'list') {
+        if (el.includes('list')) {
             return new WPTB_List();
-        } else if (el == 'image') {
+        } else if (el.includes('image')) {
             return new WPTB_Image();
-        } else if (el == 'text') {
+        } else if (el.includes('text')) {
             return new WPTB_Text();
-        } else if (el == 'button') {
+        } else if (el.includes('button')) {
             return new WPTB_Button();
         }
     }

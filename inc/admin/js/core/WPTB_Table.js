@@ -322,6 +322,14 @@ var array = [], WPTB_Table = function (columns, rows) {
 	table = document.createElement('table');
 	table.classList.add('wptb-preview-table');
 
+	jQuery('#wptb-table-header-bg').val('');
+	jQuery('#wptb-even-row-bg').val('');
+	jQuery('#wptb-odd-row-bg').val('');
+	jQuery('#wptb-table-border-color').val('');
+	jQuery('#wptb-table-inner-border-number,#wptb-table-inner-border-slider').val('0');
+	jQuery('#wptb-table-border-number,#wptb-table-border-slider').val('0');
+	jQuery('#wptb-table-padding-number,#wptb-table-padding-slider').val('15');
+
 	//Add the header row.
 	row = table.insertRow(-1);
 	row.classList.add('wptb-table-head', 'wptb-row');
@@ -375,8 +383,14 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 				if (i == 0) {
 					tds[j].parentNode.className = '';
+					tds[j].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
 					tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
 				} else {
+					if (i % 2 == 0) {
+						tds[j].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+					} else {
+						tds[j].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+					}
 					tds[j].parentNode.className = '';
 					tds[j].parentNode.classList.add('wptb-row');
 				}
@@ -401,6 +415,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 			array[i].push(0);
 		}
 		maxAmountOfCells++;
+		recalculateIndexes();
 		undoSelect();
 	};
 
@@ -421,6 +436,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 		}
 
 		maxAmountOfCells++;
+		recalculateIndexes();
 		undoSelect();
 	};
 

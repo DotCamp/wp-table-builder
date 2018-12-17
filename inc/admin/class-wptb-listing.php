@@ -47,7 +47,7 @@ class WPTB_Listing  extends \WP_List_Table{
  
 	public static function get_tables( $per_page = 5, $page_number = 1 ) {
 
-		global $post;
+		global $wpdb, $post;
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
 
@@ -66,6 +66,8 @@ class WPTB_Listing  extends \WP_List_Table{
 	
 		global $wpdb;
 
+		delete_post_meta($id, '_wptb_content_');
+
 	  	$wpdb->delete(
 	    	"{$wpdb->prefix}posts",
 	    	[ 'ID' => $id ],
@@ -76,9 +78,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	public static function record_count() {
 		
-		global $post;
-
-		$per_page = 5;
+		global $wpdb, $post;
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
 	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
