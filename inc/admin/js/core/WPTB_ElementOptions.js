@@ -145,7 +145,8 @@ var WPTB_ElementOptions = function (element, index) {
                     var img = affectedEl.getElementsByTagName('img')[0];
                     img.alt = this.value;
                     break;
-                case 'image-link': affectedEl.getElementsByTagName('a')[0].href = this.value;
+                case 'image-link':
+                    affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
                 case 'button-link-target':
                     if (this.checked == true) {
@@ -195,7 +196,6 @@ var WPTB_ElementOptions = function (element, index) {
                     }
                     break;
                 case 'button-color':
-                    //Kind of redundan
                     break;
                 case 'list-alignment':
                     var jc = '';

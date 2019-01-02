@@ -7,7 +7,7 @@ var WPTB_Image = function (src) {
 	this.kind = 'image';
 
 	anchor.appendChild(img);
-	DOMElement.appendChild(img);
+	DOMElement.appendChild(anchor);
 
 	this.getDOMElement = function () {
 		return DOMElement;

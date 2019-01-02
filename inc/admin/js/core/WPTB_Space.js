@@ -50,8 +50,8 @@ var WPTB_Space = function (text) {
             }
 
         } else {
+            alert(event.dataTransfer.getData('node'));
             element = document.getElementsByClassName(event.dataTransfer.getData('node'))[0];
-
             t_space = element.nextSibling;
             spaceParent = element.parentNode;
             if (t_space != undefined) {

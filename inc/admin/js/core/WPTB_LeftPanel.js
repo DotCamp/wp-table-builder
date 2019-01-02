@@ -77,9 +77,9 @@ var WPTB_LeftPanel = function () {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '1px solid ' + color;
             }
-            document.getElementById('wptb-apply-inner-border').classList.add('visible');
+            document.getElementById('wptb-inner-border-settings').classList.add('visible');
         } else {
-            document.getElementById('wptb-apply-inner-border').classList.remove('visible');
+            document.getElementById('wptb-inner-border-settings').classList.remove('visible');
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '0px solid ' + color;

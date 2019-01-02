@@ -109,9 +109,7 @@ var WPTB_Cell = function (callback, DOMElement) {
             }
             this.appendChild(element.getDOMElement());
             this.appendChild(space);
-        }
-        else {
-
+        } else {
             classId = e.dataTransfer.getData('node');
             element = document.getElementsByClassName(classId)[0];
             if (this.innerHTML == '') {
