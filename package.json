@@ -23,7 +23,11 @@
         "gulp-notify": "^3.0.0",
         "gulp-sort": "^2.0.0",
         "gulp-sourcemaps": "^2.6.0",
+        "gulp-uglify": "^3.0.1",
         "gulp-watch": "^4.2.4",
         "gulp-wp-pot": "^2.0.4"
+    },
+    "dependencies": {
+        "gulp-rename": "^1.4.0"
     }
 }
