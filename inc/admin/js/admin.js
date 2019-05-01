@@ -40,27 +40,31 @@
 
 	document.addEventListener('DOMContentLoaded', WPTB_Builder);
 })();
-var WPTB_Button = function WPTB_Button(text) {
+var WPTB_Button = function WPTB_Button(text, DOMElement) {
+    if ( DOMElement == undefined ) {
+        var DOMElement = document.createElement('div'),
+            elButton2 = document.createElement('div'),
+            el_B = document.createElement('a');
 
-    var DOMElement = document.createElement('div'),
-        elButton2 = document.createElement('div'),
-        el_B = document.createElement('a');
-
+        DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
+        elButton2.classList.add('wptb-button-wrapper');
+        el_B.classList.add('wptb-button');
+        el_B.classList.add('editable');
+        el_B.innerHTML = text != undefined ? text : 'Button Text';
+        elButton2.appendChild(el_B);
+        DOMElement.appendChild(elButton2);
+    } else {
+        var DOMElement = DOMElement.cloneNode( true );
+    }
+    
+    
     this.kind = 'button';
-
-    DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
-    elButton2.classList.add('wptb-button-wrapper');
-    el_B.classList.add('wptb-button');
-    el_B.classList.add('editable');
-    el_B.innerHTML = text != undefined ? text : 'Button Text';
-    elButton2.appendChild(el_B);
-    DOMElement.appendChild(elButton2);
 
     this.getDOMElement = function () {
             return DOMElement;
     };
 
-    applyGenericItemSettings(this);
+    applyGenericItemSettings( this );
 
     return this;
 };
@@ -210,6 +214,16 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
                 applyGenericItemSettings( wptbPhElement[i] );
+                if ( wptbPhElement[i].kind == 'list' ) {
+                    console.log(wptbPhElement[i]);
+                    let wptbArticle = wptbPhElement[i].getElementsByTagName( 'article' );
+                    if( wptbArticle.length > 0 ) {
+                        for ( let i = 0; i < wptbArticle.length; i++ ) {
+                            console.log(wptbArticle);
+                            WPTB_ListItem( undefined, wptbArticle[i] );
+                        }
+                    }
+                }
             }
         }
     }
@@ -267,8 +281,8 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
     var node = element.getDOMElement(),
         elemIdClass;
 
-    prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
-    prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
+        prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
+        prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
     elemIdClass = 'wptb-options-' + element.kind + "-" + index;
 
     var properties = prop.getElementsByClassName('wptb-element-property');
@@ -426,15 +440,16 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
                     this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
-                    if (this.value != 'center') {
-                        affectedEl.getElementsByTagName('img')[0].style.display = 'inline';
-                        affectedEl.getElementsByTagName('img')[0].style.float = this.value;
-                        affectedEl.getElementsByTagName('img')[0].style.margin = 'inherit';
-                    } else {
-                        affectedEl.getElementsByTagName('img')[0].style.float = 'none';
-                        affectedEl.getElementsByTagName('img')[0].style.display = 'block';
-                        affectedEl.getElementsByTagName('img')[0].style.margin = '0 auto';
-                    }
+                    affectedEl.getElementsByTagName( 'img' )[0].parentNode.style.textAlign = this.value;
+//                    if (this.value != 'center') {
+//                        affectedEl.getElementsByTagName('img')[0].style.display = 'inline';
+//                        affectedEl.getElementsByTagName('img')[0].style.float = this.value;
+//                        affectedEl.getElementsByTagName('img')[0].style.margin = 'inherit';
+//                    } else {
+//                        affectedEl.getElementsByTagName('img')[0].style.float = 'none';
+//                        affectedEl.getElementsByTagName('img')[0].style.display = 'block';
+//                        affectedEl.getElementsByTagName('img')[0].style.margin = '0 auto';
+//                    }
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';
@@ -504,40 +519,43 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index) {
         };
     }
 };
-var WPTB_Image = function WPTB_Image(src) {
-
-	var DOMElement = document.createElement('div'),
+var WPTB_Image = function WPTB_Image( src, DOMElement ) {
+        if ( DOMElement == undefined ) {
+            var DOMElement = document.createElement('div'),
 	    anchor = document.createElement('a'),
 	    img = document.createElement('img');
-
-	this.kind = 'image';
-
-	anchor.appendChild(img);
-	DOMElement.appendChild(anchor);
-
-	this.getDOMElement = function () {
-		return DOMElement;
-	};
-	applyGenericItemSettings(this);
-
-	file_frame = wp.media.frames.file_frame = wp.media({
+            anchor.style.display = 'inline-block';
+            anchor.appendChild(img);
+            DOMElement.appendChild(anchor);
+            
+            file_frame = wp.media.frames.file_frame = wp.media({
 		title: 'Select a image to upload',
 		button: {
 			text: 'Use this image'
 		},
 		multiple: false
-	});
-	// When an image is selected, run a callback.
-	file_frame.on('select', function () {
-		attachment = file_frame.state().get('selection').first().toJSON();
-		img.src = attachment.url;
-	});
-	// Finally, open the modal
-	if (src == undefined) {
-		file_frame.open();
-	} else {
-		img.src = src;
-	}
+            });
+            // When an image is selected, run a callback.
+            file_frame.on('select', function () {
+                    attachment = file_frame.state().get('selection').first().toJSON();
+                    img.src = attachment.url;
+            });
+            // Finally, open the modal
+            if (src == undefined) {
+                    file_frame.open();
+            } else {
+                    img.src = src;
+            }
+        } else {
+            var DOMElement = DOMElement.cloneNode( true );
+        }
+	
+            
+            this.kind = 'image';
+            this.getDOMElement = function () {
+                return DOMElement;
+            };
+	applyGenericItemSettings( this );
 
 	return this;
 };
@@ -737,7 +755,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         document.getElementById("element-options-group").style.display = 'none';
     };
 };
-var WPTB_List = function WPTB_List(innerElements) {
+var WPTB_List = function WPTB_List( innerElements ) {
 
     var el_L = document.createElement('ul'),
         item,
@@ -768,22 +786,34 @@ var WPTB_List = function WPTB_List(innerElements) {
 
     return this;
 };
-var WPTB_ListItem = function WPTB_ListItem(text) {
-
-    if (text == undefined) text = 'New List Item';
-    var DOMElement = document.createElement('article'),
-        divdot = document.createElement('div'),
-        divcontent = document.createElement('div'),
-        libullet = document.createElement('li');
-    divdot.classList.add('wptb-list-item-style-dot');
-    divcontent.classList.add('wptb-list-item-content');
-    libullet.classList.add('wptb-bullet');
-    DOMElement.appendChild(divdot);
-    DOMElement.appendChild(divcontent);
-    divdot.appendChild(libullet);
-    divcontent.innerHTML = text;
-    divcontent.onkeyup = window.listItemKeyListener;
-
+var WPTB_ListItem = function WPTB_ListItem( text, DOMElement ) {
+    let wptbListItemReturn;
+    if ( DOMElement == undefined ) {
+        if (text == undefined) text = 'New List Item';
+        var DOMElement = document.createElement('article'),
+            divdot = document.createElement('div'),
+            divcontent = document.createElement('div'),
+            libullet = document.createElement('li');
+        divdot.classList.add('wptb-list-item-style-dot');
+        divcontent.classList.add('wptb-list-item-content');
+        libullet.classList.add('wptb-bullet');
+        DOMElement.appendChild(divdot);
+        DOMElement.appendChild(divcontent);
+        divdot.appendChild(libullet);
+        divcontent.innerHTML = text;
+        divcontent.onkeyup = window.listItemKeyListener;
+        
+        wptbListItemReturn = true;
+    } else {
+        var divdot = DOMElement.getElementsByClassName( 'wptb-list-item-style-dot' )[0], 
+            divcontent = DOMElement.getElementsByClassName( 'wptb-list-item-content' )[0], 
+            libullet = divdot.getElementsByClassName( 'wptb-bullet' )[0];
+    
+        divcontent.onkeyup = window.listItemKeyListener;
+        
+        wptbListItemReturn = false;
+    }
+    
     DOMElement.onmouseenter = function (event) {
 
         var btnDelete = document.createElement('span'),
@@ -830,11 +860,18 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
         if (key !== 13 || window.dontAddItems !== undefined && window.dontAddItems === true) {
             return;
         }
+        console.log(event);
         event.preventDefault();
         duplicate = new WPTB_ListItem(this.innerHTML);
+        console.log(this.innerHTML);
         DOMElement.parentNode.insertBefore(duplicate.getDOMElement(), DOMElement);
-        divcontent.innerHTML = 'New List Item';
-        duplicate.getDOMElement().querySelector('.wptb-list-item-content').focus();
+        console.log(divcontent);
+        setTimeout( function(){
+            divcontent.innerHTML = '';
+            tinyMCE.execCommand('mceInsertContent',false, "New List Item");
+        }, 10 );
+        
+        
 
         return false;
     };
@@ -842,8 +879,10 @@ var WPTB_ListItem = function WPTB_ListItem(text) {
     this.getDOMElement = function () {
         return DOMElement;
     };
-
-    return this;
+    
+    if ( wptbListItemReturn ) {
+        return this;
+    }
 };
 var MultipleSelect = function MultipleSelect() {
 
@@ -924,6 +963,10 @@ var WPTB_Parser2 = function WPTB_Parser2(code) {
     if( Array.isArray( code ) ) {
         let elementHtml;
         
+        if ( code.length == 1) {
+            console.log("Hello 1");
+            return elementHtml.appendChild( document.createTextNode( code[0] ) );
+        }
         if( 0 in code ) {
             let tagName = code[0];
             elementHtml =  document.createElement( tagName );
@@ -943,6 +986,10 @@ var WPTB_Parser2 = function WPTB_Parser2(code) {
             if ( 2 in code ) {
                 if ( Array.isArray( code[2] ) ) {
                     for ( let i = 0; i < code[2].length; i++ ) {
+                        if ( typeof code[2][i] === 'string' && tagName.toLowerCase() == 'p' ) {
+                            elementHtml.appendChild( document.createTextNode( code[2][i] ) );
+                            continue;
+                        }
                         if ( ! WPTB_Parser2( code[2][i] ) ) continue;
                         elementHtml.appendChild( WPTB_Parser2( code[2][i] ) );
                     }
@@ -1421,10 +1468,22 @@ var WPTB_Stringifier2 = function WPTB_Stringifier2( node, start = false ) {
         }
         
         let code = [],
-            children = node.children.length > 0 ? node.children : node.childNodes,
+            children,
+            int_elem_arr = false,
             attributes = [...node.attributes],
             attributes_list = [],
             internal_elements = [];
+            if ( ( node.parentNode.classList.contains( 'wptb-list-item-content' ) || 
+                node.parentNode.classList.contains( 'mce-content-body' ) ) && 
+            node.tagName.toLowerCase() == 'p' ) {
+                children = node.childNodes;
+                int_elem_arr = true;
+            } else if( node.children.length > 0 ) {
+                children = node.children;
+            } else {
+                children = node.childNodes;
+            }
+            console.log(node);
         if ( attributes.length > 0 ) {
             for ( let i = 0; i < attributes.length; i++ ) {
                 attributes_list[i] = [attributes[i].name, attributes[i].value];
@@ -1436,7 +1495,8 @@ var WPTB_Stringifier2 = function WPTB_Stringifier2( node, start = false ) {
         if ( children.length > 0 ) {
             for ( let i = 0; i < children.length; i++) {
                 let inter_elem = WPTB_Stringifier2(children[i]);
-                if ( Array.isArray( inter_elem ) ) {
+                    
+                if ( Array.isArray( inter_elem ) || int_elem_arr ) {
                     internal_elements[i] = inter_elem;
                 } else if ( typeof inter_elem === 'string' && inter_elem ) {
                     internal_elements = inter_elem;
@@ -2641,30 +2701,34 @@ var array = [],
 
 	WPTB_LeftPanel();
 };
-var WPTB_Text = function WPTB_Text(text) {
+var WPTB_Text = function WPTB_Text( text , DOMElement ) {
+        if ( DOMElement == undefined ) {
+            var DOMElement = document.createElement('div'),
+                elText2 = document.createElement('div'),
+                elP = document.createElement('p');
 
-	var DOMElement = document.createElement('div'),
-	    elText2 = document.createElement('div'),
-	    elP = document.createElement('p');
+            elText2.classList.add('editable');
+            elP.innerHTML = text != undefined ? text : 'Text';
+            elText2.appendChild(elP);
+            DOMElement.appendChild(elText2);
+        } else {
+            var DOMElement = DOMElement.cloneNode( true );
+        }
+	
 
 	this.kind = 'text';
-
-	elText2.classList.add('editable');
-	elP.innerHTML = text != undefined ? text : 'Text';
-	elText2.appendChild(elP);
-	DOMElement.appendChild(elText2);
-
 	this.getDOMElement = function () {
 		return DOMElement;
 	};
-	applyGenericItemSettings(this);
+	applyGenericItemSettings( this );
 
 	return this;
 };
-var applyGenericItemSettings = function applyGenericItemSettings(element) {
+var applyGenericItemSettings = function applyGenericItemSettings( element ) {
 	var node = element.getDOMElement(),
 	    index = document.counter.nextIndex(element.kind),
-	    listItems;
+	    listItems,
+            copy;
 
 	node.onmouseenter = function (event) {
 		this.classList.add('wptb-directlyhovered');
@@ -2706,19 +2770,25 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 					temp.push(srcList[i].innerHTML);
 				}
 				var copy = new WPTB_List(temp);
-				td.appendChild(copy.getDOMElement());
+				td.appendChild( copy.getDOMElement() );
 			} else if (element.kind == 'text') {
 				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-				td.appendChild(copy.getDOMElement());
-			} else if (element.kind == 'image') {
+				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
+                            
+				node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
+			} else if ( element.kind == 'image' ) {
 				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
-				td.appendChild(copy.getDOMElement());
+				    copy = new WPTB_Image( event.target.parentNode.parentNode.children[0].children[0].src, node );
+                            
+				node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
 			} else {
 				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-				td.appendChild(copy.getDOMElement());
+				    copy = new WPTB_Button( event.target.parentNode.parentNode.childNodes[0].innerHTML, node );
+                            
+                                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
 			}
 		};
 		btnMove.ondragstart = function (event) {
@@ -2861,13 +2931,21 @@ var applyGenericItemSettings = function applyGenericItemSettings(element) {
 		this.classList.remove('wptb-directlyhovered');
 	};
         
-        if( ! node.classList.contains( 'wptb-ph-element' ) ) {
-            node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' + index);
-        } else {
-            node.classList.add('wptb-ph-element' + element.kind + '-' + index);
+        let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+        if ( node_wptb_element_kind_num ) {
+            node.classList.remove( node_wptb_element_kind_num[0] );
         }
-
-	new WPTB_ElementOptions(element, index);
+        if ( ! node.classList.contains( 'wptb-ph-element' ) ) {
+            node.classList.add('wptb-ph-element' );
+            if( ! node.classList.contains( 'wptb-element-' + element.kind + '-' + index ) ) {
+                node.classList.add( 'wptb-element-' + element.kind + '-' + index );
+            }
+        } else {
+            if( ! node.classList.contains( 'wptb-element-' + element.kind + '-' + index ) ) {
+                node.classList.add( 'wptb-element-' + element.kind + '-' + index );
+            }
+        }
+	new WPTB_ElementOptions( element, index );
 
 	document.counter.increment(element.kind);
 };
