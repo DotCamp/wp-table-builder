@@ -2,30 +2,30 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	/* The members of the class */
 	var settings = document.getElementsByClassName('wptb-settings-items'),
-		wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
-		table, row, cell,
-		maxAmountOfCells,
-		maxAmountOfRows;
+	    wptbTableSetup = document.getElementsByClassName("wptb-table-setup")[0],
+            table, row, cell,
+	    maxAmountOfCells,
+	    maxAmountOfRows;
 
 	//HERE ARE THE PRIVATE FUNCTIONS
 	/*
-	 * This function toggles buttons visibility in cell edit mode
-	 * (according to the amount of currently selected cells), and
-	 * highlights visually the clicked cell if it is not highlighted, or
-	 * removes highlight if clicked cell is already highlighted. 
-	 * It too toggles the bits of our abstract representation.
-	 * @param Event this is the event instance of the click performed over a cell.
-	 */
+  * This function toggles buttons visibility in cell edit mode
+  * (according to the amount of currently selected cells), and
+  * highlights visually the clicked cell if it is not highlighted, or
+  * removes highlight if clicked cell is already highlighted. 
+  * It too toggles the bits of our abstract representation.
+  * @param Event this is the event instance of the click performed over a cell.
+  */
 	var mark = function (event) {
 		var rs = this.rowSpan,
-			cs = this.colSpan,
-			markedCells,
-			noCells = document.getElementsByClassName('no-cell-action'),
-			singleCells = document.getElementsByClassName('single-action'),
-			multipleCells = document.getElementsByClassName('multiple-select-action'),
-			position = getCoords(this),
-			row = position[0],
-			column = position[1];
+		    cs = this.colSpan,
+		    markedCells,
+		    noCells = document.getElementsByClassName('no-cell-action'),
+		    singleCells = document.getElementsByClassName('single-action'),
+		    multipleCells = document.getElementsByClassName('multiple-select-action'),
+		    position = getCoords(this),
+		    row = position[0],
+		    column = position[1];
 		if (!document.select.isActivated()) {
 			return;
 		}
@@ -84,12 +84,12 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/* 
-	 * This function fills an array with 1's according to the actual design
-	 * of HTML table.
-	 * @returns an array of arrays containing an abstract representation
-	 * of HTML table.
-	 * @deprecated
-	 * */
+  * This function fills an array with 1's according to the actual design
+  * of HTML table.
+  * @returns an array of arrays containing an abstract representation
+  * of HTML table.
+  * @deprecated
+  * */
 
 	var realTimeArray = function () {
 		var carried = [], tds, cols, matriz = [];
@@ -120,7 +120,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 			}
 
 			for (var k = 0; k < maxAmountOfCells; k++) {
-				if (typeof carried[k] == 'object' && carried[k].amount > 0) {
+				if ( typeof carried[k] == 'object' && carried[k].amount > 0 ) {
 					carried[k].amount--;
 					if (carried[k].justAssigned) {
 						carried[k].justAssigned = false;
@@ -137,11 +137,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This function gets the number and position of cell spaces in current row that are occuped 
-	 * by upper rowspanned cells.
-	 * @param number the number of row where we wish to calculate the carried rowspans up to.
-	 * @return an array with the remaining rowspans in each column.
-	 */
+  * This function gets the number and position of cell spaces in current row that are occuped 
+  * by upper rowspanned cells.
+  * @param number the number of row where we wish to calculate the carried rowspans up to.
+  * @return an array with the remaining rowspans in each column.
+  */
 	var carriedRowspans = function (row) {
 		var carried = [], tds, cols;
 
@@ -180,10 +180,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * A helpful function for showing
-	 * the abstract table in console.
-	 * @param Array our abstract table.
-	 */
+  * A helpful function for showing
+  * the abstract table in console.
+  * @param Array our abstract table.
+  */
 	var drawTable = function (a) {
 		var string = 'DRAWING TABLE:\n';
 		for (var i = 0; i < a.length; i++) {
@@ -197,15 +197,15 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * It resets all the bits of our abstract representation
-	 * to 0 and removes the highlighting class of all cells.
-	 */
+  * It resets all the bits of our abstract representation
+  * to 0 and removes the highlighting class of all cells.
+  */
 
 	var undoSelect = function () {
 		var noCells = document.getElementsByClassName('no-cell-action'),
-			singleCells = document.getElementsByClassName('single-action'),
-			multipleCells = document.getElementsByClassName('multiple-select-action'),
-			tds = table.getElementsByClassName('wptb-highlighted');
+		    singleCells = document.getElementsByClassName('single-action'),
+		    multipleCells = document.getElementsByClassName('multiple-select-action'),
+		    tds = table.getElementsByClassName('wptb-highlighted');
 		while (tds.length) {
 			tds[0].classList.remove('wptb-highlighted');
 		}
@@ -226,10 +226,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This fills the abstract representation of our table with 
-	 * zeros, at the start. the max amount of cells is the greatest sum
-	 * of all colspans for row.
-	 */
+  * This fills the abstract representation of our table with 
+  * zeros, at the start. the max amount of cells is the greatest sum
+  * of all colspans for row.
+  */
 
 	var fillTableArray = function () {
 		var colspansSums = [], a = [];
@@ -237,7 +237,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 		//calculate max amount of cells inside a row
 		for (var i = 0; i < table.rows.length; i++) {
 			var cells = table.rows[i].getElementsByTagName('td'),
-				colspanSumInRow = 0;
+			    colspanSumInRow = 0;
 			for (var j = 0; j < cells.length; j++) {
 				colspanSumInRow += cells[j].colSpan;
 			}
@@ -260,12 +260,12 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This function gets the sum of all colspans in a row.
-	 * @param number the number of row to be used as reference.
-	 */
+  * This function gets the sum of all colspans in a row.
+  * @param number the number of row to be used as reference.
+  */
 	var getActualPointsInRow = function (row) {
 		var tds = table.rows[row].getElementsByTagName('td'),
-			points = 0;
+		    points = 0;
 		for (var i = 0; i < tds.length; i++) {
 			points += tds[i].colSpan;
 		}
@@ -273,11 +273,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 	}
 
 	/*
-	 * This function gets us the exact coordinates of
-	 * an exact cell, in a more reliable way than xIndex and yIndex,
-	 * these last ones were meant to be used for getting the cell trough them.
-	 * @param DOMElement the cell to get the coordinates.
-	 */
+  * This function gets us the exact coordinates of
+  * an exact cell, in a more reliable way than xIndex and yIndex,
+  * these last ones were meant to be used for getting the cell trough them.
+  * @param DOMElement the cell to get the coordinates.
+  */
 	var getCoords = function (search) {
 		var skipInCols = [], cell;
 
@@ -311,17 +311,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 		}
 	};
 
-	//END OF PRIVATE FUNCTIONS
-	for (var i = 0; i < settings.length; i++) {
-		if (settings[i].id !== 'wptb-apply-inner-border') {
-			settings[i].classList.add('visible');
-		}
-	}
-
-	//Create a HTML Table element.
-	table = document.createElement('table');
-	table.classList.add('wptb-preview-table');
-
 	jQuery('#wptb-table-header-bg').val('');
 	jQuery('#wptb-even-row-bg').val('');
 	jQuery('#wptb-odd-row-bg').val('');
@@ -329,34 +318,61 @@ var array = [], WPTB_Table = function (columns, rows) {
 	jQuery('#wptb-table-inner-border-number,#wptb-table-inner-border-slider').val('0');
 	jQuery('#wptb-table-border-number,#wptb-table-border-slider').val('0');
 	jQuery('#wptb-table-padding-number,#wptb-table-padding-slider').val('15');
+        
+        if ( columns || rows ) {
+            //END OF PRIVATE FUNCTIONS
+            for (var i = 0; i < settings.length; i++) {
+                    if (settings[i].id !== 'wptb-apply-inner-border') {
+                            settings[i].classList.add('visible');
+                    }
+            }
 
-	//Add the header row.
-	row = table.insertRow(-1);
-	row.classList.add('wptb-table-head', 'wptb-row');
+            //Create a HTML Table element.
+            table = document.createElement('table');
+            table.classList.add('wptb-preview-table');
 
-	for (var i = 0; i < columns; i++) {
-		cell = new WPTB_Cell(mark);
-		cell.setCoords(0, i);
-		row.appendChild(cell.getDOMElement());
-	}
+            //Add the header row.
+            row = table.insertRow(-1);
+            row.classList.add('wptb-table-head', 'wptb-row');
 
-	//Add the data rows.
-	for (var i = 1; i < rows; i++) {
+            for (var i = 0; i < columns; i++) {
+                    cell = new WPTB_Cell(mark);
+                    cell.setCoords(0, i);
+                    row.appendChild(cell.getDOMElement());
+            }
 
-		row = table.insertRow(-1);
-		row.classList.add('wptb-row');
+            //Add the data rows.
+            for (var i = 1; i < rows; i++) {
 
-		for (var j = 0; j < columns; j++) {
-			cell = new WPTB_Cell(mark);
-			cell.setCoords(i, j);
-			row.appendChild(cell.getDOMElement());
-		}
-	}
+                    row = table.insertRow(-1);
+                    row.classList.add('wptb-row');
 
+                    for (var j = 0; j < columns; j++) {
+                            cell = new WPTB_Cell(mark);
+                            cell.setCoords(i, j);
+                            row.appendChild(cell.getDOMElement());
+                    }
+            }
+        } else {
+            let wptb_preview_table = document.getElementsByClassName( 'wptb-preview-table' );
+            
+            if ( wptb_preview_table.length > 0 ) {
+                table = wptb_preview_table[0];
+                
+                let cells = table.getElementsByTagName( 'td' );
+                
+                if ( cells.length > 0 ) {
+                    for ( let i = 0; i < cells.length; i++ ) {
+                        WPTB_Cell( mark, cells[i] );
+                    }
+                }
+            }
+        }
+	
 	/*
-	 * This just toggles visibility of cell edit bar, and toggles 
-	 * cell selecting mode.
-	 */
+  * This just toggles visibility of cell edit bar, and toggles 
+  * cell selecting mode.
+  */
 
 	table.toggleTableEditMode = function () {
 		var bar = document.getElementById('edit-bar');
@@ -370,9 +386,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 	}
 
 	/*
-	 * For assigning to each cell xIndex and y Index attributes,
-	 * these are the column number and row number of cell in table. 
-	 */
+  * For assigning to each cell xIndex and y Index attributes,
+  * these are the column number and row number of cell in table. 
+  */
 
 	table.recalculateIndexes = function () {
 		var trs = this.getElementsByTagName('tr'), tds, maxCols = 0;
@@ -406,8 +422,8 @@ var array = [], WPTB_Table = function (columns, rows) {
 	}
 
 	/*
-	 * As simple as it is: adds a column to the end of table.
-	 */
+  * As simple as it is: adds a column to the end of table.
+  */
 	table.addColumnEnd = function () {
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
@@ -420,8 +436,8 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * As simple as it looks: adds a column to the start of table.
-	 */
+  * As simple as it looks: adds a column to the start of table.
+  */
 
 	table.addColumnStart = function () {
 		for (var i = 0; i < table.rows.length; i++) {
@@ -441,22 +457,22 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * Well, not so simple as previous functions.
-	 * It adds a column after a certain column of reference.
-	 * @param integer the column number to be used as reference.
-	 *	If empty, then the first highlighted cell is used as reference.
-	 */
+  * Well, not so simple as previous functions.
+  * It adds a column after a certain column of reference.
+  * @param integer the column number to be used as reference.
+  *	If empty, then the first highlighted cell is used as reference.
+  */
 
 	table.addColumnAfter = function (c_pos) {
 		var rows = table.rows,
-			cellsBuffer,
-			cell = document.querySelector('.wptb-highlighted'),
-			pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
-			pendingInsertion = false,
-			stepsToMove,
-			td, bro,
-			carriedRowspans = [],
-			currentCell;
+		    cellsBuffer,
+		    cell = document.querySelector('.wptb-highlighted'),
+		    pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
+		    pendingInsertion = false,
+		    stepsToMove,
+                    td, bro,
+		    carriedRowspans = [],
+		    currentCell;
 
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			carriedRowspans.push(0);
@@ -531,33 +547,32 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * For preventing us to take a lot of time,
-	 * This is just calling the function addColumnAfter, but
-	 * using the previous column to current one as reference.
-	 * @see addColumnAfter
-	 */
+  * For preventing us to take a lot of time,
+  * This is just calling the function addColumnAfter, but
+  * using the previous column to current one as reference.
+  * @see addColumnAfter
+  */
 
 	table.addColumnBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
-			pos = getCoords(cell)[1];
+		    pos = getCoords(cell)[1];
 
 		if (pos === 0) {
 			table.addColumnStart();
-		}
-		else {
+		} else {
 			table.addColumnAfter(pos - 1);
 		}
 	};
 
 	/*
-	 * Luckily, thisfunction is simple, 
-	 * it just add a row to the end of table.
-	 */
+  * Luckily, thisfunction is simple, 
+  * it just add a row to the end of table.
+  */
 
 	table.addRowToTheEnd = function () {
 		var r = table.insertRow(-1),
-			td,
-			aux;
+		    td,
+		    aux;
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			td = new WPTB_Cell(mark);
 			r.appendChild(td.getDOMElement());
@@ -570,9 +585,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * Yet another simple function, 
-	 * it just add a row to the start of table.
-	 */
+  * Yet another simple function, 
+  * it just add a row to the start of table.
+  */
 
 	table.addRowToTheStart = function () {
 		var r = table.insertRow(0);
@@ -588,17 +603,17 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/* 
-	 * This function adds a row before the current one.
-	 * Since the biggest factor of problem is a not-started but ongoing rowspan,
-	 * the most of the troubles is not here.
-	 */
+  * This function adds a row before the current one.
+  * Since the biggest factor of problem is a not-started but ongoing rowspan,
+  * the most of the troubles is not here.
+  */
 
 	table.addRowBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
-			row = getCoords(cell)[0],
-			r = table.insertRow(row),
-			aux,
-			rowspans = carriedRowspans(row - 1);
+		    row = getCoords(cell)[0],
+		    r = table.insertRow(row),
+		    aux,
+		    rowspans = carriedRowspans(row - 1);
 
 		noPending = rowspans.filter(function (elem) {
 			return elem == 0;
@@ -634,22 +649,22 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * Well... by the name convention of the previous 3 functions,
-	 * it's pretty obvious that this functions attaches a new
-	 * row after highlighted cell row. The greatest obstacle it was
-	 * the possibility of a TR not having the exact amount of columns
-	 * occuped by actual node but rowspanned upper cells. For that purpose
-	 * it was created the function realTimeArray.
-	 * @see realTimeArray
-	 */
+  * Well... by the name convention of the previous 3 functions,
+  * it's pretty obvious that this functions attaches a new
+  * row after highlighted cell row. The greatest obstacle it was
+  * the possibility of a TR not having the exact amount of columns
+  * occuped by actual node but rowspanned upper cells. For that purpose
+  * it was created the function realTimeArray.
+  * @see realTimeArray
+  */
 
 	table.addRowAfter = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
-			row = getCoords(cell)[0],
-			r = table.insertRow(row + 1),
-			aux,
-			rowspans = carriedRowspans(row);
+		    row = getCoords(cell)[0],
+		    r = table.insertRow(row + 1),
+		    aux,
+		    rowspans = carriedRowspans(row);
 
 		noPending = rowspans.filter(function (elem) {
 			return elem == 0;
@@ -685,22 +700,22 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This function checks the current selected cells
-	 * make a rectangular shape.
-	 * @param Array the abstract table.
-	 * @return false, if not making a rectangle, or
-	 *	Array an array containing number of rows and columns, if selection makes a rectangle.
-	 */
+  * This function checks the current selected cells
+  * make a rectangular shape.
+  * @param Array the abstract table.
+  * @return false, if not making a rectangle, or
+  *	Array an array containing number of rows and columns, if selection makes a rectangle.
+  */
 
 	table.isSquare = function (a) {
 		var rowStart = -1,
-			columnStart = -1,
-			rowEnd = -1,
-			columnEnd = -1,
-			height,
-			width,
-			itemsEstimate = 0,
-			items = 0;
+		    columnStart = -1,
+		    rowEnd = -1,
+		    columnEnd = -1,
+		    height,
+		    width,
+		    itemsEstimate = 0,
+		    items = 0;
 
 		for (var i = 0; i < a.length; i++) {
 			for (var j = 0; j < a[i].length; j++) {
@@ -727,7 +742,6 @@ var array = [], WPTB_Table = function (columns, rows) {
 				break;
 			}
 		}
-
 
 		for (var i = rowStart; i < rowEnd; i++) {
 			for (var j = columnStart; j < columnEnd; j++) {
@@ -756,17 +770,17 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This function merges all selected cells.
-	 * Well, actually sets the colspan and rowspan of first 
-	 * upper left  cell in selection and deletes the another selected cells.
-	 */
+  * This function merges all selected cells.
+  * Well, actually sets the colspan and rowspan of first 
+  * upper left  cell in selection and deletes the another selected cells.
+  */
 
 	table.mergeCells = function () {
 		var dimensions = table.isSquare(array),
-			rowspan = dimensions[0],
-			colspan = dimensions[1],
-			first = document.querySelector('.wptb-highlighted'),
-			tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
+		    rowspan = dimensions[0],
+		    colspan = dimensions[1],
+		    first = document.querySelector('.wptb-highlighted'),
+		    tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1);
 
 		for (var i = 0; i < tds.length; i++) {
 			var p = tds[i].parentNode;
@@ -779,16 +793,16 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This functions makes the exact inverse as above.
-	 * It resets colspan and rowspan and appends 
-	 * the same amount in cells to the table.
-	 * @bug
-	 */
+  * This functions makes the exact inverse as above.
+  * It resets colspan and rowspan and appends 
+  * the same amount in cells to the table.
+  * @bug
+  */
 
 	table.splitCell = function () {
 		var cell = document.getElementsByClassName('wptb-highlighted')[0],
-			rowspan = cell.rowSpan,
-			colspan = cell.colSpan;
+		    rowspan = cell.rowSpan,
+		    colspan = cell.colSpan;
 		cell.rowSpan = 1;
 		cell.colSpan = 1;
 		table.addLackingCells();
@@ -797,14 +811,14 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * Searches for rowspanned cells up to row number meeting it.
-	 * @param number the number of row where the function
-	 * must search up to.
-	 */
+  * Searches for rowspanned cells up to row number meeting it.
+  * @param number the number of row where the function
+  * must search up to.
+  */
 
 	table.findRowspannedCells = function (row) {
 		var array = [],
-			difference;
+		    difference;
 		actualPoints = getActualPointsInRow(row);
 		if (actualPoints === maxAmountOfCells) {
 			return [];
@@ -825,10 +839,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 	}
 
 	/*
-	 * This function explores the table and adds 
-	 * a cell for each lacking one for each row
-	 * to meet an even amount of cells.
-	 */
+  * This function explores the table and adds 
+  * a cell for each lacking one for each row
+  * to meet an even amount of cells.
+  */
 
 	table.addLackingCells = function () {
 		var sumRows = [];
@@ -849,7 +863,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 		for (var i = 0; i < table.rows.length; i++) {
 			var tds = table.rows[i].getElementsByTagName('td'),
-				totalColspan = 0;
+			    totalColspan = 0;
 			for (var j = 0; j < tds.length; j++) {
 				totalColspan += tds[j].colSpan;
 			}
@@ -864,15 +878,15 @@ var array = [], WPTB_Table = function (columns, rows) {
 	};
 
 	/*
-	 * This function deletes the row of currently
-	 * selected cell. 
-	 */
+  * This function deletes the row of currently
+  * selected cell. 
+  */
 
 	table.deleteRow = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
-			row = getCoords(cell)[0],
-			reduct = table.findRowspannedCells(row);
+		    row = getCoords(cell)[0],
+		    reduct = table.findRowspannedCells(row);
 
 		for (i = 0; i < reduct.length; i++) {
 			reduct[i].rowSpan--;
@@ -885,17 +899,17 @@ var array = [], WPTB_Table = function (columns, rows) {
 	}
 
 	/*
-	 * This function deletes the column of currently
-	 * selected cell. Again, this is way more complicated than
-	 * delete row case.
-	 */
+  * This function deletes the column of currently
+  * selected cell. Again, this is way more complicated than
+  * delete row case.
+  */
 
 	table.deleteColumn = function () {
 
 		var cell_ref = document.querySelector('.wptb-highlighted'),
-			column = getCoords(cell_ref)[1],
-			buffer, cell,
-			carriedRowspans = [];
+		    column = getCoords(cell_ref)[1],
+                    buffer, cell,
+		    carriedRowspans = [];
 
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			carriedRowspans.push(0);
@@ -970,6 +984,5 @@ var array = [], WPTB_Table = function (columns, rows) {
 	table.recalculateIndexes();
 
 	WPTB_LeftPanel();
-
 
 };

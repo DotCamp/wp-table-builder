@@ -1,206 +1,51 @@
-var WPTB_Stringifier = function (node) {
+var WPTB_Stringifier = function ( node, start = false ) {
 
-	if (node == undefined || node.tagName == undefined) {
+	if ( node == undefined ) {
 		return '';
-	}
-
-	var code = '', children = node.childNodes,
-		padding, margin, bg1, bg2, bg3, border,
-		colSpan, rowSpan, isHidden, borderColor, // Table Attributes
-		listClass, listStyleType, listAlignment, //list attributes
-		buttonSize, buttonColor, buttonBorder, buttonTextColor, buttonLink, buttonAlignment, //button attributes
-		fontSize, fontColor, fontFamily, //text attributes
-		src, width, height, imageAlignment, imageLink, openInNewTab, //image attributes
-		additionalCSS, additionalClass, additionalID; // A few global attributes I wanted to add.
-
-	switch (node.tagName.toLowerCase()) {
-		case 'table':
-			border = node.style.borderWidth;
-			padding = node.getElementsByTagName('td')[0].style.padding;
-			innerBorder = node.getElementsByTagName('td')[0].style.borderWidth;
-			bg1 = node.rows[0].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
-			borderColor = node.style.borderColor.replace(/\s/g, '');
-
-			if (node.rows.length > 1) {
-				bg2 = node.rows[1].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
-			}
-			if (node.rows.length > 2) {
-				bg3 = node.rows[2].getElementsByTagName('td')[0].style.backgroundColor.replace(/\s/g, '');
-			}
-			code += '[table border-color="'
-				+ (borderColor != undefined && borderColor != '' ? borderColor : 'transparent')
-				+ '" padding="' + (padding != undefined && padding != '' ? padding : '0px')
-				+ '" inner-border="' + (innerBorder != undefined && innerBorder != ''
-					&& node.getElementsByTagName('td')[0].style.borderStyle == 'solid' ?
-					innerBorder : '0px')
-				+ '" outer-border="' + (border != undefined && border != '' ? border : '0px')
-				+ '" data-bg1="' + (bg1 != undefined && bg1 != '' ? bg1 : 'transparent')
-				+ '" data-bg2="' + (bg2 != undefined && bg2 != '' ? bg2 : 'transparent')
-				+ '" data-bg3="' + (bg3 != undefined && bg3 != '' ? bg3 : 'transparent')
-				+ '"]';
-
-			for (var i = 0; i < children.length; i++) {
-				code += WPTB_Stringifier(children[i]);
-			}
-
-			code += '[/table]';
-			break;
-		case 'tbody':
-			for (var i = 0; i < children.length; i++) {
-				code += WPTB_Stringifier(children[i]);
-			}
-			break;
-		case 'tr':
-			code += '[tr]';
-
-			for (var i = 0; i < children.length; i++) {
-				code += WPTB_Stringifier(children[i]);
-			}
-
-			code += '[/tr]';
-			break;
-		case 'td': colspan = node.colSpan;
-			rowspan = node.rowSpan;
-			isHidden = node.classList.contains(/^wptb-fused-cell-(\d+)$/);
-			code += '[td'
-				+ (colspan != undefined && colspan > 1 ? ' colspan="' + colspan + '"' : '')
-				+ (rowspan != undefined && rowspan > 1 ? ' rowspan="' + rowspan + '"' : '')
-				+ (isHidden ? ' hidden="true"' : '')
-				+ ']';
-
-			for (var i = 0; i < children.length; i++) {
-				code += WPTB_Stringifier(children[i]);
-			}
-
-			code += '[/td]';
-			break;
-		case 'div':
-			if (node.classList.contains('wptb-ph-element')) {
-
-				var infArr = node.className.match(/wptb-element-(.+)-(\d+)/i),
-					optionsClass, trueNode,
-					nodeContent;
-				if (infArr == undefined) {
-					return;
-				}
-				switch (infArr[1]) {
-					case 'list':
-						trueNode = node.getElementsByTagName('ul')[0];
-						if (!trueNode) {
-							return ''; //We ignore the node in case of error
-						}
-
-						listStyleType = trueNode.getElementsByTagName('li')[0].style.listStyleType;
-						listClass = listStyleType == 'decimal' ? 'numbered' : 'unordered';
-						listAlignment = trueNode.getElementsByTagName('article')[0].style.justifyContent;
-
-						code += '[list'
-							+ (listAlignment != undefined ? ' align="' + listAlignment + '"' : 'align="left"')
-							+ (listClass != undefined ? ' class="' + listClass + '"' : 'class="unordered"')
-							+ (listStyleType != undefined ? ' style-type="' + listStyleType + '"' : '')
-							+ ']';
-						listitems = trueNode.getElementsByTagName('article');
-						for (var i = 0; i < listitems.length; i++) {
-							code += '[item]';
-							code += listitems[i]
-								.getElementsByClassName('wptb-list-item-content')[0]
-								.innerHTML;
-							code += '[/item]';
-						}
-						code += '[/list]';
-						break;
-					case 'image':
-						trueNode = node.getElementsByTagName('img')[0];
-						if (!trueNode) {
-							return ''; //We ignore the node in case of error
-						}
-						src = trueNode.src;
-						width = trueNode.style.width;
-						alt = trueNode.alt;
-						imageLink = undefined;
-						if (node.getElementsByTagName('a')[0] &&
-							node.getElementsByTagName('a')[0].href != '') {
-							imageLink = node.getElementsByTagName('a')[0].href;
-						}
-						if (trueNode.style.display != 'inline') {
-							imageAlignment = 'center';
-						} else {
-							imageAlignment = trueNode.style.float;
-						}
-						openInNewTab = node.getElementsByTagName('a')[0].target;
-						code += '[img'
-							+ (src != undefined ? ' src="' + src + '"' : 'src=""')
-							+ (width != undefined ? ' width="' + width + '"' : 'width="100%;"')
-							+ (alt != undefined ? ' alt="' + alt + '"' : 'alt=""')
-							+ (imageAlignment != undefined ? ' alignment="' + imageAlignment + '"' : 'alignment="left"')
-							+ (imageLink != undefined ? ' link="' + imageLink + '"' : 'href="#"')
-							+ (openInNewTab != undefined ? ' newtab="' + openInNewTab + '"' : 'newtab="false"')
-							+ ']';
-						break;
-					case 'text':
-						trueNode = node.getElementsByClassName('editable')[0];
-						if (!trueNode) {
-							return ''; //We ignore the node in case of error
-						}
-						fontSize = trueNode.parentNode.style.fontSize;
-						fontColor = trueNode.parentNode.style.color.replace(/\s/g, '');
-						code += '[text'
-							+ (fontSize != undefined ? ' size="' + fontSize + '"' : '')
-							+ (fontColor != undefined ? ' color="' + fontColor + '"' : '')
-							+ ']';
-						code += trueNode.innerHTML;
-						code += '[/text]';
-						break;
-					case 'button':
-						trueNode = node.getElementsByClassName('editable')[0];
-						if (!trueNode) {
-							return '';
-						}
-
-						buttonColor = trueNode.style.backgroundColor.replace(/\s/g, '');
-						buttonSize = node.className.match(/wptb-size-(\w)/i)[1];
-						buttonTextColor = node.getElementsByTagName('a')[0].style.color;
-
-						if (!buttonTextColor) {
-							buttonTextColor = 'rgb(255,255,255)';
-						}
-
-						buttonLink = undefined;
-						if (node.getElementsByTagName('a')[0] &&
-							node.getElementsByTagName('a')[0].href != '') {
-							buttonLink = node.getElementsByTagName('a')[0].href;
-						}
-						buttonAlignment = node.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent;
-						buttonOpenInNewTab = node.getElementsByTagName('a')[0].target;
-						if (buttonOpenInNewTab == '') {
-							buttonOpenInNewTab = '_self';
-						}
-
-						code += '[button'
-							+ (buttonTextColor != undefined ? ' textcolor="' + buttonTextColor + '"' : 'textcolor="rgb(255,255,255)"')
-							+ (buttonColor != undefined ? ' color="' + buttonColor + '"' : 'rgb(50,157,63)')
-							+ (buttonSize != undefined ? ' size="' + buttonSize + '"' : ' size="M"')
-							+ (buttonAlignment != undefined ? ' alignment="' + buttonAlignment + '"' : ' alignment="center"')
-							+ (buttonLink != undefined ? ' link="' + buttonLink + '"' : ' link="#"')
-							+ (buttonOpenInNewTab != undefined ? ' newtab="' + buttonOpenInNewTab + '"' : 'newtab="_self"')
-							+ ']';
-						code += trueNode.innerHTML;
-						code += '[/button]';
-						break;
-				}
-			} else {
-				return '';
-			}
-			break;
-		default:
-			code += '';
-			break;
-	}
-
-	if (node.nextSibling != undefined) {
-		WPTB_Stringifier(node.nextSibling);
-	}
-
-	return code;
-
-};
+	} else if ( node.tagName == undefined && node.nodeType == 3 ) {
+            return node.nodeValue;
+        }
+        
+        let code = [],
+            children,
+            int_elem_arr = false,
+            attributes = [...node.attributes],
+            attributes_list = [],
+            internal_elements = [];
+            if ( ( node.parentNode.classList.contains( 'wptb-list-item-content' ) || 
+                node.parentNode.classList.contains( 'mce-content-body' ) ) && 
+            node.tagName.toLowerCase() == 'p' ) {
+                children = node.childNodes;
+                int_elem_arr = true;
+            } else if( node.children.length > 0 ) {
+                children = node.children;
+            } else {
+                children = node.childNodes;
+            }
+        if ( attributes.length > 0 ) {
+            for ( let i = 0; i < attributes.length; i++ ) {
+                attributes_list[i] = [attributes[i].name, attributes[i].value];
+            }
+        } else {
+            attributes_list = '';
+        }
+        
+        if ( children.length > 0 ) {
+            for ( let i = 0; i < children.length; i++) {
+                let inter_elem = WPTB_Stringifier(children[i]);
+                    
+                if ( Array.isArray( inter_elem ) || int_elem_arr ) {
+                    internal_elements[i] = inter_elem;
+                } else if ( typeof inter_elem === 'string' && inter_elem ) {
+                    internal_elements = inter_elem;
+                }
+            }
+        } else {
+            internal_elements = '';
+        }
+        
+        
+        code.push(node.tagName.toLowerCase(), attributes_list , internal_elements);
+        
+        return code;
+}

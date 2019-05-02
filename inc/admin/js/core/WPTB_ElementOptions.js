@@ -2,8 +2,8 @@ var WPTB_ElementOptions = function (element, index) {
 
     var node = element.getDOMElement(), elemIdClass;
 
-    prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
-    prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
+        prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
+        prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
     elemIdClass = 'wptb-options-' + element.kind + "-" + index;
 
     var properties = prop.getElementsByClassName('wptb-element-property');
@@ -48,9 +48,15 @@ var WPTB_ElementOptions = function (element, index) {
             case 'list':
                 listJustifyContent = node.querySelector('article').style.justifyContent;
                 listStyleType = node.querySelector('article .wptb-list-item-style-dot li').style.listStyleType;
-                prop.querySelector('[type=ran][data-type=list-class]').selectedIndex = (listStyleType == 'decimal' ? 0 : 1);
-                prop.querySelector('[type=ran][data-type=list-style-type]').selectedIndex = (listStyleType == 'circle' ? 0 : (listStyleType == 'square' ? 1 : 2));
-                prop.querySelector('[type=ran][data-type=list-alignment]').selectedIndex = (listJustifyContent == 'flex-start' ? 0 : (listJustifyContent == 'center' ? 1 : 2));
+                if ( prop.querySelector( '[type=ran][data-type=list-class]' ) ) {
+                    prop.querySelector('[type=ran][data-type=list-class]').selectedIndex = (listStyleType == 'decimal' ? 0 : 1);
+                }
+                if ( prop.querySelector('[type=ran][data-type=list-style-type]') ) {
+                    prop.querySelector('[type=ran][data-type=list-style-type]').selectedIndex = (listStyleType == 'circle' ? 0 : (listStyleType == 'square' ? 1 : 2));
+                }
+                if ( prop.querySelector('[type=ran][data-type=list-alignment]') ) {
+                    prop.querySelector('[type=ran][data-type=list-alignment]').selectedIndex = (listJustifyContent == 'flex-start' ? 0 : (listJustifyContent == 'center' ? 1 : 2));
+                }
                 break;
             case 'image':
                 break;
@@ -161,15 +167,7 @@ var WPTB_ElementOptions = function (element, index) {
                     this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
-                    if (this.value != 'center') {
-                        affectedEl.getElementsByTagName('img')[0].style.display = 'inline';
-                        affectedEl.getElementsByTagName('img')[0].style.float = this.value;
-                        affectedEl.getElementsByTagName('img')[0].style.margin = 'inherit';
-                    } else {
-                        affectedEl.getElementsByTagName('img')[0].style.float = 'none';
-                        affectedEl.getElementsByTagName('img')[0].style.display = 'block';
-                        affectedEl.getElementsByTagName('img')[0].style.margin = '0 auto';
-                    }
+                    affectedEl.getElementsByTagName( 'img' )[0].parentNode.style.textAlign = this.value;
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';

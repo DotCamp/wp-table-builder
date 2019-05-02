@@ -1,15 +1,16 @@
 var applyGenericItemSettings = function (element) {
 	var node = element.getDOMElement(),
-		index = document.counter.nextIndex(element.kind),
-		listItems;
+	    index = document.counter.nextIndex(element.kind),
+	    listItems,
+            copy;
 
 	node.onmouseenter = function (event) {
 		this.classList.add('wptb-directlyhovered');
 		var btnDelete = document.createElement('span'),
-			btnCopy = document.createElement('span'),
-			btnMove = document.createElement('span'),
-			actions = document.createElement('span'),
-			previous, i;
+		    btnCopy = document.createElement('span'),
+		    btnMove = document.createElement('span'),
+		    actions = document.createElement('span'),
+                    previous, i;
 		actions.classList.add('wptb-actions');
 		btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
 		btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
@@ -17,9 +18,9 @@ var applyGenericItemSettings = function (element) {
 		btnMove.draggable = true;
 		btnDelete.onclick = function (event) {
 			var act = this.parentNode.parentNode,
-				el = act.parentNode,
-				space = act.nextSibling,
-				num, space2;
+			    el = act.parentNode,
+			    space = act.nextSibling,
+                            num, space2;
 			el.removeChild(act);
 			el.removeChild(space);
 			num = el.getElementsByClassName('wptb-ph-element').length;
@@ -34,27 +35,34 @@ var applyGenericItemSettings = function (element) {
 			if (element.kind == 'list') {
 
 				var td = event.target.parentNode.parentNode.parentNode,
-					temp = [],
-					srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+				    temp = [],
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content'),
+                                    DOMElement = event.target.parentNode.parentNode.getElementsByTagName( 'article' )[0];
+                                    console.log(DOMElement);
 
 				for (var i = 0; i < srcList.length; i++) {
 					temp.push(srcList[i].innerHTML);
 				}
-				var copy = new WPTB_List(temp);
-				td.appendChild(copy.getDOMElement());
-
+				var copy = new WPTB_List( temp, DOMElement );
+				td.appendChild( copy.getDOMElement() );
 			} else if (element.kind == 'text') {
 				var td = event.target.parentNode.parentNode.parentNode,
-					copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-				td.appendChild(copy.getDOMElement());
-			} else if (element.kind == 'image') {
+				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
+                            
+				node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
+			} else if ( element.kind == 'image' ) {
 				var td = event.target.parentNode.parentNode.parentNode,
-					copy = new WPTB_Image(event.target.parentNode.parentNode.childNodes[0].src);
-				td.appendChild(copy.getDOMElement());
+				    copy = new WPTB_Image( event.target.parentNode.parentNode.children[0].children[0].src, node );
+                            
+				node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
 			} else {
 				var td = event.target.parentNode.parentNode.parentNode,
-					copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML);
-				td.appendChild(copy.getDOMElement());
+				    copy = new WPTB_Button( event.target.parentNode.parentNode.childNodes[0].innerHTML, node );
+                            
+                                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
 			}
 		};
 		btnMove.ondragstart = function (event) {
@@ -88,7 +96,7 @@ var applyGenericItemSettings = function (element) {
 				setup: function (ed) {
 					ed.on("init",
 						function (ed) {
-							tinyMCE.execCommand('mceRepaint');
+						tinyMCE.execCommand('mceRepaint');
 						}
 					);
 				},
@@ -125,8 +133,7 @@ var applyGenericItemSettings = function (element) {
 					});
 				}
 			});
-		}
-		else if (element.kind === 'text') {
+		} else if (element.kind === 'text') {
 			tinyMCE.init({
 				target: node.childNodes[0],
 				inline: true,
@@ -205,11 +212,22 @@ var applyGenericItemSettings = function (element) {
 		}
 		this.classList.remove('wptb-directlyhovered');
 	};
-
-	node.classList.add('wptb-ph-element', 'wptb-element-' + element.kind + '-' +
-		index);
-
-	new WPTB_ElementOptions(element, index);
+        
+        let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+        if ( node_wptb_element_kind_num ) {
+            node.classList.remove( node_wptb_element_kind_num[0] );
+        }
+        if ( ! node.classList.contains( 'wptb-ph-element' ) ) {
+            node.classList.add('wptb-ph-element' );
+            if( ! node.classList.contains( 'wptb-element-' + element.kind + '-' + index ) ) {
+                node.classList.add( 'wptb-element-' + element.kind + '-' + index );
+            }
+        } else {
+            if( ! node.classList.contains( 'wptb-element-' + element.kind + '-' + index ) ) {
+                node.classList.add( 'wptb-element-' + element.kind + '-' + index );
+            }
+        }
+	new WPTB_ElementOptions( element, index );
 
 	document.counter.increment(element.kind);
 

@@ -1,4 +1,4 @@
-var WPTB_Space = function (text) {
+var WPTB_Space = function ( elSpaceBetween ) {
 
     function newElementProxy(el) {
         if (el.includes('list')) {
@@ -11,9 +11,12 @@ var WPTB_Space = function (text) {
             return new WPTB_Button();
         }
     }
-
-    spaceBetween = document.createElement('div'),
-        spaceBetween.classList.add('wptb-space-between');
+    let spaceBetween;
+    if ( ! elSpaceBetween ) {
+        spaceBetween = document.createElement('div'), spaceBetween.classList.add('wptb-space-between');
+    } else {
+        spaceBetween = elSpaceBetween;
+    }
 
     spaceBetween.ondragenter = function () {
         this.classList.add('visible');
@@ -69,7 +72,8 @@ var WPTB_Space = function (text) {
         }
         this.classList.remove('visible');
     };
-
-    return spaceBetween;
-
+    
+    if ( ! elSpaceBetween ) {
+        return spaceBetween;
+    }
 };
