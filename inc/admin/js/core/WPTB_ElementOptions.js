@@ -1,4 +1,4 @@
-var WPTB_ElementOptions = function (element, index) {
+var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
     var node = element.getDOMElement(), elemIdClass;
 
@@ -14,6 +14,156 @@ var WPTB_ElementOptions = function (element, index) {
 
     prop.classList.add(elemIdClass);
     document.getElementById("element-options-group").appendChild(prop);
+    
+    if ( kindIndexProt ) {
+        if ( element.kind == 'button' ) {
+            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt )[0],
+                wptbButtonWrapper,
+                wptbButton,
+                wptbSize;
+        
+            if ( affectedEl ) {
+                wptbSize = affectedEl.className.match(/wptb-size-([a-z]+)/i);
+            }
+            
+            if( wptbSize && Array.isArray( wptbSize ) ) {
+                var b = prop.getElementsByClassName('wptb-btn-size-btn');
+                
+                for ( var i = 0; i < b.length; i++ ) {
+                    b[i].classList.remove( 'selected' );
+                    
+                    if ( b[i].innerHTML == wptbSize[1] ) {
+                        b[i].classList.add( 'selected' );
+                    }
+                }
+            }
+            
+            if( affectedEl ) {
+                wptbButtonWrapper = affectedEl.getElementsByClassName( 'wptb-button-wrapper' );
+                
+                wptbButton = affectedEl.getElementsByClassName( 'wptb-button' )
+            }
+            
+            if ( wptbButtonWrapper ) {
+                let buttonAlignment = wptbButtonWrapper[0].style.justifyContent,
+                buttonAlignmentSelect = prop.querySelector( 'select[data-type="button-alignment"]' ),
+                    selectOption = buttonAlignmentSelect.getElementsByTagName( 'option' ),
+                    selectOptionVal;
+                
+                if ( buttonAlignment == 'flex-start' ) {
+                    selectOptionVal = 'left';
+                } else if ( buttonAlignment == 'center' || ! buttonAlignment ) {
+                    selectOptionVal = 'center';
+                } else if ( buttonAlignment == 'flex-end' ) {
+                    selectOptionVal = 'right';
+                }
+                
+                for ( let i = 0; i < selectOption.length; i++ ) {
+                    if ( selectOption[i].value == selectOptionVal ) {
+                        selectOption[i].selected = true;
+                    }
+                }
+            }
+            
+            if( wptbButton ) {
+                let buttonTextColor = wptbButton[0].style.color,
+                    buttonColor = wptbButton[0].style.backgroundColor,
+                    buttonHref = wptbButton[0].getAttribute( 'href' ), 
+                    buttonLinkTarget = wptbButton[0].getAttribute( 'target' ),
+                    buttonTextColorInput = prop.querySelector( 'input[data-type="button-text-color"]' ),
+                    buttonBackgroundColorInput = prop.querySelector( 'input[data-type="button-color"]' ),
+                    buttonHrefInput = prop.querySelector( 'input[data-type="button-link"]' ),
+                    buttonLinkTargetInput = prop.querySelector( 'input[data-type="button-link-target"]' ),
+                    buttonLinkTargetInputId = buttonLinkTargetInput.getAttribute( 'id' ),
+                    buttonLinkTargetInputLabel = buttonLinkTargetInput.parentNode.getElementsByTagName( 'label' )[0];
+                    
+                buttonLinkTargetInputId = buttonLinkTargetInputId + '-' + kindIndexProt.split( '-' )[1];
+
+                buttonLinkTargetInput.setAttribute( 'id', buttonLinkTargetInputId );
+                buttonLinkTargetInputLabel.setAttribute( 'for', buttonLinkTargetInputId );
+            
+                buttonTextColorInput.value = buttonTextColor;
+                
+                buttonBackgroundColorInput.value = buttonColor;
+                
+                buttonHrefInput.value = buttonHref;
+                
+                if( buttonLinkTarget && buttonLinkTarget == '_blank') {
+                    buttonLinkTargetInput.checked=true;
+                }
+            }
+        } else if ( element.kind == 'image' ) {
+            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt )[0],
+                affectedElChildren = [...affectedEl.children];
+            if ( affectedElChildren.length > 0 ) {
+                let a;
+                
+                for ( let i = 0; i < affectedElChildren.length; i++ ) {
+                    if ( affectedElChildren[i].tagName.toLowerCase() == 'a' ) {
+                        a = affectedElChildren[i];
+                    }
+                }
+                
+                if ( a ) {
+                    
+                    a.onclick = function( e ) {
+                        e.preventDefault();
+                    }
+                    // set select according to the alignment of the image
+                    let aTextAlign = a.style.textAlign,
+                    imageAlignmentSelect = prop.querySelector( 'select[data-type="image-alignment"]' ),
+                    selectOption = imageAlignmentSelect.getElementsByTagName( 'option' );
+                    
+                    for ( let i = 0; i < selectOption.length; i++ ) {
+                        if ( selectOption[i].value == aTextAlign ) {
+                            selectOption[i].selected = true;
+                        }
+                    }
+                    
+                    // set text link for input field of setting panel
+                    let imageLinkHref = a.getAttribute( 'href' ),
+                        inputImageLink = prop.querySelector( 'input[data-type="image-link"]' );
+                    if ( imageLinkHref ) {
+                        inputImageLink.value = imageLinkHref;
+                    }
+                    
+                    // set checkbox for target of link 
+                    let imageLinkTarget = a.getAttribute( 'target' ),
+                        imageLinkTargetInput = prop.querySelector( 'input[data-type="image-link-target"]' ),
+                        imageLinkTargetInputId = imageLinkTargetInput.getAttribute( 'id' ),
+                        imageLinkTargetInputLabel = imageLinkTargetInput.parentNode.getElementsByTagName( 'label' )[0];
+                
+                    imageLinkTargetInputId = imageLinkTargetInputId + '-' + kindIndexProt.split( '-' )[1];
+
+                    imageLinkTargetInput.setAttribute( 'id', imageLinkTargetInputId );
+                    imageLinkTargetInputLabel.setAttribute( 'for', imageLinkTargetInputId );
+                    
+                    if ( imageLinkTarget && imageLinkTarget == '_blank' ) {
+                        imageLinkTargetInput.checked = true;
+                    }
+                    
+                    let img = a.getElementsByTagName( 'img' );
+                    if ( img.length > 0 ) {
+                        // set value for input fields of image size
+                        let imgWidth = img[0].style.width;
+                        if ( imgWidth ) {
+                            let imageWidthInputRange = prop.querySelector( 'input[type="range"][data-type="image-size"]' ),
+                                imageWidthInputNumber = prop.querySelector( 'input[type="number"][data-type="image-size"]' );
+                        
+                            imageWidthInputRange.value = parseInt( imgWidth );
+                            imageWidthInputNumber.value = parseInt( imgWidth );
+                        }
+                        
+                        // set value for input field of alternative text image
+                        let imgAlternativeText = img[0].getAttribute('alt'),
+                            imageAlternativeTextInput = prop.querySelector( 'input[type="text"][data-type="alternative-text"]' );
+                    
+                        imageAlternativeTextInput.value = imgAlternativeText;
+                    }
+                }
+            }
+        }
+    }
 
     node.onclick = function () {
         var infArr = this.className.match(/wptb-element-((.+-)\d+)/i),
@@ -84,7 +234,7 @@ var WPTB_ElementOptions = function (element, index) {
                 affectedEl.classList.remove('wptb-size-L');
                 affectedEl.classList.remove('wptb-size-XL');
                 affectedEl.classList.add('wptb-size-' + size);
-                var b = prop.getElementsByClassName('wptb-btn-size-btn');
+                var b = this.parentNode.getElementsByClassName('wptb-btn-size-btn');
                 for (var i = 0; i < b.length; i++) {
                     b[i].classList.remove('selected');
                 }
@@ -154,7 +304,7 @@ var WPTB_ElementOptions = function (element, index) {
                 case 'image-link':
                     affectedEl.getElementsByTagName('a')[0].href = this.value;
                     break;
-                case 'button-link-target':
+                case 'image-link-target':
                     if (this.checked == true) {
                         affectedEl.getElementsByTagName('a')[0].target = '_blank';
                     } else {

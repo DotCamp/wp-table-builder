@@ -1,4 +1,4 @@
-var applyGenericItemSettings = function (element) {
+var applyGenericItemSettings = function ( element, kindIndexProt ) {
 	var node = element.getDOMElement(),
 	    index = document.counter.nextIndex(element.kind),
 	    listItems,
@@ -38,7 +38,6 @@ var applyGenericItemSettings = function (element) {
 				    temp = [],
 				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content'),
                                     DOMElement = event.target.parentNode.parentNode.getElementsByTagName( 'article' )[0];
-                                    console.log(DOMElement);
 
 				for (var i = 0; i < srcList.length; i++) {
 					temp.push(srcList[i].innerHTML);
@@ -227,7 +226,7 @@ var applyGenericItemSettings = function (element) {
                 node.classList.add( 'wptb-element-' + element.kind + '-' + index );
             }
         }
-	new WPTB_ElementOptions( element, index );
+	new WPTB_ElementOptions( element, index, kindIndexProt );
 
 	document.counter.increment(element.kind);
 

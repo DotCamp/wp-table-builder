@@ -1,4 +1,5 @@
 var WPTB_Image = function ( src, DOMElement ) {
+        let kindIndexProt;
         if ( DOMElement == undefined ) {
             var DOMElement = document.createElement('div'),
 	    anchor = document.createElement('a'),
@@ -6,6 +7,10 @@ var WPTB_Image = function ( src, DOMElement ) {
             anchor.style.display = 'inline-block';
             anchor.appendChild(img);
             DOMElement.appendChild(anchor);
+            
+            anchor.onclick = function( e ) {
+                e.preventDefault();
+            }
             
             file_frame = wp.media.frames.file_frame = wp.media({
 		title: 'Select a image to upload',
@@ -27,6 +32,11 @@ var WPTB_Image = function ( src, DOMElement ) {
             }
         } else {
             var DOMElement = DOMElement.cloneNode( true );
+            
+            let wptbElementMutch = DOMElement.className.match( /wptb-element-((.+-)\d+)/i );
+            if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
+                kindIndexProt = wptbElementMutch[1];
+            };
         }
 	
             
@@ -34,7 +44,7 @@ var WPTB_Image = function ( src, DOMElement ) {
         this.getDOMElement = function () {
             return DOMElement;
         };
-	applyGenericItemSettings( this );
+	applyGenericItemSettings( this, kindIndexProt );
 
 	return this;
 };

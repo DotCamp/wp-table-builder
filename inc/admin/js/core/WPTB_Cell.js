@@ -143,13 +143,12 @@ var WPTB_Cell = function (callback, DOMElement) {
             if( wptbElementTypeClass && Array.isArray( wptbElementTypeClass ) ) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
-                applyGenericItemSettings( wptbPhElement[i] );
+                
+                applyGenericItemSettings( wptbPhElement[i], wptbElementTypeClass[1] );
                 if ( wptbPhElement[i].kind == 'list' ) {
-                    console.log(wptbPhElement[i]);
                     let wptbArticle = wptbPhElement[i].getElementsByTagName( 'article' );
                     if( wptbArticle.length > 0 ) {
                         for ( let i = 0; i < wptbArticle.length; i++ ) {
-                            console.log(wptbArticle);
                             WPTB_ListItem( undefined, wptbArticle[i] );
                         }
                     }

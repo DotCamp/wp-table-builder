@@ -113,7 +113,7 @@ use WP_Table_Builder as NS;
                               <input data-type="image-size" class="wptb-image-width wptb-element-property  wptb-image-size-slider" type="range" min="10" max="100" step="1" value="100"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
+                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width-number wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
                             </div>
                         </div>
                     </div>
