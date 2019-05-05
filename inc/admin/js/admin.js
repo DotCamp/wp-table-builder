@@ -35,17 +35,18 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
 		};
 		btnCopy.onclick = function (event) {
 			if (element.kind == 'list') {
-
 				var td = event.target.parentNode.parentNode.parentNode,
 				    temp = [],
-				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content'),
-				    DOMElement = event.target.parentNode.parentNode.getElementsByTagName('article')[0];
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
 
 				for (var i = 0; i < srcList.length; i++) {
 					temp.push(srcList[i].innerHTML);
 				}
-				var copy = new WPTB_List(temp, DOMElement);
-				td.appendChild(copy.getDOMElement());
+
+				var copy = new WPTB_List(temp, node);
+
+				node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
+				node.parentNode.insertBefore(new WPTB_Space(), copy.getDOMElement());
 			} else if (element.kind == 'text') {
 				var td = event.target.parentNode.parentNode.parentNode,
 				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
@@ -475,11 +476,9 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
             };
 
             var wptbElementTypeClass = wptbPhElement[i].className.match(/wptb-element-((.+-)\d+)/i);
-
             if (wptbElementTypeClass && Array.isArray(wptbElementTypeClass)) {
                 var wptbTypeElementArr = wptbElementTypeClass[1].split('-');
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
-
                 applyGenericItemSettings(wptbPhElement[i], wptbElementTypeClass[1]);
                 if (wptbPhElement[i].kind == 'list') {
                     var wptbArticle = wptbPhElement[i].getElementsByTagName('article');
@@ -545,8 +544,6 @@ var ElementCounters = function ElementCounters() {
 
 	return this;
 };
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndexProt) {
 
     var node = element.getDOMElement(),
@@ -643,72 +640,163 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 }
             }
         } else if (element.kind == 'image') {
-            var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt)[0],
-                affectedElChildren = [].concat(_toConsumableArray(_affectedEl2.children));
-            if (affectedElChildren.length > 0) {
-                var a = void 0;
+            var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl2.length > 0) {
+                var elementsA = _affectedEl2[0].getElementsByTagName('a');
+                if (elementsA.length > 0) {
+                    var a = elementsA[0];
 
-                for (var _i2 = 0; _i2 < affectedElChildren.length; _i2++) {
-                    if (affectedElChildren[_i2].tagName.toLowerCase() == 'a') {
-                        a = affectedElChildren[_i2];
+                    if (a) {
+                        a.onclick = function (e) {
+                            e.preventDefault();
+                        };
+                        // set select according to the alignment of the image
+                        var aTextAlign = a.style.textAlign,
+                            imageAlignmentSelect = prop.querySelector('select[data-type="image-alignment"]'),
+                            _selectOption = imageAlignmentSelect.getElementsByTagName('option');
+
+                        for (var _i2 = 0; _i2 < _selectOption.length; _i2++) {
+                            if (_selectOption[_i2].value == aTextAlign) {
+                                _selectOption[_i2].selected = true;
+                            }
+                        }
+
+                        // set text link for input field of setting panel
+                        var imageLinkHref = a.getAttribute('href'),
+                            inputImageLink = prop.querySelector('input[data-type="image-link"]');
+                        if (imageLinkHref) {
+                            inputImageLink.value = imageLinkHref;
+                        }
+
+                        // set checkbox for target of link 
+                        var imageLinkTarget = a.getAttribute('target'),
+                            imageLinkTargetInput = prop.querySelector('input[data-type="image-link-target"]'),
+                            imageLinkTargetInputId = imageLinkTargetInput.getAttribute('id'),
+                            imageLinkTargetInputLabel = imageLinkTargetInput.parentNode.getElementsByTagName('label')[0];
+
+                        imageLinkTargetInputId = imageLinkTargetInputId + '-' + kindIndexProt.split('-')[1];
+
+                        imageLinkTargetInput.setAttribute('id', imageLinkTargetInputId);
+                        imageLinkTargetInputLabel.setAttribute('for', imageLinkTargetInputId);
+
+                        if (imageLinkTarget && imageLinkTarget == '_blank') {
+                            imageLinkTargetInput.checked = true;
+                        }
+
+                        var img = a.getElementsByTagName('img');
+                        if (img.length > 0) {
+                            // set value for input fields of image size
+                            var imgWidth = img[0].style.width;
+                            if (imgWidth) {
+                                var imageWidthInputRange = prop.querySelector('input[type="range"][data-type="image-size"]'),
+                                    imageWidthInputNumber = prop.querySelector('input[type="number"][data-type="image-size"]');
+
+                                imageWidthInputRange.value = parseInt(imgWidth);
+                                imageWidthInputNumber.value = parseInt(imgWidth);
+                            }
+
+                            // set value for input field of alternative text image
+                            var imgAlternativeText = img[0].getAttribute('alt'),
+                                imageAlternativeTextInput = prop.querySelector('input[type="text"][data-type="alternative-text"]');
+
+                            imageAlternativeTextInput.value = imgAlternativeText;
+                        }
+                    }
+                }
+            }
+        } else if (element.kind == 'text') {
+            var _affectedEl3 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl3.length > 0) {
+                var elementFontSize = _affectedEl3[0].style.fontSize,
+                    elementTextColor = _affectedEl3[0].style.color;
+                var textFontSizeInputRange = prop.querySelector('input[type="range"][data-type="font-size"]'),
+                    textFontSizeInputNumber = prop.querySelector('input[type="number"][data-type="font-size"]'),
+                    textColorInput = prop.querySelector('input[type="text"][data-type="color"]');
+
+                textFontSizeInputRange.value = parseInt(elementFontSize);
+                textFontSizeInputNumber.value = parseInt(elementFontSize);
+                textColorInput.value = elementTextColor;
+            }
+        } else if (element.kind == 'list') {
+            var _affectedEl4 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl4.length > 0) {
+                var elementListStyleType = _affectedEl4[0].getElementsByClassName('wptb-bullet');
+
+                if (elementListStyleType.length > 0) {
+                    elementListStyleType = elementListStyleType[0].style.listStyleType;
+
+                    if (elementListStyleType && elementListStyleType != 'decimal') {
+                        var elementListClassSelect = prop.querySelector('select[data-type="list-class"]');
+                        if (elementListClassSelect) {
+                            elementListClassSelect.value = 'unordered';
+
+                            var listIconSelectLabel = elementListClassSelect.parentNode.nextSibling;
+                            for (var _i3 = 0; _i3 < 10; _i3++) {
+                                if (listIconSelectLabel.nodeType == '1') {
+                                    break;
+                                } else {
+                                    listIconSelectLabel = listIconSelectLabel.nextSibling;
+                                }
+                            }
+
+                            if (listIconSelectLabel) {
+                                var listIconSelectLabelId = listIconSelectLabel.getAttribute('id');
+                                listIconSelectLabel.setAttribute('id', listIconSelectLabelId + '-' + kindIndexProt);
+                                listIconSelectLabel.style.display = 'flex';
+                            }
+
+                            var elementListStyleTypeSelect = prop.querySelector('select[data-type="list-style-type"]');
+                            if (elementListStyleTypeSelect) {
+                                elementListStyleTypeSelect.parentNode.style.display = 'flex';
+
+                                elementListStyleTypeSelect.value = elementListStyleType;
+                            }
+                        }
                     }
                 }
 
-                if (a) {
+                var elementListItemContent = _affectedEl4[0].getElementsByClassName('wptb-list-item-content');
 
-                    a.onclick = function (e) {
-                        e.preventDefault();
-                    };
-                    // set select according to the alignment of the image
-                    var aTextAlign = a.style.textAlign,
-                        imageAlignmentSelect = prop.querySelector('select[data-type="image-alignment"]'),
-                        _selectOption = imageAlignmentSelect.getElementsByTagName('option');
-
-                    for (var _i3 = 0; _i3 < _selectOption.length; _i3++) {
-                        if (_selectOption[_i3].value == aTextAlign) {
-                            _selectOption[_i3].selected = true;
+                if (elementListItemContent.length > 0) {
+                    var listItemPTextAlignArr = [];
+                    for (var _i4 = 0; _i4 < elementListItemContent.length; _i4++) {
+                        var p = elementListItemContent[_i4].querySelector('p');
+                        if (p) {
+                            if (p.style.textAlign) {
+                                listItemPTextAlignArr.push(p.style.textAlign);
+                            } else {
+                                listItemPTextAlignArr.push('left');
+                            }
                         }
                     }
 
-                    // set text link for input field of setting panel
-                    var imageLinkHref = a.getAttribute('href'),
-                        inputImageLink = prop.querySelector('input[data-type="image-link"]');
-                    if (imageLinkHref) {
-                        inputImageLink.value = imageLinkHref;
-                    }
+                    var listItemPTextAlignLeftCount = 0,
+                        listItemPTextAlignCenterCount = 0,
+                        listItemPTextAlignRightCount = 0;
 
-                    // set checkbox for target of link 
-                    var imageLinkTarget = a.getAttribute('target'),
-                        imageLinkTargetInput = prop.querySelector('input[data-type="image-link-target"]'),
-                        imageLinkTargetInputId = imageLinkTargetInput.getAttribute('id'),
-                        imageLinkTargetInputLabel = imageLinkTargetInput.parentNode.getElementsByTagName('label')[0];
-
-                    imageLinkTargetInputId = imageLinkTargetInputId + '-' + kindIndexProt.split('-')[1];
-
-                    imageLinkTargetInput.setAttribute('id', imageLinkTargetInputId);
-                    imageLinkTargetInputLabel.setAttribute('for', imageLinkTargetInputId);
-
-                    if (imageLinkTarget && imageLinkTarget == '_blank') {
-                        imageLinkTargetInput.checked = true;
-                    }
-
-                    var img = a.getElementsByTagName('img');
-                    if (img.length > 0) {
-                        // set value for input fields of image size
-                        var imgWidth = img[0].style.width;
-                        if (imgWidth) {
-                            var imageWidthInputRange = prop.querySelector('input[type="range"][data-type="image-size"]'),
-                                imageWidthInputNumber = prop.querySelector('input[type="number"][data-type="image-size"]');
-
-                            imageWidthInputRange.value = parseInt(imgWidth);
-                            imageWidthInputNumber.value = parseInt(imgWidth);
+                    if (listItemPTextAlignArr.length > 0) {
+                        for (var _i5 = 0; _i5 < listItemPTextAlignArr.length; _i5++) {
+                            if (listItemPTextAlignArr[_i5]) {
+                                if (listItemPTextAlignArr[_i5] == 'left') {
+                                    listItemPTextAlignLeftCount++;
+                                } else if (listItemPTextAlignArr[_i5] == 'center') {
+                                    listItemPTextAlignCenterCount++;
+                                } else if (listItemPTextAlignArr[_i5] == 'right') {
+                                    listItemPTextAlignRightCount++;
+                                }
+                            }
                         }
+                    }
 
-                        // set value for input field of alternative text image
-                        var imgAlternativeText = img[0].getAttribute('alt'),
-                            imageAlternativeTextInput = prop.querySelector('input[type="text"][data-type="alternative-text"]');
+                    var elementListAlignmentSelect = prop.querySelector('select[data-type="list-alignment"]'),
+                        maxListItemTAlLeftC = Math.max(listItemPTextAlignLeftCount, listItemPTextAlignCenterCount, listItemPTextAlignRightCount);
 
-                        imageAlternativeTextInput.value = imgAlternativeText;
+                    if (listItemPTextAlignLeftCount == maxListItemTAlLeftC) {
+                        elementListAlignmentSelect.value = 'left';
+                    } else if (listItemPTextAlignCenterCount == maxListItemTAlLeftC) {
+                        elementListAlignmentSelect.value = 'center';
+                    } else if (listItemPTextAlignRightCount == maxListItemTAlLeftC) {
+                        elementListAlignmentSelect.value = 'right';
                     }
                 }
             }
@@ -739,7 +827,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
 
             case 'text':
                 jQuery(prop).find('[data-type=color]').wpColorPicker({ defaultColor: node.style.color });
-                prop.querySelector('[type=number][data-type=font-size]').value = prop.querySelector('[type=ran][data-type=font-size]').value = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
+                prop.querySelector('[type=number][data-type=font-size]').value = prop.querySelector('[type=range][data-type=font-size]').value = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
                 break;
             case 'list':
                 listJustifyContent = node.querySelector('article').style.justifyContent;
@@ -896,17 +984,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 case 'button-color':
                     break;
                 case 'list-alignment':
-                    var jc = '';
-                    if (this.value == 'left') {
-                        jc = 'flex-start';
-                    } else if (this.value == 'right') {
-                        jc = 'flex-end';
-                    } else {
-                        jc = 'center';
-                    }
                     var articles = affectedEl.querySelectorAll('article');
                     for (var i = 0; i < articles.length; i++) {
-                        articles[i].style.justifyContent = jc;
+                        var _p = articles[i].querySelector('p');
+                        if (_p) {
+                            _p.style.textAlign = this.value;
+                        }
                     }
                     break;
                 case 'list-class':
@@ -937,11 +1020,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         };
     }
 };
-var WPTB_Image = function WPTB_Image(src, DOMElement) {
-    var kindIndexProt = void 0;
-    if (DOMElement == undefined) {
-        var DOMElement = document.createElement('div'),
-            anchor = document.createElement('a'),
+var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
+    var DOMElement = void 0,
+        kindIndexProt = undefined;
+    if (DOMElementProt == undefined) {
+        DOMElement = document.createElement('div');
+        var anchor = document.createElement('a'),
             img = document.createElement('img');
         anchor.style.display = 'inline-block';
         anchor.appendChild(img);
@@ -970,9 +1054,13 @@ var WPTB_Image = function WPTB_Image(src, DOMElement) {
             img.src = src;
         }
     } else {
-        var DOMElement = DOMElement.cloneNode(true);
+        DOMElement = DOMElementProt.cloneNode(true);
 
-        var wptbElementMutch = DOMElement.className.match(/wptb-element-((.+-)\d+)/i);
+        DOMElement.getElementsByTagName('a')[0].onclick = function (e) {
+            e.preventDefault();
+        };
+
+        var wptbElementMutch = DOMElementProt.className.match(/wptb-element-((.+-)\d+)/i);
         if (wptbElementMutch && Array.isArray(wptbElementMutch)) {
             kindIndexProt = wptbElementMutch[1];
         };
@@ -1186,7 +1274,8 @@ var WPTB_List = function WPTB_List(innerElements, DOMElementProt) {
 
     var el_L = document.createElement('ul'),
         item,
-        DOMElement = document.createElement('div');
+        DOMElement = document.createElement('div'),
+        kindIndexProt = undefined;
 
     this.kind = 'list';
 
@@ -1198,6 +1287,11 @@ var WPTB_List = function WPTB_List(innerElements, DOMElementProt) {
             el_L.appendChild(item.getDOMElement());
         }
     } else {
+        var wptbElementMutch = DOMElementProt.className.match(/wptb-element-((.+-)\d+)/i);
+        if (wptbElementMutch && Array.isArray(wptbElementMutch)) {
+            kindIndexProt = wptbElementMutch[1];
+        };
+
         for (var i = 0; i < innerElements.length; i++) {
             item = new WPTB_ListItem(innerElements[i], DOMElementProt, true);
             el_L.appendChild(item.getDOMElement());
@@ -1209,7 +1303,7 @@ var WPTB_List = function WPTB_List(innerElements, DOMElementProt) {
     this.getDOMElement = function () {
         return DOMElement;
     };
-    applyGenericItemSettings(this);
+    applyGenericItemSettings(this, kindIndexProt);
 
     return this;
 };
@@ -2624,13 +2718,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
     var DOMElement = document.createElement('div'),
         elText2 = document.createElement('div'),
-        elP = document.createElement('p');
+        elP = document.createElement('p'),
+        kindIndexProt = undefined;
 
     elText2.classList.add('editable');
     elP.innerHTML = text != undefined ? text : 'Text';
     elText2.appendChild(elP);
     DOMElement.appendChild(elText2);
     if (DOMElementProt) {
+        var wptbElementMutch = DOMElementProt.className.match(/wptb-element-((.+-)\d+)/i);
+        if (wptbElementMutch && Array.isArray(wptbElementMutch)) {
+            kindIndexProt = wptbElementMutch[1];
+        };
+
         var attributes = [].concat(_toConsumableArray(DOMElementProt.attributes));
         for (var i = 0; i < attributes.length; i++) {
             DOMElement.setAttribute(attributes[i].name, attributes[i].value);
@@ -2641,7 +2741,7 @@ var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
     this.getDOMElement = function () {
         return DOMElement;
     };
-    applyGenericItemSettings(this);
+    applyGenericItemSettings(this, kindIndexProt);
 
     return this;
 };

@@ -1,8 +1,9 @@
-var WPTB_Image = function ( src, DOMElement ) {
-        let kindIndexProt;
-        if ( DOMElement == undefined ) {
-            var DOMElement = document.createElement('div'),
-	    anchor = document.createElement('a'),
+var WPTB_Image = function ( src, DOMElementProt ) {
+        let DOMElement,
+            kindIndexProt = undefined;
+        if ( DOMElementProt == undefined ) {
+            DOMElement = document.createElement('div');
+	    let anchor = document.createElement('a'),
 	    img = document.createElement('img');
             anchor.style.display = 'inline-block';
             anchor.appendChild(img);
@@ -31,14 +32,17 @@ var WPTB_Image = function ( src, DOMElement ) {
                     img.src = src;
             }
         } else {
-            var DOMElement = DOMElement.cloneNode( true );
+            DOMElement = DOMElementProt.cloneNode( true );
             
-            let wptbElementMutch = DOMElement.className.match( /wptb-element-((.+-)\d+)/i );
+            DOMElement.getElementsByTagName( 'a' )[0].onclick = function(e) {
+                e.preventDefault();
+            };
+            
+            let wptbElementMutch = DOMElementProt.className.match( /wptb-element-((.+-)\d+)/i );
             if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
                 kindIndexProt = wptbElementMutch[1];
             };
         }
-	
             
         this.kind = 'image';
         this.getDOMElement = function () {

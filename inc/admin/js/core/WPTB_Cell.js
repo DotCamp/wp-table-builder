@@ -139,11 +139,9 @@ var WPTB_Cell = function (callback, DOMElement) {
             }
 
             let wptbElementTypeClass = wptbPhElement[i].className.match( /wptb-element-((.+-)\d+)/i );
-
             if( wptbElementTypeClass && Array.isArray( wptbElementTypeClass ) ) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
-                
                 applyGenericItemSettings( wptbPhElement[i], wptbElementTypeClass[1] );
                 if ( wptbPhElement[i].kind == 'list' ) {
                     let wptbArticle = wptbPhElement[i].getElementsByTagName( 'article' );

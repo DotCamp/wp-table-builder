@@ -33,17 +33,18 @@ var applyGenericItemSettings = function ( element, kindIndexProt ) {
 		};
 		btnCopy.onclick = function (event) {
 			if (element.kind == 'list') {
-
 				var td = event.target.parentNode.parentNode.parentNode,
 				    temp = [],
-				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content'),
-                                    DOMElement = event.target.parentNode.parentNode.getElementsByTagName( 'article' )[0];
-
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+                            
 				for (var i = 0; i < srcList.length; i++) {
-					temp.push(srcList[i].innerHTML);
+                                    temp.push(srcList[i].innerHTML);
 				}
-				var copy = new WPTB_List( temp, DOMElement );
-				td.appendChild( copy.getDOMElement() );
+                                
+				var copy = new WPTB_List( temp, node );
+                                
+                                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
+                                node.parentNode.insertBefore( new WPTB_Space, copy.getDOMElement() );
 			} else if (element.kind == 'text') {
 				var td = event.target.parentNode.parentNode.parentNode,
 				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
