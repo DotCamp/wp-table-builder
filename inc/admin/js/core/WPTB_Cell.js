@@ -137,17 +137,17 @@ var WPTB_Cell = function (callback, DOMElement) {
             wptbPhElement[i].getDOMElement = function() {
                 return wptbPhElement[i];
             }
-
+            
             let wptbElementTypeClass = wptbPhElement[i].className.match( /wptb-element-((.+-)\d+)/i );
             if( wptbElementTypeClass && Array.isArray( wptbElementTypeClass ) ) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
                 applyGenericItemSettings( wptbPhElement[i], wptbElementTypeClass[1] );
                 if ( wptbPhElement[i].kind == 'list' ) {
-                    let wptbArticle = wptbPhElement[i].getElementsByTagName( 'article' );
-                    if( wptbArticle.length > 0 ) {
-                        for ( let i = 0; i < wptbArticle.length; i++ ) {
-                            WPTB_ListItem( undefined, wptbArticle[i] );
+                    let wptbListItems = wptbPhElement[i].getElementsByTagName( 'li' );
+                    if( wptbListItems.length > 0 ) {
+                        for ( let i = 0; i < wptbListItems.length; i++ ) {
+                            WPTB_ListItem( undefined, wptbListItems[i] );
                         }
                     }
                 }

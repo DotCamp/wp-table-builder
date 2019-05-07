@@ -226,7 +226,7 @@ use WP_Table_Builder as NS;
                                 </option>
                             </select>              
                         </div>
-                        <div class='wptb-settings-item-header' id="wptb-list-icon-select-label" style="display: none">
+                        <div class='wptb-settings-item-header wptb-list-icon-select-label' id="wptb-list-icon-select-label" style="display: none">
                             <p class="wptb-settings-item-title"><?php echo __( 'List Icon', 'wp-table-builder' ); ?></p>
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px; display: none;">

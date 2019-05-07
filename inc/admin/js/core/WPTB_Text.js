@@ -2,7 +2,8 @@ var WPTB_Text = function ( text , DOMElementProt ) {
             let DOMElement = document.createElement('div'),
                 elText2 = document.createElement('div'),
                 elP = document.createElement('p'),
-                kindIndexProt = undefined;
+                kindIndexProt = undefined,
+                copy = false;
 
             elText2.classList.add('editable');
             elP.innerHTML = text != undefined ? text : 'Text';
@@ -12,6 +13,7 @@ var WPTB_Text = function ( text , DOMElementProt ) {
             let wptbElementMutch = DOMElementProt.className.match( /wptb-element-((.+-)\d+)/i );
             if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
                 kindIndexProt = wptbElementMutch[1];
+                copy = true;
             };
             
             let attributes = [...DOMElementProt.attributes];
@@ -24,7 +26,7 @@ var WPTB_Text = function ( text , DOMElementProt ) {
 	this.getDOMElement = function () {
             return DOMElement;
 	};
-	applyGenericItemSettings( this, kindIndexProt );
+	applyGenericItemSettings( this, kindIndexProt, copy );
 
 	return this;
         

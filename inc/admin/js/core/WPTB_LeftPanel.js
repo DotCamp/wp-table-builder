@@ -7,7 +7,32 @@ var WPTB_LeftPanel = function () {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? 'rgb(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16) + ')' : null;
     }
+    
+    function RgbToHex(rgb) {
+        var rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
 
+        return (rgb && rgb.length === 4) ? "#" +
+            ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+    };
+    
+    function wptbTdBgColorSavedSet( inputId, trNumber ) {
+        if ( trNumber > 3 ) return;
+        let tableRows = table.getElementsByTagName('tr');
+        if ( tableRows.length > trNumber ) {
+            let td = tableRows[trNumber].querySelector( 'td' );
+            if ( td ) {
+                let tdBackgroundColor = td.style.backgroundColor;
+                let wptbEvenRowBg = document.getElementById( inputId );
+                if( wptbEvenRowBg && tdBackgroundColor ) {
+                    wptbEvenRowBg.value = tdBackgroundColor;
+                }
+            }
+        }
+    }
+    
+    wptbTdBgColorSavedSet( 'wptb-even-row-bg', 1 );
     jQuery('#wptb-even-row-bg').wpColorPicker({
         change: function (event, ui) {
             var tableRows = table.getElementsByTagName('tr');
@@ -19,7 +44,8 @@ var WPTB_LeftPanel = function () {
             }
         }
     });
-
+    
+    wptbTdBgColorSavedSet( 'wptb-odd-row-bg', 2 );
     jQuery('#wptb-odd-row-bg').wpColorPicker({
         change: function (event, ui) {
             var tableRows = table.getElementsByTagName('tr');
@@ -31,7 +57,8 @@ var WPTB_LeftPanel = function () {
             }
         }
     });
-
+    
+    wptbTdBgColorSavedSet( 'wptb-table-header-bg', 0 );
     jQuery('#wptb-table-header-bg').wpColorPicker({
         change: function (event, ui) {
             var tableHeader = table.getElementsByTagName('tr')[0],
@@ -41,6 +68,45 @@ var WPTB_LeftPanel = function () {
             }
         }
     });
+    
+    function tableBorderColorWidthSavedSet() {
+        let table = document.getElementsByClassName('wptb-preview-table');
+        if ( table.length > 0 ) {
+            let tableBorderColor = table[0].style.borderColor;
+            if ( tableBorderColor ) {
+                let tableBorderColorInput = document.getElementById( 'wptb-table-border-color' );
+                if ( tableBorderColorInput ) {
+                    tableBorderColorInput.value = tableBorderColor;
+                }
+            }
+            
+            let tableBorderWidth = table[0].style.borderWidth;
+            if ( tableBorderWidth ) {
+                let wptbTableBorderWidthSlider = document.getElementById('wptb-table-border-slider'),
+                    wptbTableBorderWidthNumber = document.getElementById('wptb-table-border-number');
+                
+                if ( wptbTableBorderWidthSlider ) {
+                    wptbTableBorderWidthSlider.value = parseInt( tableBorderWidth );
+                }
+                if ( wptbTableBorderWidthNumber ) {
+                    wptbTableBorderWidthNumber.value = parseInt( tableBorderWidth );
+                }
+            }
+            
+            let tableTd = table[0].querySelector( 'td' );
+            if ( tableTd ) {
+                let applyInnerBorder = tableTd.style.borderWidth;
+                if ( applyInnerBorder && parseInt( applyInnerBorder ) > 0 ) {
+                    let innerBorderCheckInput = document.getElementById( 'wptb-inner-border-check' );
+                    if ( innerBorderCheckInput ) {
+                        innerBorderCheckInput.checked = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    tableBorderColorWidthSavedSet();
 
     jQuery('#wptb-table-border-color').wpColorPicker({
         change: function (event, ui) {
@@ -48,7 +114,11 @@ var WPTB_LeftPanel = function () {
             table.style.border = document.querySelector('#wptb-table-border-number').value + 'px solid ' + ui.color.toString();
 
             for (var i = 0; i < tableCells.length; i++) {
-                tableCells[i].style.border = document.querySelector('#wptb-table-inner-border-number').value + 'px solid ' + ui.color.toString();
+                let tableInnerborderNumber = document.querySelector('#wptb-table-inner-border-number').value;
+                if ( document.getElementById('wptb-inner-border-check').checked ) {
+                    tableCells[i].style.border = ( tableInnerborderNumber != 0 ? tableInnerborderNumber : 1 ) + 'px solid ' + ui.color.toString();
+                }
+                
             }
         }
     });
@@ -88,9 +158,38 @@ var WPTB_LeftPanel = function () {
     }
 
     function addBorderSize(value) {
-        table.style.border = value + 'px solid';
+        table.style.borderWidth = value + 'px';
+        table.style.borderStyle = 'solid';
     }
-
+    
+    function cellPaddingSavedSet() {
+        let table = document.getElementsByClassName('wptb-preview-table');
+        
+        if ( table.length > 0 ) {
+            let td = table[0].querySelector( 'td' );
+            
+            if ( td ) {
+                let padding = td.style.padding;
+                
+                if ( padding ) {
+                    let wptbTableCellSlider = document.getElementById('wptb-table-cell-slider'),
+                        wptbTableCellNumber = document.getElementById('wptb-table-cell-number');
+                
+                    if ( wptbTableCellSlider ) {
+                        wptbTableCellSlider.value = parseInt( padding );
+                    }
+                    if ( wptbTableCellNumber ) {
+                        wptbTableCellNumber.value = parseInt( padding );
+                    }
+                }
+            }
+        }
+    }
+    
+    cellPaddingSavedSet();
+    
+    
+    
     document.getElementById('wptb-table-cell-slider').oninput = function () {
         document.getElementById('wptb-table-cell-number').value = this.value;
         addCellPadding(this.value);

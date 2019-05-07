@@ -1,6 +1,7 @@
 var WPTB_Image = function ( src, DOMElementProt ) {
         let DOMElement,
-            kindIndexProt = undefined;
+            kindIndexProt = undefined,
+            copy = false;
         if ( DOMElementProt == undefined ) {
             DOMElement = document.createElement('div');
 	    let anchor = document.createElement('a'),
@@ -41,6 +42,7 @@ var WPTB_Image = function ( src, DOMElementProt ) {
             let wptbElementMutch = DOMElementProt.className.match( /wptb-element-((.+-)\d+)/i );
             if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
                 kindIndexProt = wptbElementMutch[1];
+                copy = true;
             };
         }
             
@@ -48,7 +50,7 @@ var WPTB_Image = function ( src, DOMElementProt ) {
         this.getDOMElement = function () {
             return DOMElement;
         };
-	applyGenericItemSettings( this, kindIndexProt );
+	applyGenericItemSettings( this, kindIndexProt, copy );
 
 	return this;
 };

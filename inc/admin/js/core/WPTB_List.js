@@ -2,7 +2,9 @@ var WPTB_List = function ( innerElements, DOMElementProt ) {
 
     var el_L = document.createElement('ul'), item,
         DOMElement = document.createElement('div'),
-        kindIndexProt = undefined;
+        kindIndexProt = undefined,
+        copy = false;
+    DOMElement.classList.add( 'wptb-list-item-container' );
 
     this.kind = 'list';
 
@@ -17,10 +19,12 @@ var WPTB_List = function ( innerElements, DOMElementProt ) {
         let wptbElementMutch = DOMElementProt.className.match( /wptb-element-((.+-)\d+)/i );
             if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
                 kindIndexProt = wptbElementMutch[1];
+                copy = true;
             };
         
         for ( var i = 0; i < innerElements.length; i++ ) {
-            item = new WPTB_ListItem( innerElements[i], DOMElementProt, true );
+            let listItem = DOMElementProt.querySelector( 'li' );
+            item = new WPTB_ListItem( innerElements[i], listItem, true );
             el_L.appendChild(item.getDOMElement());
         }
     }
@@ -30,7 +34,7 @@ var WPTB_List = function ( innerElements, DOMElementProt ) {
     this.getDOMElement = function () {
         return DOMElement;
     }
-    applyGenericItemSettings( this, kindIndexProt );
+    applyGenericItemSettings( this, kindIndexProt, copy );
 
     return this;
 

@@ -980,8 +980,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 	drawTable(array);
 
 	wptbTableSetup.appendChild(table);
-
-	table.recalculateIndexes();
+        if ( columns || rows ) {
+            table.recalculateIndexes();
+        }
 
 	WPTB_LeftPanel();
 

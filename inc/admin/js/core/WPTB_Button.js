@@ -3,7 +3,8 @@ var WPTB_Button = function( text, DOMElementProt ) {
     var DOMElement = document.createElement('div'),
         elButton2 = document.createElement('div'),
         el_B = document.createElement('a'),
-        kindIndexProt = undefined;
+        kindIndexProt = undefined,
+        copy = false;
 
     DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
     elButton2.classList.add('wptb-button-wrapper');
@@ -17,6 +18,7 @@ var WPTB_Button = function( text, DOMElementProt ) {
         let wptbElementMutch = DOMElementProt.className.match( /wptb-element-((.+-)\d+)/i );
         if ( wptbElementMutch && Array.isArray( wptbElementMutch ) ) {
             kindIndexProt = wptbElementMutch[1];
+            copy = true;
         }; 
         var attributesContainer = [...DOMElementProt.attributes];
         if ( attributesContainer.length > 0 ) {
@@ -61,7 +63,7 @@ var WPTB_Button = function( text, DOMElementProt ) {
             return DOMElement;
     };
 
-    applyGenericItemSettings( this, kindIndexProt );
+    applyGenericItemSettings( this, kindIndexProt, copy );
 
     return this;
 };

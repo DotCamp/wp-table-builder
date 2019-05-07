@@ -171,14 +171,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 textColorInput.value = elementTextColor;
             }
         } else if ( element.kind == 'list' ) {
-            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
-            if ( affectedEl.length > 0 ) {
-                let elementListStyleType = affectedEl[0].getElementsByClassName( 'wptb-bullet' );
+            let elementList = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
+            if ( elementList.length > 0 ) {
+                let elementListItem = elementList[0].querySelectorAll( 'li' );
         
-                if ( elementListStyleType.length > 0 ) {
-                    elementListStyleType = elementListStyleType[0].style.listStyleType;
-                    
-                    if ( elementListStyleType && elementListStyleType != 'decimal' ) {
+                if ( elementListItem.length > 0 ) {
+                    let listItemStyleType = elementListItem[0].style.listStyleType;
+                    if ( listItemStyleType && listItemStyleType != 'decimal' ) {
                         let elementListClassSelect = prop.querySelector( 'select[data-type="list-class"]' );
                         if ( elementListClassSelect ) {
                             elementListClassSelect.value = 'unordered';
@@ -191,7 +190,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                                     listIconSelectLabel = listIconSelectLabel.nextSibling;
                                 }
                             }
-                            
                             if ( listIconSelectLabel ) {
                                 let listIconSelectLabelId = listIconSelectLabel.getAttribute( 'id' );
                                 listIconSelectLabel.setAttribute( 'id', listIconSelectLabelId + '-' + kindIndexProt );
@@ -202,13 +200,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                             if ( elementListStyleTypeSelect ) {
                                 elementListStyleTypeSelect.parentNode.style.display = 'flex';
                                 
-                                elementListStyleTypeSelect.value = elementListStyleType;
+                                elementListStyleTypeSelect.value = listItemStyleType;
                             }
                         }
                     }
                 }
                 
-                let elementListItemContent = affectedEl[0].getElementsByClassName( 'wptb-list-item-content' );
+                let elementListItemContent = elementList[0].getElementsByClassName( 'wptb-list-item-content' );
                 
                 if ( elementListItemContent.length > 0 ) {
                     let listItemPTextAlignArr = [];
@@ -277,36 +275,40 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
         document.querySelector(optionsClass).style.display = 'block';
 
-        var listStyleType, listJustifyContent;
+                //var listStyleType, textAlign;
 
-        switch (element.kind) {
+//        switch (element.kind) {
 
-            case 'text':
-                jQuery(prop).find('[data-type=color]').wpColorPicker({ defaultColor: node.style.color });
-                prop.querySelector('[type=number][data-type=font-size]').value
-                    = prop.querySelector('[type=range][data-type=font-size]').value
-                    = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
-                break;
-            case 'list':
-                listJustifyContent = node.querySelector('article').style.justifyContent;
-                listStyleType = node.querySelector('article .wptb-list-item-style-dot li').style.listStyleType;
-                if ( prop.querySelector( '[type=ran][data-type=list-class]' ) ) {
-                    prop.querySelector('[type=ran][data-type=list-class]').selectedIndex = (listStyleType == 'decimal' ? 0 : 1);
-                }
-                if ( prop.querySelector('[type=ran][data-type=list-style-type]') ) {
-                    prop.querySelector('[type=ran][data-type=list-style-type]').selectedIndex = (listStyleType == 'circle' ? 0 : (listStyleType == 'square' ? 1 : 2));
-                }
-                if ( prop.querySelector('[type=ran][data-type=list-alignment]') ) {
-                    prop.querySelector('[type=ran][data-type=list-alignment]').selectedIndex = (listJustifyContent == 'flex-start' ? 0 : (listJustifyContent == 'center' ? 1 : 2));
-                }
-                break;
-            case 'image':
-                break;
-            case 'button':
-                jQuery(prop).find('[data-type=button-color]').wpColorPicker({ defaultColor: node.style.backgroundColor });
-                break;
-
-        }
+//            case 'text':
+//                jQuery(prop).find('[data-type=color]').wpColorPicker({ defaultColor: node.style.color });
+//                prop.querySelector('[type=number][data-type=font-size]').value
+//                    = prop.querySelector('[type=range][data-type=font-size]').value
+//                    = node.style.fontSize.substring(0, node.style.fontSize.length - 2);
+//                break;
+//            case 'list':
+//                textAlign = node.querySelector('li p').style.textAlign;
+//                listStyleType = node.querySelector('li').style.listStyleType;
+//                if ( prop.querySelector( 'select[data-type=list-class]' ) ) {
+//                console.log(textAlign);
+//                console.log(listStyleType);
+//                console.log(listStyleType);
+//                console.log(prop);
+//                    prop.querySelector('select[data-type=list-class]').selectedIndex = ( listStyleType == 'decimal' ? 0 : 1 );
+//                }
+//                if ( prop.querySelector('select[data-type=list-style-type]') ) {
+//                    prop.querySelector('select[data-type=list-style-type]').selectedIndex = (listStyleType == 'circle' ? 0 : (listStyleType == 'square' ? 1 : 2));
+//                }
+//                if ( prop.querySelector('select[data-type=list-alignment]') ) {
+//                    prop.querySelector('select[data-type=list-alignment]').selectedIndex = (textAlign == 'left' ? 0 : (textAlign == 'center' ? 1 : 2));
+//                }
+//                break;
+//            case 'image':
+//                break;
+//            case 'button':
+//                jQuery(prop).find('[data-type=button-color]').wpColorPicker({ defaultColor: node.style.backgroundColor });
+//                break;
+//
+//        }
     };
 
     if (element.kind == 'button') {
@@ -438,48 +440,43 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 case 'button-color':
                     break;
                 case 'list-alignment':
-                    let articles = affectedEl.querySelectorAll('article');
-                    for (var i = 0; i < articles.length; i++) {
-                        let p = articles[i].querySelector( 'p' );
+                    let listItems = affectedEl.querySelectorAll('li');
+                    for (var i = 0; i < listItems.length; i++) {
+                        let p = listItems[i].querySelector( 'p' );
                         if ( p ) {
                             p.style.textAlign = this.value;
                         }
                     }
                     break;
                 case 'list-class':
+                    let parentNode = event.target
+                            .parentNode
+                            .parentNode
+                            .querySelector('[data-type=list-style-type]')
+                            .parentNode,
+                        parentNodeSettingItem = parentNode.parentNode;
                     if (val == 'unordered') {
-                        event.target
-                            .parentNode
-                            .parentNode
-                            .querySelector('[data-type=list-style-type]')
-                            .parentNode
-                            .style
-                            .display = 'flex';
-                        document.querySelector('#wptb-list-icon-select-label').style.display = 'flex';
-                        var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
-                        for (var i = 0; i < bullets.length; i++) {
-                            bullets[i].style.listStyleType = 'disc';
+                        parentNode.style.display = 'flex';
+                        
+                        parentNodeSettingItem.querySelector( '.wptb-list-icon-select-label' ).style.display = 'flex';
+                        let listItem = affectedEl.querySelectorAll('li');
+                        for (var i = 0; i < listItem.length; i++) {
+                            listItem[i].style.listStyleType = 'disc';
                         }
-                        document.querySelector('[data-type=list-style-type]').value = 'disc';
+                        parentNodeSettingItem.querySelector('[data-type=list-style-type]').value = 'disc';
                     } else {
-                        event.target
-                            .parentNode
-                            .parentNode
-                            .querySelector('[data-type=list-style-type]')
-                            .parentNode
-                            .style
-                            .display = 'none';
-                        document.querySelector('#wptb-list-icon-select-label').style.display = 'none';
-                        var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
-                        for (var i = 0; i < bullets.length; i++) {
-                            bullets[i].style.listStyleType = 'decimal';
+                        parentNode.style.display = 'none';
+                        parentNodeSettingItem.querySelector( '.wptb-list-icon-select-label' ).style.display = 'none';
+                        var listItem = affectedEl.querySelectorAll('li');
+                        for (var i = 0; i < listItem.length; i++) {
+                            listItem[i].style.listStyleType = 'decimal';
                         }
                     }
                     break;
                 case 'list-style-type':
-                    var bullets = affectedEl.querySelectorAll('article .wptb-list-item-style-dot li');
-                    for (var i = 0; i < bullets.length; i++) {
-                        bullets[i].style.listStyleType = val.toLowerCase();
+                    var listItem = affectedEl.querySelectorAll('li');
+                    for (var i = 0; i < listItem.length; i++) {
+                        listItem[i].style.listStyleType = val.toLowerCase();
                     }
                     break;
             }

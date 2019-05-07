@@ -53,7 +53,7 @@
                 <input id="wptb-table-inner-border-slider" type="range" min="1" max="50" step="1" value="0">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="1" max="50" step="1" placeholder="1">
+                <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="1" max="50" step="1" placeholder="1" value="1">
                 <span class="wptb-input-px">px</span>
             </div>
         </div>    

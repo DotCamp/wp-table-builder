@@ -2,29 +2,29 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
     let wptbListItemReturn;
     if ( DOMElementProt == undefined || ( DOMElementProt && copy )) {
         if (text == undefined) text = 'New List Item';
-        var DOMElement = document.createElement('article'),
-            divdot = document.createElement('div'),
-            divcontent = document.createElement('div'),
-            libullet = document.createElement('li');
-        divdot.classList.add('wptb-list-item-style-dot');
+        var DOMElement = document.createElement('li'),
+            //divdot = document.createElement('div'),
+            divcontent = document.createElement('div');
+            //libullet = document.createElement('li');
+        //divdot.classList.add('wptb-list-item-style-dot');
         divcontent.classList.add('wptb-list-item-content');
-        libullet.classList.add('wptb-bullet');
+        //libullet.classList.add('wptb-bullet');
         if ( DOMElementProt ) {
-            let styleDot = DOMElementProt.querySelector( '.wptb-bullet' ).getAttribute( 'style' )
-            libullet.setAttribute( 'style', styleDot );
+            let styleDot = DOMElementProt.getAttribute( 'style' );
+            if ( styleDot ) {
+                DOMElement.setAttribute( 'style', styleDot );
+            }
         }
-        DOMElement.appendChild(divdot);
+        //DOMElement.appendChild(divdot);
         DOMElement.appendChild(divcontent);
-        divdot.appendChild(libullet);
+        //divdot.appendChild(libullet);
         divcontent.innerHTML = text;
         divcontent.onkeyup = window.listItemKeyListener;
         
         wptbListItemReturn = true;
     } else {
         var DOMElement = DOMElementProt;
-        var divdot = DOMElement.getElementsByClassName( 'wptb-list-item-style-dot' )[0], 
-            divcontent = DOMElement.getElementsByClassName( 'wptb-list-item-content' )[0], 
-            libullet = divdot.getElementsByClassName( 'wptb-bullet' )[0];
+        var divcontent = DOMElement.getElementsByClassName( 'wptb-list-item-content' )[0];
     
         divcontent.onkeyup = window.listItemKeyListener;
         
@@ -44,17 +44,19 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
-            var item = this.parentNode.parentNode,
+            var action = this.parentNode, 
+                item = this.parentNode.parentNode,
                 parent = item.parentNode;
-            parent.removeChild(item);
+            item.removeChild( action );
+            parent.removeChild( item );
         };
 
         btnCopy.onclick = function (event) {
-            var article = event.target.parentNode.parentNode,
-                content = article.querySelector('.wptb-list-item-content'),
+            var listItem = event.target.parentNode.parentNode,
+                content = listItem.querySelector('.wptb-list-item-content'),
                 html = content.innerHTML;
-            var duplicate = new WPTB_ListItem( html, article, true );
-            article.parentNode.insertBefore( duplicate.getDOMElement(), DOMElement );
+            var duplicate = new WPTB_ListItem( html, listItem, true );
+            listItem.parentNode.insertBefore( duplicate.getDOMElement(), DOMElement );
         };
 
         actions.append(btnCopy, btnDelete);

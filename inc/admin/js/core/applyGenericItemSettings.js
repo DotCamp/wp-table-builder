@@ -1,16 +1,29 @@
-var applyGenericItemSettings = function ( element, kindIndexProt ) {
+var applyGenericItemSettings = function ( element, kindIndexProt, copy = false ) {
 	var node = element.getDOMElement(),
-	    index = document.counter.nextIndex(element.kind),
+	    index,
 	    listItems,
             copy;
+    
+        if ( kindIndexProt == undefined || copy == true ) {
+            index = document.counter.nextIndex( element.kind );
+            let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
+            if ( wptbElements.length > 0 ) {
+                index = wptbElements.length + 1;
+            } else { 
+                index = 1;
+            }
+        } else if ( kindIndexProt && ! copy ) {
+            index = kindIndexProt.split('-')[1];
+        }
 
 	node.onmouseenter = function (event) {
 		this.classList.add('wptb-directlyhovered');
-		var btnDelete = document.createElement('span'),
+		let btnDelete = document.createElement('span'),
 		    btnCopy = document.createElement('span'),
 		    btnMove = document.createElement('span'),
 		    actions = document.createElement('span'),
                     previous, i;
+            
 		actions.classList.add('wptb-actions');
 		btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
 		btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
@@ -35,7 +48,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt ) {
 			if (element.kind == 'list') {
 				var td = event.target.parentNode.parentNode.parentNode,
 				    temp = [],
-				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul article .wptb-list-item-content');
+				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul li .wptb-list-item-content');
                             
 				for (var i = 0; i < srcList.length; i++) {
                                     temp.push(srcList[i].innerHTML);
@@ -166,7 +179,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt ) {
 
 		} else {
 			listItems = node.getElementsByClassName('wptb-list-item-content');
-			for (var i = 0; i < listItems.length; i++) {
+			for ( let i = 0; i < listItems.length; i++ ) {
 				tinyMCE.init({
 					target: listItems[i],
 					inline: true,
@@ -201,6 +214,10 @@ var applyGenericItemSettings = function ( element, kindIndexProt ) {
 		actions.appendChild(btnMove);
 		actions.appendChild(btnCopy);
 		actions.appendChild(btnDelete);
+//                let actionOld = this.querySelector( '.wptb-actions' );
+//                if( actionOld ) {
+//                    this.removeChild( actionOld );
+//                }
 		this.appendChild(actions);
 	};
 
