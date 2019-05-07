@@ -425,13 +425,27 @@ var array = [], WPTB_Table = function (columns, rows) {
   * As simple as it is: adds a column to the end of table.
   */
 	table.addColumnEnd = function () {
+                let td,
+                    currentTable = document.getElementsByClassName( 'wptb-preview-table' ),
+                    currentTableTd,
+                    currentTdStyle;
+                if ( currentTable.length > 0 ) {
+                    currentTableTd = currentTable[0].querySelector( 'td' );
+                }
+                
+                if ( currentTableTd ) {
+                    currentTdStyle = currentTableTd.getAttribute( 'style' );
+                }
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
+                        if ( currentTdStyle ) {
+                            td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                        }
 			table.rows[i].appendChild(td.getDOMElement());
 			array[i].push(0);
 		}
 		maxAmountOfCells++;
-		recalculateIndexes();
+		table.recalculateIndexes();
 		undoSelect();
 	};
 
@@ -440,8 +454,23 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.addColumnStart = function () {
+                let td,
+                    firstCell,
+                    currentTable = document.getElementsByClassName( 'wptb-preview-table' ),
+                    currentTableTd,
+                    currentTdStyle;
+                if ( currentTable.length > 0 ) {
+                    currentTableTd = currentTable[0].querySelector( 'td' );
+                }
+                
+                if ( currentTableTd ) {
+                    currentTdStyle = currentTableTd.getAttribute( 'style' );
+                }
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
+                        if ( currentTdStyle ) {
+                            td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                        }
 			firstCell = table.rows[i].getElementsByTagName('td')[0];
 			if (firstCell) {
 				table.rows[i].insertBefore(td.getDOMElement(), firstCell);
@@ -452,7 +481,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 		}
 
 		maxAmountOfCells++;
-		recalculateIndexes();
+		table.recalculateIndexes();
 		undoSelect();
 	};
 
@@ -464,9 +493,11 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.addColumnAfter = function (c_pos) {
-		var rows = table.rows,
+		let rows = table.rows,
+                    cellPointer,
 		    cellsBuffer,
 		    cell = document.querySelector('.wptb-highlighted'),
+                    cellStyle = cell.getAttribute( 'style' ),
 		    pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
 		    pendingInsertion = false,
 		    stepsToMove,
@@ -489,7 +520,9 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 				if (pendingInsertion) {
 					td = new WPTB_Cell(mark);
-
+                                        if ( cellStyle ) {
+                                            td.getDOMElement().setAttribute( 'style', cellStyle );
+                                        }
 					if (currentCell && rows[i].contains(currentCell)) {
 						bro = currentCell.nextSibling;
 						if (bro) {
@@ -570,11 +603,25 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.addRowToTheEnd = function () {
-		var r = table.insertRow(-1),
+		let r = table.insertRow(-1),
 		    td,
-		    aux;
+		    aux,
+                    currentTable = document.getElementsByClassName( 'wptb-preview-table' ),
+                    currentTableTd,
+                    currentTdStyle;
+                if ( currentTable.length > 0 ) {
+                    currentTableTd = currentTable[0].querySelector( 'td' );
+                }
+                
+                if ( currentTableTd ) {
+                    currentTdStyle = currentTableTd.getAttribute( 'style' );
+                }
+                
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			td = new WPTB_Cell(mark);
+                        if ( currentTdStyle ) {
+                            td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                        }
 			r.appendChild(td.getDOMElement());
 		}
 		aux = Array.from(array[0]);
@@ -590,9 +637,25 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.addRowToTheStart = function () {
-		var r = table.insertRow(0);
+		let r = table.insertRow(0),
+		    td,
+		    aux,
+                    currentTable = document.getElementsByClassName( 'wptb-preview-table' ),
+                    currentTableTd,
+                    currentTdStyle;
+                if ( currentTable.length > 0 ) {
+                    currentTableTd = currentTable[0].querySelector( 'td' );
+                }
+                
+                if ( currentTableTd ) {
+                    currentTdStyle = currentTableTd.getAttribute( 'style' );
+                }
+                
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			td = new WPTB_Cell(mark);
+                        if ( currentTdStyle ) {
+                            td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                        }
 			r.appendChild(td.getDOMElement());
 		}
 		aux = Array.from(array[0]);
@@ -610,6 +673,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 
 	table.addRowBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
+                    cellStyle = cell.getAttribute( 'style' ),
 		    row = getCoords(cell)[0],
 		    r = table.insertRow(row),
 		    aux,
@@ -620,7 +684,10 @@ var array = [], WPTB_Table = function (columns, rows) {
 		});
 
 		for (var i = 0; i < noPending.length; i++) {
-			var td = new WPTB_Cell(mark);
+                        let td = new WPTB_Cell(mark);
+                        if ( cellStyle ) {
+                            td.getDOMElement().setAttribute( 'style', cellStyle );
+                        }
 			r.appendChild(td.getDOMElement());
 		}
 
@@ -661,22 +728,26 @@ var array = [], WPTB_Table = function (columns, rows) {
 	table.addRowAfter = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
+                    cellStyle = cell.getAttribute( 'style' ),
 		    row = getCoords(cell)[0],
 		    r = table.insertRow(row + 1),
 		    aux,
 		    rowspans = carriedRowspans(row);
-
+                    
 		noPending = rowspans.filter(function (elem) {
 			return elem == 0;
 		});
 
 		for (var i = 0; i < noPending.length; i++) {
-			td = new WPTB_Cell(mark);
+			let td = new WPTB_Cell(mark);
+                        if ( cellStyle ) {
+                            td.getDOMElement().setAttribute( 'style', cellStyle );
+                        }
 			r.appendChild(td.getDOMElement());
 		}
-
+                
 		arr = realTimeArray();
-
+                
 		for (var i = 0; i < arr.length; i++) {
 
 			if (arr[i].length > maxAmountOfCells) {
@@ -691,7 +762,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 				}
 			}
 		}
-
+                
 		aux = Array.from(array[0]);
 		array.push(aux);
 		drawTable(array);

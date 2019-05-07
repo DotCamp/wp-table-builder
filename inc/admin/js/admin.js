@@ -2290,13 +2290,27 @@ var array = [],
   * As simple as it is: adds a column to the end of table.
   */
 	table.addColumnEnd = function () {
+		var td = void 0,
+		    currentTable = document.getElementsByClassName('wptb-preview-table'),
+		    currentTableTd = void 0,
+		    currentTdStyle = void 0;
+		if (currentTable.length > 0) {
+			currentTableTd = currentTable[0].querySelector('td');
+		}
+
+		if (currentTableTd) {
+			currentTdStyle = currentTableTd.getAttribute('style');
+		}
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
+			if (currentTdStyle) {
+				td.getDOMElement().setAttribute('style', currentTdStyle);
+			}
 			table.rows[i].appendChild(td.getDOMElement());
 			array[i].push(0);
 		}
 		maxAmountOfCells++;
-		recalculateIndexes();
+		table.recalculateIndexes();
 		undoSelect();
 	};
 
@@ -2305,8 +2319,23 @@ var array = [],
   */
 
 	table.addColumnStart = function () {
+		var td = void 0,
+		    firstCell = void 0,
+		    currentTable = document.getElementsByClassName('wptb-preview-table'),
+		    currentTableTd = void 0,
+		    currentTdStyle = void 0;
+		if (currentTable.length > 0) {
+			currentTableTd = currentTable[0].querySelector('td');
+		}
+
+		if (currentTableTd) {
+			currentTdStyle = currentTableTd.getAttribute('style');
+		}
 		for (var i = 0; i < table.rows.length; i++) {
 			td = new WPTB_Cell(mark);
+			if (currentTdStyle) {
+				td.getDOMElement().setAttribute('style', currentTdStyle);
+			}
 			firstCell = table.rows[i].getElementsByTagName('td')[0];
 			if (firstCell) {
 				table.rows[i].insertBefore(td.getDOMElement(), firstCell);
@@ -2317,7 +2346,7 @@ var array = [],
 		}
 
 		maxAmountOfCells++;
-		recalculateIndexes();
+		table.recalculateIndexes();
 		undoSelect();
 	};
 
@@ -2330,15 +2359,17 @@ var array = [],
 
 	table.addColumnAfter = function (c_pos) {
 		var rows = table.rows,
-		    cellsBuffer,
+		    cellPointer = void 0,
+		    cellsBuffer = void 0,
 		    cell = document.querySelector('.wptb-highlighted'),
+		    cellStyle = cell.getAttribute('style'),
 		    pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
 		    pendingInsertion = false,
-		    stepsToMove,
-		    td,
-		    bro,
+		    stepsToMove = void 0,
+		    td = void 0,
+		    bro = void 0,
 		    carriedRowspans = [],
-		    currentCell;
+		    currentCell = void 0;
 
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			carriedRowspans.push(0);
@@ -2353,7 +2384,9 @@ var array = [],
 
 				if (pendingInsertion) {
 					td = new WPTB_Cell(mark);
-
+					if (cellStyle) {
+						td.getDOMElement().setAttribute('style', cellStyle);
+					}
 					if (currentCell && rows[i].contains(currentCell)) {
 						bro = currentCell.nextSibling;
 						if (bro) {
@@ -2432,10 +2465,24 @@ var array = [],
 
 	table.addRowToTheEnd = function () {
 		var r = table.insertRow(-1),
-		    td,
-		    aux;
+		    td = void 0,
+		    aux = void 0,
+		    currentTable = document.getElementsByClassName('wptb-preview-table'),
+		    currentTableTd = void 0,
+		    currentTdStyle = void 0;
+		if (currentTable.length > 0) {
+			currentTableTd = currentTable[0].querySelector('td');
+		}
+
+		if (currentTableTd) {
+			currentTdStyle = currentTableTd.getAttribute('style');
+		}
+
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			td = new WPTB_Cell(mark);
+			if (currentTdStyle) {
+				td.getDOMElement().setAttribute('style', currentTdStyle);
+			}
 			r.appendChild(td.getDOMElement());
 		}
 		aux = Array.from(array[0]);
@@ -2451,9 +2498,25 @@ var array = [],
   */
 
 	table.addRowToTheStart = function () {
-		var r = table.insertRow(0);
+		var r = table.insertRow(0),
+		    td = void 0,
+		    aux = void 0,
+		    currentTable = document.getElementsByClassName('wptb-preview-table'),
+		    currentTableTd = void 0,
+		    currentTdStyle = void 0;
+		if (currentTable.length > 0) {
+			currentTableTd = currentTable[0].querySelector('td');
+		}
+
+		if (currentTableTd) {
+			currentTdStyle = currentTableTd.getAttribute('style');
+		}
+
 		for (var i = 0; i < maxAmountOfCells; i++) {
 			td = new WPTB_Cell(mark);
+			if (currentTdStyle) {
+				td.getDOMElement().setAttribute('style', currentTdStyle);
+			}
 			r.appendChild(td.getDOMElement());
 		}
 		aux = Array.from(array[0]);
@@ -2471,6 +2534,7 @@ var array = [],
 
 	table.addRowBefore = function () {
 		var cell = document.querySelector('.wptb-highlighted'),
+		    cellStyle = cell.getAttribute('style'),
 		    row = getCoords(cell)[0],
 		    r = table.insertRow(row),
 		    aux,
@@ -2481,8 +2545,11 @@ var array = [],
 		});
 
 		for (var i = 0; i < noPending.length; i++) {
-			var td = new WPTB_Cell(mark);
-			r.appendChild(td.getDOMElement());
+			var _td = new WPTB_Cell(mark);
+			if (cellStyle) {
+				_td.getDOMElement().setAttribute('style', cellStyle);
+			}
+			r.appendChild(_td.getDOMElement());
 		}
 
 		arr = realTimeArray();
@@ -2522,6 +2589,7 @@ var array = [],
 	table.addRowAfter = function () {
 
 		var cell = document.querySelector('.wptb-highlighted'),
+		    cellStyle = cell.getAttribute('style'),
 		    row = getCoords(cell)[0],
 		    r = table.insertRow(row + 1),
 		    aux,
@@ -2532,8 +2600,11 @@ var array = [],
 		});
 
 		for (var i = 0; i < noPending.length; i++) {
-			td = new WPTB_Cell(mark);
-			r.appendChild(td.getDOMElement());
+			var _td2 = new WPTB_Cell(mark);
+			if (cellStyle) {
+				_td2.getDOMElement().setAttribute('style', cellStyle);
+			}
+			r.appendChild(_td2.getDOMElement());
 		}
 
 		arr = realTimeArray();
