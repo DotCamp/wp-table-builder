@@ -49,36 +49,46 @@ var array = [], WPTB_Table = function (columns, rows) {
 		if (markedCells === 0) {
 			for (var i = 0; i < multipleCells.length; i++) {
 				multipleCells[i].classList.remove('visible');
+                                multipleCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.add('visible');
+                                noCells[i].removeAttribute( 'disabled' );
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.remove('visible');
+                                singleCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 		} else if (markedCells === 1) {
 			for (var i = 0; i < multipleCells.length; i++) {
 				multipleCells[i].classList.remove('visible');
+                                multipleCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.remove('visible');
+				noCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.add('visible');
+				singleCells[i].removeAttribute( 'disabled' );
 			}
 		} else {
 			for (var i = 0; i < multipleCells.length; i++) {
 				if (table.isSquare(array)) {
 					multipleCells[i].classList.add('visible');
+					multipleCells[i].removeAttribute( 'disabled' );
 				} else {
 					multipleCells[i].classList.remove('visible');
+					multipleCells[i].setAttribute( 'disabled', 'disabled' );
 				}
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.remove('visible');
+				noCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.remove('visible');
+				singleCells[i].setAttribute( 'disabled', 'disabled' );
 			}
 		}
 	};
@@ -375,14 +385,38 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.toggleTableEditMode = function () {
-		var bar = document.getElementById('edit-bar');
-		if (bar.classList.contains('visible')) {
-			document.select.deactivateMultipleSelectMode();
-			bar.classList.remove('visible');
-		} else {
-			document.select.activateMultipleSelectMode();
-			bar.classList.add('visible');
-		}
+            let bar = document.getElementsByClassName( 'edit-bar' ),
+                cellModeBackground = document.getElementById( 'cell_mode_background' ),
+                leftScrollPanelCurtain = document.getElementById( 'wptb-left-scroll-panel-curtain' ),
+                wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
+                if( wptbPreviewTable.length > 0 ) {
+                    wptbPreviewTable = wptbPreviewTable[0];
+                }
+
+            if ( bar.length > 0 ) {
+                for ( let i = 0; i < bar.length; i++ ) {
+                    if ( bar[i].classList.contains('visible') ) {
+                        document.select.deactivateMultipleSelectMode();
+                        bar[i].classList.remove('visible');
+                        cellModeBackground.classList.remove( 'visible' );
+                        leftScrollPanelCurtain.classList.remove( 'visible' );
+                        wptbPreviewTable.classList.remove( 'wptb-preview-table-manage-cells' );
+                        let wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName( 'td' );
+                        if( wptbPreviewTableTds.length > 0 ) {
+                            for ( let i = 0; i < wptbPreviewTableTds.length; i++ ) {
+                                wptbPreviewTableTds[i].classList.remove( 'wptb-highlighted' );
+                            }
+                        }
+                    } else {
+                        document.select.activateMultipleSelectMode();
+                        bar[i].classList.add('visible');
+                        cellModeBackground.classList.add( 'visible' );
+                        leftScrollPanelCurtain.classList.add( 'visible' );
+                        wptbPreviewTable.classList.add( 'wptb-preview-table-manage-cells' );
+                    }
+                }
+
+            }
 	}
 
 	/*
@@ -391,34 +425,37 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.recalculateIndexes = function () {
-		var trs = this.getElementsByTagName('tr'), tds, maxCols = 0;
+            var trs = this.getElementsByTagName('tr'), tds, maxCols = 0;
 
-		for (var i = 0; i < trs.length; i++) {
-			tds = trs[i].getElementsByTagName('td');
-			for (var j = 0; j < tds.length; j++) {
+            for (var i = 0; i < trs.length; i++) {
+                if( i == 0 ) {
+                    trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+                } else {
+                    if (i % 2 == 0) {
+                        trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+                    } else {
+                        trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+                    }
+                }
+                tds = trs[i].getElementsByTagName('td');
+                for (var j = 0; j < tds.length; j++) {
 
-				if (i == 0) {
-					tds[j].parentNode.className = '';
-					tds[j].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
-					tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
-				} else {
-					if (i % 2 == 0) {
-						tds[j].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
-					} else {
-						tds[j].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
-					}
-					tds[j].parentNode.className = '';
-					tds[j].parentNode.classList.add('wptb-row');
-				}
+                    if (i == 0) {
+                        tds[j].parentNode.className = '';
+                        tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
+                    } else {
+                        tds[j].parentNode.className = '';
+                        tds[j].parentNode.classList.add('wptb-row');
+                    }
 
-				tds[j].dataset.xIndex = j;
-				tds[j].dataset.yIndex = i;
-			}
-			if (j > maxCols) {
-				maxCols = j;
-			}
-		}
-		this.columns = maxCols;
+                    tds[j].dataset.xIndex = j;
+                    tds[j].dataset.yIndex = i;
+                }
+                if (j > maxCols) {
+                        maxCols = j;
+                }
+            }
+            this.columns = maxCols;
 	}
 
 	/*
@@ -493,90 +530,89 @@ var array = [], WPTB_Table = function (columns, rows) {
   */
 
 	table.addColumnAfter = function (c_pos) {
-		let rows = table.rows,
-                    cellPointer,
-		    cellsBuffer,
-		    cell = document.querySelector('.wptb-highlighted'),
-                    cellStyle = cell.getAttribute( 'style' ),
-		    pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
-		    pendingInsertion = false,
-		    stepsToMove,
-                    td, bro,
-		    carriedRowspans = [],
-		    currentCell;
+            let rows = table.rows,
+                cellPointer,
+                cellsBuffer,
+                cell = document.querySelector('.wptb-highlighted'),
+                cellStyle = cell.getAttribute( 'style' ),
+                pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
+                pendingInsertion = false,
+                stepsToMove,
+                td, bro,
+                carriedRowspans = [],
+                currentCell;
 
-		for (var i = 0; i < maxAmountOfCells; i++) {
-			carriedRowspans.push(0);
-		}
+            for (var i = 0; i < maxAmountOfCells; i++) {
+                carriedRowspans.push(0);
+            }
 
-		for (var i = 0; i < rows.length; i++) {
-			cellPointer = 0;
-			cellsBuffer = rows[i].getElementsByTagName('td');
-			pendingInsertion = false;
-			for (var xPosition = 0;
-				xPosition < maxAmountOfCells;
-				xPosition += stepsToMove) {
-				stepsToMove = 1;
+            for (var i = 0; i < rows.length; i++) {
+                cellPointer = 0;
+                cellsBuffer = rows[i].getElementsByTagName('td');
+                pendingInsertion = false;
+                for (var xPosition = 0;
+                        xPosition < maxAmountOfCells;
+                        xPosition += stepsToMove) {
+                        stepsToMove = 1;
 
-				if (pendingInsertion) {
-					td = new WPTB_Cell(mark);
-                                        if ( cellStyle ) {
-                                            td.getDOMElement().setAttribute( 'style', cellStyle );
+                    if (pendingInsertion) {
+                        td = new WPTB_Cell(mark);
+                        if ( cellStyle ) {
+                            td.getDOMElement().setAttribute( 'style', cellStyle );
+                        }
+                        if (currentCell && rows[i].contains(currentCell)) {
+                                bro = currentCell.nextSibling;
+                                if (bro) {
+                                        rows[i].insertBefore(td.getDOMElement(), bro);
+                                } else {
+                                        rows[i].appendChild(td.getDOMElement());
+                                }
+                        } else {
+                                rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
+                        }
+                        break;
+                    } else if (carriedRowspans[xPosition] > 0) {
+                        // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
+                        if (pos == xPosition) {
+                                pendingInsertion = true;
+                        }
+                    } else {
+                        currentCell = cellsBuffer[cellPointer++];
+                        if (currentCell.rowSpan > 1) {
+                                stepsToMove = currentCell.colSpan;
+                                for (var k = 0; k < currentCell.colSpan; k++) {
+                                        carriedRowspans[xPosition + k] = currentCell.rowSpan;
+                                        if (xPosition + k == pos) {
+                                                pendingInsertion = true;
                                         }
-					if (currentCell && rows[i].contains(currentCell)) {
-						bro = currentCell.nextSibling;
-						if (bro) {
-							rows[i].insertBefore(td.getDOMElement(), bro);
-						} else {
-							rows[i].appendChild(td.getDOMElement());
-						}
-					} else {
-						rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
-					}
-					break;
-				} else if (carriedRowspans[xPosition] > 0) {
-					// If no pending insertion, let's check if no rowspan from upper cells is pending in current position
-					if (pos == xPosition) {
-						pendingInsertion = true;
-					}
-				} else {
-					currentCell = cellsBuffer[cellPointer++];
-					if (currentCell.rowSpan > 1) {
-						stepsToMove = currentCell.colSpan;
-						for (var k = 0; k < currentCell.colSpan; k++) {
-							carriedRowspans[xPosition + k] = currentCell.rowSpan;
-							if (xPosition + k == pos) {
-								pendingInsertion = true;
-							}
-						}
-					} else if (currentCell.colSpan > 1) {
-						stepsToMove = currentCell.colSpan;
-						for (var k = 0; k < currentCell.colSpan; k++) {
-							if (xPosition + k == pos) {
-								pendingInsertion = true;
-							}
-						}
-					} else if (xPosition == pos) {
-						pendingInsertion = true;
-					}
-				}
-			}
+                                }
+                        } else if (currentCell.colSpan > 1) {
+                                stepsToMove = currentCell.colSpan;
+                                for (var k = 0; k < currentCell.colSpan; k++) {
+                                        if (xPosition + k == pos) {
+                                                pendingInsertion = true;
+                                        }
+                                }
+                        } else if (xPosition == pos) {
+                                pendingInsertion = true;
+                        }
+                    }
+                }
 
-			for (var l = 0; l < maxAmountOfCells; l++) {
-				if (carriedRowspans[l] > 0)
-					carriedRowspans[l]--;
-			}
+                for (var l = 0; l < maxAmountOfCells; l++) {
+                    if (carriedRowspans[l] > 0)
+                        carriedRowspans[l]--;
+                }
 
-		}
+            }
 
-		for (var i = 0; i < array.length; i++) {
-			array[i].push(0);
-		}
-		maxAmountOfCells++;
-		drawTable(array);
-		table.recalculateIndexes();
-		undoSelect();
-
+            for (var i = 0; i < array.length; i++) {
+                    array[i].push(0);
+            }
+            maxAmountOfCells++;
+            drawTable(array);
+            //table.recalculateIndexes();
+            undoSelect();
 	};
 
 	/*

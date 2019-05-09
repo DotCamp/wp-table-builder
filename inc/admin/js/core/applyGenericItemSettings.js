@@ -218,16 +218,16 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
 //                if( actionOld ) {
 //                    this.removeChild( actionOld );
 //                }
-		this.appendChild(actions);
+		this.appendChild( actions );
 	};
 
-	node.onmouseleave = function (event) {
-		var formerActions = this.getElementsByClassName('wptb-actions');
-		if (formerActions && formerActions[0]) {
-			let par = formerActions[0].parentNode;
-			par.removeChild(formerActions[0]);
-		}
-		this.classList.remove('wptb-directlyhovered');
+	node.onmouseleave = function ( event ) {
+            this.classList.remove('wptb-directlyhovered');
+            let iter = 0;
+            while( event.target.querySelector( '.wptb-actions' ) && iter < 5 ) {
+                event.target.querySelector( '.wptb-actions' ).remove();
+                iter++;
+            }
 	};
         
         let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);

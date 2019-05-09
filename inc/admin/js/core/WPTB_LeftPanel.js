@@ -21,52 +21,89 @@ var WPTB_LeftPanel = function () {
         if ( trNumber > 3 ) return;
         let tableRows = table.getElementsByTagName('tr');
         if ( tableRows.length > trNumber ) {
-            let td = tableRows[trNumber].querySelector( 'td' );
-            if ( td ) {
-                let tdBackgroundColor = td.style.backgroundColor;
-                let wptbEvenRowBg = document.getElementById( inputId );
-                if( wptbEvenRowBg && tdBackgroundColor ) {
-                    wptbEvenRowBg.value = tdBackgroundColor;
-                }
+            let trBackgroundColor = tableRows[trNumber].style.backgroundColor;
+            var wptbEvenRowBg = document.getElementById(inputId);
+            if ( wptbEvenRowBg && trBackgroundColor ) {
+                wptbEvenRowBg.value = trBackgroundColor;
             }
+//            let td = tableRows[trNumber].querySelector( 'td' );
+//            if ( td ) {
+//                let tdBackgroundColor = td.style.backgroundColor;
+//                let wptbEvenRowBg = document.getElementById( inputId );
+//                if( wptbEvenRowBg && tdBackgroundColor ) {
+//                    wptbEvenRowBg.value = tdBackgroundColor;
+//                }
+//            }
         }
     }
     
     wptbTdBgColorSavedSet( 'wptb-even-row-bg', 1 );
     jQuery('#wptb-even-row-bg').wpColorPicker({
-        change: function (event, ui) {
+        change: function ( event, ui ) {
             var tableRows = table.getElementsByTagName('tr');
-            for (var i = 1; i < tableRows.length; i += 2) {
-                tds = tableRows[i].getElementsByTagName('td');
-                for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = ui.color.toString();
+            for ( let i = 1; i < tableRows.length; i += 2 ) {
+                tableRows[i].style.backgroundColor = ui.color.toString();
+//                tds = tableRows[i].getElementsByTagName( 'td' );
+//                for ( let j = 0; j < tds.length; j++ ) {
+//                    tds[j].style.backgroundColor = ui.color.toString();
+//                }
+            }
+        },
+        clear: function(){
+            var tableRows = table.getElementsByTagName('tr');
+            for ( let i = 1; i < tableRows.length; i += 2 ) {
+                tableRows[i].style.backgroundColor = '';
+                let tds = tableRows[i].getElementsByTagName('td');
+                for ( let j = 0; j < tds.length; j++ ) {
+                    tds[j].style.backgroundColor = '';
                 }
             }
-        }
+        },
+
     });
     
     wptbTdBgColorSavedSet( 'wptb-odd-row-bg', 2 );
     jQuery('#wptb-odd-row-bg').wpColorPicker({
-        change: function (event, ui) {
+        change: function ( event, ui ) {
             var tableRows = table.getElementsByTagName('tr');
-            for (var i = 2; i < tableRows.length; i += 2) {
-                tds = tableRows[i].getElementsByTagName('td');
-                for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = ui.color.toString();
+            for ( let i = 2; i < tableRows.length; i += 2 ) {
+                tableRows[i].style.backgroundColor = ui.color.toString();
+//                let tds = tableRows[i].getElementsByTagName( 'td' );
+//                for ( let j = 0; j < tds.length; j++ ) {
+//                    tds[j].style.backgroundColor = ui.color.toString();
+//                }
+            }
+        },
+        clear: function(){
+            var tableRows = table.getElementsByTagName('tr');
+            for ( let i = 2; i < tableRows.length; i += 2 ) {
+                tableRows[i].style.backgroundColor = '';
+                let tds = tableRows[i].getElementsByTagName( 'td' );
+                for ( var j = 0; j < tds.length; j++ ) {
+                    tds[j].style.backgroundColor = '';
                 }
             }
-        }
+        },
     });
     
     wptbTdBgColorSavedSet( 'wptb-table-header-bg', 0 );
     jQuery('#wptb-table-header-bg').wpColorPicker({
         change: function (event, ui) {
-            var tableHeader = table.getElementsByTagName('tr')[0],
-                tds = tableHeader.getElementsByTagName('td');
+            var tableHeader = table.getElementsByTagName('tr')[0];
+            tableHeader.style.backgroundColor = ui.color.toString();
+//                tds = tableHeader.getElementsByTagName('td');
+//            for (var j = 0; j < tds.length; j++) {
+//                tds[j].style.backgroundColor = ui.color.toString();
+//            }
+        },
+        clear: function(){
+            var tableHeader = table.getElementsByTagName('tr')[0];
+            tableHeader.style.backgroundColor = '';
+            let tds = tableHeader.getElementsByTagName('td');
             for (var j = 0; j < tds.length; j++) {
-                tds[j].style.backgroundColor = ui.color.toString();
+                tds[j].style.backgroundColor = '';
             }
-        }
+        },
     });
     
     function tableBorderColorWidthSavedSet() {
@@ -232,6 +269,8 @@ var WPTB_LeftPanel = function () {
     }
 
     document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
+    document.getElementById( 'wptb-table-edit-mode-close' ).onclick = table.toggleTableEditMode;
+    document.getElementById( 'wptb-left-scroll-panel-curtain-close' ).onclick = table.toggleTableEditMode;
     document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
     document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
     document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;

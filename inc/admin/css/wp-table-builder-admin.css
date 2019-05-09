@@ -25,8 +25,12 @@ body>img {
 }
 
 .wptb-container {
+    position: fixed;
+    left: 0;
     top: 89px;
-    position: relative;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
 }
 
 .wptb-container * {
@@ -118,7 +122,7 @@ body>img {
     text-decoration: none;
 }
 
-#edit-bar ul {
+.edit-bar ul {
     display: flex;
     display: -webkit-flex;
     list-style: none;
@@ -126,33 +130,65 @@ body>img {
     padding: 0;
 }
 
-#edit-bar {
-    background-color: #263238;
+.edit-bar {
     border-radius: 2px;
-    bottom: 2em;
     display: none;
     padding: .3em .4em 0em .4em;
-    position: fixed;
-    right: 2em;
+    position: relative;
     width: auto;
     z-index: 10;
+    background: none;
 }
 
-#edit-bar.visible {
-    display: inline-flex;
+.edit-bar.visible {
+    display: block;
 }
 
-#edit-bar ul li {
+.edit-bar ul li {
     height: auto;
     margin: 0;
     padding: 0;
 }
 
-#edit-bar svg {
+.table_change_button {
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 41px;
+    background: #fafbfc;
+    font-size: 13px;
+    color: #37454c;
+    border-radius: 0px;
+    border: 2px solid #5e5e5e;
+    padding-left: 12px;
+    padding-right: 12px;
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 0;
+    margin-right: 1em;
+    line-height: 2.4em;
+    margin-bottom: 8px;
+}
+
+#wptb-delete-column, #wptb-delete-row {
+    background-color: #eb4c63;
+}
+
+#wptb-table-edit-mode-close {
+    background: #329d3f;
+    color: #fff;
+    float: right;
+}
+
+.edit-bar svg {
     cursor: pointer;
 }
 
-#edit-bar svg * {
+.edit-bar svg * {
     fill: rgba(0, 0, 0, 0) !important;
     stroke: #fff !important;
 }
@@ -179,6 +215,28 @@ body>img {
     overflow: auto;
     height: calc(100% - 89px);
 }
+
+#wptb-left-scroll-panel-curtain {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #fff;
+    padding: 20px;
+    display: none;
+}
+
+#wptb-left-scroll-panel-curtain.visible {
+    display: block;
+}
+#wptb-left-scroll-panel-curtain-close {
+    margin: auto;
+    display: block;
+    background: #329d3f;
+    color: #fff;
+}
+
 
 .wptb-panel-left {
     position: relative;
@@ -559,10 +617,9 @@ ul.wptb-tabs {
 */
 
 .wptb-builder-panel {
-    left: 300px;
-    right: 0;
-    position: absolute;
+    position: relative;
     overflow-y: auto;
+    margin-left: 300px;
 }
 
 
@@ -627,9 +684,36 @@ ul.wptb-tabs {
 *
 */
 
+.management_table_container {
+    max-width: 880px;
+    margin: auto;
+}
+
 .wptb-table-setup {
     display: flex;
     justify-content: center;
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    margin: auto;
+    padding: 2px;
+    background: #fff;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#cell_mode_background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(49, 59, 71, 0.49);
+    display: none;
+}
+
+#cell_mode_background.visible {
+    display: block;
 }
 
 
@@ -727,11 +811,24 @@ table.wptb-table {
 .wptb-preview-table {
     table-layout: fixed;
     font-size: 15px;
-    margin-top: 40px;
-    max-width: 880px;
     width: 100%;
     display: table;
     border-collapse: collapse;
+}
+
+.wptb-preview-table.wptb-preview-table-manage-cells td::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.wptb-preview-table.wptb-preview-table-manage-cells td:hover::after {
+    background: rgba(207,218,239,0.2);
+    border-color: inherit;
 }
 
 .wptb-preview-table p {
@@ -759,11 +856,12 @@ table.wptb-table {
 
 .wptb-preview-table td {
     padding: 15px;
+    position: relative;
 }
 
 .wptb-preview-table .wptb-row td.wptb-highlighted,
 .wptb-state-dragging td:hover {
-    border: 1px solid lightgreen !important;
+    outline: 1px solid lightgreen;
 }
 
 .wptb-preview-table .wptb-row.highlighted-row {
@@ -834,6 +932,11 @@ table.wptb-table {
 
 .wptb-table-head td:empty::before {
     content: 'Header';
+}
+
+.wptb-ph-element {
+    position: relative;
+    border: 1px solid #fff0;
 }
 
 
@@ -1098,6 +1201,11 @@ table.wptb-table {
     top: -15px;
     height: 15px;
     font-size: 9pt;
+    display: none;
+}
+
+.wptb-ph-element:hover .wptb-actions {
+    display: inline;
 }
 
 .wptb-actions .dashicons.dashicons-admin-page.duplicate-action {
@@ -1159,7 +1267,8 @@ table.wptb-table {
 .no-cell-action:not(.visible),
 .single-action:not(.visible),
 .multiple-select-action:not(.visible) {
-    display: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .wptb-item-dragging {

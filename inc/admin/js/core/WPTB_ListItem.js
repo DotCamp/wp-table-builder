@@ -65,10 +65,10 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
 
     DOMElement.onmouseleave = function (event) {
         this.classList.remove('wptb-directlyhovered');
-        var actions = this.parentNode.querySelector('.wptb-actions');
-        if (actions != undefined) {
-            var parent = actions.parentNode;
-            parent.removeChild(actions);
+        let iter = 0;
+        while( event.target.querySelector( '.wptb-actions' ) && iter < 5 ) {
+            event.target.querySelector( '.wptb-actions' ).remove();
+            iter++;
         }
     };
 

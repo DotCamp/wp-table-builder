@@ -218,12 +218,12 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
 	};
 
 	node.onmouseleave = function (event) {
-		var formerActions = this.getElementsByClassName('wptb-actions');
-		if (formerActions && formerActions[0]) {
-			var par = formerActions[0].parentNode;
-			par.removeChild(formerActions[0]);
-		}
 		this.classList.remove('wptb-directlyhovered');
+		var iter = 0;
+		while (event.target.querySelector('.wptb-actions') && iter < 5) {
+			event.target.querySelector('.wptb-actions').remove();
+			iter++;
+		}
 	};
 
 	var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
@@ -1165,14 +1165,19 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         if (trNumber > 3) return;
         var tableRows = table.getElementsByTagName('tr');
         if (tableRows.length > trNumber) {
-            var td = tableRows[trNumber].querySelector('td');
-            if (td) {
-                var tdBackgroundColor = td.style.backgroundColor;
-                var wptbEvenRowBg = document.getElementById(inputId);
-                if (wptbEvenRowBg && tdBackgroundColor) {
-                    wptbEvenRowBg.value = tdBackgroundColor;
-                }
+            var trBackgroundColor = tableRows[trNumber].style.backgroundColor;
+            var wptbEvenRowBg = document.getElementById(inputId);
+            if (wptbEvenRowBg && trBackgroundColor) {
+                wptbEvenRowBg.value = trBackgroundColor;
             }
+            //            let td = tableRows[trNumber].querySelector( 'td' );
+            //            if ( td ) {
+            //                let tdBackgroundColor = td.style.backgroundColor;
+            //                let wptbEvenRowBg = document.getElementById( inputId );
+            //                if( wptbEvenRowBg && tdBackgroundColor ) {
+            //                    wptbEvenRowBg.value = tdBackgroundColor;
+            //                }
+            //            }
         }
     }
 
@@ -1180,23 +1185,46 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     jQuery('#wptb-even-row-bg').wpColorPicker({
         change: function change(event, ui) {
             var tableRows = table.getElementsByTagName('tr');
-            for (var i = 1; i < tableRows.length; i += 2) {
-                tds = tableRows[i].getElementsByTagName('td');
+            for (var _i = 1; _i < tableRows.length; _i += 2) {
+                tableRows[_i].style.backgroundColor = ui.color.toString();
+                //                tds = tableRows[i].getElementsByTagName( 'td' );
+                //                for ( let j = 0; j < tds.length; j++ ) {
+                //                    tds[j].style.backgroundColor = ui.color.toString();
+                //                }
+            }
+        },
+        clear: function clear() {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var _i2 = 1; _i2 < tableRows.length; _i2 += 2) {
+                tableRows[_i2].style.backgroundColor = '';
+                var tds = tableRows[_i2].getElementsByTagName('td');
                 for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = ui.color.toString();
+                    tds[j].style.backgroundColor = '';
                 }
             }
         }
+
     });
 
     wptbTdBgColorSavedSet('wptb-odd-row-bg', 2);
     jQuery('#wptb-odd-row-bg').wpColorPicker({
         change: function change(event, ui) {
             var tableRows = table.getElementsByTagName('tr');
-            for (var i = 2; i < tableRows.length; i += 2) {
-                tds = tableRows[i].getElementsByTagName('td');
+            for (var _i3 = 2; _i3 < tableRows.length; _i3 += 2) {
+                tableRows[_i3].style.backgroundColor = ui.color.toString();
+                //                let tds = tableRows[i].getElementsByTagName( 'td' );
+                //                for ( let j = 0; j < tds.length; j++ ) {
+                //                    tds[j].style.backgroundColor = ui.color.toString();
+                //                }
+            }
+        },
+        clear: function clear() {
+            var tableRows = table.getElementsByTagName('tr');
+            for (var _i4 = 2; _i4 < tableRows.length; _i4 += 2) {
+                tableRows[_i4].style.backgroundColor = '';
+                var tds = tableRows[_i4].getElementsByTagName('td');
                 for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = ui.color.toString();
+                    tds[j].style.backgroundColor = '';
                 }
             }
         }
@@ -1205,10 +1233,19 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     wptbTdBgColorSavedSet('wptb-table-header-bg', 0);
     jQuery('#wptb-table-header-bg').wpColorPicker({
         change: function change(event, ui) {
-            var tableHeader = table.getElementsByTagName('tr')[0],
-                tds = tableHeader.getElementsByTagName('td');
+            var tableHeader = table.getElementsByTagName('tr')[0];
+            tableHeader.style.backgroundColor = ui.color.toString();
+            //                tds = tableHeader.getElementsByTagName('td');
+            //            for (var j = 0; j < tds.length; j++) {
+            //                tds[j].style.backgroundColor = ui.color.toString();
+            //            }
+        },
+        clear: function clear() {
+            var tableHeader = table.getElementsByTagName('tr')[0];
+            tableHeader.style.backgroundColor = '';
+            var tds = tableHeader.getElementsByTagName('td');
             for (var j = 0; j < tds.length; j++) {
-                tds[j].style.backgroundColor = ui.color.toString();
+                tds[j].style.backgroundColor = '';
             }
         }
     });
@@ -1373,6 +1410,8 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     }
 
     document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
+    document.getElementById('wptb-table-edit-mode-close').onclick = table.toggleTableEditMode;
+    document.getElementById('wptb-left-scroll-panel-curtain-close').onclick = table.toggleTableEditMode;
     document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
     document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
     document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
@@ -1502,10 +1541,10 @@ var WPTB_ListItem = function WPTB_ListItem(text, DOMElementProt, copy) {
 
     DOMElement.onmouseleave = function (event) {
         this.classList.remove('wptb-directlyhovered');
-        var actions = this.parentNode.querySelector('.wptb-actions');
-        if (actions != undefined) {
-            var parent = actions.parentNode;
-            parent.removeChild(actions);
+        var iter = 0;
+        while (event.target.querySelector('.wptb-actions') && iter < 5) {
+            event.target.querySelector('.wptb-actions').remove();
+            iter++;
         }
     };
 
@@ -1907,36 +1946,46 @@ var array = [],
 		if (markedCells === 0) {
 			for (var i = 0; i < multipleCells.length; i++) {
 				multipleCells[i].classList.remove('visible');
+				multipleCells[i].setAttribute('disabled', 'disabled');
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.add('visible');
+				noCells[i].removeAttribute('disabled');
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.remove('visible');
+				singleCells[i].setAttribute('disabled', 'disabled');
 			}
 		} else if (markedCells === 1) {
 			for (var i = 0; i < multipleCells.length; i++) {
 				multipleCells[i].classList.remove('visible');
+				multipleCells[i].setAttribute('disabled', 'disabled');
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.remove('visible');
+				noCells[i].setAttribute('disabled', 'disabled');
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.add('visible');
+				singleCells[i].removeAttribute('disabled');
 			}
 		} else {
 			for (var i = 0; i < multipleCells.length; i++) {
 				if (table.isSquare(array)) {
 					multipleCells[i].classList.add('visible');
+					multipleCells[i].removeAttribute('disabled');
 				} else {
 					multipleCells[i].classList.remove('visible');
+					multipleCells[i].setAttribute('disabled', 'disabled');
 				}
 			}
 			for (var i = 0; i < noCells.length; i++) {
 				noCells[i].classList.remove('visible');
+				noCells[i].setAttribute('disabled', 'disabled');
 			}
 			for (var i = 0; i < singleCells.length; i++) {
 				singleCells[i].classList.remove('visible');
+				singleCells[i].setAttribute('disabled', 'disabled');
 			}
 		}
 	};
@@ -2238,13 +2287,36 @@ var array = [],
   */
 
 	table.toggleTableEditMode = function () {
-		var bar = document.getElementById('edit-bar');
-		if (bar.classList.contains('visible')) {
-			document.select.deactivateMultipleSelectMode();
-			bar.classList.remove('visible');
-		} else {
-			document.select.activateMultipleSelectMode();
-			bar.classList.add('visible');
+		var bar = document.getElementsByClassName('edit-bar'),
+		    cellModeBackground = document.getElementById('cell_mode_background'),
+		    leftScrollPanelCurtain = document.getElementById('wptb-left-scroll-panel-curtain'),
+		    wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
+		if (wptbPreviewTable.length > 0) {
+			wptbPreviewTable = wptbPreviewTable[0];
+		}
+
+		if (bar.length > 0) {
+			for (var _i2 = 0; _i2 < bar.length; _i2++) {
+				if (bar[_i2].classList.contains('visible')) {
+					document.select.deactivateMultipleSelectMode();
+					bar[_i2].classList.remove('visible');
+					cellModeBackground.classList.remove('visible');
+					leftScrollPanelCurtain.classList.remove('visible');
+					wptbPreviewTable.classList.remove('wptb-preview-table-manage-cells');
+					var wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName('td');
+					if (wptbPreviewTableTds.length > 0) {
+						for (var _i3 = 0; _i3 < wptbPreviewTableTds.length; _i3++) {
+							wptbPreviewTableTds[_i3].classList.remove('wptb-highlighted');
+						}
+					}
+				} else {
+					document.select.activateMultipleSelectMode();
+					bar[_i2].classList.add('visible');
+					cellModeBackground.classList.add('visible');
+					leftScrollPanelCurtain.classList.add('visible');
+					wptbPreviewTable.classList.add('wptb-preview-table-manage-cells');
+				}
+			}
 		}
 	};
 
@@ -2259,19 +2331,22 @@ var array = [],
 		    maxCols = 0;
 
 		for (var i = 0; i < trs.length; i++) {
+			if (i == 0) {
+				trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+			} else {
+				if (i % 2 == 0) {
+					trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+				} else {
+					trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+				}
+			}
 			tds = trs[i].getElementsByTagName('td');
 			for (var j = 0; j < tds.length; j++) {
 
 				if (i == 0) {
 					tds[j].parentNode.className = '';
-					tds[j].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
 					tds[j].parentNode.classList.add('wptb-row', 'wptb-table-head');
 				} else {
-					if (i % 2 == 0) {
-						tds[j].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
-					} else {
-						tds[j].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
-					}
 					tds[j].parentNode.className = '';
 					tds[j].parentNode.classList.add('wptb-row');
 				}
@@ -2436,7 +2511,7 @@ var array = [],
 		}
 		maxAmountOfCells++;
 		drawTable(array);
-		table.recalculateIndexes();
+		//table.recalculateIndexes();
 		undoSelect();
 	};
 

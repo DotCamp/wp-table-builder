@@ -263,4 +263,11 @@ use WP_Table_Builder as NS;
             </div>     
         </div>  
     </div>
+    <div id="wptb-left-scroll-panel-curtain">
+        <p>You are currently editing the table cells. Click "Close" to go back to editing the table, or select a cell to edit it.</p>
+        <p>Hold down the left mouse button on a cell and drag it across the highlighted table to select multiple cells!</p>
+        <div>
+            <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button">Close</button>
+        </div>
+    </div>
 </div>
