@@ -42,8 +42,8 @@ use WP_Table_Builder as NS;
 </div>
 <div class="management_table_container">
     <div class="table management bar edit-bar">
-        <button class="table_change_button no-cell-action visible" id="wptb-add-end-column" title="Add column to the end">Add right column</button>
         <button class="table_change_button no-cell-action visible" id="wptb-add-start-column" title="Add column to the start">Add left column</button>
+        <button class="table_change_button no-cell-action visible" id="wptb-add-end-column" title="Add column to the end">Add right column</button>
         <button class="table_change_button no-cell-action visible" id="wptb-add-start-row" title="Add row to the start">Add top row</button>
         <button class="table_change_button no-cell-action visible" id="wptb-add-end-row" title="Add row to the end">Add bottom row</button>
         <button class="table_change_button multiple-select-action"  id="wptb-merge-cells" title="Merge selected Cells">Merge</button>
@@ -59,6 +59,6 @@ use WP_Table_Builder as NS;
         <button class="table_change_button single-action"  id="wptb-add-column-before" title="Add column before highlighted one">Insert column before</button>
         <button class="table_change_button single-action"  id="wptb-add-row-after" title="Add row after highlighted one">Insert row after</button>
         <button class="table_change_button single-action"  id="wptb-add-row-before" title="Add row before highlighted one">Insert row before</button>
-        <button class="table_change_button"  id="wptb-table-edit-mode-close" title="Add row before highlighted one">Close</button>
+        <button class="table_change_button"  id="wptb-table-edit-mode-close" title="Close Manage Cells Mode">Close</button>
     </div>
 </div>

@@ -620,6 +620,7 @@ ul.wptb-tabs {
     position: relative;
     overflow-y: auto;
     margin-left: 300px;
+    min-height: 100%;
 }
 
 
@@ -685,7 +686,7 @@ ul.wptb-tabs {
 */
 
 .management_table_container {
-    max-width: 880px;
+    /*max-width: 880px;*/
     margin: auto;
 }
 
@@ -694,7 +695,6 @@ ul.wptb-tabs {
     justify-content: center;
     position: relative;
     z-index: 1;
-    max-width: 880px;
     margin: auto;
     padding: 2px;
     background: #fff;
@@ -1150,7 +1150,6 @@ table.wptb-table {
 
 .wptb-droppable.wptb-cell .wptb-directlyhovered {
     border: 1px solid #1ea5e5 !important;
-    display: table;
     position: relative;
     width: 100%;
 }
@@ -1334,6 +1333,7 @@ td[class*="wptb-fused-cell"] {
     font-size: .875rem;
     line-height: 1.5;
     padding: .35rem .6rem;
+    max-width: 100%;
 }
 
 .wptb-size-M .wptb-button {
@@ -1341,6 +1341,7 @@ td[class*="wptb-fused-cell"] {
     font-size: 1.125rem;
     line-height: 1.5;
     padding: .475rem .85rem;
+    max-width: 100%;
 }
 
 .wptb-size-L .wptb-button {
@@ -1348,14 +1349,15 @@ td[class*="wptb-fused-cell"] {
     font-size: 1.25rem;
     line-height: 1.5;
     padding: .6rem 1.2rem;
+    max-width: 100%;
 }
 
 .wptb-size-XL .wptb-button {
     border-radius: .4rem;
     font-size: 1.35em;
-    text-align: center;
-    display: block;
-    width: 80%;
+    line-height: 1.5;
+    padding: .8rem 1.35rem;
+    max-width: 100%;
 }
 
 [class*=wptb-element-text-] p {
