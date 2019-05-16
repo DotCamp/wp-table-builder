@@ -309,7 +309,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                         return [i, xPosition];
                     }
                     if (td.rowSpan > 1) {
-                        for (k = 0; k < td.colSpan; k++) {
+                        for ( let k = 0; k < td.colSpan; k++ ) {
                             skipInCols[xPosition + k] = td.rowSpan - 1;
                         }
                         stepsToMove = td.colSpan;
@@ -794,42 +794,79 @@ var array = [], WPTB_Table = function (columns, rows) {
      */
 
     table.addRowAfter = function () {
-
         var cell = document.querySelector('.wptb-highlighted'),
-                cellStyle = cell.getAttribute('style'),
-                row = getCoords(cell)[0],
-                r = table.insertRow(row + 1),
-                aux,
-                rowspans = carriedRowspans(row);
+            cellStyle = cell.getAttribute('style'),
+            row = getCoords(cell)[0],
+            cellRowSpan = cell.rowSpan,
+            rowAfter = row + cellRowSpan - 1,
+            aux;
+        
+        let cellsColSpan = 0;
+        if ( rowAfter < table.rows.length -1 ) {
+            for( let i = 0; i <= rowAfter ; i++ ) {
+                let tableRowsIChildren = table.rows[i].children,
+                    tableRIChildrenLength = tableRowsIChildren.length;
+                if( tableRIChildrenLength > 0 ) {
+                    for( let j = 0; j < tableRIChildrenLength; j++ ) {
+                        let rowIRowSpan = tableRowsIChildren[j].rowSpan;
 
-        noPending = rowspans.filter(function (elem) {
-            return elem == 0;
-        });
-
-        for (var i = 0; i < noPending.length; i++) {
-            let td = new WPTB_Cell(mark);
-            if (cellStyle) {
-                td.getDOMElement().setAttribute('style', cellStyle);
-            }
-            r.appendChild(td.getDOMElement());
-        }
-
-        arr = realTimeArray();
-
-        for (var i = 0; i < arr.length; i++) {
-
-            if (arr[i].length > maxAmountOfCells) {
-                //Still not watched
-            }
-
-            if (arr[i].length < maxAmountOfCells) {
-
-                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-                    td = new WPTB_Cell(mark);
-                    table.rows[i].appendChild(td.getDOMElement());
+                        if ( rowIRowSpan - 1  + i > rowAfter ) {
+                            tableRowsIChildren[j].rowSpan++;
+                        }
+                    }
                 }
             }
+            
+            let rNext = table.rows[rowAfter + 1],
+                rNextChildren = rNext.children,
+                rNextChildrenLength = rNextChildren.length;
+                
+            if( rNextChildrenLength > 0 ) {
+                for ( let i = 0; i < rNextChildrenLength; i++ ) {
+                    cellsColSpan += rNextChildren[i].colSpan;
+                }
+            }
+        } else {
+            cellsColSpan = array[0].length;
         }
+        
+        let r = table.insertRow( rowAfter + 1 );
+        r.classList.add( 'wptb-row' );
+        
+        for ( j = 0; j < cellsColSpan; j++ ) {
+            let td = new WPTB_Cell( mark );
+            td.getDOMElement().setAttribute( 'style', cellStyle );
+            r.appendChild( td.getDOMElement() );
+        }
+        
+//        noPending = rowspans.filter(function (elem) {
+//            return elem == 0;
+//        });
+
+//        for (var i = 0; i < noPending.length; i++) {
+//            let td = new WPTB_Cell(mark);
+//            if (cellStyle) {
+//                td.getDOMElement().setAttribute('style', cellStyle);
+//            }
+//            r.appendChild(td.getDOMElement());
+//        }
+
+//        arr = realTimeArray();
+//
+//        for (var i = 0; i < arr.length; i++) {
+//
+//            if (arr[i].length > maxAmountOfCells) {
+//                //Still not watched
+//            }
+//
+//            if (arr[i].length < maxAmountOfCells) {
+//
+//                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
+//                    td = new WPTB_Cell(mark);
+//                    table.rows[i].appendChild(td.getDOMElement());
+//                }
+//            }
+//        }
 
         aux = Array.from(array[0]);
         array.push(aux);
@@ -848,37 +885,38 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.isSquare = function (a) {
         var rowStart = -1,
-                columnStart = -1,
-                rowEnd = -1,
-                columnEnd = -1,
-                height,
-                width,
-                itemsEstimate = 0,
-                items = 0;
+            columnStart = -1,
+            rowEnd = -1,
+            columnEnd = -1,
+            height,
+            width,
+            itemsEstimate = 0,
+            items = 0;
 
         for (var i = 0; i < a.length; i++) {
             for (var j = 0; j < a[i].length; j++) {
                 if (a[i][j] == 1) {
-                    rowStart = i;
-                    columnStart = j;
-                    break;
+                    if ( j < columnStart || columnStart == -1 ) {
+                        columnStart = j;
+                    }
+                    if ( i < rowStart || rowStart == -1 ) {
+                        rowStart = i;
+                    }
                 }
             }
-            if (rowStart !== -1 && columnStart !== -1) {
-                break;
-            }
+            
         }
 
         for (var i = a.length - 1; i > -1; i--) {
             for (var j = a[i].length - 1; j > -1; j--) {
                 if (a[i][j] == 1) {
-                    rowEnd = i;
-                    columnEnd = j;
-                    break;
+                    if ( j > columnEnd ) {
+                        columnEnd = j;
+                    }
+                    if ( i > rowEnd ) {
+                        rowEnd = i;
+                    }
                 }
-            }
-            if (rowEnd !== -1 && columnEnd !== -1) {
-                break;
             }
         }
 
@@ -916,11 +954,11 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.mergeCells = function () {
         var dimensions = table.isSquare(array),
-                rowspan = dimensions[0],
-                colspan = dimensions[1],
-                first = document.querySelector('.wptb-highlighted'),
-                tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1),
-                tdsChildrenNew = [];
+            rowspan = dimensions[0],
+            colspan = dimensions[1],
+            first = document.querySelector('.wptb-highlighted'),
+            tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1),
+            tdsChildrenNew = [];
 
         for (let i = 0; i < tds.length; i++) {
             let tdsInternalElements = tds[i].getElementsByClassName('wptb-ph-element');
@@ -967,7 +1005,6 @@ var array = [], WPTB_Table = function (columns, rows) {
             tdNumberBefore;
         cell.rowSpan = 1;
         cell.colSpan = 1;
-        console.log(cell);
             
         if ( cell.nextSibling ) {
             xIndexNext = cell.nextSibling.dataset.xIndex;
@@ -992,10 +1029,9 @@ var array = [], WPTB_Table = function (columns, rows) {
                     rowNext = table.rows[row + i],
                     rowChildren = rowNext.children,
                     rowChildrenLength = rowChildren.length;
-                console.log(rowNext);
+            
                 if ( rowChildrenLength > 0 ) {
                     for ( let k = 0; k < rowChildrenLength; k++ ) {
-                        console.log(rowChildren[k].dataset.xIndex);
                         if ( Number( rowChildren[k].dataset.xIndex ) >= Number( xIndexNext ) ) {
                             rowChildInsertBefore = rowChildren[k];
                             break;
