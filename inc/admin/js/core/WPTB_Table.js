@@ -226,12 +226,15 @@ var array = [], WPTB_Table = function (columns, rows) {
         }
         for (var i = 0; i < multipleCells.length; i++) {
             multipleCells[i].classList.remove('visible');
+            multipleCells[i].setAttribute('disabled', 'disabled');
         }
         for (var i = 0; i < noCells.length; i++) {
             noCells[i].classList.add('visible');
+            noCells[i].removeAttribute('disabled');
         }
         for (var i = 0; i < singleCells.length; i++) {
             singleCells[i].classList.remove('visible');
+            singleCells[i].setAttribute('disabled', 'disabled');
         }
     };
 
@@ -431,11 +434,14 @@ var array = [], WPTB_Table = function (columns, rows) {
         for (var i = 0; i < trs.length; i++) {
             if (i == 0) {
                 trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+                trs[i].classList.add( 'wptb-table-head' );
             } else {
                 if (i % 2 == 0) {
                     trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+                    trs[i].classList.remove( 'wptb-table-head' );
                 } else {
                     trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+                    trs[i].classList.remove( 'wptb-table-head' );
                 }
             }
 
@@ -677,6 +683,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                 currentTable = document.getElementsByClassName('wptb-preview-table'),
                 currentTableTd,
                 currentTdStyle;
+        r.classList.add( 'wptb-row' );
         if (currentTable.length > 0) {
             currentTableTd = currentTable[0].querySelector('td');
         }
@@ -711,6 +718,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                 currentTable = document.getElementsByClassName('wptb-preview-table'),
                 currentTableTd,
                 currentTdStyle;
+        r.classList.add( 'wptb-row' );
         if (currentTable.length > 0) {
             currentTableTd = currentTable[0].querySelector('td');
         }
@@ -740,47 +748,32 @@ var array = [], WPTB_Table = function (columns, rows) {
      */
 
     table.addRowBefore = function () {
-        var cell = document.querySelector('.wptb-highlighted'),
-                cellStyle = cell.getAttribute('style'),
-                row = getCoords(cell)[0],
-                r = table.insertRow(row),
-                aux,
-                rowspans = carriedRowspans(row - 1);
-
-        noPending = rowspans.filter(function (elem) {
-            return elem == 0;
-        });
-
-        for (var i = 0; i < noPending.length; i++) {
-            let td = new WPTB_Cell(mark);
-            if (cellStyle) {
-                td.getDOMElement().setAttribute('style', cellStyle);
-            }
-            r.appendChild(td.getDOMElement());
-        }
-
-        arr = realTimeArray();
-
-        for (var i = 0; i < arr.length; i++) {
-
-            if (arr[i].length > maxAmountOfCells) {
-                //Still not watched
-            }
-
-            if (arr[i].length < maxAmountOfCells) {
-
-                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-                    td = new WPTB_Cell(mark);
-                    table.rows[i].appendChild(td.getDOMElement());
+        let cell = document.querySelector('.wptb-highlighted'),
+            cellStyle = cell.getAttribute('style'),
+            row = getCoords(cell)[0],
+            cellNew;
+        for( let i = row - 1; i >= 0; i-- ) {
+            let rowChildren = table.rows[i].children;
+            let rowChildrenLength = rowChildren.length;
+            if( rowChildrenLength > 0 ) {
+                for( let j = 0; j < rowChildrenLength; j++ ) {
+                    if( rowChildren[j].rowSpan == 1 ) {
+                        row = i;
+                        cellNew = true;
+                        break;
+                    }
                 }
             }
+            if ( cellNew ) {
+                break;
+            }
         }
 
-        aux = Array.from(array[0]);
-        array.push(aux);
-        drawTable(array);
-        table.recalculateIndexes();
-        undoSelect();
+        if (row === 0) {
+            table.addRowToTheStart();
+        } else {
+            table.addRowAfter( row, cellStyle );
+        }
     };
 
     /*
@@ -793,13 +786,21 @@ var array = [], WPTB_Table = function (columns, rows) {
      * @see realTimeArray
      */
 
-    table.addRowAfter = function () {
-        var cell = document.querySelector('.wptb-highlighted'),
+    table.addRowAfter = function ( row, cellStyle ) {
+        let cellRowSpan,
+            rowAfter,
+            aux;
+            
+        if ( ( row == undefined || typeof row !== 'number' ) && cellStyle == undefined ) {
+            let cell = document.querySelector('.wptb-highlighted');
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             cellRowSpan = cell.rowSpan,
-            rowAfter = row + cellRowSpan - 1,
-            aux;
+            rowAfter = row + cellRowSpan - 1;
+        } else {
+            rowAfter = row;
+        }
+        
         
         let cellsColSpan = 0;
         if ( rowAfter < table.rows.length -1 ) {
@@ -838,35 +839,6 @@ var array = [], WPTB_Table = function (columns, rows) {
             td.getDOMElement().setAttribute( 'style', cellStyle );
             r.appendChild( td.getDOMElement() );
         }
-        
-//        noPending = rowspans.filter(function (elem) {
-//            return elem == 0;
-//        });
-
-//        for (var i = 0; i < noPending.length; i++) {
-//            let td = new WPTB_Cell(mark);
-//            if (cellStyle) {
-//                td.getDOMElement().setAttribute('style', cellStyle);
-//            }
-//            r.appendChild(td.getDOMElement());
-//        }
-
-//        arr = realTimeArray();
-//
-//        for (var i = 0; i < arr.length; i++) {
-//
-//            if (arr[i].length > maxAmountOfCells) {
-//                //Still not watched
-//            }
-//
-//            if (arr[i].length < maxAmountOfCells) {
-//
-//                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-//                    td = new WPTB_Cell(mark);
-//                    table.rows[i].appendChild(td.getDOMElement());
-//                }
-//            }
-//        }
 
         aux = Array.from(array[0]);
         array.push(aux);
@@ -1001,16 +973,10 @@ var array = [], WPTB_Table = function (columns, rows) {
             cellStyles = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             thisRow = table.rows[row],
-            xIndexNext,
-            tdNumberBefore;
+            cellXIndex =cell.dataset.xIndex;
+    
         cell.rowSpan = 1;
         cell.colSpan = 1;
-            
-        if ( cell.nextSibling ) {
-            xIndexNext = cell.nextSibling.dataset.xIndex;
-        } else {
-            xIndexNext = undefined;
-        }
         
         for (let i = 1; i < colspan; i++) {
             let td = new WPTB_Cell(mark);
@@ -1032,7 +998,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             
                 if ( rowChildrenLength > 0 ) {
                     for ( let k = 0; k < rowChildrenLength; k++ ) {
-                        if ( Number( rowChildren[k].dataset.xIndex ) >= Number( xIndexNext ) ) {
+                        if ( Number( rowChildren[k].dataset.xIndex ) > Number( cellXIndex ) ) {
                             rowChildInsertBefore = rowChildren[k];
                             break;
                         } 
@@ -1128,70 +1094,79 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.deleteRow = function () {
         let cell = document.querySelector('.wptb-highlighted'),
-                cellStyles = cell.getAttribute('style'),
-                row = getCoords(cell)[0],
-                thisRow = table.rows[row],
-                rowspan = cell.rowSpan,
-                colspan = cell.colSpan,
-                tdNumberBefore = [];
+            cellStyles = cell.getAttribute('style'),
+            rowspan = cell.rowSpan,
+            row = getCoords(cell)[0],
+            thisRow,
+            aux;
+    
+        if ( rowspan == undefined ) rowspan = 1;
+        
+        for ( let i = 0; i < rowspan; i++ ) {
+            thisRow = table.rows[row];
+            let thisRowChildren = thisRow.children,
+                nextRow = table.rows[row + 1],
+                nextRowChildren,
+                nextRowChildrenLength,
+                tdArr = [];
 
-        let thisRowChildren = thisRow.children;
-        for (let i = 0; i < thisRowChildren.length; i++) {
+            if( nextRow != undefined ) {
+                nextRowChildren = nextRow.children;
+                nextRowChildrenLength = nextRowChildren.length;
+                for (let j = 0; j < thisRowChildren.length; j++) {
+                    if ( thisRowChildren[j].rowSpan > 1 ) {
+                        let td = new WPTB_Cell(mark);
+                            td.getDOMElement().setAttribute('style', cellStyles);
+                            td.getDOMElement().colSpan = thisRowChildren[j].colSpan;
+                            td.getDOMElement().rowSpan = thisRowChildren[j].rowSpan - 1;
 
-                if ( thisRowChildren[i].rowSpan > 1 ) {
-                
-                    for ( let j = 1; j < thisRowChildren[i].rowSpan; j++ ) {
-                        let nextRow = table.rows[row + j],
-                                nextRowChildren = nextRow.children,
-                                nextRowChildrenLength = nextRowChildren.length,
-                                tdArr = [];
-                        
+                        let nextRowChildrenK = undefined;
                         for ( let k = 0; k < nextRowChildrenLength; k++ ) {
-                            if ( thisRowChildren.length - 1 != i && nextRowChildren[k].dataset.xIndex >= thisRowChildren[i + 1].dataset.xIndex ) {
-                                for ( let z = 0; z < thisRowChildren[i].colSpan; z++ ) {
-                                    let td = new WPTB_Cell(mark);
-                                    td.getDOMElement().setAttribute('style', cellStyles);
-                                    tdArr.push([td, nextRowChildren[k]]);
-                                }
+                            if ( Number( nextRowChildren[k].dataset.xIndex ) > Number( thisRowChildren[j].dataset.xIndex ) ) {
+                                nextRowChildrenK = nextRowChildren[k];
                                 break;
-                            } else if ( thisRowChildren.length - 1 == i ) {
-                                for ( let z = 0; z < thisRowChildren[i].colSpan; z++ ) {
-                                    let td = new WPTB_Cell(mark);
-                                    td.getDOMElement().setAttribute('style', cellStyles);
-                                    tdArr.push([td]);
-                                }
-                                break;
-                            }
+                            } 
                         }
-                        
-                        if (tdArr.length > 0) {
-                            for (let k = 0; k < tdArr.length; k++) {
-                                if ( tdArr[k][1] != undefined ) {
-                                    nextRow.insertBefore( tdArr[k][0].getDOMElement(), tdArr[k][1] );
-                                } else {
-                                    nextRow.appendChild( tdArr[k][0].getDOMElement() );
-                                }
-                            }
+
+                        if ( nextRowChildrenK ) {
+                            tdArr.push( [td, nextRowChildrenK] );
+                        } else {
+                            tdArr.push( [td] );
                         }
                     }
                 }
-        }
-        let tableRows = table.rows;
-        if ( tableRows.length > 0 ) {
-            for ( let j = 0; j < row; j++ ) {
-                let jRowChildren = tableRows[j].children;
-                if ( jRowChildren.length > 0 ) {
-                    for ( let x = 0; x < jRowChildren.length; x++ ) {
-                        if ( jRowChildren[x].rowSpan - 1 >= row - j ) {
-                            jRowChildren[x].rowSpan--;
+
+                if ( tdArr.length > 0 ) {
+                    for ( let k = 0; k < tdArr.length; k++ ) {
+                        if ( tdArr[k][1] != undefined ) {
+                            nextRow.insertBefore( tdArr[k][0].getDOMElement(), tdArr[k][1] );
+                        } else {
+                            nextRow.appendChild( tdArr[k][0].getDOMElement() );
                         }
                     }
                 }
             }
+            
+            let tableRows = table.rows;
+            if ( tableRows.length > 0 ) {
+                for ( let j = 0; j < row; j++ ) {
+                    let jRowChildren = tableRows[j].children;
+                    if ( jRowChildren.length > 0 ) {
+                        for ( let x = 0; x < jRowChildren.length; x++ ) {
+                            if ( jRowChildren[x].rowSpan - 1 >= row - j ) {
+                                jRowChildren[x].rowSpan--;
+                            }
+                        }
+                    }
+                }
+            }
+            aux = Array.from(array[0]);
+            array.pop(aux);
+            drawTable(array);
+            table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
+            table.recalculateIndexes();
+            console.log(array);
         }
-
-        table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
-        table.recalculateIndexes();
         undoSelect();
     }
 
@@ -1202,69 +1177,42 @@ var array = [], WPTB_Table = function (columns, rows) {
      */
 
     table.deleteColumn = function () {
-
-        var cell_ref = document.querySelector('.wptb-highlighted'),
-                column = getCoords(cell_ref)[1],
-                buffer, cell,
-                carriedRowspans = [];
-
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            carriedRowspans.push(0);
-        }
-
-        for (var i = 0; i < table.rows.length; i++) {
-            buffer = table.rows[i].getElementsByTagName('td');
-            stepsToMove = 1;
-            cellPointer = 0;
-            for (var j = 0; j < maxAmountOfCells; j += stepsToMove) {
-
-                stepsToMove = 1;
-
-                if (carriedRowspans[j] == 0) {
-                    cell = buffer[cellPointer++];
-                    if (cell.rowSpan > 1) {
-                        stepsToMove = cell.colSpan;
-                        for (var k = 0; k < cell.colSpan; k++) {
-                            carriedRowspans[j + k] = cell.rowSpan;
-                        }
-                        if (column > j && column <= j + k - 1) {
-                            //cell.style.backgroundColor = 'pink';
-                            cell.colSpan--;
+        let cell = document.querySelector('.wptb-highlighted'),
+            cellXIndex = cell.dataset.xIndex,
+            colspan = cell.colSpan;
+        
+        for ( let i = 0; i < colspan; i++ ) {
+            for ( let j = 0; j < table.rows.length; j++ ) {
+                let rowChildren = table.rows[j].children;
+                let rowChildrenLength = rowChildren.length;
+                if( rowChildrenLength > 0 ) {
+                    for ( let k = rowChildrenLength - 1; k >= 0; k-- ) {
+                        if ( Number( rowChildren[k].dataset.xIndex ) == Number( cellXIndex ) ) {
+                            if ( rowChildren[k].colSpan > 1 ) {
+                                rowChildren[k].colSpan--;
+                            } else {
+                                table.rows[j].removeChild( rowChildren[k] );
+                            }
                             break;
-                        }
-                    } else if (cell.colSpan > 1) {
-                        stepsToMove = cell.colSpan;
-
-                        if (column > j && column <= j + cell.colSpan - 1) {
-                            //cell.style.backgroundColor = 'pink';
-                            cell.colSpan--;
+                        } else if( Number( rowChildren[k].dataset.xIndex ) < Number( cellXIndex ) && 
+                                Number( rowChildren[k].dataset.xIndex ) + 
+                                Number( rowChildren[k].colSpan -1 ) >= cellXIndex ) {
+                            if ( rowChildren[k].colSpan > 1 ) {
+                                rowChildren[k].colSpan--;
+                            }
                             break;
                         }
                     }
-                    {
-                        if (column == j) {
-                            table.rows[i].removeChild(cell);
-                            //cell.style.backgroundColor = 'pink';
-                            break;
-                        }
-                    }
-                } else {
-                    continue;
                 }
             }
-
-            for (var l = 0; l < carriedRowspans.length; l++) {
-                if (carriedRowspans[l] > 0) {
-                    carriedRowspans[l]--;
-                }
-
+            
+            for ( let j = 0; j < table.rows.length; j++ ) {
+                if (array[j] != undefined)
+                    array[j].pop();
             }
-        }
-        maxAmountOfCells--;
-
-        for (var i = 0; i < table.rows.length; i++) {
-            if (array[i] != undefined)
-                array[i].pop();
+            
+            maxAmountOfCells--;
+            table.recalculateIndexes();
         }
         undoSelect();
     };

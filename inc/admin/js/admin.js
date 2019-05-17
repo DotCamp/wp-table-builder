@@ -2126,12 +2126,15 @@ var array = [],
         }
         for (var i = 0; i < multipleCells.length; i++) {
             multipleCells[i].classList.remove('visible');
+            multipleCells[i].setAttribute('disabled', 'disabled');
         }
         for (var i = 0; i < noCells.length; i++) {
             noCells[i].classList.add('visible');
+            noCells[i].removeAttribute('disabled');
         }
         for (var i = 0; i < singleCells.length; i++) {
             singleCells[i].classList.remove('visible');
+            singleCells[i].setAttribute('disabled', 'disabled');
         }
     };
 
@@ -2334,11 +2337,14 @@ var array = [],
         for (var i = 0; i < trs.length; i++) {
             if (i == 0) {
                 trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+                trs[i].classList.add('wptb-table-head');
             } else {
                 if (i % 2 == 0) {
                     trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+                    trs[i].classList.remove('wptb-table-head');
                 } else {
                     trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+                    trs[i].classList.remove('wptb-table-head');
                 }
             }
 
@@ -2577,6 +2583,7 @@ var array = [],
             currentTable = document.getElementsByClassName('wptb-preview-table'),
             currentTableTd = void 0,
             currentTdStyle = void 0;
+        r.classList.add('wptb-row');
         if (currentTable.length > 0) {
             currentTableTd = currentTable[0].querySelector('td');
         }
@@ -2611,6 +2618,7 @@ var array = [],
             currentTable = document.getElementsByClassName('wptb-preview-table'),
             currentTableTd = void 0,
             currentTdStyle = void 0;
+        r.classList.add('wptb-row');
         if (currentTable.length > 0) {
             currentTableTd = currentTable[0].querySelector('td');
         }
@@ -2643,44 +2651,29 @@ var array = [],
         var cell = document.querySelector('.wptb-highlighted'),
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
-            r = table.insertRow(row),
-            aux,
-            rowspans = carriedRowspans(row - 1);
-
-        noPending = rowspans.filter(function (elem) {
-            return elem == 0;
-        });
-
-        for (var i = 0; i < noPending.length; i++) {
-            var _td = new WPTB_Cell(mark);
-            if (cellStyle) {
-                _td.getDOMElement().setAttribute('style', cellStyle);
-            }
-            r.appendChild(_td.getDOMElement());
-        }
-
-        arr = realTimeArray();
-
-        for (var i = 0; i < arr.length; i++) {
-
-            if (arr[i].length > maxAmountOfCells) {
-                //Still not watched
-            }
-
-            if (arr[i].length < maxAmountOfCells) {
-
-                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-                    td = new WPTB_Cell(mark);
-                    table.rows[i].appendChild(td.getDOMElement());
+            cellNew = void 0;
+        for (var _i4 = row - 1; _i4 >= 0; _i4--) {
+            var rowChildren = table.rows[_i4].children;
+            var rowChildrenLength = rowChildren.length;
+            if (rowChildrenLength > 0) {
+                for (var _j = 0; _j < rowChildrenLength; _j++) {
+                    if (rowChildren[_j].rowSpan == 1) {
+                        row = _i4;
+                        cellNew = true;
+                        break;
+                    }
                 }
             }
+            if (cellNew) {
+                break;
+            }
         }
 
-        aux = Array.from(array[0]);
-        array.push(aux);
-        drawTable(array);
-        table.recalculateIndexes();
-        undoSelect();
+        if (row === 0) {
+            table.addRowToTheStart();
+        } else {
+            table.addRowAfter(row, cellStyle);
+        }
     };
 
     /*
@@ -2693,25 +2686,29 @@ var array = [],
      * @see realTimeArray
      */
 
-    table.addRowAfter = function () {
-        var cell = document.querySelector('.wptb-highlighted'),
-            cellStyle = cell.getAttribute('style'),
-            row = getCoords(cell)[0],
-            cellRowSpan = cell.rowSpan,
-            rowAfter = row + cellRowSpan - 1,
-            aux;
+    table.addRowAfter = function (row, cellStyle) {
+        var cellRowSpan = void 0,
+            rowAfter = void 0,
+            aux = void 0;
+
+        if ((row == undefined || typeof row !== 'number') && cellStyle == undefined) {
+            var _cell = document.querySelector('.wptb-highlighted');
+            cellStyle = _cell.getAttribute('style'), row = getCoords(_cell)[0], cellRowSpan = _cell.rowSpan, rowAfter = row + cellRowSpan - 1;
+        } else {
+            rowAfter = row;
+        }
 
         var cellsColSpan = 0;
         if (rowAfter < table.rows.length - 1) {
-            for (var _i4 = 0; _i4 <= rowAfter; _i4++) {
-                var tableRowsIChildren = table.rows[_i4].children,
+            for (var _i5 = 0; _i5 <= rowAfter; _i5++) {
+                var tableRowsIChildren = table.rows[_i5].children,
                     tableRIChildrenLength = tableRowsIChildren.length;
                 if (tableRIChildrenLength > 0) {
-                    for (var _j = 0; _j < tableRIChildrenLength; _j++) {
-                        var rowIRowSpan = tableRowsIChildren[_j].rowSpan;
+                    for (var _j2 = 0; _j2 < tableRIChildrenLength; _j2++) {
+                        var rowIRowSpan = tableRowsIChildren[_j2].rowSpan;
 
-                        if (rowIRowSpan - 1 + _i4 > rowAfter) {
-                            tableRowsIChildren[_j].rowSpan++;
+                        if (rowIRowSpan - 1 + _i5 > rowAfter) {
+                            tableRowsIChildren[_j2].rowSpan++;
                         }
                     }
                 }
@@ -2722,8 +2719,8 @@ var array = [],
                 rNextChildrenLength = rNextChildren.length;
 
             if (rNextChildrenLength > 0) {
-                for (var _i5 = 0; _i5 < rNextChildrenLength; _i5++) {
-                    cellsColSpan += rNextChildren[_i5].colSpan;
+                for (var _i6 = 0; _i6 < rNextChildrenLength; _i6++) {
+                    cellsColSpan += rNextChildren[_i6].colSpan;
                 }
             }
         } else {
@@ -2734,39 +2731,10 @@ var array = [],
         r.classList.add('wptb-row');
 
         for (j = 0; j < cellsColSpan; j++) {
-            var _td2 = new WPTB_Cell(mark);
-            _td2.getDOMElement().setAttribute('style', cellStyle);
-            r.appendChild(_td2.getDOMElement());
+            var td = new WPTB_Cell(mark);
+            td.getDOMElement().setAttribute('style', cellStyle);
+            r.appendChild(td.getDOMElement());
         }
-
-        //        noPending = rowspans.filter(function (elem) {
-        //            return elem == 0;
-        //        });
-
-        //        for (var i = 0; i < noPending.length; i++) {
-        //            let td = new WPTB_Cell(mark);
-        //            if (cellStyle) {
-        //                td.getDOMElement().setAttribute('style', cellStyle);
-        //            }
-        //            r.appendChild(td.getDOMElement());
-        //        }
-
-        //        arr = realTimeArray();
-        //
-        //        for (var i = 0; i < arr.length; i++) {
-        //
-        //            if (arr[i].length > maxAmountOfCells) {
-        //                //Still not watched
-        //            }
-        //
-        //            if (arr[i].length < maxAmountOfCells) {
-        //
-        //                for (var j = arr[i].length; j < maxAmountOfCells; j++) {
-        //                    td = new WPTB_Cell(mark);
-        //                    table.rows[i].appendChild(td.getDOMElement());
-        //                }
-        //            }
-        //        }
 
         aux = Array.from(array[0]);
         array.push(aux);
@@ -2859,23 +2827,23 @@ var array = [],
             tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1),
             tdsChildrenNew = [];
 
-        for (var _i6 = 0; _i6 < tds.length; _i6++) {
-            var tdsInternalElements = tds[_i6].getElementsByClassName('wptb-ph-element');
+        for (var _i7 = 0; _i7 < tds.length; _i7++) {
+            var tdsInternalElements = tds[_i7].getElementsByClassName('wptb-ph-element');
             if (tdsInternalElements.length > 0) {
                 var tdsIntElemLength = tdsInternalElements.length;
-                for (var _j2 = 0; _j2 < tdsIntElemLength; _j2++) {
-                    tdsChildrenNew.push(tdsInternalElements[_j2]);
+                for (var _j3 = 0; _j3 < tdsIntElemLength; _j3++) {
+                    tdsChildrenNew.push(tdsInternalElements[_j3]);
                 }
             }
-            var p = tds[_i6].parentNode;
-            p.removeChild(tds[_i6]);
+            var p = tds[_i7].parentNode;
+            p.removeChild(tds[_i7]);
         }
         if (tdsChildrenNew.length > 0) {
             if (first.children.length == 0) {
                 first.appendChild(new WPTB_Space());
             }
-            for (var _i7 = 0; _i7 < tdsChildrenNew.length; _i7++) {
-                first.appendChild(tdsChildrenNew[_i7]);
+            for (var _i8 = 0; _i8 < tdsChildrenNew.length; _i8++) {
+                first.appendChild(tdsChildrenNew[_i8]);
                 first.appendChild(new WPTB_Space());
             }
         }
@@ -2900,49 +2868,43 @@ var array = [],
             cellStyles = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             thisRow = table.rows[row],
-            xIndexNext,
-            tdNumberBefore;
+            cellXIndex = cell.dataset.xIndex;
+
         cell.rowSpan = 1;
         cell.colSpan = 1;
 
-        if (cell.nextSibling) {
-            xIndexNext = cell.nextSibling.dataset.xIndex;
-        } else {
-            xIndexNext = undefined;
-        }
-
-        for (var _i8 = 1; _i8 < colspan; _i8++) {
-            var _td3 = new WPTB_Cell(mark);
-            _td3.getDOMElement().setAttribute('style', cellStyles);
+        for (var _i9 = 1; _i9 < colspan; _i9++) {
+            var td = new WPTB_Cell(mark);
+            td.getDOMElement().setAttribute('style', cellStyles);
             if (cell.nextSibling) {
-                thisRow.insertBefore(_td3.getDOMElement(), cell.nextSibling);
+                thisRow.insertBefore(td.getDOMElement(), cell.nextSibling);
             } else {
-                thisRow.appendChild(_td3.getDOMElement());
+                thisRow.appendChild(td.getDOMElement());
             }
         }
 
         if (rowspan > 1) {
-            for (var _i9 = 1; _i9 < rowspan; _i9++) {
+            for (var _i10 = 1; _i10 < rowspan; _i10++) {
                 var rowChildInsertBefore = undefined,
-                    rowNext = table.rows[row + _i9],
+                    rowNext = table.rows[row + _i10],
                     rowChildren = rowNext.children,
                     rowChildrenLength = rowChildren.length;
 
                 if (rowChildrenLength > 0) {
                     for (var _k3 = 0; _k3 < rowChildrenLength; _k3++) {
-                        if (Number(rowChildren[_k3].dataset.xIndex) >= Number(xIndexNext)) {
+                        if (Number(rowChildren[_k3].dataset.xIndex) > Number(cellXIndex)) {
                             rowChildInsertBefore = rowChildren[_k3];
                             break;
                         }
                     }
                 }
-                for (var _j3 = 0; _j3 < colspan; _j3++) {
-                    var _td4 = new WPTB_Cell(mark);
-                    _td4.getDOMElement().setAttribute('style', cellStyles);
+                for (var _j4 = 0; _j4 < colspan; _j4++) {
+                    var _td = new WPTB_Cell(mark);
+                    _td.getDOMElement().setAttribute('style', cellStyles);
                     if (rowChildInsertBefore != undefined) {
-                        rowNext.insertBefore(_td4.getDOMElement(), rowChildInsertBefore);
+                        rowNext.insertBefore(_td.getDOMElement(), rowChildInsertBefore);
                     } else {
-                        rowNext.appendChild(_td4.getDOMElement());
+                        rowNext.appendChild(_td.getDOMElement());
                     }
                 }
             }
@@ -3026,69 +2988,78 @@ var array = [],
     table.deleteRow = function () {
         var cell = document.querySelector('.wptb-highlighted'),
             cellStyles = cell.getAttribute('style'),
-            row = getCoords(cell)[0],
-            thisRow = table.rows[row],
             rowspan = cell.rowSpan,
-            colspan = cell.colSpan,
-            tdNumberBefore = [];
+            row = getCoords(cell)[0],
+            thisRow = void 0,
+            aux = void 0;
 
-        var thisRowChildren = thisRow.children;
-        for (var _i10 = 0; _i10 < thisRowChildren.length; _i10++) {
+        if (rowspan == undefined) rowspan = 1;
 
-            if (thisRowChildren[_i10].rowSpan > 1) {
+        for (var _i11 = 0; _i11 < rowspan; _i11++) {
+            thisRow = table.rows[row];
+            var thisRowChildren = thisRow.children,
+                nextRow = table.rows[row + 1],
+                nextRowChildren = void 0,
+                nextRowChildrenLength = void 0,
+                tdArr = [];
 
-                for (var _j4 = 1; _j4 < thisRowChildren[_i10].rowSpan; _j4++) {
-                    var nextRow = table.rows[row + _j4],
-                        nextRowChildren = nextRow.children,
-                        nextRowChildrenLength = nextRowChildren.length,
-                        tdArr = [];
+            if (nextRow != undefined) {
+                nextRowChildren = nextRow.children;
+                nextRowChildrenLength = nextRowChildren.length;
+                for (var _j5 = 0; _j5 < thisRowChildren.length; _j5++) {
+                    if (thisRowChildren[_j5].rowSpan > 1) {
+                        var td = new WPTB_Cell(mark);
+                        td.getDOMElement().setAttribute('style', cellStyles);
+                        td.getDOMElement().colSpan = thisRowChildren[_j5].colSpan;
+                        td.getDOMElement().rowSpan = thisRowChildren[_j5].rowSpan - 1;
 
-                    for (var _k4 = 0; _k4 < nextRowChildrenLength; _k4++) {
-                        if (thisRowChildren.length - 1 != _i10 && nextRowChildren[_k4].dataset.xIndex >= thisRowChildren[_i10 + 1].dataset.xIndex) {
-                            for (var z = 0; z < thisRowChildren[_i10].colSpan; z++) {
-                                var _td5 = new WPTB_Cell(mark);
-                                _td5.getDOMElement().setAttribute('style', cellStyles);
-                                tdArr.push([_td5, nextRowChildren[_k4]]);
+                        var nextRowChildrenK = undefined;
+                        for (var _k4 = 0; _k4 < nextRowChildrenLength; _k4++) {
+                            if (Number(nextRowChildren[_k4].dataset.xIndex) > Number(thisRowChildren[_j5].dataset.xIndex)) {
+                                nextRowChildrenK = nextRowChildren[_k4];
+                                break;
                             }
-                            break;
-                        } else if (thisRowChildren.length - 1 == _i10) {
-                            for (var _z = 0; _z < thisRowChildren[_i10].colSpan; _z++) {
-                                var _td6 = new WPTB_Cell(mark);
-                                _td6.getDOMElement().setAttribute('style', cellStyles);
-                                tdArr.push([_td6]);
-                            }
-                            break;
+                        }
+
+                        if (nextRowChildrenK) {
+                            tdArr.push([td, nextRowChildrenK]);
+                        } else {
+                            tdArr.push([td]);
                         }
                     }
+                }
 
-                    if (tdArr.length > 0) {
-                        for (var _k5 = 0; _k5 < tdArr.length; _k5++) {
-                            if (tdArr[_k5][1] != undefined) {
-                                nextRow.insertBefore(tdArr[_k5][0].getDOMElement(), tdArr[_k5][1]);
-                            } else {
-                                nextRow.appendChild(tdArr[_k5][0].getDOMElement());
+                if (tdArr.length > 0) {
+                    for (var _k5 = 0; _k5 < tdArr.length; _k5++) {
+                        if (tdArr[_k5][1] != undefined) {
+                            nextRow.insertBefore(tdArr[_k5][0].getDOMElement(), tdArr[_k5][1]);
+                        } else {
+                            nextRow.appendChild(tdArr[_k5][0].getDOMElement());
+                        }
+                    }
+                }
+            }
+
+            var tableRows = table.rows;
+            if (tableRows.length > 0) {
+                for (var _j6 = 0; _j6 < row; _j6++) {
+                    var jRowChildren = tableRows[_j6].children;
+                    if (jRowChildren.length > 0) {
+                        for (var x = 0; x < jRowChildren.length; x++) {
+                            if (jRowChildren[x].rowSpan - 1 >= row - _j6) {
+                                jRowChildren[x].rowSpan--;
                             }
                         }
                     }
                 }
             }
+            aux = Array.from(array[0]);
+            array.pop(aux);
+            drawTable(array);
+            table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
+            table.recalculateIndexes();
+            console.log(array);
         }
-        var tableRows = table.rows;
-        if (tableRows.length > 0) {
-            for (var _j5 = 0; _j5 < row; _j5++) {
-                var jRowChildren = tableRows[_j5].children;
-                if (jRowChildren.length > 0) {
-                    for (var x = 0; x < jRowChildren.length; x++) {
-                        if (jRowChildren[x].rowSpan - 1 >= row - _j5) {
-                            jRowChildren[x].rowSpan--;
-                        }
-                    }
-                }
-            }
-        }
-
-        table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
-        table.recalculateIndexes();
         undoSelect();
     };
 
@@ -3099,68 +3070,39 @@ var array = [],
      */
 
     table.deleteColumn = function () {
+        var cell = document.querySelector('.wptb-highlighted'),
+            cellXIndex = cell.dataset.xIndex,
+            colspan = cell.colSpan;
 
-        var cell_ref = document.querySelector('.wptb-highlighted'),
-            column = getCoords(cell_ref)[1],
-            buffer,
-            cell,
-            carriedRowspans = [];
-
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            carriedRowspans.push(0);
-        }
-
-        for (var i = 0; i < table.rows.length; i++) {
-            buffer = table.rows[i].getElementsByTagName('td');
-            stepsToMove = 1;
-            cellPointer = 0;
-            for (var j = 0; j < maxAmountOfCells; j += stepsToMove) {
-
-                stepsToMove = 1;
-
-                if (carriedRowspans[j] == 0) {
-                    cell = buffer[cellPointer++];
-                    if (cell.rowSpan > 1) {
-                        stepsToMove = cell.colSpan;
-                        for (var k = 0; k < cell.colSpan; k++) {
-                            carriedRowspans[j + k] = cell.rowSpan;
-                        }
-                        if (column > j && column <= j + k - 1) {
-                            //cell.style.backgroundColor = 'pink';
-                            cell.colSpan--;
+        for (var _i12 = 0; _i12 < colspan; _i12++) {
+            for (var _j7 = 0; _j7 < table.rows.length; _j7++) {
+                var rowChildren = table.rows[_j7].children;
+                var rowChildrenLength = rowChildren.length;
+                if (rowChildrenLength > 0) {
+                    for (var _k6 = rowChildrenLength - 1; _k6 >= 0; _k6--) {
+                        if (Number(rowChildren[_k6].dataset.xIndex) == Number(cellXIndex)) {
+                            if (rowChildren[_k6].colSpan > 1) {
+                                rowChildren[_k6].colSpan--;
+                            } else {
+                                table.rows[_j7].removeChild(rowChildren[_k6]);
+                            }
                             break;
-                        }
-                    } else if (cell.colSpan > 1) {
-                        stepsToMove = cell.colSpan;
-
-                        if (column > j && column <= j + cell.colSpan - 1) {
-                            //cell.style.backgroundColor = 'pink';
-                            cell.colSpan--;
+                        } else if (Number(rowChildren[_k6].dataset.xIndex) < Number(cellXIndex) && Number(rowChildren[_k6].dataset.xIndex) + Number(rowChildren[_k6].colSpan - 1) >= cellXIndex) {
+                            if (rowChildren[_k6].colSpan > 1) {
+                                rowChildren[_k6].colSpan--;
+                            }
                             break;
                         }
                     }
-                    {
-                        if (column == j) {
-                            table.rows[i].removeChild(cell);
-                            //cell.style.backgroundColor = 'pink';
-                            break;
-                        }
-                    }
-                } else {
-                    continue;
                 }
             }
 
-            for (var l = 0; l < carriedRowspans.length; l++) {
-                if (carriedRowspans[l] > 0) {
-                    carriedRowspans[l]--;
-                }
+            for (var _j8 = 0; _j8 < table.rows.length; _j8++) {
+                if (array[_j8] != undefined) array[_j8].pop();
             }
-        }
-        maxAmountOfCells--;
 
-        for (var i = 0; i < table.rows.length; i++) {
-            if (array[i] != undefined) array[i].pop();
+            maxAmountOfCells--;
+            table.recalculateIndexes();
         }
         undoSelect();
     };
