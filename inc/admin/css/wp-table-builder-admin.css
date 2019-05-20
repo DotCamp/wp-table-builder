@@ -816,7 +816,7 @@ table.wptb-table {
     border-collapse: collapse;
 }
 
-.wptb-preview-table.wptb-preview-table-manage-cells td::after {
+.wptb-preview-table.wptb-preview-table-manage-cells tbody > tr > td::after {
     content: '';
     display: block;
     position: absolute;
@@ -926,8 +926,15 @@ table.wptb-table {
     color: #969fa6;
 }
 
-.wptb-row td:empty {
+.wptb-row td:empty::after {
+    content: '';
+    display: block;
     border: 1px dashed #969fa6;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
 }
 
 .wptb-table-head td:empty::before {

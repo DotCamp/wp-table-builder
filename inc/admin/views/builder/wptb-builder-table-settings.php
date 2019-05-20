@@ -34,14 +34,6 @@
             </label>  
         </div>  
     </div>
-    <div class="wptb-settings-row wptb-settings-middle-xs">
-        <div class='wptb-settings-col-xs-8'>
-            <p><?php echo __( 'Border Color', 'wp-table-builder' ); ?></p>
-        </div>
-        <div class='wptb-settings-col-xs-8'>
-            <input type="text" id="wptb-table-border-color" value=""/>
-        </div>
-    </div>
     <div id="wptb-apply-inner-border" style="display:none" class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
@@ -50,13 +42,21 @@
         </div>
         <div id="wptb-inner-border-settings" class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
             <div class="wptb-settings-col-xs-8">
-                <input id="wptb-table-inner-border-slider" type="range" min="1" max="50" step="1" value="0">
+                <input id="wptb-table-inner-border-slider" type="range" min="1" max="50" step="1" value="1">
             </div>
             <div class="wptb-settings-col-xs-4">
                 <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="1" max="50" step="1" placeholder="1" value="1">
                 <span class="wptb-input-px">px</span>
             </div>
         </div>    
+    </div>
+    <div id="wptb-table-border-color-set-area" style="display:none" class="wptb-settings-row wptb-settings-middle-xs">
+        <div class='wptb-settings-col-xs-8'>
+            <p><?php echo __( 'Border Color', 'wp-table-builder' ); ?></p>
+        </div>
+        <div class='wptb-settings-col-xs-8'>
+            <input type="text" id="wptb-table-border-color" value=""/>
+        </div>
     </div>
 
     <div class="wptb-settings-items">

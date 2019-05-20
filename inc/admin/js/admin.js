@@ -417,8 +417,6 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 
         if (innerBorderWidth != '' && parseInt(innerBorderWidth) != 0) {
             DOMElement.style.border = innerBorderWidth + 'px solid ' + jQuery('#wptb-table-border-color').val();
-        } else {
-            DOMElement.style.border = '1px dashed #969fa6';
         }
 
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');
@@ -1275,14 +1273,29 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             }
 
             var tableTd = table[0].querySelector('td');
-            if (tableTd) {
-                var applyInnerBorder = tableTd.style.borderWidth;
+            var applyInnerBorder = tableTd.style.borderWidth;
+            if (applyInnerBorder) {
+                var innerBorderCheckInput = document.getElementById('wptb-inner-border-check');
+                var wptbApplyInnerBorder = document.getElementById('wptb-apply-inner-border');
                 if (applyInnerBorder && parseInt(applyInnerBorder) > 0) {
-                    var innerBorderCheckInput = document.getElementById('wptb-inner-border-check');
                     if (innerBorderCheckInput) {
                         innerBorderCheckInput.checked = true;
+
+                        if (wptbApplyInnerBorder) {
+                            wptbApplyInnerBorder.classList.add('visible');
+                            var wptbTableInnerBorderSlider = document.getElementById('wptb-table-inner-border-slider');
+                            var wptbTableInnerBorderNumber = document.getElementById('wptb-table-inner-border-number');
+                            wptbTableInnerBorderSlider.value = parseInt(applyInnerBorder);
+                            wptbTableInnerBorderNumber.value = parseInt(applyInnerBorder);
+                        }
                     }
+                } else {
+                    innerBorderCheckInput.checked = false;
                 }
+            }
+
+            if (tableBorderWidth && parseInt(tableBorderWidth) > 0 || applyInnerBorder && parseInt(applyInnerBorder) > 0) {
+                document.getElementById('wptb-table-border-color-set-area').style.display = '';
             }
         }
     }
@@ -1300,13 +1313,22 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                     tableCells[i].style.border = (tableInnerborderNumber != 0 ? tableInnerborderNumber : 1) + 'px solid ' + ui.color.toString();
                 }
             }
+        },
+        clear: function clear() {
+            var tableCells = table.getElementsByTagName('td');
+            table.style.borderColor = '';
+
+            for (var i = 0; i < tableCells.length; i++) {
+                tableCells[i].style.borderColor = '';
+            }
         }
     });
 
     function addInnerBorderSize(value) {
         var tableCells = table.getElementsByTagName('td');
         for (var i = 0; i < tableCells.length; i++) {
-            tableCells[i].style.border = document.querySelector('#wptb-table-inner-border-number').value + 'px solid ' + hexToRgb(jQuery('#wptb-table-border-color').val());
+            tableCells[i].style.borderWidth = document.querySelector('#wptb-table-inner-border-number').value + 'px';
+            tableCells[i].style.borderStyle = 'solid';
         }
     }
 
@@ -1320,16 +1342,21 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     function addInnerBorder(checked) {
         var styles,
             color = document.querySelector('#wptb-table-border-color').value != undefined ? document.querySelector('#wptb-table-border-color').value : 'rgb(0,0,0)';
+        if (document.querySelector('#wptb-table-inner-border-slider').value == 0 || document.querySelector('#wptb-table-inner-border-number').value == 0) {
+            document.querySelector('#wptb-table-inner-border-slider').value = 1;
+            document.querySelector('#wptb-table-inner-border-number').value = 1;
+        }
+        var width = document.querySelector('#wptb-table-inner-border-slider').value + 'px';
 
         if (checked == 'checked') {
             document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
-                tableCells[i].style.border = '1px solid ' + color;
+                tableCells[i].style.border = width + ' solid ' + color;
             }
-            document.getElementById('wptb-inner-border-settings').classList.add('visible');
+            document.getElementById('wptb-apply-inner-border').classList.add('visible');
         } else {
-            document.getElementById('wptb-inner-border-settings').classList.remove('visible');
+            document.getElementById('wptb-apply-inner-border').classList.remove('visible');
             var tableCells = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.border = '0px solid ' + color;
@@ -1381,6 +1408,16 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     document.getElementById('wptb-table-border-slider').oninput = function () {
         document.getElementById('wptb-table-border-number').value = this.value;
         addBorderSize(this.value);
+
+        var wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
+            tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
+        console.log(wptbInnerBorderCheck);
+        console.log(this.value);
+        if (this.value == 0 && wptbInnerBorderCheck == false) {
+            tableBorderColorSetArea.style.display = 'none';
+        } else {
+            tableBorderColorSetArea.style.display = '';
+        }
     };
 
     document.getElementById('wptb-table-border-number').onchange = function () {
@@ -1401,6 +1438,13 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     document.getElementById('wptb-inner-border-check').onchange = function () {
         var _val = this.checked ? 'checked' : 'unchecked';
         addInnerBorder(_val);
+        var borderWidth = document.getElementById('wptb-table-border-slider').value,
+            tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
+        if (_val == 'unchecked' && borderWidth == 0) {
+            tableBorderColorSetArea.style.display = 'none';
+        } else {
+            tableBorderColorSetArea.style.display = '';
+        }
     };
 
     for (var i = 0; i < wptbElementButtons.length; i++) {

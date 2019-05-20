@@ -59,9 +59,7 @@ var WPTB_Cell = function (callback, DOMElement) {
 
         if (innerBorderWidth != '' && parseInt(innerBorderWidth) != 0) {
             DOMElement.style.border = innerBorderWidth + 'px solid ' + jQuery('#wptb-table-border-color').val();
-        } else {
-            DOMElement.style.border = '1px dashed #969fa6';
-        }
+        } 
 
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');
     }
