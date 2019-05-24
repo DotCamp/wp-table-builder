@@ -944,12 +944,8 @@ var array = [], WPTB_Table = function (columns, rows) {
             p.removeChild(tds[i]);
         }
         if (tdsChildrenNew.length > 0) {
-            if (first.children.length == 0) {
-                first.appendChild(new WPTB_Space());
-            }
             for (let i = 0; i < tdsChildrenNew.length; i++) {
                 first.appendChild(tdsChildrenNew[i]);
-                first.appendChild(new WPTB_Space());
             }
         }
 

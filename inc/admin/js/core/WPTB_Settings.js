@@ -10,20 +10,28 @@ var WPTB_Settings = function () {
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
-
+        
 	for (var i = 0; i < elems.length; i++) {
-		elems[i].ondragstart = function (event) {
-			event.dataTransfer.effectAllowed = 'move';
-			event.dataTransfer.setData('wptbElement', event.target.dataset.wptbElement);
-		}
+            elems[i].ondragstart = function (event) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData( 'wptbElement', event.target.dataset.wptbElement );
+            }
+            elems[i].ondragend = function () {
+                let wptbDropHandle = document.querySelector( '.wptb-drop-handle' ),
+                    wptbDropBorderMarker = document.querySelector( '.wptb-drop-border-marker' );
+                if ( wptbDropHandle || wptbDropBorderMarker ) {
+                    wptbDropHandle.style.display = 'none';
+                    wptbDropBorderMarker.style.display = 'none';
+                }
+            }
 	};
 
-	document.getElementsByClassName('wptb-save-btn')[0].onclick = function () {
+	document.getElementsByClassName( 'wptb-save-btn' )[0].onclick = function () {
 		let http = new XMLHttpRequest(),
 		    url = ajaxurl + "?action=save_table",
-		    t = document.getElementById('wptb-setup-name').value.trim(),
+		    t = document.getElementById( 'wptb-setup-name' ).value.trim(),
 		    messagingArea,
-                    code = WPTB_Stringifier(document.getElementsByClassName('wptb-preview-table')[0], true);
+                    code = WPTB_Stringifier( document.getElementsByClassName( 'wptb-preview-table' )[0], true);
                     
 		if (t === '') {
 			messagingArea = document.getElementById('wptb-messaging-area');

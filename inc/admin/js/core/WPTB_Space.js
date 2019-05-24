@@ -36,7 +36,7 @@ var WPTB_Space = function ( elSpaceBetween ) {
             td = event.target,
             element, t_space, spaceParent;
 
-        while (!td.classList.contains('wptb-droppable')) {
+        while ( !td.classList.contains('wptb-droppable') ) {
             td = td.parentNode;
         }
 

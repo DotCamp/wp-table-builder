@@ -1,248 +1,234 @@
 var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
-	var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-	var node = element.getDOMElement(),
-	    index,
-	    listItems,
-	    copy;
+    var node = element.getDOMElement(),
+        index,
+        listItems,
+        copy;
 
-	if (kindIndexProt == undefined || copy == true) {
-		index = document.counter.nextIndex(element.kind);
-		var wptbElements = document.getElementsByClassName('wptb-ph-element');
-		if (wptbElements.length > 0) {
-			index = wptbElements.length + 1;
-		} else {
-			index = 1;
-		}
-	} else if (kindIndexProt && !copy) {
-		index = kindIndexProt.split('-')[1];
-	}
+    if (kindIndexProt == undefined || copy == true) {
+        index = document.counter.nextIndex(element.kind);
+        var wptbElements = document.getElementsByClassName('wptb-ph-element');
+        if (wptbElements.length > 0) {
+            index = wptbElements.length + 1;
+        } else {
+            index = 1;
+        }
+    } else if (kindIndexProt && !copy) {
+        index = kindIndexProt.split('-')[1];
+    }
 
-	node.onmouseenter = function (event) {
-		this.classList.add('wptb-directlyhovered');
-		var btnDelete = document.createElement('span'),
-		    btnCopy = document.createElement('span'),
-		    btnMove = document.createElement('span'),
-		    actions = document.createElement('span'),
-		    previous = void 0,
-		    i = void 0;
+    node.onmouseenter = function (event) {
+        this.classList.add('wptb-directlyhovered');
+        var btnDelete = document.createElement('span'),
+            btnCopy = document.createElement('span'),
+            btnMove = document.createElement('span'),
+            actions = document.createElement('span'),
+            i = void 0;
 
-		actions.classList.add('wptb-actions');
-		btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-		btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-		btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
-		btnMove.draggable = true;
-		btnDelete.onclick = function (event) {
-			var act = this.parentNode.parentNode,
-			    el = act.parentNode,
-			    space = act.nextSibling,
-			    num,
-			    space2;
-			el.removeChild(act);
-			el.removeChild(space);
-			num = el.getElementsByClassName('wptb-ph-element').length;
-			if (!num) {
-				space2 = el.getElementsByClassName('wptb-space-between')[0];
-				if (space2) {
-					el.removeChild(space2);
-				}
-			}
-		};
-		btnCopy.onclick = function (event) {
-			if (element.kind == 'list') {
-				var td = event.target.parentNode.parentNode.parentNode,
-				    temp = [],
-				    srcList = event.target.parentNode.parentNode.querySelectorAll('ul li .wptb-list-item-content');
+        actions.classList.add('wptb-actions');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
+        btnMove.draggable = true;
+        btnDelete.onclick = function (event) {
+            var act = this.parentNode.parentNode,
+                el = act.parentNode;
+            el.removeChild(act);
+        };
+        btnCopy.onclick = function (event) {
+            if (element.kind == 'list') {
+                var td = event.target.parentNode.parentNode.parentNode,
+                    temp = [],
+                    srcList = event.target.parentNode.parentNode.querySelectorAll('ul li .wptb-list-item-content');
 
-				for (var i = 0; i < srcList.length; i++) {
-					temp.push(srcList[i].innerHTML);
-				}
+                for (var i = 0; i < srcList.length; i++) {
+                    temp.push(srcList[i].innerHTML);
+                }
 
-				var copy = new WPTB_List(temp, node);
+                var copy = new WPTB_List(temp, node);
 
-				node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
-				node.parentNode.insertBefore(new WPTB_Space(), copy.getDOMElement());
-			} else if (element.kind == 'text') {
-				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
+                node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
+            } else if (element.kind == 'text') {
+                var td = event.target.parentNode.parentNode.parentNode,
+                    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
 
-				node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
-				node.parentNode.insertBefore(new WPTB_Space(), copy.getDOMElement());
-			} else if (element.kind == 'image') {
-				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Image(event.target.parentNode.parentNode.children[0].children[0].src, node);
+                node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
+            } else if (element.kind == 'image') {
+                var td = event.target.parentNode.parentNode.parentNode,
+                    copy = new WPTB_Image(event.target.parentNode.parentNode.children[0].children[0].src, node);
 
-				node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
-				node.parentNode.insertBefore(new WPTB_Space(), copy.getDOMElement());
-			} else {
-				var td = event.target.parentNode.parentNode.parentNode,
-				    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
+                node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
+            } else {
+                var td = event.target.parentNode.parentNode.parentNode,
+                    copy = new WPTB_Button(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
 
-				node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
-				node.parentNode.insertBefore(new WPTB_Space(), copy.getDOMElement());
-			}
-		};
-		btnMove.ondragstart = function (event) {
-			var parent = this,
-			    infArr,
-			    type;
+                node.parentNode.insertBefore(copy.getDOMElement(), node.nextSibling);
+            }
+        };
+        btnMove.ondragstart = function (event) {
+            var parent = this,
+                infArr,
+                type;
 
-			while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
-				parent = parent.parentNode;
-			}
+            while (parent.className == '' || !parent.classList.contains('wptb-ph-element')) {
+                parent = parent.parentNode;
+            }
+            this.parentNode.style.display = 'none';
+            parent.classList.add('moving-mode');
+            parent.classList.remove('wptb-directlyhovered');
 
-			infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-			type = infArr[1];
+            infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
+            type = infArr[1];
 
-			var img = document.createElement("img");
-			img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-			event.dataTransfer.setDragImage(img, 0, 0);
-			event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
-		};
+            var img = document.createElement("img");
+            img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
+            event.dataTransfer.setDragImage(img, 0, 0);
+            event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
+        };
 
-		if (element.kind === 'button') {
-			tinyMCE.init({
-				target: node.childNodes[0].childNodes[0],
-				inline: true,
-				plugins: "link",
-				dialog_type: "modal",
-				theme: 'modern',
-				menubar: false,
-				fixed_toolbar_container: '#wpcd_fixed_toolbar',
-				toolbar: 'bold italic strikethrough',
-				verify_html: false,
-				setup: function setup(ed) {
-					ed.on("init", function (ed) {
-						tinyMCE.execCommand('mceRepaint');
-					});
-				},
-				init_instance_callback: function init_instance_callback(editor) {
-					editor.on('change', function (e) {
-						// check if it becomes empty because if there's no value it's hard to edit the editor in button element
-						if (editor.getContent().trim() == "") {
-							editor.setContent("<a class='wptb-button'>Button Text</a>");
-						}
-					});
-					editor.on('KeyDown', function (e) {
-						var range = editor.selection.getRng();
-						var KeyID = e.keyCode;
-						if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
-							e.preventDefault();
-							editor.setContent("<p class='wptb-button'></p>");
-						}
-					});
+        if (element.kind === 'button') {
+            tinyMCE.init({
+                target: node.childNodes[0].childNodes[0],
+                inline: true,
+                plugins: "link",
+                dialog_type: "modal",
+                theme: 'modern',
+                menubar: false,
+                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                toolbar: 'bold italic strikethrough',
+                verify_html: false,
+                setup: function setup(ed) {
+                    ed.on("init", function (ed) {
+                        tinyMCE.execCommand('mceRepaint');
+                    });
+                },
+                init_instance_callback: function init_instance_callback(editor) {
+                    editor.on('change', function (e) {
+                        // check if it becomes empty because if there's no value it's hard to edit the editor in button element
+                        if (editor.getContent().trim() == "") {
+                            editor.setContent("<a class='wptb-button'>Button Text</a>");
+                        }
+                    });
+                    editor.on('KeyDown', function (e) {
+                        var range = editor.selection.getRng();
+                        var KeyID = e.keyCode;
+                        if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
+                            e.preventDefault();
+                            editor.setContent("<p class='wptb-button'></p>");
+                        }
+                    });
 
-					window.currentEditor = editor;
-					editor.on('focus', function (e) {
-						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-						} else {
-							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-							delete document.getElementById('wpcd_fixed_toolbar').style.right;
-							delete document.getElementById('wpcd_fixed_toolbar').style.top;
-						}
-					});
-				}
-			});
-		} else if (element.kind === 'text') {
-			tinyMCE.init({
-				target: node.childNodes[0],
-				inline: true,
-				plugins: "link, paste",
-				dialog_type: "modal",
-				theme: 'modern',
-				menubar: false,
-				fixed_toolbar_container: '#wpcd_fixed_toolbar',
-				paste_as_text: true,
-				toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-				init_instance_callback: function init_instance_callback(editor) {
-					window.currentEditor = editor;
-					editor.on('focus', function (e) {
+                    window.currentEditor = editor;
+                    editor.on('focus', function (e) {
+                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                        } else {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                        }
+                    });
+                }
+            });
+        } else if (element.kind === 'text') {
+            tinyMCE.init({
+                target: node.childNodes[0],
+                inline: true,
+                plugins: "link, paste",
+                dialog_type: "modal",
+                theme: 'modern',
+                menubar: false,
+                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                paste_as_text: true,
+                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                init_instance_callback: function init_instance_callback(editor) {
+                    window.currentEditor = editor;
+                    editor.on('focus', function (e) {
+                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                        } else {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                        }
+                    });
+                }
+            });
+        } else {
+            listItems = node.getElementsByClassName('wptb-list-item-content');
+            for (var _i = 0; _i < listItems.length; _i++) {
+                tinyMCE.init({
+                    target: listItems[_i],
+                    inline: true,
+                    plugins: "link, paste",
+                    dialog_type: "modal",
+                    theme: 'modern',
+                    menubar: false,
+                    fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                    paste_as_text: true,
+                    toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                    init_instance_callback: function init_instance_callback(editor) {
+                        window.currentEditor = editor;
+                        editor.on('focus', function (e) {
+                            var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                            if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+                                document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                                document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+                                document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                            } else {
+                                document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                                delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                                delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                            }
+                        });
+                    }
+                });
+            }
+        }
 
-						var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-						if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-							document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-							document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-							document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-						} else {
-							document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-							delete document.getElementById('wpcd_fixed_toolbar').style.right;
-							delete document.getElementById('wpcd_fixed_toolbar').style.top;
-						}
-					});
-				}
-			});
-		} else {
-			listItems = node.getElementsByClassName('wptb-list-item-content');
-			for (var _i = 0; _i < listItems.length; _i++) {
-				tinyMCE.init({
-					target: listItems[_i],
-					inline: true,
-					plugins: "link, paste",
-					dialog_type: "modal",
-					theme: 'modern',
-					menubar: false,
-					fixed_toolbar_container: '#wpcd_fixed_toolbar',
-					paste_as_text: true,
-					toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-					init_instance_callback: function init_instance_callback(editor) {
-						window.currentEditor = editor;
-						editor.on('focus', function (e) {
-							var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-							if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-								document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-								document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-								document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-							} else {
-								document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-								delete document.getElementById('wpcd_fixed_toolbar').style.right;
-								delete document.getElementById('wpcd_fixed_toolbar').style.top;
-							}
-						});
-					}
-				});
-			}
-		}
+        actions.appendChild(btnMove);
+        actions.appendChild(btnCopy);
+        actions.appendChild(btnDelete);
+        //                let actionOld = this.querySelector( '.wptb-actions' );
+        //                if( actionOld ) {
+        //                    this.removeChild( actionOld );
+        //                }
+        this.appendChild(actions);
+    };
 
-		actions.appendChild(btnMove);
-		actions.appendChild(btnCopy);
-		actions.appendChild(btnDelete);
-		//                let actionOld = this.querySelector( '.wptb-actions' );
-		//                if( actionOld ) {
-		//                    this.removeChild( actionOld );
-		//                }
-		this.appendChild(actions);
-	};
+    node.onmouseleave = function (event) {
+        this.classList.remove('wptb-directlyhovered');
+        var iter = 0;
+        while (event.target.querySelector('.wptb-actions') && iter < 5) {
+            event.target.querySelector('.wptb-actions').remove();
+            iter++;
+        }
+    };
 
-	node.onmouseleave = function (event) {
-		this.classList.remove('wptb-directlyhovered');
-		var iter = 0;
-		while (event.target.querySelector('.wptb-actions') && iter < 5) {
-			event.target.querySelector('.wptb-actions').remove();
-			iter++;
-		}
-	};
+    var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+    if (node_wptb_element_kind_num) {
+        node.classList.remove(node_wptb_element_kind_num[0]);
+    }
+    if (!node.classList.contains('wptb-ph-element')) {
+        node.classList.add('wptb-ph-element');
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    } else {
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    }
+    new WPTB_ElementOptions(element, index, kindIndexProt);
 
-	var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
-	if (node_wptb_element_kind_num) {
-		node.classList.remove(node_wptb_element_kind_num[0]);
-	}
-	if (!node.classList.contains('wptb-ph-element')) {
-		node.classList.add('wptb-ph-element');
-		if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-			node.classList.add('wptb-element-' + element.kind + '-' + index);
-		}
-	} else {
-		if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-			node.classList.add('wptb-element-' + element.kind + '-' + index);
-		}
-	}
-	new WPTB_ElementOptions(element, index, kindIndexProt);
-
-	document.counter.increment(element.kind);
+    document.counter.increment(element.kind);
 };
 
 (function () {
@@ -279,6 +265,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             http.send(null);
         }
         document.counter = new ElementCounters();
+        console.log(document.counter);
         document.select = new MultipleSelect();
 
         var initializer = WPTB_Initializer();
@@ -358,18 +345,6 @@ var WPTB_Button = function WPTB_Button(text, DOMElementProt) {
 };
 var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 
-    function newElementProxy(el) {
-        if (el == 'list') {
-            return new WPTB_List();
-        } else if (el == 'image') {
-            return new WPTB_Image();
-        } else if (el == 'text') {
-            return new WPTB_Text();
-        } else if (el == 'button') {
-            return new WPTB_Button();
-        }
-    }
-
     function highlightRow(td) {
         var parentRow = td.parentNode,
             columnCount = parseInt(document.getElementById('wptb-columns-number').value),
@@ -427,55 +402,7 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         DOMElement.onclick = callback;
     }
 
-    DOMElement.ondragenter = function (e) {
-        var div;
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-        this.classList.add('wptb-drop-here-empty');
-    };
-
-    DOMElement.ondragover = function (e) {
-        e.preventDefault();
-    };
-
-    DOMElement.ondragleave = function () {
-        this.classList.remove('wptb-drop-here-empty');
-    };
-
-    DOMElement.ondrop = function (e) {
-        var element, classId, space, t_space, spaceParent;
-        e.preventDefault();
-        space = new WPTB_Space();
-
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-
-        if (e.dataTransfer.getData('wptbElement')) {
-            element = newElementProxy(e.dataTransfer.getData('wptbElement'));
-            if (this.innerHTML == '') {
-                this.appendChild(new WPTB_Space());
-            }
-            this.appendChild(element.getDOMElement());
-            this.appendChild(space);
-        } else {
-            classId = e.dataTransfer.getData('node');
-            element = document.getElementsByClassName(classId)[0];
-            if (this.innerHTML == '') {
-                t_space = element.nextSibling;
-                spaceParent = element.parentNode;
-                if (t_space != undefined) {
-                    spaceParent.removeChild(t_space);
-                }
-                this.appendChild(new WPTB_Space());
-            }
-            this.appendChild(element);
-            this.appendChild(space);
-        }
-        this.classList.remove('wptb-drop-here-empty');
-        return true;
-    };
+    WPTB_innerElementSet(DOMElement);
 
     var wptbPhElement = DOMElement.getElementsByClassName('wptb-ph-element');
 
@@ -493,6 +420,8 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
             wptbPhElement[i].getDOMElement = function () {
                 return wptbPhElement[i];
             };
+
+            WPTB_innerElementSet(wptbPhElement[i]);
 
             var wptbElementTypeClass = wptbPhElement[i].className.match(/wptb-element-((.+-)\d+)/i);
             if (wptbElementTypeClass && Array.isArray(wptbElementTypeClass)) {
@@ -538,6 +467,152 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
     };
 
     return this;
+};
+var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
+
+    function newElementProxy(el) {
+        if (el.includes('list')) {
+            return new WPTB_List();
+        } else if (el.includes('image')) {
+            return new WPTB_Image();
+        } else if (el.includes('text')) {
+            return new WPTB_Text();
+        } else if (el.includes('button')) {
+            return new WPTB_Button();
+        }
+    }
+
+    var wptbDropHandle = void 0,
+        wptbDropBorderMarker = void 0;
+    if (document.getElementsByClassName('wptb-drop-handle').length == 0) {
+        wptbDropHandle = document.createElement('div');
+        wptbDropHandle.classList.add('wptb-drop-handle');
+
+        wptbDropBorderMarker = document.createElement('div');
+        wptbDropBorderMarker.classList.add('wptb-drop-border-marker');
+
+        var _wptbDropBorderMarkerTop = document.createElement('div'),
+            _wptbDropBorderMarkerRight = document.createElement('div'),
+            _wptbDropBorderMarkerBottom = document.createElement('div'),
+            _wptbDropBorderMarkerLeft = document.createElement('div');
+
+        _wptbDropBorderMarkerTop.classList.add('wptb-drop-border-marker-top');
+        _wptbDropBorderMarkerRight.classList.add('wptb-drop-border-marker-right');
+        _wptbDropBorderMarkerBottom.classList.add('wptb-drop-border-marker-bottom');
+        _wptbDropBorderMarkerLeft.classList.add('wptb-drop-border-marker-left');
+
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerTop);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerRight);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerBottom);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerLeft);
+
+        var body = document.getElementsByTagName('body');
+        if (body.length > 0) {
+            body[0].appendChild(wptbDropHandle);
+            body[0].appendChild(wptbDropBorderMarker);
+        }
+
+        wptbDropHandle.ondragenter = function () {};
+
+        wptbDropHandle.ondragover = function (e) {
+            e.preventDefault();
+        };
+
+        wptbDropHandle.ondragleave = function () {};
+        wptbDropHandle.ondrop = function (e) {
+            e.preventDefault();
+            var element = void 0;
+
+            if (e.dataTransfer.getData('wptbElement')) {
+                element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+                element = element.getDOMElement();
+            } else {
+                element = document.getElementsByClassName(e.dataTransfer.getData('node'))[0];
+                element.classList.remove('moving-mode');
+                element.classList.remove('moving-into-same-elem');
+            }
+            if (wptbDropHandle.dataset.text == 'Drop Here') {
+                thisElem = wptbDropHandle.getDOMParentElement();
+                if (thisElem.nodeName.toLowerCase() == 'td') {
+                    var td = wptbDropHandle.getDOMParentElement();
+                    td.appendChild(element);
+                }
+            } else {
+                var innerElement = wptbDropHandle.getDOMParentElement(),
+                    _td = innerElement.parentNode;
+
+                if (wptbDropHandle.dataset.text == 'Abowe Element') {
+                    _td.insertBefore(element, innerElement);
+                } else if (wptbDropHandle.dataset.text == 'Below Element') {
+                    var innerElementNext = innerElement.nextSibling;
+                    _td.insertBefore(element, innerElementNext);
+                }
+            }
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
+
+            WPTB_innerElementSet(element);
+        };
+    } else {
+        wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
+    }
+    if (thisElem && thisElem.nodeName.toLowerCase() == 'td' && thisElem.getElementsByClassName('wptb-ph-element').length != 0) {
+        return;
+    }
+
+    wptbDropHandle.getDOMParentElement = function () {
+        return thisElem;
+    };
+    wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
+    var height = thisElem.offsetHeight,
+        coordinatesElement = thisElem.getBoundingClientRect(),
+        left = Number(coordinatesElement.left),
+        top = void 0;
+    wptbDropHandle.style.left = left + 'px';
+
+    if (e.dataTransfer.getData('node')) {
+        var elementDrag = document.getElementsByClassName(e.dataTransfer.getData('node'))[0];
+        if (thisElem == elementDrag) {
+            wptbDropHandle.classList.add('moving-into-same-elem');
+            wptbDropBorderMarker.classList.add('moving-into-same-elem');
+        } else {
+            wptbDropHandle.classList.remove('moving-into-same-elem');
+            wptbDropBorderMarker.classList.remove('moving-into-same-elem');
+        }
+    }
+    wptbDropHandle.style.display = 'block';
+    wptbDropBorderMarker.style.display = 'block';
+    if (thisElem.nodeName.toLowerCase() != 'td') {
+        var y = e.offsetY == undefined ? e.layerY : e.offsetY;
+        top = Number(coordinatesElement.top) - Number(11);
+        wptbDropHandle.dataset.text = 'Abowe Element';
+        if (y > height / 2) {
+            top = Number(coordinatesElement.top) + height - 1;
+            wptbDropHandle.dataset.text = 'Below Element';
+        }
+    } else {
+        wptbDropHandle.dataset.text = 'Drop Here';
+        top = Number(coordinatesElement.top) + height / 2 - 5;
+    }
+    wptbDropHandle.style.top = top + 'px';
+
+    wptbDropBorderMarker.style.top = coordinatesElement.top + 'px';
+    wptbDropBorderMarker.style.left = coordinatesElement.left + 'px';
+
+    wptbDropBorderMarkerTop = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-top');
+    wptbDropBorderMarkerTop.style.width = Number(thisElem.offsetWidth) - Number(1) + 'px';
+
+    wptbDropBorderMarkerRight = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-right');
+    wptbDropBorderMarkerRight.style.height = Number(coordinatesElement.bottom) - Number(coordinatesElement.top) - 1 + 'px';
+    wptbDropBorderMarkerRight.style.left = wptbDropBorderMarkerTop.style.width;
+
+    wptbDropBorderMarkerBottom = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-bottom');
+    wptbDropBorderMarkerBottom.style.width = wptbDropBorderMarkerTop.style.width;
+    wptbDropBorderMarkerBottom.style.top = wptbDropBorderMarkerRight.style.height;
+
+    wptbDropBorderMarkerLeft = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-left');
+    wptbDropBorderMarkerLeft.style.height = wptbDropBorderMarkerRight.style.height;
 };
 var ElementCounters = function ElementCounters() {
 
@@ -1142,6 +1217,93 @@ var WPTB_Initializer = function WPTB_Initializer() {
 
                 WPTB_Table(columns, rows);
         };
+};
+var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
+
+    function newElementProxy(el) {
+        if (el == 'list') {
+            return new WPTB_List();
+        } else if (el == 'image') {
+            return new WPTB_Image();
+        } else if (el == 'text') {
+            return new WPTB_Text();
+        } else if (el == 'button') {
+            return new WPTB_Button();
+        }
+    }
+
+    element.ondragenter = function (e) {
+        var div;
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
+
+        WPTB_DropHandle(this, e);
+
+        element.classList.add('ondragenter');
+    };
+    element.ondragover = function (e) {
+        e.preventDefault();
+        WPTB_DropHandle(this, e);
+    };
+    element.ondragleave = function () {};
+    element.ondrop = function (e) {
+        this.classList.remove('ondragenter');
+        var element = void 0,
+            classId = void 0;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
+        var wptbDropHandle = void 0,
+            wptbDropBorderMarker = void 0;
+        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
+            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        }
+        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
+            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
+        }
+
+        if (e.dataTransfer.getData('wptbElement')) {
+            element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+            element = element.getDOMElement();
+        } else {
+            classId = e.dataTransfer.getData('node');
+            element = document.getElementsByClassName(classId)[0];
+            element.classList.remove('moving-mode');
+        }
+
+        if (wptbDropHandle.style.display == 'block') {
+            if (wptbDropHandle.dataset.text == 'Drop Here') {
+                var td = wptbDropHandle.getDOMParentElement();
+                td.appendChild(element);
+            } else {
+                var innerElement = wptbDropHandle.getDOMParentElement(),
+                    _td = innerElement.parentNode;
+
+                if (wptbDropHandle.dataset.text == 'Abowe Element') {
+                    _td.insertBefore(element, innerElement);
+                } else if (wptbDropHandle.dataset.text == 'Below Element') {
+                    var innerElementNext = innerElement.nextSibling;
+                    _td.insertBefore(element, innerElementNext);
+                }
+            }
+        } else {
+            this.appendChild(element);
+        }
+
+        wptbDropHandle.style.display = 'none';
+        wptbDropBorderMarker.style.display = 'none';
+
+        WPTB_innerElementSet(element);
+
+        return true;
+    };
+    element.onmouseover = function (e) {
+        element.classList.remove('ondragenter');
+    };
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
@@ -1754,6 +1916,14 @@ var WPTB_Settings = function WPTB_Settings() {
 		elems[i].ondragstart = function (event) {
 			event.dataTransfer.effectAllowed = 'move';
 			event.dataTransfer.setData('wptbElement', event.target.dataset.wptbElement);
+		};
+		elems[i].ondragend = function () {
+			var wptbDropHandle = document.querySelector('.wptb-drop-handle'),
+			    wptbDropBorderMarker = document.querySelector('.wptb-drop-border-marker');
+			if (wptbDropHandle || wptbDropBorderMarker) {
+				wptbDropHandle.style.display = 'none';
+				wptbDropBorderMarker.style.display = 'none';
+			}
 		};
 	};
 
@@ -2883,12 +3053,8 @@ var array = [],
             p.removeChild(tds[_i7]);
         }
         if (tdsChildrenNew.length > 0) {
-            if (first.children.length == 0) {
-                first.appendChild(new WPTB_Space());
-            }
             for (var _i8 = 0; _i8 < tdsChildrenNew.length; _i8++) {
                 first.appendChild(tdsChildrenNew[_i8]);
-                first.appendChild(new WPTB_Space());
             }
         }
 
