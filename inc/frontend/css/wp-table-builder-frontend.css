@@ -4,41 +4,81 @@
  * The file is enqueued from inc/frontend/class-frontend.php.
  */
 
+
+.wptb-table-container {
+    max-width: 1600px;
+    overflow: auto;
+}
+
+.wptb-table-container table {
+    table-layout: fixed;
+    font-size: 15px;
+    width: 100%;
+    display: table;
+    border-collapse: collapse;
+}
+
+.wptb-table-container table tr:nth-of-type(2n+1) {
+    background-color: #eeeeee;
+}
+
+.wptb-table-container table td {
+    width: 100px;
+    box-sizing: content-box;
+}
+
+.wptb-ph-element {
+    position: relative;
+    border: 1px solid #fff0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.wptb-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wptb-size-S .wptb-button {
+    border-radius: .2rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    padding: .35rem .6rem;
+    max-width: 100%;
+}
+
+.wptb-size-M .wptb-button {
+    border-radius: .3rem;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    padding: .475rem .85rem;
+    max-width: 100%;
+}
+
+.wptb-size-L .wptb-button {
+    border-radius: .3rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    padding: .6rem 1.2rem;
+    max-width: 100%;
+}
+
+.wptb-size-XL .wptb-button {
+    border-radius: .4rem;
+    font-size: 1.35rem;
+    line-height: 1.5;
+    padding: .8rem 1.35rem;
+    max-width: 100%;
+}
+
 .wptb-table img {
     max-width: 100%;
 }
 
 .wptb-button {
-    padding: 16px;
     background: #329d3f;
     color: #ffffff;
-}
-
-.wptb-size-S {
-    border-radius: .2rem;
-    font-size: .875rem;
-    line-height: 1.5;
-    padding: .25rem .5rem;
-}
-
-.wptb-size-M {
-    border-radius: .3rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    padding: .375rem .75rem;
-}
-
-.wptb-size-L {
-    border-radius: .3rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
-    padding: .5rem 1rem;
-}
-
-.wptb-size-XL {
-    border-radius: .4rem;
-    display: block;
-    width: 100%;
 }
 
 .cneter-aligned {
@@ -86,4 +126,10 @@
 
 .square-list li {
     list-style-type: square;
+}
+
+@media only screen and (max-device-width: 1024px) {
+    .wptb-table-container table tr td {
+        width:110px;
+    }
 }

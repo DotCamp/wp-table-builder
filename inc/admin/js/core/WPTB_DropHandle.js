@@ -107,8 +107,8 @@ var WPTB_DropHandle = function (thisElem, e) {
         top;
     wptbDropHandle.style.left = left + 'px';
     
-    if( e.dataTransfer.getData('node') ) {
-        let elementDrag = document.getElementsByClassName( e.dataTransfer.getData('node') )[0];
+    if( e.dataTransfer.types.indexOf( 'moving-mode' ) != -1 ) {
+        let elementDrag = document.getElementsByClassName( 'moving-mode' )[0];
         if( thisElem == elementDrag ) {
             wptbDropHandle.classList.add('moving-into-same-elem');
             wptbDropBorderMarker.classList.add('moving-into-same-elem');

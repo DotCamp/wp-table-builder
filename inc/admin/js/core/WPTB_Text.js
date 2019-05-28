@@ -5,7 +5,7 @@ var WPTB_Text = function ( text , DOMElementProt ) {
                 kindIndexProt = undefined,
                 copy = false;
 
-            elText2.classList.add('editable');
+            //elText2.classList.add('editable');
             elP.innerHTML = text != undefined ? text : 'Text';
             elText2.appendChild(elP);
             DOMElement.appendChild(elText2);

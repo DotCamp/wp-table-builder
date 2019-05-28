@@ -427,20 +427,26 @@ var array = [], WPTB_Table = function (columns, rows) {
      * these are the column number and row number of cell in table. 
      */
 
-    table.recalculateIndexes = function () {
+    table.recalculateIndexes = function ( start ) {
         let trs = this.getElementsByTagName('tr'), tds, maxCols = 0,
                 tdsArr = [];
 
         for (var i = 0; i < trs.length; i++) {
             if (i == 0) {
-                trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+                if ( start == undefined ) {
+                    trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
+                }
                 trs[i].classList.add( 'wptb-table-head' );
             } else {
                 if (i % 2 == 0) {
-                    trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+                    if ( start == undefined ) {
+                        trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
+                    }
                     trs[i].classList.remove( 'wptb-table-head' );
                 } else {
-                    trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+                    if ( start == undefined ) {
+                        trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
+                    }
                     trs[i].classList.remove( 'wptb-table-head' );
                 }
             }
@@ -494,6 +500,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
         this.columns = maxCols;
+        console.log(maxCols);
     }
 
     /*
@@ -1221,9 +1228,9 @@ var array = [], WPTB_Table = function (columns, rows) {
     drawTable(array);
 
     wptbTableSetup.appendChild(table);
-    if (columns || rows) {
-        table.recalculateIndexes();
-    }
+    //if (columns || rows) {
+        table.recalculateIndexes( true );
+    //}
 
     WPTB_LeftPanel();
 

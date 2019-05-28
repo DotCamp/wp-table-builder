@@ -9,8 +9,7 @@ var WPTB_Button = function( text, DOMElementProt ) {
     DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
     elButton2.classList.add('wptb-button-wrapper');
     el_B.classList.add('wptb-button');
-    el_B.classList.add('editable');
-    el_B.classList.add('editable');
+    //el_B.classList.add('editable');
     el_B.innerHTML = text != undefined ? text : 'Button Text';
     
     // Creation of a new button when copying to avoid errors when assigning new event handlers.

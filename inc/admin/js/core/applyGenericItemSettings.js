@@ -70,17 +70,19 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 !parent.classList.contains('wptb-ph-element')) {
                 parent = parent.parentNode;
             }
-            this.parentNode.style.display = 'none';
-            parent.classList.add( 'moving-mode' );
+            this.parentNode.style.opacity = 0;
             parent.classList.remove( 'wptb-directlyhovered' );
+            parent.classList.add( 'moving-mode' );
 
             infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
             type = infArr[1];
 
             var img = document.createElement("img");
-            img.src = "http://localhost/sandbox/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
+            let hostName = location.protocol + '//' + location.hostname;
+            img.src = hostName + "/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
             event.dataTransfer.setDragImage(img, 0, 0);
             event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
+            event.dataTransfer.setData('moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2]); 
         };
 
         if (element.kind === 'button') {

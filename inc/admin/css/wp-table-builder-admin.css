@@ -4,6 +4,10 @@
  * The file is enqueued from inc/admin/class-admin.php.
  */
 
+html {
+    overflow-y: hidden;
+}
+
 body>img {
     position: absolute;
     z-index: 1000001;
@@ -138,6 +142,8 @@ body>img {
     width: auto;
     z-index: 10;
     background: none;
+    max-width: 1600px;
+    margin: auto;
 }
 
 .edit-bar.visible {
@@ -686,7 +692,6 @@ ul.wptb-tabs {
 */
 
 .management_table_container {
-    /*max-width: 880px;*/
     margin: auto;
 }
 
@@ -700,6 +705,8 @@ ul.wptb-tabs {
     background: #fff;
     margin-top: 30px;
     margin-bottom: 30px;
+    max-width: 1600px;
+    overflow: auto;
 }
 
 #cell_mode_background {
@@ -857,6 +864,8 @@ table.wptb-table {
 .wptb-preview-table td {
     padding: 15px;
     position: relative;
+    width: 100px;
+    box-sizing: content-box;
 }
 
 .wptb-preview-table .wptb-row td.wptb-highlighted,
@@ -1446,7 +1455,7 @@ td[class*="wptb-fused-cell"] {
 
 .wptb-size-XL .wptb-button {
     border-radius: .4rem;
-    font-size: 1.35em;
+    font-size: 1.35rem;
     line-height: 1.5;
     padding: .8rem 1.35rem;
     max-width: 100%;

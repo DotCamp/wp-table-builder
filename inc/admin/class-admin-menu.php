@@ -31,7 +31,7 @@ class Admin_Menu {
 
 	public function save_table(){
 
-		if(!isset($_POST['id']) || $_POST['id']==='-1')
+		if( !isset( $_POST['id'] ) || $_POST['id']==='-1' )
 		{
 			$id = wp_insert_post([
 				'post_title' => $_POST['title'],
@@ -49,18 +49,18 @@ class Admin_Menu {
 				'post_content' => '',
 				'post_type' => 'wptb-tables'
 			]);
-			update_post_meta($_POST['id'], '_wptb_content_',$_POST['content']);
+			update_post_meta( $_POST['id'], '_wptb_content_',$_POST['content'] );
 			wp_die( json_encode( ['edited',''] ) );
 		}
  
 	}
 
 	public function get_table(){  
-		$post = get_post($_REQUEST['id']);
-		$html = get_post_meta($_REQUEST['id'] , '_wptb_content_', true);
+		$post = get_post( $_REQUEST['id'] );
+		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_', true );
 		$name = $post->post_title;
         $html = json_decode( $html );
-		die(json_encode([$name, $html]));
+		die( json_encode( [$name, $html] ) );
 	}
 
 
@@ -133,14 +133,12 @@ class Admin_Menu {
 		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 		wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
-		wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-admin.css', array(), NS\PLUGIN_VERSION, 'all' );
-
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
-		wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
-		if(isset($_GET['page']) && $_GET['page']=='wptb-builder')
-		{
-		wp_enqueue_script( 'wptb-admin-builder-js' );
+		if( isset($_GET['page']) && $_GET['page']=='wptb-builder' ) {
+            wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-admin.css', array(), NS\PLUGIN_VERSION, 'all' );
+            wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
+            wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
+            wp_enqueue_script( 'wptb-admin-builder-js' );
 		}
 	
 	}

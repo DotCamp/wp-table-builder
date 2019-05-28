@@ -27,12 +27,20 @@ var WPTB_Settings = function () {
 	};
 
 	document.getElementsByClassName( 'wptb-save-btn' )[0].onclick = function () {
+                let bar = document.querySelector('.edit-bar');
+                if (bar && bar.classList.contains('visible')) {
+                    let table = document.getElementsByClassName('wptb-preview-table')[0];
+                    table.toggleTableEditMode();
+                }
+                    
 		let http = new XMLHttpRequest(),
 		    url = ajaxurl + "?action=save_table",
 		    t = document.getElementById( 'wptb-setup-name' ).value.trim(),
 		    messagingArea,
-                    code = WPTB_Stringifier( document.getElementsByClassName( 'wptb-preview-table' )[0], true);
-                    
+                    code = document.getElementsByClassName( 'wptb-preview-table' )[0];
+                    code = WPTB_Stringifier( code );
+                    console.log(code);
+                    code = code.outerHTML;
 		if (t === '') {
 			messagingArea = document.getElementById('wptb-messaging-area');
 			messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: You must assign a name to the table before saving it.</div>';

@@ -242,6 +242,17 @@ use WP_Table_Builder as NS;
                                 </option>
                             </select>
                         </div>
+                        
+                    <!--<div class="wptb-element-option wptb-settings-items">-->
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'List Font Color', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
+                            <div class='wptb-settings-col-xs-8'>
+                                <input type="text" class="wptb-element-property wptb-color-picker" data-type="list-text-color"/>
+                            </div>
+                        </div>
+                    <!--</div>-->
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php echo __( 'List Alignment', 'wp-table-builder' ); ?></p>
                         </div>

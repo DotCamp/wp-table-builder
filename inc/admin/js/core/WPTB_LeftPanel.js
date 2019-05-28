@@ -2,20 +2,6 @@ var WPTB_LeftPanel = function () {
 
     var table = document.getElementsByClassName('wptb-preview-table')[0],
         wptbElementButtons = document.getElementsByClassName('wptb-element');
-
-    function hexToRgb(hex) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? 'rgb(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16) + ')' : null;
-    }
-    
-    function RgbToHex(rgb) {
-        var rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-
-        return (rgb && rgb.length === 4) ? "#" +
-            ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-            ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-            ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-    };
     
     function wptbTdBgColorSavedSet( inputId, trNumber ) {
         if ( trNumber > 3 ) return;
@@ -24,7 +10,7 @@ var WPTB_LeftPanel = function () {
             let trBackgroundColor = tableRows[trNumber].style.backgroundColor;
             var wptbEvenRowBg = document.getElementById(inputId);
             if ( wptbEvenRowBg && trBackgroundColor ) {
-                wptbEvenRowBg.value = trBackgroundColor;
+                wptbEvenRowBg.value = WPTB_Helper.rgbToHex( trBackgroundColor );
             }
 //            let td = tableRows[trNumber].querySelector( 'td' );
 //            if ( td ) {
@@ -113,7 +99,7 @@ var WPTB_LeftPanel = function () {
             if ( tableBorderColor ) {
                 let tableBorderColorInput = document.getElementById( 'wptb-table-border-color' );
                 if ( tableBorderColorInput ) {
-                    tableBorderColorInput.value = tableBorderColor;
+                    tableBorderColorInput.value = WPTB_Helper.rgbToHex( tableBorderColor );
                 }
             }
             
@@ -312,6 +298,14 @@ var WPTB_LeftPanel = function () {
     for (var i = 0; i < wptbElementButtons.length; i++) {
         wptbElementButtons[i].ondragstart = function (e) {
             e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
+            e.dataTransfer.setDataElem = {
+                type: 'wptbElement',
+                data: this.dataset.wptbElement
+            };
+            e.setDataElem = {
+                type: 'wptbElement',
+                data: this.dataset.wptbElement
+            };
         }
     }
 

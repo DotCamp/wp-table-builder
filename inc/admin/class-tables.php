@@ -97,37 +97,11 @@ class Tables {
     }
 
     public function get_table($args){  
-
-    	$uniqueSequence = 't'.substr(md5(time()),0,8);
-    	$html = get_post_meta($args['id'] , '_wptb_content_');
-    	$code =  $html[0];
-    	$code = preg_replace( '/\[tr\]/','<tr>', $code);
-    	$code = preg_replace( '/\[\/tr\]/','</tr>', $code);
-
-    	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")(\s+rowspan\=\"(\d+)?\")\]/','<td colspan="$2" rowspan="$4">', $code);
-    	$code = preg_replace( '/\[td(\s+rowspan\=\"(\d+)?\")\]/','<td rowspan="$2">', $code);
-    	$code = preg_replace( '/\[td(\s+colspan\=\"(\d+)?\")\]/','<td colspan="$2">', $code);
-    	$code = preg_replace( '/\[td\]/','<td>', $code);
-    	$code = preg_replace( '/\[\/td\]/','</td>', $code);
-
-    	$code = preg_replace( '/\[table\s+border\-color\=\"(rgb\((\d+\,\d+\,\d+)\))?\"\s+padding\=\"((\d+)px)?\"\s+inner\-border\=\"((\d+)px)?\"\s+outer\-border\=\"((\d+)px)?\"\s+data\-bg1\=\"(rgb\((\d+\,\d+\,\d+)\)|transparent)?\"\s+data\-bg2\=\"(rgb\((\d+\,\d+\,\d+)\)|transparent)?\"\s+data\-bg3\=\"(rgb\((\d+\,\d+\,\d+)\)|transparent)?\"\]/','<style type="text/css">#'.$uniqueSequence.'{border:$7px solid black;} #'.$uniqueSequence.' tr:nth-child(even) td{background-color:$11} #'.$uniqueSequence.' tr:nth-child(odd) td{background-color:$13} #'.$uniqueSequence.' tr:nth-child(1) td{background-color:$9} #'.$uniqueSequence.' td{border:$5px solid $1; padding:$3px;}</style><table id="'.$uniqueSequence.'">', $code);  
-    	$code = preg_replace( '/\[\/table\]/','</table>', $code);
-
-    	$code = preg_replace( '/\[text(\s+size\=\"(\d+px)?\")?(\s+color\=\"(rgb\((\d+\,\s?\d+\,\s?\d+)\))?\")?\]/','<span class="wptb-element-text-" style="font-size:$2;color:$4;">', $code);
-    	$code = preg_replace( '/\[\/text\]/','</span>', $code);
-
-    	$code = preg_replace( '/\[img\s+src\=\"([^\"]+)\"\s+width\=\"([0-9]+\%)\"\s+alt\=\"([a-zA-Z\s0-9]*)\"\s+alignment\=\"([a-z]*)\"\s+link\=\"([^\"]*)\"\s+newtab\=\"([\_a-z]+)\"\]/','<a href="$7" target="$10"><img class="$6-aligned" src="$1" target="$7" style="width:$4;" alt="$5"/></a>', $code);
-
-    	$code = preg_replace( '/\[button\s+textcolor\=\"(rgb\(\d+\,\s?\d+\,\s?\d+\))?\"\s+color\=\"(rgb\(\d+\,\s?\d+\,\s?\d+\))?\"\s+size\=\"([A-Z]+)\"\s+alignment\=\"([\-a-z]*)\"\s+link\=\"([^\"]*)\"\s+newtab\=\"(\_[a-z]+)\"\]/','<a class="wptb-button $4-aligned wptb-size-$3" style="background-color:$2;color:$1;">', $code);
-    	//
-    	$code = preg_replace( '/\[\/button\]/','</a>', $code);
-    	// href="$5" target="$8" 
-    	$code = preg_replace( '/\[list\s+align\=\"([a-z\-]+)?\"\s+class\=\"([a-z]+)?\"\s+style\-type\=\"([a-z]+)?\"\]/','<ul class="$1-aligned-list $3-list">', $code);
-    	$code = preg_replace( '/\[item\]/','<li>', $code);
-    	$code = preg_replace( '/\[\/item\]/','</li>', $code);
-    	$code = preg_replace( '/\[\/list\]/','</ul>', $code);
-    	//die(var_dump($code));
-    	return ($code); 
+    	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
+    	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
+        $html = json_decode( $html );
+        $html = '<div class="wptb-table-container">' . $html . '</div>';
+    	return ( $html ); 
     }
 
 }

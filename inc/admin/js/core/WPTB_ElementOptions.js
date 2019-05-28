@@ -2,8 +2,8 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
     var node = element.getDOMElement(), elemIdClass;
 
-        prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
-        prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
+    prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
+    prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
     elemIdClass = 'wptb-options-' + element.kind + "-" + index;
 
     var properties = prop.getElementsByClassName('wptb-element-property');
@@ -82,14 +82,14 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 buttonLinkTargetInput.setAttribute( 'id', buttonLinkTargetInputId );
                 buttonLinkTargetInputLabel.setAttribute( 'for', buttonLinkTargetInputId );
             
-                buttonTextColorInput.value = buttonTextColor;
+                buttonTextColorInput.value = WPTB_Helper.rgbToHex( buttonTextColor );
                 
-                buttonBackgroundColorInput.value = buttonColor;
+                buttonBackgroundColorInput.value = WPTB_Helper.rgbToHex( buttonColor );
                 
                 buttonHrefInput.value = buttonHref;
                 
                 if( buttonLinkTarget && buttonLinkTarget == '_blank') {
-                    buttonLinkTargetInput.checked=true;
+                    buttonLinkTargetInput.checked = true;
                 }
             }
         } else if ( element.kind == 'image' ) {
@@ -168,13 +168,16 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
                 textFontSizeInputRange.value = parseInt( elementFontSize );
                 textFontSizeInputNumber.value = parseInt( elementFontSize );
-                textColorInput.value = elementTextColor;
+                textColorInput.value = WPTB_Helper.rgbToHex( elementTextColor );
             }
         } else if ( element.kind == 'list' ) {
             let elementList = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
             if ( elementList.length > 0 ) {
+                let elementListColor = elementList[0].style.color;
+                let listColorInput = prop.querySelector( 'input[type="text"][data-type="list-text-color"]' );
+                listColorInput.value = WPTB_Helper.rgbToHex( elementListColor );
+                
                 let elementListItem = elementList[0].querySelectorAll( 'li' );
-        
                 if ( elementListItem.length > 0 ) {
                     let listItemStyleType = elementListItem[0].style.listStyleType;
                     if ( listItemStyleType && listItemStyleType != 'decimal' ) {
@@ -207,7 +210,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 }
                 
                 let elementListItemContent = elementList[0].getElementsByClassName( 'wptb-list-item-content' );
-                
                 if ( elementListItemContent.length > 0 ) {
                     let listItemPTextAlignArr = [];
                     for ( let i = 0; i < elementListItemContent.length; i++ ) {
