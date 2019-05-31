@@ -129,17 +129,19 @@ class Admin_Menu {
 			return;
 		}
 
-		wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
-		wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
-		wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+		
+		if( isset( $_GET['page'] ) && $_GET['page']=='wptb-builder' ) {
+            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
+            wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+            wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
-		wp_enqueue_style( 'wp-color-picker' );
-		if( isset($_GET['page']) && $_GET['page']=='wptb-builder' ) {
+            wp_enqueue_style( 'wp-color-picker' );
+            
             wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-admin.css', array(), NS\PLUGIN_VERSION, 'all' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
             wp_enqueue_script( 'wptb-admin-builder-js' );
-		}
+		} 
 	
 	}
 

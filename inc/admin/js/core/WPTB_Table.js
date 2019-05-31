@@ -500,7 +500,6 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
         this.columns = maxCols;
-        console.log(maxCols);
     }
 
     /*
@@ -1168,7 +1167,6 @@ var array = [], WPTB_Table = function (columns, rows) {
             drawTable(array);
             table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
             table.recalculateIndexes();
-            console.log(array);
         }
         undoSelect();
     }

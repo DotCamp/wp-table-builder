@@ -3,7 +3,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         index,
         listItems,
         copy;
-
+    
     if ( kindIndexProt == undefined || copy == true ) {
         index = document.counter.nextIndex( element.kind );
         let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
@@ -63,26 +63,20 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             }
         };
+        let parent = this,
+            infArr,
+            type;
+        infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
+        type = infArr[1];
+        let dragImagesArr =  WPTB_Helper.dragImagesArr();
         btnMove.ondragstart = function (event) {
-            var parent = this, infArr, type;
-
-            while (parent.className == '' ||
-                !parent.classList.contains('wptb-ph-element')) {
-                parent = parent.parentNode;
-            }
             this.parentNode.style.opacity = 0;
             parent.classList.remove( 'wptb-directlyhovered' );
             parent.classList.add( 'moving-mode' );
-
-            infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-            type = infArr[1];
-
-            var img = document.createElement("img");
-            let hostName = location.protocol + '//' + location.hostname;
-            img.src = hostName + "/wp-content/plugins/wp-table-builder/inc/admin/views/builder/icons/" + type + ".png";
-            event.dataTransfer.setDragImage(img, 0, 0);
-            event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
-            event.dataTransfer.setData('moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2]); 
+            
+            event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
+            event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
+            event.dataTransfer.setData( 'moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] ); 
         };
 
         if (element.kind === 'button') {

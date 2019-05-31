@@ -241,6 +241,41 @@ var WPTB_LeftPanel = function () {
     
     cellPaddingSavedSet();
     
+    function numberImputSize( wptbNumberInputs, maxCount, maxValue ) {
+        wptbNumberInputs.onkeydown = function() {
+            let thisValue = this.value;
+            thisValue = String( thisValue );
+            if ( thisValue[0] == 0 ) {
+                this.value = "";
+            } else {
+                thisValue = thisValue.substring( 0, maxCount );
+                this.value = thisValue;
+            }
+        }
+        wptbNumberInputs.onkeyup = function() {
+            let thisValue = this.value;
+            thisValue = String( thisValue );
+            if ( thisValue > maxValue ) {
+                this.value = maxValue;
+            }
+        }
+    }
+    
+    let wptbTableBorderNumber = document.getElementById( 'wptb-table-border-number' );
+    numberImputSize( wptbTableBorderNumber, 1, 50 );
+    
+    let wptbTableInnerBorderNumber = document.getElementById( 'wptb-table-inner-border-number' );
+    numberImputSize( wptbTableInnerBorderNumber, 1, 50 );
+    
+    let wptbTableCellNumber = document.getElementById( 'wptb-table-cell-number' );
+    numberImputSize( wptbTableCellNumber, 1, 50 );
+    
+    let wptbTextfontSizeNumber = document.getElementById( 'wptb-text-font-size-number' );
+    numberImputSize( wptbTextfontSizeNumber, 1, 50 );
+    
+    let wptbImageWidthNumber = document.getElementById( 'wptb-image-width-number' );
+    numberImputSize( wptbImageWidthNumber, 2, 100 );
+    
     
     
     document.getElementById('wptb-table-cell-slider').oninput = function () {
@@ -259,8 +294,6 @@ var WPTB_LeftPanel = function () {
         
         let wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
             tableBorderColorSetArea = document.getElementById( 'wptb-table-border-color-set-area' );
-        console.log(wptbInnerBorderCheck);
-        console.log(this.value);
         if ( this.value == 0 && wptbInnerBorderCheck == false ) {
             tableBorderColorSetArea.style.display = 'none';
         } else {
@@ -298,14 +331,14 @@ var WPTB_LeftPanel = function () {
     for (var i = 0; i < wptbElementButtons.length; i++) {
         wptbElementButtons[i].ondragstart = function (e) {
             e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
-            e.dataTransfer.setDataElem = {
-                type: 'wptbElement',
-                data: this.dataset.wptbElement
-            };
-            e.setDataElem = {
-                type: 'wptbElement',
-                data: this.dataset.wptbElement
-            };
+//            e.dataTransfer.setDataElem = {
+//                type: 'wptbElement',
+//                data: this.dataset.wptbElement
+//            };
+//            e.setDataElem = {
+//                type: 'wptbElement',
+//                data: this.dataset.wptbElement
+//            };
         }
     }
 
@@ -330,6 +363,16 @@ var WPTB_LeftPanel = function () {
         document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
         document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
         document.getElementById("element-options-group").style.display = 'none';
+    };
+    document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
+        let wptbContainer = document.querySelector( '.wptb-container' );
+        if( wptbContainer ) {
+            if ( wptbContainer.classList.contains( 'collapsed' ) ) {
+                wptbContainer.classList.remove( 'collapsed' );
+            } else {
+                wptbContainer.classList.add( 'collapsed' );
+            }
+        }
     };
 
 };

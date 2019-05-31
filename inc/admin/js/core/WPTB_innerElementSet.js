@@ -14,10 +14,9 @@ var WPTB_innerElementSet = function  ( element ) {
     
     element.ondragenter = function (e) {
         var div;
-        if ( !e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node') ) {
+        if ( e.dataTransfer.types.indexOf( 'wptbElement' ) == -1 && e.dataTransfer.types.indexOf( 'moving-mode' ) == -1 ) {
             return;
         }
-        
         WPTB_DropHandle(this, e);
         
         element.classList.add( 'ondragenter' );

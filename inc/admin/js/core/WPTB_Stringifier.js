@@ -33,6 +33,12 @@ var WPTB_Stringifier = function ( code ) {
                             }
                         }
                         
+                        let mceIds = innerElements[j].querySelectorAll( '[id^=mce_]' );
+                        if ( mceIds.length > 0 ) {
+                            for ( let k = 0; k < mceIds.length; k++ ) {
+                                mceIds[k].removeAttribute( 'id' );
+                            }
+                        }
                     }
                 }
             }

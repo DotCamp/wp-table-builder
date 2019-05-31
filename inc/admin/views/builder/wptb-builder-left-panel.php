@@ -71,7 +71,7 @@ use WP_Table_Builder as NS;
                               <input   data-type="font-size" class="wptb-text-font-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="13"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-text-font-size-number" data-type="font-size"  class="wptb-text-font-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10"><span class="wptb-input-px">px</span>
+                                <input id="wptb-text-font-size-number" data-type="font-size"  class="wptb-text-font-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@ use WP_Table_Builder as NS;
                               <input data-type="image-size" class="wptb-image-width wptb-element-property  wptb-image-size-slider" type="range" min="10" max="100" step="1" value="100"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width-number wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100"><span class="wptb-input-px">%</span>
+                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width-number wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100" pattern="[0-9]*"><span class="wptb-input-px">%</span>
                             </div>
                         </div>
                     </div>
@@ -281,4 +281,12 @@ use WP_Table_Builder as NS;
             <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button" title="Close Manage Cells Mode">Close</button>
         </div>
     </div>
+    <a href="javascript:void(0)" class="wptb-left-panel-extend" data-fn="togglePanel" data-title-collapsed="Expand panel" data-title-expanded="Collapse panel" title="Collapse panel">
+		<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="512" height="512" viewBox="0 0 357 357" style="enable-background:new 0 0 357 357;" xml:space="preserve" class=""><g transform="matrix(-1, 1.22465e-16, -1.22465e-16, -1, 357, 357)"><g>
+            <g id="play-arrow">
+                <polygon points="38.25,0 38.25,357 318.75,178.5   " data-original="#000000" class="active-path" style="fill:#3B7EC0" data-old_color="##3B7EC"></polygon>
+            </g>
+            </g></g> 
+        </svg>
+    </a>
 </div>

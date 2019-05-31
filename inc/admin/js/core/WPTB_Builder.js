@@ -30,6 +30,8 @@
                     }
                 };
                 http.send(null);
+            } else {
+                document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
             }
             document.counter = new ElementCounters();
             document.select = new MultipleSelect();

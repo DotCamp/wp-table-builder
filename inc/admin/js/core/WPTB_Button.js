@@ -11,6 +11,9 @@ var WPTB_Button = function( text, DOMElementProt ) {
     el_B.classList.add('wptb-button');
     //el_B.classList.add('editable');
     el_B.innerHTML = text != undefined ? text : 'Button Text';
+    el_B.onclick = function( e ) {
+        e.preventDefault();
+    }
     
     // Creation of a new button when copying to avoid errors when assigning new event handlers.
     if ( DOMElementProt ) {

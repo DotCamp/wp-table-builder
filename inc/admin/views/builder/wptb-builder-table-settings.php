@@ -22,7 +22,7 @@
                 <input id="wptb-table-border-slider" type="range" min="0" max="50" step="1" value="0">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0">
+                <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
             <label class="wptb-inner-border">
@@ -45,7 +45,7 @@
                 <input id="wptb-table-inner-border-slider" type="range" min="1" max="50" step="1" value="1">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="1" max="50" step="1" placeholder="1" value="1">
+                <input id="wptb-table-inner-border-number" class="wptb-number-input" type="number" min="1" max="50" step="1" placeholder="1" value="1" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
         </div>    
@@ -70,7 +70,7 @@
                 <input id="wptb-table-cell-slider" type="range" min="10" max="50" step="1" value="15">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-table-cell-number" class="wptb-number-input" type="number" min="10" max="50" step="1" placeholder="15">
+                <input id="wptb-table-cell-number" class="wptb-number-input" type="number" min="10" max="50" step="1" placeholder="15" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
         </div>    
