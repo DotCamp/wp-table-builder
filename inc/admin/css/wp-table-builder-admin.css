@@ -1236,7 +1236,7 @@ table.wptb-table {
 }
 
 .wptb-list-item-container ul li {
-    list-style: numeric;
+    list-style: none;
 }
 
 .wptb-droppable.wptb-cell li .wptb-list-item-content {
@@ -1246,6 +1246,30 @@ table.wptb-table {
 .wptb-droppable.wptb-cell li .wptb-list-item-content p {
     word-wrap: break-word;
     line-height: 30px;
+}
+
+.wptb-list-item-container ul li > div>p::before {
+    content: attr(data-list-style-type-index);
+    display: inline-block;
+    line-height: 30px;
+    padding: 0 5px 0 0;
+    font-size: 15px;
+    font-family: verdana, sans-serif;
+}
+
+.wptb-list-item-container ul li > div>p.list-style-type-disc::before {
+    content: '\25CF';
+    padding-right: 10px;
+}
+
+.wptb-list-item-container ul li > div>p.list-style-type-circle::before {
+    content: '\25CB';
+    padding-right: 10px;
+}
+
+.wptb-list-item-container ul li > div>p.list-style-type-square::before {
+    content: '\25A0';
+    padding-right: 10px;
 }
 
 .wptb-droppable.wptb-cell .wptb-directlyhovered {
@@ -1275,12 +1299,12 @@ table.wptb-table {
     top: 0;
     right: 0;
     bottom: 0;
-    left: -20px;
+    left: 0;
     border: 1px solid #1ea5e5 !important;
 }
 
 .wptb-list-item-container {
-    padding-left: 20px;
+    /*padding-left: 20px;*/
 }
 
 .wptb-actions {

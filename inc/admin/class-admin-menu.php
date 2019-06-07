@@ -30,26 +30,28 @@ class Admin_Menu {
 	}
 
 	public function save_table(){
-
-		if( !isset( $_POST['id'] ) || $_POST['id']==='-1' )
+        
+        $params = json_decode(file_get_contents('php://input'));
+        
+		if( !isset( $params->id ) || $params->id === '-1' )
 		{
 			$id = wp_insert_post([
-				'post_title' => $_POST['title'],
+				'post_title' => $params->title,
 				'post_content' => '',
 				'post_type' => 'wptb-tables'
 			]);
-			add_post_meta($id, '_wptb_content_',$_POST['content']); 
+			add_post_meta($id, '_wptb_content_', $params->content ); 
 			wp_die( json_encode( ['saved',$id] ) );
 		}
 		else
 		{
 			wp_update_post([
-				'ID' => $_POST['id'],
-				'post_title' => $_POST['title'],
+				'ID' => $params->id,
+				'post_title' => $params->title,
 				'post_content' => '',
 				'post_type' => 'wptb-tables'
 			]);
-			update_post_meta( $_POST['id'], '_wptb_content_',$_POST['content'] );
+			update_post_meta( $params->id, '_wptb_content_', $params->content );
 			wp_die( json_encode( ['edited',''] ) );
 		}
  
@@ -59,7 +61,7 @@ class Admin_Menu {
 		$post = get_post( $_REQUEST['id'] );
 		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_', true );
 		$name = $post->post_title;
-        $html = json_decode( $html );
+        //$html = json_decode( $html );
 		die( json_encode( [$name, $html] ) );
 	}
 

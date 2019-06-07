@@ -25,6 +25,7 @@
 .wptb-table-container table td {
     width: 100px;
     box-sizing: content-box;
+    padding: 15px;
 }
 
 .wptb-ph-element {
@@ -116,16 +117,39 @@
     display: inline-block;
 }
 
-.disc-list li {
-    list-style-type: disc;
+.wptb-list-item-container.wptb-ph-element ul li {
+    list-style: none;
+    margin: 0;
 }
 
-.circle-list li {
-    list-style-type: circle;
+.wptb-list-item-container li p {
+    word-wrap: break-word;
+    line-height: 20px;
 }
 
-.square-list li {
-    list-style-type: square;
+.wptb-list-item-container li p::before {
+    content: attr(data-list-style-type-index);
+    display: inline-block;
+    line-height: 20px;
+    padding: 0 5px 0 0;
+        padding-right: 5px;
+    font-size: 15px;
+    font-family: verdana, sans-serif;
+}
+
+.wptb-list-item-container li p.list-style-type-disc::before {
+    content: '\25CF';
+    padding-right: 10px;
+}
+
+.wptb-list-item-container li p.list-style-type-circle::before {
+    content: '\25CB';
+    padding-right: 10px;
+}
+
+.wptb-list-item-container li p.list-style-type-square::before {
+    content: '\25A0';
+    padding-right: 10px;
 }
 
 @media only screen and (max-device-width: 1024px) {

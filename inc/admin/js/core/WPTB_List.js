@@ -12,7 +12,7 @@ var WPTB_List = function ( innerElements, DOMElementProt ) {
         //Case for edit mode list
     } else if ( !innerElements ) {
         for (var i = 0; i < 3; i++) {
-            item = new WPTB_ListItem( 'List Item ' + (i + 1) );
+            item = new WPTB_ListItem( '<p>List Item ' + (i + 1) + '</p>');
             el_L.appendChild(item.getDOMElement());
         }
     } else {
@@ -35,7 +35,7 @@ var WPTB_List = function ( innerElements, DOMElementProt ) {
         return DOMElement;
     }
     applyGenericItemSettings( this, kindIndexProt, copy );
+    WPTB_Helper.listItemsRecalculateIndex( el_L );
 
     return this;
-
 };

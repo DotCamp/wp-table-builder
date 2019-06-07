@@ -15,7 +15,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     } else if ( kindIndexProt && ! copy ) {
         index = kindIndexProt.split('-')[1];
     }
-
+    
     node.onmouseenter = function (event) {
         this.classList.add('wptb-directlyhovered');
         let btnDelete = document.createElement('span'),
@@ -34,6 +34,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             el.removeChild(act);
         };
         btnCopy.onclick = function (event) {
+            let copy;
             if (element.kind == 'list') {
                 var td = event.target.parentNode.parentNode.parentNode,
                     temp = [],
@@ -43,25 +44,27 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                     temp.push(srcList[i].innerHTML);
                 }
 
-                var copy = new WPTB_List( temp, node );
+                copy = new WPTB_List( temp, node );
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             } else if (element.kind == 'text') {
-                var td = event.target.parentNode.parentNode.parentNode,
-                    copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
+                var td = event.target.parentNode.parentNode.parentNode;
+                copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             } else if ( element.kind == 'image' ) {
-                var td = event.target.parentNode.parentNode.parentNode,
-                    copy = new WPTB_Image( event.target.parentNode.parentNode.children[0].children[0].src, node );
+                var td = event.target.parentNode.parentNode.parentNode;
+                copy = new WPTB_Image( event.target.parentNode.parentNode.children[0].children[0].src, node );
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             } else {
-                var td = event.target.parentNode.parentNode.parentNode,
-                    copy = new WPTB_Button( event.target.parentNode.parentNode.childNodes[0].innerHTML, node );
+                var td = event.target.parentNode.parentNode.parentNode;
+                copy = new WPTB_Button( event.target.parentNode.parentNode.childNodes[0].innerHTML, node );
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             }
+            
+            WPTB_innerElementSet( copy.getDOMElement() );
         };
         let parent = this,
             infArr,
@@ -162,34 +165,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         } else {
             listItems = node.getElementsByClassName('wptb-list-item-content');
             for ( let i = 0; i < listItems.length; i++ ) {
-                tinyMCE.init({
-                    target: listItems[i],
-                    inline: true,
-                    plugins: "link, paste",
-                    dialog_type: "modal",
-                    theme: 'modern',
-                    menubar: false,
-                    fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                    paste_as_text: true,
-                    toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                    init_instance_callback: function (editor) {
-                        window.currentEditor = editor;
-                        editor.on('focus', function (e) {
-                            var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                            if (window.currentEditor &&
-                                document.getElementById('wptb_builder').scrollTop >= 55 &&
-                                window.currentEditor.bodyElement.style.display != 'none') {
-                                document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                                document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
-                                document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                            } else {
-                                document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                                delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                                delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                            }
-                        });
-                    }
-                });
+                WPTB_Helper.listItemsTinyMceInit( listItems[i] );
             }
         }
 

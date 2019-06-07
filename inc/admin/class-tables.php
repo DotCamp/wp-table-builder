@@ -99,7 +99,7 @@ class Tables {
     public function get_table($args){  
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
-        $html = json_decode( $html );
+        //$html = json_decode( $html );
         $html = '<div class="wptb-table-container">' . $html . '</div>';
     	return ( $html ); 
     }

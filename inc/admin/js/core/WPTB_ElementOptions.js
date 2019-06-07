@@ -173,14 +173,16 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         } else if ( element.kind == 'list' ) {
             let elementList = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
             if ( elementList.length > 0 ) {
-                let elementListColor = elementList[0].style.color;
+                let elementListColor = elementList[0].querySelector( 'p' ).style.color;
                 let listColorInput = prop.querySelector( 'input[type="text"][data-type="list-text-color"]' );
                 listColorInput.value = WPTB_Helper.rgbToHex( elementListColor );
                 
                 let elementListItem = elementList[0].querySelectorAll( 'li' );
                 if ( elementListItem.length > 0 ) {
-                    let listItemStyleType = elementListItem[0].style.listStyleType;
-                    if ( listItemStyleType && listItemStyleType != 'decimal' ) {
+                    let listItemP = elementListItem[0].querySelector( 'p' );
+                    let listItemPClasses = listItemP.classList;
+                    listItemPClasses = [...listItemPClasses];
+                    if ( listItemPClasses.length > 0 ) {
                         let elementListClassSelect = prop.querySelector( 'select[data-type="list-class"]' );
                         if ( elementListClassSelect ) {
                             elementListClassSelect.value = 'unordered';
@@ -203,7 +205,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                             if ( elementListStyleTypeSelect ) {
                                 elementListStyleTypeSelect.parentNode.style.display = 'flex';
                                 
-                                elementListStyleTypeSelect.value = listItemStyleType;
+                                if( listItemPClasses.indexOf( 'list-style-type-disc' ) != -1 ) {
+                                    elementListStyleTypeSelect.value = 'disc';
+                                } else if( listItemPClasses.indexOf( 'list-style-type-circle' ) != -1 ) {
+                                    elementListStyleTypeSelect.value = 'circle';
+                                } else if( listItemPClasses.indexOf( 'list-style-type-square' ) != -1 ) {
+                                    elementListStyleTypeSelect.value = 'square';
+                                }
                             }
                         }
                     }
@@ -350,11 +358,18 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     type = classe[1];
                     number = classe[2];
                     affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
-                    if (type == 'button') {
+                    if ( type == 'button' ) {
                         if (parent.dataset.type == 'button-text-color') {
                             affectedEl.getElementsByClassName('wptb-button')[0].style.color = ui.color.toString();
                         } else {
                             affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
+                        }
+                    } else if( type == 'list' ) {
+                        let ps = affectedEl.querySelectorAll( 'p' );
+                        if( ps.length > 0 ) {
+                            for ( let i = 0; i < ps.length; i++ ) {
+                                ps[i].style.color = ui.color.toString();
+                            }
                         }
                     } else {
                         affectedEl.style.color = ui.color.toString();
@@ -398,7 +413,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     img.alt = this.value;
                     break;
                 case 'image-link':
-                    affectedEl.getElementsByTagName('a')[0].href = this.value;
+                    affectedEl.getElementsByTagName('a')[0].href = WPTB_Helper.linkHttpCheckChange( this.value );
                     break;
                 case 'image-link-target':
                     if (this.checked == true) {
@@ -430,7 +445,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
                 case 'button-link':
-                    affectedEl.getElementsByTagName('a')[0].href = this.value;
+                    affectedEl.getElementsByTagName('a')[0].href = WPTB_Helper.linkHttpCheckChange( this.value );
                     break;
                 case 'button-link-target':
                     if (this.checked == true) {
@@ -463,7 +478,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         parentNodeSettingItem.querySelector( '.wptb-list-icon-select-label' ).style.display = 'flex';
                         let listItem = affectedEl.querySelectorAll('li');
                         for (var i = 0; i < listItem.length; i++) {
-                            listItem[i].style.listStyleType = 'disc';
+                            let p = listItem[i].querySelector( 'p' );
+                            p.removeAttribute ( 'class' );
+                            p.classList.add( 'list-style-type-disc' );
                         }
                         parentNodeSettingItem.querySelector('[data-type=list-style-type]').value = 'disc';
                     } else {
@@ -471,14 +488,17 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         parentNodeSettingItem.querySelector( '.wptb-list-icon-select-label' ).style.display = 'none';
                         var listItem = affectedEl.querySelectorAll('li');
                         for (var i = 0; i < listItem.length; i++) {
-                            listItem[i].style.listStyleType = 'decimal';
+                            let p = listItem[i].querySelector( 'p' );
+                            p.removeAttribute ( 'class' );
                         }
                     }
                     break;
                 case 'list-style-type':
                     var listItem = affectedEl.querySelectorAll('li');
                     for (var i = 0; i < listItem.length; i++) {
-                        listItem[i].style.listStyleType = val.toLowerCase();
+                        let p = listItem[i].querySelector( 'p' );
+                        p.removeAttribute ( 'class' );
+                        p.classList.add( 'list-style-type-' + val.toLowerCase() );
                     }
                     break;
             }
