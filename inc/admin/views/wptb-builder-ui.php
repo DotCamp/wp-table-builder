@@ -8,9 +8,9 @@ use WP_Table_Builder as NS;
 
 ?>
 
+<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-header.php'; ?>
+
 <div id="wptb_builder" class="wptb-admin-container">
-    
-    <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-header.php'; ?>
 
     <div class="wptb-container">
         

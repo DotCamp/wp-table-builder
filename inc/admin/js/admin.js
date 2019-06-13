@@ -83,6 +83,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             event.dataTransfer.setDragImage(dragImagesArr[type], 0, 0);
             event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
             event.dataTransfer.setData('moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
+            event.dataTransfer.setData('wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1]);
         };
 
         if (element.kind === 'button') {
@@ -228,7 +229,8 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                     document.getElementById('wptb-setup-name').value = ans[0];
                     document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                     var wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
-                    wptbTableSetupEl.innerHTML = ans[1];
+
+                    wptbTableSetupEl.appendChild(WPTB_Parser(ans[1]));
                     WPTB_Table();
                     WPTB_LeftPanel();
                     WPTB_Settings();
@@ -529,6 +531,12 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
 
             WPTB_innerElementSet(element);
         };
+        var wptbContainer = document.querySelector('.wptb-container');
+        wptbContainer.onscroll = function () {
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
+            console.log('Hello');
+        };
     } else {
         wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
         wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
@@ -537,9 +545,29 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
         return;
     }
 
-    wptbDropHandle.getDOMParentElement = function () {
-        return thisElem;
-    };
+    var thisRow = void 0;
+    if (thisElem.localName == 'td') {
+        thisRow = thisElem.parentNode;
+    } else if (thisElem.localName == 'div' && thisElem.classList.contains('wptb-ph-element')) {
+        thisRow = thisElem.parentNode.parentNode;
+    }
+    if (thisRow.classList.contains('wptb-table-head')) {
+        var indics = e.dataTransfer.types;
+        var notDragEnter = false;
+        for (var i = 0; i < indics.length; i++) {
+            var infArr = indics[i].match(/wptbelindic-([a-z]+)/i);
+            console.log(infArr);
+            console.log(e);
+            if (infArr && infArr[1] != 'text') {
+                notDragEnter = true;
+                break;
+            }
+        }
+        if (notDragEnter) {
+            return;
+        }
+    }
+
     wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
     var height = thisElem.offsetHeight,
         coordinatesElement = thisElem.getBoundingClientRect(),
@@ -557,6 +585,11 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             wptbDropBorderMarker.classList.remove('moving-into-same-elem');
         }
     }
+
+    wptbDropHandle.getDOMParentElement = function () {
+        return thisElem;
+    };
+
     wptbDropHandle.style.display = 'block';
     wptbDropBorderMarker.style.display = 'block';
     if (thisElem.nodeName.toLowerCase() != 'td') {
@@ -1363,7 +1396,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
                 }
             }
         } else {
-            this.appendChild(element);
+            return;
         }
 
         wptbDropHandle.style.display = 'none';
@@ -1470,6 +1503,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             }
         }
     });
+
+    function tableTopRowAsHeadSavedSet(table) {
+        var wptbTopRowAsHeader = document.getElementById('wptb-top-row-as-header');
+
+        if (table.classList.contains('wptb-table-preview-head')) {
+            wptbTopRowAsHeader.checked = true;
+        } else {
+            wptbTopRowAsHeader.checked = false;
+        }
+    }
+    tableTopRowAsHeadSavedSet(table);
 
     function tableBorderColorWidthSavedSet() {
         var table = document.getElementsByClassName('wptb-preview-table');
@@ -1692,15 +1736,90 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
-        var _val = this.checked ? 'checked' : 'unchecked';
-        addInnerBorder(_val);
+        var val = this.checked ? 'checked' : 'unchecked';
+        addInnerBorder(val);
         var borderWidth = document.getElementById('wptb-table-border-slider').value,
             tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
-        if (_val == 'unchecked' && borderWidth == 0) {
+        if (val == 'unchecked' && borderWidth == 0) {
             tableBorderColorSetArea.style.display = 'none';
         } else {
             tableBorderColorSetArea.style.display = '';
         }
+    };
+
+    function createMobileHeadForTable(table, thisEvent) {
+        var rows = table.rows,
+            rowHead = rows[0];
+
+        if (thisEvent.checked) {
+            var rowHeadChildren = rowHead.children;
+            var contentsForHeader = {};
+            for (var _i5 = 0; _i5 < rowHeadChildren.length; _i5++) {
+                var tdElements = rowHeadChildren[_i5].children;
+                for (var j = 0; j < tdElements.length; j++) {
+                    var element = tdElements[j];
+                    if (element.classList.contains('wptb-ph-element')) {
+                        var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+                        if (infArr[1] == 'text') {
+                            var p = element.querySelector('p'),
+                                textContent = p.textContent;
+                            contentsForHeader[rowHeadChildren[_i5].dataset.xIndex] = textContent;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (var _i6 = 1; _i6 < rows.length; _i6++) {
+                var thisRow = rows[_i6],
+                    thisRowChildren = thisRow.children;
+                for (var _j = 0; _j < thisRowChildren.length; _j++) {
+                    if (contentsForHeader[thisRowChildren[_j].dataset.xIndex]) {
+                        thisRowChildren[_j].dataset.titleColumn = contentsForHeader[thisRowChildren[_j].dataset.xIndex];
+                    } else {
+                        thisRowChildren[_j].dataset.titleColumn = '';
+                    }
+                }
+            }
+
+            table.classList.add('wptb-table-preview-head');
+            rowHead.classList.add('wptb-table-head');
+
+            //            for ( let i = 1; rows.length; i++ ) {
+            //                
+            //            }
+
+            //            let tds = table.rows[0].children;
+            //            for ( let i = 0; i < tds.length; i++ ) {
+            //                let tdElements = tds[i].children;
+            //                
+            //                for ( let j = 0; j < tdElements.length; j++ ) {
+            //                    let element = tdElements[j];
+            //                    if( element.classList.contains( 'wptb-ph-element' ) ) {
+            //                        let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+            //                        if( infArr[1] != 'text' ) {
+            //                            tds[i].removeChild( element );
+            //                            j--;
+            //                        }
+            //                    }
+            //                }
+            //            }
+        } else {
+            table.classList.remove('wptb-table-preview-head');
+            rows[0].classList.remove('wptb-table-head');
+
+            for (var _i7 = 1; _i7 < rows.length; _i7++) {
+                var _thisRow = rows[_i7],
+                    _thisRowChildren = _thisRow.children;
+                for (var _j2 = 0; _j2 < _thisRowChildren.length; _j2++) {
+                    _thisRowChildren[_j2].removeAttribute('data-title-column');
+                }
+            }
+        }
+    }
+
+    document.getElementById('wptb-top-row-as-header').onchange = function () {
+        createMobileHeadForTable(table, this);
     };
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
@@ -2003,7 +2122,23 @@ var MultipleSelect = function MultipleSelect() {
 
 	return this;
 };
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var WPTB_Parser = function WPTB_Parser(code) {
+    var div = document.createElement('div');
+    div.innerHTML = code;
+
+    var table = div.children[0];
+    var columnTitleMobile = [].concat(_toConsumableArray(table.querySelectorAll('.column-title-mobile')));
+
+    for (var i = 0; i < columnTitleMobile.length; i++) {
+        var parent = columnTitleMobile[i].parentNode;
+        parent.removeChild(columnTitleMobile[i]);
+    }
+
+    return table;
+};
+var WPTB_Parser2 = function WPTB_Parser2(code) {
     if (Array.isArray(code)) {
         var elementHtml = void 0;
 
@@ -2063,6 +2198,7 @@ var WPTB_Settings = function WPTB_Settings() {
         elems[i].ondragstart = function (event) {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('wptbElement', event.target.dataset.wptbElement);
+            event.dataTransfer.setData('wptbElIndic-' + event.target.dataset.wptbElement, 'wptbElIndic-' + event.target.dataset.wptbElement);
         };
         elems[i].ondragend = function () {
             var wptbDropHandle = document.querySelector('.wptb-drop-handle'),
@@ -2209,10 +2345,9 @@ var WPTB_Space = function WPTB_Space(elSpaceBetween) {
         return spaceBetween;
     }
 };
-var WPTB_Stringifier = function WPTB_Stringifier(code) {
-    if (code) {
-
-        var dtaggables = code.querySelector;
+var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
+    if (codeMain) {
+        var code = codeMain.cloneNode(true);
         var tds = code.getElementsByTagName('td');
         if (tds.length > 0) {
             for (var i = 0; i < tds.length; i++) {
@@ -2252,10 +2387,18 @@ var WPTB_Stringifier = function WPTB_Stringifier(code) {
                         }
                     }
                 }
+
+                if (tds[i].hasAttribute('data-title-column')) {
+                    var columnNameDiv = document.createElement('div');
+                    columnNameDiv.classList.add('column-title-mobile');
+                    columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
+                    tds[i].insertBefore(columnNameDiv, tds[i].firstChild);
+                }
             }
         }
+
+        return code;
     }
-    return code;
 };
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -2665,18 +2808,8 @@ var array = [],
         table = document.createElement('table');
         table.classList.add('wptb-preview-table');
 
-        //Add the header row.
-        row = table.insertRow(-1);
-        row.classList.add('wptb-table-head', 'wptb-row');
-
-        for (var i = 0; i < columns; i++) {
-            cell = new WPTB_Cell(mark);
-            cell.setCoords(0, i);
-            row.appendChild(cell.getDOMElement());
-        }
-
         //Add the data rows.
-        for (var i = 1; i < rows; i++) {
+        for (var i = 0; i < rows; i++) {
 
             row = table.insertRow(-1);
             row.classList.add('wptb-row');
@@ -2752,13 +2885,24 @@ var array = [],
             tds = void 0,
             maxCols = 0,
             tdsArr = [];
+        var wptbTopRowAsHeader = document.getElementById('wptb-top-row-as-header');
 
         for (var i = 0; i < trs.length; i++) {
             if (i == 0) {
                 if (start == undefined) {
                     trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
                 }
-                trs[i].classList.add('wptb-table-head');
+                if (wptbTopRowAsHeader.checked) {
+                    if (start == undefined) {
+                        this.classList.add('wptb-table-preview-head');
+                        trs[i].classList.add('wptb-table-head');
+                    };
+                } else {
+                    if (start == undefined) {
+                        this.classList.remove('wptb-table-preview-head');
+                        trs[i].classList.remove('wptb-table-head');
+                    }
+                }
             } else {
                 if (i % 2 == 0) {
                     if (start == undefined) {
@@ -2901,81 +3045,86 @@ var array = [],
             cellsBuffer = void 0,
             cell = document.querySelector('.wptb-highlighted'),
             cellStyle = cell.getAttribute('style'),
-            pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
-            pendingInsertion = false,
-            stepsToMove = void 0,
-            td = void 0,
-            bro = void 0,
-            carriedRowspans = [],
-            currentCell = void 0;
+            pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1];
 
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            carriedRowspans.push(0);
-        }
+        if (maxAmountOfCells - pos - cell.colSpan + 1 == 1) {
+            table.addColumnEnd();
+        } else {
+            var pendingInsertion = false,
+                _stepsToMove = void 0,
+                td = void 0,
+                bro = void 0,
+                _carriedRowspans = [],
+                currentCell = void 0;
 
-        for (var i = 0; i < rows.length; i++) {
-            cellPointer = 0;
-            cellsBuffer = rows[i].getElementsByTagName('td');
-            pendingInsertion = false;
-            for (var xPosition = 0; xPosition < maxAmountOfCells; xPosition += stepsToMove) {
-                stepsToMove = 1;
+            for (var i = 0; i < maxAmountOfCells; i++) {
+                _carriedRowspans.push(0);
+            }
 
-                if (pendingInsertion) {
-                    td = new WPTB_Cell(mark);
-                    if (cellStyle) {
-                        td.getDOMElement().setAttribute('style', cellStyle);
-                    }
-                    if (currentCell && rows[i].contains(currentCell)) {
-                        bro = currentCell.nextSibling;
-                        if (bro) {
-                            rows[i].insertBefore(td.getDOMElement(), bro);
+            for (var i = 0; i < rows.length; i++) {
+                cellPointer = 0;
+                cellsBuffer = rows[i].getElementsByTagName('td');
+                pendingInsertion = false;
+                for (var xPosition = 0; xPosition < maxAmountOfCells; xPosition += _stepsToMove) {
+                    _stepsToMove = 1;
+
+                    if (pendingInsertion) {
+                        td = new WPTB_Cell(mark);
+                        if (cellStyle) {
+                            td.getDOMElement().setAttribute('style', cellStyle);
+                        }
+                        if (currentCell && rows[i].contains(currentCell)) {
+                            bro = currentCell.nextSibling;
+                            if (bro) {
+                                rows[i].insertBefore(td.getDOMElement(), bro);
+                            } else {
+                                rows[i].appendChild(td.getDOMElement());
+                            }
                         } else {
-                            rows[i].appendChild(td.getDOMElement());
+                            rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
+                        }
+                        break;
+                    } else if (_carriedRowspans[xPosition] > 0) {
+                        // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
+                        if (pos == xPosition) {
+                            pendingInsertion = true;
                         }
                     } else {
-                        rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
-                    }
-                    break;
-                } else if (carriedRowspans[xPosition] > 0) {
-                    // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
-                    if (pos == xPosition) {
-                        pendingInsertion = true;
-                    }
-                } else {
-                    currentCell = cellsBuffer[cellPointer++];
-                    if (currentCell.rowSpan > 1) {
-                        stepsToMove = currentCell.colSpan;
-                        for (var k = 0; k < currentCell.colSpan; k++) {
-                            carriedRowspans[xPosition + k] = currentCell.rowSpan;
-                            if (xPosition + k == pos) {
-                                pendingInsertion = true;
+                        currentCell = cellsBuffer[cellPointer++];
+                        if (currentCell.rowSpan > 1) {
+                            _stepsToMove = currentCell.colSpan;
+                            for (var k = 0; k < currentCell.colSpan; k++) {
+                                _carriedRowspans[xPosition + k] = currentCell.rowSpan;
+                                if (xPosition + k == pos) {
+                                    pendingInsertion = true;
+                                }
                             }
-                        }
-                    } else if (currentCell.colSpan > 1) {
-                        stepsToMove = currentCell.colSpan;
-                        for (var k = 0; k < currentCell.colSpan; k++) {
-                            if (xPosition + k == pos) {
-                                pendingInsertion = true;
+                        } else if (currentCell.colSpan > 1) {
+                            _stepsToMove = currentCell.colSpan;
+                            for (var k = 0; k < currentCell.colSpan; k++) {
+                                if (xPosition + k == pos) {
+                                    pendingInsertion = true;
+                                }
                             }
+                        } else if (xPosition == pos) {
+                            pendingInsertion = true;
                         }
-                    } else if (xPosition == pos) {
-                        pendingInsertion = true;
                     }
+                }
+
+                for (var l = 0; l < maxAmountOfCells; l++) {
+                    if (_carriedRowspans[l] > 0) _carriedRowspans[l]--;
                 }
             }
 
-            for (var l = 0; l < maxAmountOfCells; l++) {
-                if (carriedRowspans[l] > 0) carriedRowspans[l]--;
+            for (var i = 0; i < array.length; i++) {
+                array[i].push(0);
             }
+            maxAmountOfCells++;
+            drawTable(array);
+            table.recalculateIndexes();
+            undoSelect();
         }
-
-        for (var i = 0; i < array.length; i++) {
-            array[i].push(0);
-        }
-        maxAmountOfCells++;
-        drawTable(array);
-        table.recalculateIndexes();
-        undoSelect();
     };
 
     /*

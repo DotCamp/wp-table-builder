@@ -12,6 +12,17 @@
         </div> 
     </div>
     <div class="wptb-settings-items">
+        <div class="wptb-settings-row wptb-settings-middle-xs">
+            <label class="wptb-checkbox-button">
+                <span style="font-size: 16px">
+                    <?php echo __( 'Top Row As Header', 'wp-table-builder' ); ?>
+                </span>
+                <input id="wptb-top-row-as-header" type="checkbox" />
+                <i></i>
+            </label>  
+        </div>  
+    </div>
+    <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
                 <?php echo __( 'Table Border', 'wp-table-builder' ); ?>
@@ -25,7 +36,7 @@
                 <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
-            <label class="wptb-inner-border">
+            <label class="wptb-checkbox-button">
                 <span style="font-size: 16px">
                     <?php echo __( 'Apply Inner Border', 'wp-table-builder' ); ?>
                 </span>

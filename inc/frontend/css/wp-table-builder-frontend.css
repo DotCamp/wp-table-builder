@@ -152,8 +152,97 @@
     padding-right: 10px;
 }
 
+.column-title-mobile {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    height: 100%;
+}
+
+.wptb-table-container.wptb-section-small table tr td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 40px;
+}
+
+.wptb-table-container.wptb-section-small table.wptb-table-preview-head td .column-title-mobile{
+    display: table;
+}
+    
+.wptb-table-container.wptb-section-small table.wptb-table-preview-head td .column-title-mobile::before {
+    content: attr(data-title-column);
+    display: table-cell;
+    width: 45%;
+    padding-right: 5%;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.wptb-table-container.wptb-section-small table.wptb-table-preview-head td .wptb-ph-element {
+    display: inline-block;
+    width: 50%;
+    margin-left: 50%;
+}
+
+.wptb-table-container.wptb-section-small table td {
+    border-width: 0 1px 1px 1px !important;
+}
+
+.wptb-table-container.wptb-section-small table tr td:nth-of-type(1) {
+    border-top-width: 1px !important;
+}
+
+.wptb-table-container.wptb-section-small table tr.wptb-table-head {
+    display: none;
+}
+
 @media only screen and (max-device-width: 1024px) {
     .wptb-table-container table tr td {
         width:110px;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .wptb-table-container table tr td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
+        min-height: 40px;
+    }
+
+    .wptb-table-container table.wptb-table-preview-head td .column-title-mobile{
+        display: table;
+    }
+    
+    .wptb-table-container table.wptb-table-preview-head td .column-title-mobile::before {
+        content: attr(data-title-column);
+        display: table-cell;
+        width: 45%;
+        padding-right: 5%;
+        font-weight: bold;
+        vertical-align: middle;
+    }
+
+    .wptb-table-container table.wptb-table-preview-head td .wptb-ph-element {
+        display: inline-block;
+        width: 50%;
+        margin-left: 50%;
+    }
+
+    .wptb-table-container table td {
+        border-width: 0 1px 1px 1px !important;
+    }
+
+    .wptb-table-container table tr td:nth-of-type(1) {
+        border-top-width: 1px !important;
+    }
+
+    .wptb-table-container table tr.wptb-table-head {
+        display: none;
     }
 }

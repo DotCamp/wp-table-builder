@@ -1,7 +1,6 @@
-var WPTB_Stringifier = function ( code ) {
-    if ( code ) {
-        
-        let dtaggables = code.querySelector
+var WPTB_Stringifier = function ( codeMain ) {
+    if ( codeMain ) {
+        let code = codeMain.cloneNode( true );
         let tds = code.getElementsByTagName( 'td' );
         if ( tds.length > 0 ) {
             for ( let i = 0; i < tds.length; i++ ) {
@@ -41,8 +40,16 @@ var WPTB_Stringifier = function ( code ) {
                         }
                     }
                 }
+                
+                if( tds[i].hasAttribute( 'data-title-column' ) ) {
+                    let columnNameDiv = document.createElement( 'div' );
+                    columnNameDiv.classList.add( 'column-title-mobile' );
+                    columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
+                    tds[i].insertBefore( columnNameDiv, tds[i].firstChild );
+                }
             }
         }
+        
+        return code;
     }
-    return code;
 }

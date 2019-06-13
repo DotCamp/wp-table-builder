@@ -14,6 +14,7 @@ var WPTB_Settings = function () {
         elems[i].ondragstart = function ( event ) {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData( 'wptbElement', event.target.dataset.wptbElement );
+            event.dataTransfer.setData( 'wptbElIndic-' + event.target.dataset.wptbElement, 'wptbElIndic-' + event.target.dataset.wptbElement );
         }
         elems[i].ondragend = function () {
             let wptbDropHandle = document.querySelector( '.wptb-drop-handle' ),

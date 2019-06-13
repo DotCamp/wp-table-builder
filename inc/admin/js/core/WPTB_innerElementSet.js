@@ -71,7 +71,7 @@ var WPTB_innerElementSet = function  ( element ) {
                 }
             }
         } else {
-            this.appendChild( element );
+            return;
         }
         
         wptbDropHandle.style.display = 'none';

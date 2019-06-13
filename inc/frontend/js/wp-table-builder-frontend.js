@@ -30,5 +30,33 @@
          * 
          * The file is enqueued from inc/frontend/class-frontend.php.
 	 */
+        
+    
 
 })( jQuery );
+
+jQuery( document ).ready( function ( $ ) {
+    /**
+     * function wptb_tableContainerSectionSmall
+     * add class ( wptb-section-small ) in small width
+     * remove this class in large width
+     * @returns {void}
+     */
+    function wptb_tableContainerSectionSmall() {
+        var wptbTableContainer = jQuery(".wptb-table-container");
+        var sw = wptbTableContainer.width();
+        if( wptbTableContainer.length > 0 ) {
+            if (sw < 767) {
+                wptbTableContainer.addClass("wptb-section-small");
+            } else {
+                wptbTableContainer.removeClass("wptb-section-small");
+            }
+        } 
+    }
+    wptb_tableContainerSectionSmall();
+    
+    //when window resize call wpcd_archiveSectionSmall.
+    $( window ).resize( function () {
+        wptb_tableContainerSectionSmall();
+    });
+});

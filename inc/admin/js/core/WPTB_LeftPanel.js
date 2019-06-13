@@ -92,6 +92,17 @@ var WPTB_LeftPanel = function () {
         },
     });
     
+    function tableTopRowAsHeadSavedSet( table ) {
+        let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
+        
+        if( table.classList.contains( 'wptb-table-preview-head' ) ) {
+            wptbTopRowAsHeader.checked = true;
+        } else {
+            wptbTopRowAsHeader.checked = false;
+        }
+    }
+    tableTopRowAsHeadSavedSet( table );
+    
     function tableBorderColorWidthSavedSet() {
         let table = document.getElementsByClassName('wptb-preview-table');
         if ( table.length > 0 ) {
@@ -157,7 +168,6 @@ var WPTB_LeftPanel = function () {
                 if ( document.getElementById('wptb-inner-border-check').checked ) {
                     tableCells[i].style.border = ( tableInnerborderNumber != 0 ? tableInnerborderNumber : 1 ) + 'px solid ' + ui.color.toString();
                 }
-                
             }
         },
         clear: function() {
@@ -317,16 +327,91 @@ var WPTB_LeftPanel = function () {
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
-        var _val = this.checked ? 'checked' : 'unchecked';
-        addInnerBorder(_val);
+        let val = this.checked ? 'checked' : 'unchecked';
+        addInnerBorder( val );
         let borderWidth = document.getElementById('wptb-table-border-slider').value,
             tableBorderColorSetArea = document.getElementById( 'wptb-table-border-color-set-area' );
-        if( _val == 'unchecked' && borderWidth == 0 ) {
+        if( val == 'unchecked' && borderWidth == 0 ) {
             tableBorderColorSetArea.style.display = 'none';
         } else {
             tableBorderColorSetArea.style.display = '';
         }
     };
+    
+    function createMobileHeadForTable( table, thisEvent ) {
+        let rows = table.rows,
+            rowHead = rows[0];
+        
+        if( thisEvent.checked ) {
+            let rowHeadChildren = rowHead.children;
+            let contentsForHeader = {};
+            for( let i = 0; i < rowHeadChildren.length; i++ ) {
+                let tdElements = rowHeadChildren[i].children;
+                for( let j = 0; j < tdElements.length; j++ ) {
+                    let element = tdElements[j];
+                    if( element.classList.contains( 'wptb-ph-element' ) ) {
+                        let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+                        if( infArr[1] == 'text' ) {
+                            let p = element.querySelector( 'p' ),
+                                textContent = p.textContent;
+                                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = textContent;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            for ( let i = 1; i < rows.length; i++ ) {
+                let thisRow = rows[i],
+                    thisRowChildren = thisRow.children;
+                for( let j = 0; j < thisRowChildren.length; j++ ) {
+                    if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
+                        thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex];
+                    } else {
+                        thisRowChildren[j].dataset.titleColumn = '';
+                    }
+                }
+            }
+            
+            table.classList.add( 'wptb-table-preview-head' );
+            rowHead.classList.add( 'wptb-table-head' );
+            
+//            for ( let i = 1; rows.length; i++ ) {
+//                
+//            }
+            
+//            let tds = table.rows[0].children;
+//            for ( let i = 0; i < tds.length; i++ ) {
+//                let tdElements = tds[i].children;
+//                
+//                for ( let j = 0; j < tdElements.length; j++ ) {
+//                    let element = tdElements[j];
+//                    if( element.classList.contains( 'wptb-ph-element' ) ) {
+//                        let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+//                        if( infArr[1] != 'text' ) {
+//                            tds[i].removeChild( element );
+//                            j--;
+//                        }
+//                    }
+//                }
+//            }
+        } else {
+            table.classList.remove( 'wptb-table-preview-head' );
+            rows[0].classList.remove( 'wptb-table-head' );
+            
+            for ( let i = 1; i < rows.length; i++ ) {
+                let thisRow = rows[i],
+                    thisRowChildren = thisRow.children;
+                for( let j = 0; j < thisRowChildren.length; j++ ) {
+                    thisRowChildren[j].removeAttribute( 'data-title-column' );
+                }
+            }
+        }
+    }
+    
+    document.getElementById( 'wptb-top-row-as-header' ).onchange = function () {
+        createMobileHeadForTable( table, this );
+    }
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
         wptbElementButtons[i].ondragstart = function (e) {

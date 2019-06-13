@@ -79,7 +79,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             
             event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
             event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
-            event.dataTransfer.setData( 'moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] ); 
+            event.dataTransfer.setData( 'moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
+            event.dataTransfer.setData( 'wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1] );
         };
 
         if (element.kind === 'button') {

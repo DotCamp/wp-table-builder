@@ -88,6 +88,12 @@ var WPTB_DropHandle = function (thisElem, e) {
             
             WPTB_innerElementSet(element);
         }
+        let wptbContainer = document.querySelector( '.wptb-container' );
+        wptbContainer.onscroll = function() {
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
+            console.log('Hello');
+        }
     } else {
         wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' )[0];
         wptbDropBorderMarker = document.getElementsByClassName( 'wptb-drop-border-marker' )[0];
@@ -97,9 +103,29 @@ var WPTB_DropHandle = function (thisElem, e) {
         return;
     }
     
-    wptbDropHandle.getDOMParentElement = function() {
-        return thisElem;
+    let thisRow;
+    if ( thisElem.localName == 'td' ) {
+        thisRow = thisElem.parentNode;
+    } else if ( thisElem.localName == 'div' && thisElem.classList.contains( 'wptb-ph-element' ) ) {
+        thisRow = thisElem.parentNode.parentNode;
     }
+    if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+        let indics = e.dataTransfer.types;
+        let notDragEnter = false;
+        for ( let i = 0; i < indics.length; i++ ) {
+            let infArr = indics[i].match( /wptbelindic-([a-z]+)/i );
+            console.log(infArr);
+            console.log(e);
+            if ( infArr && infArr[1] != 'text' ) {
+                notDragEnter = true;
+                break;
+            }
+        }
+        if( notDragEnter ) {
+            return;
+        }
+    }
+    
     wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
     let height = thisElem.offsetHeight,
         coordinatesElement = thisElem.getBoundingClientRect(),
@@ -117,6 +143,11 @@ var WPTB_DropHandle = function (thisElem, e) {
             wptbDropBorderMarker.classList.remove('moving-into-same-elem');
         }
     }
+    
+    wptbDropHandle.getDOMParentElement = function() {
+        return thisElem;
+    }
+    
     wptbDropHandle.style.display = 'block';
     wptbDropBorderMarker.style.display = 'block';
     if( thisElem.nodeName.toLowerCase() != 'td' ) {

@@ -53,8 +53,10 @@ body>img {
     padding: 10px 0;
     border-bottom: 1px solid #ccc;
     position: fixed;
-    z-index: 99999;
+    z-index: 100101;
     display: flex;
+    top: 0;
+    left: 0;
 }
 
 .wptb-logo {
@@ -516,26 +518,26 @@ input[type="range"]::-ms-thumb {
     /* W3C */
 }
 
-.wptb-inner-border {
+.wptb-checkbox-button {
     display: inline-block;
     width: 95%;
     padding: 25px 0 10px 0;
 }
 
-.wptb-inner-border input {
+.wptb-checkbox-button input {
     display: none;
 }
 
-.wptb-inner-border input:checked+i::after {
+.wptb-checkbox-button input:checked+i::after {
     -webkit-transform: translateX(20px);
     transform: translateX(20px);
 }
 
-.wptb-inner-border input:checked+i {
+.wptb-checkbox-button input:checked+i {
     background: #3B7EC0;
 }
 
-.wptb-inner-border i {
+.wptb-checkbox-button i {
     float: right;
     padding: 2px;
     width: 40px;
@@ -548,7 +550,7 @@ input[type="range"]::-ms-thumb {
     box-sizing: initial;
 }
 
-.wptb-inner-border i::after {
+.wptb-checkbox-button i::after {
     content: " ";
     display: block;
     width: 20px;
@@ -1388,7 +1390,7 @@ table.wptb-table {
 .wptb-drop-handle {
     height: 11px;
     position: absolute;
-    z-index: 100101;
+    z-index: 100100;
     display: none;
 }
 
@@ -1594,6 +1596,10 @@ td[class*="wptb-fused-cell"] {
 .wptb-split-page-title-action a:hover {
     color: #fff;
     background-color: #1f8abb;
+}
+
+.column-title-mobile {
+    display: none;
 }
 
 @media screen and (max-width: 970px) {

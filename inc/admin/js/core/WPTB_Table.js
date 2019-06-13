@@ -344,21 +344,11 @@ var array = [], WPTB_Table = function (columns, rows) {
         table = document.createElement('table');
         table.classList.add('wptb-preview-table');
 
-        //Add the header row.
-        row = table.insertRow(-1);
-        row.classList.add('wptb-table-head', 'wptb-row');
-
-        for (var i = 0; i < columns; i++) {
-            cell = new WPTB_Cell(mark);
-            cell.setCoords(0, i);
-            row.appendChild(cell.getDOMElement());
-        }
-
         //Add the data rows.
-        for (var i = 1; i < rows; i++) {
+        for (var i = 0; i < rows; i++) {
 
             row = table.insertRow(-1);
-            row.classList.add('wptb-row');
+            row.classList.add( 'wptb-row' );
 
             for (var j = 0; j < columns; j++) {
                 cell = new WPTB_Cell(mark);
@@ -367,7 +357,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
     } else {
-        let wptb_preview_table = document.getElementsByClassName('wptb-preview-table');
+        let wptb_preview_table = document.getElementsByClassName( 'wptb-preview-table' );
 
         if (wptb_preview_table.length > 0) {
             table = wptb_preview_table[0];
@@ -430,13 +420,24 @@ var array = [], WPTB_Table = function (columns, rows) {
     table.recalculateIndexes = function ( start ) {
         let trs = this.getElementsByTagName('tr'), tds, maxCols = 0,
                 tdsArr = [];
-
+        let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
+        
         for (var i = 0; i < trs.length; i++) {
-            if (i == 0) {
+            if ( i == 0 ) {
                 if ( start == undefined ) {
                     trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
                 }
-                trs[i].classList.add( 'wptb-table-head' );
+                if( wptbTopRowAsHeader.checked ) {
+                    if( start == undefined ) {
+                        this.classList.add( 'wptb-table-preview-head' );               
+                        trs[i].classList.add( 'wptb-table-head' )
+                    }  ;
+                } else {
+                    if( start == undefined ) {
+                        this.classList.remove( 'wptb-table-preview-head' );
+                        trs[i].classList.remove( 'wptb-table-head' );
+                    }
+                }
             } else {
                 if (i % 2 == 0) {
                     if ( start == undefined ) {
@@ -575,88 +576,95 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.addColumnAfter = function (c_pos) {
         let rows = table.rows,
-                cellPointer,
-                cellsBuffer,
-                cell = document.querySelector('.wptb-highlighted'),
-                cellStyle = cell.getAttribute('style'),
-                pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1],
-                pendingInsertion = false,
+            cellPointer,
+            cellsBuffer,
+            cell = document.querySelector('.wptb-highlighted'),
+            cellStyle = cell.getAttribute('style'),
+            pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1];
+    
+        
+    
+        if( maxAmountOfCells - pos - cell.colSpan + 1 == 1 ) {
+            table.addColumnEnd();
+        } else {
+            let pendingInsertion = false,
                 stepsToMove,
                 td, bro,
                 carriedRowspans = [],
                 currentCell;
 
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            carriedRowspans.push(0);
-        }
+            for (var i = 0; i < maxAmountOfCells; i++) {
+                carriedRowspans.push(0);
+            }
 
-        for (var i = 0; i < rows.length; i++) {
-            cellPointer = 0;
-            cellsBuffer = rows[i].getElementsByTagName('td');
-            pendingInsertion = false;
-            for (var xPosition = 0;
-                    xPosition < maxAmountOfCells;
-                    xPosition += stepsToMove) {
-                stepsToMove = 1;
+            for (var i = 0; i < rows.length; i++) {
+                cellPointer = 0;
+                cellsBuffer = rows[i].getElementsByTagName('td');
+                pendingInsertion = false;
+                for (var xPosition = 0;
+                        xPosition < maxAmountOfCells;
+                        xPosition += stepsToMove) {
+                    stepsToMove = 1;
 
-                if (pendingInsertion) {
-                    td = new WPTB_Cell(mark);
-                    if (cellStyle) {
-                        td.getDOMElement().setAttribute('style', cellStyle);
-                    }
-                    if (currentCell && rows[i].contains(currentCell)) {
-                        bro = currentCell.nextSibling;
-                        if (bro) {
-                            rows[i].insertBefore(td.getDOMElement(), bro);
+                    if (pendingInsertion) {
+                        td = new WPTB_Cell(mark);
+                        if (cellStyle) {
+                            td.getDOMElement().setAttribute('style', cellStyle);
+                        }
+                        if (currentCell && rows[i].contains(currentCell)) {
+                            bro = currentCell.nextSibling;
+                            if (bro) {
+                                rows[i].insertBefore(td.getDOMElement(), bro);
+                            } else {
+                                rows[i].appendChild(td.getDOMElement());
+                            }
                         } else {
-                            rows[i].appendChild(td.getDOMElement());
+                            rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
+                        }
+                        break;
+                    } else if (carriedRowspans[xPosition] > 0) {
+                        // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
+                        if (pos == xPosition) {
+                            pendingInsertion = true;
                         }
                     } else {
-                        rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
-                    }
-                    break;
-                } else if (carriedRowspans[xPosition] > 0) {
-                    // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
-                    if (pos == xPosition) {
-                        pendingInsertion = true;
-                    }
-                } else {
-                    currentCell = cellsBuffer[cellPointer++];
-                    if (currentCell.rowSpan > 1) {
-                        stepsToMove = currentCell.colSpan;
-                        for (var k = 0; k < currentCell.colSpan; k++) {
-                            carriedRowspans[xPosition + k] = currentCell.rowSpan;
-                            if (xPosition + k == pos) {
-                                pendingInsertion = true;
+                        currentCell = cellsBuffer[cellPointer++];
+                        if (currentCell.rowSpan > 1) {
+                            stepsToMove = currentCell.colSpan;
+                            for (var k = 0; k < currentCell.colSpan; k++) {
+                                carriedRowspans[xPosition + k] = currentCell.rowSpan;
+                                if (xPosition + k == pos) {
+                                    pendingInsertion = true;
+                                }
                             }
-                        }
-                    } else if (currentCell.colSpan > 1) {
-                        stepsToMove = currentCell.colSpan;
-                        for (var k = 0; k < currentCell.colSpan; k++) {
-                            if (xPosition + k == pos) {
-                                pendingInsertion = true;
+                        } else if (currentCell.colSpan > 1) {
+                            stepsToMove = currentCell.colSpan;
+                            for (var k = 0; k < currentCell.colSpan; k++) {
+                                if (xPosition + k == pos) {
+                                    pendingInsertion = true;
+                                }
                             }
+                        } else if (xPosition == pos) {
+                            pendingInsertion = true;
                         }
-                    } else if (xPosition == pos) {
-                        pendingInsertion = true;
                     }
                 }
+
+                for (var l = 0; l < maxAmountOfCells; l++) {
+                    if (carriedRowspans[l] > 0)
+                        carriedRowspans[l]--;
+                }
+
             }
 
-            for (var l = 0; l < maxAmountOfCells; l++) {
-                if (carriedRowspans[l] > 0)
-                    carriedRowspans[l]--;
+            for (var i = 0; i < array.length; i++) {
+                array[i].push(0);
             }
-
+            maxAmountOfCells++;
+            drawTable(array);
+            table.recalculateIndexes();
+            undoSelect();
         }
-
-        for (var i = 0; i < array.length; i++) {
-            array[i].push(0);
-        }
-        maxAmountOfCells++;
-        drawTable(array);
-        table.recalculateIndexes();
-        undoSelect();
     };
 
     /*
