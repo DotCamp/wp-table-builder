@@ -32,6 +32,13 @@ var WPTB_Stringifier = function ( codeMain ) {
                             }
                         }
                         
+                        let spellCheck = innerElements[j].querySelectorAll( '[spellcheck]' );
+                        if ( spellCheck.length > 0 ) {
+                            for ( let k = 0; k < spellCheck.length; k++ ) {
+                                spellCheck[k].removeAttribute( 'spellcheck' );
+                            }
+                        }
+                        
                         let mceIds = innerElements[j].querySelectorAll( '[id^=mce_]' );
                         if ( mceIds.length > 0 ) {
                             for ( let k = 0; k < mceIds.length; k++ ) {

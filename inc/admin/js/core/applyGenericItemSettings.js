@@ -58,8 +58,9 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             } else {
-                var td = event.target.parentNode.parentNode.parentNode;
-                copy = new WPTB_Button( event.target.parentNode.parentNode.childNodes[0].innerHTML, node );
+                var td = event.target.parentNode.parentNode.parentNode,
+                    text = event.target.parentNode.parentNode.childNodes[0].querySelector( 'p' ).innerHTML;
+                copy = new WPTB_Button( text, node );
 
                 node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
             }
@@ -84,56 +85,12 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         };
 
         if (element.kind === 'button') {
-            tinyMCE.init({
-                target: node.childNodes[0].childNodes[0],
-                inline: true,
-                plugins: "link",
-                dialog_type: "modal",
-                theme: 'modern',
-                menubar: false,
-                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                toolbar: 'bold italic strikethrough',
-                verify_html: false,
-                setup: function (ed) {
-                    ed.on("init",
-                        function (ed) {
-                        tinyMCE.execCommand('mceRepaint');
-                        }
-                    );
-                },
-                init_instance_callback: function (editor) {
-                    editor.on('change', function (e) {
-                        // check if it becomes empty because if there's no value it's hard to edit the editor in button element
-                        if (editor.getContent().trim() == "") {
-                            editor.setContent("<a class='wptb-button'>Button Text</a>");
-                        }
-                    });
-                    editor.on('KeyDown', function (e) {
-                        var range = editor.selection.getRng();
-                        var KeyID = e.keyCode;
-                        if (range.startOffset == 0 && (KeyID == 8 || KeyID == 46)) {
-                            e.preventDefault();
-                            editor.setContent("<p class='wptb-button'></p>");
-                        }
-                    });
-
-                    window.currentEditor = editor;
-                    editor.on('focus', function (e) {
-                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                        if (window.currentEditor &&
-                            document.getElementById('wptb_builder').scrollTop >= 55 &&
-                            window.currentEditor.bodyElement.style.display != 'none') {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                            document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
-                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                        } else {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                        }
-                    });
-                }
-            });
+            let a = node.querySelector( 'a' ),
+                target = a.querySelector( 'div' );
+            a.onclick = function( e ) {
+                e.preventDefault();
+            }
+            WPTB_Helper.buttonsTinyMceInit( target );
         } else if (element.kind === 'text') {
             tinyMCE.init({
                 target: node.childNodes[0],
@@ -145,6 +102,15 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 fixed_toolbar_container: '#wpcd_fixed_toolbar',
                 paste_as_text: true,
                 toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                setup : function( ed ) {
+                    ed.on( 'keyup', function(e) {
+                        let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
+                        if( row.classList.contains( 'wptb-table-head' ) ) {
+                            let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+                            WPTB_Helper.dataTitleColumnSet( table );
+                        }
+                    });
+                },
                 init_instance_callback: function (editor) {
                     window.currentEditor = editor;
                     editor.on('focus', function (e) {
@@ -173,10 +139,6 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         actions.appendChild(btnMove);
         actions.appendChild(btnCopy);
         actions.appendChild(btnDelete);
-//                let actionOld = this.querySelector( '.wptb-actions' );
-//                if( actionOld ) {
-//                    this.removeChild( actionOld );
-//                }
         this.appendChild( actions );
     };
 

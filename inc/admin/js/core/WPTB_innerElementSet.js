@@ -56,12 +56,13 @@ var WPTB_innerElementSet = function  ( element ) {
         }
         
         if( wptbDropHandle.style.display == 'block' ) {
+            let td;
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
-                let td = wptbDropHandle.getDOMParentElement();
+                td = wptbDropHandle.getDOMParentElement();
                 td.appendChild( element );
             } else {
-                let innerElement = wptbDropHandle.getDOMParentElement(),
-                    td = innerElement.parentNode;
+                let innerElement = wptbDropHandle.getDOMParentElement();
+                td = innerElement.parentNode;
 
                 if( wptbDropHandle.dataset.text == 'Abowe Element' ) {
                     td.insertBefore( element, innerElement );
@@ -70,6 +71,12 @@ var WPTB_innerElementSet = function  ( element ) {
                     td.insertBefore( element, innerElementNext );
                 }
             }
+            let thisRow = td.parentNode
+            if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
+                WPTB_Helper.dataTitleColumnSet( table );
+            }
+            
         } else {
             return;
         }

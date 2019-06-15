@@ -28,6 +28,14 @@
     padding: 15px;
 }
 
+.wptb-row td:empty::before {
+    content: " ";
+    display: block;
+    min-height: 19px;
+    box-sizing: border-box;
+    border: none;
+}
+
 .wptb-ph-element {
     position: relative;
     border: 1px solid #fff0;
@@ -43,34 +51,46 @@
 
 .wptb-size-S .wptb-button {
     border-radius: .2rem;
-    font-size: .875rem;
-    line-height: 1.5;
     padding: .35rem .6rem;
     max-width: 100%;
 }
 
+.wptb-size-S .wptb-button p {
+    font-size: .875rem;
+    line-height: 1.5;
+}
+
 .wptb-size-M .wptb-button {
     border-radius: .3rem;
-    font-size: 1.125rem;
-    line-height: 1.5;
     padding: .475rem .85rem;
     max-width: 100%;
 }
 
+.wptb-size-M .wptb-button p {
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
 .wptb-size-L .wptb-button {
     border-radius: .3rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
     padding: .6rem 1.2rem;
     max-width: 100%;
 }
 
+.wptb-size-L .wptb-button p {
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
 .wptb-size-XL .wptb-button {
     border-radius: .4rem;
-    font-size: 1.35rem;
-    line-height: 1.5;
     padding: .8rem 1.35rem;
     max-width: 100%;
+}
+
+.wptb-size-XL .wptb-button p {
+    font-size: 1.35rem;
+    line-height: 1.5;
 }
 
 .wptb-table img {
@@ -206,7 +226,7 @@
     }
 }
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 480) {
     .wptb-table-container table tr td {
         display: block;
         width: 100%;

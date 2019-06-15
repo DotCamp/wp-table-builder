@@ -65,16 +65,17 @@ var WPTB_DropHandle = function (thisElem, e) {
                 element.classList.remove( 'moving-mode' );
                 element.classList.remove( 'moving-into-same-elem' );
             }
+            
+            let td;
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
                 thisElem = wptbDropHandle.getDOMParentElement();
                 if ( thisElem.nodeName.toLowerCase() == 'td' ) {
-                    let td = wptbDropHandle.getDOMParentElement();
+                    td = wptbDropHandle.getDOMParentElement();
                     td.appendChild( element );
                 }
             } else {
-                let innerElement = wptbDropHandle.getDOMParentElement(),
-                    td = innerElement.parentNode;
-            
+                let innerElement = wptbDropHandle.getDOMParentElement();
+                td = innerElement.parentNode;
                 
                 if( wptbDropHandle.dataset.text == 'Abowe Element' ) {
                     td.insertBefore( element, innerElement );
@@ -83,6 +84,13 @@ var WPTB_DropHandle = function (thisElem, e) {
                     td.insertBefore( element, innerElementNext );
                 }
             }
+            
+            let thisRow = td.parentNode
+            if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
+                WPTB_Helper.dataTitleColumnSet( table );
+            }
+            
             wptbDropHandle.style.display = 'none';
             wptbDropBorderMarker.style.display = 'none';
             
@@ -92,7 +100,6 @@ var WPTB_DropHandle = function (thisElem, e) {
         wptbContainer.onscroll = function() {
             wptbDropHandle.style.display = 'none';
             wptbDropBorderMarker.style.display = 'none';
-            console.log('Hello');
         }
     } else {
         wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' )[0];
@@ -114,8 +121,6 @@ var WPTB_DropHandle = function (thisElem, e) {
         let notDragEnter = false;
         for ( let i = 0; i < indics.length; i++ ) {
             let infArr = indics[i].match( /wptbelindic-([a-z]+)/i );
-            console.log(infArr);
-            console.log(e);
             if ( infArr && infArr[1] != 'text' ) {
                 notDragEnter = true;
                 break;

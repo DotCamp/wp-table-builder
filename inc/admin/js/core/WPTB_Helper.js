@@ -63,6 +63,42 @@ var WPTB_Helper = {
             }
         });
     },
+    buttonsTinyMceInit: function( target ) {
+        tinyMCE.init({
+            target: target,
+            inline: true,
+            plugins: "link",
+            dialog_type: "modal",
+            theme: 'modern',
+            menubar: false,
+            fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            toolbar: 'bold italic strikethrough',
+            setup : function(ed) {
+                ed.on('keydown', function(e) {
+                    if (e.keyCode == 13) {
+                        e.preventDefault();
+                    }
+                });
+            },
+            init_instance_callback: function (editor) {
+                window.currentEditor = editor;
+                editor.on('focus', function (e) {
+                    var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                    if (window.currentEditor &&
+                        document.getElementById('wptb_builder').scrollTop >= 55 &&
+                        window.currentEditor.bodyElement.style.display != 'none') {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                        document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
+                        document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                    } else {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                        delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                        delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                    }
+                });
+            }
+        });
+    },
     linkHttpCheckChange: function( link ) {
         if ( link.indexOf( 'http://' ) == -1 && link.indexOf( 'https://' ) == -1 ) {
             let linkArr = link.split( '/' ),
@@ -74,5 +110,41 @@ var WPTB_Helper = {
         } else { 
             return link;
         }
+    },
+    dataTitleColumnSet: function( table ) {
+        let rows = table.rows,
+            rowHead = rows[0];
+        let rowHeadChildren = rowHead.children;
+        let contentsForHeader = {};
+        for( let i = 0; i < rowHeadChildren.length; i++ ) {
+            let tdElements = rowHeadChildren[i].children;
+            for( let j = 0; j < tdElements.length; j++ ) {
+                let element = tdElements[j];
+                if( element.classList.contains( 'wptb-ph-element' ) ) {
+                    let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+                    if( infArr[1] == 'text' ) {
+                        let p = element.querySelector( 'p' ),
+                            textContent = p.textContent;
+                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = textContent;
+                        break;
+                    }
+                }
+            }
+        }
+        for ( let i = 1; i < rows.length; i++ ) {
+            let thisRow = rows[i],
+                thisRowChildren = thisRow.children;
+            for( let j = 0; j < thisRowChildren.length; j++ ) {
+                if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
+                    thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex];
+                } else {
+                    thisRowChildren[j].dataset.titleColumn = '';
+                }
+            }
+        }
+    },
+    findAncestor: function(el, cls) {
+        while ((el = el.parentElement) && !el.classList.contains(cls));
+        return el;
     }
 }

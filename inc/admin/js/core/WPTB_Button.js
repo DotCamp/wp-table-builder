@@ -1,19 +1,17 @@
 var WPTB_Button = function( text, DOMElementProt ) {
     
     var DOMElement = document.createElement('div'),
-        elButton2 = document.createElement('div'),
+        elButton = document.createElement('div'),
         el_B = document.createElement('a'),
+        el_BDiv = document.createElement( 'div' ),
         kindIndexProt = undefined,
         copy = false;
 
     DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
-    elButton2.classList.add('wptb-button-wrapper');
-    el_B.classList.add('wptb-button');
+    elButton.classList.add('wptb-button-wrapper');
+    el_BDiv.classList.add('wptb-button');
     //el_B.classList.add('editable');
-    el_B.innerHTML = text != undefined ? text : 'Button Text';
-    el_B.onclick = function( e ) {
-        e.preventDefault();
-    }
+    el_BDiv.innerHTML = text != undefined ? text : 'Button Text';
     
     // Creation of a new button when copying to avoid errors when assigning new event handlers.
     if ( DOMElementProt ) {
@@ -35,13 +33,13 @@ var WPTB_Button = function( text, DOMElementProt ) {
             if ( wptbButtonWrapAttributes.length > 0 ) {
                 for( let i = 0; i < wptbButtonWrapAttributes.length; i++ ) {
                     if ( wptbButtonWrapAttributes[i].name == 'style') {
-                        elButton2.setAttribute( wptbButtonWrapAttributes[i].name, wptbButtonWrapAttributes[i].value );
+                        elButton.setAttribute( wptbButtonWrapAttributes[i].name, wptbButtonWrapAttributes[i].value );
                     }
                 } 
             }
         }
         
-        var wptbButton = DOMElementProt.querySelector( '.wptb-button' );
+        var wptbButton = DOMElementProt.querySelector( 'a' );
         if ( wptbButton ) {
             var wptbButtonAttributes = [...wptbButton.attributes];
             if ( wptbButtonAttributes.length > 0 ) {
@@ -56,8 +54,11 @@ var WPTB_Button = function( text, DOMElementProt ) {
         }
     }
     
-    elButton2.appendChild(el_B);
-    DOMElement.appendChild(elButton2);
+    elButton.appendChild(el_B);
+    el_B.appendChild( el_BDiv );
+    DOMElement.appendChild(elButton);
+    
+    
     
     this.kind = 'button';
 

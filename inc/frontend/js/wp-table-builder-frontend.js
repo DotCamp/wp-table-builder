@@ -46,7 +46,7 @@ jQuery( document ).ready( function ( $ ) {
         var wptbTableContainer = jQuery(".wptb-table-container");
         var sw = wptbTableContainer.width();
         if( wptbTableContainer.length > 0 ) {
-            if (sw < 767) {
+            if (sw < 480) {
                 wptbTableContainer.addClass("wptb-section-small");
             } else {
                 wptbTableContainer.removeClass("wptb-section-small");
