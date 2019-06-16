@@ -365,13 +365,6 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-delete-row').onclick = table.deleteRow;
     document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
     document.getElementById('wptb-split-cell').onclick = table.splitCell;
-    document.getElementById('add-elements').onclick = function () {
-        document.getElementById('element-options').getElementsByTagName('a')[0].classList.remove('active');
-        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.add('active');
-        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-        document.getElementById("element-options-group").style.display = 'none';
-    };
     document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
         let wptbContainer = document.querySelector( '.wptb-container' );
         if( wptbContainer ) {
@@ -382,5 +375,15 @@ var WPTB_LeftPanel = function () {
             }
         }
     };
+    
+    let wptbBuilderPanel = document.getElementsByClassName( 'wptb-builder-panel' )[0];
+    wptbBuilderPanel.addEventListener( 'click', function( e ) {
+        if( ! e.target.classList.contains( 'wptb-ph-element' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) ) {
+            document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+            document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+            document.getElementById("element-options-group").style.display = 'none';
+        }
+    }, false);
+    
 
 };

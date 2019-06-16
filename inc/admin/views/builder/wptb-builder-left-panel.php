@@ -11,18 +11,6 @@ use WP_Table_Builder as NS;
     <div class="wptb-left-scroll-panel">
         <div class="wptb-panel-left">
             <div class="wptb-elements-section">
-                <ul class="wptb-tabs wptb-clear">
-                    <li class="wptb-tab" id="add-elements">
-                        <a href="#" class="active">
-                            <?php echo __( 'Add Elements', 'wp-table-builder' ); ?>
-                        </a>
-                    </li>
-                    <li class="wptb-tab" id="element-options">
-                        <a href="#">
-                            <?php echo __( 'Element Options', 'wp-table-builder' ); ?>
-                        </a>
-                    </li>
-                </ul>
                 <div class="add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
                         <div class="wptb-element left " draggable="true" data-wptb-element="text"  id="wptb-text">

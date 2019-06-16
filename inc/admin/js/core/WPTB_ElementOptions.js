@@ -270,9 +270,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             optionsClass = '.wptb-' + infArr[2] + 'options' +
                 '.wptb-options-' + infArr[1];
 
-        document.getElementById('add-elements').getElementsByTagName('a')[0].classList.remove('active');
-        document.getElementById('element-options').getElementsByTagName('a')[0].classList.add('active');
-
         document.getElementsByClassName('wptb-elements-container')[0].style.display = 'none';
         document.getElementsByClassName('wptb-settings-section')[0].style.display = 'none';
         document.getElementById("element-options-group").style.display = 'block';

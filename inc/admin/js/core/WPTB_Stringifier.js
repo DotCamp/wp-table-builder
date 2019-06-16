@@ -52,6 +52,10 @@ var WPTB_Stringifier = function ( codeMain ) {
                     let columnNameDiv = document.createElement( 'div' );
                     columnNameDiv.classList.add( 'column-title-mobile' );
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
+                    columnNameDiv.style.paddingLeft = tds[i].style.padding;
+                    if( tds[i].children.length == 0 ) {
+                        columnNameDiv.classList.add( 'column-title-mobile-not-elements' );
+                    }
                     tds[i].insertBefore( columnNameDiv, tds[i].firstChild );
                 }
             }

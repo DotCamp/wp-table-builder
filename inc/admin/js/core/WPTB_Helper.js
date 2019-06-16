@@ -44,6 +44,45 @@ var WPTB_Helper = {
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
             paste_as_text: true,
             toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            setup: function(ed) {
+                ed.on('keydown', function(e) {
+                    let article = e.target.parentNode;
+                    if ( e.keyCode == 13 ) {
+                        e.preventDefault();
+                        let text = e.target.innerHTML;
+                        let duplicate = new WPTB_ListItem( text, article, true );
+                        
+                        article.parentNode.insertBefore( duplicate.getDOMElement(), article );
+                        WPTB_Helper.listItemsTinyMceInit( duplicate.getDOMElement().firstChild );
+                        e.target.querySelector( 'p' ).innerText = 'New List Item';
+                        //tinyMCE.execCommand('mceInsertContent', false, 'New List Item');
+                        WPTB_Helper.listItemsRecalculateIndex( article.parentNode );
+                        
+                    } else if ( e.keyCode == '8' || e.keyCode == '46' ) {
+                        let p = e.target.querySelector( 'p' );
+                        let pText = p.innerHTML.replace(/<[^>]+>/g, '');
+                        pText = pText.replace( /\s+/g, ' ' ).trim();
+                        pText = pText.replace( /&nbsp;/g, '').trim();
+                        
+                        if( pText == '' ) {
+                            e.preventDefault();
+                            e.target.querySelector( 'p' ).innerText = '\n';
+                        } else {
+                            let selectedText = WPTB_Helper.getSelectionText();
+                            selectedText = selectedText.replace( /\s+/g, ' ' ).trim();
+                            selectedText = selectedText.replace( /&nbsp;/g, '' ).trim();
+                            if( selectedText == pText ) {
+                                e.preventDefault();
+                                e.target.querySelector( 'p' ).innerText = '\n';
+                            }
+                        }
+                    }
+                });
+                
+                ed.on( 'keyup', function( e ) {
+                    
+                });
+            },
             init_instance_callback: function (editor) {
                 window.currentEditor = editor;
                 editor.on('focus', function (e) {
@@ -146,5 +185,14 @@ var WPTB_Helper = {
     findAncestor: function(el, cls) {
         while ((el = el.parentElement) && !el.classList.contains(cls));
         return el;
+    },
+    getSelectionText: function() {
+        var txt = '';
+        if (txt = window.getSelection) {
+            txt = window.getSelection().toString();
+        } else {
+            txt = document.selection.createRange().text;
+        }
+        return txt;
     }
 }

@@ -78,53 +78,6 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
         }
     };
 
-    divcontent.onkeydown = function (event) {
-        var key = event.which != undefined ? event.which : event.keyCode,
-            article = event.target.parentNode,
-            duplicate;
-        
-        setTimeout( function(){
-            if( ! divcontent.querySelector( 'p' ).hasAttribute( 'data-list-style-type-index' ) ) {
-                let ps = DOMElement.parentNode.querySelectorAll( 'p' );
-                if( ps.length > 0 ) {
-                    for( let i = 0; i < ps.length; i++ ) {
-                        if ( ps[i].hasAttribute( 'data-list-style-type-index' ) ) {
-                            let psIClass = ps[i].getAttribute( 'class' ),
-                                psIStyle = ps[i].getAttribute( 'style' );
-                            let p = divcontent.querySelector( 'p' );
-                            p.setAttribute( 'class', psIClass );
-                            p.setAttribute( 'style', psIStyle );
-                            break;
-                        }
-                    }
-                }
-                WPTB_Helper.listItemsRecalculateIndex( DOMElement.parentNode );
-            }
-        }, 5 );
-        if ( key !== 13 || window.dontAddItems !== undefined && window.dontAddItems === true ) {
-            return;
-        }
-        event.preventDefault();
-        duplicate = new WPTB_ListItem( this.innerHTML, article, true );
-        DOMElement.parentNode.insertBefore( duplicate.getDOMElement(), DOMElement );
-        let listItemContent = duplicate.getDOMElement().getElementsByClassName( 'wptb-list-item-content' )[0],
-            listItemContentP = listItemContent.querySelector( 'p' ),
-            newP = document.createElement( 'p' ),
-            listItemContentPAttributes = listItemContentP.attributes;
-        if( listItemContentPAttributes.length > 0 ) {
-            for ( let i = 0; i < listItemContentPAttributes.length; i++ ) {
-                newP.setAttribute( listItemContentPAttributes[i].name, listItemContentPAttributes[i].value );
-            }
-        }
-        newP.innerHTML = 'New List Item';
-        setTimeout( function(){
-            divcontent.innerHTML = newP.outerHTML;
-            WPTB_Helper.listItemsRecalculateIndex( DOMElement.parentNode );
-        }, 5 );
-
-        return false;
-    };
-
     this.getDOMElement = function () {
         return DOMElement;
     };

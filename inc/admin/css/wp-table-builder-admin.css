@@ -648,10 +648,6 @@ ul.wptb-tabs {
     padding: 0 0 60px 0;
 }
 
-#element-options-group {
-    margin-top: 54px;
-}
-
 .wptb-element {
     background: #fff;
     color: #000;
@@ -924,6 +920,8 @@ table.wptb-table {
 .wptb-preview-table p {
     margin: 0;
     font-size: 15px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .wptb-preview-table ul {
@@ -1053,6 +1051,7 @@ table.wptb-table {
 
 .wptb-button-wrapper > a {
     text-decoration: none;
+    max-width: 100%;
 }
 
 .wptb-button {
@@ -1261,6 +1260,7 @@ table.wptb-table {
     padding: 0 5px 0 0;
     font-size: 15px;
     font-family: verdana, sans-serif;
+    cursor: text;
 }
 
 .wptb-list-item-container ul li > div>p.list-style-type-disc::before {
