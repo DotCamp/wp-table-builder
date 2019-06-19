@@ -139,15 +139,19 @@ var WPTB_Helper = {
         });
     },
     linkHttpCheckChange: function( link ) {
-        if ( link.indexOf( 'http://' ) == -1 && link.indexOf( 'https://' ) == -1 ) {
-            let linkArr = link.split( '/' ),
-                linkClean;
-            if ( Array.isArray( linkArr ) && linkArr.length > 0 ) {
-                linkClean = linkArr[linkArr.length - 1];
+        if ( link ) {
+            if ( link.indexOf( 'http://' ) == -1 && link.indexOf( 'https://' ) == -1 ) {
+                let linkArr = link.split( '/' ),
+                    linkClean;
+                if ( Array.isArray( linkArr ) && linkArr.length > 0 ) {
+                    linkClean = linkArr[linkArr.length - 1];
+                }
+                return document.location.protocol + '//' + linkClean;
+            } else { 
+                return link;
             }
-            return document.location.protocol + '//' + linkClean;
-        } else { 
-            return link;
+        } else {
+            return '';
         }
     },
     dataTitleColumnSet: function( table ) {
@@ -160,11 +164,12 @@ var WPTB_Helper = {
             for( let j = 0; j < tdElements.length; j++ ) {
                 let element = tdElements[j];
                 if( element.classList.contains( 'wptb-ph-element' ) ) {
+                    let textContentStyle = element.getAttribute( 'style' );
                     let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
                     if( infArr[1] == 'text' ) {
                         let p = element.querySelector( 'p' ),
                             textContent = p.textContent;
-                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = textContent;
+                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color];
                         break;
                     }
                 }
@@ -175,9 +180,13 @@ var WPTB_Helper = {
                 thisRowChildren = thisRow.children;
             for( let j = 0; j < thisRowChildren.length; j++ ) {
                 if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
-                    thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex];
+                    thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
+                    thisRowChildren[j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
+                    thisRowChildren[j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
                 } else {
                     thisRowChildren[j].dataset.titleColumn = '';
+                    thisRowChildren[j].dataset.titleColumnFontSize = '';
+                    thisRowChildren[j].dataset.titleColumnColor = '';
                 }
             }
         }

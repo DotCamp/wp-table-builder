@@ -181,7 +181,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 if ( elementListItem.length > 0 ) {
                     let listItemP = elementListItem[0].querySelector( 'p' );
                     let listItemPClasses = listItemP.classList;
-                    listItemPClasses = [...listItemPClasses];
+                    //listItemPClasses = [...listItemPClasses];
                     if ( listItemPClasses.length > 0 ) {
                         let elementListClassSelect = prop.querySelector( 'select[data-type="list-class"]' );
                         if ( elementListClassSelect ) {
@@ -205,12 +205,14 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                             if ( elementListStyleTypeSelect ) {
                                 elementListStyleTypeSelect.parentNode.style.display = 'flex';
                                 
-                                if( listItemPClasses.indexOf( 'list-style-type-disc' ) != -1 ) {
+                                if( listItemPClasses.contains( 'list-style-type-disc' ) ) {
                                     elementListStyleTypeSelect.value = 'disc';
-                                } else if( listItemPClasses.indexOf( 'list-style-type-circle' ) != -1 ) {
+                                } else if( listItemPClasses.contains( 'list-style-type-circle' ) ) {
                                     elementListStyleTypeSelect.value = 'circle';
-                                } else if( listItemPClasses.indexOf( 'list-style-type-square' ) != -1 ) {
+                                } else if( listItemPClasses.contains( 'list-style-type-square' ) ) {
                                     elementListStyleTypeSelect.value = 'square';
+                                } else if ( listItemPClasses.contains( 'list-style-type-none' ) ) {
+                                    elementListStyleTypeSelect.value = 'none';
                                 }
                             }
                         }
@@ -442,7 +444,11 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
                 case 'button-link':
-                    affectedEl.getElementsByTagName('a')[0].href = WPTB_Helper.linkHttpCheckChange( this.value );
+                    if ( this.value ) {
+                        affectedEl.getElementsByTagName( 'a' )[0].href = WPTB_Helper.linkHttpCheckChange( this.value );
+                    } else {
+                        affectedEl.getElementsByTagName( 'a' )[0].removeAttribute( 'href' );
+                    }
                     break;
                 case 'button-link-target':
                     if (this.checked == true) {

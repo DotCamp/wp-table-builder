@@ -11,6 +11,8 @@ var WPTB_Stringifier = function ( codeMain ) {
                 
                 if ( innerElements.length > 0 ) {
                     for ( let j = 0; j < innerElements.length; j++ ) {
+                        innerElements[j].classList.remove( 'wptb-directlyhovered' );
+                        
                         let mceContentBodys = innerElements[j].querySelectorAll( '.mce-content-body' );
                         if( mceContentBodys.length > 0 ) {
                             for ( let k = 0; k < mceContentBodys.length; k++ ) {
@@ -45,18 +47,30 @@ var WPTB_Stringifier = function ( codeMain ) {
                                 mceIds[k].removeAttribute( 'id' );
                             }
                         }
+                        
+                        let wptbActions = innerElements[j].querySelectorAll( '.wptb-actions' );
+                        let wptbActionsLength = wptbActions.length;
+                        while ( wptbActionsLength > 0 ) {
+                            wptbActions[0].parentNode.removeChild( wptbActions[0] );
+                            wptbActionsLength--;
+                        }  
                     }
                 }
                 
                 if( tds[i].hasAttribute( 'data-title-column' ) ) {
-                    let columnNameDiv = document.createElement( 'div' );
+                    let columnNameDivContainer = document.createElement( 'div' ),
+                        columnNameDiv = document.createElement( 'div' ),
+                        columnNameDivContainerCopy;
+                    columnNameDivContainer.classList.add( 'column-title-mobile-container' );
                     columnNameDiv.classList.add( 'column-title-mobile' );
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
+                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; color:' + tds[i].dataset.titleColumnColor + ';' );
                     columnNameDiv.style.paddingLeft = tds[i].style.padding;
                     if( tds[i].children.length == 0 ) {
-                        columnNameDiv.classList.add( 'column-title-mobile-not-elements' );
+                        columnNameDivContainer.classList.add( 'column-title-mobile-not-elements' );
                     }
-                    tds[i].insertBefore( columnNameDiv, tds[i].firstChild );
+                    columnNameDivContainer.appendChild( columnNameDiv );
+                    tds[i].insertBefore( columnNameDivContainer, tds[i].firstChild );
                 }
             }
         }

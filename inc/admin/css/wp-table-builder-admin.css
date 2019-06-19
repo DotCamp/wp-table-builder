@@ -695,8 +695,6 @@ ul.wptb-tabs {
 
 .wptb-builder-panel {
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
     left: 300px;
     min-height: 100%;
     padding-left: 20px;
@@ -705,6 +703,7 @@ ul.wptb-tabs {
     -o-transition: left 0.2s ease-out, right 0.2s ease-out;
     transition: left 0.2s ease-out, right 0.2s ease-out;
     width: calc(100% - 300px);
+    text-align: center;
 }
 
 .wptb-container.collapsed .wptb-builder-panel {
@@ -748,6 +747,7 @@ ul.wptb-tabs {
     padding: 5px;
     transition: all 1s 0s;
     width: 90%;
+    text-align: initial;
 }
 
 .wptb-messaging.success {
@@ -775,6 +775,7 @@ ul.wptb-tabs {
 
 .management_table_container {
     margin: auto;
+    text-align: initial;
 }
 
 .wptb-table-setup {
@@ -799,6 +800,7 @@ ul.wptb-tabs {
     bottom: 0;
     background: rgba(49, 59, 71, 0.49);
     display: none;
+    text-align: initial;
 }
 
 #cell_mode_background.visible {
@@ -818,6 +820,7 @@ table.wptb-table {
     margin: 0 auto;
     padding: 40px;
     max-width: 960px;
+    text-align: initial;
 }
 
 .wptb-table {
@@ -1140,6 +1143,10 @@ table.wptb-table {
 #wpcd_fixed_toolbar {
     min-height: 55px;
     text-align: center;
+    position: sticky !important;
+    top: 20px;
+    z-index: 100;
+    display: inline-block;
 }
 
 
@@ -1266,19 +1273,24 @@ table.wptb-table {
     cursor: text;
 }
 
+.wptb-list-item-container ul li>div>p::before {
+    padding-right: 10px;
+}
+
 .wptb-list-item-container ul li>div>p.list-style-type-disc::before {
     content: '\25CF';
-    padding-right: 10px;
 }
 
 .wptb-list-item-container ul li>div>p.list-style-type-circle::before {
     content: '\25CB';
-    padding-right: 10px;
 }
 
 .wptb-list-item-container ul li>div>p.list-style-type-square::before {
     content: '\25A0';
-    padding-right: 10px;
+}
+
+.wptb-list-item-container ul li>div>p.list-style-type-none::before {
+    content: ' ';
 }
 
 .wptb-droppable.wptb-cell .wptb-directlyhovered {

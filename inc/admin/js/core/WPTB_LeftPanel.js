@@ -378,10 +378,11 @@ var WPTB_LeftPanel = function () {
     
     let wptbBuilderPanel = document.getElementsByClassName( 'wptb-builder-panel' )[0];
     wptbBuilderPanel.addEventListener( 'click', function( e ) {
-        if( ! e.target.classList.contains( 'wptb-ph-element' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) ) {
-            document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-            document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-            document.getElementById("element-options-group").style.display = 'none';
+        if( ! e.target.classList.contains( 'wpcd_fixed_toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) && 
+               ! e.target.classList.contains( 'wptb-fixed-toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-fixed-toolbar' ) ) {
+            document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
+            document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
+            document.getElementById( 'element-options-group' ).style.display = 'none';
         }
     }, false);
     

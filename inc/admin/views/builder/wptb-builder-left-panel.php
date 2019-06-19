@@ -228,6 +228,9 @@ use WP_Table_Builder as NS;
                                 <option value="disc">
                                     <?php echo __( 'Disc', 'wp-table-builder' ); ?>
                                 </option>
+                                <option value="none">
+                                    <?php echo __( 'None', 'wp-table-builder' ); ?>
+                                </option>
                             </select>
                         </div>
                         

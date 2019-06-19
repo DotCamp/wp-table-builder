@@ -18,10 +18,10 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     
     node.onmouseenter = function (event) {
         this.classList.add('wptb-directlyhovered');
-        let btnDelete = document.createElement('span'),
-            btnCopy = document.createElement('span'),
-            btnMove = document.createElement('span'),
-            actions = document.createElement('span'), i;
+        let btnDelete = document.createElement( 'span' ),
+            btnCopy = document.createElement( 'span' ),
+            btnMove = document.createElement( 'span' ),
+            actions = document.createElement( 'span' ), i;
 
         actions.classList.add('wptb-actions');
         btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
@@ -129,8 +129,9 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                     });
                 }
             });
+            
         } else {
-            listItems = node.getElementsByClassName('wptb-list-item-content');
+            listItems = node.getElementsByClassName( 'wptb-list-item-content' );
             for ( let i = 0; i < listItems.length; i++ ) {
                 WPTB_Helper.listItemsTinyMceInit( listItems[i] );
             }
@@ -143,20 +144,33 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     };
 
     node.onmouseleave = function ( event ) {
-        this.classList.remove('wptb-directlyhovered');
+        this.classList.remove( 'wptb-directlyhovered' );
         let iter = 0;
         while( event.target.querySelector( '.wptb-actions' ) && iter < 5 ) {
             event.target.querySelector( '.wptb-actions' ).remove();
             iter++;
         }
     };
+    
+    // Change data-title-column if the title was changed
+    if( element.kind == 'text' ) {
+        var observer = new MutationObserver( function( mutations ) {
+            let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
+            if( row.classList.contains( 'wptb-table-head' ) ) {
+                let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+                WPTB_Helper.dataTitleColumnSet( table );
+            }
+        });
+        var config = { attributes: true, attributeFilter: ['style'] };
+        observer.observe( element.getDOMElement(), config );
+    }
 
     let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
     if ( node_wptb_element_kind_num ) {
         node.classList.remove( node_wptb_element_kind_num[0] );
     }
     if ( ! node.classList.contains( 'wptb-ph-element' ) ) {
-        node.classList.add('wptb-ph-element' );
+        node.classList.add( 'wptb-ph-element' );
         if( ! node.classList.contains( 'wptb-element-' + element.kind + '-' + index ) ) {
             node.classList.add( 'wptb-element-' + element.kind + '-' + index );
         }

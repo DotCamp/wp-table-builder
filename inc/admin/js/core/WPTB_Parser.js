@@ -3,7 +3,7 @@ var WPTB_Parser = function (code) {
     div.innerHTML = code;
     
     let table = div.children[0];
-    let columnTitleMobile = [...table.querySelectorAll( '.column-title-mobile' )];
+    let columnTitleMobile = [...table.querySelectorAll( '.column-title-mobile-container' )];
     
     for( let i = 0; i < columnTitleMobile.length; i++ ) {
         let parent = columnTitleMobile[i].parentNode;
