@@ -1149,6 +1149,10 @@ table.wptb-table {
     display: inline-block;
 }
 
+#wpcd_fixed_toolbar > div.toolbar-active {
+    display: block !important;
+}
+
 
 /*
  ** Button Size Selector Style
@@ -1290,7 +1294,8 @@ table.wptb-table {
 }
 
 .wptb-list-item-container ul li>div>p.list-style-type-none::before {
-    content: ' ';
+    content: '';
+    padding-right: 0px;
 }
 
 .wptb-droppable.wptb-cell .wptb-directlyhovered {

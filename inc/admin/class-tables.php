@@ -101,6 +101,15 @@ class Tables {
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
         $html = '<div class="wptb-table-container">' . $html . '</div>';
+        $html .= '<script>'
+                . 'let wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
+                . 'console.log(wptbPreviewTable);'
+                . 'console.log("Hello");'
+                . 'if( wptbPreviewTable.length > 0 ) {'
+                . '    wptbPreviewTable[0].style.display = "none";'
+                . '    console.log(wptbPreviewTable);'
+                . '}'
+                . '</script>';
     	return ( $html ); 
     }
 

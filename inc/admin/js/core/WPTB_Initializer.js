@@ -12,7 +12,7 @@ var WPTB_Initializer = function () {
             rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1],
             columnsInput = document.getElementById('wptb-columns-number'),
             rowsInput = document.getElementById('wptb-rows-number');
-
+    //WPTB_LeftPanel();
     columnsDecrementButton.onclick = function () {
             if (columnsInput.value > MIN_COLUMNS) {
                     columnsInput.value--;
@@ -43,5 +43,9 @@ var WPTB_Initializer = function () {
 
             WPTB_Table(columns, rows);
     }
+    
+//    if( document.getElementsByClassName( 'wptb-preview-table' ).length == 0 ) {
+//        WPTB_LeftPanel();
+//    }
 
 };

@@ -10,5 +10,10 @@ var WPTB_Parser = function (code) {
         parent.removeChild( columnTitleMobile[i] );
     }
     
+    let tds = table.querySelectorAll( 'td' );
+    for ( let i = 0; i < tds.length; i++ ) {
+        tds[i].classList.add( 'wptb-droppable' );
+    }
+    
     return table;
 }

@@ -4,9 +4,12 @@ var WPTB_Stringifier = function ( codeMain ) {
         let tds = code.getElementsByTagName( 'td' );
         if ( tds.length > 0 ) {
             for ( let i = 0; i < tds.length; i++ ) {
-                tds[i].removeAttribute( 'data-x-index' );
+                if ( codeMain.querySelector( 'wptb-table-preview-head' ) ) {
+                    tds[i].removeAttribute( 'data-x-index' );
+                }
                 tds[i].removeAttribute( 'data-y-index' );
                 tds[i].removeAttribute( 'draggable' );
+                tds[i].classList.remove( 'wptb-droppable' );
                 let innerElements = tds[i].getElementsByClassName( 'wptb-ph-element' );
                 
                 if ( innerElements.length > 0 ) {

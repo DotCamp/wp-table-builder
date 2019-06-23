@@ -70,7 +70,7 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
     };
 
     DOMElement.onmouseleave = function (event) {
-        this.classList.remove('wptb-directlyhovered');
+        this.removeAttribute( 'class' );
         let iter = 0;
         while( event.target.querySelector( '.wptb-actions' ) && iter < 5 ) {
             event.target.querySelector( '.wptb-actions' ).remove();

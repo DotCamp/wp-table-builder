@@ -1174,6 +1174,14 @@ var array = [], WPTB_Table = function (columns, rows) {
             array.pop(aux);
             drawTable(array);
             table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
+            
+            if( table.rows.length == 0 ) {
+                table.toggleTableEditMode();
+                wptbTableSetup.innerHTML = '';
+                WPTB_Helper.settingsPanelClear();
+                document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+            }
+            
             table.recalculateIndexes();
         }
         undoSelect();
@@ -1221,6 +1229,14 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
             
             maxAmountOfCells--;
+            
+            if( table.querySelectorAll( 'td' ).length == 0 ) {
+                table.toggleTableEditMode();
+                wptbTableSetup.innerHTML = '';
+                WPTB_Helper.settingsPanelClear();
+                document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+            }
+            
             table.recalculateIndexes();
         }
         undoSelect();
@@ -1239,5 +1255,38 @@ var array = [], WPTB_Table = function (columns, rows) {
     //}
 
     WPTB_LeftPanel();
-
+    
+    // this code gets the ID of the active element in the toolbar 
+    // and stores it in the data attribute of the common container element "wpcd_fixed_toolbar"
+//    let wptbPhElement = document.getElementsByClassName( 'wptb-ph-element' );
+//    let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
+//    for ( let i = 0; i < wptbPhElement.length; i++ ) {
+//        wptbPhElement[i].addEventListener( 'click', function( e ) {
+//            let wptbToolbar = document.getElementById( 'wpcd_fixed_toolbar' ).children;
+//            for ( let j = 0; j < wptbToolbar.length; j++ ) {
+//                let elementStyles = window.getComputedStyle( wptbToolbar[j], 'null' );
+//                if( elementStyles.getPropertyValue( 'display' ) == 'block' ) {
+//                    wpcdFixedToolbar.dataset.toolbarActiveId = wptbToolbar[j].getAttribute( 'id' );
+//                }
+//            }
+//        }, false );
+//    }
+    
+//    let wptbPanelLeft = document.getElementsByClassName( 'wptb-panel-left' );
+//    if( wptbPanelLeft.length > 0 ) {
+//        wptbPanelLeft[0].addEventListener( 'click', function( e ) {
+//            let toolbarActiveElementId = wpcdFixedToolbar.dataset.toolbarActiveId;
+//            document.getElementById( toolbarActiveElementId ).style.display = '';
+//        }, false );
+//    }
+    
+//    let body = document.getElementsByTagName( 'body' );
+//    if( body.length > 0 ) {
+//        body[0].addEventListener( 'click', function( e ) {
+//            if ( e.target.classList.contains( 'wptb-panel-left' ) || WPTB_Helper.findAncestor( e.target, 'wptb-panel-left' ) ) {
+//                let toolbarActiveElementId = wpcdFixedToolbar.dataset.toolbarActiveId;
+//                document.getElementById( toolbarActiveElementId ).style.display = '';
+//            }
+//        }, false );
+//    }
 };

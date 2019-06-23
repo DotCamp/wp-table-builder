@@ -19,6 +19,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         if ( element.kind == 'button' ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt )[0],
                 wptbButtonWrapper,
+                wptbButtonA,
                 wptbButton,
                 wptbSize;
         
@@ -41,7 +42,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             if( affectedEl ) {
                 wptbButtonWrapper = affectedEl.getElementsByClassName( 'wptb-button-wrapper' );
                 
-                wptbButton = affectedEl.getElementsByClassName( 'wptb-button' )
+                wptbButtonA = affectedEl.getElementsByTagName( 'a' );
+                
+                wptbButton = affectedEl.getElementsByClassName( 'wptb-button' );
             }
             
             if ( wptbButtonWrapper ) {
@@ -65,32 +68,43 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 }
             }
             
-            if( wptbButton ) {
-                let buttonTextColor = wptbButton[0].style.color,
-                    buttonColor = wptbButton[0].style.backgroundColor,
-                    buttonHref = wptbButton[0].getAttribute( 'href' ), 
-                    buttonLinkTarget = wptbButton[0].getAttribute( 'target' ),
-                    buttonTextColorInput = prop.querySelector( 'input[data-type="button-text-color"]' ),
-                    buttonBackgroundColorInput = prop.querySelector( 'input[data-type="button-color"]' ),
+            if ( wptbButtonA.length > 0 ) {
+                let buttonHref = wptbButtonA[0].getAttribute( 'href' ), 
+                    buttonLinkTarget = wptbButtonA[0].getAttribute( 'target' ),
+                    buttonId = wptbButtonA[0].getAttribute( 'id' ),
+                    
+                    
                     buttonHrefInput = prop.querySelector( 'input[data-type="button-link"]' ),
                     buttonLinkTargetInput = prop.querySelector( 'input[data-type="button-link-target"]' ),
                     buttonLinkTargetInputId = buttonLinkTargetInput.getAttribute( 'id' ),
-                    buttonLinkTargetInputLabel = buttonLinkTargetInput.parentNode.getElementsByTagName( 'label' )[0];
-                    
-                buttonLinkTargetInputId = buttonLinkTargetInputId + '-' + kindIndexProt.split( '-' )[1];
+                    buttonLinkTargetInputLabel = buttonLinkTargetInput.parentNode.getElementsByTagName( 'label' )[0],
+            
+                    buttotIdInput = prop.querySelector( 'input[data-type="button-id"]' );
 
+                buttonLinkTargetInputId = buttonLinkTargetInputId + '-' + kindIndexProt.split( '-' )[1];
                 buttonLinkTargetInput.setAttribute( 'id', buttonLinkTargetInputId );
                 buttonLinkTargetInputLabel.setAttribute( 'for', buttonLinkTargetInputId );
+
+                buttonHrefInput.value = buttonHref;
+
+                if( buttonLinkTarget && buttonLinkTarget == '_blank') {
+                    buttonLinkTargetInput.checked = true;
+                }
+                
+                buttotIdInput.value = buttonId;
+            }
+            
+            if( wptbButton ) {
+                let buttonTextColor = wptbButton[0].style.color,
+                    buttonColor = wptbButton[0].style.backgroundColor,
+                    buttonTextColorInput = prop.querySelector( 'input[data-type="button-text-color"]' ),
+                    buttonBackgroundColorInput = prop.querySelector( 'input[data-type="button-color"]' );
+                
             
                 buttonTextColorInput.value = WPTB_Helper.rgbToHex( buttonTextColor );
                 
                 buttonBackgroundColorInput.value = WPTB_Helper.rgbToHex( buttonColor );
                 
-                buttonHrefInput.value = buttonHref;
-                
-                if( buttonLinkTarget && buttonLinkTarget == '_blank') {
-                    buttonLinkTargetInput.checked = true;
-                }
             }
         } else if ( element.kind == 'image' ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
@@ -457,6 +471,12 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         affectedEl.getElementsByTagName('a')[0].target = '_self';
                     }
                     break;
+                case 'button-id':
+                    if( this.value ) {
+                        affectedEl.getElementsByTagName( 'a' )[0].id = this.value;
+                    } else {
+                        affectedEl.getElementsByTagName( 'a' )[0].removeAttribute( 'id' );
+                    }
                 case 'button-color':
                     break;
                 case 'list-alignment':

@@ -1,4 +1,4 @@
-(function( $ ) {
+( function( $ ) {
 	'use strict';
 
 	/**
@@ -43,20 +43,106 @@ jQuery( document ).ready( function ( $ ) {
      * @returns {void}
      */
     function wptb_tableContainerSectionSmall() {
-        var wptbTableContainer = jQuery(".wptb-table-container");
-        var sw = wptbTableContainer.width();
+        let wptbTableContainer = jQuery(".wptb-table-container");
+        let sw = wptbTableContainer.width();
         if( wptbTableContainer.length > 0 ) {
             if (sw < 480) {
                 wptbTableContainer.addClass("wptb-section-small");
             } else {
                 wptbTableContainer.removeClass("wptb-section-small");
             }
-        } 
-    }
-    wptb_tableContainerSectionSmall();
+        }
+    } 
     
-    //when window resize call wpcd_archiveSectionSmall.
-    $( window ).resize( function () {
+    /**
+     * function wptb_tableGenerateMobile
+     * generates a mobile view of the table 
+     * when the top row of the table is not a heading
+     * @returns {void}
+     */
+    function wptb_tableGenerateMobile() {
+        let wptbTableContainer = document.getElementsByClassName( 'wptb-table-container' );
+        let wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
+        let wptbPreviewTableMobile = document.getElementsByClassName( 'wptb-preview-table-mobile' );
+        if( wptbTableContainer.length > 0 && wptbPreviewTable.length > 0 ) {
+            let sw = wptbTableContainer[0].offsetWidth;
+            if (sw < 480) {
+                wptbPreviewTable[0].style.display = 'none';
+                
+                
+                
+                if( wptbPreviewTableMobile.length == 0 ) {
+                    let tableRows = wptbPreviewTable[0].rows;
+                    let tableRowTop = tableRows[0];
+                    let tableRowTopChildren = tableRowTop.children;
+                    let columnCount = 0;
+
+                    for( let i = 0; i < tableRowTopChildren.length; i++ ) {
+                        columnCount += tableRowTopChildren[i].colSpan;
+                    }
+
+                    let newTableArray = [];
+
+                    for( let i = 0; i < columnCount; i++ ) {
+                        newTableArray[i] = [];
+                    }
+                    
+                    for( let i = 0; i < tableRows.length; i++ ) {
+                        let rowChildren = tableRows[i].children;
+
+                        for( let j = 0; j < columnCount; j++ ) {
+                            if( rowChildren[j].dataset.xIndex == j ) {
+                                newTableArray[j].push( rowChildren[j].cloneNode( true ) );
+                            } else {
+                                newTableArray[j].push( '' );
+                            }
+                        }
+                    }
+                    
+                    let table = document.createElement( 'table' );
+                    table.classList.add( 'wptb-preview-table-mobile' );
+                    let tableStyle = wptbPreviewTable[0].getAttribute( 'style' );
+                    table.setAttribute( 'style', tableStyle );
+                    table.style.display = 'table';
+                    for ( let i = 0; i < columnCount; i++ ) {
+                        let row = table.insertRow(-1);
+                        row.classList.add( 'wptb-row' );
+                        
+                        for ( let j = 0; j < tableRows.length; j++ ) {
+                            row.appendChild( newTableArray[i][j] );
+                        }
+                    }
+                    
+                    wptbTableContainer[0].appendChild( table );
+                } else {
+                    wptbPreviewTableMobile[0].style.display = 'table';
+                }
+                
+            } else {
+                wptbPreviewTable[0].style.display = 'table';
+                if( wptbPreviewTableMobile.length > 0 ) {
+                    wptbPreviewTableMobile[0].style.display = 'none';
+                }
+                
+            }
+        }
+    }
+    
+    let wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
+    if ( wptbPreviewTable.length > 0 ) {
+        wptbPreviewTable[0].style.display = 'table';
+        if( ! wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
+            wptb_tableGenerateMobile();
+        }
         wptb_tableContainerSectionSmall();
-    });
+
+        //when window resize call wpcd_archiveSectionSmall and wptb_tableGenerateMobile
+        $( window ).resize( function () {
+            if( ! wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
+                wptb_tableGenerateMobile();
+            }
+            wptb_tableContainerSectionSmall();
+        });
+    }
+    
 });

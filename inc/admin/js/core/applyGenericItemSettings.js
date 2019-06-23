@@ -92,6 +92,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             }
             WPTB_Helper.buttonsTinyMceInit( target );
         } else if (element.kind === 'text') {
+            
+                
             tinyMCE.init({
                 target: node.childNodes[0],
                 inline: true,
@@ -113,6 +115,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 },
                 init_instance_callback: function (editor) {
                     window.currentEditor = editor;
+                    //editor.fire('focus');
                     editor.on('focus', function (e) {
                         var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
                         if (window.currentEditor &&
