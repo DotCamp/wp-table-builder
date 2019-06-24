@@ -391,7 +391,6 @@ var WPTB_LeftPanel = function () {
     // this code hides the "element parameters" area 
     // when clicked outside this element and its "tinymce" toolbar 
     let wptbBuilderPanel = document.getElementsByClassName( 'wptb-builder-panel' )[0];
-    //let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
     wptbBuilderPanel.addEventListener( 'click', function( e ) {
         if( ! e.target.classList.contains( 'wptb-ph-element' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) && 
                ! e.target.classList.contains( 'wptb-fixed-toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-fixed-toolbar' ) ) {
@@ -403,35 +402,6 @@ var WPTB_LeftPanel = function () {
                 document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
             }
         } 
-//        else if( e.target.classList.contains( 'wptb-ph-element' ) || WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) ) {
-//            if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
-//                document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
-//            }
-//
-//            console.log(wpcdFixedToolbar.getAttribute( 'data-element-active-id' ));
-//
-//            let wptbToolbar = document.getElementById( 'wpcd_fixed_toolbar' ).children;
-//            for ( let j = 0; j < wptbToolbar.length; j++ ) {
-//                let elementStyles = window.getComputedStyle( wptbToolbar[j], 'null' );
-//                if( elementStyles.getPropertyValue( 'display' ) == 'block' ) {
-//                    wpcdFixedToolbar.dataset.toolbarActiveId = wptbToolbar[j].getAttribute( 'id' );
-//                    //wpcdFixedToolbar.dataset.elementActiveId = thisElem.getAttribute( 'id' );
-//                    break;
-//                }
-//            }
-//        }
-    }, false);
-    
-    
-    // This code adds the "data-cousor-here" attribute to the "wptb-panel-left" 
-    // when you hover and deletes it when cursor left this aria
-//    let wptbLeftPanel = document.getElementsByClassName( 'wptb-panel-left' )[0];
-//    wptbLeftPanel.onmouseenter = function() {
-//        wptbLeftPanel.dataset.coursorHere = true;
-//    }
-//    wptbLeftPanel.onmouseleave = function() {
-//        wptbLeftPanel.removeAttribute( 'data-coursor-here' );
-//    }
-    
-    
+   }, false);
+   
 };

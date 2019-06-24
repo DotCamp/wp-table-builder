@@ -21,6 +21,14 @@
     background-color: #eeeeee;
 }
 
+.wptb-table-container table.wptb-preview-table-mobile tr:nth-of-type(2n+1) {
+    background-color: inherit;
+}
+
+.wptb-table-container table.wptb-preview-table-mobile tr td:nth-of-type(2n+1) {
+    background-color: #eeeeee;
+}
+
 .wptb-table-container table td {
     width: 100px;
     box-sizing: content-box;

@@ -7,8 +7,17 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     if ( kindIndexProt == undefined || copy == true ) {
         index = document.counter.nextIndex( element.kind );
         let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
-        if ( wptbElements.length > 0 ) {
-            index = wptbElements.length + 1;
+        let elementIndexesArr = [];
+        for( let i = 0; i < wptbElements.length; i++ ) {
+            var regex = new RegExp( 'wptb-element-' + element.kind + '-(\\d+)', "i" );
+            let infArr = wptbElements[i].className.match( regex );
+            if( infArr ) {
+                elementIndexesArr.push( infArr[1] );
+            }
+        }
+        if( elementIndexesArr.length > 0 ) {
+            let elementIndexMax = Math.max( ...elementIndexesArr );
+            index = elementIndexMax + 1;
         } else { 
             index = 1;
         }
@@ -105,7 +114,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 paste_as_text: true,
                 toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
                 setup : function( ed ) {
-                    ed.on( 'keyup', function(e) {
+                    ed.on( 'change', function(e) {
                         let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
                         if( row.classList.contains( 'wptb-table-head' ) ) {
                             let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );

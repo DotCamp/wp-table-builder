@@ -69,8 +69,6 @@ jQuery( document ).ready( function ( $ ) {
             if (sw < 480) {
                 wptbPreviewTable[0].style.display = 'none';
                 
-                
-                
                 if( wptbPreviewTableMobile.length == 0 ) {
                     let tableRows = wptbPreviewTable[0].rows;
                     let tableRowTop = tableRows[0];
@@ -92,7 +90,11 @@ jQuery( document ).ready( function ( $ ) {
 
                         for( let j = 0; j < columnCount; j++ ) {
                             if( rowChildren[j].dataset.xIndex == j ) {
-                                newTableArray[j].push( rowChildren[j].cloneNode( true ) );
+                                let tdNew = rowChildren[j].cloneNode( true );
+                                if ( tableRows[i].style.backgroundColor ) {
+                                    tdNew.style.backgroundColor = tableRows[i].style.backgroundColor;
+                                }
+                                newTableArray[j].push( tdNew );
                             } else {
                                 newTableArray[j].push( '' );
                             }
@@ -109,7 +111,9 @@ jQuery( document ).ready( function ( $ ) {
                         row.classList.add( 'wptb-row' );
                         
                         for ( let j = 0; j < tableRows.length; j++ ) {
-                            row.appendChild( newTableArray[i][j] );
+                            if( newTableArray[i][j] ) {
+                                row.appendChild( newTableArray[i][j] );
+                            }
                         }
                     }
                     

@@ -9,8 +9,17 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
     if (kindIndexProt == undefined || copy == true) {
         index = document.counter.nextIndex(element.kind);
         var wptbElements = document.getElementsByClassName('wptb-ph-element');
-        if (wptbElements.length > 0) {
-            index = wptbElements.length + 1;
+        var elementIndexesArr = [];
+        for (var i = 0; i < wptbElements.length; i++) {
+            var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
+            var infArr = wptbElements[i].className.match(regex);
+            if (infArr) {
+                elementIndexesArr.push(infArr[1]);
+            }
+        }
+        if (elementIndexesArr.length > 0) {
+            var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
+            index = elementIndexMax + 1;
         } else {
             index = 1;
         }
@@ -107,7 +116,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                 paste_as_text: true,
                 toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
                 setup: function setup(ed) {
-                    ed.on('keyup', function (e) {
+                    ed.on('change', function (e) {
                         var row = WPTB_Helper.findAncestor(node, 'wptb-row');
                         if (row.classList.contains('wptb-table-head')) {
                             var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
@@ -1233,31 +1242,6 @@ var WPTB_Helper = {
                 });
 
                 ed.on('keyup', function (e) {});
-
-                //                let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
-                //                ed.on( 'blur', function ( e ) {
-                //                    let wptbLeftPanel = document.getElementsByClassName( 'wptb-panel-left' )[0];
-                //                    if( wptbLeftPanel.hasAttribute( 'data-coursor-here' ) ) {
-                //                        document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.add( 'toolbar-active' );
-                //                    }
-                //                } );
-                //
-                //                ed.on( 'click', function ( e ) {
-                //                    let toolbarActive = wpcdFixedToolbar.getElementsByClassName( 'toolbar-active' );
-                //                    if( toolbarActive.length > 0 ) {
-                //                        wpcdFixedToolbar.toolbarActive[0].classList.remove( 'toolbar-active' );
-                //                    }
-                //
-                //                    let wptbToolbar = document.getElementById( 'wpcd_fixed_toolbar' ).children;
-                //                    for ( let j = 0; j < wptbToolbar.length; j++ ) {
-                //                        let elementStyles = window.getComputedStyle( wptbToolbar[j], 'null' );
-                //                        if( elementStyles.getPropertyValue( 'display' ) == 'block' ) {
-                //                            wpcdFixedToolbar.dataset.toolbarActiveId = wptbToolbar[j].getAttribute( 'id' );
-                //                            wpcdFixedToolbar.dataset.elementActiveId = thisElem.getAttribute( 'id' );
-                //                            break;
-                //                        }
-                //                    }
-                //                });
             },
             init_instance_callback: function init_instance_callback(editor) {
                 window.currentEditor = editor;
@@ -1292,31 +1276,6 @@ var WPTB_Helper = {
                         e.preventDefault();
                     }
                 });
-
-                //                let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
-                //                ed.on( 'blur', function ( e ) {
-                //                    let wptbLeftPanel = document.getElementsByClassName( 'wptb-panel-left' )[0];
-                //                    if( wptbLeftPanel.hasAttribute( 'data-coursor-here' ) ) {
-                //                        document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.add( 'toolbar-active' );
-                //                    }
-                //                } );
-                //
-                //                ed.on( 'click', function ( e ) {
-                //                    let toolbarActive = wpcdFixedToolbar.getElementsByClassName( 'toolbar-active' );
-                //                    if( toolbarActive.length > 0 ) {
-                //                        wpcdFixedToolbar.toolbarActive[0].classList.remove( 'toolbar-active' );
-                //                    }
-                //
-                //                    let wptbToolbar = document.getElementById( 'wpcd_fixed_toolbar' ).children;
-                //                    for ( let j = 0; j < wptbToolbar.length; j++ ) {
-                //                        let elementStyles = window.getComputedStyle( wptbToolbar[j], 'null' );
-                //                        if( elementStyles.getPropertyValue( 'display' ) == 'block' ) {
-                //                            wpcdFixedToolbar.dataset.toolbarActiveId = wptbToolbar[j].getAttribute( 'id' );
-                //                            wpcdFixedToolbar.dataset.elementActiveId = thisElem.getAttribute( 'id' );
-                //                            break;
-                //                        }
-                //                    }
-                //                });
             },
             init_instance_callback: function init_instance_callback(editor) {
                 window.currentEditor = editor;
@@ -1497,7 +1456,7 @@ var WPTB_Initializer = function WPTB_Initializer() {
 
         var tableGenerator = document.body;
         columnsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[0], columnsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[0], rowsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[1], rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1], columnsInput = document.getElementById('wptb-columns-number'), rowsInput = document.getElementById('wptb-rows-number');
-        //WPTB_LeftPanel();
+
         columnsDecrementButton.onclick = function () {
                 if (columnsInput.value > MIN_COLUMNS) {
                         columnsInput.value--;
@@ -2012,7 +1971,6 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     // this code hides the "element parameters" area 
     // when clicked outside this element and its "tinymce" toolbar 
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
-    //let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
     wptbBuilderPanel.addEventListener('click', function (e) {
         if (!e.target.classList.contains('wptb-ph-element') && !WPTB_Helper.findAncestor(e.target, 'wptb-ph-element') && !e.target.classList.contains('wptb-fixed-toolbar') && !WPTB_Helper.findAncestor(e.target, 'wptb-fixed-toolbar')) {
             document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
@@ -2023,35 +1981,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                 document.getElementById(wpcdFixedToolbar.getAttribute('data-toolbar-active-id')).classList.remove('toolbar-active');
             }
         }
-        //        else if( e.target.classList.contains( 'wptb-ph-element' ) || WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) ) {
-        //            if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
-        //                document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
-        //            }
-        //
-        //            console.log(wpcdFixedToolbar.getAttribute( 'data-element-active-id' ));
-        //
-        //            let wptbToolbar = document.getElementById( 'wpcd_fixed_toolbar' ).children;
-        //            for ( let j = 0; j < wptbToolbar.length; j++ ) {
-        //                let elementStyles = window.getComputedStyle( wptbToolbar[j], 'null' );
-        //                if( elementStyles.getPropertyValue( 'display' ) == 'block' ) {
-        //                    wpcdFixedToolbar.dataset.toolbarActiveId = wptbToolbar[j].getAttribute( 'id' );
-        //                    //wpcdFixedToolbar.dataset.elementActiveId = thisElem.getAttribute( 'id' );
-        //                    break;
-        //                }
-        //            }
-        //        }
     }, false);
-
-    // This code adds the "data-cousor-here" attribute to the "wptb-panel-left" 
-    // when you hover and deletes it when cursor left this aria
-    //    let wptbLeftPanel = document.getElementsByClassName( 'wptb-panel-left' )[0];
-    //    wptbLeftPanel.onmouseenter = function() {
-    //        wptbLeftPanel.dataset.coursorHere = true;
-    //    }
-    //    wptbLeftPanel.onmouseleave = function() {
-    //        wptbLeftPanel.removeAttribute( 'data-coursor-here' );
-    //    }
-
 };
 var WPTB_List = function WPTB_List(innerElements, DOMElementProt) {
 
