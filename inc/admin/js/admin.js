@@ -1324,8 +1324,9 @@ var WPTB_Helper = {
                     var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
                     if (infArr[1] == 'text') {
                         var p = element.querySelector('p'),
-                            textContent = p.textContent;
-                        contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color];
+                            textContent = p.textContent,
+                            textAlign = p.style.textAlign;
+                        contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color, textAlign];
                         break;
                     }
                 }
@@ -1339,10 +1340,12 @@ var WPTB_Helper = {
                     thisRowChildren[_j].dataset.titleColumn = contentsForHeader[thisRowChildren[_j].dataset.xIndex][0];
                     thisRowChildren[_j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[_j].dataset.xIndex][1];
                     thisRowChildren[_j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][2];
+                    thisRowChildren[_j].dataset.titleAlign = contentsForHeader[thisRowChildren[_j].dataset.xIndex][3];
                 } else {
                     thisRowChildren[_j].dataset.titleColumn = '';
                     thisRowChildren[_j].dataset.titleColumnFontSize = '';
                     thisRowChildren[_j].dataset.titleColumnColor = '';
+                    thisRowChildren[_j].dataset.titleAlign = '';
                 }
             }
         }
@@ -2486,8 +2489,9 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                     columnNameDivContainer.classList.add('column-title-mobile-container');
                     columnNameDiv.classList.add('column-title-mobile');
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
-                    columnNameDiv.setAttribute('style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; color:' + tds[i].dataset.titleColumnColor + ';');
-                    columnNameDiv.style.paddingLeft = tds[i].style.padding;
+                    columnNameDiv.setAttribute('style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
+                        color:' + tds[i].dataset.titleColumnColor + '; text-align:' + tds[i].dataset.titleAlign + ';');
+                    columnNameDiv.style.padding = tds[i].style.padding;
                     if (tds[i].children.length == 0) {
                         columnNameDivContainer.classList.add('column-title-mobile-not-elements');
                     }

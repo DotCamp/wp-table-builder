@@ -247,10 +247,9 @@
 .wptb-table-container table.wptb-table-preview-head td .column-title-mobile-container .column-title-mobile::before {
     content: attr(data-title-column);
     display: table-cell;
-    width: 45%;
-    padding-right: 5%;
+    width: 50%;
     vertical-align: middle;
-    padding-left: inherit;
+    padding: inherit;
 }
 
 .wptb-table-container table.wptb-table-preview-head td 
@@ -262,6 +261,7 @@
     display: inline-block;
     width: 50%;
     margin-left: 50%;
+    padding-left: inherit;
 }
 
 .wptb-table-container.wptb-section-small table td {
@@ -300,8 +300,9 @@
     }
     .wptb-table-container table.wptb-table-preview-head td .wptb-ph-element {
         display: inline-block;
-        width: 45%;
-        margin-left: 55%;
+        width: 50%;
+        margin-left: 50%;
+        padding-left: inherit;
     }
     .wptb-table-container table.wptb-table-preview-head td {
         border-width: 0 1px 1px 1px !important;

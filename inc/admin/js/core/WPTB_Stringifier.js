@@ -67,8 +67,9 @@ var WPTB_Stringifier = function ( codeMain ) {
                     columnNameDivContainer.classList.add( 'column-title-mobile-container' );
                     columnNameDiv.classList.add( 'column-title-mobile' );
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
-                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; color:' + tds[i].dataset.titleColumnColor + ';' );
-                    columnNameDiv.style.paddingLeft = tds[i].style.padding;
+                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
+                        color:' + tds[i].dataset.titleColumnColor + '; text-align:' + tds[i].dataset.titleAlign + ';' );
+                    columnNameDiv.style.padding = tds[i].style.padding;
                     if( tds[i].children.length == 0 ) {
                         columnNameDivContainer.classList.add( 'column-title-mobile-not-elements' );
                     }
