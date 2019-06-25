@@ -1646,3 +1646,7 @@ td[class*="wptb-fused-cell"] {
         margin-left: 0px;
     }
 }
+
+.wptb-cell img {
+    max-width: 100%;
+}
