@@ -4,6 +4,8 @@ var WPTB_Text = function ( text , DOMElementProt ) {
         elP = document.createElement('p'),
         kindIndexProt = undefined,
         copy = false;
+        
+        DOMElement.classList.add( 'wptb-text-container' );
 
         elP.innerHTML = text != undefined ? text : 'Text';
         elText2.appendChild(elP);

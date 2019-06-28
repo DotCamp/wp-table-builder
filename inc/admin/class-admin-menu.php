@@ -23,11 +23,21 @@ class Admin_Menu {
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); 
+		add_action( 'wp_ajax_create_table', array( $this, 'create_table' ) );
 		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_get_table', array( $this, 'get_table' ) );
 		add_action( 'wp_ajax_nopriv_get_table', array( $this, 'get_table' ) );
 	}
+    
+    public function create_table() {
+        $id = wp_insert_post([
+            'post_title' => '',
+            'post_content' => '',
+            'post_type' => 'wptb-tables'
+        ]);
+        wp_die( json_encode( ['created',$id] ) );
+    }
 
 	public function save_table(){
         
@@ -143,7 +153,9 @@ class Admin_Menu {
             wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
             wp_enqueue_script( 'wptb-admin-builder-js' );
-		} 
+		} elseif( isset( $_GET['page'] ) && $_GET['page'] == 'wptb-overview' ) {
+            wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
+        }
 	
 	}
 

@@ -68,10 +68,10 @@ var WPTB_Stringifier = function ( codeMain ) {
                     columnNameDiv.classList.add( 'column-title-mobile' );
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
                     columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
-                        color:' + tds[i].dataset.titleColumnColor + '; text-align:' + tds[i].dataset.titleAlign + ';' );
+                        color:' + tds[i].dataset.titleColumnColor + '; background-color:' + tds[i].dataset.titleBackgroundColor + '; text-align:' + tds[i].dataset.titleAlign + ';' );
                     columnNameDiv.style.padding = tds[i].style.padding;
                     if( tds[i].children.length == 0 ) {
-                        columnNameDivContainer.classList.add( 'column-title-mobile-not-elements' );
+                        tds[i].classList.add( 'column-title-mobile-not-elements' );
                     }
                     columnNameDivContainer.appendChild( columnNameDiv );
                     tds[i].insertBefore( columnNameDivContainer, tds[i].firstChild );

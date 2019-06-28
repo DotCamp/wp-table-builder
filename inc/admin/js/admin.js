@@ -44,6 +44,14 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             var act = this.parentNode.parentNode,
                 el = act.parentNode;
             el.removeChild(act);
+
+            if (act.kind == 'text') {
+                var thisRow = el.parentNode;
+                if (thisRow.classList.contains('wptb-table-head')) {
+                    var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+                    WPTB_Helper.dataTitleColumnSet(table);
+                }
+            }
         };
         btnCopy.onclick = function (event) {
             var copy = void 0;
@@ -94,6 +102,14 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
             event.dataTransfer.setData('moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
             event.dataTransfer.setData('wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1]);
+            var act = event.target.parentNode.parentNode;
+            if (act.kind == 'text') {
+                var thisRow = el.parentNode;
+                if (thisRow.classList.contains('wptb-table-head')) {
+                    var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+                    WPTB_Helper.dataTitleColumnSet(table);
+                }
+            }
         };
 
         if (element.kind === 'button') {
@@ -104,7 +120,6 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             };
             WPTB_Helper.buttonsTinyMceInit(target);
         } else if (element.kind === 'text') {
-
             tinyMCE.init({
                 target: node.childNodes[0],
                 inline: true,
@@ -196,22 +211,15 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
 };
 
 (function () {
-
-    function detectMode() {
-        var url = window.location.href,
-            regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return false;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
     var WPTB_Builder = function WPTB_Builder() {
-        var table_id = detectMode();
-        if (table_id) {
+        var url = window.location.href,
+            regex = new RegExp('[?&]newtable(=(1)|&|#|$)'),
+            results = regex.exec(url);
+        var table_id = WPTB_Helper.detectMode();
+        if (table_id && (!results || !results[2])) {
             var http = new XMLHttpRequest(),
-                url = ajaxurl + "?action=get_table" + '&id=' + table_id;
-            http.open('GET', url, true);
+                urlSet = ajaxurl + "?action=get_table" + '&id=' + table_id;
+            http.open('GET', urlSet, true);
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             http.onreadystatechange = function (d) {
                 if (this.readyState == 4 && this.status == 200) {
@@ -1313,6 +1321,8 @@ var WPTB_Helper = {
     dataTitleColumnSet: function dataTitleColumnSet(table) {
         var rows = table.rows,
             rowHead = rows[0];
+        var computedStyleRowHead = getComputedStyle(rowHead);
+
         var rowHeadChildren = rowHead.children;
         var contentsForHeader = {};
         for (var i = 0; i < rowHeadChildren.length; i++) {
@@ -1326,10 +1336,13 @@ var WPTB_Helper = {
                         var p = element.querySelector('p'),
                             textContent = p.textContent,
                             textAlign = p.style.textAlign;
-                        contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color, textAlign];
+                        contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color, computedStyleRowHead.backgroundColor, textAlign];
                         break;
                     }
                 }
+            }
+            if (!contentsForHeader[rowHeadChildren[i].dataset.xIndex]) {
+                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '', '', computedStyleRowHead.backgroundColor, ''];
             }
         }
         for (var _i = 1; _i < rows.length; _i++) {
@@ -1340,11 +1353,13 @@ var WPTB_Helper = {
                     thisRowChildren[_j].dataset.titleColumn = contentsForHeader[thisRowChildren[_j].dataset.xIndex][0];
                     thisRowChildren[_j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[_j].dataset.xIndex][1];
                     thisRowChildren[_j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][2];
-                    thisRowChildren[_j].dataset.titleAlign = contentsForHeader[thisRowChildren[_j].dataset.xIndex][3];
+                    thisRowChildren[_j].dataset.titleBackgroundColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][3];
+                    thisRowChildren[_j].dataset.titleAlign = contentsForHeader[thisRowChildren[_j].dataset.xIndex][4];
                 } else {
                     thisRowChildren[_j].dataset.titleColumn = '';
                     thisRowChildren[_j].dataset.titleColumnFontSize = '';
                     thisRowChildren[_j].dataset.titleColumnColor = '';
+                    thisRowChildren[_j].dataset.titleBackgroundColor = '';
                     thisRowChildren[_j].dataset.titleAlign = '';
                 }
             }
@@ -1392,6 +1407,14 @@ var WPTB_Helper = {
         newInput.setAttribute('id', inputId);
         newInput.value = "";
         parent.appendChild(newInput);
+    },
+    detectMode: function detectMode() {
+        var url = window.location.href,
+            regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return false;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 };
 var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
@@ -2260,15 +2283,6 @@ var WPTB_Parser2 = function WPTB_Parser2(code) {
 var WPTB_Settings = function WPTB_Settings() {
     var elems = document.getElementsByClassName('wptb-element');
 
-    function detectMode() {
-        var url = window.location.href,
-            regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return false;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
     for (var i = 0; i < elems.length; i++) {
         elems[i].ondragstart = function (event) {
             event.dataTransfer.effectAllowed = 'move';
@@ -2283,6 +2297,19 @@ var WPTB_Settings = function WPTB_Settings() {
                 wptbDropBorderMarker.style.display = 'none';
             }
         };
+    };
+
+    var shortcodePopupWindow = document.getElementsByClassName('wptb-shortcode-popup-window-modal')[0];
+    document.getElementsByClassName('wptb-embed-btn')[0].onclick = function () {
+        shortcodePopupWindow.classList.add('wptb-shortcode-popup-show');
+    };
+
+    document.getElementsByClassName('wptb-shortcode-popup-dark-area')[0].onclick = function () {
+        shortcodePopupWindow.classList.remove('wptb-shortcode-popup-show');
+    };
+
+    document.getElementsByClassName('wptb-shortcode-popup-window-close-icon')[0].onclick = function () {
+        shortcodePopupWindow.classList.remove('wptb-shortcode-popup-show');
     };
 
     document.getElementsByClassName('wptb-save-btn')[0].onclick = function () {
@@ -2313,7 +2340,7 @@ var WPTB_Settings = function WPTB_Settings() {
             title: t,
             content: code
         };
-        if ((rs = detectMode()) || (rs = document.wptbId)) {
+        if ((rs = WPTB_Helper.detectMode()) || (rs = document.wptbId)) {
             params.id = rs;
         }
         params = JSON.stringify(params);
@@ -2490,10 +2517,10 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                     columnNameDiv.classList.add('column-title-mobile');
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
                     columnNameDiv.setAttribute('style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
-                        color:' + tds[i].dataset.titleColumnColor + '; text-align:' + tds[i].dataset.titleAlign + ';');
+                        color:' + tds[i].dataset.titleColumnColor + '; background-color:' + tds[i].dataset.titleBackgroundColor + '; text-align:' + tds[i].dataset.titleAlign + ';');
                     columnNameDiv.style.padding = tds[i].style.padding;
                     if (tds[i].children.length == 0) {
-                        columnNameDivContainer.classList.add('column-title-mobile-not-elements');
+                        tds[i].classList.add('column-title-mobile-not-elements');
                     }
                     columnNameDivContainer.appendChild(columnNameDiv);
                     tds[i].insertBefore(columnNameDivContainer, tds[i].firstChild);
@@ -3852,6 +3879,8 @@ var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
         elP = document.createElement('p'),
         kindIndexProt = undefined,
         copy = false;
+
+    DOMElement.classList.add('wptb-text-container');
 
     elP.innerHTML = text != undefined ? text : 'Text';
     elText2.appendChild(elP);

@@ -38,9 +38,18 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
         btnMove.draggable = true;
         btnDelete.onclick = function (event) {
-            var act = this.parentNode.parentNode,
+            let act = this.parentNode.parentNode,
                 el = act.parentNode;
             el.removeChild(act);
+            
+            if( act.kind == 'text' ) {
+                let thisRow = el.parentNode
+                if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                    let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
+                    WPTB_Helper.dataTitleColumnSet( table );
+                }
+            }
+            
         };
         btnCopy.onclick = function (event) {
             let copy;
@@ -91,6 +100,14 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
             event.dataTransfer.setData( 'moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
             event.dataTransfer.setData( 'wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1] );
+            let act = event.target.parentNode.parentNode;
+            if( act.kind == 'text' ) {
+                let thisRow = el.parentNode
+                if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                    let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
+                    WPTB_Helper.dataTitleColumnSet( table );
+                }
+            }
         };
 
         if (element.kind === 'button') {
@@ -101,8 +118,6 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             }
             WPTB_Helper.buttonsTinyMceInit( target );
         } else if (element.kind === 'text') {
-            
-                
             tinyMCE.init({
                 target: node.childNodes[0],
                 inline: true,

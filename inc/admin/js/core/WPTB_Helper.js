@@ -157,6 +157,8 @@ var WPTB_Helper = {
     dataTitleColumnSet: function( table ) {
         let rows = table.rows,
             rowHead = rows[0];
+        let computedStyleRowHead = getComputedStyle(rowHead);
+        
         let rowHeadChildren = rowHead.children;
         let contentsForHeader = {};
         for( let i = 0; i < rowHeadChildren.length; i++ ) {
@@ -170,10 +172,15 @@ var WPTB_Helper = {
                         let p = element.querySelector( 'p' ),
                             textContent = p.textContent,
                             textAlign = p.style.textAlign;
-                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, element.style.color, textAlign];
+                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, 
+                                element.style.color, computedStyleRowHead.backgroundColor, textAlign];
                         break;
                     }
                 }
+            }
+            if( ! contentsForHeader[rowHeadChildren[i].dataset.xIndex] ) {
+                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '', 
+                            '', computedStyleRowHead.backgroundColor, ''];
             }
         }
         for ( let i = 1; i < rows.length; i++ ) {
@@ -184,11 +191,13 @@ var WPTB_Helper = {
                     thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
                     thisRowChildren[j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
                     thisRowChildren[j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
-                    thisRowChildren[j].dataset.titleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
+                    thisRowChildren[j].dataset.titleBackgroundColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
+                    thisRowChildren[j].dataset.titleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][4];
                 } else {
                     thisRowChildren[j].dataset.titleColumn = '';
                     thisRowChildren[j].dataset.titleColumnFontSize = '';
                     thisRowChildren[j].dataset.titleColumnColor = '';
+                    thisRowChildren[j].dataset.titleBackgroundColor = '';
                     thisRowChildren[j].dataset.titleAlign = '';
                 }
             }
@@ -236,5 +245,13 @@ var WPTB_Helper = {
         newInput.setAttribute( 'id', inputId );
         newInput.value = "";
         parent.appendChild( newInput );
+    },
+    detectMode: function() {
+        var url = window.location.href,
+            regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return false;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 }
