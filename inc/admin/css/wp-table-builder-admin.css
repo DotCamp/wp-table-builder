@@ -259,7 +259,7 @@ body>img {
     width: auto;
     z-index: 10;
     background: none;
-    max-width: 850px;
+    max-width: 870px;
     margin: auto;
 }
 
@@ -281,8 +281,8 @@ body>img {
     background: #fafbfc;
     font-size: 13px;
     color: #37454c;
-    border-radius: 0px;
-    border: 2px solid #5e5e5e;
+    border-radius: 3px;
+    border: 1px solid #a4a4a4;
     padding-left: 12px;
     padding-right: 12px;
     position: relative;
@@ -1268,7 +1268,7 @@ table.wptb-preview-table td p {
     display: inline-block;
 }
 
-#wpcd_fixed_toolbar > div.toolbar-active {
+#wpcd_fixed_toolbar>div.toolbar-active {
     display: block !important;
 }
 
@@ -1764,4 +1764,8 @@ td[class*="wptb-fused-cell"] {
         max-width: 420px;
         margin-left: 0px;
     }
+}
+
+.wptb-cell img {
+    max-width: 100%;
 }

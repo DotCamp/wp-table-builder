@@ -276,8 +276,8 @@ use WP_Table_Builder as NS;
         </div>  
     </div>
     <div id="wptb-left-scroll-panel-curtain">
-        <p>You are currently editing the table cells. Click "Close" to go back to editing the table, or select a cell to edit it.</p>
-        <p>Hold down the left mouse button on a cell and drag it across the highlighted table to select multiple cells!</p>
+        <p>You are currently editing the table cells. Click "Close" to go back to editing the table.</p>
+        <p>Click on cells to select them or deselect them. Selected cells will be shown in a green outline.</p>
         <div>
             <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button" title="Close Manage Cells Mode">Close</button>
         </div>
