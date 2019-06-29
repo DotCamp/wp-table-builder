@@ -1,10 +1,7 @@
 (function () {
     var WPTB_Builder = function () {
-        var url = window.location.href,
-            regex = new RegExp('[?&]newtable(=(1)|&|#|$)'),
-            results = regex.exec(url);
         var table_id = WPTB_Helper.detectMode();
-        if ( table_id && ( ! results || ! results[2] ) ) {
+        if ( table_id ) {
             var http = new XMLHttpRequest(),
                 urlSet = ajaxurl + "?action=get_table" + '&id=' + table_id;
             http.open('GET', urlSet, true);
@@ -13,13 +10,18 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var ans = JSON.parse(http.responseText);
                     document.getElementById('wptb-setup-name').value = ans[0];
-                    document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-                    let wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
-
-                    wptbTableSetupEl.appendChild( WPTB_Parser( ans[1] ) );
-                    WPTB_Table();
-                    WPTB_LeftPanel();
-                    WPTB_Settings();
+                    
+                    if( ans[1] ) {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+                        let wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
+                        wptbTableSetupEl.appendChild( WPTB_Parser( ans[1] ) );
+                        WPTB_Table();
+                        WPTB_LeftPanel();
+                        WPTB_Settings();
+                    } else {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+                    }
+                    
                     return;
                 }
             };

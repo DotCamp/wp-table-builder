@@ -61,7 +61,8 @@ class Tables {
 	        	echo "$title";
 	        	break;
 			case 'shortcode' : 
-				echo '<input class="wptb_shortcode" value="[wptb id='.$post_id.']" readonly style="border:none;display:inline;"><button onclick="event.preventDefault();var s=this.parentNode.getElementsByClassName(\'wptb_shortcode\')[0];s.select();document.execCommand(\'copy\');var elem = document.createElement(\'div\');elem.classList.add(\'notice\',\'notice-success\',\'is-dismissible\');elem.innerHTML = \'<p>Selected!</p><button onclick=\\\'var n = this.parentNode,p= n.parentNode;p.removeChild(n);\\\' type=\\\'button\\\' class=\\\'notice-dismiss\\\'><span class=\\\'screen-reader-text\\\'>Descartar este aviso.</span></button>\'; document.getElementsByClassName(\'wrap\')[0].prepend(elem);" class="button wptb-edit-button">Copy</button>'; 
+				echo '<input class="wptb_shortcode" value="[wptb id='.$post_id.']" readonly style="border:none;display:inline;">'
+                    . '<button onclick="event.preventDefault();var s=this.parentNode.getElementsByClassName(\'wptb_shortcode\')[0];s.select();document.execCommand(\'copy\');var elem = document.createElement(\'div\');elem.classList.add(\'notice\',\'notice-success\',\'is-dismissible\');elem.innerHTML = \'<p>Selected!</p><button onclick=\\\'var n = this.parentNode,p= n.parentNode;p.removeChild(n);\\\' type=\\\'button\\\' class=\\\'notice-dismiss\\\'><span class=\\\'screen-reader-text\\\'>Descartar este aviso.</span></button>\'; document.getElementsByClassName(\'wrap\')[0].prepend(elem);" class="button wptb-edit-button">Copy</button>'; 
 				break;
 				
 	    }
@@ -103,11 +104,8 @@ class Tables {
         $html = '<div class="wptb-table-container">' . $html . '</div>';
         $html .= '<script>'
                 . 'let wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
-                . 'console.log(wptbPreviewTable);'
-                . 'console.log("Hello");'
                 . 'if( wptbPreviewTable.length > 0 ) {'
                 . '    wptbPreviewTable[0].style.display = "none";'
-                . '    console.log(wptbPreviewTable);'
                 . '}'
                 . '</script>';
     	return ( $html ); 

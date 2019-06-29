@@ -43,7 +43,7 @@ class Admin_Menu {
         
         $params = json_decode(file_get_contents('php://input'));
         
-		if( !isset( $params->id ) || $params->id === '-1' )
+		if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
 		{
 			$id = wp_insert_post([
 				'post_title' => $params->title,

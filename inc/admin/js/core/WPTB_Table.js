@@ -528,6 +528,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         }
         maxAmountOfCells++;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -564,6 +565,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 
         maxAmountOfCells++;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -663,6 +665,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             maxAmountOfCells++;
             drawTable(array);
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
         }
     };
@@ -717,6 +720,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -752,6 +756,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -858,6 +863,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -1183,6 +1189,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
             
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet( table );
         }
         undoSelect();
     }
@@ -1238,6 +1245,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
             
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet( table );
         }
         undoSelect();
     };

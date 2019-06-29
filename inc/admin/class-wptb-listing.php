@@ -49,7 +49,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 		global $wpdb, $post;
 
-		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
+		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page, 'paged' => $page_number );
 
 	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
 	  	$params['order'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'DESC';
@@ -113,7 +113,7 @@ class WPTB_Listing  extends \WP_List_Table{
 		  
 		$table_title = $item->post_title;
 
-		$title = ! empty( $table_title ) ? $table_title : __( '(no title)', 'wp-table-builder' );
+		$title = ! empty( $table_title ) ? $table_title : __( 'Table (ID #' . absint( $item->ID ) . ')', 'wp-table-builder' );
 		  
 		$title = sprintf(
 			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',

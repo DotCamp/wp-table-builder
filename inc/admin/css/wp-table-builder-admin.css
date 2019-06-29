@@ -113,6 +113,23 @@ body>img {
     color: #6b6b6b;
 }
 
+.wptb-embed-btn:active, .wptb-embed-btn:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+.wptb-embed-btn::-moz-focus-inner {
+    border: 0 !important;
+}
+
+.wptb-embed-btn.embed-disable {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.wptb-embed-btn.embed-disable:hover {
+    text-decoration: none;
+}
+
 .wptb-save {
     display: inline-block;
     margin-right: 25px;

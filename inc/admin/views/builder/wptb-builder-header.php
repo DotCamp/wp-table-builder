@@ -22,7 +22,7 @@
     <div class="wptb-right">
         <div class="wptb-embed">
             <i class="fa fa-code"></i>
-            <a href="#" class="wptb-embed-btn">
+            <a href="#" class="wptb-embed-btn <?php echo ! $_GET['table'] || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? 'embed-disable' : '';?>">
                 <?php echo __( '</>Embed', 'wp-table-builder' ); ?>
             </a>
         </div>
@@ -42,7 +42,7 @@
             <div class="wptb-shortcode-popup-content">
                 <p>To embed this table on your site, please paste the following shortcode inside a post or page.</p>
                 
-                <input type="text" value="<?php echo $_GET['table'] && (int) $_GET['table'] ? '[wptb id=' . $_GET['table'] . ']' : '';?>" id="wptb-embed-shortcode" readonly>
+                <input type="text" value="<?php echo $_GET['table'] && absint( $_GET['table'] ) && get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? '[wptb id=' . $_GET['table'] . ']' : '';?>" id="wptb-embed-shortcode" readonly>
             </div>
         </div>
     </div>

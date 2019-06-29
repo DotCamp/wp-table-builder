@@ -212,11 +212,8 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
 
 (function () {
     var WPTB_Builder = function WPTB_Builder() {
-        var url = window.location.href,
-            regex = new RegExp('[?&]newtable(=(1)|&|#|$)'),
-            results = regex.exec(url);
         var table_id = WPTB_Helper.detectMode();
-        if (table_id && (!results || !results[2])) {
+        if (table_id) {
             var http = new XMLHttpRequest(),
                 urlSet = ajaxurl + "?action=get_table" + '&id=' + table_id;
             http.open('GET', urlSet, true);
@@ -225,13 +222,18 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                 if (this.readyState == 4 && this.status == 200) {
                     var ans = JSON.parse(http.responseText);
                     document.getElementById('wptb-setup-name').value = ans[0];
-                    document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
-                    var wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
 
-                    wptbTableSetupEl.appendChild(WPTB_Parser(ans[1]));
-                    WPTB_Table();
-                    WPTB_LeftPanel();
-                    WPTB_Settings();
+                    if (ans[1]) {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+                        var wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
+                        wptbTableSetupEl.appendChild(WPTB_Parser(ans[1]));
+                        WPTB_Table();
+                        WPTB_LeftPanel();
+                        WPTB_Settings();
+                    } else {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+                    }
+
                     return;
                 }
             };
@@ -2301,7 +2303,9 @@ var WPTB_Settings = function WPTB_Settings() {
 
     var shortcodePopupWindow = document.getElementsByClassName('wptb-shortcode-popup-window-modal')[0];
     document.getElementsByClassName('wptb-embed-btn')[0].onclick = function () {
-        shortcodePopupWindow.classList.add('wptb-shortcode-popup-show');
+        if (!this.classList.contains('embed-disable')) {
+            shortcodePopupWindow.classList.add('wptb-shortcode-popup-show');
+        }
     };
 
     document.getElementsByClassName('wptb-shortcode-popup-dark-area')[0].onclick = function () {
@@ -2323,12 +2327,20 @@ var WPTB_Settings = function WPTB_Settings() {
             url = ajaxurl + "?action=save_table",
             t = document.getElementById('wptb-setup-name').value.trim(),
             messagingArea = void 0,
-            code = document.getElementsByClassName('wptb-preview-table')[0];
-        code = WPTB_Stringifier(code);
-        code = code.outerHTML;
-        if (t === '') {
+            code = document.getElementsByClassName('wptb-preview-table');
+        if (code.length > 0) {
+            code = WPTB_Stringifier(code[0]);
+            code = code.outerHTML;
+        } else {
+            code = '';
+        }
+
+        if (t === '' || code === '') {
+            var messagingAreaText = '';
+            if (t === '') messagingAreaText += 'You must assign a name to the table before saving it.</br>';
+            if (code === '') messagingAreaText += 'Table wasn\'t created';
             messagingArea = document.getElementById('wptb-messaging-area');
-            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: You must assign a name to the table before saving it.</div>';
+            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: ' + messagingAreaText + '</div>';
             messagingArea.classList.add('wptb-warning');
             setTimeout(function () {
                 messagingArea.removeChild(messagingArea.firstChild);
@@ -2356,6 +2368,8 @@ var WPTB_Settings = function WPTB_Settings() {
                 if (data[0] == 'saved') {
                     document.wptbId = data[1];
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+                    document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('embed-disable');
+                    document.getElementById('wptb-embed-shortcode').value = '[wptb id=' + data[1] + ']';
                 } else {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
                 }
@@ -3124,6 +3138,7 @@ var array = [],
         }
         maxAmountOfCells++;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3160,6 +3175,7 @@ var array = [],
 
         maxAmountOfCells++;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3254,6 +3270,7 @@ var array = [],
             maxAmountOfCells++;
             drawTable(array);
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet(table);
             undoSelect();
         }
     };
@@ -3308,6 +3325,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3343,6 +3361,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3445,6 +3464,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3767,6 +3787,7 @@ var array = [],
             }
 
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet(table);
         }
         undoSelect();
     };
@@ -3819,6 +3840,7 @@ var array = [],
             }
 
             table.recalculateIndexes();
+            WPTB_Helper.dataTitleColumnSet(table);
         }
         undoSelect();
     };

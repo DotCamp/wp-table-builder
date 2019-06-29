@@ -19,7 +19,9 @@ var WPTB_Settings = function () {
     
     let shortcodePopupWindow = document.getElementsByClassName( 'wptb-shortcode-popup-window-modal' )[0];
     document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
-        shortcodePopupWindow.classList.add( 'wptb-shortcode-popup-show' );
+        if( ! this.classList.contains( 'embed-disable' ) ) {
+            shortcodePopupWindow.classList.add( 'wptb-shortcode-popup-show' );
+        }
     }
     
     document.getElementsByClassName( 'wptb-shortcode-popup-dark-area' )[0].onclick = function () {
@@ -41,12 +43,20 @@ var WPTB_Settings = function () {
             url = ajaxurl + "?action=save_table",
             t = document.getElementById( 'wptb-setup-name' ).value.trim(),
             messagingArea,
-            code = document.getElementsByClassName( 'wptb-preview-table' )[0];
-            code = WPTB_Stringifier( code );
+            code = document.getElementsByClassName( 'wptb-preview-table' );
+        if( code.length > 0 ) {
+            code = WPTB_Stringifier( code[0] );
             code = code.outerHTML;
-        if ( t === '' ) {
+        } else { 
+            code = '';
+        }
+            
+        if ( t === '' || code === '' ) {
+            let messagingAreaText = '';
+            if( t === '' ) messagingAreaText += 'You must assign a name to the table before saving it.</br>';
+            if( code === '' ) messagingAreaText += 'Table wasn\'t created';
             messagingArea = document.getElementById( 'wptb-messaging-area' );
-            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: You must assign a name to the table before saving it.</div>';
+            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: ' + messagingAreaText + '</div>';
             messagingArea.classList.add( 'wptb-warning' );
             setTimeout(function () {
                     messagingArea.removeChild( messagingArea.firstChild );
@@ -74,6 +84,8 @@ var WPTB_Settings = function () {
                 if ( data[0] == 'saved' ) {
                     document.wptbId = data[1];
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+                    document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'embed-disable' );
+                    document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
                 } else {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
                 }

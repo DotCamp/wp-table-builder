@@ -312,6 +312,7 @@
     width: 50%;
     margin-left: 50%;
     padding-left: inherit;
+    box-sizing: border-box;
 }
 
 .wptb-table-container.wptb-section-small table td {
