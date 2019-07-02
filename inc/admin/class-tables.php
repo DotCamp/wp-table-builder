@@ -101,10 +101,11 @@ class Tables {
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
-        $html = '<div class="wptb-table-container">' . $html . '</div>';
+        $html = '<div class="wptb-table-container"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
         $html .= '<script>'
                 . 'let wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
                 . 'if( wptbPreviewTable.length > 0 ) {'
+                . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
                 . '    wptbPreviewTable[0].style.display = "none";'
                 . '}'
                 . '</script>';

@@ -1,9 +1,21 @@
 var WPTB_Stringifier = function ( codeMain ) {
     if ( codeMain ) {
         let code = codeMain.cloneNode( true );
+        code.classList.add( 'wptb-table-preview-static-indic' );
+        code.dataset.tableColumns = codeMain.columns;
+        code.dataset.reconstraction = 1;
+        
         let tds = code.getElementsByTagName( 'td' );
         if ( tds.length > 0 ) {
             for ( let i = 0; i < tds.length; i++ ) {
+                
+                for( let i = 0; i < tds.length; i++ ) {
+                    if( code.dataset.reconstraction == 1 && tds[i].colSpan > 1 || tds[i].rowSpan > 1 ) {
+                        code.dataset.reconstraction = 0;
+                        break;
+                    }
+                }
+                
                 if ( codeMain.querySelector( 'wptb-table-preview-head' ) ) {
                     tds[i].removeAttribute( 'data-x-index' );
                 }

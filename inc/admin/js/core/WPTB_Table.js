@@ -972,6 +972,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         first.colSpan = colspan;
         first.rowSpan = rowspan;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 
@@ -1033,6 +1034,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         }
 
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
     };
 

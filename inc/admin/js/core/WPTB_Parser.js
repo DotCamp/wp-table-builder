@@ -13,6 +13,7 @@ var WPTB_Parser = function (code) {
     let tds = table.querySelectorAll( 'td' );
     for ( let i = 0; i < tds.length; i++ ) {
         tds[i].classList.add( 'wptb-droppable' );
+        tds[i].classList.remove( 'column-title-mobile-not-elements' );
     }
     
     return table;

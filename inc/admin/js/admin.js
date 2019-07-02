@@ -2234,6 +2234,7 @@ var WPTB_Parser = function WPTB_Parser(code) {
     var tds = table.querySelectorAll('td');
     for (var _i = 0; _i < tds.length; _i++) {
         tds[_i].classList.add('wptb-droppable');
+        tds[_i].classList.remove('column-title-mobile-not-elements');
     }
 
     return table;
@@ -2464,9 +2465,21 @@ var WPTB_Space = function WPTB_Space(elSpaceBetween) {
 var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
     if (codeMain) {
         var code = codeMain.cloneNode(true);
+        code.classList.add('wptb-table-preview-static-indic');
+        code.dataset.tableColumns = codeMain.columns;
+        code.dataset.reconstraction = 1;
+
         var tds = code.getElementsByTagName('td');
         if (tds.length > 0) {
             for (var i = 0; i < tds.length; i++) {
+
+                for (var _i = 0; _i < tds.length; _i++) {
+                    if (code.dataset.reconstraction == 1 && tds[_i].colSpan > 1 || tds[_i].rowSpan > 1) {
+                        code.dataset.reconstraction = 0;
+                        break;
+                    }
+                }
+
                 if (codeMain.querySelector('wptb-table-preview-head')) {
                     tds[i].removeAttribute('data-x-index');
                 }
@@ -3572,6 +3585,7 @@ var array = [],
         first.colSpan = colspan;
         first.rowSpan = rowspan;
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
@@ -3632,6 +3646,7 @@ var array = [],
         }
 
         table.recalculateIndexes();
+        WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
 
