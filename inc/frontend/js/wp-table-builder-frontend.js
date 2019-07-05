@@ -135,20 +135,20 @@ jQuery( document ).ready( function ( $ ) {
     let wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
     if ( wptbPreviewTable.length > 0 ) {
         wptbPreviewTable[0].style.display = 'table';
-        if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
             wptb_tableReconstraction();
+        if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
         } else {
-            wptb_tableGenerateMobile();
-            wptb_tableContainerSectionSmall();
+//            wptb_tableGenerateMobile();
+//            wptb_tableContainerSectionSmall();
         }
 
         //when window resize call wpcd_archiveSectionSmall and wptb_tableGenerateMobile
         $( window ).resize( function () {
-            if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
                 wptb_tableReconstraction();
+            if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
             } else {
-                wptb_tableGenerateMobile();
-                wptb_tableContainerSectionSmall();
+//                wptb_tableGenerateMobile();
+//                wptb_tableContainerSectionSmall();
             }
         });
     }
@@ -175,9 +175,11 @@ jQuery( document ).ready( function ( $ ) {
                     if( tableColumns ) {
                         let tdWidth = previewTableWidth / tableColumns;
                         let wholeColumnsInContainer = Math.floor( tableContainerWidth/tdWidth );
-                        if( document.getElementsByClassName( 'wptb-preview-table-mobile-head' ).length > 0 ) {
-                            let wptbPreviewTableMobileHead = document.getElementsByClassName( 'wptb-preview-table-mobile-head' )[0];
-                            wptbPreviewTableMobileHead.classList.remove( 'mobile-head-hide' );
+                        
+                        
+                        if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
+                            let wptbPreviewTableMobileHead = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
+                            wptbPreviewTableMobileHead.classList.remove( 'mobile-hide' );
                             let dataWholeColumnInContainer = wptbPreviewTableMobileHead.dataset.wholeColumnsInContainer;
                             if( dataWholeColumnInContainer == wholeColumnsInContainer ) {
                                 createNewTableIndic = false;
@@ -188,87 +190,154 @@ jQuery( document ).ready( function ( $ ) {
                         
                         if( createNewTableIndic ) {
                             let newTable = document.createElement( 'table' );
-                            newTable.classList.add( 'wptb-preview-table-mobile-head' );
-
+                            newTable.classList.add( 'wptb-preview-table-mobile' );
                             let tableRows = previewTable.rows.length;
-                            let tableRowsWithoutHeader = tableRows - 1;
-                            let newTableColumnsWithoutLeftHeader;
+                            let valuesIsSaved = false;
                             let newTalbeLastSectionFilledColumns;
                             
-                            let valuesIsSaved = false;
-                            
-                            for( let i = 0; i < tableRowsWithoutHeader; i++ ) {
-                                newTableColumnsWithoutLeftHeader = wholeColumnsInContainer - 1 - i;
-                                if( newTableColumnsWithoutLeftHeader == 0 ) newTableColumnsWithoutLeftHeader = 1;
-                                newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
+                            if ( previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
+                                let tableRowsWithoutHeader = tableRows - 1;
+                                let newTableColumnsWithoutLeftHeader;
 
-                                if( newTalbeLastSectionFilledColumns == 0 ) {
-                                    valuesIsSaved = true;
-                                    break;
-                                } else if( newTableColumnsWithoutLeftHeader - 2 * newTalbeLastSectionFilledColumns < 0 ) {
-                                    valuesIsSaved = true;
-                                    continue;
-                                } else {
-                                    if( valuesIsSaved ) {
+                                for( let i = 0; i < tableRowsWithoutHeader; i++ ) {
+                                    newTableColumnsWithoutLeftHeader = wholeColumnsInContainer - 1 - i;
+                                    if( newTableColumnsWithoutLeftHeader == 0 ) newTableColumnsWithoutLeftHeader = 1;
+                                    newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
+                                    
+                                    if( Math.floor( wholeColumnsInContainer / ( newTableColumnsWithoutLeftHeader + 1 ) ) >= 2 && valuesIsSaved ) {
                                         newTableColumnsWithoutLeftHeader = newTableColumnsWithoutLeftHeader + 1;
                                         newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
                                         break;
-                                    } else {
+                                    }
+
+                                    if( newTalbeLastSectionFilledColumns == 0 ) {
+                                        valuesIsSaved = true;
+                                        break;
+                                    } else if( newTableColumnsWithoutLeftHeader - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
+                                        valuesIsSaved = true;
                                         continue;
+                                    } else {
+                                        if( valuesIsSaved ) {
+                                            newTableColumnsWithoutLeftHeader = newTableColumnsWithoutLeftHeader + 1;
+                                            newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
+                                            break;
+                                        } else {
+                                            continue;
+                                        }
+                                    }
+                                }
+
+                                if( valuesIsSaved && newTableColumnsWithoutLeftHeader ) {
+                                    let countRows = tableColumns * Math.ceil( tableRowsWithoutHeader / newTableColumnsWithoutLeftHeader );
+                                    for( let j = 0; j < countRows; j++ ) {
+                                        let sectionNumber = Math.floor( j / tableColumns ),
+                                            tr = document.createElement( 'tr' ),
+                                            tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
+                                            td;
+                                        tdLeftHeader.style.backgroundColor = previewTable.rows[0].style.backgroundColor;
+                                        if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                            tdLeftHeader.style.borderTopWidth = '5px';
+                                        }
+                                        tr.appendChild( tdLeftHeader );
+
+                                        for( let k = newTableColumnsWithoutLeftHeader*( sectionNumber ) + 1; k < newTableColumnsWithoutLeftHeader*( sectionNumber + 1) + 1; k++ ) {
+                                            if( k < previewTable.rows.length ) {
+                                                td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
+                                                td.style.backgroundColor = previewTable.rows[k].style.backgroundColor;
+                                                td.style.border
+                                            } else {
+                                                td = document.createElement( 'td' );
+                                                td.style.borderWidth = '0px';
+                                                td.style.borderColor = previewTable.querySelector( 'td' );
+                                                if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                                    td.style.borderColor = previewTable.querySelector( 'td' ).style.borderColor;
+                                                }
+                                                td.style.background = '#fff';
+                                            }
+
+                                            if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                                td.style.borderTopWidth = '5px';
+                                            }
+
+                                            tr.appendChild( td );
+                                        }
+
+                                        newTable.appendChild( tr );
+                                    }
+                                }
+                            } else {
+                                
+                                let newTableColumns;
+                                
+                                for( let i = 0; i < tableColumns; i++ ) {
+                                    newTableColumns = wholeColumnsInContainer - i;
+                                    if( newTableColumns == 0 ) newTableColumns = 1;
+                                    newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                    
+                                    if( Math.floor( wholeColumnsInContainer / newTableColumns ) >= 2 && valuesIsSaved ) {
+                                        newTableColumns = newTableColumns + 1;
+                                        newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                        break;
+                                    }
+
+                                    if( newTalbeLastSectionFilledColumns == 0 ) {
+                                        valuesIsSaved = true;
+                                        break;
+                                    } else if( newTableColumns - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
+                                        valuesIsSaved = true;
+                                        continue;
+                                    } else {
+                                        if( valuesIsSaved ) {
+                                            newTableColumns = newTableColumns + 1;
+                                            newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                            break;
+                                        } else {
+                                            continue;
+                                        }
+                                    }
+                                }
+                                
+                                let increaseRatioRows = Math.ceil( tableColumns / newTableColumns );
+                                
+                                let newTableRows = increaseRatioRows * tableRows;
+                                
+                                if( valuesIsSaved ) {
+                                    for( let i = 0; i < newTableRows; i++ ) {
+                                        let sectionNumber = Math.floor( i / tableRows );
+                                        let tr = document.createElement( 'tr' );
+                                        let jMax;
+                                        let jStart;
+                                        if( sectionNumber != increaseRatioRows - 1 || newTalbeLastSectionFilledColumns == 0 ) {
+                                            jStart = sectionNumber * newTableColumns;
+                                            jMax = newTableColumns * ( 1 + sectionNumber );
+                                        } else {
+                                            jStart = tableColumns - newTalbeLastSectionFilledColumns;
+                                            jMax = tableColumns;
+                                        }
+                                        let row = previewTable.rows[i - sectionNumber * tableRows];
+                                        tr.classList = row.classList;
+                                        tr.style.backgroundColor = row.style.backgroundColor;
+                                        
+                                        for ( let j = jStart; j < jMax; j++ ) {
+                                            let newTd = row.children[j].cloneNode( true );
+                                            newTd.style.background = 'none';
+                                            tr.appendChild( newTd );
+                                        }
+                                        
+                                        newTable.appendChild( tr );
+                                        
                                     }
                                 }
                             }
                             
-                            if( valuesIsSaved && newTableColumnsWithoutLeftHeader ) {
-                                let countRows = tableColumns * Math.ceil( tableRowsWithoutHeader / newTableColumnsWithoutLeftHeader );
-                                console.log(countRows);
-                                for( let j = 0; j < countRows; j++ ) {
-                                    let sectionNumber = Math.floor( j / tableColumns ),
-                                        tr = document.createElement( 'tr' ),
-                                        tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
-                                        td;
-                                    tdLeftHeader.style.backgroundColor = previewTable.rows[0].style.backgroundColor;
-                                    if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                        tdLeftHeader.style.borderTopWidth = '5px';
-                                        tdLeftHeader.classList.add( 'linear-gradient' );
-                                    }
-                                    tr.appendChild( tdLeftHeader );
-
-                                    for( let k = newTableColumnsWithoutLeftHeader*( sectionNumber ) + 1; k < newTableColumnsWithoutLeftHeader*( sectionNumber + 1) + 1; k++ ) {
-                                        if( k < previewTable.rows.length ) {
-                                            td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
-                                            td.style.backgroundColor = previewTable.rows[k].style.backgroundColor;
-                                            td.style.border
-                                        } else {
-                                            td = document.createElement( 'td' );
-                                            td.style.borderWidth = '0px';
-                                            td.style.borderColor = previewTable.querySelector( 'td' );
-                                            if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                                td.style.borderColor = previewTable.querySelector( 'td' ).style.borderColor;
-                                            }
-                                            td.style.background = '#fff';
-                                        }
-
-                                        if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                            td.style.borderTopWidth = '5px';
-                                            td.classList.add( 'linear-gradient' );
-                                        }
-
-                                        tr.appendChild( td );
-                                    }
-
-                                    newTable.appendChild( tr );
-                                }
-
-                                newTable.dataset.wholeColumnsInContainer = wholeColumnsInContainer;
-                                tableContainer.appendChild( newTable );
-                            }
+                            newTable.dataset.wholeColumnsInContainer = wholeColumnsInContainer;
+                            tableContainer.appendChild( newTable );
                         }
                     }
                 } else {
                     if( tableContainerMatrix ) tableContainerMatrix.classList.remove( 'matrix-hide' );
-                    if( document.getElementsByClassName( 'wptb-preview-table-mobile-head' ).length > 0 ) {
-                        document.getElementsByClassName( 'wptb-preview-table-mobile-head' )[0].classList.add( 'mobile-head-hide' );
+                    if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
+                        document.getElementsByClassName( 'wptb-preview-table-mobile' )[0].classList.add( 'mobile-hide' );
                     }
                     tableContainer.style.overflow = 'auto';
                 }

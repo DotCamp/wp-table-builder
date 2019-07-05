@@ -1062,10 +1062,6 @@ table.wptb-table {
     overflow-wrap: break-word;
 }
 
-table.wptb-preview-table td p {
-    font-family: Open Sans, sans-serif;
-}
-
 .wptb-preview-table ul {
     list-style-type: disc;
     margin-left: 15px;
