@@ -178,13 +178,18 @@ jQuery( document ).ready( function ( $ ) {
                         
                         
                         if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
-                            let wptbPreviewTableMobileHead = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
-                            wptbPreviewTableMobileHead.classList.remove( 'mobile-hide' );
-                            let dataWholeColumnInContainer = wptbPreviewTableMobileHead.dataset.wholeColumnsInContainer;
-                            if( dataWholeColumnInContainer == wholeColumnsInContainer ) {
+                            let wptbPreviewTableMobile = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
+                            wptbPreviewTableMobile.classList.remove( 'mobile-hide' );
+                            let dataWholeColumnInContainer = wptbPreviewTableMobile.dataset.wholeColumnsInContainer;
+                            
+                            if( dataWholeColumnInContainer == wholeColumnsInContainer && previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
+                                createNewTableIndic = false;
+                            } else if( dataWholeColumnInContainer == wholeColumnsInContainer && 
+                                    ! previewTable.classList.contains( 'wptb-table-preview-head' ) && 
+                                    ( tableContainerWidth > 480 || wptbPreviewTableMobile.column == 1 ) ) {
                                 createNewTableIndic = false;
                             } else {
-                                wptbPreviewTableMobileHead.parentNode.removeChild( wptbPreviewTableMobileHead );
+                                wptbPreviewTableMobile.parentNode.removeChild( wptbPreviewTableMobile );
                             }
                         }
                         
@@ -268,33 +273,39 @@ jQuery( document ).ready( function ( $ ) {
                             } else {
                                 
                                 let newTableColumns;
-                                
-                                for( let i = 0; i < tableColumns; i++ ) {
-                                    newTableColumns = wholeColumnsInContainer - i;
-                                    if( newTableColumns == 0 ) newTableColumns = 1;
-                                    newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
-                                    
-                                    if( Math.floor( wholeColumnsInContainer / newTableColumns ) >= 2 && valuesIsSaved ) {
-                                        newTableColumns = newTableColumns + 1;
+                                if( tableContainerWidth > 480 ) {
+                                    for( let i = 0; i < tableColumns; i++ ) {
+                                        newTableColumns = wholeColumnsInContainer - i;
+                                        if( newTableColumns == 0 ) newTableColumns = 1;
                                         newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
-                                        break;
-                                    }
 
-                                    if( newTalbeLastSectionFilledColumns == 0 ) {
-                                        valuesIsSaved = true;
-                                        break;
-                                    } else if( newTableColumns - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
-                                        valuesIsSaved = true;
-                                        continue;
-                                    } else {
-                                        if( valuesIsSaved ) {
+                                        if( Math.floor( wholeColumnsInContainer / newTableColumns ) >= 2 && valuesIsSaved ) {
                                             newTableColumns = newTableColumns + 1;
                                             newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
                                             break;
-                                        } else {
+                                        }
+
+                                        if( newTalbeLastSectionFilledColumns == 0 ) {
+                                            valuesIsSaved = true;
+                                            break;
+                                        } else if( newTableColumns - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
+                                            valuesIsSaved = true;
                                             continue;
+                                        } else {
+                                            if( valuesIsSaved ) {
+                                                newTableColumns = newTableColumns + 1;
+                                                newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                                break;
+                                            } else {
+                                                continue;
+                                            }
                                         }
                                     }
+                                } else {
+                                    newTableColumns = 1;
+                                    newTalbeLastSectionFilledColumns = 0;
+                                    valuesIsSaved = true;
+                                    newTable.column = 1;
                                 }
                                 
                                 let increaseRatioRows = Math.ceil( tableColumns / newTableColumns );
