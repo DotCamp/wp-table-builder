@@ -191,16 +191,6 @@ use WP_Table_Builder as NS;
                     </div>
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php echo __( 'Button Id', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin: 15px 0;">
-                                <input type="text" data-type="button-id" placeholder="<?php echo __( 'Insert Button Id Here', 'wp-table-builder' ); ?>" class="wptb-element-property" />
-                            </div>
-                        </div>    
-                    </div>
-                    <div class="wptb-settings-items">
-                        <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php echo __( 'Button Alignment', 'wp-table-builder' ); ?></p>
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
@@ -210,6 +200,16 @@ use WP_Table_Builder as NS;
                                     <option value="center"><?php echo __( 'Center', 'wp-table-builder' ); ?></option>
                                     <option value="right"><?php echo __( 'Right', 'wp-table-builder' ); ?></option>
                                 </select>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php echo __( 'Button ID', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin: 15px 0;">
+                                <input type="text" data-type="button-id" placeholder="<?php echo __( 'Insert Button ID Here', 'wp-table-builder' ); ?>" class="wptb-element-property" />
                             </div>
                         </div>    
                     </div>
