@@ -117,6 +117,10 @@ use WP_Table_Builder as NS;
                                 <input type="checkbox" data-type="image-link-target" id="image-link-target" class="wptb-element-property" />
                                 <label for="image-link-target"><?php echo __( 'Open Link in New Tab', 'wp-table-builder' ); ?></label>
                             </div>
+                            <div class='wptb-settings-col-xs-8'>
+                                <input type="checkbox" data-type="image-link-nofollow" id="image-link-nofollow" class="wptb-element-property" />
+                                <label for="image-link-nofollow"><?php echo __( 'Nofollow Link', 'wp-table-builder' ); ?></label>
+                            </div>
                         </div>    
                     </div>
                     <div class="wptb-element-option wptb-settings-items">
@@ -178,6 +182,10 @@ use WP_Table_Builder as NS;
                             <div class='wptb-settings-col-xs-8'>
                                 <input type="checkbox" data-type="button-link-target" id="button-link-target" class="wptb-element-property" />
                                 <label for="button-link-target"><?php echo __( 'Open Link in New Tab', 'wp-table-builder' ); ?></label>
+                            </div>
+                            <div class='wptb-settings-col-xs-8'>
+                                <input type="checkbox" data-type="button-link-nofollow" id="button-link-nofollow" class="wptb-element-property" />
+                                <label for="button-link-nofollow"><?php echo __( 'Nofollow Link', 'wp-table-builder' ); ?></label>
                             </div>
                         </div>    
                     </div>

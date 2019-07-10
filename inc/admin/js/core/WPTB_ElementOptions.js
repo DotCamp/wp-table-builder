@@ -435,6 +435,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         affectedEl.getElementsByTagName('a')[0].target = '_self';
                     }
                     break;
+                case 'image-link-nofollow':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].rel = 'nofollow';
+                    } else {
+                        affectedEl.getElementsByTagName('a')[0].removeAttribute('rel');
+                    }
+                    break;
                 case 'image-size':
                     affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
                     affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
@@ -469,6 +476,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         affectedEl.getElementsByTagName('a')[0].target = '_blank';
                     } else {
                         affectedEl.getElementsByTagName('a')[0].target = '_self';
+                    }
+                    break;
+                case 'button-link-nofollow':
+                    if (this.checked == true) {
+                        affectedEl.getElementsByTagName('a')[0].rel = 'nofollow';
+                    } else {
+                        affectedEl.getElementsByTagName('a')[0].removeAttribute( 'rel' );
                     }
                     break;
                 case 'button-id':
