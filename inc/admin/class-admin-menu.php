@@ -39,9 +39,9 @@ class Admin_Menu {
         wp_die( json_encode( ['created',$id] ) );
     }
 
-	public function save_table(){
+	public function save_table() {
         
-        $params = json_decode(file_get_contents('php://input'));
+        $params = json_decode( file_get_contents( 'php://input' ) );
         
 		if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
 		{
@@ -67,7 +67,7 @@ class Admin_Menu {
  
 	}
 
-	public function get_table(){  
+	public function get_table() {  
 		$post = get_post( $_REQUEST['id'] );
 		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_', true );
 		$name = $post->post_title;
@@ -149,7 +149,7 @@ class Admin_Menu {
 
             wp_enqueue_style( 'wp-color-picker' );
             
-            wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-admin.css', array(), NS\PLUGIN_VERSION, 'all' );
+            wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
             wp_enqueue_script( 'wptb-admin-builder-js' );

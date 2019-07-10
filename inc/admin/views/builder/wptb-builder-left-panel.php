@@ -276,10 +276,10 @@ use WP_Table_Builder as NS;
         </div>  
     </div>
     <div id="wptb-left-scroll-panel-curtain">
-        <p>You are currently editing the table cells. Click "Close" to go back to editing the table.</p>
-        <p>Click on cells to select them or deselect them. Selected cells will be shown in a green outline.</p>
+        <p><?php echo __( 'You are currently editing the table cells. Click "Close" to go back to editing the table.', 'wp-table-builder' ); ?></p>
+        <p><?php echo __( 'Click on cells to select them or deselect them. Selected cells will be shown in a green outline.', 'wp-table-builder'); ?></p>
         <div>
-            <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button" title="Close Manage Cells Mode">Close</button>
+            <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button" title="Close Manage Cells Mode"><?php echo __( 'Close', 'wp-table-builder' ); ?></button>
         </div>
     </div>
     <a href="javascript:void(0)" class="wptb-left-panel-extend" data-fn="togglePanel" data-title-collapsed="Expand panel" data-title-expanded="Collapse panel" title="Collapse panel">

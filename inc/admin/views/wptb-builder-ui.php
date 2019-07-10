@@ -59,6 +59,6 @@ use WP_Table_Builder as NS;
         </div>
     </div>
 </div> 
-    <style type="text/css" id="custom-cursor">
+<style type="text/css" id="custom-cursor">
         
-    </style>
+</style>

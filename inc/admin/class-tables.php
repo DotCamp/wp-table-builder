@@ -33,21 +33,21 @@ class Tables {
 
     	if ( $post->post_type =="wptb-tables" ) {
     		unset( $actions['inline hide-if-no-js'] );
-        	$actions['edit'] = '<a href="' . menu_page_url( 'wptb-builder',false) . '&table='.$post->ID.'">'.__('Edit','wptb').'</a>';
+        	$actions['edit'] = '<a href="' . menu_page_url( 'wptb-builder',false) . '&table='.$post->ID.'">'.__( 'Edit','wp-table-builder' ).'</a>';
 		}
 		
 		return $actions;
 		
 	}
 
-	function addHeader($columns) { 
-	    $columns['shortcode'] = __( 'Shortcode', 'wptb' ); 
+	function addHeader( $columns ) { 
+	    $columns['shortcode'] = __( 'Shortcode', 'wp-table-builder' ); 
 
 	    return array(
 	        'cb' => '<input type="checkbox" />',
-	        'title' => __('Title'), 
-	        'shortcode' => __('Shortcode'),
-	        'date' => __('Date'),
+	        'title' => __( 'Title', 'wp-table-builder' ), 
+	        'shortcode' => __( 'Shortcode', 'wp-table-builder' ),
+	        'date' => __( 'Date', 'wp-table-builder' ),
 	    );
 	}
 
@@ -93,11 +93,11 @@ class Tables {
 
 		// Register the post type
         register_post_type( 'wptb-tables', $args );
-		add_shortcode('wptb',array($this, 'get_table'));
+		add_shortcode( 'wptb', array( $this, 'get_table' ) );
         
     }
 
-    public function get_table($args){  
+    public function get_table( $args ) {  
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );

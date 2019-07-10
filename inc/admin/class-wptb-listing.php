@@ -24,23 +24,18 @@ class WPTB_Listing  extends \WP_List_Table{
 			'plural'   => __( 'WPTB Tables', 'wp-table-builder' ), 
 			'ajax'     => false 
 		] );
-		if(isset($_GET['success']))
-		{ 
-	    ?>
+		if ( isset( $_GET['success'] ) ) { ?>
 	    <div class="notice notice-success is-dismissible">
-	        <p><?php _e( 'Table deleted successfully.', 'wptb-builder' ); ?></p>
+	        <p><?php _e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
 	    </div>
 	    <?php 
-	    unset($_GET['success']);
-		} 
-		if(isset($_GET['bulksuccess']))
-		{ 
-	    ?>
+	    	unset( $_GET['success'] );
+		} if ( isset( $_GET['bulksuccess'] ) ) { ?>
 	    <div class="notice notice-success is-dismissible">
-	        <p><?php _e( 'Bulk delete performed successfully.', 'wptb-builder' ); ?></p>
+	        <p><?php _e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
 	    </div>
 	    <?php 
-	    unset($_GET['bulksuccess']);
+	    	unset( $_GET['bulksuccess'] );
 		} 
 
 	}
@@ -66,7 +61,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	
 		global $wpdb;
 
-		delete_post_meta($id, '_wptb_content_');
+		delete_post_meta( $id, '_wptb_content_' );
 
 	  	$wpdb->delete(
 	    	"{$wpdb->prefix}posts",
@@ -226,7 +221,7 @@ class WPTB_Listing  extends \WP_List_Table{
 			} else {
 
 	      		$this->delete_table( absint( $_GET['table_id'] ) );
-	      	die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&success=1";</script>');
+	      		die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&success=1";</script>');
 	      		exit;
 	    	}
 

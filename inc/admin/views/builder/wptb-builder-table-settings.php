@@ -6,7 +6,6 @@
 
 <div class="wptb-settings-items" style="display: block;">
     <div class="wptb-settings-row wptb-settings-middle-xs">
-        
         <div class="wptb-settings-col-xs-12" style="margin: auto;">
             <input type="button" id="wptb-activate-cell-management-mode" name="wptb-activate-cell-management-mode" class="wptb-button" value="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>" title="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>">
         </div> 
