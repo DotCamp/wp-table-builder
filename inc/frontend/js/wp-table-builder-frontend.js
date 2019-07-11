@@ -169,7 +169,7 @@ jQuery( document ).ready( function ( $ ) {
                 let previewTableWidth = previewTable.offsetWidth;
                 if( tableContainerWidth < previewTableWidth ) {
                     tableContainer.style.overflow = 'unset';
-                    if( tableContainerMatrix ) tableContainerMatrix.classList.add( 'matrix-hide' );
+                    if( tableContainerMatrix ) tableContainerMatrix.classList.add( 'wptb-matrix-hide' );
                     
                     let tableColumns = previewTable.dataset.tableColumns;
                     if( tableColumns ) {
@@ -179,7 +179,7 @@ jQuery( document ).ready( function ( $ ) {
                         
                         if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
                             let wptbPreviewTableMobile = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
-                            wptbPreviewTableMobile.classList.remove( 'mobile-hide' );
+                            wptbPreviewTableMobile.classList.remove( 'wptb-mobile-hide' );
                             let dataWholeColumnInContainer = wptbPreviewTableMobile.dataset.wholeColumnsInContainer;
                             
                             if( dataWholeColumnInContainer == wholeColumnsInContainer && previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
@@ -331,7 +331,10 @@ jQuery( document ).ready( function ( $ ) {
                                         
                                         for ( let j = jStart; j < jMax; j++ ) {
                                             let newTd = row.children[j].cloneNode( true );
-                                            newTd.style.background = 'none';
+                                            if( ! newTd.style.background ) {
+                                                let rowStyles = window.getComputedStyle( row );
+                                                newTd.style.backgroundColor = rowStyles.backgroundColor;
+                                            }
                                             tr.appendChild( newTd );
                                         }
                                         
@@ -346,9 +349,9 @@ jQuery( document ).ready( function ( $ ) {
                         }
                     }
                 } else {
-                    if( tableContainerMatrix ) tableContainerMatrix.classList.remove( 'matrix-hide' );
+                    if( tableContainerMatrix ) tableContainerMatrix.classList.remove( 'wptb-matrix-hide' );
                     if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
-                        document.getElementsByClassName( 'wptb-preview-table-mobile' )[0].classList.add( 'mobile-hide' );
+                        document.getElementsByClassName( 'wptb-preview-table-mobile' )[0].classList.add( 'wptb-mobile-hide' );
                     }
                     tableContainer.style.overflow = 'auto';
                 }

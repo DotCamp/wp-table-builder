@@ -14,12 +14,12 @@ var WPTB_innerElementSet = function  ( element ) {
     
     element.ondragenter = function (e) {
         var div;
-        if ( e.dataTransfer.types.indexOf( 'wptbelement' ) == -1 && e.dataTransfer.types.indexOf( 'moving-mode' ) == -1 ) {
+        if ( e.dataTransfer.types.indexOf( 'wptbelement' ) == -1 && e.dataTransfer.types.indexOf( 'wptb-moving-mode' ) == -1 ) {
             return;
         }
         WPTB_DropHandle(this, e);
         
-        element.classList.add( 'ondragenter' );
+        element.classList.add( 'wptb-ondragenter' );
     }
     element.ondragover = function (e) {
         e.preventDefault();
@@ -29,7 +29,7 @@ var WPTB_innerElementSet = function  ( element ) {
         
     }
     element.ondrop = function(e) {
-        this.classList.remove( 'ondragenter' );
+        this.classList.remove( 'wptb-ondragenter' );
         let element, classId;
         e.preventDefault();
         e.stopPropagation();
@@ -52,7 +52,7 @@ var WPTB_innerElementSet = function  ( element ) {
         } else {
             classId = e.dataTransfer.getData( 'node' );
             element = document.getElementsByClassName( classId )[0];
-            element.classList.remove( 'moving-mode' );
+            element.classList.remove( 'wptb-moving-mode' );
         }
         
         if( wptbDropHandle.style.display == 'block' ) {
@@ -89,6 +89,6 @@ var WPTB_innerElementSet = function  ( element ) {
         return true;
     }
     element.onmouseover = function(e) {
-        element.classList.remove( 'ondragenter' );
+        element.classList.remove( 'wptb-ondragenter' );
     }
 }

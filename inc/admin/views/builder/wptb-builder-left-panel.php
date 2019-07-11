@@ -11,7 +11,7 @@ use WP_Table_Builder as NS;
     <div class="wptb-left-scroll-panel">
         <div class="wptb-panel-left">
             <div class="wptb-elements-section">
-                <div class="add-elements wptb-tab-content">
+                <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
                         <div class="wptb-element left " draggable="true" data-wptb-element="text"  id="wptb-text">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.php'; ?>
@@ -287,7 +287,7 @@ use WP_Table_Builder as NS;
         <p><?php echo __( 'You are currently editing the table cells. Click "Close" to go back to editing the table.', 'wp-table-builder' ); ?></p>
         <p><?php echo __( 'Click on cells to select them or deselect them. Selected cells will be shown in a green outline.', 'wp-table-builder'); ?></p>
         <div>
-            <button id="wptb-left-scroll-panel-curtain-close" class="table_change_button" title="Close Manage Cells Mode"><?php echo __( 'Close', 'wp-table-builder' ); ?></button>
+            <button id="wptb-left-scroll-panel-curtain-close" class="wptb-table_change_button" title="Close Manage Cells Mode"><?php echo __( 'Close', 'wp-table-builder' ); ?></button>
         </div>
     </div>
     <a href="javascript:void(0)" class="wptb-left-panel-extend" data-fn="togglePanel" data-title-collapsed="Expand panel" data-title-expanded="Collapse panel" title="Collapse panel">

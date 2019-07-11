@@ -33,9 +33,9 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             actions = document.createElement( 'span' ), i;
 
         actions.classList.add('wptb-actions');
-        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
-        btnMove.classList.add("dashicons", "dashicons-move", 'move-action');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'wptb-delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'wptb-duplicate-action');
+        btnMove.classList.add("dashicons", "dashicons-move", 'wptb-move-action');
         btnMove.draggable = true;
         btnDelete.onclick = function (event) {
             let act = this.parentNode.parentNode,
@@ -94,11 +94,11 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         btnMove.ondragstart = function (event) {
             this.parentNode.style.opacity = 0;
             parent.classList.remove( 'wptb-directlyhovered' );
-            parent.classList.add( 'moving-mode' );
+            parent.classList.add( 'wptb-moving-mode' );
             
             event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
             event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
-            event.dataTransfer.setData( 'moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
+            event.dataTransfer.setData( 'wptb-moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
             event.dataTransfer.setData( 'wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1] );
             let act = event.target.parentNode.parentNode;
             if( act.kind == 'text' ) {

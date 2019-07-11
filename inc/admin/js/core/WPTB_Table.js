@@ -20,9 +20,9 @@ var array = [], WPTB_Table = function (columns, rows) {
         var rs = this.rowSpan,
                 cs = this.colSpan,
                 markedCells,
-                noCells = document.getElementsByClassName('no-cell-action'),
-                singleCells = document.getElementsByClassName('single-action'),
-                multipleCells = document.getElementsByClassName('multiple-select-action'),
+                noCells = document.getElementsByClassName('wptb-no-cell-action'),
+                singleCells = document.getElementsByClassName('wptb-single-action'),
+                multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
                 position = getCoords(this),
                 row = position[0],
                 column = position[1];
@@ -212,9 +212,9 @@ var array = [], WPTB_Table = function (columns, rows) {
      */
 
     var undoSelect = function () {
-        var noCells = document.getElementsByClassName('no-cell-action'),
-                singleCells = document.getElementsByClassName('single-action'),
-                multipleCells = document.getElementsByClassName('multiple-select-action'),
+        var noCells = document.getElementsByClassName('wptb-no-cell-action'),
+                singleCells = document.getElementsByClassName('wptb-single-action'),
+                multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
                 tds = table.getElementsByClassName('wptb-highlighted');
         while (tds.length) {
             tds[0].classList.remove('wptb-highlighted');
@@ -378,8 +378,8 @@ var array = [], WPTB_Table = function (columns, rows) {
      */
 
     table.toggleTableEditMode = function () {
-        let bar = document.getElementsByClassName('edit-bar'),
-                cellModeBackground = document.getElementById('cell_mode_background'),
+        let bar = document.getElementsByClassName('wptb-edit-bar'),
+                cellModeBackground = document.getElementById('wptb-cell_mode_background'),
                 leftScrollPanelCurtain = document.getElementById('wptb-left-scroll-panel-curtain'),
                 wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
         if (wptbPreviewTable.length > 0) {

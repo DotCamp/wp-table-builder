@@ -62,8 +62,8 @@ var WPTB_DropHandle = function (thisElem, e) {
                 element = element.getDOMElement();
             } else {
                 element = document.getElementsByClassName( e.dataTransfer.getData('node') )[0];
-                element.classList.remove( 'moving-mode' );
-                element.classList.remove( 'moving-into-same-elem' );
+                element.classList.remove( 'wptb-moving-mode' );
+                element.classList.remove( 'wptb-moving-into-same-elem' );
             }
             
             let td;
@@ -138,14 +138,14 @@ var WPTB_DropHandle = function (thisElem, e) {
         top;
     wptbDropHandle.style.left = left + 'px';
     
-    if( e.dataTransfer.types.indexOf( 'moving-mode' ) != -1 ) {
-        let elementDrag = document.getElementsByClassName( 'moving-mode' )[0];
+    if( e.dataTransfer.types.indexOf( 'wptb-moving-mode' ) != -1 ) {
+        let elementDrag = document.getElementsByClassName( 'wptb-moving-mode' )[0];
         if( thisElem == elementDrag ) {
-            wptbDropHandle.classList.add('moving-into-same-elem');
-            wptbDropBorderMarker.classList.add('moving-into-same-elem');
+            wptbDropHandle.classList.add('wptb-moving-into-same-elem');
+            wptbDropBorderMarker.classList.add('wptb-moving-into-same-elem');
         } else {
-            wptbDropHandle.classList.remove('moving-into-same-elem');
-            wptbDropBorderMarker.classList.remove('moving-into-same-elem');
+            wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
+            wptbDropBorderMarker.classList.remove('wptb-moving-into-same-elem');
         }
     }
     

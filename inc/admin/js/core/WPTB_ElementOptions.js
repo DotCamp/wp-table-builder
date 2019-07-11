@@ -219,13 +219,13 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                             if ( elementListStyleTypeSelect ) {
                                 elementListStyleTypeSelect.parentNode.style.display = 'flex';
                                 
-                                if( listItemPClasses.contains( 'list-style-type-disc' ) ) {
+                                if( listItemPClasses.contains( 'wptb-list-style-type-disc' ) ) {
                                     elementListStyleTypeSelect.value = 'disc';
-                                } else if( listItemPClasses.contains( 'list-style-type-circle' ) ) {
+                                } else if( listItemPClasses.contains( 'wptb-list-style-type-circle' ) ) {
                                     elementListStyleTypeSelect.value = 'circle';
-                                } else if( listItemPClasses.contains( 'list-style-type-square' ) ) {
+                                } else if( listItemPClasses.contains( 'wptb-list-style-type-square' ) ) {
                                     elementListStyleTypeSelect.value = 'square';
-                                } else if ( listItemPClasses.contains( 'list-style-type-none' ) ) {
+                                } else if ( listItemPClasses.contains( 'wptb-list-style-type-none' ) ) {
                                     elementListStyleTypeSelect.value = 'none';
                                 }
                             }
@@ -517,7 +517,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         for (var i = 0; i < listItem.length; i++) {
                             let p = listItem[i].querySelector( 'p' );
                             p.removeAttribute ( 'class' );
-                            p.classList.add( 'list-style-type-disc' );
+                            p.classList.add( 'wptb-list-style-type-disc' );
                         }
                         parentNodeSettingItem.querySelector('[data-type=list-style-type]').value = 'disc';
                     } else {
@@ -535,7 +535,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     for (var i = 0; i < listItem.length; i++) {
                         let p = listItem[i].querySelector( 'p' );
                         p.removeAttribute ( 'class' );
-                        p.classList.add( 'list-style-type-' + val.toLowerCase() );
+                        p.classList.add( 'wptb-list-style-type-' + val.toLowerCase() );
                     }
                     break;
             }

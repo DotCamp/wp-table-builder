@@ -43,27 +43,33 @@ class Admin_Menu {
         
         $params = json_decode( file_get_contents( 'php://input' ) );
         
-		if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
-		{
-			$id = wp_insert_post([
-				'post_title' => $params->title,
-				'post_content' => '',
-				'post_type' => 'wptb-tables'
-			]);
-			add_post_meta($id, '_wptb_content_', $params->content ); 
-			wp_die( json_encode( ['saved',$id] ) );
-		}
-		else
-		{
-			wp_update_post([
-				'ID' => $params->id,
-				'post_title' => $params->title,
-				'post_content' => '',
-				'post_type' => 'wptb-tables'
-			]);
-			update_post_meta( $params->id, '_wptb_content_', $params->content );
-			wp_die( json_encode( ['edited',''] ) );
-		}
+        if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
+            if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
+            {
+                $id = wp_insert_post([
+                    'post_title' => $params->title,
+                    'post_content' => '',
+                    'post_type' => 'wptb-tables'
+                ]);
+                add_post_meta($id, '_wptb_content_', $params->content ); 
+                wp_die( json_encode( ['saved',$id] ) );
+            }
+            else
+            {
+                wp_update_post([
+                    'ID' => $params->id,
+                    'post_title' => $params->title,
+                    'post_content' => '',
+                    'post_type' => 'wptb-tables'
+                ]);
+                update_post_meta( $params->id, '_wptb_content_', $params->content );
+                wp_die( json_encode( ['edited',''] ) );
+            }
+        } else {
+            wp_die( json_encode( ['security_problem', ''] ) );
+        }
+        
+		
  
 	}
 
@@ -153,6 +159,15 @@ class Admin_Menu {
             wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
             wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
             wp_enqueue_script( 'wptb-admin-builder-js' );
+            
+            wp_localize_script( 
+                'wptb-admin-builder-js', 
+                'wptb_admin_object', 
+                [
+                    'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+                    'security_code'  => wp_create_nonce( 'wptb-security-nonce' ),
+                ] 
+            );
 		} elseif( isset( $_GET['page'] ) && $_GET['page'] == 'wptb-overview' ) {
             wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
         }

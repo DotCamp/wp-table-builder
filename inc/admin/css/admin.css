@@ -121,12 +121,12 @@ body>img {
     border: 0 !important;
 }
 
-.wptb-embed-btn.embed-disable {
+.wptb-embed-btn.wptb-embed-disable {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.wptb-embed-btn.embed-disable:hover {
+.wptb-embed-btn.wptb-embed-disable:hover {
     text-decoration: none;
 }
 
@@ -260,7 +260,7 @@ body>img {
     margin: 20px auto 0 auto;
 }
 
-.edit-bar ul {
+.wptb-edit-bar ul {
     display: flex;
     display: -webkit-flex;
     list-style: none;
@@ -268,7 +268,7 @@ body>img {
     padding: 0;
 }
 
-.edit-bar {
+.wptb-edit-bar {
     border-radius: 2px;
     display: none;
     padding: .3em .4em 0em .4em;
@@ -280,17 +280,17 @@ body>img {
     margin: auto;
 }
 
-.edit-bar.visible {
+.wptb-edit-bar.visible {
     display: block;
 }
 
-.edit-bar ul li {
+.wptb-edit-bar ul li {
     height: auto;
     margin: 0;
     padding: 0;
 }
 
-.table_change_button {
+.wptb-table_change_button {
     cursor: pointer;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -314,7 +314,7 @@ body>img {
     margin-bottom: 8px;
 }
 
-.table.management.bar.edit-bar.visible button.visible:hover {
+.wptb-management.wptb-bar.wptb-edit-bar.visible button.visible:hover {
     color: #4fbe31;
     -webkit-transition: all .1s ease-out;
     -o-transition: all .1s ease-out;
@@ -332,11 +332,11 @@ body>img {
     float: right;
 }
 
-.edit-bar svg {
+.wptb-edit-bar svg {
     cursor: pointer;
 }
 
-.edit-bar svg * {
+.wptb-edit-bar svg * {
     fill: rgba(0, 0, 0, 0) !important;
     stroke: #fff !important;
 }
@@ -754,7 +754,7 @@ ul.wptb-tabs {
     color: #186cba;
 }
 
-.wptb-tabs #add-elements .active {
+.wptb-tabs #wptb-add-elements .active {
     background: #fff;
 }
 
@@ -882,7 +882,7 @@ ul.wptb-tabs {
     text-align: initial;
 }
 
-.wptb-messaging.success {
+.wptb-messaging.wptb-success {
     background: #4caf50;
     background: -moz-linear-gradient(45deg, #4caf50 0%, #8bc34a 100%);
     background: -webkit-linear-gradient(45deg, #4caf50 0%, #8bc34a 100%);
@@ -891,7 +891,7 @@ ul.wptb-tabs {
     height: auto;
 }
 
-.wptb-messaging.warning {
+.wptb-messaging.wptb-warning {
     background: #f44336;
     background: -moz-linear-gradient(45deg, #f44336 0%, #ff5722 100%);
     background: -webkit-linear-gradient(45deg, #f44336 0%, #ff5722 100%);
@@ -905,7 +905,7 @@ ul.wptb-tabs {
 *
 */
 
-.management_table_container {
+.wptb-management_table_container {
     margin: auto;
     text-align: initial;
 }
@@ -924,7 +924,7 @@ ul.wptb-tabs {
     overflow-y: hidden;
 }
 
-#cell_mode_background {
+#wptb-cell_mode_background {
     position: absolute;
     top: 0;
     left: 0;
@@ -935,7 +935,7 @@ ul.wptb-tabs {
     text-align: initial;
 }
 
-#cell_mode_background.visible {
+#wptb-cell_mode_background.visible {
     display: block;
 }
 
@@ -948,7 +948,7 @@ table.wptb-table {
     border-collapse: collapse
 }
 
-.wrapper {
+.wptb-wrapper {
     margin: 0 auto;
     padding: 40px;
     max-width: 960px;
@@ -984,11 +984,11 @@ table.wptb-table {
     background: #ea6153;
 }
 
-.wptb-row.green {
+.wptb-row.wptb-green {
     background: #27ae60;
 }
 
-.wptb-row.blue {
+.wptb-row.wptb-blue {
     background: #2980b9;
 }
 
@@ -1092,12 +1092,12 @@ table.wptb-table {
     outline: 1px solid lightgreen;
 }
 
-.wptb-preview-table .wptb-row.highlighted-row {
+.wptb-preview-table .wptb-row.wptb-highlighted-row {
     background-color: hsla(210, 53%, 49%, 0.34);
     border: 1px solid pink;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-row-first {
+.wptb-preview-table .wptb-row td.wptb-highlighted-row-first {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: 1px solid pink;
     border-left: 1px solid pink;
@@ -1105,7 +1105,7 @@ table.wptb-table {
     border-top: 1px solid pink;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-row-inner {
+.wptb-preview-table .wptb-row td.wptb-highlighted-row-inner {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: 1px solid pink;
     border-left: inherit;
@@ -1113,7 +1113,7 @@ table.wptb-table {
     border-top: 1px solid pink;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-row-last {
+.wptb-preview-table .wptb-row td.wptb-highlighted-row-last {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: 1px solid pink;
     border-left: inherit;
@@ -1121,7 +1121,7 @@ table.wptb-table {
     border-top: 1px solid pink;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-column-first {
+.wptb-preview-table .wptb-row td.wptb-highlighted-column-first {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: inherit;
     border-left: 1px solid pink;
@@ -1129,7 +1129,7 @@ table.wptb-table {
     border-top: 1px solid pink;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-column-inner {
+.wptb-preview-table .wptb-row td.wptb-highlighted-column-inner {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: inherit;
     border-left: 1px solid pink;
@@ -1137,7 +1137,7 @@ table.wptb-table {
     border-top: inherit;
 }
 
-.wptb-preview-table .wptb-row td.highlighted-column-last {
+.wptb-preview-table .wptb-row td.wptb-highlighted-column-last {
     background-color: hsla(210, 53%, 49%, 0.34);
     border-bottom: 1px solid pink;
     border-left: 1px solid pink;
@@ -1413,19 +1413,19 @@ table.wptb-table {
     padding-right: 10px;
 }
 
-.wptb-list-item-container ul li>div>p.list-style-type-disc::before {
+.wptb-list-item-container ul li>div>p.wptb-list-style-type-disc::before {
     content: '\25CF';
 }
 
-.wptb-list-item-container ul li>div>p.list-style-type-circle::before {
+.wptb-list-item-container ul li>div>p.wptb-list-style-type-circle::before {
     content: '\25CB';
 }
 
-.wptb-list-item-container ul li>div>p.list-style-type-square::before {
+.wptb-list-item-container ul li>div>p.wptb-list-style-type-square::before {
     content: '\25A0';
 }
 
-.wptb-list-item-container ul li>div>p.list-style-type-none::before {
+.wptb-list-item-container ul li>div>p.wptb-list-style-type-none::before {
     content: '';
     padding-right: 0px;
 }
@@ -1489,14 +1489,14 @@ table.wptb-table {
     display: inline;
 }
 
-.wptb-actions .dashicons.dashicons-admin-page.duplicate-action {
+.wptb-actions .dashicons.dashicons-admin-page.wptb-duplicate-action {
     font-size: 10pt;
     margin: 0em 0.05em 0 0.1em;
     width: 15px;
     height: 15px;
 }
 
-.wptb-actions .dashicons.dashicons-trash.delete-action {
+.wptb-actions .dashicons.dashicons-trash.wptb-delete-action {
     font-size: 10pt;
     margin: 0em 0.1em 0 0.05em;
     width: 15px;
@@ -1522,7 +1522,7 @@ table.wptb-table {
     width: 100%;
 }
 
-.wptb-ph-element.ondragenter::before {
+.wptb-ph-element.wptb-ondragenter::before {
     content: "";
     display: block;
     position: absolute;
@@ -1533,7 +1533,7 @@ table.wptb-table {
     z-index: 100;
 }
 
-.wptb-ph-element.moving-mode {
+.wptb-ph-element.wptb-moving-mode {
     opacity: .4;
     -webkit-transform: scale(0.9) translate(-5%, -5%);
     -ms-transform: scale(0.9) translate(-5%, -5%);
@@ -1573,8 +1573,8 @@ table.wptb-table {
     z-index: 100100;
 }
 
-.wptb-drop-handle.moving-into-same-elem,
-.wptb-drop-border-marker.moving-into-same-elem {
+.wptb-drop-handle.wptb-moving-into-same-elem,
+.wptb-drop-border-marker.wptb-moving-into-same-elem {
     opacity: 0;
     visibility: hidden;
 }
@@ -1624,14 +1624,14 @@ table.wptb-table {
     border: none;
 }
 
-.wptb-actions .dashicons.dashicons-move.move-action {
+.wptb-actions .dashicons.dashicons-move.wptb-move-action {
     font-size: 17px !important;
     cursor: move;
 }
 
-.no-cell-action:not(.visible),
-.single-action:not(.visible),
-.multiple-select-action:not(.visible) {
+.wptb-no-cell-action:not(.visible),
+.wptb-single-action:not(.visible),
+.wptb-multiple-select-action:not(.visible) {
     cursor: not-allowed;
     opacity: 0.3;
 }
@@ -1745,7 +1745,7 @@ td[class*="wptb-fused-cell"] {
 
 .wptb-split-page-title-action a,
 .wptb-split-page-title-action a:active,
-.wptb-split-page-title-action .expander::after {
+.wptb-split-page-title-action .wptb-expander::after {
     padding: 6px 10px;
     position: relative;
     top: -3px;
@@ -1767,7 +1767,7 @@ td[class*="wptb-fused-cell"] {
     background-color: #1f8abb;
 }
 
-.column-title-mobile {
+.wptb-column-title-mobile {
     display: none;
 }
 

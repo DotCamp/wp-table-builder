@@ -22,7 +22,7 @@
     <div class="wptb-right">
         <div class="wptb-embed">
             <i class="fa fa-code"></i>
-            <a href="#" class="wptb-embed-btn <?php echo ! $_GET['table'] || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? 'embed-disable' : '';?>">
+            <a href="#" class="wptb-embed-btn <?php echo ! $_GET['table'] || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? 'wptb-embed-disable' : '';?>">
                 <?php echo __( '</>Embed', 'wp-table-builder' ); ?>
             </a>
         </div>

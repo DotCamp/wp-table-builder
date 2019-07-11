@@ -5,11 +5,11 @@ var WPTB_Cell = function (callback, DOMElement) {
             columnCount = parseInt(document.getElementById('wptb-columns-number').value),
             tds = document.getElementsByClassName('wptb-preview-table')[0].getElementsByTagName('td');
         for (var i = 0; i < tds.length; i++) {
-            tds[i].classList.remove('highlighted-row-first', 'highlighted-row-last', 'highlighted-row-inner', 'highlighted-column-first', 'highlighted-column-last', 'highlighted-column-inner');
+            tds[i].classList.remove('wptb-highlighted-row-first', 'wptb-highlighted-row-last', 'wptb-highlighted-row-inner', 'wptb-highlighted-column-first', 'wptb-highlighted-column-last', 'wptb-highlighted-column-inner');
         }
         for (var i = 0; i < columnCount; i++) {
 
-            var classToAdd = i == 0 ? 'highlighted-row-first' : i == columnCount - 1 ? 'highlighted-row-last' : 'highlighted-row-inner';
+            var classToAdd = i == 0 ? 'wptb-highlighted-row-first' : i == columnCount - 1 ? 'wptb-highlighted-row-last' : 'wptb-highlighted-row-inner';
             var ttd = parentRow.getElementsByTagName('td')[i];
             if (ttd !== td) {
                 ttd.classList.add(classToAdd);
@@ -30,7 +30,7 @@ var WPTB_Cell = function (callback, DOMElement) {
         }
 
         for (var i = 0; i < rowCount; i++) {
-            var classToAdd = i == 0 ? 'highlighted-column-first' : i == rowCount - 1 ? 'highlighted-column-last' : 'highlighted-column-inner';
+            var classToAdd = i == 0 ? 'wptb-highlighted-column-first' : i == rowCount - 1 ? 'wptb-highlighted-column-last' : 'wptb-highlighted-column-inner';
             var tr = table.getElementsByTagName('tr')[i];
             if (tr.getElementsByTagName('td')[index] !== td) {
                 tr.getElementsByTagName('td')[index].classList.add(classToAdd);

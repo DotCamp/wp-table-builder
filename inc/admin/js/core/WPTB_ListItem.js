@@ -39,8 +39,8 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
             previous,
             i;
         actions.classList.add('wptb-actions');
-        btnDelete.classList.add('dashicons', 'dashicons-trash', 'delete-action');
-        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'duplicate-action');
+        btnDelete.classList.add('dashicons', 'dashicons-trash', 'wptb-delete-action');
+        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'wptb-duplicate-action');
         this.classList.add('wptb-directlyhovered');
 
         btnDelete.onclick = function () {
