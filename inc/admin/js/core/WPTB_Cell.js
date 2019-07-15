@@ -116,6 +116,13 @@ var WPTB_Cell = function (callback, DOMElement) {
     this.appendElement = function (node) {
         getDOMElement().appendChild(node);
     };
+    
+    DOMElement.getCellWidth = function() {
+        return {
+            width: this.style.width, 
+            height: this.style.height
+        };
+    }
 
     return this;
 };

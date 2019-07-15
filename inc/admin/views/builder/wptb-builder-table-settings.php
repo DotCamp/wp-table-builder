@@ -77,10 +77,10 @@
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
             <div class="wptb-settings-col-xs-8">
-                <input id="wptb-table-cell-slider" type="range" min="10" max="50" step="1" value="15">
+                <input id="wptb-table-cell-slider" type="range" min="0" max="50" step="1" value="15">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-table-cell-number" class="wptb-number-input" type="number" min="10" max="50" step="1" placeholder="15" pattern="[0-9]*">
+                <input id="wptb-table-cell-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="15" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
         </div>    

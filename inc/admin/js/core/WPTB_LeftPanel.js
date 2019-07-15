@@ -178,7 +178,7 @@ var WPTB_LeftPanel = function () {
         }
     }
 
-    function addInnerBorder(checked) {
+    function addInnerBorder( checked ) {
         var styles, color = document.querySelector('#wptb-table-border-color').value != undefined ?
             document.querySelector('#wptb-table-border-color').value : 'rgb(0,0,0)';
             if ( document.querySelector( '#wptb-table-inner-border-slider' ).value == 0 || document.querySelector( '#wptb-table-inner-border-number' ).value == 0 ) {
@@ -200,13 +200,14 @@ var WPTB_LeftPanel = function () {
                 var tableCells = wptbPreviewTable[0].getElementsByTagName( 'td' );
                 for (var i = 0; i < tableCells.length; i++) {
                     tableCells[i].style.border = '0px solid ' + color;
+                    tableCells[i].style.border = null;
                 }
             }
         }
         
     }
 
-    function addBorderSize(value) {
+    function addBorderSize( value ) {
         table.style.borderWidth = value + 'px';
         table.style.borderStyle = 'solid';
     }
@@ -272,6 +273,12 @@ var WPTB_LeftPanel = function () {
     let wptbImageWidthNumber = document.getElementById( 'wptb-image-width-number' );
     numberImputSize( wptbImageWidthNumber, 2, 100 );
     
+    let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );
+    numberImputSize( wptbTableColumnWidthNumber, 2, 500 );
+    
+    let wptbTableRowHeightNumber = document.getElementById( 'wptb-table-row-height-number' );
+    numberImputSize( wptbTableRowHeightNumber, 2, 200 );
+    
     
     
     document.getElementById('wptb-table-cell-slider').oninput = function () {
@@ -325,6 +332,82 @@ var WPTB_LeftPanel = function () {
             }
         }
         
+    };
+    
+    function addColumnWidth( value ) {
+        let highlighted  = table.querySelector( '.wptb-highlighted' );
+        if( highlighted ) {
+            let dataXIndex = highlighted.dataset.xIndex;
+            if( dataXIndex ) {
+                function tableTdsFor( dataXIndex, colspan ) {
+                    let tableRows = table.rows;
+                    let widthIsSet = false;
+                    for( let i = 0; i < tableRows.length; i++ ) {
+                        let row = tableRows[i];
+                        let tds = row.children;
+                        for( let j = 0; j < tds.length; j++ ) {
+                            let td = tds[j];
+                            if( td.dataset.xIndex == dataXIndex ) {
+                                if( value ) {
+                                    if( td.colSpan == colspan ) {
+                                        td.style.width = value + 'px';
+                                        widthIsSet = true;
+                                    } else {
+                                        td.style.width = null;
+                                        if( i == tableRows.length - 1 && ! widthIsSet ) {
+                                            tableTdsFor( dataXIndex, colspan + 1 );
+                                        }
+                                    }
+                                } else {
+                                    td.style.width = null;
+                                }
+                                break;
+                            } 
+                        }
+                    }
+                    tableTdsRedidWidth();
+                }
+                tableTdsFor( dataXIndex, 1 );
+                
+                table.tdDefaultWidth();
+            }
+            
+            function tableTdsRedidWidth() {
+                let tds = table.querySelectorAll( 'td' );
+                for( let i = 0; i < tds.length; i++ ) {
+                    let td = tds[i];
+                    if( td.style.width ) {
+                        td.style.width = td.offsetWidth;
+                    }
+                }
+            }
+        }
+    }
+    
+    document.getElementById( 'wptb-table-column-width-slider' ).oninput = function () {
+        document.getElementById( 'wptb-table-column-width-number' ).value = this.value;
+        addColumnWidth( this.value );
+    };
+    
+    document.getElementById( 'wptb-table-column-width-number' ).onchange = function () {
+        document.getElementById( 'wptb-table-column-width-slider' ).value = this.value;
+        addColumnWidth( this.value );
+    };
+    
+    document.getElementById( 'wptb-table-column-width-reset' ).onclick = function () {
+        document.getElementById( 'wptb-table-column-width-number' ).value = 30;
+        document.getElementById( 'wptb-table-column-width-slider' ).value = 30;
+        addColumnWidth( false );
+    };
+
+    document.getElementById( 'wptb-table-row-height-slider' ).oninput = function () {
+        document.getElementById( 'wptb-table-row-height-number' ).value = this.value;
+        addRowHeight( this.value );
+    };
+
+    document.getElementById( 'wptb-table-row-height-number' ).onchange = function () {
+        document.getElementById( 'wptb-table-row-height-slider' ).value = this.value;
+        addRowHeight( this.value );
     };
     
     function createMobileHeadForTable( table, thisEvent ) {
