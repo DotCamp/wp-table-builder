@@ -44,8 +44,7 @@ class Admin_Menu {
         $params = json_decode( file_get_contents( 'php://input' ) );
         
         if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
-            if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
-            {
+            if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) ) {
                 $id = wp_insert_post([
                     'post_title' => $params->title,
                     'post_content' => '',
@@ -53,9 +52,7 @@ class Admin_Menu {
                 ]);
                 add_post_meta($id, '_wptb_content_', $params->content ); 
                 wp_die( json_encode( ['saved',$id] ) );
-            }
-            else
-            {
+            } else {
                 wp_update_post([
                     'ID' => $params->id,
                     'post_title' => $params->title,
@@ -68,8 +65,6 @@ class Admin_Menu {
         } else {
             wp_die( json_encode( ['security_problem', ''] ) );
         }
-        
-		
  
 	}
 
@@ -188,7 +183,7 @@ class Admin_Menu {
 						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
 					</h1>
 					<span class="wptb-split-page-title-action">
-						<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="wptb-button-add-new">
+						<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="page-title-action">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>
