@@ -32,7 +32,7 @@
             </a>
         </div>
         <div class="wptb-close">
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview' ) ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
+            <a href="<?php echo admin_url( 'admin.php?page=wptb-overview' ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
         </div>
     </div>
     
