@@ -44,25 +44,25 @@ class Admin_Menu {
         $params = json_decode( file_get_contents( 'php://input' ) );
         
         if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
-            if( !isset( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
+            if( ! isset( $params->id ) || ! absint( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) )
             {
                 $id = wp_insert_post([
-                    'post_title' => $params->title,
+                    'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',
                     'post_type' => 'wptb-tables'
                 ]);
-                add_post_meta($id, '_wptb_content_', $params->content ); 
+                add_post_meta( $id, '_wptb_content_', $params->content ); 
                 wp_die( json_encode( ['saved',$id] ) );
             }
             else
             {
                 wp_update_post([
-                    'ID' => $params->id,
-                    'post_title' => $params->title,
+                    'ID' => absint( $params->id ),
+                    'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',
                     'post_type' => 'wptb-tables'
                 ]);
-                update_post_meta( $params->id, '_wptb_content_', $params->content );
+                update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
                 wp_die( json_encode( ['edited',''] ) );
             }
         } else {
@@ -74,8 +74,8 @@ class Admin_Menu {
 	}
 
 	public function get_table() {  
-		$post = get_post( $_REQUEST['id'] );
-		$html = get_post_meta( $_REQUEST['id'] , '_wptb_content_', true );
+		$post = get_post( absint( $_REQUEST['id'] ) );
+		$html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
 		$name = $post->post_title;
         //$html = json_decode( $html );
 		die( json_encode( [$name, $html] ) );
@@ -148,7 +148,7 @@ class Admin_Menu {
 		}
 
 		
-		if( isset( $_GET['page'] ) && $_GET['page']=='wptb-builder' ) {
+		if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
             wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
             wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
             wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
@@ -168,7 +168,7 @@ class Admin_Menu {
                     'security_code'  => wp_create_nonce( 'wptb-security-nonce' ),
                 ] 
             );
-		} elseif( isset( $_GET['page'] ) && $_GET['page'] == 'wptb-overview' ) {
+		} elseif( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
             wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
         }
 	
@@ -188,7 +188,7 @@ class Admin_Menu {
 						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
 					</h1>
 					<span class="wptb-split-page-title-action">
-						<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="wptb-button-add-new">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder"' ) ); ?>" class="wptb-button-add-new">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>

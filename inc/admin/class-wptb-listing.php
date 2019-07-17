@@ -46,8 +46,8 @@ class WPTB_Listing  extends \WP_List_Table{
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page, 'paged' => $page_number );
 
-	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
-	  	$params['order'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'DESC';
+	  	$params['orderby'] = ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
+	  	$params['order'] = ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
 	  	
 	  	$loop = new \WP_Query( $params ); 
 		$result=[];
@@ -76,8 +76,8 @@ class WPTB_Listing  extends \WP_List_Table{
 		global $wpdb, $post;
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
-	  	$params['orderby'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'date';
-	  	$params['order'] = ! empty( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'DESC';
+	  	$params['orderby'] = ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
+	  	$params['order'] = ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
 	  	
 	  	$loop = new \WP_Query( $params ); 
 	  	return $loop->found_posts;
@@ -148,7 +148,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	function column_cb( $item ) {
 		
 		return sprintf(
-	    	'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item->ID
+	    	'<input type="checkbox" name="bulk-delete[]" value="%s" />', absint( $item->ID )
 	  	);
 	
 	}
@@ -211,15 +211,14 @@ class WPTB_Listing  extends \WP_List_Table{
 	}
 
 	public function process_bulk_action() {
+        
+        $nonce = esc_attr( $_REQUEST['_wpnonce'] );
 
 		if ( 'delete' === $this->current_action() ) {
- 
-	    	$nonce = esc_attr( $_REQUEST['_wpnonce'] );
 
 	    	if ( ! wp_verify_nonce( $nonce, 'wptb_delete_table' ) ) {
 	      		die( 'Go get a life script kiddies' );
 			} else {
-
 	      		$this->delete_table( absint( $_GET['table_id'] ) );
 	      		die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&success=1";</script>');
 	      		exit;
@@ -228,17 +227,22 @@ class WPTB_Listing  extends \WP_List_Table{
 	  	}
 
 	  	// If the delete bulk action is triggered
-	  	if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-delete' ) || ( isset( $_POST['action2'] ) && $_POST['action2'] == 'bulk-delete' ) ) {
+	  	if ( ( isset( $_POST['action'] ) && sanitize_text_field( $_POST['action'] ) == 'bulk-delete' ) ||
+                ( isset( $_POST['action2'] ) && sanitize_text_field( $_POST['action2'] ) == 'bulk-delete' ) ) {
+            
+            if( ! wp_verify_nonce( $nonce, 'bulk-' . $this->_args['plural'] ) ){
+                die( 'Go get a life script kiddies' );
+            } else {
+                $delete_ids = esc_sql( $_POST['bulk-delete'] );
 
-	    	$delete_ids = esc_sql( $_POST['bulk-delete'] );
+                // loop over the array of record IDs and delete them
+                foreach ( $delete_ids as $id ) {
+                    $this->delete_table( absint( $id ) );
+                }
 
-	    	// loop over the array of record IDs and delete them
-	    	foreach ( $delete_ids as $id ) {
-	      		$this->delete_table( $id );
-	    	}
-
-	      	die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&bulksuccess=1";</script>');
-	    	exit;
+                die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&bulksuccess=1";</script>');
+                exit;
+            }
 	  	}
 	}
 }

@@ -29,11 +29,11 @@ class Tables {
 		add_action( 'manage_wptb-tables_posts_custom_column' , [ $this,'addContent' ], 10, 2 );
 	}
 
-	function customizeActions( $actions,$post ) { 
+	function customizeActions( $actions, $post ) { 
 
     	if ( $post->post_type =="wptb-tables" ) {
     		unset( $actions['inline hide-if-no-js'] );
-        	$actions['edit'] = '<a href="' . menu_page_url( 'wptb-builder',false) . '&table='.$post->ID.'">'.__( 'Edit','wp-table-builder' ).'</a>';
+        	$actions['edit'] = '<a href="' . menu_page_url( 'wptb-builder', false ) . '&table='.$post->ID.'">'.__( 'Edit','wp-table-builder' ).'</a>';
 		}
 		
 		return $actions;
@@ -56,7 +56,7 @@ class Tables {
 	    switch ( $column ) {
 
 			case 'title' :  
-				$post = get_post($post_id);
+				$post = get_post( $post_id );
 	        	$title = $post->post_title;
 	        	echo "$title";
 	        	break;

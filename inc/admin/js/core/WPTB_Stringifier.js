@@ -74,8 +74,7 @@ var WPTB_Stringifier = function ( codeMain ) {
                 
                 if( tds[i].hasAttribute( 'data-title-column' ) ) {
                     let columnNameDivContainer = document.createElement( 'div' ),
-                        columnNameDiv = document.createElement( 'div' ),
-                        columnNameDivContainerCopy;
+                        columnNameDiv = document.createElement( 'div' );
                     columnNameDivContainer.classList.add( 'wptb-column-title-mobile-container' );
                     columnNameDiv.classList.add( 'wptb-column-title-mobile' );
                     columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
