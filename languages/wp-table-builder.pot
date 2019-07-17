@@ -16,19 +16,19 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-admin-menu.php:92, ../inc/admin/class-admin-menu.php:104
+#: ../inc/admin/class-admin-menu.php:91, ../inc/admin/class-admin-menu.php:103
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:93, ../inc/admin/class-admin-menu.php:114
+#: ../inc/admin/class-admin-menu.php:92, ../inc/admin/class-admin-menu.php:113
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:105, ../inc/admin/class-admin-menu.php:183
+#: ../inc/admin/class-admin-menu.php:104, ../inc/admin/class-admin-menu.php:182
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:115, ../inc/admin/class-admin-menu.php:187
+#: ../inc/admin/class-admin-menu.php:114, ../inc/admin/class-admin-menu.php:186
 msgid "Add New"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgid "Button"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-header.php:26
-msgid "</>Embed"
+msgid "</> Embed"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-header.php:31
@@ -172,12 +172,32 @@ msgstr ""
 msgid "Image Alternative Text"
 msgstr ""
 
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:132
+msgid "Image Alt Text"
+msgstr ""
+
 #: ../inc/admin/views/builder/wptb-builder-left-panel.php:139
 msgid "Button Options"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-left-panel.php:143
 msgid "Button Size"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:147
+msgid "S"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:148
+msgid "M"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:149
+msgid "L"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:150
+msgid "XL"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-left-panel.php:156
@@ -256,43 +276,47 @@ msgstr ""
 msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
 msgstr ""
 
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:290, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+msgid "Close Manage Cells Mode"
+msgstr ""
+
 #: ../inc/admin/views/builder/wptb-builder-left-panel.php:290, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
 msgid "Close"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:17
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:19
 msgid "Top Row As Header"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:27
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:29
 msgid "Table Border"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:40
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:42
 msgid "Apply Inner Border"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:50
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:52
 msgid "Inner Border Size"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:65
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:67
 msgid "Border Color"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:75
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:77
 msgid "Cell Padding"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:91
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:93
 msgid "Header Background"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:103
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:105
 msgid "Even Row Background"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:115
+#: ../inc/admin/views/builder/wptb-builder-table-settings.php:117
 msgid "Odd Row Background"
 msgstr ""
 
@@ -410,8 +434,4 @@ msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-table-setup.php:86
 msgid "Insert Row Before"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:88
-msgid "Close Manage Cells Mode"
 msgstr ""
