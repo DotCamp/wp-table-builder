@@ -23,16 +23,16 @@
         <div class="wptb-embed">
             <i class="fa fa-code"></i>
             <a href="#" class="wptb-embed-btn <?php echo ! isset( $_GET['table'] ) || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? 'wptb-embed-disable' : '';?>">
-                <?php echo __( '</>Embed', 'wp-table-builder' ); ?>
+                <?php esc_html_e( '</> Embed', 'wp-table-builder' ); ?>
             </a>
         </div>
         <div class="wptb-save">
             <a href="#" class="wptb-save-btn">
-                <?php echo __( 'Save Table', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
             </a>
         </div>
         <div class="wptb-close">
-            <a href="<?php echo admin_url( 'admin.php?page=wptb-overview' ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
+            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview' ) ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
         </div>
     </div>
     
@@ -41,7 +41,7 @@
             <div class="wptb-shortcode-popup-window-close-icon" style="display: block;">×</div>
             <div class="wptb-shortcode-popup-content">
                 <p>
-                    <?php echo __( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
+                    <?php esc_html_e( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
                 </p>
                 
                 <input type="text" value="<?php echo isset( $_GET['table'] ) && absint( $_GET['table'] ) && 

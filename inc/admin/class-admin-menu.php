@@ -182,7 +182,7 @@ class Admin_Menu {
 						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
 					</h1>
 					<span class="wptb-split-page-title-action">
-						<a href="<?php echo admin_url( 'admin.php?page=wptb-builder' ); ?>" class="page-title-action">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>" class="page-title-action">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>

@@ -26,13 +26,13 @@ class WPTB_Listing  extends \WP_List_Table{
 		] );
 		if ( isset( $_GET['success'] ) ) { ?>
 	    <div class="notice notice-success is-dismissible">
-	        <p><?php _e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
+	        <p><?php esc_html_e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
 	    </div>
 	    <?php 
 	    	unset( $_GET['success'] );
 		} if ( isset( $_GET['bulksuccess'] ) ) { ?>
 	    <div class="notice notice-success is-dismissible">
-	        <p><?php _e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
+	        <p><?php esc_html_e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
 	    </div>
 	    <?php 
 	    	unset( $_GET['bulksuccess'] );
@@ -116,7 +116,7 @@ class WPTB_Listing  extends \WP_List_Table{
 				array(
 					'table' => $item->ID,
 				),
-				admin_url( 'admin.php?page=wptb-builder' )
+				esc_url( admin_url( 'admin.php?page=wptb-builder' ) )
 			),
 			esc_html__( 'Edit This Table', 'wp-table-builder' ),
 			$title

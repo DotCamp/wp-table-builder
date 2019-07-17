@@ -8,15 +8,15 @@
     <div class="wptb-settings-row wptb-settings-middle-xs">
         <div class="wptb-settings-col-xs-12" style="margin: auto;">
             <input type="button" id="wptb-activate-cell-management-mode" name="wptb-activate-cell-management-mode" 
-                class="wptb-button" value="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>" 
-                title="<?php echo __( 'Manage Cells', 'wp_table_builder' ); ?>">
+                class="wptb-button" value="<?php esc_attr_e( 'Manage Cells', 'wp_table_builder' ); ?>" 
+                title="<?php esc_attr_e( 'Manage Cells', 'wp_table_builder' ); ?>">
         </div> 
     </div>
     <div class="wptb-settings-items">
         <div class="wptb-settings-row wptb-settings-middle-xs">
             <label class="wptb-checkbox-button">
                 <span style="font-size: 16px">
-                    <?php echo __( 'Top Row As Header', 'wp-table-builder' ); ?>
+                    <?php esc_html_e( 'Top Row As Header', 'wp-table-builder' ); ?>
                 </span>
                 <input id="wptb-top-row-as-header" type="checkbox" />
                 <i></i>
@@ -26,7 +26,7 @@
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Table Border', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Table Border', 'wp-table-builder' ); ?>
             </p>
         </div> 
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
@@ -39,7 +39,7 @@
             </div>
             <label class="wptb-checkbox-button">
                 <span style="font-size: 16px">
-                    <?php echo __( 'Apply Inner Border', 'wp-table-builder' ); ?>
+                    <?php esc_html_e( 'Apply Inner Border', 'wp-table-builder' ); ?>
                 </span>
                 <input id="wptb-inner-border-check" type="checkbox" />
                 <i></i>
@@ -49,7 +49,7 @@
     <div id="wptb-apply-inner-border" style="display:none" class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Inner Border Size', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Inner Border Size', 'wp-table-builder' ); ?>
             </p>
         </div>
         <div id="wptb-inner-border-settings" class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
@@ -64,7 +64,7 @@
     </div>
     <div id="wptb-table-border-color-set-area" style="display:none" class="wptb-settings-row wptb-settings-middle-xs">
         <div class='wptb-settings-col-xs-8'>
-            <p><?php echo __( 'Border Color', 'wp-table-builder' ); ?></p>
+            <p><?php esc_html_e( 'Border Color', 'wp-table-builder' ); ?></p>
         </div>
         <div class='wptb-settings-col-xs-8'>
             <input type="text" id="wptb-table-border-color" value=""/>
@@ -74,7 +74,7 @@
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Cell Padding', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Cell Padding', 'wp-table-builder' ); ?>
             </p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
@@ -90,7 +90,7 @@
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Header Background', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Header Background', 'wp-table-builder' ); ?>
             </p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs">
@@ -102,7 +102,7 @@
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Even Row Background', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Even Row Background', 'wp-table-builder' ); ?>
             </p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs">
@@ -114,7 +114,7 @@
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">
-                <?php echo __( 'Odd Row Background', 'wp-table-builder' ); ?>
+                <?php esc_html_e( 'Odd Row Background', 'wp-table-builder' ); ?>
             </p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs">
