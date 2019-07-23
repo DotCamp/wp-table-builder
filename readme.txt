@@ -3,7 +3,7 @@ Contributors: imtiazrayhan
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -54,9 +54,15 @@ That's it. You're done!
 == Screenshots ==
 
 1. Table Builer Interface.
-2. Table Shortcode Popup.
+2. Cell Management Mode.
+3. Table Shortcode Popup.
 
 == Changelog ==
+
+= 1.0.1 =
+
+* NEW: Column Width Setting.
+* NEW: Row Height Setting.
 
 = 1.0.0 =
 

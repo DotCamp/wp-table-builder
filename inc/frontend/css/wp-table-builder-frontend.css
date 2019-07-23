@@ -3,12 +3,14 @@
  *
  * The file is enqueued from inc/frontend/class-frontend.php.
  */
+
 .wptb-table-container {
     /*max-width: 850px;*/
     overflow: auto;
     position: relative;
     width: 100%;
     min-width: 100%;
+    margin: 30px 0;
 }
 
 .wptb-table-container table {
@@ -28,7 +30,7 @@
     visibility: visible;
     opacity: 0;
     position: absolute;
-    top: 0; 
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -47,12 +49,12 @@ table.wptb-preview-table-mobile {
     background-color: #eeeeee;
 }
 
-.wptb-table-container table.wptb-preview-table-mobile tr:nth-of-type(2n+1), 
+.wptb-table-container table.wptb-preview-table-mobile tr:nth-of-type(2n+1),
 .wptb-table-container table.wptb-preview-table-mobile tr:nth-of-type(2n+1) {
     background-color: inherit;
 }
 
-.wptb-table-container table.wptb-preview-table-mobile tr td:nth-of-type(2n+1), 
+.wptb-table-container table.wptb-preview-table-mobile tr td:nth-of-type(2n+1),
 .wptb-table-container table.wptb-preview-table-mobile tr td:nth-of-type(2n+1) {
     background-color: #eeeeee;
 }
@@ -100,7 +102,8 @@ table.wptb-preview-table-mobile {
     margin-bottom: 15px;
 }
 
-.wptb-text-container > div, .wptb-text-container > div > p {
+.wptb-text-container>div,
+.wptb-text-container>div>p {
     font-size: inherit;
     color: inherit;
 }
@@ -186,6 +189,10 @@ table.wptb-preview-table-mobile {
     margin: 0px 0px 10px;
 }
 
+.wptb-list-item-container.wptb-ph-element ul li:last-child {
+    margin-bottom: 0;
+}
+
 .wptb-list-item-container li p {
     word-wrap: break-word;
     line-height: 20px;
@@ -239,6 +246,7 @@ table.wptb-preview-table-mobile {
     top: auto;
     bottom: auto;
 }
+
 .wptb-column-title-mobile-container .wptb-column-title-mobile {
     display: table;
     width: 100%;
@@ -285,18 +293,17 @@ table.wptb-preview-table-mobile {
     padding: 0px !important;
 }
 
-.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container  {
+.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container {
     position: relative;
     width: 50%;
 }
 
-.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container .wptb-column-title-mobile  {
+.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container .wptb-column-title-mobile {
     display: block;
     min-height: 60px;
 }
 
-.wptb-table-container table.wptb-table-preview-head td.wptb-column-title-mobile-not-elements 
-.wptb-column-title-mobile-container .wptb-column-title-mobile::before {
+.wptb-table-container table.wptb-table-preview-head td.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container .wptb-column-title-mobile::before {
     display: block;
     width: 100%;
     padding: 0px;
