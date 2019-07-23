@@ -116,6 +116,39 @@ var WPTB_Cell = function (callback, DOMElement) {
     this.appendElement = function (node) {
         getDOMElement().appendChild(node);
     };
+    
+    DOMElement.getCellDimensions = function() {
+        let tdStyleObj = window.getComputedStyle( this, null );
+        
+        let tdPaddingLeft = tdStyleObj.getPropertyValue( 'padding-left' );
+        let tdPaddingRight = tdStyleObj.getPropertyValue( 'padding-right' );
+        
+        let tdBorderLeftWidth = tdStyleObj.getPropertyValue( 'border-left-width' );
+        let tdBorderRightWidth = tdStyleObj.getPropertyValue( 'border-right-width' );
+        
+        let tdPaddingTop = tdStyleObj.getPropertyValue( 'padding-top' );
+        let tdPaddingBottom = tdStyleObj.getPropertyValue( 'padding-bottom' );
+        
+        let tdBorderTopWidth = tdStyleObj.getPropertyValue( 'border-top-width' );
+        let tdBorderBottomWidth = tdStyleObj.getPropertyValue( 'border-bottom-width' );
+        
+        let width = parseFloat( this.offsetWidth, 10 ) - 
+                    parseFloat( tdPaddingLeft, 10 ) - 
+                    parseFloat( tdPaddingRight, 10 ) -
+                    parseFloat( tdBorderLeftWidth, 10 ) -
+                    parseFloat( tdBorderRightWidth, 10 );
+            
+        let height = parseFloat( this.offsetHeight, 10 ) - 
+                    parseFloat( tdPaddingTop, 10 ) - 
+                    parseFloat( tdPaddingBottom, 10 ) -
+                    parseFloat( tdBorderTopWidth, 10 ) -
+                    parseFloat( tdBorderBottomWidth, 10 );
+        
+        return {
+            width: width, 
+            height: height
+        };
+    }
 
     return this;
 };

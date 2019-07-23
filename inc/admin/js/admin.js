@@ -442,6 +442,31 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         getDOMElement().appendChild(node);
     };
 
+    DOMElement.getCellDimensions = function () {
+        var tdStyleObj = window.getComputedStyle(this, null);
+
+        var tdPaddingLeft = tdStyleObj.getPropertyValue('padding-left');
+        var tdPaddingRight = tdStyleObj.getPropertyValue('padding-right');
+
+        var tdBorderLeftWidth = tdStyleObj.getPropertyValue('border-left-width');
+        var tdBorderRightWidth = tdStyleObj.getPropertyValue('border-right-width');
+
+        var tdPaddingTop = tdStyleObj.getPropertyValue('padding-top');
+        var tdPaddingBottom = tdStyleObj.getPropertyValue('padding-bottom');
+
+        var tdBorderTopWidth = tdStyleObj.getPropertyValue('border-top-width');
+        var tdBorderBottomWidth = tdStyleObj.getPropertyValue('border-bottom-width');
+
+        var width = parseFloat(this.offsetWidth, 10) - parseFloat(tdPaddingLeft, 10) - parseFloat(tdPaddingRight, 10) - parseFloat(tdBorderLeftWidth, 10) - parseFloat(tdBorderRightWidth, 10);
+
+        var height = parseFloat(this.offsetHeight, 10) - parseFloat(tdPaddingTop, 10) - parseFloat(tdPaddingBottom, 10) - parseFloat(tdBorderTopWidth, 10) - parseFloat(tdBorderBottomWidth, 10);
+
+        return {
+            width: width,
+            height: height
+        };
+    };
+
     return this;
 };
 var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
@@ -1346,7 +1371,6 @@ var WPTB_Helper = {
             for (var j = 0; j < tdElements.length; j++) {
                 var element = tdElements[j];
                 if (element.classList.contains('wptb-ph-element')) {
-                    var textContentStyle = element.getAttribute('style');
                     var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
                     if (infArr[1] == 'text') {
                         var p = element.querySelector('p'),
@@ -1431,6 +1455,28 @@ var WPTB_Helper = {
         if (!results) return false;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    },
+    getColumnWidth: function getColumnWidth(table, cell) {
+        var xIndex = cell.dataset.xIndex;
+        var xIndexes = table.querySelectorAll('[data-x-index="' + xIndex + '"]');
+        var cellWidth = cell.getCellDimensions().width;
+        for (var i = 0; i < xIndexes.length; i++) {
+            if (cellWidth > xIndexes[i].getCellDimensions().width) {
+                cellWidth = xIndexes[i].getCellDimensions().width;
+            }
+        }
+        return cellWidth;
+    },
+    getRowHeight: function getRowHeight(table, cell) {
+        var yIndex = cell.dataset.yIndex;
+        var yIndexes = table.querySelectorAll('[data-y-index="' + yIndex + '"]');
+        var cellHeight = cell.getCellDimensions().height;
+        for (var i = 0; i < yIndexes.length; i++) {
+            if (cellHeight > yIndexes[i].getCellDimensions().height) {
+                cellHeight = yIndexes[i].getCellDimensions().height;
+            }
+        }
+        return cellHeight;
     }
 };
 var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
@@ -1826,6 +1872,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                 var tableCells = wptbPreviewTable[0].getElementsByTagName('td');
                 for (var i = 0; i < tableCells.length; i++) {
                     tableCells[i].style.border = '0px solid ' + color;
+                    tableCells[i].style.border = null;
                 }
             }
         }
@@ -1897,19 +1944,28 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     var wptbImageWidthNumber = document.getElementById('wptb-image-width-number');
     numberImputSize(wptbImageWidthNumber, 2, 100);
 
+    var wptbTableColumnWidthNumber = document.getElementById('wptb-table-column-width-number');
+    numberImputSize(wptbTableColumnWidthNumber, 2, 500);
+
+    var wptbTableRowHeightNumber = document.getElementById('wptb-table-row-height-number');
+    numberImputSize(wptbTableRowHeightNumber, 2, 200);
+
     document.getElementById('wptb-table-cell-slider').oninput = function () {
         document.getElementById('wptb-table-cell-number').value = this.value;
         addCellPadding(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-cell-number').onchange = function () {
         document.getElementById('wptb-table-cell-slider').value = this.value;
         addCellPadding(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-border-slider').oninput = function () {
         document.getElementById('wptb-table-border-number').value = this.value;
         addBorderSize(this.value);
+        table.tdDefaultWidth();
 
         var wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
             tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
@@ -1923,16 +1979,19 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
         addBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-inner-border-slider').oninput = function () {
         document.getElementById('wptb-table-inner-border-number').value = this.value;
         addInnerBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
         addInnerBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
@@ -1946,6 +2005,54 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             } else {
                 tableBorderColorSetArea.style.display = '';
             }
+        }
+    };
+
+    document.getElementById('wptb-table-column-width-slider').oninput = function () {
+        document.getElementById('wptb-table-column-width-number').value = this.value;
+        table.addColumnWidth(this.value);
+    };
+
+    document.getElementById('wptb-table-column-width-number').onchange = function () {
+        document.getElementById('wptb-table-column-width-slider').value = this.value;
+        table.addColumnWidth(this.value);
+    };
+
+    document.getElementById('wptb-table-column-width-auto-fixed').onchange = function () {
+        if (this.checked) {
+            var highlighted = table.querySelector('.wptb-highlighted');
+            var width = WPTB_Helper.getColumnWidth(table, highlighted);
+            table.addColumnWidth(width);
+        } else {
+            table.addColumnWidth(false, true);
+            var _highlighted = table.querySelector('.wptb-highlighted');
+            var _width = WPTB_Helper.getColumnWidth(table, _highlighted);
+            document.getElementById('wptb-table-column-width-number').value = _width;
+            document.getElementById('wptb-table-column-width-slider').value = _width;
+        }
+    };
+
+    document.getElementById('wptb-table-row-height-slider').oninput = function () {
+        document.getElementById('wptb-table-row-height-number').value = this.value;
+        table.addRowHeight(this.value);
+    };
+
+    document.getElementById('wptb-table-row-height-number').onchange = function () {
+        document.getElementById('wptb-table-row-height-slider').value = this.value;
+        table.addRowHeight(this.value);
+    };
+
+    document.getElementById('wptb-table-row-height-auto-fixed').onchange = function () {
+        if (this.checked) {
+            var highlighted = table.querySelector('.wptb-highlighted');
+            var height = WPTB_Helper.getRowHeight(table, highlighted);
+            table.addRowHeight(height);
+        } else {
+            table.addRowHeight(false, true);
+            var _highlighted2 = table.querySelector('.wptb-highlighted');
+            var _height = WPTB_Helper.getRowHeight(table, _highlighted2);
+            document.getElementById('wptb-table-row-height-number').value = _height;
+            document.getElementById('wptb-table-row-height-slider').value = _height;
         }
     };
 
@@ -2485,18 +2592,13 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
         var code = codeMain.cloneNode(true);
         code.classList.add('wptb-table-preview-static-indic');
         code.dataset.tableColumns = codeMain.columns;
-        code.dataset.reconstraction = 1;
+        code.style.width = null;
+        code.style.minWidth = null;
+        code.style.maxWidth = null;
 
         var tds = code.getElementsByTagName('td');
         if (tds.length > 0) {
             for (var i = 0; i < tds.length; i++) {
-
-                for (var _i = 0; _i < tds.length; _i++) {
-                    if (code.dataset.reconstraction == 1 && tds[_i].colSpan > 1 || tds[_i].rowSpan > 1) {
-                        code.dataset.reconstraction = 0;
-                        break;
-                    }
-                }
 
                 if (codeMain.querySelector('wptb-table-preview-head')) {
                     tds[i].removeAttribute('data-x-index');
@@ -2657,6 +2759,7 @@ var array = [],
             noCells = document.getElementsByClassName('wptb-no-cell-action'),
             singleCells = document.getElementsByClassName('wptb-single-action'),
             multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
+            cellSettings = document.getElementById('wptb-left-scroll-panel-cell-settings'),
             position = getCoords(this),
             row = position[0],
             column = position[1];
@@ -2693,6 +2796,7 @@ var array = [],
                 singleCells[i].classList.remove('visible');
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
+            cellSettings.classList.remove('visible');
         } else if (markedCells === 1) {
             for (var i = 0; i < multipleCells.length; i++) {
                 multipleCells[i].classList.remove('visible');
@@ -2706,6 +2810,47 @@ var array = [],
                 singleCells[i].classList.add('visible');
                 singleCells[i].removeAttribute('disabled');
             }
+            var cellHighlighted = document.querySelector('.wptb-highlighted');
+            if (cellHighlighted) {
+                var wptbTableColumnWidthSlider = document.getElementById('wptb-table-column-width-slider');
+                var wptbTableColumnWidthNumber = document.getElementById('wptb-table-column-width-number');
+                var tableColumnWidthAutoFixedCheckbox = document.getElementById('wptb-table-column-width-auto-fixed');
+                var width = cellHighlighted.style.width;
+                if (width) {
+                    wptbTableColumnWidthSlider.value = parseFloat(width, 10);
+                    wptbTableColumnWidthNumber.value = parseFloat(width, 10);
+                    tableColumnWidthAutoFixedCheckbox.checked = true;
+                } else if (cellHighlighted.dataset.wptbFixedWidth) {
+                    wptbTableColumnWidthSlider.value = cellHighlighted.dataset.wptbFixedWidth;
+                    wptbTableColumnWidthNumber.value = cellHighlighted.dataset.wptbFixedWidth;
+                    tableColumnWidthAutoFixedCheckbox.checked = true;
+                } else {
+                    var cellWidth = WPTB_Helper.getColumnWidth(table, cellHighlighted);
+                    wptbTableColumnWidthSlider.value = cellWidth;
+                    wptbTableColumnWidthNumber.value = cellWidth;
+                    tableColumnWidthAutoFixedCheckbox.checked = false;
+                }
+
+                var wptbTableRowHeightSlider = document.getElementById('wptb-table-row-height-slider');
+                var wptbTableRowHeightNumber = document.getElementById('wptb-table-row-height-number');
+                var tableRowHeightAutoFixedCheckbox = document.getElementById('wptb-table-row-height-auto-fixed');
+                var height = cellHighlighted.style.height;
+                if (height) {
+                    wptbTableRowHeightSlider.value = parseFloat(height, 10);
+                    wptbTableRowHeightNumber.value = parseFloat(height, 10);
+                    tableRowHeightAutoFixedCheckbox.checked = true;
+                } else if (cellHighlighted.dataset.wptbFixedHeight) {
+                    wptbTableRowHeightSlider.value = cellHighlighted.dataset.wptbFixedHeight;
+                    wptbTableRowHeightNumber.value = cellHighlighted.dataset.wptbFixedHeight;
+                    tableRowHeightAutoFixedCheckbox.checked = true;
+                } else {
+                    var cellHeight = WPTB_Helper.getRowHeight(table, cellHighlighted);
+                    wptbTableRowHeightSlider.value = cellHeight;
+                    wptbTableRowHeightNumber.value = cellHeight;
+                    tableRowHeightAutoFixedCheckbox.checked = false;
+                }
+            }
+            cellSettings.classList.add('visible');
         } else {
             for (var i = 0; i < multipleCells.length; i++) {
                 if (table.isSquare(array)) {
@@ -2724,6 +2869,7 @@ var array = [],
                 singleCells[i].classList.remove('visible');
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
+            cellSettings.classList.remove('visible');
         }
     };
 
@@ -2981,8 +3127,8 @@ var array = [],
 
         //Create a HTML Table element.
         table = document.createElement('table');
-        table.classList.add('wptb-preview-table');
-
+        table.classList.add('wptb-preview-table', 'wptb-preview-table-default-width');
+        table.dataset.reconstraction = 1;
         //Add the data rows.
         for (var i = 0; i < rows; i++) {
 
@@ -3020,6 +3166,7 @@ var array = [],
         var bar = document.getElementsByClassName('wptb-edit-bar'),
             cellModeBackground = document.getElementById('wptb-cell_mode_background'),
             leftScrollPanelCurtain = document.getElementById('wptb-left-scroll-panel-curtain'),
+            leftScrollPanelCellSettings = document.getElementById('wptb-left-scroll-panel-cell-settings'),
             wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
         if (wptbPreviewTable.length > 0) {
             wptbPreviewTable = wptbPreviewTable[0];
@@ -3032,6 +3179,7 @@ var array = [],
                     bar[_i2].classList.remove('visible');
                     cellModeBackground.classList.remove('visible');
                     leftScrollPanelCurtain.classList.remove('visible');
+                    leftScrollPanelCellSettings.classList.remove('visible');
                     wptbPreviewTable.classList.remove('wptb-preview-table-manage-cells');
                     var wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName('td');
                     if (wptbPreviewTableTds.length > 0) {
@@ -3059,6 +3207,7 @@ var array = [],
         var trs = this.getElementsByTagName('tr'),
             tds = void 0,
             maxCols = 0,
+            maxColsFull = 0,
             tdsArr = [];
         var wptbTopRowAsHeader = document.getElementById('wptb-top-row-as-header');
 
@@ -3135,12 +3284,308 @@ var array = [],
                     }
                 }
                 jMainIter++;
+                if (i == 0) {
+                    maxColsFull = jMainIter;
+                }
             }
             if (j > maxCols) {
                 maxCols = j;
             }
         }
         this.columns = maxCols;
+        this.maxCols = maxColsFull;
+    };
+
+    table.addColumnWidth = function (value, cleaner) {
+        var highlighted = table.getElementsByClassName('wptb-highlighted');
+        if (highlighted.length > 0) {
+            for (var _k3 = 0; _k3 < highlighted.length; _k3++) {
+                var dataXIndex = highlighted[_k3].dataset.xIndex;
+                if (dataXIndex) {
+                    (function () {
+                        var tableTdsFor = function tableTdsFor(dataXIndex, colspan) {
+                            var tableRows = table.rows;
+                            var widthIsSet = false;
+                            var arrayTdsFromPreviousRow = [];
+                            for (var _i4 = 0; _i4 < tableRows.length; _i4++) {
+                                var _row = tableRows[_i4];
+                                var tds = _row.children;
+                                for (var _j = 0; _j < tds.length; _j++) {
+                                    var td = tds[_j];
+                                    if (td.dataset.xIndex == dataXIndex) {
+                                        if (value) {
+                                            if (td.colSpan == colspan) {
+                                                td.style.width = value + 'px';
+                                                td.removeAttribute('data-wptb-fixed-width');
+                                                widthIsSet = true;
+                                                var tableColumnWidthAutoFixedCheckbox = document.getElementById('wptb-table-column-width-auto-fixed');
+                                                if (!tableColumnWidthAutoFixedCheckbox.checked) {
+                                                    tableColumnWidthAutoFixedCheckbox.checked = true;
+                                                }
+                                            } else {
+                                                td.style.width = null;
+                                                td.dataset.wptbFixedWidth = value;
+                                                if (_i4 == tableRows.length - 1 && !widthIsSet) {
+                                                    tableTdsFor(dataXIndex, colspan + 1);
+                                                }
+                                            }
+                                        } else if (cleaner) {
+                                            td.style.width = null;
+                                            td.removeAttribute('data-wptb-fixed-width');
+                                        } else {
+                                            if (td.dataset.wptbFixedWidth) {
+                                                if (td.colSpan == colspan) {
+                                                    td.style.width = td.dataset.wptbFixedWidth + 'px';
+                                                    td.removeAttribute('data-wptb-fixed-width');
+                                                }
+                                            } else if (td.style.width) {
+                                                for (var z = 0; z < arrayTdsFromPreviousRow.length; z++) {
+                                                    arrayTdsFromPreviousRow[z].style.width = td.style.width;
+                                                }
+                                                arrayTdsFromPreviousRow = [];
+                                            } else {
+                                                arrayTdsFromPreviousRow.push(td);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        };
+
+                        tableTdsFor(dataXIndex, 1);
+                    })();
+                }
+            }
+
+            table.tdDefaultWidth();
+        }
+    };
+
+    table.tdDefaultWidth = function () {
+        var rows = table.rows;
+
+        var tableTdsSumMaxWidth = 0;
+        var tableTdsSumMaxWidthFixed = 0;
+        var tableTdsSumMaxWidthAuto = 0;
+
+        var wptbTableSetup = document.getElementsByClassName('wptb-table-setup')[0];
+        var wptbTableSetupWidth = wptbTableSetup.offsetWidth;
+
+        var arrayCellsWidthFixedHelper = [];
+        var arrayCellsWidthAutoHelper = [];
+        var tdPaddingCommon = 0;
+        var tableTdBorderCommonWidth = 0;
+        var cssForTdsWidthAuto = '';
+
+        for (var _i5 = 0; _i5 < rows.length; _i5++) {
+            var tds = rows[_i5].children;
+            for (var _j2 = 0; _j2 < tds.length; _j2++) {
+                var td = tds[_j2];
+
+                if (!arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] && !arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)]) {
+                    if (td.style.width) {
+                        arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] = parseFloat(td.style.width);
+                        td.removeAttribute('data-wptb-css-td-auto-width');
+                    } else {
+                        if (!td.dataset.wptbFixedWidth) {
+                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] = 100;
+                            td.dataset.wptbCssTdAutoWidth = true;
+                        }
+                    }
+
+                    if (window.getComputedStyle(td, null)) {
+                        var tdStyleObj = window.getComputedStyle(td, null);
+                        var tdPaddingLeft = tdStyleObj.getPropertyValue('padding-left');
+                        var tdPaddingRight = tdStyleObj.getPropertyValue('padding-right');
+                        tdPaddingCommon = parseFloat(tdPaddingLeft, 10) + parseFloat(tdPaddingRight, 10);
+
+                        var tableTdBorderLeftWidth = tdStyleObj.getPropertyValue('border-left-width');
+                        var tableTdBorderRightWidth = tdStyleObj.getPropertyValue('border-right-width');
+                        tableTdBorderCommonWidth = parseFloat(tableTdBorderLeftWidth, 10) + parseFloat(tableTdBorderRightWidth, 10);
+                        if (arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)]) {
+                            arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] += tdPaddingCommon;
+                            arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] += tableTdBorderCommonWidth;
+                        } else {
+                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] += tdPaddingCommon;
+                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] += tableTdBorderCommonWidth;
+                        }
+                    }
+                } else if (arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)]) {
+                    if (!td.dataset.wptbFixedWidth) {
+                        td.dataset.wptbCssTdAutoWidth = true;
+                    }
+                } else if (arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)]) {
+                    td.removeAttribute('data-wptb-css-td-auto-width');
+                }
+            }
+        }
+
+        for (var _i6 = 0; _i6 < arrayCellsWidthFixedHelper.length; _i6++) {
+            if (arrayCellsWidthFixedHelper[_i6]) {
+                tableTdsSumMaxWidthFixed += arrayCellsWidthFixedHelper[_i6];
+            }
+        }
+
+        var CellsWidthAutoCount = 0;
+        for (var _i7 = 0; _i7 < arrayCellsWidthAutoHelper.length; _i7++) {
+            if (arrayCellsWidthAutoHelper[_i7]) {
+                tableTdsSumMaxWidthAuto += arrayCellsWidthAutoHelper[_i7];
+                CellsWidthAutoCount++;
+            }
+        }
+
+        var tableFullStyleObj = window.getComputedStyle(table, null);
+        var borderLeftWidth = tableFullStyleObj.getPropertyValue('border-left-width');
+        var borderRightWidth = tableFullStyleObj.getPropertyValue('border-right-width');
+        var tableBorderCommon = parseFloat(borderLeftWidth, 10) + parseFloat(borderRightWidth, 10);
+        tableTdsSumMaxWidth = tableTdsSumMaxWidthFixed + tableTdsSumMaxWidthAuto + tableBorderCommon;
+
+        table.dataset.wptbTableTdsSumMaxWidth = tableTdsSumMaxWidth;
+        if (CellsWidthAutoCount) {
+            table.dataset.wptbCellsWidthAutoCount = CellsWidthAutoCount;
+            if (table.mergingСellsHorizontally) {
+                table.dataset.wptbFixedWidthSize = tableTdsSumMaxWidthFixed - tableBorderCommon;
+            } else {
+                table.removeAttribute('data-wptb-fixed-width-size');
+            }
+        } else {
+            table.removeAttribute('data-wptb-fixed-width-size');
+            table.removeAttribute('data-wptb-cells-width-auto-count');
+        }
+
+        var styleElementCreate = false;
+        var tableTdWidthAuto = void 0;
+        if (tableTdsSumMaxWidth < wptbTableSetupWidth) {
+            if (CellsWidthAutoCount) {
+                table.style.minWidth = '100%';
+                if (table.mergingСellsHorizontally) {
+                    table.style.width = null;
+                    var tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed - tableBorderCommon;
+                    tableTdWidthAuto = tableTdsWidthAutoCommon / CellsWidthAutoCount;
+                    tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
+                    styleElementCreate = true;
+                } else {
+                    table.style.width = '100%';
+                }
+            } else {
+                table.style.width = null;
+                table.style.minWidth = null;
+                table.style.maxWidth = tableTdsSumMaxWidth + 'px';
+            }
+        } else {
+            table.style.maxWidth = null;
+            table.style.minWidth = tableTdsSumMaxWidth + 'px';
+            table.style.width = null;
+            tableTdWidthAuto = '100';
+            styleElementCreate = true;
+        }
+
+        var head = document.head;
+        if (head) {
+            var cssForTdsWidthAutoOld = head.querySelector('style[data-wptb-td-auto-width="true"]');
+            if (cssForTdsWidthAutoOld) {
+                head.removeChild(cssForTdsWidthAutoOld);
+            }
+        }
+
+        if (styleElementCreate) {
+            cssForTdsWidthAuto = document.createElement('style');
+            cssForTdsWidthAuto.setAttribute('data-wptb-td-auto-width', true);
+            cssForTdsWidthAuto.innerHTML = '[data-wptb-css-td-auto-width=true]{width:' + tableTdWidthAuto + 'px}';
+            if (head) {
+                head.appendChild(cssForTdsWidthAuto);
+            }
+        }
+    };
+
+    table.addRowHeight = function (value, cleaner) {
+        var highlighted = table.getElementsByClassName('wptb-highlighted');
+        if (highlighted.length > 0) {
+            for (var _k4 = 0; _k4 < highlighted.length; _k4++) {
+                var dataYIndex = highlighted[_k4].dataset.yIndex;
+                if (dataYIndex) {
+                    (function () {
+                        var tableTdsFor = function tableTdsFor(dataYIndex, rowspan) {
+                            var tableRows = table.rows;
+                            var heightIsSet = false;
+                            var arrayTdsPrevious = [];
+                            for (var _i8 = 0; _i8 < tableRows.length; _i8++) {
+                                var _row2 = tableRows[_i8];
+                                var tds = _row2.children;
+                                for (var _j3 = 0; _j3 < tds.length; _j3++) {
+                                    var td = tds[_j3];
+                                    if (td.dataset.yIndex == dataYIndex) {
+                                        if (value) {
+                                            if (td.rowSpan == rowspan) {
+                                                td.style.height = value + 'px';
+                                                td.removeAttribute('data-wptb-fixed-heidht');
+                                                heightIsSet = true;
+                                                var tableColumnHeightAutoFixedCheckbox = document.getElementById('wptb-table-row-height-auto-fixed');
+                                                if (!tableColumnHeightAutoFixedCheckbox.checked) {
+                                                    tableColumnHeightAutoFixedCheckbox.checked = true;
+                                                }
+                                                continue;
+                                            } else {
+                                                td.style.height = null;
+                                                td.dataset.wptbFixedHeight = value;
+                                                if (_j3 == tds.length - 1 && !heightIsSet) {
+                                                    tableTdsFor(dataYIndex, rowspan + 1);
+                                                }
+                                            }
+                                        } else if (cleaner) {
+                                            td.style.height = null;
+                                            td.removeAttribute('data-wptb-fixed-heidht');
+                                        } else {
+                                            if (td.dataset.wptbFixedHeight) {
+                                                if (td.rowSpan = rowspan) {
+                                                    td.style.height = td.dataset.wptbFixedHeight + 'px';
+                                                    td.removeAttribute('data-wptb-fixed-width');
+                                                }
+                                            } else if (td.style.height) {
+                                                for (var z = 0; z < arrayTdsPrevious.length; z++) {
+                                                    arrayTdsPrevious[z].style.height = td.style.height;
+                                                }
+                                                arrayTdsPrevious = [];
+                                            } else {
+                                                arrayTdsPrevious.push(td);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        tableTdsFor(dataYIndex, 1);
+                    })();
+                }
+            }
+        }
+    };
+
+    table.reconstraction = function () {
+        var tds = table.getElementsByTagName('td');
+        table.mergingСellsHorizontally = false;
+        table.mergingCellsVertically = false;
+        table.dataset.reconstraction = 1;
+        var forBreak = 0;
+        for (var _i9 = 0; _i9 < tds.length; _i9++) {
+            if (tds[_i9].colSpan > 1) {
+                table.dataset.reconstraction = 0;
+                table.mergingСellsHorizontally = true;
+                forBreak++;
+            }
+
+            if (tds[_i9].rowSpan > 1) {
+                table.dataset.reconstraction = 0;
+                table.mergingCellsVertically = true;
+                forBreak++;
+            }
+
+            if (forBreak == 2) {
+                break;
+            }
+        }
     };
 
     /*
@@ -3158,16 +3603,23 @@ var array = [],
         if (currentTableTd) {
             currentTdStyle = currentTableTd.getAttribute('style');
         }
+
         for (var i = 0; i < table.rows.length; i++) {
             td = new WPTB_Cell(mark);
+
             if (currentTdStyle) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
+                td.getDOMElement().style.width = null;
             }
+
             table.rows[i].appendChild(td.getDOMElement());
             array[i].push(0);
         }
+
         maxAmountOfCells++;
         table.recalculateIndexes();
+        table.tdDefaultWidth();
+        table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3189,10 +3641,12 @@ var array = [],
         if (currentTableTd) {
             currentTdStyle = currentTableTd.getAttribute('style');
         }
+
         for (var i = 0; i < table.rows.length; i++) {
             td = new WPTB_Cell(mark);
             if (currentTdStyle) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
+                td.getDOMElement().style.width = null;
             }
             firstCell = table.rows[i].getElementsByTagName('td')[0];
             if (firstCell) {
@@ -3205,6 +3659,8 @@ var array = [],
 
         maxAmountOfCells++;
         table.recalculateIndexes();
+        table.tdDefaultWidth();
+        table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3249,6 +3705,7 @@ var array = [],
                         td = new WPTB_Cell(mark);
                         if (cellStyle) {
                             td.getDOMElement().setAttribute('style', cellStyle);
+                            td.getDOMElement().style.width = null;
                         }
                         if (currentCell && rows[i].contains(currentCell)) {
                             bro = currentCell.nextSibling;
@@ -3300,6 +3757,8 @@ var array = [],
             maxAmountOfCells++;
             drawTable(array);
             table.recalculateIndexes();
+            table.addColumnWidth();
+            table.addRowHeight();
             WPTB_Helper.dataTitleColumnSet(table);
             undoSelect();
         }
@@ -3355,6 +3814,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3391,6 +3851,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3406,13 +3867,13 @@ var array = [],
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             cellNew = void 0;
-        for (var _i4 = row - 1; _i4 >= 0; _i4--) {
-            var rowChildren = table.rows[_i4].children;
+        for (var _i10 = row - 1; _i10 >= 0; _i10--) {
+            var rowChildren = table.rows[_i10].children;
             var rowChildrenLength = rowChildren.length;
             if (rowChildrenLength > 0) {
-                for (var _j = 0; _j < rowChildrenLength; _j++) {
-                    if (rowChildren[_j].rowSpan == 1) {
-                        row = _i4;
+                for (var _j4 = 0; _j4 < rowChildrenLength; _j4++) {
+                    if (rowChildren[_j4].rowSpan == 1) {
+                        row = _i10;
                         cellNew = true;
                         break;
                     }
@@ -3454,15 +3915,15 @@ var array = [],
 
         var cellsColSpan = 0;
         if (rowAfter < table.rows.length - 1) {
-            for (var _i5 = 0; _i5 <= rowAfter; _i5++) {
-                var tableRowsIChildren = table.rows[_i5].children,
+            for (var _i11 = 0; _i11 <= rowAfter; _i11++) {
+                var tableRowsIChildren = table.rows[_i11].children,
                     tableRIChildrenLength = tableRowsIChildren.length;
                 if (tableRIChildrenLength > 0) {
-                    for (var _j2 = 0; _j2 < tableRIChildrenLength; _j2++) {
-                        var rowIRowSpan = tableRowsIChildren[_j2].rowSpan;
+                    for (var _j5 = 0; _j5 < tableRIChildrenLength; _j5++) {
+                        var rowIRowSpan = tableRowsIChildren[_j5].rowSpan;
 
-                        if (rowIRowSpan - 1 + _i5 > rowAfter) {
-                            tableRowsIChildren[_j2].rowSpan++;
+                        if (rowIRowSpan - 1 + _i11 > rowAfter) {
+                            tableRowsIChildren[_j5].rowSpan++;
                         }
                     }
                 }
@@ -3473,8 +3934,8 @@ var array = [],
                 rNextChildrenLength = rNextChildren.length;
 
             if (rNextChildrenLength > 0) {
-                for (var _i6 = 0; _i6 < rNextChildrenLength; _i6++) {
-                    cellsColSpan += rNextChildren[_i6].colSpan;
+                for (var _i12 = 0; _i12 < rNextChildrenLength; _i12++) {
+                    cellsColSpan += rNextChildren[_i12].colSpan;
                 }
             }
         } else {
@@ -3487,6 +3948,8 @@ var array = [],
         for (j = 0; j < cellsColSpan; j++) {
             var td = new WPTB_Cell(mark);
             td.getDOMElement().setAttribute('style', cellStyle);
+            td.getDOMElement().style.width = null;
+            td.getDOMElement().style.height = null;
             r.appendChild(td.getDOMElement());
         }
 
@@ -3494,6 +3957,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3582,26 +4046,46 @@ var array = [],
             tds = [].slice.call(document.getElementsByClassName('wptb-highlighted'), 1),
             tdsChildrenNew = [];
 
-        for (var _i7 = 0; _i7 < tds.length; _i7++) {
-            var tdsInternalElements = tds[_i7].getElementsByClassName('wptb-ph-element');
+        for (var _i13 = 0; _i13 < tds.length; _i13++) {
+            var tdsInternalElements = tds[_i13].getElementsByClassName('wptb-ph-element');
             if (tdsInternalElements.length > 0) {
                 var tdsIntElemLength = tdsInternalElements.length;
-                for (var _j3 = 0; _j3 < tdsIntElemLength; _j3++) {
-                    tdsChildrenNew.push(tdsInternalElements[_j3]);
+                for (var _j6 = 0; _j6 < tdsIntElemLength; _j6++) {
+                    tdsChildrenNew.push(tdsInternalElements[_j6]);
                 }
             }
-            var p = tds[_i7].parentNode;
-            p.removeChild(tds[_i7]);
+            var p = tds[_i13].parentNode;
+            p.removeChild(tds[_i13]);
         }
         if (tdsChildrenNew.length > 0) {
-            for (var _i8 = 0; _i8 < tdsChildrenNew.length; _i8++) {
-                first.appendChild(tdsChildrenNew[_i8]);
+            for (var _i14 = 0; _i14 < tdsChildrenNew.length; _i14++) {
+                first.appendChild(tdsChildrenNew[_i14]);
             }
         }
 
         first.colSpan = colspan;
         first.rowSpan = rowspan;
         table.recalculateIndexes();
+        table.reconstraction();
+        var firstWidth = first.style.width;
+        var firstDataFixedWidth = first.dataset.wptbFixedWidth;
+        if (firstWidth) {
+            table.addColumnWidth(parseFloat(firstWidth, 10));
+        } else if (firstDataFixedWidth) {
+            table.addColumnWidth();
+        } else {
+            table.addColumnWidth(false, true);
+        }
+
+        var firstHeight = first.style.height;
+        var firstDataFixedHeight = first.dataset.wptbFixedHeight;
+        if (firstHeight) {
+            table.addRowHeight(parseFloat(firstHeight, 10));
+        } else if (firstDataFixedHeight) {
+            table.addRowHeight();
+        } else {
+            table.addRowHeight(false, true);
+        }
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3625,9 +4109,10 @@ var array = [],
         cell.rowSpan = 1;
         cell.colSpan = 1;
 
-        for (var _i9 = 1; _i9 < colspan; _i9++) {
+        for (var _i15 = 1; _i15 < colspan; _i15++) {
             var td = new WPTB_Cell(mark);
             td.getDOMElement().setAttribute('style', cellStyles);
+            td.getDOMElement().classList.add('wptb-highlighted');
             if (cell.nextSibling) {
                 thisRow.insertBefore(td.getDOMElement(), cell.nextSibling);
             } else {
@@ -3636,21 +4121,21 @@ var array = [],
         }
 
         if (rowspan > 1) {
-            for (var _i10 = 1; _i10 < rowspan; _i10++) {
+            for (var _i16 = 1; _i16 < rowspan; _i16++) {
                 var rowChildInsertBefore = undefined,
-                    rowNext = table.rows[row + _i10],
+                    rowNext = table.rows[row + _i16],
                     rowChildren = rowNext.children,
                     rowChildrenLength = rowChildren.length;
 
                 if (rowChildrenLength > 0) {
-                    for (var _k3 = 0; _k3 < rowChildrenLength; _k3++) {
-                        if (Number(rowChildren[_k3].dataset.xIndex) > Number(cellXIndex)) {
-                            rowChildInsertBefore = rowChildren[_k3];
+                    for (var _k5 = 0; _k5 < rowChildrenLength; _k5++) {
+                        if (Number(rowChildren[_k5].dataset.xIndex) > Number(cellXIndex)) {
+                            rowChildInsertBefore = rowChildren[_k5];
                             break;
                         }
                     }
                 }
-                for (var _j4 = 0; _j4 < colspan; _j4++) {
+                for (var _j7 = 0; _j7 < colspan; _j7++) {
                     var _td = new WPTB_Cell(mark);
                     _td.getDOMElement().setAttribute('style', cellStyles);
                     if (rowChildInsertBefore != undefined) {
@@ -3663,6 +4148,9 @@ var array = [],
         }
 
         table.recalculateIndexes();
+        table.reconstraction();
+        table.addColumnWidth();
+        table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
     };
@@ -3748,7 +4236,7 @@ var array = [],
 
         if (rowspan == undefined) rowspan = 1;
 
-        for (var _i11 = 0; _i11 < rowspan; _i11++) {
+        for (var _i17 = 0; _i17 < rowspan; _i17++) {
             thisRow = table.rows[row];
             var thisRowChildren = thisRow.children,
                 nextRow = table.rows[row + 1],
@@ -3759,17 +4247,17 @@ var array = [],
             if (nextRow != undefined) {
                 nextRowChildren = nextRow.children;
                 nextRowChildrenLength = nextRowChildren.length;
-                for (var _j5 = 0; _j5 < thisRowChildren.length; _j5++) {
-                    if (thisRowChildren[_j5].rowSpan > 1) {
+                for (var _j8 = 0; _j8 < thisRowChildren.length; _j8++) {
+                    if (thisRowChildren[_j8].rowSpan > 1) {
                         var td = new WPTB_Cell(mark);
                         td.getDOMElement().setAttribute('style', cellStyles);
-                        td.getDOMElement().colSpan = thisRowChildren[_j5].colSpan;
-                        td.getDOMElement().rowSpan = thisRowChildren[_j5].rowSpan - 1;
+                        td.getDOMElement().colSpan = thisRowChildren[_j8].colSpan;
+                        td.getDOMElement().rowSpan = thisRowChildren[_j8].rowSpan - 1;
 
                         var nextRowChildrenK = undefined;
-                        for (var _k4 = 0; _k4 < nextRowChildrenLength; _k4++) {
-                            if (Number(nextRowChildren[_k4].dataset.xIndex) > Number(thisRowChildren[_j5].dataset.xIndex)) {
-                                nextRowChildrenK = nextRowChildren[_k4];
+                        for (var _k6 = 0; _k6 < nextRowChildrenLength; _k6++) {
+                            if (Number(nextRowChildren[_k6].dataset.xIndex) > Number(thisRowChildren[_j8].dataset.xIndex)) {
+                                nextRowChildrenK = nextRowChildren[_k6];
                                 break;
                             }
                         }
@@ -3783,11 +4271,11 @@ var array = [],
                 }
 
                 if (tdArr.length > 0) {
-                    for (var _k5 = 0; _k5 < tdArr.length; _k5++) {
-                        if (tdArr[_k5][1] != undefined) {
-                            nextRow.insertBefore(tdArr[_k5][0].getDOMElement(), tdArr[_k5][1]);
+                    for (var _k7 = 0; _k7 < tdArr.length; _k7++) {
+                        if (tdArr[_k7][1] != undefined) {
+                            nextRow.insertBefore(tdArr[_k7][0].getDOMElement(), tdArr[_k7][1]);
                         } else {
-                            nextRow.appendChild(tdArr[_k5][0].getDOMElement());
+                            nextRow.appendChild(tdArr[_k7][0].getDOMElement());
                         }
                     }
                 }
@@ -3795,11 +4283,11 @@ var array = [],
 
             var tableRows = table.rows;
             if (tableRows.length > 0) {
-                for (var _j6 = 0; _j6 < row; _j6++) {
-                    var jRowChildren = tableRows[_j6].children;
+                for (var _j9 = 0; _j9 < row; _j9++) {
+                    var jRowChildren = tableRows[_j9].children;
                     if (jRowChildren.length > 0) {
                         for (var x = 0; x < jRowChildren.length; x++) {
-                            if (jRowChildren[x].rowSpan - 1 >= row - _j6) {
+                            if (jRowChildren[x].rowSpan - 1 >= row - _j9) {
                                 jRowChildren[x].rowSpan--;
                             }
                         }
@@ -3835,22 +4323,22 @@ var array = [],
             cellXIndex = cell.dataset.xIndex,
             colspan = cell.colSpan;
 
-        for (var _i12 = 0; _i12 < colspan; _i12++) {
-            for (var _j7 = 0; _j7 < table.rows.length; _j7++) {
-                var rowChildren = table.rows[_j7].children;
+        for (var _i18 = 0; _i18 < colspan; _i18++) {
+            for (var _j10 = 0; _j10 < table.rows.length; _j10++) {
+                var rowChildren = table.rows[_j10].children;
                 var rowChildrenLength = rowChildren.length;
                 if (rowChildrenLength > 0) {
-                    for (var _k6 = rowChildrenLength - 1; _k6 >= 0; _k6--) {
-                        if (Number(rowChildren[_k6].dataset.xIndex) == Number(cellXIndex)) {
-                            if (rowChildren[_k6].colSpan > 1) {
-                                rowChildren[_k6].colSpan--;
+                    for (var _k8 = rowChildrenLength - 1; _k8 >= 0; _k8--) {
+                        if (Number(rowChildren[_k8].dataset.xIndex) == Number(cellXIndex)) {
+                            if (rowChildren[_k8].colSpan > 1) {
+                                rowChildren[_k8].colSpan--;
                             } else {
-                                table.rows[_j7].removeChild(rowChildren[_k6]);
+                                table.rows[_j10].removeChild(rowChildren[_k8]);
                             }
                             break;
-                        } else if (Number(rowChildren[_k6].dataset.xIndex) < Number(cellXIndex) && Number(rowChildren[_k6].dataset.xIndex) + Number(rowChildren[_k6].colSpan - 1) >= cellXIndex) {
-                            if (rowChildren[_k6].colSpan > 1) {
-                                rowChildren[_k6].colSpan--;
+                        } else if (Number(rowChildren[_k8].dataset.xIndex) < Number(cellXIndex) && Number(rowChildren[_k8].dataset.xIndex) + Number(rowChildren[_k8].colSpan - 1) >= cellXIndex) {
+                            if (rowChildren[_k8].colSpan > 1) {
+                                rowChildren[_k8].colSpan--;
                             }
                             break;
                         }
@@ -3858,8 +4346,8 @@ var array = [],
                 }
             }
 
-            for (var _j8 = 0; _j8 < table.rows.length; _j8++) {
-                if (array[_j8] != undefined) array[_j8].pop();
+            for (var _j11 = 0; _j11 < table.rows.length; _j11++) {
+                if (array[_j11] != undefined) array[_j11].pop();
             }
 
             maxAmountOfCells--;
@@ -3872,6 +4360,7 @@ var array = [],
             }
 
             table.recalculateIndexes();
+            table.tdDefaultWidth();
             WPTB_Helper.dataTitleColumnSet(table);
         }
         undoSelect();
@@ -3888,6 +4377,12 @@ var array = [],
     //if (columns || rows) {
     table.recalculateIndexes(true);
     //}
+    table.reconstraction();
+    table.tdDefaultWidth();
+
+    wptbTableSetup.onresize = function () {
+        table.tdDefaultWidth();
+    };
 
     WPTB_LeftPanel();
 
