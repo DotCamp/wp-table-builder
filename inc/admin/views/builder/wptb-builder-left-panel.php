@@ -298,26 +298,32 @@ use WP_Table_Builder as NS;
             <div class="wptb-settings-items">
                 <div class="wptb-settings-item-header">
                     <p style="margin: 0">
-                        <?php echo __( 'Column Width', 'wp-table-builder' ); ?>
+                        <?php esc_html_e( 'Column Width', 'wp-table-builder' ); ?>
                     </p>
                 </div>
                 <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
                     <div class="wptb-settings-col-xs-8">
-                        <input id="wptb-table-column-width-slider" type="range" min="30" max="500" step="1" value="30">
+                        <input id="wptb-table-column-width-slider" type="range" min="50" max="500" step="1" value="30">
                     </div>
                     <div class="wptb-settings-col-xs-4">
-                        <input id="wptb-table-column-width-number" class="wptb-number-input" type="number" min="30" max="500" step="1" placeholder="30" pattern="[0-9]*">
+                        <input id="wptb-table-column-width-number" class="wptb-number-input" type="number" min="50" max="500" step="1" placeholder="30" pattern="[0-9]*">
                         <span class="wptb-input-px">px</span>
                     </div>
-                    <div class="wptb-settings-col-xs-4">
-                        <input id="wptb-table-column-width-reset" type="button" class="button button-small" value="Reset">
-                    </div>
+                    <div class="wptb-settings-col-xs-12">
+                        <label class="wptb-checkbox-button wptb-column-width-fix-auto">
+                            <input id="wptb-table-column-width-auto-fixed" type="checkbox" />
+                            <i>
+                                <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>
+                                <div class="wptb-column-auto"><?php esc_html_e( 'Auto', 'wp-table-builder' ); ?></div>
+                            </i>
+                        </label>  
+                    </div>  
                 </div>    
             </div>
             <div class="wptb-settings-items">
                 <div class="wptb-settings-item-header">
                     <p style="margin: 0">
-                        <?php echo __( 'Row Height', 'wp-table-builder' ); ?>
+                        <?php esc_html_e( 'Row Height', 'wp-table-builder' ); ?>
                     </p>
                 </div>
                 <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
@@ -328,6 +334,15 @@ use WP_Table_Builder as NS;
                         <input id="wptb-table-row-height-number" class="wptb-number-input" type="number" min="10" max="200" step="1" placeholder="10" pattern="[0-9]*">
                         <span class="wptb-input-px">px</span>
                     </div>
+                    <div class="wptb-settings-col-xs-12">
+                        <label class="wptb-checkbox-button wptb-column-width-fix-auto">
+                            <input id="wptb-table-row-height-auto-fixed" type="checkbox" />
+                            <i>
+                                <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>
+                                <div class="wptb-column-auto"><?php esc_html_e( 'Auto', 'wp-table-builder' ); ?></div>
+                            </i>
+                        </label>  
+                    </div>  
                 </div>    
             </div>
         </div>

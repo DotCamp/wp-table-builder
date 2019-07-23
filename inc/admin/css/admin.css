@@ -535,6 +535,11 @@ body>img {
     border-radius: 2px;
 }
 
+.wptb-settings-col-xs-12 {
+    flex-basis: 100%;
+    max-width: 100%;
+}
+
 .wptb-settings-col-xs-8 {
     flex-basis: 66.66666667%;
     max-width: 66.66666667%;
@@ -704,6 +709,43 @@ input[type="range"]::-ms-thumb {
     transition: .25s;
 }
 
+.wptb-checkbox-button.wptb-column-width-fix-auto input:checked + i::after {
+    -webkit-transform: translateX(50px);
+    transform: translateX(50px);
+}
+
+.wptb-checkbox-button.wptb-column-width-fix-auto i {
+    float: left;
+    width: 100px;
+    border-radius: 5px;
+    height: 25px;
+}
+
+.wptb-checkbox-button.wptb-column-width-fix-auto i:after {
+    width: 50px;
+    height: 25px;
+    border-radius: 5px;
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
+}
+
+.wptb-column-fixed, .wptb-column-auto {
+    position: absolute;
+    font-size: 15px;
+    width: 50%;
+    height: 100%;
+    text-align: center;
+    line-height: 25px;
+}
+
+.wptb-column-fixed {
+    color: #d8d9db;
+}
+
+.wptb-column-auto {
+    color: #3B7EC0;
+    right: 0;
+}
 
 /**
 * Element Section
@@ -1044,10 +1086,11 @@ table.wptb-table {
     display: table;
     border-collapse: collapse !important;
     margin: auto;
+    width: auto;
 }
 
-.wptb-preview-table.wptb-preview-table-default-width {
-    width: 100%;
+.wptb-preview-table.wptb-preview-table-auto-width {
+    width: auto;
 }
 
 .wptb-preview-table.wptb-preview-table-manage-cells tbody>tr>td::after {

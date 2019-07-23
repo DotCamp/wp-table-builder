@@ -14,10 +14,14 @@
 .wptb-table-container table {
     table-layout: fixed;
     font-size: 15px;
-    width: 100%;
+    width: auto;
     display: table;
     border-collapse: collapse;
     /*min-width: 850px;*/
+}
+
+.wptb-table-container-matrix table {
+    margin: auto;
 }
 
 .wptb-table-container-matrix.wptb-matrix-hide {
@@ -29,6 +33,10 @@
     right: 0;
     bottom: 0;
     z-index: -1;
+}
+
+table.wptb-preview-table-mobile {
+    width: 100%;
 }
 
 .wptb-preview-table-mobile.wptb-mobile-hide {
@@ -50,16 +58,22 @@
 }
 
 .wptb-table-container table td {
-    width: 100px;
+    /*width: 100px;*/
     box-sizing: content-box;
     padding: 15px;
     background-color: inherit;
+}
+
+.wptb-table-container-matrix.wptb-matrix-hide .wptb-preview-table td {
+    width: auto !important;
 }
 
 .wptb-table-container table td p {
     word-wrap: break-word;
     overflow-wrap: break-word;
     margin: 0 !important;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .wptb-table-container table tr td ul {

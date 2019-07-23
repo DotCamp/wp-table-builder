@@ -166,7 +166,6 @@ var WPTB_Helper = {
             for( let j = 0; j < tdElements.length; j++ ) {
                 let element = tdElements[j];
                 if( element.classList.contains( 'wptb-ph-element' ) ) {
-                    let textContentStyle = element.getAttribute( 'style' );
                     let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
                     if( infArr[1] == 'text' ) {
                         let p = element.querySelector( 'p' ),
@@ -253,5 +252,27 @@ var WPTB_Helper = {
         if (!results) return false;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    },
+    getColumnWidth: function( table, cell ) {
+        let xIndex = cell.dataset.xIndex;
+        let xIndexes = table.querySelectorAll( '[data-x-index="' + xIndex + '"]' );
+        let cellWidth = cell.getCellDimensions().width;
+        for( let i = 0; i < xIndexes.length; i++ ) {
+            if( cellWidth > xIndexes[i].getCellDimensions().width ) {
+                cellWidth = xIndexes[i].getCellDimensions().width;
+            }
+        }
+        return cellWidth;
+    },
+    getRowHeight: function( table, cell ) {
+        let yIndex = cell.dataset.yIndex;
+        let yIndexes = table.querySelectorAll( '[data-y-index="' + yIndex + '"]' );
+        let cellHeight = cell.getCellDimensions().height;
+        for( let i = 0; i < yIndexes.length; i++ ) {
+            if( cellHeight > yIndexes[i].getCellDimensions().height ) {
+                cellHeight = yIndexes[i].getCellDimensions().height;
+            }
+        }
+        return cellHeight;
     }
 }

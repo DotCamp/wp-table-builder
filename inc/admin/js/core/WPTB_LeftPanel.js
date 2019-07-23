@@ -284,16 +284,19 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-table-cell-slider').oninput = function () {
         document.getElementById('wptb-table-cell-number').value = this.value;
         addCellPadding(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-cell-number').onchange = function () {
         document.getElementById('wptb-table-cell-slider').value = this.value;
         addCellPadding(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-border-slider').oninput = function () {
         document.getElementById('wptb-table-border-number').value = this.value;
         addBorderSize(this.value);
+        table.tdDefaultWidth();
         
         let wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
             tableBorderColorSetArea = document.getElementById( 'wptb-table-border-color-set-area' );
@@ -307,16 +310,19 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
         addBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-inner-border-slider').oninput = function () {
         document.getElementById('wptb-table-inner-border-number').value = this.value;
         addInnerBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
         addInnerBorderSize(this.value);
+        table.tdDefaultWidth();
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
@@ -334,80 +340,52 @@ var WPTB_LeftPanel = function () {
         
     };
     
-    function addColumnWidth( value ) {
-        let highlighted  = table.querySelector( '.wptb-highlighted' );
-        if( highlighted ) {
-            let dataXIndex = highlighted.dataset.xIndex;
-            if( dataXIndex ) {
-                function tableTdsFor( dataXIndex, colspan ) {
-                    let tableRows = table.rows;
-                    let widthIsSet = false;
-                    for( let i = 0; i < tableRows.length; i++ ) {
-                        let row = tableRows[i];
-                        let tds = row.children;
-                        for( let j = 0; j < tds.length; j++ ) {
-                            let td = tds[j];
-                            if( td.dataset.xIndex == dataXIndex ) {
-                                if( value ) {
-                                    if( td.colSpan == colspan ) {
-                                        td.style.width = value + 'px';
-                                        widthIsSet = true;
-                                    } else {
-                                        td.style.width = null;
-                                        if( i == tableRows.length - 1 && ! widthIsSet ) {
-                                            tableTdsFor( dataXIndex, colspan + 1 );
-                                        }
-                                    }
-                                } else {
-                                    td.style.width = null;
-                                }
-                                break;
-                            } 
-                        }
-                    }
-                    tableTdsRedidWidth();
-                }
-                tableTdsFor( dataXIndex, 1 );
-                
-                table.tdDefaultWidth();
-            }
-            
-            function tableTdsRedidWidth() {
-                let tds = table.querySelectorAll( 'td' );
-                for( let i = 0; i < tds.length; i++ ) {
-                    let td = tds[i];
-                    if( td.style.width ) {
-                        td.style.width = td.offsetWidth;
-                    }
-                }
-            }
-        }
-    }
-    
     document.getElementById( 'wptb-table-column-width-slider' ).oninput = function () {
         document.getElementById( 'wptb-table-column-width-number' ).value = this.value;
-        addColumnWidth( this.value );
+        table.addColumnWidth( this.value );
     };
     
     document.getElementById( 'wptb-table-column-width-number' ).onchange = function () {
         document.getElementById( 'wptb-table-column-width-slider' ).value = this.value;
-        addColumnWidth( this.value );
+        table.addColumnWidth( this.value );
     };
     
-    document.getElementById( 'wptb-table-column-width-reset' ).onclick = function () {
-        document.getElementById( 'wptb-table-column-width-number' ).value = 30;
-        document.getElementById( 'wptb-table-column-width-slider' ).value = 30;
-        addColumnWidth( false );
+    document.getElementById( 'wptb-table-column-width-auto-fixed' ).onchange = function () {
+        if( this.checked ) {
+            let highlighted = table.querySelector( '.wptb-highlighted' );
+            let width = WPTB_Helper.getColumnWidth( table, highlighted );
+            table.addColumnWidth( width );
+        } else {
+            table.addColumnWidth( false, true );
+            let highlighted = table.querySelector( '.wptb-highlighted' );
+            let width = WPTB_Helper.getColumnWidth( table, highlighted );
+            document.getElementById( 'wptb-table-column-width-number' ).value = width;
+            document.getElementById( 'wptb-table-column-width-slider' ).value = width;
+        }
     };
 
     document.getElementById( 'wptb-table-row-height-slider' ).oninput = function () {
         document.getElementById( 'wptb-table-row-height-number' ).value = this.value;
-        addRowHeight( this.value );
+        table.addRowHeight( this.value );
     };
 
     document.getElementById( 'wptb-table-row-height-number' ).onchange = function () {
         document.getElementById( 'wptb-table-row-height-slider' ).value = this.value;
-        addRowHeight( this.value );
+        table.addRowHeight( this.value );
+    };
+    
+    document.getElementById( 'wptb-table-row-height-auto-fixed' ).onchange = function () {
+        if( this.checked ) {
+            let highlighted = table.querySelector( '.wptb-highlighted' );
+            let height = WPTB_Helper.getRowHeight( table, highlighted );
+            table.addRowHeight( height );
+        } else {
+            table.addRowHeight( false, true );
+            let highlighted = table.querySelector( '.wptb-highlighted' );
+            let height = WPTB_Helper.getRowHeight( table, highlighted );
+            document.getElementById( 'wptb-table-row-height-number' ).value = height;
+            document.getElementById( 'wptb-table-row-height-slider' ).value = height;
+        }
     };
     
     function createMobileHeadForTable( table, thisEvent ) {
