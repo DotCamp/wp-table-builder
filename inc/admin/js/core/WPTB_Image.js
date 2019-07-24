@@ -1,14 +1,19 @@
 var WPTB_Image = function ( src, DOMElementProt ) {
         let DOMElement,
+                elImage,
             kindIndexProt = undefined,
             copy = false;
         if ( DOMElementProt == undefined ) {
-            DOMElement = document.createElement('div');
-	    let anchor = document.createElement('a'),
-	    img = document.createElement('img');
+            DOMElement = document.createElement( 'div' );
+            elImage = document.createElement( 'div' );
+	    let anchor = document.createElement( 'a' ),
+	    img = document.createElement( 'img' );
             anchor.style.display = 'inline-block';
-            anchor.appendChild(img);
-            DOMElement.appendChild(anchor);
+            anchor.appendChild( img );
+            DOMElement.classList.add( 'wptb-image-container' );
+            elImage.classList.add( 'wptb-image-wrapper' );
+            elImage.appendChild( anchor );
+            DOMElement.appendChild( elImage );
             
             anchor.onclick = function( e ) {
                 e.preventDefault();

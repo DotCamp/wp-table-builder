@@ -1118,12 +1118,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     }
                     break;
                 case 'image-size':
-                    affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
-                    affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
+                    affectedEl.getElementsByTagName('a')[0].style.width = this.value + '%';
+                    affectedEl.getElementsByTagName('a')[0].style.height = 'auto';
                     this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
-                    affectedEl.getElementsByTagName('img')[0].parentNode.style.textAlign = this.value;
+                    affectedEl.getElementsByClassName('wptb-image-wrapper')[0].style.textAlign = this.value;
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';
@@ -1390,17 +1390,17 @@ var WPTB_Helper = {
                 thisRowChildren = thisRow.children;
             for (var _j = 0; _j < thisRowChildren.length; _j++) {
                 if (contentsForHeader[thisRowChildren[_j].dataset.xIndex]) {
-                    thisRowChildren[_j].dataset.titleColumn = contentsForHeader[thisRowChildren[_j].dataset.xIndex][0];
-                    thisRowChildren[_j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[_j].dataset.xIndex][1];
-                    thisRowChildren[_j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][2];
-                    thisRowChildren[_j].dataset.titleBackgroundColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][3];
-                    thisRowChildren[_j].dataset.titleAlign = contentsForHeader[thisRowChildren[_j].dataset.xIndex][4];
+                    thisRowChildren[_j].dataset.wptbTitleColumn = contentsForHeader[thisRowChildren[_j].dataset.xIndex][0];
+                    thisRowChildren[_j].dataset.wptbTitleColumnFontSize = contentsForHeader[thisRowChildren[_j].dataset.xIndex][1];
+                    thisRowChildren[_j].dataset.wptbTitleColumnColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][2];
+                    thisRowChildren[_j].dataset.wptbTitleBackgroundColor = contentsForHeader[thisRowChildren[_j].dataset.xIndex][3];
+                    thisRowChildren[_j].dataset.wptbTitleAlign = contentsForHeader[thisRowChildren[_j].dataset.xIndex][4];
                 } else {
-                    thisRowChildren[_j].dataset.titleColumn = '';
-                    thisRowChildren[_j].dataset.titleColumnFontSize = '';
-                    thisRowChildren[_j].dataset.titleColumnColor = '';
-                    thisRowChildren[_j].dataset.titleBackgroundColor = '';
-                    thisRowChildren[_j].dataset.titleAlign = '';
+                    thisRowChildren[_j].dataset.wptbTitleColumn = '';
+                    thisRowChildren[_j].dataset.wptbTitleColumnFontSize = '';
+                    thisRowChildren[_j].dataset.wptbTitleColumnColor = '';
+                    thisRowChildren[_j].dataset.wptbTitleBackgroundColor = '';
+                    thisRowChildren[_j].dataset.wptbTitleAlign = '';
                 }
             }
         }
@@ -1481,15 +1481,20 @@ var WPTB_Helper = {
 };
 var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
     var DOMElement = void 0,
+        elImage = void 0,
         kindIndexProt = undefined,
         copy = false;
     if (DOMElementProt == undefined) {
         DOMElement = document.createElement('div');
+        elImage = document.createElement('div');
         var anchor = document.createElement('a'),
             img = document.createElement('img');
         anchor.style.display = 'inline-block';
         anchor.appendChild(img);
-        DOMElement.appendChild(anchor);
+        DOMElement.classList.add('wptb-image-container');
+        elImage.classList.add('wptb-image-wrapper');
+        elImage.appendChild(anchor);
+        DOMElement.appendChild(elImage);
 
         anchor.onclick = function (e) {
             e.preventDefault();
@@ -2072,7 +2077,11 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                 var thisRow = rows[_i5],
                     thisRowChildren = thisRow.children;
                 for (var j = 0; j < thisRowChildren.length; j++) {
-                    thisRowChildren[j].removeAttribute('data-title-column');
+                    thisRowChildren[j].removeAttribute('data-wptb-title-column');
+                    thisRowChildren[j].removeAttribute('data-wptb-title-column-font-size');
+                    thisRowChildren[j].removeAttribute('data-wptb-title-column-color');
+                    thisRowChildren[j].removeAttribute('data-wptb-title-background-color');
+                    thisRowChildren[j].removeAttribute('data-wptb-title-align');
                 }
             }
         }
@@ -2656,14 +2665,14 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                     }
                 }
 
-                if (tds[i].hasAttribute('data-title-column')) {
+                if (tds[i].hasAttribute('data-wptb-title-column')) {
                     var columnNameDivContainer = document.createElement('div'),
                         columnNameDiv = document.createElement('div');
                     columnNameDivContainer.classList.add('wptb-column-title-mobile-container');
                     columnNameDiv.classList.add('wptb-column-title-mobile');
-                    columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
-                    columnNameDiv.setAttribute('style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
-                        color:' + tds[i].dataset.titleColumnColor + '; background-color:' + tds[i].dataset.titleBackgroundColor + '; text-align:' + tds[i].dataset.titleAlign + ';');
+                    columnNameDiv.dataset.wptbTitleColumn = tds[i].dataset.wptbTitleColumn;
+                    columnNameDiv.setAttribute('style', 'font-size:' + tds[i].dataset.wptbTitleColumnFontSize + '; \n\
+                        color:' + tds[i].dataset.wptbTitleColumnColor + '; background-color:' + tds[i].dataset.wptbTitleBackgroundColor + '; text-align:' + tds[i].dataset.wptbTitleAlign + ';');
                     columnNameDiv.style.padding = tds[i].style.padding;
                     if (tds[i].children.length == 0) {
                         tds[i].classList.add('wptb-column-title-mobile-not-elements');
@@ -3127,7 +3136,7 @@ var array = [],
 
         //Create a HTML Table element.
         table = document.createElement('table');
-        table.classList.add('wptb-preview-table', 'wptb-preview-table-default-width');
+        table.classList.add('wptb-preview-table');
         table.dataset.reconstraction = 1;
         //Add the data rows.
         for (var i = 0; i < rows; i++) {

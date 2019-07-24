@@ -443,12 +443,12 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     }
                     break;
                 case 'image-size':
-                    affectedEl.getElementsByTagName('img')[0].style.width = this.value + '%';
-                    affectedEl.getElementsByTagName('img')[0].style.height = 'auto';
+                    affectedEl.getElementsByTagName('a')[0].style.width = this.value + '%';
+                    affectedEl.getElementsByTagName('a')[0].style.height = 'auto';
                     this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
-                    affectedEl.getElementsByTagName( 'img' )[0].parentNode.style.textAlign = this.value;
+                    affectedEl.getElementsByClassName( 'wptb-image-wrapper' )[0].style.textAlign = this.value;
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';

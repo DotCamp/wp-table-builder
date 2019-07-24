@@ -404,7 +404,11 @@ var WPTB_LeftPanel = function () {
                 let thisRow = rows[i],
                     thisRowChildren = thisRow.children;
                 for( let j = 0; j < thisRowChildren.length; j++ ) {
-                    thisRowChildren[j].removeAttribute( 'data-title-column' );
+                    thisRowChildren[j].removeAttribute( 'data-wptb-title-column' );
+                    thisRowChildren[j].removeAttribute( 'data-wptb-title-column-font-size' );
+                    thisRowChildren[j].removeAttribute( 'data-wptb-title-column-color' );
+                    thisRowChildren[j].removeAttribute( 'data-wptb-title-background-color' );
+                    thisRowChildren[j].removeAttribute( 'data-wptb-title-align' );
                 }
             }
         }

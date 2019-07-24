@@ -187,17 +187,17 @@ var WPTB_Helper = {
                 thisRowChildren = thisRow.children;
             for( let j = 0; j < thisRowChildren.length; j++ ) {
                 if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
-                    thisRowChildren[j].dataset.titleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
-                    thisRowChildren[j].dataset.titleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
-                    thisRowChildren[j].dataset.titleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
-                    thisRowChildren[j].dataset.titleBackgroundColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
-                    thisRowChildren[j].dataset.titleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][4];
+                    thisRowChildren[j].dataset.wptbTitleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
+                    thisRowChildren[j].dataset.wptbTitleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
+                    thisRowChildren[j].dataset.wptbTitleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
+                    thisRowChildren[j].dataset.wptbTitleBackgroundColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
+                    thisRowChildren[j].dataset.wptbTitleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][4];
                 } else {
-                    thisRowChildren[j].dataset.titleColumn = '';
-                    thisRowChildren[j].dataset.titleColumnFontSize = '';
-                    thisRowChildren[j].dataset.titleColumnColor = '';
-                    thisRowChildren[j].dataset.titleBackgroundColor = '';
-                    thisRowChildren[j].dataset.titleAlign = '';
+                    thisRowChildren[j].dataset.wptbTitleColumn = '';
+                    thisRowChildren[j].dataset.wptbTitleColumnFontSize = '';
+                    thisRowChildren[j].dataset.wptbTitleColumnColor = '';
+                    thisRowChildren[j].dataset.wptbTitleBackgroundColor = '';
+                    thisRowChildren[j].dataset.wptbTitleAlign = '';
                 }
             }
         }

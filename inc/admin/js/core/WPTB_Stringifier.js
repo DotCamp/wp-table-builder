@@ -67,14 +67,14 @@ var WPTB_Stringifier = function ( codeMain ) {
                     }
                 }
                 
-                if( tds[i].hasAttribute( 'data-title-column' ) ) {
+                if( tds[i].hasAttribute( 'data-wptb-title-column' ) ) {
                     let columnNameDivContainer = document.createElement( 'div' ),
                         columnNameDiv = document.createElement( 'div' );
                     columnNameDivContainer.classList.add( 'wptb-column-title-mobile-container' );
                     columnNameDiv.classList.add( 'wptb-column-title-mobile' );
-                    columnNameDiv.dataset.titleColumn = tds[i].dataset.titleColumn;
-                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.titleColumnFontSize + '; \n\
-                        color:' + tds[i].dataset.titleColumnColor + '; background-color:' + tds[i].dataset.titleBackgroundColor + '; text-align:' + tds[i].dataset.titleAlign + ';' );
+                    columnNameDiv.dataset.wptbTitleColumn = tds[i].dataset.wptbTitleColumn;
+                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.wptbTitleColumnFontSize + '; \n\
+                        color:' + tds[i].dataset.wptbTitleColumnColor + '; background-color:' + tds[i].dataset.wptbTitleBackgroundColor + '; text-align:' + tds[i].dataset.wptbTitleAlign + ';' );
                     columnNameDiv.style.padding = tds[i].style.padding;
                     if( tds[i].children.length == 0 ) {
                         tds[i].classList.add( 'wptb-column-title-mobile-not-elements' );

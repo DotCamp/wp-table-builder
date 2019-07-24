@@ -1235,6 +1235,13 @@ table.wptb-table {
     margin-bottom: 7px;
 }
 
+/*
+** Image Style
+*/
+
+.wptb-image-wrapper img {
+    width: 100%;
+}
 
 /*
 ** Button Style

@@ -387,7 +387,7 @@ var array = [], WPTB_Table = function (columns, rows) {
 
         //Create a HTML Table element.
         table = document.createElement( 'table' );
-        table.classList.add( 'wptb-preview-table', 'wptb-preview-table-default-width' );
+        table.classList.add( 'wptb-preview-table' );
         table.dataset.reconstraction = 1;
         //Add the data rows.
         for (var i = 0; i < rows; i++) {
