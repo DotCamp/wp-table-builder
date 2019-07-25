@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             </div>\n\
             <div class="wptb-popup-window-buttons">\n\
                 <button class="wptb-confirm-btn">OK</button>\n\
-                <button class="wptb-cansel-btn">CANSEL</button>\n\
+                <button class="wptb-cancel-btn">CANCEL</button>\n\
             </div>\n\
         </div>';
 
@@ -77,10 +77,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }, 1000 );
         }
 
-        let wptbCanselButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-cansel-btn' );
-        if( wptbCanselButton.length > 0 ) {
-            wptbCanselButton = wptbCanselButton[0];
-            wptbCanselButton.onclick = function() {
+        let wptbCancelButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-cancel-btn' );
+        if( wptbCancelButton.length > 0 ) {
+            wptbCancelButton = wptbCancelButton[0];
+            wptbCancelButton.onclick = function() {
                 wptbPopupWindowModal.classList.remove( 'wptb-popup-show' );
             }
         }
