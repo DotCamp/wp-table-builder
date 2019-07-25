@@ -164,6 +164,7 @@ class Admin_Menu {
             );
 		} elseif( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
             wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
+            wp_enqueue_style( 'wptb-admin-common-css', plugin_dir_url( __FILE__ ) . 'css/admin-common.css', array(), NS\PLUGIN_VERSION, 'all' );
         }
 	
 	}

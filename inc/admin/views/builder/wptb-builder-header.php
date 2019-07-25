@@ -36,10 +36,10 @@
         </div>
     </div>
     
-    <div class="wptb-shortcode-popup-window-modal">
-        <div class="wptb-shortcode-popup-box">
-            <div class="wptb-shortcode-popup-window-close-icon" style="display: block;">×</div>
-            <div class="wptb-shortcode-popup-content">
+    <div class="wptb-popup-window-modal">
+        <div class="wptb-popup-box">
+            <div class="wptb-popup-window-close-icon" style="display: block;">×</div>
+            <div class="wptb-popup-content">
                 <p>
                     <?php esc_html_e( 'To embed this table on your site, please paste the following shortcode inside a post or page.', 'wp-table-builder' ); ?>
                 </p>
@@ -49,6 +49,6 @@
             </div>
         </div>
     </div>
-    <div class="wptb-shortcode-popup-dark-area"></div>
+    <div class="wptb-popup-dark-area"></div>
     
 </div>

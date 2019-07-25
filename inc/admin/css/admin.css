@@ -165,7 +165,7 @@ body>img {
     text-decoration: none;
 }
 
-.wptb-shortcode-popup-dark-area {
+.wptb-popup-dark-area {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -180,12 +180,12 @@ body>img {
     transition: all 0.3s;
 }
 
-.wptb-shortcode-popup-window-modal.wptb-shortcode-popup-show~.wptb-shortcode-popup-dark-area {
+.wptb-popup-window-modal.wptb-popup-show~.wptb-popup-dark-area {
     visibility: visible;
     opacity: .6;
 }
 
-.wptb-shortcode-popup-window-modal {
+.wptb-popup-window-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -204,11 +204,11 @@ body>img {
     transform: translateX(-50%) translateY(-50%);
 }
 
-.wptb-shortcode-popup-window-modal.wptb-shortcode-popup-show {
+.wptb-popup-window-modal.wptb-popup-show {
     visibility: visible;
 }
 
-.wptb-shortcode-popup-box {
+.wptb-popup-box {
     -webkit-transform: scale(0.7);
     -moz-transform: scale(0.7);
     -ms-transform: scale(0.7);
@@ -223,7 +223,7 @@ body>img {
     background-color: white;
 }
 
-.wptb-shortcode-popup-window-modal.wptb-shortcode-popup-show .wptb-shortcode-popup-box {
+.wptb-popup-window-modal.wptb-popup-show .wptb-popup-box {
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
     -ms-transform: scale(1);
@@ -231,7 +231,7 @@ body>img {
     opacity: 1;
 }
 
-.wptb-shortcode-popup-window-close-icon {
+.wptb-popup-window-close-icon {
     height: 20px;
     width: 20px;
     position: absolute;
@@ -246,7 +246,7 @@ body>img {
     z-index: 1;
 }
 
-.wptb-shortcode-popup-content p {
+.wptb-popup-content p {
     font-size: 15px;
     text-align: center;
 }

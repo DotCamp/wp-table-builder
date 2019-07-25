@@ -2433,19 +2433,19 @@ var WPTB_Settings = function WPTB_Settings() {
         };
     };
 
-    var shortcodePopupWindow = document.getElementsByClassName('wptb-shortcode-popup-window-modal')[0];
+    var shortcodePopupWindow = document.getElementsByClassName('wptb-popup-window-modal')[0];
     document.getElementsByClassName('wptb-embed-btn')[0].onclick = function () {
         if (!this.classList.contains('wptb-embed-disable')) {
-            shortcodePopupWindow.classList.add('wptb-shortcode-popup-show');
+            shortcodePopupWindow.classList.add('wptb-popup-show');
         }
     };
 
-    document.getElementsByClassName('wptb-shortcode-popup-dark-area')[0].onclick = function () {
-        shortcodePopupWindow.classList.remove('wptb-shortcode-popup-show');
+    document.getElementsByClassName('wptb-popup-dark-area')[0].onclick = function () {
+        shortcodePopupWindow.classList.remove('wptb-popup-show');
     };
 
-    document.getElementsByClassName('wptb-shortcode-popup-window-close-icon')[0].onclick = function () {
-        shortcodePopupWindow.classList.remove('wptb-shortcode-popup-show');
+    document.getElementsByClassName('wptb-popup-window-close-icon')[0].onclick = function () {
+        shortcodePopupWindow.classList.remove('wptb-popup-show');
     };
 
     document.getElementsByClassName('wptb-save-btn')[0].onclick = function () {
