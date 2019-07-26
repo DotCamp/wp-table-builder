@@ -24,20 +24,6 @@ class WPTB_Listing  extends \WP_List_Table{
 			'plural'   => __( 'WPTB Tables', 'wp-table-builder' ), 
 			'ajax'     => false 
 		] );
-		if ( isset( $_GET['success'] ) ) { ?>
-	    <div class="notice notice-success is-dismissible">
-	        <p><?php esc_html_e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
-	    </div>
-	    <?php 
-	    	unset( $_GET['success'] );
-		} if ( isset( $_GET['bulksuccess'] ) ) { ?>
-	    <div class="notice notice-success is-dismissible">
-	        <p><?php esc_html_e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
-	    </div>
-	    <?php 
-	    	unset( $_GET['bulksuccess'] );
-		} 
-
 	}
  
 	public static function get_tables( $per_page = 5, $page_number = 1 ) {
@@ -55,6 +41,37 @@ class WPTB_Listing  extends \WP_List_Table{
 	  	
 		return $result;
 		 
+	}
+
+	public static function duplicate_table( $id ) {
+	
+		global $wpdb;
+        
+        $post = get_post( $id );
+        
+        if( $post ) {
+            $id_new = wp_insert_post([
+                'post_title' => sanitize_text_field( $post->post_title ),
+                'post_content' => '',
+                'post_type' => 'wptb-tables'
+            ]);
+            $post_meta = get_post_meta( absint( $id ) , '_wptb_content_', true );
+            
+            $post_meta = add_post_meta( $id_new, '_wptb_content_', $post_meta );
+            
+            if( $id_new && $post_meta ) {
+                wp_update_post([
+                    'ID' => $id_new,
+                    'post_title' => str_replace( ' (ID #'.$id.')', '', get_the_title( $id_new )  . ' (ID #' . $id_new . ')' ),
+                    'post_content' => '',
+                    'post_type' => 'wptb-tables'
+                ]);
+                return true;
+            }
+        }
+        
+        return false;
+	
 	}
 
 	public static function delete_table( $id ) {
@@ -104,7 +121,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	function column_name( $item ) {
 
 		// create a nonce
-		$delete_nonce = wp_create_nonce( 'wptb_delete_table' );
+		$nonce = wp_create_nonce( 'wptb_nonce_table' );
 		  
 		$table_title = $item->post_title;
 
@@ -123,7 +140,8 @@ class WPTB_Listing  extends \WP_List_Table{
 		);
 
 	  	$actions = [
-	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $delete_nonce ),
+	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $nonce ),
+            'duplicate' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Duplicate</a>', esc_attr( $_REQUEST['page'] ), 'duplicate', absint( $item->ID ), $nonce ),
 			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) )
 	  	];
 
@@ -213,15 +231,36 @@ class WPTB_Listing  extends \WP_List_Table{
 	public function process_bulk_action() {
         
         $nonce = esc_attr( $_REQUEST['_wpnonce'] );
+        
+        
+		if ( 'duplicate' === $this->current_action() ) {
+
+	    	if ( ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+	      		die( 'Go get a life script kiddies' );
+			} else {
+	      		$duplicate = $this->duplicate_table( absint( $_GET['table_id'] ) );
+                ?>
+                    <div class="notice notice-success is-dismissible">
+                        <p><?php esc_html_e( 'Table duplicate successfully.', 'wp-table-builder' ); ?></p>
+                    </div>
+                    <script>window.history.pushState( null, null, window.location.href.split('?')[0] + '?page=wptb-overview' );</script>
+                <?php
+	    	}
+
+	  	}
 
 		if ( 'delete' === $this->current_action() ) {
 
-	    	if ( ! wp_verify_nonce( $nonce, 'wptb_delete_table' ) ) {
+	    	if ( ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
 	      		die( 'Go get a life script kiddies' );
 			} else {
 	      		$this->delete_table( absint( $_GET['table_id'] ) );
-	      		die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&success=1";</script>');
-	      		exit;
+                ?>
+                    <div class="notice notice-success is-dismissible">
+                        <p><?php esc_html_e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
+                    </div>
+                    <script>window.history.pushState( null, null, window.location.href.split('?')[0] + '?page=wptb-overview' );</script>
+                <?php
 	    	}
 
 	  	}
@@ -239,9 +278,13 @@ class WPTB_Listing  extends \WP_List_Table{
                 foreach ( $delete_ids as $id ) {
                     $this->delete_table( absint( $id ) );
                 }
-
-                die('<script>window.location=window.location.href.split(\'?\')[0]+"?page=wptb-overview&bulksuccess=1";</script>');
-                exit;
+                
+                ?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
+                </div>
+                <script>window.history.pushState( null, null, window.location.href.split('?')[0] + '?page=wptb-overview' );</script>
+                <?php 
             }
 	  	}
 	}

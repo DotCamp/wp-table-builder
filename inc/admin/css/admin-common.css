@@ -24,7 +24,7 @@
     left: 50%;
     width: 50%;
     max-width: 630px;
-    min-width: 320px;
+    min-width: 300px;
     height: auto;
     z-index: 10000;
     visibility: hidden;
@@ -38,7 +38,7 @@
 }
 
 .wptb-popup-window-modal.wptb-popup-window-delete-confirm {
-    max-width: 400px;
+    width: 400px;
     margin-left: -200px;
     margin-top: -100px;
     -webkit-transform: translateX(0%) translateY(0%);
@@ -110,14 +110,23 @@
 }
 
 .wptb-confirm-btn {
-    background: #3B7EC0;
+    background-color: #3B7EC0;
     color: white;
+}
+
+.wptb-confirm-btn:hover {
+    background-color: #184D81;
 }
 
 .wptb-cancel-btn {
     background-color: #ecf0f1;
     color: #000;
 }
+
+.wptb-cancel-btn:hover {
+    background-color: #5553;
+}
+
 .wptb-popup-sing-picture-container {
     height: 70px;
     text-align: center;
@@ -133,19 +142,26 @@
 }
 
 @keyframes shake {
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-  
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
-  }
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
 
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
-  }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
 
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
-  }
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .wptb-popup-window-modal.wptb-popup-window-delete-confirm {
+        width: 300px;
+        margin-left: -150px;
+    }
 }

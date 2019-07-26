@@ -1,23 +1,4 @@
-document.addEventListener("DOMContentLoaded", function(event) { 
-    let elemClick;
-    wptbModalPopupWindowCreate();
-    
-    let deletes = document.getElementsByClassName( 'delete' );
-    let wptbPopupWindowModal = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
-    for( let i = 0; i < deletes.length; i++ ) {
-        let a = deletes[i].getElementsByTagName( 'a' );
-        if( a.length > 0 ) {
-            a[0].onclick = function( e ) {
-                e.preventDefault();
-                wptbPopupWindowModal.classList.add( 'wptb-popup-show' );
-                let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-confirm-btn' );
-                if( wptbConfirmButton.length > 0 ) {
-                    wptbConfirmButton = wptbConfirmButton[0];
-                    wptbConfirmButton.dataset.urlForTableDelete = e.target.href;
-                }
-            }
-        }
-    }
+document.addEventListener("DOMContentLoaded", function(event) {
     
     
     function wptbModalPopupWindowCreate() {
@@ -89,10 +70,55 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if( wptbConfirmButton.length > 0 ) {
             wptbConfirmButton = wptbConfirmButton[0];
             wptbConfirmButton.onclick = function() {
-                window.location.href = this.dataset.urlForTableDelete;
+                window.location.href = this.dataset.urlForTableConfirm;
             }
         }
     }
+    
+    wptbModalPopupWindowCreate();
+    
+    
+    function eachItemsAddHandler( attributeClass ) {
+        let htmlCollection = document.getElementsByClassName( attributeClass );
+        let wptbPopupWindowModal = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
+        
+        for( let i = 0; i < htmlCollection.length; i++ ) {
+            let a = htmlCollection[i].getElementsByTagName( 'a' );
+            if( a.length > 0 ) {
+                a[0].onclick = function( e ) {
+                    e.preventDefault();
+                    wptbPopupWindowModal.classList.add( 'wptb-popup-show' );
+                    
+                    let wptbPopupContent = wptbPopupWindowModal.getElementsByClassName( 'wptb-popup-content' );
+                    if( wptbPopupContent.length > 0 ) {
+                        wptbPopupContent = wptbPopupContent[0];
+                        let p = wptbPopupContent.getElementsByTagName( 'p' );
+                        if( p.length > 0 ) {
+                            p = p[0];
+                            if( attributeClass == 'delete' ) {
+                                p.innerHTML = 'Are you sure you want to delete this table?';
+                            } else if( attributeClass == 'duplicate' ) {
+                                p.innerHTML = 'Are you sure you want to duplicate this table?';
+                            }
+                        }
+                    }
+                    
+                    let wptbConfirmButton = wptbPopupWindowModal.getElementsByClassName( 'wptb-confirm-btn' );
+                    if( wptbConfirmButton.length > 0 ) {
+                        wptbConfirmButton = wptbConfirmButton[0];
+                        wptbConfirmButton.dataset.urlForTableConfirm = e.target.href;
+                    }
+                }
+            }
+        }
+    }
+    
+    eachItemsAddHandler( 'delete' );
+    
+    eachItemsAddHandler( 'duplicate' );
+    
+    
+    
 });
 
 
