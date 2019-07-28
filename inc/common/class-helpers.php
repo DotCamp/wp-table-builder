@@ -33,5 +33,27 @@ class Helpers {
         $capability = wptb_get_capability_manage_options();
         return apply_filters( 'wptb_current_user_can', current_user_can( $capability ), $capability );
     }
+    
+    /**
+    * Return URL to form preview page.
+    *
+    * @since 1.0.2
+    *
+    * @param int  $table_id Table ID.
+    *
+    * @return string
+    */
+    static function wptb_get_table_preview_url( $table_id ) {
+
+
+        $url = add_query_arg(
+            array(
+                'wptb_table_preview' => absint( $table_id ),
+            ),
+            home_url()
+        );
+        
+        return $url;
+    }
 
 }

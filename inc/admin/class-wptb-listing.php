@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
+use WP_Table_Builder\Inc\Common\Helpers as Helpers;
 
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -142,6 +143,7 @@ class WPTB_Listing  extends \WP_List_Table{
 	  	$actions = [
 	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $nonce ),
             'duplicate' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Duplicate</a>', esc_attr( $_REQUEST['page'] ), 'duplicate', absint( $item->ID ), $nonce ),
+            'preview_' => sprintf( '<a href="%s&_wpnonce=%s" target="_blank">Preview</a>', Helpers::wptb_get_table_preview_url( absint( $item->ID ) ), $nonce ),
 			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) )
 	  	];
 
