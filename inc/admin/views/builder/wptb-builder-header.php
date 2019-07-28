@@ -20,10 +20,31 @@
             
     </div>
     <div class="wptb-right">
+        <?php
+            $wptb_button_disable_class = '';
+            $wptb_preview_button_url_value_id = 'empty';
+            if( ! isset( $_GET['table'] ) || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ) {
+                $wptb_button_disable_class =  'wptb-button-disable';
+            } else {
+                $wptb_preview_button_url_value_id = absint( $_GET['table'] );
+            }
+            $wptb_preview_button_url = add_query_arg(
+                array(
+                    'wptb_table_preview' => $wptb_preview_button_url_value_id,
+                ),
+                home_url()
+            );
+        ?>
         <div class="wptb-embed">
-            <i class="fa fa-code"></i>
-            <a href="#" class="wptb-embed-btn <?php echo ! isset( $_GET['table'] ) || ! absint( $_GET['table'] ) || ! get_post_meta( absint( $_GET['table'] ) , '_wptb_content_', true ) ? 'wptb-embed-disable' : '';?>">
+            <a href="#" class="wptb-button-grey wptb-embed-btn <?php echo $wptb_button_disable_class; ?>">
                 <?php esc_html_e( '</> Embed', 'wp-table-builder' ); ?>
+            </a>
+        </div>
+        <div class="wptb-preview">
+            <a href="<?php echo $wptb_preview_button_url_value_id !== 'empty' ? $wptb_preview_button_url : '#'; ?>" 
+               target="_blank" class="wptb-button-grey wptb-preview-btn <?php echo $wptb_button_disable_class; ?>" 
+               data-preview-href="<?php echo $wptb_preview_button_url_value_id === 'empty' ? $wptb_preview_button_url : '#'; ?>">
+                <?php esc_html_e( 'Preview', 'wp-table-builder' ); ?>
             </a>
         </div>
         <div class="wptb-save">

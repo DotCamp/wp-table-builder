@@ -19,7 +19,7 @@ var WPTB_Settings = function () {
     
     let shortcodePopupWindow = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
     document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {
-        if( ! this.classList.contains( 'wptb-embed-disable' ) ) {
+        if( ! this.classList.contains( 'wptb-button-disable' ) ) {
             shortcodePopupWindow.classList.add( 'wptb-popup-show' );
         }
     }
@@ -85,8 +85,17 @@ var WPTB_Settings = function () {
                 if ( data[0] == 'saved' ) {
                     document.wptbId = data[1];
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
-                    document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-embed-disable' );
+                    document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-button-disable' );
                     document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
+                    let wptbPreviewBtn = document.getElementsByClassName( 'wptb-preview-btn' );
+                    if( wptbPreviewBtn.length > 0 ) {
+                        wptbPreviewBtn = wptbPreviewBtn[0];
+                        wptbPreviewBtn.classList.remove( 'wptb-button-disable' );
+                        let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+                        wptbPreviewBtnHref = wptbPreviewBtnHref.replace( 'empty', data[1] );
+                        wptbPreviewBtn.setAttribute( 'href', wptbPreviewBtnHref );
+                    }
+                    
                 } else if( data[0] == 'edited' ) {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
                 } else {

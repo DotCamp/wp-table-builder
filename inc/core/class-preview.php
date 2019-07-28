@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Core;
+use WP_Table_Builder\Inc\Common\Helpers;
 
 /**
  * Show preview table 
@@ -77,7 +78,7 @@ class Preview {
 		}
 
 		// if the user is authorized and if user rights are valid 
-		if ( ! is_user_logged_in() || ! wptb_current_user_can ) {
+		if ( ! is_user_logged_in() || ! Helpers::wptb_current_user_can() ) {
 			return false;
 		}
         

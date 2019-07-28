@@ -30,7 +30,7 @@ class Helpers {
     * @return bool
     */
     static function wptb_current_user_can() {
-        $capability = wptb_get_capability_manage_options();
+        $capability = self::wptb_get_capability_manage_options();
         return apply_filters( 'wptb_current_user_can', current_user_can( $capability ), $capability );
     }
     

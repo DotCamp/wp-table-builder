@@ -1,7 +1,6 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
-use WP_Table_Builder\Inc\Common\Helpers as Helpers;
 
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
@@ -33,8 +32,8 @@ class WPTB_Listing  extends \WP_List_Table{
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page, 'paged' => $page_number );
 
-	  	$params['orderby'] = ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
-	  	$params['order'] = ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
+	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
+	  	$params['order'] = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
 	  	
 	  	$loop = new \WP_Query( $params ); 
 		$result=[];
@@ -89,13 +88,13 @@ class WPTB_Listing  extends \WP_List_Table{
 	
 	}
 
-	public static function record_count() {
+	public static function record_count( $per_page ) {
 		
 		global $wpdb, $post;
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
-	  	$params['orderby'] = ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
-	  	$params['order'] = ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
+	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
+	  	$params['order'] = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
 	  	
 	  	$loop = new \WP_Query( $params ); 
 	  	return $loop->found_posts;
@@ -139,11 +138,18 @@ class WPTB_Listing  extends \WP_List_Table{
 			esc_html__( 'Edit This Table', 'wp-table-builder' ),
 			$title
 		);
-
+        
+        $wptb_preview_button_url = add_query_arg(
+            array(
+                'wptb_table_preview' => absint( $item->ID ),
+            ),
+            home_url()
+        );
+        
 	  	$actions = [
 	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $nonce ),
             'duplicate' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Duplicate</a>', esc_attr( $_REQUEST['page'] ), 'duplicate', absint( $item->ID ), $nonce ),
-            'preview_' => sprintf( '<a href="%s&_wpnonce=%s" target="_blank">Preview</a>', Helpers::wptb_get_table_preview_url( absint( $item->ID ) ), $nonce ),
+            'preview_' => sprintf( '<a href="%s" target="_blank">Preview</a>', $wptb_preview_button_url ),
 			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) )
 	  	];
 
@@ -219,7 +225,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	  	$per_page     = $this->get_items_per_page( 'tables_per_page', 10 );
 	  	$current_page = $this->get_pagenum();
-	  	$total_items  = self::record_count();
+	  	$total_items  = self::record_count( $per_page );
 
 	  	$this->set_pagination_args( [
 	    	'total_items' => $total_items, //WE have to calculate the total number of items
@@ -232,7 +238,7 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	public function process_bulk_action() {
         
-        $nonce = esc_attr( $_REQUEST['_wpnonce'] );
+        $nonce = isset( $_REQUEST['_wpnonce'] ) && esc_attr( $_REQUEST['_wpnonce'] ) ? esc_attr( $_REQUEST['_wpnonce'] ) : '';
         
         
 		if ( 'duplicate' === $this->current_action() ) {
