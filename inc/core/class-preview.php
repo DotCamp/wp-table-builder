@@ -160,12 +160,14 @@ class Preview {
 	 *
 	 * @return string
 	 */
-	public function the_title() {
+	public function the_title( $title ) {
         
-        $title = sprintf(
-            esc_html__( '%s Preview', 'wp-table-builder' ),
-            ! empty( $this->table_data->post_title ) ? sanitize_text_field( $this->table_data->post_title ) : esc_html__( 'Table', 'wp-table-builder' )
-        );
+        if( ( is_singular( 'post' ) || is_singular( 'page' ) ) && in_the_loop() ) {
+            $title = sprintf(
+                esc_html__( '%s Preview', 'wp-table-builder' ),
+                ! empty( $this->table_data->post_title ) ? sanitize_text_field( $this->table_data->post_title ) : esc_html__( 'Table', 'wp-table-builder' )
+            );
+        }
         
 		return $title;
         
