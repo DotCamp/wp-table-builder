@@ -3,7 +3,7 @@ Contributors: imtiazrayhan
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -58,6 +58,11 @@ That's it. You're done!
 3. Table Shortcode Popup.
 
 == Changelog ==
+
+= 1.0.3 =
+
+* FIX: PHP function not declared issue. 
+* NEW: Preview button in the builder.
 
 = 1.0.2 =
 

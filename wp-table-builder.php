@@ -15,7 +15,7 @@
  * Plugin Name:       WP Table Builder
  * Plugin URI:        https://wptablebuilder.com/
  * Description:       Drag and Drop Table Builder Plugin for WordPress.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Imtiaz Rayhan
  * Author URI:        https://imtiazrayhan.com//
  * License:           GPL-3.0+
@@ -39,7 +39,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'WP_TABLE_BUILDER', 'wp-table-builder' );
 
-define( NS . 'PLUGIN_VERSION', '1.0.2' );
+define( NS . 'PLUGIN_VERSION', '1.0.3' );
 
 define( NS . 'WP_TABLE_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 
