@@ -2448,6 +2448,12 @@ var WPTB_Settings = function WPTB_Settings() {
         shortcodePopupWindow.classList.remove('wptb-popup-show');
     };
 
+    document.getElementsByClassName('wptb-preview-btn')[0].onclick = function (e) {
+        if (this.classList.contains('wptb-button-disable')) {
+            e.preventDefault();
+        }
+    };
+
     document.getElementsByClassName('wptb-save-btn')[0].onclick = function () {
         var bar = document.querySelector('.wptb-edit-bar');
         if (bar && bar.classList.contains('visible')) {

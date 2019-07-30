@@ -31,6 +31,12 @@ var WPTB_Settings = function () {
     document.getElementsByClassName( 'wptb-popup-window-close-icon' )[0].onclick = function () {
         shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
     }
+    
+    document.getElementsByClassName( 'wptb-preview-btn' )[0].onclick = function ( e ) {
+        if( this.classList.contains( 'wptb-button-disable' ) ) {
+            e.preventDefault();
+        }
+    }
 
     document.getElementsByClassName( 'wptb-save-btn' )[0].onclick = function () {
         let bar = document.querySelector( '.wptb-edit-bar' );
