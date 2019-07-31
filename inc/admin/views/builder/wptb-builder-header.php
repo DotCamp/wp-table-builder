@@ -16,8 +16,9 @@
 	<path style="fill:#0D557E" d="M373.996,456.673c0,3.631-2.954,6.585-6.585,6.585h-15.722c-3.631,0-6.585-2.954-6.585-6.585   V352.839c0-3.647,2.954-6.585,6.585-6.585h15.722c3.631,0,6.585,2.938,6.585,6.585V456.673z" data-original="#FFB600" class="" data-old_color="#0D567F"/>
     </g></g> </svg>
     </div>
-    <div id="wptb-messaging-area">
-            
+    
+    <div class="wptb-close">
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview' ) ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
     </div>
     <div class="wptb-right">
         <?php
@@ -52,9 +53,9 @@
                 <?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
             </a>
         </div>
-        <div class="wptb-close">
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview' ) ); ?>"><span class="dashicons dashicons-no" style="font-size: 30px; width: 30px; height: 30px;"></span></a>
-        </div>
+    </div>
+    <div id="wptb-messaging-area">
+            
     </div>
     
     <div class="wptb-popup-window-modal">

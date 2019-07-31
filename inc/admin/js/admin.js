@@ -2673,8 +2673,12 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                         var wptbActions = innerElements[j].querySelectorAll('.wptb-actions');
                         var wptbActionsLength = wptbActions.length;
                         while (wptbActionsLength > 0) {
-                            wptbActions[0].parentNode.removeChild(wptbActions[0]);
-                            wptbActionsLength--;
+                            if (wptbActions[0] && wptbActions[0].parentNode) {
+                                wptbActions[0].parentNode.removeChild(wptbActions[0]);
+                                wptbActionsLength--;
+                            } else {
+                                break;
+                            }
                         }
                     }
                 }
