@@ -80,7 +80,7 @@ class Tables {
 			'wptb_tables_post_type_args',
 			array(
 				'label'               => 'WPTB Tables',
-				'public'              => false,
+				'public'              => true,
 				'exclude_from_search' => true,
 				'show_ui'             => false,
 				'show_in_admin_bar'   => false,

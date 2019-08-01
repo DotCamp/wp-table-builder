@@ -73,16 +73,18 @@ class Preview {
 	public function is_preview_page() {
 
 		// if this is a preview page, then continue
-		if ( empty( $_GET['wptb_table_preview'] ) ) {
+		if ( empty( $_GET['post_type'] ) && empty( $_GET['p'] ) ) {
 			return false;
-		}
+		} elseif ( sanitize_text_field( $_GET['post_type'] ) !== 'wptb-tables' ) {
+            return false;
+        }
 
 		// if the user is authorized and if user rights are valid 
 		if ( ! is_user_logged_in() || ! Helpers::wptb_current_user_can() ) {
 			return false;
 		}
         
-        $this->table_data = $this->get_table_data( absint( $_GET['wptb_table_preview'] ) );
+        $this->table_data = $this->get_table_data( absint( $_GET['p'] ) );
         
         // Check if the form is available
         if ( empty( $this->table_data ) ) {
@@ -130,7 +132,7 @@ class Preview {
 
 		add_filter( 'get_the_excerpt', array( $this, 'the_content' ), 999 );
 
-		add_filter( 'template_include', array( $this, 'template_include' ) );
+		//add_filter( 'template_include', array( $this, 'template_include' ) );
 
 		add_filter( 'post_thumbnail_html', '__return_empty_string' );
         
@@ -199,7 +201,7 @@ class Preview {
 	 */
 	public function template_include() {
 
-		return locate_template( array( 'page.php', 'single.php', 'index.php' ) );
+		return locate_template( array( 'single.php', 'singular.php', 'index.php' ) );
         
 	}
     

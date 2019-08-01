@@ -31,7 +31,8 @@
             }
             $wptb_preview_button_url = add_query_arg(
                 array(
-                    'wptb_table_preview' => $wptb_preview_button_url_value_id,
+                    'post_type' => 'wptb-tables',
+                    'p' => $wptb_preview_button_url_value_id,
                 ),
                 home_url()
             );

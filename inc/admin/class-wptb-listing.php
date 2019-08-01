@@ -53,7 +53,8 @@ class WPTB_Listing  extends \WP_List_Table{
             $id_new = wp_insert_post([
                 'post_title' => sanitize_text_field( $post->post_title ),
                 'post_content' => '',
-                'post_type' => 'wptb-tables'
+                'post_type' => 'wptb-tables',
+                'status' => 'draft'
             ]);
             $post_meta = get_post_meta( absint( $id ) , '_wptb_content_', true );
             
@@ -141,7 +142,8 @@ class WPTB_Listing  extends \WP_List_Table{
         
         $wptb_preview_button_url = add_query_arg(
             array(
-                'wptb_table_preview' => absint( $item->ID ),
+                'post_type' => 'wptb-tables',
+                'p' => absint( $item->ID ),
             ),
             home_url()
         );

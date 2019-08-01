@@ -48,7 +48,8 @@ class Helpers {
 
         $url = add_query_arg(
             array(
-                'wptb_table_preview' => absint( $table_id ),
+                'post_type' => 'wptb-tables',
+                'p' => absint( $table_id )
             ),
             home_url()
         );
