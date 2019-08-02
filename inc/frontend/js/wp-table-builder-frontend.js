@@ -166,7 +166,7 @@ jQuery( document ).ready( function ( $ ) {
         if( previewTable.length > 0 && tableContainer.length > 0 ) {
             tableContainer = tableContainer[0];
             previewTable = previewTable[0];
-            if( previewTable.dataset.reconstraction == 1 ) {
+            if( previewTable.dataset.reconstraction == 1 && previewTable.dataset.wptbAdaptiveTable == 1 ) {
                 let tableContainerWidth = tableContainer.offsetWidth;
                 let previewTableWidth = previewTable.offsetWidth;
                 if( tableContainerWidth < previewTableWidth ) {

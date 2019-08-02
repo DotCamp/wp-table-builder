@@ -216,6 +216,7 @@ var WPTB_Helper = {
         return txt;
     },
     settingsPanelClear: function() {
+        document.getElementById( 'wptb-adaptive-table-checkbox' ).checked = false;
         document.getElementById( 'wptb-top-row-as-header' ).checked = false;
         document.getElementById( 'wptb-table-border-slider' ).value = 0;
         document.getElementById( 'wptb-table-border-number' ).value = 0;

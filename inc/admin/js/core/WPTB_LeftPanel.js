@@ -75,6 +75,16 @@ var WPTB_LeftPanel = function () {
         },
     });
     
+    function tableAdaptiveForMobile( table ) {
+        let wptbAdaptiveTableCheckbox = document.getElementById( 'wptb-adaptive-table-checkbox' );
+        if( table && table.dataset.wptbAdaptiveTable ) {
+            wptbAdaptiveTableCheckbox.checked = true;
+        } else {
+            wptbAdaptiveTableCheckbox.checked = false;
+        }
+    }
+    tableAdaptiveForMobile( table );
+    
     function tableTopRowAsHeadSavedSet( table ) {
         let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
         
@@ -385,6 +395,14 @@ var WPTB_LeftPanel = function () {
             let height = WPTB_Helper.getRowHeight( table, highlighted );
             document.getElementById( 'wptb-table-row-height-number' ).value = height;
             document.getElementById( 'wptb-table-row-height-slider' ).value = height;
+        }
+    };
+    
+    document.getElementById( 'wptb-adaptive-table-checkbox' ).onchange = function() {
+        if( this.checked ) {
+            table.dataset.wptbAdaptiveTable = 1;
+        } else {
+            table.dataset.wptbAdaptiveTable = 0;
         }
     };
     

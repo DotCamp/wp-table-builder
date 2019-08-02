@@ -12,6 +12,17 @@
                 title="<?php esc_attr_e( 'Manage Cells', 'wp_table_builder' ); ?>">
         </div> 
     </div>
+    <div class="wptb-settings-items wptb-adaptive-table-chose-block" style="display: none;">
+        <div class="wptb-settings-row wptb-settings-middle-xs">
+            <label class="wptb-checkbox-button">
+                <span style="font-size: 16px">
+                    <?php esc_html_e( 'Table Adaptive for mobile', 'wp-table-builder' ); ?>
+                </span>
+                <input id="wptb-adaptive-table-checkbox" type="checkbox" />
+                <i></i>
+            </label>  
+        </div>  
+    </div>
     <div class="wptb-settings-items">
         <div class="wptb-settings-row wptb-settings-middle-xs">
             <label class="wptb-checkbox-button">

@@ -389,6 +389,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         table = document.createElement( 'table' );
         table.classList.add( 'wptb-preview-table' );
         table.dataset.reconstraction = 1;
+        table.dataset.wptbAdaptiveTable = 1;
         //Add the data rows.
         for (var i = 0; i < rows; i++) {
 
@@ -819,19 +820,26 @@ var array = [], WPTB_Table = function (columns, rows) {
     
     table.reconstraction = function() {
         let tds = table.getElementsByTagName( 'td' );
+        let wptbAdaptiveTableChoseBlock = document.getElementsByClassName( 'wptb-adaptive-table-chose-block' );
+        if( wptbAdaptiveTableChoseBlock.length > 0 ) {
+            wptbAdaptiveTableChoseBlock = wptbAdaptiveTableChoseBlock[0];
+        }
         table.mergingСellsHorizontally = false;
         table.mergingCellsVertically = false;
         table.dataset.reconstraction = 1;
+        wptbAdaptiveTableChoseBlock.style.display = 'block';
         let forBreak = 0;
         for( let i = 0; i < tds.length; i++ ) {
             if( tds[i].colSpan > 1 ) {
                 table.dataset.reconstraction = 0;
+                wptbAdaptiveTableChoseBlock.style.display = 'none';
                 table.mergingСellsHorizontally = true;
                 forBreak++;
             }
             
             if( tds[i].rowSpan > 1 ) {
                 table.dataset.reconstraction = 0;
+                wptbAdaptiveTableChoseBlock.style.display = 'none';
                 table.mergingCellsVertically = true;
                 forBreak++;
             }
@@ -1418,6 +1426,10 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbLeftScrollPanelCellSetting = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ); 
+        if( wptbLeftScrollPanelCellSetting ) {
+            wptbLeftScrollPanelCellSetting.classList.remove( 'visible' );
+        }
     };
 
     /*
