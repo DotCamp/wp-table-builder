@@ -59,6 +59,13 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.0.4 =
+
+* NEW - Option to choose whether to make the table responsive or not.
+* FIX - Table Preview issue.
+* FIX - Preview button not working in the editor.
+* FIX - Words breaking for Text element.
+
 = 1.0.3 =
 
 * FIX: PHP function not declared issue. 
