@@ -16,7 +16,7 @@
         <div class="wptb-settings-row wptb-settings-middle-xs">
             <label class="wptb-checkbox-button">
                 <span style="font-size: 16px">
-                    <?php esc_html_e( 'Table Adaptive for mobile', 'wp-table-builder' ); ?>
+                    <?php esc_html_e( 'Make Table Responsive', 'wp-table-builder' ); ?>
                 </span>
                 <input id="wptb-adaptive-table-checkbox" type="checkbox" />
                 <i></i>
