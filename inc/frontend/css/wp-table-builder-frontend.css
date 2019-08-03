@@ -75,7 +75,7 @@ table.wptb-preview-table-mobile {
     overflow-wrap: break-word;
     margin: 0 !important;
     word-wrap: break-word;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .wptb-table-container table tr td ul {
@@ -301,15 +301,18 @@ table.wptb-preview-table-mobile {
     padding: 0px !important;
 }
 
+
 /*.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container  {
     position: relative;
     width: 50%;
 }*/
 
+
 /*.wptb-column-title-mobile-not-elements .wptb-column-title-mobile-container .wptb-column-title-mobile  {
     display: block;
     min-height: 60px;
 }*/
+
 
 /*.wptb-table-container table.wptb-table-preview-head td.wptb-column-title-mobile-not-elements 
 .wptb-column-title-mobile-container .wptb-column-title-mobile::before {
