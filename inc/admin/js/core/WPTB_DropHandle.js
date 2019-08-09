@@ -13,34 +13,14 @@ var WPTB_DropHandle = function (thisElem, e) {
     }
     
     let wptbDropHandle,
-        wptbDropBorderMarker;
+        wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        wptbBorderMarkerActionsField.actionsRemove();
     if ( document.getElementsByClassName( 'wptb-drop-handle' ).length == 0 ) {
+        let body = document.getElementsByTagName( 'body' )[0];
         wptbDropHandle = document.createElement( 'div' );
         wptbDropHandle.classList.add( 'wptb-drop-handle' );
-        
-        wptbDropBorderMarker = document.createElement( 'div' );
-        wptbDropBorderMarker.classList.add( 'wptb-drop-border-marker' );
-        
-        let wptbDropBorderMarkerTop = document.createElement( 'div' ),
-            wptbDropBorderMarkerRight = document.createElement( 'div' ),
-            wptbDropBorderMarkerBottom = document.createElement( 'div' ),
-            wptbDropBorderMarkerLeft = document.createElement( 'div' );
-        
-        wptbDropBorderMarkerTop.classList.add( 'wptb-drop-border-marker-top' );
-        wptbDropBorderMarkerRight.classList.add( 'wptb-drop-border-marker-right' );
-        wptbDropBorderMarkerBottom.classList.add( 'wptb-drop-border-marker-bottom' );
-        wptbDropBorderMarkerLeft.classList.add( 'wptb-drop-border-marker-left' );
-        
-        wptbDropBorderMarker.appendChild( wptbDropBorderMarkerTop );
-        wptbDropBorderMarker.appendChild( wptbDropBorderMarkerRight );
-        wptbDropBorderMarker.appendChild( wptbDropBorderMarkerBottom );
-        wptbDropBorderMarker.appendChild( wptbDropBorderMarkerLeft );
-        
-        let body = document.getElementsByTagName( 'body' );
-        if ( body.length > 0 ) {
-            body[0].appendChild( wptbDropHandle );
-            body[0].appendChild( wptbDropBorderMarker );
-        }
+       
+        body.appendChild( wptbDropHandle );
         
         wptbDropHandle.ondragenter = function () {
 
@@ -92,19 +72,14 @@ var WPTB_DropHandle = function (thisElem, e) {
             }
             
             wptbDropHandle.style.display = 'none';
-            wptbDropBorderMarker.style.display = 'none';
+            wptbBorderMarkerActionsField.borderMarkerHide();
             
             WPTB_innerElementSet(element);
         }
-        let wptbContainer = document.querySelector( '.wptb-container' );
-        wptbContainer.onscroll = function() {
-            wptbDropHandle.style.display = 'none';
-            wptbDropBorderMarker.style.display = 'none';
-        }
     } else {
         wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' )[0];
-        wptbDropBorderMarker = document.getElementsByClassName( 'wptb-drop-border-marker' )[0];
     }
+    
     if( thisElem && thisElem.nodeName.toLowerCase() == 'td' && 
             thisElem.getElementsByClassName( 'wptb-ph-element' ).length != 0 ) {
         return;
@@ -142,10 +117,10 @@ var WPTB_DropHandle = function (thisElem, e) {
         let elementDrag = document.getElementsByClassName( 'wptb-moving-mode' )[0];
         if( thisElem == elementDrag ) {
             wptbDropHandle.classList.add('wptb-moving-into-same-elem');
-            wptbDropBorderMarker.classList.add('wptb-moving-into-same-elem');
+            wptbBorderMarkerActionsField.wptbBorderMarker.classList.add('wptb-moving-into-same-elem');
         } else {
             wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
-            wptbDropBorderMarker.classList.remove('wptb-moving-into-same-elem');
+            wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove('wptb-moving-into-same-elem');
         }
     }
     
@@ -154,7 +129,19 @@ var WPTB_DropHandle = function (thisElem, e) {
     }
     
     wptbDropHandle.style.display = 'block';
-    wptbDropBorderMarker.style.display = 'block';
+    
+    let actions = wptbBorderMarkerActionsField.wptbActions;
+    if( actions ) {
+        actions.style.display = 'none';
+    }
+    
+    let wptbContainer = document.getElementsByClassName( 'wptb-container' )[0];
+    let correctTop = function() {
+        let coordinatesElement = thisElem.getBoundingClientRect();
+        wptbBorderMarkerActionsField.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
+    }
+    wptbContainer.removeEventListener( 'scroll', correctTop, false );
+    
     if( thisElem.nodeName.toLowerCase() != 'td' ) {
         let y = e.offsetY==undefined?e.layerY:e.offsetY;
         top = Number( coordinatesElement.top ) - Number( 11 );
@@ -168,21 +155,8 @@ var WPTB_DropHandle = function (thisElem, e) {
         top = Number( coordinatesElement.top ) + height/2 - 5;
     }
     wptbDropHandle.style.top = top + 'px';
+    
+    wptbContainer.addEventListener( 'scroll', correctTop, false );
 
-    wptbDropBorderMarker.style.top = coordinatesElement.top + 'px';
-    wptbDropBorderMarker.style.left = coordinatesElement.left + 'px';
-
-    wptbDropBorderMarkerTop = wptbDropBorderMarker.querySelector( '.wptb-drop-border-marker-top' );
-    wptbDropBorderMarkerTop.style.width = ( Number( thisElem.offsetWidth ) - Number( 1 ) ) + 'px';
-
-    wptbDropBorderMarkerRight = wptbDropBorderMarker.querySelector( '.wptb-drop-border-marker-right' );
-    wptbDropBorderMarkerRight.style.height = ( Number( coordinatesElement.bottom ) - Number( coordinatesElement.top ) - 1 ) + 'px';
-    wptbDropBorderMarkerRight.style.left = wptbDropBorderMarkerTop.style.width;
-
-    wptbDropBorderMarkerBottom = wptbDropBorderMarker.querySelector( '.wptb-drop-border-marker-bottom' );
-    wptbDropBorderMarkerBottom.style.width = wptbDropBorderMarkerTop.style.width;
-    wptbDropBorderMarkerBottom.style.top = wptbDropBorderMarkerRight.style.height;
-
-    wptbDropBorderMarkerLeft = wptbDropBorderMarker.querySelector( '.wptb-drop-border-marker-left' );
-    wptbDropBorderMarkerLeft.style.height = wptbDropBorderMarkerRight.style.height;
+    wptbBorderMarkerActionsField.setParameters( thisElem ); 
 }

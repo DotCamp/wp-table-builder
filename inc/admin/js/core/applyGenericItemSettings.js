@@ -25,92 +25,14 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         index = kindIndexProt.split('-')[1];
     }
     
-    node.onmouseenter = function (event) {
-        this.classList.add('wptb-directlyhovered');
-        let btnDelete = document.createElement( 'span' ),
-            btnCopy = document.createElement( 'span' ),
-            btnMove = document.createElement( 'span' ),
-            actions = document.createElement( 'span' ), i;
-
-        actions.classList.add('wptb-actions');
-        btnDelete.classList.add('dashicons', 'dashicons-trash', 'wptb-delete-action');
-        btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'wptb-duplicate-action');
-        btnMove.classList.add("dashicons", "dashicons-move", 'wptb-move-action');
-        btnMove.draggable = true;
-        btnDelete.onclick = function (event) {
-            let act = this.parentNode.parentNode,
-                el = act.parentNode;
-            el.removeChild(act);
-            
-            if( act.kind == 'text' ) {
-                let thisRow = el.parentNode
-                if( thisRow.classList.contains( 'wptb-table-head' ) ) {
-                    let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
-                    WPTB_Helper.dataTitleColumnSet( table );
-                }
-            }
-            
-        };
-        btnCopy.onclick = function (event) {
-            let copy;
-            if (element.kind == 'list') {
-                var td = event.target.parentNode.parentNode.parentNode,
-                    temp = [],
-                    srcList = event.target.parentNode.parentNode.querySelectorAll('ul li .wptb-list-item-content');
-
-                for (var i = 0; i < srcList.length; i++) {
-                    temp.push(srcList[i].innerHTML);
-                }
-
-                copy = new WPTB_List( temp, node );
-
-                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
-            } else if (element.kind == 'text') {
-                var td = event.target.parentNode.parentNode.parentNode;
-                copy = new WPTB_Text(event.target.parentNode.parentNode.childNodes[0].innerHTML, node);
-
-                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
-            } else if ( element.kind == 'image' ) {
-                var td = event.target.parentNode.parentNode.parentNode;
-                copy = new WPTB_Image( event.target.parentNode.parentNode.children[0].children[0].src, node );
-
-                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
-            } else {
-                var td = event.target.parentNode.parentNode.parentNode,
-                    text = event.target.parentNode.parentNode.childNodes[0].querySelector( 'p' ).innerHTML;
-                copy = new WPTB_Button( text, node );
-
-                node.parentNode.insertBefore( copy.getDOMElement(), node.nextSibling );
-            }
-            
-            WPTB_innerElementSet( copy.getDOMElement() );
-        };
-        let parent = this,
-            infArr,
-            type;
-        infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-        type = infArr[1];
-        let dragImagesArr =  WPTB_Helper.dragImagesArr();
-        btnMove.ondragstart = function (event) {
-            this.parentNode.style.opacity = 0;
-            parent.classList.remove( 'wptb-directlyhovered' );
-            parent.classList.add( 'wptb-moving-mode' );
-            
-            event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
-            event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
-            event.dataTransfer.setData( 'wptb-moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
-            event.dataTransfer.setData( 'wptbElIndic-' + infArr[1], 'wptbElIndic-' + infArr[1] );
-            let act = event.target.parentNode.parentNode;
-            if( act.kind == 'text' ) {
-                let thisRow = el.parentNode
-                if( thisRow.classList.contains( 'wptb-table-head' ) ) {
-                    let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
-                    WPTB_Helper.dataTitleColumnSet( table );
-                }
-            }
-        };
-
-        if (element.kind === 'button') {
+    node.onmouseenter = function ( event ) {
+        let i, wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        
+        wptbBorderMarkerActionsField.addActionField( 1, node )
+        
+        wptbBorderMarkerActionsField.setParameters( this );
+        
+        if ( element.kind === 'button' ) {
             let a = node.querySelector( 'a' ),
                 target = a.querySelector( 'div' );
             a.onclick = function( e ) {
@@ -135,6 +57,15 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                             let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
                             WPTB_Helper.dataTitleColumnSet( table );
                         }
+                    });
+                    
+                    ed.on( 'keydown', function(e) {
+                        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, node );
+                        wptbBorderMarkerActionsField.setParameters( node );
+                    });
+                    ed.on( 'keyup', function(e) {
+                        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, node );
+                        wptbBorderMarkerActionsField.setParameters( node );
                     });
                 },
                 init_instance_callback: function (editor) {
@@ -164,20 +95,26 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             }
         }
 
-        actions.appendChild(btnMove);
-        actions.appendChild(btnCopy);
-        actions.appendChild(btnDelete);
-        this.appendChild( actions );
+        
     };
-
+    
     node.onmouseleave = function ( event ) {
-        this.classList.remove( 'wptb-directlyhovered' );
-        let iter = 0;
-        while( event.target.querySelector( '.wptb-actions' ) && iter < 5 ) {
-            event.target.querySelector( '.wptb-actions' ).remove();
-            iter++;
+        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        
+        if( wptbBorderMarkerActionsField.wptbActions && wptbBorderMarkerActionsField.wptbActions.type != '1' ) {
+            return;
         }
+        
+        wptbBorderMarkerActionsField.addActionField( 1, node )
+        
+        wptbBorderMarkerActionsField.leaveFromField( event, node, 1 )
     };
+    
+    let wptbActions = document.getElementsByClassName( 'wptb-actions' );
+    if( wptbActions.length > 0 ) {
+        wptbActions = wptbActions[0];
+        
+    }
     
     // Change data-title-column if the title was changed
     if( element.kind == 'text' ) {

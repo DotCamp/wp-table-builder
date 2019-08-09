@@ -9,10 +9,10 @@ var WPTB_Settings = function () {
         }
         elems[i].ondragend = function () {
             let wptbDropHandle = document.querySelector( '.wptb-drop-handle' ),
-                wptbDropBorderMarker = document.querySelector( '.wptb-drop-border-marker' );
-            if ( wptbDropHandle || wptbDropBorderMarker ) {
+                wptbBorderMarker = document.querySelector( '.wptb-border-marker' );
+            if ( wptbDropHandle || wptbBorderMarker ) {
                 wptbDropHandle.style.display = 'none';
-                wptbDropBorderMarker.style.display = 'none';
+                wptbBorderMarker.style.display = 'none';
             }
         }
     };

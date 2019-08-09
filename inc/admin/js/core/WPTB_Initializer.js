@@ -42,10 +42,8 @@ var WPTB_Initializer = function () {
                 rows = document.getElementById('wptb-rows-number').value;
 
             WPTB_Table(columns, rows);
+            
+            //WPTB_TableStateSaving();
     }
-    
-//    if( document.getElementsByClassName( 'wptb-preview-table' ).length == 0 ) {
-//        WPTB_LeftPanel();
-//    }
 
 };

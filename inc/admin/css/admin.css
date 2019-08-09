@@ -100,6 +100,26 @@ body>img {
     font-size: 15px;
 }
 
+.wptb-undo-redo-container {
+    float: left;
+    margin-right: 20px;
+    margin-top: 30px;
+}
+
+.wptb-undo, .wptb-redo {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.wptb-undo {
+    margin-right: 7px;
+}
+
+
+.wptb-undo:hover, .wptb-redo:hover {
+    
+}
+
 .wptb-embed,
 .wptb-preview {
     display: block;
@@ -1452,7 +1472,7 @@ table.wptb-table {
 .wptb-droppable.wptb-cell ol {
     border: 1px solid transparent;
     margin: 0;
-    padding: 1em 0 0 0;
+    padding: 1em 0.2em 0.4em;
     width: 100%;
 }
 
@@ -1472,6 +1492,7 @@ table.wptb-table {
 
 .wptb-list-item-container ul li {
     list-style: none;
+    margin: 0px;
 }
 
 .wptb-droppable.wptb-cell li .wptb-list-item-content {
@@ -1556,8 +1577,6 @@ table.wptb-table {
     border-top-right-radius: 4px;
     box-sizing: border-box;
     color: white;
-    display: flex;
-    display: -webkit-flex;
     justify-content: space-between;
     line-height: 1em;
     padding: 0px 5px;
@@ -1568,6 +1587,7 @@ table.wptb-table {
     font-size: 9pt;
     display: none;
     min-width: 70px;
+    z-index: 100100;
 }
 
 .wptb-ph-element:hover .wptb-actions {
@@ -1651,7 +1671,7 @@ table.wptb-table {
     box-sizing: border-box;
 }
 
-.wptb-drop-border-marker {
+.wptb-border-marker {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -1659,33 +1679,33 @@ table.wptb-table {
 }
 
 .wptb-drop-handle.wptb-moving-into-same-elem,
-.wptb-drop-border-marker.wptb-moving-into-same-elem {
+.wptb-border-marker.wptb-moving-into-same-elem {
     opacity: 0;
     visibility: hidden;
 }
 
-.wptb-drop-border-marker>div {
+.wptb-border-marker>div {
     position: absolute;
     background: #1ea9eb;
 }
 
-.wptb-drop-border-marker-top {
+.wptb-border-marker-top {
     top: 0;
     left: 0;
     height: 1px;
 }
 
-.wptb-drop-border-marker-right {
+.wptb-border-marker-right {
     top: 0;
     width: 1px;
 }
 
-.wptb-drop-border-marker-bottom {
+.wptb-border-marker-bottom {
     left: 0;
     height: 1px;
 }
 
-.wptb-drop-border-marker-left {
+.wptb-border-marker-left {
     top: 0;
     left: 0;
     width: 1px;

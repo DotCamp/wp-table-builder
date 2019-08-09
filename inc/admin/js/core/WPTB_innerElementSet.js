@@ -34,16 +34,13 @@ var WPTB_innerElementSet = function  ( element ) {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+        if ( !e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node') ) {
             return;
         }
         let wptbDropHandle,
-            wptbDropBorderMarker;
+            wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
         if ( document.getElementsByClassName( 'wptb-drop-handle' ).length > 0 ) {
             wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' )[0];
-        }
-        if( document.getElementsByClassName( 'wptb-drop-border-marker' ).length > 0 ) {
-            wptbDropBorderMarker = document.getElementsByClassName( 'wptb-drop-border-marker' )[0];
         }
 
         if ( e.dataTransfer.getData( 'wptbElement' ) ) {
@@ -53,6 +50,7 @@ var WPTB_innerElementSet = function  ( element ) {
             classId = e.dataTransfer.getData( 'node' );
             element = document.getElementsByClassName( classId )[0];
             element.classList.remove( 'wptb-moving-mode' );
+            wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove( 'wptb-moving-into-same-elem' );
         }
         
         if( wptbDropHandle.style.display == 'block' ) {
@@ -82,7 +80,7 @@ var WPTB_innerElementSet = function  ( element ) {
         }
         
         wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
+        wptbBorderMarkerActionsField.borderMarkerHide();
 
         WPTB_innerElementSet( element );
 

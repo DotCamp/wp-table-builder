@@ -21,7 +21,6 @@ var WPTB_Stringifier = function ( codeMain ) {
                 
                 if ( innerElements.length > 0 ) {
                     for ( let j = 0; j < innerElements.length; j++ ) {
-                        innerElements[j].classList.remove( 'wptb-directlyhovered' );
                         
                         let mceContentBodys = innerElements[j].querySelectorAll( '.mce-content-body' );
                         if( mceContentBodys.length > 0 ) {

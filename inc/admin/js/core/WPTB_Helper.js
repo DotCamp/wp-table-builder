@@ -77,10 +77,16 @@ var WPTB_Helper = {
                             }
                         }
                     }
+                    
+                    let wptbListItem = e.target.parentNode;
+                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 2, wptbListItem );
+                    wptbBorderMarkerActionsField.setParameters( wptbListItem );
                 });
                 
                 ed.on( 'keyup', function( e ) {
-                    
+                    let wptbListItem = e.target.parentNode;
+                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 2, wptbListItem );
+                    wptbBorderMarkerActionsField.setParameters( wptbListItem );
                 });
             },
             init_instance_callback: function (editor) {
@@ -113,10 +119,19 @@ var WPTB_Helper = {
             fixed_toolbar_container: '#wpcd_fixed_toolbar',
             toolbar: 'bold italic strikethrough',
             setup : function(ed) {
-                ed.on('keydown', function(e) {
+                ed.on( 'keydown', function(e) {
                     if (e.keyCode == 13) {
                         e.preventDefault();
                     }
+                    let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
+                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, wptbButtonContainer );
+                    wptbBorderMarkerActionsField.setParameters( wptbButtonContainer );
+                });
+                
+                ed.on( 'keyup', function(e) {
+                    let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
+                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, wptbButtonContainer );
+                    wptbBorderMarkerActionsField.setParameters( wptbButtonContainer );
                 });
             },
             init_instance_callback: function (editor) {
