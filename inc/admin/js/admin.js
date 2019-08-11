@@ -103,7 +103,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             return;
         }
 
-        wptbBorderMarkerActionsField.addActionField(1, node);
+        //wptbBorderMarkerActionsField.addActionField( 1, node );
 
         wptbBorderMarkerActionsField.leaveFromField(event, node, 1);
     };
@@ -232,15 +232,13 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                 wptbBorderMarkerActionsField.borderMarkerHide();
             };
 
-            var parent = thisNode,
-                infArr = void 0,
-                type = void 0;
-            infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-            type = infArr[1];
-
             btnCopy.onclick = function (event) {
-                var copy = void 0;
+                var copy = void 0,
+                    infArr = void 0,
+                    type = void 0;
                 var activeElement = event.target.parentNode.activeElem;
+                infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
+                type = infArr[1];
                 var td = activeElement.parentNode;
                 if (type == 'list') {
                     var temp = [],
@@ -276,14 +274,18 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                 wptbBorderMarkerActionsField.setParameters(activeElement);
             };
 
-            var dragImagesArr = WPTB_Helper.dragImagesArr();
             btnMove.ondragstart = function (event) {
-                actions = document.getElementsByClassName('wptb-actions');
-                if (actions.length != 0) {
-                    actions[0].style.display = 'none';
-                }
-                parent.classList.add('wptb-moving-mode');
+                var dragImagesArr = WPTB_Helper.dragImagesArr(),
+                    actions = event.target.parentNode,
+                    activeElem = actions.activeElem,
+                    infArr = void 0,
+                    type = void 0;
+                infArr = activeElem.className.match(/wptb-element-(.+)-(\d+)/i);
+                type = infArr[1];
+                actions.style.opacity = 0;
+                activeElem.classList.add('wptb-moving-mode');
 
+                event.dataTransfer.effectAllowed = 'move';
                 event.dataTransfer.setDragImage(dragImagesArr[type], 0, 0);
                 event.dataTransfer.setData('node', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
                 event.dataTransfer.setData('wptb-moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2]);
@@ -298,8 +300,7 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                 }
             };
 
-            actions.style.right = '-' + (parseInt(thisNode.offsetWidth) - 1) + 'px';
-            actions.style.top = '-15px';
+            actions.style.right = '-' + (parseFloat(thisNode.offsetWidth) + 3) + 'px';
             actions.style.display = 'block';
 
             _this.wptbActions = actions;
@@ -369,8 +370,7 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                 }
             };
 
-            _actions.style.right = '-' + (parseInt(thisNode.offsetWidth) - 1) + 'px';
-            _actions.style.top = '-15px';
+            _actions.style.right = '-' + (parseFloat(thisNode.offsetWidth) + 3) + 'px';
             _actions.style.display = 'block';
 
             _this.wptbActions = _actions;
@@ -379,27 +379,27 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
 
     this.setParameters = function (thisNode) {
         var coordinatesElement = thisNode.getBoundingClientRect();
-        var wptbContainer = document.getElementsByClassName('wptb-container')[0];
 
+        var wptbContainer = document.getElementsByClassName('wptb-container')[0];
         var correctTop = function correctTop() {
             var coordinatesElement = thisNode.getBoundingClientRect();
             _this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
         };
         wptbContainer.removeEventListener('scroll', correctTop, false);
 
-        _this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
-        _this.wptbBorderMarker.style.left = coordinatesElement.left + 'px';
+        _this.wptbBorderMarker.style.top = parseFloat(coordinatesElement.top) - 2 + 'px';
+        _this.wptbBorderMarker.style.left = parseFloat(coordinatesElement.left) - 2 + 'px';
 
         var wptbBorderMarkerTop = _this.wptbBorderMarker.querySelector('.wptb-border-marker-top');
-        wptbBorderMarkerTop.style.width = Number(thisNode.offsetWidth) - Number(1) + 'px';
+        wptbBorderMarkerTop.style.width = parseFloat(thisNode.offsetWidth) + 3 + 'px';
 
         var wptbBorderMarkerRight = _this.wptbBorderMarker.querySelector('.wptb-border-marker-right');
-        wptbBorderMarkerRight.style.height = Number(coordinatesElement.bottom) - Number(coordinatesElement.top) - 1 + 'px';
-        wptbBorderMarkerRight.style.left = wptbBorderMarkerTop.style.width;
+        wptbBorderMarkerRight.style.height = parseFloat(coordinatesElement.bottom) - parseFloat(coordinatesElement.top) + 4 + 'px';
+        wptbBorderMarkerRight.style.left = parseFloat(thisNode.offsetWidth) + 3 + 'px';
 
         var wptbBorderMarkerBottom = _this.wptbBorderMarker.querySelector('.wptb-border-marker-bottom');
         wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
-        wptbBorderMarkerBottom.style.top = wptbBorderMarkerRight.style.height;
+        wptbBorderMarkerBottom.style.top = parseFloat(coordinatesElement.bottom) - parseFloat(coordinatesElement.top) + 3 + 'px';;
 
         var wptbBorderMarkerLeft = _this.wptbBorderMarker.querySelector('.wptb-border-marker-left');
         wptbBorderMarkerLeft.style.height = wptbBorderMarkerRight.style.height;
@@ -410,74 +410,34 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
     };
 
     this.leaveFromField = function (event, node, actionType) {
-        var clientX = event.clientX;
-        var clientY = event.clientY;
+        if (event.relatedTarget != null) {
+            if (event.relatedTarget.classList.contains('wptb-border-marker') || event.relatedTarget.classList.contains('wptb-border-marker-top') || event.relatedTarget.classList.contains('wptb-border-marker-right') || event.relatedTarget.classList.contains('wptb-border-marker-bottom') || event.relatedTarget.classList.contains('wptb-border-marker-left') || event.relatedTarget.localName == 'td') {
+                _this.wptbBorderMarker.style.display = 'none';
+                _this.wptbActions.style.display = 'none';
 
-        if (_this.wptbBorderMarker && _this.wptbActions && clientX && clientY) {
-            var _wptbBorderMarkerTop = _this.wptbBorderMarker.style.top;
-            var _wptbBorderMarkerLeft = _this.wptbBorderMarker.style.left;
+                if (_this.wptbActions.type == 2) {
+                    var listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
+                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+                    wptbBorderMarkerActionsField.addActionField(1, listElement);
+                    wptbBorderMarkerActionsField.setParameters(listElement);
+                }
+            } else if (event.relatedTarget.classList.contains('wptb-actions') || event.relatedTarget.classList.contains('wptb-move-action') || event.relatedTarget.classList.contains('wptb-duplicate-action') || event.relatedTarget.classList.contains('wptb-delete-action')) {
+                _this.wptbActions.onmouseleave = function (event) {
+                    if (event.relatedTarget != null && event.relatedTarget.localName == 'td') {
+                        _this.wptbBorderMarker.style.display = 'none';
+                        _this.wptbActions.style.display = 'none';
 
-            if (_wptbBorderMarkerTop && _wptbBorderMarkerLeft) {
-                var wptbActionsWidth = _this.wptbActions.offsetWidth;
-                var wptbActionsTop = _this.wptbActions.style.top;
-                var wptbActionRight = _this.wptbActions.style.right;
-
-                var wptbActionsClientBottom = parseInt(_wptbBorderMarkerTop, 10);
-                var wptbActionsClientTop = wptbActionsClientBottom + parseInt(wptbActionsTop, 10);
-                var wptbActionsClientRigth = parseInt(_wptbBorderMarkerLeft, 10) - parseInt(wptbActionRight, 10);
-                var wptbActionsClientLeft = wptbActionsClientRigth - parseInt(wptbActionsWidth, 10);
-
-                if (wptbActionsWidth && wptbActionsTop) {
-                    if (clientX >= wptbActionsClientLeft && clientX <= wptbActionsClientRigth && clientY <= wptbActionsClientBottom && clientY >= wptbActionsClientTop) {
-
-                        _this.wptbActions.onmouseleave = function (event) {
-                            var clientX = event.clientX;
-                            var clientY = event.clientY;
-
-                            var wptbBorderMarkerLeft = _this.wptbBorderMarker.getElementsByClassName('wptb-border-marker-left');
-                            if (wptbBorderMarkerLeft.length > 0) {
-                                wptbBorderMarkerLeft = wptbBorderMarkerLeft[0];
-                            }
-
-                            var wptbBorderMarkerTop = _this.wptbBorderMarker.getElementsByClassName('wptb-border-marker-top');
-                            if (wptbBorderMarkerTop.length > 0) {
-                                wptbBorderMarkerTop = wptbBorderMarkerTop[0];
-                            }
-
-                            var wptbElemClientTop = parseInt(_this.wptbBorderMarker.style.top, 10);
-                            var wptbElemClientBottom = wptbElemClientTop - parseInt(wptbBorderMarkerLeft.style.height, 10);
-                            var wptbElemClientLeft = parseInt(_this.wptbBorderMarker.style.left, 10);
-                            var wptbElemClientRigth = wptbElemClientLeft + parseInt(wptbBorderMarkerTop.style.width, 10);
-
-                            if (clientX >= wptbElemClientLeft && clientX <= wptbElemClientRigth && clientY >= wptbElemClientTop && clientY <= wptbElemClientBottom) {
-                                return;
-                            }
-
-                            _this.wptbBorderMarker.style.display = 'none';
-                            _this.wptbActions.style.display = 'none';
-
-                            if (_this.wptbActions.type == 2) {
-                                var listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
-                                var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                                wptbBorderMarkerActionsField.addActionField(1, listElement);
-                                wptbBorderMarkerActionsField.setParameters(listElement);
-                            }
-                        };
-
+                        if (_this.wptbActions.type == 2) {
+                            var _listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
+                            var _wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+                            _wptbBorderMarkerActionsField.addActionField(1, _listElement);
+                            _wptbBorderMarkerActionsField.setParameters(_listElement);
+                        }
+                    } else {
                         return;
                     }
-                }
+                };
             }
-        }
-
-        _this.wptbBorderMarker.style.display = 'none';
-        _this.wptbActions.style.display = 'none';
-
-        if (_this.wptbActions.type == 2) {
-            var listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
-            var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-            wptbBorderMarkerActionsField.addActionField(1, listElement);
-            wptbBorderMarkerActionsField.setParameters(listElement);
         }
     };
 
@@ -811,6 +771,8 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
                 element.classList.remove('wptb-moving-into-same-elem');
             }
 
+            element.classList.remove('wptb-ondragenter');
+
             var td = void 0;
             if (wptbDropHandle.dataset.text == 'Drop Here') {
                 thisElem = wptbDropHandle.getDOMParentElement();
@@ -870,12 +832,12 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
         }
     }
 
-    wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
+    wptbDropHandle.style.width = thisElem.offsetWidth + 4 + 'px';
     var height = thisElem.offsetHeight,
         coordinatesElement = thisElem.getBoundingClientRect(),
         left = Number(coordinatesElement.left),
         top = void 0;
-    wptbDropHandle.style.left = left + 'px';
+    wptbDropHandle.style.left = left - 2 + 'px';
 
     if (e.dataTransfer.types.indexOf('wptb-moving-mode') != -1) {
         var elementDrag = document.getElementsByClassName('wptb-moving-mode')[0];
@@ -908,15 +870,15 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
 
     if (thisElem.nodeName.toLowerCase() != 'td') {
         var y = e.offsetY == undefined ? e.layerY : e.offsetY;
-        top = Number(coordinatesElement.top) - Number(11);
+        top = parseFloat(coordinatesElement.top) - parseFloat(13);
         wptbDropHandle.dataset.text = 'Abowe Element';
         if (y > height / 2) {
-            top = Number(coordinatesElement.top) + height - 1;
+            top = parseFloat(coordinatesElement.top) + height + 1;
             wptbDropHandle.dataset.text = 'Below Element';
         }
     } else {
         wptbDropHandle.dataset.text = 'Drop Here';
-        top = Number(coordinatesElement.top) + height / 2 - 5;
+        top = parseFloat(coordinatesElement.top) + height / 2 - 5;
     }
     wptbDropHandle.style.top = top + 'px';
 
@@ -1910,7 +1872,6 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
     };
     element.ondragleave = function () {};
     element.ondrop = function (e) {
-        this.classList.remove('wptb-ondragenter');
         var element = void 0,
             classId = void 0;
         e.preventDefault();
@@ -1932,8 +1893,11 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
             classId = e.dataTransfer.getData('node');
             element = document.getElementsByClassName(classId)[0];
             element.classList.remove('wptb-moving-mode');
+            wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
             wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove('wptb-moving-into-same-elem');
         }
+
+        element.classList.remove('wptb-ondragenter');
 
         if (wptbDropHandle.style.display == 'block') {
             var td = void 0;
@@ -1967,7 +1931,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
 
         return true;
     };
-    element.onmouseover = function (e) {
+    element.mouseenter = function (e) {
         element.classList.remove('wptb-ondragenter');
     };
 };
@@ -2541,7 +2505,7 @@ var WPTB_ListItem = function WPTB_ListItem(text, DOMElementProt, copy) {
     DOMElement.onmouseleave = function (event) {
         var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
 
-        wptbBorderMarkerActionsField.addActionField(2, DOMElement);
+        //wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
 
         wptbBorderMarkerActionsField.leaveFromField(event, DOMElement, 2);
 

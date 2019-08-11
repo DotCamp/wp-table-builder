@@ -81,15 +81,15 @@ var WPTB_BorderMarkerActionsField = function() {
                 wptbBorderMarkerActionsField.borderMarkerHide();
             };
 
-            let parent = thisNode,
-                infArr,
-                type;
-            infArr = parent.className.match(/wptb-element-(.+)-(\d+)/i);
-            type = infArr[1];
+            
 
             btnCopy.onclick = ( event ) => {
-                let copy;
+                let copy,
+                    infArr,
+                    type;
                 let activeElement = event.target.parentNode.activeElem;
+                infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
+                type = infArr[1];
                 let td = activeElement.parentNode;
                 if ( type == 'list' ) {
                     var temp = [],
@@ -125,14 +125,18 @@ var WPTB_BorderMarkerActionsField = function() {
                 wptbBorderMarkerActionsField.setParameters( activeElement );
             };
 
-            let dragImagesArr =  WPTB_Helper.dragImagesArr();
-            btnMove.ondragstart = function(event) {
-                actions = document.getElementsByClassName( 'wptb-actions' );
-                if( actions.length != 0 ) {
-                    actions[0].style.display = 'none';
-                }
-                parent.classList.add( 'wptb-moving-mode' );
-
+            btnMove.ondragstart = function( event ) {
+                let dragImagesArr =  WPTB_Helper.dragImagesArr(),
+                    actions = event.target.parentNode,
+                    activeElem = actions.activeElem,
+                    infArr,
+                    type;
+                infArr = activeElem.className.match(/wptb-element-(.+)-(\d+)/i);
+                type = infArr[1];
+                actions.style.opacity = 0;
+                activeElem.classList.add( 'wptb-moving-mode' );
+                
+                event.dataTransfer.effectAllowed = 'move';
                 event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
                 event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
                 event.dataTransfer.setData( 'wptb-moving-mode', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
@@ -147,8 +151,7 @@ var WPTB_BorderMarkerActionsField = function() {
                 }
             };
 
-            actions.style.right = '-' + ( parseInt( thisNode.offsetWidth ) - 1 ) + 'px';
-            actions.style.top = '-15px';
+            actions.style.right = '-' + ( parseFloat( thisNode.offsetWidth ) + 3 ) + 'px';
             actions.style.display = 'block';
             
             this.wptbActions = actions;
@@ -220,8 +223,7 @@ var WPTB_BorderMarkerActionsField = function() {
                 }
             };
 
-            actions.style.right = '-' + ( parseInt( thisNode.offsetWidth ) - 1 ) + 'px';
-            actions.style.top = '-15px';
+            actions.style.right = '-' + ( parseFloat( thisNode.offsetWidth ) + 3 ) + 'px';
             actions.style.display = 'block';
             
             this.wptbActions = actions;
@@ -231,28 +233,27 @@ var WPTB_BorderMarkerActionsField = function() {
     
     this.setParameters = ( thisNode ) => {
         let coordinatesElement = thisNode.getBoundingClientRect();
-        let wptbContainer = document.getElementsByClassName( 'wptb-container' )[0];
         
+        let wptbContainer = document.getElementsByClassName( 'wptb-container' )[0];
         let correctTop = () => {
             let coordinatesElement = thisNode.getBoundingClientRect();
             this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
         }
         wptbContainer.removeEventListener( 'scroll', correctTop, false );
         
-        
-        this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
-        this.wptbBorderMarker.style.left = coordinatesElement.left + 'px';
+        this.wptbBorderMarker.style.top = parseFloat( coordinatesElement.top ) - 2 + 'px';
+        this.wptbBorderMarker.style.left = parseFloat( coordinatesElement.left ) - 2 + 'px';
 
         let wptbBorderMarkerTop = this.wptbBorderMarker.querySelector( '.wptb-border-marker-top' );
-        wptbBorderMarkerTop.style.width = ( Number( thisNode.offsetWidth ) - Number( 1 ) ) + 'px';
+        wptbBorderMarkerTop.style.width = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
 
         let wptbBorderMarkerRight = this.wptbBorderMarker.querySelector( '.wptb-border-marker-right' );
-        wptbBorderMarkerRight.style.height = ( Number( coordinatesElement.bottom ) - Number( coordinatesElement.top ) - 1 ) + 'px';
-        wptbBorderMarkerRight.style.left = wptbBorderMarkerTop.style.width;
+        wptbBorderMarkerRight.style.height = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 4 ) + 'px';
+        wptbBorderMarkerRight.style.left = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
 
         let wptbBorderMarkerBottom = this.wptbBorderMarker.querySelector( '.wptb-border-marker-bottom' );
         wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
-        wptbBorderMarkerBottom.style.top = wptbBorderMarkerRight.style.height;
+        wptbBorderMarkerBottom.style.top = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 3 ) + 'px';;
 
         let wptbBorderMarkerLeft = this.wptbBorderMarker.querySelector( '.wptb-border-marker-left' );
         wptbBorderMarkerLeft.style.height = wptbBorderMarkerRight.style.height;
@@ -263,79 +264,41 @@ var WPTB_BorderMarkerActionsField = function() {
     }
     
     this.leaveFromField = ( event, node, actionType ) => {
-        let clientX = event.clientX;
-        let clientY = event.clientY;
+        if( event.relatedTarget != null ) {
+            if( event.relatedTarget.classList.contains( 'wptb-border-marker' ) ||
+                event.relatedTarget.classList.contains( 'wptb-border-marker-top' ) ||
+                event.relatedTarget.classList.contains( 'wptb-border-marker-right' ) ||
+                event.relatedTarget.classList.contains( 'wptb-border-marker-bottom' ) ||
+                event.relatedTarget.classList.contains( 'wptb-border-marker-left' ) || event.relatedTarget.localName == 'td' ) {
+                this.wptbBorderMarker.style.display = 'none';
+                this.wptbActions.style.display = 'none';
 
-        if( this.wptbBorderMarker && this.wptbActions && clientX && clientY ) {
-            let wptbBorderMarkerTop = this.wptbBorderMarker.style.top;
-            let wptbBorderMarkerLeft = this.wptbBorderMarker.style.left;
+                if( this.wptbActions.type == 2 ) {
+                    let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
+                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+                    wptbBorderMarkerActionsField.addActionField( 1, listElement );
+                    wptbBorderMarkerActionsField.setParameters( listElement );
+                }
+            } else if( event.relatedTarget.classList.contains( 'wptb-actions' ) ||
+                event.relatedTarget.classList.contains( 'wptb-move-action' ) ||
+                event.relatedTarget.classList.contains( 'wptb-duplicate-action' ) ||
+                event.relatedTarget.classList.contains( 'wptb-delete-action' ) ) {
+                this.wptbActions.onmouseleave = ( event ) => {
+                    if( event.relatedTarget != null && event.relatedTarget.localName == 'td' ) {
+                        this.wptbBorderMarker.style.display = 'none';
+                        this.wptbActions.style.display = 'none';
 
-            if( wptbBorderMarkerTop && wptbBorderMarkerLeft ) {
-                let wptbActionsWidth = this.wptbActions.offsetWidth;
-                let wptbActionsTop = this.wptbActions.style.top;
-                let wptbActionRight = this.wptbActions.style.right;
-
-                let wptbActionsClientBottom = parseInt( wptbBorderMarkerTop, 10 );
-                let wptbActionsClientTop = wptbActionsClientBottom + parseInt( wptbActionsTop, 10 );
-                let wptbActionsClientRigth = parseInt( wptbBorderMarkerLeft, 10 ) - parseInt( wptbActionRight, 10 );
-                let wptbActionsClientLeft = wptbActionsClientRigth - parseInt( wptbActionsWidth, 10 );
-
-                if( wptbActionsWidth && wptbActionsTop ) {
-                    if( clientX >= wptbActionsClientLeft && 
-                        clientX <= wptbActionsClientRigth && 
-                        clientY <= wptbActionsClientBottom && 
-                        clientY >= wptbActionsClientTop ) {
-
-                        this.wptbActions.onmouseleave = ( event ) => {
-                            let clientX = event.clientX;
-                            let clientY = event.clientY;
-
-                            let wptbBorderMarkerLeft = this.wptbBorderMarker.getElementsByClassName( 'wptb-border-marker-left' );
-                            if( wptbBorderMarkerLeft.length > 0 ) {
-                                wptbBorderMarkerLeft = wptbBorderMarkerLeft[0];
-                            }
-
-                            let wptbBorderMarkerTop = this.wptbBorderMarker.getElementsByClassName( 'wptb-border-marker-top' );
-                            if( wptbBorderMarkerTop.length > 0 ) {
-                                wptbBorderMarkerTop = wptbBorderMarkerTop[0];
-                            }
-
-                            let wptbElemClientTop = parseInt( this.wptbBorderMarker.style.top, 10 );
-                            let wptbElemClientBottom = wptbElemClientTop - parseInt( wptbBorderMarkerLeft.style.height, 10 );
-                            let wptbElemClientLeft = parseInt( this.wptbBorderMarker.style.left, 10 );
-                            let wptbElemClientRigth = wptbElemClientLeft + parseInt( wptbBorderMarkerTop.style.width, 10 );
-
-                            if( clientX >= wptbElemClientLeft && clientX <= wptbElemClientRigth && 
-                                clientY >= wptbElemClientTop && clientY <= wptbElemClientBottom ) {
-                                return;
-                            }
-
-                            this.wptbBorderMarker.style.display = 'none';
-                            this.wptbActions.style.display = 'none';
-
-                            if( this.wptbActions.type == 2 ) {
-                                let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
-                                let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                                wptbBorderMarkerActionsField.addActionField( 1, listElement );
-                                wptbBorderMarkerActionsField.setParameters( listElement );
-                            }
-
+                        if( this.wptbActions.type == 2 ) {
+                            let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
+                            let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+                            wptbBorderMarkerActionsField.addActionField( 1, listElement );
+                            wptbBorderMarkerActionsField.setParameters( listElement );
                         }
-
+                    } else {
                         return;
                     }
                 }
             }
-        }
-
-        this.wptbBorderMarker.style.display = 'none';
-        this.wptbActions.style.display = 'none';
-
-        if( this.wptbActions.type == 2 ) {
-            let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
-            let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-            wptbBorderMarkerActionsField.addActionField( 1, listElement );
-            wptbBorderMarkerActionsField.setParameters( listElement );
         }
     }
     

@@ -29,7 +29,6 @@ var WPTB_innerElementSet = function  ( element ) {
         
     }
     element.ondrop = function(e) {
-        this.classList.remove( 'wptb-ondragenter' );
         let element, classId;
         e.preventDefault();
         e.stopPropagation();
@@ -50,8 +49,11 @@ var WPTB_innerElementSet = function  ( element ) {
             classId = e.dataTransfer.getData( 'node' );
             element = document.getElementsByClassName( classId )[0];
             element.classList.remove( 'wptb-moving-mode' );
+            wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
             wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove( 'wptb-moving-into-same-elem' );
         }
+        
+        element.classList.remove( 'wptb-ondragenter' );
         
         if( wptbDropHandle.style.display == 'block' ) {
             let td;
@@ -86,7 +88,7 @@ var WPTB_innerElementSet = function  ( element ) {
 
         return true;
     }
-    element.onmouseover = function(e) {
+    element.mouseenter = function(e) {
         element.classList.remove( 'wptb-ondragenter' );
     }
 }

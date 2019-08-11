@@ -105,9 +105,9 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             return;
         }
         
-        wptbBorderMarkerActionsField.addActionField( 1, node )
+        //wptbBorderMarkerActionsField.addActionField( 1, node );
         
-        wptbBorderMarkerActionsField.leaveFromField( event, node, 1 )
+        wptbBorderMarkerActionsField.leaveFromField( event, node, 1 );
     };
     
     let wptbActions = document.getElementsByClassName( 'wptb-actions' );

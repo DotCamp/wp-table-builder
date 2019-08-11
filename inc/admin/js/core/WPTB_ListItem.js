@@ -42,7 +42,7 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
     DOMElement.onmouseleave = function ( event ) {
         let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
         
-        wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
+        //wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
         
         wptbBorderMarkerActionsField.leaveFromField( event, DOMElement, 2 );
         

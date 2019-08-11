@@ -46,6 +46,8 @@ var WPTB_DropHandle = function (thisElem, e) {
                 element.classList.remove( 'wptb-moving-into-same-elem' );
             }
             
+            element.classList.remove( 'wptb-ondragenter' );
+            
             let td;
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
                 thisElem = wptbDropHandle.getDOMParentElement();
@@ -106,12 +108,12 @@ var WPTB_DropHandle = function (thisElem, e) {
         }
     }
     
-    wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
+    wptbDropHandle.style.width = thisElem.offsetWidth + 4 + 'px';
     let height = thisElem.offsetHeight,
         coordinatesElement = thisElem.getBoundingClientRect(),
         left = Number( coordinatesElement.left ),
         top;
-    wptbDropHandle.style.left = left + 'px';
+    wptbDropHandle.style.left = left - 2 + 'px';
     
     if( e.dataTransfer.types.indexOf( 'wptb-moving-mode' ) != -1 ) {
         let elementDrag = document.getElementsByClassName( 'wptb-moving-mode' )[0];
@@ -144,15 +146,15 @@ var WPTB_DropHandle = function (thisElem, e) {
     
     if( thisElem.nodeName.toLowerCase() != 'td' ) {
         let y = e.offsetY==undefined?e.layerY:e.offsetY;
-        top = Number( coordinatesElement.top ) - Number( 11 );
+        top = parseFloat( coordinatesElement.top ) - parseFloat( 13 );
         wptbDropHandle.dataset.text = 'Abowe Element';
         if ( y > height/2 ) {
-            top = Number( coordinatesElement.top ) + height - 1;
+            top = parseFloat( coordinatesElement.top ) + height + 1;
             wptbDropHandle.dataset.text = 'Below Element';
         }
     } else {
         wptbDropHandle.dataset.text = 'Drop Here';
-        top = Number( coordinatesElement.top ) + height/2 - 5;
+        top = parseFloat( coordinatesElement.top ) + height/2 - 5;
     }
     wptbDropHandle.style.top = top + 'px';
     
