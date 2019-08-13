@@ -59,7 +59,7 @@ var WPTB_DropHandle = function (thisElem, e) {
                 let innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
                 
-                if( wptbDropHandle.dataset.text == 'Abowe Element' ) {
+                if( wptbDropHandle.dataset.text == 'Above Element' ) {
                     td.insertBefore( element, innerElement );
                 } else if( wptbDropHandle.dataset.text == 'Below Element' ) {
                     let innerElementNext = innerElement.nextSibling;
@@ -147,7 +147,7 @@ var WPTB_DropHandle = function (thisElem, e) {
     if( thisElem.nodeName.toLowerCase() != 'td' ) {
         let y = e.offsetY==undefined?e.layerY:e.offsetY;
         top = parseFloat( coordinatesElement.top ) - parseFloat( 13 );
-        wptbDropHandle.dataset.text = 'Abowe Element';
+        wptbDropHandle.dataset.text = 'Above Element';
         if ( y > height/2 ) {
             top = parseFloat( coordinatesElement.top ) + height + 1;
             wptbDropHandle.dataset.text = 'Below Element';

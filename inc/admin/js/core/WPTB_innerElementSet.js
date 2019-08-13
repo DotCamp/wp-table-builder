@@ -64,7 +64,7 @@ var WPTB_innerElementSet = function  ( element ) {
                 let innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
 
-                if( wptbDropHandle.dataset.text == 'Abowe Element' ) {
+                if( wptbDropHandle.dataset.text == 'Above Element' ) {
                     td.insertBefore( element, innerElement );
                 } else if( wptbDropHandle.dataset.text == 'Below Element' ) {
                     let innerElementNext = innerElement.nextSibling;
