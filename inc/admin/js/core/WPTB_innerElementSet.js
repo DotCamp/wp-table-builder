@@ -29,17 +29,21 @@ var WPTB_innerElementSet = function  ( element ) {
         
     }
     element.ondrop = function(e) {
+        this.classList.remove( 'wptb-ondragenter' );
         let element, classId;
         e.preventDefault();
         e.stopPropagation();
 
-        if ( !e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node') ) {
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
             return;
         }
         let wptbDropHandle,
-            wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+            wptbDropBorderMarker;
         if ( document.getElementsByClassName( 'wptb-drop-handle' ).length > 0 ) {
             wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' )[0];
+        }
+        if( document.getElementsByClassName( 'wptb-drop-border-marker' ).length > 0 ) {
+            wptbDropBorderMarker = document.getElementsByClassName( 'wptb-drop-border-marker' )[0];
         }
 
         if ( e.dataTransfer.getData( 'wptbElement' ) ) {
@@ -48,12 +52,8 @@ var WPTB_innerElementSet = function  ( element ) {
         } else {
             classId = e.dataTransfer.getData( 'node' );
             element = document.getElementsByClassName( classId )[0];
-            element.classList.remove( 'wptb-moving-mode' );
-            wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
-            wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove( 'wptb-moving-into-same-elem' );
+            //element.classList.remove( 'wptb-moving-mode' );
         }
-        
-        element.classList.remove( 'wptb-ondragenter' );
         
         if( wptbDropHandle.style.display == 'block' ) {
             let td;
@@ -82,13 +82,18 @@ var WPTB_innerElementSet = function  ( element ) {
         }
         
         wptbDropHandle.style.display = 'none';
-        wptbBorderMarkerActionsField.borderMarkerHide();
+        wptbDropBorderMarker.style.display = 'none';
 
         WPTB_innerElementSet( element );
-
+        
+        if( ! element.classList.contains( 'wptb-image-container' ) || element.classList.contains( 'wptb-moving-mode' ) ) {
+            element.classList.remove( 'wptb-moving-mode' );
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        } 
         return true;
     }
-    element.mouseenter = function(e) {
+    element.onmouseover = function(e) {
         element.classList.remove( 'wptb-ondragenter' );
     }
 }

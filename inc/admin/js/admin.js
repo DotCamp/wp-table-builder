@@ -28,12 +28,20 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
     }
 
     node.onmouseenter = function (event) {
+        if (event.target.classList.contains('wptb-moving-mode')) {
+            return;
+        }
+
         var i = void 0,
-            wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+            wptbActionsField = new WPTB_ActionsField();
 
-        wptbBorderMarkerActionsField.addActionField(1, node);
+        wptbActionsField.addActionField(1, node);
 
-        wptbBorderMarkerActionsField.setParameters(this);
+        wptbActionsField.setParameters(node);
+
+        node.classList.remove('wptb-ondragenter');
+
+        //wptbActionsField.addActionField( 1, node )
 
         if (element.kind === 'button') {
             var a = node.querySelector('a'),
@@ -63,12 +71,23 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                     });
 
                     ed.on('keydown', function (e) {
-                        var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(1, node);
-                        wptbBorderMarkerActionsField.setParameters(node);
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
                     });
                     ed.on('keyup', function (e) {
-                        var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(1, node);
-                        wptbBorderMarkerActionsField.setParameters(node);
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
+
+                        e.target.onblur = function () {
+                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
                     });
                 },
                 init_instance_callback: function init_instance_callback(editor) {
@@ -97,15 +116,13 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
     };
 
     node.onmouseleave = function (event) {
-        var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        var wptbActionsField = new WPTB_ActionsField();
 
-        if (wptbBorderMarkerActionsField.wptbActions && wptbBorderMarkerActionsField.wptbActions.type != '1') {
+        if (wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1') {
             return;
         }
 
-        //wptbBorderMarkerActionsField.addActionField( 1, node );
-
-        wptbBorderMarkerActionsField.leaveFromField(event, node, 1);
+        wptbActionsField.leaveFromField(event, node, 1);
     };
 
     var wptbActions = document.getElementsByClassName('wptb-actions');
@@ -145,56 +162,35 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
     document.counter.increment(element.kind);
 };
 
-var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
+var WPTB_ActionsField = function WPTB_ActionsField() {
     var _this = this;
 
-    this.wptbBorderMarker;
+    //this.wptbBorderMarker;
     this.wptbActions;
-    if (document.getElementsByClassName('wptb-border-marker').length == 0) {
-        var body = document.getElementsByTagName('body')[0];
-        this.wptbBorderMarker = document.createElement('div');
-        this.wptbBorderMarker.classList.add('wptb-border-marker');
-
-        var wptbBorderMarkerTop = document.createElement('div'),
-            wptbBorderMarkerRight = document.createElement('div'),
-            wptbBorderMarkerBottom = document.createElement('div'),
-            wptbBorderMarkerLeft = document.createElement('div');
-
-        wptbBorderMarkerTop.classList.add('wptb-border-marker-top');
-        wptbBorderMarkerRight.classList.add('wptb-border-marker-right');
-        wptbBorderMarkerBottom.classList.add('wptb-border-marker-bottom');
-        wptbBorderMarkerLeft.classList.add('wptb-border-marker-left');
-
-        this.wptbBorderMarker.appendChild(wptbBorderMarkerTop);
-        this.wptbBorderMarker.appendChild(wptbBorderMarkerRight);
-        this.wptbBorderMarker.appendChild(wptbBorderMarkerBottom);
-        this.wptbBorderMarker.appendChild(wptbBorderMarkerLeft);
-
-        body.appendChild(this.wptbBorderMarker);
-    } else {
-        this.wptbBorderMarker = document.getElementsByClassName('wptb-border-marker')[0];
-    }
-
     if (document.getElementsByClassName('wptb-actions').length != 0) {
         this.wptbActions = document.getElementsByClassName('wptb-actions')[0];
     }
 
-    this.addActionField = function () {
-        var actionType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var thisNode = arguments[1];
+    this.addActionField = function (actionType, thisNode) {
+        var body = document.getElementsByTagName('body')[0];
+
+        var actions = document.getElementsByClassName('wptb-actions');
+        if (actions.length != 0) {
+            var previousNode = actions[0].activeElem;
+            if (previousNode) {
+                previousNode.classList.remove('wptb-directlyhovered');
+            }
+
+            while (actions.length != 0) {
+                actions[0].parentNode.removeChild(actions[0]);
+            }
+        }
 
         if (actionType == 1) {
+
             var btnDelete = void 0,
                 btnCopy = void 0,
-                btnMove = void 0,
-                actions = void 0;
-
-            actions = document.getElementsByClassName('wptb-actions');
-            if (actions.length != 0) {
-                while (actions.length != 0) {
-                    actions[0].parentNode.removeChild(actions[0]);
-                }
-            }
+                btnMove = void 0;
 
             btnDelete = document.createElement('span'), btnCopy = document.createElement('span'), btnMove = document.createElement('span'), actions = document.createElement('div');
 
@@ -207,8 +203,7 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
             actions.appendChild(btnMove);
             actions.appendChild(btnCopy);
             actions.appendChild(btnDelete);
-
-            _this.wptbBorderMarker.insertBefore(actions, _this.wptbBorderMarker.firstChild);
+            body.appendChild(actions);
 
             actions.activeElem = thisNode;
 
@@ -227,9 +222,11 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                     }
                 }
 
-                var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(4);
+                var wptbActionsField = new WPTB_ActionsField();
 
-                wptbBorderMarkerActionsField.borderMarkerHide();
+                wptbActionsField.actionsRemove();
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
             btnCopy.onclick = function (event) {
@@ -237,6 +234,8 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                     infArr = void 0,
                     type = void 0;
                 var activeElement = event.target.parentNode.activeElem;
+                var activeElementClone = activeElement.cloneNode(true);
+                activeElementClone.classList.remove('wptb-directlyhovered');
                 infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
                 var td = activeElement.parentNode;
@@ -248,30 +247,33 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                         temp.push(srcList[i].innerHTML);
                     }
 
-                    copy = new WPTB_List(temp, activeElement);
+                    copy = new WPTB_List(temp, activeElementClone);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 } else if (type == 'text') {
-                    copy = new WPTB_Text(activeElement.childNodes[0].innerHTML, activeElement);
+                    copy = new WPTB_Text(activeElementClone.childNodes[0].innerHTML, activeElementClone);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 } else if (type == 'image') {
-                    copy = new WPTB_Image(activeElement.children[0].children[0].src, thisNode);
+                    copy = new WPTB_Image('', activeElement);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 } else {
-                    var text = activeElement.childNodes[0].querySelector('p').innerHTML;
+                    var text = activeElementClone.childNodes[0].querySelector('p').innerHTML;
 
-                    copy = new WPTB_Button(text, activeElement);
+                    copy = new WPTB_Button(text, activeElementClone);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 }
 
                 WPTB_innerElementSet(copy.getDOMElement());
 
-                var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(1, activeElement);
+                var wptbActionsField = new WPTB_ActionsField(1, activeElement);
 
-                wptbBorderMarkerActionsField.setParameters(activeElement);
+                wptbActionsField.setParameters(activeElement);
+
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
             btnMove.ondragstart = function (event) {
@@ -282,7 +284,6 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                     type = void 0;
                 infArr = activeElem.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
-                actions.style.opacity = 0;
                 activeElem.classList.add('wptb-moving-mode');
 
                 event.dataTransfer.effectAllowed = 'move';
@@ -298,47 +299,49 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                         WPTB_Helper.dataTitleColumnSet(table);
                     }
                 }
+                //actions.style.display = 'none';
+                _this.actionsHide();
             };
 
-            actions.style.right = '-' + (parseFloat(thisNode.offsetWidth) + 3) + 'px';
+            //actions.style.right = '-' + parseFloat( thisNode.offsetWidth ) + 'px';
             actions.style.display = 'block';
 
             _this.wptbActions = actions;
         } else if (actionType == 2) {
             var _btnDelete = void 0,
                 _btnCopy = void 0,
-                _actions = void 0,
                 previous = void 0,
                 i = void 0;
 
-            _actions = document.getElementsByClassName('wptb-actions');
-            if (_actions.length != 0) {
-                while (_actions.length != 0) {
-                    _actions[0].parentNode.removeChild(_actions[0]);
-                }
-            }
+            _btnDelete = document.createElement('span'), _btnCopy = document.createElement('span'), actions = document.createElement('span');
 
-            _btnDelete = document.createElement('span'), _btnCopy = document.createElement('span'), _actions = document.createElement('span');
-
-            _actions.classList.add('wptb-actions');
+            actions.classList.add('wptb-actions');
             _btnDelete.classList.add('dashicons', 'dashicons-trash', 'wptb-delete-action');
             _btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'wptb-duplicate-action');
 
-            _actions.append(_btnCopy, _btnDelete);
-            _this.wptbBorderMarker.insertBefore(_actions, _this.wptbBorderMarker.firstChild);
+            actions.append(_btnCopy, _btnDelete);
+            body.appendChild(actions);
 
-            _actions.activeElem = thisNode;
+            actions.activeElem = thisNode;
 
-            _actions.type = 2;
+            var wptbDirectlyhovered = WPTB_Helper.findAncestor(thisNode, 'wptb-directlyhovered');
+            if (wptbDirectlyhovered) {
+                wptbDirectlyhovered.classList.remove('wptb-directlyhovered');
+            }
+
+            actions.type = 2;
 
             _btnDelete.onclick = function (event) {
                 var action = event.target.parentNode,
                     item = action.activeElem,
                     parent = item.parentNode;
-                var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(4);
-                wptbBorderMarkerActionsField.wptbBorderMarker.removeChild(action);
+                var wptbActionsField = new WPTB_ActionsField(4);
+                wptbActionsField.actionsRemove();
                 parent.removeChild(item);
                 WPTB_Helper.listItemsRecalculateIndex(parent);
+
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
             _btnCopy.onclick = function (event) {
@@ -365,91 +368,146 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                 var coordinatesElementTopEnd = coordinatesElement.top;
 
                 if (coordinatesElementTopBegin != coordinatesElementTopEnd) {
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(2, thisNode);
-                    wptbBorderMarkerActionsField.setParameters(thisNode);
+                    var wptbActionsField = new WPTB_ActionsField(2, thisNode);
+                    wptbActionsField.setParameters(thisNode);
                 }
+
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
-            _actions.style.right = '-' + (parseFloat(thisNode.offsetWidth) + 3) + 'px';
-            _actions.style.display = 'block';
+            actions.style.display = 'block';
 
-            _this.wptbActions = _actions;
+            _this.wptbActions = actions;
         }
     };
 
     this.setParameters = function (thisNode) {
+        if (!_this.wptbActions) {
+            var actions = document.getElementsByClassName('wptb-actions');
+            if (actions.length > 0) {
+                _this.wptbActions = actions[0];
+            }
+        }
+
+        if (_this.wptbActions) {
+            _this.wptbActions.style.display = 'block';
+        }
+
         var coordinatesElement = thisNode.getBoundingClientRect();
 
         var wptbContainer = document.getElementsByClassName('wptb-container')[0];
         var correctTop = function correctTop() {
             var coordinatesElement = thisNode.getBoundingClientRect();
-            _this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
+            _this.wptbActions.style.top = parseFloat(coordinatesElement.top) - 15 + 'px';
         };
         wptbContainer.removeEventListener('scroll', correctTop, false);
 
-        _this.wptbBorderMarker.style.top = parseFloat(coordinatesElement.top) - 2 + 'px';
-        _this.wptbBorderMarker.style.left = parseFloat(coordinatesElement.left) - 2 + 'px';
+        _this.wptbActions.style.top = parseFloat(coordinatesElement.top) - 15 + 'px';
+        _this.wptbActions.style.left = parseFloat(coordinatesElement.right) - parseFloat(_this.wptbActions.clientWidth) + 1 + 'px';
 
-        var wptbBorderMarkerTop = _this.wptbBorderMarker.querySelector('.wptb-border-marker-top');
-        wptbBorderMarkerTop.style.width = parseFloat(thisNode.offsetWidth) + 3 + 'px';
+        //        let wptbBorderMarkerTop = this.wptbBorderMarker.querySelector( '.wptb-border-marker-top' );
+        //        wptbBorderMarkerTop.style.width = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
+        //
+        //        let wptbBorderMarkerRight = this.wptbBorderMarker.querySelector( '.wptb-border-marker-right' );
+        //        wptbBorderMarkerRight.style.height = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 4 ) + 'px';
+        //        wptbBorderMarkerRight.style.left = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
+        //
+        //        let wptbBorderMarkerBottom = this.wptbBorderMarker.querySelector( '.wptb-border-marker-bottom' );
+        //        wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
+        //        wptbBorderMarkerBottom.style.top = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 3 ) + 'px';;
+        //
+        //        let wptbBorderMarkerLeft = this.wptbBorderMarker.querySelector( '.wptb-border-marker-left' );
+        //      
 
-        var wptbBorderMarkerRight = _this.wptbBorderMarker.querySelector('.wptb-border-marker-right');
-        wptbBorderMarkerRight.style.height = parseFloat(coordinatesElement.bottom) - parseFloat(coordinatesElement.top) + 4 + 'px';
-        wptbBorderMarkerRight.style.left = parseFloat(thisNode.offsetWidth) + 3 + 'px';
-
-        var wptbBorderMarkerBottom = _this.wptbBorderMarker.querySelector('.wptb-border-marker-bottom');
-        wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
-        wptbBorderMarkerBottom.style.top = parseFloat(coordinatesElement.bottom) - parseFloat(coordinatesElement.top) + 3 + 'px';;
-
-        var wptbBorderMarkerLeft = _this.wptbBorderMarker.querySelector('.wptb-border-marker-left');
-        wptbBorderMarkerLeft.style.height = wptbBorderMarkerRight.style.height;
-
-        _this.wptbBorderMarker.style.display = 'block';
+        //this.wptbBorderMarker.style.display = 'block';
+        _this.wptbActions.style.display = 'block';
+        thisNode.classList.add('wptb-directlyhovered');
 
         wptbContainer.addEventListener('scroll', correctTop, false);
     };
 
-    this.leaveFromField = function (event, node, actionType) {
-        if (event.relatedTarget != null) {
-            if (event.relatedTarget.classList.contains('wptb-border-marker') || event.relatedTarget.classList.contains('wptb-border-marker-top') || event.relatedTarget.classList.contains('wptb-border-marker-right') || event.relatedTarget.classList.contains('wptb-border-marker-bottom') || event.relatedTarget.classList.contains('wptb-border-marker-left') || event.relatedTarget.localName == 'td') {
-                _this.wptbBorderMarker.style.display = 'none';
-                _this.wptbActions.style.display = 'none';
+    //        if( actionType == 1 || actionType == 2 ) {
+    //            this.setParameters( thisNode );
+    //        }
+    //    } else {
+    //        this.wptbActions.style.display = 'block';
+    //        thisNode.classList.add( 'wptb-directlyhovered' );
+    //    }
 
-                if (_this.wptbActions.type == 2) {
-                    var listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                    wptbBorderMarkerActionsField.addActionField(1, listElement);
-                    wptbBorderMarkerActionsField.setParameters(listElement);
+    this.leaveFromField = function (event, node, actionType) {
+        if (event.relatedTarget) {
+            if (event.relatedTarget.classList.contains('wptb-actions') || event.relatedTarget.classList.contains('wptb-move-action') || event.relatedTarget.classList.contains('wptb-duplicate-action') || event.relatedTarget.classList.contains('wptb-delete-action')) {
+                if (!_this.wptbActions) {
+                    _this.wptbActions = document.getElementsByClassName('wptb-actions')[0];
                 }
-            } else if (event.relatedTarget.classList.contains('wptb-actions') || event.relatedTarget.classList.contains('wptb-move-action') || event.relatedTarget.classList.contains('wptb-duplicate-action') || event.relatedTarget.classList.contains('wptb-delete-action')) {
                 _this.wptbActions.onmouseleave = function (event) {
-                    if (event.relatedTarget != null && event.relatedTarget.localName == 'td') {
-                        _this.wptbBorderMarker.style.display = 'none';
+                    if (event.relatedTarget != null && event.relatedTarget != _this.wptbActions.activeElem && WPTB_Helper.findAncestor(event.relatedTarget, 'wptb-directlyhovered') != _this.wptbActions.activeElem) {
+                        event.target.activeElem.classList.remove('wptb-directlyhovered');
                         _this.wptbActions.style.display = 'none';
 
                         if (_this.wptbActions.type == 2) {
-                            var _listElement = WPTB_Helper.findAncestor(node, 'wptb-list-item-container');
-                            var _wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                            _wptbBorderMarkerActionsField.addActionField(1, _listElement);
-                            _wptbBorderMarkerActionsField.setParameters(_listElement);
+                            var wptbActionsField = new WPTB_ActionsField();
+
+                            wptbActionsField.addActionField(1, event.relatedTarget.parentNode.parentNode);
+
+                            wptbActionsField.setParameters(event.relatedTarget.parentNode.parentNode);
                         }
                     } else {
                         return;
                     }
                 };
+
+                return;
+            }
+            //            else if( event.relatedTarget.classList.contains( 'wptb-drop-handle' ) ) {
+            //                let wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' );
+            //                if( wptbDropHandle.length > 0 ) {
+            //                    wptbDropHandle = wptbDropHandle[0];
+            //                    wptbDropHandle.onmouseleave
+            //                }
+            //            }
+        }
+
+        node.classList.remove('wptb-directlyhovered');
+        _this.wptbActions.style.display = 'none';
+
+        if (_this.wptbActions.type == 2) {
+            if (event.relatedTarget) {
+                if (event.relatedTarget.localName == 'ul') {
+                    //let wptbActionsField = new WPTB_ActionsField();
+
+                    _this.addActionField(1, event.relatedTarget.parentNode);
+
+                    _this.setParameters(event.relatedTarget.parentNode);
+                }
             }
         }
     };
 
-    this.borderMarkerHide = function () {
-        _this.wptbBorderMarker.style.display = 'none';
+    this.actionsRemove = function () {
+        if (!_this.wptbActions) {
+            var actions = document.getElementsByClassName('wptb-actions');
+            if (actions.length > 0) {
+                _this.wptbActions = actions[0];
+            }
+        }
+
+        if (_this.wptbActions) {
+            _this.wptbActions.parentNode.removeChild(_this.wptbActions);
+        }
     };
 
-    this.actionsRemove = function () {
-        var actions = _this.wptbBorderMarker.getElementsByClassName('wptb-actions');
-        if (actions.length > 0) {
-            actions = actions[0];
-            _this.wptbBorderMarker.removeChild(actions);
+    this.actionsHide = function () {
+        if (!_this.wptbActions) {
+            var actions = document.getElementsByClassName('wptb-actions');
+            if (actions.length > 0) {
+                _this.wptbActions = actions[0];
+            }
+        }
+
+        if (_this.wptbActions) {
+            _this.wptbActions.style.opacity = 0;
         }
     };
 };
@@ -473,7 +531,9 @@ var WPTB_BorderMarkerActionsField = function WPTB_BorderMarkerActionsField() {
                         WPTB_Table();
                         WPTB_LeftPanel();
                         WPTB_Settings();
-                        //WPTB_TableStateSaving();
+
+                        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }
@@ -742,14 +802,34 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
     }
 
     var wptbDropHandle = void 0,
-        wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-    wptbBorderMarkerActionsField.actionsRemove();
+        wptbDropBorderMarker = void 0;
     if (document.getElementsByClassName('wptb-drop-handle').length == 0) {
-        var body = document.getElementsByTagName('body')[0];
         wptbDropHandle = document.createElement('div');
         wptbDropHandle.classList.add('wptb-drop-handle');
 
-        body.appendChild(wptbDropHandle);
+        wptbDropBorderMarker = document.createElement('div');
+        wptbDropBorderMarker.classList.add('wptb-drop-border-marker');
+
+        var _wptbDropBorderMarkerTop = document.createElement('div'),
+            _wptbDropBorderMarkerRight = document.createElement('div'),
+            _wptbDropBorderMarkerBottom = document.createElement('div'),
+            _wptbDropBorderMarkerLeft = document.createElement('div');
+
+        _wptbDropBorderMarkerTop.classList.add('wptb-drop-border-marker-top');
+        _wptbDropBorderMarkerRight.classList.add('wptb-drop-border-marker-right');
+        _wptbDropBorderMarkerBottom.classList.add('wptb-drop-border-marker-bottom');
+        _wptbDropBorderMarkerLeft.classList.add('wptb-drop-border-marker-left');
+
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerTop);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerRight);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerBottom);
+        wptbDropBorderMarker.appendChild(_wptbDropBorderMarkerLeft);
+
+        var body = document.getElementsByTagName('body');
+        if (body.length > 0) {
+            body[0].appendChild(wptbDropHandle);
+            body[0].appendChild(wptbDropBorderMarker);
+        }
 
         wptbDropHandle.ondragenter = function () {};
 
@@ -770,8 +850,6 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
                 element.classList.remove('wptb-moving-mode');
                 element.classList.remove('wptb-moving-into-same-elem');
             }
-
-            element.classList.remove('wptb-ondragenter');
 
             var td = void 0;
             if (wptbDropHandle.dataset.text == 'Drop Here') {
@@ -799,14 +877,24 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             }
 
             wptbDropHandle.style.display = 'none';
-            wptbBorderMarkerActionsField.borderMarkerHide();
+            wptbDropBorderMarker.style.display = 'none';
 
             WPTB_innerElementSet(element);
+
+            if (!element.classList.contains('wptb-image-container')) {
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
+            }
+        };
+        var wptbContainer = document.querySelector('.wptb-container');
+        wptbContainer.onscroll = function () {
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
         };
     } else {
         wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
     }
-
     if (thisElem && thisElem.nodeName.toLowerCase() == 'td' && thisElem.getElementsByClassName('wptb-ph-element').length != 0) {
         return;
     }
@@ -832,21 +920,21 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
         }
     }
 
-    wptbDropHandle.style.width = thisElem.offsetWidth + 4 + 'px';
+    wptbDropHandle.style.width = thisElem.offsetWidth + 'px';
     var height = thisElem.offsetHeight,
         coordinatesElement = thisElem.getBoundingClientRect(),
-        left = Number(coordinatesElement.left),
+        left = parseFloat(coordinatesElement.left),
         top = void 0;
-    wptbDropHandle.style.left = left - 2 + 'px';
+    wptbDropHandle.style.left = left + 'px';
 
     if (e.dataTransfer.types.indexOf('wptb-moving-mode') != -1) {
         var elementDrag = document.getElementsByClassName('wptb-moving-mode')[0];
         if (thisElem == elementDrag) {
             wptbDropHandle.classList.add('wptb-moving-into-same-elem');
-            wptbBorderMarkerActionsField.wptbBorderMarker.classList.add('wptb-moving-into-same-elem');
+            wptbDropBorderMarker.classList.add('wptb-moving-into-same-elem');
         } else {
             wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
-            wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove('wptb-moving-into-same-elem');
+            wptbDropBorderMarker.classList.remove('wptb-moving-into-same-elem');
         }
     }
 
@@ -855,25 +943,13 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
     };
 
     wptbDropHandle.style.display = 'block';
-
-    var actions = wptbBorderMarkerActionsField.wptbActions;
-    if (actions) {
-        actions.style.display = 'none';
-    }
-
-    var wptbContainer = document.getElementsByClassName('wptb-container')[0];
-    var correctTop = function correctTop() {
-        var coordinatesElement = thisElem.getBoundingClientRect();
-        wptbBorderMarkerActionsField.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
-    };
-    wptbContainer.removeEventListener('scroll', correctTop, false);
-
+    wptbDropBorderMarker.style.display = 'block';
     if (thisElem.nodeName.toLowerCase() != 'td') {
         var y = e.offsetY == undefined ? e.layerY : e.offsetY;
-        top = parseFloat(coordinatesElement.top) - parseFloat(13);
+        top = parseFloat(coordinatesElement.top) - parseFloat(11);
         wptbDropHandle.dataset.text = 'Abowe Element';
         if (y > height / 2) {
-            top = parseFloat(coordinatesElement.top) + height + 1;
+            top = parseFloat(coordinatesElement.top) + height - 1;
             wptbDropHandle.dataset.text = 'Below Element';
         }
     } else {
@@ -882,9 +958,22 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
     }
     wptbDropHandle.style.top = top + 'px';
 
-    wptbContainer.addEventListener('scroll', correctTop, false);
+    wptbDropBorderMarker.style.top = coordinatesElement.top + 'px';
+    wptbDropBorderMarker.style.left = coordinatesElement.left + 'px';
 
-    wptbBorderMarkerActionsField.setParameters(thisElem);
+    wptbDropBorderMarkerTop = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-top');
+    wptbDropBorderMarkerTop.style.width = parseFloat(thisElem.offsetWidth) - parseFloat(1) + 'px';
+
+    wptbDropBorderMarkerRight = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-right');
+    wptbDropBorderMarkerRight.style.height = parseFloat(coordinatesElement.bottom) - parseFloat(coordinatesElement.top) - 1 + 'px';
+    wptbDropBorderMarkerRight.style.left = wptbDropBorderMarkerTop.style.width;
+
+    wptbDropBorderMarkerBottom = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-bottom');
+    wptbDropBorderMarkerBottom.style.width = wptbDropBorderMarkerTop.style.width;
+    wptbDropBorderMarkerBottom.style.top = wptbDropBorderMarkerRight.style.height;
+
+    wptbDropBorderMarkerLeft = wptbDropBorderMarker.querySelector('.wptb-drop-border-marker-left');
+    wptbDropBorderMarkerLeft.style.height = wptbDropBorderMarkerRight.style.height;
 };
 var ElementCounters = function ElementCounters() {
 
@@ -1268,6 +1357,9 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     b[i].classList.remove('selected');
                 }
                 this.classList.add('selected');
+
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
         }
     }
@@ -1303,6 +1395,9 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     } else {
                         affectedEl.style.color = ui.color.toString();
                     }
+
+                    //console.log(event);
+                    WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
                 }
             });
         }
@@ -1311,7 +1406,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
             var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0];
             slider.oninput = function () {
                 this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].onchange();
+                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].onchange(event);
             };
         }
 
@@ -1319,12 +1414,11 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
             var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0];
             slider.oninput = function () {
                 this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange();
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange(event);
             };
         }
 
         optionControls[i].onchange = function (event) {
-
             var n_Class = this.dataset.element,
                 infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
                 type = infArr[1],
@@ -1452,6 +1546,16 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     }
                     break;
             }
+
+            if (event.target.classList.contains('wptb-text-font-size-slider') || event.target.classList.contains('wptb-image-size-slider')) {
+                event.target.onmouseup = function () {
+                    var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                };
+            } else {
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
+            }
         };
     }
 };
@@ -1511,6 +1615,8 @@ var WPTB_Helper = {
                         e.target.querySelector('p').innerText = 'New List Item';
                         //tinyMCE.execCommand('mceInsertContent', false, 'New List Item');
                         WPTB_Helper.listItemsRecalculateIndex(article.parentNode);
+
+                        return;
                     } else if (e.keyCode == '8' || e.keyCode == '46') {
                         var p = e.target.querySelector('p');
                         var pText = p.innerHTML.replace(/<[^>]+>/g, '');
@@ -1532,14 +1638,25 @@ var WPTB_Helper = {
                     }
 
                     var wptbListItem = e.target.parentNode;
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(2, wptbListItem);
-                    wptbBorderMarkerActionsField.setParameters(wptbListItem);
+                    var wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField(2, wptbListItem);
+
+                    wptbActionsField.setParameters(wptbListItem);
                 });
 
                 ed.on('keyup', function (e) {
                     var wptbListItem = e.target.parentNode;
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(2, wptbListItem);
-                    wptbBorderMarkerActionsField.setParameters(wptbListItem);
+                    var wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField(2, wptbListItem);
+
+                    wptbActionsField.setParameters(wptbListItem);
+
+                    e.target.onblur = function () {
+                        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    };
                 });
             },
             init_instance_callback: function init_instance_callback(editor) {
@@ -1575,14 +1692,27 @@ var WPTB_Helper = {
                         e.preventDefault();
                     }
                     var wptbButtonContainer = WPTB_Helper.findAncestor(target, 'wptb-button-container');
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(1, wptbButtonContainer);
-                    wptbBorderMarkerActionsField.setParameters(wptbButtonContainer);
+
+                    var wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField(1, wptbButtonContainer);
+
+                    wptbActionsField.setParameters(wptbButtonContainer);
                 });
 
                 ed.on('keyup', function (e) {
                     var wptbButtonContainer = WPTB_Helper.findAncestor(target, 'wptb-button-container');
-                    var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(1, wptbButtonContainer);
-                    wptbBorderMarkerActionsField.setParameters(wptbButtonContainer);
+
+                    var wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField(1, wptbButtonContainer);
+
+                    wptbActionsField.setParameters(wptbButtonContainer);
+
+                    e.target.onblur = function () {
+                        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    };
                 });
             },
             init_instance_callback: function init_instance_callback(editor) {
@@ -1687,26 +1817,75 @@ var WPTB_Helper = {
         document.getElementById('wptb-table-inner-border-slider').value = 1;
         document.getElementById('wptb-table-inner-border-number').value = 1;
 
-        WPTB_Helper.wpColorPickerClear('wptb-table-border-color');
+        WPTB_Helper.wpColorPickerClear('wptb-table-border-color', true);
 
-        WPTB_Helper.wpColorPickerClear('wptb-table-header-bg');
+        WPTB_Helper.wpColorPickerClear('wptb-table-header-bg', true);
 
-        WPTB_Helper.wpColorPickerClear('wptb-even-row-bg');
+        WPTB_Helper.wpColorPickerClear('wptb-even-row-bg', true);
 
-        WPTB_Helper.wpColorPickerClear('wptb-odd-row-bg');
+        WPTB_Helper.wpColorPickerClear('wptb-odd-row-bg', true);
 
         document.getElementById('wptb-table-cell-slider').value = 15;
         document.getElementById('wptb-table-cell-number').value = 15;
     },
-    wpColorPickerClear: function wpColorPickerClear(inputId) {
-        var input = document.getElementById(inputId);
-        var wpPickerContainer = WPTB_Helper.findAncestor(input, 'wp-picker-container');
-        var parent = wpPickerContainer.parentNode;
-        parent.removeChild(wpPickerContainer);
-        var newInput = document.createElement('input');
-        newInput.setAttribute('id', inputId);
-        newInput.value = "";
-        parent.appendChild(newInput);
+    elementOptionsPanelClear: function elementOptionsPanelClear() {
+        var elementOptionsGroup = document.getElementById('element-options-group');
+        if (elementOptionsGroup) {
+            elementOptionsGroup.innerHTML = '';
+        }
+    },
+    wpColorPickerCheckChangeForTableStateSaving: function wpColorPickerCheckChangeForTableStateSaving(event) {
+        if (event.originalEvent.type == 'external') {
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        } else {
+            var wpPickerContainer = WPTB_Helper.findAncestor(event.target, 'wp-picker-container');
+            if (wpPickerContainer) {
+                if (event.originalEvent.type == 'square') {
+                    var irisSquareHandle = wpPickerContainer.getElementsByClassName('iris-square-handle');
+                    if (irisSquareHandle.length > 0) {
+                        irisSquareHandle = irisSquareHandle[0];
+                        irisSquareHandle.onmouseup = function () {
+                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
+                    }
+                } else if (event.originalEvent.type == 'strip') {
+                    var uiSliderHandle = wpPickerContainer.getElementsByClassName('iris-slider-offset');
+                    if (uiSliderHandle.length > 0) {
+                        uiSliderHandle = uiSliderHandle[0];
+                        uiSliderHandle.onmouseup = function () {
+                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
+                    }
+                }
+            }
+        }
+    },
+    wpColorPickerClear: function wpColorPickerClear(attribute, isId) {
+        var input = void 0;
+        if (isId) {
+            input = [document.getElementById(attribute)];
+            input.length = 1;
+        } else {
+            input = document.getElementsByClassName(attribute);
+        }
+        for (var i = 0; i < input.length; i++) {
+            var wpPickerContainer = WPTB_Helper.findAncestor(input[i], 'wp-picker-container');
+            if (wpPickerContainer) {
+                var parent = wpPickerContainer.parentNode;
+                parent.removeChild(wpPickerContainer);
+                var newInput = document.createElement('input');
+                if (isId) {
+                    newInput.setAttribute('id', attribute);
+                } else {
+                    newInput.classList.add('wptb-element-property', attribute);
+                }
+                newInput.value = "";
+                parent.appendChild(newInput);
+            }
+        }
     },
     detectMode: function detectMode() {
         var url = window.location.href,
@@ -1749,7 +1928,7 @@ var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
         elImage = document.createElement('div');
         var anchor = document.createElement('a'),
             img = document.createElement('img');
-        anchor.style.display = 'inline-block';
+        anchor.style.display = 'block';
         anchor.appendChild(img);
         DOMElement.classList.add('wptb-image-container');
         elImage.classList.add('wptb-image-wrapper');
@@ -1770,7 +1949,19 @@ var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
         // When an image is selected, run a callback.
         file_frame.on('select', function () {
             attachment = file_frame.state().get('selection').first().toJSON();
-            img.src = attachment.url;
+            var imgSrc = attachment.url;
+            var linkArr = imgSrc.split(':'),
+                linkClean = void 0;
+            if (Array.isArray(linkArr) && linkArr.length > 0) {
+                linkClean = linkArr[linkArr.length - 1];
+            }
+            img.src = linkClean;
+            img.height = attachment.height;
+            img.width = attachment.width;
+            img.style.width = '100%';
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         });
         // Finally, open the modal
         if (src == undefined) {
@@ -1840,7 +2031,8 @@ var WPTB_Initializer = function WPTB_Initializer() {
 
                 WPTB_Table(columns, rows);
 
-                //WPTB_TableStateSaving();
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
         };
 };
 var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
@@ -1872,6 +2064,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
     };
     element.ondragleave = function () {};
     element.ondrop = function (e) {
+        this.classList.remove('wptb-ondragenter');
         var element = void 0,
             classId = void 0;
         e.preventDefault();
@@ -1881,9 +2074,12 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
             return;
         }
         var wptbDropHandle = void 0,
-            wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+            wptbDropBorderMarker = void 0;
         if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
             wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        }
+        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
+            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
         }
 
         if (e.dataTransfer.getData('wptbElement')) {
@@ -1892,12 +2088,8 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
         } else {
             classId = e.dataTransfer.getData('node');
             element = document.getElementsByClassName(classId)[0];
-            element.classList.remove('wptb-moving-mode');
-            wptbDropHandle.classList.remove('wptb-moving-into-same-elem');
-            wptbBorderMarkerActionsField.wptbBorderMarker.classList.remove('wptb-moving-into-same-elem');
+            //element.classList.remove( 'wptb-moving-mode' );
         }
-
-        element.classList.remove('wptb-ondragenter');
 
         if (wptbDropHandle.style.display == 'block') {
             var td = void 0;
@@ -1925,13 +2117,18 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
         }
 
         wptbDropHandle.style.display = 'none';
-        wptbBorderMarkerActionsField.borderMarkerHide();
+        wptbDropBorderMarker.style.display = 'none';
 
         WPTB_innerElementSet(element);
 
+        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
+            element.classList.remove('wptb-moving-mode');
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
         return true;
     };
-    element.mouseenter = function (e) {
+    element.onmouseover = function (e) {
         element.classList.remove('wptb-ondragenter');
     };
 };
@@ -1961,6 +2158,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             for (var _i = 1; _i < tableRows.length; _i += 2) {
                 tableRows[_i].style.backgroundColor = ui.color.toString();
             }
+            console.log(event);
+            console.log(this);
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
         },
         clear: function clear() {
             var tableRows = table.getElementsByTagName('tr');
@@ -1971,6 +2171,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                     tds[j].style.backgroundColor = '';
                 }
             }
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
 
     });
@@ -1982,6 +2185,8 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             for (var _i3 = 2; _i3 < tableRows.length; _i3 += 2) {
                 tableRows[_i3].style.backgroundColor = ui.color.toString();
             }
+
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
         },
         clear: function clear() {
             var tableRows = table.getElementsByTagName('tr');
@@ -1992,6 +2197,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                     tds[j].style.backgroundColor = '';
                 }
             }
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     });
 
@@ -2000,6 +2208,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         change: function change(event, ui) {
             var tableHeader = table.getElementsByTagName('tr')[0];
             tableHeader.style.backgroundColor = ui.color.toString();
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         },
         clear: function clear() {
             var tableHeader = table.getElementsByTagName('tr')[0];
@@ -2008,12 +2219,14 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             for (var j = 0; j < tds.length; j++) {
                 tds[j].style.backgroundColor = '';
             }
+
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
         }
     });
 
     function tableAdaptiveForMobile(table) {
         var wptbAdaptiveTableCheckbox = document.getElementById('wptb-adaptive-table-checkbox');
-        if (table && table.dataset.wptbAdaptiveTable) {
+        if (table && table.dataset.wptbAdaptiveTable && table.dataset.wptbAdaptiveTable == "1") {
             wptbAdaptiveTableCheckbox.checked = true;
         } else {
             wptbAdaptiveTableCheckbox.checked = false;
@@ -2097,6 +2310,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                     tableCells[i].style.border = (tableInnerborderNumber != 0 ? tableInnerborderNumber : 1) + 'px solid ' + ui.color.toString();
                 }
             }
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
         },
         clear: function clear() {
             var tableCells = table.getElementsByTagName('td');
@@ -2105,6 +2319,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.borderColor = '';
             }
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     });
 
@@ -2229,10 +2446,18 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         table.tdDefaultWidth();
     };
 
+    document.getElementById('wptb-table-cell-slider').onchange = function () {
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+
     document.getElementById('wptb-table-cell-number').onchange = function () {
         document.getElementById('wptb-table-cell-slider').value = this.value;
         addCellPadding(this.value);
         table.tdDefaultWidth();
+
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-border-slider').oninput = function () {
@@ -2249,10 +2474,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         }
     };
 
+    document.getElementById('wptb-table-border-slider').onchange = function () {
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
         addBorderSize(this.value);
         table.tdDefaultWidth();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-inner-border-slider').oninput = function () {
@@ -2261,10 +2493,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         table.tdDefaultWidth();
     };
 
+    document.getElementById('wptb-table-inner-border-slider').onchange = function () {
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
         addInnerBorderSize(this.value);
         table.tdDefaultWidth();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
@@ -2278,6 +2517,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             } else {
                 tableBorderColorSetArea.style.display = '';
             }
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     };
 
@@ -2286,9 +2528,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         table.addColumnWidth(this.value);
     };
 
+    document.getElementById('wptb-table-column-width-slider').onchange = function () {
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+
     document.getElementById('wptb-table-column-width-number').onchange = function () {
         document.getElementById('wptb-table-column-width-slider').value = this.value;
         table.addColumnWidth(this.value);
+
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-column-width-auto-fixed').onchange = function () {
@@ -2303,6 +2553,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             document.getElementById('wptb-table-column-width-number').value = _width;
             document.getElementById('wptb-table-column-width-slider').value = _width;
         }
+
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-row-height-slider').oninput = function () {
@@ -2310,9 +2563,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         table.addRowHeight(this.value);
     };
 
+    document.getElementById('wptb-table-row-height-slider').onchange = function () {
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+
     document.getElementById('wptb-table-row-height-number').onchange = function () {
         document.getElementById('wptb-table-row-height-slider').value = this.value;
         table.addRowHeight(this.value);
+
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-row-height-auto-fixed').onchange = function () {
@@ -2327,6 +2588,9 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
             document.getElementById('wptb-table-row-height-number').value = _height;
             document.getElementById('wptb-table-row-height-slider').value = _height;
         }
+
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-adaptive-table-checkbox').onchange = function () {
@@ -2335,6 +2599,8 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         } else {
             table.dataset.wptbAdaptiveTable = 0;
         }
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     function createMobileHeadForTable(table, thisEvent) {
@@ -2365,6 +2631,8 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
     document.getElementById('wptb-top-row-as-header').onchange = function () {
         createMobileHeadForTable(table, this);
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
@@ -2406,17 +2674,27 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     // this code hides the "element parameters" area 
     // when clicked outside this element and its "tinymce" toolbar 
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
-    wptbBuilderPanel.addEventListener('click', function (e) {
+    wptbBuilderPanel.onclick = function (e) {
         if (!e.target.classList.contains('wptb-ph-element') && !WPTB_Helper.findAncestor(e.target, 'wptb-ph-element') && !e.target.classList.contains('wptb-fixed-toolbar') && !WPTB_Helper.findAncestor(e.target, 'wptb-fixed-toolbar')) {
-            document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-            document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-            document.getElementById('element-options-group').style.display = 'none';
-            var wpcdFixedToolbar = document.getElementById('wpcd_fixed_toolbar');
-            if (wpcdFixedToolbar.hasAttribute('data-toolbar-active-id')) {
-                document.getElementById(wpcdFixedToolbar.getAttribute('data-toolbar-active-id')).classList.remove('toolbar-active');
-            }
+            clickOnFreeSpace();
         }
-    }, false);
+    };
+
+    var wptbHeader = document.getElementsByClassName('wptb-header');
+    if (wptbHeader.length > 0) wptbHeader = wptbHeader[0];
+    wptbHeader.onclick = function () {
+        clickOnFreeSpace();
+    };
+
+    function clickOnFreeSpace() {
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+        document.getElementById('element-options-group').style.display = 'none';
+        var wpcdFixedToolbar = document.getElementById('wpcd_fixed_toolbar');
+        if (wpcdFixedToolbar.hasAttribute('data-toolbar-active-id')) {
+            document.getElementById(wpcdFixedToolbar.getAttribute('data-toolbar-active-id')).classList.remove('toolbar-active');
+        }
+    }
 };
 var WPTB_List = function WPTB_List(innerElements, DOMElementProt) {
 
@@ -2495,19 +2773,18 @@ var WPTB_ListItem = function WPTB_ListItem(text, DOMElementProt, copy) {
     }
 
     DOMElement.onmouseenter = function (event) {
-        var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        var wptbActionsField = new WPTB_ActionsField();
 
-        wptbBorderMarkerActionsField.addActionField(2, DOMElement);
+        wptbActionsField.addActionField(2, DOMElement);
 
-        wptbBorderMarkerActionsField.setParameters(DOMElement);
+        wptbActionsField.setParameters(DOMElement);
+        console.log(DOMElement);
     };
 
     DOMElement.onmouseleave = function (event) {
-        var wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        var wptbActionsField = new WPTB_ActionsField();
 
-        //wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
-
-        wptbBorderMarkerActionsField.leaveFromField(event, DOMElement, 2);
+        wptbActionsField.leaveFromField(event, DOMElement, 2);
 
         return false;
     };
@@ -2672,13 +2949,52 @@ var WPTB_Settings = function WPTB_Settings() {
         };
         elems[i].ondragend = function () {
             var wptbDropHandle = document.querySelector('.wptb-drop-handle'),
-                wptbBorderMarker = document.querySelector('.wptb-border-marker');
-            if (wptbDropHandle || wptbBorderMarker) {
+                wptbDropBorderMarker = document.querySelector('.wptb-drop-border-marker');
+            if (wptbDropHandle || wptbDropBorderMarker) {
                 wptbDropHandle.style.display = 'none';
-                wptbBorderMarker.style.display = 'none';
+                wptbDropBorderMarker.style.display = 'none';
             }
         };
     };
+
+    var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+    var wptbUndo = document.getElementsByClassName('wptb-undo');
+    if (wptbUndo.length > 0) {
+        wptbUndo = wptbUndo[0];
+
+        wptbUndo.onclick = function (event) {
+            if (!this.classList.contains('wptb-undoredo-disabled')) {
+                wptbTableStateSaveManager.tableStateGet(this.dataset.wptbUndoredo);
+                var wptbUndoRedoContainer = document.getElementsByClassName('wptb-undo-redo-container');
+                if (wptbUndoRedoContainer.length > 0) {
+                    wptbUndoRedoContainer = wptbUndoRedoContainer[0];
+                    wptbUndoRedoContainer.onmouseleave = function (event) {
+                        event.target.onmouseleave = '';
+                        WPTB_Table();
+                    };
+                }
+            }
+        };
+    }
+
+    var wptbRedo = document.getElementsByClassName('wptb-redo');
+    if (wptbRedo.length > 0) {
+        wptbRedo = wptbRedo[0];
+
+        wptbRedo.onclick = function (event) {
+            if (!this.classList.contains('wptb-undoredo-disabled')) {
+                wptbTableStateSaveManager.tableStateGet(this.dataset.wptbUndoredo);
+                var wptbUndoRedoContainer = document.getElementsByClassName('wptb-undo-redo-container');
+                if (wptbUndoRedoContainer.length > 0) {
+                    wptbUndoRedoContainer = wptbUndoRedoContainer[0];
+                    wptbUndoRedoContainer.onmouseleave = function (event) {
+                        event.target.onmouseleave = '';
+                        WPTB_Table();
+                    };
+                }
+            }
+        };
+    }
 
     var shortcodePopupWindow = document.getElementsByClassName('wptb-popup-window-modal')[0];
     document.getElementsByClassName('wptb-embed-btn')[0].onclick = function () {
@@ -3271,10 +3587,12 @@ var array = [],
         var noCells = document.getElementsByClassName('wptb-no-cell-action'),
             singleCells = document.getElementsByClassName('wptb-single-action'),
             multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
+            cellSettings = document.getElementById('wptb-left-scroll-panel-cell-settings'),
             tds = table.getElementsByClassName('wptb-highlighted');
         while (tds.length) {
             tds[0].classList.remove('wptb-highlighted');
         }
+        cellSettings.classList.remove('visible');
         for (var i = 0; i < array.length; i++) {
             for (var j = 0; j < array[i].length; j++) {
                 array[i][j] = 0;
@@ -3454,7 +3772,7 @@ var array = [],
                     cellModeBackground.classList.remove('visible');
                     leftScrollPanelCurtain.classList.remove('visible');
                     leftScrollPanelCellSettings.classList.remove('visible');
-                    wptbPreviewTable.classList.remove('wptb-preview-table-manage-cells');
+                    wptbPreviewTable.parentNode.classList.remove('wptb-preview-table-manage-cells');
                     var wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName('td');
                     if (wptbPreviewTableTds.length > 0) {
                         for (var _i3 = 0; _i3 < wptbPreviewTableTds.length; _i3++) {
@@ -3466,7 +3784,7 @@ var array = [],
                     bar[_i2].classList.add('visible');
                     cellModeBackground.classList.add('visible');
                     leftScrollPanelCurtain.classList.add('visible');
-                    wptbPreviewTable.classList.add('wptb-preview-table-manage-cells');
+                    wptbPreviewTable.parentNode.classList.add('wptb-preview-table-manage-cells');
                 }
             }
         }
@@ -3903,6 +4221,8 @@ var array = [],
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -3944,6 +4264,8 @@ var array = [],
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4042,6 +4364,8 @@ var array = [],
             table.addRowHeight();
             WPTB_Helper.dataTitleColumnSet(table);
             undoSelect();
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     };
 
@@ -4098,6 +4422,8 @@ var array = [],
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4135,6 +4461,8 @@ var array = [],
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /* 
@@ -4241,6 +4569,8 @@ var array = [],
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4369,6 +4699,8 @@ var array = [],
         }
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4434,10 +4766,8 @@ var array = [],
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
-        var wptbLeftScrollPanelCellSetting = document.getElementById('wptb-left-scroll-panel-cell-settings');
-        if (wptbLeftScrollPanelCellSetting) {
-            wptbLeftScrollPanelCellSetting.classList.remove('visible');
-        }
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4594,7 +4924,10 @@ var array = [],
             table.recalculateIndexes();
             WPTB_Helper.dataTitleColumnSet(table);
         }
+
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -4648,7 +4981,10 @@ var array = [],
             table.tdDefaultWidth();
             WPTB_Helper.dataTitleColumnSet(table);
         }
+
         undoSelect();
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
@@ -4705,35 +5041,172 @@ var array = [],
     //        }, false );
     //    }
 };
-var WPTB_TableStateSaving = function WPTB_TableStateSaving() {
+var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
+    this.tableStateSet = function () {
+        // get preview table
+        var wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
+        if (wptbPreviewTable.length > 0) {
+            wptbPreviewTable = wptbPreviewTable[0];
 
-    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    // выбираем элемент
-    var target = document.querySelector('.wptb-preview-table');
+            // check if a global array doesn't exist with saved versions of the table 
+            // them create it
+            if (!window.wptbTableStateSaving) {
+                window.wptbTableStateSaving = [];
+            }
 
-    // создаем экземпляр наблюдателя
-    var observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            //            if( mutation.type === 'attributes' ) {
-            //                
-            //            } else if( mutation.type === 'childList' ) {
-            //                console.log( mutations );
-            //            } else {
-            //                console.log(mutation.type);
-            //                console.log(mutations);
-            //            }
+            // remove the extra part of the array after changing the table 
+            // when it is showed in the not last modified version
+            if (window.wptbTableStateSaving.length > window.wptbTableStateNumberShow + 1) {
+                window.wptbTableStateSaving = window.wptbTableStateSaving.slice(0, window.wptbTableStateNumberShow + 1);
+            }
 
-        });
-    });
+            //add new state of table
+            var wptbNewPreviewTable = wptbPreviewTable.cloneNode(true);
+            var wptbHighlighted = wptbNewPreviewTable.getElementsByClassName('wptb-highlighted');
+            for (var i = 0; i < wptbHighlighted.length; i++) {
+                wptbHighlighted[i].classList.remove('wptb-highlighted');
+            }
+            var wptbDirectlyhovered = wptbNewPreviewTable.getElementsByClassName('wptb-directlyhovered');
+            for (var _i = 0; _i < wptbDirectlyhovered.length; _i++) {
+                wptbDirectlyhovered[_i].classList.remove('wptb-directlyhovered');
+            }
 
-    // настраиваем наблюдатель
-    var config = { attributes: true, childList: true, characterData: true, subtree: true
+            var cssForTdsWidthAutoValue = '';
+            var head = document.head;
+            if (head) {
+                var cssForTdsWidthAuto = head.querySelector('style[data-wptb-td-auto-width="true"]');
+                if (cssForTdsWidthAuto) {
+                    cssForTdsWidthAutoValue = cssForTdsWidthAuto.innerHTML;
+                }
+            }
 
-        // передаем элемент и настройки в наблюдатель
-    };observer.observe(target, config);
+            var mceContentBodys = wptbNewPreviewTable.querySelectorAll('.mce-content-body');
+            if (mceContentBodys.length > 0) {
+                for (var k = 0; k < mceContentBodys.length; k++) {
+                    mceContentBodys[k].classList.remove('mce-content-body');
+                }
+            }
 
-    // позже можно остановить наблюдение
-    //observer.disconnect();
+            var dataMceStyle = wptbNewPreviewTable.querySelectorAll('[data-mce-style]');
+            if (dataMceStyle.length > 0) {
+                for (var _k = 0; _k < dataMceStyle.length; _k++) {
+                    dataMceStyle[_k].removeAttribute('data-mce-style');
+                }
+            }
+
+            var mceIds = wptbNewPreviewTable.querySelectorAll('[id^=mce_]');
+            if (mceIds.length > 0) {
+                for (var _k2 = 0; _k2 < mceIds.length; _k2++) {
+                    mceIds[_k2].removeAttribute('id');
+                }
+            }
+
+            window.wptbTableStateSaving.push([wptbNewPreviewTable, cssForTdsWidthAutoValue]);
+
+            // set new number of state which is showed now
+            window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
+
+            // make undo arrow active when the table was changed
+            if (window.wptbTableStateSaving.length > 1) {
+                var wptbUndo = document.getElementsByClassName('wptb-undo');
+                if (wptbUndo.length > 0) {
+                    wptbUndo = wptbUndo[0];
+
+                    wptbUndo.classList.remove('wptb-undoredo-disabled');
+                }
+            }
+
+            // make redo arrow not active when the table was changed
+            var wptbRedo = document.getElementsByClassName('wptb-redo');
+            if (wptbRedo.length > 0) {
+                wptbRedo = wptbRedo[0];
+
+                wptbRedo.classList.add('wptb-undoredo-disabled');
+            }
+        }
+    };
+
+    this.tableStateGet = function (datawptbUndoredo) {
+        if (datawptbUndoredo && window.wptbTableStateSaving && window.wptbTableStateSaving.length > 1) {
+
+            // changes the number of the state which displays now
+            if (datawptbUndoredo == 'undo') {
+                if (window.wptbTableStateNumberShow > 0) {
+                    window.wptbTableStateNumberShow--;
+                } else {
+                    return false;
+                }
+            } else if (datawptbUndoredo == 'redo') {
+                if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1) {
+                    window.wptbTableStateNumberShow++;
+                } else {
+                    return false;
+                }
+            }
+
+            // add or delete class "wptb-undoredo-disabled" for undo button
+            var wptbUndo = document.getElementsByClassName('wptb-undo');
+            if (wptbUndo.length > 0) {
+                wptbUndo = wptbUndo[0];
+            }
+            if (window.wptbTableStateNumberShow == 0) {
+                if (wptbUndo) {
+                    wptbUndo.classList.add('wptb-undoredo-disabled');
+                }
+            } else if (window.wptbTableStateNumberShow > 0) {
+                if (wptbUndo) {
+                    wptbUndo.classList.remove('wptb-undoredo-disabled');
+                }
+            }
+
+            // add or delete class "wptb-undoredo-disabled" for redo button
+            var wptbRedo = document.getElementsByClassName('wptb-redo');
+            if (wptbRedo.length > 0) {
+                wptbRedo = wptbRedo[0];
+            }
+            if (window.wptbTableStateNumberShow == window.wptbTableStateSaving.length - 1) {
+                if (wptbRedo) {
+                    wptbRedo.classList.add('wptb-undoredo-disabled');
+                }
+            } else if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1) {
+                if (wptbRedo) {
+                    wptbRedo.classList.remove('wptb-undoredo-disabled');
+                }
+            }
+
+            // load necessary saved table state
+            var wptbTableSetup = document.getElementsByClassName('wptb-table-setup');
+            if (wptbTableSetup.length > 0) {
+                wptbTableSetup = wptbTableSetup[0];
+
+                wptbTableSetup.innerHTML = '';
+                wptbTableSetup.appendChild(window.wptbTableStateSaving[window.wptbTableStateNumberShow][0]);
+
+                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][1]) {
+                    var cssForTdsWidthAuto = document.createElement('style');
+                    cssForTdsWidthAuto.setAttribute('data-wptb-td-auto-width', true);
+                    cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
+                    var head = document.head;
+                    if (head) {
+                        var cssForTdsWidthAutoOld = head.querySelector('style[data-wptb-td-auto-width="true"]');
+                        if (cssForTdsWidthAutoOld) {
+                            head.removeChild(cssForTdsWidthAutoOld);
+                        }
+                        head.appendChild(cssForTdsWidthAuto);
+                    }
+                }
+
+                WPTB_Helper.settingsPanelClear();
+                WPTB_Helper.elementOptionsPanelClear();
+                WPTB_LeftPanel();
+
+                var wptbLeftScrollPanelCellSetting = document.getElementById('wptb-left-scroll-panel-cell-settings');
+                if (wptbLeftScrollPanelCellSetting) {
+                    wptbLeftScrollPanelCellSetting.classList.remove('visible');
+                }
+            }
+        }
+    };
 };
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 

@@ -18,7 +18,9 @@
                         WPTB_Table();
                         WPTB_LeftPanel();
                         WPTB_Settings();
-                        //WPTB_TableStateSaving();
+                        
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }

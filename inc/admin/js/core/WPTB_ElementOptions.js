@@ -364,6 +364,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     b[i].classList.remove('selected');
                 }
                 this.classList.add('selected');
+                
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             }
         }
     }
@@ -395,6 +398,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     } else {
                         affectedEl.style.color = ui.color.toString();
                     }
+                    
+                    //console.log(event);
+                    WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
                 }
             });
         }
@@ -403,7 +409,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0];
             slider.oninput = function () {
                 this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].onchange();
+                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].onchange( event );
             }
         }
 
@@ -411,12 +417,11 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0];
             slider.oninput = function () {
                 this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange();
+                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange( event );
             }
         }
 
-        optionControls[i].onchange = function (event) {
-
+        optionControls[i].onchange = function ( event ) {
             var n_Class = this.dataset.element,
                 infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
                 type = infArr[1],
@@ -424,7 +429,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0],
                 val = this.value;
 
-            switch (this.dataset.type) {
+            switch ( this.dataset.type ) {
                 case 'src':
                     var img = affectedEl.getElementsByTagName("img")[0];
                     img.src = this.value;
@@ -547,6 +552,17 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         p.classList.add( 'wptb-list-style-type-' + val.toLowerCase() );
                     }
                     break;
+            }
+            
+            
+            if( event.target.classList.contains( 'wptb-text-font-size-slider' ) || event.target.classList.contains( 'wptb-image-size-slider' ) ) {
+                event.target.onmouseup = function() {
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            } else {
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             }
         }
     }

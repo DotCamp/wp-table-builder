@@ -260,10 +260,12 @@ var array = [], WPTB_Table = function (columns, rows) {
         var noCells = document.getElementsByClassName('wptb-no-cell-action'),
                 singleCells = document.getElementsByClassName('wptb-single-action'),
                 multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
+                cellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ),
                 tds = table.getElementsByClassName('wptb-highlighted');
         while (tds.length) {
             tds[0].classList.remove('wptb-highlighted');
         }
+        cellSettings.classList.remove( 'visible' );
         for (var i = 0; i < array.length; i++) {
             for (var j = 0; j < array[i].length; j++) {
                 array[i][j] = 0;
@@ -441,7 +443,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                     cellModeBackground.classList.remove( 'visible' );
                     leftScrollPanelCurtain.classList.remove( 'visible' );
                     leftScrollPanelCellSettings.classList.remove( 'visible' );
-                    wptbPreviewTable.classList.remove( 'wptb-preview-table-manage-cells' );
+                    wptbPreviewTable.parentNode.classList.remove( 'wptb-preview-table-manage-cells' );
                     let wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName( 'td' );
                     if ( wptbPreviewTableTds.length > 0 ) {
                         for ( let i = 0; i < wptbPreviewTableTds.length; i++ ) {
@@ -453,7 +455,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                     bar[i].classList.add( 'visible' );
                     cellModeBackground.classList.add( 'visible' );
                     leftScrollPanelCurtain.classList.add( 'visible' );
-                    wptbPreviewTable.classList.add( 'wptb-preview-table-manage-cells' );
+                    wptbPreviewTable.parentNode.classList.add( 'wptb-preview-table-manage-cells' );
                 }
             }
 
@@ -884,6 +886,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -925,6 +929,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1028,6 +1034,8 @@ var array = [], WPTB_Table = function (columns, rows) {
             table.addRowHeight();
             WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     };
 
@@ -1084,6 +1092,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1121,6 +1131,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /* 
@@ -1231,6 +1243,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1360,6 +1374,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         }
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1426,10 +1442,8 @@ var array = [], WPTB_Table = function (columns, rows) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
-        let wptbLeftScrollPanelCellSetting = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ); 
-        if( wptbLeftScrollPanelCellSetting ) {
-            wptbLeftScrollPanelCellSetting.classList.remove( 'visible' );
-        }
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1587,7 +1601,10 @@ var array = [], WPTB_Table = function (columns, rows) {
             table.recalculateIndexes();
             WPTB_Helper.dataTitleColumnSet( table );
         }
+        
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     }
 
     /*
@@ -1644,7 +1661,10 @@ var array = [], WPTB_Table = function (columns, rows) {
             table.tdDefaultWidth();
             WPTB_Helper.dataTitleColumnSet( table );
         }
+        
         undoSelect();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';

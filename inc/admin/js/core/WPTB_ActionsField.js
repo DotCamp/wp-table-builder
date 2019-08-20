@@ -1,46 +1,28 @@
-var WPTB_BorderMarkerActionsField = function() {
-    this.wptbBorderMarker;
+var WPTB_ActionsField = function() {
+    //this.wptbBorderMarker;
     this.wptbActions;
-    if( document.getElementsByClassName( 'wptb-border-marker' ).length == 0 ) {
-        let body = document.getElementsByTagName( 'body' )[0];
-        this.wptbBorderMarker = document.createElement( 'div' );
-        this.wptbBorderMarker.classList.add( 'wptb-border-marker' );
-
-        let wptbBorderMarkerTop = document.createElement( 'div' ),
-            wptbBorderMarkerRight = document.createElement( 'div' ),
-            wptbBorderMarkerBottom = document.createElement( 'div' ),
-            wptbBorderMarkerLeft = document.createElement( 'div' );
-
-        wptbBorderMarkerTop.classList.add( 'wptb-border-marker-top' );
-        wptbBorderMarkerRight.classList.add( 'wptb-border-marker-right' );
-        wptbBorderMarkerBottom.classList.add( 'wptb-border-marker-bottom' );
-        wptbBorderMarkerLeft.classList.add( 'wptb-border-marker-left' );
-
-        this.wptbBorderMarker.appendChild( wptbBorderMarkerTop );
-        this.wptbBorderMarker.appendChild( wptbBorderMarkerRight );
-        this.wptbBorderMarker.appendChild( wptbBorderMarkerBottom );
-        this.wptbBorderMarker.appendChild( wptbBorderMarkerLeft );
-
-        body.appendChild( this.wptbBorderMarker );
-    } else {
-        this.wptbBorderMarker = document.getElementsByClassName( 'wptb-border-marker' )[0];
-    }
-    
     if( document.getElementsByClassName( 'wptb-actions' ).length != 0 ) {
         this.wptbActions = document.getElementsByClassName( 'wptb-actions' )[0];
     }
     
-    
-    this.addActionField = ( actionType = 1, thisNode ) => {
-        if( actionType == 1 ) {
-            let btnDelete, btnCopy, btnMove, actions;
-
-            actions = document.getElementsByClassName( 'wptb-actions' );
-            if( actions.length != 0 ) {
-                while( actions.length != 0 ) {
-                    actions[0].parentNode.removeChild( actions[0] );
-                }
+    this.addActionField = ( actionType, thisNode ) => {
+        let body = document.getElementsByTagName( 'body' )[0];
+        
+        let actions = document.getElementsByClassName( 'wptb-actions' );
+        if( actions.length != 0 ) {
+            let previousNode = actions[0].activeElem;
+            if( previousNode ) {
+                previousNode.classList.remove( 'wptb-directlyhovered' );
             }
+            
+            while( actions.length != 0 ) {
+                actions[0].parentNode.removeChild( actions[0] );
+            }
+        }
+        
+        if( actionType == 1 ) {
+        
+            let btnDelete, btnCopy, btnMove;
 
             btnDelete = document.createElement( 'span' ),
             btnCopy = document.createElement( 'span' ),
@@ -56,11 +38,10 @@ var WPTB_BorderMarkerActionsField = function() {
             actions.appendChild( btnMove );
             actions.appendChild( btnCopy );
             actions.appendChild( btnDelete );
-
-            this.wptbBorderMarker.insertBefore( actions, this.wptbBorderMarker.firstChild );
+            body.appendChild( actions );
 
             actions.activeElem = thisNode;
-            
+
             actions.type = 1;
 
             btnDelete.onclick = function( event ) {
@@ -76,18 +57,22 @@ var WPTB_BorderMarkerActionsField = function() {
                     }
                 }
 
-                let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField(4);
-                
-                wptbBorderMarkerActionsField.borderMarkerHide();
+                let wptbActionsField = new WPTB_ActionsField();
+
+                wptbActionsField.actionsRemove();
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
-            
+
 
             btnCopy.onclick = ( event ) => {
                 let copy,
                     infArr,
                     type;
                 let activeElement = event.target.parentNode.activeElem;
+                let activeElementClone = activeElement.cloneNode( true );
+                activeElementClone.classList.remove( 'wptb-directlyhovered' );
                 infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
                 let td = activeElement.parentNode;
@@ -99,33 +84,36 @@ var WPTB_BorderMarkerActionsField = function() {
                         temp.push(srcList[i].innerHTML);
                     }
 
-                    copy = new WPTB_List( temp, activeElement );
+                    copy = new WPTB_List( temp, activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else if ( type == 'text' ) {
-                    copy = new WPTB_Text( activeElement.childNodes[0].innerHTML, activeElement );
+                    copy = new WPTB_Text( activeElementClone.childNodes[0].innerHTML, activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else if ( type == 'image' ) {
-                    copy = new WPTB_Image( activeElement.children[0].children[0].src, thisNode );
-
+                    copy = new WPTB_Image( '', activeElement );
+                    
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else {
-                    let text = activeElement.childNodes[0].querySelector( 'p' ).innerHTML;
+                    let text = activeElementClone.childNodes[0].querySelector( 'p' ).innerHTML;
 
-                    copy = new WPTB_Button( text, activeElement );
+                    copy = new WPTB_Button( text, activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 }
 
                 WPTB_innerElementSet( copy.getDOMElement() );
 
-                let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, activeElement );
-
-                wptbBorderMarkerActionsField.setParameters( activeElement );
+                let wptbActionsField = new WPTB_ActionsField( 1, activeElement );
+    
+                wptbActionsField.setParameters( activeElement );
+                
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
-            btnMove.ondragstart = function( event ) {
+            btnMove.ondragstart = ( event ) => {
                 let dragImagesArr =  WPTB_Helper.dragImagesArr(),
                     actions = event.target.parentNode,
                     activeElem = actions.activeElem,
@@ -133,9 +121,8 @@ var WPTB_BorderMarkerActionsField = function() {
                     type;
                 infArr = activeElem.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
-                actions.style.opacity = 0;
                 activeElem.classList.add( 'wptb-moving-mode' );
-                
+
                 event.dataTransfer.effectAllowed = 'move';
                 event.dataTransfer.setDragImage( dragImagesArr[type], 0, 0 );
                 event.dataTransfer.setData( 'node', 'wptb-element-' + infArr[1] + '-' + infArr[2] );
@@ -149,25 +136,19 @@ var WPTB_BorderMarkerActionsField = function() {
                         WPTB_Helper.dataTitleColumnSet( table );
                     }
                 }
+                //actions.style.display = 'none';
+                this.actionsHide();
             };
 
-            actions.style.right = '-' + ( parseFloat( thisNode.offsetWidth ) + 3 ) + 'px';
+            //actions.style.right = '-' + parseFloat( thisNode.offsetWidth ) + 'px';
             actions.style.display = 'block';
-            
+
             this.wptbActions = actions;
         } else if( actionType == 2 ) {
             let btnDelete,
                 btnCopy,
-                actions,
                 previous,
                 i;
-
-            actions = document.getElementsByClassName( 'wptb-actions' );
-            if( actions.length != 0 ) {
-                while( actions.length != 0 ) {
-                    actions[0].parentNode.removeChild( actions[0] );
-                }
-            }
 
             btnDelete = document.createElement('span'),
             btnCopy = document.createElement('span'),
@@ -178,20 +159,28 @@ var WPTB_BorderMarkerActionsField = function() {
             btnCopy.classList.add('dashicons', 'dashicons-admin-page', 'wptb-duplicate-action');
 
             actions.append( btnCopy, btnDelete );
-            this.wptbBorderMarker.insertBefore( actions, this.wptbBorderMarker.firstChild );
+            body.appendChild( actions );
 
             actions.activeElem = thisNode;
             
+            let wptbDirectlyhovered = WPTB_Helper.findAncestor( thisNode, 'wptb-directlyhovered' );
+            if( wptbDirectlyhovered ) {
+                wptbDirectlyhovered.classList.remove( 'wptb-directlyhovered' );
+            }
+
             actions.type = 2;
 
             btnDelete.onclick = ( event ) => {
                 var action = event.target.parentNode, 
                     item = action.activeElem,
                     parent = item.parentNode;
-                let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 4 );
-                wptbBorderMarkerActionsField.wptbBorderMarker.removeChild( action );
+                let wptbActionsField = new WPTB_ActionsField( 4 );
+                wptbActionsField.actionsRemove();
                 parent.removeChild( item );
                 WPTB_Helper.listItemsRecalculateIndex( parent );
+                
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
             btnCopy.onclick = ( event ) => {
@@ -218,99 +207,151 @@ var WPTB_BorderMarkerActionsField = function() {
                 let coordinatesElementTopEnd = coordinatesElement.top;
 
                 if( coordinatesElementTopBegin != coordinatesElementTopEnd ) {
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 2, thisNode );
-                    wptbBorderMarkerActionsField.setParameters( thisNode );
+                    let wptbActionsField = new WPTB_ActionsField( 2, thisNode );
+                    wptbActionsField.setParameters( thisNode );
                 }
+                
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             };
 
-            actions.style.right = '-' + ( parseFloat( thisNode.offsetWidth ) + 3 ) + 'px';
             actions.style.display = 'block';
-            
+
             this.wptbActions = actions;
         }
     }
     
-    
     this.setParameters = ( thisNode ) => {
+        if( ! this.wptbActions ) {
+            let actions = document.getElementsByClassName( 'wptb-actions' );
+            if( actions.length > 0 ) {
+                this.wptbActions = actions[0];
+            }
+        }
+        
+        if( this.wptbActions ) {
+            this.wptbActions.style.display = 'block';
+        }
+        
         let coordinatesElement = thisNode.getBoundingClientRect();
         
         let wptbContainer = document.getElementsByClassName( 'wptb-container' )[0];
         let correctTop = () => {
             let coordinatesElement = thisNode.getBoundingClientRect();
-            this.wptbBorderMarker.style.top = coordinatesElement.top + 'px';
+            this.wptbActions.style.top = parseFloat( coordinatesElement.top ) - 15 + 'px';
         }
         wptbContainer.removeEventListener( 'scroll', correctTop, false );
         
-        this.wptbBorderMarker.style.top = parseFloat( coordinatesElement.top ) - 2 + 'px';
-        this.wptbBorderMarker.style.left = parseFloat( coordinatesElement.left ) - 2 + 'px';
+        this.wptbActions.style.top = parseFloat( coordinatesElement.top ) - 15 + 'px';
+        this.wptbActions.style.left = ( parseFloat( coordinatesElement.right ) - parseFloat( this.wptbActions.clientWidth ) ) + 1 + 'px';
 
-        let wptbBorderMarkerTop = this.wptbBorderMarker.querySelector( '.wptb-border-marker-top' );
-        wptbBorderMarkerTop.style.width = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
-
-        let wptbBorderMarkerRight = this.wptbBorderMarker.querySelector( '.wptb-border-marker-right' );
-        wptbBorderMarkerRight.style.height = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 4 ) + 'px';
-        wptbBorderMarkerRight.style.left = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
-
-        let wptbBorderMarkerBottom = this.wptbBorderMarker.querySelector( '.wptb-border-marker-bottom' );
-        wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
-        wptbBorderMarkerBottom.style.top = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 3 ) + 'px';;
-
-        let wptbBorderMarkerLeft = this.wptbBorderMarker.querySelector( '.wptb-border-marker-left' );
-        wptbBorderMarkerLeft.style.height = wptbBorderMarkerRight.style.height;
+//        let wptbBorderMarkerTop = this.wptbBorderMarker.querySelector( '.wptb-border-marker-top' );
+//        wptbBorderMarkerTop.style.width = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
+//
+//        let wptbBorderMarkerRight = this.wptbBorderMarker.querySelector( '.wptb-border-marker-right' );
+//        wptbBorderMarkerRight.style.height = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 4 ) + 'px';
+//        wptbBorderMarkerRight.style.left = ( parseFloat( thisNode.offsetWidth )  + 3 ) + 'px';
+//
+//        let wptbBorderMarkerBottom = this.wptbBorderMarker.querySelector( '.wptb-border-marker-bottom' );
+//        wptbBorderMarkerBottom.style.width = wptbBorderMarkerTop.style.width;
+//        wptbBorderMarkerBottom.style.top = ( parseFloat( coordinatesElement.bottom ) - parseFloat( coordinatesElement.top )  + 3 ) + 'px';;
+//
+//        let wptbBorderMarkerLeft = this.wptbBorderMarker.querySelector( '.wptb-border-marker-left' );
+//      
         
-        this.wptbBorderMarker.style.display = 'block';
+        //this.wptbBorderMarker.style.display = 'block';
+        this.wptbActions.style.display = 'block';
+        thisNode.classList.add( 'wptb-directlyhovered' );
         
         wptbContainer.addEventListener( 'scroll', correctTop, false );
     }
     
+//        if( actionType == 1 || actionType == 2 ) {
+//            this.setParameters( thisNode );
+//        }
+//    } else {
+//        this.wptbActions.style.display = 'block';
+//        thisNode.classList.add( 'wptb-directlyhovered' );
+//    }
+    
     this.leaveFromField = ( event, node, actionType ) => {
-        if( event.relatedTarget != null ) {
-            if( event.relatedTarget.classList.contains( 'wptb-border-marker' ) ||
-                event.relatedTarget.classList.contains( 'wptb-border-marker-top' ) ||
-                event.relatedTarget.classList.contains( 'wptb-border-marker-right' ) ||
-                event.relatedTarget.classList.contains( 'wptb-border-marker-bottom' ) ||
-                event.relatedTarget.classList.contains( 'wptb-border-marker-left' ) || event.relatedTarget.localName == 'td' ) {
-                this.wptbBorderMarker.style.display = 'none';
-                this.wptbActions.style.display = 'none';
-
-                if( this.wptbActions.type == 2 ) {
-                    let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                    wptbBorderMarkerActionsField.addActionField( 1, listElement );
-                    wptbBorderMarkerActionsField.setParameters( listElement );
-                }
-            } else if( event.relatedTarget.classList.contains( 'wptb-actions' ) ||
+        if( event.relatedTarget ) {
+            if ( event.relatedTarget.classList.contains( 'wptb-actions' ) ||
                 event.relatedTarget.classList.contains( 'wptb-move-action' ) ||
                 event.relatedTarget.classList.contains( 'wptb-duplicate-action' ) ||
                 event.relatedTarget.classList.contains( 'wptb-delete-action' ) ) {
+                if( ! this.wptbActions ) {
+                    this.wptbActions = document.getElementsByClassName( 'wptb-actions' )[0];
+                }
                 this.wptbActions.onmouseleave = ( event ) => {
-                    if( event.relatedTarget != null && event.relatedTarget.localName == 'td' ) {
-                        this.wptbBorderMarker.style.display = 'none';
+                    if( event.relatedTarget != null && event.relatedTarget != this.wptbActions.activeElem &&
+                        WPTB_Helper.findAncestor( event.relatedTarget, 'wptb-directlyhovered') != this.wptbActions.activeElem ) {
+                        event.target.activeElem.classList.remove( 'wptb-directlyhovered' );
                         this.wptbActions.style.display = 'none';
 
                         if( this.wptbActions.type == 2 ) {
-                            let listElement = WPTB_Helper.findAncestor( node, 'wptb-list-item-container' );
-                            let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
-                            wptbBorderMarkerActionsField.addActionField( 1, listElement );
-                            wptbBorderMarkerActionsField.setParameters( listElement );
+                            let wptbActionsField = new WPTB_ActionsField();
+
+                            wptbActionsField.addActionField( 1, event.relatedTarget.parentNode.parentNode );
+
+                            wptbActionsField.setParameters( event.relatedTarget.parentNode.parentNode );
                         }
                     } else {
                         return;
                     }
                 }
+
+                return;
+            } 
+//            else if( event.relatedTarget.classList.contains( 'wptb-drop-handle' ) ) {
+//                let wptbDropHandle = document.getElementsByClassName( 'wptb-drop-handle' );
+//                if( wptbDropHandle.length > 0 ) {
+//                    wptbDropHandle = wptbDropHandle[0];
+//                    wptbDropHandle.onmouseleave
+//                }
+//            }
+        }
+        
+        node.classList.remove( 'wptb-directlyhovered' );
+        this.wptbActions.style.display = 'none';
+        
+        if( this.wptbActions.type == 2 ) {
+            if( event.relatedTarget ) {
+                if( event.relatedTarget.localName == 'ul' ) {
+                    //let wptbActionsField = new WPTB_ActionsField();
+
+                    this.addActionField( 1, event.relatedTarget.parentNode );
+
+                    this.setParameters( event.relatedTarget.parentNode );
+                }
             }
+            
         }
     }
     
-    this.borderMarkerHide = () => {
-        this.wptbBorderMarker.style.display = 'none';
+    this.actionsRemove = () => {
+        if( ! this.wptbActions ) {
+            let actions = document.getElementsByClassName( 'wptb-actions' );
+            if( actions.length > 0 ) {
+                this.wptbActions = actions[0];
+            }
+        }
+        
+        if( this.wptbActions ) {
+            this.wptbActions.parentNode.removeChild( this.wptbActions );
+        }
     }
     
-    this.actionsRemove = () => {
-        let actions = this.wptbBorderMarker.getElementsByClassName('wptb-actions');
-        if( actions.length > 0 ) {
-            actions = actions[0];
-            this.wptbBorderMarker.removeChild( actions );
+    this.actionsHide = () => {
+        if( ! this.wptbActions ) {
+            let actions = document.getElementsByClassName( 'wptb-actions' );
+            if( actions.length > 0 ) {
+                this.wptbActions = actions[0];
+            }
+        }
+        
+        if( this.wptbActions ) {
+            this.wptbActions.style.opacity = 0;
         }
     }
 }

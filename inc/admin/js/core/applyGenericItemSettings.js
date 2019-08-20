@@ -26,11 +26,19 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     }
     
     node.onmouseenter = function ( event ) {
-        let i, wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        if( event.target.classList.contains( 'wptb-moving-mode' ) ) {
+            return;
+        }
         
-        wptbBorderMarkerActionsField.addActionField( 1, node )
+        let i, wptbActionsField = new WPTB_ActionsField();
         
-        wptbBorderMarkerActionsField.setParameters( this );
+        wptbActionsField.addActionField( 1, node );
+        
+        wptbActionsField.setParameters( node );
+        
+        node.classList.remove( 'wptb-ondragenter' );
+        
+        //wptbActionsField.addActionField( 1, node )
         
         if ( element.kind === 'button' ) {
             let a = node.querySelector( 'a' ),
@@ -57,16 +65,30 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                             let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
                             WPTB_Helper.dataTitleColumnSet( table );
                         }
+                        
+                        
                     });
                     
                     ed.on( 'keydown', function(e) {
-                        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, node );
-                        wptbBorderMarkerActionsField.setParameters( node );
+                        let wptbActionsField = new WPTB_ActionsField();
+                        
+                        wptbActionsField.addActionField( 1, node );
+        
+                        wptbActionsField.setParameters( node );
                     });
                     ed.on( 'keyup', function(e) {
-                        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, node );
-                        wptbBorderMarkerActionsField.setParameters( node );
+                        let wptbActionsField = new WPTB_ActionsField();
+                        
+                        wptbActionsField.addActionField( 1, node );
+        
+                        wptbActionsField.setParameters( node );
+                        
+                        e.target.onblur = function() {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        }
                     });
+                    
                 },
                 init_instance_callback: function (editor) {
                     window.currentEditor = editor;
@@ -99,15 +121,13 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     };
     
     node.onmouseleave = function ( event ) {
-        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        let wptbActionsField = new WPTB_ActionsField();
         
-        if( wptbBorderMarkerActionsField.wptbActions && wptbBorderMarkerActionsField.wptbActions.type != '1' ) {
+        if( wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1' ) {
             return;
         }
         
-        //wptbBorderMarkerActionsField.addActionField( 1, node );
-        
-        wptbBorderMarkerActionsField.leaveFromField( event, node, 1 );
+        wptbActionsField.leaveFromField( event, node, 1 );
     };
     
     let wptbActions = document.getElementsByClassName( 'wptb-actions' );

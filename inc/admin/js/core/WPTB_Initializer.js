@@ -43,7 +43,8 @@ var WPTB_Initializer = function () {
 
             WPTB_Table(columns, rows);
             
-            //WPTB_TableStateSaving();
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
     }
 
 };

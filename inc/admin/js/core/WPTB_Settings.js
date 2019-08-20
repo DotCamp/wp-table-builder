@@ -9,13 +9,54 @@ var WPTB_Settings = function () {
         }
         elems[i].ondragend = function () {
             let wptbDropHandle = document.querySelector( '.wptb-drop-handle' ),
-                wptbBorderMarker = document.querySelector( '.wptb-border-marker' );
-            if ( wptbDropHandle || wptbBorderMarker ) {
+                wptbDropBorderMarker = document.querySelector( '.wptb-drop-border-marker' );
+            if ( wptbDropHandle || wptbDropBorderMarker ) {
                 wptbDropHandle.style.display = 'none';
-                wptbBorderMarker.style.display = 'none';
+                wptbDropBorderMarker.style.display = 'none';
             }
         }
     };
+    
+    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+    let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
+    if( wptbUndo.length > 0 ) {
+        wptbUndo = wptbUndo[0];
+        
+        wptbUndo.onclick = function( event ) {
+            if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
+                wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
+                let wptbUndoRedoContainer = document.getElementsByClassName( 'wptb-undo-redo-container' );
+                if( wptbUndoRedoContainer.length > 0 ) {
+                    wptbUndoRedoContainer = wptbUndoRedoContainer[0];
+                    wptbUndoRedoContainer.onmouseleave = function( event ) {
+                        event.target.onmouseleave = '';
+                        WPTB_Table();
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
+    if( wptbRedo.length > 0 ) {
+        wptbRedo = wptbRedo[0];
+        
+        wptbRedo.onclick = function( event ) {
+            if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
+                wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
+                let wptbUndoRedoContainer = document.getElementsByClassName( 'wptb-undo-redo-container' );
+                if( wptbUndoRedoContainer.length > 0 ) {
+                    wptbUndoRedoContainer = wptbUndoRedoContainer[0];
+                    wptbUndoRedoContainer.onmouseleave = function( event ) {
+                        event.target.onmouseleave = '';
+                        WPTB_Table();
+                    }
+                }
+            }
+            
+        }
+    }
     
     let shortcodePopupWindow = document.getElementsByClassName( 'wptb-popup-window-modal' )[0];
     document.getElementsByClassName( 'wptb-embed-btn' )[0].onclick = function () {

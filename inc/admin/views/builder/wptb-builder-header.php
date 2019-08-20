@@ -37,8 +37,8 @@
                 home_url()
             );
         ?>
-<!--        <div class="wptb-undo-redo-container">
-            <div class="wptb-undo">
+        <div class="wptb-undo-redo-container">
+            <div class="wptb-undo wptb-undoredo-disabled" data-wptb-undoredo="undo">
                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" 
                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
                     viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;" 
@@ -54,7 +54,7 @@
                     </g>
                 </svg>
             </div>
-            <div class="wptb-redo">
+            <div class="wptb-redo wptb-undoredo-disabled" data-wptb-undoredo="redo">
                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" 
                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" 
                     viewBox="0 0 511.983 511.983" style="enable-background:new 0 0 511.983 511.983;" 
@@ -71,7 +71,7 @@
                     </g>
                 </svg>
             </div>
-        </div>-->
+        </div>
         <div class="wptb-embed">
             <a href="#" class="wptb-button-grey wptb-embed-btn <?php echo $wptb_button_disable_class; ?>">
                 <?php esc_html_e( '</> Embed', 'wp-table-builder' ); ?>

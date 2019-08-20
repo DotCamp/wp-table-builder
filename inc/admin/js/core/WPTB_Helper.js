@@ -58,6 +58,8 @@ var WPTB_Helper = {
                         //tinyMCE.execCommand('mceInsertContent', false, 'New List Item');
                         WPTB_Helper.listItemsRecalculateIndex( article.parentNode );
                         
+                        return;
+                        
                     } else if ( e.keyCode == '8' || e.keyCode == '46' ) {
                         let p = e.target.querySelector( 'p' );
                         let pText = p.innerHTML.replace(/<[^>]+>/g, '');
@@ -79,14 +81,25 @@ var WPTB_Helper = {
                     }
                     
                     let wptbListItem = e.target.parentNode;
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 2, wptbListItem );
-                    wptbBorderMarkerActionsField.setParameters( wptbListItem );
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 2, wptbListItem );
+
+                    wptbActionsField.setParameters( wptbListItem );
                 });
                 
                 ed.on( 'keyup', function( e ) {
                     let wptbListItem = e.target.parentNode;
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 2, wptbListItem );
-                    wptbBorderMarkerActionsField.setParameters( wptbListItem );
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 2, wptbListItem );
+
+                    wptbActionsField.setParameters( wptbListItem );
+                    
+                    e.target.onblur = function() {
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    }
                 });
             },
             init_instance_callback: function (editor) {
@@ -124,14 +137,27 @@ var WPTB_Helper = {
                         e.preventDefault();
                     }
                     let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, wptbButtonContainer );
-                    wptbBorderMarkerActionsField.setParameters( wptbButtonContainer );
+                    
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 1, wptbButtonContainer );
+
+                    wptbActionsField.setParameters( wptbButtonContainer );
                 });
                 
                 ed.on( 'keyup', function(e) {
                     let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
-                    let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField( 1, wptbButtonContainer );
-                    wptbBorderMarkerActionsField.setParameters( wptbButtonContainer );
+                    
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 1, wptbButtonContainer );
+
+                    wptbActionsField.setParameters( wptbButtonContainer );
+                    
+                    e.target.onblur = function() {
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    }
                 });
             },
             init_instance_callback: function (editor) {
@@ -240,26 +266,75 @@ var WPTB_Helper = {
         document.getElementById( 'wptb-table-inner-border-slider' ).value = 1;
         document.getElementById( 'wptb-table-inner-border-number' ).value = 1;
         
-        WPTB_Helper.wpColorPickerClear( 'wptb-table-border-color' );
+        WPTB_Helper.wpColorPickerClear( 'wptb-table-border-color', true );
         
-        WPTB_Helper.wpColorPickerClear( 'wptb-table-header-bg' );
+        WPTB_Helper.wpColorPickerClear( 'wptb-table-header-bg', true );
         
-        WPTB_Helper.wpColorPickerClear( 'wptb-even-row-bg' );
+        WPTB_Helper.wpColorPickerClear( 'wptb-even-row-bg', true );
         
-        WPTB_Helper.wpColorPickerClear( 'wptb-odd-row-bg' );
+        WPTB_Helper.wpColorPickerClear( 'wptb-odd-row-bg', true );
         
         document.getElementById( 'wptb-table-cell-slider' ).value = 15;
         document.getElementById( 'wptb-table-cell-number' ).value = 15;
     },
-    wpColorPickerClear: function( inputId ) {
-        let input = document.getElementById( inputId );
-        let wpPickerContainer = WPTB_Helper.findAncestor( input, 'wp-picker-container' );
-        let parent = wpPickerContainer.parentNode;
-        parent.removeChild( wpPickerContainer );
-        let newInput = document.createElement( 'input' );
-        newInput.setAttribute( 'id', inputId );
-        newInput.value = "";
-        parent.appendChild( newInput );
+    elementOptionsPanelClear: function() {
+        let elementOptionsGroup = document.getElementById( 'element-options-group' );
+        if( elementOptionsGroup ) {
+            elementOptionsGroup.innerHTML = '';
+        }
+    },
+    wpColorPickerCheckChangeForTableStateSaving: function( event ) {
+        if( event.originalEvent.type == 'external' ) {
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        } else {
+            let wpPickerContainer = WPTB_Helper.findAncestor( event.target, 'wp-picker-container' );
+            if( wpPickerContainer ) {
+                if( event.originalEvent.type == 'square' ) {
+                    let irisSquareHandle = wpPickerContainer.getElementsByClassName( 'iris-square-handle' );
+                    if( irisSquareHandle.length > 0 ) {
+                        irisSquareHandle = irisSquareHandle[0];
+                        irisSquareHandle.onmouseup = function() {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        }
+                    }
+                } else if( event.originalEvent.type == 'strip' ) {
+                    let uiSliderHandle = wpPickerContainer.getElementsByClassName( 'iris-slider-offset' );
+                    if( uiSliderHandle.length > 0 ) {
+                        uiSliderHandle = uiSliderHandle[0];
+                        uiSliderHandle.onmouseup = function() {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        }
+                    }
+                }
+            }
+        }
+    },
+    wpColorPickerClear: function( attribute, isId ) {
+        let input;
+        if( isId ) {
+            input = [document.getElementById( attribute )];
+            input.length = 1;
+        } else {
+            input = document.getElementsByClassName( attribute );
+        }
+        for( let i = 0; i < input.length; i++ ) {
+            let wpPickerContainer = WPTB_Helper.findAncestor( input[i], 'wp-picker-container' );
+            if( wpPickerContainer ) {
+                let parent = wpPickerContainer.parentNode;
+                parent.removeChild( wpPickerContainer );
+                let newInput = document.createElement( 'input' );
+                if( isId ) {
+                    newInput.setAttribute( 'id', attribute );
+                } else {
+                    newInput.classList.add( 'wptb-element-property', attribute );
+                }
+                newInput.value = "";
+                parent.appendChild( newInput );
+            }
+        }
     },
     detectMode: function() {
         var url = window.location.href,

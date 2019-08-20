@@ -32,19 +32,18 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
     }
     
     DOMElement.onmouseenter = function ( event ) {
-        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        let wptbActionsField = new WPTB_ActionsField();
         
-        wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
-
-        wptbBorderMarkerActionsField.setParameters( DOMElement );
+        wptbActionsField.addActionField( 2, DOMElement );
+        
+        wptbActionsField.setParameters( DOMElement );
+        console.log(DOMElement);
     };
 
     DOMElement.onmouseleave = function ( event ) {
-        let wptbBorderMarkerActionsField = new WPTB_BorderMarkerActionsField();
+        let wptbActionsField = new WPTB_ActionsField();
         
-        //wptbBorderMarkerActionsField.addActionField( 2, DOMElement )
-        
-        wptbBorderMarkerActionsField.leaveFromField( event, DOMElement, 2 );
+        wptbActionsField.leaveFromField( event, DOMElement, 2 );
         
         return false;
     };

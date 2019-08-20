@@ -80,6 +80,6 @@ var WPTB_Button = function( text, DOMElementProt ) {
     };
 
     applyGenericItemSettings( this, kindIndexProt, copy );
-
+    
     return this;
 };

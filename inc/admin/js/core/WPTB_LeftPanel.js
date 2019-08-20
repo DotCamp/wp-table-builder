@@ -25,6 +25,9 @@ var WPTB_LeftPanel = function () {
             for ( let i = 1; i < tableRows.length; i += 2 ) {
                 tableRows[i].style.backgroundColor = ui.color.toString();
             }
+            console.log(event);
+            console.log(this);
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
         },
         clear: function(){
             var tableRows = table.getElementsByTagName('tr');
@@ -35,6 +38,9 @@ var WPTB_LeftPanel = function () {
                     tds[j].style.backgroundColor = '';
                 }
             }
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         },
 
     });
@@ -46,6 +52,8 @@ var WPTB_LeftPanel = function () {
             for ( let i = 2; i < tableRows.length; i += 2 ) {
                 tableRows[i].style.backgroundColor = ui.color.toString();
             }
+            
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
         },
         clear: function(){
             var tableRows = table.getElementsByTagName('tr');
@@ -56,6 +64,9 @@ var WPTB_LeftPanel = function () {
                     tds[j].style.backgroundColor = '';
                 }
             }
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         },
     });
     
@@ -64,6 +75,9 @@ var WPTB_LeftPanel = function () {
         change: function (event, ui) {
             var tableHeader = table.getElementsByTagName('tr')[0];
             tableHeader.style.backgroundColor = ui.color.toString();
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         },
         clear: function(){
             var tableHeader = table.getElementsByTagName('tr')[0];
@@ -72,12 +86,14 @@ var WPTB_LeftPanel = function () {
             for (var j = 0; j < tds.length; j++) {
                 tds[j].style.backgroundColor = '';
             }
+            
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
         },
     });
     
     function tableAdaptiveForMobile( table ) {
         let wptbAdaptiveTableCheckbox = document.getElementById( 'wptb-adaptive-table-checkbox' );
-        if( table && table.dataset.wptbAdaptiveTable ) {
+        if( table && table.dataset.wptbAdaptiveTable && table.dataset.wptbAdaptiveTable == "1" ) {
             wptbAdaptiveTableCheckbox.checked = true;
         } else {
             wptbAdaptiveTableCheckbox.checked = false;
@@ -162,6 +178,7 @@ var WPTB_LeftPanel = function () {
                     tableCells[i].style.border = ( tableInnerborderNumber != 0 ? tableInnerborderNumber : 1 ) + 'px solid ' + ui.color.toString();
                 }
             }
+            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
         },
         clear: function() {
             var tableCells = table.getElementsByTagName('td');
@@ -170,6 +187,9 @@ var WPTB_LeftPanel = function () {
             for (var i = 0; i < tableCells.length; i++) {
                 tableCells[i].style.borderColor = '';
             }
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     });
 
@@ -296,11 +316,19 @@ var WPTB_LeftPanel = function () {
         addCellPadding(this.value);
         table.tdDefaultWidth();
     };
+    
+    document.getElementById('wptb-table-cell-slider').onchange = function() {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    }
 
     document.getElementById('wptb-table-cell-number').onchange = function () {
         document.getElementById('wptb-table-cell-slider').value = this.value;
         addCellPadding(this.value);
         table.tdDefaultWidth();
+        
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-border-slider').oninput = function () {
@@ -316,11 +344,18 @@ var WPTB_LeftPanel = function () {
             tableBorderColorSetArea.style.display = '';
         }
     };
+    
+    document.getElementById('wptb-table-border-slider').onchange = function() {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    }
 
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
         addBorderSize(this.value);
         table.tdDefaultWidth();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-table-inner-border-slider').oninput = function () {
@@ -328,11 +363,18 @@ var WPTB_LeftPanel = function () {
         addInnerBorderSize(this.value);
         table.tdDefaultWidth();
     };
+    
+    document.getElementById('wptb-table-inner-border-slider').onchange = function () {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    }
 
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
         addInnerBorderSize(this.value);
         table.tdDefaultWidth();
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById('wptb-inner-border-check').onchange = function () {
@@ -346,8 +388,10 @@ var WPTB_LeftPanel = function () {
             } else {
                 tableBorderColorSetArea.style.display = '';
             }
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
-        
     };
     
     document.getElementById( 'wptb-table-column-width-slider' ).oninput = function () {
@@ -355,9 +399,17 @@ var WPTB_LeftPanel = function () {
         table.addColumnWidth( this.value );
     };
     
+    document.getElementById( 'wptb-table-column-width-slider' ).onchange = function () {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
+    
     document.getElementById( 'wptb-table-column-width-number' ).onchange = function () {
         document.getElementById( 'wptb-table-column-width-slider' ).value = this.value;
         table.addColumnWidth( this.value );
+        
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
     
     document.getElementById( 'wptb-table-column-width-auto-fixed' ).onchange = function () {
@@ -372,16 +424,27 @@ var WPTB_LeftPanel = function () {
             document.getElementById( 'wptb-table-column-width-number' ).value = width;
             document.getElementById( 'wptb-table-column-width-slider' ).value = width;
         }
+        
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
 
     document.getElementById( 'wptb-table-row-height-slider' ).oninput = function () {
         document.getElementById( 'wptb-table-row-height-number' ).value = this.value;
         table.addRowHeight( this.value );
     };
+    
+    document.getElementById( 'wptb-table-row-height-slider' ).onchange = function () {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+    };
 
     document.getElementById( 'wptb-table-row-height-number' ).onchange = function () {
         document.getElementById( 'wptb-table-row-height-slider' ).value = this.value;
         table.addRowHeight( this.value );
+        
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
     
     document.getElementById( 'wptb-table-row-height-auto-fixed' ).onchange = function () {
@@ -396,6 +459,9 @@ var WPTB_LeftPanel = function () {
             document.getElementById( 'wptb-table-row-height-number' ).value = height;
             document.getElementById( 'wptb-table-row-height-slider' ).value = height;
         }
+        
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
     
     document.getElementById( 'wptb-adaptive-table-checkbox' ).onchange = function() {
@@ -404,6 +470,8 @@ var WPTB_LeftPanel = function () {
         } else {
             table.dataset.wptbAdaptiveTable = 0;
         }
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     };
     
     function createMobileHeadForTable( table, thisEvent ) {
@@ -434,6 +502,8 @@ var WPTB_LeftPanel = function () {
     
     document.getElementById( 'wptb-top-row-as-header' ).onchange = function () {
         createMobileHeadForTable( table, this );
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
     }
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
@@ -475,17 +545,27 @@ var WPTB_LeftPanel = function () {
     // this code hides the "element parameters" area 
     // when clicked outside this element and its "tinymce" toolbar 
     let wptbBuilderPanel = document.getElementsByClassName( 'wptb-builder-panel' )[0];
-    wptbBuilderPanel.addEventListener( 'click', function( e ) {
+    wptbBuilderPanel.onclick = function( e ) {
         if( ! e.target.classList.contains( 'wptb-ph-element' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) && 
                ! e.target.classList.contains( 'wptb-fixed-toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-fixed-toolbar' ) ) {
-            document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
-            document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
-            document.getElementById( 'element-options-group' ).style.display = 'none';
-            let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
-            if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
-                document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
-            }
+            clickOnFreeSpace();
         } 
-   }, false);
+   };
+   
+   let wptbHeader = document.getElementsByClassName( 'wptb-header' );
+   if( wptbHeader.length > 0 ) wptbHeader = wptbHeader[0];
+   wptbHeader.onclick = function() {
+       clickOnFreeSpace();
+   }
+   
+   function clickOnFreeSpace() {
+       document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
+        document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
+        document.getElementById( 'element-options-group' ).style.display = 'none';
+        let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
+        if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
+            document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
+        }
+   }
    
 };
