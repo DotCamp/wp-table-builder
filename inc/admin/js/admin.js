@@ -862,7 +862,7 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
                 var innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
 
-                if (wptbDropHandle.dataset.text == 'Abowe Element') {
+                if (wptbDropHandle.dataset.text == 'Above Element') {
                     td.insertBefore(element, innerElement);
                 } else if (wptbDropHandle.dataset.text == 'Below Element') {
                     var innerElementNext = innerElement.nextSibling;
@@ -2100,7 +2100,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
                 var innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
 
-                if (wptbDropHandle.dataset.text == 'Abowe Element') {
+                if (wptbDropHandle.dataset.text == 'Above Element') {
                     td.insertBefore(element, innerElement);
                 } else if (wptbDropHandle.dataset.text == 'Below Element') {
                     var innerElementNext = innerElement.nextSibling;
