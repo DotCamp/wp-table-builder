@@ -1,9 +1,9 @@
-=== WP Table Builder ===
+=== WordPress Table Plugin - WP Table Builder ===
 Contributors: imtiazrayhan
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -58,6 +58,12 @@ That's it. You're done!
 3. Table Shortcode Popup.
 
 == Changelog ==
+
+= 1.0.5 = 
+
+* NEW: Undo/Redo options for the builder.
+* FIX: Element Actions getting saved with the table.
+* IMPROVE: Element Actions and Border marker.
 
 = 1.0.4 =
 

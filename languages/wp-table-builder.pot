@@ -104,19 +104,19 @@ msgstr ""
 msgid "Button"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:42
+#: ../inc/admin/views/builder/wptb-builder-header.php:77
 msgid "</> Embed"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:49
+#: ../inc/admin/views/builder/wptb-builder-header.php:84
 msgid "Preview"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:54
+#: ../inc/admin/views/builder/wptb-builder-header.php:89
 msgid "Save Table"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:67
+#: ../inc/admin/views/builder/wptb-builder-header.php:102
 msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
 msgstr ""
 
