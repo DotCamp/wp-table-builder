@@ -64,6 +64,7 @@ var WPTB_DropHandle = function (thisElem, e) {
                 element = document.getElementsByClassName( e.dataTransfer.getData('node') )[0];
                 element.classList.remove( 'wptb-moving-mode' );
                 element.classList.remove( 'wptb-moving-into-same-elem' );
+                element.wptbMovingMode = 1;
             }
             
             let td;
@@ -95,10 +96,11 @@ var WPTB_DropHandle = function (thisElem, e) {
             wptbDropBorderMarker.style.display = 'none';
             
             WPTB_innerElementSet(element);
-            
-            if( ! element.classList.contains( 'wptb-image-container' ) ) {
+            console.log(element);
+            if( ! element.classList.contains( 'wptb-image-container' ) || element.wptbMovingMode == 1 ) {
                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
+                element.wptbMovingMode == undefined;
             }
         }
         let wptbContainer = document.querySelector( '.wptb-container' );
@@ -163,7 +165,7 @@ var WPTB_DropHandle = function (thisElem, e) {
     if( thisElem.nodeName.toLowerCase() != 'td' ) {
         let y = e.offsetY==undefined?e.layerY:e.offsetY;
         top = parseFloat( coordinatesElement.top ) - parseFloat( 11 );
-        wptbDropHandle.dataset.text = 'Abowe Element';
+        wptbDropHandle.dataset.text = 'Above Element';
         if ( y > height/2 ) {
             top = parseFloat( coordinatesElement.top ) + height - 1;
             wptbDropHandle.dataset.text = 'Below Element';

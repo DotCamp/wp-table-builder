@@ -184,6 +184,25 @@ body>img {
     color: white;
 }
 
+.wptb-save-btn:focus {
+    color: white;
+}
+
+.wptb-save-btn.wptb-save-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.wptb-save-btn.wptb-save-disabled:hover {
+    text-decoration: none;
+}
+
+.wptb-save-btn.wptb-save-disabled:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+
 .wptb-close {
     background-color: #fff;
     border-left: 1px solid #d3d3d3;

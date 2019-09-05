@@ -85,7 +85,7 @@
             </a>
         </div>
         <div class="wptb-save">
-            <a href="#" class="wptb-save-btn">
+            <a href="#" class="wptb-save-btn wptb-save-disabled">
                 <?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
             </a>
         </div>

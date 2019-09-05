@@ -80,6 +80,17 @@ var WPTB_TableStateSaveManager = function() {
                 
                 wptbRedo.classList.add( 'wptb-undoredo-disabled' );
             }
+            
+            let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+            if( wptbSaveBtn.length > 0 ) {
+                wptbSaveBtn = wptbSaveBtn[0];
+                if( ( ! wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
+                        window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave ) {
+                    wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                } else {
+                    wptbSaveBtn.classList.remove( 'wptb-save-disabled' );
+                }
+            }
         }
     }
     
@@ -128,6 +139,17 @@ var WPTB_TableStateSaveManager = function() {
             } else if( window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1 ) {
                 if( wptbRedo ) {
                     wptbRedo.classList.remove( 'wptb-undoredo-disabled' )
+                }
+            }
+            
+            let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+            if( wptbSaveBtn.length > 0 ) {
+                wptbSaveBtn = wptbSaveBtn[0];
+                if( ( ! wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
+                        window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave ) {
+                    wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                } else {
+                    wptbSaveBtn.classList.remove( 'wptb-save-disabled' );
                 }
             }
             
