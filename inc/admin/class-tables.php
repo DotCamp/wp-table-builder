@@ -1,6 +1,7 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
+use WP_Table_Builder as NS;
 
 /**
  * All the table stuffs.
@@ -97,7 +98,9 @@ class Tables {
         
     }
 
-    public function get_table( $args ) {  
+    public function get_table( $args ) { 
+        do_action( 'wptb_frontend_enqueue_style' );
+        do_action( 'wptb_frontend_enqueue_script' );
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );

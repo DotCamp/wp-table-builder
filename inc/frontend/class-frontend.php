@@ -77,11 +77,15 @@ class Frontend {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
+		add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
 
 	}
+    
+    public function unqueue_styles_start() {
+        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
+    }
 
-	/**
+    /**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
@@ -99,8 +103,12 @@ class Frontend {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */ 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
 
 	}
+    
+    public function unqueue_script_start() {
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+    }
 
 }
