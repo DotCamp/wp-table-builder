@@ -1108,71 +1108,70 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         } else if (element.kind == 'image') {
             var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
             if (_affectedEl2.length > 0) {
+                var elementsA = _affectedEl2[0].getElementsByTagName('a');
+                if (elementsA.length > 0) {
+                    var a = elementsA[0];
 
-                var wptbImageWrapper = _affectedEl2[0].getElementsByClassName('wptb-image-wrapper');
-                if (wptbImageWrapper.length > 0) {
-                    wptbImageWrapper = wptbImageWrapper[0];
-
-                    // set select according to the alignment of the image
-                    var imgAlign = wptbImageWrapper.style.textAlign,
-                        imageAlignmentSelect = prop.querySelector('select[data-type="image-alignment"]'),
-                        _selectOption = imageAlignmentSelect.getElementsByTagName('option');
-
-                    for (var _i2 = 0; _i2 < _selectOption.length; _i2++) {
-                        if (_selectOption[_i2].value == imgAlign) {
-                            _selectOption[_i2].selected = true;
+                    if (a) {
+                        // set select according to the alignment of the image
+                        var imgAlign = void 0;
+                        if (a.style.float == 'none') {
+                            imgAlign = 'center';
+                        } else {
+                            imgAlign = a.style.float;
                         }
-                    }
+                        var imageAlignmentSelect = prop.querySelector('select[data-type="image-alignment"]'),
+                            _selectOption = imageAlignmentSelect.getElementsByTagName('option');
 
-                    var elementsA = wptbImageWrapper.getElementsByTagName('a');
-                    if (elementsA.length > 0) {
-                        var a = elementsA[0];
-
-                        if (a) {
-                            a.onclick = function (e) {
-                                e.preventDefault();
-                            };
-
-                            // set text link for input field of setting panel
-                            var imageLinkHref = a.getAttribute('href'),
-                                inputImageLink = prop.querySelector('input[data-type="image-link"]');
-                            if (imageLinkHref) {
-                                inputImageLink.value = imageLinkHref;
+                        for (var _i2 = 0; _i2 < _selectOption.length; _i2++) {
+                            if (_selectOption[_i2].value == imgAlign) {
+                                _selectOption[_i2].selected = true;
                             }
+                        }
 
-                            // set checkbox for target of link 
-                            var imageLinkTarget = a.getAttribute('target'),
-                                imageLinkTargetInput = prop.querySelector('input[data-type="image-link-target"]'),
-                                imageLinkTargetInputId = imageLinkTargetInput.getAttribute('id'),
-                                imageLinkTargetInputLabel = imageLinkTargetInput.parentNode.getElementsByTagName('label')[0];
+                        a.onclick = function (e) {
+                            e.preventDefault();
+                        };
 
-                            imageLinkTargetInputId = imageLinkTargetInputId + '-' + kindIndexProt.split('-')[1];
+                        // set text link for input field of setting panel
+                        var imageLinkHref = a.getAttribute('href'),
+                            inputImageLink = prop.querySelector('input[data-type="image-link"]');
+                        if (imageLinkHref) {
+                            inputImageLink.value = imageLinkHref;
+                        }
 
-                            imageLinkTargetInput.setAttribute('id', imageLinkTargetInputId);
-                            imageLinkTargetInputLabel.setAttribute('for', imageLinkTargetInputId);
+                        // set checkbox for target of link 
+                        var imageLinkTarget = a.getAttribute('target'),
+                            imageLinkTargetInput = prop.querySelector('input[data-type="image-link-target"]'),
+                            imageLinkTargetInputId = imageLinkTargetInput.getAttribute('id'),
+                            imageLinkTargetInputLabel = imageLinkTargetInput.parentNode.getElementsByTagName('label')[0];
 
-                            if (imageLinkTarget && imageLinkTarget == '_blank') {
-                                imageLinkTargetInput.checked = true;
-                            }
+                        imageLinkTargetInputId = imageLinkTargetInputId + '-' + kindIndexProt.split('-')[1];
 
-                            // set value for input fields of image size
-                            var imgWidth = a.style.width;
-                            if (imgWidth) {
-                                var imageWidthInputRange = prop.querySelector('input[type="range"][data-type="image-size"]'),
-                                    imageWidthInputNumber = prop.querySelector('input[type="number"][data-type="image-size"]');
+                        imageLinkTargetInput.setAttribute('id', imageLinkTargetInputId);
+                        imageLinkTargetInputLabel.setAttribute('for', imageLinkTargetInputId);
 
-                                imageWidthInputRange.value = parseInt(imgWidth);
-                                imageWidthInputNumber.value = parseInt(imgWidth);
-                            }
+                        if (imageLinkTarget && imageLinkTarget == '_blank') {
+                            imageLinkTargetInput.checked = true;
+                        }
 
-                            var img = a.getElementsByTagName('img');
-                            if (img.length > 0) {
-                                // set value for input field of alternative text image
-                                var imgAlternativeText = img[0].getAttribute('alt'),
-                                    imageAlternativeTextInput = prop.querySelector('input[type="text"][data-type="alternative-text"]');
+                        // set value for input fields of image size
+                        var imgWidth = a.style.width;
+                        if (imgWidth) {
+                            var imageWidthInputRange = prop.querySelector('input[type="range"][data-type="image-size"]'),
+                                imageWidthInputNumber = prop.querySelector('input[type="number"][data-type="image-size"]');
 
-                                imageAlternativeTextInput.value = imgAlternativeText;
-                            }
+                            imageWidthInputRange.value = parseInt(imgWidth);
+                            imageWidthInputNumber.value = parseInt(imgWidth);
+                        }
+
+                        var img = a.getElementsByTagName('img');
+                        if (img.length > 0) {
+                            // set value for input field of alternative text image
+                            var imgAlternativeText = img[0].getAttribute('alt'),
+                                imageAlternativeTextInput = prop.querySelector('input[type="text"][data-type="alternative-text"]');
+
+                            imageAlternativeTextInput.value = imgAlternativeText;
                         }
                     }
                 }
@@ -1460,7 +1459,13 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
-                    affectedEl.getElementsByClassName('wptb-image-wrapper')[0].style.textAlign = this.value;
+                    var wptbImageFloatValue = '';
+                    if (this.value == 'center') {
+                        wptbImageFloatValue = 'none';
+                    } else {
+                        wptbImageFloatValue = this.value;
+                    }
+                    affectedEl.querySelector('.wptb-image-wrapper a').style.float = wptbImageFloatValue;
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';

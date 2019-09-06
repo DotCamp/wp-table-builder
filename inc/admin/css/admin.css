@@ -1312,6 +1312,15 @@ table.wptb-table {
     display: block !important;
     max-width: 100%;
     position: relative;
+    margin: auto;
+}
+
+.wptb-image-wrapper::after {
+    content: "";
+    display: block;
+    height: 0;
+    width: 100%;
+    clear: both;
 }
 
 /*
