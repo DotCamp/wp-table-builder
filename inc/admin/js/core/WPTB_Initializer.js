@@ -2,8 +2,8 @@ var WPTB_Initializer = function () {
 
     const MIN_COLUMNS = 1,
         MIN_ROWS = 1,
-        MAX_COLUMNS = 10,
-        MAX_ROWS = 10;
+        MAX_COLUMNS = 30,
+        MAX_ROWS = 30;
 
     var tableGenerator = document.body;
     columnsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[0],

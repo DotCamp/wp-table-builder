@@ -23,10 +23,10 @@ use WP_Table_Builder as NS;
     </tr>
     <tr>
         <td style="padding: 15px">
-            <span class="wptb-input-number-decrement">–</span><input class="wptb-input-number" id="wptb-columns-number" type="text" value="1" min="1" max="10"><span class="wptb-input-number-increment">+</span>
+            <span class="wptb-input-number-decrement">–</span><input class="wptb-input-number" id="wptb-columns-number" type="text" value="1" min="1" max="30"><span class="wptb-input-number-increment">+</span>
         </td>
         <td style="padding: 15px">
-            <span class="wptb-input-number-decrement">–</span><input class="wptb-input-number" id="wptb-rows-number" type="text" value="1" min="1" max="10"><span class="wptb-input-number-increment">+</span>
+            <span class="wptb-input-number-decrement">–</span><input class="wptb-input-number" id="wptb-rows-number" type="text" value="1" min="1" max="30"><span class="wptb-input-number-increment">+</span>
         </td>
     </tr>
     <tr>
