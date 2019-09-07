@@ -1,9 +1,9 @@
 === WordPress Table Plugin - WP Table Builder ===
-Contributors: imtiazrayhan
+Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -51,6 +51,12 @@ Please remember you MUST have PHP 5.6+ to be able to use this plugin.
 
 That's it. You're done!
 
+## Join Us To Get Updates and Resources
+
+* [Visit WP Table Builder Website](https://wptablebuilder.com/)
+* [Follow Us on Twitter](https://twitter.com/wptbplugin)
+* [Join Our Facebook Group](https://www.facebook.com/groups/497986907442780/)
+
 == Screenshots ==
 
 1. Table Builer Interface.
@@ -58,6 +64,12 @@ That's it. You're done!
 3. Table Shortcode Popup.
 
 == Changelog ==
+
+= 1.0.7 =
+
+* FIX: Image alignment setting not working.
+* NEW: Increased maximum number of Rows and Columns.
+* IMPROVE: Performance improvement by loading assets only where necessary.
 
 = 1.0.6 =
 

@@ -32,19 +32,19 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:36
+#: ../inc/admin/class-tables.php:37
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:189
+#: ../inc/admin/class-tables.php:45, ../inc/admin/class-tables.php:50, ../inc/admin/class-wptb-listing.php:189
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:188
+#: ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:188
 msgid "Title"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:50
+#: ../inc/admin/class-tables.php:51
 msgid "Date"
 msgstr ""
 
