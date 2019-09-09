@@ -1,50 +1,30 @@
-# WP Table Builder
+# WP Table Builder - Drag and Drop Table Builder Plugin for WordPress
 
-Table Builder Plugin for WordPress.
+WP Table Builder is a drag and drop table builder plugin for WordPress. It's insanely easy to create responsive tables with WP Table Builder.
 
-IN DEVELOPMENT. NOT READY TO USE YET.
+WP Table Builder is perfect for creating comparison tables, pricing tables, list tables and many more.
 
-### → Development: Installing NodeJS, NPM and Gulp
+The builder comes with 4 elements right now. You can add the following elements in a table:
 
-You need to have NodeJS & NPM installed. If it is installed, skip to installing Gulp. Otherwise, download [NodeJS](https://nodejs.org/en/download/) and install it. After installing NodeJS, you can verify the install of both NodeJS and Node Package Manager by typing the following commands. This step needs to be followed only once if you don't have NodeJS installed. No need to repeat it ever again.
+* Text
+* Image
+* List
+* Button
 
-```bash
-node -v
-# Results into v9.11.1
+All the elements come with customization options of their own.
 
-npm -v
-# Results into 5.6.0
-```
+We have a cell management mode which comes with options like Add New Row, Add New Column, Merge Cells, Split Cells and many more.
 
-NodeJS and NPM are installed, now we need to install `Gulp` globally. To do that, run the following command
+## How to Use
 
-```bash
-# Run the following command with super user.
-sudo npm install --global gulp
+After you install the plugin, you will see a Table Builder menu. Go to Table Builder > Add New. 
 
-# Or run the following command.
-npm install --global gulp
-```
+You will be able select column number and row number. Once you select that, click on Generate. The table will be generated. 
 
-### → Installing Node Dependencies
+You can then drag and drop elements from the left panel into the table cells. Once you are done adding and editing elements, click on Save to save the tables.
 
-We are in the root folder of our WordPress plugin, let's install the Node Dependencies. In the terminal run this command and wait for it to download all the NodeJS dependencies. It's a one-time process and can take about 5 minutes depending on the internet speed of your connection.
+After the table is saved, you can embed it in post and pages by using a shortcode. Click on 'Embed' on the top to get the shortcode. 
 
-```bash
-# Run the following command with super user.
-sudo npm install
+You can also get the shortcode from the 'All Tables' list under 'Table Builder' menu.
 
-# Or run the following command.
-npm install
-```
-
-### → Just run `Gulp`
-
-Once the NodeJS dependencies are downloaded just run the following command to combine the JavaScript Files.
-
-```bash
-# To start gulp
-gulp
-
-# To stop gulp press CTRL (⌃) + C
-```
+[Download WP Table Builder](https://wordpress.org/plugins/wp-table-builder/)
