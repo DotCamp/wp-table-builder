@@ -237,6 +237,84 @@ table.wptb-preview-table-mobile {
     padding-right: 0px;
 }
 
+/* Star Rating */
+.wptb-star_rating-container {
+    text-align: center;
+}
+.wptb-rating-stars-box {
+    text-align: center;
+    display: inline-block;
+    padding: 7px;
+}
+
+.wptb-rating-stars-box ul {
+    list-style-type:none;
+    padding:0;
+
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    padding: 0.5em 0.2em 0.2em;
+}
+
+.wptb-rating-stars-box ul li {
+    display: inline-block;
+}.wptb-rating-stars-box ul > li.wptb-rating-star {
+    font-size: 25px;
+    height: 25px;
+    line-height: 25px;
+    color: #ccc;
+    font-style: normal;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-hover {
+    color:#FF912C;
+    opacity: 0.4;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected {
+    color:#FF912C;
+}
+
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected.wptb-rating-star-hover {
+    opacity: 1;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star:before {
+    content: "☆";
+    font-size: inherit;
+    height: inherit;
+    line-height: inherit;
+    color: #ccc;
+    font-style: normal;
+    display: block;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-hover:before {
+    content: "★";
+    color: inherit;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected:before {
+    content: "★";
+    color: inherit;
+}
+
+.wptb-success-box {
+    text-align: center;
+    font-size: 20px;
+}
+
+.wptb-success-box > div {
+  vertical-align:top;
+  display:inline-block;
+  color:#888;
+  text-align: center;
+  height: 25px;
+  font-size: 25px;
+  line-height: 25px;
+}
+
 .wptb-column-title-mobile-container {
     display: none;
     position: absolute;

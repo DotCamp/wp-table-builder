@@ -1,17 +1,5 @@
 var WPTB_DropHandle = function (thisElem, e) {
     
-    function newElementProxy(el) {
-        if (el.includes('list')) {
-            return new WPTB_List();
-        } else if (el.includes('image')) {
-            return new WPTB_Image();
-        } else if (el.includes('text')) {
-            return new WPTB_Text();
-        } else if (el.includes('button')) {
-            return new WPTB_Button();
-        }
-    }
-    
     let wptbDropHandle,
         wptbDropBorderMarker;
     if ( document.getElementsByClassName( 'wptb-drop-handle' ).length == 0 ) {
@@ -58,7 +46,7 @@ var WPTB_DropHandle = function (thisElem, e) {
             let element;
             
             if ( e.dataTransfer.getData('wptbElement') ) {
-                element = newElementProxy( e.dataTransfer.getData('wptbElement') );
+                element = WPTB_Helper.newElementProxy( e.dataTransfer.getData('wptbElement') );
                 element = element.getDOMElement();
             } else {
                 element = document.getElementsByClassName( e.dataTransfer.getData('node') )[0];

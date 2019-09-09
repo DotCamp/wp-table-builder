@@ -22,7 +22,8 @@ var WPTB_Helper = {
             text: WPTB_Helper.getDragImageCustom( 'text' ),
             image: WPTB_Helper.getDragImageCustom( 'image' ),
             button: WPTB_Helper.getDragImageCustom( 'button' ),
-            list: WPTB_Helper.getDragImageCustom( 'list' )
+            list: WPTB_Helper.getDragImageCustom( 'list' ),
+            star_rating: WPTB_Helper.getDragImageCustom( 'half-filled-rating-star' )
         };
     },
     listItemsRecalculateIndex: function( ulElem ) {
@@ -365,5 +366,64 @@ var WPTB_Helper = {
             }
         }
         return cellHeight;
+    },
+    newElementProxy: function(el) {
+        if ( el == 'list' ) {
+            return new WPTB_List();
+        } else if ( el == 'image' ) {
+            return new WPTB_Image();
+        } else if ( el == 'text' ) {
+            return new WPTB_Text();
+        } else if ( el == 'button' ) {
+            return new WPTB_Button();
+        } else if( el == 'star_rating' ) {
+            return new WPTB_StarRating();
+        }
+    },
+    wpColorPickerChange: function( event, ui ) {
+        let uiColor;
+        if( ui ) {
+            uiColor = ui.color.toString();
+        } else {
+            uiColor = '';
+        }
+        
+        let parent = WPTB_Helper.findAncestor( event.target, 'wp-picker-input-wrap' ).getElementsByClassName( 'wptb-color-picker' )[0], classe, type, ps, number;
+        classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
+        type = classe[1];
+        number = classe[2];
+        let affectedEl = document.getElementsByClassName( 'wptb-element-' + type + '-' + number )[0];
+        if ( type == 'button' ) {
+            if ( parent.dataset.type == 'button-text-color' ) {
+                affectedEl.getElementsByClassName( 'wptb-button' )[0].style.color = uiColor;
+            } else {
+                affectedEl.getElementsByClassName( 'wptb-button' )[0].style.backgroundColor = uiColor;
+            }
+        } else if( type == 'list' ) {
+            let ps = affectedEl.querySelectorAll( 'p' );
+            if( ps.length > 0 ) {
+                for ( let i = 0; i < ps.length; i++ ) {
+                    ps[i].style.color = uiColor;
+                }
+            }
+        } else if( type == 'star_rating' ) {
+            if ( parent.dataset.type == 'star-color' ) {
+                let ratingStar = affectedEl.querySelectorAll('li');
+                for( let i = 0; i < ratingStar.length; i++ ) {
+                    ratingStar[i].style.color = uiColor;
+                }
+            } else if( parent.dataset.type == 'star-background-color' ) {
+                let wptbRatingStarsBox = affectedEl.querySelector('.wptb-rating-stars-box');
+                if( wptbRatingStarsBox ) {
+                    wptbRatingStarsBox.style.backgroundColor = uiColor;
+                }
+            } else if( parent.dataset.type == 'numeral-rating-color' ) {
+                let wptbTextMessageSize = affectedEl.querySelector('.wptb-text-message');
+                wptbTextMessageSize.style.color = uiColor;
+            }
+
+        } else {
+            affectedEl.style.color = uiColor;
+        }
     }
 }

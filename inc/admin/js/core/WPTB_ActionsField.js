@@ -95,10 +95,14 @@ var WPTB_ActionsField = function() {
                     copy = new WPTB_Image( '', activeElement );
                     
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
-                } else {
+                } else if( type == 'button' ) {
                     let text = activeElementClone.childNodes[0].querySelector( 'p' ).innerHTML;
-
+ 
                     copy = new WPTB_Button( text, activeElementClone );
+
+                    td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                } else if( type = 'star_rating' ) {
+                    copy = new WPTB_StarRating( activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 }

@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
 
 gulp.task('adminJs', function () {
     gulp.
-        src('./inc/admin/js/core/*.js')
+        src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: [['env', { modules: false }]]
@@ -27,7 +27,7 @@ gulp.task('minify', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./inc/admin/js/core/*.js', ['adminJs']);
+    gulp.watch(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'], ['adminJs']);
 });
 
 gulp.task('default', ['adminJs']);

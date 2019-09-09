@@ -22,7 +22,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             index = 1;
         }
     } else if ( kindIndexProt && ! copy ) {
-        index = kindIndexProt.split('-')[1];
+        let kindIndexProtArr = kindIndexProt.split('-');
+        index = kindIndexProtArr[kindIndexProtArr.length - 1];
     }
     
     node.onmouseenter = function ( event ) {
@@ -55,6 +56,9 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 dialog_type: "modal",
                 theme: 'modern',
                 menubar: false,
+                force_br_newlines : false,
+                force_p_newlines : false,
+                forced_root_block : '',
                 fixed_toolbar_container: '#wpcd_fixed_toolbar',
                 paste_as_text: true,
                 toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
@@ -109,15 +113,12 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                     });
                 }
             });
-            
-        } else {
+        } else if( element.kind === 'list' ) {
             listItems = node.getElementsByClassName( 'wptb-list-item-content' );
             for ( let i = 0; i < listItems.length; i++ ) {
                 WPTB_Helper.listItemsTinyMceInit( listItems[i] );
             }
-        }
-
-        
+        } 
     };
     
     node.onmouseleave = function ( event ) {
@@ -147,6 +148,68 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         });
         var config = { attributes: true, attributeFilter: ['style'] };
         observer.observe( element.getDOMElement(), config );
+    } else if( element.kind == 'star_rating' ) {
+        let ratingStars = node.getElementsByClassName( 'wptb-rating-star' );
+        for ( let i = 0; i < ratingStars.length; i++ ) {
+            let ratingStar = ratingStars[i];
+            ratingStar.onmouseover = function() {
+                let onStar = parseInt( this.dataset.value, 10 ); // The star currently mouse on
+
+                // Now highlight all the stars that's not after the current hovered star
+                let children = this.parentNode.children;
+
+                for( let i = 0; i < children.length; i++ ) {
+                    if( i < onStar ) {
+                        children[i].classList.add( 'wptb-rating-star-hover' );
+                    } else {
+                        children[i].classList.remove( 'wptb-rating-star-hover' );
+                    }
+                }
+            }
+            ratingStar.onmouseout = function() {
+                let children = this.parentNode.children;
+                for( let i = 0; i < children.length; i++ ) {
+                    children[i].classList.remove( 'wptb-rating-star-hover' );
+                }
+            }
+            
+            /* 2. Action to perform on click */
+            ratingStar.onclick = function() {
+                let onStar = parseInt( this.dataset.value, 10 );
+                let stars = this.parentNode.children;
+                
+                for ( let i = 0; i < stars.length; i++ ) {
+                    stars[i].classList.remove( 'wptb-rating-star-selected' );
+                }
+                
+                for ( let i = 0; i < onStar; i++ ) {
+                    stars[i].classList.add( 'wptb-rating-star-selected' );
+                }
+                
+                /* Rating number message */
+                let ratingValue = parseInt( this.dataset.value , 10 );
+                let wptbStarRatingContainer = WPTB_Helper.findAncestor( this, 'wptb-star_rating-container' );
+                if( wptbStarRatingContainer ) {
+                    let wptbTextMessage;
+                    wptbTextMessage = wptbStarRatingContainer.getElementsByClassName( 'wptb-text-message' );
+                    if( wptbTextMessage.length > 0 ) {
+                        wptbTextMessage = wptbTextMessage[0];
+                        wptbTextMessage.innerHTML = ratingValue;
+                    } else {
+                        
+                    }
+                    
+                    
+                    
+                    let wptbActionsField = new WPTB_ActionsField( 1, wptbStarRatingContainer );
+    
+                    wptbActionsField.setParameters( wptbStarRatingContainer );
+                }
+                
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
+            }
+        }
     }
 
     let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);

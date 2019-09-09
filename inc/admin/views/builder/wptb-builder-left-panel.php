@@ -29,6 +29,7 @@ use WP_Table_Builder as NS;
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
                             <p class="wptb-draggable-prototype"><?php esc_html_e( 'List', 'wp-table-builder' ); ?></p>
                         </div>
+                        <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/builder-premium/wptb-builder-left-panel-elements-premium.php'; ?>
                     </div>              
                 </div>
             </div>
@@ -56,10 +57,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="margin: 9px 0; padding-bottom: 10px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="font-size" class="wptb-text-font-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="10"> 
+                              <input data-type="font-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="10"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-text-font-size-number" data-type="font-size"  class="wptb-text-font-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
+                                <input id="wptb-size-number" data-type="font-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>
@@ -98,10 +99,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="image-size" class="wptb-image-width wptb-element-property  wptb-image-size-slider" type="range" min="10" max="100" step="1" value="100"> 
+                              <input data-type="image-size" class="wptb-image-width wptb-element-property  wptb-size-slider" type="range" min="10" max="100" step="1" value="100"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-image-width-number" data-type="image-size"  class="wptb-image-width-number wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100" pattern="[0-9]*"><span class="wptb-input-px">%</span>
+                                <input id="wptb-size-number" data-type="image-size"  class="wptb-size-number wptb-image-width wptb-number-input wptb-element-property" type="number" min="10" max="100" step="1" placeholder="100" pattern="[0-9]*"><span class="wptb-input-px">%</span>
                             </div>
                         </div>
                     </div>
@@ -280,6 +281,7 @@ use WP_Table_Builder as NS;
                         </div>
                     </div>
                 </div>
+                <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/builder-premium/wptb-builder-left-panel-element-option.php'; ?>
             </div>     
         </div>  
     </div>

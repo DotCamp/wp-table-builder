@@ -1,17 +1,5 @@
 var WPTB_innerElementSet = function  ( element ) {
     
-    function newElementProxy(el) {
-        if (el == 'list') {
-            return new WPTB_List();
-        } else if (el == 'image') {
-            return new WPTB_Image();
-        } else if (el == 'text') {
-            return new WPTB_Text();
-        } else if (el == 'button') {
-            return new WPTB_Button();
-        }
-    }
-    
     element.ondragenter = function (e) {
         var div;
         if ( e.dataTransfer.types.indexOf( 'wptbelement' ) == -1 && e.dataTransfer.types.indexOf( 'wptb-moving-mode' ) == -1 ) {
@@ -47,7 +35,7 @@ var WPTB_innerElementSet = function  ( element ) {
         }
 
         if ( e.dataTransfer.getData( 'wptbElement' ) ) {
-            element = newElementProxy( e.dataTransfer.getData( 'wptbElement' ) );
+            element = WPTB_Helper.newElementProxy( e.dataTransfer.getData( 'wptbElement' ) );
             element = element.getDOMElement();
         } else {
             classId = e.dataTransfer.getData( 'node' );

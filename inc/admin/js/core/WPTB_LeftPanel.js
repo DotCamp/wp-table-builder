@@ -297,10 +297,10 @@ var WPTB_LeftPanel = function () {
     let wptbTableCellNumber = document.getElementById( 'wptb-table-cell-number' );
     numberImputSize( wptbTableCellNumber, 1, 50 );
     
-    let wptbTextfontSizeNumber = document.getElementById( 'wptb-text-font-size-number' );
+    let wptbTextfontSizeNumber = document.getElementById( 'wptb-size-number' );
     numberImputSize( wptbTextfontSizeNumber, 1, 50 );
     
-    let wptbImageWidthNumber = document.getElementById( 'wptb-image-width-number' );
+    let wptbImageWidthNumber = document.getElementById( 'wptb-size-number' );
     numberImputSize( wptbImageWidthNumber, 2, 100 );
     
     let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );

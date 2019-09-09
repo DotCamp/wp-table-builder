@@ -24,7 +24,8 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             index = 1;
         }
     } else if (kindIndexProt && !copy) {
-        index = kindIndexProt.split('-')[1];
+        var kindIndexProtArr = kindIndexProt.split('-');
+        index = kindIndexProtArr[kindIndexProtArr.length - 1];
     }
 
     node.onmouseenter = function (event) {
@@ -58,6 +59,9 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                 dialog_type: "modal",
                 theme: 'modern',
                 menubar: false,
+                force_br_newlines: false,
+                force_p_newlines: false,
+                forced_root_block: '',
                 fixed_toolbar_container: '#wpcd_fixed_toolbar',
                 paste_as_text: true,
                 toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
@@ -107,7 +111,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                     });
                 }
             });
-        } else {
+        } else if (element.kind === 'list') {
             listItems = node.getElementsByClassName('wptb-list-item-content');
             for (var _i = 0; _i < listItems.length; _i++) {
                 WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
@@ -141,6 +145,64 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
         });
         var config = { attributes: true, attributeFilter: ['style'] };
         observer.observe(element.getDOMElement(), config);
+    } else if (element.kind == 'star_rating') {
+        var ratingStars = node.getElementsByClassName('wptb-rating-star');
+        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
+            var ratingStar = ratingStars[_i2];
+            ratingStar.onmouseover = function () {
+                var onStar = parseInt(this.dataset.value, 10); // The star currently mouse on
+
+                // Now highlight all the stars that's not after the current hovered star
+                var children = this.parentNode.children;
+
+                for (var _i3 = 0; _i3 < children.length; _i3++) {
+                    if (_i3 < onStar) {
+                        children[_i3].classList.add('wptb-rating-star-hover');
+                    } else {
+                        children[_i3].classList.remove('wptb-rating-star-hover');
+                    }
+                }
+            };
+            ratingStar.onmouseout = function () {
+                var children = this.parentNode.children;
+                for (var _i4 = 0; _i4 < children.length; _i4++) {
+                    children[_i4].classList.remove('wptb-rating-star-hover');
+                }
+            };
+
+            /* 2. Action to perform on click */
+            ratingStar.onclick = function () {
+                var onStar = parseInt(this.dataset.value, 10);
+                var stars = this.parentNode.children;
+
+                for (var _i5 = 0; _i5 < stars.length; _i5++) {
+                    stars[_i5].classList.remove('wptb-rating-star-selected');
+                }
+
+                for (var _i6 = 0; _i6 < onStar; _i6++) {
+                    stars[_i6].classList.add('wptb-rating-star-selected');
+                }
+
+                /* Rating number message */
+                var ratingValue = parseInt(this.dataset.value, 10);
+                var wptbStarRatingContainer = WPTB_Helper.findAncestor(this, 'wptb-star_rating-container');
+                if (wptbStarRatingContainer) {
+                    var wptbTextMessage = void 0;
+                    wptbTextMessage = wptbStarRatingContainer.getElementsByClassName('wptb-text-message');
+                    if (wptbTextMessage.length > 0) {
+                        wptbTextMessage = wptbTextMessage[0];
+                        wptbTextMessage.innerHTML = ratingValue;
+                    } else {}
+
+                    var wptbActionsField = new WPTB_ActionsField(1, wptbStarRatingContainer);
+
+                    wptbActionsField.setParameters(wptbStarRatingContainer);
+                }
+
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
+            };
+        }
     }
 
     var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
@@ -258,10 +320,14 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                     copy = new WPTB_Image('', activeElement);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
-                } else {
+                } else if (type == 'button') {
                     var text = activeElementClone.childNodes[0].querySelector('p').innerHTML;
 
                     copy = new WPTB_Button(text, activeElementClone);
+
+                    td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
+                } else if (type = 'star_rating') {
+                    copy = new WPTB_StarRating(activeElementClone);
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 }
@@ -789,18 +855,6 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 };
 var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
 
-    function newElementProxy(el) {
-        if (el.includes('list')) {
-            return new WPTB_List();
-        } else if (el.includes('image')) {
-            return new WPTB_Image();
-        } else if (el.includes('text')) {
-            return new WPTB_Text();
-        } else if (el.includes('button')) {
-            return new WPTB_Button();
-        }
-    }
-
     var wptbDropHandle = void 0,
         wptbDropBorderMarker = void 0;
     if (document.getElementsByClassName('wptb-drop-handle').length == 0) {
@@ -843,7 +897,7 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             var element = void 0;
 
             if (e.dataTransfer.getData('wptbElement')) {
-                element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+                element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
                 element = element.getDOMElement();
             } else {
                 element = document.getElementsByClassName(e.dataTransfer.getData('node'))[0];
@@ -1021,14 +1075,14 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
 
     if (kindIndexProt) {
         if (element.kind == 'button') {
-            var _affectedEl = document.getElementsByClassName('wptb-element-' + kindIndexProt)[0],
+            var affectedEl = document.getElementsByClassName('wptb-element-' + kindIndexProt)[0],
                 wptbButtonWrapper = void 0,
                 wptbButtonA = void 0,
                 wptbButton = void 0,
                 wptbSize = void 0;
 
-            if (_affectedEl) {
-                wptbSize = _affectedEl.className.match(/wptb-size-([a-z]+)/i);
+            if (affectedEl) {
+                wptbSize = affectedEl.className.match(/wptb-size-([a-z]+)/i);
             }
 
             if (wptbSize && Array.isArray(wptbSize)) {
@@ -1043,12 +1097,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 }
             }
 
-            if (_affectedEl) {
-                wptbButtonWrapper = _affectedEl.getElementsByClassName('wptb-button-wrapper');
+            if (affectedEl) {
+                wptbButtonWrapper = affectedEl.getElementsByClassName('wptb-button-wrapper');
 
-                wptbButtonA = _affectedEl.getElementsByTagName('a');
+                wptbButtonA = affectedEl.getElementsByTagName('a');
 
-                wptbButton = _affectedEl.getElementsByClassName('wptb-button');
+                wptbButton = affectedEl.getElementsByClassName('wptb-button');
             }
 
             if (wptbButtonWrapper) {
@@ -1106,9 +1160,9 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 buttonBackgroundColorInput.value = WPTB_Helper.rgbToHex(buttonColor);
             }
         } else if (element.kind == 'image') {
-            var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
-            if (_affectedEl2.length > 0) {
-                var elementsA = _affectedEl2[0].getElementsByTagName('a');
+            var _affectedEl = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl.length > 0) {
+                var elementsA = _affectedEl[0].getElementsByTagName('a');
                 if (elementsA.length > 0) {
                     var a = elementsA[0];
 
@@ -1177,17 +1231,17 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 }
             }
         } else if (element.kind == 'text') {
-            var _affectedEl3 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
-            if (_affectedEl3.length > 0) {
-                var elementFontSize = _affectedEl3[0].style.fontSize,
-                    elementTextColor = _affectedEl3[0].style.color;
+            var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl2.length > 0) {
+                var elementFontSize = _affectedEl2[0].style.fontSize,
+                    elementTextColor = _affectedEl2[0].style.color;
                 var textFontSizeInputRange = prop.querySelector('input[type="range"][data-type="font-size"]'),
                     textFontSizeInputNumber = prop.querySelector('input[type="number"][data-type="font-size"]'),
-                    textColorInput = prop.querySelector('input[type="text"][data-type="color"]');
+                    _textColorInput = prop.querySelector('input[type="text"][data-type="color"]');
 
                 textFontSizeInputRange.value = parseInt(elementFontSize) ? parseInt(elementFontSize) : 10;
                 textFontSizeInputNumber.value = parseInt(elementFontSize) ? parseInt(elementFontSize) : 10;
-                textColorInput.value = WPTB_Helper.rgbToHex(elementTextColor);
+                _textColorInput.value = WPTB_Helper.rgbToHex(elementTextColor);
             }
         } else if (element.kind == 'list') {
             var elementList = document.getElementsByClassName('wptb-element-' + kindIndexProt);
@@ -1282,6 +1336,57 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     }
                 }
             }
+        } else if (element.kind == 'star_rating') {
+            var _affectedEl3 = document.getElementsByClassName('wptb-element-' + kindIndexProt);
+            if (_affectedEl3.length > 0) {
+                var wptbRatingStarsBox = _affectedEl3[0].querySelector('.wptb-rating-stars-box');
+                if (wptbRatingStarsBox) {
+                    var wptbRatingStarsBoxBackGround = wptbRatingStarsBox.style.backgroundColor;
+                    var starBoxBackgroundColorInput = textColorInput = prop.querySelector('input[type="text"][data-type="star-background-color"]');
+                    starBoxBackgroundColorInput.value = WPTB_Helper.rgbToHex(wptbRatingStarsBoxBackGround);
+
+                    var ratingStar = wptbRatingStarsBox.querySelector('li');
+                    if (ratingStar) {
+                        var ratingStarSize = ratingStar.style.fontSize,
+                            ratingStarColor = ratingStar.style.color;
+                        var starSizeInputRange = prop.querySelector('input[type="range"][data-type="star-size"]'),
+                            starSizeInputNumber = prop.querySelector('input[type="number"][data-type="star-size"]'),
+                            starColorInput = prop.querySelector('input[type="text"][data-type="star-color"]');
+
+                        starSizeInputRange.value = parseInt(ratingStarSize) ? parseInt(ratingStarSize) : 10;
+                        starSizeInputNumber.value = parseInt(ratingStarSize) ? parseInt(ratingStarSize) : 10;
+                        starColorInput.value = WPTB_Helper.rgbToHex(ratingStarColor);
+                    }
+
+                    var successBox = wptbRatingStarsBox.querySelector('.wptb-success-box');
+                    if (successBox) {
+                        var showNumberRatingCheckbox = prop.querySelector('input[type="checkbox"][data-type="show-number-rating"]');
+                        if (successBox.style.display == 'block') {
+                            showNumberRatingCheckbox.checked = true;
+                            var numeralRatingOptionContainers = prop.getElementsByClassName('wptb-numeral-rating-option-container');
+                            for (var _i6 = 0; _i6 < numeralRatingOptionContainers.length; _i6++) {
+                                numeralRatingOptionContainers[_i6].style.display = 'block';
+                            }
+                        } else {
+                            showNumberRatingCheckbox.checked = false;
+                        }
+
+                        var wptbTextMessage = successBox.querySelector('.wptb-text-message');
+                        if (wptbTextMessage) {
+                            var numberRatingSize = wptbTextMessage.style.fontSize;
+                            var numberRatingColor = wptbTextMessage.style.color;
+
+                            var numberSizeInputRange = prop.querySelector('input[type="range"][data-type="numeral-rating-size"]'),
+                                numberSizeInputNumber = prop.querySelector('input[type="number"][data-type="numeral-rating-size"]'),
+                                numberColorInput = prop.querySelector('input[type="text"][data-type="numeral-rating-color"]');
+
+                            numberSizeInputRange.value = parseInt(numberRatingSize) ? parseInt(numberRatingSize) : 10;
+                            numberSizeInputNumber.value = parseInt(numberRatingSize) ? parseInt(numberRatingSize) : 10;
+                            numberColorInput.value = WPTB_Helper.rgbToHex(numberRatingColor);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1371,53 +1476,40 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         if (optionControls[i].classList.contains('wptb-color-picker')) {
             jQuery(optionControls[i]).wpColorPicker({
                 change: function change(event, ui) {
-                    var parent = event.target,
-                        classe,
-                        type,
-                        ps,
-                        number;
-                    classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
-                    type = classe[1];
-                    number = classe[2];
-                    affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
-                    if (type == 'button') {
-                        if (parent.dataset.type == 'button-text-color') {
-                            affectedEl.getElementsByClassName('wptb-button')[0].style.color = ui.color.toString();
-                        } else {
-                            affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = ui.color.toString();
-                        }
-                    } else if (type == 'list') {
-                        var _ps = affectedEl.querySelectorAll('p');
-                        if (_ps.length > 0) {
-                            for (var _i6 = 0; _i6 < _ps.length; _i6++) {
-                                _ps[_i6].style.color = ui.color.toString();
-                            }
-                        }
-                    } else {
-                        affectedEl.style.color = ui.color.toString();
-                    }
+                    WPTB_Helper.wpColorPickerChange(event, ui);
 
                     //console.log(event);
                     WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
+                },
+                clear: function clear(event) {
+                    WPTB_Helper.wpColorPickerChange(event);
                 }
             });
         }
 
-        if (optionControls[i].dataset.type === 'font-size') {
-            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0];
+        if (optionControls[i].dataset.type === 'font-size' || optionControls[i].dataset.type === 'image-size' || optionControls[i].dataset.type === 'star-size' || optionControls[i].dataset.type === 'numeral-rating-size') {
+            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0];
             slider.oninput = function () {
-                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-number')[0].onchange(event);
+                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
+                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].onchange(event);
             };
         }
 
-        if (optionControls[i].dataset.type === 'image-size') {
-            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0];
-            slider.oninput = function () {
-                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].value = this.value;
-                this.parentNode.parentNode.getElementsByClassName('wptb-image-width-number')[0].onchange(event);
-            };
-        }
+        //        if (optionControls[i].dataset.type === 'image-size') {
+        //            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0];
+        //            slider.oninput = function () {
+        //                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
+        //                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].onchange( event );
+        //            }
+        //        }
+        //        
+        //        if ( optionControls[i].dataset.type === 'star-size' ) {
+        //            var slider = optionControls[i].parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0];
+        //            slider.oninput = function () {
+        //                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
+        //                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].onchange( event );
+        //            }
+        //        }
 
         optionControls[i].onchange = function (event) {
             var n_Class = this.dataset.element,
@@ -1456,7 +1548,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 case 'image-size':
                     affectedEl.getElementsByTagName('a')[0].style.width = this.value + '%';
                     affectedEl.getElementsByTagName('a')[0].style.height = 'auto';
-                    this.parentNode.parentNode.getElementsByClassName('wptb-image-size-slider')[0].value = this.value;
+                    this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                     break;
                 case 'image-alignment':
                     var wptbImageFloatValue = '';
@@ -1469,7 +1561,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';
-                    this.parentNode.parentNode.getElementsByClassName('wptb-text-font-size-slider')[0].value = this.value;
+                    this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                     break;
                 case 'button-alignment':
                     var jc = '';
@@ -1552,9 +1644,45 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                         _p4.classList.add('wptb-list-style-type-' + val.toLowerCase());
                     }
                     break;
+                case 'star-size':
+                    var _ratingStar = affectedEl.querySelectorAll('li');
+                    for (var _i7 = 0; _i7 < _ratingStar.length; _i7++) {
+                        _ratingStar[_i7].style.fontSize = val + 'px';
+                        _ratingStar[_i7].style.height = val + 'px';
+                    }
+                    break;
+                case 'show-number-rating':
+                    var wptbNumeralRatingOptionContainer = WPTB_Helper.findAncestor(this, 'wptb-star_rating-options').getElementsByClassName('wptb-numeral-rating-option-container');
+
+                    var ratingNumber = affectedEl.getElementsByClassName('wptb-rating-star-selected').length;
+
+                    var _wptbTextMessage = affectedEl.querySelector('.wptb-text-message');
+
+                    if (wptbNumeralRatingOptionContainer.length > 0) {
+                        var _val = this.checked ? 'checked' : 'unchecked';
+                        if (_val == 'checked') {
+                            for (var _i8 = 0; _i8 < wptbNumeralRatingOptionContainer.length; _i8++) {
+                                wptbNumeralRatingOptionContainer[_i8].style.display = 'block';
+                            }
+                            _wptbTextMessage.parentNode.style.display = 'block';
+                            _wptbTextMessage.innerHTML = ratingNumber;
+                        } else if (_val == 'unchecked') {
+                            for (var _i9 = 0; _i9 < wptbNumeralRatingOptionContainer.length; _i9++) {
+                                wptbNumeralRatingOptionContainer[_i9].style.display = 'none';
+                            }
+                            _wptbTextMessage.parentNode.style.display = 'none';
+                        }
+                    }
+                    break;
+                case 'numeral-rating-size':
+                    var wptbTextMessageSize = affectedEl.querySelector('.wptb-text-message');
+                    wptbTextMessageSize.style.fontSize = val + 'px';
+                    wptbTextMessageSize.style.height = val + 'px';
+                    wptbTextMessageSize.style.lineHeight = val + 'px';
+                    break;
             }
 
-            if (event.target.classList.contains('wptb-text-font-size-slider') || event.target.classList.contains('wptb-image-size-slider')) {
+            if (event.target.classList.contains('wptb-size-slider') || event.target.classList.contains('wptb-size-slider')) {
                 event.target.onmouseup = function () {
                     var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                     wptbTableStateSaveManager.tableStateSet();
@@ -1587,7 +1715,8 @@ var WPTB_Helper = {
             text: WPTB_Helper.getDragImageCustom('text'),
             image: WPTB_Helper.getDragImageCustom('image'),
             button: WPTB_Helper.getDragImageCustom('button'),
-            list: WPTB_Helper.getDragImageCustom('list')
+            list: WPTB_Helper.getDragImageCustom('list'),
+            star_rating: WPTB_Helper.getDragImageCustom('half-filled-rating-star')
         };
     },
     listItemsRecalculateIndex: function listItemsRecalculateIndex(ulElem) {
@@ -1923,6 +2052,68 @@ var WPTB_Helper = {
             }
         }
         return cellHeight;
+    },
+    newElementProxy: function newElementProxy(el) {
+        if (el == 'list') {
+            return new WPTB_List();
+        } else if (el == 'image') {
+            return new WPTB_Image();
+        } else if (el == 'text') {
+            return new WPTB_Text();
+        } else if (el == 'button') {
+            return new WPTB_Button();
+        } else if (el == 'star_rating') {
+            return new WPTB_StarRating();
+        }
+    },
+    wpColorPickerChange: function wpColorPickerChange(event, ui) {
+        var uiColor = void 0;
+        if (ui) {
+            uiColor = ui.color.toString();
+        } else {
+            uiColor = '';
+        }
+
+        var parent = WPTB_Helper.findAncestor(event.target, 'wp-picker-input-wrap').getElementsByClassName('wptb-color-picker')[0],
+            classe = void 0,
+            type = void 0,
+            ps = void 0,
+            number = void 0;
+        classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
+        type = classe[1];
+        number = classe[2];
+        var affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + number)[0];
+        if (type == 'button') {
+            if (parent.dataset.type == 'button-text-color') {
+                affectedEl.getElementsByClassName('wptb-button')[0].style.color = uiColor;
+            } else {
+                affectedEl.getElementsByClassName('wptb-button')[0].style.backgroundColor = uiColor;
+            }
+        } else if (type == 'list') {
+            var _ps = affectedEl.querySelectorAll('p');
+            if (_ps.length > 0) {
+                for (var i = 0; i < _ps.length; i++) {
+                    _ps[i].style.color = uiColor;
+                }
+            }
+        } else if (type == 'star_rating') {
+            if (parent.dataset.type == 'star-color') {
+                var ratingStar = affectedEl.querySelectorAll('li');
+                for (var _i2 = 0; _i2 < ratingStar.length; _i2++) {
+                    ratingStar[_i2].style.color = uiColor;
+                }
+            } else if (parent.dataset.type == 'star-background-color') {
+                var wptbRatingStarsBox = affectedEl.querySelector('.wptb-rating-stars-box');
+                if (wptbRatingStarsBox) {
+                    wptbRatingStarsBox.style.backgroundColor = uiColor;
+                }
+            } else if (parent.dataset.type == 'numeral-rating-color') {
+                var wptbTextMessageSize = affectedEl.querySelector('.wptb-text-message');
+                wptbTextMessageSize.style.color = uiColor;
+            }
+        } else {
+            affectedEl.style.color = uiColor;
+        }
     }
 };
 var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
@@ -2044,18 +2235,6 @@ var WPTB_Initializer = function WPTB_Initializer() {
 };
 var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
 
-    function newElementProxy(el) {
-        if (el == 'list') {
-            return new WPTB_List();
-        } else if (el == 'image') {
-            return new WPTB_Image();
-        } else if (el == 'text') {
-            return new WPTB_Text();
-        } else if (el == 'button') {
-            return new WPTB_Button();
-        }
-    }
-
     element.ondragenter = function (e) {
         var div;
         if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
@@ -2090,7 +2269,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
         }
 
         if (e.dataTransfer.getData('wptbElement')) {
-            element = newElementProxy(e.dataTransfer.getData('wptbElement'));
+            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
             element = element.getDOMElement();
         } else {
             classId = e.dataTransfer.getData('node');
@@ -2435,10 +2614,10 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     var wptbTableCellNumber = document.getElementById('wptb-table-cell-number');
     numberImputSize(wptbTableCellNumber, 1, 50);
 
-    var wptbTextfontSizeNumber = document.getElementById('wptb-text-font-size-number');
+    var wptbTextfontSizeNumber = document.getElementById('wptb-size-number');
     numberImputSize(wptbTextfontSizeNumber, 1, 50);
 
-    var wptbImageWidthNumber = document.getElementById('wptb-image-width-number');
+    var wptbImageWidthNumber = document.getElementById('wptb-size-number');
     numberImputSize(wptbImageWidthNumber, 2, 100);
 
     var wptbTableColumnWidthNumber = document.getElementById('wptb-table-column-width-number');
@@ -5285,6 +5464,104 @@ var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
     this.getDOMElement = function () {
         return DOMElement;
     };
+    applyGenericItemSettings(this, kindIndexProt, copy);
+
+    return this;
+};
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var WPTB_StarRating = function WPTB_StarRating(DOMElementProt) {
+    var DOMElement = document.createElement('div'),
+        ratingStarsBox = document.createElement('div'),
+        ratingStarsList = document.createElement('ul'),
+        successBox = document.createElement('div'),
+        textMessage = document.createElement('div'),
+        kindIndexProt = undefined,
+        copy = false;
+
+    DOMElement.classList.add('wptb-star_rating-container');
+    ratingStarsBox.classList.add('wptb-rating-stars-box');
+    ratingStarsList.classList.add('wptb-rating-stars-list');
+    successBox.classList.add('wptb-success-box');
+    successBox.style.display = 'none';
+    textMessage.classList.add('wptb-text-message');
+
+    var wptbRatingStarsArr = ['Poor', 'Fair', 'Good', 'Excellent', 'WOW!!!'];
+
+    for (var i = 0; i < wptbRatingStarsArr.length; i++) {
+        var ratingStar = document.createElement('li');
+        ratingStar.classList.add('wptb-rating-star');
+        ratingStar.dataset.value = i + 1;
+        ratingStar.setAttribute('title', wptbRatingStarsArr[i]);
+        ratingStarsList.appendChild(ratingStar);
+    }
+
+    successBox.appendChild(textMessage);
+    ratingStarsBox.appendChild(ratingStarsList);
+    ratingStarsBox.appendChild(successBox);
+    DOMElement.appendChild(ratingStarsBox);
+
+    // Creation of a new star rating when copying to avoid errors when assigning new event handlers.
+    if (DOMElementProt) {
+        var wptbElementMutch = DOMElementProt.className.match(/wptb-element-((.+-)\d+)/i);
+        if (wptbElementMutch && Array.isArray(wptbElementMutch)) {
+            kindIndexProt = wptbElementMutch[1];
+            copy = true;
+        };
+
+        var wptbRatingStarsBox = DOMElementProt.querySelector('.wptb-rating-stars-box');
+        if (wptbRatingStarsBox) {
+            var wptbRatingStarsBoxAttributes = [].concat(_toConsumableArray(wptbRatingStarsBox.attributes));
+            if (wptbRatingStarsBoxAttributes.length > 0) {
+                for (var _i = 0; _i < wptbRatingStarsBoxAttributes.length; _i++) {
+                    if (wptbRatingStarsBoxAttributes[_i].name == 'style') {
+                        ratingStarsBox.setAttribute(wptbRatingStarsBoxAttributes[_i].name, wptbRatingStarsBoxAttributes[_i].value);
+                    }
+                }
+            }
+        }
+
+        var wptbRatingStarsOld = wptbRatingStarsBox.querySelectorAll('li');
+        var wptbRatingStars = ratingStarsList.querySelectorAll('li');
+        if (wptbRatingStarsOld.length > 0 && wptbRatingStars.length > 0) {
+            for (var _i2 = 0; _i2 < wptbRatingStarsOld.length; _i2++) {
+                var wptbRatingStarsAttributes = [].concat(_toConsumableArray(wptbRatingStarsOld[_i2].attributes));
+                if (wptbRatingStarsAttributes.length > 0) {
+                    for (var j = 0; j < wptbRatingStarsAttributes.length; j++) {
+                        wptbRatingStars[_i2].setAttribute(wptbRatingStarsAttributes[j].name, wptbRatingStarsAttributes[j].value);
+                    }
+                }
+            }
+        }
+
+        var wptbSuccessBox = wptbRatingStarsBox.querySelector('.wptb-success-box');
+        if (wptbSuccessBox) {
+            var wptbSuccessBoxAttributes = [].concat(_toConsumableArray(wptbSuccessBox.attributes));
+            for (var _i3 = 0; _i3 < wptbSuccessBoxAttributes.length; _i3++) {
+                if (wptbSuccessBoxAttributes[_i3].name == 'style') {
+                    successBox.setAttribute(wptbSuccessBoxAttributes[_i3].name, wptbSuccessBoxAttributes[_i3].value);
+                }
+            }
+        }
+
+        var wptbTextMessage = wptbSuccessBox.querySelector('.wptb-text-message');
+        if (wptbTextMessage) {
+            textMessage.innerHTML = wptbTextMessage.innerHTML;
+            var wptbTextMessageAttributes = [].concat(_toConsumableArray(wptbTextMessage.attributes));
+            for (var _i4 = 0; _i4 < wptbTextMessageAttributes.length; _i4++) {
+                if (wptbTextMessageAttributes[_i4].name == 'style') {
+                    textMessage.setAttribute(wptbTextMessageAttributes[_i4].name, wptbTextMessageAttributes[_i4].value);
+                }
+            }
+        }
+    }
+
+    this.kind = 'star_rating';
+
+    this.getDOMElement = function () {
+        return DOMElement;
+    };
+
     applyGenericItemSettings(this, kindIndexProt, copy);
 
     return this;
