@@ -268,46 +268,26 @@ var WPTB_LeftPanel = function () {
     
     cellPaddingSavedSet();
     
-    function numberImputSize( wptbNumberInputs, maxCount, maxValue ) {
-        wptbNumberInputs.onkeydown = function() {
-            let thisValue = this.value;
-            thisValue = String( thisValue );
-            if ( thisValue[0] == 0 ) {
-                this.value = "";
-            } else {
-                thisValue = thisValue.substring( 0, maxCount );
-                this.value = thisValue;
-            }
-        }
-        wptbNumberInputs.onkeyup = function() {
-            let thisValue = this.value;
-            thisValue = String( thisValue );
-            if ( thisValue > maxValue ) {
-                this.value = maxValue;
-            }
-        }
-    }
-    
     let wptbTableBorderNumber = document.getElementById( 'wptb-table-border-number' );
-    numberImputSize( wptbTableBorderNumber, 1, 50 );
+    WPTB_Helper.numberImputSize( wptbTableBorderNumber, 1, 50 );
     
     let wptbTableInnerBorderNumber = document.getElementById( 'wptb-table-inner-border-number' );
-    numberImputSize( wptbTableInnerBorderNumber, 1, 50 );
+    WPTB_Helper.numberImputSize( wptbTableInnerBorderNumber, 1, 50 );
     
     let wptbTableCellNumber = document.getElementById( 'wptb-table-cell-number' );
-    numberImputSize( wptbTableCellNumber, 1, 50 );
+    WPTB_Helper.numberImputSize( wptbTableCellNumber, 1, 50 );
     
     let wptbTextfontSizeNumber = document.getElementById( 'wptb-size-number' );
-    numberImputSize( wptbTextfontSizeNumber, 1, 50 );
+    WPTB_Helper.numberImputSize( wptbTextfontSizeNumber, 1, 50 );
     
     let wptbImageWidthNumber = document.getElementById( 'wptb-size-number' );
-    numberImputSize( wptbImageWidthNumber, 2, 100 );
+    WPTB_Helper.numberImputSize( wptbImageWidthNumber, 2, 100 );
     
     let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );
-    numberImputSize( wptbTableColumnWidthNumber, 2, 500 );
+    WPTB_Helper.numberImputSize( wptbTableColumnWidthNumber, 2, 500 );
     
     let wptbTableRowHeightNumber = document.getElementById( 'wptb-table-row-height-number' );
-    numberImputSize( wptbTableRowHeightNumber, 2, 200 );
+    WPTB_Helper.numberImputSize( wptbTableRowHeightNumber, 2, 200 );
     
     
     

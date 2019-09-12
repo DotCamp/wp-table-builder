@@ -258,46 +258,88 @@ table.wptb-preview-table-mobile {
 
 .wptb-rating-stars-box ul li {
     display: inline-block;
-}.wptb-rating-stars-box ul > li.wptb-rating-star {
-    font-size: 25px;
-    height: 25px;
-    line-height: 25px;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star {
     color: #ccc;
-    font-style: normal;
+    margin: 0px;
+    position: relative;
+    width: 20px;
+    height: 20px;
 }
 
-.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-hover {
-    color:#FF912C;
-    opacity: 0.4;
+.wptb-rating-stars-box ul > li.wptb-rating-star span {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part,
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-right-signal-part{
+    height: 100%;
+    width: 50%;
+    z-index: 20;
 }
 
-.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected {
-    color:#FF912C;
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part {
+    left: 0px;
 }
 
-
-.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected.wptb-rating-star-hover {
-    opacity: 1;
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part span.wptb-rating-star-zero-set {
+    left: 0px;
+    width: 40%;
+    height: 100%;
+    top: 0px;
+    z-index: 30px;
 }
 
-.wptb-rating-stars-box ul > li.wptb-rating-star:before {
-    content: "☆";
-    font-size: inherit;
-    height: inherit;
-    line-height: inherit;
-    color: #ccc;
-    font-style: normal;
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-right-signal-part {
+    right: 0px;
+    left: auto;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star span {
     display: block;
 }
 
-.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-hover:before {
-    content: "★";
-    color: inherit;
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-filled-rating-star {
+    display: none;
 }
 
-.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected:before {
-    content: "★";
-    color: inherit;
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-half-filled-rating-star {
+    display: none;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-not-filled-rating-star {
+    fill: #ccc;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-half span.wptb-filled-rating-star {
+    display: none;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-half span.wptb-not-filled-rating-star {
+    display: none;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-half span.wptb-half-filled-rating-star {
+    display: block;
+    fill: #FF912C;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-full span.wptb-filled-rating-star {
+    display: block;
+    fill: #FF912C;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-full span.wptb-not-filled-rating-star {
+    display: none;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-full span.wptb-half-filled-rating-star {
+    display: none;
 }
 
 .wptb-success-box {

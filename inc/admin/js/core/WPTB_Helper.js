@@ -410,12 +410,10 @@ var WPTB_Helper = {
             if ( parent.dataset.type == 'star-color' ) {
                 let ratingStar = affectedEl.querySelectorAll('li');
                 for( let i = 0; i < ratingStar.length; i++ ) {
-                    ratingStar[i].style.color = uiColor;
-                }
-            } else if( parent.dataset.type == 'star-background-color' ) {
-                let wptbRatingStarsBox = affectedEl.querySelector('.wptb-rating-stars-box');
-                if( wptbRatingStarsBox ) {
-                    wptbRatingStarsBox.style.backgroundColor = uiColor;
+                    let span = ratingStar[i].getElementsByTagName( 'span' );
+                    for( let j = 0; j < span.length; j++ ) {
+                        span[j].style.fill = uiColor;
+                    }
                 }
             } else if( parent.dataset.type == 'numeral-rating-color' ) {
                 let wptbTextMessageSize = affectedEl.querySelector('.wptb-text-message');
@@ -425,5 +423,125 @@ var WPTB_Helper = {
         } else {
             affectedEl.style.color = uiColor;
         }
+    },
+    starRatingSelectHoverSet : function( event ) {
+        let starRating;
+        if( ! event.target.classList.contains( 'wptb-rating-star' ) ) {
+            starRating = WPTB_Helper.findAncestor( event.target, 'wptb-rating-star' );
+        } else {
+            starRating = event.target;
+        }
+        
+        let onStar = parseInt( starRating.dataset.value, 10 ); // The star currently mouse on
+
+        // Now highlight all the stars that's not after the current hovered star
+        let children = starRating.parentNode.children;
+        if( event.type == "mouseover" ) {
+            for( let j = 0; j < children.length; j++ ) {
+                if( j < onStar ) {
+                    if( j == onStar - 1 ) {
+                        if ( event.target.classList.contains( 'wptb-rating-star-left-signal-part' ) ) {
+                            children[j].classList.add( 'wptb-rating-star-hover-half' );
+                            children[j].classList.remove( 'wptb-rating-star-hover-full' );
+                        } else if( event.target.classList.contains( 'wptb-rating-star-right-signal-part' ) ) {
+                            children[j].classList.add( 'wptb-rating-star-hover-full' );
+                            children[j].classList.remove( 'wptb-rating-star-hover-half' );
+                        }
+                    } else {
+                        children[j].classList.add( 'wptb-rating-star-hover-full' );
+                        children[j].classList.remove( 'wptb-rating-star-hover-half' );
+                    }
+                } else {
+                    children[j].classList.remove( 'wptb-rating-star-hover-full' );
+                    children[j].classList.remove( 'wptb-rating-star-hover-half' );
+                }
+            }
+        } else if ( event.type == "click" ) {
+            for( let j = 0; j < children.length; j++ ) {
+                if( j < onStar ) {
+                    if( j == onStar - 1 ) {
+                        if ( event.target.classList.contains( 'wptb-rating-star-left-signal-part' ) ) {
+                            children[j].classList.add( 'wptb-rating-star-selected-half' );
+                            children[j].classList.remove( 'wptb-rating-star-selected-full' );
+                        } else if( event.target.classList.contains( 'wptb-rating-star-right-signal-part' ) ) {
+                            children[j].classList.add( 'wptb-rating-star-selected-full' );
+                            children[j].classList.remove( 'wptb-rating-star-selected-half' );
+                        }
+                    } else {
+                        children[j].classList.add( 'wptb-rating-star-selected-full' );
+                        children[j].classList.remove( 'wptb-rating-star-selected-half' );
+                    }
+                } else {
+                    children[j].classList.remove( 'wptb-rating-star-selected-full' );
+                    children[j].classList.remove( 'wptb-rating-star-selected-half' );
+                }
+            }
+        }
+        
+    },
+    starRatingEventHandlersAdd: function( ratingStar ) {
+        ratingStar.onmouseover = function( event ) {
+            event.stopPropagation();
+            WPTB_Helper.starRatingSelectHoverSet( event );
+        }
+        ratingStar.onmouseout = function() {
+            let children = this.parentNode.children;
+            for( let j = 0; j < children.length; j++ ) {
+                children[j].classList.remove( 'wptb-rating-star-hover-half' );
+                children[j].classList.remove( 'wptb-rating-star-hover-full' );
+            }
+        }
+
+        /* 2. Action to perform on click */
+        ratingStar.onclick = function( event ) {
+            WPTB_Helper.starRatingSelectHoverSet( event );
+            
+            /* Rating number message */
+            let wptbStarRatingContainer = WPTB_Helper.findAncestor( event.target, 'wptb-star_rating-container' );
+
+            WPTB_Helper.starRatingTextMessageChenge( wptbStarRatingContainer );
+
+            let wptbActionsField = new WPTB_ActionsField( 1, wptbStarRatingContainer );
+
+            wptbActionsField.setParameters( wptbStarRatingContainer );
+
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
+    },
+    numberImputSize: function ( wptbNumberInputs, maxCount, maxValue ) {
+        wptbNumberInputs.onkeydown = function() {
+            let thisValue = this.value;
+            thisValue = String( thisValue );
+            if ( thisValue[0] == 0 ) {
+                this.value = "";
+            } else {
+                thisValue = thisValue.substring( 0, maxCount );
+                this.value = thisValue;
+            }
+        }
+        wptbNumberInputs.onkeyup = function() {
+            let thisValue = this.value;
+            thisValue = String( thisValue );
+            if ( thisValue > maxValue ) {
+                this.value = maxValue;
+            }
+        }
+    },
+    starRatingTextMessageChenge: function( starRatingContainer ) {
+        let ratingNumber = starRatingContainer.getElementsByClassName( 'wptb-rating-star-selected-full' ).length;
+        if( starRatingContainer.getElementsByClassName( 'wptb-rating-star-selected-half' ).length > 0 ) {
+            ratingNumber = parseInt( ratingNumber ) + 0.5;
+        }
+        
+        let wptbTextMessageCommon = starRatingContainer.querySelectorAll( 'li' ),
+            wptbTextMessageCommonVal = wptbTextMessageCommon.length,
+            wptbTextMessage = starRatingContainer.querySelector( '.wptb-text-message' );
+        if( wptbTextMessageCommonVal == 1 && wptbTextMessageCommon[0].style.display == 'none' ) {
+            wptbTextMessage.innerHTML = '';
+            return;
+        }
+        
+        wptbTextMessage.innerHTML = ratingNumber + '/' + wptbTextMessageCommonVal;
     }
 }

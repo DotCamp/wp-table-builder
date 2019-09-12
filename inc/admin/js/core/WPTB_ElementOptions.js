@@ -287,52 +287,56 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         } else if( element.kind == 'star_rating' ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
             if( affectedEl.length > 0 ) {
-                let wptbRatingStarsBox = affectedEl[0].querySelector( '.wptb-rating-stars-box' );
-                if( wptbRatingStarsBox ) {
-                    let wptbRatingStarsBoxBackGround = wptbRatingStarsBox.style.backgroundColor;
-                    let starBoxBackgroundColorInput = textColorInput = prop.querySelector( 'input[type="text"][data-type="star-background-color"]' );
-                    starBoxBackgroundColorInput.value = WPTB_Helper.rgbToHex( wptbRatingStarsBoxBackGround );
-                    
-                    
-                    let ratingStar = wptbRatingStarsBox.querySelector( 'li' );
-                    if( ratingStar ) {
-                        let ratingStarSize = ratingStar.style.fontSize,
-                            ratingStarColor = ratingStar.style.color;
-                        let starSizeInputRange = prop.querySelector( 'input[type="range"][data-type="star-size"]' ),
-                            starSizeInputNumber = prop.querySelector( 'input[type="number"][data-type="star-size"]' ),
-                            starColorInput = prop.querySelector( 'input[type="text"][data-type="star-color"]' );
+                affectedEl = affectedEl[0];
+                let ratingStar = affectedEl.querySelector( 'li' );
+                if( ratingStar ) {
+                    let ratingStarSize = ratingStar.style.width;
+                    let starSizeInputRange = prop.querySelector( 'input[type="range"][data-type="star-size"]' ),
+                        starSizeInputNumber = prop.querySelector( 'input[type="number"][data-type="star-size"]' );
 
-                        starSizeInputRange.value = parseInt( ratingStarSize ) ? parseInt( ratingStarSize ) : 10;
-                        starSizeInputNumber.value = parseInt( ratingStarSize ) ? parseInt( ratingStarSize ) : 10;
+                    starSizeInputRange.value = parseInt( ratingStarSize ) ? parseInt( ratingStarSize ) : 10;
+                    starSizeInputNumber.value = parseInt( ratingStarSize ) ? parseInt( ratingStarSize ) : 10;
+
+                    if( ratingStar.querySelector( 'span' ) ) {
+                        let starColorInput = prop.querySelector( 'input[type="text"][data-type="star-color"]' ),
+                            ratingStarColor = ratingStar.querySelector( 'span' ).style.fill;
                         starColorInput.value = WPTB_Helper.rgbToHex( ratingStarColor );
                     }
-                    
-                    let successBox = wptbRatingStarsBox.querySelector( '.wptb-success-box' );
-                    if( successBox ) {
-                        let showNumberRatingCheckbox = prop.querySelector( 'input[type="checkbox"][data-type="show-number-rating"]' );
-                        if( successBox.style.display == 'block' ) {
-                            showNumberRatingCheckbox.checked = true;
-                            let numeralRatingOptionContainers = prop.getElementsByClassName( 'wptb-numeral-rating-option-container' );
-                            for( let i = 0; i < numeralRatingOptionContainers.length; i++ ) {
-                                numeralRatingOptionContainers[i].style.display = 'block';
-                            }
-                        } else {
-                            showNumberRatingCheckbox.checked = false;
-                        }
-                        
-                        let wptbTextMessage = successBox.querySelector( '.wptb-text-message' );
-                        if( wptbTextMessage ) {
-                            let numberRatingSize = wptbTextMessage.style.fontSize;
-                            let numberRatingColor = wptbTextMessage.style.color;
-                            
-                            let numberSizeInputRange = prop.querySelector( 'input[type="range"][data-type="numeral-rating-size"]' ),
-                            numberSizeInputNumber = prop.querySelector( 'input[type="number"][data-type="numeral-rating-size"]' ),
-                            numberColorInput = prop.querySelector( 'input[type="text"][data-type="numeral-rating-color"]' );
+                }
+                
+                let ratingStars = affectedEl.querySelectorAll( 'li' );
+                let starsCountInputNumber = prop.querySelector( 'input[type="number"][data-type="stars-count"]' );
+                if( ratingStars.length == 1 && ratingStars[0].style.display == 'none' ) {
+                    starsCountInputNumber.value = 0;
+                } else {
+                    starsCountInputNumber.value = ratingStars.length;
+                }
 
-                            numberSizeInputRange.value = parseInt( numberRatingSize ) ? parseInt( numberRatingSize ) : 10;
-                            numberSizeInputNumber.value = parseInt( numberRatingSize ) ? parseInt( numberRatingSize ) : 10;
-                            numberColorInput.value = WPTB_Helper.rgbToHex( numberRatingColor );
+                let successBox = affectedEl.querySelector( '.wptb-success-box' );
+                if( successBox ) {
+                    let showNumberRatingCheckbox = prop.querySelector( 'input[type="checkbox"][data-type="show-number-rating"]' );
+                    if( successBox.style.display == 'block' ) {
+                        showNumberRatingCheckbox.checked = true;
+                        let numeralRatingOptionContainers = prop.getElementsByClassName( 'wptb-numeral-rating-option-container' );
+                        for( let i = 0; i < numeralRatingOptionContainers.length; i++ ) {
+                            numeralRatingOptionContainers[i].style.display = 'block';
                         }
+                    } else {
+                        showNumberRatingCheckbox.checked = false;
+                    }
+
+                    let wptbTextMessage = successBox.querySelector( '.wptb-text-message' );
+                    if( wptbTextMessage ) {
+                        let numberRatingSize = wptbTextMessage.style.fontSize;
+                        let numberRatingColor = wptbTextMessage.style.color;
+
+                        let numberSizeInputRange = prop.querySelector( 'input[type="range"][data-type="numeral-rating-size"]' ),
+                        numberSizeInputNumber = prop.querySelector( 'input[type="number"][data-type="numeral-rating-size"]' ),
+                        numberColorInput = prop.querySelector( 'input[type="text"][data-type="numeral-rating-color"]' );
+
+                        numberSizeInputRange.value = parseInt( numberRatingSize ) ? parseInt( numberRatingSize ) : 10;
+                        numberSizeInputNumber.value = parseInt( numberRatingSize ) ? parseInt( numberRatingSize ) : 10;
+                        numberColorInput.value = WPTB_Helper.rgbToHex( numberRatingColor );
                     }
                 }
             }
@@ -424,9 +428,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
     var optionControls = prop.getElementsByClassName('wptb-element-property');
 
     for (var i = 0; i < optionControls.length; i++) {
-        if (optionControls[i].classList.contains('wptb-color-picker')) {
+        if ( optionControls[i].classList.contains( 'wptb-color-picker' ) ) {
             jQuery(optionControls[i]).wpColorPicker({
-                change: function (event, ui) {
+                change: function ( event, ui ) {
                     WPTB_Helper.wpColorPickerChange( event, ui );
                     
                     //console.log(event);
@@ -436,6 +440,10 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     WPTB_Helper.wpColorPickerChange( event );
                 }
             });
+        }
+        
+        if( optionControls[i].classList.contains( 'wptb-stars-count-field' ) ) {
+            WPTB_Helper.numberImputSize( optionControls[i], 1, 10 );
         }
 
         if ( optionControls[i].dataset.type === 'font-size' || optionControls[i].dataset.type === 'image-size' ||
@@ -603,26 +611,33 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 case 'star-size':
                     let ratingStar = affectedEl.querySelectorAll('li');
                     for( let i = 0; i < ratingStar.length; i++ ) {
-                        ratingStar[i].style.fontSize = val + 'px';
+                        ratingStar[i].style.width = val + 'px';
                         ratingStar[i].style.height = val + 'px';
+                        let span = ratingStar[i].querySelectorAll( 'span' );
+                        for( let j = 0; j < span.length; j++ ) {
+                            if( span[j].querySelector( 'svg' ) ) {
+                                span[j].style.width = val + 'px';
+                                span[j].style.height = val + 'px';
+                                span[j].querySelector( 'svg' ).style.width = val + 'px';
+                            }
+                        }
                     }
                     break;
                 case 'show-number-rating':
                     let wptbNumeralRatingOptionContainer = WPTB_Helper.findAncestor( this, 'wptb-star_rating-options' )
                     .getElementsByClassName( 'wptb-numeral-rating-option-container' );
                     
-                    let ratingNumber = affectedEl.getElementsByClassName( 'wptb-rating-star-selected' ).length;
-                    
-                    let wptbTextMessage = affectedEl.querySelector( '.wptb-text-message' );
+                    WPTB_Helper.starRatingTextMessageChenge( affectedEl );
                     
                     if( wptbNumeralRatingOptionContainer.length > 0 ) {
+                        let wptbTextMessage = affectedEl.querySelector( '.wptb-text-message' );
+                        
                         let val = this.checked ? 'checked' : 'unchecked';
                         if( val== 'checked' ) {
                             for ( let i = 0; i < wptbNumeralRatingOptionContainer.length; i++ ) {
                                 wptbNumeralRatingOptionContainer[i].style.display = 'block';
                             }
                             wptbTextMessage.parentNode.style.display = 'block';
-                            wptbTextMessage.innerHTML = ratingNumber;
                         } else if ( val == 'unchecked' ) {
                             for ( let i = 0; i < wptbNumeralRatingOptionContainer.length; i++ ) {
                                 wptbNumeralRatingOptionContainer[i].style.display = 'none';
@@ -636,6 +651,45 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     wptbTextMessageSize.style.fontSize = val + 'px';
                     wptbTextMessageSize.style.height = val + 'px';
                     wptbTextMessageSize.style.lineHeight = val + 'px';
+                    break;
+                case 'stars-count':
+                    let starRatings = affectedEl.querySelectorAll( 'li' );
+                    
+                    let starRatingsCount = starRatings.length;
+                    
+                    if( val > starRatingsCount ) {
+                        let difference = val - starRatingsCount;
+                        let starRatingsLast = starRatings[starRatings.length - 1];
+                        
+                        let parent = starRatingsLast.parentNode;
+                        for( let i = 0; i < difference; i++ ){
+                            let newStarRating = starRatingsLast.cloneNode( true );
+                            newStarRating.removeAttribute( 'class' );
+                            newStarRating.setAttribute( 'class', 'wptb-rating-star' );
+                            newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + i + 1;
+                            WPTB_Helper.starRatingEventHandlersAdd( newStarRating );
+                            parent.appendChild( newStarRating );
+                        }
+                    } else if( val < starRatingsCount ) {
+                            let difference = parseInt( starRatingsCount ) - parseInt( val );
+                            
+                            if( val == 0 ) {
+                                difference--;
+                                starRatings[0].removeAttribute( 'class' );
+                                starRatings[0].setAttribute( 'class', 'wptb-rating-star' );
+                                starRatings[0].style.display = 'none';
+                            }
+                            
+                            let starRatingLength = starRatings.length;
+                            for( i = 0; i < difference; i++ ) {
+                                starRatings[0].parentNode.removeChild( starRatings[starRatingLength - i - 1] );
+                            }
+                    } else if( val == starRatingsCount && starRatingsCount == 1 ) {
+                        starRatings[0].style.display = 'inline-block';
+                    }
+                    
+                    WPTB_Helper.starRatingTextMessageChenge( affectedEl );
+                    
                     break;
             }
             

@@ -106,7 +106,7 @@ class Tables {
         //$html = json_decode( $html );
         $html = '<div class="wptb-table-container"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
         $html .= '<script>'
-                . 'let wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
+                . 'var wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
                 . 'if( wptbPreviewTable.length > 0 ) {'
                 . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
                 . '    wptbPreviewTable[0].style.display = "none";'
