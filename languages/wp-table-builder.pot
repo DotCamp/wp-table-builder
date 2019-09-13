@@ -132,191 +132,223 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:38
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:34
+msgid "Star Rating"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:42
 msgid "Table Settings"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:51
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:55
 msgid "Text Options"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:55
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:59
 msgid "Font Size"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:68
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:72
 msgid "Font Color"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:79
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:83
 msgid "Image Options"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:83
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:87
 msgid "Image Alignment"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:88, ../inc/admin/views/builder/wptb-builder-left-panel.php:199, ../inc/admin/views/builder/wptb-builder-left-panel.php:271
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:92, ../inc/admin/views/builder/wptb-builder-left-panel.php:203, ../inc/admin/views/builder/wptb-builder-left-panel.php:275
 msgid "Left"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:89, ../inc/admin/views/builder/wptb-builder-left-panel.php:200, ../inc/admin/views/builder/wptb-builder-left-panel.php:274
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:93, ../inc/admin/views/builder/wptb-builder-left-panel.php:204, ../inc/admin/views/builder/wptb-builder-left-panel.php:278
 msgid "Center"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:90, ../inc/admin/views/builder/wptb-builder-left-panel.php:201, ../inc/admin/views/builder/wptb-builder-left-panel.php:277
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:94, ../inc/admin/views/builder/wptb-builder-left-panel.php:205, ../inc/admin/views/builder/wptb-builder-left-panel.php:281
 msgid "Right"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:97
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:101
 msgid "Image Size"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:110
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:114
 msgid "Image Link"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:114, ../inc/admin/views/builder/wptb-builder-left-panel.php:180
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:118, ../inc/admin/views/builder/wptb-builder-left-panel.php:184
 msgid "Insert Link Here"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:118, ../inc/admin/views/builder/wptb-builder-left-panel.php:184
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:122, ../inc/admin/views/builder/wptb-builder-left-panel.php:188
 msgid "Open Link in New Tab"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:122, ../inc/admin/views/builder/wptb-builder-left-panel.php:188
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:126, ../inc/admin/views/builder/wptb-builder-left-panel.php:192
 msgid "Nofollow Link"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:128
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:132
 msgid "Image Alternative Text"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:132
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:136
 msgid "Image Alt Text"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:139
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:143
 msgid "Button Options"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:143
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:147
 msgid "Button Size"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:147
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:151
 msgid "S"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:148
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:152
 msgid "M"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:149
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:153
 msgid "L"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:150
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:154
 msgid "XL"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:156
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:160
 msgid "Button Text Color"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:166
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:170
 msgid "Button Color"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:176
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:180
 msgid "Button Link"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:194
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:198
 msgid "Button Alignment"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:208
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:212
 msgid "Button ID"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:212
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:216
 msgid "Insert Button ID Here"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:219
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:223
 msgid "List Options"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:223
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:227
 msgid "List Type"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:228
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:232
 msgid "Ordered"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:231
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:235
 msgid "Unordered"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:236
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:240
 msgid "List Icon"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:241
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:245
 msgid "Circle"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:244
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:248
 msgid "Square"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:247
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:251
 msgid "Disc"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:250
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:254
 msgid "None"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:257
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:261
 msgid "List Font Color"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:266
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:270
 msgid "List Alignment"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:287
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:289
+msgid "Star Rating Options"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:293
+msgid "Star Size"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:306
+msgid "Star Color"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:316
+msgid "Stars Count"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:328
+msgid "Show Number Rating"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:337
+msgid "Number Rating Size"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:350
+msgid "Number Rating Color"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:363
 msgid "You are currently editing the table cells. Click \"Close\" to go back to editing the table."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:288
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:364
 msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:290, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:366, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:290, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:366, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
 msgid "Close"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:301
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:377
 msgid "Column Width"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:316, ../inc/admin/views/builder/wptb-builder-left-panel.php:341
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:392, ../inc/admin/views/builder/wptb-builder-left-panel.php:417
 msgid "Fixed"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:317, ../inc/admin/views/builder/wptb-builder-left-panel.php:342
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:393, ../inc/admin/views/builder/wptb-builder-left-panel.php:418
 msgid "Auto"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:326
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:402
 msgid "Row Height"
 msgstr ""
 
