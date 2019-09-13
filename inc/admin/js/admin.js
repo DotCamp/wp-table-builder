@@ -1,192 +1,3 @@
-var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
-    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-    var node = element.getDOMElement(),
-        index,
-        listItems,
-        copy;
-
-    if (kindIndexProt == undefined || copy == true) {
-        index = document.counter.nextIndex(element.kind);
-        var wptbElements = document.getElementsByClassName('wptb-ph-element');
-        var elementIndexesArr = [];
-        for (var i = 0; i < wptbElements.length; i++) {
-            var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
-            var infArr = wptbElements[i].className.match(regex);
-            if (infArr) {
-                elementIndexesArr.push(infArr[1]);
-            }
-        }
-        if (elementIndexesArr.length > 0) {
-            var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
-            index = elementIndexMax + 1;
-        } else {
-            index = 1;
-        }
-    } else if (kindIndexProt && !copy) {
-        var kindIndexProtArr = kindIndexProt.split('-');
-        index = kindIndexProtArr[kindIndexProtArr.length - 1];
-    }
-
-    node.onmouseenter = function (event) {
-        if (event.target.classList.contains('wptb-moving-mode')) {
-            return;
-        }
-
-        var i = void 0,
-            wptbActionsField = new WPTB_ActionsField();
-
-        wptbActionsField.addActionField(1, node);
-
-        wptbActionsField.setParameters(node);
-
-        node.classList.remove('wptb-ondragenter');
-
-        //wptbActionsField.addActionField( 1, node )
-
-        if (element.kind === 'button') {
-            var a = node.querySelector('a'),
-                target = a.querySelector('div');
-            a.onclick = function (e) {
-                e.preventDefault();
-            };
-            WPTB_Helper.buttonsTinyMceInit(target);
-        } else if (element.kind === 'text') {
-            tinyMCE.init({
-                target: node.childNodes[0],
-                inline: true,
-                plugins: "link, paste",
-                dialog_type: "modal",
-                theme: 'modern',
-                menubar: false,
-                force_br_newlines: false,
-                force_p_newlines: false,
-                forced_root_block: '',
-                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                paste_as_text: true,
-                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                setup: function setup(ed) {
-                    ed.on('change', function (e) {
-                        var row = WPTB_Helper.findAncestor(node, 'wptb-row');
-                        if (row.classList.contains('wptb-table-head')) {
-                            var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
-                            WPTB_Helper.dataTitleColumnSet(table);
-                        }
-                    });
-
-                    ed.on('keydown', function (e) {
-                        var wptbActionsField = new WPTB_ActionsField();
-
-                        wptbActionsField.addActionField(1, node);
-
-                        wptbActionsField.setParameters(node);
-                    });
-                    ed.on('keyup', function (e) {
-                        var wptbActionsField = new WPTB_ActionsField();
-
-                        wptbActionsField.addActionField(1, node);
-
-                        wptbActionsField.setParameters(node);
-
-                        e.target.onblur = function () {
-                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        };
-                    });
-                },
-                init_instance_callback: function init_instance_callback(editor) {
-                    window.currentEditor = editor;
-                    //editor.fire('focus');
-                    editor.on('focus', function (e) {
-                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                        } else {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                        }
-                    });
-                }
-            });
-        } else if (element.kind === 'list') {
-            listItems = node.getElementsByClassName('wptb-list-item-content');
-            for (var _i = 0; _i < listItems.length; _i++) {
-                WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
-            }
-        }
-    };
-
-    node.onmouseleave = function (event) {
-        var wptbActionsField = new WPTB_ActionsField();
-
-        if (wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1') {
-            return;
-        }
-
-        wptbActionsField.leaveFromField(event, node, 1);
-    };
-
-    var wptbActions = document.getElementsByClassName('wptb-actions');
-    if (wptbActions.length > 0) {
-        wptbActions = wptbActions[0];
-    }
-
-    // Change data-title-column if the title was changed
-    if (element.kind == 'text') {
-        var observer = new MutationObserver(function (mutations) {
-            var row = WPTB_Helper.findAncestor(node, 'wptb-row');
-            if (row.classList.contains('wptb-table-head')) {
-                var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
-            }
-        });
-        var config = { attributes: true, attributeFilter: ['style'] };
-        observer.observe(element.getDOMElement(), config);
-    } else if (element.kind == 'star_rating') {
-        var ratingStars = node.getElementsByClassName('wptb-rating-star');
-        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
-            var ratingStar = ratingStars[_i2];
-
-            WPTB_Helper.starRatingEventHandlersAdd(ratingStar);
-
-            var ritingStarZeroSet = ratingStar.querySelector('.wptb-rating-star-zero-set');
-            if (ritingStarZeroSet) {
-                ritingStarZeroSet.onclick = function (event) {
-                    var ulStarList = WPTB_Helper.findAncestor(event.target, 'wptb-rating-stars-list');
-                    if (ulStarList) {
-                        var children = ulStarList.children;
-                        for (var _i3 = 0; _i3 < children.length; _i3++) {
-                            children[_i3].classList.remove('wptb-rating-star-selected-full');
-                            children[_i3].classList.remove('wptb-rating-star-selected-half');
-                        }
-                    }
-                };
-            }
-        }
-    }
-
-    var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
-    if (node_wptb_element_kind_num) {
-        node.classList.remove(node_wptb_element_kind_num[0]);
-    }
-    if (!node.classList.contains('wptb-ph-element')) {
-        node.classList.add('wptb-ph-element');
-        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-            node.classList.add('wptb-element-' + element.kind + '-' + index);
-        }
-    } else {
-        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-            node.classList.add('wptb-element-' + element.kind + '-' + index);
-        }
-    }
-    new WPTB_ElementOptions(element, index, kindIndexProt);
-
-    document.counter.increment(element.kind);
-};
-
 var WPTB_ActionsField = function WPTB_ActionsField() {
     var _this = this;
 
@@ -2367,91 +2178,6 @@ var WPTB_Initializer = function WPTB_Initializer() {
                 var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
         };
-};
-var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
-
-    element.ondragenter = function (e) {
-        var div;
-        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
-            return;
-        }
-        WPTB_DropHandle(this, e);
-
-        element.classList.add('wptb-ondragenter');
-    };
-    element.ondragover = function (e) {
-        e.preventDefault();
-        WPTB_DropHandle(this, e);
-    };
-    element.ondragleave = function () {};
-    element.ondrop = function (e) {
-        this.classList.remove('wptb-ondragenter');
-        var element = void 0,
-            classId = void 0;
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-        var wptbDropHandle = void 0,
-            wptbDropBorderMarker = void 0;
-        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
-            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
-        }
-        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
-            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
-        }
-
-        if (e.dataTransfer.getData('wptbElement')) {
-            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
-            element = element.getDOMElement();
-        } else {
-            classId = e.dataTransfer.getData('node');
-            element = document.getElementsByClassName(classId)[0];
-            //element.classList.remove( 'wptb-moving-mode' );
-        }
-
-        if (wptbDropHandle.style.display == 'block') {
-            var td = void 0;
-            if (wptbDropHandle.dataset.text == 'Drop Here') {
-                td = wptbDropHandle.getDOMParentElement();
-                td.appendChild(element);
-            } else {
-                var innerElement = wptbDropHandle.getDOMParentElement();
-                td = innerElement.parentNode;
-
-                if (wptbDropHandle.dataset.text == 'Above Element') {
-                    td.insertBefore(element, innerElement);
-                } else if (wptbDropHandle.dataset.text == 'Below Element') {
-                    var innerElementNext = innerElement.nextSibling;
-                    td.insertBefore(element, innerElementNext);
-                }
-            }
-            var thisRow = td.parentNode;
-            if (thisRow.classList.contains('wptb-table-head')) {
-                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
-            }
-        } else {
-            return;
-        }
-
-        wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
-
-        WPTB_innerElementSet(element);
-
-        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
-            element.classList.remove('wptb-moving-mode');
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-        return true;
-    };
-    element.onmouseover = function (e) {
-        element.classList.remove('wptb-ondragenter');
-    };
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
@@ -5729,4 +5455,278 @@ var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
 
     return this;
 };
+var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
+
+    element.ondragenter = function (e) {
+        var div;
+        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
+            return;
+        }
+        WPTB_DropHandle(this, e);
+
+        element.classList.add('wptb-ondragenter');
+    };
+    element.ondragover = function (e) {
+        e.preventDefault();
+        WPTB_DropHandle(this, e);
+    };
+    element.ondragleave = function () {};
+    element.ondrop = function (e) {
+        this.classList.remove('wptb-ondragenter');
+        var element = void 0,
+            classId = void 0;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
+        var wptbDropHandle = void 0,
+            wptbDropBorderMarker = void 0;
+        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
+            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        }
+        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
+            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
+        }
+
+        if (e.dataTransfer.getData('wptbElement')) {
+            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
+            element = element.getDOMElement();
+        } else {
+            classId = e.dataTransfer.getData('node');
+            element = document.getElementsByClassName(classId)[0];
+            //element.classList.remove( 'wptb-moving-mode' );
+        }
+
+        if (wptbDropHandle.style.display == 'block') {
+            var td = void 0;
+            if (wptbDropHandle.dataset.text == 'Drop Here') {
+                td = wptbDropHandle.getDOMParentElement();
+                td.appendChild(element);
+            } else {
+                var innerElement = wptbDropHandle.getDOMParentElement();
+                td = innerElement.parentNode;
+
+                if (wptbDropHandle.dataset.text == 'Above Element') {
+                    td.insertBefore(element, innerElement);
+                } else if (wptbDropHandle.dataset.text == 'Below Element') {
+                    var innerElementNext = innerElement.nextSibling;
+                    td.insertBefore(element, innerElementNext);
+                }
+            }
+            var thisRow = td.parentNode;
+            if (thisRow.classList.contains('wptb-table-head')) {
+                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
+        } else {
+            return;
+        }
+
+        wptbDropHandle.style.display = 'none';
+        wptbDropBorderMarker.style.display = 'none';
+
+        WPTB_innerElementSet(element);
+
+        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
+            element.classList.remove('wptb-moving-mode');
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
+        return true;
+    };
+    element.onmouseover = function (e) {
+        element.classList.remove('wptb-ondragenter');
+    };
+};
+var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
+    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+    var node = element.getDOMElement(),
+        index,
+        listItems,
+        copy;
+
+    if (kindIndexProt == undefined || copy == true) {
+        index = document.counter.nextIndex(element.kind);
+        var wptbElements = document.getElementsByClassName('wptb-ph-element');
+        var elementIndexesArr = [];
+        for (var i = 0; i < wptbElements.length; i++) {
+            var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
+            var infArr = wptbElements[i].className.match(regex);
+            if (infArr) {
+                elementIndexesArr.push(infArr[1]);
+            }
+        }
+        if (elementIndexesArr.length > 0) {
+            var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
+            index = elementIndexMax + 1;
+        } else {
+            index = 1;
+        }
+    } else if (kindIndexProt && !copy) {
+        var kindIndexProtArr = kindIndexProt.split('-');
+        index = kindIndexProtArr[kindIndexProtArr.length - 1];
+    }
+
+    node.onmouseenter = function (event) {
+        if (event.target.classList.contains('wptb-moving-mode')) {
+            return;
+        }
+
+        var i = void 0,
+            wptbActionsField = new WPTB_ActionsField();
+
+        wptbActionsField.addActionField(1, node);
+
+        wptbActionsField.setParameters(node);
+
+        node.classList.remove('wptb-ondragenter');
+
+        //wptbActionsField.addActionField( 1, node )
+
+        if (element.kind === 'button') {
+            var a = node.querySelector('a'),
+                target = a.querySelector('div');
+            a.onclick = function (e) {
+                e.preventDefault();
+            };
+            WPTB_Helper.buttonsTinyMceInit(target);
+        } else if (element.kind === 'text') {
+            tinyMCE.init({
+                target: node.childNodes[0],
+                inline: true,
+                plugins: "link, paste",
+                dialog_type: "modal",
+                theme: 'modern',
+                menubar: false,
+                force_br_newlines: false,
+                force_p_newlines: false,
+                forced_root_block: '',
+                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                paste_as_text: true,
+                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                setup: function setup(ed) {
+                    ed.on('change', function (e) {
+                        var row = WPTB_Helper.findAncestor(node, 'wptb-row');
+                        if (row.classList.contains('wptb-table-head')) {
+                            var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
+                            WPTB_Helper.dataTitleColumnSet(table);
+                        }
+                    });
+
+                    ed.on('keydown', function (e) {
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
+                    });
+                    ed.on('keyup', function (e) {
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
+
+                        e.target.onblur = function () {
+                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
+                    });
+                },
+                init_instance_callback: function init_instance_callback(editor) {
+                    window.currentEditor = editor;
+                    //editor.fire('focus');
+                    editor.on('focus', function (e) {
+                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                        } else {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                        }
+                    });
+                }
+            });
+        } else if (element.kind === 'list') {
+            listItems = node.getElementsByClassName('wptb-list-item-content');
+            for (var _i = 0; _i < listItems.length; _i++) {
+                WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
+            }
+        }
+    };
+
+    node.onmouseleave = function (event) {
+        var wptbActionsField = new WPTB_ActionsField();
+
+        if (wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1') {
+            return;
+        }
+
+        wptbActionsField.leaveFromField(event, node, 1);
+    };
+
+    var wptbActions = document.getElementsByClassName('wptb-actions');
+    if (wptbActions.length > 0) {
+        wptbActions = wptbActions[0];
+    }
+
+    // Change data-title-column if the title was changed
+    if (element.kind == 'text') {
+        var observer = new MutationObserver(function (mutations) {
+            var row = WPTB_Helper.findAncestor(node, 'wptb-row');
+            if (row.classList.contains('wptb-table-head')) {
+                var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
+        });
+        var config = { attributes: true, attributeFilter: ['style'] };
+        observer.observe(element.getDOMElement(), config);
+    } else if (element.kind == 'star_rating') {
+        var ratingStars = node.getElementsByClassName('wptb-rating-star');
+        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
+            var ratingStar = ratingStars[_i2];
+
+            WPTB_Helper.starRatingEventHandlersAdd(ratingStar);
+
+            var ritingStarZeroSet = ratingStar.querySelector('.wptb-rating-star-zero-set');
+            if (ritingStarZeroSet) {
+                ritingStarZeroSet.onclick = function (event) {
+                    var ulStarList = WPTB_Helper.findAncestor(event.target, 'wptb-rating-stars-list');
+                    if (ulStarList) {
+                        var children = ulStarList.children;
+                        for (var _i3 = 0; _i3 < children.length; _i3++) {
+                            children[_i3].classList.remove('wptb-rating-star-selected-full');
+                            children[_i3].classList.remove('wptb-rating-star-selected-half');
+                        }
+                    }
+                };
+            }
+        }
+    }
+
+    var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+    if (node_wptb_element_kind_num) {
+        node.classList.remove(node_wptb_element_kind_num[0]);
+    }
+    if (!node.classList.contains('wptb-ph-element')) {
+        node.classList.add('wptb-ph-element');
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    } else {
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    }
+    new WPTB_ElementOptions(element, index, kindIndexProt);
+
+    document.counter.increment(element.kind);
+};
+
 //# sourceMappingURL=admin.js.map
