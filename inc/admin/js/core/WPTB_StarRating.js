@@ -21,22 +21,23 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
     successBox.classList.add( 'wptb-success-box' );
     successBox.style.display = 'none';
     textMessage.classList.add( 'wptb-text-message' );
+    textMessage.style.fontSize = '25px';
     
     let filledRatingStarHtml = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" \n\
-        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" viewBox="0 0 426.667 426.667" \n\
+        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" style="width: 20px;" viewBox="0 0 426.667 426.667" \n\
         style="enable-background:new 0 0 426.667 426.667;" xml:space="preserve">\n\
         <polygon points="426.667,165.12 273.28,152.107 213.333,10.667 153.387,152.107 0,165.12 \n\
         116.48,266.027 81.493,416 213.333,336.427 345.173,416 310.187,266.027"/></svg>';
     
     let notFilledRatingStarHtml = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" \n\
-        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" viewBox="0 0 426.667 426.667" \n\
+        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" style="width: 20px;" viewBox="0 0 426.667 426.667" \n\
         style="enable-background:new 0 0 426.667 426.667;" xml:space="preserve">\n\
         <path d="M426.667,165.12L273.28,151.893L213.333,10.667l-59.947,141.44L0,165.12l116.48,100.907L81.493,416l131.84-79.573\n\
         L345.173,416L310.4,266.027L426.667,165.12z M213.333,296.533L133.12,344.96l21.333-91.307l-70.827-61.44l93.44-8.107 \n\
         l36.267-85.973l36.48,86.187l93.44,8.107l-70.827,61.44l21.333,91.307L213.333,296.533z"/></svg>';
     
     let halfFilledRatingStarHtml = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" \n\
-        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" viewBox="0 0 426.667 426.667" \n\
+        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" style="width: 20px;" viewBox="0 0 426.667 426.667" \n\
         style="enable-background:new 0 0 426.667 426.667;" xml:space="preserve">\n\
         <path d="M426.667,165.12L273.28,151.893L213.333,10.667l-59.947,141.44L0,165.12l116.48,100.907L81.493,416l131.84-79.573 \n\
         L345.173,416L310.4,266.027L426.667,165.12z M213.333,296.533v-198.4l36.48,86.187l93.44,8.107l-70.827,61.44l21.333,91.307 \n\
@@ -46,6 +47,7 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
     for( let i = 0; i < countStarts; i++ ) {
         let ratingStar = document.createElement( 'li' );
         ratingStar.classList.add( 'wptb-rating-star' );
+        ratingStar.style.width = '20px';
         let ratingStarZeroSet = '';
         if( i == 0 ) {
             ratingStarZeroSet = '<span class="wptb-rating-star-zero-set"></span>';

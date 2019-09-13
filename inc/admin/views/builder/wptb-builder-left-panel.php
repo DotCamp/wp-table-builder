@@ -294,10 +294,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="margin: 9px 0; padding-bottom: 10px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="star-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="20"> 
+                              <input data-type="star-size" class="wptb-size-slider wptb-element-property" type="range" min="10" max="50" step="1" value="20"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-size-number" data-type="star-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*" value="20"><span class="wptb-input-px">px</span>
+                                <input id="wptb-size-number" data-type="star-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="20" pattern="[0-9]*" value="20"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>
@@ -341,7 +341,7 @@ use WP_Table_Builder as NS;
                               <input data-type="numeral-rating-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="25"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-numeral-size-number" data-type="numeral-rating-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*" value="25"><span class="wptb-input-px">px</span>
+                                <input id="wptb-numeral-size-number" data-type="numeral-rating-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="25" pattern="[0-9]*" value="25"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>

@@ -159,7 +159,7 @@ var WPTB_TableStateSaveManager = function() {
                 wptbTableSetup = wptbTableSetup[0];
 
                 wptbTableSetup.innerHTML = '';
-                wptbTableSetup.appendChild( window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] );
+                wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
 
                 if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][1] ) {
                     let cssForTdsWidthAuto = document.createElement( 'style' );
