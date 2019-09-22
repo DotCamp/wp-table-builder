@@ -1,3 +1,192 @@
+var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
+    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+    var node = element.getDOMElement(),
+        index,
+        listItems,
+        copy;
+
+    if (kindIndexProt == undefined || copy == true) {
+        index = document.counter.nextIndex(element.kind);
+        var wptbElements = document.getElementsByClassName('wptb-ph-element');
+        var elementIndexesArr = [];
+        for (var i = 0; i < wptbElements.length; i++) {
+            var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
+            var infArr = wptbElements[i].className.match(regex);
+            if (infArr) {
+                elementIndexesArr.push(infArr[1]);
+            }
+        }
+        if (elementIndexesArr.length > 0) {
+            var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
+            index = elementIndexMax + 1;
+        } else {
+            index = 1;
+        }
+    } else if (kindIndexProt && !copy) {
+        var kindIndexProtArr = kindIndexProt.split('-');
+        index = kindIndexProtArr[kindIndexProtArr.length - 1];
+    }
+
+    node.onmouseenter = function (event) {
+        if (event.target.classList.contains('wptb-moving-mode')) {
+            return;
+        }
+
+        var i = void 0,
+            wptbActionsField = new WPTB_ActionsField();
+
+        wptbActionsField.addActionField(1, node);
+
+        wptbActionsField.setParameters(node);
+
+        node.classList.remove('wptb-ondragenter');
+
+        //wptbActionsField.addActionField( 1, node )
+
+        if (element.kind === 'button') {
+            var a = node.querySelector('a'),
+                target = a.querySelector('div');
+            a.onclick = function (e) {
+                e.preventDefault();
+            };
+            WPTB_Helper.buttonsTinyMceInit(target);
+        } else if (element.kind === 'text') {
+            tinyMCE.init({
+                target: node.childNodes[0],
+                inline: true,
+                plugins: "link, paste",
+                dialog_type: "modal",
+                theme: 'modern',
+                menubar: false,
+                force_br_newlines: false,
+                force_p_newlines: false,
+                forced_root_block: '',
+                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+                paste_as_text: true,
+                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+                setup: function setup(ed) {
+                    ed.on('change', function (e) {
+                        var row = WPTB_Helper.findAncestor(node, 'wptb-row');
+                        if (row.classList.contains('wptb-table-head')) {
+                            var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
+                            WPTB_Helper.dataTitleColumnSet(table);
+                        }
+                    });
+
+                    ed.on('keydown', function (e) {
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
+                    });
+                    ed.on('keyup', function (e) {
+                        var wptbActionsField = new WPTB_ActionsField();
+
+                        wptbActionsField.addActionField(1, node);
+
+                        wptbActionsField.setParameters(node);
+
+                        e.target.onblur = function () {
+                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
+                    });
+                },
+                init_instance_callback: function init_instance_callback(editor) {
+                    window.currentEditor = editor;
+                    //editor.fire('focus');
+                    editor.on('focus', function (e) {
+                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
+                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                        } else {
+                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                        }
+                    });
+                }
+            });
+        } else if (element.kind === 'list') {
+            listItems = node.getElementsByClassName('wptb-list-item-content');
+            for (var _i = 0; _i < listItems.length; _i++) {
+                WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
+            }
+        }
+    };
+
+    node.onmouseleave = function (event) {
+        var wptbActionsField = new WPTB_ActionsField();
+
+        if (wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1') {
+            return;
+        }
+
+        wptbActionsField.leaveFromField(event, node, 1);
+    };
+
+    var wptbActions = document.getElementsByClassName('wptb-actions');
+    if (wptbActions.length > 0) {
+        wptbActions = wptbActions[0];
+    }
+
+    // Change data-title-column if the title was changed
+    if (element.kind == 'text') {
+        var observer = new MutationObserver(function (mutations) {
+            var row = WPTB_Helper.findAncestor(node, 'wptb-row');
+            if (row.classList.contains('wptb-table-head')) {
+                var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
+        });
+        var config = { attributes: true, attributeFilter: ['style'] };
+        observer.observe(element.getDOMElement(), config);
+    } else if (element.kind == 'star_rating') {
+        var ratingStars = node.getElementsByClassName('wptb-rating-star');
+        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
+            var ratingStar = ratingStars[_i2];
+
+            WPTB_Helper.starRatingEventHandlersAdd(ratingStar);
+
+            var ritingStarZeroSet = ratingStar.querySelector('.wptb-rating-star-zero-set');
+            if (ritingStarZeroSet) {
+                ritingStarZeroSet.onclick = function (event) {
+                    var ulStarList = WPTB_Helper.findAncestor(event.target, 'wptb-rating-stars-list');
+                    if (ulStarList) {
+                        var children = ulStarList.children;
+                        for (var _i3 = 0; _i3 < children.length; _i3++) {
+                            children[_i3].classList.remove('wptb-rating-star-selected-full');
+                            children[_i3].classList.remove('wptb-rating-star-selected-half');
+                        }
+                    }
+                };
+            }
+        }
+    }
+
+    var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+    if (node_wptb_element_kind_num) {
+        node.classList.remove(node_wptb_element_kind_num[0]);
+    }
+    if (!node.classList.contains('wptb-ph-element')) {
+        node.classList.add('wptb-ph-element');
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    } else {
+        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+            node.classList.add('wptb-element-' + element.kind + '-' + index);
+        }
+    }
+    new WPTB_ElementOptions(element, index, kindIndexProt);
+
+    document.counter.increment(element.kind);
+};
+
 var WPTB_ActionsField = function WPTB_ActionsField() {
     var _this = this;
 
@@ -2179,6 +2368,91 @@ var WPTB_Initializer = function WPTB_Initializer() {
                 wptbTableStateSaveManager.tableStateSet();
         };
 };
+var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
+
+    element.ondragenter = function (e) {
+        var div;
+        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
+            return;
+        }
+        WPTB_DropHandle(this, e);
+
+        element.classList.add('wptb-ondragenter');
+    };
+    element.ondragover = function (e) {
+        e.preventDefault();
+        WPTB_DropHandle(this, e);
+    };
+    element.ondragleave = function () {};
+    element.ondrop = function (e) {
+        this.classList.remove('wptb-ondragenter');
+        var element = void 0,
+            classId = void 0;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
+        var wptbDropHandle = void 0,
+            wptbDropBorderMarker = void 0;
+        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
+            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        }
+        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
+            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
+        }
+
+        if (e.dataTransfer.getData('wptbElement')) {
+            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
+            element = element.getDOMElement();
+        } else {
+            classId = e.dataTransfer.getData('node');
+            element = document.getElementsByClassName(classId)[0];
+            //element.classList.remove( 'wptb-moving-mode' );
+        }
+
+        if (wptbDropHandle.style.display == 'block') {
+            var td = void 0;
+            if (wptbDropHandle.dataset.text == 'Drop Here') {
+                td = wptbDropHandle.getDOMParentElement();
+                td.appendChild(element);
+            } else {
+                var innerElement = wptbDropHandle.getDOMParentElement();
+                td = innerElement.parentNode;
+
+                if (wptbDropHandle.dataset.text == 'Above Element') {
+                    td.insertBefore(element, innerElement);
+                } else if (wptbDropHandle.dataset.text == 'Below Element') {
+                    var innerElementNext = innerElement.nextSibling;
+                    td.insertBefore(element, innerElementNext);
+                }
+            }
+            var thisRow = td.parentNode;
+            if (thisRow.classList.contains('wptb-table-head')) {
+                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
+        } else {
+            return;
+        }
+
+        wptbDropHandle.style.display = 'none';
+        wptbDropBorderMarker.style.display = 'none';
+
+        WPTB_innerElementSet(element);
+
+        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
+            element.classList.remove('wptb-moving-mode');
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
+        return true;
+    };
+    element.onmouseover = function (e) {
+        element.classList.remove('wptb-ondragenter');
+    };
+};
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
     var table = document.getElementsByClassName('wptb-preview-table')[0],
@@ -3580,6 +3854,9 @@ var array = [],
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
             cellSettings.classList.remove('visible');
+
+            var wptbRowMove = new WPTB_RowMove();
+            wptbRowMove.rowMovingFieldHide();
         } else if (markedCells === 1) {
             for (var i = 0; i < multipleCells.length; i++) {
                 multipleCells[i].classList.remove('visible');
@@ -3634,6 +3911,9 @@ var array = [],
                 }
             }
             cellSettings.classList.add('visible');
+
+            var _wptbRowMove = new WPTB_RowMove();
+            _wptbRowMove.rowMovingFieldPutActive();
         } else {
             for (var i = 0; i < multipleCells.length; i++) {
                 if (table.isSquare(array)) {
@@ -3653,6 +3933,9 @@ var array = [],
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
             cellSettings.classList.remove('visible');
+
+            var _wptbRowMove2 = new WPTB_RowMove();
+            _wptbRowMove2.rowMovingFieldHide();
         }
     };
 
@@ -3942,6 +4225,8 @@ var array = [],
             }
         }
     }
+
+    table.mark = mark;
 
     /*
      * This just toggles visibility of cell edit bar, and toggles 
@@ -5457,278 +5742,504 @@ var WPTB_Text = function WPTB_Text(text, DOMElementProt) {
 
     return this;
 };
-var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-    element.ondragenter = function (e) {
-        var div;
-        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
-            return;
-        }
-        WPTB_DropHandle(this, e);
+var WPTB_RowMove = function WPTB_RowMove() {
+    var _this = this;
 
-        element.classList.add('wptb-ondragenter');
-    };
-    element.ondragover = function (e) {
-        e.preventDefault();
-        WPTB_DropHandle(this, e);
-    };
-    element.ondragleave = function () {};
-    element.ondrop = function (e) {
-        this.classList.remove('wptb-ondragenter');
-        var element = void 0,
-            classId = void 0;
-        e.preventDefault();
-        e.stopPropagation();
+    this.rowMovingField;
 
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-        var wptbDropHandle = void 0,
-            wptbDropBorderMarker = void 0;
-        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
-            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
-        }
-        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
-            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
-        }
+    this.withdrawTable;
 
-        if (e.dataTransfer.getData('wptbElement')) {
-            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
-            element = element.getDOMElement();
+    this.tablePreview;
+
+    this.tBody;
+
+    this.body;
+
+    this.rowsTopBottomCoordinatesArr;
+
+    this.setTimeoutWhenStopMove;
+
+    // function creates a field with which will move a row to left or right 
+    // if this field isn't existence and put it on the right place
+    this.rowMovingFieldPutActive = function () {
+        var rowMovingField = document.getElementsByClassName('wptb-row-moving-field');
+        var body = document.getElementsByTagName('body')[0];
+        _this.body = body;
+        if (rowMovingField.length > 0) {
+            _this.rowMovingField = rowMovingField[0];
         } else {
-            classId = e.dataTransfer.getData('node');
-            element = document.getElementsByClassName(classId)[0];
-            //element.classList.remove( 'wptb-moving-mode' );
+            rowMovingField = document.createElement('div');
+            rowMovingField.classList.add('wptb-row-moving-field');
+            rowMovingField.innerHTML = '<div class="text-box">\n\
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
+                    x="0px" y="0px" width="30" height="30" viewBox="0 0 511.626 511.627" \n\
+                    style="enable-background:new 0 0 511.626 511.627;" xml:space="preserve">\n\
+                    <path d="M328.906,401.994h-36.553V109.636h36.553c4.948,0,9.236-1.809,12.847-5.426c3.613-3.615,5.421-7.898,5.421-12.845 \n\
+                        c0-4.949-1.801-9.231-5.428-12.851l-73.087-73.09C265.044,1.809,260.76,0,255.813,0c-4.948,0-9.229,1.809-12.847,5.424 \n\
+                        l-73.088,73.09c-3.618,3.619-5.424,7.902-5.424,12.851c0,4.946,1.807,9.229,5.424,12.845c3.619,3.617,7.901,5.426,12.85,5.426 \n\
+                        h36.545v292.358h-36.542c-4.952,0-9.235,1.808-12.85,5.421c-3.617,3.621-5.424,7.905-5.424,12.854 \n\
+                        c0,4.945,1.807,9.227,5.424,12.847l73.089,73.088c3.617,3.617,7.898,5.424,12.847,5.424c4.95,0,9.234-1.807,12.849-5.424 \n\
+                        l73.087-73.088c3.613-3.62,5.421-7.901,5.421-12.847c0-4.948-1.808-9.232-5.421-12.854 \n\
+                        C338.142,403.802,333.857,401.994,328.906,401.994z" style="fill:#FFFFFF"></path>\n\
+                </svg></div>';
+
+            body.appendChild(rowMovingField);
+
+            _this.rowMovingField = rowMovingField;
         }
 
-        if (wptbDropHandle.style.display == 'block') {
-            var td = void 0;
-            if (wptbDropHandle.dataset.text == 'Drop Here') {
-                td = wptbDropHandle.getDOMParentElement();
-                td.appendChild(element);
-            } else {
-                var innerElement = wptbDropHandle.getDOMParentElement();
-                td = innerElement.parentNode;
+        var wptbContainer = document.getElementsByClassName('wptb-container')[0];
 
-                if (wptbDropHandle.dataset.text == 'Above Element') {
-                    td.insertBefore(element, innerElement);
-                } else if (wptbDropHandle.dataset.text == 'Below Element') {
-                    var innerElementNext = innerElement.nextSibling;
-                    td.insertBefore(element, innerElementNext);
+        // function set coordinates top and write property positionTop for moving field
+        _this.rowMovingFieldParametrsOne = function () {
+            var coordinatesHighlighted = wptbHighlighted.getBoundingClientRect();
+            _this.rowMovingField.style.top = parseFloat(coordinatesHighlighted.top) + 'px';
+            _this.rowMovingField.positionTop = parseFloat(coordinatesHighlighted.top);
+            _this.rowMovingField.height = parseFloat(coordinatesHighlighted.height);
+        };
+        wptbContainer.removeEventListener('scroll', _this.rowMovingFieldParametrsOne, false);
+
+        // function set position left and heigth for moving field
+        var rowMovingFieldParametrsTwo = function rowMovingFieldParametrsTwo() {
+            _this.rowMovingFieldParametrsOne();
+            var wptbHighlighted = document.getElementsByClassName('wptb-highlighted');
+            if (wptbHighlighted.length > 0) {
+                wptbHighlighted = wptbHighlighted[0];
+
+                var coordinatesHighlighted = wptbHighlighted.getBoundingClientRect(),
+                    coordinatesHighlightedHeight = parseFloat(coordinatesHighlighted.height);
+
+                _this.rowMovingField.style.display = 'table';
+                _this.rowMovingField.style.height = coordinatesHighlightedHeight + 'px';
+
+                var wptbTableSetup = document.getElementsByClassName('wptb-table-setup');
+                if (wptbTableSetup.length > 0) {
+                    wptbTableSetup = wptbTableSetup[0];
+
+                    var coordinatesPreviewTable = wptbTableSetup.getBoundingClientRect(),
+                        coordinatesPreviewTableRight = parseFloat(coordinatesPreviewTable.right);
+
+                    _this.rowMovingField.style.left = coordinatesPreviewTableRight + 'px';
+
+                    var tableWithdrewRows = _this.rowMovingField.getElementsByClassName('wptb-table-setup');
+                    if (tableWithdrewRows.length > 0) {
+                        tableWithdrewRows = tableWithdrewRows[0];
+
+                        tableWithdrewRows.style.maxWidth = wptbTableSetup.getBoundingClientRect().width + 'px';
+                    }
                 }
             }
-            var thisRow = td.parentNode;
-            if (thisRow.classList.contains('wptb-table-head')) {
-                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
-            }
-        } else {
-            return;
+        };
+        window.removeEventListener('resize', rowMovingFieldParametrsTwo, false);
+
+        var wptbHighlighted = document.getElementsByClassName('wptb-highlighted');
+        if (wptbHighlighted.length > 0) {
+            wptbHighlighted = wptbHighlighted[0];
+
+            _this.rowMovingFieldParametrsOne();
+            rowMovingFieldParametrsTwo();
         }
 
-        wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
-
-        WPTB_innerElementSet(element);
-
-        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
-            element.classList.remove('wptb-moving-mode');
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-        return true;
-    };
-    element.onmouseover = function (e) {
-        element.classList.remove('wptb-ondragenter');
-    };
-};
-var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
-    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-    var node = element.getDOMElement(),
-        index,
-        listItems,
-        copy;
-
-    if (kindIndexProt == undefined || copy == true) {
-        index = document.counter.nextIndex(element.kind);
-        var wptbElements = document.getElementsByClassName('wptb-ph-element');
-        var elementIndexesArr = [];
-        for (var i = 0; i < wptbElements.length; i++) {
-            var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
-            var infArr = wptbElements[i].className.match(regex);
-            if (infArr) {
-                elementIndexesArr.push(infArr[1]);
-            }
-        }
-        if (elementIndexesArr.length > 0) {
-            var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
-            index = elementIndexMax + 1;
-        } else {
-            index = 1;
-        }
-    } else if (kindIndexProt && !copy) {
-        var kindIndexProtArr = kindIndexProt.split('-');
-        index = kindIndexProtArr[kindIndexProtArr.length - 1];
-    }
-
-    node.onmouseenter = function (event) {
-        if (event.target.classList.contains('wptb-moving-mode')) {
-            return;
-        }
-
-        var i = void 0,
-            wptbActionsField = new WPTB_ActionsField();
-
-        wptbActionsField.addActionField(1, node);
-
-        wptbActionsField.setParameters(node);
-
-        node.classList.remove('wptb-ondragenter');
-
-        //wptbActionsField.addActionField( 1, node )
-
-        if (element.kind === 'button') {
-            var a = node.querySelector('a'),
-                target = a.querySelector('div');
-            a.onclick = function (e) {
-                e.preventDefault();
-            };
-            WPTB_Helper.buttonsTinyMceInit(target);
-        } else if (element.kind === 'text') {
-            tinyMCE.init({
-                target: node.childNodes[0],
-                inline: true,
-                plugins: "link, paste",
-                dialog_type: "modal",
-                theme: 'modern',
-                menubar: false,
-                force_br_newlines: false,
-                force_p_newlines: false,
-                forced_root_block: '',
-                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                paste_as_text: true,
-                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                setup: function setup(ed) {
-                    ed.on('change', function (e) {
-                        var row = WPTB_Helper.findAncestor(node, 'wptb-row');
-                        if (row.classList.contains('wptb-table-head')) {
-                            var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
-                            WPTB_Helper.dataTitleColumnSet(table);
-                        }
-                    });
-
-                    ed.on('keydown', function (e) {
-                        var wptbActionsField = new WPTB_ActionsField();
-
-                        wptbActionsField.addActionField(1, node);
-
-                        wptbActionsField.setParameters(node);
-                    });
-                    ed.on('keyup', function (e) {
-                        var wptbActionsField = new WPTB_ActionsField();
-
-                        wptbActionsField.addActionField(1, node);
-
-                        wptbActionsField.setParameters(node);
-
-                        e.target.onblur = function () {
-                            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        };
-                    });
-                },
-                init_instance_callback: function init_instance_callback(editor) {
-                    window.currentEditor = editor;
-                    //editor.fire('focus');
-                    editor.on('focus', function (e) {
-                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                        if (window.currentEditor && document.getElementById('wptb_builder').scrollTop >= 55 && window.currentEditor.bodyElement.style.display != 'none') {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                            document.getElementById('wpcd_fixed_toolbar').style.right = totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2 + 'px';
-                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                        } else {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                        }
-                    });
+        var checkHighlighted = function checkHighlighted() {
+            var highlighted = document.getElementsByClassName('wptb-highlighted');
+            if (highlighted.length != 1) {
+                if (!_this.rowMovingField) {
+                    _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
                 }
-            });
-        } else if (element.kind === 'list') {
-            listItems = node.getElementsByClassName('wptb-list-item-content');
-            for (var _i = 0; _i < listItems.length; _i++) {
-                WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
+                var _rowMovingField = _this.rowMovingField;
+                if (_rowMovingField) {
+                    var parent = _rowMovingField.parentNode;
+                    parent.removeChild(_rowMovingField);
+                }
             }
-        }
-    };
+            body.removeEventListener('click', checkHighlighted, false);
+        };
 
-    node.onmouseleave = function (event) {
-        var wptbActionsField = new WPTB_ActionsField();
+        wptbContainer.addEventListener('scroll', _this.rowMovingFieldParametrsOne, false);
+        window.addEventListener('resize', rowMovingFieldParametrsTwo, false);
+        body.addEventListener('click', checkHighlighted, false);
 
-        if (wptbActionsField.wptbActions && wptbActionsField.wptbActions.type != '1') {
-            return;
-        }
+        // sets handler for the event when the moving field was moved
+        _this.rowMovingField.onmousedown = function (eventDown) {
+            _this.rowMovingField.downYcoordinates = eventDown.clientY;
+            var body = _this.body;
 
-        wptbActionsField.leaveFromField(event, node, 1);
-    };
-
-    var wptbActions = document.getElementsByClassName('wptb-actions');
-    if (wptbActions.length > 0) {
-        wptbActions = wptbActions[0];
-    }
-
-    // Change data-title-column if the title was changed
-    if (element.kind == 'text') {
-        var observer = new MutationObserver(function (mutations) {
-            var row = WPTB_Helper.findAncestor(node, 'wptb-row');
-            if (row.classList.contains('wptb-table-head')) {
-                var table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
+            if (!_this.withdrawTable) {
+                _this.withdrawTable = _this.withdrawSelectedRowsFromTable();
             }
-        });
-        var config = { attributes: true, attributeFilter: ['style'] };
-        observer.observe(element.getDOMElement(), config);
-    } else if (element.kind == 'star_rating') {
-        var ratingStars = node.getElementsByClassName('wptb-rating-star');
-        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
-            var ratingStar = ratingStars[_i2];
 
-            WPTB_Helper.starRatingEventHandlersAdd(ratingStar);
+            if (!_this.tablePreview) {
+                _this.tablePreview = document.querySelector('.wptb-preview-table');
+            }
+            var table = _this.tablePreview;
 
-            var ritingStarZeroSet = ratingStar.querySelector('.wptb-rating-star-zero-set');
-            if (ritingStarZeroSet) {
-                ritingStarZeroSet.onclick = function (event) {
-                    var ulStarList = WPTB_Helper.findAncestor(event.target, 'wptb-rating-stars-list');
-                    if (ulStarList) {
-                        var children = ulStarList.children;
-                        for (var _i3 = 0; _i3 < children.length; _i3++) {
-                            children[_i3].classList.remove('wptb-rating-star-selected-full');
-                            children[_i3].classList.remove('wptb-rating-star-selected-half');
+            if (!_this.rowMovingField) {
+                _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
+            }
+            var rowMovingField = _this.rowMovingField;
+            if (rowMovingField) {
+                var withdrawTableContainer = document.createElement('div');
+                withdrawTableContainer.classList.add('wptb-withdraw-table-container');
+
+                withdrawTableContainer.appendChild(_this.withdrawTable);
+
+                rowMovingField.appendChild(withdrawTableContainer);
+
+                withdrawTableContainer.style.position = 'absolute';
+                withdrawTableContainer.style.right = '30px';
+
+                if (table) {
+                    withdrawTableContainer.style.width = table.getBoundingClientRect().width + 'px';
+                }
+            }
+
+            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+
+            body.onmousemove = function (eventMove) {
+                if (!_this.rowMovingField) {
+                    _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
+                }
+                var rowMovingField = _this.rowMovingField;
+                if (rowMovingField) {
+                    body.onmouseup = function () {
+                        if (!_this.rowMovingField) {
+                            _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
+                        }
+                        var rowMovingField = _this.rowMovingField;
+                        if (rowMovingField) {
+                            body.removeChild(rowMovingField);
+
+                            _this.withdrewRowsPut();
+
+                            _this.withdrawTable = null;
+                        }
+
+                        body.onmouseup = null;
+                        body.onmousemove = null;
+
+                        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    };
+
+                    if (!_this.withdrawTableContainer) {
+                        _this.withdrawTableContainer = document.querySelector('.wptb-withdraw-table-container');
+                    }
+                    var _withdrawTableContainer = _this.withdrawTableContainer;
+
+                    _withdrawTableContainer.style.display = 'block';
+
+                    if (!_this.withdrawTable) {
+                        _this.withdrawTable = _this.withdrawSelectedRowsFromTable();
+                    }
+
+                    //                    clearTimeout( this.setTimeoutWhenStopMove );
+                    //                    
+                    //                    this.setTimeoutWhenStopMove = setTimeout( () => {
+                    //                        let withdrawTableContainer = document.querySelector( '.wptb-withdraw-table-container' );
+                    //                        if( withdrawTableContainer ) {
+                    //                            withdrawTableContainer.style.display = 'none';
+                    //                            this.withdrewRowsPut( true );
+                    //                            this.withdrawTable = null;
+                    //                            this.rowMovingFieldParametrsOne();
+                    //                        }
+                    //                    }, 800 );
+
+                    var downYcoordinates = rowMovingField.downYcoordinates;
+                    var differenceY = downYcoordinates - eventMove.clientY;
+
+                    var rowMovingFieldTopCoordinates = parseFloat(rowMovingField.positionTop) - parseFloat(differenceY);
+
+                    var rowMovingFieldBottomCoordinates = rowMovingFieldTopCoordinates + parseFloat(rowMovingField.height);
+
+                    if (!_this.tablePreview) {
+                        _this.tablePreview = document.querySelector('.wptb-preview-table');
+                    }
+                    var _table = _this.tablePreview;
+
+                    var tableCoordinatesTop = parseFloat(_table.getBoundingClientRect().top);
+
+                    var tableCoordinatesBottom = parseFloat(_table.getBoundingClientRect().bottom);
+
+                    rowMovingField.style.top = rowMovingFieldTopCoordinates + 'px';
+
+                    if (tableCoordinatesTop - parseFloat(rowMovingField.style.top) >= 20) {
+                        rowMovingField.style.top = tableCoordinatesTop - 20 + 'px';
+                    } else if (parseFloat(rowMovingField.style.top) + parseFloat(rowMovingField.height) - tableCoordinatesBottom >= 20) {
+                        rowMovingField.style.top = tableCoordinatesBottom - parseFloat(rowMovingField.height) + 20 + 'px';
+                    }
+
+                    if (!_this.tBody) {
+                        _this.tBody = _table.querySelector('tbody');
+                    }
+                    var tBody = _this.tBody;
+
+                    var rowsMoving = tBody.getElementsByClassName('wptb-row-moving');
+                    var rowsMovingDeleted = [];
+                    if (rowsMoving.length > 0) {
+                        if (_this.rowsTopBottomCoordinatesArr['top'] && parseInt(_this.rowsTopBottomCoordinatesArr['top'][1], 10) + 10 >= rowMovingFieldTopCoordinates) {
+                            for (var i = 0; i < rowsMoving.length; i++) {
+                                rowsMovingDeleted.push(rowsMoving[i]);
+                            }
+
+                            for (var _i = 0; _i < rowsMovingDeleted.length; _i++) {
+                                tBody.removeChild(rowsMovingDeleted[_i]);
+                            }
+
+                            _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['top'][0]);
+
+                            for (var _i2 = 0; _i2 < rowsMovingDeleted.length; _i2++) {
+                                tBody.insertBefore(rowsMovingDeleted[_i2], _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + _i2]);
+                            }
+
+                            _table.recalculateIndexes();
+
+                            if (_table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1] && _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]) {
+                                _this.glueTableHorizontally(_table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1], _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]);
+                            }
+
+                            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+                        } else if (_this.rowsTopBottomCoordinatesArr['bottom'] && parseInt(_this.rowsTopBottomCoordinatesArr['bottom'][1], 10) - 10 <= rowMovingFieldBottomCoordinates) {
+                            for (var _i3 = 0; _i3 < rowsMoving.length; _i3++) {
+                                rowsMovingDeleted.push(rowsMoving[_i3]);
+                            }
+
+                            for (var _i4 = 0; _i4 < rowsMovingDeleted.length; _i4++) {
+                                tBody.removeChild(rowsMovingDeleted[_i4]);
+                            }
+
+                            _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length);
+
+                            for (var _i5 = 0; _i5 < rowsMovingDeleted.length; _i5++) {
+                                tBody.insertBefore(rowsMovingDeleted[_i5], _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + _i5]);
+                            }
+
+                            _table.recalculateIndexes();
+
+                            if (_table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]) {
+                                _this.glueTableHorizontally(_table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]);
+                            }
+
+                            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
                         }
                     }
-                };
+                }
+            };
+        };
+
+        function setRowsTopBottomCoordinates() {
+            if (!this.tablePreview) {
+                this.tablePreview = document.querySelector('.wptb-preview-table');
+            }
+            var table = this.tablePreview,
+                cell = table.querySelector('.wptb-highlighted'),
+                rowspan = cell.rowSpan,
+                row = parseInt(cell.dataset.yIndex, 10);
+
+            var rowsTopBottomCoordinatesArr = [];
+
+            if (table.rows[row - 1]) {
+                rowsTopBottomCoordinatesArr['top'] = [row - 1, table.rows[row - 1].getBoundingClientRect().top];
+            }
+
+            if (table.rows[row + rowspan]) {
+                rowsTopBottomCoordinatesArr['bottom'] = [row + rowspan + 1, table.rows[row + rowspan].getBoundingClientRect().bottom];
+            }
+
+            return rowsTopBottomCoordinatesArr;
+        }
+
+        // returns difference of positions of moving field before and after moving when this field was moved
+        function cursorPositionDifference(eventMove, body, rowMovingField) {}
+    };
+
+    // function hide the moving field 
+    this.rowMovingFieldHide = function () {
+        var rowMovingField = document.getElementsByClassName('wptb-row-moving-field');
+        if (rowMovingField.length > 0) {
+            rowMovingField = rowMovingField[0];
+            rowMovingField.style.display = 'none';
+        }
+    };
+
+    this.withdrawSelectedRowsFromTable = function () {
+        if (!this.tablePreview) {
+            this.tablePreview = document.querySelector('.wptb-preview-table');
+        }
+        var table = this.tablePreview,
+            cell = document.querySelector('.wptb-highlighted'),
+            rowspan = cell.rowSpan,
+            row = parseInt(cell.dataset.yIndex, 10),
+            tableWithdrewRows = document.createElement('table'),
+            tableWithdrewRowsTbody = document.createElement('tbody');
+        tableWithdrewRows.appendChild(tableWithdrewRowsTbody);
+        tableWithdrewRows.classList.add('wptb-preview-table');
+
+        if (table) {
+            var tableAttributes = table.attributes;
+
+            for (var i = 0; i < tableAttributes.length; i++) {
+                tableWithdrewRows.setAttribute(tableAttributes[i].nodeName, tableAttributes[i].nodeValue);
             }
         }
-    }
 
-    var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
-    if (node_wptb_element_kind_num) {
-        node.classList.remove(node_wptb_element_kind_num[0]);
-    }
-    if (!node.classList.contains('wptb-ph-element')) {
-        node.classList.add('wptb-ph-element');
-        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-            node.classList.add('wptb-element-' + element.kind + '-' + index);
-        }
-    } else {
-        if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-            node.classList.add('wptb-element-' + element.kind + '-' + index);
-        }
-    }
-    new WPTB_ElementOptions(element, index, kindIndexProt);
+        if (rowspan == undefined) rowspan = 1;
 
-    document.counter.increment(element.kind);
+        this.cutTableHorizontally(row);
+
+        this.cutTableHorizontally(row + rowspan);
+
+        //undoSelect();
+
+        var tableRowsWithDrewArr = [];
+        for (var _i6 = row; _i6 < row + rowspan; _i6++) {
+            tableRowsWithDrewArr.push(table.rows[_i6]);
+            tableWithdrewRowsTbody.appendChild(table.rows[_i6].cloneNode(true));
+
+            if (_i6 == row) {
+                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + 15 + 'px';
+            }
+
+            if (_i6 == row + rowspan - 1) {
+                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + 15 + 'px';
+            }
+
+            var rowsIChildren = table.rows[_i6].children;
+            for (var j = 0; j < rowsIChildren.length; j++) {
+                if (rowsIChildren[j].dataset.xIndex == 0) {
+                    rowsIChildren[j].classList.add('wptb-td-border-top-bottom-right-none');
+                } else if (rowsIChildren[j].dataset.xIndex == table.maxCols - 1) {
+                    rowsIChildren[j].classList.add('wptb-td-border-top-bottom-left-none');
+                } else {
+                    rowsIChildren[j].classList.add('wptb-td-border-none');
+                }
+            }
+
+            table.rows[_i6].classList.add('wptb-row-moving');
+        }
+
+        var rowNew = tableWithdrewRows.insertRow(-1);
+        rowNew.classList.add('wptb-row');
+        rowNew.style.display = 'none';
+        for (var _i7 = 0; _i7 < table.maxCols; _i7++) {
+            var td = new WPTB_Cell(table.mark);
+            td.getDOMElement().dataset.wptbCssTdAutoWidth = 'true';
+            tableWithdrewRows.rows[tableWithdrewRows.rows.length - 1].appendChild(td.getDOMElement());
+        }
+
+        return tableWithdrewRows;
+    };
+
+    this.cutTableHorizontally = function (rowsBefore) {
+        if (!this.tablePreview) {
+            this.tablePreview = document.querySelector('.wptb-preview-table');
+        }
+        var table = this.tablePreview;
+        rowsBefore = parseInt(rowsBefore, 10);
+        if (table.rows[rowsBefore]) {
+            for (var i = 0; i < rowsBefore; i++) {
+                var tableRowsIChildren = table.rows[i].children;
+
+                for (var j = 0; j < tableRowsIChildren.length; j++) {
+                    if (tableRowsIChildren[j].rowSpan > 1 && tableRowsIChildren[j].rowSpan > rowsBefore - i) {
+                        var newTdRowspan = tableRowsIChildren[j].rowSpan - rowsBefore + i;
+                        tableRowsIChildren[j].rowSpan = rowsBefore - i;
+                        if (!tableRowsIChildren[j].dataset.sameCellBeforeDivision) {
+                            tableRowsIChildren[j].dataset.sameCellBeforeDivision = 'r' + i + 'c' + j;
+                        }
+
+                        var td = new WPTB_Cell(table.mark),
+                            tdTopStyle = tableRowsIChildren[j].getAttribute('style');
+                        td.getDOMElement().setAttribute('style', tdTopStyle);
+                        td.getDOMElement().colSpan = tableRowsIChildren[j].colSpan;
+                        td.getDOMElement().rowSpan = newTdRowspan;
+                        td.getDOMElement().dataset.sameCellBeforeDivision = tableRowsIChildren[j].dataset.sameCellBeforeDivision;
+
+                        var dataXIndex = tableRowsIChildren[j].dataset.xIndex;
+                        var dataXIndexNext = parseInt(dataXIndex) + parseInt(tableRowsIChildren[j].colSpan);
+                        var beforeTd = void 0;
+                        while (!beforeTd && dataXIndexNext < table.maxCols) {
+                            beforeTd = table.rows[rowsBefore].querySelector('[data-x-index="' + dataXIndexNext + '"]');
+                            dataXIndexNext++;
+                        }
+                        table.rows[rowsBefore].insertBefore(td.getDOMElement(), beforeTd);
+
+                        table.recalculateIndexes();
+                    }
+                }
+            }
+        }
+    };
+
+    this.glueTableHorizontally = function () {
+        if (!this.tablePreview) {
+            this.tablePreview = document.querySelector('.wptb-preview-table');
+        }
+        var table = this.tablePreview;
+        if (table) {
+            var tds = [].concat(_toConsumableArray(table.getElementsByTagName('td')));
+            for (var i = 0; i < tds.length; i++) {
+                if (tds[i].hasAttribute('data-same-cell-before-division')) {
+                    var dataSameCellBeforeDivision = tds[i].dataset.sameCellBeforeDivision;
+                    var tdsSameBeforeDivision = table.querySelectorAll('[data-same-cell-before-division="' + dataSameCellBeforeDivision + '"]');
+                    for (var j = 0; j < tdsSameBeforeDivision.length; j++) {
+                        if (tdsSameBeforeDivision[j] && tdsSameBeforeDivision[j + 1]) {
+                            if (tdsSameBeforeDivision[j].parentNode && tdsSameBeforeDivision[j + 1].parentNode && !tdsSameBeforeDivision[j].parentNode.classList.contains('wptb-row-moving') && !tdsSameBeforeDivision[j + 1].parentNode.classList.contains('wptb-row-moving')) {
+                                if (tdsSameBeforeDivision[j + 1].dataset.yIndex == parseInt(tdsSameBeforeDivision[j].dataset.yIndex) + parseInt(tdsSameBeforeDivision[j].rowSpan)) {
+                                    tdsSameBeforeDivision[j].rowSpan += tdsSameBeforeDivision[j + 1].rowSpan;
+
+                                    var nextRow = tdsSameBeforeDivision[j + 1].parentNode;
+                                    nextRow.removeChild(tdsSameBeforeDivision[j + 1]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            table.recalculateIndexes();
+        }
+    };
+
+    this.withdrewRowsPut = function (temporaryShow) {
+        if (!this.tablePreview) {
+            this.tablePreview = document.querySelector('.wptb-preview-table');
+        }
+        var table = this.tablePreview;
+        if (table) {
+            var rows = table.rows;
+            for (var i = 0; i < rows.length; i++) {
+                if (rows[i].classList.contains('wptb-row-moving')) {
+                    var children = rows[i].children;
+
+                    for (var j = 0; j < children.length; j++) {
+                        children[j].classList.remove('wptb-td-border-top-bottom-right-none');
+                        children[j].classList.remove('wptb-td-border-top-bottom-left-none');
+                        children[j].classList.remove('wptb-td-border-none');
+                    }
+
+                    rows[i].style.height = '';
+                    rows[i].classList.remove('wptb-row-moving');
+                }
+            }
+
+            this.glueTableHorizontally();
+
+            if (!temporaryShow) {
+                var highlighted = [].concat(_toConsumableArray(table.getElementsByClassName('wptb-highlighted')));
+                for (var _i8 = 0; _i8 < highlighted.length; _i8++) {
+                    highlighted[_i8].classList.remove('wptb-highlighted');
+                }
+
+                var tds = [].concat(_toConsumableArray(table.getElementsByTagName('td')));
+                for (var _i9 = 0; _i9 < tds.length; _i9++) {
+                    if (tds[_i9].hasAttribute('data-same-cell-before-division')) {
+                        tds[_i9].removeAttribute('data-same-cell-before-division');
+                    }
+                }
+            }
+        }
+    };
 };
-
 //# sourceMappingURL=admin.js.map

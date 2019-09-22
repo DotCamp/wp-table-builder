@@ -61,6 +61,9 @@ var array = [], WPTB_Table = function (columns, rows) {
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
             cellSettings.classList.remove( 'visible' );
+            
+            let wptbRowMove = new WPTB_RowMove();
+            wptbRowMove.rowMovingFieldHide();
         } else if (markedCells === 1) {
             for (var i = 0; i < multipleCells.length; i++) {
                 multipleCells[i].classList.remove('visible');
@@ -116,6 +119,9 @@ var array = [], WPTB_Table = function (columns, rows) {
                 }
             }
             cellSettings.classList.add( 'visible' );
+            
+            let wptbRowMove = new WPTB_RowMove();
+            wptbRowMove.rowMovingFieldPutActive();
         } else {
             for (var i = 0; i < multipleCells.length; i++) {
                 if (table.isSquare(array)) {
@@ -135,6 +141,9 @@ var array = [], WPTB_Table = function (columns, rows) {
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
             cellSettings.classList.remove( 'visible' );
+            
+            let wptbRowMove = new WPTB_RowMove();
+            wptbRowMove.rowMovingFieldHide();
         }
     };
 
@@ -419,6 +428,8 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
     }
+    
+    table.mark = mark;
 
     /*
      * This just toggles visibility of cell edit bar, and toggles 
@@ -1246,7 +1257,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
-
+    
     /*
      * This function checks the current selected cells
      * make a rectangular shape.

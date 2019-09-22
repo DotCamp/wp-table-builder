@@ -1029,9 +1029,11 @@ ul.wptb-tabs {
     background: #fff;
     margin-top: 30px;
     margin-bottom: 30px;
-    max-width: 850px;
+    /*max-width: 850px;*/
     overflow-x: auto;
     overflow-y: hidden;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 #wptb-cell_mode_background {
@@ -1146,7 +1148,7 @@ table.wptb-table {
     table-layout: fixed;
     font-size: 15px;
     display: table;
-    border-collapse: collapse !important;
+    border-collapse: collapse;
     margin: auto;
     width: auto;
 }
@@ -1163,6 +1165,7 @@ table.wptb-table {
     right: 0;
     left: 0;
     bottom: 0;
+    z-index: 20;
 }
 
 .wptb-preview-table-manage-cells td:hover::after {
@@ -1962,13 +1965,12 @@ td[class*="wptb-fused-cell"] {
     width: 100%;
     top: 0px;
     left: 0px;
-    z-index: 10;
 }
 .wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part,
 .wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-right-signal-part{
     height: 100%;
     width: 50%;
-    z-index: 20;
+    z-index: 10;
 }
 
 .wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part {
@@ -2127,6 +2129,59 @@ td[class*="wptb-fused-cell"] {
   height: 25px;
   font-size: 25px;
   line-height: 25px;
+}
+
+
+/*  Moving Row and Columns Fields  */
+.wptb-row-moving-field {
+    width: 30px;
+    background-color: #1ea5e5;
+    position: absolute;
+    z-index: 100100;
+    display: table;
+/*    -webkit-transform: scale(0.9, 0.9);
+    -moz-transform: scale(0.9, 0.9);
+    -ms-transform: scale(0.9, 0.9);
+    transform: scale(0.9, 0.9);*/
+}
+
+.wptb-row-moving-field .text-box {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.wptb-row-moving-field .text-box span {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+.wptb-row-moving-field:hover {
+    cursor: move;
+}
+
+.wptb-preview-table tr.wptb-row.wptb-row-moving {
+    background: #d8d8d8;
+}
+
+.wptb-td-border-top-bottom-right-none {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
+    opacity: 0 !important;
+}
+
+.wptb-td-border-top-bottom-left-none {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    opacity: 0 !important;
+}
+
+.wptb-td-border-none {
+    border: none !important;
+    opacity: 0 !important;
 }
 
 @media screen and (max-width: 1375px) {
