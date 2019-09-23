@@ -54,14 +54,19 @@ use WP_Table_Builder as NS;
                     
                      
                     <div class="wptb-settings-dropdown">
-                        <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
+                        <div class="wptb-back-button">
+                             <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
                             <svg pointer-events="none" width="12px" height="12px" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
                                 <g>
                                     <path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                                         c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/>
                                 </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-                        </a>
-                        &emsp; <?php esc_html_e( 'Text Options', 'wp-table-builder' ); ?>
+                            </a>
+                        </div>
+                        <div class="wptb-option-text">  
+                            <?php esc_html_e( 'Text Options', 'wp-table-builder' ); ?>
+                        </div>                       
+                        
                     </div>
                     <div class="wptb-element-option wptb-settings-items" >
                         <div class='wptb-settings-item-header' >
@@ -89,15 +94,18 @@ use WP_Table_Builder as NS;
                 </div>
                 <div class='wptb-element-options  wptb-image-options wptb-image-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
-                       <a href="javascript:void(0)"  title="Back" class="wptb-exit-options">
-                            <svg pointer-events="none" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12px" height="12px" x="0px" y="0px"
-                                     viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                       <div class="wptb-back-button">
+                             <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
+                            <svg pointer-events="none" width="12px" height="12px" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
                                 <g>
                                     <path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                                         c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/>
                                 </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-                        </a>
-                        &emsp;<?php esc_html_e( 'Image Options', 'wp-table-builder' ); ?>
+                            </a>
+                        </div>
+                        <div class="wptb-option-text">  
+                            <?php esc_html_e( 'Image Options', 'wp-table-builder' ); ?>
+                        </div>
                     </div>
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
@@ -158,15 +166,18 @@ use WP_Table_Builder as NS;
                 <div class='wptb-element-options wptb-button-options wptb-button-options-prototype' style='display: none;'>
                     
                     <div class="wptb-settings-dropdown">
-                        <a href="javascript:void(0)"  title="Back" class="wptb-exit-options">
-                            <svg pointer-events="none" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12px" height="12px" x="0px" y="0px"
-                                     viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                        <div class="wptb-back-button">
+                             <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
+                            <svg pointer-events="none" width="12px" height="12px" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
                                 <g>
                                     <path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                                         c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/>
                                 </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-                        </a>
-                        &emsp;<?php esc_html_e( 'Button Options', 'wp-table-builder' ); ?>
+                            </a>
+                        </div>
+                        <div class="wptb-option-text">  
+                            <?php esc_html_e( 'Button Options', 'wp-table-builder' ); ?>
+                        </div>
                     </div>
                     <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
@@ -246,15 +257,18 @@ use WP_Table_Builder as NS;
                 </div>
                 <div class='wptb-element-options wptb-list-options wptb-list-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
-                        <a href="javascript:void(0)"  title="Back" class="wptb-exit-options">
-                            <svg pointer-events="none" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12px" height="12px" x="0px" y="0px"
-                                     viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                        <div class="wptb-back-button">
+                             <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
+                            <svg pointer-events="none" width="12px" height="12px" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
                                 <g>
                                     <path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                                         c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/>
                                 </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-                        </a>
-                        &emsp;<?php esc_html_e( 'List Options', 'wp-table-builder' ); ?>
+                            </a>
+                        </div>
+                        <div class="wptb-option-text">  
+                            <?php esc_html_e( 'List Options', 'wp-table-builder' ); ?>
+                        </div>
                     </div>
                     <div class="wptb-settings-items" >
                         <div class='wptb-settings-item-header' >
@@ -320,15 +334,18 @@ use WP_Table_Builder as NS;
                 </div>
                 <div class='wptb-element-options wptb-star_rating-options wptb-star_rating-options-prototype' style='display: none;'>
                     <div class="wptb-settings-dropdown">
-                        <a href="javascript:void(0)"  title="Back" class="wptb-exit-options">
-                            <svg pointer-events="none" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12px" height="12px" x="0px" y="0px"
-                                     viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
+                        <div class="wptb-back-button">
+                             <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
+                            <svg pointer-events="none" width="12px" height="12px" x="0px" y="0px" viewBox="0 0 477.175 477.175" style="enable-background:new 0 0 477.175 477.175;" xml:space="preserve">
                                 <g>
                                     <path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
                                         c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"/>
                                 </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-                        </a>
-                        &emsp;<?php esc_html_e( 'Star Rating Options', 'wp-table-builder' ); ?>
+                            </a>
+                        </div>
+                        <div class="wptb-option-text">  
+                            <?php esc_html_e( 'Star Rating Options', 'wp-table-builder' ); ?>
+                        </div>
                     </div>
                     <div class="wptb-element-option" >
                         <div class='wptb-settings-item-header' >

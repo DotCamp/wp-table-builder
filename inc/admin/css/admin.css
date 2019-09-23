@@ -533,7 +533,7 @@ body>img {
 
 .wptb-settings-dropdown {
     font-size: 16px;
-    padding: 16px 0 16px 20px;
+    padding: 16px 20px 16px 20px;
     position: relative;
     background-color: #fff;
     color: #186cba;
@@ -2218,4 +2218,10 @@ td[class*="wptb-fused-cell"] {
 }
 .wptb-exit-options{
     text-decoration: none;
+}
+.wptb-back-button{
+    float: left;
+}
+.wptb-option-text {
+    text-align: center;
 }
