@@ -2216,3 +2216,6 @@ td[class*="wptb-fused-cell"] {
 .wptb-cell img {
     max-width: 100%;
 }
+.wptb-exit-options{
+    text-decoration: none;
+}
