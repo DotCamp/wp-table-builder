@@ -874,6 +874,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             if (currentTdStyle) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
                 td.getDOMElement().style.width = null;
+                td.getDOMElement().style.height = null;
             }
             
             table.rows[i].appendChild(td.getDOMElement());
@@ -913,6 +914,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             if (currentTdStyle) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
                 td.getDOMElement().style.width = null;
+                td.getDOMElement().style.height = null;
             }
             firstCell = table.rows[i].getElementsByTagName('td')[0];
             if (firstCell) {
@@ -977,6 +979,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                         if (cellStyle) {
                             td.getDOMElement().setAttribute('style', cellStyle);
                             td.getDOMElement().style.width = null;
+                            td.getDOMElement().style.height = null;
                         }
                         if (currentCell && rows[i].contains(currentCell)) {
                             bro = currentCell.nextSibling;
@@ -1064,36 +1067,35 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.addRowToTheEnd = function () {
         let r = table.insertRow(-1),
-                td,
-                aux,
-                currentTable = document.getElementsByClassName('wptb-preview-table'),
-                currentTableTd,
-                currentTdStyle;
+        td,
+        aux,
+        currentTable = document.getElementsByClassName('wptb-preview-table');
         r.classList.add( 'wptb-row' );
         if (currentTable.length > 0) {
-            currentTableTd = currentTable[0].querySelector('td');
-        }
-
-        if (currentTableTd) {
-            currentTdStyle = currentTableTd.getAttribute('style');
-        }
-
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            td = new WPTB_Cell(mark);
-            if (currentTdStyle) {
-                td.getDOMElement().setAttribute('style', currentTdStyle);
+            currentTable = currentTable[0];
+            
+            for (var i = 0; i < maxAmountOfCells; i++) {
+                td = new WPTB_Cell(mark);
+                let currentTableTd = currentTable.querySelector('[data-x-index="' + i + '"]');
+                if( currentTableTd ) {
+                    let currentTdStyle = currentTableTd.getAttribute( 'style' );
+                    
+                    td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                    td.getDOMElement().style.height = null;
+                }
+                r.appendChild(td.getDOMElement());
             }
-            r.appendChild(td.getDOMElement());
+            
+            aux = Array.from(array[0]);
+            array.push(aux);
+            drawTable(array);
+            table.recalculateIndexes();
+            table.addColumnWidth();
+            WPTB_Helper.dataTitleColumnSet( table );
+            undoSelect();
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
-        aux = Array.from(array[0]);
-        array.push(aux);
-        drawTable(array);
-        table.recalculateIndexes();
-        table.addColumnWidth();
-        WPTB_Helper.dataTitleColumnSet( table );
-        undoSelect();
-        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
     };
 
     /*
@@ -1103,36 +1105,37 @@ var array = [], WPTB_Table = function (columns, rows) {
 
     table.addRowToTheStart = function () {
         let r = table.insertRow(0),
-                td,
-                aux,
-                currentTable = document.getElementsByClassName('wptb-preview-table'),
-                currentTableTd,
-                currentTdStyle;
+        td,
+        aux,
+        currentTable = document.getElementsByClassName('wptb-preview-table'),
+        currentTableTd,
+        currentTdStyle;
         r.classList.add( 'wptb-row' );
         if (currentTable.length > 0) {
-            currentTableTd = currentTable[0].querySelector('td');
-        }
-
-        if (currentTableTd) {
-            currentTdStyle = currentTableTd.getAttribute('style');
-        }
-
-        for (var i = 0; i < maxAmountOfCells; i++) {
-            td = new WPTB_Cell(mark);
-            if (currentTdStyle) {
-                td.getDOMElement().setAttribute('style', currentTdStyle);
+            currentTable = currentTable[0];
+            
+            for (var i = 0; i < maxAmountOfCells; i++) {
+                td = new WPTB_Cell(mark);
+                let currentTableTd = currentTable.querySelector('[data-x-index="' + i + '"]');
+                if( currentTableTd ) {
+                    let currentTdStyle = currentTableTd.getAttribute( 'style' );
+                    
+                    td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                    td.getDOMElement().style.height = null;
+                }
+                r.appendChild(td.getDOMElement());
             }
-            r.appendChild(td.getDOMElement());
+            
+            aux = Array.from(array[0]);
+            array.push(aux);
+            drawTable(array);
+            table.recalculateIndexes();
+            table.addColumnWidth();
+            WPTB_Helper.dataTitleColumnSet( table );
+            undoSelect();
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
-        aux = Array.from(array[0]);
-        array.push(aux);
-        drawTable(array);
-        table.recalculateIndexes();
-        table.addColumnWidth();
-        WPTB_Helper.dataTitleColumnSet( table );
-        undoSelect();
-        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
     };
 
     /* 
