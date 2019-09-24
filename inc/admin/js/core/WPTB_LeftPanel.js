@@ -547,5 +547,10 @@ var WPTB_LeftPanel = function () {
             document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
         }
    }
+   document.querySelector('.wptb-panel-left').addEventListener('click', function (event) {
+      if (event.target.classList.contains('wptb-exit-options')) {
+        clickOnFreeSpace();
+      }
+    });
    
 };
