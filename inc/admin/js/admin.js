@@ -5772,8 +5772,9 @@ var WPTB_RowMove = function WPTB_RowMove() {
         } else {
             rowMovingField = document.createElement('div');
             rowMovingField.classList.add('wptb-row-moving-field');
-            rowMovingField.innerHTML = '<div class="text-box">\n\
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
+            var visualButtonBox = document.createElement('div');
+            visualButtonBox.classList.add('visual-button-box');
+            visualButtonBox.innerHTML = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
                     x="0px" y="0px" width="30" height="30" viewBox="0 0 511.626 511.627" \n\
                     style="enable-background:new 0 0 511.626 511.627;" xml:space="preserve">\n\
                     <path d="M328.906,401.994h-36.553V109.636h36.553c4.948,0,9.236-1.809,12.847-5.426c3.613-3.615,5.421-7.898,5.421-12.845 \n\
@@ -5783,7 +5784,14 @@ var WPTB_RowMove = function WPTB_RowMove() {
                         c0,4.945,1.807,9.227,5.424,12.847l73.089,73.088c3.617,3.617,7.898,5.424,12.847,5.424c4.95,0,9.234-1.807,12.849-5.424 \n\
                         l73.087-73.088c3.613-3.62,5.421-7.901,5.421-12.847c0-4.948-1.808-9.232-5.421-12.854 \n\
                         C338.142,403.802,333.857,401.994,328.906,401.994z" style="fill:#FFFFFF"></path>\n\
-                </svg></div>';
+                </svg>';
+
+            var visualButtonBoxLeft = visualButtonBox.cloneNode(true);
+
+            visualButtonBoxLeft.classList.add('visual-button-box-left');
+
+            rowMovingField.appendChild(visualButtonBox);
+            rowMovingField.appendChild(visualButtonBoxLeft);
 
             body.appendChild(rowMovingField);
 
@@ -5818,10 +5826,9 @@ var WPTB_RowMove = function WPTB_RowMove() {
                 if (wptbTableSetup.length > 0) {
                     wptbTableSetup = wptbTableSetup[0];
 
-                    var coordinatesPreviewTable = wptbTableSetup.getBoundingClientRect(),
-                        coordinatesPreviewTableRight = parseFloat(coordinatesPreviewTable.right);
-
-                    _this.rowMovingField.style.left = coordinatesPreviewTableRight + 'px';
+                    var coordinatesPreviewTable = wptbTableSetup.getBoundingClientRect();
+                    _this.rowMovingField.style.left = parseFloat(coordinatesPreviewTable.right) + 'px';
+                    _this.rowMovingField.querySelector('.visual-button-box-left').style.left = '-' + (parseFloat(coordinatesPreviewTable.width) + 30) + 'px';
 
                     var tableWithdrewRows = _this.rowMovingField.getElementsByClassName('wptb-table-setup');
                     if (tableWithdrewRows.length > 0) {
@@ -5873,7 +5880,7 @@ var WPTB_RowMove = function WPTB_RowMove() {
             if (!_this.tablePreview) {
                 _this.tablePreview = document.querySelector('.wptb-preview-table');
             }
-            var table = _this.tablePreview;
+            var tablePreview = document.querySelector('.wptb-preview-table');
 
             if (!_this.rowMovingField) {
                 _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
@@ -5890,8 +5897,8 @@ var WPTB_RowMove = function WPTB_RowMove() {
                 withdrawTableContainer.style.position = 'absolute';
                 withdrawTableContainer.style.right = '30px';
 
-                if (table) {
-                    withdrawTableContainer.style.width = table.getBoundingClientRect().width + 'px';
+                if (tablePreview) {
+                    withdrawTableContainer.style.width = tablePreview.getBoundingClientRect().width + 'px';
                 }
             }
 
@@ -5956,11 +5963,11 @@ var WPTB_RowMove = function WPTB_RowMove() {
                     if (!_this.tablePreview) {
                         _this.tablePreview = document.querySelector('.wptb-preview-table');
                     }
-                    var _table = _this.tablePreview;
+                    var _tablePreview = _this.tablePreview;
 
-                    var tableCoordinatesTop = parseFloat(_table.getBoundingClientRect().top);
+                    var tableCoordinatesTop = parseFloat(_tablePreview.getBoundingClientRect().top);
 
-                    var tableCoordinatesBottom = parseFloat(_table.getBoundingClientRect().bottom);
+                    var tableCoordinatesBottom = parseFloat(_tablePreview.getBoundingClientRect().bottom);
 
                     rowMovingField.style.top = rowMovingFieldTopCoordinates + 'px';
 
@@ -5971,7 +5978,7 @@ var WPTB_RowMove = function WPTB_RowMove() {
                     }
 
                     if (!_this.tBody) {
-                        _this.tBody = _table.querySelector('tbody');
+                        _this.tBody = _tablePreview.querySelector('tbody');
                     }
                     var tBody = _this.tBody;
 
@@ -5990,13 +5997,13 @@ var WPTB_RowMove = function WPTB_RowMove() {
                             _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['top'][0]);
 
                             for (var _i2 = 0; _i2 < rowsMovingDeleted.length; _i2++) {
-                                tBody.insertBefore(rowsMovingDeleted[_i2], _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + _i2]);
+                                tBody.insertBefore(rowsMovingDeleted[_i2], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + _i2]);
                             }
 
-                            _table.recalculateIndexes();
+                            _tablePreview.recalculateIndexes();
 
-                            if (_table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1] && _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]) {
-                                _this.glueTableHorizontally(_table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1], _table.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]);
+                            if (_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1] && _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]) {
+                                _this.glueTableHorizontally(_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]);
                             }
 
                             _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
@@ -6012,13 +6019,13 @@ var WPTB_RowMove = function WPTB_RowMove() {
                             _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length);
 
                             for (var _i5 = 0; _i5 < rowsMovingDeleted.length; _i5++) {
-                                tBody.insertBefore(rowsMovingDeleted[_i5], _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + _i5]);
+                                tBody.insertBefore(rowsMovingDeleted[_i5], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + _i5]);
                             }
 
-                            _table.recalculateIndexes();
+                            _tablePreview.recalculateIndexes();
 
-                            if (_table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]) {
-                                _this.glueTableHorizontally(_table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], _table.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]);
+                            if (_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]) {
+                                _this.glueTableHorizontally(_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]);
                             }
 
                             _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();

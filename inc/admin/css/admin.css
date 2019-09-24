@@ -2143,15 +2143,31 @@ td[class*="wptb-fused-cell"] {
     -moz-transform: scale(0.9, 0.9);
     -ms-transform: scale(0.9, 0.9);
     transform: scale(0.9, 0.9);*/
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
-.wptb-row-moving-field .text-box {
+.wptb-row-moving-field .visual-button-box {
     display: table-cell;
     vertical-align: middle;
     width: 100%;
 }
 
-.wptb-row-moving-field .text-box span {
+.visual-button-box.visual-button-box-left {
+    position: absolute;
+    background: #1ea5e5;
+    width: 30px;
+    height: 100%;
+}
+
+.visual-button-box.visual-button-box-left svg {
+    height: 100%;
+}
+
+.wptb-row-moving-field .visual-button-box span {
     display: block;
     text-align: center;
     margin: auto;

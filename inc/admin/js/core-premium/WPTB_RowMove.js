@@ -24,8 +24,9 @@ var WPTB_RowMove = function () {
         } else {
             rowMovingField = document.createElement( 'div' );
             rowMovingField.classList.add( 'wptb-row-moving-field' );
-            rowMovingField.innerHTML = '<div class="text-box">\n\
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
+            let visualButtonBox = document.createElement( 'div' );
+            visualButtonBox.classList.add( 'visual-button-box' );
+            visualButtonBox.innerHTML = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" \n\
                     x="0px" y="0px" width="30" height="30" viewBox="0 0 511.626 511.627" \n\
                     style="enable-background:new 0 0 511.626 511.627;" xml:space="preserve">\n\
                     <path d="M328.906,401.994h-36.553V109.636h36.553c4.948,0,9.236-1.809,12.847-5.426c3.613-3.615,5.421-7.898,5.421-12.845 \n\
@@ -35,7 +36,14 @@ var WPTB_RowMove = function () {
                         c0,4.945,1.807,9.227,5.424,12.847l73.089,73.088c3.617,3.617,7.898,5.424,12.847,5.424c4.95,0,9.234-1.807,12.849-5.424 \n\
                         l73.087-73.088c3.613-3.62,5.421-7.901,5.421-12.847c0-4.948-1.808-9.232-5.421-12.854 \n\
                         C338.142,403.802,333.857,401.994,328.906,401.994z" style="fill:#FFFFFF"></path>\n\
-                </svg></div>';
+                </svg>';
+            
+            let visualButtonBoxLeft = visualButtonBox.cloneNode( true );
+            
+            visualButtonBoxLeft.classList.add( 'visual-button-box-left' );
+            
+            rowMovingField.appendChild( visualButtonBox );
+            rowMovingField.appendChild( visualButtonBoxLeft );
             
             body.appendChild( rowMovingField );
             
@@ -70,10 +78,9 @@ var WPTB_RowMove = function () {
                 if( wptbTableSetup.length > 0 ) {
                     wptbTableSetup = wptbTableSetup[0];
 
-                    let coordinatesPreviewTable = wptbTableSetup.getBoundingClientRect(),
-                    coordinatesPreviewTableRight = parseFloat( coordinatesPreviewTable.right );
-
-                    this.rowMovingField.style.left = coordinatesPreviewTableRight + 'px';
+                    let coordinatesPreviewTable = wptbTableSetup.getBoundingClientRect()
+                    this.rowMovingField.style.left = parseFloat( coordinatesPreviewTable.right ) + 'px';
+                    this.rowMovingField.querySelector( '.visual-button-box-left' ).style.left = '-' + ( parseFloat( coordinatesPreviewTable.width ) + 30 ) + 'px';
                     
                     let tableWithdrewRows = this.rowMovingField.getElementsByClassName( 'wptb-table-setup' );
                     if( tableWithdrewRows.length > 0 ) {
@@ -125,7 +132,7 @@ var WPTB_RowMove = function () {
             if( ! this.tablePreview ) {
                 this.tablePreview = document.querySelector( '.wptb-preview-table' );
             }
-            let table = this.tablePreview;
+            let tablePreview = document.querySelector( '.wptb-preview-table' );
 
             if( ! this.rowMovingField ) {
                 this.rowMovingField = document.querySelector( '.wptb-row-moving-field' );
@@ -142,8 +149,8 @@ var WPTB_RowMove = function () {
                 withdrawTableContainer.style.position = 'absolute';
                 withdrawTableContainer.style.right = '30px';
 
-                if( table ) {
-                    withdrawTableContainer.style.width = table.getBoundingClientRect().width + 'px';
+                if( tablePreview ) {
+                    withdrawTableContainer.style.width = tablePreview.getBoundingClientRect().width + 'px';
                 }
             }
             
@@ -208,11 +215,11 @@ var WPTB_RowMove = function () {
                     if( ! this.tablePreview ) {
                         this.tablePreview = document.querySelector( '.wptb-preview-table' );
                     }
-                    let table = this.tablePreview;
+                    let tablePreview = this.tablePreview;
                     
-                    let tableCoordinatesTop = parseFloat( table.getBoundingClientRect().top );
+                    let tableCoordinatesTop = parseFloat( tablePreview.getBoundingClientRect().top );
                     
-                    let tableCoordinatesBottom = parseFloat( table.getBoundingClientRect().bottom );
+                    let tableCoordinatesBottom = parseFloat( tablePreview.getBoundingClientRect().bottom );
                     
                     rowMovingField.style.top = rowMovingFieldTopCoordinates + 'px';
                     
@@ -223,7 +230,7 @@ var WPTB_RowMove = function () {
                     }
                     
                     if( ! this.tBody ) {
-                        this.tBody = table.querySelector( 'tbody' );
+                        this.tBody = tablePreview.querySelector( 'tbody' );
                     }
                     let tBody = this.tBody;
                     
@@ -243,14 +250,14 @@ var WPTB_RowMove = function () {
                             this.cutTableHorizontally( this.rowsTopBottomCoordinatesArr['top'][0] );
                             
                             for( let i = 0; i < rowsMovingDeleted.length; i++ ) {
-                                tBody.insertBefore( rowsMovingDeleted[i], table.rows[this.rowsTopBottomCoordinatesArr['top'][0] + i] );
+                                tBody.insertBefore( rowsMovingDeleted[i], tablePreview.rows[this.rowsTopBottomCoordinatesArr['top'][0] + i] );
                             }
 
-                            table.recalculateIndexes();
+                            tablePreview.recalculateIndexes();
                             
-                            if( table.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 1] && table.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 2] ) {
-                                this.glueTableHorizontally( table.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 1], 
-                                    table.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 2] );
+                            if( tablePreview.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 1] && tablePreview.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 2] ) {
+                                this.glueTableHorizontally( tablePreview.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 1], 
+                                    tablePreview.rows[this.rowsTopBottomCoordinatesArr['top'][0] + 2] );
                             }
                             
                             this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
@@ -267,14 +274,14 @@ var WPTB_RowMove = function () {
                             this.cutTableHorizontally( this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length );
                             
                             for( let i = 0; i < rowsMovingDeleted.length; i++ ) {
-                                tBody.insertBefore( rowsMovingDeleted[i], table.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + i] );
+                                tBody.insertBefore( rowsMovingDeleted[i], tablePreview.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + i] );
                             }
                             
-                            table.recalculateIndexes();
+                            tablePreview.recalculateIndexes();
                             
-                            if( table.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && table.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 2] ) {
-                                this.glueTableHorizontally( table.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], 
-                                    table.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 2] );
+                            if( tablePreview.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && tablePreview.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 2] ) {
+                                this.glueTableHorizontally( tablePreview.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], 
+                                    tablePreview.rows[this.rowsTopBottomCoordinatesArr['bottom'][0] - 2] );
                             }
 
                             this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
