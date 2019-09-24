@@ -60,10 +60,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="margin: 9px 0; padding-bottom: 10px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="font-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="10"> 
+                              <input data-type="font-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="15"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-size-number" data-type="font-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
+                                <input id="wptb-size-number" data-type="font-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1"  value="15" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>
