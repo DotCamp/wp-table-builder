@@ -1327,14 +1327,32 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     starsCountInputNumber.value = ratingStars.length;
                 }
 
+                var ratingAlignment = _affectedEl3.style.textAlign,
+                    ratingAlignmentSelect = prop.querySelector('select[data-type="rating-alignment"]'),
+                    _selectOption2 = ratingAlignmentSelect.getElementsByTagName('option'),
+                    _selectOptionVal = void 0;
+                if (ratingAlignment == 'start') {
+                    _selectOptionVal = 'left';
+                } else if (ratingAlignment == 'center' || !ratingAlignment) {
+                    _selectOptionVal = 'center';
+                } else if (ratingAlignment == 'right') {
+                    _selectOptionVal = 'right';
+                }
+
+                for (var _i6 = 0; _i6 < _selectOption2.length; _i6++) {
+                    if (_selectOption2[_i6].value == _selectOptionVal) {
+                        _selectOption2[_i6].selected = true;
+                    }
+                }
+
                 var successBox = _affectedEl3.querySelector('.wptb-success-box');
                 if (successBox) {
                     var showNumberRatingCheckbox = prop.querySelector('input[type="checkbox"][data-type="show-number-rating"]');
                     if (successBox.style.display == 'block') {
                         showNumberRatingCheckbox.checked = true;
                         var numeralRatingOptionContainers = prop.getElementsByClassName('wptb-numeral-rating-option-container');
-                        for (var _i6 = 0; _i6 < numeralRatingOptionContainers.length; _i6++) {
-                            numeralRatingOptionContainers[_i6].style.display = 'block';
+                        for (var _i7 = 0; _i7 < numeralRatingOptionContainers.length; _i7++) {
+                            numeralRatingOptionContainers[_i7].style.display = 'block';
                         }
                     } else {
                         showNumberRatingCheckbox.checked = false;
@@ -1546,6 +1564,17 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     }
                     affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
+                case 'rating-alignment':
+                    var jc = '';
+                    if (this.value == 'left') {
+                        jc = 'start';
+                    } else if (this.value == 'right') {
+                        jc = 'right';
+                    } else {
+                        jc = 'center';
+                    }
+                    affectedEl.style.textAlign = jc;
+                    break;
                 case 'button-link':
                     if (this.value) {
                         affectedEl.getElementsByTagName('a')[0].href = WPTB_Helper.linkHttpCheckChange(this.value);
@@ -1618,10 +1647,10 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     break;
                 case 'star-size':
                     var _ratingStar = affectedEl.querySelectorAll('li');
-                    for (var _i7 = 0; _i7 < _ratingStar.length; _i7++) {
-                        _ratingStar[_i7].style.width = val + 'px';
-                        _ratingStar[_i7].style.height = val + 'px';
-                        var span = _ratingStar[_i7].querySelectorAll('span');
+                    for (var _i8 = 0; _i8 < _ratingStar.length; _i8++) {
+                        _ratingStar[_i8].style.width = val + 'px';
+                        _ratingStar[_i8].style.height = val + 'px';
+                        var span = _ratingStar[_i8].querySelectorAll('span');
                         for (var j = 0; j < span.length; j++) {
                             if (span[j].querySelector('svg')) {
                                 span[j].style.width = val + 'px';
@@ -1641,13 +1670,13 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
 
                         var _val = this.checked ? 'checked' : 'unchecked';
                         if (_val == 'checked') {
-                            for (var _i8 = 0; _i8 < wptbNumeralRatingOptionContainer.length; _i8++) {
-                                wptbNumeralRatingOptionContainer[_i8].style.display = 'block';
+                            for (var _i9 = 0; _i9 < wptbNumeralRatingOptionContainer.length; _i9++) {
+                                wptbNumeralRatingOptionContainer[_i9].style.display = 'block';
                             }
                             _wptbTextMessage.parentNode.style.display = 'block';
                         } else if (_val == 'unchecked') {
-                            for (var _i9 = 0; _i9 < wptbNumeralRatingOptionContainer.length; _i9++) {
-                                wptbNumeralRatingOptionContainer[_i9].style.display = 'none';
+                            for (var _i10 = 0; _i10 < wptbNumeralRatingOptionContainer.length; _i10++) {
+                                wptbNumeralRatingOptionContainer[_i10].style.display = 'none';
                             }
                             _wptbTextMessage.parentNode.style.display = 'none';
                         }
@@ -1669,11 +1698,11 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                         var starRatingsLast = starRatings[starRatings.length - 1];
 
                         var parent = starRatingsLast.parentNode;
-                        for (var _i10 = 0; _i10 < difference; _i10++) {
+                        for (var _i11 = 0; _i11 < difference; _i11++) {
                             var newStarRating = starRatingsLast.cloneNode(true);
                             newStarRating.removeAttribute('class');
                             newStarRating.setAttribute('class', 'wptb-rating-star');
-                            newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + _i10 + 1;
+                            newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + _i11 + 1;
                             WPTB_Helper.starRatingEventHandlersAdd(newStarRating);
                             parent.appendChild(newStarRating);
                         }
