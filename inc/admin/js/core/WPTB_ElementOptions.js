@@ -312,6 +312,27 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     starsCountInputNumber.value = ratingStars.length;
                 }
 
+
+                    let ratingAlignment = affectedEl.style.textAlign,
+                    ratingAlignmentSelect = prop.querySelector( 'select[data-type="rating-alignment"]' ),
+                        selectOption = ratingAlignmentSelect.getElementsByTagName( 'option' ),
+                        selectOptionVal;
+                    if ( ratingAlignment == 'start' ) {
+                        selectOptionVal = 'left';
+                    } else if ( ratingAlignment == 'center' || ! ratingAlignment ) {
+                        selectOptionVal = 'center';
+                    } else if ( ratingAlignment == 'right' ) {
+                        selectOptionVal = 'right';
+                    }
+                    
+                    for ( let i = 0; i < selectOption.length; i++ ) {
+                        if ( selectOption[i].value == selectOptionVal ) {
+                            selectOption[i].selected = true;
+                        }
+                    }
+                
+                
+
                 let successBox = affectedEl.querySelector( '.wptb-success-box' );
                 if( successBox ) {
                     let showNumberRatingCheckbox = prop.querySelector( 'input[type="checkbox"][data-type="show-number-rating"]' );
@@ -533,6 +554,17 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         jc = 'center';
                     }
                     affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
+                    break;
+                case 'rating-alignment':
+                    var jc = '';
+                    if (this.value == 'left') {
+                        jc = 'start';
+                    } else if (this.value == 'right') {
+                        jc = 'right';
+                    } else {
+                        jc = 'center';
+                    }
+                    affectedEl.style.textAlign = jc;
                     break;
                 case 'button-link':
                     if ( this.value ) {

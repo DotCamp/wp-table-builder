@@ -380,6 +380,20 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>
                     </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php esc_html_e( 'Rating Alignment', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
+                                <select data-type="rating-alignment" class="wptb-element-property">
+                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
+                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
+                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
+                                </select>
+                            </div>
+                        </div>    
+                    </div>
                     <div class="wptb-element-option">
                         <div class="wptb-settings-row wptb-settings-middle-xs">
                             <label class="wptb-checkbox-button">
