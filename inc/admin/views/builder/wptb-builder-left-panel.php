@@ -380,19 +380,37 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>
                     </div>
-                    <div class="wptb-settings-items">
+                    <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Rating Alignment', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="rating-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <ul>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher" data-star_alignment="left">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 458.353 458.353" height="18" viewBox="0 0 458.353 458.353" width="18"  font-weight="bold">
+                                        <path id="path-1_133_" d="m28.647 143.235h286.471v28.647h-286.471z" transform="translate(1 5)" stroke-width="10"/>
+                                        <path id="path-2_63_" d="m28.647 286.471h401.059v28.647h-401.059z" transform="translate(1 10)" stroke-width="10"/>
+                                        <path id="path-1_132_" d="m28.647 429.706h286.471v28.647h-286.471z" transform="translate(1 15)" stroke-width="10"/>
+                                        <path id="path-2_62_" d="m28.647 0h401.059v28.647h-401.059z" transform="translate(1)" stroke-width="10"/></svg>
+                                    
+                                </li>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher selected" data-star_alignment="center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 458.353 458.353" height="18" viewBox="0 0 458.353 458.353" width="18">
+                                        <path id="path-1" d="m85.941 143.235h286.471v28.647h-286.471z" transform="translate(3 5)"/>
+                                        <path id="path-2" d="m28.647 286.471h401.059v28.647h-401.059z" transform="translate(1 10)"/>
+                                        <path id="path-1_1_" d="m85.941 429.706h286.471v28.647h-286.471z" transform="translate(3 15)"/>
+                                        <path id="path-2_1_" d="m28.647 0h401.059v28.647h-401.059z" transform="translate(1)"/>
+                                    </svg>
+                                </li>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher" data-star_alignment="right">
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 458.353 458.353" height="18" viewBox="0 0 458.353 458.353" width="18">
+                                        <path id="path-1_5_" d="m143.235 143.235h286.471v28.647h-286.471z" transform="translate(5 5)"/><path id="path-2_5_" d="m28.647 286.471h401.059v28.647h-401.059z" transform="translate(1 10)"/>
+                                        <path id="path-1_4_" d="m143.235 429.706h286.471v28.647h-286.471z" transform="translate(5 15)"/>
+                                        <path id="path-2_4_" d="m28.647 0h401.059v28.647h-401.059z" transform="translate(1)"/>
+                                    </svg>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="wptb-element-option">
                         <div class="wptb-settings-row wptb-settings-middle-xs">

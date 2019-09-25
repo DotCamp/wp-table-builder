@@ -2225,3 +2225,48 @@ td[class*="wptb-fused-cell"] {
 .wptb-option-text {
     text-align: center;
 }
+
+/*
+ ** Star rating alignment Selector Style
+ */
+
+.wptb-rating-alignment-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-rating-alignment-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-rating-alignment-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-rating-alignment-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-rating-alignment-switcher:hover {
+    background: #fff;
+}
+
+.wptb-rating-alignment-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-rating-alignment-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}

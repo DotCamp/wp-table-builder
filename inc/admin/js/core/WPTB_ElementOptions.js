@@ -285,7 +285,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 }
             } 
         } else if( element.kind == 'star_rating' ) {
-            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
+            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt ),wptbRatingAlignment;
             if( affectedEl.length > 0 ) {
                 affectedEl = affectedEl[0];
                 let ratingStar = affectedEl.querySelector( 'li' );
@@ -312,26 +312,23 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     starsCountInputNumber.value = ratingStars.length;
                 }
 
-
-                    let ratingAlignment = affectedEl.style.textAlign,
-                    ratingAlignmentSelect = prop.querySelector( 'select[data-type="rating-alignment"]' ),
-                        selectOption = ratingAlignmentSelect.getElementsByTagName( 'option' ),
-                        selectOptionVal;
-                    if ( ratingAlignment == 'start' ) {
-                        selectOptionVal = 'left';
-                    } else if ( ratingAlignment == 'center' || ! ratingAlignment ) {
-                        selectOptionVal = 'center';
-                    } else if ( ratingAlignment == 'right' ) {
-                        selectOptionVal = 'right';
-                    }
+                
+                if ( affectedEl ) {
+                    wptbRatingAlignment = affectedEl.style.textAlign;
+                    console.log("wptbRatingAlignment",wptbRatingAlignment);
+                }
+                
+                if( wptbRatingAlignment ) {
+                    var b = prop.getElementsByClassName('wptb-rating-alignment-btn');
                     
-                    for ( let i = 0; i < selectOption.length; i++ ) {
-                        if ( selectOption[i].value == selectOptionVal ) {
-                            selectOption[i].selected = true;
+                    for ( var i = 0; i < b.length; i++ ) {
+                        b[i].classList.remove( 'selected' );
+                        
+                        if ( b[i].getAttribute('data-star_alignment') == wptbRatingAlignment ) {
+                            b[i].classList.add( 'selected' );
                         }
                     }
-                
-                
+                }
 
                 let successBox = affectedEl.querySelector( '.wptb-success-box' );
                 if( successBox ) {
@@ -446,6 +443,31 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         }
     }
 
+    if (element.kind == 'star_rating') {
+            //We must add this special kind of property, since it is triggered with click event
+            var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = function () {
+                    var size = this.getAttribute('data-star_alignment'),
+                        n_Class = this.dataset.element,
+                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                        type = infArr[1],
+                        num = infArr[2],
+                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+                        affectedEl.style.textAlign = size;
+
+                    var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
+                    for (var i = 0; i < b.length; i++) {
+                        b[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            }
+        }
     var optionControls = prop.getElementsByClassName('wptb-element-property');
 
     for (var i = 0; i < optionControls.length; i++) {
