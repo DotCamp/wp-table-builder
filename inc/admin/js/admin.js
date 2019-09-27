@@ -3811,7 +3811,7 @@ var array = [],
      * (according to the amount of currently selected cells), and
      * highlights visually the clicked cell if it is not highlighted, or
      * removes highlight if clicked cell is already highlighted. 
-     * It too toggles the bits of our abstract representation.
+     * It too toggles the bits of our abstract representation.mergeCells
      * @param Event this is the event instance of the click performed over a cell.
      */
     var mark = function mark(event) {
@@ -4232,6 +4232,8 @@ var array = [],
     }
 
     table.mark = mark;
+
+    table.undoSelect = undoSelect;
 
     /*
      * This just toggles visibility of cell edit bar, and toggles 
@@ -5765,9 +5767,17 @@ var WPTB_RowMove = function WPTB_RowMove() {
 
     this.body;
 
-    this.rowsTopBottomCoordinatesArr;
-
     this.setTimeoutWhenStopMove;
+
+    this.wptbHeaderCoordinates;
+
+    this.wptbContainer;
+
+    this.setTimeoutScrollTop;
+
+    this.autoScroll = false;
+
+    this.eventMove;
 
     // function creates a field with which will move a row to left or right 
     // if this field isn't existence and put it on the right place
@@ -5806,14 +5816,22 @@ var WPTB_RowMove = function WPTB_RowMove() {
             _this.rowMovingField = rowMovingField;
         }
 
-        var wptbContainer = document.getElementsByClassName('wptb-container')[0];
+        if (!_this.wptbContainer) {
+            _this.wptbContainer = document.getElementsByClassName('wptb-container')[0];
+        }
+        var wptbContainer = _this.wptbContainer;
 
         // function set coordinates top and write property positionTop for moving field
         _this.rowMovingFieldParametrsOne = function () {
-            var coordinatesHighlighted = wptbHighlighted.getBoundingClientRect();
-            _this.rowMovingField.style.top = parseFloat(coordinatesHighlighted.top) + 'px';
-            _this.rowMovingField.positionTop = parseFloat(coordinatesHighlighted.top);
-            _this.rowMovingField.height = parseFloat(coordinatesHighlighted.height);
+            var rowMovingField = document.querySelector('.wptb-row-moving-field');
+            var wptbHighlighted = document.querySelector('.wptb-highlighted');
+            if (rowMovingField && !rowMovingField.autoScroll) {
+                var coordinatesHighlighted = wptbHighlighted.getBoundingClientRect();
+                _this.rowMovingField.style.top = parseFloat(coordinatesHighlighted.top) + 'px';
+                _this.rowMovingField.positionTop = parseFloat(coordinatesHighlighted.top);
+                _this.rowMovingField.height = parseFloat(coordinatesHighlighted.height);
+            }
+            //            console.log(wptbHighlighted.getBoundingClientRect().top);
         };
         wptbContainer.removeEventListener('scroll', _this.rowMovingFieldParametrsOne, false);
 
@@ -5876,6 +5894,101 @@ var WPTB_RowMove = function WPTB_RowMove() {
         window.addEventListener('resize', rowMovingFieldParametrsTwo, false);
         body.addEventListener('click', checkHighlighted, false);
 
+        var insertRowsMoving = function insertRowsMoving(eventMove) {
+            if (!_this.withdrawTableContainer) {
+                _this.withdrawTableContainer = document.querySelector('.wptb-withdraw-table-container');
+            }
+            var withdrawTableContainer = _this.withdrawTableContainer;
+
+            withdrawTableContainer.style.display = 'block';
+
+            if (!_this.withdrawTable) {
+                _this.withdrawTable = _this.withdrawSelectedRowsFromTable();
+            }
+
+            if (!_this.rowMovingField) {
+                _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
+            }
+            var rowMovingField = _this.rowMovingField;
+
+            var downYcoordinates = rowMovingField.downYcoordinates;
+            var differenceY = downYcoordinates - eventMove.clientY;
+
+            var rowMovingFieldTopCoordinates = parseFloat(rowMovingField.positionTop) - parseFloat(differenceY);
+
+            var rowMovingFieldBottomCoordinates = rowMovingFieldTopCoordinates + parseFloat(rowMovingField.height);
+
+            if (!_this.tablePreview) {
+                _this.tablePreview = document.querySelector('.wptb-preview-table');
+            }
+            var tablePreview = _this.tablePreview;
+
+            var tableCoordinatesTop = parseFloat(tablePreview.getBoundingClientRect().top);
+
+            var tableCoordinatesBottom = parseFloat(tablePreview.getBoundingClientRect().bottom);
+
+            rowMovingField.style.top = rowMovingFieldTopCoordinates + 'px';
+
+            if (tableCoordinatesTop - parseFloat(rowMovingField.style.top) >= 20) {
+                rowMovingField.style.top = tableCoordinatesTop - 20 + 'px';
+            } else if (parseFloat(rowMovingField.style.top) + parseFloat(rowMovingField.height) - tableCoordinatesBottom >= 20) {
+                rowMovingField.style.top = tableCoordinatesBottom - parseFloat(rowMovingField.height) + 20 + 'px';
+            }
+
+            var tBody = tablePreview.querySelector('tbody');
+
+            var rowsMoving = tBody.getElementsByClassName('wptb-row-moving');
+            var rowsMovingDeleted = [];
+            if (rowsMoving.length > 0) {
+                if (rowMovingField.rowsTopBottomCoordinatesArr['top'] && parseInt(rowMovingField.rowsTopBottomCoordinatesArr['top'][1], 10) + 10 >= rowMovingFieldTopCoordinates) {
+                    for (var i = 0; i < rowsMoving.length; i++) {
+                        rowsMovingDeleted.push(rowsMoving[i]);
+                    }
+
+                    for (var _i = 0; _i < rowsMovingDeleted.length; _i++) {
+                        tBody.removeChild(rowsMovingDeleted[_i]);
+                    }
+
+                    console.log(rowMovingField.rowsTopBottomCoordinatesArr['top'][1]);
+
+                    _this.cutTableHorizontally(rowMovingField.rowsTopBottomCoordinatesArr['top'][0]);
+
+                    for (var _i2 = 0; _i2 < rowsMovingDeleted.length; _i2++) {
+                        tBody.insertBefore(rowsMovingDeleted[_i2], tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['top'][0] + _i2]);
+                    }
+
+                    tablePreview.recalculateIndexes();
+
+                    if (tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['top'][0] + 1] && tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['top'][0] + 2]) {
+                        _this.glueTableHorizontally(tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['top'][0] + 1], tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['top'][0] + 2]);
+                    }
+
+                    rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+                } else if (rowMovingField.rowsTopBottomCoordinatesArr['bottom'] && parseInt(rowMovingField.rowsTopBottomCoordinatesArr['bottom'][1], 10) - 10 <= rowMovingFieldBottomCoordinates) {
+                    for (var _i3 = 0; _i3 < rowsMoving.length; _i3++) {
+                        rowsMovingDeleted.push(rowsMoving[_i3]);
+                    }
+
+                    for (var _i4 = 0; _i4 < rowsMovingDeleted.length; _i4++) {
+                        tBody.removeChild(rowsMovingDeleted[_i4]);
+                    }
+
+                    _this.cutTableHorizontally(rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length);
+
+                    for (var _i5 = 0; _i5 < rowsMovingDeleted.length; _i5++) {
+                        tBody.insertBefore(rowsMovingDeleted[_i5], tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + _i5]);
+                    }
+
+                    tablePreview.recalculateIndexes();
+
+                    if (tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - 2]) {
+                        _this.glueTableHorizontally(tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - 3], tablePreview.rows[rowMovingField.rowsTopBottomCoordinatesArr['bottom'][0] - 2]);
+                    }
+
+                    rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+                }
+            }
+        };
         // sets handler for the event when the moving field was moved
         _this.rowMovingField.onmousedown = function (eventDown) {
             _this.rowMovingField.downYcoordinates = eventDown.clientY;
@@ -5910,19 +6023,98 @@ var WPTB_RowMove = function WPTB_RowMove() {
                 }
             }
 
-            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+            rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
 
             body.onmousemove = function (eventMove) {
-                if (!_this.rowMovingField) {
-                    _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
+                //console.log(eventMove);
+                var rowMovingField = document.querySelector('.wptb-row-moving-field');
+
+                if (!_this.wptbHeaderCoordinates) {
+                    _this.wptbHeaderCoordinates = body.querySelector('.wptb-header').getBoundingClientRect();
                 }
-                var rowMovingField = _this.rowMovingField;
+                var wptbHeaderCoordinates = _this.wptbHeaderCoordinates;
+
+                if (!_this.wptbContainer) {
+                    _this.wptbContainer = document.getElementsByClassName('wptb-container')[0];
+                }
+                var wptbContainer = _this.wptbContainer;
+                //                    console.log(eventMove);
+
+                clearInterval(rowMovingField.setIntervalScrollTop);
+                var difference = wptbHeaderCoordinates.bottom - rowMovingField.getBoundingClientRect().top;
+                if (difference > 10 && eventMove.movementY <= 0) {
+                    var setIntervalPeriod = 2;
+                    if (!rowMovingField.startScrollPositionY) {
+                        rowMovingField.startScrollPositionY = eventMove.clientY;
+                    } else {
+                        var cursorDifference = rowMovingField.startScrollPositionY - eventMove.clientY;
+
+                        if (cursorDifference <= 0) {
+                            setIntervalPeriod = 0;
+                        }
+                    }
+                    if (setIntervalPeriod) {
+                        var _tablePreview = document.querySelector('.wptb-preview-table');
+
+                        _this.eventMove = eventMove;
+                        rowMovingField.setIntervalScrollTop = setInterval(function () {
+                            wptbContainer.scrollTop = parseFloat(wptbContainer.scrollTop) - 5;
+
+                            rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+                            insertRowsMoving(eventMove);
+
+                            //                            for( let i = 0; i < tablePreview.rows.length; i++ ) {
+                            //                                let rowCoordinatesTop = parseFloat( tablePreview.rows[i].getBoundingClientRect().top );
+                            //                                let rowHeight = parseFloat( tablePreview.rows[i].getBoundingClientRect().height );
+                            //
+                            //                                if( rowCoordinatesTop > rowMovingFieldTop && rowCoordinatesTop + rowHeight/2 < rowMovingFieldTop ) {
+                            //                                    let row = tablePreview.rows[i];
+                            //
+                            //                                    rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates( row );
+                            //                                }
+                            //                            }
+                            //                            
+                            //                            if( tableCoordinatesTop - rowMovingFieldTop > 20 ) {
+                            //                                clearInterval( rowMovingField.setIntervalScrollTop );
+                            //                            }
+                        }, setIntervalPeriod);
+
+                        rowMovingField.autoScroll = true;
+                    } else {
+                        clearInterval(rowMovingField.setIntervalScrollTop);
+                        //rowMovingField.autoScroll = false;
+                    }
+                } else if (rowMovingField.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom > 10 && eventMove.movementY > 0) {
+                    var _setIntervalPeriod = 2;
+                    if (!rowMovingField.startScrollPositionY) {
+                        rowMovingField.startScrollPositionY = eventMove.clientY;
+                    } else {
+                        var _cursorDifference = eventMove.clientY - rowMovingField.startScrollPositionY;
+
+                        if (_cursorDifference <= 0) {
+                            _setIntervalPeriod = 0;
+                        }
+                    }
+                    if (_setIntervalPeriod) {
+                        rowMovingField.setIntervalScrollTop = setInterval(function () {
+                            wptbContainer.scrollTop = parseFloat(wptbContainer.scrollTop) + 5;
+
+                            rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
+                            insertRowsMoving(eventMove);
+                        }, _setIntervalPeriod);
+
+                        rowMovingField.autoScroll = true;
+                    } else {
+                        clearInterval(rowMovingField.setIntervalScrollTop);
+                        //rowMovingField.autoScroll = false;
+                    }
+                } else {
+                    clearInterval(rowMovingField.setIntervalScrollTop);
+                }
+
                 if (rowMovingField) {
                     body.onmouseup = function () {
-                        if (!_this.rowMovingField) {
-                            _this.rowMovingField = document.querySelector('.wptb-row-moving-field');
-                        }
-                        var rowMovingField = _this.rowMovingField;
+                        var rowMovingField = document.querySelector('.wptb-row-moving-field');
                         if (rowMovingField) {
                             body.removeChild(rowMovingField);
 
@@ -5931,128 +6123,32 @@ var WPTB_RowMove = function WPTB_RowMove() {
                             _this.withdrawTable = null;
                         }
 
+                        clearInterval(rowMovingField.setIntervalScrollTop);
+
                         body.onmouseup = null;
                         body.onmousemove = null;
+
+                        var tablePreview = document.querySelector('.wptb-preview-table');
+                        tablePreview.undoSelect();
 
                         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
                     };
 
-                    if (!_this.withdrawTableContainer) {
-                        _this.withdrawTableContainer = document.querySelector('.wptb-withdraw-table-container');
-                    }
-                    var _withdrawTableContainer = _this.withdrawTableContainer;
-
-                    _withdrawTableContainer.style.display = 'block';
-
-                    if (!_this.withdrawTable) {
-                        _this.withdrawTable = _this.withdrawSelectedRowsFromTable();
-                    }
-
-                    //                    clearTimeout( this.setTimeoutWhenStopMove );
-                    //                    
-                    //                    this.setTimeoutWhenStopMove = setTimeout( () => {
-                    //                        let withdrawTableContainer = document.querySelector( '.wptb-withdraw-table-container' );
-                    //                        if( withdrawTableContainer ) {
-                    //                            withdrawTableContainer.style.display = 'none';
-                    //                            this.withdrewRowsPut( true );
-                    //                            this.withdrawTable = null;
-                    //                            this.rowMovingFieldParametrsOne();
-                    //                        }
-                    //                    }, 800 );
-
-                    var downYcoordinates = rowMovingField.downYcoordinates;
-                    var differenceY = downYcoordinates - eventMove.clientY;
-
-                    var rowMovingFieldTopCoordinates = parseFloat(rowMovingField.positionTop) - parseFloat(differenceY);
-
-                    var rowMovingFieldBottomCoordinates = rowMovingFieldTopCoordinates + parseFloat(rowMovingField.height);
-
-                    if (!_this.tablePreview) {
-                        _this.tablePreview = document.querySelector('.wptb-preview-table');
-                    }
-                    var _tablePreview = _this.tablePreview;
-
-                    var tableCoordinatesTop = parseFloat(_tablePreview.getBoundingClientRect().top);
-
-                    var tableCoordinatesBottom = parseFloat(_tablePreview.getBoundingClientRect().bottom);
-
-                    rowMovingField.style.top = rowMovingFieldTopCoordinates + 'px';
-
-                    if (tableCoordinatesTop - parseFloat(rowMovingField.style.top) >= 20) {
-                        rowMovingField.style.top = tableCoordinatesTop - 20 + 'px';
-                    } else if (parseFloat(rowMovingField.style.top) + parseFloat(rowMovingField.height) - tableCoordinatesBottom >= 20) {
-                        rowMovingField.style.top = tableCoordinatesBottom - parseFloat(rowMovingField.height) + 20 + 'px';
-                    }
-
-                    if (!_this.tBody) {
-                        _this.tBody = _tablePreview.querySelector('tbody');
-                    }
-                    var tBody = _this.tBody;
-
-                    var rowsMoving = tBody.getElementsByClassName('wptb-row-moving');
-                    var rowsMovingDeleted = [];
-                    if (rowsMoving.length > 0) {
-                        if (_this.rowsTopBottomCoordinatesArr['top'] && parseInt(_this.rowsTopBottomCoordinatesArr['top'][1], 10) + 10 >= rowMovingFieldTopCoordinates) {
-                            for (var i = 0; i < rowsMoving.length; i++) {
-                                rowsMovingDeleted.push(rowsMoving[i]);
-                            }
-
-                            for (var _i = 0; _i < rowsMovingDeleted.length; _i++) {
-                                tBody.removeChild(rowsMovingDeleted[_i]);
-                            }
-
-                            _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['top'][0]);
-
-                            for (var _i2 = 0; _i2 < rowsMovingDeleted.length; _i2++) {
-                                tBody.insertBefore(rowsMovingDeleted[_i2], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + _i2]);
-                            }
-
-                            _tablePreview.recalculateIndexes();
-
-                            if (_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1] && _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]) {
-                                _this.glueTableHorizontally(_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 1], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['top'][0] + 2]);
-                            }
-
-                            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
-                        } else if (_this.rowsTopBottomCoordinatesArr['bottom'] && parseInt(_this.rowsTopBottomCoordinatesArr['bottom'][1], 10) - 10 <= rowMovingFieldBottomCoordinates) {
-                            for (var _i3 = 0; _i3 < rowsMoving.length; _i3++) {
-                                rowsMovingDeleted.push(rowsMoving[_i3]);
-                            }
-
-                            for (var _i4 = 0; _i4 < rowsMovingDeleted.length; _i4++) {
-                                tBody.removeChild(rowsMovingDeleted[_i4]);
-                            }
-
-                            _this.cutTableHorizontally(_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length);
-
-                            for (var _i5 = 0; _i5 < rowsMovingDeleted.length; _i5++) {
-                                tBody.insertBefore(rowsMovingDeleted[_i5], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - rowsMovingDeleted.length + _i5]);
-                            }
-
-                            _tablePreview.recalculateIndexes();
-
-                            if (_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3] && _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]) {
-                                _this.glueTableHorizontally(_tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 3], _tablePreview.rows[_this.rowsTopBottomCoordinatesArr['bottom'][0] - 2]);
-                            }
-
-                            _this.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
-                        }
-                    }
+                    insertRowsMoving(eventMove);
                 }
             };
         };
 
-        function setRowsTopBottomCoordinates() {
-            if (!this.tablePreview) {
-                this.tablePreview = document.querySelector('.wptb-preview-table');
-            }
-            var table = this.tablePreview,
-                cell = table.querySelector('.wptb-highlighted'),
-                rowspan = cell.rowSpan,
-                row = parseInt(cell.dataset.yIndex, 10);
+        function setRowsTopBottomCoordinates(row) {
+            var table = document.querySelector('.wptb-preview-table');
+            var cell = table.querySelector('.wptb-highlighted'),
+                rowspan = cell.rowSpan;
 
             var rowsTopBottomCoordinatesArr = [];
+            if (!row) {
+                row = parseInt(cell.dataset.yIndex, 10);
+            }
 
             if (table.rows[row - 1]) {
                 rowsTopBottomCoordinatesArr['top'] = [row - 1, table.rows[row - 1].getBoundingClientRect().top];
@@ -6113,11 +6209,11 @@ var WPTB_RowMove = function WPTB_RowMove() {
             tableWithdrewRowsTbody.appendChild(table.rows[_i6].cloneNode(true));
 
             if (_i6 == row) {
-                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + 15 + 'px';
-            }
-
-            if (_i6 == row + rowspan - 1) {
-                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + 15 + 'px';
+                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + parseInt(cell.style.borderWidth) / 2 + 15 + 'px';
+            } else if (_i6 == row + rowspan - 1) {
+                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + parseInt(cell.style.borderWidth) / 2 + 15 + 'px';
+            } else {
+                table.rows[_i6].style.height = parseInt(table.rows[_i6].getBoundingClientRect().height) + parseInt(table.rows[_i6].children[0].style.borderWidth) / 2 + 'px';
             }
 
             var rowsIChildren = table.rows[_i6].children;
@@ -6203,6 +6299,12 @@ var WPTB_RowMove = function WPTB_RowMove() {
                             if (tdsSameBeforeDivision[j].parentNode && tdsSameBeforeDivision[j + 1].parentNode && !tdsSameBeforeDivision[j].parentNode.classList.contains('wptb-row-moving') && !tdsSameBeforeDivision[j + 1].parentNode.classList.contains('wptb-row-moving')) {
                                 if (tdsSameBeforeDivision[j + 1].dataset.yIndex == parseInt(tdsSameBeforeDivision[j].dataset.yIndex) + parseInt(tdsSameBeforeDivision[j].rowSpan)) {
                                     tdsSameBeforeDivision[j].rowSpan += tdsSameBeforeDivision[j + 1].rowSpan;
+
+                                    var tdsSameBeforeDivisionJPlusChildren = [].concat(_toConsumableArray(tdsSameBeforeDivision[j + 1].children));
+
+                                    for (var k = 0; k < tdsSameBeforeDivisionJPlusChildren.length; k++) {
+                                        tdsSameBeforeDivision[j].appendChild(tdsSameBeforeDivisionJPlusChildren[k]);
+                                    }
 
                                     var nextRow = tdsSameBeforeDivision[j + 1].parentNode;
                                     nextRow.removeChild(tdsSameBeforeDivision[j + 1]);

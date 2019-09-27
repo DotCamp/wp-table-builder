@@ -13,7 +13,7 @@ var array = [], WPTB_Table = function (columns, rows) {
      * (according to the amount of currently selected cells), and
      * highlights visually the clicked cell if it is not highlighted, or
      * removes highlight if clicked cell is already highlighted. 
-     * It too toggles the bits of our abstract representation.
+     * It too toggles the bits of our abstract representation.mergeCells
      * @param Event this is the event instance of the click performed over a cell.
      */
     var mark = function ( event ) {
@@ -293,7 +293,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             singleCells[i].setAttribute('disabled', 'disabled');
         }
     };
-
+    
     /*
      * This fills the abstract representation of our table with 
      * zeros, at the start. the max amount of cells is the greatest sum
@@ -430,6 +430,8 @@ var array = [], WPTB_Table = function (columns, rows) {
     }
     
     table.mark = mark;
+    
+    table.undoSelect = undoSelect;
 
     /*
      * This just toggles visibility of cell edit bar, and toggles 
