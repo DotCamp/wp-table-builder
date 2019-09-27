@@ -2270,3 +2270,140 @@ td[class*="wptb-fused-cell"] {
     box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
     cursor: default;
 }
+
+
+/*
+ ** list rating alignment Selector Style
+ */
+
+.wptb-list-alignment-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-list-alignment-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-list-alignment-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-list-alignment-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-list-alignment-switcher:hover {
+    background: #fff;
+}
+
+.wptb-list-alignment-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-list-alignment-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}
+
+/*
+ ** button rating alignment Selector Style
+ */
+
+.wptb-button-alignment-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-button-alignment-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-button-alignment-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-button-alignment-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-button-alignment-switcher:hover {
+    background: #fff;
+}
+
+.wptb-button-alignment-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-button-alignment-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}
+
+
+/*
+ ** image rating alignment Selector Style
+ */
+
+.wptb-image-alignment-btn {
+    padding: 8px 15px;
+    margin: 0;
+    vertical-align: middle;
+    border: solid 1px #ccc;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.wptb-image-alignment-switcher {
+    background: linear-gradient(to bottom, white, #eeeeee);
+    display: table-cell;
+    border-right: none;
+    border-radius: 0;
+    color: #433f33;
+}
+
+.wptb-image-alignment-switcher:first-child {
+    border-radius: 4px 0 0 4px;
+}
+
+.wptb-image-alignment-switcher:last-child {
+    border-radius: 0 4px 4px 0;
+    border-right: solid 1px #ccc;
+}
+
+.wptb-image-alignment-switcher:hover {
+    background: #fff;
+}
+
+.wptb-image-alignment-switcher:active {
+    box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
+}
+
+.wptb-image-alignment-switcher.selected {
+    background: #fff;
+    box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}
