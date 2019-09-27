@@ -682,30 +682,10 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     affectedEl.getElementsByTagName('a')[0].style.height = 'auto';
                     this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                     break;
-                /*case 'image-alignment':
-                    let wptbImageFloatValue = '';
-                    if( this.value == 'center' ) {
-                        wptbImageFloatValue = 'none';
-                    } else {
-                        wptbImageFloatValue = this.value;
-                    }
-                    affectedEl.querySelector( '.wptb-image-wrapper a' ).style.float = wptbImageFloatValue;
-                    break;*/
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';
                     this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                     break;
-                // case 'button-alignment':
-                //     var jc = '';
-                //     if (this.value == 'left') {
-                //         jc = 'start';
-                //     } else if (this.value == 'right') {
-                //         jc = 'flex-end';
-                //     } else {
-                //         jc = 'center';
-                //     }
-                //     affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
-                //     break;
                 case 'rating-alignment':
                     var jc = '';
                     if (this.value == 'left') {
@@ -746,15 +726,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     }
                 case 'button-color':
                     break;
-                // case 'list-alignment':
-                //     let listItems = affectedEl.querySelectorAll('li');
-                //     for (var i = 0; i < listItems.length; i++) {
-                //         let p = listItems[i].querySelector( 'p' );
-                //         if ( p ) {
-                //             p.style.textAlign = this.value;
-                //         }
-                //     }
-                //     break;
                 case 'list-class':
                     let parentNode = event.target
                             .parentNode

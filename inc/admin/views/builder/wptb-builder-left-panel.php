@@ -107,21 +107,6 @@ use WP_Table_Builder as NS;
                             <?php esc_html_e( 'Image Options', 'wp-table-builder' ); ?>
                         </div>
                     </div>
-                    <!-- <div class="wptb-settings-items">
-                        <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php esc_html_e( 'Image Alignment', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="image-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
-                    </div> -->
-                    <!--  -->
                     <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Image Alignment', 'wp-table-builder' ); ?></p>
@@ -140,7 +125,6 @@ use WP_Table_Builder as NS;
                             </ul>
                         </div>
                     </div>
-                    <!--  -->
                     <div class="wptb-element-option wptb-settings-items" style="margin-top: 5px;">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Image Size', 'wp-table-builder' ); ?></p>
@@ -250,21 +234,6 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>    
                     </div>
-                    <!-- <div class="wptb-settings-items">
-                        <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php esc_html_e( 'Button Alignment', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="button-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
-                    </div> -->
-                    <!--  -->
                     <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Button Alignment', 'wp-table-builder' ); ?></p>
@@ -283,7 +252,6 @@ use WP_Table_Builder as NS;
                             </ul>
                         </div>
                     </div>
-                    <!--  -->
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Button ID', 'wp-table-builder' ); ?></p>
@@ -353,24 +321,6 @@ use WP_Table_Builder as NS;
                                 <input type="text" class="wptb-element-property wptb-color-picker" data-type="list-text-color"/>
                             </div>
                         </div>
-                    <!--</div>-->
-                        <!-- <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php esc_html_e( 'List Alignment', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px;">
-                            <select data-type="list-alignment" class="wptb-element-property"> 
-                                <option value="left">
-                                    <?php esc_html_e( 'Left', 'wp-table-builder' ); ?>
-                                </option>
-                                <option value="center">
-                                    <?php esc_html_e( 'Center', 'wp-table-builder' ); ?>
-                                </option>
-                                <option value="right">
-                                    <?php esc_html_e( 'Right', 'wp-table-builder' ); ?>
-                                </option>
-                            </select>              
-                        </div> -->
-                        <!--  -->
                         <div class="wptb-element-option wptb-settings-items">
                             <div class='wptb-settings-item-header' >
                                 <p class="wptb-settings-item-title"><?php esc_html_e( 'List Alignment', 'wp-table-builder' ); ?></p>
@@ -389,7 +339,6 @@ use WP_Table_Builder as NS;
                                 </ul>
                             </div>
                         </div>
-                        <!--  -->
                     </div>
                 </div>
                 <div class='wptb-element-options wptb-star_rating-options wptb-star_rating-options-prototype' style='display: none;'>
