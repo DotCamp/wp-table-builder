@@ -74,10 +74,10 @@ use WP_Table_Builder as NS;
                         </div>
                         <div class="wptb-settings-row wptb-settings-middle-xs" style="margin: 9px 0; padding-bottom: 10px;">
                             <div class="wptb-settings-col-xs-8">
-                              <input data-type="font-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="10"> 
+                              <input data-type="font-size" class="wptb-size-slider wptb-element-property" type="range"   min="10" max="50" step="1" value="15"> 
                             </div>
                             <div class="wptb-settings-col-xs-4">
-                                <input id="wptb-size-number" data-type="font-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
+                                <input id="wptb-size-number" data-type="font-size"  class="wptb-size-number wptb-number-input wptb-element-property" type="number" min="10" max="50" step="1"  value="15" placeholder="10" pattern="[0-9]*"><span class="wptb-input-px">px</span>
                             </div>
                         </div>
                     </div>
@@ -379,6 +379,20 @@ use WP_Table_Builder as NS;
                                 <input type="number" class="wptb-element-property wptb-stars-count-field" data-type="stars-count" value="5" min="1" max="10"/>
                             </div>
                         </div>
+                    </div>
+                    <div class="wptb-settings-items">
+                        <div class='wptb-settings-item-header' >
+                            <p class="wptb-settings-item-title"><?php esc_html_e( 'Rating Alignment', 'wp-table-builder' ); ?></p>
+                        </div>
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
+                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
+                                <select data-type="rating-alignment" class="wptb-element-property">
+                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
+                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
+                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
+                                </select>
+                            </div>
+                        </div>    
                     </div>
                     <div class="wptb-element-option">
                         <div class="wptb-settings-row wptb-settings-middle-xs">
