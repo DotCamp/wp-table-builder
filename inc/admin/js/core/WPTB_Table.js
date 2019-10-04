@@ -62,8 +62,18 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
             cellSettings.classList.remove( 'visible' );
             
-            let wptbRowMove = new WPTB_RowMove();
-            wptbRowMove.rowMovingFieldHide();
+            // delete row moving field and column moving field and delete all its handlers
+            let body = document.getElementsByTagName( 'body' )[0];
+            let wptbRowMovingField = document.querySelector( '.wptb-row-moving-field' );
+            if( wptbRowMovingField ) {
+                wptbRowMovingField.deleteEventHandlers();
+                body.removeChild( wptbRowMovingField );
+            }
+            let wptbColumnMovingField = document.querySelector( '.wptb-column-moving-field' );
+            if( wptbColumnMovingField ) {
+                wptbColumnMovingField.deleteEventHandlers();
+                body.removeChild( wptbColumnMovingField );
+            }
         } else if (markedCells === 1) {
             for (var i = 0; i < multipleCells.length; i++) {
                 multipleCells[i].classList.remove('visible');
@@ -122,6 +132,9 @@ var array = [], WPTB_Table = function (columns, rows) {
             
             let wptbRowMove = new WPTB_RowMove();
             wptbRowMove.rowMovingFieldPutActive();
+            
+            let wptbColumnMove = new WPTB_ColumnMove();
+            wptbColumnMove.columnMovingFieldPutActive();
         } else {
             for (var i = 0; i < multipleCells.length; i++) {
                 if (table.isSquare(array)) {
@@ -142,8 +155,18 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
             cellSettings.classList.remove( 'visible' );
             
-            let wptbRowMove = new WPTB_RowMove();
-            wptbRowMove.rowMovingFieldHide();
+            // delete row moving field and column moving field and delete all its handlers
+            let body = document.getElementsByTagName( 'body' )[0];
+            let wptbRowMovingField = document.querySelector( '.wptb-row-moving-field' );
+            if( wptbRowMovingField ) {
+                wptbRowMovingField.deleteEventHandlers();
+                body.removeChild( wptbRowMovingField );
+            }
+            let wptbColumnMovingField = document.querySelector( '.wptb-column-moving-field' );
+            if( wptbColumnMovingField ) {
+                wptbColumnMovingField.deleteEventHandlers();
+                body.removeChild( wptbColumnMovingField );
+            }
         }
     };
 
@@ -291,6 +314,19 @@ var array = [], WPTB_Table = function (columns, rows) {
         for (var i = 0; i < singleCells.length; i++) {
             singleCells[i].classList.remove('visible');
             singleCells[i].setAttribute('disabled', 'disabled');
+        }
+        
+        // delete row moving field and column moving field and delete all its handlers
+        let body = document.getElementsByTagName( 'body' )[0];
+        let wptbRowMovingField = document.querySelector( '.wptb-row-moving-field' );
+        if( wptbRowMovingField ) {
+            wptbRowMovingField.deleteEventHandlers();
+            body.removeChild( wptbRowMovingField );
+        }
+        let wptbColumnMovingField = document.querySelector( '.wptb-column-moving-field' );
+        if( wptbColumnMovingField ) {
+            wptbColumnMovingField.deleteEventHandlers();
+            body.removeChild( wptbColumnMovingField );
         }
     };
     
