@@ -117,7 +117,7 @@ var WPTB_ColumnMove = function () {
             } else if( parseFloat( columnMovingField.style.left ) + parseFloat( columnMovingField.width ) - tableCoordinatesRight >= 20 )  {
                 columnMovingField.style.left = ( tableCoordinatesRight - parseFloat( columnMovingField.width ) + 20 ) + 'px';
             }
-//
+            
             let tBody = tablePreview.querySelector( 'tbody' );
 
             let columnsMoving = tBody.getElementsByClassName( 'wptb-column-moving' );
@@ -246,7 +246,6 @@ var WPTB_ColumnMove = function () {
             columnMovingField.columnsLeftRightCoordinatesArr = setColumnsLeftRightCoordinates();
             
             body.onmousemove = ( eventMove ) => {
-                //console.log(eventMove);
                 let columnMovingField = document.querySelector( '.wptb-column-moving-field' );
 
                 if( ! this.wptbTableSetup ) {
@@ -259,7 +258,6 @@ var WPTB_ColumnMove = function () {
                     this.wptbTableSetupCoordinates = wptbTableSetup.getBoundingClientRect();
                 }
                 let wptbTableSetupCoordinates = this.wptbTableSetupCoordinates;
-//                    console.log(eventMove);
 
                 clearInterval( columnMovingField.setIntervalScrollLeft );
                 let difference = wptbTableSetupCoordinates.left - columnMovingField.getBoundingClientRect().left;
@@ -524,8 +522,6 @@ var WPTB_ColumnMove = function () {
         
         this.cutTableVertically( col + colspan );
         
-        //undoSelect();
-        
         let arrWithTdsWhichNeedAddWidth = [];
         for( let i = 0; i < table.rows.length; i++ ) {
             let rowChildren = table.rows[i].children;
@@ -550,9 +546,20 @@ var WPTB_ColumnMove = function () {
                 rowWithdrewColumns.appendChild( newTd );
                 
                 rowChildren[j].style.backgroundColor = '#d8d8d8';
-                rowChildren[j].dataset.borderColorBeforeMove = rowChildren[j].style.borderColor;
-                rowChildren[j].style.borderColor = '#d8d8d8';
                 rowChildren[j].classList.add( 'wptb-column-moving' );
+                
+                if( parseInt( rowChildren[j].dataset.yIndex ) != 0 ) {
+                    rowChildren[j].classList.add( 'wptb-td-border-top-moving' );
+                }
+                if( parseInt( rowChildren[j].dataset.yIndex ) + rowChildren[j].rowSpan != table.rows.length ) {
+                    rowChildren[j].classList.add( 'wptb-td-border-bottom-moving' );
+                }
+                if( parseInt( rowChildren[j].dataset.xIndex ) != col ) {
+                    rowChildren[j].classList.add( 'wptb-td-border-left-moving' );
+                }
+                if( parseInt( rowChildren[j].dataset.xIndex ) + rowChildren[j].colSpan != col + colspan ) {
+                    rowChildren[j].classList.add( 'wptb-td-border-right-moving' );
+                }
             }
         }
         
@@ -699,8 +706,10 @@ var WPTB_ColumnMove = function () {
                 wptbColumnMoving[i].removeAttribute( 'data-width-which-need-add' );
                 wptbColumnMoving[i].classList.remove( 'wptb-width-which-need-add' );
                 
-                wptbColumnMoving[i].style.borderColor = wptbColumnMoving[i].dataset.borderColorBeforeMove;
-                wptbColumnMoving[i].removeAttribute( 'data-border-color-before-move' );
+                wptbColumnMoving[i].classList.remove( 'wptb-td-border-top-moving' );
+                wptbColumnMoving[i].classList.remove( 'wptb-td-border-bottom-moving' );
+                wptbColumnMoving[i].classList.remove( 'wptb-td-border-left-moving' );
+                wptbColumnMoving[i].classList.remove( 'wptb-td-border-right-moving' );
             }
 
             this.glueTableVertically();

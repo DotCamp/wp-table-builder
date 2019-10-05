@@ -224,7 +224,6 @@ var WPTB_RowMove = function () {
             rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
             
             body.onmousemove = ( eventMove ) => {
-                //console.log(eventMove);
                 let rowMovingField = document.querySelector( '.wptb-row-moving-field' );
                 
                 if( ! this.wptbHeaderCoordinates ) {
@@ -236,7 +235,6 @@ var WPTB_RowMove = function () {
                     this.wptbContainer = document.getElementsByClassName( 'wptb-container' )[0];
                 }
                 let wptbContainer = this.wptbContainer;
-//                    console.log(eventMove);
 
                 clearInterval( rowMovingField.setIntervalScrollTop );
                 let difference = wptbHeaderCoordinates.bottom - rowMovingField.getBoundingClientRect().top;
@@ -252,35 +250,17 @@ var WPTB_RowMove = function () {
                         }
                     }
                     if( setIntervalPeriod ) {
-                        let tablePreview = document.querySelector( '.wptb-preview-table' );
-                        
                         this.eventMove = eventMove;
                         rowMovingField.setIntervalScrollTop = setInterval( function() {
                             wptbContainer.scrollTop = parseFloat( wptbContainer.scrollTop ) - 5;
                             
                             rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
                             insertRowsMoving( eventMove );
-                            
-//                            for( let i = 0; i < tablePreview.rows.length; i++ ) {
-//                                let rowCoordinatesTop = parseFloat( tablePreview.rows[i].getBoundingClientRect().top );
-//                                let rowHeight = parseFloat( tablePreview.rows[i].getBoundingClientRect().height );
-//
-//                                if( rowCoordinatesTop > rowMovingFieldTop && rowCoordinatesTop + rowHeight/2 < rowMovingFieldTop ) {
-//                                    let row = tablePreview.rows[i];
-//
-//                                    rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates( row );
-//                                }
-//                            }
-//                            
-//                            if( tableCoordinatesTop - rowMovingFieldTop > 20 ) {
-//                                clearInterval( rowMovingField.setIntervalScrollTop );
-//                            }
                         }, setIntervalPeriod );
                         
                         rowMovingField.autoScroll = true;
                     } else {
                         clearInterval( rowMovingField.setIntervalScrollTop );
-                        //rowMovingField.autoScroll = false;
                     }
                 } else if( rowMovingField.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom > 10 && eventMove.movementY > 0 ) {
                     let setIntervalPeriod = 2;
@@ -304,7 +284,6 @@ var WPTB_RowMove = function () {
                         rowMovingField.autoScroll = true;
                     } else {
                         clearInterval( rowMovingField.setIntervalScrollTop );
-                        //rowMovingField.autoScroll = false;
                     }
                     
                 } else {
@@ -484,8 +463,6 @@ var WPTB_RowMove = function () {
         
         this.cutTableHorizontally( row + rowspan );
         
-        //undoSelect();
-        
         let tableRowsWithDrewArr = [];
         for( let i = row; i < row + rowspan; i++ ) {
             tableRowsWithDrewArr.push( table.rows[i] );
@@ -499,12 +476,17 @@ var WPTB_RowMove = function () {
             
             let rowsIChildren = table.rows[i].children;
             for( let j = 0; j < rowsIChildren.length; j++ ) {
-                if( rowsIChildren[j].dataset.xIndex == 0 ) {
-                    rowsIChildren[j].classList.add( 'wptb-td-border-top-bottom-right-none' );
-                } else if( rowsIChildren[j].dataset.xIndex == table.maxCols - 1 ) {
-                    rowsIChildren[j].classList.add( 'wptb-td-border-top-bottom-left-none' );
-                } else {
-                    rowsIChildren[j].classList.add( 'wptb-td-border-none' );
+                if( parseInt( rowsIChildren[j].dataset.yIndex ) != 0 ) {
+                    rowsIChildren[j].classList.add( 'wptb-td-border-top-moving' );
+                }
+                if( parseInt( rowsIChildren[j].dataset.yIndex ) + rowsIChildren[j].rowSpan != row + rowspan ) {
+                    rowsIChildren[j].classList.add( 'wptb-td-border-bottom-moving' );
+                }
+                if( parseInt( rowsIChildren[j].dataset.xIndex ) != 0 ) {
+                    rowsIChildren[j].classList.add( 'wptb-td-border-left-moving' );
+                }
+                if( parseInt( rowsIChildren[j].dataset.xIndex ) + rowsIChildren[j].colSpan != rowsIChildren.length ) {
+                    rowsIChildren[j].classList.add( 'wptb-td-border-right-moving' );
                 }
             }
             
@@ -615,9 +597,10 @@ var WPTB_RowMove = function () {
                     let children = rows[i].children;
 
                     for( let j = 0; j < children.length; j++ ) {
-                        children[j].classList.remove( 'wptb-td-border-top-bottom-right-none' );
-                        children[j].classList.remove( 'wptb-td-border-top-bottom-left-none' );
-                        children[j].classList.remove( 'wptb-td-border-none' );
+                        children[j].classList.remove( 'wptb-td-border-top-moving' );
+                        children[j].classList.remove( 'wptb-td-border-bottom-moving' );
+                        children[j].classList.remove( 'wptb-td-border-left-moving' );
+                        children[j].classList.remove( 'wptb-td-border-right-moving' );
                     }
 
                     rows[i].style.height = '';

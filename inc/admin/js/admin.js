@@ -5940,7 +5940,7 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
             } else if (parseFloat(columnMovingField.style.left) + parseFloat(columnMovingField.width) - tableCoordinatesRight >= 20) {
                 columnMovingField.style.left = tableCoordinatesRight - parseFloat(columnMovingField.width) + 20 + 'px';
             }
-            //
+
             var tBody = tablePreview.querySelector('tbody');
 
             var columnsMoving = tBody.getElementsByClassName('wptb-column-moving');
@@ -6065,7 +6065,6 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
             columnMovingField.columnsLeftRightCoordinatesArr = setColumnsLeftRightCoordinates();
 
             body.onmousemove = function (eventMove) {
-                //console.log(eventMove);
                 var columnMovingField = document.querySelector('.wptb-column-moving-field');
 
                 if (!_this.wptbTableSetup) {
@@ -6077,7 +6076,6 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
                     _this.wptbTableSetupCoordinates = wptbTableSetup.getBoundingClientRect();
                 }
                 var wptbTableSetupCoordinates = _this.wptbTableSetupCoordinates;
-                //                    console.log(eventMove);
 
                 clearInterval(columnMovingField.setIntervalScrollLeft);
                 var difference = wptbTableSetupCoordinates.left - columnMovingField.getBoundingClientRect().left;
@@ -6339,8 +6337,6 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
 
         this.cutTableVertically(col + colspan);
 
-        //undoSelect();
-
         var arrWithTdsWhichNeedAddWidth = [];
         for (var _i7 = 0; _i7 < table.rows.length; _i7++) {
             var rowChildren = table.rows[_i7].children;
@@ -6365,9 +6361,20 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
                 rowWithdrewColumns.appendChild(newTd);
 
                 rowChildren[_j5].style.backgroundColor = '#d8d8d8';
-                rowChildren[_j5].dataset.borderColorBeforeMove = rowChildren[_j5].style.borderColor;
-                rowChildren[_j5].style.borderColor = '#d8d8d8';
                 rowChildren[_j5].classList.add('wptb-column-moving');
+
+                if (parseInt(rowChildren[_j5].dataset.yIndex) != 0) {
+                    rowChildren[_j5].classList.add('wptb-td-border-top-moving');
+                }
+                if (parseInt(rowChildren[_j5].dataset.yIndex) + rowChildren[_j5].rowSpan != table.rows.length) {
+                    rowChildren[_j5].classList.add('wptb-td-border-bottom-moving');
+                }
+                if (parseInt(rowChildren[_j5].dataset.xIndex) != col) {
+                    rowChildren[_j5].classList.add('wptb-td-border-left-moving');
+                }
+                if (parseInt(rowChildren[_j5].dataset.xIndex) + rowChildren[_j5].colSpan != col + colspan) {
+                    rowChildren[_j5].classList.add('wptb-td-border-right-moving');
+                }
             }
         }
 
@@ -6508,8 +6515,10 @@ var WPTB_ColumnMove = function WPTB_ColumnMove() {
                 wptbColumnMoving[i].removeAttribute('data-width-which-need-add');
                 wptbColumnMoving[i].classList.remove('wptb-width-which-need-add');
 
-                wptbColumnMoving[i].style.borderColor = wptbColumnMoving[i].dataset.borderColorBeforeMove;
-                wptbColumnMoving[i].removeAttribute('data-border-color-before-move');
+                wptbColumnMoving[i].classList.remove('wptb-td-border-top-moving');
+                wptbColumnMoving[i].classList.remove('wptb-td-border-bottom-moving');
+                wptbColumnMoving[i].classList.remove('wptb-td-border-left-moving');
+                wptbColumnMoving[i].classList.remove('wptb-td-border-right-moving');
             }
 
             this.glueTableVertically();
@@ -6756,7 +6765,6 @@ var WPTB_RowMove = function WPTB_RowMove() {
             rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
 
             body.onmousemove = function (eventMove) {
-                //console.log(eventMove);
                 var rowMovingField = document.querySelector('.wptb-row-moving-field');
 
                 if (!_this.wptbHeaderCoordinates) {
@@ -6768,7 +6776,6 @@ var WPTB_RowMove = function WPTB_RowMove() {
                     _this.wptbContainer = document.getElementsByClassName('wptb-container')[0];
                 }
                 var wptbContainer = _this.wptbContainer;
-                //                    console.log(eventMove);
 
                 clearInterval(rowMovingField.setIntervalScrollTop);
                 var difference = wptbHeaderCoordinates.bottom - rowMovingField.getBoundingClientRect().top;
@@ -6784,35 +6791,17 @@ var WPTB_RowMove = function WPTB_RowMove() {
                         }
                     }
                     if (setIntervalPeriod) {
-                        var _tablePreview = document.querySelector('.wptb-preview-table');
-
                         _this.eventMove = eventMove;
                         rowMovingField.setIntervalScrollTop = setInterval(function () {
                             wptbContainer.scrollTop = parseFloat(wptbContainer.scrollTop) - 5;
 
                             rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates();
                             insertRowsMoving(eventMove);
-
-                            //                            for( let i = 0; i < tablePreview.rows.length; i++ ) {
-                            //                                let rowCoordinatesTop = parseFloat( tablePreview.rows[i].getBoundingClientRect().top );
-                            //                                let rowHeight = parseFloat( tablePreview.rows[i].getBoundingClientRect().height );
-                            //
-                            //                                if( rowCoordinatesTop > rowMovingFieldTop && rowCoordinatesTop + rowHeight/2 < rowMovingFieldTop ) {
-                            //                                    let row = tablePreview.rows[i];
-                            //
-                            //                                    rowMovingField.rowsTopBottomCoordinatesArr = setRowsTopBottomCoordinates( row );
-                            //                                }
-                            //                            }
-                            //                            
-                            //                            if( tableCoordinatesTop - rowMovingFieldTop > 20 ) {
-                            //                                clearInterval( rowMovingField.setIntervalScrollTop );
-                            //                            }
                         }, setIntervalPeriod);
 
                         rowMovingField.autoScroll = true;
                     } else {
                         clearInterval(rowMovingField.setIntervalScrollTop);
-                        //rowMovingField.autoScroll = false;
                     }
                 } else if (rowMovingField.getBoundingClientRect().bottom - body.getBoundingClientRect().bottom > 10 && eventMove.movementY > 0) {
                     var _setIntervalPeriod = 2;
@@ -6836,7 +6825,6 @@ var WPTB_RowMove = function WPTB_RowMove() {
                         rowMovingField.autoScroll = true;
                     } else {
                         clearInterval(rowMovingField.setIntervalScrollTop);
-                        //rowMovingField.autoScroll = false;
                     }
                 } else {
                     clearInterval(rowMovingField.setIntervalScrollTop);
@@ -7012,8 +7000,6 @@ var WPTB_RowMove = function WPTB_RowMove() {
 
         this.cutTableHorizontally(row + rowspan);
 
-        //undoSelect();
-
         var tableRowsWithDrewArr = [];
         for (var _i6 = row; _i6 < row + rowspan; _i6++) {
             tableRowsWithDrewArr.push(table.rows[_i6]);
@@ -7027,12 +7013,17 @@ var WPTB_RowMove = function WPTB_RowMove() {
 
             var rowsIChildren = table.rows[_i6].children;
             for (var j = 0; j < rowsIChildren.length; j++) {
-                if (rowsIChildren[j].dataset.xIndex == 0) {
-                    rowsIChildren[j].classList.add('wptb-td-border-top-bottom-right-none');
-                } else if (rowsIChildren[j].dataset.xIndex == table.maxCols - 1) {
-                    rowsIChildren[j].classList.add('wptb-td-border-top-bottom-left-none');
-                } else {
-                    rowsIChildren[j].classList.add('wptb-td-border-none');
+                if (parseInt(rowsIChildren[j].dataset.yIndex) != 0) {
+                    rowsIChildren[j].classList.add('wptb-td-border-top-moving');
+                }
+                if (parseInt(rowsIChildren[j].dataset.yIndex) + rowsIChildren[j].rowSpan != row + rowspan) {
+                    rowsIChildren[j].classList.add('wptb-td-border-bottom-moving');
+                }
+                if (parseInt(rowsIChildren[j].dataset.xIndex) != 0) {
+                    rowsIChildren[j].classList.add('wptb-td-border-left-moving');
+                }
+                if (parseInt(rowsIChildren[j].dataset.xIndex) + rowsIChildren[j].colSpan != rowsIChildren.length) {
+                    rowsIChildren[j].classList.add('wptb-td-border-right-moving');
                 }
             }
 
@@ -7140,9 +7131,10 @@ var WPTB_RowMove = function WPTB_RowMove() {
                     var children = rows[i].children;
 
                     for (var j = 0; j < children.length; j++) {
-                        children[j].classList.remove('wptb-td-border-top-bottom-right-none');
-                        children[j].classList.remove('wptb-td-border-top-bottom-left-none');
-                        children[j].classList.remove('wptb-td-border-none');
+                        children[j].classList.remove('wptb-td-border-top-moving');
+                        children[j].classList.remove('wptb-td-border-bottom-moving');
+                        children[j].classList.remove('wptb-td-border-left-moving');
+                        children[j].classList.remove('wptb-td-border-right-moving');
                     }
 
                     rows[i].style.height = '';
