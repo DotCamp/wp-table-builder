@@ -24,11 +24,11 @@ var WPTB_Image = function ( src, DOMElementProt ) {
 		button: {
                     text: 'Use this image'
 		},
-		multiple: false
+		multiple: false,
+                frame: 'post'
             });
-            // When an image is selected, run a callback.
-            file_frame.on('select', function () {
-                attachment = file_frame.state().get('selection').first().toJSON();
+            
+            let imageSetting = function( img, attachment ) {
                 let imgSrc = attachment.url;
                 let linkArr = imgSrc.split( ':' ),
                     linkClean;
@@ -42,10 +42,27 @@ var WPTB_Image = function ( src, DOMElementProt ) {
 
                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
+            }
+            
+            // When an image is select, run a callback.
+            file_frame.on( 'select', function() {
+                attachment = file_frame.state().props.toJSON();
+                imageSetting( img, attachment );
             });
+            
+            // When an image is insert, run a callback.
+            file_frame.on( 'insert', function () {
+                attachment = file_frame.state().get( 'selection' ).first().toJSON();
+                imageSetting( img, attachment );
+            });
+            
             // Finally, open the modal
             if (src == undefined) {
                 file_frame.open();
+                file_frame.menuItemVisibility( 'gallery', 'hide' );
+                file_frame.menuItemVisibility("playlist", "hide"), 
+                file_frame.menuItemVisibility("video-playlist", "hide"), 
+                file_frame.menuItemVisibility("audio-playlist", "hide")
             } else {
                 img.src = src;
             }
