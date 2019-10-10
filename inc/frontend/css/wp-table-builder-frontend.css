@@ -64,6 +64,7 @@ table.wptb-preview-table-mobile {
     box-sizing: content-box;
     padding: 15px;
     background-color: inherit;
+    vertical-align: middle;
 }
 
 .wptb-table-container-matrix.wptb-matrix-hide .wptb-preview-table td {
@@ -101,6 +102,21 @@ table.wptb-preview-table-mobile {
     margin-top: 15px;
     margin-bottom: 15px;
 }
+
+.wptb-image-wrapper::after {
+    content: "";
+    display: block;
+    height: 0;
+    width: 100%;
+    clear: both;
+}
+.wptb-image-wrapper a {
+    display: block !important;
+    max-width: 100%;
+    position: relative;
+    margin: auto;
+}
+
 
 .wptb-cell .wptb-ph-element a {
     box-shadow: none;
