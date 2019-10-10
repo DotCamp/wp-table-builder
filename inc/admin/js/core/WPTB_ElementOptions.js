@@ -48,24 +48,29 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             }
             
             if ( wptbButtonWrapper ) {
-                let buttonAlignment = wptbButtonWrapper[0].style.justifyContent,
-                buttonAlignmentSelect = prop.querySelector( 'select[data-type="button-alignment"]' ),
-                    selectOption = buttonAlignmentSelect.getElementsByTagName( 'option' ),
-                    selectOptionVal;
-                
-                if ( buttonAlignment == 'flex-start' ) {
+                let buttonAlignment = wptbButtonWrapper[0].style.justifyContent;
+
+                var selectOptionVal='';
+                if ( buttonAlignment == 'start' ) {
                     selectOptionVal = 'left';
                 } else if ( buttonAlignment == 'center' || ! buttonAlignment ) {
                     selectOptionVal = 'center';
                 } else if ( buttonAlignment == 'flex-end' ) {
                     selectOptionVal = 'right';
                 }
-                
-                for ( let i = 0; i < selectOption.length; i++ ) {
-                    if ( selectOption[i].value == selectOptionVal ) {
-                        selectOption[i].selected = true;
+
+                let elementButtonAlignmentSelect = prop.getElementsByClassName('wptb-button-alignment-btn');
+
+
+
+
+                for ( var i = 0; i < elementButtonAlignmentSelect.length; i++ ) {
+                        elementButtonAlignmentSelect[i].classList.remove( 'selected' );
+                        
+                        if ( elementButtonAlignmentSelect[i].getAttribute('data-button_alignment') == selectOptionVal ) {
+                            elementButtonAlignmentSelect[i].classList.add( 'selected' );
+                        }
                     }
-                }
             }
             
             if ( wptbButtonA.length > 0 ) {
@@ -116,19 +121,21 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     if ( a ) {
                         // set select according to the alignment of the image
                         let imgAlign;
-                        if( a.style.float == 'none' ) {
+                        if( a.style.float == 'none' || ! a.style.float) {
                             imgAlign = 'center';
                         } else {
                             imgAlign = a.style.float;
                         }
-                        let imageAlignmentSelect = prop.querySelector( 'select[data-type="image-alignment"]' ),
-                        selectOption = imageAlignmentSelect.getElementsByTagName( 'option' );
+                        let imageAlignmentSelect = prop.getElementsByClassName('wptb-image-alignment-btn');
 
-                        for ( let i = 0; i < selectOption.length; i++ ) {
-                            if ( selectOption[i].value == imgAlign ) {
-                                selectOption[i].selected = true;
+                        for ( var i = 0; i < imageAlignmentSelect.length; i++ ) {
+                            imageAlignmentSelect[i].classList.remove( 'selected' );
+                            
+                            if ( imageAlignmentSelect[i].getAttribute('data-image_alignment') == imgAlign ) {
+                                imageAlignmentSelect[i].classList.add( 'selected' );
                             }
                         }
+
 
                         a.onclick = function( e ) {
                             e.preventDefault();
@@ -272,20 +279,28 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         }
                     }
                     
-                    let elementListAlignmentSelect = prop.querySelector( 'select[data-type="list-alignment"]' ),
+                    let elementListAlignmentSelect = prop.getElementsByClassName('wptb-list-alignment-btn'),
                         maxListItemTAlLeftC = Math.max( listItemPTextAlignLeftCount, listItemPTextAlignCenterCount, listItemPTextAlignRightCount );
-                
+                    let wptbListAlignmentValue;
                     if ( listItemPTextAlignLeftCount == maxListItemTAlLeftC ) {
-                        elementListAlignmentSelect.value = 'left';
+                        wptbListAlignmentValue = 'left';
                     } else if ( listItemPTextAlignCenterCount == maxListItemTAlLeftC ) {
-                        elementListAlignmentSelect.value = 'center';
+                        wptbListAlignmentValue = 'center';
                     } else if ( listItemPTextAlignRightCount == maxListItemTAlLeftC ) {
-                        elementListAlignmentSelect.value = 'right';
+                        wptbListAlignmentValue = 'right';
+                    }
+
+                    for ( var i = 0; i < elementListAlignmentSelect.length; i++ ) {
+                        elementListAlignmentSelect[i].classList.remove( 'selected' );
+                        
+                        if ( elementListAlignmentSelect[i].getAttribute('data-list_alignment') == wptbListAlignmentValue ) {
+                            elementListAlignmentSelect[i].classList.add( 'selected' );
+                        }
                     }
                 }
             } 
         } else if( element.kind == 'star_rating' ) {
-            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
+            let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt ),wptbRatingAlignment;
             if( affectedEl.length > 0 ) {
                 affectedEl = affectedEl[0];
                 let ratingStar = affectedEl.querySelector( 'li' );
@@ -312,26 +327,22 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     starsCountInputNumber.value = ratingStars.length;
                 }
 
-
-                    let ratingAlignment = affectedEl.style.textAlign,
-                    ratingAlignmentSelect = prop.querySelector( 'select[data-type="rating-alignment"]' ),
-                        selectOption = ratingAlignmentSelect.getElementsByTagName( 'option' ),
-                        selectOptionVal;
-                    if ( ratingAlignment == 'start' ) {
-                        selectOptionVal = 'left';
-                    } else if ( ratingAlignment == 'center' || ! ratingAlignment ) {
-                        selectOptionVal = 'center';
-                    } else if ( ratingAlignment == 'right' ) {
-                        selectOptionVal = 'right';
-                    }
+                // Rating default/saved alignment from icons in left panel
+                if ( affectedEl ) {
+                    wptbRatingAlignment = affectedEl.style.textAlign;
+                }
+                
+                if( wptbRatingAlignment ) {
+                    var b = prop.getElementsByClassName('wptb-rating-alignment-btn');
                     
-                    for ( let i = 0; i < selectOption.length; i++ ) {
-                        if ( selectOption[i].value == selectOptionVal ) {
-                            selectOption[i].selected = true;
+                    for ( var i = 0; i < b.length; i++ ) {
+                        b[i].classList.remove( 'selected' );
+                        
+                        if ( b[i].getAttribute('data-star_alignment') == wptbRatingAlignment ) {
+                            b[i].classList.add( 'selected' );
                         }
                     }
-                
-                
+                }
 
                 let successBox = affectedEl.querySelector( '.wptb-success-box' );
                 if( successBox ) {
@@ -446,6 +457,146 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         }
     }
 
+    /*
+    * alignment option in left panel using icons for star-rating
+    */
+    if (element.kind == 'star_rating') {
+            //We must add this special kind of property, since it is triggered with click event
+            var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = function () {
+                    var star_alignment = this.getAttribute('data-star_alignment'),
+                        n_Class = this.dataset.element,
+                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                        type = infArr[1],
+                        num = infArr[2],
+                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+                        affectedEl.style.textAlign = star_alignment;
+
+                    var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
+                    for (var i = 0; i < b.length; i++) {
+                        b[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            }
+        }
+    /*
+    * alignment option in left panel using icons for list
+    */
+    if (element.kind == 'list') {
+            //We must add this special kind of property, since it is triggered with click event
+            var buttons = prop.getElementsByClassName('wptb-list-alignment-btn');
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = function () {
+                    var list_alignment = this.getAttribute('data-list_alignment'),
+                        n_Class = this.dataset.element,
+                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                        type = infArr[1],
+                        num = infArr[2],
+                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+
+                        let listItems = affectedEl.querySelectorAll('li');
+                        for (var i = 0; i < listItems.length; i++) {
+                            let p = listItems[i].querySelector( 'p' );
+                            if ( p ) {
+                                p.style.textAlign = list_alignment;
+                            }
+                        }
+
+                    var b = this.parentNode.getElementsByClassName('wptb-list-alignment-btn');
+                    for (var i = 0; i < b.length; i++) {
+                        b[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            }
+        }
+    /*
+    * alignment option in left panel using icons for button
+    */
+    if (element.kind == 'button') {
+            //We must add this special kind of property, since it is triggered with click event
+            var buttons = prop.getElementsByClassName('wptb-button-alignment-btn');
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = function () {
+                    var button_alignment = this.getAttribute('data-button_alignment'),
+                        n_Class = this.dataset.element,
+                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                        type = infArr[1],
+                        num = infArr[2],
+                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+
+                        var jc = '';
+                        if (button_alignment == 'left') {
+                            jc = 'start';
+                        } else if (button_alignment == 'right') {
+                            jc = 'flex-end';
+                        } else {
+                            jc = 'center';
+                        }
+                        affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
+
+                    var b = this.parentNode.getElementsByClassName('wptb-button-alignment-btn');
+                    for (var i = 0; i < b.length; i++) {
+                        b[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            }
+        }
+
+    /*
+    * alignment option in left panel using icons for image
+    */
+    if (element.kind == 'image') {
+            //We must add this special kind of property, since it is triggered with click event
+            var buttons = prop.getElementsByClassName('wptb-image-alignment-btn');
+
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = function () {
+                    var image_alignment = this.getAttribute('data-image_alignment'),
+                        n_Class = this.dataset.element,
+                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+                        type = infArr[1],
+                        num = infArr[2],
+                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+
+                        var image_alignment_value = '';
+                        if (image_alignment == 'left') {
+                            image_alignment_value = 'left';
+                        } else if (image_alignment == 'right') {
+                            image_alignment_value = 'right';
+                        } else {
+                            image_alignment_value = 'none';
+                        }
+                        
+                        affectedEl.querySelector( '.wptb-image-wrapper a' ).style.float = image_alignment_value;
+
+                    var b = this.parentNode.getElementsByClassName('wptb-image-alignment-btn');
+                    for (var i = 0; i < b.length; i++) {
+                        b[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
+                }
+            }
+        }
+
     var optionControls = prop.getElementsByClassName('wptb-element-property');
 
     for (var i = 0; i < optionControls.length; i++) {
@@ -531,29 +682,9 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     affectedEl.getElementsByTagName('a')[0].style.height = 'auto';
                     this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                     break;
-                case 'image-alignment':
-                    let wptbImageFloatValue = '';
-                    if( this.value == 'center' ) {
-                        wptbImageFloatValue = 'none';
-                    } else {
-                        wptbImageFloatValue = this.value;
-                    }
-                    affectedEl.querySelector( '.wptb-image-wrapper a' ).style.float = wptbImageFloatValue;
-                    break;
                 case 'font-size':
                     affectedEl.style.fontSize = val + 'px';
                     this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
-                    break;
-                case 'button-alignment':
-                    var jc = '';
-                    if (this.value == 'left') {
-                        jc = 'start';
-                    } else if (this.value == 'right') {
-                        jc = 'flex-end';
-                    } else {
-                        jc = 'center';
-                    }
-                    affectedEl.getElementsByClassName('wptb-button-wrapper')[0].style.justifyContent = jc;
                     break;
                 case 'rating-alignment':
                     var jc = '';
@@ -594,15 +725,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         affectedEl.getElementsByTagName( 'a' )[0].removeAttribute( 'id' );
                     }
                 case 'button-color':
-                    break;
-                case 'list-alignment':
-                    let listItems = affectedEl.querySelectorAll('li');
-                    for (var i = 0; i < listItems.length; i++) {
-                        let p = listItems[i].querySelector( 'p' );
-                        if ( p ) {
-                            p.style.textAlign = this.value;
-                        }
-                    }
                     break;
                 case 'list-class':
                     let parentNode = event.target

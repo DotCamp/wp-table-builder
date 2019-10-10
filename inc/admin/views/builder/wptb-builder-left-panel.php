@@ -107,19 +107,23 @@ use WP_Table_Builder as NS;
                             <?php esc_html_e( 'Image Options', 'wp-table-builder' ); ?>
                         </div>
                     </div>
-                    <div class="wptb-settings-items">
+                    <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Image Alignment', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="image-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <ul>
+                                <li class="wptb-image-alignment-btn wptb-element-property wptb-image-alignment-switcher" data-image_alignment="left">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php'; ?>
+                                </li>
+                                <li class="wptb-image-alignment-btn wptb-element-property wptb-image-alignment-switcher selected" data-image_alignment="center">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php'; ?>
+                                </li>
+                                <li class="wptb-image-alignment-btn wptb-element-property wptb-image-alignment-switcher" data-image_alignment="right">
+                                   <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php'; ?>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="wptb-element-option wptb-settings-items" style="margin-top: 5px;">
                         <div class='wptb-settings-item-header' >
@@ -230,19 +234,23 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>    
                     </div>
-                    <div class="wptb-settings-items">
+                    <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Button Alignment', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="button-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <ul>
+                                <li class="wptb-button-alignment-btn wptb-element-property wptb-button-alignment-switcher" data-button_alignment="left">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php'; ?>
+                                </li>
+                                <li class="wptb-button-alignment-btn wptb-element-property wptb-button-alignment-switcher selected" data-button_alignment="center">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php'; ?>
+                                </li>
+                                <li class="wptb-button-alignment-btn wptb-element-property wptb-button-alignment-switcher" data-button_alignment="right">
+                                   <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php'; ?>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="wptb-settings-items">
                         <div class='wptb-settings-item-header' >
@@ -313,22 +321,23 @@ use WP_Table_Builder as NS;
                                 <input type="text" class="wptb-element-property wptb-color-picker" data-type="list-text-color"/>
                             </div>
                         </div>
-                    <!--</div>-->
-                        <div class='wptb-settings-item-header' >
-                            <p class="wptb-settings-item-title"><?php esc_html_e( 'List Alignment', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 15px; padding-top: 25px;">
-                            <select data-type="list-alignment" class="wptb-element-property"> 
-                                <option value="left">
-                                    <?php esc_html_e( 'Left', 'wp-table-builder' ); ?>
-                                </option>
-                                <option value="center">
-                                    <?php esc_html_e( 'Center', 'wp-table-builder' ); ?>
-                                </option>
-                                <option value="right">
-                                    <?php esc_html_e( 'Right', 'wp-table-builder' ); ?>
-                                </option>
-                            </select>              
+                        <div class="wptb-element-option wptb-settings-items">
+                            <div class='wptb-settings-item-header' >
+                                <p class="wptb-settings-item-title"><?php esc_html_e( 'List Alignment', 'wp-table-builder' ); ?></p>
+                            </div>
+                            <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                                <ul>
+                                    <li class="wptb-list-alignment-btn wptb-element-property wptb-list-alignment-switcher" data-list_alignment="left">
+                                        <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php'; ?>
+                                    </li>
+                                    <li class="wptb-list-alignment-btn wptb-element-property wptb-list-alignment-switcher selected" data-list_alignment="center">
+                                        <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php'; ?>
+                                    </li>
+                                    <li class="wptb-list-alignment-btn wptb-element-property wptb-list-alignment-switcher" data-list_alignment="right">
+                                       <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php'; ?>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -380,19 +389,23 @@ use WP_Table_Builder as NS;
                             </div>
                         </div>
                     </div>
-                    <div class="wptb-settings-items">
+                    <div class="wptb-element-option wptb-settings-items">
                         <div class='wptb-settings-item-header' >
                             <p class="wptb-settings-item-title"><?php esc_html_e( 'Rating Alignment', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
-                            <div class='wptb-settings-col-xs-8' style="margin-top: 10px;">
-                                <select data-type="rating-alignment" class="wptb-element-property">
-                                    <option value="left"><?php esc_html_e( 'Left', 'wp-table-builder' ); ?></option>
-                                    <option value="center"><?php esc_html_e( 'Center', 'wp-table-builder' ); ?></option>
-                                    <option value="right"><?php esc_html_e( 'Right', 'wp-table-builder' ); ?></option>
-                                </select>
-                            </div>
-                        </div>    
+                        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px">
+                            <ul>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher" data-star_alignment="left">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php'; ?>
+                                </li>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher selected" data-star_alignment="center">
+                                    <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php'; ?>
+                                </li>
+                                <li class="wptb-rating-alignment-btn wptb-element-property wptb-rating-alignment-switcher" data-star_alignment="right">
+                                   <?php require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php'; ?>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="wptb-element-option">
                         <div class="wptb-settings-row wptb-settings-middle-xs">
