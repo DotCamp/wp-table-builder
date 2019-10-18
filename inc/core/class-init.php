@@ -107,6 +107,7 @@ class Init {
 	 * @access    private
 	 */
 	private function define_admin_hooks() {
+
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$tables = new Admin\Tables;
@@ -114,19 +115,9 @@ class Init {
         
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'review_notice' );
+		$this->loader->add_action( 'wp_ajax_wptbReviewNoticeHide', $plugin_admin, 'wptb_hide_review_notify' );
         
-		/*
-		 * Additional Hooks go here
-		 *
-		 * e.g.
-		 *
-		 * //admin menu pages
-		 * $this->loader->add_action('admin_menu', $plugin_admin, 'add_plugin_admin_menu');
-		 *
-		 *  //plugin action links
-		 * $this->loader->add_filter( 'plugin_action_links_' . $this->plugin_basename, $plugin_admin, 'add_additional_action_link' );
-		 *
-		 */
 	}
 
 	/**

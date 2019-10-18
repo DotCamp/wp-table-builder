@@ -31,6 +31,9 @@ class Activator {
 			wp_die( 'WP Table Builder requires a minmum PHP Version of ' . $min_php );
 		}
 
+		// Adds the option to check if user is notified for review.
+		add_option( 'wptb_review_notify', 'no' );
+
 	}
 
 }
