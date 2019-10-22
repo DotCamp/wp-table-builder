@@ -101,4 +101,68 @@ class Admin {
 
 	}
 
+	/**
+	 * Generating the review notice.
+	 *
+	 * @since 2.0
+	 */
+	public function review_notice() {
+
+		$tables_count  = wp_count_posts( 'wptb-tables' );
+		$tables_number = $tables_count->draft;
+
+		if ( $tables_number >= 10 && get_option( 'wptb_review_notify' ) == "no" ) {
+			?>
+            <div class="wptb-review-notice notice notice-info">
+                <p style="font-size: 14px;">
+					<?php _e( 'Hey,<br> I noticed that you have already created ' . $tables_number . ' tables with WP Table Builder plugin - that’s awesome! Could you please do me a BIG favor and <b>give it a 5-star rating on WordPress</b>? Just to help us spread the word and boost our motivation. Thank you. <br>~ Imtiaz Rayhan', 'wp-table-builder' ); ?>
+                </p>
+                <ul>
+                    <li>
+						<a style="margin-right: 5px; margin-bottom: 5px;" class="button-primary"
+                           href="https://wordpress.org/support/plugin/wp-table-builder/reviews/#new-post"
+                           target="_blank">Sure, you deserve it.</a>
+                        <a style="margin-right: 5px;" class="wptb_HideReview_Notice button" href="javascript:void(0);">I already did.</a>
+                        <a class="wptb_HideReview_Notice button" href="javascript:void(0);">No, not good enough.</a>
+                    </li>
+                </ul>
+            </div>
+            <script>
+                jQuery(document).ready(function ($) {
+                    jQuery('.wptb_HideReview_Notice').click(function () {
+                        var data = {'action': 'wptbReviewNoticeHide'};
+                        jQuery.ajax({
+                            url: "<?php echo admin_url( 'admin-ajax.php' ); ?>",
+                            type: "post",
+                            data: data,
+                            dataType: "json",
+                            async: !0,
+                            success: function (notice_hide) {
+                                if (notice_hide == "success") {
+                                    jQuery('.wptb-review-notice').slideUp('fast');
+                                }
+                            }
+                        });
+                    });
+                });
+            </script>
+			<?php
+
+		}
+
+	}
+
+	/**
+	 * Hides the review notice.
+	 *
+	 * @since 2.0
+	 */
+	public function wptb_hide_review_notify() {
+
+		update_option( 'wptb_review_notify', 'yes' );
+		echo json_encode( array( "success" ) );
+		exit;
+
+	}
+
 }

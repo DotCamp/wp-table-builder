@@ -1,9 +1,9 @@
-=== WordPress Table Plugin - WP Table Builder ===
+=== WP Table Builder - WordPress Table Plugin ===
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.0.9
+Stable tag: 1.1.1
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -70,6 +70,15 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.1.1 =
+
+* FIX: Table not showing in some cases.
+
+= 1.1.0 =
+
+* NEW: Option to add images from URL.
+* NEW: Icons for alignment settings instead of Select box.
 
 = 1.0.9 =
 
