@@ -54,7 +54,7 @@ class WPTB_Listing  extends \WP_List_Table{
                 'post_title' => sanitize_text_field( $post->post_title ),
                 'post_content' => '',
                 'post_type' => 'wptb-tables',
-                'status' => 'draft'
+                'post_status' => 'publish',
             ]);
             $post_meta = get_post_meta( absint( $id ) , '_wptb_content_', true );
             
