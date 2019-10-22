@@ -21,10 +21,9 @@ class Tables {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-
 		// Register wptb-tables custom post type
 		$this->register_cpt();
-		// Add the custom columns to the book post type: 
+		// Add the custom columns to the book post type:
 		add_filter( 'manage_wptb-tables_posts_columns', [ $this,'addHeader' ] );
 		add_filter( 'post_row_actions', [ $this,'customizeActions'], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column' , [ $this,'addContent' ], 10, 2 );
@@ -68,7 +67,7 @@ class Tables {
 				
 	    }
 	}
- 
+    
 	/**
 	 * Registers the custom post type to be used for table.
 	 *

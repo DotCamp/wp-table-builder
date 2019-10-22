@@ -60,9 +60,9 @@ var WPTB_Image = function ( src, DOMElementProt ) {
             if (src == undefined) {
                 file_frame.open();
                 file_frame.menuItemVisibility( 'gallery', 'hide' );
-                file_frame.menuItemVisibility("playlist", "hide"), 
-                file_frame.menuItemVisibility("video-playlist", "hide"), 
-                file_frame.menuItemVisibility("audio-playlist", "hide")
+                file_frame.menuItemVisibility( 'playlist', 'hide' ), 
+                file_frame.menuItemVisibility( 'video-playlist', 'hide' ), 
+                file_frame.menuItemVisibility( 'audio-playlist', 'hide' )
             } else {
                 img.src = src;
             }

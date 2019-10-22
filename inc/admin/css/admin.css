@@ -909,6 +909,18 @@ ul.wptb-tabs {
     cursor: move;
 }
 
+.wptb-element:nth-child(odd) {
+    width: 47.5%;
+    float: left;
+    margin: 6px 0 -4px 6px;
+} 
+
+.wptb-element:nth-child(even) {
+    width: 47.5%;
+    float: right;
+    margin: 6px 5px -4px 0;
+} 
+
 .wptb-element p {
     margin: 0;
     font-size: 15px;

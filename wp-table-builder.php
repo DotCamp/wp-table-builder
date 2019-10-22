@@ -90,21 +90,12 @@ class WP_Table_Builder {
 	 * @since    1.0.0
 	 * @var      Init $init Instance of the plugin.
 	 */
-	private static $init;
-	/**
-	 * Loads the plugin
-	 *
-	 * @access    public
-	 */
-	public static function init() {
-
-		if ( null === self::$init ) {
-			self::$init = new Inc\Core\Init();
-			self::$init->run();
-		}
-
-		return self::$init;
-	}
+	public static $init;
+    
+    public function __construct() {
+        self::$init = Inc\Core\Init::instance();
+        self::$init->run();
+    }
 
 }
 
@@ -119,7 +110,7 @@ class WP_Table_Builder {
  * can interact with the plugin's hooks contained within.
  **/
 function wp_table_builder_init() {
-	return WP_Table_Builder::init();
+	new WP_Table_Builder();
 }
 
 $min_php = '5.6.0';

@@ -4,6 +4,7 @@
  */
 
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Core\Init as Init;
 
 ?>
 
@@ -13,23 +14,28 @@ use WP_Table_Builder as NS;
             <div class="wptb-elements-section">
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
-                        <div class="wptb-element left " draggable="true" data-wptb-element="text"  id="wptb-text">
-                            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.php'; ?>
-                            <p class="wptb-draggable"><?php esc_html_e( 'Text', 'wp-table-builder' ); ?></p>
+                        
+                        <?php $item_objects = Init::instance()->items_manager->get_item_objects(); ?>
+                        <?php foreach( $item_objects as $item ): ?>
+                        <div class="wptb-element 1" draggable="true" data-wptb-element="<?php echo $item->get_item_data(); ?>">
+                            <?php require_once $item->get_directory_icon(); ?>
+                            <p class="wptb-draggable"><?php $item->get_title(); ?></p>
                         </div>
-                        <div class="wptb-element right  " draggable="true" data-wptb-element="image"  id="wptb-image">
+                        <?php endforeach; ?>
+                        
+                        <div class="wptb-element" draggable="true" data-wptb-element="image">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.php'; ?>
                             <p class="wptb-draggable-prototype"><?php esc_html_e( 'Image', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element left " draggable="true" data-wptb-element="button"  id="wptb-button">
+                        <div class="wptb-element" draggable="true" data-wptb-element="button">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.php'; ?>
                             <p class="wptb-draggable-prototype"><?php esc_html_e( 'Button', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element right " draggable="true" data-wptb-element="list"  id="wptb-list">
+                        <div class="wptb-element" draggable="true" data-wptb-element="list">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
                             <p class="wptb-draggable-prototype"><?php esc_html_e( 'List', 'wp-table-builder' ); ?></p>
                         </div>
-                        <div class="wptb-element left " draggable="true" data-wptb-element="star_rating"  id="wptb-star_rating">
+                        <div class="wptb-element" draggable="true" data-wptb-element="star_rating">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/half-filled-rating-star.php'; ?>
                             <p class="wptb-draggable"><?php esc_html_e( 'Star Rating', 'wp-table-builder' ); ?></p>
                         </div>

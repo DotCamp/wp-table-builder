@@ -5,6 +5,8 @@ use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Core\Preview as Preview;
+use WP_Table_Builder\Inc\Admin\Item_Classes\Managers\Items_Manager as Items_Manager;
+use WP_Table_Builder\Inc\Admin\Item_Classes\Managers\Controls_Manager as Controls_Manager;
 
 /**
  * The core plugin class.
@@ -16,8 +18,15 @@ use WP_Table_Builder\Inc\Core\Preview as Preview;
  * @author     Imtiaz Rayhan
  */
 class Init {
+    
+    /**
+     * Instance to instantiate object.
+     *
+     * @var $instance
+     */
+    protected static $instance;
 
-	/**
+    /**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
@@ -55,21 +64,64 @@ class Init {
 	/**
 	 * Initialize and define the core functionality of the plugin.
 	 */
-	public function __construct() {
+    
+    /**
+	 * Items manager.
+	 *
+	 * Holds the plugin items manager.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @var Items_Manager
+	 */
+    public $items_manager;
+    
+    /**
+	 * Controls manager.
+	 *
+	 * Holds the plugin controls manager.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @var Controls_Manager
+	 */
+    public $controls_manager;
+    
+    private function __construct() {
 
 		$this->plugin_name = NS\WP_TABLE_BUILDER;
 		$this->version = NS\PLUGIN_VERSION;
 		$this->plugin_basename = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
+        
+		$this->items_manager = new Items_Manager();
+        $this->controls_manager = new Controls_Manager();
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
         $this->table_preview();
+        add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
 	}
+    
+    /**
+     * Singleton pattern, making only one instance of the class.
+     *
+     * @since 1.00
+     */
+    public static function instance() {
+        if ( ! isset( self::$instance ) ) {
+            $className      = __CLASS__;
+            self::$instance = new $className;
+        }
 
-	/**
+        return self::$instance;
+    }
+
+    /**
 	 * Loads the following required dependencies for this plugin.
 	 *
 	 * - Loader - Orchestrates the hooks of the plugin.
@@ -197,5 +249,21 @@ class Init {
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;
 	}
-
+    
+    /**
+	 * WP footer.
+	 *
+	 * Prints Elementor editor with all the editor templates, and render controls,
+	 * widgets and content elements.
+	 *
+	 * Fired by `wp_footer` action.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function wp_footer_js_templates() {
+        $this->items_manager->output_items_templates();
+        $this->controls_manager->output_controls_templates();
+        $this->controls_manager->output_control_stacks();
+	}
 }

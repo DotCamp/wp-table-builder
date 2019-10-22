@@ -80,11 +80,17 @@ var WPTB_DropHandle = function (thisElem, e) {
                 WPTB_Helper.dataTitleColumnSet( table );
             }
             
+            // start item javascript if item is new
+            let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+            let elemType = infArr[1];
+            if ( e.dataTransfer.getData( 'wptbElement' ) && elemType == 'text' ) {
+                WPTB_Helper.wptbItemStartScript( element );
+            }
+            
             wptbDropHandle.style.display = 'none';
             wptbDropBorderMarker.style.display = 'none';
             
             WPTB_innerElementSet(element);
-            console.log(element);
             if( ! element.classList.contains( 'wptb-image-container' ) || element.wptbMovingMode == 1 ) {
                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();

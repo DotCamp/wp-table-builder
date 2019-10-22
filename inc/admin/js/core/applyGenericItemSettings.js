@@ -24,12 +24,20 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     } else if ( kindIndexProt && ! copy ) {
         let kindIndexProtArr = kindIndexProt.split('-');
         index = kindIndexProtArr[kindIndexProtArr.length - 1];
+        // start item javascript if item is new
+        if( element.kind == 'text' ) {
+            WPTB_Helper.wptbItemStartScript( element.getDOMElement() );
+        }
     }
+    
+            
     
     node.onmouseenter = function ( event ) {
         if( event.target.classList.contains( 'wptb-moving-mode' ) ) {
             return;
         }
+        
+        WPTB_Helper.wptbDocumentEventGenerate( 'item:onmouseenter' );
         
         let i, wptbActionsField = new WPTB_ActionsField();
         
@@ -49,70 +57,70 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             }
             WPTB_Helper.buttonsTinyMceInit( target );
         } else if (element.kind === 'text') {
-            tinyMCE.init({
-                target: node.childNodes[0],
-                inline: true,
-                plugins: "link, paste",
-                dialog_type: "modal",
-                theme: 'modern',
-                menubar: false,
-                force_br_newlines : false,
-                force_p_newlines : false,
-                forced_root_block : '',
-                fixed_toolbar_container: '#wpcd_fixed_toolbar',
-                paste_as_text: true,
-                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
-                setup : function( ed ) {
-                    ed.on( 'change', function(e) {
-                        let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
-                        if( row.classList.contains( 'wptb-table-head' ) ) {
-                            let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
-                            WPTB_Helper.dataTitleColumnSet( table );
-                        }
-                        
-                        
-                    });
-                    
-                    ed.on( 'keydown', function(e) {
-                        let wptbActionsField = new WPTB_ActionsField();
-                        
-                        wptbActionsField.addActionField( 1, node );
-        
-                        wptbActionsField.setParameters( node );
-                    });
-                    ed.on( 'keyup', function(e) {
-                        let wptbActionsField = new WPTB_ActionsField();
-                        
-                        wptbActionsField.addActionField( 1, node );
-        
-                        wptbActionsField.setParameters( node );
-                        
-                        e.target.onblur = function() {
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    });
-                    
-                },
-                init_instance_callback: function (editor) {
-                    window.currentEditor = editor;
-                    //editor.fire('focus');
-                    editor.on('focus', function (e) {
-                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                        if (window.currentEditor &&
-                            document.getElementById('wptb_builder').scrollTop >= 55 &&
-                            window.currentEditor.bodyElement.style.display != 'none') {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                            document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
-                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                        } else {
-                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                        }
-                    });
-                }
-            });
+//            tinyMCE.init({
+//                target: node.childNodes[0],
+//                inline: true,
+//                plugins: "link, paste",
+//                dialog_type: "modal",
+//                theme: 'modern',
+//                menubar: false,
+//                force_br_newlines : false,
+//                force_p_newlines : false,
+//                forced_root_block : '',
+//                fixed_toolbar_container: '#wpcd_fixed_toolbar',
+//                paste_as_text: true,
+//                toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+//                setup : function( ed ) {
+//                    ed.on( 'change', function(e) {
+//                        let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
+//                        if( row.classList.contains( 'wptb-table-head' ) ) {
+//                            let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+//                            WPTB_Helper.dataTitleColumnSet( table );
+//                        }
+//                        
+//                        
+//                    });
+//                    
+//                    ed.on( 'keydown', function(e) {
+//                        let wptbActionsField = new WPTB_ActionsField();
+//                        
+//                        wptbActionsField.addActionField( 1, node );
+//        
+//                        wptbActionsField.setParameters( node );
+//                    });
+//                    ed.on( 'keyup', function(e) {
+//                        let wptbActionsField = new WPTB_ActionsField();
+//                        
+//                        wptbActionsField.addActionField( 1, node );
+//        
+//                        wptbActionsField.setParameters( node );
+//                        
+//                        e.target.onblur = function() {
+//                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+//                            wptbTableStateSaveManager.tableStateSet();
+//                        }
+//                    });
+//                    
+//                },
+//                init_instance_callback: function (editor) {
+//                    window.currentEditor = editor;
+//                    //editor.fire('focus');
+//                    editor.on('focus', function (e) {
+//                        var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+//                        if (window.currentEditor &&
+//                            document.getElementById('wptb_builder').scrollTop >= 55 &&
+//                            window.currentEditor.bodyElement.style.display != 'none') {
+//                            document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+//                            document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
+//                            document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+//                        } else {
+//                            document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+//                            delete document.getElementById('wpcd_fixed_toolbar').style.right;
+//                            delete document.getElementById('wpcd_fixed_toolbar').style.top;
+//                        }
+//                    });
+//                }
+//            });
         } else if( element.kind === 'list' ) {
             listItems = node.getElementsByClassName( 'wptb-list-item-content' );
             for ( let i = 0; i < listItems.length; i++ ) {
@@ -139,15 +147,15 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     
     // Change data-title-column if the title was changed
     if( element.kind == 'text' ) {
-        var observer = new MutationObserver( function( mutations ) {
-            let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
-            if( row.classList.contains( 'wptb-table-head' ) ) {
-                let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
-                WPTB_Helper.dataTitleColumnSet( table );
-            }
-        });
-        var config = { attributes: true, attributeFilter: ['style'] };
-        observer.observe( element.getDOMElement(), config );
+//        var observer = new MutationObserver( function( mutations ) {
+//            let row = WPTB_Helper.findAncestor( node, 'wptb-row' );
+//            if( row.classList.contains( 'wptb-table-head' ) ) {
+//                let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+//                WPTB_Helper.dataTitleColumnSet( table );
+//            }
+//        });
+//        var config = { attributes: true, attributeFilter: ['style'] };
+//        observer.observe( element.getDOMElement(), config );
     } else if( element.kind == 'star_rating' ) {
         let ratingStars = node.getElementsByClassName( 'wptb-rating-star' );
         for ( let i = 0; i < ratingStars.length; i++ ) {

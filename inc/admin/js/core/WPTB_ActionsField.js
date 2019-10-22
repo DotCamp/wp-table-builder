@@ -88,7 +88,10 @@ var WPTB_ActionsField = function() {
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else if ( type == 'text' ) {
-                    copy = new WPTB_Text( activeElementClone.childNodes[0].innerHTML, activeElementClone );
+                    let data = {};
+                    data.kind = type;
+                    data.elemProt = activeElement;
+                    copy = new WPTB_ItemObject( data );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else if ( type == 'image' ) {

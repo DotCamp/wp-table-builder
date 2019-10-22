@@ -367,7 +367,12 @@ var WPTB_Helper = {
         }
         return cellHeight;
     },
-    newElementProxy: function(el) {
+    newElementProxy: function( el ) {
+        if( el == 'text' ) {
+            let data = {kind: 'text'};
+            return new WPTB_ItemObject( data );
+        }
+        
         if ( el == 'list' ) {
             return new WPTB_List();
         } else if ( el == 'image' ) {
@@ -543,5 +548,35 @@ var WPTB_Helper = {
         }
         
         wptbTextMessage.innerHTML = ratingNumber + '/' + wptbTextMessageCommonVal;
+    },
+    ucfirst: function( str ) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+    wpTemplatesHandler: function( kind ) {
+        wp_enqueue_script( kind + '_item_script_handler',  );
+    },
+    wptbDocumentEventGenerate: function( eventCustom ) {
+        let event = new Event( eventCustom, {bubbles: true} );
+        document.dispatchEvent( event );
+    },
+    wptbItemStartScript: function( item ) {
+        //let script = item.getElementsByTagName( 'script' );
+        let infArr = item.className.match(/wptb-element-(.+)-(\d+)/i);
+        if( infArr && Array.isArray( infArr ) ) {
+            let kind = infArr[1];
+            if( kind ) {
+                let wpTemplateId = 'wptb-' + kind + '-script';
+                let template = wp.template( wpTemplateId );
+                let data  = {elemClass: infArr[0]};
+                let itemScriptText = template( data );
+                itemScriptText = itemScriptText.replace(/\r|\n|\t/g, '').trim();
+                
+                let scriptNew = document.createElement( 'script' );
+                scriptNew.setAttribute( 'type', 'text/javascript' );
+                scriptNew.innerHTML = itemScriptText;
+                item.parentNode.appendChild( scriptNew );
+                item.parentNode.removeChild( scriptNew );
+            }
+        }
     }
 }

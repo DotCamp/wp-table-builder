@@ -65,6 +65,12 @@ var WPTB_innerElementSet = function  ( element ) {
                 WPTB_Helper.dataTitleColumnSet( table );
             }
             
+            // start item javascript if item is new
+            let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+            let elemType = infArr[1];
+            if ( e.dataTransfer.getData( 'wptbElement' ) && elemType == 'text' ) {
+                WPTB_Helper.wptbItemStartScript( element );
+            }
         } else {
             return;
         }
