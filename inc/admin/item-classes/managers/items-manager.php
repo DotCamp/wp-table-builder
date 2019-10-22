@@ -1,5 +1,6 @@
 <?php
 namespace WP_Table_Builder\Inc\Admin\Item_Classes\Managers;
+use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -43,7 +44,7 @@ class Items_Manager {
 		$this->_item_objects = [];
 
 		foreach ( $build_items_filename as $item_filename ) {
-			include( WP_TABLE_BUILDER_DIR . 'inc/items/' . $item_filename . '-item.php' );
+			include( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/item-classes/items/' . $item_filename . '-item.php' );
 
 			$class_name = ucfirst( $item_filename ) . '_Item';
 
