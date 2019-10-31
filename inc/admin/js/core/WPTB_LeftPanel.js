@@ -25,8 +25,6 @@ var WPTB_LeftPanel = function () {
             for ( let i = 1; i < tableRows.length; i += 2 ) {
                 tableRows[i].style.backgroundColor = ui.color.toString();
             }
-            console.log(event);
-            console.log(this);
             WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
         },
         clear: function(){
@@ -277,11 +275,11 @@ var WPTB_LeftPanel = function () {
     let wptbTableCellNumber = document.getElementById( 'wptb-table-cell-number' );
     WPTB_Helper.numberImputSize( wptbTableCellNumber, 1, 50 );
     
-    let wptbTextfontSizeNumber = document.getElementById( 'wptb-size-number' );
-    WPTB_Helper.numberImputSize( wptbTextfontSizeNumber, 1, 50 );
-    
-    let wptbImageWidthNumber = document.getElementById( 'wptb-size-number' );
-    WPTB_Helper.numberImputSize( wptbImageWidthNumber, 2, 100 );
+//    let wptbTextfontSizeNumber = document.getElementById( 'wptb-size-number' );
+//    WPTB_Helper.numberImputSize( wptbTextfontSizeNumber, 1, 50 );
+//    
+//    let wptbImageWidthNumber = document.getElementById( 'wptb-size-number' );
+//    WPTB_Helper.numberImputSize( wptbImageWidthNumber, 2, 100 );
     
     let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );
     WPTB_Helper.numberImputSize( wptbTableColumnWidthNumber, 2, 500 );

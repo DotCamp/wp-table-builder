@@ -26,6 +26,28 @@ var WPTB_Helper = {
             star_rating: WPTB_Helper.getDragImageCustom( 'half-filled-rating-star' )
         };
     },
+    elementDragEndClear: function() {
+        let wptbMovingMode = document.getElementsByClassName( 'wptb-moving-mode' );
+        if ( wptbMovingMode.length > 0 ) {
+            for( let i = 0; i < wptbMovingMode.length; i++ ) {
+                wptbMovingMode[i].classList.remove( 'wptb-moving-mode' );
+            }
+        }
+
+        let wptbDropHandles = document.getElementsByClassName( 'wptb-drop-handle' );
+        if ( wptbDropHandles.length > 0 ) {
+            for( let i = 0; i < wptbDropHandles.length; i++ ) {
+                wptbDropHandles[i].style.display = 'none';
+            }
+        }
+
+        let wptbDropBorderMarkers = document.getElementsByClassName( 'wptb-drop-border-marker' );
+        if ( wptbDropBorderMarkers.length > 0 ) {
+            for( let i = 0; i < wptbDropBorderMarkers.length; i++ ) {
+                wptbDropBorderMarkers[i].style.display = 'none';
+            }
+        }
+    },
     listItemsRecalculateIndex: function( ulElem ) {
         let par = ulElem.querySelectorAll( 'p' );
         if ( par.length > 0 ) {
@@ -33,6 +55,71 @@ var WPTB_Helper = {
                 par[i].dataset.listStyleTypeIndex = Number( i ) + 1 + '.';
             }
         }
+    },
+    textTinyMceInit: function( target ) {
+        tinyMCE.init({
+            target: target.childNodes[0],
+            inline: true,
+            plugins: "link, paste",
+            dialog_type: "modal",
+            theme: 'modern',
+            menubar: false,
+            force_br_newlines : false,
+            force_p_newlines : false,
+            forced_root_block : '',
+            fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            paste_as_text: true,
+            toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+            setup : function( ed ) {
+                ed.on( 'change', function(e) {
+                    let row = WPTB_Helper.findAncestor( target, 'wptb-row' );
+                    if( row.classList.contains( 'wptb-table-head' ) ) {
+                        let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+                        WPTB_Helper.dataTitleColumnSet( table );
+                    }
+
+
+                });
+
+                ed.on( 'keydown', function(e) {
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 1, target );
+
+                    wptbActionsField.setParameters( target );
+                });
+                ed.on( 'keyup', function(e) {
+                    let wptbActionsField = new WPTB_ActionsField();
+
+                    wptbActionsField.addActionField( 1, target );
+
+                    wptbActionsField.setParameters( target );
+
+                    e.target.onblur = function() {
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
+                    }
+                });
+
+            },
+            init_instance_callback: function (editor) {
+                window.currentEditor = editor;
+                editor.on('focus', function (e) {
+                    var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                    if (window.currentEditor &&
+                        document.getElementById('wptb_builder').scrollTop >= 55 &&
+                        window.currentEditor.bodyElement.style.display != 'none') {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                        document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
+                        document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                    } else {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                        delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                        delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                    }
+                });
+            }
+        });
     },
     listItemsTinyMceInit: function( listItem ) {
         tinyMCE.init({
@@ -291,27 +378,20 @@ var WPTB_Helper = {
         } else {
             let wpPickerContainer = WPTB_Helper.findAncestor( event.target, 'wp-picker-container' );
             if( wpPickerContainer ) {
-                if( event.originalEvent.type == 'square' ) {
-                    let irisSquareHandle = wpPickerContainer.getElementsByClassName( 'iris-square-handle' );
-                    if( irisSquareHandle.length > 0 ) {
-                        irisSquareHandle = irisSquareHandle[0];
-                        irisSquareHandle.onmouseup = function() {
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    }
-                } else if( event.originalEvent.type == 'strip' ) {
-                    let uiSliderHandle = wpPickerContainer.getElementsByClassName( 'iris-slider-offset' );
-                    if( uiSliderHandle.length > 0 ) {
-                        uiSliderHandle = uiSliderHandle[0];
-                        uiSliderHandle.onmouseup = function() {
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    }
+                if( event.originalEvent.type == 'square' || event.originalEvent.type == 'strip' ) {
+                    let body = document.getElementsByTagName( 'body' )[0];
+                    body.removeEventListener( 'mouseup', WPTB_Helper.irisStripMouseUpStateSaveManager, false );
+                    body.addEventListener( 'mouseup', WPTB_Helper.irisStripMouseUpStateSaveManager, false );
                 }
             }
         }
+    },
+    irisStripMouseUpStateSaveManager: function() {
+        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+        
+        let body = document.getElementsByTagName( 'body' )[0];
+        body.removeEventListener( 'mouseup', WPTB_Helper.irisStripMouseUpStateSaveManager, false );
     },
     wpColorPickerClear: function( attribute, isId ) {
         let input;
@@ -370,6 +450,12 @@ var WPTB_Helper = {
     newElementProxy: function( el ) {
         if( el == 'text' ) {
             let data = {kind: 'text'};
+            return new WPTB_ItemObject( data );
+        } else if( el == 'button' ) {
+            let data = {kind: 'button'};
+            return new WPTB_ItemObject( data );
+        } else if( el == 'image' ) {
+            let data = {kind: 'image'};
             return new WPTB_ItemObject( data );
         }
         
@@ -525,12 +611,14 @@ var WPTB_Helper = {
                 this.value = thisValue;
             }
         }
-        wptbNumberInputs.onkeyup = function() {
+        wptbNumberInputs.onkeyup = function(  ) {
             let thisValue = this.value;
-            thisValue = String( thisValue );
-            if ( thisValue > maxValue ) {
+            if ( parseInt( thisValue, 10 ) > parseInt( maxValue, 10 ) ) {
                 this.value = maxValue;
             }
+            
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
     },
     starRatingTextMessageChenge: function( starRatingContainer ) {
@@ -552,31 +640,93 @@ var WPTB_Helper = {
     ucfirst: function( str ) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
-    wpTemplatesHandler: function( kind ) {
-        wp_enqueue_script( kind + '_item_script_handler',  );
-    },
     wptbDocumentEventGenerate: function( eventCustom ) {
         let event = new Event( eventCustom, {bubbles: true} );
         document.dispatchEvent( event );
     },
-    wptbItemStartScript: function( item ) {
-        //let script = item.getElementsByTagName( 'script' );
-        let infArr = item.className.match(/wptb-element-(.+)-(\d+)/i);
+    // run script for the pointed element
+    elementStartScript: function( element ) {
+        //let script = element.getElementsByTagName( 'script' );
+        let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
         if( infArr && Array.isArray( infArr ) ) {
             let kind = infArr[1];
             if( kind ) {
                 let wpTemplateId = 'wptb-' + kind + '-script';
                 let template = wp.template( wpTemplateId );
                 let data  = {elemClass: infArr[0]};
-                let itemScriptText = template( data );
-                itemScriptText = itemScriptText.replace(/\r|\n|\t/g, '').trim();
+                let elementScriptText = template( data );
+                elementScriptText = elementScriptText.replace(/\r|\n|\t/g, '').trim();
                 
                 let scriptNew = document.createElement( 'script' );
                 scriptNew.setAttribute( 'type', 'text/javascript' );
-                scriptNew.innerHTML = itemScriptText;
-                item.parentNode.appendChild( scriptNew );
-                item.parentNode.removeChild( scriptNew );
+                scriptNew.innerHTML = elementScriptText;
+                element.parentNode.appendChild( scriptNew );
+                element.parentNode.removeChild( scriptNew );
             }
         }
+    },
+    // deletes event handlers from the pointed option element and from all his daughter elements
+    deleteEventHandlers: function( element ) {
+        if( element ) {
+            $( element ).off();
+            let elementChildren = element.children;
+            if( elementChildren ) {
+                for ( let i = 0; i < elementChildren.length; i++ ) {
+                    WPTB_Helper.deleteEventHandlers( elementChildren[i] );
+                }
+            }
+        } else {
+            return;
+        }
+    },
+    // replace all occurrences in a string
+    replaceAll: function( string, search, replace ){
+        return string.split( search ).join( replace );
+    },
+    // clears code from TinyMCE attributes
+    elementClearFromTinyMce: function( element ) {
+        let mceContentBodys = element.querySelectorAll( '.mce-content-body' );
+        if( mceContentBodys.length > 0 ) {
+            for ( let k = 0; k < mceContentBodys.length; k++ ) {
+                mceContentBodys[k].classList.remove( 'mce-content-body' );
+            }
+        }
+
+        let dataMceStyle = element.querySelectorAll( '[data-mce-style]' );
+        if ( dataMceStyle.length > 0 ) {
+            for ( let k = 0; k < dataMceStyle.length; k++ ) {
+                dataMceStyle[k].removeAttribute( 'data-mce-style' );
+            }
+        }
+        
+        let mceEditFocus = element.querySelectorAll( '.mce-edit-focus' );
+        if( mceEditFocus.length > 0 ) {
+            for ( let k = 0; k < mceEditFocus.length; k++ ) {
+                mceEditFocus[k].classList.remove( 'mce-edit-focus' );
+            }
+        }
+
+        let contentEditable = element.querySelectorAll( '[contenteditable]' );
+        if ( contentEditable.length > 0 ) {
+            for ( let k = 0; k < contentEditable.length; k++ ) {
+                contentEditable[k].removeAttribute( 'contenteditable' );
+            }
+        }
+
+        let spellCheck = element.querySelectorAll( '[spellcheck]' );
+        if ( spellCheck.length > 0 ) {
+            for ( let k = 0; k < spellCheck.length; k++ ) {
+                spellCheck[k].removeAttribute( 'spellcheck' );
+            }
+        }
+
+        let mceIds = element.querySelectorAll( '[id^=mce_]' );
+        if ( mceIds.length > 0 ) {
+            for ( let k = 0; k < mceIds.length; k++ ) {
+                mceIds[k].removeAttribute( 'id' );
+            }
+        }
+        
+        return element;
     }
 }

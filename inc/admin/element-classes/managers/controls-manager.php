@@ -1,7 +1,7 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Managers;
-use WP_Table_Builder\Inc\Admin\Item_Classes\Controls\Base_Control as Base_Control;
-use WP_Table_Builder\Inc\Admin\Item_Classes\Base\Item_Base_Object as Item_Base_Object;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Managers;
+use WP_Table_Builder\Inc\Admin\Element_Classes\Controls\Base_Control as Base_Control;
+use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -11,7 +11,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder Controls Manager.
  *
- * WP Table Builder controls manager handler class is responsible for registering and
+ * WP Table Builder control manager handler class is responsible for registering and
  * initializing all the supported controls.
  *
  * @since 1.1.2
@@ -22,14 +22,31 @@ class Controls_Manager {
 	 * Size control.
 	 */
 	const SIZE = 'size';
+    
     /**
 	 * Color control.
 	 */
 	const COLOR = 'color';
+    
     /**
 	 *  Section Header control.
 	 */
 	const SECTION_HEADER = 'section_header';
+    
+    /**
+	 *  Change Element Attribute control.
+	 */
+	const CHANGE_ELEMENT_ATTRIBUTE = 'change_element_attribute';
+    
+    /**
+	 *  Href control.
+	 */
+	const HREF = 'href';
+    
+    /**
+	 *  Adding user id control.
+	 */
+	const ADDING_USER_ATTR = 'adding_user_attr';
     
     /**
 	 * Controls.
@@ -59,7 +76,10 @@ class Controls_Manager {
 		return [
 			self::COLOR, 
             self::SIZE,
-            self::SECTION_HEADER
+            self::SECTION_HEADER,
+            self::CHANGE_ELEMENT_ATTRIBUTE,
+            self::HREF,
+            self::ADDING_USER_ATTR
 		];
 	}
     
@@ -71,13 +91,13 @@ class Controls_Manager {
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @param Item_Base_Object $item      Item stack.
+	 * @param Element_Base_Object $item      Item stack.
 	 * @param string         $control_id   Control ID.
 	 * @param array          $control_data Control data.
 	 *
 	 * @return bool True if control added, False otherwise.
 	 */
-	public function add_control_to_stack( Item_Base_Object $item, $control_id, $control_data ) {
+	public function add_control_to_stack( Element_Base_Object $item, $control_id, $control_data ) {
 
 		$control_data['name'] = $control_id;
 
@@ -117,7 +137,7 @@ class Controls_Manager {
 
 		foreach ( self::get_controls_names() as $control_id ) {
 			$control_class_id = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $control_id ) ) );
-			$class_name = '\WP_Table_Builder\Inc\Admin\Item_Classes\Controls\Control_' . $control_class_id;
+			$class_name = '\WP_Table_Builder\Inc\Admin\Element_Classes\Controls\Control_' . $control_class_id;
             if( class_exists( $class_name ) ) {
                 $this->register_control_object( $control_id, new $class_name() );
             }
@@ -144,7 +164,7 @@ class Controls_Manager {
     /**
 	 * Get controls.
 	 *
-	 * Retrieve the controls list from the current instance.
+	 * Returns the controls list from the current instance.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -162,7 +182,7 @@ class Controls_Manager {
     /**
 	 * Get control.
 	 *
-	 * Retrieve a specific control from the current controls instance.
+	 * Returns a specific control from the current controls instance.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -180,7 +200,7 @@ class Controls_Manager {
 	/**
 	 * Render controls.
 	 *
-	 * Generate the final HTML for all the registered controls using the item
+	 * Generate the final HTML for all the registered controls using the element
 	 * template.
 	 *
 	 * @since 1.1.2
@@ -193,7 +213,7 @@ class Controls_Manager {
 	}
     
     /**
-	 * Render items content.
+	 * Render element content js templates.
 	 *
 	 * @since 1.1.2
 	 * @access public

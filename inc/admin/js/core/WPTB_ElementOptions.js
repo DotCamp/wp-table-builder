@@ -1,7 +1,7 @@
 var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
     var node = element.getDOMElement(), elemIdClass;
-    if( element.kind != 'text' ) {
+    if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
         prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
         prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
         elemIdClass = 'wptb-options-' + element.kind + "-" + index;
@@ -18,7 +18,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
     
     
     if ( kindIndexProt ) {
-        if ( element.kind == 'button' ) {
+        if ( element.kind == 'button' && false ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt )[0],
                 wptbButtonWrapper,
                 wptbButtonA,
@@ -113,7 +113,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 buttonBackgroundColorInput.value = WPTB_Helper.rgbToHex( buttonColor );
                 
             }
-        } else if ( element.kind == 'image' ) {
+        } else if ( element.kind == 'image' && false ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
             if ( affectedEl.length > 0 ) {
                 let elementsA = affectedEl[0].getElementsByTagName( 'a' );
@@ -383,7 +383,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             if (children[i].style)
                 children[i].style.display = 'none';
         }
-        if( element.kind != 'text' ) {
+        if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
             var infArr = this.className.match(/wptb-element-((.+-)\d+)/i),
                 optionsClass = '.wptb-' + infArr[2] + 'options' +
                     '.wptb-options-' + infArr[1];
@@ -400,7 +400,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             let wptbContrlStacksConfigId = 'wptb-' + element.kind + '-control-stack';
             let tmplControlsConfig = wp.template( wptbContrlStacksConfigId );
             let data = {
-                wrapper: '.' + infArr[0]
+                container: '.' + infArr[0]
             };
             let jsonControlsConfigJson = tmplControlsConfig( data );
             let jsonControlsConfig = JSON.parse( jsonControlsConfigJson );
@@ -414,8 +414,10 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             let elementOptionsGroup = document.getElementById( 'element-options-group' );
             let elementOptionsGroupChildren = elementOptionsGroup.children;
             for( let i = 0; i < elementOptionsGroupChildren.length; i++ ) {
-                let elem = elementOptionsGroupChildren[i].className.match(/wptb-options-text-(\d+)/i);
+                let regularText = new RegExp( 'wptb-options-' + element.kind + '-(\\d+)', "i" );
+                let elem = elementOptionsGroupChildren[i].className.match( regularText );
                 if( elem ) {
+                    WPTB_Helper.deleteEventHandlers( elementOptionsGroupChildren[i] );
                     elementOptionsGroup.removeChild( elementOptionsGroupChildren[i] );
                 }
             }
@@ -436,28 +438,26 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             
             // create controls 
             Object.keys( jsonControlsConfig ).forEach( function( key ) {
-                // get necessary wp js template
-                let tmplControlTemplate = wp.template( 'wptb-' + key + '-control' );
-                
-                
                 let data = jsonControlsConfig[key];
                 
-                // create class which needs for searching 
-                let targetInputAddClass;
-                if( jsonControlsConfig[key].selectors !== undefined ) {
-                    let selector,
-                    cssSetting;
-                    for ( let prop in jsonControlsConfig[key].selectors ) {
-                        selector = prop;
-                        cssSetting = jsonControlsConfig[key].selectors[prop];
-                    }
-
-                    targetInputAddClass = selector.replace( '.', '' ).replace( ' ', '-' ).trim() + '-' + cssSetting;
-                    targetInputAddClass = targetInputAddClass.toLowerCase();
-                    
-                    data.targetInputAddClass = targetInputAddClass;
-                }
+                // get necessary wp js template
+                let tmplControlTemplate = wp.template( 'wptb-' + data.type + '-control' );
                 
+                // create class which needs for searching 
+//                let targetInputAddClass;
+//                if( jsonControlsConfig[key].selectors !== undefined ) {
+//                    let selector,
+//                    cssSetting;
+//                    for ( let prop in jsonControlsConfig[key].selectors ) {
+//                        selector = prop;
+//                        cssSetting = jsonControlsConfig[key].selectors[prop];
+//                    }
+//
+//                    targetInputAddClass = selector.replace( '.', '' ).replace( ' ', '-' ).trim() + '-' + cssSetting;
+//                    targetInputAddClass = targetInputAddClass.toLowerCase();
+//                    
+//                    data.targetInputAddClass = targetInputAddClass;
+//                }
                 
                 let controlTemplate = tmplControlTemplate( data );
                 
@@ -468,7 +468,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 
                 wptbElementOptionsContainer.appendChild( wptbElementOptionContainer );
                 
-                let helperJavascriptElem = wptbElementOptionContainer.getElementsByTagName( 'script' );
+                let helperJavascriptElem = wptbElementOptionContainer.getElementsByTagName( 'wptb-template-script' );
                 if( helperJavascriptElem.length > 0 ) {
                     helperJavascriptElem = helperJavascriptElem[0];
                     let helperJavascriptCode = helperJavascriptElem.innerText;
@@ -523,31 +523,31 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
     if (element.kind == 'button') {
         //We must add this special kind of property, since it is triggered with click event
-        var buttons = prop.getElementsByClassName('wptb-btn-size-btn');
-
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].onclick = function () {
-                var size = this.innerHTML,
-                    n_Class = this.dataset.element,
-                    infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
-                    type = infArr[1],
-                    num = infArr[2],
-                    affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
-                affectedEl.classList.remove('wptb-size-S');
-                affectedEl.classList.remove('wptb-size-M');
-                affectedEl.classList.remove('wptb-size-L');
-                affectedEl.classList.remove('wptb-size-XL');
-                affectedEl.classList.add('wptb-size-' + size);
-                var b = this.parentNode.getElementsByClassName('wptb-btn-size-btn');
-                for (var i = 0; i < b.length; i++) {
-                    b[i].classList.remove('selected');
-                }
-                this.classList.add('selected');
-                
-                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                wptbTableStateSaveManager.tableStateSet();
-            }
-        }
+//        var buttons = prop.getElementsByClassName('wptb-btn-size-btn');
+//
+//        for (var i = 0; i < buttons.length; i++) {
+//            buttons[i].onclick = function () {
+//                var size = this.innerHTML,
+//                    n_Class = this.dataset.element,
+//                    infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+//                    type = infArr[1],
+//                    num = infArr[2],
+//                    affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+//                affectedEl.classList.remove('wptb-size-S');
+//                affectedEl.classList.remove('wptb-size-m');
+//                affectedEl.classList.remove('wptb-size-l');
+//                affectedEl.classList.remove('wptb-size-xl');
+//                affectedEl.classList.add('wptb-size-' + size);
+//                var b = this.parentNode.getElementsByClassName('wptb-btn-size-btn');
+//                for (var i = 0; i < b.length; i++) {
+//                    b[i].classList.remove('selected');
+//                }
+//                this.classList.add('selected');
+//                
+//                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+//                wptbTableStateSaveManager.tableStateSet();
+//            }
+//        }
     }
 
     /*
@@ -616,7 +616,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
     /*
     * alignment option in left panel using icons for button
     */
-    if (element.kind == 'button') {
+    if ( element.kind == 'button' && false) {
             //We must add this special kind of property, since it is triggered with click event
             var buttons = prop.getElementsByClassName('wptb-button-alignment-btn');
 
@@ -654,7 +654,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
     /*
     * alignment option in left panel using icons for image
     */
-    if (element.kind == 'image') {
+    if ( element.kind == 'image' && false ) {
         //We must add this special kind of property, since it is triggered with click event
         var buttons = prop.getElementsByClassName('wptb-image-alignment-btn');
 
@@ -690,7 +690,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         }
     }
     
-    if( element.kind != 'text' ) {
+    if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
         var optionControls = prop.getElementsByClassName('wptb-element-property');
 
         for (var i = 0; i < optionControls.length; i++) {

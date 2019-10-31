@@ -8,7 +8,7 @@ var WPTB_Button = function( text, DOMElementProt ) {
         kindIndexProt = undefined,
         copy = false;
 
-    DOMElement.classList.add('wptb-button-container', 'wptb-size-M', 'wptb-');
+    DOMElement.classList.add('wptb-button-container', 'wptb-size-m', 'wptb-');
     elButton.classList.add('wptb-button-wrapper');
     el_BDiv.classList.add('wptb-button');
     el_BDivP.innerHTML = text != undefined ? text : 'Button Text';

@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -40,7 +40,7 @@ class Control_Size extends Base_Control {
 	}
 
 	/**
-	 * Render color control output in the editor.
+	 * Render size control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *
@@ -61,7 +61,10 @@ class Control_Size extends Base_Control {
             var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
             let dataElement = 'wptb-options-' + infArr[1];
             
-            let targetInputAddClass = selector.replace( '.', '' ).replace( ' ', '-' ).trim() + '-' + cssSetting;
+            let targetInputAddClass = selector.trim();
+            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
+            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
+            targetInputAddClass += '-' + cssSetting;
             targetInputAddClass = targetInputAddClass.toLowerCase();
         #>
         
@@ -81,32 +84,41 @@ class Control_Size extends Base_Control {
             </div>
         </div>
         
-        <script>
+        <wptb-template-script>
             ( function() {
-                let selectorItem = document.querySelector( '{{{selector}}}' );
+                let selectorElement = document.querySelector( '{{{selector}}}' );
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                 for( let i = 0; i < targetInputs.length; i++ ) {
-                    let targetInputsCss = selectorItem.style['{{{cssSetting}}}'];
+                    let targetInputsCss = selectorElement.style['{{{cssSetting}}}'];
                     if( targetInputsCss ) {
                         targetInputs[i].value = parseInt( targetInputsCss );
                     }
                     if( targetInputs[i].classList.contains( 'wptb-size-slider' ) ) {
                         targetInputs[i].oninput = function ( event ) {
-                            this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
-                            this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].onchange( event );
-                        }
-                    } else if( targetInputs[i].classList.contains( 'wptb-number-input' ) ) {
-                        targetInputs[i].onchange = function() {
-                            this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
+                            if( event.target == this ) {
+                                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
+                            }
+                            
                             let selectorElem = document.querySelector( '{{{selector}}}' );
                             if( selectorElem ) {
                                 selectorElem.style['{{{cssSetting}}}'] = this.value + '{{{data.dimension}}}';
+                            };
+                            
+                            event.target.onmouseup = function() {
+                                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                                wptbTableStateSaveManager.tableStateSet();
                             }
+                        };
+                    } else if( targetInputs[i].classList.contains( 'wptb-number-input' ) ) {
+                        WPTB_Helper.numberImputSize( targetInputs[i], '{{{data.max}}}'.length - 1, '{{{data.max}}}' );
+                        targetInputs[i].oninput = function( event ) {
+                            this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
+                            this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
                         }
                     }
                 } 
             } )();
-        </script>
+        </wptb-template-script>
         
 		<?php
 	}

@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -61,7 +61,10 @@ class Control_Color extends Base_Control {
             var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
             let dataElement = 'wptb-options-' + infArr[1];
             
-            let targetInputAddClass = selector.replace( '.', '' ).replace( ' ', '-' ).trim() + '-' + cssSetting;
+            let targetInputAddClass = selector.trim();
+            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
+            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
+            targetInputAddClass += '-' + cssSetting;
             targetInputAddClass = targetInputAddClass.toLowerCase();
         #>
         <div class='wptb-settings-item-header' >
@@ -69,34 +72,45 @@ class Control_Color extends Base_Control {
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
             <div class='wptb-settings-col-xs-8'>
-                <input type="text" class="wptb-element-property 
-                       wptb-color-picker {{{targetInputAddClass}}}" data-type="color" data-element="{{{dataElement}}}" value=""/>
+                <input type="text" class="wptb-element-property wptb-color-picker {{{targetInputAddClass}}}" data-type="color" data-element="{{{dataElement}}}" value=""/>
             </div>
         </div>
         
-        <script>
+        <wptb-template-script>
             ( function() {
-                let selectorItem = document.querySelector( '{{{selector}}}' );
+                let selectorElement = document.querySelector( '{{{selector}}}' );
                 let targetInput = document.querySelector( '.{{{targetInputAddClass}}}' );
-                if( selectorItem && targetInput ) {
-                    let selectorItemCss = selectorItem.style['{{{cssSetting}}}'];
-                    if( selectorItemCss ) {
-                        targetInput.value = WPTB_Helper.rgbToHex( selectorItemCss );
+                if( selectorElement && targetInput ) {
+                    let selectorElementCss = selectorElement.style['{{{cssSetting}}}'];
+                    if( selectorElementCss ) {
+                        targetInput.classList.add('testCom');
+                        targetInput.value = WPTB_Helper.rgbToHex( selectorElementCss );
+                        
                     }
                 }
 
                 jQuery( '.{{{targetInputAddClass}}}' ).wpColorPicker({
                     change: function ( event, ui ) {
-                        WPTB_Helper.wpColorPickerChange( event, ui );
-
+                        let uiColor;
+                        if( ui ) {
+                            uiColor = ui.color.toString();
+                        } else {
+                            uiColor = '';
+                        }
+                        let selectorElement = document.querySelector( '{{{selector}}}' );
+                        selectorElement.style['{{{cssSetting}}}'] = uiColor;
+                        
                         WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
                     },
                     clear: function( event ) {
-                        WPTB_Helper.wpColorPickerChange( event );
+                        let selectorElement = document.querySelector( '{{{selector}}}' );
+                        selectorElement.style['{{{cssSetting}}}'] = '';
+                        
+                        WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
                     }
                 });
             } )();
-        </script>
+        </wptb-template-script>
 		<?php
 	}
 }

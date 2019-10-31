@@ -15,22 +15,14 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
                         
-                        <?php $item_objects = Init::instance()->items_manager->get_item_objects(); ?>
-                        <?php foreach( $item_objects as $item ): ?>
-                        <div class="wptb-element 1" draggable="true" data-wptb-element="<?php echo $item->get_item_data(); ?>">
-                            <?php require_once $item->get_directory_icon(); ?>
-                            <p class="wptb-draggable"><?php $item->get_title(); ?></p>
+                        <?php $element_objects = Init::instance()->Elements_Manager->get_element_objects(); ?>
+                        <?php foreach( $element_objects as $element ): ?>
+                        <div class="wptb-element" draggable="true" data-wptb-element="<?php echo $element->get_element_data(); ?>">
+                            <?php require_once $element->get_directory_icon(); ?>
+                            <p class="wptb-draggable"><?php $element->get_title(); ?></p>
                         </div>
                         <?php endforeach; ?>
                         
-                        <div class="wptb-element" draggable="true" data-wptb-element="image">
-                            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.php'; ?>
-                            <p class="wptb-draggable-prototype"><?php esc_html_e( 'Image', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-element" draggable="true" data-wptb-element="button">
-                            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.php'; ?>
-                            <p class="wptb-draggable-prototype"><?php esc_html_e( 'Button', 'wp-table-builder' ); ?></p>
-                        </div>
                         <div class="wptb-element" draggable="true" data-wptb-element="list">
                             <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
                             <p class="wptb-draggable-prototype"><?php esc_html_e( 'List', 'wp-table-builder' ); ?></p>

@@ -146,46 +146,46 @@ table.wptb-preview-table-mobile {
     max-width: 100%;
 }
 
-.wptb-size-S .wptb-button {
+.wptb-size-s .wptb-button {
     border-radius: .2rem;
     padding: .35rem .6rem;
     max-width: 100%;
 }
 
-.wptb-size-S .wptb-button p {
+.wptb-size-s .wptb-button p {
     font-size: .875rem;
     line-height: 1.5;
 }
 
-.wptb-size-M .wptb-button {
+.wptb-size-m .wptb-button {
     border-radius: .3rem;
     padding: .475rem .85rem;
     max-width: 100%;
 }
 
-.wptb-size-M .wptb-button p {
+.wptb-size-m .wptb-button p {
     font-size: 1.125rem;
     line-height: 1.5;
 }
 
-.wptb-size-L .wptb-button {
+.wptb-size-l .wptb-button {
     border-radius: .3rem;
     padding: .6rem 1.2rem;
     max-width: 100%;
 }
 
-.wptb-size-L .wptb-button p {
+.wptb-size-l .wptb-button p {
     font-size: inherit;
     line-height: 1.5;
 }
 
-.wptb-size-XL .wptb-button {
+.wptb-size-xl .wptb-button {
     border-radius: .4rem;
     padding: .8rem 1.35rem;
     max-width: 100%;
 }
 
-.wptb-size-XL .wptb-button p {
+.wptb-size-xl .wptb-button p {
     font-size: 1.35rem;
     line-height: 1.5;
 }

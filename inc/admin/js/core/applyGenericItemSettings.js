@@ -25,8 +25,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         let kindIndexProtArr = kindIndexProt.split('-');
         index = kindIndexProtArr[kindIndexProtArr.length - 1];
         // start item javascript if item is new
-        if( element.kind == 'text' ) {
-            WPTB_Helper.wptbItemStartScript( element.getDOMElement() );
+        if( element.kind == 'text' || element.kind == 'button' || element.kind == 'image' ) {
+            WPTB_Helper.elementStartScript( element.getDOMElement() );
         }
     }
     
@@ -50,12 +50,12 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         //wptbActionsField.addActionField( 1, node )
         
         if ( element.kind === 'button' ) {
-            let a = node.querySelector( 'a' ),
-                target = a.querySelector( 'div' );
-            a.onclick = function( e ) {
-                e.preventDefault();
-            }
-            WPTB_Helper.buttonsTinyMceInit( target );
+//            let a = node.querySelector( 'a' ),
+//                target = a.querySelector( 'div' );
+//            a.onclick = function( e ) {
+//                e.preventDefault();
+//            }
+//            WPTB_Helper.buttonsTinyMceInit( target );
         } else if (element.kind === 'text') {
 //            tinyMCE.init({
 //                target: node.childNodes[0],

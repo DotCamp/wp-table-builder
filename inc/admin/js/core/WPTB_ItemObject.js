@@ -21,6 +21,10 @@ var WPTB_ItemObject = function ( data ) {
             kindIndexProt = wptbElementMutch[1];
         };
         copy = true;
+        
+        if( data.tinyMceClear ) {
+            DOMElement = WPTB_Helper.elementClearFromTinyMce( DOMElement );
+        }
     }
      
     window.addEventListener( 'item:onmouseenter', function( event ) {

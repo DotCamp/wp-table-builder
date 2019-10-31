@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -27,10 +27,9 @@ class Control_Section_Header extends Base_Control {
 	}
 
 	/**
-	 * Enqueue size control scripts and styles.
+	 * Enqueue control scripts and styles.
 	 *
-	 * Used to register and enqueue custom scripts and styles used by the size
-	 * control.
+	 * Used to register and enqueue custom scripts and styles used by the section header control.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -40,7 +39,7 @@ class Control_Section_Header extends Base_Control {
 	}
 
 	/**
-	 * Render color control output in the editor.
+	 * Render section header control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *

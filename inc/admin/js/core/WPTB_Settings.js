@@ -8,12 +8,7 @@ var WPTB_Settings = function () {
             event.dataTransfer.setData( 'wptbElIndic-' + event.target.dataset.wptbElement, 'wptbElIndic-' + event.target.dataset.wptbElement );
         }
         elems[i].ondragend = function () {
-            let wptbDropHandle = document.querySelector( '.wptb-drop-handle' ),
-                wptbDropBorderMarker = document.querySelector( '.wptb-drop-border-marker' );
-            if ( wptbDropHandle || wptbDropBorderMarker ) {
-                wptbDropHandle.style.display = 'none';
-                wptbDropBorderMarker.style.display = 'none';
-            }
+            WPTB_Helper.elementDragEndClear();
         }
     };
     

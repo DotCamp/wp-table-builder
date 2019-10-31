@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Base;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Base;
 use WP_Table_Builder\Inc\Core\Init as Init;
 use WP_Table_Builder as NS;
 
@@ -10,23 +10,23 @@ if ( ! defined( 'WPINC' ) ) {
 
 
 /**
- * WP Table Builder item base.
+ * WP Table Builder element base.
  *
- * An abstract class to register new WP Table Builder items. 
+ * An abstract class to register new WP Table Builder elements. 
  *
- * This abstract class must be extended in order to register new items.
+ * This abstract class must be extended in order to register new elements.
  *
- * @since 1.0.0
+ * @since 1.1.2
  * @abstract
  */
-abstract class Item_Base_Object {
+abstract class Element_Base_Object {
     
     /**
-	 * Get item name.
+	 * Get element name.
 	 *
-	 * Retrieve the item name.
+	 * Retrieve the element name.
 	 *
-	 * @since 1.4.0
+	 * @since 1.1.2
 	 * @access public
 	 * @abstract
 	 *
@@ -38,9 +38,9 @@ abstract class Item_Base_Object {
 	 * Get unique name.
 	 *
 	 * Some classes need to use unique names, this method allows you to create
-	 * them. By default it retrieves the regular name.
+	 * them. By default it returns the regular name.
 	 *
-	 * @since 1.6.0
+	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Unique name.
@@ -50,9 +50,9 @@ abstract class Item_Base_Object {
 	}
     
     /**
-	 * Get item data.
+	 * Get element data.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string element data.
@@ -62,14 +62,14 @@ abstract class Item_Base_Object {
 	}
     
     /**
-	 * Get item title.
+	 * Get element title.
 	 *
 	 * Retrieve the item title.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Item title.
+	 * @return string Element title.
 	 */
 	public function get_title() {
 		return '';
@@ -80,7 +80,7 @@ abstract class Item_Base_Object {
 	 *
 	 * Retrieve url item icon.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Item icon.
@@ -92,9 +92,9 @@ abstract class Item_Base_Object {
     /**
 	 * Get stack.
 	 *
-	 * Retrieve the stack of controls.
+	 * Returns the stack of controls.
 	 *
-	 * @since 1.9.2
+	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return array Stack of controls.
@@ -116,7 +116,7 @@ abstract class Item_Base_Object {
 	 *
 	 * Used to add new controls group to stack
 	 *
-	 * @since 1.4.0
+	 * @since 1.1.2
 	 * @access protected
 	 */
 	protected function _register_controls() {}
@@ -126,7 +126,7 @@ abstract class Item_Base_Object {
 	 *
 	 * Register the all controls added by `_register_controls()`.
 	 *
-	 * @since 2.0.0
+	 * @since 1.1.2
 	 * @access protected
 	 */
 	public function init_controls() {
@@ -140,18 +140,17 @@ abstract class Item_Base_Object {
 	 *
 	 * This method should be used inside `_register_controls()`.
 	 *
-	 * @since 1.4.0
+	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @param string $id      Control ID.
 	 * @param array  $args    Control arguments.
-	 * @param array  $options Optional. Control options. Default is an empty array.
 	 *
 	 * @return bool True if control added, False otherwise.
 	 */
     
 	public function add_control( $id, array $args ) {
-        Init::instance()->controls_manager->add_control_to_stack( $this, $id, $args );
+        return Init::instance()->controls_manager->add_control_to_stack( $this, $id, $args );
 	}
     
     /**
@@ -159,27 +158,27 @@ abstract class Item_Base_Object {
 	 *
 	 * Used to generate the live preview, using a wp js template
 	 *
-	 * @since 2.0.0
+	 * @since 1.1.2
 	 * @access protected
 	 */
 	protected function _content_template() {}
     
     /**
-	 * Render item script output in the editor.
+	 * Render element script output in the editor.
 	 *
 	 * Used to generate the live preview, using a wp js template
 	 *
-	 * @since 2.0.0
+	 * @since 1.1.2
 	 * @access protected
 	 */
-	protected function _item_script() {}
+	protected function _element_script() {}
 
     /**
-	 * Output item template and script.
+	 * Output element template and script.
 	 *
-	 * Used to generate the item template on the editor.
+	 * Used to generate the element template on the editor.
 	 *
-	 * @since 2.0.0
+	 * @since 1.1.2
 	 * @access public
 	 */
 	public function output_template() {
@@ -195,7 +194,7 @@ abstract class Item_Base_Object {
         
         ob_start();
         
-        $this->_item_script();
+        $this->_element_script();
         
         $item_script = ob_get_clean();
         

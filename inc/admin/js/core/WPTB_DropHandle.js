@@ -82,9 +82,9 @@ var WPTB_DropHandle = function (thisElem, e) {
             
             // start item javascript if item is new
             let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
-            let elemType = infArr[1];
-            if ( e.dataTransfer.getData( 'wptbElement' ) && elemType == 'text' ) {
-                WPTB_Helper.wptbItemStartScript( element );
+            let elemKind = infArr[1];
+            if ( e.dataTransfer.getData( 'wptbElement' ) && ( elemKind == 'text' || elemKind == 'button' || elemKind == 'image' ) ) {
+                WPTB_Helper.elementStartScript( element );
             }
             
             wptbDropHandle.style.display = 'none';

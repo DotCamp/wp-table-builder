@@ -87,30 +87,40 @@ var WPTB_ActionsField = function() {
                     copy = new WPTB_List( temp, activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
-                } else if ( type == 'text' ) {
+                    WPTB_innerElementSet( copy.getDOMElement() );
+                } else if ( type == 'text' || type == 'button' || type == 'image' ) {
                     let data = {};
                     data.kind = type;
                     data.elemProt = activeElement;
+                    data.tinyMceClear = true;
                     copy = new WPTB_ItemObject( data );
-
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    
+                    WPTB_Helper.elementStartScript( copy.getDOMElement() );
+                    
+                    WPTB_innerElementSet( copy.getDOMElement() );
                 } else if ( type == 'image' ) {
                     copy = new WPTB_Image( '', activeElement );
                     
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    WPTB_innerElementSet( copy.getDOMElement() );
                 } else if( type == 'button' ) {
                     let text = activeElementClone.childNodes[0].querySelector( 'p' ).innerHTML;
  
                     copy = new WPTB_Button( text, activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    
+                    WPTB_Helper.elementStartScript( copy.getDOMElement() );
+                    
+                    WPTB_innerElementSet( copy.getDOMElement() );
                 } else if( type = 'star_rating' ) {
                     copy = new WPTB_StarRating( activeElementClone );
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    WPTB_innerElementSet( copy.getDOMElement() );
                 }
 
-                WPTB_innerElementSet( copy.getDOMElement() );
 
                 let wptbActionsField = new WPTB_ActionsField( 1, activeElement );
     
@@ -146,6 +156,10 @@ var WPTB_ActionsField = function() {
                 //actions.style.display = 'none';
                 this.actionsHide();
             };
+            
+            btnMove.ondragend = ( event ) => {
+                WPTB_Helper.elementDragEndClear();
+            }
 
             //actions.style.right = '-' + parseFloat( thisNode.offsetWidth ) + 'px';
             actions.style.display = 'block';

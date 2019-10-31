@@ -53,7 +53,7 @@ spl_autoload_register( function( $class_name ) {
 
 				$file_name = "interface-$interface_name.php";
 
-            } elseif( strpos( strtolower( $class_name ), 'wp_table_builder\inc\admin\item_classes' ) !== false ) {
+            } elseif( strpos( strtolower( $class_name ), 'wp_table_builder\inc\admin\element_classes' ) !== false ) {
                 $file_name = "$current.php";
             } else {
 				$file_name = "class-$current.php";

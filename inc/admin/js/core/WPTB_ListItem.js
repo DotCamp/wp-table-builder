@@ -37,7 +37,6 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
         wptbActionsField.addActionField( 2, DOMElement );
         
         wptbActionsField.setParameters( DOMElement );
-        console.log(DOMElement);
     };
 
     DOMElement.onmouseleave = function ( event ) {

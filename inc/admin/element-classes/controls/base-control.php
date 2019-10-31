@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Item_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -18,7 +18,7 @@ abstract class Base_Control {
     /**
 	 * Get control type.
 	 *
-	 * Retrieve the control type.
+	 * Return the control type.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -39,7 +39,7 @@ abstract class Base_Control {
     /**
 	 * Control content template.
 	 *
-	 * Used to generate the control HTML in the editor using wp js tempalte
+	 * Used to generate the control HTML in the editor using wp js template
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -48,9 +48,9 @@ abstract class Base_Control {
 	abstract public function content_template();
     
     /**
-	 * Output item template.
+	 * Output element template.
 	 *
-	 * Used to generate the item template on the editor.
+	 * Used to generate the element template on the editor.
 	 *
 	 * @since 1.1.2
 	 * @access public
