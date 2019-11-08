@@ -139,8 +139,8 @@ jQuery( document ).ready( function ( $ ) {
             wptb_tableReconstraction();
         if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
         } else {
-//            wptb_tableGenerateMobile();
-//            wptb_tableContainerSectionSmall();
+           wptb_tableGenerateMobile();
+           wptb_tableContainerSectionSmall();
         }
 
         //when window resize call wpcd_archiveSectionSmall and wptb_tableGenerateMobile
@@ -149,8 +149,8 @@ jQuery( document ).ready( function ( $ ) {
                 wptb_tableReconstraction();
             if( wptbPreviewTable[0].classList.contains( 'wptb-table-preview-head' ) ) {
             } else {
-//                wptb_tableGenerateMobile();
-//                wptb_tableContainerSectionSmall();
+               wptb_tableGenerateMobile();
+               wptb_tableContainerSectionSmall();
             }
         });
     }
