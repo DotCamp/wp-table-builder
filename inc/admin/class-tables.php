@@ -104,6 +104,13 @@ class Tables {
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
         $html = '<div class="wptb-table-container"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
+        $html .= '<script>'
+                . 'var wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
+                . 'if( wptbPreviewTable.length > 0 ) {'
+                . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
+                . '    wptbPreviewTable[0].style.display = "none";'
+                . '}'
+                . '</script>';
     	return ( $html ); 
     }
 

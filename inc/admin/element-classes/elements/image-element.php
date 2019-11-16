@@ -84,31 +84,14 @@ class Image_Element extends Element_Base_Object {
 			]
 		);
         
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php';
-		$left_align_image_svg = ob_get_clean();
-        
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php';
-		$center_align_image_svg = ob_get_clean();
-        
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php';
-		$right_align_image_svg = ob_get_clean();
 		$this->add_control(
 			'imageAlignmentCheckbox',
 			[
 				'label' => __( 'Image Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::CHANGE_ELEMENT_ATTRIBUTE,
+				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+                'selected' => 1,
                 'selectors' => [
-                    '{{{data.container}}} .wptb-image-wrapper a' => 'class: float',
-                ],
-                'numberSelectedButtonDefault' => '1',
-                'buttonDataNames' => ['left', 'center', 'right'],
-                'buttonViews' => [
-                    $left_align_image_svg, 
-                    $center_align_image_svg, 
-                    $right_align_image_svg
+                    '{{{data.container}}} .wptb-image-wrapper a' => 'float',
                 ]
 			]
 		);
@@ -177,7 +160,6 @@ class Image_Element extends Element_Base_Object {
         ?>
         ( function() {
             let element = document.getElementsByClassName( '{{{data.elemClass}}}' );
-            console.log(element);
             if( element.length > 0 ) {
                 element = element[0];
                 let a = element.getElementsByTagName( 'a' );

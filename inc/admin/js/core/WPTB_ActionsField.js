@@ -76,7 +76,7 @@ var WPTB_ActionsField = function() {
                 infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
                 let td = activeElement.parentNode;
-                if ( type == 'list' ) {
+                if ( type == 'list1' ) {
                     var temp = [],
                         srcList = activeElement.querySelectorAll('ul li .wptb-list-item-content');
 
@@ -88,7 +88,7 @@ var WPTB_ActionsField = function() {
 
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                     WPTB_innerElementSet( copy.getDOMElement() );
-                } else if ( type == 'text' || type == 'button' || type == 'image' ) {
+                } else if ( type == 'text' || type == 'button' || type == 'image' || type == 'star_rating' || type == 'list' ) {
                     let data = {};
                     data.kind = type;
                     data.elemProt = activeElement;

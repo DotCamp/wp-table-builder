@@ -1543,7 +1543,7 @@ table.wptb-table {
     width: 100%;
 }
 
-.wptb-list-item-container ul li {
+.wptb-list-container ul li {
     list-style: none;
     margin: 0px;
 }
@@ -1557,7 +1557,7 @@ table.wptb-table {
     line-height: 30px;
 }
 
-.wptb-list-item-container ul li>div>p::before {
+.wptb-list-container ul li>div>p::before {
     content: attr(data-list-style-type-index);
     display: inline-block;
     line-height: 30px;
@@ -1567,23 +1567,23 @@ table.wptb-table {
     cursor: text;
 }
 
-.wptb-list-item-container ul li>div>p::before {
+.wptb-list-container ul li>div>p::before {
     padding-right: 10px;
 }
 
-.wptb-list-item-container ul li>div>p.wptb-list-style-type-disc::before {
+.wptb-list-container ul li>div>p.wptb-list-style-type-disc::before {
     content: '\25CF';
 }
 
-.wptb-list-item-container ul li>div>p.wptb-list-style-type-circle::before {
+.wptb-list-container ul li>div>p.wptb-list-style-type-circle::before {
     content: '\25CB';
 }
 
-.wptb-list-item-container ul li>div>p.wptb-list-style-type-square::before {
+.wptb-list-container ul li>div>p.wptb-list-style-type-square::before {
     content: '\25A0';
 }
 
-.wptb-list-item-container ul li>div>p.wptb-list-style-type-none::before {
+.wptb-list-container ul li>div>p.wptb-list-style-type-none::before {
     content: '';
     padding-right: 0px;
 }
@@ -1594,7 +1594,7 @@ table.wptb-table {
     /*width: 100%;*/
 }
 
-.wptb-droppable.wptb-cell .wptb-list-item-container.wptb-directlyhovered {
+.wptb-droppable.wptb-cell .wptb-list-container.wptb-directlyhovered {
     display: block;
 }
 
@@ -1603,12 +1603,12 @@ table.wptb-table {
     width: 100%;
 }
 
-.wptb-droppable.wptb-cell .wptb-list-item-container.wptb-directlyhovered .wptb-directlyhovered {
+.wptb-droppable.wptb-cell .wptb-list-container.wptb-directlyhovered .wptb-directlyhovered {
     display: list-item;
     border: none !important;
 }
 
-.wptb-droppable.wptb-cell .wptb-list-item-container.wptb-directlyhovered .wptb-directlyhovered:before {
+.wptb-droppable.wptb-cell .wptb-list-container.wptb-directlyhovered .wptb-directlyhovered:before {
     content: "";
     display: inline-block;
     position: absolute;
@@ -1619,7 +1619,7 @@ table.wptb-table {
     border: 1px solid #1ea5e5 !important;
 }
 
-.wptb-list-item-container {
+.wptb-list-container {
     /*padding-left: 20px;*/
 }
 
@@ -2448,4 +2448,18 @@ td[class*="wptb-fused-cell"] {
 }
 .wptb-float-right {
     float: right;
+}
+
+/*
+ ** classes with text-align styles
+ */
+
+.wptb-text-align-left {
+    text-align: left;
+}
+.wptb-text-align-center {
+    text-align: center;
+}
+.wptb-text-align-right {
+    text-align: right;
 }

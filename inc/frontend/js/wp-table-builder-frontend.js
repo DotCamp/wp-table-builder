@@ -156,218 +156,284 @@ jQuery( document ).ready( function ( $ ) {
     }
     
     function wptb_tableReconstraction() {
+        // get necessary elements on page 
         let tableContainer = document.getElementsByClassName( 'wptb-table-container' );
         let previewTable = document.getElementsByClassName( 'wptb-preview-table' );
         let tableContainerMatrix = document.getElementsByClassName( 'wptb-table-container-matrix' );
-        if( tableContainerMatrix.length > 0 ) {
-            tableContainerMatrix = tableContainerMatrix[0];
-        }
+        
+        // Set default indicator of creating a new table in true
         let createNewTableIndic = true;
-        if( previewTable.length > 0 && tableContainer.length > 0 ) {
+        if( previewTable.length > 0 && tableContainer.length > 0 && tableContainerMatrix.length > 0 ) {
             tableContainer = tableContainer[0];
             previewTable = previewTable[0];
+            tableContainerMatrix = tableContainerMatrix[0];
+            
+            // check data parametrs reconstraction and wptbAdaptiveTable if they are both equal 1 then continue
             if( previewTable.dataset.reconstraction == 1 && previewTable.dataset.wptbAdaptiveTable == 1 ) {
+                
+                // get widths for wptb-table-container and wptb-preview-table
                 let tableContainerWidth = tableContainer.offsetWidth;
                 let previewTableWidth = previewTable.offsetWidth;
-                if( tableContainerWidth < previewTableWidth ) {
-                    tableContainer.style.overflow = 'unset';
-                    if( tableContainerMatrix ) tableContainerMatrix.classList.add( 'wptb-matrix-hide' );
-                    
-                    
-                    let tableColumns = previewTable.dataset.tableColumns;
-                    if( tableColumns ) {
-                        let tdWidth = previewTableWidth / tableColumns;
-                        let wholeColumnsInContainer = Math.floor( tableContainerWidth/tdWidth );
-                        
-                        
-                        if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
-                            let wptbPreviewTableMobile = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
-                            wptbPreviewTableMobile.classList.remove( 'wptb-mobile-hide' );
-                            let dataWholeColumnInContainer = wptbPreviewTableMobile.dataset.wholeColumnsInContainer;
-                            
-                            if( dataWholeColumnInContainer == wholeColumnsInContainer && previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
-                                createNewTableIndic = false;
-                            } else if( dataWholeColumnInContainer == wholeColumnsInContainer && 
-                                    ! previewTable.classList.contains( 'wptb-table-preview-head' ) && 
-                                    ( tableContainerWidth > 480 || wptbPreviewTableMobile.column == 1 ) ) {
-                                createNewTableIndic = false;
-                            } else {
-                                wptbPreviewTableMobile.parentNode.removeChild( wptbPreviewTableMobile );
+                
+                // get count of table columns
+                let tableColumns = previewTable.dataset.tableColumns;
+                
+                // check the top line if it is presented as a title
+                let tablePreviewHeadIndic = previewTable.classList.contains( 'wptb-table-preview-head' )
+                
+                // check conditions: if table top row is as "header" - table must have more that two columns, 
+                // otherwise table must have more taht one columns
+                if( ( ( ! tablePreviewHeadIndic || tableColumns > 2 ) && tableColumns > 1 ) ) {
+                    // if width of wptb-table-container less then width of wptb-preview-table - 
+                    // continue the way creation new mobile table
+                    if( tableContainerWidth < previewTableWidth ) {
+
+                        tableContainer.style.overflow = 'unset';
+
+                        // hide wptb-table-container-matrix
+                        if( tableContainerMatrix ) tableContainerMatrix.classList.add( 'wptb-matrix-hide' );
+
+                        if( previewTable.rows && tableColumns ) {
+
+                            // we get the estimated cell width
+                            let tdWidth = previewTableWidth / tableColumns;
+
+                            // get the quantity of whole Columns that are can placed in the container
+                            let wholeColumnsInContainer = Math.floor( tableContainerWidth/tdWidth );
+                            if( wholeColumnsInContainer < 1 ) wholeColumnsInContainer = 1;
+
+                            // check for the existence of a mobile table 
+                            // if it available, check this table for compliance 
+                            // with our conditions. If it compliance, remain this table 
+                            // and cancel creating a new table ( createNewTableIndic = false ).
+                            if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
+                                let wptbPreviewTableMobile = document.getElementsByClassName( 'wptb-preview-table-mobile' )[0];
+                                wptbPreviewTableMobile.classList.remove( 'wptb-mobile-hide' );
+                                let dataWholeColumnInContainer = wptbPreviewTableMobile.dataset.wholeColumnsInContainer;
+
+                                if( dataWholeColumnInContainer == wholeColumnsInContainer && previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
+                                    createNewTableIndic = false;
+                                } else if( dataWholeColumnInContainer == wholeColumnsInContainer && 
+                                        ! previewTable.classList.contains( 'wptb-table-preview-head' ) && 
+                                        ( tableContainerWidth > 480 || wptbPreviewTableMobile.column == 1 ) ) {
+                                    createNewTableIndic = false;
+                                } else {
+                                    wptbPreviewTableMobile.parentNode.removeChild( wptbPreviewTableMobile );
+                                }
                             }
-                        }
-                        
-                        if( createNewTableIndic ) {
-                            let newTable = document.createElement( 'table' );
-                            newTable.classList.add( 'wptb-preview-table-mobile' );
-                            let tableRows = previewTable.rows.length;
-                            let valuesIsSaved = false;
-                            let newTalbeLastSectionFilledColumns;
-                            
-                            if ( previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
-                                let tableRowsWithoutHeader = tableRows - 1;
-                                let newTableColumnsWithoutLeftHeader;
+    //                        
+                            // if indicator of creating of table "true" - continue 
+                            if( createNewTableIndic ) {
+                                // create new table for mobile devices
+                                let newTable = document.createElement( 'table' );
 
-                                for( let i = 0; i < tableRowsWithoutHeader; i++ ) {
-                                    newTableColumnsWithoutLeftHeader = wholeColumnsInContainer - 1 - i;
-                                    if( newTableColumnsWithoutLeftHeader == 0 ) newTableColumnsWithoutLeftHeader = 1;
-                                    newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
-                                    
-                                    if( Math.floor( wholeColumnsInContainer / ( newTableColumnsWithoutLeftHeader + 1 ) ) >= 2 && valuesIsSaved ) {
-                                        newTableColumnsWithoutLeftHeader = newTableColumnsWithoutLeftHeader + 1;
-                                        newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
-                                        break;
-                                    }
+                                // add css class for new mobile table
+                                newTable.classList.add( 'wptb-preview-table-mobile' );
 
-                                    if( newTalbeLastSectionFilledColumns == 0 ) {
-                                        valuesIsSaved = true;
-                                        break;
-                                    } else if( newTableColumnsWithoutLeftHeader - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
-                                        valuesIsSaved = true;
-                                        continue;
-                                    } else {
-                                        if( valuesIsSaved ) {
-                                            newTableColumnsWithoutLeftHeader = newTableColumnsWithoutLeftHeader + 1;
-                                            newTalbeLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
-                                            break;
-                                        } else {
-                                            continue;
-                                        }
-                                    }
-                                }
+                                // get number of rows for wptb-preview-table
+                                let tableRows = previewTable.rows.length;
 
-                                if( valuesIsSaved && newTableColumnsWithoutLeftHeader ) {
-                                    let countRows = tableColumns * Math.ceil( tableRowsWithoutHeader / newTableColumnsWithoutLeftHeader );
-                                    for( let j = 0; j < countRows; j++ ) {
-                                        let sectionNumber = Math.floor( j / tableColumns ),
-                                            tr = document.createElement( 'tr' ),
-                                            tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
-                                            td;
-                                        tdLeftHeader.style.backgroundColor = previewTable.rows[0].style.backgroundColor;
-                                        tdLeftHeader.style.width = null;
-                                        tdLeftHeader.style.height = null;
-                                        tdLeftHeader.removeAttribute( 'data-x-index' );
-                                        tdLeftHeader.removeAttribute( 'data-wptb-css-td-auto-width' );
-                                        if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                            tdLeftHeader.style.borderTopWidth = '5px';
-                                        }
-                                        tr.appendChild( tdLeftHeader );
+                                // In this variable must have quantity columns of the last section of the new table
+                                let newTableLastSectionFilledColumns;
 
-                                        for( let k = newTableColumnsWithoutLeftHeader*( sectionNumber ) + 1; k < newTableColumnsWithoutLeftHeader*( sectionNumber + 1) + 1; k++ ) {
-                                            if( k < previewTable.rows.length ) {
-                                                td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
-                                                td.style.backgroundColor = previewTable.rows[k].style.backgroundColor;
-                                                td.style.width = null;
-                                                td.style.height = null;
-                                                td.removeAttribute( 'data-x-index' );
-                                                td.removeAttribute( 'data-wptb-css-td-auto-width' );
-                                            } else {
-                                                td = document.createElement( 'td' );
-                                                td.style.borderWidth = '0px';
-                                                td.style.borderColor = previewTable.querySelector( 'td' );
-                                                if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                                    td.style.borderColor = previewTable.querySelector( 'td' ).style.borderColor;
-                                                }
-                                                td.style.background = '#fff';
-                                            }
+                                // set valuesIsSaved in 'false'
+                                // if the parameters newTableLastSectionFilledColumns get 
+                                // optimal values, valuesIsSaved must have value 'true'
+                                let valuesIsSaved = false;
 
-                                            if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                                td.style.borderTopWidth = '5px';
-                                            }
+                                // check if top row is as "header"
+                                if ( previewTable.classList.contains( 'wptb-table-preview-head' ) ) {
+                                    // quantity rows without top row
+                                    let tableRowsWithoutHeader = tableRows - 1;
 
-                                            tr.appendChild( td );
-                                        }
+                                    // this variable will have quantity columns in new mobile table
+                                    let newTableColumnsWithoutLeftHeader;
 
-                                        newTable.appendChild( tr );
-                                    }
-                                }
-                            } else {
-                                
-                                let newTableColumns;
-                                if( tableContainerWidth > 480 ) {
-                                    for( let i = 0; i < tableColumns; i++ ) {
-                                        newTableColumns = wholeColumnsInContainer - i;
-                                        if( newTableColumns == 0 ) newTableColumns = 1;
-                                        newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                    // if quantity of rows in desktop table more than 
+                                    // quantity whole columns which are can placed in the container, 
+                                    // execute "loop for"
+                                    if( tableRows > wholeColumnsInContainer ) {
+                                        // this code, сyclical reduces the number of columns in the new table, 
+                                        // until the optimal view is obtained so that the last block of the new table 
+                                        // has more than half the columns compared to the previous blocks  
+                                        for( let i = 0; i < tableRowsWithoutHeader; i++ ) {
+                                            newTableColumnsWithoutLeftHeader = ( wholeColumnsInContainer - 1 ) - i;
+                                            if( newTableColumnsWithoutLeftHeader <= 0 ) newTableColumnsWithoutLeftHeader = 1;
 
-                                        if( Math.floor( wholeColumnsInContainer / newTableColumns ) >= 2 && valuesIsSaved ) {
-                                            newTableColumns = newTableColumns + 1;
-                                            newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
-                                            break;
-                                        }
+                                            newTableLastSectionFilledColumns = tableRowsWithoutHeader % newTableColumnsWithoutLeftHeader;
 
-                                        if( newTalbeLastSectionFilledColumns == 0 ) {
-                                            valuesIsSaved = true;
-                                            break;
-                                        } else if( newTableColumns - 2 * newTalbeLastSectionFilledColumns <= 0 ) {
-                                            valuesIsSaved = true;
-                                            continue;
-                                        } else {
-                                            if( valuesIsSaved ) {
-                                                newTableColumns = newTableColumns + 1;
-                                                newTalbeLastSectionFilledColumns = tableColumns % newTableColumns;
+                                            if( newTableLastSectionFilledColumns == 0 ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 0 < newTableColumnsWithoutLeftHeader && newTableColumnsWithoutLeftHeader <= 6 && 
+                                                    ( newTableColumnsWithoutLeftHeader - ( 2 * newTableLastSectionFilledColumns ) < 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumnsWithoutLeftHeader ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 6 < newTableColumnsWithoutLeftHeader && newTableColumnsWithoutLeftHeader <= 12 && 
+                                                    ( newTableColumnsWithoutLeftHeader - ( 1.8 * newTableLastSectionFilledColumns ) < 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumnsWithoutLeftHeader ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 12 < newTableColumnsWithoutLeftHeader && newTableColumnsWithoutLeftHeader <= 18 && 
+                                                    ( newTableColumnsWithoutLeftHeader - ( 1.6 * newTableLastSectionFilledColumns ) < 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumnsWithoutLeftHeader ) {
+                                                valuesIsSaved = true;
                                                 break;
                                             } else {
                                                 continue;
                                             }
                                         }
+                                    } else {
+                                        newTableColumnsWithoutLeftHeader = tableRowsWithoutHeader;
+                                        newTableLastSectionFilledColumns = 0;
+                                        valuesIsSaved = true;
+                                    }
+
+                                    // if all necessary values ​​are available (  ), execute
+                                    if( valuesIsSaved ) {
+                                        let countRows;
+                                        if( newTableColumnsWithoutLeftHeader > 0 ) {
+                                            countRows = tableColumns * Math.ceil( tableRowsWithoutHeader / newTableColumnsWithoutLeftHeader );
+                                        } else {
+                                            countRows = tableColumns;
+                                        }
+
+                                        let sectionNumberLast = Math.floor( ( countRows - 1 ) / tableColumns );
+
+                                        for( let j = 0; j < countRows; j++ ) {
+                                            let sectionNumber = Math.floor( j / tableColumns ),
+                                                tr = document.createElement( 'tr' ),
+                                                tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
+                                                td;
+                                            tdLeftHeader.style.backgroundColor = previewTable.rows[0].style.backgroundColor;
+                                            tdLeftHeader.style.width = null;
+                                            tdLeftHeader.style.height = null;
+                                            tdLeftHeader.removeAttribute( 'data-x-index' );
+                                            tdLeftHeader.removeAttribute( 'data-wptb-css-td-auto-width' );
+                                            if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                                tdLeftHeader.style.borderTopWidth = '5px';
+                                            }
+                                            tr.appendChild( tdLeftHeader );
+
+                                            for( let k = newTableColumnsWithoutLeftHeader*( sectionNumber ) + 1; k < newTableColumnsWithoutLeftHeader*( sectionNumber + 1) + 1; k++ ) {
+                                                if( k < previewTable.rows.length ) {
+                                                    td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
+                                                    td.style.backgroundColor = previewTable.rows[k].style.backgroundColor;
+                                                    td.style.width = null;
+                                                    td.style.height = null;
+                                                    td.removeAttribute( 'data-x-index' );
+                                                    td.removeAttribute( 'data-wptb-css-td-auto-width' );
+                                                } else {
+                                                    td = document.createElement( 'td' );
+                                                    td.style.borderWidth = '0px';
+                                                    td.style.borderColor = previewTable.querySelector( 'td' );
+                                                    if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                                        td.style.borderColor = previewTable.querySelector( 'td' ).style.borderColor;
+                                                    }
+                                                    td.style.background = '#fff';
+                                                }
+
+                                                if( sectionNumber > 0 && j % tableColumns == 0 ) {
+                                                    td.style.borderTopWidth = '5px';
+                                                }
+
+                                                tr.appendChild( td );
+                                            }
+
+                                            newTable.appendChild( tr );
+                                        }
                                     }
                                 } else {
-                                    newTableColumns = 1;
-                                    newTalbeLastSectionFilledColumns = 0;
-                                    valuesIsSaved = true;
-                                    newTable.column = 1;
-                                }
-                                
-                                let increaseRatioRows = Math.ceil( tableColumns / newTableColumns );
-                                
-                                let newTableRows = increaseRatioRows * tableRows;
-                                
-                                if( valuesIsSaved ) {
-                                    for( let i = 0; i < newTableRows; i++ ) {
-                                        let sectionNumber = Math.floor( i / tableRows );
-                                        let tr = document.createElement( 'tr' );
-                                        let jMax;
-                                        let jStart;
-                                        if( sectionNumber != increaseRatioRows - 1 || newTalbeLastSectionFilledColumns == 0 ) {
-                                            jStart = sectionNumber * newTableColumns;
-                                            jMax = newTableColumns * ( 1 + sectionNumber );
-                                        } else {
-                                            jStart = tableColumns - newTalbeLastSectionFilledColumns;
-                                            jMax = tableColumns;
-                                        }
-                                        let row = previewTable.rows[i - sectionNumber * tableRows];
-                                        tr.classList = row.classList;
-                                        tr.style.backgroundColor = row.style.backgroundColor;
-                                        
-                                        for ( let j = jStart; j < jMax; j++ ) {
-                                            let newTd = row.children[j].cloneNode( true );
-                                            if( ! newTd.style.background ) {
-                                                let rowStyles = window.getComputedStyle( row );
-                                                newTd.style.backgroundColor = rowStyles.backgroundColor;
+                                    let newTableColumns;
+                                    if( tableContainerWidth > 480 ) {
+                                        for( let i = 0; i < tableColumns; i++ ) {
+                                            newTableColumns = wholeColumnsInContainer - i;
+                                            if( newTableColumns == 0 ) newTableColumns = 1;
+                                            newTableLastSectionFilledColumns = tableColumns % newTableColumns;
+
+                                            if( newTableLastSectionFilledColumns == 0 ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 0 < newTableColumns && newTableColumns <= 6 && 
+                                                    ( newTableColumns - ( 2 * newTableLastSectionFilledColumns ) <= 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumns ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 6 < newTableColumns && newTableColumns <= 12 && 
+                                                    ( newTableColumns - ( 1.8 * newTableLastSectionFilledColumns ) <= 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumns ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else if( 12 < newTableColumns && newTableColumns <= 18 && 
+                                                    ( newTableColumns - ( 1.6 * newTableLastSectionFilledColumns ) <= 0 ) && 
+                                                newTableLastSectionFilledColumns < newTableColumns ) {
+                                                valuesIsSaved = true;
+                                                break;
+                                            } else {
+                                                continue;
                                             }
-                                            newTd.style.width = null;
-                                            newTd.style.height = null;
-                                            newTd.removeAttribute( 'data-x-index' );
-                                            newTd.removeAttribute( 'data-wptb-css-td-auto-width' );
-                                            tr.appendChild( newTd );
                                         }
-                                        
-                                        newTable.appendChild( tr );
-                                        
+                                    } else {
+                                        newTableColumns = 1;
+                                        newTableLastSectionFilledColumns = 0;
+                                        valuesIsSaved = true;
+                                        newTable.column = 1;
+                                    }
+
+                                    let increaseRatioRows = Math.ceil( tableColumns / newTableColumns );
+
+                                    let newTableRows = increaseRatioRows * tableRows;
+
+                                    if( valuesIsSaved ) {
+                                        for( let i = 0; i < newTableRows; i++ ) {
+                                            let sectionNumber = Math.floor( i / tableRows );
+                                            let tr = document.createElement( 'tr' );
+                                            let jMax;
+                                            let jStart;
+                                            if( sectionNumber != increaseRatioRows - 1 || newTableLastSectionFilledColumns == 0 ) {
+                                                jStart = sectionNumber * newTableColumns;
+                                                jMax = newTableColumns * ( 1 + sectionNumber );
+                                            } else {
+                                                jStart = tableColumns - newTableLastSectionFilledColumns;
+                                                jMax = tableColumns;
+                                            }
+                                            let row = previewTable.rows[i - sectionNumber * tableRows];
+                                            tr.classList = row.classList;
+                                            tr.style.backgroundColor = row.style.backgroundColor;
+
+                                            for ( let j = jStart; j < jMax; j++ ) {
+                                                let newTd = row.children[j].cloneNode( true );
+                                                if( ! newTd.style.background ) {
+                                                    let rowStyles = window.getComputedStyle( row );
+                                                    newTd.style.backgroundColor = rowStyles.backgroundColor;
+                                                }
+                                                newTd.style.width = null;
+                                                newTd.style.height = null;
+                                                newTd.removeAttribute( 'data-x-index' );
+                                                newTd.removeAttribute( 'data-wptb-css-td-auto-width' );
+                                                tr.appendChild( newTd );
+                                            }
+
+                                            newTable.appendChild( tr );
+
+                                        }
                                     }
                                 }
+
+                                newTable.dataset.wholeColumnsInContainer = wholeColumnsInContainer;
+                                tableContainer.appendChild( newTable );
                             }
-                            
-                            newTable.dataset.wholeColumnsInContainer = wholeColumnsInContainer;
-                            tableContainer.appendChild( newTable );
                         }
+                    } else {
+                        if( tableContainerMatrix ) tableContainerMatrix.classList.remove( 'wptb-matrix-hide' );
+                        if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
+                            document.getElementsByClassName( 'wptb-preview-table-mobile' )[0].classList.add( 'wptb-mobile-hide' );
+                        }
+                        tableContainer.style.overflow = 'auto';
                     }
                 } else {
-                    if( tableContainerMatrix ) tableContainerMatrix.classList.remove( 'wptb-matrix-hide' );
-                    if( document.getElementsByClassName( 'wptb-preview-table-mobile' ).length > 0 ) {
-                        document.getElementsByClassName( 'wptb-preview-table-mobile' )[0].classList.add( 'wptb-mobile-hide' );
-                    }
-                    tableContainer.style.overflow = 'auto';
+                    previewTable.style.minWidth = 'auto';
                 }
             }
         }

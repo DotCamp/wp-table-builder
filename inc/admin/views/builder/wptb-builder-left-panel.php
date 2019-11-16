@@ -23,14 +23,6 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                         </div>
                         <?php endforeach; ?>
                         
-                        <div class="wptb-element" draggable="true" data-wptb-element="list">
-                            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ?>
-                            <p class="wptb-draggable-prototype"><?php esc_html_e( 'List', 'wp-table-builder' ); ?></p>
-                        </div>
-                        <div class="wptb-element" draggable="true" data-wptb-element="star_rating">
-                            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/half-filled-rating-star.php'; ?>
-                            <p class="wptb-draggable"><?php esc_html_e( 'Star Rating', 'wp-table-builder' ); ?></p>
-                        </div>
                     </div>              
                 </div>
             </div>

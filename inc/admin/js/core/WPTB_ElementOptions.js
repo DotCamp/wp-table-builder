@@ -1,7 +1,7 @@
 var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 
     var node = element.getDOMElement(), elemIdClass;
-    if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
+    if( false ) {
         prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
         prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
         elemIdClass = 'wptb-options-' + element.kind + "-" + index;
@@ -199,7 +199,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 //                textFontSizeInputNumber.value = parseInt( elementFontSize ) ? parseInt( elementFontSize ) : 10;
 //                textColorInput.value = WPTB_Helper.rgbToHex( elementTextColor );
 //            }
-        } else if ( element.kind == 'list' ) {
+        } else if ( element.kind == 'list' && false ) {
             let elementList = document.getElementsByClassName( 'wptb-element-' + kindIndexProt );
             if ( elementList.length > 0 ) {
                 let elementListColor = elementList[0].querySelector( 'p' ).style.color;
@@ -301,7 +301,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     }
                 }
             } 
-        } else if( element.kind == 'star_rating' ) {
+        } else if( element.kind == 'star_rating' && false ) {
             let affectedEl = document.getElementsByClassName( 'wptb-element-' + kindIndexProt ),wptbRatingAlignment;
             if( affectedEl.length > 0 ) {
                 affectedEl = affectedEl[0];
@@ -383,7 +383,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             if (children[i].style)
                 children[i].style.display = 'none';
         }
-        if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
+        if( false ) {
             var infArr = this.className.match(/wptb-element-((.+-)\d+)/i),
                 optionsClass = '.wptb-' + infArr[2] + 'options' +
                     '.wptb-options-' + infArr[1];
@@ -436,9 +436,12 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
             // show created container
             wptbElementOptionsContainer.style.display = 'block';
             
-            // create controls 
+            let controlScriptsArr = [];
+            // create controls
+            let i = 0;
             Object.keys( jsonControlsConfig ).forEach( function( key ) {
                 let data = jsonControlsConfig[key];
+                data.controlKey = key;
                 
                 // get necessary wp js template
                 let tmplControlTemplate = wp.template( 'wptb-' + data.type + '-control' );
@@ -458,11 +461,23 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
 //                    
 //                    data.targetInputAddClass = targetInputAddClass;
 //                }
-                
+
+                data.elemContainer = infArr[0];
+                data.elementControlTargetUnicClass = 'wptb-el-' + infArr[1] + '-' + data.controlKey;
                 let controlTemplate = tmplControlTemplate( data );
+                
+                //console.log( controlTemplate );
                 
                 let wptbElementOptionContainer = document.createElement( 'div' );
                 wptbElementOptionContainer.classList.add( 'wptb-element-option', 'wptb-settings-items' );
+                
+                if( data.customClassForContainer ) {
+                    wptbElementOptionContainer.classList.add( data.customClassForContainer );
+                }
+                
+                if( data.containerAdditionalStyles ) {
+                    wptbElementOptionContainer.setAttribute( 'style', data.containerAdditionalStyles );
+                }
                 
                 wptbElementOptionContainer.innerHTML = controlTemplate;
                 
@@ -476,9 +491,17 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                     let script = document.createElement( 'script' );
                     script.setAttribute( 'type', 'text/javascript' );
                     script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
-                    wptbElementOptionContainer.appendChild( script );
+                    controlScriptsArr.push( script );
                 }
+                
+                i++;
             });
+            
+            if( controlScriptsArr.length > 0 ) {
+                for( let i = 0; i < controlScriptsArr.length; i++ ) {
+                    wptbElementOptionsContainer.appendChild( controlScriptsArr[i] );
+                }
+            }
             
             
             WPTB_Helper.wptbDocumentEventGenerate( 'controlPanel:added:leftPanel' );
@@ -555,33 +578,33 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
     */
     if (element.kind == 'star_rating') {
             //We must add this special kind of property, since it is triggered with click event
-            var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
-
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].onclick = function () {
-                    var star_alignment = this.getAttribute('data-star_alignment'),
-                        n_Class = this.dataset.element,
-                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
-                        type = infArr[1],
-                        num = infArr[2],
-                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
-                        affectedEl.style.textAlign = star_alignment;
-
-                    var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
-                    for (var i = 0; i < b.length; i++) {
-                        b[i].classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    
-                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                    wptbTableStateSaveManager.tableStateSet();
-                }
-            }
+//            var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
+//
+//            for (var i = 0; i < buttons.length; i++) {
+//                buttons[i].onclick = function () {
+//                    var star_alignment = this.getAttribute('data-star_alignment'),
+//                        n_Class = this.dataset.element,
+//                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+//                        type = infArr[1],
+//                        num = infArr[2],
+//                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+//                        affectedEl.style.textAlign = star_alignment;
+//
+//                    var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
+//                    for (var i = 0; i < b.length; i++) {
+//                        b[i].classList.remove('selected');
+//                    }
+//                    this.classList.add('selected');
+//                    
+//                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+//                    wptbTableStateSaveManager.tableStateSet();
+//                }
+//            }
         }
     /*
     * alignment option in left panel using icons for list
     */
-    if (element.kind == 'list') {
+    if (element.kind == 'list' && false) {
             //We must add this special kind of property, since it is triggered with click event
             var buttons = prop.getElementsByClassName('wptb-list-alignment-btn');
 
@@ -690,7 +713,7 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
         }
     }
     
-    if( element.kind != 'text' && element.kind != 'button' && element.kind != 'image' ) {
+    if( false ) {
         var optionControls = prop.getElementsByClassName('wptb-element-property');
 
         for (var i = 0; i < optionControls.length; i++) {
@@ -901,42 +924,42 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                         wptbTextMessageSize.style.lineHeight = val + 'px';
                         break;
                     case 'stars-count':
-                        let starRatings = affectedEl.querySelectorAll( 'li' );
-
-                        let starRatingsCount = starRatings.length;
-
-                        if( val > starRatingsCount ) {
-                            let difference = val - starRatingsCount;
-                            let starRatingsLast = starRatings[starRatings.length - 1];
-
-                            let parent = starRatingsLast.parentNode;
-                            for( let i = 0; i < difference; i++ ){
-                                let newStarRating = starRatingsLast.cloneNode( true );
-                                newStarRating.removeAttribute( 'class' );
-                                newStarRating.setAttribute( 'class', 'wptb-rating-star' );
-                                newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + i + 1;
-                                WPTB_Helper.starRatingEventHandlersAdd( newStarRating );
-                                parent.appendChild( newStarRating );
-                            }
-                        } else if( val < starRatingsCount ) {
-                                let difference = parseInt( starRatingsCount ) - parseInt( val );
-
-                                if( val == 0 ) {
-                                    difference--;
-                                    starRatings[0].removeAttribute( 'class' );
-                                    starRatings[0].setAttribute( 'class', 'wptb-rating-star' );
-                                    starRatings[0].style.display = 'none';
-                                }
-
-                                let starRatingLength = starRatings.length;
-                                for( i = 0; i < difference; i++ ) {
-                                    starRatings[0].parentNode.removeChild( starRatings[starRatingLength - i - 1] );
-                                }
-                        } else if( val == starRatingsCount && starRatingsCount == 1 ) {
-                            starRatings[0].style.display = 'inline-block';
-                        }
-
-                        WPTB_Helper.starRatingTextMessageChenge( affectedEl );
+//                        let starRatings = affectedEl.querySelectorAll( 'li' );
+//
+//                        let starRatingsCount = starRatings.length;
+//
+//                        if( val > starRatingsCount ) {
+//                            let difference = val - starRatingsCount;
+//                            let starRatingsLast = starRatings[starRatings.length - 1];
+//
+//                            let parent = starRatingsLast.parentNode;
+//                            for( let i = 0; i < difference; i++ ){
+//                                let newStarRating = starRatingsLast.cloneNode( true );
+//                                newStarRating.removeAttribute( 'class' );
+//                                newStarRating.setAttribute( 'class', 'wptb-rating-star' );
+//                                newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + i + 1;
+//                                WPTB_Helper.starRatingEventHandlersAdd( newStarRating );
+//                                parent.appendChild( newStarRating );
+//                            }
+//                        } else if( val < starRatingsCount ) {
+//                            let difference = parseInt( starRatingsCount ) - parseInt( val );
+//
+//                            if( val == 0 ) {
+//                                difference--;
+//                                starRatings[0].removeAttribute( 'class' );
+//                                starRatings[0].setAttribute( 'class', 'wptb-rating-star' );
+//                                starRatings[0].style.display = 'none';
+//                            }
+//
+//                            let starRatingLength = starRatings.length;
+//                            for( i = 0; i < difference; i++ ) {
+//                                starRatings[0].parentNode.removeChild( starRatings[starRatingLength - i - 1] );
+//                            }
+//                        } else if( val == starRatingsCount && starRatingsCount == 1 ) {
+//                            starRatings[0].style.display = 'inline-block';
+//                        }
+//
+//                        WPTB_Helper.starRatingTextMessageChenge( affectedEl );
 
                         break;
                 }

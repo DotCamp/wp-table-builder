@@ -9,7 +9,8 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder color control.
  *
- * A Control class for creating color control. Displays a color picker field.
+ * A Control class for creating color control. Displays a color picker field. 
+ * When this control adds to element there is opportunity to point css type (color, backgroundColor ...)
  *
  * @since 1.1.2
  */
@@ -50,29 +51,28 @@ class Control_Color extends Base_Control {
 	public function content_template() {
 		?>
         <#
-            let selector,
-            cssSetting;
+            let label,
+                selector,
+                cssSetting,
+                targetInputAddClass;
+             
+            if( data.label ) {
+                label = data.label;
+            }
+            
             for ( let prop in data.selectors ) {
                 selector = prop;
                 cssSetting = data.selectors[prop];
             }
             
-            let selectorArr = selector.replace( '.', '' ).split( ' ' );
-            var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
-            let dataElement = 'wptb-options-' + infArr[1];
-            
-            let targetInputAddClass = selector.trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
-            targetInputAddClass += '-' + cssSetting;
-            targetInputAddClass = targetInputAddClass.toLowerCase();
+            targetInputAddClass = data.elementControlTargetUnicClass;
         #>
         <div class='wptb-settings-item-header' >
-            <p class="wptb-settings-item-title">{{{data.label}}}</p>
+            <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
             <div class='wptb-settings-col-xs-8'>
-                <input type="text" class="wptb-element-property wptb-color-picker {{{targetInputAddClass}}}" data-type="color" data-element="{{{dataElement}}}" value=""/>
+                <input type="text" class="wptb-element-property wptb-color-picker {{{targetInputAddClass}}}" data-type="color" value=""/>
             </div>
         </div>
         
@@ -80,12 +80,11 @@ class Control_Color extends Base_Control {
             ( function() {
                 let selectorElement = document.querySelector( '{{{selector}}}' );
                 let targetInput = document.querySelector( '.{{{targetInputAddClass}}}' );
+                
                 if( selectorElement && targetInput ) {
                     let selectorElementCss = selectorElement.style['{{{cssSetting}}}'];
                     if( selectorElementCss ) {
-                        targetInput.classList.add('testCom');
                         targetInput.value = WPTB_Helper.rgbToHex( selectorElementCss );
-                        
                     }
                 }
 
@@ -97,14 +96,23 @@ class Control_Color extends Base_Control {
                         } else {
                             uiColor = '';
                         }
-                        let selectorElement = document.querySelector( '{{{selector}}}' );
-                        selectorElement.style['{{{cssSetting}}}'] = uiColor;
+                        
+                        let selectorElements = document.querySelectorAll( '{{{selector}}}' );
+                        if( selectorElements.length > 0 ) {
+                            for( let i = 0; i < selectorElements.length; i++ ) {
+                                selectorElements[i].style['{{{cssSetting}}}'] = uiColor;
+                            }
+                        }
                         
                         WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
                     },
                     clear: function( event ) {
-                        let selectorElement = document.querySelector( '{{{selector}}}' );
-                        selectorElement.style['{{{cssSetting}}}'] = '';
+                        let selectorElements = document.querySelectorAll( '{{{selector}}}' );
+                        if( selectorElements.length > 0 ) {
+                            for( let i = 0; i < selectorElements.length; i++ ) {
+                                selectorElements[i].style['{{{cssSetting}}}'] = '';
+                            }
+                        }
                         
                         WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving( event );
                     }

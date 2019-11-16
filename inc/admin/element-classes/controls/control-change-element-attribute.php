@@ -7,9 +7,11 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder change element attribute control.
+ * WP Table Builder "change element attribute" control.
  *
- * A control class for creating change element attribute controle.
+ * A control class for creating "change element attribute" control to add and then change attribute.
+ * When this control adds to element there is opportunity to point type attribute ( id, class ... ) 
+ * and part of name this abbtibute.
  *
  * @since 1.1.2
  */
@@ -50,10 +52,19 @@ class Control_Change_Element_Attribute extends Base_Control {
 	public function content_template() {
 		?>
         <#
-            let selector,
-            attributeAndName,
+            let label,
+            selector,
+            attributeAndTitle,
             attribute,
-            attributeName;
+            attributeName,
+            buttonDataNames,
+            buttonViews = [],
+            targetAddClass;
+             
+            if( data.label ) {
+                label = data.label;
+            }
+            
             for ( let prop in data.selectors ) {
                 selector = prop;
                 attributeAndTitle = data.selectors[prop];
@@ -65,42 +76,47 @@ class Control_Change_Element_Attribute extends Base_Control {
                 attributeName = attributeAndTitleArr[1].trim();
             }
             
+            if( data.buttonDataNames ) {
+                buttonDataNames = data.buttonDataNames;
+            }
+            
+            if( data.buttonViews ) {
+                buttonViews = data.buttonViews;
+            }
+            
             let selectorArr = selector.replace( '.', '' ).split( ' ' );
             var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
             let dataElement = 'wptb-options-' + infArr[1];
-            let targetAddClass = selector.trim();
-            targetAddClass = WPTB_Helper.replaceAll( targetAddClass, '.', '' ).trim();
-            targetAddClass = WPTB_Helper.replaceAll( targetAddClass, ' ', '-' ).trim();
-            targetAddClass += '-' + attributeName;
-            targetAddClass = targetAddClass.toLowerCase();
+            
+            targetAddClass = data.elementControlTargetUnicClass;
         #>
         
         <div class="wptb-settings-item-header">
-            <p class="wptb-settings-item-title">{{{data.label}}}</p>
+            <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
-            <# if( data.buttonDataNames && Array.isArray( data.buttonDataNames ) ) { #>
+            <# if( buttonDataNames && Array.isArray( buttonDataNames ) ) { #>
             <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; padding-top: 23px;">
                 <ul>
                 <# let selected,
-                       selectedI,
-                       buttonDataNames = data.buttonDataNames;
+                       selectedI;
                     if( data.numberSelectedButtonDefault &&
                         data.numberSelectedButtonDefault >= 0 &&
-                        data.numberSelectedButtonDefault < data.buttonDataNames.length ) {
+                        data.numberSelectedButtonDefault < buttonDataNames.length ) {
                         selectedI = data.numberSelectedButtonDefault;
                     } else {
                         selectedI = 1;
                     }
-                    for( let i = 0; i < data.buttonDataNames.length; i++ ) { 
+                    for( let i = 0; i < buttonDataNames.length; i++ ) { 
                         if( i == selectedI ) {
                             selected = 'selected';
                         } else {
                             selected = '';
                         }
                         #>
-                    <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
-                        {{{selected}}} {{{targetAddClass}}}" data-name="{{{data.buttonDataNames[i]}}}" 
-                        data-element="{{{dataElement}}}">{{{data.buttonViews[i]}}}</li>
+                        <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
+                            {{{selected}}} {{{targetAddClass}}}" data-name="{{{buttonDataNames[i]}}}" >
+                            {{{buttonViews[i]}}}
+                        </li>
                     <# } #>
                 </ul>
             </div>
@@ -128,12 +144,8 @@ class Control_Change_Element_Attribute extends Base_Control {
                         
                         buttons[i].onclick = function () {
                             var buttonDataName = this.dataset.name,
-                            buttonDataNames = '{{{data.buttonDataNames}}}'.split( ',' ),
-                            n_Class = this.dataset.element,
-                            infArr = n_Class.match( /wptb-options-(.+)-(\d+)/i ),
-                            type = infArr[1],
-                            num = infArr[2],
-                            affectedEl = document.querySelector( '{{{selector}}}' );
+                            buttonDataNames = '{{{buttonDataNames}}}'.split( ',' ),
+                            selectorEl = document.querySelector( '{{{selector}}}' );
                             let attributeTitlesNew = '';
                             let attributesCollection;
                             if( buttonDataNames && Array.isArray( buttonDataNames ) ) {
@@ -142,9 +154,9 @@ class Control_Change_Element_Attribute extends Base_Control {
                                 });
                             }
 
-                            if( affectedEl && '{{{attribute}}}' && '{{{attributeName}}}' ) {
+                            if( selectorEl && '{{{attribute}}}' && '{{{attributeName}}}' ) {
 
-                                let attributeTitles = affectedEl.getAttribute( '{{{attribute}}}' );
+                                let attributeTitles = selectorEl.getAttribute( '{{{attribute}}}' );
 
                                 if( attributeTitles ) {
                                     let attributeTitlesArr = attributeTitles.split( ' ' );
@@ -160,10 +172,10 @@ class Control_Change_Element_Attribute extends Base_Control {
                                 }
 
                                 attributeTitlesNew += 'wptb-{{{attributeName}}}-' + buttonDataName;
-                                affectedEl.removeAttribute( '{{{attribute}}}' );
+                                selectorEl.removeAttribute( '{{{attribute}}}' );
 
                                 if( attributeTitlesNew ) {
-                                    affectedEl.setAttribute( '{{{attribute}}}', attributeTitlesNew );
+                                    selectorEl.setAttribute( '{{{attribute}}}', attributeTitlesNew );
                                 }
 
                                 var b = this.parentNode.getElementsByClassName( 'wptb-btn-size-btn' );

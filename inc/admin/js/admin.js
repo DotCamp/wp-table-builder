@@ -27,7 +27,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
         var kindIndexProtArr = kindIndexProt.split('-');
         index = kindIndexProtArr[kindIndexProtArr.length - 1];
         // start item javascript if item is new
-        if (element.kind == 'text' || element.kind == 'button' || element.kind == 'image') {
+        if (element.kind == 'text' || element.kind == 'button' || element.kind == 'image' || element.kind == 'star_rating' || element.kind == 'list') {
             WPTB_Helper.elementStartScript(element.getDOMElement());
         }
     }
@@ -123,10 +123,10 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             //                }
             //            });
         } else if (element.kind === 'list') {
-            listItems = node.getElementsByClassName('wptb-list-item-content');
-            for (var _i = 0; _i < listItems.length; _i++) {
-                WPTB_Helper.listItemsTinyMceInit(listItems[_i]);
-            }
+            //            listItems = node.getElementsByClassName( 'wptb-list-item-content' );
+            //            for ( let i = 0; i < listItems.length; i++ ) {
+            //                WPTB_Helper.listItemsTinyMceInit( listItems[i] );
+            //            }
         }
     };
 
@@ -157,26 +157,27 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
         //        var config = { attributes: true, attributeFilter: ['style'] };
         //        observer.observe( element.getDOMElement(), config );
     } else if (element.kind == 'star_rating') {
-        var ratingStars = node.getElementsByClassName('wptb-rating-star');
-        for (var _i2 = 0; _i2 < ratingStars.length; _i2++) {
-            var ratingStar = ratingStars[_i2];
-
-            WPTB_Helper.starRatingEventHandlersAdd(ratingStar);
-
-            var ritingStarZeroSet = ratingStar.querySelector('.wptb-rating-star-zero-set');
-            if (ritingStarZeroSet) {
-                ritingStarZeroSet.onclick = function (event) {
-                    var ulStarList = WPTB_Helper.findAncestor(event.target, 'wptb-rating-stars-list');
-                    if (ulStarList) {
-                        var children = ulStarList.children;
-                        for (var _i3 = 0; _i3 < children.length; _i3++) {
-                            children[_i3].classList.remove('wptb-rating-star-selected-full');
-                            children[_i3].classList.remove('wptb-rating-star-selected-half');
-                        }
-                    }
-                };
-            }
-        }
+        //        let ratingStars = node.getElementsByClassName( 'wptb-rating-star' );
+        //        for ( let i = 0; i < ratingStars.length; i++ ) {
+        //            let ratingStar = ratingStars[i];
+        //            
+        //            
+        //            WPTB_Helper.starRatingEventHandlersAdd( ratingStar );
+        //            
+        //            let ritingStarZeroSet = ratingStar.querySelector( '.wptb-rating-star-zero-set' );
+        //            if( ritingStarZeroSet ) {
+        //                ritingStarZeroSet.onclick = function( event ) {
+        //                    let ulStarList = WPTB_Helper.findAncestor( event.target, 'wptb-rating-stars-list' );
+        //                    if( ulStarList ) {
+        //                        let children = ulStarList.children;
+        //                        for( let i = 0; i < children.length; i++ ) {
+        //                            children[i].classList.remove( 'wptb-rating-star-selected-full' );
+        //                            children[i].classList.remove( 'wptb-rating-star-selected-half' );
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
     }
 
     var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
@@ -275,7 +276,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                 infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
                 type = infArr[1];
                 var td = activeElement.parentNode;
-                if (type == 'list') {
+                if (type == 'list1') {
                     var temp = [],
                         srcList = activeElement.querySelectorAll('ul li .wptb-list-item-content');
 
@@ -287,7 +288,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
 
                     td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                     WPTB_innerElementSet(copy.getDOMElement());
-                } else if (type == 'text' || type == 'button' || type == 'image') {
+                } else if (type == 'text' || type == 'button' || type == 'image' || type == 'star_rating' || type == 'list') {
                     var data = {};
                     data.kind = type;
                     data.elemProt = activeElement;
@@ -924,7 +925,7 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             // start item javascript if item is new
             var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
             var elemKind = infArr[1];
-            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image')) {
+            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list')) {
                 WPTB_Helper.elementStartScript(element);
             }
 
@@ -1055,7 +1056,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
 
     var node = element.getDOMElement(),
         elemIdClass;
-    if (element.kind != 'text' && element.kind != 'button' && element.kind != 'image') {
+    if (false) {
         prop = document.querySelector(".wptb-" + element.kind + "-options-prototype").cloneNode(true);
         prop.classList.remove("wptb-" + element.kind + "-options-prototype"); // remove prototype from the class
         elemIdClass = 'wptb-options-' + element.kind + "-" + index;
@@ -1243,7 +1244,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
             //                textFontSizeInputNumber.value = parseInt( elementFontSize ) ? parseInt( elementFontSize ) : 10;
             //                textColorInput.value = WPTB_Helper.rgbToHex( elementTextColor );
             //            }
-        } else if (element.kind == 'list') {
+        } else if (element.kind == 'list' && false) {
             var elementList = document.getElementsByClassName('wptb-element-' + kindIndexProt);
             if (elementList.length > 0) {
                 var elementListColor = elementList[0].querySelector('p').style.color;
@@ -1344,7 +1345,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     }
                 }
             }
-        } else if (element.kind == 'star_rating') {
+        } else if (element.kind == 'star_rating' && false) {
             var _affectedEl2 = document.getElementsByClassName('wptb-element-' + kindIndexProt),
                 wptbRatingAlignment = void 0;
             if (_affectedEl2.length > 0) {
@@ -1426,7 +1427,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         for (var i = 0; i < children.length; i++) {
             if (children[i].style) children[i].style.display = 'none';
         }
-        if (element.kind != 'text' && element.kind != 'button' && element.kind != 'image') {
+        if (false) {
             var infArr = this.className.match(/wptb-element-((.+-)\d+)/i),
                 optionsClass = '.wptb-' + infArr[2] + 'options' + '.wptb-options-' + infArr[1];
 
@@ -1454,12 +1455,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
             //document.getElementById( 'element-options-group' ).innerHTML = '';
             var elementOptionsGroup = document.getElementById('element-options-group');
             var elementOptionsGroupChildren = elementOptionsGroup.children;
-            for (var _i5 = 0; _i5 < elementOptionsGroupChildren.length; _i5++) {
+            for (var _i6 = 0; _i6 < elementOptionsGroupChildren.length; _i6++) {
                 var regularText = new RegExp('wptb-options-' + element.kind + '-(\\d+)', "i");
-                var elem = elementOptionsGroupChildren[_i5].className.match(regularText);
+                var elem = elementOptionsGroupChildren[_i6].className.match(regularText);
                 if (elem) {
-                    WPTB_Helper.deleteEventHandlers(elementOptionsGroupChildren[_i5]);
-                    elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i5]);
+                    WPTB_Helper.deleteEventHandlers(elementOptionsGroupChildren[_i6]);
+                    elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i6]);
                 }
             }
 
@@ -1476,9 +1477,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
             // show created container
             wptbElementOptionsContainer.style.display = 'block';
 
-            // create controls 
+            var controlScriptsArr = [];
+            // create controls
+            var _i5 = 0;
             Object.keys(jsonControlsConfig).forEach(function (key) {
                 var data = jsonControlsConfig[key];
+                data.controlKey = key;
 
                 // get necessary wp js template
                 var tmplControlTemplate = wp.template('wptb-' + data.type + '-control');
@@ -1499,10 +1503,22 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 //                    data.targetInputAddClass = targetInputAddClass;
                 //                }
 
+                data.elemContainer = infArr[0];
+                data.elementControlTargetUnicClass = 'wptb-el-' + infArr[1] + '-' + data.controlKey;
                 var controlTemplate = tmplControlTemplate(data);
+
+                //console.log( controlTemplate );
 
                 var wptbElementOptionContainer = document.createElement('div');
                 wptbElementOptionContainer.classList.add('wptb-element-option', 'wptb-settings-items');
+
+                if (data.customClassForContainer) {
+                    wptbElementOptionContainer.classList.add(data.customClassForContainer);
+                }
+
+                if (data.containerAdditionalStyles) {
+                    wptbElementOptionContainer.setAttribute('style', data.containerAdditionalStyles);
+                }
 
                 wptbElementOptionContainer.innerHTML = controlTemplate;
 
@@ -1516,9 +1532,17 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                     var script = document.createElement('script');
                     script.setAttribute('type', 'text/javascript');
                     script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
-                    wptbElementOptionContainer.appendChild(script);
+                    controlScriptsArr.push(script);
                 }
+
+                _i5++;
             });
+
+            if (controlScriptsArr.length > 0) {
+                for (var _i7 = 0; _i7 < controlScriptsArr.length; _i7++) {
+                    wptbElementOptionsContainer.appendChild(controlScriptsArr[_i7]);
+                }
+            }
 
             WPTB_Helper.wptbDocumentEventGenerate('controlPanel:added:leftPanel');
         }
@@ -1591,35 +1615,35 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
     /*
     * alignment option in left panel using icons for star-rating
     */
-    if (element.kind == 'star_rating') {
-        //We must add this special kind of property, since it is triggered with click event
-        var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
+    if (element.kind == 'star_rating') {}
+    //We must add this special kind of property, since it is triggered with click event
+    //            var buttons = prop.getElementsByClassName('wptb-rating-alignment-btn');
+    //
+    //            for (var i = 0; i < buttons.length; i++) {
+    //                buttons[i].onclick = function () {
+    //                    var star_alignment = this.getAttribute('data-star_alignment'),
+    //                        n_Class = this.dataset.element,
+    //                        infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
+    //                        type = infArr[1],
+    //                        num = infArr[2],
+    //                        affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
+    //                        affectedEl.style.textAlign = star_alignment;
+    //
+    //                    var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
+    //                    for (var i = 0; i < b.length; i++) {
+    //                        b[i].classList.remove('selected');
+    //                    }
+    //                    this.classList.add('selected');
+    //                    
+    //                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+    //                    wptbTableStateSaveManager.tableStateSet();
+    //                }
+    //            }
 
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].onclick = function () {
-                var star_alignment = this.getAttribute('data-star_alignment'),
-                    n_Class = this.dataset.element,
-                    infArr = n_Class.match(/wptb-options-(.+)-(\d+)/i),
-                    type = infArr[1],
-                    num = infArr[2],
-                    affectedEl = document.getElementsByClassName('wptb-element-' + type + '-' + num)[0];
-                affectedEl.style.textAlign = star_alignment;
-
-                var b = this.parentNode.getElementsByClassName('wptb-rating-alignment-btn');
-                for (var i = 0; i < b.length; i++) {
-                    b[i].classList.remove('selected');
-                }
-                this.classList.add('selected');
-
-                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                wptbTableStateSaveManager.tableStateSet();
-            };
-        }
-    }
     /*
     * alignment option in left panel using icons for list
     */
-    if (element.kind == 'list') {
+    if (element.kind == 'list' && false) {
         //We must add this special kind of property, since it is triggered with click event
         var buttons = prop.getElementsByClassName('wptb-list-alignment-btn');
 
@@ -1728,7 +1752,7 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         }
     }
 
-    if (element.kind != 'text' && element.kind != 'button' && element.kind != 'image') {
+    if (false) {
         var optionControls = prop.getElementsByClassName('wptb-element-property');
 
         for (var i = 0; i < optionControls.length; i++) {
@@ -1891,10 +1915,10 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                         break;
                     case 'star-size':
                         var _ratingStar = affectedEl.querySelectorAll('li');
-                        for (var _i6 = 0; _i6 < _ratingStar.length; _i6++) {
-                            _ratingStar[_i6].style.width = val + 'px';
-                            _ratingStar[_i6].style.height = val + 'px';
-                            var span = _ratingStar[_i6].querySelectorAll('span');
+                        for (var _i8 = 0; _i8 < _ratingStar.length; _i8++) {
+                            _ratingStar[_i8].style.width = val + 'px';
+                            _ratingStar[_i8].style.height = val + 'px';
+                            var span = _ratingStar[_i8].querySelectorAll('span');
                             for (var j = 0; j < span.length; j++) {
                                 if (span[j].querySelector('svg')) {
                                     span[j].style.width = val + 'px';
@@ -1914,13 +1938,13 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
 
                             var _val = this.checked ? 'checked' : 'unchecked';
                             if (_val == 'checked') {
-                                for (var _i7 = 0; _i7 < wptbNumeralRatingOptionContainer.length; _i7++) {
-                                    wptbNumeralRatingOptionContainer[_i7].style.display = 'block';
+                                for (var _i9 = 0; _i9 < wptbNumeralRatingOptionContainer.length; _i9++) {
+                                    wptbNumeralRatingOptionContainer[_i9].style.display = 'block';
                                 }
                                 _wptbTextMessage.parentNode.style.display = 'block';
                             } else if (_val == 'unchecked') {
-                                for (var _i8 = 0; _i8 < wptbNumeralRatingOptionContainer.length; _i8++) {
-                                    wptbNumeralRatingOptionContainer[_i8].style.display = 'none';
+                                for (var _i10 = 0; _i10 < wptbNumeralRatingOptionContainer.length; _i10++) {
+                                    wptbNumeralRatingOptionContainer[_i10].style.display = 'none';
                                 }
                                 _wptbTextMessage.parentNode.style.display = 'none';
                             }
@@ -1933,42 +1957,42 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                         wptbTextMessageSize.style.lineHeight = val + 'px';
                         break;
                     case 'stars-count':
-                        var starRatings = affectedEl.querySelectorAll('li');
-
-                        var starRatingsCount = starRatings.length;
-
-                        if (val > starRatingsCount) {
-                            var difference = val - starRatingsCount;
-                            var starRatingsLast = starRatings[starRatings.length - 1];
-
-                            var parent = starRatingsLast.parentNode;
-                            for (var _i9 = 0; _i9 < difference; _i9++) {
-                                var newStarRating = starRatingsLast.cloneNode(true);
-                                newStarRating.removeAttribute('class');
-                                newStarRating.setAttribute('class', 'wptb-rating-star');
-                                newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + _i9 + 1;
-                                WPTB_Helper.starRatingEventHandlersAdd(newStarRating);
-                                parent.appendChild(newStarRating);
-                            }
-                        } else if (val < starRatingsCount) {
-                            var _difference = parseInt(starRatingsCount) - parseInt(val);
-
-                            if (val == 0) {
-                                _difference--;
-                                starRatings[0].removeAttribute('class');
-                                starRatings[0].setAttribute('class', 'wptb-rating-star');
-                                starRatings[0].style.display = 'none';
-                            }
-
-                            var starRatingLength = starRatings.length;
-                            for (i = 0; i < _difference; i++) {
-                                starRatings[0].parentNode.removeChild(starRatings[starRatingLength - i - 1]);
-                            }
-                        } else if (val == starRatingsCount && starRatingsCount == 1) {
-                            starRatings[0].style.display = 'inline-block';
-                        }
-
-                        WPTB_Helper.starRatingTextMessageChenge(affectedEl);
+                        //                        let starRatings = affectedEl.querySelectorAll( 'li' );
+                        //
+                        //                        let starRatingsCount = starRatings.length;
+                        //
+                        //                        if( val > starRatingsCount ) {
+                        //                            let difference = val - starRatingsCount;
+                        //                            let starRatingsLast = starRatings[starRatings.length - 1];
+                        //
+                        //                            let parent = starRatingsLast.parentNode;
+                        //                            for( let i = 0; i < difference; i++ ){
+                        //                                let newStarRating = starRatingsLast.cloneNode( true );
+                        //                                newStarRating.removeAttribute( 'class' );
+                        //                                newStarRating.setAttribute( 'class', 'wptb-rating-star' );
+                        //                                newStarRating.dataset.value = parseInt(starRatingsLast.dataset.value) + i + 1;
+                        //                                WPTB_Helper.starRatingEventHandlersAdd( newStarRating );
+                        //                                parent.appendChild( newStarRating );
+                        //                            }
+                        //                        } else if( val < starRatingsCount ) {
+                        //                            let difference = parseInt( starRatingsCount ) - parseInt( val );
+                        //
+                        //                            if( val == 0 ) {
+                        //                                difference--;
+                        //                                starRatings[0].removeAttribute( 'class' );
+                        //                                starRatings[0].setAttribute( 'class', 'wptb-rating-star' );
+                        //                                starRatings[0].style.display = 'none';
+                        //                            }
+                        //
+                        //                            let starRatingLength = starRatings.length;
+                        //                            for( i = 0; i < difference; i++ ) {
+                        //                                starRatings[0].parentNode.removeChild( starRatings[starRatingLength - i - 1] );
+                        //                            }
+                        //                        } else if( val == starRatingsCount && starRatingsCount == 1 ) {
+                        //                            starRatings[0].style.display = 'inline-block';
+                        //                        }
+                        //
+                        //                        WPTB_Helper.starRatingTextMessageChenge( affectedEl );
 
                         break;
                 }
@@ -1986,6 +2010,10 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         }
     }
 };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var WPTB_Helper = {
     hexToRgb: function hexToRgb(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -2430,6 +2458,12 @@ var WPTB_Helper = {
         } else if (el == 'image') {
             var _data2 = { kind: 'image' };
             return new WPTB_ItemObject(_data2);
+        } else if (el == 'star_rating') {
+            var _data3 = { kind: 'star_rating' };
+            return new WPTB_ItemObject(_data3);
+        } else if (el == 'list') {
+            var _data4 = { kind: 'list' };
+            return new WPTB_ItemObject(_data4);
         }
 
         if (el == 'list') {
@@ -2615,9 +2649,11 @@ var WPTB_Helper = {
     ucfirst: function ucfirst(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
-    wptbDocumentEventGenerate: function wptbDocumentEventGenerate(eventCustom) {
-        var event = new Event(eventCustom, { bubbles: true });
-        document.dispatchEvent(event);
+    wptbDocumentEventGenerate: function wptbDocumentEventGenerate(eventCustom, element) {
+        if (eventCustom && element) {
+            var event = new Event(eventCustom, { bubbles: true });
+            element.dispatchEvent(event);
+        }
     },
     // run script for the pointed element
     elementStartScript: function elementStartScript(element) {
@@ -2703,6 +2739,96 @@ var WPTB_Helper = {
         }
 
         return element;
+    },
+    elementOptionContainerCustomClassSet: function elementOptionContainerCustomClassSet(targetInput, customClassForContainer) {
+        if (targetInput && customClassForContainer) {
+            var containerElement = WPTB_Helper.findAncestor(targetInput, 'wptb-element-option');
+            if (containerElement) {
+                containerElement.classList.add(customClassForContainer);
+            }
+        }
+    },
+    elementOptionContainerAdditionalStyles: function elementOptionContainerAdditionalStyles(targetInput, containerAdditionalStyles) {
+        if (targetInput && containerAdditionalStyles) {
+            var containerElement = WPTB_Helper.findAncestor(targetInput, 'wptb-element-option');
+            var containerStylesArrOne = containerAdditionalStyles.split(';');
+
+            if (containerElement && containerStylesArrOne) {
+                var containerStylesSet = function containerStylesSet(containerStyleStr, containerElement) {
+                    if (containerStyleStr) {
+                        containerStyleStrArr = containerStyleStr.split(':');
+
+                        if (containerStyleStrArr && Array.isArray(containerStyleStrArr)) {
+                            containerElement.style[containerStyleStrArr[0]] = containerStyleStrArr[1];
+                        }
+                    }
+                };
+
+                if (containerStylesArrOne && Array.isArray(containerStylesArrOne)) {
+                    for (var i = 0; i < containerStylesArrOne.length; i++) {
+                        console.log(containerStylesArrOne);
+                        if (containerStylesArrOne[i]) {
+                            containerStylesSet(containerStylesArrOne[i], containerElement);
+                        }
+                    }
+                } else {
+                    containerStylesSet(containerStylesArrOne, containerElement);
+                }
+            }
+        }
+    },
+    // function which set handler for event of changes of "select" control
+    selectControlsInclude: function selectControlsInclude(element, functionHandler) {
+        element.addEventListener('click', function () {
+            var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i),
+                elementKind = void 0;
+
+            if (infArr && Array.isArray(infArr)) {
+                elementKind = infArr[1];
+            }
+
+            if (!element.hasOwnProperty('selectControlsConnect') || element.selectControlsConnect !== true && elementKind) {
+                if (element.attributes && _typeof(element.attributes) === 'object') {
+                    (function () {
+
+                        var attributes = [].concat(_toConsumableArray(element.attributes));
+
+                        var selectClasses = [];
+
+                        for (var i = 0; i < attributes.length; i++) {
+                            if (attributes[i] && _typeof(attributes[i]) === 'object' && attributes[i].nodeName) {
+                                var regularText = new RegExp('data-wptb-el-' + elementKind + '-(\\d+)-(.+)', "i");
+                                var attr = attributes[i].nodeName.match(regularText);
+                                if (attr) {
+                                    var selectClass = attributes[i].nodeName.replace('data-', '');
+                                    selectClasses.push(selectClass);
+                                }
+                            }
+                        }
+
+                        for (var _i5 = 0; _i5 < selectClasses.length; _i5++) {
+                            element.addEventListener('wptb-control:select:' + selectClasses[_i5], function () {
+                                var selects = {};
+                                for (var j = 0; j < selectClasses.length; j++) {
+                                    var selectClassesArr = selectClasses[j].split('-');
+                                    var selectName = selectClassesArr[selectClassesArr.length - 1];
+                                    var select = document.getElementsByClassName(selectClasses[j]);
+                                    if (select.length > 0) {
+                                        select = select[0];
+
+                                        selects[selectName] = select.value;
+                                    }
+                                }
+
+                                functionHandler(selects, element);
+                            }, false);
+
+                            element.selectControlsConnect = true;
+                        }
+                    })();
+                }
+            }
+        }, false);
     }
 };
 var WPTB_Image = function WPTB_Image(src, DOMElementProt) {
@@ -2906,7 +3032,7 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
             // start item javascript if item is new
             var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
             var elemKind = infArr[1];
-            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image')) {
+            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list')) {
                 WPTB_Helper.elementStartScript(element);
             }
         } else {

@@ -457,6 +457,12 @@ var WPTB_Helper = {
         } else if( el == 'image' ) {
             let data = {kind: 'image'};
             return new WPTB_ItemObject( data );
+        } else if( el == 'star_rating' ) {
+            let data = {kind: 'star_rating'};
+            return new WPTB_ItemObject( data );
+        } else if( el == 'list' ) {
+            let data = {kind: 'list'};
+            return new WPTB_ItemObject( data );
         }
         
         if ( el == 'list' ) {
@@ -640,9 +646,11 @@ var WPTB_Helper = {
     ucfirst: function( str ) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
-    wptbDocumentEventGenerate: function( eventCustom ) {
-        let event = new Event( eventCustom, {bubbles: true} );
-        document.dispatchEvent( event );
+    wptbDocumentEventGenerate: function( eventCustom, element ) {
+        if( eventCustom && element ) {
+            let event = new Event( eventCustom, {bubbles: true} );
+            element.dispatchEvent( event );
+        }
     },
     // run script for the pointed element
     elementStartScript: function( element ) {
@@ -728,5 +736,93 @@ var WPTB_Helper = {
         }
         
         return element;
+    },
+    elementOptionContainerCustomClassSet: function( targetInput, customClassForContainer ) {
+        if( targetInput && customClassForContainer ) {
+            let containerElement = WPTB_Helper.findAncestor( targetInput, 'wptb-element-option' );
+            if( containerElement ) {
+                containerElement.classList.add( customClassForContainer );
+            }
+        }
+    },
+    elementOptionContainerAdditionalStyles: function( targetInput, containerAdditionalStyles ) {
+        if( targetInput && containerAdditionalStyles ) {
+            let containerElement = WPTB_Helper.findAncestor( targetInput, 'wptb-element-option' );
+            let containerStylesArrOne = containerAdditionalStyles.split( ';' );
+
+            if( containerElement && containerStylesArrOne ) {
+                function containerStylesSet( containerStyleStr, containerElement ) {
+                    if( containerStyleStr ) {
+                        containerStyleStrArr = containerStyleStr.split( ':' );
+
+                        if( containerStyleStrArr && Array.isArray( containerStyleStrArr ) ) {
+                            containerElement.style[containerStyleStrArr[0]] = containerStyleStrArr[1];
+                        }
+                    }
+                }
+                if( containerStylesArrOne && Array.isArray( containerStylesArrOne ) ) {
+                    for( let i = 0; i < containerStylesArrOne.length; i++ ) {
+                        console.log( containerStylesArrOne );
+                        if( containerStylesArrOne[i] ) {
+                            containerStylesSet( containerStylesArrOne[i], containerElement );
+                        }
+                    }
+                } else {
+                    containerStylesSet( containerStylesArrOne, containerElement );
+                }
+            }
+        }
+    },
+    // function which set handler for event of changes of "select" control
+    selectControlsInclude: function( element, functionHandler ) {
+        element.addEventListener( 'click', function() {
+            let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i ),
+                elementKind;
+
+            if( infArr && Array.isArray( infArr ) ) {
+                elementKind = infArr[1];
+            }
+            
+            if( ! element.hasOwnProperty( 'selectControlsConnect' ) || element.selectControlsConnect !== true && elementKind  ) {
+                if( element.attributes && typeof element.attributes === 'object' ) {
+                    
+                    let attributes = [...element.attributes];
+                    
+                    let selectClasses = [];
+                    
+                    for( let i = 0; i < attributes.length; i++ ) {
+                        if( attributes[i] && typeof attributes[i] === 'object' && attributes[i].nodeName ) {
+                            let regularText = new RegExp( 'data-wptb-el-' + elementKind + '-(\\d+)-(.+)', "i" );
+                            let attr = attributes[i].nodeName.match( regularText );
+                            if( attr ) {
+                                let selectClass = attributes[i].nodeName.replace( 'data-', '' );
+                                selectClasses.push( selectClass );
+                            }
+                        }
+                    }
+                    
+                    for( let i = 0; i < selectClasses.length; i++ ) {
+                        element.addEventListener( 'wptb-control:select:' + selectClasses[i], function() {
+                            let selects = {};
+                            for( let j = 0; j < selectClasses.length; j++ ) {
+                                let selectClassesArr = selectClasses[j].split( '-' );
+                                let selectName = selectClassesArr[selectClassesArr.length - 1];
+                                let select = document.getElementsByClassName( selectClasses[j] );
+                                if( select.length > 0 ) {
+                                    select = select[0];
+                                    
+                                    selects[selectName] = select.value;
+                                }
+                                
+                            }
+                            
+                            functionHandler( selects, element );
+                        }, false);
+
+                        element.selectControlsConnect = true;
+                    }
+                }
+            }
+        }, false );
     }
 }

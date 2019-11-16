@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder section header control.
  *
- * A control class for creating Section Header control.
+ * A control class for creating a Section Header control object to show the header of the control panel of the element.
  *
  * @since 1.1.2
  */
@@ -48,6 +48,12 @@ class Control_Section_Header extends Base_Control {
 	 */
 	public function content_template() {
 		?>
+        <#  
+            let label;
+            if( data.label ) {
+                label = data.label;
+            }
+        #>
         <div class="wptb-settings-dropdown">
             <div class="wptb-back-button">
                  <a href="javascript:void(0)"  title="Back" class="wptb-exit-options" >
@@ -59,7 +65,7 @@ class Control_Section_Header extends Base_Control {
                     </g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
                 </a>
             </div>
-            <div class="wptb-option-text">{{{data.label}}}</div>   
+            <div class="wptb-option-text">{{{label}}}</div>   
         </div>
 		<?php
 	}

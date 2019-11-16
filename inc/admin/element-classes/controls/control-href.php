@@ -9,7 +9,8 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder href control.
  *
- * A control class for creating href control.
+ * A control class for creating href control for to add href attribute to tag
+ * and also to set attributes target and rel="nofollow".
  *
  * @since 1.1.2
  */
@@ -49,20 +50,30 @@ class Control_Href extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-        <#
-            let selectorArr = data.selector.replace( '.', '' ).split( ' ' );
-            var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
-            let dataElement = 'wptb-options-' + infArr[1];
+        <#  
+            let label,
+                selector,
+                dataElement;
             
-            let targetInputAddClass = data.selector.trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
-            targetInputAddClass += '-href';
-            targetInputAddClass = targetInputAddClass.toLowerCase();
+            if( data.label ) {
+                label = data.label;
+            }
+            
+            if( data.selector ) {
+                selector = data.selector;
+            }
+            
+            if( selector ) {
+                let selectorArr = selector.replace( '.', '' ).split( ' ' );
+                var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
+                let dataElement = 'wptb-options-' + infArr[1];
+            }
+            
+            targetInputAddClass = data.elementControlTargetUnicClass;
         #>
         
         <div class="wptb-settings-item-header">
-            <p class="wptb-settings-item-title">{{{data.label}}}</p>
+            <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
@@ -83,7 +94,7 @@ class Control_Href extends Base_Control {
         
         <wptb-template-script>
             ( function() {
-                let selectorElement = document.querySelector( '{{{data.selector}}}' );
+                let selectorElement = document.querySelector( '{{{selector}}}' );
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                 for( let i = 0; i < targetInputs.length; i++ ) {
                     if( targetInputs[i].dataset.type == 'element-link' ) {

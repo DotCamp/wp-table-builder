@@ -39,7 +39,9 @@ class Elements_Manager {
 		$build_elements_filename = [
 			'text',
             'button',
-            'image'
+            'image',
+            'list',
+            'star_rating'
 		];
 
 		$this->_element_objects = [];

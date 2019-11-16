@@ -39,14 +39,34 @@ class Controls_Manager {
 	const CHANGE_ELEMENT_ATTRIBUTE = 'change_element_attribute';
     
     /**
+	 *  Element Alignment control.
+	 */
+    const ELEMENT_ALIGNMENT = 'element_alignment';
+    
+    /**
 	 *  Href control.
 	 */
 	const HREF = 'href';
     
     /**
-	 *  Adding user id control.
+	 *  Adding user attribute control.
 	 */
 	const ADDING_USER_ATTR = 'adding_user_attr';
+    
+    /**
+	 *  Adding entry field control.
+	 */
+	const ENTRY_FIELD = 'entry_field';
+    
+    /**
+	 *  Adding show hide control.
+	 */
+	const SHOW_HIDE = 'show_hide';
+    
+    /**
+	 *  Adding select control.
+	 */
+	const SELECT = 'select';
     
     /**
 	 * Controls.
@@ -78,8 +98,12 @@ class Controls_Manager {
             self::SIZE,
             self::SECTION_HEADER,
             self::CHANGE_ELEMENT_ATTRIBUTE,
+            self::ELEMENT_ALIGNMENT,
             self::HREF,
-            self::ADDING_USER_ATTR
+            self::ADDING_USER_ATTR,
+            self::ENTRY_FIELD,
+            self::SHOW_HIDE,
+            self::SELECT
 		];
 	}
     

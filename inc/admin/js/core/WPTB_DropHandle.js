@@ -83,7 +83,7 @@ var WPTB_DropHandle = function (thisElem, e) {
             // start item javascript if item is new
             let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
             let elemKind = infArr[1];
-            if ( e.dataTransfer.getData( 'wptbElement' ) && ( elemKind == 'text' || elemKind == 'button' || elemKind == 'image' ) ) {
+            if ( e.dataTransfer.getData( 'wptbElement' ) && ( elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list' ) ) {
                 WPTB_Helper.elementStartScript( element );
             }
             

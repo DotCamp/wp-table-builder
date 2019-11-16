@@ -7,9 +7,9 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder add element id control.
+ * WP Table Builder "adding user attr" control.
  *
- * A control class for adding element id control.
+ * A control class for "adding user attr" control to user can add an attribute for element.
  *
  * @since 1.1.2
  */
@@ -27,9 +27,9 @@ class Control_ADDING_USER_ATTR extends Base_Control {
 	}
 
 	/**
-	 * Enqueue change element attribute control scripts and styles.
+	 * Enqueue "adding user attr" control scripts and styles.
 	 *
-	 * Used to register and enqueue custom scripts and styles used by the adding user-id
+	 * Used to register and enqueue custom scripts and styles used by "adding user attr"
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -48,44 +48,55 @@ class Control_ADDING_USER_ATTR extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-        <#
-            let selectorArr = data.selector.replace( '.', '' ).split( ' ' );
-            var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
-            let dataElement = 'wptb-options-' + infArr[1];
+        <#  let label,
+                placeholder,
+                selector,
+                attrName,
+                targetInputAddClass;
             
-            let targetInputAddClass = data.selector.trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
-            targetInputAddClass += '-id';
-            targetInputAddClass = targetInputAddClass.toLowerCase();
+            if( data.label ) {
+                label = data.label;
+            }
+            
+            if( data.placeholder ) {
+                placeholder = data.placeholder;
+            }
+            
+            if( data.selector ) {
+                selector = data.selector;
+            }
+            
+            if( data.attrName ) {
+                attrName = data.attrName;
+            }
+            
+            targetInputAddClass = data.elementControlTargetUnicClass;
         #>
         
         <div class="wptb-settings-item-header">
-            <p class="wptb-settings-item-title">{{{data.label}}}</p>
+            <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
-                <input type="text" placeholder="{{{data.placeholder}}}" 
-                       class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
+                <input type="text" placeholder="{{{placeholder}}}" 
+                       class="wptb-element-property {{{targetInputAddClass}}}">
             </div>
         </div>   
 
         <wptb-template-script>
             ( function() {
                 let targetInput = document.querySelector( '.{{{targetInputAddClass}}}' );
-                let selectorElement = document.querySelector( '{{{data.selector}}}' );
+                let selectorElement = document.querySelector( '{{{selector}}}' );
                 
-                let attr = selectorElement.getAttribute( '{{{data.attrName}}}' );
-                console.log( attr );
+                let attr = selectorElement.getAttribute( '{{{attrName}}}' );
                 targetInput.value = attr;
-                console.log( targetInput );
                 
                 targetInput.onchange = function() {
                     if( selectorElement ) {
                         if( this.value ) {
-                            selectorElement.setAttribute( '{{{data.attrName}}}', this.value );
+                            selectorElement.setAttribute( '{{{attrName}}}', this.value );
                         } else {
-                            selectorElement.removeAttribute( '{{{data.attrName}}}' );
+                            selectorElement.removeAttribute( '{{{attrName}}}' );
                         }
                         
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();

@@ -9,7 +9,10 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder size control.
  *
- * A control class for creating size control.
+ * A control class for creating size control objects 
+ * for showing size field on the left panel. This fiels set css value for html tag.
+ * When this control adds for element, there is opportunity to point css type (width or fontSize ...)
+ * and also to point dimension of value
  *
  * @since 1.1.2
  */
@@ -51,72 +54,106 @@ class Control_Size extends Base_Control {
 		?>
         <#
             let selector,
-            cssSetting;
-            for ( let prop in data.selectors ) {
-                selector = prop;
-                cssSetting = data.selectors[prop];
+                cssSetting,
+                label,
+                max,
+                min,
+                defaultValue,
+                dimension;
+            
+            if( data.selectors && typeof data.selectors === 'object' ) {
+                for ( let prop in data.selectors ) {
+                    selector = prop;
+                    cssSetting = data.selectors[prop];
+                }
             }
             
-            let selectorArr = selector.replace( '.', '' ).split( ' ' );
-            var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
-            let dataElement = 'wptb-options-' + infArr[1];
+            if( data.label ) {
+                label = data.label;
+            }
+            if( data.max ) {
+                max = data.max;
+            } else {
+                max = 100;
+            }
+            if( data.min ) {
+                min = data.min;
+            } else {
+                min = 10;
+            }
+            if( data.defaultValue ) {
+                defaultValue = data.defaultValue;
+            } else {
+                defaultValue = 15;
+            }
+            if( data.dimension ) {
+                dimension = data.dimension;
+            } else {
+                dimension = 'px';
+            }
             
-            let targetInputAddClass = selector.trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, '.', '' ).trim();
-            targetInputAddClass = WPTB_Helper.replaceAll( targetInputAddClass, ' ', '-' ).trim();
-            targetInputAddClass += '-' + cssSetting;
-            targetInputAddClass = targetInputAddClass.toLowerCase();
+            targetInputAddClass = data.elementControlTargetUnicClass;
         #>
         
         <div class='wptb-settings-item-header' >
-            <p class="wptb-settings-item-title">{{{data.label}}}</p>
+            <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-8">
                 <input data-type="size" class="wptb-element-property wptb-size-slider {{{targetInputAddClass}}}" 
-                    type="range" min="{{{data.min}}}" max="{{{data.max}}}" step="1" value="{{{data.defaultValue}}}"> 
+                    type="range" min="{{{min}}}" max="{{{max}}}" step="1" value="{{{defaultValue}}}"> 
             </div>
             <div class="wptb-settings-col-xs-4">
                 <input id="wptb-size-number" data-type="size" 
                     class="wptb-size-number wptb-number-input wptb-element-property {{{targetInputAddClass}}}" 
-                    type="number" min="{{{data.min}}}" max="{{{data.max}}}" step="1" placeholder="{{{data.defaultValue}}}" pattern="[0-9]*">
-                <span class="wptb-input-px">{{{data.dimension}}}</span>
+                    type="number" min="{{{min}}}" max="{{{max}}}" step="1" placeholder="{{{defaultValue}}}" pattern="[0-9]*">
+                <span class="wptb-input-px">{{{dimension}}}</span>
             </div>
         </div>
         
         <wptb-template-script>
             ( function() {
-                let selectorElement = document.querySelector( '{{{selector}}}' );
-                let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-                for( let i = 0; i < targetInputs.length; i++ ) {
-                    let targetInputsCss = selectorElement.style['{{{cssSetting}}}'];
-                    if( targetInputsCss ) {
-                        targetInputs[i].value = parseInt( targetInputsCss );
-                    }
-                    if( targetInputs[i].classList.contains( 'wptb-size-slider' ) ) {
-                        targetInputs[i].oninput = function ( event ) {
-                            if( event.target == this ) {
-                                this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
-                            }
-                            
-                            let selectorElem = document.querySelector( '{{{selector}}}' );
-                            if( selectorElem ) {
-                                selectorElem.style['{{{cssSetting}}}'] = this.value + '{{{data.dimension}}}';
-                            };
-                            
-                            event.target.onmouseup = function() {
-                                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                                wptbTableStateSaveManager.tableStateSet();
-                            }
-                        };
-                    } else if( targetInputs[i].classList.contains( 'wptb-number-input' ) ) {
-                        WPTB_Helper.numberImputSize( targetInputs[i], '{{{data.max}}}'.length - 1, '{{{data.max}}}' );
-                        targetInputs[i].oninput = function( event ) {
-                            this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
-                            this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
+                if( '{{{selector}}}' ) {
+                    let selectorElement = document.querySelector( '{{{selector}}}' );
+                    let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
+
+                    for( let i = 0; i < targetInputs.length; i++ ) {
+                        let cssSetting = '{{{cssSetting}}}';
+                        let cssSettingArr = cssSetting.split( ',' );
+
+                        let targetInputsCss = selectorElement.style[cssSettingArr[0]];
+                        if( targetInputsCss ) {
+                            targetInputs[i].value = parseInt( targetInputsCss );
                         }
-                    }
-                } 
+                        if( targetInputs[i].classList.contains( 'wptb-size-slider' ) ) {
+                            targetInputs[i].oninput = function ( event ) {
+                                if( event.target == this ) {
+                                    this.parentNode.parentNode.getElementsByClassName('wptb-size-number')[0].value = this.value;
+                                }
+
+                                let selectorElements = document.querySelectorAll( '{{{selector}}}' );
+                                if( selectorElements.length > 0 ) {
+                                    for( let i = 0; i < selectorElements.length; i++ ) {
+                                        for( let j = 0; j < cssSettingArr.length; j++ ) {
+                                            selectorElements[i].style[cssSettingArr[j]] = this.value + '{{{dimension}}}';
+                                        }
+                                    }
+                                };
+
+                                event.target.onmouseup = function() {
+                                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                                    wptbTableStateSaveManager.tableStateSet();
+                                }
+                            };
+                        } else if( targetInputs[i].classList.contains( 'wptb-number-input' ) ) {
+                            WPTB_Helper.numberImputSize( targetInputs[i], '{{{max}}}'.length - 1, '{{{max}}}' );
+                            targetInputs[i].oninput = function( event ) {
+                                this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
+                                this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
+                            }
+                        }
+                    } 
+                }
             } )();
         </wptb-template-script>
         

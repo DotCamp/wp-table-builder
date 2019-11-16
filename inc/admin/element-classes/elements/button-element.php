@@ -39,7 +39,7 @@ class Button_Element extends Element_Base_Object {
 	}
 
 	/**
-	 * Get element button.
+	 * Get element title.
 	 *
 	 * Retrieve button editor element.
 	 *
@@ -129,31 +129,14 @@ class Button_Element extends Element_Base_Object {
 			]
 		);
         
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php';
-		$left_align_button_svg = ob_get_clean();
-        
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php';
-		$center_align_button_svg = ob_get_clean();
-        
-        ob_start();
-		require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php';
-		$right_align_button_svg = ob_get_clean();
 		$this->add_control(
 			'buttonAlignmentCheckbox',
 			[
 				'label' => __( 'Button Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::CHANGE_ELEMENT_ATTRIBUTE,
+				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+                'selected' => 1,
                 'selectors' => [
-                    '{{{data.container}}} .wptb-button-wrapper' => 'class: justify-content',
-                ],
-                'numberSelectedButtonDefault' => '1',
-                'buttonDataNames' => ['left', 'center', 'right'],
-                'buttonViews' => [
-                    $left_align_button_svg, 
-                    $center_align_button_svg, 
-                    $right_align_button_svg
+                    '{{{data.container}}} .wptb-button-wrapper' => 'justify-content',
                 ]
 			]
 		);
