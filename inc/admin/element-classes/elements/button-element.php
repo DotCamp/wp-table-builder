@@ -124,7 +124,7 @@ class Button_Element extends Element_Base_Object {
 			'buttonLink',
 			[
 				'label' => __( 'Button Link', 'wp_table_builder' ),
-				'type' => Controls_Manager::HREF,
+				'type' => Controls_Manager::URL,
                 'selector' => '{{{data.container}}} .wptb-button-wrapper a'
 			]
 		);

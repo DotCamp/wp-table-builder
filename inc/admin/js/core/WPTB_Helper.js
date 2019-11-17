@@ -676,7 +676,7 @@ var WPTB_Helper = {
     // deletes event handlers from the pointed option element and from all his daughter elements
     deleteEventHandlers: function( element ) {
         if( element ) {
-            $( element ).off();
+            jQuery( element ).off();
             let elementChildren = element.children;
             if( elementChildren ) {
                 for ( let i = 0; i < elementChildren.length; i++ ) {

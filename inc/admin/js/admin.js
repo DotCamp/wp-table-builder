@@ -1,3 +1,7 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
     var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -22,6 +26,24 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
             index = elementIndexMax + 1;
         } else {
             index = 1;
+        }
+
+        if (copy) {
+            // change all data-elements which save parameters for different controls
+            var wptbNodeattributes = [].concat(_toConsumableArray(node.attributes));
+
+            for (var _i = 0; _i < wptbNodeattributes.length; _i++) {
+                if (wptbNodeattributes[_i] && _typeof(wptbNodeattributes[_i]) === 'object' && wptbNodeattributes[_i].nodeName) {
+                    var regularText = new RegExp('data-wptb-el-' + element.kind + '-(\\d+)-(.+)', "i");
+                    var attr = wptbNodeattributes[_i].nodeName.match(regularText);
+                    if (attr && Array.isArray(attr)) {
+                        var newDataAttributeName = wptbNodeattributes[_i].nodeName.replace(element.kind + '-' + attr[1], element.kind + '-' + index);
+                        var newDataAttributeValue = wptbNodeattributes[_i].nodeValue;
+                        node.removeAttribute(wptbNodeattributes[_i].nodeName);
+                        node.setAttribute(newDataAttributeName, newDataAttributeValue);
+                    }
+                }
+            }
         }
     } else if (kindIndexProt && !copy) {
         var kindIndexProtArr = kindIndexProt.split('-');
@@ -1459,7 +1481,6 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
                 var regularText = new RegExp('wptb-options-' + element.kind + '-(\\d+)', "i");
                 var elem = elementOptionsGroupChildren[_i6].className.match(regularText);
                 if (elem) {
-                    WPTB_Helper.deleteEventHandlers(elementOptionsGroupChildren[_i6]);
                     elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i6]);
                 }
             }
@@ -2679,7 +2700,7 @@ var WPTB_Helper = {
     // deletes event handlers from the pointed option element and from all his daughter elements
     deleteEventHandlers: function deleteEventHandlers(element) {
         if (element) {
-            $(element).off();
+            jQuery(element).off();
             var elementChildren = element.children;
             if (elementChildren) {
                 for (var i = 0; i < elementChildren.length; i++) {

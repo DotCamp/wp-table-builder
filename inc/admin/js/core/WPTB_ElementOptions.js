@@ -417,7 +417,6 @@ var WPTB_ElementOptions = function ( element, index, kindIndexProt ) {
                 let regularText = new RegExp( 'wptb-options-' + element.kind + '-(\\d+)', "i" );
                 let elem = elementOptionsGroupChildren[i].className.match( regularText );
                 if( elem ) {
-                    WPTB_Helper.deleteEventHandlers( elementOptionsGroupChildren[i] );
                     elementOptionsGroup.removeChild( elementOptionsGroupChildren[i] );
                 }
             }

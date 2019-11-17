@@ -103,10 +103,12 @@ class Tables {
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
-        $html = '<div class="wptb-table-container"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
+        $html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
         $html .= '<script>'
-                . 'var wptbPreviewTable = document.getElementsByClassName( "wptb-preview-table" );'
-                . 'if( wptbPreviewTable.length > 0 ) {'
+                . 'var wptbContainer = document.getElementsByClassName( "wptb-table-' . $args['id'] . '" );'
+                . 'if( wptbContainer.length > 0 ) {'
+                . '    wptbContainer = wptbContainer[0];'
+                . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
                 . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
                 . '    wptbPreviewTable[0].style.display = "none";'
                 . '}'

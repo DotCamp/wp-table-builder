@@ -46,7 +46,7 @@ class Controls_Manager {
     /**
 	 *  Href control.
 	 */
-	const HREF = 'href';
+	const URL = 'url';
     
     /**
 	 *  Adding user attribute control.
@@ -99,7 +99,7 @@ class Controls_Manager {
             self::SECTION_HEADER,
             self::CHANGE_ELEMENT_ATTRIBUTE,
             self::ELEMENT_ALIGNMENT,
-            self::HREF,
+            self::URL,
             self::ADDING_USER_ATTR,
             self::ENTRY_FIELD,
             self::SHOW_HIDE,

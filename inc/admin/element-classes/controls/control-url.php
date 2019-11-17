@@ -7,14 +7,14 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder href control.
+ * WP Table Builder url control.
  *
- * A control class for creating href control for to add href attribute to tag
+ * A control class for creating url control for to add tag "a" with href attribute
  * and also to set attributes target and rel="nofollow".
  *
  * @since 1.1.2
  */
-class Control_Href extends Base_Control {
+class Control_Url extends Base_Control {
     /**
 	 * Get control type.
 	 *
@@ -24,13 +24,13 @@ class Control_Href extends Base_Control {
 	 * @return string Control type.
 	 */
 	public function get_type() {
-		return 'href';
+		return 'url';
 	}
 
 	/**
-	 * Enqueue href control scripts and styles.
+	 * Enqueue url control scripts and styles.
 	 *
-	 * Used to register and enqueue custom scripts and styles used by the href
+	 * Used to register and enqueue custom scripts and styles used by the url
 	 * control.
 	 *
 	 * @since 1.1.2
@@ -41,7 +41,7 @@ class Control_Href extends Base_Control {
 	}
 
 	/**
-	 * Render href control output in the editor.
+	 * Render url control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *
@@ -65,11 +65,12 @@ class Control_Href extends Base_Control {
             
             if( selector ) {
                 let selectorArr = selector.replace( '.', '' ).split( ' ' );
-                var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
+                let infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
                 let dataElement = 'wptb-options-' + infArr[1];
             }
             
             targetInputAddClass = data.elementControlTargetUnicClass;
+            let postfixIdFor = targetInputAddClass.replace( 'wptb-el', '' ).toLowerCase();
         #>
         
         <div class="wptb-settings-item-header">
@@ -81,14 +82,14 @@ class Control_Href extends Base_Control {
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
             </div>
             <div class="wptb-settings-col-xs-8">
-                <input type="checkbox" data-type="element-link-target" id="element-link-target"
+                <input type="checkbox" data-type="element-link-target" id="element-link-target{{{postfixIdFor}}}"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-link-target">Open Link in New Tab</label>
+                <label for="element-link-target{{{postfixIdFor}}}">Open Link in New Tab</label>
             </div>
             <div class="wptb-settings-col-xs-8">
-                <input type="checkbox" data-type="element-link-nofollow" id="element-link-nofollow" 
+                <input type="checkbox" data-type="element-link-nofollow" id="element-link-nofollow{{{postfixIdFor}}}" 
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-link-nofollow">Nofollow Link</label>
+                <label for="element-link-nofollow{{{postfixIdFor}}}">Nofollow Link</label>
             </div>
         </div>   
         

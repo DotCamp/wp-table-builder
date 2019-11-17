@@ -105,7 +105,7 @@ class Star_Rating_Element extends Element_Base_Object {
 				'label' => __( 'Star Color', 'wp_table_builder' ),
 				'type' => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{{data.container}}} .wptb-rating-star span' => 'fill',
+                    '{{{data.container}}} .wptb-rating-star span svg' => 'fill',
                 ]
 			]
 		);
@@ -232,7 +232,7 @@ class Star_Rating_Element extends Element_Base_Object {
             ?>
             </ul>
             <div class="wptb-success-box" style="display: none;">
-                <div class="wptb-text-message" style="font-size: 25px;"></div>
+                <div class="wptb-text-message" style="font-size: 25px;">0/<?php echo $countStarts; ?></div>
             </div>
         </div>
 		<?php

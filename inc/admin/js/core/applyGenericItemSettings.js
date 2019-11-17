@@ -21,6 +21,25 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         } else { 
             index = 1;
         }
+        
+        if( copy ) {
+            // change all data-elements which save parameters for different controls
+            let wptbNodeattributes = [...node.attributes];
+
+            for( let i = 0; i < wptbNodeattributes.length; i++ ) {
+                if( wptbNodeattributes[i] && typeof wptbNodeattributes[i] === 'object' && wptbNodeattributes[i].nodeName ) {
+                    let regularText = new RegExp( 'data-wptb-el-' + element.kind + '-(\\d+)-(.+)', "i" );
+                    let attr = wptbNodeattributes[i].nodeName.match( regularText );
+                    if( attr && Array.isArray( attr ) ) {
+                        let newDataAttributeName = wptbNodeattributes[i].nodeName.replace( element.kind + '-' + attr[1], element.kind + '-' + index );
+                        let newDataAttributeValue = wptbNodeattributes[i].nodeValue;
+                        node.removeAttribute( wptbNodeattributes[i].nodeName );
+                        node.setAttribute( newDataAttributeName, newDataAttributeValue );
+                    }
+                }
+            }
+        }
+        
     } else if ( kindIndexProt && ! copy ) {
         let kindIndexProtArr = kindIndexProt.split('-');
         index = kindIndexProtArr[kindIndexProtArr.length - 1];

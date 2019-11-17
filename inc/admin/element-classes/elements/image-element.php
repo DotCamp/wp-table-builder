@@ -115,7 +115,7 @@ class Image_Element extends Element_Base_Object {
 			'imageLink',
 			[
 				'label' => __( 'Image Link', 'wp_table_builder' ),
-				'type' => Controls_Manager::HREF,
+				'type' => Controls_Manager::URL,
                 'selector' => '{{{data.container}}} .wptb-image-wrapper a'
 			]
 		);

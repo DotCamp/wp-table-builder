@@ -208,21 +208,21 @@ table.wptb-preview-table-mobile {
     font-size: inherit !important;
 }
 
-.wptb-list-item-container.wptb-ph-element ul li {
+.wptb-list-container.wptb-ph-element ul li {
     list-style: none;
     margin: 0px 0px 10px;
 }
 
-.wptb-list-item-container.wptb-ph-element ul li:last-child {
+.wptb-list-container.wptb-ph-element ul li:last-child {
     margin-bottom: 0;
 }
 
-.wptb-list-item-container li p {
+.wptb-list-container li p {
     word-wrap: break-word;
     line-height: 20px;
 }
 
-.wptb-list-item-container li p::before {
+.wptb-list-container li p::before {
     content: attr(data-list-style-type-index);
     display: inline-block;
     line-height: 20px;
@@ -232,23 +232,23 @@ table.wptb-preview-table-mobile {
     font-family: verdana, sans-serif;
 }
 
-.wptb-list-item-container li p::before {
+.wptb-list-container li p::before {
     padding-right: 10px;
 }
 
-.wptb-list-item-container li p.wptb-list-style-type-disc::before {
+.wptb-list-container li p.wptb-list-style-type-disc::before {
     content: '\25CF';
 }
 
-.wptb-list-item-container li p.wptb-list-style-type-circle::before {
+.wptb-list-container li p.wptb-list-style-type-circle::before {
     content: '\25CB';
 }
 
-.wptb-list-item-container li p.wptb-list-style-type-square::before {
+.wptb-list-container li p.wptb-list-style-type-square::before {
     content: '\25A0';
 }
 
-.wptb-list-item-container li p.wptb-list-style-type-none::before {
+.wptb-list-container li p.wptb-list-style-type-none::before {
     content: '';
     padding-right: 0px;
 }
@@ -342,11 +342,17 @@ table.wptb-preview-table-mobile {
 
 .wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-half span.wptb-half-filled-rating-star {
     display: block;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-half span.wptb-half-filled-rating-star svg {
     fill: #FF912C;
 }
 
 .wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-full span.wptb-filled-rating-star {
     display: block;
+}
+
+.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-selected-full span.wptb-filled-rating-star svg {
     fill: #FF912C;
 }
 
