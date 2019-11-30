@@ -1,4 +1,4 @@
-var WPTB_Parser = function (code) {
+var WPTB_Parser = function ( code ) {
     let div = document.createElement( 'div' );
     div.innerHTML = code;
     

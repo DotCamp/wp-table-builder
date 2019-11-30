@@ -37,6 +37,13 @@ var WPTB_TableStateSaveManager = function() {
                 }
             }
             
+            let wptbDlementDatas = document.getElementsByClassName( 'wptb-element-datas' );
+            if( wptbDlementDatas.length > 0 ) {
+                wptbDlementDatas = wptbDlementDatas.innerHTML;
+            } else {
+                wptbDlementDatas = '';
+            }
+            
             let mceContentBodys = wptbNewPreviewTable.querySelectorAll( '.mce-content-body' );
             if( mceContentBodys.length > 0 ) {
                 for ( let k = 0; k < mceContentBodys.length; k++ ) {
@@ -58,7 +65,7 @@ var WPTB_TableStateSaveManager = function() {
                 }
             }
             
-            window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue] );
+            window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbDlementDatas] );
             
             // set new number of state which is showed now
             window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
@@ -172,6 +179,29 @@ var WPTB_TableStateSaveManager = function() {
                             head.removeChild( cssForTdsWidthAutoOld );
                         }
                         head.appendChild( cssForTdsWidthAuto );
+                    }
+                }
+                
+                
+                let wptbElementDatas = document.getElementsByClassName( 'wptb-element-datas' );
+                let body = document.getElementsByTagName( 'body' );
+                if( body.length > 0 ) {
+                    body = body[0];
+                }
+                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][2] ) {
+                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
+                    
+                    if( wptbElementDatas.length > 0 ) {
+                        wptbElementDatas = wptbElementDatas[0];
+                    } else {
+                        wptbElementDatas = document.createElement( 'div' );
+                        wptbElementDatas.classList.add( 'wptb-element-datas' );
+                        body.appendChild( wptbElementDatas );
+                    }
+                } else {
+                    if( wptbElementDatas.length > 0 ) {
+                        wptbElementDatas = wptbElementDatas[0];
+                        body.removeChild( wptbElementDatas );
                     }
                 }
 

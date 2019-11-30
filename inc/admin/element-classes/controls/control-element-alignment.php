@@ -68,7 +68,7 @@ class Control_Element_Alignment extends Base_Control {
                 label = data.label;
             }
                     
-            if( data.selected ) {
+            if( 'selected' in data ) {
                 if( data.selected == 0 ) {
                     selected0 = 'selected';
                 } else if( data.selected == 1 ) {

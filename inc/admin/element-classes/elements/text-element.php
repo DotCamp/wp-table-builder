@@ -25,18 +25,6 @@ class Text_Element extends Element_Base_Object {
 	public function get_name() {
 		return 'text';
 	}
-    
-    /**
-	 * Get element data.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @return string element data.
-	 */
-	public function get_element_data() {
-		return esc_attr( 'text', 'wp-table-builder' );
-	}
 
 	/**
 	 * Get element title.
@@ -55,16 +43,40 @@ class Text_Element extends Element_Base_Object {
 	/**
 	 * Get directory icon.
 	 *
-	 * Retrieve url text editor element icon.
+	 * Return directory text editor element icon.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string directory Element icon.
+	 */
+	public function get_directory_icon() {
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.svg'; ;
+	}
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url text icon
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Element icon.
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/text.php'; ;
+	public function get_url_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/text.svg' );
 	}
+    
+    /**
+	 * Include file with js script for element text
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/text-element.js' );
+    }
     
     /**
 	 * Register the element controls.
@@ -124,34 +136,4 @@ class Text_Element extends Element_Base_Object {
         <div><p>Text</p></div>
 		<?php
 	}
-    
-    /**
-	 * Render element script output in the editor.
-	 *
-	 * Used to generate the live preview, using a wp js template
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-    protected function _element_script() {
-        ?>
-        ( function() {
-            let element = document.getElementsByClassName( '{{{data.elemClass}}}' );
-            if( element.length > 0 ) {
-                element = element[0];
-                WPTB_Helper.textTinyMceInit( element );
-                
-                var observer = new MutationObserver( function( mutations ) {
-                    let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
-                    if( row.classList.contains( 'wptb-table-head' ) ) {
-                        let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
-                        WPTB_Helper.dataTitleColumnSet( table );
-                    }
-                });
-                var config = { attributes: true, attributeFilter: ['style'] };
-                observer.observe( element, config );
-            }
-        } )();
-        <?php
-    }
 }

@@ -52,7 +52,8 @@ class Admin_Menu {
                     'post_type' => 'wptb-tables',
                     'post_status' => 'publish',
                 ]);
-                add_post_meta( $id, '_wptb_content_', $params->content ); 
+                add_post_meta( $id, '_wptb_content_', $params->content );
+                add_post_meta( $id, '_wptb_table_elements_datas_', $params->elements_datas );
                 wp_die( json_encode( ['saved',$id] ) );
             } else {
                 wp_update_post([
@@ -63,6 +64,7 @@ class Admin_Menu {
                     'post_status' => 'publish',
                 ]);
                 update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+                update_post_meta( absint( $params->id ), '_wptb_table_elements_datas_', $params->elements_datas );
                 wp_die( json_encode( ['edited',''] ) );
             }
         } else {
@@ -72,10 +74,11 @@ class Admin_Menu {
 
 	public function get_table() {  
 		$post = get_post( absint( $_REQUEST['id'] ) );
-		$html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
+		$table_html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
+		$elements_datas = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_table_elements_datas_', true );
 		$name = $post->post_title;
         //$html = json_decode( $html );
-		die( json_encode( [$name, $html] ) );
+		die( json_encode( [$name, $table_html, $elements_datas] ) );
 	}
 
 

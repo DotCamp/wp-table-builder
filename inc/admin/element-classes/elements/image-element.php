@@ -25,18 +25,6 @@ class Image_Element extends Element_Base_Object {
 	public function get_name() {
 		return 'image';
 	}
-    
-    /**
-	 * Get element data.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @return string element data.
-	 */
-	public function get_element_data() {
-		return esc_attr( 'image', 'wp-table-builder' );
-	}
 
 	/**
 	 * Get element image.
@@ -55,16 +43,40 @@ class Image_Element extends Element_Base_Object {
 	/**
 	 * Get directory icon.
 	 *
-	 * Retrieve url text editor element icon.
+	 * Retrieve directory image editor element icon.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Directory Element icon.
+	 */
+	public function get_directory_icon() {
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.svg'; ;
+	}
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url image icon
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Element icon.
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.php'; ;
+	public function get_url_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/image.svg' );
 	}
+    
+    /**
+	 * Include file with js script for element image
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/image-element.js' );
+    }
     
     /**
 	 * Register the element controls.
@@ -119,15 +131,13 @@ class Image_Element extends Element_Base_Object {
                 'selector' => '{{{data.container}}} .wptb-image-wrapper a'
 			]
 		);
-        
+
 		$this->add_control(
 			'imageAlternativeText',
 			[
 				'label' => __( 'Image Alternative Text', 'wp_table_builder' ),
-				'type' => Controls_Manager::ADDING_USER_ATTR,
-                'attrName' => 'alt',
-                'selector' => '{{{data.container}}} .wptb-image-wrapper a img',
-                'placeholder' => __( 'Image Alt Text', 'wp_table_builder' )
+				'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
 			]
 		);
 	}
@@ -147,85 +157,4 @@ class Image_Element extends Element_Base_Object {
         </div>
 		<?php
 	}
-    
-    /**
-	 * Render element script output in the editor.
-	 *
-	 * Used to generate the live preview, using a wp js template
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-    protected function _element_script() {
-        ?>
-        ( function() {
-            let element = document.getElementsByClassName( '{{{data.elemClass}}}' );
-            if( element.length > 0 ) {
-                element = element[0];
-                let a = element.getElementsByTagName( 'a' );
-                if( a.length > 0 ) {
-                    a = a[0];
-                }
-                a.onclick = function( e ) {
-                    e.preventDefault();
-                };
-                
-                let img = element.getElementsByTagName( 'img' );
-                if( img.length > 0 ) {
-                    img = img[0];
-                }
-                
-                let src;
-                if( img.src ) {
-                    src = img.src;
-                }
-
-                file_frame = wp.media.frames.file_frame = wp.media({
-                    title: 'Select a image to upload',
-                    button: {
-                        text: 'Use this image'
-                    },
-                    multiple: false,
-                    frame: 'post'
-                });
-
-                let imageSetting = function( img, attachment ) {
-                    let imgSrc = attachment.url;
-                    let linkArr = imgSrc.split( ':' ),
-                        linkClean;
-                    if ( Array.isArray( linkArr ) && linkArr.length > 0 ) {
-                        linkClean = linkArr[linkArr.length - 1];
-                    }
-                    img.src = linkClean;
-                    img.height = attachment.height;
-                    img.width = attachment.width;
-                    img.style.width = '100%';
-
-                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                    wptbTableStateSaveManager.tableStateSet();
-                };
-
-                file_frame.on( 'select', function() {
-                    attachment = file_frame.state().props.toJSON();
-                    imageSetting( img, attachment );
-                });
-
-                file_frame.on( 'insert', function () {
-                    attachment = file_frame.state().get( 'selection' ).first().toJSON();
-                    imageSetting( img, attachment );
-                });
-
-                if ( src == undefined ) {
-                    file_frame.open();
-                    file_frame.menuItemVisibility( 'gallery', 'hide' );
-                    file_frame.menuItemVisibility( 'playlist', 'hide' ), 
-                    file_frame.menuItemVisibility( 'video-playlist', 'hide' ), 
-                    file_frame.menuItemVisibility( 'audio-playlist', 'hide' )
-                } else {
-                    img.src = src;
-                }
-            };
-        } )();
-        <?php
-    }
 }

@@ -15,6 +15,19 @@
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                         let wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
                         wptbTableSetupEl.appendChild( WPTB_Parser( ans[1] ) );
+                        
+                        let body = document.getElementsByTagName('body')[0];
+                        
+                        if( ans[2] ) {
+                            let elementsSettingTemplateJs = document.createElement( 'script' );
+                            elementsSettingTemplateJs.setAttribute( 'type', 'text/html' );
+                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
+
+                            elementsSettingTemplateJs.innerHTML = ans[2];
+
+                            body.appendChild( elementsSettingTemplateJs );
+                        }
+                        
                         WPTB_Table();
                         WPTB_LeftPanel();
                         WPTB_Settings();

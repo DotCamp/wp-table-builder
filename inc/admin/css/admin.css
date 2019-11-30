@@ -2085,6 +2085,10 @@ td[class*="wptb-fused-cell"] {
     display: none;
 }
 
+.wptb-rating-stars-box ul > li.wptb-rating-star span svg {
+    display: block;
+}
+
 
 /*.wptb-rating-stars-box ul > li.wptb-rating-star.wptb-rating-star-hover {
     color:#FF912C;
@@ -2120,12 +2124,12 @@ td[class*="wptb-fused-cell"] {
     color: inherit;
 }*/
 
-.wptb-success-box {
+.wptb-number-rating-box {
     text-align: center;
     font-size: 20px;
 }
 
-.wptb-success-box>div {
+.wptb-number-rating-box>div {
     vertical-align: top;
     display: inline-block;
     color: #888;

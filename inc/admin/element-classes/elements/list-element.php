@@ -25,18 +25,6 @@ class List_Element extends Element_Base_Object {
 	public function get_name() {
 		return 'list';
 	}
-    
-    /**
-	 * Get element data.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @return string element data.
-	 */
-	public function get_element_data() {
-		return esc_attr( 'list', 'wp-table-builder' );
-	}
 
 	/**
 	 * Get element title.
@@ -55,16 +43,40 @@ class List_Element extends Element_Base_Object {
 	/**
 	 * Get directory icon.
 	 *
-	 * Retrieve url text editor element icon.
+	 * Retrieve directory list-item editor element icon.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Directory Element icon.
+	 */
+	public function get_directory_icon() {
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.svg'; ;
+	}
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url list-item icon
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Element icon.
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.php'; ;
+	public function get_url_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/list.svg' );
 	}
+    
+    /**
+	 * Include file with js script for element list
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/list-element.js' );
+    }
     
     /**
 	 * Register the element controls.
@@ -148,19 +160,19 @@ class List_Element extends Element_Base_Object {
 	protected function _content_template() {
 		?>
         <ul>
-            <li>
+            <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
                     <p data-list-style-type-index="1."><?php esc_html_e( 'List Item 1', 'wp-table-builder' ); ?></p>
                 </div>
             </li>
-            <li class="">
+            <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
                     <p data-list-style-type-index="2."><?php esc_html_e( 'List Item 2', 'wp-table-builder' ); ?></p>
                 </div>
             </li>
-            <li>
+            <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
                     <p data-list-style-type-index="3."><?php esc_html_e( 'List Item 3', 'wp-table-builder' ); ?></p>
@@ -169,80 +181,4 @@ class List_Element extends Element_Base_Object {
         </ul>
 		<?php
 	}
-    
-    /**
-	 * Render element script output in the editor.
-	 *
-	 * Used to generate the live preview, using a wp js template
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-    protected function _element_script() {
-        ?>
-        ( function() {
-            let element = document.getElementsByClassName( '{{{data.elemClass}}}' );
-            if( element.length > 0 ) {
-                element = element[0];
-                
-                let lis = element.getElementsByTagName( 'li' );
-                if( lis.length > 0 ) {
-                    for( let i = 0; i < lis.length; i++ ) {
-                        lis[i].onmouseenter = function ( event ) {
-                            let wptbActionsField = new WPTB_ActionsField();
-
-                            wptbActionsField.addActionField( 2, this );
-
-                            wptbActionsField.setParameters( this );
-                        };
-
-                        lis[i].onmouseleave = function ( event ) {
-                            let wptbActionsField = new WPTB_ActionsField();
-
-                            wptbActionsField.leaveFromField( event, this, 2 );
-
-                            return false;
-                        };
-                        
-                        let listItemContent = lis[i].getElementsByClassName( 'wptb-list-item-content' );
-                        if( listItemContent.length > 0 ) {
-                            WPTB_Helper.listItemsTinyMceInit( listItemContent[0] );
-                        }
-                    }
-                }
-                
-                function selectControlsChange( selects, element ) {
-                    if( selects && typeof selects === 'object' ) {
-                        if( selects.hasOwnProperty( 'select1' ) ) {
-                            let listItem = element.querySelectorAll('li');
-                            if( selects.select1 == 'numbered' ) {
-                                for ( let i = 0; i < listItem.length; i++ ) {
-                                    let p = listItem[i].querySelector( 'p' );
-                                    p.removeAttribute ( 'class' );
-                                }
-                            } else if( selects.select1 == 'unordered' ) {
-                                if( selects.hasOwnProperty( 'select2' ) && selects.select2 ) {
-                                    for ( let i = 0; i < listItem.length; i++) {
-                                        let p = listItem[i].querySelector( 'p' );
-                                        p.removeAttribute ( 'class' );
-                                        p.classList.add( 'wptb-list-style-type-' + selects.select2.toLowerCase() );
-                                    }
-                                } else {
-                                    for ( let i = 0; i < listItem.length; i++ ) {
-                                        let p = listItem[i].querySelector( 'p' );
-                                        p.removeAttribute ( 'class' );
-                                        p.classList.add( 'wptb-list-style-type-disc' );
-                                    }
-                                }
-                                
-                            }
-                        }
-                    }
-                }
-                
-                WPTB_Helper.selectControlsInclude( element, selectControlsChange );
-            }
-        } )();
-        <?php
-    }
 }

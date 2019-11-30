@@ -99,12 +99,23 @@ var WPTB_Settings = function () {
             url = ( wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl ) + "?action=save_table",
             t = document.getElementById( 'wptb-setup-name' ).value.trim(),
             messagingArea,
-            code = document.getElementsByClassName( 'wptb-preview-table' );
+            code,
+            datas;
+        code = document.getElementsByClassName( 'wptb-preview-table' );
         if( code.length > 0 ) {
             code = WPTB_Stringifier( code[0] );
             code = code.outerHTML;
         } else { 
             code = '';
+        }
+        
+        datas = '';
+        let datas_containers = document.getElementsByClassName( 'wptb-element-datas' );
+        
+        if( datas_containers.length > 0 ) {
+            if( datas_containers[0].innerHTML ) {
+                datas = datas_containers[0].innerHTML;
+            }
         }
             
         if ( t === '' || code === '' ) {
@@ -123,6 +134,7 @@ var WPTB_Settings = function () {
         let params = {
             title: t,
             content: code,
+            elements_datas: datas,
             security_code: wptb_admin_object.security_code
         };
         if (( rs = WPTB_Helper.detectMode() ) || ( rs = document.wptbId )) {
@@ -133,7 +145,7 @@ var WPTB_Settings = function () {
         http.open('POST', url, true);
         http.setRequestHeader( 'Content-type', 'application/json; charset=utf-8' );
 
-        http.onreadystatechange = function (action) {
+        http.onreadystatechange = function ( action ) {
             if ( this.readyState == 4 && this.status == 200 ) {
                 var data = JSON.parse( http.responseText );
                 messagingArea = document.getElementById( 'wptb-messaging-area' );

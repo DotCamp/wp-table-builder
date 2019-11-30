@@ -5,7 +5,7 @@ use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Core\Preview as Preview;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\Elements_Manager as Elements_Manager;
+use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\elements_manager as elements_manager;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\Controls_Manager as Controls_Manager;
 
 /**
@@ -73,9 +73,9 @@ class Init {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @var Elements_Manager
+	 * @var elements_manager
 	 */
-    public $Elements_Manager;
+    public $elements_manager;
     
     /**
 	 * Controls manager.
@@ -96,7 +96,7 @@ class Init {
 		$this->plugin_basename = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
         
-		$this->Elements_Manager = new Elements_Manager();
+		$this->elements_manager = new elements_manager();
         $this->controls_manager = new Controls_Manager();
 
 		$this->load_dependencies();
@@ -253,7 +253,9 @@ class Init {
 	 * @access public
 	 */
 	public function wp_footer_js_templates() {
-        $this->Elements_Manager->output_elements_templates();
+        $this->elements_manager->output_elements_templates();
+        $this->elements_manager->output_directories_icons();
+        $this->elements_manager->output_elements_scripts();
         $this->controls_manager->output_controls_templates();
         $this->controls_manager->output_control_stacks();
 	}

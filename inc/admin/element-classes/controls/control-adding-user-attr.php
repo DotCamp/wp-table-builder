@@ -49,7 +49,7 @@ class Control_ADDING_USER_ATTR extends Base_Control {
 	public function content_template() {
 		?>
         <#  let label,
-                placeholder,
+                defaultValue,
                 selector,
                 attrName,
                 targetInputAddClass;
@@ -58,8 +58,8 @@ class Control_ADDING_USER_ATTR extends Base_Control {
                 label = data.label;
             }
             
-            if( data.placeholder ) {
-                placeholder = data.placeholder;
+            if( data.defaultValue ) {
+                defaultValue = data.defaultValue;
             }
             
             if( data.selector ) {
@@ -78,8 +78,8 @@ class Control_ADDING_USER_ATTR extends Base_Control {
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
-                <input type="text" placeholder="{{{placeholder}}}" 
-                       class="wptb-element-property {{{targetInputAddClass}}}">
+                <input type="text" placeholder="{{{defaultValue}}}" 
+                       class="wptb-element-property {{{targetInputAddClass}}}" value="{{{defaultValue}}}">
             </div>
         </div>   
 

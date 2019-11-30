@@ -25,18 +25,6 @@ class Button_Element extends Element_Base_Object {
 	public function get_name() {
 		return 'button';
 	}
-    
-    /**
-	 * Get element data.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @return string element data.
-	 */
-	public function get_element_data() {
-		return esc_attr( 'button', 'wp-table-builder' );
-	}
 
 	/**
 	 * Get element title.
@@ -55,16 +43,40 @@ class Button_Element extends Element_Base_Object {
 	/**
 	 * Get directory icon.
 	 *
-	 * Retrieve url text editor element icon.
+	 * Return directory button editor icon
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Directory Element icon.
+	 */
+	public function get_directory_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.svg' );
+	}
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url button icon
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Element icon.
 	 */
-	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/button.php'; ;
+	public function get_url_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/button.svg' );
 	}
+    
+    /**
+	 * Include file with js script for element button
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/button-element.js' );
+    }
     
     /**
 	 * Register the element controls.
@@ -140,15 +152,13 @@ class Button_Element extends Element_Base_Object {
                 ]
 			]
 		);
-        
+
 		$this->add_control(
-			'buttonId',
+			'button-id',
 			[
 				'label' => __( 'Button Id', 'wp_table_builder' ),
-				'type' => Controls_Manager::ADDING_USER_ATTR,
-                'attrName' => 'id',
-                'selector' => '{{{data.container}}} .wptb-button-wrapper a',
-                'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' )
+				'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' ),
 			]
 		);
 	}
@@ -173,31 +183,4 @@ class Button_Element extends Element_Base_Object {
         </div>
 		<?php
 	}
-    
-    /**
-	 * Render element script output in the editor.
-	 *
-	 * Used to generate the live preview, using a wp js template
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-    protected function _element_script() {
-        ?>
-        ( function() {
-            let element = document.getElementsByClassName( '{{{data.elemClass}}}' );
-            if( element.length > 0 ) {
-                element = element[0];
-                let a = element.querySelector( 'a' );
-                let target = a.querySelector( 'div' );
-                a.onclick = function( e ) {
-                    e.preventDefault();
-                };
-                if( target ) {
-                    WPTB_Helper.buttonsTinyMceInit( target );
-                }
-            }
-        } )();
-        <?php
-    }
 }

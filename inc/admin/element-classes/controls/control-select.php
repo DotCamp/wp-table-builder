@@ -56,8 +56,7 @@ class Control_Select extends Base_Control {
                 options = [],
                 selectedDefault,
                 dataElement,
-                targetSelectAddClass,
-                appearDependOn;
+                targetSelectAddClass;
             
             if( data.label ) {
                 label = data.label;
@@ -81,17 +80,11 @@ class Control_Select extends Base_Control {
             
             if( selector ) {
                 let selectorArr = selector.replace( '.', '' ).split( ' ' );
-                var infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
+                var infArr = selectorArr[0].match( /wptb-element-((.+-)\d+)/i );
                 let dataElement = 'wptb-options-' + infArr[1];
             }
             
             targetSelectAddClass = data.elementControlTargetUnicClass;
-            
-            if( data.appearDependOn ) {
-                if( Array.isArray( data.appearDependOn ) ) {
-                    appearDependOn = JSON.stringify( data.appearDependOn );
-                }
-            }
         #>
         
         <div class="wptb-settings-item-header">
@@ -136,66 +129,19 @@ class Control_Select extends Base_Control {
                     targetSelect = targetSelects[0];
                     let dataSelectorElement = targetSelect.dataset.element;
                     if( dataSelectorElement ) {
-                        let selectorElement = document.querySelector( '.' + dataSelectorElement );
-                        if( selectorElement ) {
+                        if( targetSelect ) {
                             targetSelect.onchange = function( event ) {
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:select:{{{targetSelectAddClass}}}', selectorElement );
+                                let dataSelectorElement = targetSelect.dataset.element;
+                                let selectorElement = document.querySelector( '.' + dataSelectorElement );
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetSelectAddClass}}}', selectorElement );
                                 
-                                selectorElement.setAttribute( 'data-{{{targetSelectAddClass}}}', this.value );
+                                WPTB_Helper.controlsStateManager( '{{{targetSelectAddClass}}}', true );
                                 
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
                             };
                             
-                            if( selectorElement.hasAttribute( 'data-{{{targetSelectAddClass}}}' ) ) {
-                                if( selectorElement.getAttribute( 'data-{{{targetSelectAddClass}}}' ) ) {
-                                    targetSelect.value = selectorElement.getAttribute( 'data-{{{targetSelectAddClass}}}' );
-                                }
-                            } else {
-                                selectorElement.setAttribute( 'data-{{{targetSelectAddClass}}}', '' );
-                            }
-                            
-                            if( '{{{appearDependOn}}}' ) {
-                                let appearDependOn = JSON.parse( '{{{appearDependOn}}}' ); 
-                                
-                                if( Array.isArray( appearDependOn ) ) {
-                                    let dependOnControlName = appearDependOn[0];
-                                    let targetSelectAddClassArr = '{{{targetSelectAddClass}}}'.split( '-' );
-                                    
-                                    let controlName = targetSelectAddClassArr[targetSelectAddClassArr.length -1];
-                                    
-                                    let dependOnControlElementClass = '{{{targetSelectAddClass}}}'.replace( controlName, dependOnControlName );
-                                    
-                                    let dependOnControlElement = document.getElementsByClassName( dependOnControlElementClass );
-                                    
-                                    if( dependOnControlElement.length > 0 ) {
-                                        dependOnControlElement = dependOnControlElement[0];
-                                        
-                                        let controlContainerElem = WPTB_Helper.findAncestor( targetSelect, 'wptb-element-option' );
-                                        
-                                        if( controlContainerElem ) {
-                                            
-                                            function showHideDependOnControlElement( dependOnControlElement ) {
-                                                if( dependOnControlElement.value ) {
-                                                    if( appearDependOn[1] && Array.isArray( appearDependOn[1] ) && 
-                                                        ( appearDependOn[1].indexOf( dependOnControlElement.value ) !== -1 ) ) {
-                                                        controlContainerElem.style.display = 'block';
-                                                    } else if( appearDependOn[2] && Array.isArray( appearDependOn[2] ) && 
-                                                        ( appearDependOn[2].indexOf( dependOnControlElement.value ) !== -1 ) ) {
-                                                        controlContainerElem.style.display = 'none';
-                                                    }
-                                                }
-                                            }
-                                            
-                                            showHideDependOnControlElement( dependOnControlElement );
-                                            
-                                            dependOnControlElement.addEventListener( 'change', function() {
-                                                showHideDependOnControlElement( dependOnControlElement );
-                                            }, false );
-                                        }
-                                    }
-                                }
-                            }
+                            WPTB_Helper.controlsStateManager( '{{{targetSelectAddClass}}}' );
                         }
                     }
                 }

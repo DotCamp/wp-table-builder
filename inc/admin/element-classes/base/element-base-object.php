@@ -50,18 +50,6 @@ abstract class Element_Base_Object {
 	}
     
     /**
-	 * Get element data.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @return string element data.
-	 */
-	public function get_item_data() {
-		return '';
-	}
-    
-    /**
 	 * Get element title.
 	 *
 	 * Retrieve the item title.
@@ -78,16 +66,34 @@ abstract class Element_Base_Object {
     /**
 	 * Get directory icon.
 	 *
-	 * Retrieve url item icon.
+	 * Retrieve directory item icon.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Directory Item icon.
+	 */
+	abstract public function get_directory_icon();
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url icon.
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
 	 * @return string Url Item icon.
 	 */
-	public function get_directory_icon() {
-        return '';
-    }
+	abstract public function get_url_icon();
+    
+    /**
+	 * Include file with js script for element
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {}
     
     /**
 	 * Get stack.
@@ -162,16 +168,6 @@ abstract class Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _content_template() {}
-    
-    /**
-	 * Render element script output in the editor.
-	 *
-	 * Used to generate the live preview, using a wp js template
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-	protected function _element_script() {}
 
     /**
 	 * Output element template and script.
@@ -192,23 +188,30 @@ abstract class Element_Base_Object {
 			return;
 		}
         
-        ob_start();
-        
-        $this->_element_script();
-        
-        $item_script = ob_get_clean();
-        
 		?>
 		<script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_name() ); ?>-content">
 			<?php echo $template_content; ?>
 		</script>
-		<?php
-        if( ! empty( $item_script ) ) {
-        ?>
-        <script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_name() ); ?>-script">
-            <?php echo $item_script; ?>
-        </script>
+        
         <?php
-        }
 	}
+    
+    /**
+	 * Output element script.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 */
+    public function output_scripts() {
+        $directory_sctipt = $this->element_script();
+        if( $directory_sctipt && file_exists( $directory_sctipt ) ) {
+            ?>
+            <script type="text/javascript">
+                WPTB_ElementsScriptsLauncher['<?php echo $this->get_name(); ?>'] = function( element ) {
+                    <?php include $directory_sctipt; ?>
+                }
+            </script>
+            <?php
+        }
+    }
 }

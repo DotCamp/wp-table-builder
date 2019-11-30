@@ -111,4 +111,59 @@ class Elements_Manager {
 			$element->output_template();
 		}
 	}
+    
+    /**
+	 * Render Elements scripts.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	*/
+	public function output_elements_scripts() {
+        ?>
+        <script type="text/javascript">
+            var WPTB_ElementsScriptsLauncher = {};
+        </script>
+        <?php 
+		foreach ( $this->get_element_objects() as $element ) {
+			$element->output_scripts();
+		}
+	}
+    
+    /**
+	 * Render Elements content.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	*/
+    
+    public function output_directories_icons() {
+        $directories_icons = array();
+		foreach ( $this->get_element_objects() as $element ) {
+            $directories_icons[$element->get_name()] = $element->get_url_icon();
+		}
+        ?>
+        <script type="text/html" id="tmpl-wptb-element-icons-directories">
+            <?php echo json_encode( $directories_icons ); ?>
+        </script>
+        
+        // code javascript for for preloading icons
+        <script type="text/javascript">
+            ( function() {
+                window.onload = function() {
+                    let wptbElementIconsDirectories = 'wptb-element-icons-directories';
+                    let tmplIconsDirectories = wp.template( wptbElementIconsDirectories );
+                    let data = {};
+                    let jsonIconsDirectories = tmplIconsDirectories( data );
+                    let IconsDirectories = JSON.parse( jsonIconsDirectories );
+
+                    if( IconsDirectories && typeof IconsDirectories === 'object' ) {
+                        for ( let key in IconsDirectories ) {
+                            let imageItem = WPTB_Helper.getElementIcon( IconsDirectories[key] );
+                        }
+                    }
+                };
+            } )();
+        </script>
+        <?php
+    }
 }

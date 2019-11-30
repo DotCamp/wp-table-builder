@@ -65,7 +65,7 @@ class Control_Url extends Base_Control {
             
             if( selector ) {
                 let selectorArr = selector.replace( '.', '' ).split( ' ' );
-                let infArr = selectorArr[0].match(/wptb-element-((.+-)\d+)/i);
+                let infArr = selectorArr[0].match( /wptb-element-((.+-)\d+)/i );
                 let dataElement = 'wptb-options-' + infArr[1];
             }
             

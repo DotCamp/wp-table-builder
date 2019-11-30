@@ -63,15 +63,6 @@ var WPTB_Cell = function (callback, DOMElement) {
                                             
     if ( wptbPhElement.length > 0 ) {
         for( let i = 0; i < wptbPhElement.length; i++ ) {
-
-            let wptbSpaceBetween = DOMElement.getElementsByClassName( 'wptb-space-between' );
-
-            if ( wptbSpaceBetween.length > 0 ) {
-                for( let j = 0; j < wptbSpaceBetween.length; j++ ) {
-                    WPTB_Space( wptbSpaceBetween[j] );
-                }
-            }
-            
             wptbPhElement[i].getDOMElement = function() {
                 return wptbPhElement[i];
             }
@@ -83,12 +74,10 @@ var WPTB_Cell = function (callback, DOMElement) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
                 wptbPhElement[i].kind = wptbTypeElementArr[0];
                 applyGenericItemSettings( wptbPhElement[i], wptbElementTypeClass[1] );
-                if ( wptbPhElement[i].kind == 'list' ) {
-                    let wptbListItems = wptbPhElement[i].getElementsByTagName( 'li' );
-                    if( wptbListItems.length > 0 ) {
-                        for ( let i = 0; i < wptbListItems.length; i++ ) {
-                            WPTB_ListItem( undefined, wptbListItems[i] );
-                        }
+                let wptbInternalActiveElement = wptbPhElement[i].getElementsByClassName( 'wptb-in-element' );
+                if ( wptbInternalActiveElement.length > 0 ) {
+                    for ( let j = 0; j < wptbInternalActiveElement.length; j++ ) {
+                        applyGenericItemSettings( wptbInternalActiveElement[j] );
                     }
                 }
             }

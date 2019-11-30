@@ -10,7 +10,7 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
     let DOMElement = document.createElement('div'),
         ratingStarsBox = document.createElement( 'div' ),
         ratingStarsList = document.createElement( 'ul' ),
-        successBox = document.createElement( 'div' ),
+        numberRatingBox = document.createElement( 'div' ),
         textMessage = document.createElement( 'div' ),
         kindIndexProt = undefined,
         copy = false;
@@ -18,9 +18,9 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
     DOMElement.classList.add( 'wptb-star_rating-container' );
     ratingStarsBox.classList.add( 'wptb-rating-stars-box' );
     ratingStarsList.classList.add( 'wptb-rating-stars-list' );
-    successBox.classList.add( 'wptb-success-box' );
-    successBox.style.display = 'none';
-    textMessage.classList.add( 'wptb-text-message' );
+    numberRatingBox.classList.add( 'wptb-number-rating-box' );
+    numberRatingBox.style.display = 'none';
+    textMessage.classList.add( 'wptb-number-rating' );
     textMessage.style.fontSize = '25px';
     
     let filledRatingStarHtml = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" \n\
@@ -60,9 +60,9 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
         ratingStarsList.appendChild( ratingStar );
     }
 
-    successBox.appendChild( textMessage );
+    numberRatingBox.appendChild( textMessage );
     ratingStarsBox.appendChild( ratingStarsList );
-    ratingStarsBox.appendChild( successBox );
+    ratingStarsBox.appendChild( numberRatingBox );
     DOMElement.appendChild( ratingStarsBox );
     
     
@@ -118,17 +118,17 @@ var WPTB_StarRating = function ( DOMElementProt, countStarts ) {
             }
         }
         
-        var wptbSuccessBox = wptbRatingStarsBox.querySelector( '.wptb-success-box' );
-        if ( wptbSuccessBox ) {
-            var wptbSuccessBoxAttributes = [...wptbSuccessBox.attributes];
-            for( let i = 0; i < wptbSuccessBoxAttributes.length; i++ ) {
-                if ( wptbSuccessBoxAttributes[i].name == 'style') {
-                    successBox.setAttribute( wptbSuccessBoxAttributes[i].name, wptbSuccessBoxAttributes[i].value );
+        var wptbNumberRatingBox = wptbRatingStarsBox.querySelector( '.wptb-number-rating-box' );
+        if ( wptbNumberRatingBox ) {
+            var wptbNumberRatingBoxAttributes = [...wptbNumberRatingBox.attributes];
+            for( let i = 0; i < wptbNumberRatingBoxAttributes.length; i++ ) {
+                if ( wptbNumberRatingBoxAttributes[i].name == 'style') {
+                    numberRatingBox.setAttribute( wptbNumberRatingBoxAttributes[i].name, wptbNumberRatingBoxAttributes[i].value );
                 }
             } 
         }
         
-        var wptbTextMessage = wptbSuccessBox.querySelector( '.wptb-text-message' );
+        var wptbTextMessage = wptbSuccessBox.querySelector( '.wptb-number-rating' );
         if ( wptbTextMessage ) {
             textMessage.innerHTML = wptbTextMessage.innerHTML;
             var wptbTextMessageAttributes = [...wptbTextMessage.attributes];

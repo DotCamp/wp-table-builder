@@ -507,4 +507,29 @@ jQuery( document ).ready( function ( $ ) {
             }
         }
     }
+    
+    // code for adding of old css styles for correct view 
+    let elements = document.getElementsByClassName( 'wptb-ph-element' );
+    for( let i = 0; i < elements.length; i++ ) {
+        let element = elements[i];
+        if( element.classList.contains( 'wptb-list-item-container' ) ) {
+            element.classList.remove( 'wptb-list-item-container' );
+            element.classList.add( 'wptb-list-container' );
+        }
+        
+        if( element.classList.contains( 'wptb-button-container' ) ) {
+            let infArr = element.className.match( /wptb-size-([A-Z]+)/i );
+            if( infArr && Array.isArray( infArr ) ) {
+                let wptbSize = infArr[0],
+                wptbSizeNew = wptbSize.toLowerCase();
+                
+                element.classList.remove( wptbSize );
+                
+                let wptbButtonWrapper = element.querySelector( '.wptb-button-wrapper' );
+                if( wptbButtonWrapper ) {
+                    wptbButtonWrapper.classList.add( wptbSizeNew );
+                }
+            }
+        }
+    }
 });

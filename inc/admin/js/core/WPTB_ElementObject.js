@@ -1,4 +1,4 @@
-var WPTB_ItemObject = function ( data ) {
+var WPTB_ElementObject = function ( data ) {
     let DOMElement, kindIndexProt, copy;
     if( ! data.elemProt ) {
         DOMElement = document.createElement('div'),

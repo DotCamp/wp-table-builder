@@ -54,14 +54,19 @@ class Controls_Manager {
 	const ADDING_USER_ATTR = 'adding_user_attr';
     
     /**
-	 *  Adding entry field control.
+	 *  Adding text control.
 	 */
-	const ENTRY_FIELD = 'entry_field';
+	const TEXT = 'text';
     
     /**
-	 *  Adding show hide control.
+	 *  Adding number control.
 	 */
-	const SHOW_HIDE = 'show_hide';
+	const NUMBER = 'number';
+    
+    /**
+	 *  Adding on off control.
+	 */
+	const ON_OFF = 'on_off';
     
     /**
 	 *  Adding select control.
@@ -101,8 +106,9 @@ class Controls_Manager {
             self::ELEMENT_ALIGNMENT,
             self::URL,
             self::ADDING_USER_ATTR,
-            self::ENTRY_FIELD,
-            self::SHOW_HIDE,
+            self::TEXT,
+            self::NUMBER,
+            self::ON_OFF,
             self::SELECT
 		];
 	}

@@ -42,9 +42,9 @@ var WPTB_ListItem = function ( text, DOMElementProt, copy ) {
     DOMElement.onmouseleave = function ( event ) {
         let wptbActionsField = new WPTB_ActionsField();
         
-        wptbActionsField.leaveFromField( event, DOMElement, 2 );
+        wptbActionsField.leaveFromField( event, DOMElement );
         
-        return false;
+//        return false;
     };
 
     this.getDOMElement = function () {
