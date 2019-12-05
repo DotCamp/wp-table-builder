@@ -149,6 +149,7 @@ function starRatingEventHandlersAdd( ratingStar ) {
     };
 
     ratingStar.onclick = function( event ) {
+        event.stopPropagation();
         starRatingSelectHoverSet( event );
 
         let wptbStarRatingContainer = WPTB_Helper.findAncestor( event.target, 'wptb-star_rating-container' );

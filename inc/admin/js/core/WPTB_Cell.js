@@ -77,7 +77,12 @@ var WPTB_Cell = function (callback, DOMElement) {
                 let wptbInternalActiveElement = wptbPhElement[i].getElementsByClassName( 'wptb-in-element' );
                 if ( wptbInternalActiveElement.length > 0 ) {
                     for ( let j = 0; j < wptbInternalActiveElement.length; j++ ) {
-                        applyGenericItemSettings( wptbInternalActiveElement[j] );
+                        let wptbInternalActiveElementObj = {};
+                        wptbInternalActiveElementObj.getDOMElement = function() {
+                            return wptbInternalActiveElement[j];
+                        }
+                        
+                        applyGenericItemSettings( wptbInternalActiveElementObj );
                     }
                 }
             }

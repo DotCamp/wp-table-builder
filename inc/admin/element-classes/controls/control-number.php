@@ -113,7 +113,8 @@ class Control_Number extends Base_Control {
                                     this.value = parseInt ( '{{{max}}}' );
                                 }
                                 
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
+                                let details = {value: this.value};
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
 
                                 WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
                                 
@@ -127,7 +128,6 @@ class Control_Number extends Base_Control {
                 }
             } )();
         </wptb-template-script>
-        
 		<?php
 	}
 }

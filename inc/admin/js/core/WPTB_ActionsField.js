@@ -83,7 +83,7 @@ var WPTB_ActionsField = function() {
                     data.tinyMceClear = true;
                     copy = new WPTB_ElementObject( data );
                     WPTB_Helper.elementControlsStateCopy( activeElement, copy.getDOMElement() );
-                    WPTB_Helper.elementStartScript( copy.getDOMElement() );
+                    //WPTB_Helper.elementStartScript( copy.getDOMElement() );
                     
                     td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else {

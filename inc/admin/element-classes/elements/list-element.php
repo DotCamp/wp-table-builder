@@ -124,6 +124,31 @@ class List_Element extends Element_Base_Object {
                 'appearDependOn' => ['select1', ['unordered'], ['numbered']]
 			]
 		);
+        
+//        $this->add_control(
+//            'checkbox',
+//			[
+//				'label' => __( 'Checkbox Test', 'wp_table_builder' ),
+//				'type' => Controls_Manager::CHECKBOX,
+//                'checkboxes' => [
+//                    ['Name 1', 'value 1', 'on'],
+//                    ['Name 2', 'value 2', 'off'],
+//                    ['Name 3', 'value 3', 'on']
+//                ],
+//                'appearDependOn' => ['select1', ['unordered'], ['numbered']]
+//			]  
+//        );
+//        
+//        $this->add_control(
+//            'textarea',
+//			[
+//				'label' => __( 'Textarea Test', 'wp_table_builder' ),
+//				'type' => Controls_Manager::TEXTAREA,
+//                'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' ),
+//                'rows' => 5,
+//                'appearDependOn' => ['select1', ['unordered'], ['numbered']]
+//			]  
+//        );
 
 		$this->add_control(
 			'listColor',

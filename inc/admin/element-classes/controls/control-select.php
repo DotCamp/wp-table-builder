@@ -52,18 +52,12 @@ class Control_Select extends Base_Control {
 		?>
         <#  
             let label,
-                selector,
                 options = [],
                 selectedDefault,
-                dataElement,
                 targetSelectAddClass;
             
             if( data.label ) {
                 label = data.label;
-            }
-            
-            if( data.selector ) {
-                selector = data.selector;
             }
             
             if( data.options ) {
@@ -76,12 +70,6 @@ class Control_Select extends Base_Control {
             
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
-            }
-            
-            if( selector ) {
-                let selectorArr = selector.replace( '.', '' ).split( ' ' );
-                var infArr = selectorArr[0].match( /wptb-element-((.+-)\d+)/i );
-                let dataElement = 'wptb-options-' + infArr[1];
             }
             
             targetSelectAddClass = data.elementControlTargetUnicClass;
@@ -129,18 +117,18 @@ class Control_Select extends Base_Control {
                     targetSelect = targetSelects[0];
                     let dataSelectorElement = targetSelect.dataset.element;
                     if( dataSelectorElement ) {
-                        if( targetSelect ) {
+                        let selectorElement = document.querySelector( '.' + dataSelectorElement );
+                        if( selectorElement ) {
                             targetSelect.onchange = function( event ) {
-                                let dataSelectorElement = targetSelect.dataset.element;
-                                let selectorElement = document.querySelector( '.' + dataSelectorElement );
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetSelectAddClass}}}', selectorElement );
-                                
+                                let details = {value: this.value};
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetSelectAddClass}}}', selectorElement, details );
+
                                 WPTB_Helper.controlsStateManager( '{{{targetSelectAddClass}}}', true );
-                                
+
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
                             };
-                            
+
                             WPTB_Helper.controlsStateManager( '{{{targetSelectAddClass}}}' );
                         }
                     }

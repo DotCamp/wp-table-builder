@@ -14,7 +14,7 @@
     </div>
     <div class="wptb-settings-items wptb-adaptive-table-chose-block" style="display: none;">
         <div class="wptb-settings-row wptb-settings-middle-xs">
-            <label class="wptb-checkbox-button">
+            <label class="wptb-toggle">
                 <span style="font-size: 16px">
                     <?php esc_html_e( 'Make Table Responsive', 'wp-table-builder' ); ?>
                 </span>
@@ -25,7 +25,7 @@
     </div>
     <div class="wptb-settings-items">
         <div class="wptb-settings-row wptb-settings-middle-xs">
-            <label class="wptb-checkbox-button">
+            <label class="wptb-toggle">
                 <span style="font-size: 16px">
                     <?php esc_html_e( 'Top Row As Header', 'wp-table-builder' ); ?>
                 </span>
@@ -48,7 +48,7 @@
                 <input id="wptb-table-border-number" class="wptb-number-input" type="number" min="0" max="50" step="1" placeholder="0" pattern="[0-9]*">
                 <span class="wptb-input-px">px</span>
             </div>
-            <label class="wptb-checkbox-button">
+            <label class="wptb-toggle">
                 <span style="font-size: 16px">
                     <?php esc_html_e( 'Apply Inner Border', 'wp-table-builder' ); ?>
                 </span>

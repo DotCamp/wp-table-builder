@@ -26,6 +26,18 @@ var WPTB_ElementObject = function ( data ) {
             DOMElement = WPTB_Helper.elementClearFromTinyMce( DOMElement );
         }
     }
+    
+    let inElems = DOMElement.querySelectorAll( '.wptb-in-element' );
+    if( inElems.length > 0 ) {
+        for ( let i = 0; i < inElems.length; i++ ) {
+            let inElemObj = {};
+            inElemObj.getDOMElement = function() {
+                return inElems[i];
+            }
+            
+            applyGenericItemSettings( inElemObj );
+        }
+    }
      
     window.addEventListener( 'item:onmouseenter', function( event ) {
         //console.log( event );

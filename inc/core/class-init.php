@@ -96,15 +96,18 @@ class Init {
 		$this->plugin_basename = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
         
-		$this->elements_manager = new elements_manager();
-        $this->controls_manager = new Controls_Manager();
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
         $this->table_preview();
-        add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
+        
+        if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
+            $this->elements_manager = new elements_manager();
+            $this->controls_manager = new Controls_Manager();
+            add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
+        }
 	}
     
     /**

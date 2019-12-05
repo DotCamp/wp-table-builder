@@ -1,12 +1,7 @@
 let lis = element.getElementsByTagName( 'li' );
 if( lis.length > 0 ) {
     for( let i = 0; i < lis.length; i++ ) {
-        let elementObj = {};
-        elementObj.getDOMElement = function() {
-            return lis[i];
-        }
-        
-        applyGenericItemSettings( elementObj );
+        lis[i].classList.add( 'wptb-in-element' );
 
         let listItemContent = lis[i].getElementsByClassName( 'wptb-list-item-content' );
         if( listItemContent.length > 0 ) {
@@ -61,50 +56,60 @@ function listItemsTinyMceInit( listItem ) {
                         elementCopy.classList.remove( 'wptb-directlyhovered' );
                         article.classList.remove( 'wptb-directlyhovered' );
                         WPTB_Helper.elementClearFromTinyMce( elementCopy );
-                        listItemsTinyMceInit( elementCopy.firstChild );
+                        
+                        let listItemContent = elementCopy.getElementsByClassName( 'wptb-list-item-content' );
+                        if( listItemContent.length > 0 ) {
+                            listItemsTinyMceInit( listItemContent[0] );
+                        }
+                        
                         listItemsRecalculateIndex( article.parentNode );
-                        console.log("Hello147");
+                        
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
                     }
-                } else if ( e.keyCode == '8' || e.keyCode == '46' ) {
+                } else {
                     let p = e.target.querySelector( 'p' );
                     let pText = p.innerHTML.replace(/<[^>]+>/g, '');
                     pText = pText.replace( /\s+/g, ' ' ).trim();
                     pText = pText.replace( /&nbsp;/g, '').trim();
-
-                    if( pText == '' ) {
-                        e.preventDefault();
-                        e.target.querySelector( 'p' ).innerText = '\n';
-                    } else {
-                        let selectedText = WPTB_Helper.getSelectionText();
-                        selectedText = selectedText.replace( /\s+/g, ' ' ).trim();
-                        selectedText = selectedText.replace( /&nbsp;/g, '' ).trim();
-                        if( selectedText == pText ) {
+                    
+                    if ( e.keyCode == '8' || e.keyCode == '46' ) {
+                        if( pText == '' ) {
                             e.preventDefault();
                             e.target.querySelector( 'p' ).innerText = '\n';
+                        } else {
+                            let selectedText = WPTB_Helper.getSelectionText();
+                            selectedText = selectedText.replace( /\s+/g, ' ' ).trim();
+                            selectedText = selectedText.replace( /&nbsp;/g, '' ).trim();
+                            if( selectedText == pText ) {
+                                e.preventDefault();
+                                e.target.querySelector( 'p' ).innerText = '\n';
+                            }
                         }
                     }
                     
-                    let wptbListItem = e.target.parentNode;
-                    let wptbActionsField = new WPTB_ActionsField();
-
-                    wptbActionsField.addActionField( 1, wptbListItem );
-
-                    wptbActionsField.setParameters( wptbListItem );
-                }
-
+                    if( ! window.listItemPTextKeyDown ) {
+                        window.listItemPTextKeyDown = pText;
+                    }
+                } 
             });
-
             ed.on( 'keyup', function( e ) {
-                let wptbListItem = e.target.parentNode;
-                let wptbActionsField = new WPTB_ActionsField();
-
-                wptbActionsField.addActionField( 1, wptbListItem );
-
-                wptbActionsField.setParameters( wptbListItem );
-
-                e.target.onblur = function() {
-                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                    wptbTableStateSaveManager.tableStateSet();
+                if ( e.keyCode != 13 ) {
+                    let p = e.target.querySelector( 'p' );
+                    let pText = p.innerHTML.replace(/<[^>]+>/g, '');
+                    pText = pText.replace( /\s+/g, ' ' ).trim();
+                    pText = pText.replace( /&nbsp;/g, '').trim();
+                    if( pText !== window.listItemPTextKeyDown ) {
+                        e.target.onblur = function() {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                            
+                            window.listItemPTextKeyDown = '';
+                            e.target.onblur = '';
+                        }
+                    } else {
+                        e.target.onblur = '';
+                    }
                 }
             });
         },
@@ -128,22 +133,22 @@ function listItemsTinyMceInit( listItem ) {
     });
 }
 
-element.addEventListener( 'wptb-inner-element:copy', function( event ) {
+function liCopyHandler( li, element ) {
     let ulElem = element.getElementsByTagName( 'ul' );
     if( ulElem.length > 0 ) {
         ulElem = ulElem[0];
         listItemsRecalculateIndex( ulElem );
-        
-        let newListItem = event.detail;
-        if( newListItem ) {
-            let listItemContent = newListItem.getElementsByClassName( 'wptb-list-item-content' );
-            if( listItemContent.length > 0 ) {
-                WPTB_Helper.elementClearFromTinyMce( newListItem );
-                listItemsTinyMceInit( listItemContent[0] );
-            }
+    }
+    
+    if( li ) {
+        let listItemContent = li.getElementsByClassName( 'wptb-list-item-content' );
+        if( listItemContent.length > 0 ) {
+            listItemsTinyMceInit( listItemContent[0] );
         }
     }
-}, false );
+}
+
+WPTB_Helper.innerElementCopyIncludeHandler( element, liCopyHandler );
 
 function selectControlsChange( selects, element ) {
     if( selects && typeof selects === 'object' ) {
@@ -181,7 +186,6 @@ WPTB_Helper.controlsInclude( element, selectControlsChange );
 if( element.classList.contains( 'wptb-list-item-container' ) ) {
     element.classList.add( 'wptb-list-container' );
 }
-
 
 let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
 let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );

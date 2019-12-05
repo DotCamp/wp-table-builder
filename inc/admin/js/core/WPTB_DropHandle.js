@@ -84,7 +84,7 @@ var WPTB_DropHandle = function (thisElem, e) {
             let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
             let elemKind = infArr[1];
             if ( e.dataTransfer.getData( 'wptbElement' ) && ( elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list' ) ) {
-                WPTB_Helper.elementStartScript( element );
+                //WPTB_Helper.elementStartScript( element );
             }
             
             wptbDropHandle.style.display = 'none';

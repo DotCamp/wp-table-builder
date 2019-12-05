@@ -40,8 +40,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         } else if ( kindIndexProt && ! copy ) {
             let kindIndexProtArr = kindIndexProt.split('-');
             index = kindIndexProtArr[kindIndexProtArr.length - 1];
-            // start item javascript if item is new
-            WPTB_Helper.elementStartScript( element.getDOMElement() );
+            // start element javascript if element is new
+            
         }
 
         let node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
@@ -59,7 +59,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
             }
         }
         new WPTB_ElementOptions( element, index, kindIndexProt );
-
+        WPTB_Helper.elementStartScript( element.getDOMElement() );
         document.counter.increment(element.kind);
     }
     

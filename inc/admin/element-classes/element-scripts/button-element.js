@@ -18,27 +18,30 @@ if( target ) {
                 if (e.keyCode == 13) {
                     e.preventDefault();
                 }
-                let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
+                
+                let p = e.target.querySelector( 'p' );
+                let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+                pText = pText.replace( /&nbsp;/g, '').trim();
 
-                let wptbActionsField = new WPTB_ActionsField();
-
-                wptbActionsField.addActionField( 1, wptbButtonContainer );
-
-                wptbActionsField.setParameters( wptbButtonContainer );
+                if( ! window.buttonElemPTextKeyDown ) {
+                    window.buttonElemPTextKeyDown = pText;
+                }
             });
 
             ed.on( 'keyup', function(e) {
-                let wptbButtonContainer = WPTB_Helper.findAncestor( target, 'wptb-button-container' );
+                let p = e.target.querySelector( 'p' );
+                let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+                pText = pText.replace( /&nbsp;/g, '').trim();
+                if( pText !== window.buttonElemPTextKeyDown ) {
+                    e.target.onblur = function() {
+                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                        wptbTableStateSaveManager.tableStateSet();
 
-                let wptbActionsField = new WPTB_ActionsField();
-
-                wptbActionsField.addActionField( 1, wptbButtonContainer );
-
-                wptbActionsField.setParameters( wptbButtonContainer );
-
-                e.target.onblur = function() {
-                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                    wptbTableStateSaveManager.tableStateSet();
+                        window.buttonElemPTextKeyDown = '';
+                        e.target.onblur = '';
+                    }
+                } else {
+                    e.target.onblur = '';
                 }
             });
         },
@@ -62,21 +65,31 @@ if( target ) {
     });
 }
 
-function textControlsChange( inputs, element ) {
-    console.log("Hello");
-    if( inputs && typeof inputs === 'object' ) {
-        if( inputs.hasOwnProperty( 'button-id' ) ) {
-            let buttonIdValue = inputs['button-id'];
-            let a = element.getElementsByTagName( 'a' );
-            if( a.length > 0 ) {
-                a = a[0];
-                a.setAttribute( 'id', buttonIdValue );
-            }
-        }
-    } 
+//function textControlsChange( inputs, element ) {
+//    if( inputs && typeof inputs === 'object' ) {
+//        if( inputs.hasOwnProperty( 'button-id' ) ) {
+//            let buttonIdValue = inputs['button-id'];
+//            let a = element.getElementsByTagName( 'a' );
+//            if( a.length > 0 ) {
+//                a = a[0];
+//                a.setAttribute( 'id', buttonIdValue );
+//            }
+//        }
+//    } 
+//}
+//
+//WPTB_Helper.controlsInclude( element, textControlsChange );
+
+function textControlChange2( controlValue, element ) {
+    let a = element.getElementsByTagName( 'a' );
+    if( a.length > 0 ) {
+        a = a[0];
+        a.setAttribute( 'id', controlValue );
+    }
 }
 
-WPTB_Helper.controlsInclude( element, textControlsChange );
+let controlName = 'button-id';
+WPTB_Helper.oneControlInclude( element, textControlChange2, controlName );
 
 // for old elements which were before the change of structure of the plugin
 let infArr = element.className.match( /wptb-size-([A-Z]+)/i );

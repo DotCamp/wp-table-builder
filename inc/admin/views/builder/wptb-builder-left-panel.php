@@ -405,7 +405,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                     </div>
                     <div class="wptb-element-option">
                         <div class="wptb-settings-row wptb-settings-middle-xs">
-                            <label class="wptb-checkbox-button">
+                            <label class="wptb-toggle">
                                 <span style="font-size: 16px">
                                     <?php esc_html_e( 'Show Number Rating', 'wp-table-builder' ); ?>
                                 </span>
@@ -468,7 +468,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                         <span class="wptb-input-px">px</span>
                     </div>
                     <div class="wptb-settings-col-xs-12">
-                        <label class="wptb-checkbox-button wptb-column-width-fix-auto">
+                        <label class="wptb-toggle wptb-column-width-fix-auto">
                             <input id="wptb-table-column-width-auto-fixed" type="checkbox" />
                             <i>
                                 <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>
@@ -493,7 +493,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                         <span class="wptb-input-px">px</span>
                     </div>
                     <div class="wptb-settings-col-xs-12">
-                        <label class="wptb-checkbox-button wptb-column-width-fix-auto">
+                        <label class="wptb-toggle wptb-column-width-fix-auto">
                             <input id="wptb-table-row-height-auto-fixed" type="checkbox" />
                             <i>
                                 <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>

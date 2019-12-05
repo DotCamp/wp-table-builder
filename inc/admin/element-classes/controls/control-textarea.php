@@ -7,15 +7,15 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder "text" control.
+ * WP Table Builder "textarea" control.
  *
- * A control class for creating "text" control.
+ * A control class for creating "textarea" control.
  *
  * @since 1.1.2
  */
-class Control_Text extends Base_Control {
+class Control_Textarea extends Base_Control {
     /**
-	 * Get text control type.
+	 * Get textarea control type.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -23,13 +23,13 @@ class Control_Text extends Base_Control {
 	 * @return string Control type.
 	 */
 	public function get_type() {
-		return 'text';
+		return 'textarea';
 	}
 
 	/**
-	 * Enqueue text control scripts and styles.
+	 * Enqueue textarea control scripts and styles.
 	 *
-	 * Used to register and enqueue custom scripts and styles used by the text
+	 * Used to register and enqueue custom scripts and styles used by the textarea
 	 * control.
 	 *
 	 * @since 1.1.2
@@ -40,7 +40,7 @@ class Control_Text extends Base_Control {
 	}
 
 	/**
-	 * Render text control output in the editor.
+	 * Render textarea control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *
@@ -52,11 +52,21 @@ class Control_Text extends Base_Control {
         <#
             let label,
                 placeholder,
+                rows,
+                cols,
                 elemContainer,
-                targetInputAddClass = '';
+                targetTextareaAddClass = '';
                 
             if( data.label ) {
                 label = data.label;
+            }
+                
+            if( data.rows ) {
+                rows = data.rows;
+            }
+                
+            if( data.cols ) {
+                cols = data.cols;
             }
             
             if( data.placeholder ) {
@@ -67,41 +77,41 @@ class Control_Text extends Base_Control {
                 elemContainer = data.elemContainer;
             }
             
-            targetInputAddClass = data.elementControlTargetUnicClass;
+            targetTextareaAddClass = data.elementControlTargetUnicClass;
         #>
         
         <div class='wptb-settings-item-header' >
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
-            <div class="wptb-settings-col-xs-8">
-                <input class="wptb-number wptb-element-property {{{targetInputAddClass}}}" 
-                       type="text" data-element="{{{elemContainer}}}" placeholder="{{{placeholder}}}">
+            <div class="wptb-settings-col-xs-12">
+                <textarea class="wptb-number wptb-element-property {{{targetTextareaAddClass}}}" 
+                          rows="{{{rows}}}" cols="{{{cols}}}" placeholder="{{{placeholder}}}" data-element="{{{elemContainer}}}" style="width: 100%"></textarea>
             </div>
         </div>
         
         <wptb-template-script>
             ( function() {
-                let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-                if( targetInputs.length > 0 ) {
-                    targetInput = targetInputs[0];
-                    let dataSelectorElement = targetInput.dataset.element;
+                let targetTextarea = document.getElementsByClassName( '{{{targetTextareaAddClass}}}' );
+                if( targetTextarea.length > 0 ) {
+                    targetTextarea = targetTextarea[0];
+                    let dataSelectorElement = targetTextarea.dataset.element;
                     if( dataSelectorElement ) {
                         let selectorElement = document.querySelector( '.' + dataSelectorElement );
                         if( selectorElement ) {
-                            targetInput.oninput = function( event ) {
+                            targetTextarea.oninput = function( event ) {
                                 let details = {value: this.value};
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetTextareaAddClass}}}', selectorElement, details );
 
-                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
+                                WPTB_Helper.controlsStateManager( '{{{targetTextareaAddClass}}}', true );
                             };
                             
-                            targetInput.onchange = function( event ) {
+                            targetTextarea.onchange = function( event ) {
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
                             };
                             
-                            WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
+                            WPTB_Helper.controlsStateManager( '{{{targetTextareaAddClass}}}' );
                         }
                     }
                 }

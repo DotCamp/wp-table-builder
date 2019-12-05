@@ -18,27 +18,31 @@ tinyMCE.init({
                 let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
                 WPTB_Helper.dataTitleColumnSet( table );
             }
-
-
         });
-
-        ed.on( 'keydown', function(e) {
-            let wptbActionsField = new WPTB_ActionsField();
-
-            wptbActionsField.addActionField( 1, element );
-
-            wptbActionsField.setParameters( element );
+        console.log("12345");
+        ed.on( 'keydown', function( e ) {
+            let p = e.target.querySelector( 'p' );
+            let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+            pText = pText.replace( /&nbsp;/g, '').trim();
+            
+            if( ! window.textElemPTextKeyDown ) {
+                window.textElemPTextKeyDown = pText;
+            }
         });
         ed.on( 'keyup', function(e) {
-            let wptbActionsField = new WPTB_ActionsField();
+            let p = e.target.querySelector( 'p' );
+            let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+            pText = pText.replace( /&nbsp;/g, '').trim();
+            if( pText !== window.textElemPTextKeyDown ) {
+                e.target.onblur = function() {
+                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                    wptbTableStateSaveManager.tableStateSet();
 
-            wptbActionsField.addActionField( 1, element );
-
-            wptbActionsField.setParameters( element );
-
-            e.element.onblur = function() {
-                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                wptbTableStateSaveManager.tableStateSet();
+                    window.textElemPTextKeyDown = '';
+                    e.target.onblur = '';
+                }
+            } else {
+                e.target.onblur = '';
             }
         });
 

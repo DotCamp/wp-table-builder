@@ -64,14 +64,24 @@ class Controls_Manager {
 	const NUMBER = 'number';
     
     /**
-	 *  Adding on off control.
+	 *  Adding on toggle control.
 	 */
-	const ON_OFF = 'on_off';
+	const TOGGLE = 'toggle';
     
     /**
 	 *  Adding select control.
 	 */
 	const SELECT = 'select';
+    
+    /**
+	 *  Adding checkbox control.
+	 */
+	const CHECKBOX = 'checkbox';
+    
+    /**
+	 *  Adding textarea control.
+	 */
+	const TEXTAREA = 'textarea';
     
     /**
 	 * Controls.
@@ -108,8 +118,10 @@ class Controls_Manager {
             self::ADDING_USER_ATTR,
             self::TEXT,
             self::NUMBER,
-            self::ON_OFF,
-            self::SELECT
+            self::TOGGLE,
+            self::SELECT,
+            self::CHECKBOX,
+            self::TEXTAREA
 		];
 	}
     
