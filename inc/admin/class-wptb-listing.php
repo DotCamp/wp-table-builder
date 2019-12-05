@@ -54,7 +54,7 @@ class WPTB_Listing  extends \WP_List_Table{
                 'post_title' => sanitize_text_field( $post->post_title ),
                 'post_content' => '',
                 'post_type' => 'wptb-tables',
-                'post_status' => 'publish',
+                'post_status' => 'draft'
             ]);
             $table = get_post_meta( absint( $id ) , '_wptb_content_', true );
             $elements_datas = get_post_meta( absint( $id ) , '_wptb_table_elements_datas_', true );
@@ -67,7 +67,8 @@ class WPTB_Listing  extends \WP_List_Table{
                     'ID' => $id_new,
                     'post_title' => str_replace( ' (ID #'.$id.')', '', get_the_title( $id_new )  . ' (ID #' . $id_new . ')' ),
                     'post_content' => '',
-                    'post_type' => 'wptb-tables'
+                    'post_type' => 'wptb-tables',
+                    'post_status' => 'draft'
                 ]);
                 return true;
             }

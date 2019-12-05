@@ -98,8 +98,6 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     body.appendChild( elementsSettingsTemplateJs );
 }
 
-console.log('Hello258');
-
 if( ! elementSettings ) {
     if( ! elementsSettings || typeof elementsSettings !== 'object' ) {
         elementsSettings = {};

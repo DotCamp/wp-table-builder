@@ -35,7 +35,7 @@ class Admin_Menu {
             'post_title' => '',
             'post_content' => '',
             'post_type' => 'wptb-tables',
-            'post_status' => 'publish',
+            'post_status' => 'draft'
         ]);
         wp_die( json_encode( ['created',$id] ) );
     }
@@ -50,7 +50,7 @@ class Admin_Menu {
                     'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',
                     'post_type' => 'wptb-tables',
-                    'post_status' => 'publish',
+                    'post_status' => 'draft'
                 ]);
                 add_post_meta( $id, '_wptb_content_', $params->content );
                 add_post_meta( $id, '_wptb_table_elements_datas_', $params->elements_datas );
@@ -61,7 +61,7 @@ class Admin_Menu {
                     'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',
                     'post_type' => 'wptb-tables',
-                    'post_status' => 'publish',
+                    'post_status' => 'draft'
                 ]);
                 update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
                 update_post_meta( absint( $params->id ), '_wptb_table_elements_datas_', $params->elements_datas );
