@@ -37,30 +37,6 @@ abstract class Base_Control {
 	public function enqueue() {}
     
     /**
-	 * Get number control default settings.
-	 *
-	 * Retrieve the default settings of the number control. Used to return the
-	 * default settings while initializing the number control.
-	 *
-	 * @since 1.5.0
-	 * @access protected
-	 *
-	 * @return array Control default settings.
-	 */
-	protected function get_default_settings() {
-		return [
-			'min' => '',
-			'max' => '',
-			'step' => '',
-			'placeholder' => '',
-			'title' => '',
-			'dynamic' => [
-				'categories' => [ TagsModule::NUMBER_CATEGORY ],
-			],
-		];
-	}
-    
-    /**
 	 * Control content template.
 	 *
 	 * Used to generate the control HTML in the editor using wp js template
