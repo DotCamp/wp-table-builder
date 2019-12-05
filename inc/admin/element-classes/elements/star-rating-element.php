@@ -137,7 +137,7 @@ class Star_Rating_Element extends Element_Base_Object {
 			'ratingAlignmentCheckbox',
 			[
 				'label' => __( 'Rating Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+				'type' => Controls_Manager::ALIGNMENT,
                 'selected' => 1,
                 'selectors' => [
                     '{{{data.container}}}' => 'text-align',

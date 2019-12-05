@@ -100,7 +100,7 @@ class Image_Element extends Element_Base_Object {
 			'imageAlignmentCheckbox',
 			[
 				'label' => __( 'Image Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+				'type' => Controls_Manager::ALIGNMENT,
                 'selected' => 1,
                 'selectors' => [
                     '{{{data.container}}} .wptb-image-wrapper a' => 'float',

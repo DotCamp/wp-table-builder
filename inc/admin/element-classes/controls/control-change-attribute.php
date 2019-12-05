@@ -7,15 +7,15 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder "change element attribute" control.
+ * WP Table Builder "change attribute" control.
  *
- * A control class for creating "change element attribute" control to add and then change attribute.
+ * A control class for creating "change attribute" control to add and then change attribute.
  * When this control adds to element there is opportunity to point type attribute ( id, class ... ) 
  * and part of name this abbtibute.
  *
  * @since 1.1.2
  */
-class Control_Change_Element_Attribute extends Base_Control {
+class Control_Change_Attribute extends Base_Control {
     /**
 	 * Get control type.
 	 *
@@ -25,14 +25,14 @@ class Control_Change_Element_Attribute extends Base_Control {
 	 * @return string Control type.
 	 */
 	public function get_type() {
-		return 'change_element_attribute';
+		return 'change_attribute';
 	}
 
 	/**
-	 * Enqueue change element attribute control scripts and styles.
+	 * Enqueue change attribute control scripts and styles.
 	 *
 	 * Used to register and enqueue custom scripts and styles 
-     * used by the change element attribute control.
+     * used by the change attribute control.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -42,7 +42,7 @@ class Control_Change_Element_Attribute extends Base_Control {
 	}
 
 	/**
-	 * Render change element attribute control output in the editor.
+	 * Render change attribute control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *

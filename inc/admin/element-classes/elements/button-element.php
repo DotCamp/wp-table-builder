@@ -100,7 +100,7 @@ class Button_Element extends Element_Base_Object {
 			'buttonSizeCheckbox',
 			[
 				'label' => __( 'Button Size', 'wp_table_builder' ),
-				'type' => Controls_Manager::CHANGE_ELEMENT_ATTRIBUTE,
+				'type' => Controls_Manager::CHANGE_ATTRIBUTE,
                 'selectors' => [
                     '{{{data.container}}} .wptb-button-wrapper' => 'class: size',
                 ],
@@ -145,7 +145,7 @@ class Button_Element extends Element_Base_Object {
 			'buttonAlignmentCheckbox',
 			[
 				'label' => __( 'Button Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+				'type' => Controls_Manager::ALIGNMENT,
                 'selected' => 1,
                 'selectors' => [
                     '{{{data.container}}} .wptb-button-wrapper' => 'justify-content',

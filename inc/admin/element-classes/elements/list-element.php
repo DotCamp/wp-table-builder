@@ -165,7 +165,7 @@ class List_Element extends Element_Base_Object {
 			'listAlignment',
 			[
 				'label' => __( 'List Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ELEMENT_ALIGNMENT,
+				'type' => Controls_Manager::ALIGNMENT,
                 'selected' => 0,
                 'selectors' => [
                     '{{{data.container}}} ul li p' => 'text-align',

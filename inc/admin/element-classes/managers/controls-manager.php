@@ -34,24 +34,19 @@ class Controls_Manager {
 	const SECTION_HEADER = 'section_header';
     
     /**
-	 *  Change Element Attribute control.
+	 *  Change Attribute control.
 	 */
-	const CHANGE_ELEMENT_ATTRIBUTE = 'change_element_attribute';
+	const CHANGE_ATTRIBUTE = 'change_attribute';
     
     /**
-	 *  Element Alignment control.
+	 *  Alignment control.
 	 */
-    const ELEMENT_ALIGNMENT = 'element_alignment';
+    const ALIGNMENT = 'alignment';
     
     /**
 	 *  Href control.
 	 */
 	const URL = 'url';
-    
-    /**
-	 *  Adding user attribute control.
-	 */
-	const ADDING_USER_ATTR = 'adding_user_attr';
     
     /**
 	 *  Adding text control.
@@ -112,10 +107,9 @@ class Controls_Manager {
 			self::COLOR, 
             self::SIZE,
             self::SECTION_HEADER,
-            self::CHANGE_ELEMENT_ATTRIBUTE,
-            self::ELEMENT_ALIGNMENT,
+            self::CHANGE_ATTRIBUTE,
+            self::ALIGNMENT,
             self::URL,
-            self::ADDING_USER_ATTR,
             self::TEXT,
             self::NUMBER,
             self::TOGGLE,

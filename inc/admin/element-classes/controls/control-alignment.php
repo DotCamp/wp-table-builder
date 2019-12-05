@@ -7,15 +7,15 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder "element alignment" control.
+ * WP Table Builder "alignment" control.
  *
- * A control class for creating "element alignment" control.
+ * A control class for creating "alignment" control.
  * When this control adds to element there is opportunity to point css type (for example text-align, float ...)
  * witch will be necessary to use for element alignment.
  *
  * @since 1.1.2
  */
-class Control_Element_Alignment extends Base_Control {
+class Control_Alignment extends Base_Control {
     /**
 	 * Get control type.
 	 *
@@ -25,14 +25,14 @@ class Control_Element_Alignment extends Base_Control {
 	 * @return string Control type.
 	 */
 	public function get_type() {
-		return 'element_alignment';
+		return 'alignment';
 	}
 
 	/**
-	 * Enqueue "element alignment" control scripts and styles.
+	 * Enqueue "alignment" control scripts and styles.
 	 *
 	 * Used to register and enqueue custom scripts and styles 
-     * used by the "element alignment" control.
+     * used by the "alignment" control.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -42,7 +42,7 @@ class Control_Element_Alignment extends Base_Control {
 	}
 
 	/**
-	 * Render "element alignment" control output in the editor.
+	 * Render "alignment" control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *
