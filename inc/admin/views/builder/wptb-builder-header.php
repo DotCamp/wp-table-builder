@@ -4,6 +4,8 @@
  * Builder Header.
  */
 
+do_action( 'wptb_before_header' );
+
 ?>
 
 <div class="wptb-header">
@@ -110,3 +112,7 @@
     <div class="wptb-popup-dark-area"></div>
     
 </div>
+
+<?php
+
+do_action( 'wptb_after_header' );
