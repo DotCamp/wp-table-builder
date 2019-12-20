@@ -15,20 +15,40 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container">
                         
-                        <?php $element_objects = Init::instance()->elements_manager->get_element_objects(); ?>
-                        <?php foreach( $element_objects as $element ): ?>
-                        <div class="wptb-element" draggable="true" data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
-                            <?php if( file_exists( $element->get_directory_icon() ) ) : ?>
-                                <?php require_once $element->get_directory_icon(); ?>
-                            <?php endif; ?>
-                            <p class="wptb-draggable">
-                            <?php if( method_exists( $element, 'get_title' ) ) : ?>
-                                <?php $element->get_title(); ?>
-                            <?php endif; ?>
-                            </p>
-                        </div>
+                        <?php 
+
+                            do_action( 'wptb_before_elements' );
+
+                            $element_objects = Init::instance()->elements_manager->get_element_objects();
+                            
+                            foreach( $element_objects as $element ): ?>
+
+                                <div class="wptb-element" draggable="true" data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
+
+                                    <?php 
+
+                                        if( file_exists( $element->get_directory_icon() ) ) :
+                                            require_once $element->get_directory_icon();
+                                        endif; 
+                                        
+                                    ?>
+                                    
+                                    <p class="wptb-draggable">
+                                
+                                        <?php 
+
+                                            if( method_exists( $element, 'get_title' ) ) :
+                                                $element->get_title();
+                                            endif; 
+                                        
+                                        ?>
+                                        
+                                    </p>
+
+                                </div>
+
                         <?php endforeach; ?>
-                        
+         
                     </div>              
                 </div>
             </div>
