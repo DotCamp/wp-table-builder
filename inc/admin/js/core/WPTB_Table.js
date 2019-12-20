@@ -557,7 +557,7 @@ var array = [], WPTB_Table = function (columns, rows) {
         this.maxCols = maxColsFull;
     }
     
-     table.addColumnWidth = function( value, cleaner ) {
+    table.addColumnWidth = function( value, cleaner ) {
         let highlighted  = table.getElementsByClassName( 'wptb-highlighted' );
         if( highlighted.length > 0 ) {
             for( let k = 0; k < highlighted.length; k++ ) {
@@ -637,18 +637,24 @@ var array = [], WPTB_Table = function (columns, rows) {
         let tableTdBorderCommonWidth = 0;
         let cssForTdsWidthAuto = '';
         
+        
+        let tableFullStyleObj = window.getComputedStyle( table, null );
+        let borderLeftWidth = tableFullStyleObj.getPropertyValue( 'border-left-width' );
+        let borderRightWidth = tableFullStyleObj.getPropertyValue( 'border-right-width' );
+        let tableBorderCommon = parseFloat( borderLeftWidth, 10 ) + parseFloat( borderRightWidth, 10 );
+        
         for( let i = 0; i < rows.length; i++ ) {
             let tds = rows[i].children;
             for( let j = 0; j < tds.length; j++ ) {
                 let td = tds[j];
                 
-                if( ! arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] && ! arrayCellsWidthAutoHelper[parseInt( td.dataset.xIndex )] ) {
+                if( ! arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] && ! arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] ) {
                     if( td.style.width ) {
-                        arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] = parseFloat( td.style.width );
+                        arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] = parseFloat( td.style.width );
                         td.removeAttribute( 'data-wptb-css-td-auto-width' );
                     } else {
                         if( ! td.dataset.wptbFixedWidth ) {
-                            arrayCellsWidthAutoHelper[parseInt( td.dataset.xIndex )] = 100;
+                            arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] = 100;
                             td.dataset.wptbCssTdAutoWidth = true;
                         }
                     }
@@ -662,19 +668,45 @@ var array = [], WPTB_Table = function (columns, rows) {
                         let tableTdBorderLeftWidth = tdStyleObj.getPropertyValue( 'border-left-width' );
                         let tableTdBorderRightWidth = tdStyleObj.getPropertyValue( 'border-right-width' );
                         tableTdBorderCommonWidth = parseFloat( tableTdBorderLeftWidth, 10 ) + parseFloat( tableTdBorderRightWidth, 10 );
-                        if( arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] ) {
-                            arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] += tdPaddingCommon;
-                            arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] += tableTdBorderCommonWidth;
-                        } else {
-                            arrayCellsWidthAutoHelper[parseInt( td.dataset.xIndex )] += tdPaddingCommon;
-                            arrayCellsWidthAutoHelper[parseInt( td.dataset.xIndex )] += tableTdBorderCommonWidth;
+                        tableTdBorderCommonWidth = tableTdBorderCommonWidth / 2;
+                        
+                        if( arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] ) {
+                            arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += tdPaddingCommon;
+                            arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += tableTdBorderCommonWidth;
+                            
+                            if( j == 0 && ( tableBorderCommon / 2 ) <= parseFloat( tableTdBorderLeftWidth, 10 ) ) {
+                                arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += parseFloat( tableTdBorderLeftWidth, 10 ) / 2;
+                            } else if( j == 0 && ( tableBorderCommon / 2 ) > parseFloat( tableTdBorderLeftWidth, 10 ) ) {
+                                arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += ( ( tableBorderCommon / 2 ) - ( parseFloat( tableTdBorderRightWidth, 10 ) / 2 ) );
+                            }
+
+                            if( j == tds.length - 1 && ( tableBorderCommon / 2 ) <= parseFloat( tableTdBorderRightWidth, 10 ) ) {
+                                arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += parseFloat( tableTdBorderRightWidth, 10 ) / 2;
+                            } else if( j == tds.length - 1 && ( tableBorderCommon / 2 ) > parseFloat( tableTdBorderRightWidth, 10 ) ) {
+                                arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] += ( ( tableBorderCommon / 2 ) - ( parseFloat( tableTdBorderRightWidth, 10 ) / 2 ) );
+                            }
+                        } else if( arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] ) {
+                            arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += tdPaddingCommon;
+                            arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += tableTdBorderCommonWidth;
+                            
+                            if( j == 0 && ( tableBorderCommon / 2 ) <= parseFloat( tableTdBorderLeftWidth, 10 ) ) {
+                                arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += parseFloat( tableTdBorderLeftWidth, 10 ) / 2;
+                            } else if( j == 0 && ( tableBorderCommon / 2 ) > parseFloat( tableTdBorderLeftWidth, 10 ) ) {
+                                arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += ( ( tableBorderCommon / 2 ) - ( parseFloat( tableTdBorderLeftWidth, 10 ) / 2 ) );
+                            }
+
+                            if( j == tds.length - 1 && ( tableBorderCommon / 2 ) <= parseFloat( tableTdBorderRightWidth, 10 ) ) {
+                                arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += parseFloat( tableTdBorderRightWidth, 10 ) / 2;
+                            } else if( j == tds.length - 1 && ( tableBorderCommon / 2 ) > parseFloat( tableTdBorderRightWidth, 10 ) ) {
+                                arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] += ( ( tableBorderCommon / 2 ) - ( parseFloat( tableTdBorderLeftWidth, 10 ) / 2 ) );
+                            }
                         }
                     }
-                } else if( arrayCellsWidthAutoHelper[parseInt( td.dataset.xIndex )] ) {
+                } else if( arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] ) {
                     if( ! td.dataset.wptbFixedWidth ) {
                         td.dataset.wptbCssTdAutoWidth = true;
                     }
-                } else if( arrayCellsWidthFixedHelper[parseInt( td.dataset.xIndex )] ) {
+                } else if( arrayCellsWidthFixedHelper[parseFloat( td.dataset.xIndex )] ) {
                     td.removeAttribute( 'data-wptb-css-td-auto-width' );
                 }
             }
@@ -694,17 +726,13 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
         
-        let tableFullStyleObj = window.getComputedStyle( table, null );
-        let borderLeftWidth = tableFullStyleObj.getPropertyValue( 'border-left-width' );
-        let borderRightWidth = tableFullStyleObj.getPropertyValue( 'border-right-width' );
-        let tableBorderCommon = parseFloat( borderLeftWidth, 10 ) + parseFloat( borderRightWidth, 10 );
-        tableTdsSumMaxWidth = tableTdsSumMaxWidthFixed + tableTdsSumMaxWidthAuto + tableBorderCommon;
+        tableTdsSumMaxWidth = tableTdsSumMaxWidthFixed + tableTdsSumMaxWidthAuto;
         
         table.dataset.wptbTableTdsSumMaxWidth = tableTdsSumMaxWidth;
         if( CellsWidthAutoCount ) {
             table.dataset.wptbCellsWidthAutoCount = CellsWidthAutoCount;
             if( table.mergingСellsHorizontally ) {
-                table.dataset.wptbFixedWidthSize = tableTdsSumMaxWidthFixed - tableBorderCommon;
+                table.dataset.wptbFixedWidthSize = tableTdsSumMaxWidthFixed;
             } else {
                 table.removeAttribute( 'data-wptb-fixed-width-size' );
             }
@@ -720,7 +748,7 @@ var array = [], WPTB_Table = function (columns, rows) {
                 table.style.minWidth = '100%';
                 if( table.mergingСellsHorizontally ) {
                     table.style.width = null;
-                    let tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed - tableBorderCommon;
+                    let tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed;
                     tableTdWidthAuto = tableTdsWidthAutoCommon / CellsWidthAutoCount;
                     tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
                     styleElementCreate = true;
@@ -730,7 +758,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             } else {
                 table.style.width = null;
                 table.style.minWidth = null;
-                table.style.maxWidth = tableTdsSumMaxWidth + 'px';
+                table.style.maxWidth = null;
             }
         } else {
             table.style.maxWidth = null;

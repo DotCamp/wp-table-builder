@@ -311,7 +311,7 @@ var WPTB_LeftPanel = function () {
 
     document.getElementById('wptb-table-border-slider').oninput = function () {
         document.getElementById('wptb-table-border-number').value = this.value;
-        addBorderSize(this.value);
+        addBorderSize( this.value );
         table.tdDefaultWidth();
         
         let wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
@@ -330,7 +330,7 @@ var WPTB_LeftPanel = function () {
 
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
-        addBorderSize(this.value);
+        addBorderSize( this.value );
         table.tdDefaultWidth();
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
@@ -338,7 +338,7 @@ var WPTB_LeftPanel = function () {
 
     document.getElementById('wptb-table-inner-border-slider').oninput = function () {
         document.getElementById('wptb-table-inner-border-number').value = this.value;
-        addInnerBorderSize(this.value);
+        addInnerBorderSize( this.value );
         table.tdDefaultWidth();
     };
     
@@ -349,7 +349,7 @@ var WPTB_LeftPanel = function () {
 
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
-        addInnerBorderSize(this.value);
+        addInnerBorderSize( this.value );
         table.tdDefaultWidth();
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();

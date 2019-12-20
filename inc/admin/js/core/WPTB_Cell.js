@@ -112,6 +112,7 @@ var WPTB_Cell = function (callback, DOMElement) {
     };
     
     DOMElement.getCellDimensions = function() {
+        
         let tdStyleObj = window.getComputedStyle( this, null );
         
         let tdPaddingLeft = tdStyleObj.getPropertyValue( 'padding-left' );
@@ -126,21 +127,61 @@ var WPTB_Cell = function (callback, DOMElement) {
         let tdBorderTopWidth = tdStyleObj.getPropertyValue( 'border-top-width' );
         let tdBorderBottomWidth = tdStyleObj.getPropertyValue( 'border-bottom-width' );
         
-        let width = parseFloat( this.offsetWidth, 10 ) - 
-                    parseFloat( tdPaddingLeft, 10 ) - 
-                    parseFloat( tdPaddingRight, 10 ) -
-                    parseFloat( tdBorderLeftWidth, 10 ) -
-                    parseFloat( tdBorderRightWidth, 10 );
+        let width = parseInt( this.offsetWidth, 10 ) - 
+                    parseInt( tdPaddingLeft, 10 ) - 
+                    parseInt( tdPaddingRight, 10 ) -
+                    ( parseInt( tdBorderLeftWidth, 10 ) / 2 ) -
+                    ( parseInt( tdBorderRightWidth, 10 ) / 2 );
             
-        let height = parseFloat( this.offsetHeight, 10 ) - 
-                    parseFloat( tdPaddingTop, 10 ) - 
-                    parseFloat( tdPaddingBottom, 10 ) -
-                    parseFloat( tdBorderTopWidth, 10 ) -
-                    parseFloat( tdBorderBottomWidth, 10 );
+        let height = parseInt( this.offsetHeight, 10 ) - 
+                    parseInt( tdPaddingTop, 10 ) - 
+                    parseInt( tdPaddingBottom, 10 ) -
+                    ( parseInt( tdBorderTopWidth, 10 ) / 2 ) -
+                    ( parseInt( tdBorderBottomWidth, 10 ) / 2 ); 
+        
+        
+        let table = WPTB_Helper.findAncestor( this, 'wptb-preview-table' );
+        if( table ) {
+            let tableFullStyleObj = window.getComputedStyle( table, null );
+            let tableBorderLeft = tableFullStyleObj.getPropertyValue( 'border-left-width' );
+            let tableBorderRight = tableFullStyleObj.getPropertyValue( 'border-right-width' );
+            let tableBorderTop = tableFullStyleObj.getPropertyValue( 'border-top-width' );
+            let tableBorderBottom = tableFullStyleObj.getPropertyValue( 'border-bottom-width' );
+            
+            let tr = this.parentNode;
+            if( tr && tr.nodeName.toLowerCase() === 'tr' ) {
+                if( tr.firstChild && tr.firstChild.dataset.xIndex === this.dataset.xIndex ) {
+                    if( parseInt( tableBorderLeft, 10 ) > parseInt( tdBorderLeftWidth, 10 ) ) {
+                        width += -( parseInt( tableBorderLeft, 10 ) - parseInt( tdBorderLeftWidth, 10 ) ) / 2;
+                    }
+                }
+
+                if( tr.lastChild && tr.lastChild.dataset.xIndex === this.dataset.xIndex ) {
+                    if( parseInt( tableBorderRight, 10 ) > parseInt( tdBorderRightWidth, 10 ) ) {
+                        width += -( parseInt( tableBorderRight, 10 ) - parseInt( tdBorderRightWidth, 10 ) ) / 2;
+                    }
+                }
+                
+                let body = tr.parentNode;
+                if( body && body.nodeName.toLowerCase() === 'body' ) {
+                    if( body.firstChild && body.firstChild.firstChild.dataset.yIndex === this.dataset.yIndex ) {
+                        if( parseInt( tableBorderTop, 10 ) > parseInt( tdBorderTopWidth, 10 ) ) {
+                            height += ( parseInt( tableBorderTop, 10 ) - parseInt( tdBorderTopWidth, 10 ) ) / 2;
+                        }
+                    }
+                    
+                    if( body.lastChild && body.lastChild.firstChild.dataset.yIndex === this.dataset.yIndex ) {
+                        if( parseInt( tableBorderBottom, 10 ) > parseInt( tdBorderBottomWidth, 10 ) ) {
+                            height += ( parseInt( tableBorderBottom, 10 ) - parseInt( tdBorderBottomWidth, 10 ) ) / 2;
+                        }
+                    }
+                }
+            }
+        }
         
         return {
-            width: width, 
-            height: height
+            width: parseInt( width ), 
+            height: parseInt( height )
         };
     }
 

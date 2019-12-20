@@ -1229,6 +1229,7 @@ table.wptb-table {
     right: 0;
     left: 0;
     bottom: 0;
+    z-index: 100;
 }
 
 .wptb-preview-table-manage-cells td:hover::after {

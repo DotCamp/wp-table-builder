@@ -560,6 +560,7 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
     };
 
     DOMElement.getCellDimensions = function () {
+
         var tdStyleObj = window.getComputedStyle(this, null);
 
         var tdPaddingLeft = tdStyleObj.getPropertyValue('padding-left');
@@ -574,13 +575,52 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         var tdBorderTopWidth = tdStyleObj.getPropertyValue('border-top-width');
         var tdBorderBottomWidth = tdStyleObj.getPropertyValue('border-bottom-width');
 
-        var width = parseFloat(this.offsetWidth, 10) - parseFloat(tdPaddingLeft, 10) - parseFloat(tdPaddingRight, 10) - parseFloat(tdBorderLeftWidth, 10) - parseFloat(tdBorderRightWidth, 10);
+        var width = parseInt(this.offsetWidth, 10) - parseInt(tdPaddingLeft, 10) - parseInt(tdPaddingRight, 10) - parseInt(tdBorderLeftWidth, 10) / 2 - parseInt(tdBorderRightWidth, 10) / 2;
 
-        var height = parseFloat(this.offsetHeight, 10) - parseFloat(tdPaddingTop, 10) - parseFloat(tdPaddingBottom, 10) - parseFloat(tdBorderTopWidth, 10) - parseFloat(tdBorderBottomWidth, 10);
+        var height = parseInt(this.offsetHeight, 10) - parseInt(tdPaddingTop, 10) - parseInt(tdPaddingBottom, 10) - parseInt(tdBorderTopWidth, 10) / 2 - parseInt(tdBorderBottomWidth, 10) / 2;
+
+        var table = WPTB_Helper.findAncestor(this, 'wptb-preview-table');
+        if (table) {
+            var tableFullStyleObj = window.getComputedStyle(table, null);
+            var tableBorderLeft = tableFullStyleObj.getPropertyValue('border-left-width');
+            var tableBorderRight = tableFullStyleObj.getPropertyValue('border-right-width');
+            var tableBorderTop = tableFullStyleObj.getPropertyValue('border-top-width');
+            var tableBorderBottom = tableFullStyleObj.getPropertyValue('border-bottom-width');
+
+            var tr = this.parentNode;
+            if (tr && tr.nodeName.toLowerCase() === 'tr') {
+                if (tr.firstChild && tr.firstChild.dataset.xIndex === this.dataset.xIndex) {
+                    if (parseInt(tableBorderLeft, 10) > parseInt(tdBorderLeftWidth, 10)) {
+                        width += -(parseInt(tableBorderLeft, 10) - parseInt(tdBorderLeftWidth, 10)) / 2;
+                    }
+                }
+
+                if (tr.lastChild && tr.lastChild.dataset.xIndex === this.dataset.xIndex) {
+                    if (parseInt(tableBorderRight, 10) > parseInt(tdBorderRightWidth, 10)) {
+                        width += -(parseInt(tableBorderRight, 10) - parseInt(tdBorderRightWidth, 10)) / 2;
+                    }
+                }
+
+                var body = tr.parentNode;
+                if (body && body.nodeName.toLowerCase() === 'body') {
+                    if (body.firstChild && body.firstChild.firstChild.dataset.yIndex === this.dataset.yIndex) {
+                        if (parseInt(tableBorderTop, 10) > parseInt(tdBorderTopWidth, 10)) {
+                            height += (parseInt(tableBorderTop, 10) - parseInt(tdBorderTopWidth, 10)) / 2;
+                        }
+                    }
+
+                    if (body.lastChild && body.lastChild.firstChild.dataset.yIndex === this.dataset.yIndex) {
+                        if (parseInt(tableBorderBottom, 10) > parseInt(tdBorderBottomWidth, 10)) {
+                            height += (parseInt(tableBorderBottom, 10) - parseInt(tdBorderBottomWidth, 10)) / 2;
+                        }
+                    }
+                }
+            }
+        }
 
         return {
-            width: width,
-            height: height
+            width: parseInt(width),
+            height: parseInt(height)
         };
     };
 
@@ -3486,18 +3526,23 @@ var array = [],
         var tableTdBorderCommonWidth = 0;
         var cssForTdsWidthAuto = '';
 
+        var tableFullStyleObj = window.getComputedStyle(table, null);
+        var borderLeftWidth = tableFullStyleObj.getPropertyValue('border-left-width');
+        var borderRightWidth = tableFullStyleObj.getPropertyValue('border-right-width');
+        var tableBorderCommon = parseFloat(borderLeftWidth, 10) + parseFloat(borderRightWidth, 10);
+
         for (var _i5 = 0; _i5 < rows.length; _i5++) {
             var tds = rows[_i5].children;
             for (var _j2 = 0; _j2 < tds.length; _j2++) {
                 var td = tds[_j2];
 
-                if (!arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] && !arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)]) {
+                if (!arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] && !arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)]) {
                     if (td.style.width) {
-                        arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] = parseFloat(td.style.width);
+                        arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] = parseFloat(td.style.width);
                         td.removeAttribute('data-wptb-css-td-auto-width');
                     } else {
                         if (!td.dataset.wptbFixedWidth) {
-                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] = 100;
+                            arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] = 100;
                             td.dataset.wptbCssTdAutoWidth = true;
                         }
                     }
@@ -3511,19 +3556,45 @@ var array = [],
                         var tableTdBorderLeftWidth = tdStyleObj.getPropertyValue('border-left-width');
                         var tableTdBorderRightWidth = tdStyleObj.getPropertyValue('border-right-width');
                         tableTdBorderCommonWidth = parseFloat(tableTdBorderLeftWidth, 10) + parseFloat(tableTdBorderRightWidth, 10);
-                        if (arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)]) {
-                            arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] += tdPaddingCommon;
-                            arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)] += tableTdBorderCommonWidth;
-                        } else {
-                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] += tdPaddingCommon;
-                            arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)] += tableTdBorderCommonWidth;
+                        tableTdBorderCommonWidth = tableTdBorderCommonWidth / 2;
+
+                        if (arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)]) {
+                            arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += tdPaddingCommon;
+                            arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += tableTdBorderCommonWidth;
+
+                            if (_j2 == 0 && tableBorderCommon / 2 <= parseFloat(tableTdBorderLeftWidth, 10)) {
+                                arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += parseFloat(tableTdBorderLeftWidth, 10) / 2;
+                            } else if (_j2 == 0 && tableBorderCommon / 2 > parseFloat(tableTdBorderLeftWidth, 10)) {
+                                arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += tableBorderCommon / 2 - parseFloat(tableTdBorderRightWidth, 10) / 2;
+                            }
+
+                            if (_j2 == tds.length - 1 && tableBorderCommon / 2 <= parseFloat(tableTdBorderRightWidth, 10)) {
+                                arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += parseFloat(tableTdBorderRightWidth, 10) / 2;
+                            } else if (_j2 == tds.length - 1 && tableBorderCommon / 2 > parseFloat(tableTdBorderRightWidth, 10)) {
+                                arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)] += tableBorderCommon / 2 - parseFloat(tableTdBorderRightWidth, 10) / 2;
+                            }
+                        } else if (arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)]) {
+                            arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += tdPaddingCommon;
+                            arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += tableTdBorderCommonWidth;
+
+                            if (_j2 == 0 && tableBorderCommon / 2 <= parseFloat(tableTdBorderLeftWidth, 10)) {
+                                arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += parseFloat(tableTdBorderLeftWidth, 10) / 2;
+                            } else if (_j2 == 0 && tableBorderCommon / 2 > parseFloat(tableTdBorderLeftWidth, 10)) {
+                                arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += tableBorderCommon / 2 - parseFloat(tableTdBorderLeftWidth, 10) / 2;
+                            }
+
+                            if (_j2 == tds.length - 1 && tableBorderCommon / 2 <= parseFloat(tableTdBorderRightWidth, 10)) {
+                                arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += parseFloat(tableTdBorderRightWidth, 10) / 2;
+                            } else if (_j2 == tds.length - 1 && tableBorderCommon / 2 > parseFloat(tableTdBorderRightWidth, 10)) {
+                                arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)] += tableBorderCommon / 2 - parseFloat(tableTdBorderLeftWidth, 10) / 2;
+                            }
                         }
                     }
-                } else if (arrayCellsWidthAutoHelper[parseInt(td.dataset.xIndex)]) {
+                } else if (arrayCellsWidthAutoHelper[parseFloat(td.dataset.xIndex)]) {
                     if (!td.dataset.wptbFixedWidth) {
                         td.dataset.wptbCssTdAutoWidth = true;
                     }
-                } else if (arrayCellsWidthFixedHelper[parseInt(td.dataset.xIndex)]) {
+                } else if (arrayCellsWidthFixedHelper[parseFloat(td.dataset.xIndex)]) {
                     td.removeAttribute('data-wptb-css-td-auto-width');
                 }
             }
@@ -3543,17 +3614,13 @@ var array = [],
             }
         }
 
-        var tableFullStyleObj = window.getComputedStyle(table, null);
-        var borderLeftWidth = tableFullStyleObj.getPropertyValue('border-left-width');
-        var borderRightWidth = tableFullStyleObj.getPropertyValue('border-right-width');
-        var tableBorderCommon = parseFloat(borderLeftWidth, 10) + parseFloat(borderRightWidth, 10);
-        tableTdsSumMaxWidth = tableTdsSumMaxWidthFixed + tableTdsSumMaxWidthAuto + tableBorderCommon;
+        tableTdsSumMaxWidth = tableTdsSumMaxWidthFixed + tableTdsSumMaxWidthAuto;
 
         table.dataset.wptbTableTdsSumMaxWidth = tableTdsSumMaxWidth;
         if (CellsWidthAutoCount) {
             table.dataset.wptbCellsWidthAutoCount = CellsWidthAutoCount;
             if (table.mergingСellsHorizontally) {
-                table.dataset.wptbFixedWidthSize = tableTdsSumMaxWidthFixed - tableBorderCommon;
+                table.dataset.wptbFixedWidthSize = tableTdsSumMaxWidthFixed;
             } else {
                 table.removeAttribute('data-wptb-fixed-width-size');
             }
@@ -3569,7 +3636,7 @@ var array = [],
                 table.style.minWidth = '100%';
                 if (table.mergingСellsHorizontally) {
                     table.style.width = null;
-                    var tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed - tableBorderCommon;
+                    var tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed;
                     tableTdWidthAuto = tableTdsWidthAutoCommon / CellsWidthAutoCount;
                     tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
                     styleElementCreate = true;
@@ -3579,7 +3646,7 @@ var array = [],
             } else {
                 table.style.width = null;
                 table.style.minWidth = null;
-                table.style.maxWidth = tableTdsSumMaxWidth + 'px';
+                table.style.maxWidth = null;
             }
         } else {
             table.style.maxWidth = null;
