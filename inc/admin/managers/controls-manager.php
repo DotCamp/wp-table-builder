@@ -1,7 +1,7 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Element_Classes\Managers;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Controls\Base_Control as Base_Control;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
+namespace WP_Table_Builder\Inc\Admin\Managers;
+use WP_Table_Builder\Inc\Admin\Controls\Base_Control as Base_Control;
+use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -133,7 +133,7 @@ class Controls_Manager {
 	 *
 	 * @return bool True if control added, False otherwise.
 	 */
-	public function add_control_to_stack( Element_Base_Object $item, $control_id, $control_data ) {
+	public function add_control_to_stack( Controls_Stack $item, $control_id, $control_data ) {
 
 		$control_data['name'] = $control_id;
 
@@ -173,7 +173,7 @@ class Controls_Manager {
 
 		foreach ( self::get_controls_names() as $control_id ) {
 			$control_class_id = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $control_id ) ) );
-			$class_name = '\WP_Table_Builder\Inc\Admin\Element_Classes\Controls\Control_' . $control_class_id;
+			$class_name = '\WP_Table_Builder\Inc\Admin\Controls\Control_' . $control_class_id;
             if( class_exists( $class_name ) ) {
                 $this->register_control_object( $control_id, new $class_name() );
             }

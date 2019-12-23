@@ -1,4 +1,11 @@
 <?php
+use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Views\Builder\Builder_Table_Settings as Builder_Table_Settings;
+
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
 // Table Settings 
 
@@ -98,6 +105,47 @@
             </div>
         </div>    
     </div>
+    <div id="table-settings-group">
+        
+    </div>
+    <?php
+//        ob_start();
+//        require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/left_align.php';
+//        $left_align_image_svg = ob_get_clean();
+//
+//        ob_start();
+//        require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/center_align.php';
+//        $center_align_image_svg = ob_get_clean();
+//
+//        ob_start();
+//        require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php';
+//        $right_align_image_svg = ob_get_clean();
+        
+        $builder_table_settings = new Builder_Table_Settings();
+        $builder_table_settings->init_controls();
+    ?>
+    
+    <script>
+        WPTB_Helper.subjectOprionsSet( 'table_setting' );
+    </script>
+<!--    <div class="wptb-settings-items">
+        <div class="wptb-settings-item-header">
+            <p class="wptb-settings-item-title">Button Alignment</p>
+        </div>
+        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; padding-top: 23px;">
+            <ul>
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher" data-alignment-value="flex-start">
+                    <?php // echo $left_align_image_svg; ?>
+                </li>
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher" data-alignment-value="center">
+                    <?php // echo $center_align_image_svg; ?>
+                </li>
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher" data-alignment-value="flex-end">
+                    <?php // echo $right_align_image_svg; ?>
+                </li>
+            </ul>
+        </div>
+    </div>-->
     <div class="wptb-settings-items">
         <div class="wptb-settings-item-header">
             <p style="margin: 0">

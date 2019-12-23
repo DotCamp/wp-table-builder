@@ -287,8 +287,6 @@ var WPTB_LeftPanel = function () {
     let wptbTableRowHeightNumber = document.getElementById( 'wptb-table-row-height-number' );
     WPTB_Helper.numberImputSize( wptbTableRowHeightNumber, 2, 200 );
     
-    
-    
     document.getElementById('wptb-table-cell-slider').oninput = function () {
         document.getElementById('wptb-table-cell-number').value = this.value;
         addCellPadding(this.value);
@@ -298,7 +296,7 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-table-cell-slider').onchange = function() {
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
-    }
+    };
 
     document.getElementById('wptb-table-cell-number').onchange = function () {
         document.getElementById('wptb-table-cell-slider').value = this.value;
@@ -326,7 +324,7 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-table-border-slider').onchange = function() {
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
-    }
+    };
 
     document.getElementById('wptb-table-border-number').onchange = function () {
         document.getElementById('wptb-table-border-slider').value = this.value;
@@ -345,7 +343,7 @@ var WPTB_LeftPanel = function () {
     document.getElementById('wptb-table-inner-border-slider').onchange = function () {
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
-    }
+    };
 
     document.getElementById('wptb-table-inner-border-number').onchange = function () {
         document.getElementById('wptb-table-inner-border-slider').value = this.value;
@@ -476,20 +474,20 @@ var WPTB_LeftPanel = function () {
                 }
             }
         }
-    }
+    };
     
     document.getElementById( 'wptb-top-row-as-header' ).onchange = function () {
         createMobileHeadForTable( table, this );
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
-    }
+    };
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
         wptbElementButtons[i].ondragstart = function (e) {
             e.dataTransfer.setData('wptbElement', this.dataset.wptbElement);
             e.dataTransfer.setData( 'wptbElIndic-' + this.dataset.wptbElement, 'wptbElIndic-' + this.dataset.wptbElement );
         }
-    }
+    };
     
     if( table ) {
         document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
@@ -507,7 +505,7 @@ var WPTB_LeftPanel = function () {
         document.getElementById('wptb-delete-row').onclick = table.deleteRow;
         document.getElementById('wptb-merge-cells').onclick = table.mergeCells;
         document.getElementById('wptb-split-cell').onclick = table.splitCell;
-    }
+    };
     
     document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
         let wptbContainer = document.querySelector( '.wptb-container' );
@@ -528,27 +526,29 @@ var WPTB_LeftPanel = function () {
                ! e.target.classList.contains( 'wptb-fixed-toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-fixed-toolbar' ) ) {
             clickOnFreeSpace();
         } 
-   };
+    };
    
-   let wptbHeader = document.getElementsByClassName( 'wptb-header' );
-   if( wptbHeader.length > 0 ) wptbHeader = wptbHeader[0];
-   wptbHeader.onclick = function() {
-       clickOnFreeSpace();
-   }
+    let wptbHeader = document.getElementsByClassName( 'wptb-header' );
+    if( wptbHeader.length > 0 ) wptbHeader = wptbHeader[0];
+    wptbHeader.onclick = function() {
+        clickOnFreeSpace();
+    };
    
-   function clickOnFreeSpace() {
-       document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
+    function clickOnFreeSpace() {
+        document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
         document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
         document.getElementById( 'element-options-group' ).style.display = 'none';
         let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
         if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
             document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );
         }
-   }
-   document.querySelector('.wptb-panel-left').addEventListener('click', function (event) {
-      if (event.target.classList.contains('wptb-exit-options')) {
-        clickOnFreeSpace();
-      }
+        
+        WPTB_Helper.subjectOprionsSet( 'table_setting' );
+    };
+    
+    document.querySelector('.wptb-panel-left').addEventListener('click', function (event) {
+        if (event.target.classList.contains('wptb-exit-options')) {
+            clickOnFreeSpace();
+        }
     });
-   
 };

@@ -184,7 +184,7 @@ function starRatingNumberRatingChenge( starRatingContainer ) {
 
 // for old elements which were before the change of structure of the plugin
 let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
+let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-subject-datas' );
 let elementsSettings;
 let elementSettings;
 if( elementsSettingsTemplateJs.length > 0 ) {
@@ -192,14 +192,14 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
         elementsSettings = JSON.parse( elementsSettings );
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-element-datas-' + infArr[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-element-datas-' + infArr[1]];
+        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-subject-datas-' + infArr[1] ) in elementsSettings ) {
+            elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]];
         }
     }
 } else {
     elementsSettingsTemplateJs = document.createElement( 'script' );
     elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
+    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
     let body = document.getElementsByTagName('body')[0];
     body.appendChild( elementsSettingsTemplateJs );
 }
@@ -211,12 +211,12 @@ if( ! elementSettings ) {
         elementsSettings = {};
     }
 
-    elementsSettings['tmpl-wptb-element-datas-' + infArr[1]] = {};
+    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]] = {};
     
     let listItems = element.querySelectorAll( 'li' );
     let listItemsNumber = listItems.length;
     if( listItemsNumber > 0 ) {
-        elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-starCount'] = listItemsNumber;
+        elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-starCount'] = listItemsNumber;
     }
     
     let wptbSuccessBox = element.querySelector( '.wptb-success-box' );
@@ -229,9 +229,9 @@ if( ! elementSettings ) {
         }
         
         if( wptbSuccessBox.style.display == 'block' ) {
-            elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'checked';
+            elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'checked';
         } else if( wptbSuccessBox.style.display == 'none' ) {
-            elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'unchecked';
+            elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'unchecked';
         }
     }
     

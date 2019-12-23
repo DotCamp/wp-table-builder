@@ -21,7 +21,7 @@
                         if( ans[2] ) {
                             let elementsSettingTemplateJs = document.createElement( 'script' );
                             elementsSettingTemplateJs.setAttribute( 'type', 'text/html' );
-                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
+                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
 
                             elementsSettingTemplateJs.innerHTML = ans[2];
 
@@ -31,6 +31,7 @@
                         WPTB_Table();
                         WPTB_LeftPanel();
                         WPTB_Settings();
+                        WPTB_Helper.subjectOprionsSet( 'table_setting' );
                         
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();

@@ -2,7 +2,7 @@
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\Controls_Manager as Controls_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
@@ -109,17 +109,6 @@ class Button_Element extends Element_Base_Object {
                 'buttonViews' => ['S', 'M', 'L', 'XL']
 			]
 		);
-
-		$this->add_control(
-			'textColor',
-			[
-				'label' => __( 'Button Text Color', 'wp_table_builder' ),
-				'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{{data.container}}} .wptb-button-wrapper a div' => 'color',
-                ]
-			]
-		);
         
         $this->add_control(
 			'buttonColor',
@@ -128,6 +117,32 @@ class Button_Element extends Element_Base_Object {
 				'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{{data.container}}} .wptb-button-wrapper a div' => 'backgroundColor',
+                ]
+			]
+		);
+        
+		$this->add_control(
+			'buttonTextSize',
+			[
+				'label' => __( 'Button Text Size', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}} .wptb-button-wrapper p' => 'fontSize',
+                ],
+                'min' => 10, 
+                'max' => 50,
+                'defaultValue' => 15,
+                'dimension' => 'px'
+			]
+		);
+
+		$this->add_control(
+			'textColor',
+			[
+				'label' => __( 'Button Text Color', 'wp_table_builder' ),
+				'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{{data.container}}} .wptb-button-wrapper a div' => 'color',
                 ]
 			]
 		);

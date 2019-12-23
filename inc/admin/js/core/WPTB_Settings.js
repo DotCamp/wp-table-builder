@@ -110,7 +110,7 @@ var WPTB_Settings = function () {
         }
         
         datas = '';
-        let datas_containers = document.getElementsByClassName( 'wptb-element-datas' );
+        let datas_containers = document.getElementsByClassName( 'wptb-subject-datas' );
         
         if( datas_containers.length > 0 ) {
             if( datas_containers[0].innerHTML ) {

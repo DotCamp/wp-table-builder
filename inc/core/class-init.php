@@ -6,7 +6,7 @@ use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Core\Preview as Preview;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\elements_manager as elements_manager;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\Controls_Manager as Controls_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 
 /**
  * The core plugin class.

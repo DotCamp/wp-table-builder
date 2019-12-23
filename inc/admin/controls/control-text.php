@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Controls;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -7,15 +7,15 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder "number" control.
+ * WP Table Builder "text" control.
  *
- * A control class for creating "number" control.
+ * A control class for creating "text" control.
  *
  * @since 1.1.2
  */
-class Control_Number extends Base_Control {
+class Control_Text extends Base_Control {
     /**
-	 * Get number control type.
+	 * Get text control type.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -23,13 +23,13 @@ class Control_Number extends Base_Control {
 	 * @return string Control type.
 	 */
 	public function get_type() {
-		return 'number';
+		return 'text';
 	}
 
 	/**
-	 * Enqueue number control scripts and styles.
+	 * Enqueue text control scripts and styles.
 	 *
-	 * Used to register and enqueue custom scripts and styles used by the number
+	 * Used to register and enqueue custom scripts and styles used by the text
 	 * control.
 	 *
 	 * @since 1.1.2
@@ -40,7 +40,7 @@ class Control_Number extends Base_Control {
 	}
 
 	/**
-	 * Render number control output in the editor.
+	 * Render text control output in the editor.
 	 *
 	 * Used to generate the control HTML in the editor wp js template
 	 *
@@ -51,10 +51,7 @@ class Control_Number extends Base_Control {
 		?>
         <#
             let label,
-                min,
-                max,
-                defaultValue,
-                dimension,
+                placeholder,
                 elemContainer,
                 targetInputAddClass = '';
                 
@@ -62,20 +59,8 @@ class Control_Number extends Base_Control {
                 label = data.label;
             }
             
-            if( data.min ) {
-                min = data.min;
-            }
-            
-            if( data.max ) {
-                max = data.max;
-            }
-            
-            if( data.defaultValue ) {
-                defaultValue = data.defaultValue;
-            }
-            
-            if( data.dimension ) {
-                dimension = data.dimension;
+            if( data.placeholder ) {
+                placeholder = data.placeholder;
             }
             
             if( data.elemContainer ) {
@@ -91,9 +76,7 @@ class Control_Number extends Base_Control {
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-8">
                 <input class="wptb-number wptb-element-property {{{targetInputAddClass}}}" 
-                    type="number" min="{{{min}}}" max="{{{max}}}" 
-                    step="1" placeholder="{{{defaultValue}}}" data-element="{{{elemContainer}}}" value="{{{defaultValue}}}">
-                <span class="wptb-input-px">{{{dimension}}}</span>
+                       type="text" data-element="{{{elemContainer}}}" placeholder="{{{placeholder}}}">
             </div>
         </div>
         
@@ -107,17 +90,13 @@ class Control_Number extends Base_Control {
                         let selectorElement = document.querySelector( '.' + dataSelectorElement );
                         if( selectorElement ) {
                             targetInput.oninput = function( event ) {
-                                if( parseInt( this.value ) < parseInt( '{{{min}}}' ) ) {
-                                    this.value = parseInt( '{{{min}}}' );
-                                } else if( parseInt( this.value ) > parseInt( '{{{max}}}' ) ) {
-                                    this.value = parseInt ( '{{{max}}}' );
-                                }
-                                
                                 let details = {value: this.value};
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
 
                                 WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
-                                
+                            };
+                            
+                            targetInput.onchange = function( event ) {
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
                             };
@@ -128,6 +107,7 @@ class Control_Number extends Base_Control {
                 }
             } )();
         </wptb-template-script>
+        
 		<?php
 	}
 }

@@ -188,7 +188,7 @@ if( element.classList.contains( 'wptb-list-item-container' ) ) {
 }
 
 let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
+let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-subject-datas' );
 let elementsSettings;
 let elementSettings;
 if( elementsSettingsTemplateJs.length > 0 ) {
@@ -196,14 +196,14 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
         elementsSettings = JSON.parse( elementsSettings );
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-element-datas-' + infArr[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-element-datas-' + infArr[1]];
+        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-subject-datas-' + infArr[1] ) in elementsSettings ) {
+            elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]];
         }
     }
 } else {
     elementsSettingsTemplateJs = document.createElement( 'script' );
     elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
+    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
     let body = document.getElementsByTagName('body')[0];
     body.appendChild( elementsSettingsTemplateJs );
 }
@@ -220,16 +220,16 @@ if( ! elementSettings ) {
                     elementsSettings = {};
                 }
                 
-                elementsSettings['tmpl-wptb-element-datas-' + infArr[1]] = {};
+                elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]] = {};
                 
                 let classAttr = p.className.match( /wptb-list-style-type-(.+)/i );
                 if( classAttr && Array.isArray( classAttr ) ) {
                     let listType = classAttr[0].replace( 'wptb-list-style-type-', '' );
-                    elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'unordered';
-                    elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = listType;
+                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'unordered';
+                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = listType;
                 } else {
-                    elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'numbered';
-                    elementsSettings['tmpl-wptb-element-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = 'disc';
+                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'numbered';
+                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = 'disc';
                 }
                 
                 if( elementsSettings ) {

@@ -78,7 +78,7 @@ WPTB_Helper.controlsInclude( element, controlsChange );
 
 
 let infArrEl = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
+let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-subject-datas' );
 let elementsSettings;
 let elementSettings;
 if( elementsSettingsTemplateJs.length > 0 ) {
@@ -86,14 +86,14 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
         elementsSettings = JSON.parse( elementsSettings );
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-element-datas-' + infArrEl[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-element-datas-' + infArrEl[1]];
+        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-subject-datas-' + infArrEl[1] ) in elementsSettings ) {
+            elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]];
         }
     }
 } else {
     elementsSettingsTemplateJs = document.createElement( 'script' );
     elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
+    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
     let body = document.getElementsByTagName('body')[0];
     body.appendChild( elementsSettingsTemplateJs );
 }
@@ -103,7 +103,7 @@ if( ! elementSettings ) {
         elementsSettings = {};
     }
 
-    elementsSettings['tmpl-wptb-element-datas-' + infArrEl[1]] = {};
+    elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]] = {};
     let imageAltText;
     let img = element.getElementsByTagName( 'img' );
     if( img.length > 0 ) {
@@ -111,9 +111,9 @@ if( ! elementSettings ) {
         
         if( img.hasAttribute( 'alt' ) ) {
             imageAltText = img.getAttribute( 'alt' );
-            elementsSettings['tmpl-wptb-element-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-imageAlternativeText'] = imageAltText;
+            elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-imageAlternativeText'] = imageAltText;
         } else {
-            elementsSettings['tmpl-wptb-element-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-imageAlternativeText'] = '';
+            elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-imageAlternativeText'] = '';
         }
     }
     

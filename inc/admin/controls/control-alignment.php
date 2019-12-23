@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Element_Classes\Controls;
+namespace WP_Table_Builder\Inc\Admin\Controls;
 use WP_Table_Builder as NS;
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
