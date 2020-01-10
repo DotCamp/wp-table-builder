@@ -137,9 +137,10 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
             btnDelete.onclick = function (event) {
                 var act = event.target.parentNode.activeElem,
                     el = act.parentNode;
-
-                if (act && act.className.match(/wptb-element-(.+)-(\d+)/i)) {
+                var infArr = act.className.match(/wptb-element-(.+)-(\d+)/i);
+                if (act && infArr && Array.isArray(infArr)) {
                     WPTB_Helper.elementControlsStateDelete(act);
+                    WPTB_Helper.externalCssStylesDelete(infArr[0]);
                 }
 
                 if (act) {
@@ -148,9 +149,13 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
 
                 if (act && (typeof act === 'undefined' ? 'undefined' : _typeof(act)) === 'object' && act.hasOwnProperty('kind') && act.kind == 'text') {
                     var thisRow = el.parentNode;
-                    if (thisRow.classList.contains('wptb-table-head')) {
+
+                    if (WPTB_Helper.rowIsTop(thisRow)) {
                         var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                        WPTB_Helper.dataTitleColumnSet(table);
+
+                        if (table.classList.contains('wptb-table-preview-head')) {
+                            WPTB_Helper.dataTitleColumnSet(table);
+                        }
                     }
                 }
 
@@ -166,7 +171,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                     infArr = void 0,
                     type = void 0;
                 var activeElement = event.target.parentNode.activeElem;
-                var td = activeElement.parentNode;
+                var activeElemParent = activeElement.parentNode;
                 infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
                 if (infArr && Array.isArray(infArr)) {
                     type = infArr[1];
@@ -176,9 +181,10 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                     data.tinyMceClear = true;
                     copy = new WPTB_ElementObject(data);
                     WPTB_Helper.elementControlsStateCopy(activeElement, copy.getDOMElement());
+                    WPTB_Helper.externalCssStylesCopy(activeElement, copy.getDOMElement());
                     //WPTB_Helper.elementStartScript( copy.getDOMElement() );
 
-                    td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
+                    activeElemParent.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
                 } else {
                     copy = {};
                     var elementCopy = activeElement.cloneNode(true);
@@ -190,7 +196,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
 
                     applyGenericItemSettings(copy);
 
-                    td.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
+                    activeElemParent.insertBefore(copy.getDOMElement(), activeElement.nextSibling);
 
                     WPTB_Helper.wptbDocumentEventGenerate('wptb-inner-element:copy', activeElement, copy.getDOMElement());
                 }
@@ -240,9 +246,13 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                         var act = event.target.parentNode.activeElem;
                         if (act.kind == 'text') {
                             var thisRow = act.parentNode.parentNode;
-                            if (thisRow.classList.contains('wptb-table-head')) {
+
+                            if (WPTB_Helper.rowIsTop(thisRow)) {
                                 var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                                WPTB_Helper.dataTitleColumnSet(table);
+
+                                if (table.classList.contains('wptb-table-preview-head')) {
+                                    WPTB_Helper.dataTitleColumnSet(table);
+                                }
                             }
                         }
                     } else {
@@ -403,20 +413,33 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                         if (ans[2]) {
                             var elementsSettingTemplateJs = document.createElement('script');
                             elementsSettingTemplateJs.setAttribute('type', 'text/html');
-                            elementsSettingTemplateJs.setAttribute('class', 'wptb-subject-datas');
+                            elementsSettingTemplateJs.setAttribute('class', 'wptb-element-datas');
 
                             elementsSettingTemplateJs.innerHTML = ans[2];
 
                             body.appendChild(elementsSettingTemplateJs);
                         }
 
+                        if (ans[3]) {
+                            WPTB_Helper.elementsStylesSetFromObject(ans[3]);
+                        }
+
                         WPTB_Table();
+                        var element = document.querySelector('.wptb-preview-table');
+                        if (element) {
+                            var infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
+                            if (!infArr) {
+                                element.classList.add('wptb-element-main-table_setting-' + table_id);
+                            }
+                        }
+
                         WPTB_LeftPanel();
                         WPTB_Settings();
-                        WPTB_Helper.subjectOprionsSet('table_setting');
 
                         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
+
+                        WPTB_Helper.elementOptionsSet('table_setting', element);
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }
@@ -489,6 +512,7 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         }
 
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');
+        console.log('wptb_cell_test');
     }
 
     DOMElement.draggable = false;
@@ -700,9 +724,12 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             }
 
             var thisRow = td.parentNode;
-            if (thisRow.classList.contains('wptb-table-head')) {
+            if (WPTB_Helper.rowIsTop(thisRow)) {
                 var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
+
+                if (table.classList.contains('wptb-table-preview-head')) {
+                    WPTB_Helper.dataTitleColumnSet(table);
+                }
             }
 
             // start item javascript if item is new
@@ -741,18 +768,23 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
     } else if (thisElem.localName == 'div' && thisElem.classList.contains('wptb-ph-element')) {
         thisRow = thisElem.parentNode.parentNode;
     }
-    if (thisRow.classList.contains('wptb-table-head')) {
-        var indics = e.dataTransfer.types;
-        var notDragEnter = false;
-        for (var i = 0; i < indics.length; i++) {
-            var infArr = indics[i].match(/wptbelindic-([a-z]+)/i);
-            if (infArr && infArr[1] != 'text') {
-                notDragEnter = true;
-                break;
+
+    if (WPTB_Helper.rowIsTop(thisRow)) {
+        var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+
+        if (table.classList.contains('wptb-table-preview-head')) {
+            var indics = e.dataTransfer.types;
+            var notDragEnter = false;
+            for (var i = 0; i < indics.length; i++) {
+                var infArr = indics[i].match(/wptbelindic-([a-z]+)/i);
+                if (infArr && infArr[1] != 'text') {
+                    notDragEnter = true;
+                    break;
+                }
             }
-        }
-        if (notDragEnter) {
-            return;
+            if (notDragEnter) {
+                return;
+            }
         }
     }
 
@@ -897,10 +929,12 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
     var node = element.getDOMElement();
 
     node.onclick = function () {
-        WPTB_Helper.subjectOprionsSet(element.kind, this);
+        WPTB_Helper.elementOptionsSet(element.kind, this);
     };
 };
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var WPTB_Helper = {
     hexToRgb: function hexToRgb(hex) {
@@ -911,6 +945,10 @@ var WPTB_Helper = {
         var rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
 
         return rgb && rgb.length === 4 ? "#" + ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+    },
+    isHex: function isHex(hex) {
+        var regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}$');
+        return regex.test(hex);
     },
     getElementIcon: function getElementIcon(icon_directory) {
         var hostName = location.protocol + '//' + location.hostname;
@@ -965,6 +1003,7 @@ var WPTB_Helper = {
         var contentsForHeader = {};
         for (var i = 0; i < rowHeadChildren.length; i++) {
             var tdElements = rowHeadChildren[i].children;
+
             for (var j = 0; j < tdElements.length; j++) {
                 var element = tdElements[j];
                 if (element.classList.contains('wptb-ph-element')) {
@@ -1006,6 +1045,14 @@ var WPTB_Helper = {
         while ((el = el.parentElement) && !el.classList.contains(cls)) {}
         return el;
     },
+    rowIsTop: function rowIsTop(row) {
+        var parent = row.parentNode;
+        if (parent.children[0] == row) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     getSelectionText: function getSelectionText() {
         var txt = '';
         if (txt = window.getSelection) {
@@ -1015,31 +1062,10 @@ var WPTB_Helper = {
         }
         return txt;
     },
-    settingsPanelClear: function settingsPanelClear() {
-        document.getElementById('wptb-adaptive-table-checkbox').checked = false;
-        document.getElementById('wptb-top-row-as-header').checked = false;
-        document.getElementById('wptb-table-border-slider').value = 0;
-        document.getElementById('wptb-table-border-number').value = 0;
-        document.getElementById('wptb-inner-border-check').checked = false;
-        document.getElementById('wptb-apply-inner-border').classList.remove('visible');
-        document.getElementById('wptb-table-inner-border-slider').value = 1;
-        document.getElementById('wptb-table-inner-border-number').value = 1;
-
-        WPTB_Helper.wpColorPickerClear('wptb-table-border-color', true);
-
-        WPTB_Helper.wpColorPickerClear('wptb-table-header-bg', true);
-
-        WPTB_Helper.wpColorPickerClear('wptb-even-row-bg', true);
-
-        WPTB_Helper.wpColorPickerClear('wptb-odd-row-bg', true);
-
-        document.getElementById('wptb-table-cell-slider').value = 15;
-        document.getElementById('wptb-table-cell-number').value = 15;
-    },
-    subjectOptionsPanelClear: function subjectOptionsPanelClear() {
-        var subjectOptionsGroup = document.getElementById('element-options-group');
-        if (subjectOptionsGroup) {
-            subjectOptionsGroup.innerHTML = '';
+    elementOptionsPanelClear: function elementOptionsPanelClear() {
+        var elementOptionsGroup = document.getElementById('element-options-group');
+        if (elementOptionsGroup) {
+            elementOptionsGroup.innerHTML = '';
         }
     },
     wpColorPickerCheckChangeForTableStateSaving: function wpColorPickerCheckChangeForTableStateSaving(event) {
@@ -1333,7 +1359,7 @@ var WPTB_Helper = {
     // function which set handler for event of changes of control
     controlsInclude: function controlsInclude(element, functionHandler) {
         if (element && (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' && typeof functionHandler === 'function') {
-            element.addEventListener('click', function () {
+            element.addEventListener('element:control:active', function () {
                 var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i),
                     elementKind = void 0;
 
@@ -1342,7 +1368,7 @@ var WPTB_Helper = {
                 }
 
                 if (!element.hasOwnProperty('сontrolsConnectIndic') || element.сontrolsConnectIndic !== true && elementKind) {
-                    var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-subject-datas');
+                    var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-element-datas');
                     if (elementsSettingsTemplateJs.length > 0) {
                         (function () {
                             elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
@@ -1352,8 +1378,8 @@ var WPTB_Helper = {
                             if (elementsSettings) {
                                 elementsSettings = JSON.parse(elementsSettings);
                                 if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object') {
-                                    if ('tmpl-wptb-subject-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings) {
-                                        var elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1] + '-' + infArr[2]];
+                                    if ('tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings) {
+                                        var elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
                                         if (elementSettings && (typeof elementSettings === 'undefined' ? 'undefined' : _typeof(elementSettings)) === 'object') {
                                             Object.keys(elementSettings).forEach(function (key) {
                                                 var regularText = new RegExp('data-wptb-el-' + elementKind + '-(\\d+)-(.+)', "i");
@@ -1440,7 +1466,7 @@ var WPTB_Helper = {
         }
     },
     //
-    appearDependOn: function appearDependOn(dependOn, targetControlElementClass) {
+    appearDependOnControl: function appearDependOnControl(dependOn, targetControlElementClass) {
         if (Array.isArray(dependOn)) {
             var dependOnControlName = dependOn[0];
             var infArr = targetControlElementClass.match(/wptb-el-((.+-)\d+)-(.+)/i);
@@ -1462,15 +1488,15 @@ var WPTB_Helper = {
                         if (controlContainerElem) {
                             var showHideDependOnControlElement = function showHideDependOnControlElement(dependOnControlElementKind) {
 
-                                var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-subject-datas');
+                                var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-element-datas');
                                 if (elementsSettingsTemplateJs.length > 0) {
                                     elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
 
                                     var elementsSettings = elementsSettingsTemplateJs.innerHTML;
                                     if (elementsSettings) {
                                         elementsSettings = JSON.parse(elementsSettings);
-                                        if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object' && 'tmpl-wptb-subject-datas-' + dependOnControlElementKind in elementsSettings) {
-                                            var elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + dependOnControlElementKind];
+                                        if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object' && 'tmpl-wptb-el-datas-' + dependOnControlElementKind in elementsSettings) {
+                                            var elementSettings = elementsSettings['tmpl-wptb-el-datas-' + dependOnControlElementKind];
                                             if (elementSettings && (typeof elementSettings === 'undefined' ? 'undefined' : _typeof(elementSettings)) === 'object' && 'data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName in elementSettings) {
                                                 var elementSettingValue = elementSettings['data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName];
 
@@ -1507,24 +1533,26 @@ var WPTB_Helper = {
             var infArr = targetControlClass.match(/wptb-el-((.+-)\d+)-(.+)/i);
 
             if (infArr && Array.isArray(infArr)) {
-                var selectorElement = document.querySelector('.wptb-element-' + infArr[1]);
+                var selectorElement = void 0;
+                selectorElement = document.querySelector('.wptb-element-' + infArr[1]);
+
                 if (selectorElement) {
                     var elementsSettingsTemplatesJs = void 0;
                     var elementSettings = {};
                     var elementsSettings = void 0;
-                    elementsSettingsTemplatesJs = document.getElementsByClassName('wptb-subject-datas');
+                    elementsSettingsTemplatesJs = document.getElementsByClassName('wptb-element-datas');
                     if (elementsSettingsTemplatesJs.length == 0 || elementsSettingsTemplatesJs[0].innerHTML == '') {
                         var targetControlValue = WPTB_Helper.targetControlValueGet(targetControls);
                         elementSettings['data-' + targetControlClass] = targetControlValue;
 
                         elementsSettings = {};
-                        elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]] = elementSettings;
+                        elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = elementSettings;
                         elementsSettings = JSON.stringify(elementsSettings);
 
                         if (elementsSettingsTemplatesJs.length == 0) {
                             elementsSettingsTemplatesJs = document.createElement('script');
                             elementsSettingsTemplatesJs.setAttribute('type', 'text/html');
-                            elementsSettingsTemplatesJs.setAttribute('class', 'wptb-subject-datas');
+                            elementsSettingsTemplatesJs.setAttribute('class', 'wptb-element-datas');
                         } else {
                             elementsSettingsTemplatesJs = elementsSettingsTemplatesJs[0];
                         }
@@ -1543,26 +1571,26 @@ var WPTB_Helper = {
 
                                 if (controlChangeIndic) {
                                     var _targetControlValue = WPTB_Helper.targetControlValueGet(targetControls);
-                                    if (!('tmpl-wptb-subject-datas-' + infArr[1] in elementsSettings) || _typeof(elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]) !== 'object') {
-                                        elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]] = {};
+                                    if (!('tmpl-wptb-el-datas-' + infArr[1] in elementsSettings) || _typeof(elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]) !== 'object') {
+                                        elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
                                     }
-                                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-' + targetControlClass] = _targetControlValue;
+                                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass] = _targetControlValue;
                                     elementsSettingsTemplatesJs.innerHTML = JSON.stringify(elementsSettings);
-                                } else if (!('tmpl-wptb-subject-datas-' + infArr[1] in elementsSettings && _typeof(elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]) === 'object' && 'data-' + targetControlClass in elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]])) {
+                                } else if (!('tmpl-wptb-el-datas-' + infArr[1] in elementsSettings && _typeof(elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]) === 'object' && 'data-' + targetControlClass in elementsSettings['tmpl-wptb-el-datas-' + infArr[1]])) {
                                     var _targetControlValue2 = WPTB_Helper.targetControlValueGet(targetControls);
-                                    if (!('tmpl-wptb-subject-datas-' + infArr[1] in elementsSettings) || _typeof(elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]) !== 'object') {
-                                        elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]] = {};
+                                    if (!('tmpl-wptb-el-datas-' + infArr[1] in elementsSettings) || _typeof(elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]) !== 'object') {
+                                        elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
                                     }
-                                    elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-' + targetControlClass] = _targetControlValue2;
+                                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass] = _targetControlValue2;
                                     elementsSettingsTemplatesJs.innerHTML = JSON.stringify(elementsSettings);
-                                } else if ('tmpl-wptb-subject-datas-' + infArr[1] in elementsSettings && _typeof(elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]) === 'object' && 'data-' + targetControlClass in elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]) {
+                                } else if ('tmpl-wptb-el-datas-' + infArr[1] in elementsSettings && _typeof(elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]) === 'object' && 'data-' + targetControlClass in elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]) {
                                     for (var i = 0; i < targetControls.length; i++) {
                                         if (targetControls[i].type == 'checkbox') {
                                             var _targetControlValue3 = void 0;
                                             if (targetControls[i].name) {
-                                                _targetControlValue3 = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-' + targetControlClass][targetControls[i].name];
+                                                _targetControlValue3 = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass][targetControls[i].name];
                                             } else {
-                                                _targetControlValue3 = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-' + targetControlClass];
+                                                _targetControlValue3 = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass];
                                             }
 
                                             if (_targetControlValue3 == 'checked') {
@@ -1571,7 +1599,7 @@ var WPTB_Helper = {
                                                 targetControls[i].checked = false;
                                             }
                                         } else {
-                                            targetControls[i].value = elementsSettings['tmpl-wptb-subject-datas-' + infArr[1]]['data-' + targetControlClass];
+                                            targetControls[i].value = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass];
                                         }
                                     }
                                 }
@@ -1613,7 +1641,7 @@ var WPTB_Helper = {
             if (infArrProt && Array.isArray(infArrProt) && infArrCopy && Array.isArray(infArrCopy)) {
                 var elemProtKind = infArrProt[1];
                 var elemCopyKind = infArrCopy[1];
-                var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-subject-datas');
+                var elementsSettingsTemplateJs = document.getElementsByClassName('wptb-element-datas');
                 if (elementsSettingsTemplateJs.length > 0) {
                     elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
 
@@ -1622,7 +1650,7 @@ var WPTB_Helper = {
                         elementsSettings = JSON.parse(elementsSettings);
 
                         if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object') {
-                            var elementSettingsProt = elementsSettings['tmpl-wptb-subject-datas-' + elemProtKind];
+                            var elementSettingsProt = elementsSettings['tmpl-wptb-el-datas-' + elemProtKind];
                             if (elementSettingsProt && (typeof elementSettingsProt === 'undefined' ? 'undefined' : _typeof(elementSettingsProt)) === 'object') {
                                 var elementSettingsCopy = {};
 
@@ -1633,7 +1661,7 @@ var WPTB_Helper = {
                                 });
 
                                 if (Object.keys(elementSettingsCopy).length > 0) {
-                                    elementsSettings['tmpl-wptb-subject-datas-' + elemCopyKind] = elementSettingsCopy;
+                                    elementsSettings['tmpl-wptb-el-datas-' + elemCopyKind] = elementSettingsCopy;
 
                                     elementsSettings = JSON.stringify(elementsSettings);
                                     elementsSettingsTemplateJs.innerHTML = elementsSettings;
@@ -1649,14 +1677,14 @@ var WPTB_Helper = {
     elementControlsStateDelete: function elementControlsStateDelete(element) {
         var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
         var body = document.getElementsByTagName('body')[0];
-        var wptbElementDatas = body.getElementsByClassName('wptb-subject-datas');
+        var wptbElementDatas = body.getElementsByClassName('wptb-element-datas');
         if (infArr && Array.isArray(infArr) && wptbElementDatas.length > 0) {
             wptbElementDatas = wptbElementDatas[0];
             var elementsSettings = wptbElementDatas.innerHTML;
             if (elementsSettings) {
                 elementsSettings = JSON.parse(elementsSettings);
-                if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object' && 'tmpl-wptb-subject-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings) {
-                    delete elementsSettings['tmpl-wptb-subject-datas-' + infArr[1] + '-' + infArr[2]];
+                if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object' && 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings) {
+                    delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
 
                     if (Object.keys(elementsSettings).length == 0) {
                         body.removeChild(wptbElementDatas);
@@ -1669,34 +1697,40 @@ var WPTB_Helper = {
         }
     },
     // 
-    subjectOprionsSet: function subjectOprionsSet(kind, subject) {
-        // get controls config for this subject
+    elementOptionsSet: function elementOptionsSet(kind, element) {
+        // get controls config for this element
         var wptbContrlStacksConfigId = 'wptb-' + kind + '-control-stack';
         var tmplControlsConfig = wp.template(wptbContrlStacksConfigId);
         var data = void 0;
-        var subjectContainerClass = void 0;
-        var subjectOptionClassIndic = void 0;
-        var subjectOptionsGroup = void 0;
-        var subjectOptionsGroupId = void 0;
-        var wptbSubjectOptionClass = void 0;
+        var elementContainerClass = void 0;
+        var elementOptionClassIndic = void 0;
+        var elementOptionsGroup = void 0;
+        var elementOptionsGroupId = void 0;
+        var wptbelementOptionClass = void 0;
 
         // create a container for inserting controls of this item
-        var wptbSubjectOptionsContainer = document.createElement('div');
-        if (subject) {
+        var wptbelementOptionsContainer = document.createElement('div');
+
+        var infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
+        if (!infArr && element.classList.contains('wptb-preview-table')) {
+            var table_id = WPTB_Helper.detectMode();
+            element.classList.add('wptb-element-main-table_setting-' + table_id);
+            infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
+        }
+        data = {
+            container: '.' + infArr[0]
+        };
+
+        elementContainerClass = infArr[0];
+        elementOptionClassIndic = infArr[1];
+
+        if (!element.classList.contains('wptb-preview-table')) {
             var children = document.getElementById('element-options-group').childNodes;
             for (var _i5 = 0; _i5 < children.length; _i5++) {
                 if (children[_i5].style) children[_i5].style.display = 'none';
             }
 
-            var infArr = subject.className.match(/wptb-element-((.+-)\d+)/i);
-            data = {
-                container: '.' + infArr[0]
-            };
-
-            subjectContainerClass = infArr[0];
-            subjectOptionClassIndic = infArr[1];
-
-            wptbSubjectOptionsContainer.classList.add('wptb-element-options', 'wptb-options-' + infArr[1]);
+            wptbelementOptionsContainer.classList.add('wptb-element-options', 'wptb-options-' + infArr[1]);
 
             // hide wptb-elements-container and wptb-settings-section
             document.getElementsByClassName('wptb-elements-container')[0].style.display = 'none';
@@ -1705,18 +1739,11 @@ var WPTB_Helper = {
             // show element-options-group 
             document.getElementById('element-options-group').style.display = 'block';
 
-            subjectOptionsGroupId = 'element-options-group';
-            wptbSubjectOptionClass = 'wptb-element-option';
+            elementOptionsGroupId = 'element-options-group';
+            wptbelementOptionClass = 'wptb-element-option';
         } else {
-            data = {
-                container: '.wptb-preview-table'
-            };
-
-            subjectContainerClass = 'wptb-preview-table';
-            subjectOptionClassIndic = kind;
-
-            subjectOptionsGroupId = 'table-settings-group';
-            wptbSubjectOptionClass = 'wptb-subject-option';
+            elementOptionsGroupId = 'table-settings-group';
+            wptbelementOptionClass = 'wptb-element-option';
         }
 
         var jsonControlsConfigJson = tmplControlsConfig(data);
@@ -1724,23 +1751,23 @@ var WPTB_Helper = {
 
         // clear elements from options group
         //document.getElementById( 'element-options-group' ).innerHTML = '';
-        subjectOptionsGroup = document.getElementById(subjectOptionsGroupId);
-        var subjectOptionsGroupChildren = subjectOptionsGroup.children;
-        for (var _i6 = 0; _i6 < subjectOptionsGroupChildren.length; _i6++) {
-            subjectOptionsGroup.removeChild(subjectOptionsGroupChildren[_i6]);
+        elementOptionsGroup = document.getElementById(elementOptionsGroupId);
+        var elementOptionsGroupChildren = elementOptionsGroup.children;
+        for (var _i6 = 0; _i6 < elementOptionsGroupChildren.length; _i6++) {
+            elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i6]);
         }
 
         // insert created container into element-option-group tag
-        document.getElementById(subjectOptionsGroupId).appendChild(wptbSubjectOptionsContainer);
+        document.getElementById(elementOptionsGroupId).appendChild(wptbelementOptionsContainer);
 
         // show created container
-        wptbSubjectOptionsContainer.style.display = 'block';
+        wptbelementOptionsContainer.style.display = 'block';
 
         // array for save all scrips for each controls
         var controlScriptsArr = [];
 
         // array for keep "appear depend on" parametrs
-        var controlAppearDependOn = [];
+        var controlappearDependOnControl = [];
 
         // create controls
         var i = 0;
@@ -1751,20 +1778,20 @@ var WPTB_Helper = {
             // get necessary wp js template
             var tmplControlTemplate = wp.template('wptb-' + data.type + '-control');
 
-            data.elemContainer = subjectContainerClass;
-            data.elementControlTargetUnicClass = 'wptb-el-' + subjectOptionClassIndic + '-' + data.controlKey;
+            data.elemContainer = elementContainerClass;
+            data.elementControlTargetUnicClass = 'wptb-el-' + elementOptionClassIndic + '-' + data.controlKey;
             var controlTemplate = tmplControlTemplate(data);
 
-            if ('appearDependOn' in data) {
-                if (Array.isArray(data.appearDependOn)) {
-                    controlAppearDependOn.push([data.appearDependOn, data.elementControlTargetUnicClass]);
+            if ('appearDependOnControl' in data) {
+                if (Array.isArray(data.appearDependOnControl)) {
+                    controlappearDependOnControl.push([data.appearDependOnControl, data.elementControlTargetUnicClass]);
                 }
             }
 
             //console.log( controlTemplate );
 
             var wptbElementOptionContainer = document.createElement('div');
-            wptbElementOptionContainer.classList.add(wptbSubjectOptionClass, 'wptb-settings-items');
+            wptbElementOptionContainer.classList.add(wptbelementOptionClass, 'wptb-settings-items');
 
             if (data.customClassForContainer) {
                 wptbElementOptionContainer.classList.add(data.customClassForContainer);
@@ -1776,7 +1803,7 @@ var WPTB_Helper = {
 
             wptbElementOptionContainer.innerHTML = controlTemplate;
 
-            wptbSubjectOptionsContainer.appendChild(wptbElementOptionContainer);
+            wptbelementOptionsContainer.appendChild(wptbElementOptionContainer);
 
             var helperJavascriptElem = wptbElementOptionContainer.getElementsByTagName('wptb-template-script');
             if (helperJavascriptElem.length > 0) {
@@ -1795,16 +1822,349 @@ var WPTB_Helper = {
         // run the scripts of controls
         if (controlScriptsArr.length > 0) {
             for (var _i7 = 0; _i7 < controlScriptsArr.length; _i7++) {
-                wptbSubjectOptionsContainer.appendChild(controlScriptsArr[_i7]);
+                wptbelementOptionsContainer.appendChild(controlScriptsArr[_i7]);
             }
         }
 
-        // run appearDependOn function
-        for (var _i8 = 0; _i8 < controlAppearDependOn.length; _i8++) {
-            WPTB_Helper.appearDependOn(controlAppearDependOn[_i8][0], controlAppearDependOn[_i8][1]);
+        // run appearDependOnControl function
+        for (var _i8 = 0; _i8 < controlappearDependOnControl.length; _i8++) {
+            WPTB_Helper.appearDependOnControl(controlappearDependOnControl[_i8][0], controlappearDependOnControl[_i8][1]);
         }
 
-        WPTB_Helper.wptbDocumentEventGenerate('controlPanel:added:leftPanel');
+        WPTB_Helper.wptbDocumentEventGenerate('element:control:active', element);
+    },
+    // function for create, update css for element
+    managerExternalCssStyles: function managerExternalCssStyles(elementContainer, selector, cssName, cssValue) {
+        var infArr = elementContainer.match(/wptb-element-main(.+)-(\d+)/i);
+        if (!infArr || !Array.isArray(infArr)) {
+            var table = document.getElementsByClassName('wptb-preview-table');
+
+            if (table.length > 0) {
+                table = table[0];
+
+                var _infArr = table.className.match(/wptb-element-main(.+)-(\d+)/i);
+                if (_infArr && Array.isArray(_infArr)) {
+                    selector = '.' + _infArr[0] + ' ' + selector;
+                }
+            }
+        }
+
+        var head = document.head;
+        if (head) {
+            var cssForThisElement = head.querySelector('#styles-' + elementContainer);
+            if (cssForThisElement) {
+                var cssText = cssForThisElement.innerHTML;
+                if (cssText) {
+                    var cssTextArrFirst = cssText.split('}');
+                    cssTextArrFirst.pop();
+                    var selectorExists = false;
+                    for (var i = 0; i < cssTextArrFirst.length; i++) {
+                        var cssTextArrSecond = cssTextArrFirst[i].split('{');
+                        if (cssTextArrSecond[0] === selector) {
+                            var cssTextArrThird = cssTextArrSecond[1].split(';');
+                            cssTextArrThird.pop();
+                            var cssNameExists = false;
+                            for (var j = 0; j < cssTextArrThird.length; j++) {
+                                var cssTextArrFourth = cssTextArrThird[j].split(':');
+                                if (cssTextArrFourth[0] === cssName) {
+                                    if (cssValue) {
+                                        cssTextArrThird[j] = cssName + ':' + cssValue;
+                                    } else {
+                                        cssTextArrThird.splice(j, 1);
+                                    }
+
+                                    cssTextArrSecond[1] = cssTextArrThird.join(';') ? cssTextArrThird.join(';') + ';' : '';
+                                    cssNameExists = true;
+                                    break;
+                                }
+                            }
+                            if (!cssNameExists) {
+                                if (cssValue) {
+                                    cssTextArrSecond[1] += cssName + ':' + cssValue + ';';
+                                }
+                            }
+                            if (cssTextArrSecond[1]) {
+                                cssTextArrFirst[i] = cssTextArrSecond[0] + '{' + cssTextArrSecond[1];
+                            } else {
+                                cssTextArrFirst.splice(i, 1);
+                            }
+                            if (cssTextArrFirst.join('}')) {
+                                cssForThisElement.innerHTML = cssTextArrFirst.join('}') + '}';
+                            } else {
+                                head.removeChild(cssForThisElement);
+                            }
+
+                            selectorExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!selectorExists) {
+                        if (cssValue) {
+                            cssForThisElement.innerHTML = cssText + selector + '{' + cssName + ':' + cssValue + ';}';
+                        } else {
+                            cssForThisElement.innerHTML = cssText;
+                        }
+                    }
+                } else {
+                    if (cssValue) {
+                        cssForThisElement.innerHTML = selector + '{' + cssName + ':' + cssValue + ';}';
+                    } else {
+                        head.removeChild(cssForThisElement);
+                    }
+                }
+            } else {
+                if (cssValue) {
+                    var _cssForThisElement = document.createElement('style');
+                    _cssForThisElement.setAttribute('id', 'styles-' + elementContainer);
+                    _cssForThisElement.classList.add('styles-wptb-elements');
+                    _cssForThisElement.innerHTML = selector + '{' + cssName + ':' + cssValue + ';}';
+                    head.appendChild(_cssForThisElement);
+                }
+            }
+        }
+    },
+    // function for deleting all external CSS for the element
+    externalCssStylesDelete: function externalCssStylesDelete(elementContainerClass) {
+        var head = document.head;
+        if (head) {
+            var cssForThisElement = head.querySelector('#styles-' + elementContainerClass);
+
+            if (cssForThisElement) {
+                head.removeChild(cssForThisElement);
+            }
+        }
+    },
+    // function for copy all external CSS for the element
+    externalCssStylesCopy: function externalCssStylesCopy(activeElement, copyElement) {
+        if (activeElement) {
+            var infArr = activeElement.className.match(/wptb-element-(.+)-(\d+)/i);
+            if (infArr && Array.isArray(infArr)) {
+                var activeElemClass = infArr[0];
+
+                var head = document.head;
+                if (head) {
+                    var cssForActiveElement = head.querySelector('#styles-' + activeElemClass);
+
+                    if (cssForActiveElement) {
+                        var cssForNewElement = cssForActiveElement.cloneNode(true);
+
+                        cssForNewElement.removeAttribute('id', 'styles-' + activeElemClass);
+
+                        var infArrCopyEl = copyElement.className.match(/wptb-element-(.+)-(\d+)/i);
+                        if (infArrCopyEl && Array.isArray(infArrCopyEl)) {
+                            cssForNewElement.setAttribute('id', 'styles-' + infArrCopyEl[0]);
+                            var cssForActiveElementInnerHTML = cssForActiveElement.innerHTML;
+                            var cssForNewElementInnerHTML = WPTB_Helper.replaceAll(cssForActiveElementInnerHTML, activeElemClass, infArrCopyEl[0]);
+                            cssForNewElement.innerHTML = cssForNewElementInnerHTML;
+                            head.appendChild(cssForNewElement);
+                        }
+                    }
+                }
+            }
+        }
+    },
+    // function for convertation elements stiles in json
+    elementsStylesConvertToObject: function elementsStylesConvertToObject() {
+        var head = document.head;
+        var stylesElements = head.querySelectorAll('.styles-wptb-elements');
+        var stylesObj = {};
+        for (var i = 0; i < stylesElements.length; i++) {
+            var styleElemId = stylesElements[i].getAttribute('id');
+            if (styleElemId && stylesElements[i].innerHTML) {
+                stylesObj[styleElemId] = stylesElements[i].innerHTML;
+            }
+        }
+
+        if (Object.keys(stylesObj).length != 0) {
+            return JSON.stringify(stylesObj);
+        }
+        return '';
+    },
+    // function for set scc styles tags to head
+    elementsStylesSetFromObject: function elementsStylesSetFromObject(jsonObject) {
+        var head = document.head;
+        if (head) {
+            var stylesElements = head.querySelectorAll('.styles-wptb-elements');
+            if (stylesElements.length > 0) {
+                stylesElements = [].concat(_toConsumableArray(stylesElements));
+                for (var i = 0; i < stylesElements.length; i++) {
+                    head.removeChild(stylesElements[i]);
+                }
+            }
+            if (jsonObject) {
+                var stylesObj = JSON.parse(jsonObject);
+                if (Object.keys(stylesObj).length != 0) {
+                    Object.keys(stylesObj).forEach(function (key) {
+                        var cssText = stylesObj[key];
+                        var styleCss = document.createElement('style');
+                        styleCss.setAttribute('id', key);
+                        styleCss.classList.add('styles-wptb-elements');
+                        styleCss.innerHTML = cssText;
+                        head.appendChild(styleCss);
+                    });
+                }
+            }
+        }
+    },
+    // function for table saving
+    saveTable: function saveTable(event, startSaving) {
+        if (!startSaving) {
+            if (!event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == event.target.dataset.wptbTableStateNumberSave) {
+                //return;
+            }
+        }
+
+        var bar = document.querySelector('.wptb-edit-bar');
+        if (bar && bar.classList.contains('visible')) {
+            var table = document.getElementsByClassName('wptb-preview-table')[0];
+            table.toggleTableEditMode();
+        }
+
+        var http = new XMLHttpRequest(),
+            url = (wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl) + "?action=save_table",
+            t = document.getElementById('wptb-setup-name').value.trim(),
+            messagingArea = void 0,
+            code = void 0,
+            datas = void 0;
+        code = document.getElementsByClassName('wptb-preview-table');
+
+        var postId = void 0;
+        if ((rs = WPTB_Helper.detectMode()) || (rs = document.wptbId)) {
+            postId = rs;
+        }
+        var paramIdsNecessaryChange = false;
+        if (code.length > 0) {
+            code = code[0];
+            var codeClone = code.cloneNode(true);
+            if (postId) {
+                if (codeClone.classList.contains('wptb-element-main-table_setting-startedid-0')) {
+                    codeClone.classList.remove('wptb-element-main-table_setting-startedid-0');
+                    codeClone.classList.add('wptb-element-main-table_setting-' + postId);
+                    paramIdsNecessaryChange = true;
+                }
+            }
+            codeClone.columns = code.columns;
+            code = WPTB_Stringifier(codeClone);
+            code = code.outerHTML;
+        } else {
+            code = '';
+        }
+
+        datas = '';
+        var datas_containers = document.getElementsByClassName('wptb-element-datas');
+
+        if (datas_containers.length > 0) {
+            if (datas_containers[0].innerHTML) {
+                datas = datas_containers[0].innerHTML;
+
+                if (paramIdsNecessaryChange) {
+                    datas = WPTB_Helper.replaceAll(datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 'tmpl-wptb-el-datas-main-table_setting-' + postId);
+
+                    datas = WPTB_Helper.replaceAll(datas, 'data-wptb-el-main-table_setting-startedid-0', 'data-wptb-el-main-table_setting-' + postId);
+                }
+            }
+        }
+
+        var styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
+        if (paramIdsNecessaryChange) {
+            styleObjJson = WPTB_Helper.replaceAll(styleObjJson, '.wptb-element-main-table_setting-startedid-0', '.wptb-element-main-table_setting-' + postId);
+        }
+
+        if (t === '' && code === '') {
+            var messagingAreaText = '';
+            if (t === '') messagingAreaText += 'You must assign a name to the table before saving it.</br>';
+            if (code === '') messagingAreaText += 'Table wasn\'t created';
+            messagingArea = document.getElementById('wptb-messaging-area');
+            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: ' + messagingAreaText + '</div>';
+            messagingArea.classList.add('wptb-warning');
+            setTimeout(function () {
+                messagingArea.removeChild(messagingArea.firstChild);
+            }, 4000);
+            return;
+        }
+
+        var params = {
+            title: t,
+            content: code,
+            elements_datas: datas,
+            elements_styles: styleObjJson,
+            security_code: wptb_admin_object.security_code
+        };
+
+        if (postId) {
+            params.id = postId;
+        }
+        params = JSON.stringify(params);
+
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        http.onreadystatechange = function (action) {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(http.responseText);
+                messagingArea = document.getElementById('wptb-messaging-area');
+
+                if (data[0] == 'saved') {
+                    console.log(window.wptbTableStateSaving);
+                    window.history.pushState(null, null, document.location.href.replace('#', '') + '&table=' + data[1]);
+
+                    WPTB_Helper.saveTable(event, true);
+                    return;
+                } else if (data[0] == 'edited' && startSaving) {
+                    document.wptbId = data[1];
+                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+                    document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
+                    document.getElementById('wptb-embed-shortcode').value = '[wptb id=' + data[1] + ']';
+                    var wptbPreviewTable = document.querySelector('.wptb-preview-table');
+                    var wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
+                    if (wptbPreviewBtn.length > 0) {
+                        wptbPreviewBtn = wptbPreviewBtn[0];
+                        wptbPreviewBtn.classList.remove('wptb-button-disable');
+                        var wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+                        wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
+                        wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
+                    }
+
+                    event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+                    var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+                    if (wptbSaveBtn.length > 0) {
+                        wptbSaveBtn = wptbSaveBtn[0];
+                        wptbSaveBtn.classList.add('wptb-save-disabled');
+                    }
+                } else if (data[0] == 'edited') {
+                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
+                    event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+
+                    var _wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+                    if (_wptbSaveBtn.length > 0) {
+                        _wptbSaveBtn = _wptbSaveBtn[0];
+                        _wptbSaveBtn.classList.add('wptb-save-disabled');
+                    }
+                } else {
+                    messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
+                }
+                messagingArea.classList.add('wptb-success');
+                setTimeout(function () {
+                    messagingArea.removeChild(messagingArea.firstChild);
+                }, 4000);
+            }
+        };
+        http.send(params);
+    },
+    //
+    clickOnFreeSpace: function clickOnFreeSpace() {
+        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
+        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
+        document.getElementById('element-options-group').style.display = 'none';
+        var wpcdFixedToolbar = document.getElementById('wpcd_fixed_toolbar');
+        if (wpcdFixedToolbar.hasAttribute('data-toolbar-active-id')) {
+            document.getElementById(wpcdFixedToolbar.getAttribute('data-toolbar-active-id')).classList.remove('toolbar-active');
+        }
+        var element = document.querySelector('.wptb-preview-table');
+        if (element) {
+            WPTB_Helper.elementOptionsSet('table_setting', element);
+        }
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -1845,9 +2205,13 @@ var WPTB_Initializer = function WPTB_Initializer() {
                 var columns = document.getElementById('wptb-columns-number').value,
                     rows = document.getElementById('wptb-rows-number').value;
 
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                //wptbTableStateSaveManager.tableStateClear();
+
+                wptbTableStateSaveManager.tableStateSet(true);
+
                 WPTB_Table(columns, rows);
 
-                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
         };
 };
@@ -1911,10 +2275,14 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
                     td.insertBefore(element, innerElementNext);
                 }
             }
+
             var thisRow = td.parentNode;
-            if (thisRow.classList.contains('wptb-table-head')) {
+            if (WPTB_Helper.rowIsTop(thisRow)) {
                 var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-                WPTB_Helper.dataTitleColumnSet(table);
+
+                if (table.classList.contains('wptb-table-preview-head')) {
+                    WPTB_Helper.dataTitleColumnSet(table);
+                }
             }
 
             // start item javascript if item is new
@@ -1943,374 +2311,18 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
         element.classList.remove('wptb-ondragenter');
     };
 };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
     var table = document.getElementsByClassName('wptb-preview-table')[0],
         wptbElementButtons = document.getElementsByClassName('wptb-element');
-
-    function wptbTdBgColorSavedSet(inputId, trNumber) {
-        if (trNumber > 3) return;
-        if (table) {
-            var tableRows = table.getElementsByTagName('tr');
-            if (tableRows.length > trNumber) {
-                var trBackgroundColor = tableRows[trNumber].style.backgroundColor;
-                var wptbEvenRowBg = document.getElementById(inputId);
-                if (wptbEvenRowBg && trBackgroundColor) {
-                    wptbEvenRowBg.value = WPTB_Helper.rgbToHex(trBackgroundColor);
-                }
-            }
-        }
-    }
-
-    wptbTdBgColorSavedSet('wptb-even-row-bg', 1);
-    jQuery('#wptb-even-row-bg').wpColorPicker({
-        change: function change(event, ui) {
-            var tableRows = table.getElementsByTagName('tr');
-            for (var _i = 1; _i < tableRows.length; _i += 2) {
-                tableRows[_i].style.backgroundColor = ui.color.toString();
-            }
-            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
-        },
-        clear: function clear() {
-            var tableRows = table.getElementsByTagName('tr');
-            for (var _i2 = 1; _i2 < tableRows.length; _i2 += 2) {
-                tableRows[_i2].style.backgroundColor = '';
-                var tds = tableRows[_i2].getElementsByTagName('td');
-                for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = '';
-                }
-            }
-
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-
-    });
-
-    wptbTdBgColorSavedSet('wptb-odd-row-bg', 2);
-    jQuery('#wptb-odd-row-bg').wpColorPicker({
-        change: function change(event, ui) {
-            var tableRows = table.getElementsByTagName('tr');
-            for (var _i3 = 2; _i3 < tableRows.length; _i3 += 2) {
-                tableRows[_i3].style.backgroundColor = ui.color.toString();
-            }
-
-            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
-        },
-        clear: function clear() {
-            var tableRows = table.getElementsByTagName('tr');
-            for (var _i4 = 2; _i4 < tableRows.length; _i4 += 2) {
-                tableRows[_i4].style.backgroundColor = '';
-                var tds = tableRows[_i4].getElementsByTagName('td');
-                for (var j = 0; j < tds.length; j++) {
-                    tds[j].style.backgroundColor = '';
-                }
-            }
-
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-    });
-
-    wptbTdBgColorSavedSet('wptb-table-header-bg', 0);
-    jQuery('#wptb-table-header-bg').wpColorPicker({
-        change: function change(event, ui) {
-            var tableHeader = table.getElementsByTagName('tr')[0];
-            tableHeader.style.backgroundColor = ui.color.toString();
-
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        },
-        clear: function clear() {
-            var tableHeader = table.getElementsByTagName('tr')[0];
-            tableHeader.style.backgroundColor = '';
-            var tds = tableHeader.getElementsByTagName('td');
-            for (var j = 0; j < tds.length; j++) {
-                tds[j].style.backgroundColor = '';
-            }
-
-            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
-        }
-    });
-
-    function tableAdaptiveForMobile(table) {
-        var wptbAdaptiveTableCheckbox = document.getElementById('wptb-adaptive-table-checkbox');
-        if (table && table.dataset.wptbAdaptiveTable && table.dataset.wptbAdaptiveTable == "1") {
-            wptbAdaptiveTableCheckbox.checked = true;
-        } else {
-            wptbAdaptiveTableCheckbox.checked = false;
-        }
-    }
-    tableAdaptiveForMobile(table);
-
-    function tableTopRowAsHeadSavedSet(table) {
-        var wptbTopRowAsHeader = document.getElementById('wptb-top-row-as-header');
-
-        if (table && table.classList.contains('wptb-table-preview-head')) {
-            wptbTopRowAsHeader.checked = true;
-        } else {
-            wptbTopRowAsHeader.checked = false;
-        }
-    }
-    tableTopRowAsHeadSavedSet(table);
-
-    function tableBorderColorWidthSavedSet() {
-        var table = document.getElementsByClassName('wptb-preview-table');
-        if (table.length > 0) {
-            var tableBorderColor = table[0].style.borderColor;
-            if (tableBorderColor) {
-                var tableBorderColorInput = document.getElementById('wptb-table-border-color');
-                if (tableBorderColorInput) {
-                    tableBorderColorInput.value = WPTB_Helper.rgbToHex(tableBorderColor);
-                }
-            }
-
-            var tableBorderWidth = table[0].style.borderWidth;
-            if (tableBorderWidth) {
-                var wptbTableBorderWidthSlider = document.getElementById('wptb-table-border-slider'),
-                    wptbTableBorderWidthNumber = document.getElementById('wptb-table-border-number');
-
-                if (wptbTableBorderWidthSlider) {
-                    wptbTableBorderWidthSlider.value = parseInt(tableBorderWidth);
-                }
-                if (wptbTableBorderWidthNumber) {
-                    wptbTableBorderWidthNumber.value = parseInt(tableBorderWidth);
-                }
-            }
-
-            var tableTd = table[0].querySelector('td');
-            var applyInnerBorder = tableTd.style.borderWidth;
-            if (applyInnerBorder) {
-                var innerBorderCheckInput = document.getElementById('wptb-inner-border-check');
-                var wptbApplyInnerBorder = document.getElementById('wptb-apply-inner-border');
-                if (applyInnerBorder && parseInt(applyInnerBorder) > 0) {
-                    if (innerBorderCheckInput) {
-                        innerBorderCheckInput.checked = true;
-
-                        if (wptbApplyInnerBorder) {
-                            wptbApplyInnerBorder.classList.add('visible');
-                            var wptbTableInnerBorderSlider = document.getElementById('wptb-table-inner-border-slider');
-                            var _wptbTableInnerBorderNumber = document.getElementById('wptb-table-inner-border-number');
-                            wptbTableInnerBorderSlider.value = parseInt(applyInnerBorder);
-                            _wptbTableInnerBorderNumber.value = parseInt(applyInnerBorder);
-                        }
-                    }
-                } else {
-                    innerBorderCheckInput.checked = false;
-                }
-            }
-
-            if (tableBorderWidth && parseInt(tableBorderWidth) > 0 || applyInnerBorder && parseInt(applyInnerBorder) > 0) {
-                document.getElementById('wptb-table-border-color-set-area').style.display = '';
-            }
-        }
-    }
-
-    tableBorderColorWidthSavedSet();
-
-    jQuery('#wptb-table-border-color').wpColorPicker({
-        change: function change(event, ui) {
-            var tableCells = table.getElementsByTagName('td');
-            table.style.border = document.querySelector('#wptb-table-border-number').value + 'px solid ' + ui.color.toString();
-
-            for (var i = 0; i < tableCells.length; i++) {
-                var tableInnerborderNumber = document.querySelector('#wptb-table-inner-border-number').value;
-                if (document.getElementById('wptb-inner-border-check').checked) {
-                    tableCells[i].style.border = (tableInnerborderNumber != 0 ? tableInnerborderNumber : 1) + 'px solid ' + ui.color.toString();
-                }
-            }
-            WPTB_Helper.wpColorPickerCheckChangeForTableStateSaving(event);
-        },
-        clear: function clear() {
-            var tableCells = table.getElementsByTagName('td');
-            table.style.borderColor = '';
-
-            for (var i = 0; i < tableCells.length; i++) {
-                tableCells[i].style.borderColor = '';
-            }
-
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-    });
-
-    function addInnerBorderSize(value) {
-        var tableCells = table.getElementsByTagName('td');
-        for (var i = 0; i < tableCells.length; i++) {
-            tableCells[i].style.borderWidth = document.querySelector('#wptb-table-inner-border-number').value + 'px';
-            tableCells[i].style.borderStyle = 'solid';
-        }
-    }
-
-    function addCellPadding(value) {
-        var tableCells = table.getElementsByTagName('td');
-        for (var i = 0; i < tableCells.length; i++) {
-            tableCells[i].style.padding = value + 'px';
-        }
-    }
-
-    function addInnerBorder(checked) {
-        var styles,
-            color = document.querySelector('#wptb-table-border-color').value != undefined ? document.querySelector('#wptb-table-border-color').value : 'rgb(0,0,0)';
-        if (document.querySelector('#wptb-table-inner-border-slider').value == 0 || document.querySelector('#wptb-table-inner-border-number').value == 0) {
-            document.querySelector('#wptb-table-inner-border-slider').value = 1;
-            document.querySelector('#wptb-table-inner-border-number').value = 1;
-        }
-        var width = document.querySelector('#wptb-table-inner-border-slider').value + 'px';
-        var wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
-        if (wptbPreviewTable.length > 0) {
-            if (checked == 'checked') {
-                document.getElementById('wptb-apply-inner-border').style.marginBottom = '0px';
-                var tableCells = wptbPreviewTable[0].getElementsByTagName('td');
-                for (var i = 0; i < tableCells.length; i++) {
-                    tableCells[i].style.border = width + ' solid ' + color;
-                }
-                document.getElementById('wptb-apply-inner-border').classList.add('visible');
-            } else {
-                document.getElementById('wptb-apply-inner-border').classList.remove('visible');
-                var tableCells = wptbPreviewTable[0].getElementsByTagName('td');
-                for (var i = 0; i < tableCells.length; i++) {
-                    tableCells[i].style.border = '0px solid ' + color;
-                    tableCells[i].style.border = null;
-                }
-            }
-        }
-    }
-
-    function addBorderSize(value) {
-        table.style.borderWidth = value + 'px';
-        table.style.borderStyle = 'solid';
-    }
-
-    function cellPaddingSavedSet() {
-        var table = document.getElementsByClassName('wptb-preview-table');
-
-        if (table.length > 0) {
-            var td = table[0].querySelector('td');
-
-            if (td) {
-                var padding = td.style.padding;
-
-                if (padding) {
-                    var wptbTableCellSlider = document.getElementById('wptb-table-cell-slider'),
-                        _wptbTableCellNumber = document.getElementById('wptb-table-cell-number');
-
-                    if (wptbTableCellSlider) {
-                        wptbTableCellSlider.value = parseInt(padding);
-                    }
-                    if (_wptbTableCellNumber) {
-                        _wptbTableCellNumber.value = parseInt(padding);
-                    }
-                }
-            }
-        }
-    }
-
-    cellPaddingSavedSet();
-
-    var wptbTableBorderNumber = document.getElementById('wptb-table-border-number');
-    WPTB_Helper.numberImputSize(wptbTableBorderNumber, 1, 50);
-
-    var wptbTableInnerBorderNumber = document.getElementById('wptb-table-inner-border-number');
-    WPTB_Helper.numberImputSize(wptbTableInnerBorderNumber, 1, 50);
-
-    var wptbTableCellNumber = document.getElementById('wptb-table-cell-number');
-    WPTB_Helper.numberImputSize(wptbTableCellNumber, 1, 50);
-
-    //    let wptbTextfontSizeNumber = document.getElementById( 'wptb-size-number' );
-    //    WPTB_Helper.numberImputSize( wptbTextfontSizeNumber, 1, 50 );
-    //    
-    //    let wptbImageWidthNumber = document.getElementById( 'wptb-size-number' );
-    //    WPTB_Helper.numberImputSize( wptbImageWidthNumber, 2, 100 );
 
     var wptbTableColumnWidthNumber = document.getElementById('wptb-table-column-width-number');
     WPTB_Helper.numberImputSize(wptbTableColumnWidthNumber, 2, 500);
 
     var wptbTableRowHeightNumber = document.getElementById('wptb-table-row-height-number');
     WPTB_Helper.numberImputSize(wptbTableRowHeightNumber, 2, 200);
-
-    document.getElementById('wptb-table-cell-slider').oninput = function () {
-        document.getElementById('wptb-table-cell-number').value = this.value;
-        addCellPadding(this.value);
-        table.tdDefaultWidth();
-    };
-
-    document.getElementById('wptb-table-cell-slider').onchange = function () {
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-table-cell-number').onchange = function () {
-        document.getElementById('wptb-table-cell-slider').value = this.value;
-        addCellPadding(this.value);
-        table.tdDefaultWidth();
-
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-table-border-slider').oninput = function () {
-        document.getElementById('wptb-table-border-number').value = this.value;
-        addBorderSize(this.value);
-        table.tdDefaultWidth();
-
-        var wptbInnerBorderCheck = document.getElementById('wptb-inner-border-check').checked,
-            tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
-        if (this.value == 0 && wptbInnerBorderCheck == false) {
-            tableBorderColorSetArea.style.display = 'none';
-        } else {
-            tableBorderColorSetArea.style.display = '';
-        }
-    };
-
-    document.getElementById('wptb-table-border-slider').onchange = function () {
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-table-border-number').onchange = function () {
-        document.getElementById('wptb-table-border-slider').value = this.value;
-        addBorderSize(this.value);
-        table.tdDefaultWidth();
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-table-inner-border-slider').oninput = function () {
-        document.getElementById('wptb-table-inner-border-number').value = this.value;
-        addInnerBorderSize(this.value);
-        table.tdDefaultWidth();
-    };
-
-    document.getElementById('wptb-table-inner-border-slider').onchange = function () {
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-table-inner-border-number').onchange = function () {
-        document.getElementById('wptb-table-inner-border-slider').value = this.value;
-        addInnerBorderSize(this.value);
-        table.tdDefaultWidth();
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
-
-    document.getElementById('wptb-inner-border-check').onchange = function () {
-        if (table) {
-            var val = this.checked ? 'checked' : 'unchecked';
-            addInnerBorder(val);
-            var borderWidth = document.getElementById('wptb-table-border-slider').value,
-                tableBorderColorSetArea = document.getElementById('wptb-table-border-color-set-area');
-            if (val == 'unchecked' && borderWidth == 0) {
-                tableBorderColorSetArea.style.display = 'none';
-            } else {
-                tableBorderColorSetArea.style.display = '';
-            }
-
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-    };
 
     document.getElementById('wptb-table-column-width-slider').oninput = function () {
         document.getElementById('wptb-table-column-width-number').value = this.value;
@@ -2382,47 +2394,41 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         wptbTableStateSaveManager.tableStateSet();
     };
 
-    document.getElementById('wptb-adaptive-table-checkbox').onchange = function () {
-        if (this.checked) {
-            table.dataset.wptbAdaptiveTable = 1;
-        } else {
-            table.dataset.wptbAdaptiveTable = 0;
-        }
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
+    function controlsChange(inputs, table) {
+        if (inputs && (typeof inputs === 'undefined' ? 'undefined' : _typeof(inputs)) === 'object') {
+            if (inputs.hasOwnProperty('tableTopRowsAsHeader')) {
+                if (inputs.tableTopRowsAsHeader == 'checked') {
+                    var rows = table.rows;
+                    table.classList.add('wptb-table-preview-head');
+                } else if (inputs.tableTopRowsAsHeader == 'unchecked') {
+                    var _rows = table.rows;
+                    table.classList.remove('wptb-table-preview-head');
 
-    function createMobileHeadForTable(table, thisEvent) {
-
-        if (thisEvent.checked) {
-            WPTB_Helper.dataTitleColumnSet(table);
-
-            table.classList.add('wptb-table-preview-head');
-            table.rows[0].classList.add('wptb-table-head');
-        } else {
-            var rows = table.rows;
-            table.classList.remove('wptb-table-preview-head');
-            rows[0].classList.remove('wptb-table-head');
-
-            for (var _i5 = 1; _i5 < rows.length; _i5++) {
-                var thisRow = rows[_i5],
-                    thisRowChildren = thisRow.children;
-                for (var j = 0; j < thisRowChildren.length; j++) {
-                    thisRowChildren[j].removeAttribute('data-wptb-title-column');
-                    thisRowChildren[j].removeAttribute('data-wptb-title-column-font-size');
-                    thisRowChildren[j].removeAttribute('data-wptb-title-column-color');
-                    thisRowChildren[j].removeAttribute('data-wptb-title-background-color');
-                    thisRowChildren[j].removeAttribute('data-wptb-title-align');
+                    for (var _i = 1; _i < _rows.length; _i++) {
+                        var thisRow = _rows[_i],
+                            thisRowChildren = thisRow.children;
+                        for (var j = 0; j < thisRowChildren.length; j++) {
+                            thisRowChildren[j].removeAttribute('data-wptb-title-column');
+                            thisRowChildren[j].removeAttribute('data-wptb-title-column-font-size');
+                            thisRowChildren[j].removeAttribute('data-wptb-title-column-color');
+                            thisRowChildren[j].removeAttribute('data-wptb-title-background-color');
+                            thisRowChildren[j].removeAttribute('data-wptb-title-align');
+                        }
+                    }
                 }
+            } else if (inputs.hasOwnProperty('makeTableResponsive')) {
+                if (inputs.makeTableResponsive == 'checked') {
+                    table.dataset.wptbAdaptiveTable = 1;
+                } else if (inputs.makeTableResponsive == 'unchecked') {
+                    table.dataset.wptbAdaptiveTable = 0;
+                }
+            } else if (inputs.hasOwnProperty('tableManageCells')) {
+                table.toggleTableEditMode();
             }
         }
-    };
+    }
 
-    document.getElementById('wptb-top-row-as-header').onchange = function () {
-        createMobileHeadForTable(table, this);
-        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-        wptbTableStateSaveManager.tableStateSet();
-    };
+    WPTB_Helper.controlsInclude(table, controlsChange);
 
     for (var i = 0; i < wptbElementButtons.length; i++) {
         wptbElementButtons[i].ondragstart = function (e) {
@@ -2432,7 +2438,6 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     };
 
     if (table) {
-        document.getElementById('wptb-activate-cell-management-mode').onclick = table.toggleTableEditMode;
         document.getElementById('wptb-table-edit-mode-close').onclick = table.toggleTableEditMode;
         document.getElementById('wptb-left-scroll-panel-curtain-close').onclick = table.toggleTableEditMode;
         document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
@@ -2465,33 +2470,15 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
     wptbBuilderPanel.onclick = function (e) {
         if (!e.target.classList.contains('wptb-ph-element') && !WPTB_Helper.findAncestor(e.target, 'wptb-ph-element') && !e.target.classList.contains('wptb-fixed-toolbar') && !WPTB_Helper.findAncestor(e.target, 'wptb-fixed-toolbar')) {
-            clickOnFreeSpace();
+            WPTB_Helper.clickOnFreeSpace();
         }
     };
 
     var wptbHeader = document.getElementsByClassName('wptb-header');
     if (wptbHeader.length > 0) wptbHeader = wptbHeader[0];
     wptbHeader.onclick = function () {
-        clickOnFreeSpace();
+        WPTB_Helper.clickOnFreeSpace();
     };
-
-    function clickOnFreeSpace() {
-        document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
-        document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
-        document.getElementById('element-options-group').style.display = 'none';
-        var wpcdFixedToolbar = document.getElementById('wpcd_fixed_toolbar');
-        if (wpcdFixedToolbar.hasAttribute('data-toolbar-active-id')) {
-            document.getElementById(wpcdFixedToolbar.getAttribute('data-toolbar-active-id')).classList.remove('toolbar-active');
-        }
-
-        WPTB_Helper.subjectOprionsSet('table_setting');
-    };
-
-    document.querySelector('.wptb-panel-left').addEventListener('click', function (event) {
-        if (event.target.classList.contains('wptb-exit-options')) {
-            clickOnFreeSpace();
-        }
-    });
 };
 var MultipleSelect = function MultipleSelect() {
 
@@ -2641,7 +2628,7 @@ var WPTB_Settings = function WPTB_Settings() {
             WPTB_Helper.elementDragEndClear();
         };
     };
-
+    var table = document.getElementsByClassName('wptb-preview-table');
     var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
     var wptbUndo = document.getElementsByClassName('wptb-undo');
     if (wptbUndo.length > 0) {
@@ -2651,7 +2638,7 @@ var WPTB_Settings = function WPTB_Settings() {
             if (!this.classList.contains('wptb-undoredo-disabled')) {
                 wptbTableStateSaveManager.tableStateGet(this.dataset.wptbUndoredo);
                 var wptbUndoRedoContainer = document.getElementsByClassName('wptb-undo-redo-container');
-                if (wptbUndoRedoContainer.length > 0) {
+                if (wptbUndoRedoContainer.length > 0 && table.length > 0) {
                     wptbUndoRedoContainer = wptbUndoRedoContainer[0];
                     wptbUndoRedoContainer.onmouseleave = function (event) {
                         event.target.onmouseleave = '';
@@ -2670,7 +2657,7 @@ var WPTB_Settings = function WPTB_Settings() {
             if (!this.classList.contains('wptb-undoredo-disabled')) {
                 wptbTableStateSaveManager.tableStateGet(this.dataset.wptbUndoredo);
                 var wptbUndoRedoContainer = document.getElementsByClassName('wptb-undo-redo-container');
-                if (wptbUndoRedoContainer.length > 0) {
+                if (wptbUndoRedoContainer.length > 0 && table.length > 0) {
                     wptbUndoRedoContainer = wptbUndoRedoContainer[0];
                     wptbUndoRedoContainer.onmouseleave = function (event) {
                         event.target.onmouseleave = '';
@@ -2712,102 +2699,9 @@ var WPTB_Settings = function WPTB_Settings() {
     };
 
     document.getElementsByClassName('wptb-save-btn')[0].onclick = function (event) {
-        if (!event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == event.target.dataset.wptbTableStateNumberSave) {
-            return;
+        if (!this.classList.contains('wptb-save-disabled')) {
+            WPTB_Helper.saveTable(event);
         }
-        var bar = document.querySelector('.wptb-edit-bar');
-        if (bar && bar.classList.contains('visible')) {
-            var table = document.getElementsByClassName('wptb-preview-table')[0];
-            table.toggleTableEditMode();
-        }
-
-        var http = new XMLHttpRequest(),
-            url = (wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl) + "?action=save_table",
-            t = document.getElementById('wptb-setup-name').value.trim(),
-            messagingArea = void 0,
-            code = void 0,
-            datas = void 0;
-        code = document.getElementsByClassName('wptb-preview-table');
-        if (code.length > 0) {
-            code = WPTB_Stringifier(code[0]);
-            code = code.outerHTML;
-        } else {
-            code = '';
-        }
-
-        datas = '';
-        var datas_containers = document.getElementsByClassName('wptb-subject-datas');
-
-        if (datas_containers.length > 0) {
-            if (datas_containers[0].innerHTML) {
-                datas = datas_containers[0].innerHTML;
-            }
-        }
-
-        if (t === '' || code === '') {
-            var messagingAreaText = '';
-            if (t === '') messagingAreaText += 'You must assign a name to the table before saving it.</br>';
-            if (code === '') messagingAreaText += 'Table wasn\'t created';
-            messagingArea = document.getElementById('wptb-messaging-area');
-            messagingArea.innerHTML = '<div class="wptb-error wptb-message">Error: ' + messagingAreaText + '</div>';
-            messagingArea.classList.add('wptb-warning');
-            setTimeout(function () {
-                messagingArea.removeChild(messagingArea.firstChild);
-            }, 4000);
-            return;
-        }
-
-        var params = {
-            title: t,
-            content: code,
-            elements_datas: datas,
-            security_code: wptb_admin_object.security_code
-        };
-        if ((rs = WPTB_Helper.detectMode()) || (rs = document.wptbId)) {
-            params.id = rs;
-        }
-        params = JSON.stringify(params);
-
-        http.open('POST', url, true);
-        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-        http.onreadystatechange = function (action) {
-            if (this.readyState == 4 && this.status == 200) {
-                var data = JSON.parse(http.responseText);
-                messagingArea = document.getElementById('wptb-messaging-area');
-
-                if (data[0] == 'saved') {
-                    document.wptbId = data[1];
-                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
-                    document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
-                    document.getElementById('wptb-embed-shortcode').value = '[wptb id=' + data[1] + ']';
-                    var wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
-                    if (wptbPreviewBtn.length > 0) {
-                        wptbPreviewBtn = wptbPreviewBtn[0];
-                        wptbPreviewBtn.classList.remove('wptb-button-disable');
-                        var wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
-                        wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
-                        wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
-                    }
-                } else if (data[0] == 'edited') {
-                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
-                    event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
-
-                    var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-                    if (wptbSaveBtn.length > 0) {
-                        wptbSaveBtn = wptbSaveBtn[0];
-                        wptbSaveBtn.classList.add('wptb-save-disabled');
-                    }
-                } else {
-                    messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
-                }
-                messagingArea.classList.add('wptb-success');
-                setTimeout(function () {
-                    messagingArea.removeChild(messagingArea.firstChild);
-                }, 4000);
-            }
-        };
-        http.send(params);
     };
 };
 var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
@@ -3285,12 +3179,7 @@ var array = [],
         }
     };
 
-    jQuery('#wptb-table-header-bg').val('');
-    jQuery('#wptb-even-row-bg').val('');
-    jQuery('#wptb-odd-row-bg').val('');
     jQuery('#wptb-table-border-color').val('');
-    jQuery('#wptb-table-inner-border-number,#wptb-table-inner-border-slider').val('0');
-    jQuery('#wptb-table-border-number,#wptb-table-border-slider').val('0');
     jQuery('#wptb-table-padding-number,#wptb-table-padding-slider').val('15');
 
     if (columns || rows) {
@@ -3303,7 +3192,8 @@ var array = [],
 
         //Create a HTML Table element.
         table = document.createElement('table');
-        table.classList.add('wptb-preview-table');
+        table.classList.add('wptb-preview-table', 'wptb-element-main-table_setting-startedid-0');
+        table.style.border = '0px solid';
         table.dataset.reconstraction = 1;
         table.dataset.wptbAdaptiveTable = 1;
         //Add the data rows.
@@ -3315,6 +3205,7 @@ var array = [],
             for (var j = 0; j < columns; j++) {
                 cell = new WPTB_Cell(mark);
                 cell.setCoords(i, j);
+                cell.getDOMElement().style.borderWidth = '1px';
                 row.appendChild(cell.getDOMElement());
             }
         }
@@ -3331,6 +3222,8 @@ var array = [],
                     WPTB_Cell(mark, cells[_i]);
                 }
             }
+        } else {
+            return;
         }
     }
 
@@ -3386,37 +3279,28 @@ var array = [],
             maxCols = 0,
             maxColsFull = 0,
             tdsArr = [];
-        var wptbTopRowAsHeader = document.getElementById('wptb-top-row-as-header');
+        //let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
 
         for (var i = 0; i < trs.length; i++) {
             if (i == 0) {
-                if (start == undefined) {
-                    trs[i].style.backgroundColor = jQuery('#wptb-table-header-bg').val();
-                }
-                if (wptbTopRowAsHeader.checked) {
-                    if (start == undefined) {
-                        this.classList.add('wptb-table-preview-head');
-                        trs[i].classList.add('wptb-table-head');
-                    };
-                } else {
-                    if (start == undefined) {
-                        this.classList.remove('wptb-table-preview-head');
-                        trs[i].classList.remove('wptb-table-head');
-                    }
-                }
+                //                if( wptbTopRowAsHeader.checked ) {
+                //                    if( start == undefined ) {
+                //                        this.classList.add( 'wptb-table-preview-head' );               
+                //                        trs[i].classList.add( 'wptb-table-head' )
+                //                    }  ;
+                //                } else {
+                //                    if( start == undefined ) {
+                //                        this.classList.remove( 'wptb-table-preview-head' );
+                //                        trs[i].classList.remove( 'wptb-table-head' );
+                //                    }
+                //                }
             } else {
-                if (i % 2 == 0) {
-                    if (start == undefined) {
-                        trs[i].style.backgroundColor = jQuery('#wptb-odd-row-bg').val();
-                    }
-                    trs[i].classList.remove('wptb-table-head');
-                } else {
-                    if (start == undefined) {
-                        trs[i].style.backgroundColor = jQuery('#wptb-even-row-bg').val();
-                    }
-                    trs[i].classList.remove('wptb-table-head');
+                    //                if (i % 2 == 0) {
+                    //                    trs[i].classList.remove( 'wptb-table-head' );
+                    //                } else {
+                    //                    trs[i].classList.remove( 'wptb-table-head' );
+                    //                }
                 }
-            }
 
             tdsArr[i];
             tds = trs[i].getElementsByTagName('td');
@@ -3769,26 +3653,19 @@ var array = [],
 
     table.reconstraction = function () {
         var tds = table.getElementsByTagName('td');
-        var wptbAdaptiveTableChoseBlock = document.getElementsByClassName('wptb-adaptive-table-chose-block');
-        if (wptbAdaptiveTableChoseBlock.length > 0) {
-            wptbAdaptiveTableChoseBlock = wptbAdaptiveTableChoseBlock[0];
-        }
         table.mergingСellsHorizontally = false;
         table.mergingCellsVertically = false;
         table.dataset.reconstraction = 1;
-        wptbAdaptiveTableChoseBlock.style.display = 'block';
         var forBreak = 0;
         for (var _i9 = 0; _i9 < tds.length; _i9++) {
             if (tds[_i9].colSpan > 1) {
                 table.dataset.reconstraction = 0;
-                wptbAdaptiveTableChoseBlock.style.display = 'none';
                 table.mergingСellsHorizontally = true;
                 forBreak++;
             }
 
             if (tds[_i9].rowSpan > 1) {
                 table.dataset.reconstraction = 0;
-                wptbAdaptiveTableChoseBlock.style.display = 'none';
                 table.mergingCellsVertically = true;
                 forBreak++;
             }
@@ -4532,12 +4409,17 @@ var array = [],
             if (table.rows.length == 0) {
                 table.toggleTableEditMode();
                 wptbTableSetup.innerHTML = '';
-                WPTB_Helper.settingsPanelClear();
                 document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
-            }
+                var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+                if (wptbSaveBtn.length > 0) {
+                    wptbSaveBtn = wptbSaveBtn[0];
 
-            table.recalculateIndexes();
-            WPTB_Helper.dataTitleColumnSet(table);
+                    wptbSaveBtn.classList.add('wptb-save-disabled');
+                }
+            } else {
+                table.recalculateIndexes();
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
         }
 
         undoSelect();
@@ -4588,13 +4470,18 @@ var array = [],
             if (table.querySelectorAll('td').length == 0) {
                 table.toggleTableEditMode();
                 wptbTableSetup.innerHTML = '';
-                WPTB_Helper.settingsPanelClear();
                 document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
-            }
+                var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+                if (wptbSaveBtn.length > 0) {
+                    wptbSaveBtn = wptbSaveBtn[0];
 
-            table.recalculateIndexes();
-            table.tdDefaultWidth();
-            WPTB_Helper.dataTitleColumnSet(table);
+                    wptbSaveBtn.classList.add('wptb-save-disabled');
+                }
+            } else {
+                table.recalculateIndexes();
+                table.tdDefaultWidth();
+                WPTB_Helper.dataTitleColumnSet(table);
+            }
         }
 
         undoSelect();
@@ -4656,27 +4543,39 @@ var array = [],
     //        }, false );
     //    }
 };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
-    this.tableStateSet = function () {
+    this.tableStateSet = function (generate) {
+
+        if (generate && window.wptbTableStateSaving && Array.isArray(window.wptbTableStateSaving)) {
+            return;
+        }
+
         // get preview table
         var wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
         if (wptbPreviewTable.length > 0) {
             wptbPreviewTable = wptbPreviewTable[0];
+        } else {
+            wptbPreviewTable = '';
+        }
 
-            // check if a global array doesn't exist with saved versions of the table 
-            // them create it
-            if (!window.wptbTableStateSaving) {
-                window.wptbTableStateSaving = [];
-            }
+        // check if a global array doesn't exist with saved versions of the table 
+        // them create it
+        if (!window.wptbTableStateSaving && !Array.isArray(window.wptbTableStateSaving)) {
+            window.wptbTableStateSaving = [];
+        }
 
-            // remove the extra part of the array after changing the table 
-            // when it is showed in the not last modified version
-            if (window.wptbTableStateSaving.length > window.wptbTableStateNumberShow + 1) {
-                window.wptbTableStateSaving = window.wptbTableStateSaving.slice(0, window.wptbTableStateNumberShow + 1);
-            }
+        // remove the extra part of the array after changing the table 
+        // when it is showed in the not last modified version
+        if (window.wptbTableStateSaving.length > window.wptbTableStateNumberShow) {
+            window.wptbTableStateSaving = window.wptbTableStateSaving.slice(0, window.wptbTableStateNumberShow + 1);
+        }
 
-            //add new state of table
-            var wptbNewPreviewTable = wptbPreviewTable.cloneNode(true);
+        //add new state of table
+        var wptbNewPreviewTable = '';
+        if (wptbPreviewTable) {
+            wptbNewPreviewTable = wptbPreviewTable.cloneNode(true);
             var wptbHighlighted = wptbNewPreviewTable.getElementsByClassName('wptb-highlighted');
             for (var i = 0; i < wptbHighlighted.length; i++) {
                 wptbHighlighted[i].classList.remove('wptb-highlighted');
@@ -4685,81 +4584,81 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             for (var _i = 0; _i < wptbDirectlyhovered.length; _i++) {
                 wptbDirectlyhovered[_i].classList.remove('wptb-directlyhovered');
             }
-
-            var cssForTdsWidthAutoValue = '';
-            var head = document.head;
-            if (head) {
-                var cssForTdsWidthAuto = head.querySelector('style[data-wptb-td-auto-width="true"]');
-                if (cssForTdsWidthAuto) {
-                    cssForTdsWidthAutoValue = cssForTdsWidthAuto.innerHTML;
-                }
-            }
-
-            var wptbDlementDatas = document.getElementsByClassName('wptb-subject-datas');
-            if (wptbDlementDatas.length > 0) {
-                wptbDlementDatas = wptbDlementDatas.innerHTML;
-            } else {
-                wptbDlementDatas = '';
-            }
-
             var mceContentBodys = wptbNewPreviewTable.querySelectorAll('.mce-content-body');
             if (mceContentBodys.length > 0) {
                 for (var k = 0; k < mceContentBodys.length; k++) {
                     mceContentBodys[k].classList.remove('mce-content-body');
                 }
             }
-
             var dataMceStyle = wptbNewPreviewTable.querySelectorAll('[data-mce-style]');
             if (dataMceStyle.length > 0) {
                 for (var _k = 0; _k < dataMceStyle.length; _k++) {
                     dataMceStyle[_k].removeAttribute('data-mce-style');
                 }
             }
-
             var mceIds = wptbNewPreviewTable.querySelectorAll('[id^=mce_]');
             if (mceIds.length > 0) {
                 for (var _k2 = 0; _k2 < mceIds.length; _k2++) {
                     mceIds[_k2].removeAttribute('id');
                 }
             }
+        }
 
-            window.wptbTableStateSaving.push([wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbDlementDatas]);
-
-            // set new number of state which is showed now
-            window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
-
-            // make undo arrow active when the table was changed
-            if (window.wptbTableStateSaving.length > 1) {
-                var wptbUndo = document.getElementsByClassName('wptb-undo');
-                if (wptbUndo.length > 0) {
-                    wptbUndo = wptbUndo[0];
-
-                    wptbUndo.classList.remove('wptb-undoredo-disabled');
-                }
+        var cssForTdsWidthAutoValue = '';
+        var head = document.head;
+        if (head) {
+            var cssForTdsWidthAuto = head.querySelector('style[data-wptb-td-auto-width="true"]');
+            if (cssForTdsWidthAuto) {
+                cssForTdsWidthAutoValue = cssForTdsWidthAuto.innerHTML;
             }
+        }
 
-            // make redo arrow not active when the table was changed
-            var wptbRedo = document.getElementsByClassName('wptb-redo');
-            if (wptbRedo.length > 0) {
-                wptbRedo = wptbRedo[0];
+        var wptbElementDatas = document.getElementsByClassName('wptb-element-datas');
+        if (wptbElementDatas.length > 0) {
+            wptbElementDatas = wptbElementDatas[0];
+            wptbElementDatas = wptbElementDatas.innerHTML;
+        } else {
+            wptbElementDatas = '';
+        }
 
-                wptbRedo.classList.add('wptb-undoredo-disabled');
+        var styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
+
+        window.wptbTableStateSaving.push([wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbElementDatas, styleObjJson]);
+
+        // set new number of state which is showed now
+        window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
+
+        // make undo arrow active when the table was changed
+        if (window.wptbTableStateSaving.length - 1 > 0) {
+            var wptbUndo = document.getElementsByClassName('wptb-undo');
+            if (wptbUndo.length > 0) {
+                wptbUndo = wptbUndo[0];
+
+                wptbUndo.classList.remove('wptb-undoredo-disabled');
             }
+        }
 
-            var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-            if (wptbSaveBtn.length > 0) {
-                wptbSaveBtn = wptbSaveBtn[0];
-                if (!wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave) {
-                    wptbSaveBtn.classList.add('wptb-save-disabled');
-                } else {
-                    wptbSaveBtn.classList.remove('wptb-save-disabled');
-                }
+        // make redo arrow not active when the table was changed
+        var wptbRedo = document.getElementsByClassName('wptb-redo');
+        if (wptbRedo.length > 0) {
+            wptbRedo = wptbRedo[0];
+
+            wptbRedo.classList.add('wptb-undoredo-disabled');
+        }
+
+        var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+        if (wptbSaveBtn.length > 0) {
+            wptbSaveBtn = wptbSaveBtn[0];
+            if (!wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave || !wptbPreviewTable) {
+                wptbSaveBtn.classList.add('wptb-save-disabled');
+            } else {
+                wptbSaveBtn.classList.remove('wptb-save-disabled');
             }
         }
     };
 
     this.tableStateGet = function (datawptbUndoredo) {
-        if (datawptbUndoredo && window.wptbTableStateSaving && window.wptbTableStateSaving.length > 1) {
+        if (datawptbUndoredo && window.wptbTableStateSaving && window.wptbTableStateSaving.length > 0) {
 
             // changes the number of the state which displays now
             if (datawptbUndoredo == 'undo') {
@@ -4769,7 +4668,7 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                     return false;
                 }
             } else if (datawptbUndoredo == 'redo') {
-                if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1) {
+                if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length) {
                     window.wptbTableStateNumberShow++;
                 } else {
                     return false;
@@ -4780,14 +4679,15 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             var wptbUndo = document.getElementsByClassName('wptb-undo');
             if (wptbUndo.length > 0) {
                 wptbUndo = wptbUndo[0];
-            }
-            if (window.wptbTableStateNumberShow == 0) {
-                if (wptbUndo) {
-                    wptbUndo.classList.add('wptb-undoredo-disabled');
-                }
-            } else if (window.wptbTableStateNumberShow > 0) {
-                if (wptbUndo) {
-                    wptbUndo.classList.remove('wptb-undoredo-disabled');
+
+                if (window.wptbTableStateNumberShow == 0) {
+                    if (wptbUndo) {
+                        wptbUndo.classList.add('wptb-undoredo-disabled');
+                    }
+                } else if (window.wptbTableStateNumberShow > 0) {
+                    if (wptbUndo) {
+                        wptbUndo.classList.remove('wptb-undoredo-disabled');
+                    }
                 }
             }
 
@@ -4795,17 +4695,19 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             var wptbRedo = document.getElementsByClassName('wptb-redo');
             if (wptbRedo.length > 0) {
                 wptbRedo = wptbRedo[0];
-            }
-            if (window.wptbTableStateNumberShow == window.wptbTableStateSaving.length - 1) {
-                if (wptbRedo) {
-                    wptbRedo.classList.add('wptb-undoredo-disabled');
-                }
-            } else if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1) {
-                if (wptbRedo) {
-                    wptbRedo.classList.remove('wptb-undoredo-disabled');
+
+                if (window.wptbTableStateNumberShow == window.wptbTableStateSaving.length - 1) {
+                    if (wptbRedo) {
+                        wptbRedo.classList.add('wptb-undoredo-disabled');
+                    }
+                } else if (window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1) {
+                    if (wptbRedo) {
+                        wptbRedo.classList.remove('wptb-undoredo-disabled');
+                    }
                 }
             }
 
+            // add or delete class "wptb-save-disabled" for save button
             var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
             if (wptbSaveBtn.length > 0) {
                 wptbSaveBtn = wptbSaveBtn[0];
@@ -4822,37 +4724,56 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                 wptbTableSetup = wptbTableSetup[0];
 
                 wptbTableSetup.innerHTML = '';
-                wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
+                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow]) {
+                    if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] && _typeof(window.wptbTableStateSaving[window.wptbTableStateNumberShow][0]) === 'object') {
+                        if ('outerHTML' in window.wptbTableStateSaving[window.wptbTableStateNumberShow][0]) {
+                            wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
+                        }
+                    }
 
-                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][1]) {
-                    var cssForTdsWidthAuto = document.createElement('style');
-                    cssForTdsWidthAuto.setAttribute('data-wptb-td-auto-width', true);
-                    cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
+                    if (!wptbTableSetup.innerHTML) {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+                        wptbSaveBtn.classList.add('wptb-save-disabled');
+                    } else {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+                    }
+                }
+                // add or change or delete style element in the head for table cells who have auto width
+                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow]) {
                     var head = document.head;
                     if (head) {
                         var cssForTdsWidthAutoOld = head.querySelector('style[data-wptb-td-auto-width="true"]');
                         if (cssForTdsWidthAutoOld) {
                             head.removeChild(cssForTdsWidthAutoOld);
                         }
-                        head.appendChild(cssForTdsWidthAuto);
+
+                        if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][1]) {
+                            var cssForTdsWidthAuto = document.createElement('style');
+                            cssForTdsWidthAuto.setAttribute('data-wptb-td-auto-width', true);
+                            cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
+                            head.appendChild(cssForTdsWidthAuto);
+                        }
                     }
                 }
 
-                var wptbElementDatas = document.getElementsByClassName('wptb-subject-datas');
                 var body = document.getElementsByTagName('body');
                 if (body.length > 0) {
                     body = body[0];
                 }
-                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][2]) {
-                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
+
+                // add or change or delete script element from the bottom page which have data for several control types
+                var wptbElementDatas = document.getElementsByClassName('wptb-element-datas');
+                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow] && window.wptbTableStateSaving[window.wptbTableStateNumberShow][2]) {
 
                     if (wptbElementDatas.length > 0) {
                         wptbElementDatas = wptbElementDatas[0];
                     } else {
-                        wptbElementDatas = document.createElement('div');
-                        wptbElementDatas.classList.add('wptb-subject-datas');
+                        wptbElementDatas = document.createElement('sctipt');
+                        wptbElementDatas.classList.add('wptb-element-datas');
                         body.appendChild(wptbElementDatas);
                     }
+
+                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
                 } else {
                     if (wptbElementDatas.length > 0) {
                         wptbElementDatas = wptbElementDatas[0];
@@ -4860,7 +4781,11 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                     }
                 }
 
-                WPTB_Helper.settingsPanelClear();
+                // runs function which adds or create or delete CSS in the head for several element settings
+                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow]) {
+                    WPTB_Helper.elementsStylesSetFromObject(window.wptbTableStateSaving[window.wptbTableStateNumberShow][3]);
+                }
+
                 WPTB_Helper.elementOptionsPanelClear();
                 WPTB_LeftPanel();
 
@@ -4869,6 +4794,32 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                     wptbLeftScrollPanelCellSetting.classList.remove('visible');
                 }
             }
+        }
+    };
+
+    this.tableStateClear = function () {
+        delete window.wptbTableStateSaving;
+        delete window.wptbTableStateNumberShow;
+
+        var wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+        if (wptbSaveBtn.length > 0) {
+            wptbSaveBtn = wptbSaveBtn[0];
+
+            wptbSaveBtn.removeAttribute('data-wptb-table-state-number-save');
+        }
+
+        var wptbUndo = document.getElementsByClassName('wptb-undo');
+        if (wptbUndo.length > 0) {
+            wptbUndo = wptbUndo[0];
+
+            wptbUndo.classList.add('wptb-undoredo-disabled');
+        }
+
+        var wptbRedo = document.getElementsByClassName('wptb-redo');
+        if (wptbRedo.length > 0) {
+            wptbRedo = wptbRedo[0];
+
+            wptbRedo.classList.add('wptb-undoredo-disabled');
         }
     };
 };

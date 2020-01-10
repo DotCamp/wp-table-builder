@@ -1,24 +1,34 @@
 var WPTB_TableStateSaveManager = function() {
-    this.tableStateSet = () => {
+    this.tableStateSet = ( generate ) => {
+        
+        if( generate && window.wptbTableStateSaving && Array.isArray( window.wptbTableStateSaving ) ) {
+            return;
+        }
+        
         // get preview table
         let wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
         if( wptbPreviewTable.length > 0 ) {
             wptbPreviewTable = wptbPreviewTable[0];
+        } else {
+            wptbPreviewTable = '';
+        }
             
-            // check if a global array doesn't exist with saved versions of the table 
-            // them create it
-            if( ! window.wptbTableStateSaving ) {
-                window.wptbTableStateSaving = [];
-            } 
-            
-            // remove the extra part of the array after changing the table 
-            // when it is showed in the not last modified version
-            if( window.wptbTableStateSaving.length > window.wptbTableStateNumberShow + 1 ) {
-                window.wptbTableStateSaving = window.wptbTableStateSaving.slice( 0, window.wptbTableStateNumberShow + 1 );
-            }
-            
-            //add new state of table
-            let wptbNewPreviewTable = wptbPreviewTable.cloneNode( true );
+        // check if a global array doesn't exist with saved versions of the table 
+        // them create it
+        if( ! window.wptbTableStateSaving && ! Array.isArray( window.wptbTableStateSaving ) ) {
+            window.wptbTableStateSaving = [];
+        } 
+
+        // remove the extra part of the array after changing the table 
+        // when it is showed in the not last modified version
+        if( window.wptbTableStateSaving.length > window.wptbTableStateNumberShow ) {
+            window.wptbTableStateSaving = window.wptbTableStateSaving.slice( 0, window.wptbTableStateNumberShow + 1 );
+        }
+
+        //add new state of table
+        let wptbNewPreviewTable = '';
+        if( wptbPreviewTable ) {
+            wptbNewPreviewTable = wptbPreviewTable.cloneNode( true );
             let wptbHighlighted = wptbNewPreviewTable.getElementsByClassName( 'wptb-highlighted' );
             for( let i = 0; i < wptbHighlighted.length; i++ ) {
                 wptbHighlighted[i].classList.remove( 'wptb-highlighted' );
@@ -27,82 +37,82 @@ var WPTB_TableStateSaveManager = function() {
             for( let i = 0; i < wptbDirectlyhovered.length; i++ ) {
                 wptbDirectlyhovered[i].classList.remove( 'wptb-directlyhovered' );
             }
-            
-            let cssForTdsWidthAutoValue = '';
-            let head = document.head;
-            if( head ) {
-                let cssForTdsWidthAuto = head.querySelector( 'style[data-wptb-td-auto-width="true"]' );
-                if( cssForTdsWidthAuto ) {
-                    cssForTdsWidthAutoValue = cssForTdsWidthAuto.innerHTML;
-                }
-            }
-            
-            let wptbDlementDatas = document.getElementsByClassName( 'wptb-subject-datas' );
-            if( wptbDlementDatas.length > 0 ) {
-                wptbDlementDatas = wptbDlementDatas.innerHTML;
-            } else {
-                wptbDlementDatas = '';
-            }
-            
             let mceContentBodys = wptbNewPreviewTable.querySelectorAll( '.mce-content-body' );
             if( mceContentBodys.length > 0 ) {
                 for ( let k = 0; k < mceContentBodys.length; k++ ) {
                     mceContentBodys[k].classList.remove( 'mce-content-body' );
                 }
             }
-
             let dataMceStyle = wptbNewPreviewTable.querySelectorAll( '[data-mce-style]' );
             if ( dataMceStyle.length > 0 ) {
                 for ( let k = 0; k < dataMceStyle.length; k++ ) {
                     dataMceStyle[k].removeAttribute( 'data-mce-style' );
                 }
             }
-
             let mceIds = wptbNewPreviewTable.querySelectorAll( '[id^=mce_]' );
             if ( mceIds.length > 0 ) {
                 for ( let k = 0; k < mceIds.length; k++ ) {
                     mceIds[k].removeAttribute( 'id' );
                 }
             }
-            
-            window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbDlementDatas] );
-            
-            // set new number of state which is showed now
-            window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
-            
-            // make undo arrow active when the table was changed
-            if( window.wptbTableStateSaving.length > 1 ) {
-                let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
-                if( wptbUndo.length > 0 ) {
-                    wptbUndo = wptbUndo[0];
+        }
 
-                    wptbUndo.classList.remove( 'wptb-undoredo-disabled' );
-                }
+        let cssForTdsWidthAutoValue = '';
+        let head = document.head;
+        if( head ) {
+            let cssForTdsWidthAuto = head.querySelector( 'style[data-wptb-td-auto-width="true"]' );
+            if( cssForTdsWidthAuto ) {
+                cssForTdsWidthAutoValue = cssForTdsWidthAuto.innerHTML;
             }
-            
-            // make redo arrow not active when the table was changed
-            let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
-            if( wptbRedo.length > 0 ) {
-                wptbRedo = wptbRedo[0];
-                
-                wptbRedo.classList.add( 'wptb-undoredo-disabled' );
+        }
+
+        let wptbElementDatas = document.getElementsByClassName( 'wptb-element-datas' );
+        if( wptbElementDatas.length > 0 ) {
+            wptbElementDatas = wptbElementDatas[0];
+            wptbElementDatas = wptbElementDatas.innerHTML;
+        } else {
+            wptbElementDatas = '';
+        }
+
+        let styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
+
+        window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbElementDatas, styleObjJson] );
+
+        // set new number of state which is showed now
+        window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
+
+        // make undo arrow active when the table was changed
+        if( window.wptbTableStateSaving.length - 1 > 0 ) {
+            let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
+            if( wptbUndo.length > 0 ) {
+                wptbUndo = wptbUndo[0];
+
+                wptbUndo.classList.remove( 'wptb-undoredo-disabled' );
             }
-            
-            let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
-            if( wptbSaveBtn.length > 0 ) {
-                wptbSaveBtn = wptbSaveBtn[0];
-                if( ( ! wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
-                        window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave ) {
-                    wptbSaveBtn.classList.add( 'wptb-save-disabled' );
-                } else {
-                    wptbSaveBtn.classList.remove( 'wptb-save-disabled' );
-                }
+        }
+
+        // make redo arrow not active when the table was changed
+        let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
+        if( wptbRedo.length > 0 ) {
+            wptbRedo = wptbRedo[0];
+
+            wptbRedo.classList.add( 'wptb-undoredo-disabled' );
+        }
+
+        let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+        if( wptbSaveBtn.length > 0 ) {
+            wptbSaveBtn = wptbSaveBtn[0];
+            if( ( ! wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
+                    window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave || ! wptbPreviewTable ) {
+                wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+            } else {
+                wptbSaveBtn.classList.remove( 'wptb-save-disabled' );
             }
         }
     }
     
     this.tableStateGet = ( datawptbUndoredo ) => {
-        if( datawptbUndoredo && window.wptbTableStateSaving && window.wptbTableStateSaving.length > 1 ) {
+        if( datawptbUndoredo && window.wptbTableStateSaving && window.wptbTableStateSaving.length > 0 ) {
             
             // changes the number of the state which displays now
             if( datawptbUndoredo == 'undo' ) {
@@ -112,7 +122,7 @@ var WPTB_TableStateSaveManager = function() {
                     return false;
                 }
             } else if( datawptbUndoredo == 'redo' ) {
-                if( window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1 ) {
+                if( window.wptbTableStateNumberShow < window.wptbTableStateSaving.length ) {
                     window.wptbTableStateNumberShow++;
                 } else {
                     return false;
@@ -123,14 +133,15 @@ var WPTB_TableStateSaveManager = function() {
             let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
             if( wptbUndo.length > 0 ) {
                 wptbUndo = wptbUndo[0];
-            }
-            if( window.wptbTableStateNumberShow == 0 ) {
-                if( wptbUndo ) {
-                    wptbUndo.classList.add( 'wptb-undoredo-disabled' )
-                }
-            } else if( window.wptbTableStateNumberShow > 0 ) {
-                if( wptbUndo ) {
-                    wptbUndo.classList.remove( 'wptb-undoredo-disabled' )
+                
+                if( window.wptbTableStateNumberShow == 0 ) {
+                    if( wptbUndo ) {
+                        wptbUndo.classList.add( 'wptb-undoredo-disabled' );
+                    }
+                } else if( window.wptbTableStateNumberShow > 0 ) {
+                    if( wptbUndo ) {
+                        wptbUndo.classList.remove( 'wptb-undoredo-disabled' );
+                    }
                 }
             }
             
@@ -138,17 +149,19 @@ var WPTB_TableStateSaveManager = function() {
             let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
             if( wptbRedo.length > 0 ) {
                 wptbRedo = wptbRedo[0];
-            }
-            if( window.wptbTableStateNumberShow == window.wptbTableStateSaving.length - 1 ) {
-                if( wptbRedo ) {
-                    wptbRedo.classList.add( 'wptb-undoredo-disabled' )
-                }
-            } else if( window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1 ) {
-                if( wptbRedo ) {
-                    wptbRedo.classList.remove( 'wptb-undoredo-disabled' )
+                
+                if( window.wptbTableStateNumberShow == window.wptbTableStateSaving.length - 1 ) {
+                    if( wptbRedo ) {
+                        wptbRedo.classList.add( 'wptb-undoredo-disabled' );
+                    }
+                } else if( window.wptbTableStateNumberShow < window.wptbTableStateSaving.length - 1 ) {
+                    if( wptbRedo ) {
+                        wptbRedo.classList.remove( 'wptb-undoredo-disabled' );
+                    }
                 }
             }
             
+            // add or delete class "wptb-save-disabled" for save button
             let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
             if( wptbSaveBtn.length > 0 ) {
                 wptbSaveBtn = wptbSaveBtn[0];
@@ -166,46 +179,70 @@ var WPTB_TableStateSaveManager = function() {
                 wptbTableSetup = wptbTableSetup[0];
 
                 wptbTableSetup.innerHTML = '';
-                wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
-
-                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][1] ) {
-                    let cssForTdsWidthAuto = document.createElement( 'style' );
-                    cssForTdsWidthAuto.setAttribute( 'data-wptb-td-auto-width', true );
-                    cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
+                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] ) {
+                    if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] && 
+                            typeof window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] === 'object' ) {
+                        if( 'outerHTML' in window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] ) {
+                            wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
+                        }
+                    }
+                    
+                    if( ! wptbTableSetup.innerHTML ) {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+                        wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                    } else {
+                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+                    }
+                }
+                // add or change or delete style element in the head for table cells who have auto width
+                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] ) {
                     let head = document.head;
                     if( head ) {
                         let cssForTdsWidthAutoOld = head.querySelector( 'style[data-wptb-td-auto-width="true"]' );
                         if( cssForTdsWidthAutoOld ) {
                             head.removeChild( cssForTdsWidthAutoOld );
                         }
-                        head.appendChild( cssForTdsWidthAuto );
+                        
+                        if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][1] ) {
+                            let cssForTdsWidthAuto = document.createElement( 'style' );
+                            cssForTdsWidthAuto.setAttribute( 'data-wptb-td-auto-width', true );
+                            cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
+                            head.appendChild( cssForTdsWidthAuto );
+                        }
                     }
                 }
                 
                 
-                let wptbElementDatas = document.getElementsByClassName( 'wptb-subject-datas' );
                 let body = document.getElementsByTagName( 'body' );
                 if( body.length > 0 ) {
                     body = body[0];
                 }
-                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow][2] ) {
-                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
+                
+                // add or change or delete script element from the bottom page which have data for several control types
+                let wptbElementDatas = document.getElementsByClassName( 'wptb-element-datas' );
+                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] && window.wptbTableStateSaving[window.wptbTableStateNumberShow][2] ) {
                     
                     if( wptbElementDatas.length > 0 ) {
                         wptbElementDatas = wptbElementDatas[0];
                     } else {
-                        wptbElementDatas = document.createElement( 'div' );
-                        wptbElementDatas.classList.add( 'wptb-subject-datas' );
+                        wptbElementDatas = document.createElement( 'sctipt' );
+                        wptbElementDatas.classList.add( 'wptb-element-datas' );
                         body.appendChild( wptbElementDatas );
                     }
+                    
+                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
                 } else {
                     if( wptbElementDatas.length > 0 ) {
                         wptbElementDatas = wptbElementDatas[0];
                         body.removeChild( wptbElementDatas );
                     }
                 }
+                
+                // runs function which adds or create or delete CSS in the head for several element settings
+                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] ) {
+                    WPTB_Helper.elementsStylesSetFromObject( window.wptbTableStateSaving[window.wptbTableStateNumberShow][3] );
+                }
 
-                WPTB_Helper.settingsPanelClear();
                 WPTB_Helper.elementOptionsPanelClear();
                 WPTB_LeftPanel();
 
@@ -214,6 +251,32 @@ var WPTB_TableStateSaveManager = function() {
                     wptbLeftScrollPanelCellSetting.classList.remove( 'visible' );
                 }
             }
+        }
+    }
+    
+    this.tableStateClear = function() {
+        delete window.wptbTableStateSaving;
+        delete window.wptbTableStateNumberShow;
+        
+        let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+        if( wptbSaveBtn.length > 0 ) {
+            wptbSaveBtn = wptbSaveBtn[0];
+            
+            wptbSaveBtn.removeAttribute( 'data-wptb-table-state-number-save' );
+        }
+        
+        let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
+        if( wptbUndo.length > 0 ) {
+            wptbUndo = wptbUndo[0];
+            
+            wptbUndo.classList.add( 'wptb-undoredo-disabled' );
+        }
+        
+        let wptbRedo = document.getElementsByClassName( 'wptb-redo' );
+        if( wptbRedo.length > 0 ) {
+            wptbRedo = wptbRedo[0];
+
+            wptbRedo.classList.add( 'wptb-undoredo-disabled' );
         }
     }
 }

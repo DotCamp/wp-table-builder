@@ -49,16 +49,10 @@ class Control_Toggle extends Base_Control {
 	public function content_template() {
 		?>
         <#
-            let selector,
-                cssSetting,
-                elemContainer,
-                label,
+            let label,
+                selector,
                 selectors = [],
-                selectorsJson;
-            
-            if( data.elemContainer ) {
-                elemContainer = data.elemContainer;
-            }
+                elemContainer;
             
             if( data.label ) {
                 label = data.label;
@@ -74,6 +68,10 @@ class Control_Toggle extends Base_Control {
             
             if( selectors && Array.isArray( selectors ) ) {
                 selectorsJson = JSON.stringify( selectors );
+            }
+            
+            if( data.elemContainer ) {
+                elemContainer = data.elemContainer;
             }
             
             targetInputAddClass = data.elementControlTargetUnicClass;
@@ -106,7 +104,48 @@ class Control_Toggle extends Base_Control {
                                 }
                                 
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
-
+                                
+                                if( '{{{selectorsJson}}}' ) {
+                                    let selectors = JSON.parse( '{{{selectorsJson}}}' );
+                                    
+                                    if( selectors && Array.isArray( selectors ) ) {
+                                        for( let i = 0; i < selectors.length; i++ ) {
+                                            if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
+                                                let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                                if( selectorElements.length > 0 ) {
+                                                    for( let j = 0; j < selectorElements.length; j++ ) {
+                                                        if( selectors[i][1] && Array.isArray( selectors[i][1] ) ) {
+                                                            if( selectors[i][1][0] && Array.isArray( selectors[i][1][0] ) ) {
+                                                                for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                                    if( selectors[i][1][k][0] && selectors[i][1][k][1] && selectors[i][1][k][2] ) {
+                                                                        let styleValue;
+                                                                        if( details.value == 'checked' ) {
+                                                                            styleValue = selectors[i][1][k][1];
+                                                                        } else {
+                                                                            styleValue = selectors[i][1][k][2];
+                                                                        }
+                                                                        selectorElements[j].style[selectors[i][1][k][0]] = styleValue;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                if( selectors[i][1][0] && selectors[i][1][1] && selectors[i][1][2] ) {
+                                                                    let styleValue;
+                                                                    if( details.value == 'checked' ) {
+                                                                        styleValue = selectors[i][1][1];
+                                                                    } else {
+                                                                        styleValue = selectors[i][1][2];
+                                                                    }
+                                                                    selectorElements[j].style[selectors[i][1][0]] = styleValue;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
                                 WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
                                 
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();

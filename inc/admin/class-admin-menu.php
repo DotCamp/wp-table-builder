@@ -45,6 +45,12 @@ class Admin_Menu {
         $params = json_decode( file_get_contents( 'php://input' ) );
         
         if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
+            $elements_styles_array = json_decode( $params->elements_styles );
+            $elements_styles_text = '';
+            foreach ( $elements_styles_array as $item_styles ) {
+                $elements_styles_text .= $item_styles;
+            }
+            
             if( ! isset( $params->id ) || ! absint( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) ) {
                 $id = wp_insert_post([
                     'post_title' => sanitize_text_field( $params->title ),
@@ -52,9 +58,13 @@ class Admin_Menu {
                     'post_type' => 'wptb-tables',
                     'post_status' => 'draft'
                 ]);
+                
                 add_post_meta( $id, '_wptb_content_', $params->content );
                 add_post_meta( $id, '_wptb_table_elements_datas_', $params->elements_datas );
-                wp_die( json_encode( ['saved',$id] ) );
+                add_post_meta( $id, '_wptb_table_elements_styles_', $params->elements_styles );
+                add_post_meta( $id, '_wptb_table_elements_styles_frontend', $elements_styles_text );
+                
+                wp_die( json_encode( ['saved', $id] ) );
             } else {
                 wp_update_post([
                     'ID' => absint( $params->id ),
@@ -63,9 +73,13 @@ class Admin_Menu {
                     'post_type' => 'wptb-tables',
                     'post_status' => 'draft'
                 ]);
+                
                 update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
                 update_post_meta( absint( $params->id ), '_wptb_table_elements_datas_', $params->elements_datas );
-                wp_die( json_encode( ['edited',''] ) );
+                update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_', $params->elements_styles );
+                update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_frontend', $elements_styles_text );
+                
+                wp_die( json_encode( ['edited', absint( $params->id )] ) );
             }
         } else {
             wp_die( json_encode( ['security_problem', ''] ) );
@@ -76,9 +90,10 @@ class Admin_Menu {
 		$post = get_post( absint( $_REQUEST['id'] ) );
 		$table_html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
 		$elements_datas = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_table_elements_datas_', true );
+		$elements_styles = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_table_elements_styles_', true );
 		$name = $post->post_title;
         //$html = json_decode( $html );
-		die( json_encode( [$name, $table_html, $elements_datas] ) );
+		die( json_encode( [$name, $table_html, $elements_datas, $elements_styles] ) );
 	}
 
 

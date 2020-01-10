@@ -220,6 +220,11 @@ jQuery( document ).ready( function ( $ ) {
 
                                     // add css class for new mobile table
                                     newTable.classList.add( 'wptb-preview-table-mobile' );
+                                    newTable.classList.add( 'wptb-preview-table-mobile' );
+                                    let infArr = previewTable.className.match( /wptb-element-main(.+)-(\d+)/i );
+                                    if( infArr && Array.isArray( infArr ) ) {
+                                        newTable.classList.add( infArr[0] );
+                                    }
 
                                     // get number of rows for wptb-preview-table
                                     let tableRows = previewTable.rows.length;
@@ -291,26 +296,36 @@ jQuery( document ).ready( function ( $ ) {
                                             }
 
                                             let sectionNumberLast = Math.floor( ( countRows - 1 ) / tableColumns );
-
+                                            let tdStyles;
                                             for( let j = 0; j < countRows; j++ ) {
                                                 let sectionNumber = Math.floor( j / tableColumns ),
                                                     tr = document.createElement( 'tr' ),
                                                     tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
                                                     td;
-                                                tdLeftHeader.style.backgroundColor = previewTable.rows[0].style.backgroundColor;
+                                                let rowFirstStyles = window.getComputedStyle( previewTable.rows[0] );
+                                                tdLeftHeader.style.backgroundColor = rowFirstStyles.backgroundColor;
                                                 tdLeftHeader.style.width = null;
                                                 tdLeftHeader.style.height = null;
                                                 tdLeftHeader.removeAttribute( 'data-x-index' );
                                                 tdLeftHeader.removeAttribute( 'data-wptb-css-td-auto-width' );
+                                                tdStyles = window.getComputedStyle( previewTable.querySelector( 'td' ) );
+                                                if( tdStyles.borderTopColor ) {
+                                                    tdLeftHeader.style.borderColor = tdStyles.borderTopColor;
+                                                } else {
+                                                    tdLeftHeader.style.borderColor = tdStyles.borderBottomColor;
+                                                }
                                                 if( sectionNumber > 0 && j % tableColumns == 0 ) {
                                                     tdLeftHeader.style.borderTopWidth = '5px';
                                                 }
                                                 tr.appendChild( tdLeftHeader );
 
                                                 for( let k = newTableColumnsWithoutLeftHeader*( sectionNumber ) + 1; k < newTableColumnsWithoutLeftHeader*( sectionNumber + 1) + 1; k++ ) {
+                                                    
                                                     if( k < previewTable.rows.length ) {
                                                         td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
-                                                        td.style.backgroundColor = previewTable.rows[k].style.backgroundColor;
+                                                        let rowKStyles = window.getComputedStyle( previewTable.rows[k] );
+                                                        td.style.backgroundColor = rowKStyles.backgroundColor;
+                                                        
                                                         td.style.width = null;
                                                         td.style.height = null;
                                                         td.removeAttribute( 'data-x-index' );
@@ -318,11 +333,15 @@ jQuery( document ).ready( function ( $ ) {
                                                     } else {
                                                         td = document.createElement( 'td' );
                                                         td.style.borderWidth = '0px';
-                                                        td.style.borderColor = previewTable.querySelector( 'td' );
-                                                        if( sectionNumber > 0 && j % tableColumns == 0 ) {
-                                                            td.style.borderColor = previewTable.querySelector( 'td' ).style.borderColor;
-                                                        }
+                                                        
                                                         td.style.background = '#fff';
+                                                    }
+                                                    
+                                                    tdStyles = window.getComputedStyle( previewTable.querySelector( 'td' ) );
+                                                    if( tdStyles.borderTopColor ) {
+                                                        td.style.borderColor = tdStyles.borderTopColor;
+                                                    } else {
+                                                        td.style.borderColor = tdStyles.borderBottomColor;
                                                     }
 
                                                     if( sectionNumber > 0 && j % tableColumns == 0 ) {

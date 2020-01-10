@@ -59,10 +59,14 @@ var WPTB_innerElementSet = function  ( element ) {
                     td.insertBefore( element, innerElementNext );
                 }
             }
-            let thisRow = td.parentNode
-            if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+            
+            let thisRow = td.parentNode;
+            if( WPTB_Helper.rowIsTop( thisRow ) ) { 
                 let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
-                WPTB_Helper.dataTitleColumnSet( table );
+                
+                if( table.classList.contains( 'wptb-table-preview-head' ) ) {
+                    WPTB_Helper.dataTitleColumnSet( table );
+                }
             }
             
             // start item javascript if item is new

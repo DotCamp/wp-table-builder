@@ -93,6 +93,7 @@ class Button_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Button Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
+                'buttonBack' => true
 			]
 		);
         
@@ -116,7 +117,7 @@ class Button_Element extends Element_Base_Object {
 				'label' => __( 'Button Color', 'wp_table_builder' ),
 				'type' => Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{{data.container}}} .wptb-button-wrapper a div' => 'backgroundColor',
+                    '{{{data.container}}} .wptb-button-wrapper a div' => 'background-color',
                 ]
 			]
 		);

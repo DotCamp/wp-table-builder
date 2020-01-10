@@ -44,9 +44,10 @@ var WPTB_ActionsField = function() {
             btnDelete.onclick = function( event ) {
                 let act = event.target.parentNode.activeElem,
                     el = act.parentNode;
-            
-                if( act && act.className.match( /wptb-element-(.+)-(\d+)/i ) ) {
+                let infArr = act.className.match( /wptb-element-(.+)-(\d+)/i );
+                if( act && infArr && Array.isArray( infArr ) ) {
                     WPTB_Helper.elementControlsStateDelete( act );
+                    WPTB_Helper.externalCssStylesDelete( infArr[0] );
                 }
                 
                 if( act ) {
@@ -54,10 +55,14 @@ var WPTB_ActionsField = function() {
                 }
 
                 if( act && typeof act === 'object' && act.hasOwnProperty( 'kind' ) && act.kind == 'text' ) {
-                    let thisRow = el.parentNode
-                    if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                    let thisRow = el.parentNode;
+                            
+                    if( WPTB_Helper.rowIsTop( thisRow ) ) {
                         let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
-                        WPTB_Helper.dataTitleColumnSet( table );
+
+                        if( table.classList.contains( 'wptb-table-preview-head' ) ) {
+                            WPTB_Helper.dataTitleColumnSet( table );
+                        }
                     }
                 }
 
@@ -73,7 +78,7 @@ var WPTB_ActionsField = function() {
                     infArr,
                     type;
                 let activeElement = event.target.parentNode.activeElem;
-                let td = activeElement.parentNode;
+                let activeElemParent = activeElement.parentNode;
                 infArr = activeElement.className.match( /wptb-element-(.+)-(\d+)/i );
                 if( infArr && Array.isArray( infArr ) ) {
                     type = infArr[1];
@@ -83,9 +88,10 @@ var WPTB_ActionsField = function() {
                     data.tinyMceClear = true;
                     copy = new WPTB_ElementObject( data );
                     WPTB_Helper.elementControlsStateCopy( activeElement, copy.getDOMElement() );
+                    WPTB_Helper.externalCssStylesCopy( activeElement, copy.getDOMElement() );
                     //WPTB_Helper.elementStartScript( copy.getDOMElement() );
                     
-                    td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    activeElemParent.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                 } else {
                     copy = {};
                     let elementCopy = activeElement.cloneNode( true );
@@ -97,7 +103,7 @@ var WPTB_ActionsField = function() {
                     
                     applyGenericItemSettings( copy );
                     
-                    td.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
+                    activeElemParent.insertBefore( copy.getDOMElement(), activeElement.nextSibling );
                     
                     WPTB_Helper.wptbDocumentEventGenerate( 'wptb-inner-element:copy', activeElement, copy.getDOMElement() );
                 }
@@ -148,9 +154,13 @@ var WPTB_ActionsField = function() {
                         let act = event.target.parentNode.activeElem;
                         if( act.kind == 'text' ) {
                             let thisRow = act.parentNode.parentNode;
-                            if( thisRow.classList.contains( 'wptb-table-head' ) ) {
+                            
+                            if( WPTB_Helper.rowIsTop( thisRow ) ) {
                                 let table = WPTB_Helper.findAncestor( thisRow, 'wptb-preview-table' );
-                                WPTB_Helper.dataTitleColumnSet( table );
+
+                                if( table.classList.contains( 'wptb-table-preview-head' ) ) {
+                                    WPTB_Helper.dataTitleColumnSet( table );
+                                }
                             }
                         }
                     } else {

@@ -5,7 +5,7 @@ use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Core\Preview as Preview;
-use WP_Table_Builder\Inc\Admin\Element_Classes\Managers\elements_manager as elements_manager;
+use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 
 /**
@@ -104,7 +104,7 @@ class Init {
         $this->table_preview();
         
         if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
-            $this->elements_manager = new elements_manager();
+            $this->elements_manager = new Elements_Manager();
             $this->controls_manager = new Controls_Manager();
             add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
         }

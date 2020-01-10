@@ -14,12 +14,15 @@ tinyMCE.init({
     setup : function( ed ) {
         ed.on( 'change', function(e) {
             let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
-            if( row.classList.contains( 'wptb-table-head' ) ) {
+            if( WPTB_Helper.rowIsTop( row ) ) { 
                 let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
-                WPTB_Helper.dataTitleColumnSet( table );
+                
+                if( table.classList.contains( 'wptb-table-preview-head' ) ) {
+                    WPTB_Helper.dataTitleColumnSet( table );
+                }
             }
         });
-        console.log("12345");
+        
         ed.on( 'keydown', function( e ) {
             let p = e.target.querySelector( 'p' );
             let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
@@ -29,6 +32,7 @@ tinyMCE.init({
                 window.textElemPTextKeyDown = pText;
             }
         });
+        
         ed.on( 'keyup', function(e) {
             let p = e.target.querySelector( 'p' );
             let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
@@ -45,7 +49,6 @@ tinyMCE.init({
                 e.target.onblur = '';
             }
         });
-
     },
     init_instance_callback: function (editor) {
         window.currentEditor = editor;
@@ -75,3 +78,18 @@ var observer = new MutationObserver( function( mutations ) {
 });
 var config = { attributes: true, attributeFilter: ['style'] };
 observer.observe( element, config );
+
+function controlsChange( inputs, element ) {
+    if( inputs && typeof inputs === 'object' ) {
+        if( inputs.hasOwnProperty( 'color' ) ) {
+            console.log("Hello");
+            let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
+            let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
+            if( WPTB_Helper.rowIsTop( row ) && table.classList.contains( 'wptb-table-preview-head' ) ) {
+                WPTB_Helper.dataTitleColumnSet( table );
+            }
+        }
+    } 
+}
+
+WPTB_Helper.controlsInclude( element, controlsChange );

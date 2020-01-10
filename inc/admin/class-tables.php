@@ -27,7 +27,33 @@ class Tables {
 		add_filter( 'manage_wptb-tables_posts_columns', [ $this,'addHeader' ] );
 		add_filter( 'post_row_actions', [ $this,'customizeActions'], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column' , [ $this,'addContent' ], 10, 2 );
+        
+        add_action( 'wp_head', array( $this, 'head_hook_css' ));
 	}
+    
+    function head_hook_css() {
+        global $post;
+
+        $pattern = get_shortcode_regex();
+
+        if ( preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches ) ) {
+            // Custom post type arguments, which can be filtered if needed
+		
+            $paramsAll = $matches[3];
+            
+            $css_text = '';
+            foreach( $paramsAll as $params ) {
+                $paramsArr = explode( ' id=', $params );
+                $id = ( int )$paramsArr[1];
+                $css = get_post_meta( $id , '_wptb_table_elements_styles_frontend', true );
+                if( $css ) {
+                    $css_text .= $css;
+                }
+            }
+            
+            echo '<style>' . $css_text . '</style>';
+        }
+    }
 
 	function customizeActions( $actions, $post ) { 
 

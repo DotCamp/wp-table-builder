@@ -18,9 +18,9 @@ if ( ! defined( 'WPINC' ) ) {
 abstract class Base_Object {
     
     /**
-	 * Get subject name.
+	 * Get element name.
 	 *
-	 * Retrieve the subject name.
+	 * Retrieve the element name.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -46,14 +46,14 @@ abstract class Base_Object {
 	}
     
     /**
-	 * Get subject title.
+	 * Get element title.
 	 *
-	 * Retrieve the subject title.
+	 * Retrieve the element title.
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Subject title.
+	 * @return string element title.
 	 */
 	public function get_title() {
 		return '';

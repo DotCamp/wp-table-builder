@@ -59,7 +59,9 @@ class Control_Size extends Base_Control {
                 max,
                 min,
                 defaultValue,
-                dimension;
+                dimension,
+                addText,
+                whenZero;
             
             if( data.selectors && typeof data.selectors === 'object' ) {
                 for ( let prop in data.selectors ) {
@@ -90,6 +92,14 @@ class Control_Size extends Base_Control {
                 dimension = data.dimension;
             } else {
                 dimension = 'px';
+            }
+            
+            if( data.addText ) {
+                addText = data.addText;
+            }
+            
+            if( data.whenZero ) {
+                whenZero = data.whenZero;
             }
             
             targetInputAddClass = data.elementControlTargetUnicClass;
@@ -135,7 +145,12 @@ class Control_Size extends Base_Control {
                                 if( selectorElements.length > 0 ) {
                                     for( let i = 0; i < selectorElements.length; i++ ) {
                                         for( let j = 0; j < cssSettingArr.length; j++ ) {
-                                            selectorElements[i].style[cssSettingArr[j]] = this.value + '{{{dimension}}}';
+                                            if( this.value == 0 && '{{{whenZero}}}' ) {
+                                                selectorElements[i].style[cssSettingArr[j]] = '{{{whenZero}}}';
+                                                continue;
+                                            }
+                                            
+                                            selectorElements[i].style[cssSettingArr[j]] = this.value + '{{{dimension}}}' + '{{{addText}}}';
                                         }
                                     }
                                 };
@@ -146,8 +161,13 @@ class Control_Size extends Base_Control {
                                 }
                             };
                         } else if( targetInputs[i].classList.contains( 'wptb-number-input' ) ) {
-                            WPTB_Helper.numberImputSize( targetInputs[i], '{{{max}}}'.length - 1, '{{{max}}}' );
                             targetInputs[i].oninput = function( event ) {
+                                if( parseInt( this.value ) < parseInt( '{{{min}}}' ) ) {
+                                    this.value = parseInt( '{{{min}}}' );
+                                } else if( parseInt( this.value ) > parseInt( '{{{max}}}' ) ) {
+                                    this.value = parseInt ( '{{{max}}}' );
+                                }
+                                
                                 this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
                                 this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
                             }

@@ -106,7 +106,7 @@ if( infArr && Array.isArray( infArr ) ) {
 }
 
 let infArrEl = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-subject-datas' );
+let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
 let elementsSettings;
 let elementSettings;
 if( elementsSettingsTemplateJs.length > 0 ) {
@@ -114,14 +114,14 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
         elementsSettings = JSON.parse( elementsSettings );
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-subject-datas-' + infArrEl[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]];
+        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArrEl[1] ) in elementsSettings ) {
+            elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]];
         }
     }
 } else {
     elementsSettingsTemplateJs = document.createElement( 'script' );
     elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
+    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
     let body = document.getElementsByTagName('body')[0];
     body.appendChild( elementsSettingsTemplateJs );
 }
@@ -133,7 +133,7 @@ if( ! elementSettings ) {
         elementsSettings = {};
     }
 
-    elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]] = {};
+    elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]] = {};
     let buttonId;
     let a = element.getElementsByTagName( 'a' );
     if( a.length > 0 ) {
@@ -141,9 +141,9 @@ if( ! elementSettings ) {
         
         if( a.hasAttribute( 'id' ) ) {
             buttonId = a.getAttribute( 'id' );
-            elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = buttonId;
+            elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = buttonId;
         } else {
-            elementsSettings['tmpl-wptb-subject-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = '';
+            elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = '';
         }
 
         if( elementsSettings ) {

@@ -1351,7 +1351,7 @@ table.wptb-table {
     left: 2px;
 }
 
-.wptb-table-head td:empty::before {
+.wptb-preview-table.wptb-table-preview-head .wptb-row:first-child td:empty::before {
     content: 'Header';
 }
 
@@ -1896,7 +1896,7 @@ table.wptb-table {
     z-index: 1;
 }
 
-.wptb-table-head td.wptb-drop-here-empty:empty::before,
+.wptb-preview-table.wptb-table-preview-head .wptb-row:first-child td.wptb-drop-here-empty:empty::before,
 .wptb-row td.wptb-drop-here-empty:empty::before {
     background-color: dodgerblue;
     border: 1px solid dodgerblue;

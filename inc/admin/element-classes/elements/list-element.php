@@ -93,6 +93,7 @@ class List_Element extends Element_Base_Object {
 			[
 				'label' => __( 'List Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
+                'buttonBack' => true
 			]
 		);
         
@@ -121,7 +122,7 @@ class List_Element extends Element_Base_Object {
                     ['None', 'none']
                 ],
                 'selectedDefault' => 2,
-                'appearDependOn' => ['select1', ['unordered'], ['numbered']]
+                'appearDependOnControl' => ['select1', ['unordered'], ['numbered']]
 			]
 		);
         
@@ -135,7 +136,7 @@ class List_Element extends Element_Base_Object {
 //                    ['Name 2', 'value 2', 'off'],
 //                    ['Name 3', 'value 3', 'on']
 //                ],
-//                'appearDependOn' => ['select1', ['unordered'], ['numbered']]
+//                'appearDependOnControl' => ['select1', ['unordered'], ['numbered']]
 //			]  
 //        );
 //        
@@ -146,7 +147,7 @@ class List_Element extends Element_Base_Object {
 //				'type' => Controls_Manager::TEXTAREA,
 //                'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' ),
 //                'rows' => 5,
-//                'appearDependOn' => ['select1', ['unordered'], ['numbered']]
+//                'appearDependOnControl' => ['select1', ['unordered'], ['numbered']]
 //			]  
 //        );
 

@@ -37,13 +37,17 @@ var WPTB_Initializer = function () {
             }
     };
 
-    document.getElementById('wptb-generate-table').onclick = function () {
+    document.getElementById( 'wptb-generate-table' ).onclick = function (  ) {
             var columns = document.getElementById('wptb-columns-number').value,
                 rows = document.getElementById('wptb-rows-number').value;
-
-            WPTB_Table(columns, rows);
             
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            //wptbTableStateSaveManager.tableStateClear();
+            
+            wptbTableStateSaveManager.tableStateSet( true );
+            
+            WPTB_Table(columns, rows);
+            
             wptbTableStateSaveManager.tableStateSet();
     }
 

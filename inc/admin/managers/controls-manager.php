@@ -77,6 +77,10 @@ class Controls_Manager {
 	 *  Adding textarea control.
 	 */
 	const TEXTAREA = 'textarea';
+    /**
+	 *  Adding button control.
+	 */
+	const BUTTON = 'button';
     
     /**
 	 * Controls.
@@ -115,7 +119,8 @@ class Controls_Manager {
             self::TOGGLE,
             self::SELECT,
             self::CHECKBOX,
-            self::TEXTAREA
+            self::TEXTAREA,
+            self::BUTTON
 		];
 	}
     
@@ -133,7 +138,7 @@ class Controls_Manager {
 	 *
 	 * @return bool True if control added, False otherwise.
 	 */
-	public function add_control_to_stack( Controls_Stack $item, $control_id, $control_data ) {
+	public function add_control_to_stack( Controls_Stack $element, $control_id, $control_data ) {
 
 		$control_data['name'] = $control_id;
 
@@ -144,7 +149,7 @@ class Controls_Manager {
 			return false;
 		}
 
-		$stack_id = $item->get_unique_name();
+		$stack_id = $element->get_unique_name();
 
 		if ( isset( $this->stacks[ $stack_id ][ $control_id ] ) ) {
 			_doing_it_wrong( sprintf( '%1$s::%2$s', __CLASS__, __FUNCTION__ ), sprintf( 'Cannot redeclare control with same name "%s".', $control_id ), '1.0.0' );

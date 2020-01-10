@@ -1,5 +1,5 @@
 <?php
-namespace WP_Table_Builder\Inc\Admin\Element_Classes\Managers;
+namespace WP_Table_Builder\Inc\Admin\Managers;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -108,7 +108,9 @@ class Elements_Manager {
 	*/
 	public function output_elements_templates() {
 		foreach ( $this->get_element_objects() as $element ) {
-			$element->output_template();
+			if( method_exists( $element, 'output_template' ) ) {
+                $element->output_template();
+            }
 		}
 	}
     
@@ -125,7 +127,9 @@ class Elements_Manager {
         </script>
         <?php 
 		foreach ( $this->get_element_objects() as $element ) {
-			$element->output_scripts();
+            if( method_exists( $element, 'output_scripts' ) ) {
+                $element->output_scripts();
+            }
 		}
 	}
     
@@ -139,7 +143,9 @@ class Elements_Manager {
     public function output_directories_icons() {
         $directories_icons = array();
 		foreach ( $this->get_element_objects() as $element ) {
-            $directories_icons[$element->get_name()] = $element->get_url_icon();
+            if( method_exists( $element, 'get_url_icon' ) ) {
+                $directories_icons[$element->get_name()] = $element->get_url_icon();
+            }
 		}
         ?>
         <script type="text/html" id="tmpl-wptb-element-icons-directories">

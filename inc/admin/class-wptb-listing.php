@@ -58,9 +58,11 @@ class WPTB_Listing  extends \WP_List_Table{
             ]);
             $table = get_post_meta( absint( $id ) , '_wptb_content_', true );
             $elements_datas = get_post_meta( absint( $id ) , '_wptb_table_elements_datas_', true );
+            $elements_styles = get_post_meta( absint( $id ) , '_wptb_table_elements_styles_', true );
             
             $table_new = add_post_meta( $id_new, '_wptb_content_', $table );
             $elements_datas_new = add_post_meta( $id_new , '_wptb_table_elements_datas_', $elements_datas );
+            $elements_datas_new = add_post_meta( $id_new , '_wptb_table_elements_styles_', $elements_styles );
             
             if( $id_new && $table_new ) {
                 wp_update_post([

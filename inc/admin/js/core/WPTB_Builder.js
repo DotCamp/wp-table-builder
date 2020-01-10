@@ -10,7 +10,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     var ans = JSON.parse(http.responseText);
                     document.getElementById('wptb-setup-name').value = ans[0];
-                    
+                        
                     if( ans[1] ) {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                         let wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
@@ -21,20 +21,33 @@
                         if( ans[2] ) {
                             let elementsSettingTemplateJs = document.createElement( 'script' );
                             elementsSettingTemplateJs.setAttribute( 'type', 'text/html' );
-                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-subject-datas' );
+                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
 
                             elementsSettingTemplateJs.innerHTML = ans[2];
 
                             body.appendChild( elementsSettingTemplateJs );
                         }
                         
+                        if( ans[3] ) {
+                            WPTB_Helper.elementsStylesSetFromObject( ans[3] );
+                        }
+                        
                         WPTB_Table();
+                        let element = document.querySelector( '.wptb-preview-table' );
+                        if( element ) {
+                            let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
+                            if( ! infArr ) {
+                                element.classList.add( 'wptb-element-main-table_setting-' + table_id );
+                            }
+                        }
+                        
                         WPTB_LeftPanel();
                         WPTB_Settings();
-                        WPTB_Helper.subjectOprionsSet( 'table_setting' );
                         
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
+                        
+                        WPTB_Helper.elementOptionsSet( 'table_setting', element );
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }

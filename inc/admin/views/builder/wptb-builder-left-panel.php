@@ -54,9 +54,6 @@ use WP_Table_Builder\Inc\Core\Init as Init;
             </div>
             
             <div class="wptb-settings-section">
-                <div class="wptb-settings-dropdown">
-                    <?php esc_html_e( 'Table Settings', 'wp-table-builder' ); ?>
-                </div>
                 <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-settings.php'; ?>
             </div>
             

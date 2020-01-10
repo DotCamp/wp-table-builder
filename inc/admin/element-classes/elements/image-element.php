@@ -93,6 +93,7 @@ class Image_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Image Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
+                'buttonBack' => true
 			]
 		);
         

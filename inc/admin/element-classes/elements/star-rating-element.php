@@ -93,6 +93,7 @@ class Star_Rating_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Star Rating Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
+                'buttonBack' => true
 			]
 		);
         
@@ -149,11 +150,7 @@ class Star_Rating_Element extends Element_Base_Object {
 			'numberRatingShowHide',
 			[
 				'label' => __( 'Show Number Rating', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE,
-                'selectors' => [
-                    '{{{data.container}}} .wptb-number-rating-box' => 'display',
-                    '.wptb-numeral-star-rating-option' => 'display'
-                ]
+				'type' => Controls_Manager::TOGGLE
 			]
 		);
         
@@ -171,7 +168,7 @@ class Star_Rating_Element extends Element_Base_Object {
                 'dimension' => 'px',
                 'customClassForContainer' => 'wptb-numeral-star-rating-option',
                 'containerAdditionalStyles' => 'display:none;',
-                'appearDependOn' => ['numberRatingShowHide', ['checked'], ['unchecked']]
+                'appearDependOnControl' => ['numberRatingShowHide', ['checked'], ['unchecked']]
 			]
 		);
         
@@ -185,7 +182,7 @@ class Star_Rating_Element extends Element_Base_Object {
                 ],
                 'customClassForContainer' => 'wptb-numeral-star-rating-option',
                 'containerAdditionalStyles' => 'display:none;',
-                'appearDependOn' => ['numberRatingShowHide', ['checked'], ['unchecked']]
+                'appearDependOnControl' => ['numberRatingShowHide', ['checked'], ['unchecked']]
 			]
 		);
 	}
