@@ -103,6 +103,10 @@ table.wptb-preview-table-mobile {
     margin-bottom: 15px;
 }
 
+.wptb-element-placeholder {
+    display: none;
+}
+
 .wptb-image-wrapper::after {
     content: "";
     display: block;

@@ -1380,6 +1380,16 @@ table.wptb-table {
     max-width: 100%;
     position: relative;
     margin: auto;
+    text-decoration: none;
+}
+
+.wptb-icon-image-button {
+    display: block;
+    padding: 5px;
+    background: #747d84;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
 }
 
 .wptb-image-wrapper::after {
