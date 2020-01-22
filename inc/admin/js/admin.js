@@ -520,6 +520,20 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
         DOMElement.onclick = callback;
     }
 
+    // Cell double click handler
+    DOMElement.ondblclick = function (event) {
+        event.stopPropagation();
+        if (!WPTB_Helper.findAncestor(DOMElement, 'wptb-preview-table-manage-cells') && event.target == event.currentTarget) {
+
+            WPTB_Helper.wptbDocumentEventGenerate('table:cell:dblclick', event.target);
+
+            var element = WPTB_Helper.newElementProxy('text');
+            element = element.getDOMElement();
+
+            DOMElement.appendChild(element);
+        }
+    };
+
     WPTB_innerElementSet(DOMElement);
 
     var wptbPhElement = DOMElement.getElementsByClassName('wptb-ph-element');
@@ -2008,17 +2022,19 @@ var WPTB_Helper = {
         }
     },
     // function for table saving
-    saveTable: function saveTable(event, startSaving) {
-        if (!startSaving) {
+    saveTable: function saveTable(event, startSaving, previewSaving) {
+        if (!previewSaving && !startSaving) {
             if (!event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == event.target.dataset.wptbTableStateNumberSave) {
                 //return;
             }
         }
 
-        var bar = document.querySelector('.wptb-edit-bar');
-        if (bar && bar.classList.contains('visible')) {
-            var table = document.getElementsByClassName('wptb-preview-table')[0];
-            table.toggleTableEditMode();
+        if (!previewSaving) {
+            var bar = document.querySelector('.wptb-edit-bar');
+            if (bar && bar.classList.contains('visible')) {
+                var table = document.getElementsByClassName('wptb-preview-table')[0];
+                table.toggleTableEditMode();
+            }
         }
 
         var http = new XMLHttpRequest(),
@@ -2027,6 +2043,7 @@ var WPTB_Helper = {
             messagingArea = void 0,
             code = void 0,
             datas = void 0;
+
         code = document.getElementsByClassName('wptb-preview-table');
 
         var postId = void 0;
@@ -2051,17 +2068,19 @@ var WPTB_Helper = {
             code = '';
         }
 
-        datas = '';
-        var datas_containers = document.getElementsByClassName('wptb-element-datas');
+        if (!previewSaving) {
+            datas = '';
+            var datas_containers = document.getElementsByClassName('wptb-element-datas');
 
-        if (datas_containers.length > 0) {
-            if (datas_containers[0].innerHTML) {
-                datas = datas_containers[0].innerHTML;
+            if (datas_containers.length > 0) {
+                if (datas_containers[0].innerHTML) {
+                    datas = datas_containers[0].innerHTML;
 
-                if (paramIdsNecessaryChange) {
-                    datas = WPTB_Helper.replaceAll(datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 'tmpl-wptb-el-datas-main-table_setting-' + postId);
+                    if (paramIdsNecessaryChange) {
+                        datas = WPTB_Helper.replaceAll(datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 'tmpl-wptb-el-datas-main-table_setting-' + postId);
 
-                    datas = WPTB_Helper.replaceAll(datas, 'data-wptb-el-main-table_setting-startedid-0', 'data-wptb-el-main-table_setting-' + postId);
+                        datas = WPTB_Helper.replaceAll(datas, 'data-wptb-el-main-table_setting-startedid-0', 'data-wptb-el-main-table_setting-' + postId);
+                    }
                 }
             }
         }
@@ -2091,6 +2110,10 @@ var WPTB_Helper = {
             elements_styles: styleObjJson,
             security_code: wptb_admin_object.security_code
         };
+
+        if (previewSaving) {
+            params.preview_saving = previewSaving;
+        }
 
         if (postId) {
             params.id = postId;
@@ -2141,6 +2164,8 @@ var WPTB_Helper = {
                         _wptbSaveBtn = _wptbSaveBtn[0];
                         _wptbSaveBtn.classList.add('wptb-save-disabled');
                     }
+                } else if (data[0] == 'preview_edited') {
+                    return;
                 } else {
                     messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
                 }
@@ -2692,10 +2717,17 @@ var WPTB_Settings = function WPTB_Settings() {
         shortcodePopupWindow.classList.remove('wptb-popup-show');
     };
 
-    document.getElementsByClassName('wptb-preview-btn')[0].onclick = function (e) {
+    document.getElementsByClassName('wptb-preview-btn')[0].onclick = function (event) {
         if (this.classList.contains('wptb-button-disable')) {
-            e.preventDefault();
+            return;
         }
+
+        var previewId = Math.floor(Math.random() * 10000);
+
+        var newHref = new URL(event.target.href);
+        newHref.searchParams.set('preview_id', previewId);
+        event.target.href = newHref.toString();
+        WPTB_Helper.saveTable(event, false, previewId);
     };
 
     document.getElementsByClassName('wptb-save-btn')[0].onclick = function (event) {

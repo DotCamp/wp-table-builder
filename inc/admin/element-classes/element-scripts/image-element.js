@@ -6,17 +6,6 @@ a.onclick = function( e ) {
     e.preventDefault();
 };
 
-let iconImageButton = element.getElementsByClassName( 'wptb-icon-image-button' );
-if( iconImageButton.length > 0 ) {
-    iconImageButton = iconImageButton[0];
-    
-    element.classList.add( 'wptb-element-placeholder' );
-    iconImageButton.onclick = function() {
-        addMedia( element, true );
-    }
-}
-
-
 let addMedia = function( element, imageChange = false ) {
     let img = element.querySelector( 'img' );
 
@@ -57,7 +46,7 @@ let addMedia = function( element, imageChange = false ) {
         img.width = attachment.width;
         img.style.width = '100%';
         
-        element.classList.remove( 'wptb-element-placeholder' );
+        element.classList.remove( 'wptb-elem-placeholder' );
 
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
@@ -84,7 +73,17 @@ let addMedia = function( element, imageChange = false ) {
     } 
 }
 
-addMedia( element );
+let iconImageButton = element.querySelector( '.wptb-icon-image-button' );
+if( iconImageButton ) {
+    iconImageButton.onclick = function() {
+        addMedia( element, true );
+    }
+}
+    
+if( iconImageButton && ! element.classList.contains( 'wptb-elem-placeholder' ) ) {
+    element.classList.add( 'wptb-elem-placeholder' );
+    addMedia( element );
+}
 
 function controlsChange( inputs, element ) {
     if( inputs && typeof inputs === 'object' ) {

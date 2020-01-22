@@ -452,7 +452,7 @@ jQuery( document ).ready( function ( $ ) {
     
     function wptb_tdDefaultWidth() {
         let wptbTableContainers = document.getElementsByClassName( 'wptb-table-container' );
-        
+        let frontendEditLink = document.querySelectorAll( '.wptb-frontend-table-edit-link' );
         for( let i = 0; i < wptbTableContainers.length; i++ ) {
             let wptbTableContainer = wptbTableContainers[i];
             
@@ -485,6 +485,11 @@ jQuery( document ).ready( function ( $ ) {
             if( wptbTableTdsSumMaxWidth < wptbTableContainerWidth ) {
                 if( wptbCellsWidthAutoCount ) {
                     table.style.minWidth = '100%';
+                    
+                    if( frontendEditLink && frontendEditLink[i] ) {
+                        frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
+                    }
+                    
                     if( table.mergingСellsHorizontally ) {
                         table.style.width = null;
                         let tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
@@ -493,18 +498,35 @@ jQuery( document ).ready( function ( $ ) {
                         styleElementCreate = true;
                     } else {
                         table.style.width = '100%';
+                        
+                        if( frontendEditLink && frontendEditLink[i] ) {
+                            frontendEditLink[i].style.width = '100%';
+                            frontendEditLink[i].style.maxWidth = '100%';
+                        }
                     }
                 } else {
                     table.style.width = null;
                     table.style.minWidth = null;
                     table.style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
+                    
+                    if( frontendEditLink && frontendEditLink[i] ) {
+                        frontendEditLink[i].style.width = null;
+                        frontendEditLink[i].style.minWidth = null;
+                        frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
+                    }
                 }
             } else {
                 table.style.maxWidth = null;
                 table.style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
                 table.style.width = null;
-                tableTdWidthAuto = '100'
+                tableTdWidthAuto = '100';
                 styleElementCreate = true;
+                
+                if( frontendEditLink && frontendEditLink[i] ) {
+                    frontendEditLink[i].style.maxWidth = null;
+                    frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
+                    frontendEditLink[i].style.width = null;
+                }
             }
 
             let head = document.head;

@@ -149,6 +149,7 @@ class WPTB_Listing  extends \WP_List_Table{
             array(
                 'post_type' => 'wptb-tables',
                 'p' => absint( $item->ID ),
+                '_wpnonce' => $nonce,
             ),
             home_url()
         );

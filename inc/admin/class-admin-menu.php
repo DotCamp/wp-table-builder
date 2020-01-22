@@ -74,12 +74,20 @@ class Admin_Menu {
                     'post_status' => 'draft'
                 ]);
                 
-                update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
-                update_post_meta( absint( $params->id ), '_wptb_table_elements_datas_', $params->elements_datas );
-                update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_', $params->elements_styles );
-                update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_frontend', $elements_styles_text );
+                if( isset( $params->preview_saving ) && ! empty( (int)$params->preview_saving ) ) {
+                    update_post_meta( absint( $params->id ), '_wptb_preview_id_', $params->preview_saving );
+                    update_post_meta( absint( $params->id ), '_wptb_content_preview_', $params->content );
+                    update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_preview_', $elements_styles_text );
+                    
+                    wp_die( json_encode( ['preview_edited'] ) );
+                } else {
+                    update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+                    update_post_meta( absint( $params->id ), '_wptb_table_elements_datas_', $params->elements_datas );
+                    update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_', $params->elements_styles );
+                    update_post_meta( absint( $params->id ), '_wptb_table_elements_styles_frontend', $elements_styles_text );
                 
-                wp_die( json_encode( ['edited', absint( $params->id )] ) );
+                    wp_die( json_encode( ['edited', absint( $params->id )] ) );
+                }
             }
         } else {
             wp_die( json_encode( ['security_problem', ''] ) );

@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder as NS;
 
 /**
  * Show preview table 
@@ -90,6 +91,12 @@ class Preview {
         if ( empty( $this->table_data ) ) {
 			return false;
 		}
+        
+        // Check nonce
+        $nonce = sanitize_text_field( $_GET['_wpnonce'] );
+        if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) && ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+            return false;
+        }
 
 		return true;
         
@@ -103,8 +110,40 @@ class Preview {
         
         if ( ! empty( $id ) ) {
 			$post = get_post( $id );
+            $nonce = sanitize_text_field( $_GET['_wpnonce'] );
+            if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+                $post = ! empty( $post ) && 'wptb-tables' === $post->post_type && get_post_meta( $id, '_wptb_content_', true ) ? $post : false;
+            } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
+                $time_over = false;
+                $preview_id = absint( $_GET['preview_id'] );
+                $preview_id_meta = get_post_meta( $id, '_wptb_preview_id_', true );
+                $ts = absint( $_GET['ts'] );
+                if( ! $ts ) {
+                    $ts = 1;
+                } else {
+                    if( $ts < 10 ) {
+                        $ts += 1;
+                    } else {
+                        $time_over = true;
+                    }
+                } 
+                
+                if( $preview_id_meta != $preview_id && ! $time_over ) {
+                    echo '<div style="display:table; width:100%; height:100%;">'
+                    . '<div style="display:table-cell; width:100%; vertical-align:middle; text-align:center;"><img src="' . wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/icon-128x128.png' ) . '">'
+                    . '<p>' . __( 'Generating preview...', 'wp-table-builder' ) . '</p></div>'
+                    . '</div>';
+                    echo '<script>setTimeout( function() {'
+                    . 'let newHref = new URL( "' . get_site_url() . $_SERVER['REQUEST_URI'] . '" );'
+                    . 'newHref.searchParams.set( "ts", ' . $ts . ' );'
+                    . 'window.location.href=newHref.toString();'
+                    . '} , 1000 );</script>';
+                    die();
+                }
+                
+                $post = ! empty( $post ) && 'wptb-tables' === $post->post_type && get_post_meta( $id, '_wptb_content_preview_', true ) ? $post : false;
+            }
             
-            $post = ! empty( $post ) && 'wptb-tables' === $post->post_type && get_post_meta( $id, '_wptb_content_', true ) ? $post : false;
 		}
         
         if ( empty( $post ) ) {
@@ -115,6 +154,19 @@ class Preview {
         
     }
     
+    function head_hook_css() {
+        // Check nonce
+        $nonce = sanitize_text_field( $_GET['_wpnonce'] );
+        
+        if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+            $css_text = get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_frontend', true );
+        } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
+            $css_text = get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_preview_', true );
+        }
+
+        echo '<style>' . $css_text . '</style>';
+    }
+    
     
     /**
 	 * Adds functions to event handlers and filtering functions 
@@ -123,6 +175,8 @@ class Preview {
 	 * @since 1.0.1
 	 */
 	public function hooks() {
+        
+        add_action( 'wp_head', array( $this, 'head_hook_css' ) );
 
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 
@@ -186,7 +240,29 @@ class Preview {
 
 		$content = esc_html__( 'This is a preview of your table. This page is not publicly accessible.', 'wp-table-builder' );
         
-		$content .= do_shortcode( '[wptb id="' . absint( $this->table_data->ID ) . '"]' );
+        do_action( 'wptb_frontend_enqueue_style' );
+        do_action( 'wptb_frontend_enqueue_script' );
+        
+        // Check nonce
+        $nonce = sanitize_text_field( $_GET['_wpnonce'] );
+        if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
+            $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
+        } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
+            $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
+        }
+        
+        $content = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
+                . '<div class="wptb-table-container-matrix">' . $content . '</div>'
+                . '</div>';
+        $content .= '<script>'
+                . 'var wptbContainer = document.getElementsByClassName( "wptb-table-' . absint( $this->table_data->ID ) . '" );'
+                . 'if( wptbContainer.length > 0 ) {'
+                . '    wptbContainer = wptbContainer[0];'
+                . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
+                . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
+                . '    wptbPreviewTable[0].style.display = "none";'
+                . '}'
+                . '</script>';
 
 		return $content;
         

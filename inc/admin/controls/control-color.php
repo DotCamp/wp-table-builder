@@ -162,6 +162,7 @@ class Control_Color extends Base_Control {
                                             if( thisColorCss && ! targetInputSetColorIndic ) {
                                                 targetInput.value = thisColorCss;
                                                 WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
+                                                console.log("Hello");
                                                 targetInputSetColorIndic = true;
                                             }
                                         }

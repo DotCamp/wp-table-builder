@@ -78,10 +78,17 @@ var WPTB_Settings = function () {
         shortcodePopupWindow.classList.remove( 'wptb-popup-show' );
     }
     
-    document.getElementsByClassName( 'wptb-preview-btn' )[0].onclick = function ( e ) {
+    document.getElementsByClassName( 'wptb-preview-btn' )[0].onclick = function ( event ) {
         if( this.classList.contains( 'wptb-button-disable' ) ) {
-            e.preventDefault();
-        }
+            return;
+        } 
+        
+        let previewId = Math.floor( Math.random() * 10000 );
+        
+        var newHref = new URL( event.target.href );
+        newHref.searchParams.set( 'preview_id', previewId );
+        event.target.href = newHref.toString();
+        WPTB_Helper.saveTable( event, false, previewId );
     }
 
     document.getElementsByClassName( 'wptb-save-btn' )[0].onclick = function ( event ) {

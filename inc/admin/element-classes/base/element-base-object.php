@@ -55,7 +55,7 @@ abstract class Element_Base_Object extends Controls_Stack {
     public function element_script() {}
     
     /**
-	 * Render item output in the editor.
+	 * Render element output in the editor.
 	 *
 	 * Used to generate the live preview, using a wp js template
 	 *

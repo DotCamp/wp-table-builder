@@ -108,8 +108,8 @@ var WPTB_Helper = {
             }
         }
     },
-    findAncestor: function(el, cls) {
-        while ((el = el.parentElement) && !el.classList.contains(cls));
+    findAncestor: function( el, cls ) {
+        while ( ( el = el.parentElement ) && !el.classList.contains( cls ) );
         return el;
     },
     rowIsTop: function( row ) {
@@ -1080,18 +1080,20 @@ var WPTB_Helper = {
         }
     },
     // function for table saving
-    saveTable: function( event, startSaving ) {
-        if( ! startSaving ) {
+    saveTable: function( event, startSaving, previewSaving ) {
+        if( ! previewSaving && ! startSaving ) {
             if( ( ! event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
                     window.wptbTableStateNumberShow == event.target.dataset.wptbTableStateNumberSave ) {
                 //return;
             }
         }
         
-        let bar = document.querySelector( '.wptb-edit-bar' );
-        if ( bar && bar.classList.contains( 'visible' ) ) {
-            let table = document.getElementsByClassName( 'wptb-preview-table' )[0];
-            table.toggleTableEditMode();
+        if( ! previewSaving ) {
+            let bar = document.querySelector( '.wptb-edit-bar' );
+            if ( bar && bar.classList.contains( 'visible' ) ) {
+                let table = document.getElementsByClassName( 'wptb-preview-table' )[0];
+                table.toggleTableEditMode();
+            }
         }
 
         let http = new XMLHttpRequest(),
@@ -1100,6 +1102,7 @@ var WPTB_Helper = {
             messagingArea,
             code,
             datas;
+    
         code = document.getElementsByClassName( 'wptb-preview-table' );
         
         let postId;
@@ -1124,23 +1127,25 @@ var WPTB_Helper = {
             code = '';
         }
         
-        datas = '';
-        let datas_containers = document.getElementsByClassName( 'wptb-element-datas' );
-        
-        if( datas_containers.length > 0 ) {
-            if( datas_containers[0].innerHTML ) {
-                datas = datas_containers[0].innerHTML;
-                
-                if( paramIdsNecessaryChange ) {
-                    datas = WPTB_Helper.replaceAll( datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 
-                    'tmpl-wptb-el-datas-main-table_setting-' + postId );
-                    
-                    datas = WPTB_Helper.replaceAll( datas, 'data-wptb-el-main-table_setting-startedid-0', 
-                    'data-wptb-el-main-table_setting-' + postId );
+        if( ! previewSaving ) {
+            datas = '';
+            let datas_containers = document.getElementsByClassName( 'wptb-element-datas' );
+
+            if( datas_containers.length > 0 ) {
+                if( datas_containers[0].innerHTML ) {
+                    datas = datas_containers[0].innerHTML;
+
+                    if( paramIdsNecessaryChange ) {
+                        datas = WPTB_Helper.replaceAll( datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 
+                        'tmpl-wptb-el-datas-main-table_setting-' + postId );
+
+                        datas = WPTB_Helper.replaceAll( datas, 'data-wptb-el-main-table_setting-startedid-0', 
+                        'data-wptb-el-main-table_setting-' + postId );
+                    }
                 }
             }
         }
-        
+
         let styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
         if( paramIdsNecessaryChange ) {
             styleObjJson = WPTB_Helper.replaceAll( styleObjJson, '.wptb-element-main-table_setting-startedid-0', 
@@ -1167,6 +1172,11 @@ var WPTB_Helper = {
             elements_styles: styleObjJson,
             security_code: wptb_admin_object.security_code
         };
+        
+        
+        if( previewSaving ) {
+            params.preview_saving = previewSaving;
+        }
         
         if ( postId ) {
             params.id = postId;
@@ -1217,6 +1227,8 @@ var WPTB_Helper = {
                         wptbSaveBtn = wptbSaveBtn[0];
                         wptbSaveBtn.classList.add( 'wptb-save-disabled' );
                     }
+                } else if( data[0] == 'preview_edited' ) {
+                    return;
                 } else {
                     messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
                 }

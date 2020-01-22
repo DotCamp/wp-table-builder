@@ -1,4 +1,4 @@
-var WPTB_Cell = function (callback, DOMElement) {
+var WPTB_Cell = function ( callback, DOMElement ) {
 
     function highlightRow(td) {
         var parentRow = td.parentNode,
@@ -56,6 +56,20 @@ var WPTB_Cell = function (callback, DOMElement) {
     DOMElement.draggable = false;
     if ( callback ) {
         DOMElement.onclick = callback;
+    }
+    
+    // Cell double click handler
+    DOMElement.ondblclick = function( event ) {
+        event.stopPropagation();
+        if( ! WPTB_Helper.findAncestor( DOMElement, 'wptb-preview-table-manage-cells' ) && event.target == event.currentTarget ) {
+            
+            WPTB_Helper.wptbDocumentEventGenerate( 'table:cell:dblclick', event.target );
+            
+            let element = WPTB_Helper.newElementProxy( 'text' );
+            element = element.getDOMElement();
+            
+            DOMElement.appendChild( element );
+        }
     }
     
     WPTB_innerElementSet( DOMElement );

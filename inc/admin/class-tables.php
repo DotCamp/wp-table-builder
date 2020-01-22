@@ -129,7 +129,13 @@ class Tables {
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
-        $html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>';
+        // проверим возможность
+        $post_edit_link;
+        if( current_user_can( 'manage_options' ) ){
+            $post_edit_link = '<div class="wptb-frontend-table-edit-link">'
+                    . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
+        }
+        $html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>'. $post_edit_link;
         $html .= '<script>'
                 . 'var wptbContainer = document.getElementsByClassName( "wptb-table-' . $args['id'] . '" );'
                 . 'if( wptbContainer.length > 0 ) {'

@@ -82,7 +82,6 @@ observer.observe( element, config );
 function controlsChange( inputs, element ) {
     if( inputs && typeof inputs === 'object' ) {
         if( inputs.hasOwnProperty( 'color' ) ) {
-            console.log("Hello");
             let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
             let table = WPTB_Helper.findAncestor( row, 'wptb-preview-table' );
             if( WPTB_Helper.rowIsTop( row ) && table.classList.contains( 'wptb-table-preview-head' ) ) {
