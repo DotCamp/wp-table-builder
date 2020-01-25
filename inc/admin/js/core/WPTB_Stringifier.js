@@ -68,6 +68,16 @@ var WPTB_Stringifier = function ( codeMain ) {
                             }
                             
                         }  
+                        
+                        let dataMceBogus = innerElements[j].querySelectorAll( '[data-mce-bogus]' );
+                        if( dataMceBogus.length > 0 ) {
+                            dataMceBogus = [...dataMceBogus];
+                            for( let k = 0; k < dataMceBogus.length; k++ ) {
+                                if( dataMceBogus[k] && dataMceBogus[k].parentNode ) {
+                                    dataMceBogus[k].parentNode.removeChild( dataMceBogus[k] );
+                                }
+                            }
+                        }
                     }
                 }
                 

@@ -2736,6 +2736,8 @@ var WPTB_Settings = function WPTB_Settings() {
         }
     };
 };
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
     if (codeMain) {
         var code = codeMain.cloneNode(true);
@@ -2803,6 +2805,16 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                                 wptbActionsLength--;
                             } else {
                                 break;
+                            }
+                        }
+
+                        var dataMceBogus = innerElements[j].querySelectorAll('[data-mce-bogus]');
+                        if (dataMceBogus.length > 0) {
+                            dataMceBogus = [].concat(_toConsumableArray(dataMceBogus));
+                            for (var _k5 = 0; _k5 < dataMceBogus.length; _k5++) {
+                                if (dataMceBogus[_k5] && dataMceBogus[_k5].parentNode) {
+                                    dataMceBogus[_k5].parentNode.removeChild(dataMceBogus[_k5]);
+                                }
                             }
                         }
                     }

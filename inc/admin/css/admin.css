@@ -16,7 +16,7 @@ body>img {
 .wptb-admin-container {
     background: #fff;
     color: #444;
-    z-index: 100099;
+    z-index: 10099;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -1588,6 +1588,10 @@ table.wptb-table {
     background: transparent !important;
 }
 
+br[data-mce-bogus="1"] {
+  display:none;
+}
+
 .wptb-droppable.wptb-cell ul,
 .wptb-droppable.wptb-cell ol {
     border: 1px solid transparent;
@@ -1706,7 +1710,7 @@ table.wptb-table {
     font-size: 9pt;
     display: none;
     max-width: 70px;
-    z-index: 100101;
+    z-index: 10101;
     box-sizing: border-box;
 }
 
@@ -1775,7 +1779,7 @@ table.wptb-table {
 .wptb-drop-handle {
     height: 11px;
     position: absolute;
-    z-index: 100100;
+    z-index: 10100;
     display: none;
 }
 
@@ -1799,7 +1803,7 @@ table.wptb-table {
     position: absolute;
     width: 1px;
     height: 1px;
-    z-index: 100100;
+    z-index: 10100;
 }
 
 .wptb-drop-handle.wptb-moving-into-same-elem,
@@ -1875,7 +1879,7 @@ table.wptb-table {
     transition: all 0.2s ease;
     transition-property: left, top;
     width: auto;
-    z-index: 110000;
+    z-index: 11000;
 }
 
 .wptb-range-input {

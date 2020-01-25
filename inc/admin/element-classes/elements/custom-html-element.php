@@ -1,0 +1,154 @@
+<?php
+namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
+
+use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
+use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
+use WP_Table_Builder as NS;
+
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
+class Custom_Html_Element extends Element_Base_Object {
+    
+    /**
+	 * Get element name.
+	 *
+	 * Retrieve custom html editor element name.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string element name.
+	 */
+	public function get_name() {
+		return 'custom_html';
+	}
+
+	/**
+	 * Get element title.
+	 *
+	 * Retrieve custom html editor element title.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Element title.
+	 */
+	public function get_title() {
+		return esc_html_e( 'Custom HTML', 'wp-table-builder' );
+	}
+
+	/**
+	 * Get directory icon.
+	 *
+	 * Return directory custom html editor element icon.
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string directory Element icon.
+	 */
+	public function get_directory_icon() {
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/custom-html.svg'; ;
+	}
+    
+    /**
+	 * Get url icon.
+	 *
+	 * Return url custom html icon
+	 *
+	 * @since 1.1.2
+	 * @access public
+	 *
+	 * @return string Url Element icon.
+	 */
+	public function get_url_icon() {
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/custom-html.svg' );
+	}
+    
+    /**
+	 * Include file with js script for element custom html
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+    public function element_script() {
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/custom-html-element.js' );
+    }
+    
+    /**
+	 * Register the element controls.
+	 *
+	 * Adds different fields to allow the user to change and customize the element settings.
+	 *
+	 * @since 1.1.2
+	 *
+	 * @access protected
+	 */
+	protected function _register_controls() {
+		$this->add_control(
+			'section_header',
+			[
+				'label' => __( 'Custom Html Options', 'wp_table_builder' ),
+				'type' => Controls_Manager::SECTION_HEADER,
+                'buttonBack' => true
+			]
+		);
+
+		$this->add_control(
+			'fontColor',
+			[
+				'label' => __( 'Font Color', 'wp_table_builder' ),
+				'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{{data.container}}}' => 'color',
+                ]
+			]
+		);
+        
+		$this->add_control(
+			'fontSize',
+			[
+				'label' => __( 'Font Size', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}}' => 'fontSize',
+                ],
+                'min' => 10, 
+                'max' => 50,
+                'defaultValue' => 15,
+                'dimension' => 'px'
+			]
+		);
+        
+		$this->add_control(
+			'customHtmlAlignmentCheckbox',
+			[
+				'label' => __( 'Alignment', 'wp_table_builder' ),
+				'type' => Controls_Manager::ALIGNMENT,
+                'selected' => 0,
+                'selectors' => [
+                    '{{{data.container}}}' => 'text-align',
+                ]
+			]
+		);
+	}
+    
+    /**
+	 * Render custom html editor element output in the editor.
+	 *
+	 * Written as a wp js template and used to generate the live preview.
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+	protected function _content_template() {
+		?>
+        <div class="wptb-custom-html-wrapper" data-wptb-new-element="1">
+            <span>Insert Custom HTML</span>
+        </div>
+		<?php
+	}
+}

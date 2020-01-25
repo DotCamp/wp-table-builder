@@ -47,7 +47,7 @@ if( target ) {
         },
         init_instance_callback: function (editor) {
             window.currentEditor = editor;
-            editor.on('focus', function (e) {
+            editor.on( 'focus', function (e) {
                 var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
                 if (window.currentEditor &&
                     document.getElementById('wptb_builder').scrollTop >= 55 &&
@@ -60,6 +60,7 @@ if( target ) {
                     delete document.getElementById('wpcd_fixed_toolbar').style.right;
                     delete document.getElementById('wpcd_fixed_toolbar').style.top;
                 }
+                console.log('Hello555');
             });
         }
     });

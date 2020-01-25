@@ -41,7 +41,8 @@ class Elements_Manager {
             'button',
             'image',
             'list',
-            'star_rating'
+            'star_rating',
+            'custom_html'
 		];
 
 		$this->_element_objects = [];
