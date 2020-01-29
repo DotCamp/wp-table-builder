@@ -160,7 +160,7 @@ class Star_Rating_Element extends Element_Base_Object {
 				'label' => __( 'Number Rating Size', 'wp_table_builder' ),
 				'type' => Controls_Manager::SIZE,
                 'selectors' => [
-                    '{{{data.container}}} .wptb-number-rating' => ['fontSize', 'lineHeight']
+                    '{{{data.container}}} .wptb-number-rating' => ['fontSize', 'lineHeight', 'height']
                 ],
                 'min' => 10, 
                 'max' => 50,

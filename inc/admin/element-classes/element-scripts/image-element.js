@@ -64,6 +64,7 @@ let addMedia = function( element, imageChange = false ) {
 
     if ( src == undefined || imageChange == true ) {
         file_frame.open();
+        console.log(file_frame);
         file_frame.menuItemVisibility( 'gallery', 'hide' );
         file_frame.menuItemVisibility( 'playlist', 'hide' ), 
         file_frame.menuItemVisibility( 'video-playlist', 'hide' ), 

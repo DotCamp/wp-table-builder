@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder\Inc\Admin\Tables as Tables;
 use WP_Table_Builder as NS;
 
 /**
@@ -158,11 +159,17 @@ class Preview {
         // Check nonce
         $nonce = sanitize_text_field( $_GET['_wpnonce'] );
         
+        $css_text = '';
+        
         if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
-            $css_text = get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_frontend', true );
+            $content = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
+            $css_text .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_frontend', true );
         } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
-            $css_text = get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_preview_', true );
+            $content = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
+            $css_text .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_preview_', true );
         }
+        
+        $css_text .= Tables::look_shortcode_wptb( $content, '_wptb_table_elements_styles_frontend', 0, array( absint( $this->table_data->ID ) ) );
 
         echo '<style>' . $css_text . '</style>';
     }
@@ -251,6 +258,7 @@ class Preview {
             $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
         }
         
+        $content = do_shortcode( $content );
         $content = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
                 . '<div class="wptb-table-container-matrix">' . $content . '</div>'
                 . '</div>';

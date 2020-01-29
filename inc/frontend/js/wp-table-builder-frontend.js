@@ -458,92 +458,95 @@ jQuery( document ).ready( function ( $ ) {
             
             wptbTableContainer.classList.add( 'wptb-table-container-' + i );
             
-            let table = wptbTableContainer.getElementsByClassName( 'wptb-preview-table' )[0];
-            
-            table.mergingСellsHorizontally = false;
-            let tds = table.querySelectorAll( 'td' );
-            for( let i = 0; i < tds.length; i++ ) {
-                if( tds[i].colSpan > 1 ) {
-                    table.mergingСellsHorizontally = true;
-                }
-            }
-            let wptbTableContainerWidth = wptbTableContainer.offsetWidth;
-
-            let td = table.querySelector( 'td' );
-            let tdStyleObj = window.getComputedStyle( td, null );
-            let tdBorderLeftWidth = tdStyleObj.getPropertyValue( 'border-left-width' );
-            let tdBorderRightWidth = tdStyleObj.getPropertyValue( 'border-right-width' );
-            let tdPaddingLeftWidth = tdStyleObj.getPropertyValue( 'padding-left' );
-            let tdPaddingRightWidth = tdStyleObj.getPropertyValue( 'padding-left' );
-            let tdPaddingCommon = parseFloat( tdPaddingLeftWidth, 10 ) + parseFloat( tdPaddingRightWidth, 10 );
-            let tableTdBorderCommonWidth = parseFloat( tdBorderLeftWidth, 10 ) + parseFloat( tdBorderRightWidth, 10 );
-            let wptbTableTdsSumMaxWidth = table.dataset.wptbTableTdsSumMaxWidth;
-            let wptbFixedWidthSize = table.dataset.wptbFixedWidthSize;
-            let wptbCellsWidthAutoCount = table.dataset.wptbCellsWidthAutoCount;
-            let styleElementCreate = false;
-            let tableTdWidthAuto;
-            if( wptbTableTdsSumMaxWidth < wptbTableContainerWidth ) {
-                if( wptbCellsWidthAutoCount ) {
-                    table.style.minWidth = '100%';
-                    
-                    if( frontendEditLink && frontendEditLink[i] ) {
-                        frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
+            let table = wptbTableContainer.getElementsByClassName( 'wptb-preview-table' );
+            if( table.length > 0 ) {
+                table = table[0];
+                
+                table.mergingСellsHorizontally = false;
+                let tds = table.querySelectorAll( 'td' );
+                for( let i = 0; i < tds.length; i++ ) {
+                    if( tds[i].colSpan > 1 ) {
+                        table.mergingСellsHorizontally = true;
                     }
-                    
-                    if( table.mergingСellsHorizontally ) {
-                        table.style.width = null;
-                        let tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
-                        tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
-                        tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
-                        styleElementCreate = true;
-                    } else {
-                        table.style.width = '100%';
-                        
+                }
+                let wptbTableContainerWidth = wptbTableContainer.offsetWidth;
+
+                let td = table.querySelector( 'td' );
+                let tdStyleObj = window.getComputedStyle( td, null );
+                let tdBorderLeftWidth = tdStyleObj.getPropertyValue( 'border-left-width' );
+                let tdBorderRightWidth = tdStyleObj.getPropertyValue( 'border-right-width' );
+                let tdPaddingLeftWidth = tdStyleObj.getPropertyValue( 'padding-left' );
+                let tdPaddingRightWidth = tdStyleObj.getPropertyValue( 'padding-left' );
+                let tdPaddingCommon = parseFloat( tdPaddingLeftWidth, 10 ) + parseFloat( tdPaddingRightWidth, 10 );
+                let tableTdBorderCommonWidth = parseFloat( tdBorderLeftWidth, 10 ) + parseFloat( tdBorderRightWidth, 10 );
+                let wptbTableTdsSumMaxWidth = table.dataset.wptbTableTdsSumMaxWidth;
+                let wptbFixedWidthSize = table.dataset.wptbFixedWidthSize;
+                let wptbCellsWidthAutoCount = table.dataset.wptbCellsWidthAutoCount;
+                let styleElementCreate = false;
+                let tableTdWidthAuto;
+                if( wptbTableTdsSumMaxWidth < wptbTableContainerWidth ) {
+                    if( wptbCellsWidthAutoCount ) {
+                        table.style.minWidth = '100%';
+
                         if( frontendEditLink && frontendEditLink[i] ) {
-                            frontendEditLink[i].style.width = '100%';
-                            frontendEditLink[i].style.maxWidth = '100%';
+                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
+                        }
+
+                        if( table.mergingСellsHorizontally ) {
+                            table.style.width = null;
+                            let tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
+                            tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
+                            tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
+                            styleElementCreate = true;
+                        } else {
+                            table.style.width = '100%';
+
+                            if( frontendEditLink && frontendEditLink[i] ) {
+                                frontendEditLink[i].style.width = '100%';
+                                frontendEditLink[i].style.maxWidth = '100%';
+                            }
+                        }
+                    } else {
+                        table.style.width = null;
+                        table.style.minWidth = null;
+                        table.style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
+
+                        if( frontendEditLink && frontendEditLink[i] ) {
+                            frontendEditLink[i].style.width = null;
+                            frontendEditLink[i].style.minWidth = null;
+                            frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
                         }
                     }
                 } else {
+                    table.style.maxWidth = null;
+                    table.style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
                     table.style.width = null;
-                    table.style.minWidth = null;
-                    table.style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
-                    
+                    tableTdWidthAuto = '100';
+                    styleElementCreate = true;
+
                     if( frontendEditLink && frontendEditLink[i] ) {
+                        frontendEditLink[i].style.maxWidth = '100%';
+                        frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
                         frontendEditLink[i].style.width = null;
-                        frontendEditLink[i].style.minWidth = null;
-                        frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
                     }
                 }
-            } else {
-                table.style.maxWidth = null;
-                table.style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
-                table.style.width = null;
-                tableTdWidthAuto = '100';
-                styleElementCreate = true;
-                
-                if( frontendEditLink && frontendEditLink[i] ) {
-                    frontendEditLink[i].style.maxWidth = null;
-                    frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
-                    frontendEditLink[i].style.width = null;
-                }
-            }
 
-            let head = document.head;
-            if( head ) {
-                let cssForTdsWidthAutoOld = head.querySelector( 'style[data-wptb-td-auto-width-' + i + '="true"]' );
-                
-                if( cssForTdsWidthAutoOld ) {
-                    head.removeChild( cssForTdsWidthAutoOld );
-                }
-            }
-
-            if( styleElementCreate ) {
-                let cssForTdsWidthAuto = document.createElement( 'style' );
-                cssForTdsWidthAuto.setAttribute( 'data-wptb-td-auto-width-' + i, true );
-                cssForTdsWidthAuto.innerHTML = '.wptb-table-container-' + i + ' table td[data-wptb-css-td-auto-width=true]{width:' + tableTdWidthAuto + 'px}';
+                let head = document.head;
                 if( head ) {
-                    head.appendChild( cssForTdsWidthAuto );
+                    let cssForTdsWidthAutoOld = head.querySelector( 'style[data-wptb-td-auto-width-' + i + '="true"]' );
+
+                    if( cssForTdsWidthAutoOld ) {
+                        head.removeChild( cssForTdsWidthAutoOld );
+                    }
+                }
+
+                if( styleElementCreate ) {
+                    let cssForTdsWidthAuto = document.createElement( 'style' );
+                    cssForTdsWidthAuto.setAttribute( 'data-wptb-td-auto-width-' + i, true );
+                    cssForTdsWidthAuto.innerHTML = '.wptb-table-container-' + i + ' table td[data-wptb-css-td-auto-width=true]{width:' + tableTdWidthAuto + 'px}';
+                    if( head ) {
+                        head.appendChild( cssForTdsWidthAuto );
+                    }
                 }
             }
         }

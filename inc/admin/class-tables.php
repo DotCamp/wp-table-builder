@@ -31,27 +31,52 @@ class Tables {
         add_action( 'wp_head', array( $this, 'head_hook_css' ));
 	}
     
-    function head_hook_css() {
+    public function head_hook_css() {
         global $post;
-
-        $pattern = get_shortcode_regex();
-
-        if ( preg_match_all( '/'. $pattern .'/s', $post->post_content, $matches ) ) {
-            // Custom post type arguments, which can be filtered if needed
-		
-            $paramsAll = $matches[3];
-            
-            $css_text = '';
-            foreach( $paramsAll as $params ) {
-                $paramsArr = explode( ' id=', $params );
-                $id = ( int )$paramsArr[1];
-                $css = get_post_meta( $id , '_wptb_table_elements_styles_frontend', true );
-                if( $css ) {
-                    $css_text .= $css;
-                }
-            }
-            
+        
+        $content = $post->post_content;
+        
+        $css_text = self::look_shortcode_wptb( $content, '_wptb_table_elements_styles_frontend', 0 );
+        
+        if( $css_text ) {
             echo '<style>' . $css_text . '</style>';
+        }
+    }
+    
+    public static function look_shortcode_wptb( $content, $post_meta_key, $iter, $paramsIdWere ) {
+        if( $iter < 5 ) {
+            $pattern = get_shortcode_regex( array( 'wptb' ) );
+            if ( preg_match_all( '/'. $pattern .'/s', $content, $matches ) ) {
+                // Custom post type arguments, which can be filtered if needed
+                $paramsAll = $matches[3];
+
+                $css_text = '';
+                if( ! $paramsIdWere ) $paramsIdWere = array();
+                
+                for( $i = 0; $i < count( $matches[3] ); $i++ ) {
+                    $paramsArr = explode( ' id=', $matches[3][$i] );
+                    if( $matches[2][$i] == 'wptb' ) {
+                        $id = ( int )$paramsArr[1];
+                        if( in_array( $id, $paramsIdWere ) ) continue;
+                        array_push( $paramsIdWere, $id );
+                        $css = get_post_meta( $id , $post_meta_key, true );
+                        if( $css ) {
+                            $css_text .= $css;
+                        }
+                    }
+
+                    $new_shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
+                    $new_content = do_shortcode( $new_shortcode );
+                    $iter += 1;
+                    $css_text .= self::look_shortcode_wptb( $new_content, $post_meta_key, $iter, $paramsIdWere );
+                }
+
+                return $css_text;
+            } else {
+                return '';
+            }
+        } else {
+            return '';
         }
     }
 
@@ -120,7 +145,6 @@ class Tables {
 		// Register the post type
         register_post_type( 'wptb-tables', $args );
 		add_shortcode( 'wptb', array( $this, 'get_table' ) );
-        
     }
 
     public function get_table( $args ) { 
@@ -129,7 +153,29 @@ class Tables {
     	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         //$html = json_decode( $html );
-        // проверим возможность
+        
+        if( ! isset( $args['internal_shortcodes_stop'] ) && $html ) {
+            if( ! isset( $args['internal_shortcodes_nesting_number'] ) || $args['internal_shortcodes_nesting_number'] <= 5 ) {
+                $pattern = get_shortcode_regex();
+                
+                if ( preg_match_all( '/'. $pattern .'/s', $html, $matches ) ) {
+
+                    for( $i = 0; $i < count( $matches[0] ); $i++ ) {
+                        $shortcode = $matches[0][$i];
+                        if( $matches[2][$i] == 'wptb' ) {
+                            $internal_shortcodes_nesting_number = $args['internal_shortcodes_nesting_number'] ? 
+                                    $args['internal_shortcodes_nesting_number'] + 1 : 1;
+                            $shortcode = str_replace( ']' , ' internal_shortcodes_nesting_number="' . $internal_shortcodes_nesting_number . '"]' , $matches[0][$i] );
+
+                            $html = str_replace( $matches[0][$i] , $shortcode , $html );
+                        }
+                    }
+                }
+                
+                $html = do_shortcode( $html );
+            }
+        }
+        
         $post_edit_link;
         if( current_user_can( 'manage_options' ) ){
             $post_edit_link = '<div class="wptb-frontend-table-edit-link">'
@@ -141,8 +187,10 @@ class Tables {
                 . 'if( wptbContainer.length > 0 ) {'
                 . '    wptbContainer = wptbContainer[0];'
                 . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
-                . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
-                . '    wptbPreviewTable[0].style.display = "none";'
+                . '    if( wptbPreviewTable.length > 0 ) {'
+                . '         wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
+                . '         wptbPreviewTable[0].style.display = "none";'
+                . '    }'
                 . '}'
                 . '</script>';
     	return ( $html ); 
