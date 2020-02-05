@@ -743,7 +743,7 @@ var WPTB_Helper = {
         }
     },
     //
-    elementControlsStateDelete: function( element ) {
+    elementControlsStateDelete: function( element, nameControl ) {
         let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
         let body = document.getElementsByTagName( 'body' )[0];
         let wptbElementDatas = body.getElementsByClassName( 'wptb-element-datas' );
@@ -754,7 +754,15 @@ var WPTB_Helper = {
                 elementsSettings = JSON.parse( elementsSettings );
                 if( elementsSettings && typeof elementsSettings === 'object' &&
                         ( ( 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] ) in elementsSettings ) ) {
-                    delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
+                    if( ! nameControl ) {
+                        delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
+                    } else {
+                        if( elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] && 
+                                typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] === 'object' &&
+                            ( 'data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl ) in elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] ) {
+                           delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]]['data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl];
+                        }
+                    }
 
                     if( Object.keys( elementsSettings ).length == 0 ) {
                         body.removeChild( wptbElementDatas );
@@ -1253,5 +1261,39 @@ var WPTB_Helper = {
         if( element ) {
             WPTB_Helper.elementOptionsSet( 'table_setting', element );
         }
+    },
+    // function for sending of element ajax request
+    elementAjax: function( dataAjaxData, element ) {
+        let http = new XMLHttpRequest(),
+            url = ( wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl ) + "?action=wptb_element_ajax";
+        let element_name;
+        let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+        if( infArr && Array.isArray( infArr ) ) {
+            element_name = infArr[1];
+        }
+        
+        let params = {
+            element_ajax_data: dataAjaxData,
+            element_name: element_name,
+            security_code: wptb_admin_object.security_code
+        };
+        params = JSON.stringify( params );
+
+        http.open( 'POST', url, true );
+        http.setRequestHeader( 'Content-type', 'application/json; charset=utf-8' );
+
+        http.onreadystatechange = function ( action ) {
+            if ( this.readyState == 4 && this.status == 200 ) {
+                var data = JSON.parse( http.responseText );
+                let detail;
+                if ( data && Array.isArray( data ) && data[0] == 'element_ajax_responce' ) {
+                    detail = {value: data[1]};
+                } else {
+                    detail = '';
+                }
+                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-element:ajax-response', element, detail );
+            }
+        }
+        http.send( params );
     }
 }

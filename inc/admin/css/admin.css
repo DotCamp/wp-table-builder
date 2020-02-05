@@ -1360,6 +1360,7 @@ table.wptb-table {
     border: 1px solid #fff0;
     margin-top: 15px;
     margin-bottom: 15px;
+    min-height: 15px;
 }
 
 
@@ -1557,6 +1558,10 @@ table.wptb-table {
 
 
 /* customize tinymce Editor */
+
+.mce-content-body {
+    min-height: 19px;
+}
 
 .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
     left: 50% !important;

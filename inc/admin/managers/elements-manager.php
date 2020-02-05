@@ -26,39 +26,62 @@ class Elements_Manager {
 	 * @var WPTB_Element_Base_Object[]
 	 */
 	private $_element_objects = null;
-
-	/**
-	 * Init Elements.
+    
+    /**
+	 * Elements file names array.
 	 *
-	 * Initialize WP Table Builder Elements manager. Include all the the elements files.
+	 * Holds the list of all the files names which have element objects.
 	 *
 	 * @since 1.1.2
 	 * @access private
-	*/
-	private function element_elements() {
-		$build_elements_filename = [
+	 *
+	 * @var array
+	 */
+    private $_build_elements_name = [
 			'text',
             'button',
             'image',
             'list',
             'star_rating',
-            'custom_html'
+            'custom_html',
+            'shortcode'
 		];
 
+    /**
+	 * Init Elements.
+	 *
+	 * Initialize WP Table Builder Elements manager.
+	 *
+	 * @since 1.1.2
+	 * @access private
+	*/
+	private function element_elements() {
 		$this->_element_objects = [];
 
-		foreach ( $build_elements_filename as $element_filename ) {
-			$class_name = ucfirst( $element_filename ) . '_Element';
-
-			$class_name = '\WP_Table_Builder\Inc\Admin\Element_Classes\Elements\\' . $class_name;
-            
-            $object = new $class_name();
+		foreach ( $this->_build_elements_name as $element_name ) {
+            $object = $this->get_element_object( $element_name );
 
 			$this->register_element_object( $object );
             
             $object->init_controls();
 		}
 	}
+    
+    /**
+	 * Element Object Create.
+	 *
+	 * Return Element Object. Include the necessary element files.
+	 *
+	 * @since 1.1.2
+	 * @access private
+	*/
+    private function get_element_object( $element_name ) {
+        $class_name = ucfirst( $element_name ) . '_Element';
+
+        $class_name = '\WP_Table_Builder\Inc\Admin\Element_Classes\Elements\\' . $class_name;
+        
+        return new $class_name();
+    }
     
     /**
 	 * Register element object.

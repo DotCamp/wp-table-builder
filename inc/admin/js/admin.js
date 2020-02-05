@@ -420,10 +420,6 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                             body.appendChild(elementsSettingTemplateJs);
                         }
 
-                        if (ans[3]) {
-                            WPTB_Helper.elementsStylesSetFromObject(ans[3]);
-                        }
-
                         WPTB_Table();
                         var element = document.querySelector('.wptb-preview-table');
                         if (element) {
@@ -531,6 +527,8 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
             element = element.getDOMElement();
 
             DOMElement.appendChild(element);
+
+            WPTB_innerElementSet(element);
         }
     };
 
@@ -1688,7 +1686,7 @@ var WPTB_Helper = {
         }
     },
     //
-    elementControlsStateDelete: function elementControlsStateDelete(element) {
+    elementControlsStateDelete: function elementControlsStateDelete(element, nameControl) {
         var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
         var body = document.getElementsByTagName('body')[0];
         var wptbElementDatas = body.getElementsByClassName('wptb-element-datas');
@@ -1698,7 +1696,13 @@ var WPTB_Helper = {
             if (elementsSettings) {
                 elementsSettings = JSON.parse(elementsSettings);
                 if (elementsSettings && (typeof elementsSettings === 'undefined' ? 'undefined' : _typeof(elementsSettings)) === 'object' && 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings) {
-                    delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
+                    if (!nameControl) {
+                        delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
+                    } else {
+                        if (elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] && _typeof(elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]]) === 'object' && 'data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl in elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]]) {
+                            delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]]['data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl];
+                        }
+                    }
 
                     if (Object.keys(elementsSettings).length == 0) {
                         body.removeChild(wptbElementDatas);
@@ -2190,6 +2194,40 @@ var WPTB_Helper = {
         if (element) {
             WPTB_Helper.elementOptionsSet('table_setting', element);
         }
+    },
+    // function for sending of element ajax request
+    elementAjax: function elementAjax(dataAjaxData, element) {
+        var http = new XMLHttpRequest(),
+            url = (wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl) + "?action=wptb_element_ajax";
+        var element_name = void 0;
+        var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+        if (infArr && Array.isArray(infArr)) {
+            element_name = infArr[1];
+        }
+
+        var params = {
+            element_ajax_data: dataAjaxData,
+            element_name: element_name,
+            security_code: wptb_admin_object.security_code
+        };
+        params = JSON.stringify(params);
+
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        http.onreadystatechange = function (action) {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(http.responseText);
+                var detail = void 0;
+                if (data && Array.isArray(data) && data[0] == 'element_ajax_responce') {
+                    detail = { value: data[1] };
+                } else {
+                    detail = '';
+                }
+                WPTB_Helper.wptbDocumentEventGenerate('wptb-element:ajax-response', element, detail);
+            }
+        };
+        http.send(params);
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {

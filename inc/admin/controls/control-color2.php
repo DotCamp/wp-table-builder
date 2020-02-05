@@ -118,10 +118,12 @@ class Control_Color extends Base_Control {
                 }
                 
                 if( targetInput && selectorElement ) {
+                    WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
                     if( '{{{selectorsJson}}}' ) {
                         let selectors = JSON.parse( '{{{selectorsJson}}}' );
                         
                         let thisColorCss;
+                        let targetInputSetColorIndic = false;
                         for( let i = 0; i < selectors.length; i++ ) {
                             if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
                                 let selectorElements = document.querySelectorAll( selectors[i][0] );
@@ -132,14 +134,17 @@ class Control_Color extends Base_Control {
                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
                                                     if( selectorElements[j].style[selectors[i][1][k]] ) {
                                                         thisColorCss = selectorElements[j].style[selectors[i][1][k]];
+                                                        console.log(thisColorCss);
                                                         thisColorCssHex = WPTB_Helper.rgbToHex( thisColorCss );
                                                         if( thisColorCssHex ) {
                                                             thisColorCss = thisColorCssHex;
+
                                                         }
                                                         if( ! WPTB_Helper.isHex( thisColorCss ) ) {
                                                             thisColorCss = '';
                                                         }
-                                                        selectorElements[j].style[selectors[i][1][k]] = thisColorCss;
+                                                        WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1][k], thisColorCss );
+                                                        selectorElements[j].style[selectors[i][1][k]] = '';
                                                     }
                                                 }
                                             } else {
@@ -149,19 +154,66 @@ class Control_Color extends Base_Control {
                                                     if( thisColorCssHex ) {
                                                         thisColorCss = thisColorCssHex;
                                                     }
-                                                    if( ! WPTB_Helper.isHex( thisColorCss ) ) {
-                                                        thisColorCss = '';
-                                                    }
-                                                    selectorElements[j].style[selectors[i][1]] = thisColorCss;
+                                                    WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1], thisColorCss );
+                                                    selectorElements[j].style[selectors[i][1]] = '';
                                                 }
                                             }
 
-                                            if( thisColorCss ) {
+                                            if( thisColorCss && ! targetInputSetColorIndic ) {
                                                 targetInput.value = thisColorCss;
+                                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
+                                                console.log("Hello");
+                                                targetInputSetColorIndic = true;
                                             }
                                         }
                                     }
                                 }
+                            }
+                        }
+                        
+                        WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
+                        if( targetInputSetColorIndic ) {
+                            let wptbDlementDatas = document.getElementsByClassName( 'wptb-element-datas' );
+                            if( wptbDlementDatas.length > 0 ) {
+                                wptbDlementDatas = wptbDlementDatas.innerHTML;
+                            } else {
+                                wptbDlementDatas = '';
+                            }
+                            if( window.wptbTableStateSaving && Array.isArray( window.wptbTableStateSaving ) ) {
+                                let lastElem = window.wptbTableStateSaving[window.wptbTableStateSaving.length - 1];
+                                let wptbPreviewTable = document.getElementsByClassName( 'wptb-preview-table' );
+                                if( wptbPreviewTable.length > 0 ) {
+                                    wptbPreviewTable = wptbPreviewTable[0];
+                                    
+                                    let wptbNewPreviewTable = wptbPreviewTable.cloneNode( true );
+                                    let mceContentBodys = wptbNewPreviewTable.querySelectorAll( '.mce-content-body' );
+                                    if( mceContentBodys.length > 0 ) {
+                                        for ( let k = 0; k < mceContentBodys.length; k++ ) {
+                                            mceContentBodys[k].classList.remove( 'mce-content-body' );
+                                        }
+                                    }
+
+                                    let dataMceStyle = wptbNewPreviewTable.querySelectorAll( '[data-mce-style]' );
+                                    if ( dataMceStyle.length > 0 ) {
+                                        for ( let k = 0; k < dataMceStyle.length; k++ ) {
+                                            dataMceStyle[k].removeAttribute( 'data-mce-style' );
+                                        }
+                                    }
+
+                                    let mceIds = wptbNewPreviewTable.querySelectorAll( '[id^=mce_]' );
+                                    if ( mceIds.length > 0 ) {
+                                        for ( let k = 0; k < mceIds.length; k++ ) {
+                                            mceIds[k].removeAttribute( 'id' );
+                                        }
+                                    }
+                                    
+                                    lastElem[0] = wptbNewPreviewTable;
+                                }
+                                
+                                lastElem[2] = wptbDlementDatas;
+                                let styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
+                                lastElem[3] = styleObjJson;
+                                window.wptbTableStateSaving[window.wptbTableStateSaving.length - 1] = lastElem;
                             }
                         }
                         
@@ -182,11 +234,23 @@ class Control_Color extends Base_Control {
                                                 if( selectors[i][1] ) {
                                                     if( Array.isArray( selectors[i][1] ) ) {
                                                         for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                            selectorElements[j].style[selectors[i][1][k]] = uiColor;
+                                                            selectorElements[j].style[selectors[i][1][k]] = '';
+                                                            WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1][k], uiColor );
                                                         }
                                                     } else {
-                                                        selectorElements[j].style[selectors[i][1]] = uiColor;
+                                                        selectorElements[j].style[selectors[i][1]] = '';
+                                                        WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1], uiColor );
                                                     }
+                                                }
+                                            }
+                                        } else {
+                                            if( selectors[i][0] && selectors[i][1] ) {
+                                                if( Array.isArray( selectors[i][1] ) ) {
+                                                    for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                        WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1][k], uiColor );
+                                                    }
+                                                } else {
+                                                    WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1], uiColor );
                                                 }
                                             }
                                         }
@@ -199,6 +263,7 @@ class Control_Color extends Base_Control {
                                     targetInput.value = uiColor;
                                 }
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
+                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
                                 wpColorPickerCheckChangeForTableStateSaving( event );
                             },
                             clear: function( event ) {
@@ -211,10 +276,22 @@ class Control_Color extends Base_Control {
                                                     if( Array.isArray( selectors[i][1] ) ) {
                                                         for( let k = 0; k < selectors[i][1].length; k++ ) {
                                                             selectorElements[j].style[selectors[i][1][k]] = '';
+                                                            WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1][k], '' );
                                                         }
                                                     } else {
                                                         selectorElements[j].style[selectors[i][1]] = '';
+                                                        WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1], '' );
                                                     }
+                                                }
+                                            }
+                                        } else {
+                                            if( selectors[i][0] && selectors[i][1] ) {
+                                                if( Array.isArray( selectors[i][1] ) ) {
+                                                    for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                        WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1][k], '' );
+                                                    }
+                                                } else {
+                                                    WPTB_Helper.managerExternalCssStyles( dataSelectorElement, selectors[i][0], selectors[i][1], '' );
                                                 }
                                             }
                                         }
@@ -222,6 +299,7 @@ class Control_Color extends Base_Control {
                                 }
                                 
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
+                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
                                 wpColorPickerCheckChangeForTableStateSaving( event );
                             }
                         });

@@ -155,26 +155,6 @@ class Preview {
         
     }
     
-    function head_hook_css() {
-        // Check nonce
-        $nonce = sanitize_text_field( $_GET['_wpnonce'] );
-        
-        $css_text = '';
-        
-        if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
-            $content = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
-            $css_text .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_frontend', true );
-        } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
-            $content = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
-            $css_text .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_table_elements_styles_preview_', true );
-        }
-        
-        $css_text .= Tables::look_shortcode_wptb( $content, '_wptb_table_elements_styles_frontend', 0, array( absint( $this->table_data->ID ) ) );
-
-        echo '<style>' . $css_text . '</style>';
-    }
-    
-    
     /**
 	 * Adds functions to event handlers and filtering functions 
      * for displaying necessary content.
@@ -182,8 +162,6 @@ class Preview {
 	 * @since 1.0.1
 	 */
 	public function hooks() {
-        
-        add_action( 'wp_head', array( $this, 'head_hook_css' ) );
 
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 
@@ -258,7 +236,51 @@ class Preview {
             $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
         }
         
-        $content = do_shortcode( $content );
+        // prepating html encoding for looking for shortcodes using DOMDocument
+        $html_encoding = mb_detect_encoding( $content );
+        if( $html_encoding != 'UTF-8' ) {
+            $content = mb_convert_encoding( $content, "UTF-8", $html_encoding );
+        }
+        
+        $content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'utf-8' );
+        
+        $dom = new \DOMDocument( '1.0', 'UTF-8' );
+        $dom->validateOnParse = true;
+        $dom->encoding="UTF-8";
+        $dom->loadHTML( $content );
+        $divs = $dom->getElementsByTagName( 'div' );
+        $shortcodes = array();
+        foreach ( $divs as $div ) {
+            $classes = $div->getAttribute( 'class' );
+            if ( strpos( $classes, 'wptb-shortcode-container' ) !== false ) {
+                $div_outer_html = trim( $div->ownerDocument->saveHTML( $div ) );
+                
+                if( ! isset( $args['internal_shortcodes_stop'] ) && $div_outer_html ) {
+                    $pattern = get_shortcode_regex();
+
+                    if ( preg_match_all( '/'. $pattern .'/s', $div_outer_html, $matches ) ) {
+
+                        for( $i = 0; $i < count( $matches[0] ); $i++ ) {
+                            $shortcode = $matches[0][$i];
+                            if( $matches[2][$i] == 'wptb' ) {
+
+                                $shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
+
+                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $div_outer_html );
+
+                                $content = str_replace( $div_outer_html, $div_outer_html_new, $content );
+
+                                $content = str_replace( $div_outer_html_new, do_shortcode( $div_outer_html_new ), $content );
+                            } else {
+                                $content = str_replace( $div_outer_html, do_shortcode( $div_outer_html ), $content );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        //$content = do_shortcode( $content );
         $content = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
                 . '<div class="wptb-table-container-matrix">' . $content . '</div>'
                 . '</div>';

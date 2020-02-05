@@ -27,58 +27,7 @@ class Tables {
 		add_filter( 'manage_wptb-tables_posts_columns', [ $this,'addHeader' ] );
 		add_filter( 'post_row_actions', [ $this,'customizeActions'], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column' , [ $this,'addContent' ], 10, 2 );
-        
-        add_action( 'wp_head', array( $this, 'head_hook_css' ));
 	}
-    
-    public function head_hook_css() {
-        global $post;
-        
-        $content = $post->post_content;
-        
-        $css_text = self::look_shortcode_wptb( $content, '_wptb_table_elements_styles_frontend', 0 );
-        
-        if( $css_text ) {
-            echo '<style>' . $css_text . '</style>';
-        }
-    }
-    
-    public static function look_shortcode_wptb( $content, $post_meta_key, $iter, $paramsIdWere ) {
-        if( $iter < 5 ) {
-            $pattern = get_shortcode_regex( array( 'wptb' ) );
-            if ( preg_match_all( '/'. $pattern .'/s', $content, $matches ) ) {
-                // Custom post type arguments, which can be filtered if needed
-                $paramsAll = $matches[3];
-
-                $css_text = '';
-                if( ! $paramsIdWere ) $paramsIdWere = array();
-                
-                for( $i = 0; $i < count( $matches[3] ); $i++ ) {
-                    $paramsArr = explode( ' id=', $matches[3][$i] );
-                    if( $matches[2][$i] == 'wptb' ) {
-                        $id = ( int )$paramsArr[1];
-                        if( in_array( $id, $paramsIdWere ) ) continue;
-                        array_push( $paramsIdWere, $id );
-                        $css = get_post_meta( $id , $post_meta_key, true );
-                        if( $css ) {
-                            $css_text .= $css;
-                        }
-                    }
-
-                    $new_shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
-                    $new_content = do_shortcode( $new_shortcode );
-                    $iter += 1;
-                    $css_text .= self::look_shortcode_wptb( $new_content, $post_meta_key, $iter, $paramsIdWere );
-                }
-
-                return $css_text;
-            } else {
-                return '';
-            }
-        } else {
-            return '';
-        }
-    }
 
 	function customizeActions( $actions, $post ) { 
 
@@ -150,29 +99,49 @@ class Tables {
     public function get_table( $args ) { 
         do_action( 'wptb_frontend_enqueue_style' );
         do_action( 'wptb_frontend_enqueue_script' );
-    	//$uniqueSequence = 't'.substr( md5(time()),0,8 );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
-        //$html = json_decode( $html );
         
-        if( ! isset( $args['internal_shortcodes_stop'] ) && $html ) {
-            if( ! isset( $args['internal_shortcodes_nesting_number'] ) || $args['internal_shortcodes_nesting_number'] <= 5 ) {
-                $pattern = get_shortcode_regex();
+        // prepating html encoding for looking for shortcodes using DOMDocument
+        $html_encoding = mb_detect_encoding( $html );
+        if( $html_encoding != 'UTF-8' ) {
+            $html = mb_convert_encoding( $html, "UTF-8", $html_encoding );
+        }
+        
+        $html = mb_convert_encoding( $html, 'HTML-ENTITIES', 'utf-8' );
+        
+        $dom = new \DOMDocument( '1.0', 'UTF-8' );
+        $dom->validateOnParse = true;
+        $dom->encoding="UTF-8";
+        $dom->loadHTML( $html );
+        $divs = $dom->getElementsByTagName( 'div' );
+        $shortcodes = array();
+        foreach ( $divs as $div ) {
+            $classes = $div->getAttribute( 'class' );
+            if ( strpos( $classes, 'wptb-shortcode-container' ) !== false ) {
+                $div_outer_html = trim( $div->ownerDocument->saveHTML( $div ) );
                 
-                if ( preg_match_all( '/'. $pattern .'/s', $html, $matches ) ) {
+                if( ! isset( $args['internal_shortcodes_stop'] ) && $div_outer_html ) {
+                    $pattern = get_shortcode_regex();
 
-                    for( $i = 0; $i < count( $matches[0] ); $i++ ) {
-                        $shortcode = $matches[0][$i];
-                        if( $matches[2][$i] == 'wptb' ) {
-                            $internal_shortcodes_nesting_number = $args['internal_shortcodes_nesting_number'] ? 
-                                    $args['internal_shortcodes_nesting_number'] + 1 : 1;
-                            $shortcode = str_replace( ']' , ' internal_shortcodes_nesting_number="' . $internal_shortcodes_nesting_number . '"]' , $matches[0][$i] );
+                    if ( preg_match_all( '/'. $pattern .'/s', $div_outer_html, $matches ) ) {
 
-                            $html = str_replace( $matches[0][$i] , $shortcode , $html );
+                        for( $i = 0; $i < count( $matches[0] ); $i++ ) {
+                            $shortcode = $matches[0][$i];
+                            if( $matches[2][$i] == 'wptb' ) {
+
+                                $shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
+
+                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $div_outer_html );
+
+                                $html = str_replace( $div_outer_html, $div_outer_html_new, $html );
+
+                                $html = str_replace( $div_outer_html_new, do_shortcode( $div_outer_html_new ), $html );
+                            } else {
+                                $html = str_replace( $div_outer_html, do_shortcode( $div_outer_html ), $html );
+                            }
                         }
                     }
                 }
-                
-                $html = do_shortcode( $html );
             }
         }
         

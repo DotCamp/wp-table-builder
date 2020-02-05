@@ -5,21 +5,16 @@ let elementControlTargetUnicClass = 'wptb-el-' + infArr[1] + '-' + controlKey;
 tinyMCE.init({
     target: element.childNodes[0],
     inline: true,
-    plugins: "code",
-    //dialog_type: "modal",
-    //theme: 'modern',
+    plugins: "link, paste",
+    dialog_type: "modal",
+    theme: 'modern',
     menubar: false,
     force_br_newlines : false,
     force_p_newlines : false,
     forced_root_block : '',
-    paste_as_text: false,
+    paste_as_text: true,
     toolbar: false,
-    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],\n\
-                            mask[*],path[*],line[*],marker[*],rect[*],circle[*],\n\
-                            ellipse[*],polygon[*],polyline[*],linearGradient[*],\n\
-                            radialGradient[*],stop[*],image[*],view[*],text[*],\n\
-                            textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]",
-    setup: function ( ed ) {
+    setup : function( ed ) {
         
         ed.on( 'input', function( e ) {
             let elementControlTextarea = document.getElementsByClassName( elementControlTargetUnicClass );
@@ -30,35 +25,26 @@ tinyMCE.init({
             WPTB_Helper.controlsStateManager( elementControlTargetUnicClass, true );
         });
         
-        ed.on( 'focus', function(  ) {
-            ed.targetElm.innerText = ed.targetElm.innerHTML;
-        });
-        
-        ed.on( 'blur', function(  ) {
-            ed.targetElm.innerHTML = ed.targetElm.innerText;
-        });
-        
         ed.on( 'keydown', function( e ) {
             let div = e.target;
             let divText = div.innerHTML.replace( /\s+/g, ' ' ).trim();
             divText = divText.replace( /&nbsp;/g, '').trim();
             
-            if( ! window.htmlElemKeyDown ) {
-                window.htmlElemKeyDown = divText;
+            if( ! window.shortcodeElemKeyDown ) {
+                window.shortcodeElemKeyDown = divText;
             }
         });
         
         ed.on( 'keyup', function(e) {
-            console.log('keyup');
             let div = e.target;
             let divText = div.innerHTML.replace( /\s+/g, ' ' ).trim();
             divText = divText.replace( /&nbsp;/g, '').trim();
-            if( divText !== window.htmlElemKeyDown ) {
+            if( divText !== window.shortcodeElemKeyDown ) {
                 e.target.onblur = function() {
                     let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                     wptbTableStateSaveManager.tableStateSet();
 
-                    window.htmlElemKeyDown = '';
+                    window.shortcodeElemKeyDown = '';
                     e.target.onblur = '';
                 }
             } else {
@@ -72,6 +58,6 @@ element.addEventListener( 'wptb-control:' + elementControlTargetUnicClass, funct
     let targetElm = element.getElementsByClassName( 'mce-content-body' );
     if( targetElm.length > 0 ) {
         targetElm = targetElm[0];
-        targetElm.innerHTML = event.detail.value;
+        targetElm.innerText = event.detail.value;
     }
 }, false );

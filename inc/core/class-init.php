@@ -109,7 +109,7 @@ class Init {
             add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
         }
 	}
-    
+
     /**
      * Singleton pattern, making only one instance of the class.
      *

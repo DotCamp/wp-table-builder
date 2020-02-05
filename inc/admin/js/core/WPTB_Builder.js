@@ -28,10 +28,6 @@
                             body.appendChild( elementsSettingTemplateJs );
                         }
                         
-                        if( ans[3] ) {
-                            WPTB_Helper.elementsStylesSetFromObject( ans[3] );
-                        }
-                        
                         WPTB_Table();
                         let element = document.querySelector( '.wptb-preview-table' );
                         if( element ) {

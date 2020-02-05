@@ -10,12 +10,12 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Custom_Html_Element extends Element_Base_Object {
+class Shortcode_Element extends Element_Base_Object {
     
     /**
 	 * Get element name.
 	 *
-	 * Retrieve custom html editor element name.
+	 * Retrieve shortcode editor element name.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -23,13 +23,13 @@ class Custom_Html_Element extends Element_Base_Object {
 	 * @return string element name.
 	 */
 	public function get_name() {
-		return 'custom_html';
+		return 'shortcode';
 	}
 
 	/**
 	 * Get element title.
 	 *
-	 * Retrieve custom html editor element title.
+	 * Retrieve shortcode editor element title.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -37,13 +37,13 @@ class Custom_Html_Element extends Element_Base_Object {
 	 * @return string Element title.
 	 */
 	public function get_title() {
-		return esc_html_e( 'Custom HTML', 'wp-table-builder' );
+		return esc_html_e( 'Shortcode', 'wp-table-builder' );
 	}
 
 	/**
 	 * Get directory icon.
 	 *
-	 * Return directory custom html editor element icon.
+	 * Return directory shortcode editor element icon.
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -51,13 +51,13 @@ class Custom_Html_Element extends Element_Base_Object {
 	 * @return string directory Element icon.
 	 */
 	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/custom-html.svg'; ;
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/shortcode.svg'; ;
 	}
     
     /**
 	 * Get url icon.
 	 *
-	 * Return url custom html icon
+	 * Return url shortcode icon
 	 *
 	 * @since 1.1.2
 	 * @access public
@@ -65,17 +65,17 @@ class Custom_Html_Element extends Element_Base_Object {
 	 * @return string Url Element icon.
 	 */
 	public function get_url_icon() {
-		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/custom-html.svg' );
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/shortcode.svg' );
 	}
     
     /**
-	 * Include file with js script for element custom html
+	 * Include file with js script for element shortcode
 	 *
 	 * @since 1.1.2
 	 * @access protected
 	 */
     public function element_script() {
-        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/custom-html-element.js' );
+        return wp_normalize_path ( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/element-classes/element-scripts/shortcode-element.js' );
     }
     
     /**
@@ -91,7 +91,7 @@ class Custom_Html_Element extends Element_Base_Object {
 		$this->add_control(
 			'section_header',
 			[
-				'label' => __( 'Custom Html Options', 'wp_table_builder' ),
+				'label' => __( 'Element Shortcode Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
                 'buttonBack' => true
 			]
@@ -100,17 +100,17 @@ class Custom_Html_Element extends Element_Base_Object {
         $this->add_control(
             'textarea',
 			[
-				'label' => __( 'Insert HTML', 'wp_table_builder' ),
+				'label' => __( 'Insert Shortcode', 'wp_table_builder' ),
 				'type' => Controls_Manager::TEXTAREA,
-                'placeholder' => __( 'Insert HTML Code Here', 'wp_table_builder' ),
+                'placeholder' => __( 'Insert Shortcode Here', 'wp_table_builder' ),
                 'rows' => 5,
-                'defaultValue' => 'Insert Custom HTML'
+                'defaultValue' => '[Shortcode]'
 			]  
         );
 	}
     
     /**
-	 * Render custom html editor element output in the editor.
+	 * Render shortcode editor element output in the editor.
 	 *
 	 * Written as a wp js template and used to generate the live preview.
 	 *
@@ -119,9 +119,7 @@ class Custom_Html_Element extends Element_Base_Object {
 	 */
 	protected function _content_template() {
 		?>
-        <div class="wptb-custom-html-wrapper" data-wptb-new-element="1">
-            <span>Insert Custom HTML</span>
-        </div>
+        <div>[Shortcode]</div>
 		<?php
 	}
 }

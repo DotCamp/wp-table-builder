@@ -69,6 +69,8 @@ var WPTB_Cell = function ( callback, DOMElement ) {
             element = element.getDOMElement();
             
             DOMElement.appendChild( element );
+            
+            WPTB_innerElementSet( element );
         }
     }
     

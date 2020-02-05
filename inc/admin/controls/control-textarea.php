@@ -54,6 +54,7 @@ class Control_Textarea extends Base_Control {
                 placeholder,
                 rows,
                 cols,
+                defaultValue,
                 elemContainer,
                 targetTextareaAddClass = '';
                 
@@ -67,6 +68,10 @@ class Control_Textarea extends Base_Control {
                 
             if( data.cols ) {
                 cols = data.cols;
+            }
+            
+            if( data.defaultValue ) {
+                defaultValue = data.defaultValue;
             }
             
             if( data.placeholder ) {
@@ -86,7 +91,7 @@ class Control_Textarea extends Base_Control {
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-12">
                 <textarea class="wptb-number wptb-element-property {{{targetTextareaAddClass}}}" 
-                          rows="{{{rows}}}" cols="{{{cols}}}" placeholder="{{{placeholder}}}" data-element="{{{elemContainer}}}" style="width: 100%"></textarea>
+                          rows="{{{rows}}}" cols="{{{cols}}}" placeholder="{{{placeholder}}}" data-element="{{{elemContainer}}}" style="width: 100%">{{{defaultValue}}}</textarea>
             </div>
         </div>
         

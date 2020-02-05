@@ -93,7 +93,7 @@ var WPTB_DropHandle = function (thisElem, e) {
             wptbDropHandle.style.display = 'none';
             wptbDropBorderMarker.style.display = 'none';
             
-            WPTB_innerElementSet(element);
+            WPTB_innerElementSet( element );
             if( ! element.classList.contains( 'wptb-image-container' ) || element.wptbMovingMode == 1 ) {
                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
