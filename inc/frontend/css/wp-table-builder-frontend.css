@@ -129,6 +129,7 @@ table.wptb-preview-table-mobile {
 
 .wptb-image-wrapper img {
     width: 100%;
+    height: auto;
 }
 
 .wptb-text-container>div,
