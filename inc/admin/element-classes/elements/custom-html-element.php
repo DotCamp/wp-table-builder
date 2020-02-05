@@ -91,7 +91,7 @@ class Custom_Html_Element extends Element_Base_Object {
 		$this->add_control(
 			'section_header',
 			[
-				'label' => __( 'Custom Html Options', 'wp_table_builder' ),
+				'label' => __( 'Custom HTML Options', 'wp_table_builder' ),
 				'type' => Controls_Manager::SECTION_HEADER,
                 'buttonBack' => true
 			]

@@ -2,8 +2,8 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 5.2
-Stable tag: 1.1.2
+Tested up to: 5.3
+Stable tag: 1.1.3
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -17,13 +17,15 @@ WP Table Builder is a drag and drop table builder plugin for WordPress. It's ins
 
 WP Table Builder is perfect for creating comparison tables, pricing tables, list tables and many more.
 
-The builder comes with 5 elements right now. You can add the following elements in a table:
+The builder comes with 7 elements right now. You can add the following elements in a table:
 
 * Text
 * Image
 * List
 * Button
 * Star Rating
+* Custom HTML
+* Shortcode
 
 All the elements come with customization options of their own.
 
@@ -70,6 +72,17 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.1.3 = 
+
+ADD: Custom HTML Element
+ADD: Shortcode Element
+ADD: Double Click On Cell to Add Text Element.
+ADD: Option to Change/Replace Image in Image Element.
+ADD: Option to Change Button Text Size.
+ADD: Frontend Link to Edit Table When Logged in.
+FIX: Image Height Issue / Image getting stretched.
+FIX: Bug in Cell Width Change function.
 
 = 1.1.2 =
 
