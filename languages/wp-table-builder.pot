@@ -1,4 +1,4 @@
-# Copyright (C) 2019 wptb
+# Copyright (C) 2020 wptb
 # This file is distributed under the same license as the wptb package.
 msgid ""
 msgstr ""
@@ -16,39 +16,43 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-admin-menu.php:97, ../inc/admin/class-admin-menu.php:109
+#: ../inc/admin/class-admin-menu.php:109, ../inc/admin/class-admin-menu.php:121
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:98, ../inc/admin/class-admin-menu.php:119
+#: ../inc/admin/class-admin-menu.php:110, ../inc/admin/class-admin-menu.php:131
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:110, ../inc/admin/class-admin-menu.php:189
+#: ../inc/admin/class-admin-menu.php:122, ../inc/admin/class-admin-menu.php:201
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:120, ../inc/admin/class-admin-menu.php:193
+#: ../inc/admin/class-admin-menu.php:132, ../inc/admin/class-admin-menu.php:205
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:132
+#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:134
 msgstr ""
 
 #: ../inc/admin/class-tables.php:36
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:192
+#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:195, ../inc/admin/element-classes/elements/shortcode-element.php:40
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:191
+#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:194
 msgid "Title"
 msgstr ""
 
 #: ../inc/admin/class-tables.php:50
 msgid "Date"
+msgstr ""
+
+#: ../inc/admin/class-tables.php:151
+msgid "Edit Table"
 msgstr ""
 
 #: ../inc/admin/class-wptb-listing.php:23
@@ -60,48 +64,56 @@ msgid "WPTB Tables"
 msgstr ""
 
 #. translators: %s - admin area page builder page URL.
-#: ../inc/admin/class-wptb-listing.php:113
+#: ../inc/admin/class-wptb-listing.php:115
 msgid "Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a go</a>?"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:142
+#: ../inc/admin/class-wptb-listing.php:144
 msgid "Edit This Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:193
+#: ../inc/admin/class-wptb-listing.php:196
 msgid "Created"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:194
+#: ../inc/admin/class-wptb-listing.php:197
 msgid "ID"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:257
+#: ../inc/admin/class-wptb-listing.php:260
 msgid "Table duplicate successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:273
+#: ../inc/admin/class-wptb-listing.php:276
 msgid "Table deleted successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:297
+#: ../inc/admin/class-wptb-listing.php:300
 msgid "Bulk Delete Performed Successfully."
 msgstr ""
 
-#: ../inc/core/class-preview.php:169
+#: ../inc/core/class-preview.php:135
+msgid "Generating preview..."
+msgstr ""
+
+#: ../inc/core/class-preview.php:208
 msgid "%s Preview"
 msgstr ""
 
-#: ../inc/core/class-preview.php:170
+#: ../inc/core/class-preview.php:209
 msgid "Table"
 msgstr ""
 
-#: ../inc/core/class-preview.php:187
+#: ../inc/core/class-preview.php:226
 msgid "This is a preview of your table. This page is not publicly accessible."
 msgstr ""
 
 #: ../inc/admin/element-classes/elements/button-element.php:40, ../inc/admin/views/builder/additional-element.php:3
 msgid "Button"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/custom-html-element.php:40
+msgid "Custom HTML"
 msgstr ""
 
 #: ../inc/admin/element-classes/elements/image-element.php:40
@@ -112,15 +124,15 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:191
+#: ../inc/admin/element-classes/elements/list-element.php:192
 msgid "List Item 1"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:197
+#: ../inc/admin/element-classes/elements/list-element.php:198
 msgid "List Item 2"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:203
+#: ../inc/admin/element-classes/elements/list-element.php:204
 msgid "List Item 3"
 msgstr ""
 
@@ -132,96 +144,56 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:77
+#: ../inc/admin/views/builder/table-settings-element.php:35
+msgid "Table Setting"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:83
 msgid "</> Embed"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:84
+#: ../inc/admin/views/builder/wptb-builder-header.php:90
 msgid "Preview"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:89
+#: ../inc/admin/views/builder/wptb-builder-header.php:95
 msgid "Save Table"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:102
+#: ../inc/admin/views/builder/wptb-builder-header.php:108
 msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:38
-msgid "Table Settings"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:49
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:66
 msgid "You are currently editing the table cells. Click \"Close\" to go back to editing the table."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:50
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:67
 msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:52, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:52, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
 msgid "Close"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:63
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:80
 msgid "Column Width"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:78, ../inc/admin/views/builder/wptb-builder-left-panel.php:103
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:95, ../inc/admin/views/builder/wptb-builder-left-panel.php:120
 msgid "Fixed"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:79, ../inc/admin/views/builder/wptb-builder-left-panel.php:104
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:96, ../inc/admin/views/builder/wptb-builder-left-panel.php:121
 msgid "Auto"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:88
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:105
 msgid "Row Height"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:19
-msgid "Make Table Responsive"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:30
-msgid "Top Row As Header"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:40
-msgid "Table Border"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:53
-msgid "Apply Inner Border"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:63
-msgid "Inner Border Size"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:78
-msgid "Border Color"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:88
-msgid "Cell Padding"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:104
-msgid "Header Background"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:116
-msgid "Even Row Background"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-settings.php:128
-msgid "Odd Row Background"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-table-setup.php:13
