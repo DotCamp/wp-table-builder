@@ -101,43 +101,26 @@ class Tables {
         do_action( 'wptb_frontend_enqueue_script' );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         
-        // prepating html encoding for looking for shortcodes using DOMDocument
-        $html_encoding = mb_detect_encoding( $html );
-        if( $html_encoding != 'UTF-8' ) {
-            $html = mb_convert_encoding( $html, "UTF-8", $html_encoding );
-        }
-        
-        $html = mb_convert_encoding( $html, 'HTML-ENTITIES', 'utf-8' );
-        
-        $dom = new \DOMDocument( '1.0', 'UTF-8' );
-        $dom->validateOnParse = true;
-        $dom->encoding="UTF-8";
-        $dom->loadHTML( $html );
-        $divs = $dom->getElementsByTagName( 'div' );
-        $shortcodes = array();
-        foreach ( $divs as $div ) {
-            $classes = $div->getAttribute( 'class' );
-            if ( strpos( $classes, 'wptb-shortcode-container' ) !== false ) {
-                $div_outer_html = trim( $div->ownerDocument->saveHTML( $div ) );
-                
-                if( ! isset( $args['internal_shortcodes_stop'] ) && $div_outer_html ) {
+        if ( preg_match_all( '|<!--wptb_shortcode_start-->(.+)<!--wptb_shortcode_end-->|isU', $html, $arr ) ) { 
+            foreach ( $arr[1] as $value ) {
+                if( ! isset( $args['internal_shortcodes_stop'] ) && $value ) {
                     $pattern = get_shortcode_regex();
 
-                    if ( preg_match_all( '/'. $pattern .'/s', $div_outer_html, $matches ) ) {
+                    if ( preg_match_all( '/'. $pattern .'/s', $value, $matches ) ) {
 
                         for( $i = 0; $i < count( $matches[0] ); $i++ ) {
                             $shortcode = $matches[0][$i];
-                            if( $matches[2][$i] == 'wptb' ) {
+                            if( isset( $matches[2][$i] ) && $matches[2][$i] == 'wptb' ) {
 
                                 $shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
 
-                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $div_outer_html );
+                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $value );
 
-                                $html = str_replace( $div_outer_html, $div_outer_html_new, $html );
+                                $html = str_replace( $value, $div_outer_html_new, $html );
 
                                 $html = str_replace( $div_outer_html_new, do_shortcode( $div_outer_html_new ), $html );
                             } else {
-                                $html = str_replace( $div_outer_html, do_shortcode( $div_outer_html ), $html );
+                                $html = str_replace( $value, do_shortcode( $value ), $html );
                             }
                         }
                     }

@@ -223,7 +223,7 @@ class Preview {
 	 */
 	public function the_content() {
 
-		$content = esc_html__( 'This is a preview of your table. This page is not publicly accessible.', 'wp-table-builder' );
+		$html = esc_html__( 'This is a preview of your table. This page is not publicly accessible.', 'wp-table-builder' );
         
         do_action( 'wptb_frontend_enqueue_style' );
         do_action( 'wptb_frontend_enqueue_script' );
@@ -231,48 +231,31 @@ class Preview {
         // Check nonce
         $nonce = sanitize_text_field( $_GET['_wpnonce'] );
         if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
-            $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
+            $html .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
         } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
-            $content .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
+            $html .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
         }
         
-        // prepating html encoding for looking for shortcodes using DOMDocument
-        $html_encoding = mb_detect_encoding( $content );
-        if( $html_encoding != 'UTF-8' ) {
-            $content = mb_convert_encoding( $content, "UTF-8", $html_encoding );
-        }
-        
-        $content = mb_convert_encoding( $content, 'HTML-ENTITIES', 'utf-8' );
-        
-        $dom = new \DOMDocument( '1.0', 'UTF-8' );
-        $dom->validateOnParse = true;
-        $dom->encoding="UTF-8";
-        $dom->loadHTML( $content );
-        $divs = $dom->getElementsByTagName( 'div' );
-        $shortcodes = array();
-        foreach ( $divs as $div ) {
-            $classes = $div->getAttribute( 'class' );
-            if ( strpos( $classes, 'wptb-shortcode-container' ) !== false ) {
-                $div_outer_html = trim( $div->ownerDocument->saveHTML( $div ) );
-                
-                if( ! isset( $args['internal_shortcodes_stop'] ) && $div_outer_html ) {
+        if ( preg_match_all( '|<!--wptb_shortcode_start-->(.+)<!--wptb_shortcode_end-->|isU', $html, $arr ) ) { 
+            foreach ( $arr[1] as $value ) {
+                if( ! isset( $args['internal_shortcodes_stop'] ) && $value ) {
                     $pattern = get_shortcode_regex();
 
-                    if ( preg_match_all( '/'. $pattern .'/s', $div_outer_html, $matches ) ) {
+                    if ( preg_match_all( '/'. $pattern .'/s', $value, $matches ) ) {
 
                         for( $i = 0; $i < count( $matches[0] ); $i++ ) {
                             $shortcode = $matches[0][$i];
-                            if( $matches[2][$i] == 'wptb' ) {
+                            if( isset( $matches[2][$i] ) && $matches[2][$i] == 'wptb' ) {
 
                                 $shortcode = str_replace( ']' , ' internal_shortcodes_stop="1"]' , $matches[0][$i] );
 
-                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $div_outer_html );
+                                $div_outer_html_new = str_replace( $matches[0][$i] , $shortcode , $value );
 
-                                $content = str_replace( $div_outer_html, $div_outer_html_new, $content );
+                                $html = str_replace( $value, $div_outer_html_new, $html );
 
-                                $content = str_replace( $div_outer_html_new, do_shortcode( $div_outer_html_new ), $content );
+                                $html = str_replace( $div_outer_html_new, do_shortcode( $div_outer_html_new ), $html );
                             } else {
-                                $content = str_replace( $div_outer_html, do_shortcode( $div_outer_html ), $content );
+                                $html = str_replace( $value, do_shortcode( $value ), $html );
                             }
                         }
                     }
@@ -281,10 +264,10 @@ class Preview {
         }
         
         //$content = do_shortcode( $content );
-        $content = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
-                . '<div class="wptb-table-container-matrix">' . $content . '</div>'
+        $html = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
+                . '<div class="wptb-table-container-matrix">' . $html . '</div>'
                 . '</div>';
-        $content .= '<script>'
+        $html .= '<script>'
                 . 'var wptbContainer = document.getElementsByClassName( "wptb-table-' . absint( $this->table_data->ID ) . '" );'
                 . 'if( wptbContainer.length > 0 ) {'
                 . '    wptbContainer = wptbContainer[0];'
@@ -294,7 +277,7 @@ class Preview {
                 . '}'
                 . '</script>';
 
-		return $content;
+		return $html;
         
 	}
 

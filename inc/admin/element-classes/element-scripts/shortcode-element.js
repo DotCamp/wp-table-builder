@@ -3,7 +3,7 @@ let controlKey = 'textarea';
 let elementControlTargetUnicClass = 'wptb-el-' + infArr[1] + '-' + controlKey;
 
 tinyMCE.init({
-    target: element.childNodes[0],
+    target: element.children[0],
     inline: true,
     plugins: "link, paste",
     dialog_type: "modal",
