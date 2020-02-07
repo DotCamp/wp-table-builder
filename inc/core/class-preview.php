@@ -236,7 +236,7 @@ class Preview {
             $html .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
         }
         
-        if ( preg_match_all( '|<!--wptb_shortcode_start-->(.+)<!--wptb_shortcode_end-->|isU', $html, $arr ) ) { 
+        if ( preg_match_all( '|<wptb_shortcode_container_element>(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) { 
             foreach ( $arr[1] as $value ) {
                 if( ! isset( $args['internal_shortcodes_stop'] ) && $value ) {
                     $pattern = get_shortcode_regex();

@@ -119,9 +119,9 @@ class Shortcode_Element extends Element_Base_Object {
 	 */
 	protected function _content_template() {
 		?>
-        <!--wptb_shortcode_start-->
-        <div>[Shortcode]</div>
-        <!--wptb_shortcode_end-->
+        <wptb_shortcode_container_element>
+            <div>[Shortcode]</div>
+        </wptb_shortcode_container_element>
 		<?php
 	}
 }
