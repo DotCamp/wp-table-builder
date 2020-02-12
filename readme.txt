@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.3
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -73,16 +73,23 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.1.4 = 
+
+* FIX: PHP errors.
+* FIX: Table editing issue.
+* FIX: Table Settings not showing issue.
+* FIX: Table duplicaton issue.
+
 = 1.1.3 = 
 
-ADD: Custom HTML Element
-ADD: Shortcode Element
-ADD: Double Click On Cell to Add Text Element.
-ADD: Option to Change/Replace Image in Image Element.
-ADD: Option to Change Button Text Size.
-ADD: Frontend Link to Edit Table When Logged in.
-FIX: Image Height Issue / Image getting stretched.
-FIX: Bug in Cell Width Change function.
+* ADD: Custom HTML Element
+* ADD: Shortcode Element
+* ADD: Double Click On Cell to Add Text Element.
+* ADD: Option to Change/Replace Image in Image Element.
+* ADD: Option to Change Button Text Size.
+* ADD: Frontend Link to Edit Table When Logged in.
+* FIX: Image Height Issue / Image getting stretched.
+* FIX: Bug in Cell Width Change function.
 
 = 1.1.2 =
 
