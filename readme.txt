@@ -75,6 +75,8 @@ That's it. You're done!
 
 = 1.1.4 = 
 
+* ADD: Option to set max width for table container.
+* FIX: Table Alignment setting issue.
 * FIX: PHP errors.
 * FIX: Table editing issue.
 * FIX: Table Settings not showing issue.
