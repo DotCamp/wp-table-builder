@@ -3732,6 +3732,8 @@ var array = [],
             } else {
                 wptbTableSetup.style.float = wptbTableAlignment;
             }
+        } else {
+            table.style.float = null;
         }
     };
 

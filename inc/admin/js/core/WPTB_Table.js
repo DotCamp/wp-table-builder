@@ -794,6 +794,8 @@ var array = [], WPTB_Table = function (columns, rows) {
             } else {
                 wptbTableSetup.style.float = wptbTableAlignment;
             }
+        } else {
+            table.style.float = null;
         }
     }
     
