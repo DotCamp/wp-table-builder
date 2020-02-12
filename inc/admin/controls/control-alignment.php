@@ -192,6 +192,7 @@ class Control_Alignment extends Base_Control {
                             
                             let details = {value: buttonDataAlignment};
                             WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetAddClass}}}', selectorEl[0], details );
+                            WPTB_Helper.controlsStateManager( '{{{targetAddClass}}}', true );
                             
                             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                             wptbTableStateSaveManager.tableStateSet();
@@ -199,6 +200,7 @@ class Control_Alignment extends Base_Control {
                     }
                 }
                 
+                WPTB_Helper.controlsStateManager( '{{{targetAddClass}}}' );
             } )();
         </wptb-template-script>
 		<?php
