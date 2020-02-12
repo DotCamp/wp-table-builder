@@ -107,8 +107,43 @@ var WPTB_LeftPanel = function () {
                 } else if( inputs.makeTableResponsive == 'unchecked' ) {
                     table.dataset.wptbAdaptiveTable = 0;
                 }
+            } else if( inputs.hasOwnProperty( 'applyTableContainerMaxWidth' ) ) {
+                let wptbTableSetup = document.querySelector( '.wptb-table-setup' );
+                if( inputs.applyTableContainerMaxWidth == 'checked' ) {
+                    let table_id = WPTB_Helper.detectMode();
+
+                    if( ! table_id ) {
+                        table_id = 'startedid-0';
+                    }
+
+                    let tableContainerMaxWidthInput = document.getElementsByClassName( 'wptb-el-main-table_setting-' + table_id + '-tableContainerMaxWidth' );
+                    let tableContainerMaxWidthInputValue = 850;
+                    if( tableContainerMaxWidthInput.length > 0 ) {
+                        tableContainerMaxWidthInput = tableContainerMaxWidthInput[0];
+                        if( tableContainerMaxWidthInput.value ) tableContainerMaxWidthInputValue = tableContainerMaxWidthInput.value;
+                    }
+
+                    table.dataset.wptbTableContainerMaxWidth = tableContainerMaxWidthInputValue;
+                    if( wptbTableSetup ) wptbTableSetup.style.maxWidth = tableContainerMaxWidthInputValue + 'px';
+                } else if( inputs.applyTableContainerMaxWidth == 'unchecked' ) {
+                    table.removeAttribute( 'data-wptb-table-container-max-width' );
+                    if( wptbTableSetup ) wptbTableSetup.style.maxWidth = null;
+                }
+                    
+                table.tdDefaultWidth();
+            } else if( inputs.hasOwnProperty( 'tableContainerMaxWidth' ) ) {
+                if( inputs.tableContainerMaxWidth ) {
+                    table.dataset.wptbTableContainerMaxWidth = inputs.tableContainerMaxWidth;
+                    
+                    let wptbTableSetup = document.querySelector( '.wptb-table-setup' );
+                    if( wptbTableSetup ) wptbTableSetup.style.maxWidth = inputs.tableContainerMaxWidth + 'px';
+                    
+                    table.tdDefaultWidth();
+                }
             } else if( inputs.hasOwnProperty( 'tableManageCells' ) ) {
                 table.toggleTableEditMode();
+            } else if( inputs.hasOwnProperty( 'tableAlignmentCheckbox' ) ) {
+                table.tdDefaultWidth();
             }
         } 
     }

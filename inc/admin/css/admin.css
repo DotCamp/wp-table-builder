@@ -333,6 +333,7 @@ body>img {
     background: none;
     max-width: 870px;
     margin: auto;
+    clear: both;
 }
 
 .wptb-edit-bar.visible {
@@ -766,19 +767,22 @@ input[type="range"]::-ms-thumb {
     transition: .25s;
 }
 
-.wptb-toggle.wptb-column-width-fix-auto input:checked+i::after {
+.wptb-toggle.wptb-column-width-fix-auto input:checked+i::after,
+.wptb-toggle.wptb-size-fixed-auto input:checked+i::after{
     -webkit-transform: translateX(50px);
     transform: translateX(50px);
 }
 
-.wptb-toggle.wptb-column-width-fix-auto i {
+.wptb-toggle.wptb-column-width-fix-auto i,
+.wptb-toggle.wptb-size-fixed-auto i{
     float: left;
     width: 100px;
     border-radius: 5px;
     height: 25px;
 }
 
-.wptb-toggle.wptb-column-width-fix-auto i:after {
+.wptb-toggle.wptb-column-width-fix-auto i:after,
+.wptb-toggle.wptb-size-fixed-auto i:after{
     width: 50px;
     height: 25px;
     border-radius: 5px;

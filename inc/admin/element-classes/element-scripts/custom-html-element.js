@@ -49,7 +49,6 @@ tinyMCE.init({
         });
         
         ed.on( 'keyup', function(e) {
-            console.log('keyup');
             let div = e.target;
             let divText = div.innerHTML.replace( /\s+/g, ' ' ).trim();
             divText = divText.replace( /&nbsp;/g, '').trim();

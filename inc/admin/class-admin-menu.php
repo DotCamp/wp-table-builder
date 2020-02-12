@@ -46,7 +46,7 @@ class Admin_Menu {
         
         if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
             
-            if( ! isset( $params->id ) || ! absint( $params->id ) || ! get_post_meta( absint( $params->id ) , '_wptb_content_', true ) ) {
+            if( ! isset( $params->id ) || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
                 $id = wp_insert_post([
                     'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',

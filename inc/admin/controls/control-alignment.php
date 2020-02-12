@@ -83,7 +83,7 @@ class Control_Alignment extends Base_Control {
                 styleAlignment = data.selectors[prop];
             }
             
-            if( styleAlignment == 'text-align' ) {
+            if( styleAlignment == 'text-align' || styleAlignment.indexOf( 'data-' ) === 0 ) {
                 left = 'left';
                 center = 'center';
                 right = 'right';
@@ -140,15 +140,28 @@ class Control_Alignment extends Base_Control {
                 if( selectorEl.length && '{{{styleAlignment}}}' ) {
                     for( let i = 0; i < selectorEl.length; i++ ) {
                         if( i === 0 ) {
-                            selectedButtonAlignment = selectorEl[i].style['{{{styleAlignment}}}'];
+                            if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
+                                selectedButtonAlignment = selectorEl[i].getAttribute( '{{{styleAlignment}}}' );
+                            } else {
+                                selectedButtonAlignment = selectorEl[i].style['{{{styleAlignment}}}'];
+                            }
                         }
                         
-                        if( i > 0 && selectedButtonAlignment != selectorEl[i].style['{{{styleAlignment}}}'] ) {
-                            selectedButtonAlignment = false;
+                        if( i > 0 ) {
+                            if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
+                                if ( selectedButtonAlignment != selectorEl[i].getAttribute( '{{{styleAlignment}}}' ) ) {
+                                    selectedButtonAlignment = false;
+                                }
+                            } else {
+                                if ( selectedButtonAlignment != selectorEl[i].style['{{{styleAlignment}}}'] ) {
+                                    selectedButtonAlignment = false;
+                                }
+                            }
                         }
                     }
                     
                 }
+                
                 for ( var i = 0; i < buttons.length; i++ ) {
                     if( selectedButtonAlignment ) {
                         buttons[i].classList.remove( 'selected' );
@@ -160,11 +173,15 @@ class Control_Alignment extends Base_Control {
 
                     buttons[i].onclick = function () {
                         let selectorEl = document.querySelectorAll( '{{{selector}}}' );
-                        if( selectorEl.length && '{{{styleAlignment}}}' ) {
+                        if( selectorEl.length > 0 && '{{{styleAlignment}}}' ) {
                             let buttonDataAlignment = this.dataset.alignmentValue;
                             
                             for( let i = 0; i < selectorEl.length; i++ ) {
-                                selectorEl[i].style['{{{styleAlignment}}}'] = buttonDataAlignment;
+                                if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
+                                    selectorEl[i].setAttribute( '{{{styleAlignment}}}', buttonDataAlignment );
+                                } else {
+                                    selectorEl[i].style['{{{styleAlignment}}}'] = buttonDataAlignment;
+                                }
                             }
 
                             var b = this.parentNode.getElementsByClassName( 'wptb-btn-size-btn' );
@@ -172,12 +189,16 @@ class Control_Alignment extends Base_Control {
                                 b[i].classList.remove( 'selected' );
                             }
                             this.classList.add( 'selected' );
-
+                            
+                            let details = {value: buttonDataAlignment};
+                            WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetAddClass}}}', selectorEl[0], details );
+                            
                             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                             wptbTableStateSaveManager.tableStateSet();
                         }
                     }
                 }
+                
             } )();
         </wptb-template-script>
 		<?php

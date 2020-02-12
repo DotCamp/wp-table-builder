@@ -8,7 +8,7 @@
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             http.onreadystatechange = function (d) {
                 if (this.readyState == 4 && this.status == 200) {
-                    var ans = JSON.parse(http.responseText);
+                    var ans = JSON.parse( http.responseText );
                     document.getElementById('wptb-setup-name').value = ans[0];
                         
                     if( ans[1] ) {
@@ -34,6 +34,12 @@
                             let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
                             if( ! infArr ) {
                                 element.classList.add( 'wptb-element-main-table_setting-' + table_id );
+                            }
+                            
+                            if( element.dataset.wptbTableContainerMaxWidth ) {
+                                wptbTableSetupEl.style.maxWidth = element.dataset.wptbTableContainerMaxWidth + 'px';
+                                
+                                element.tdDefaultWidth();
                             }
                         }
                         

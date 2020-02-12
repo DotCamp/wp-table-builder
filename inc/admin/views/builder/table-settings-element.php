@@ -77,6 +77,30 @@ class Table_Settings_Element extends Controls_Stack {
 			]
 		);
         
+        $this->add_control(
+			'applyTableContainerMaxWidth',
+			[
+				'label' => __( 'Apply Table Container Max Width', 'wp_table_builder' ),
+				'type' => Controls_Manager::TOGGLE
+			]
+		);
+        
+		$this->add_control(
+			'tableContainerMaxWidth',
+			[
+				'label' => __( 'Table Container Max Width', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}}' => ['data-wptb-table-container-max-width']
+                ],
+                'min' => 100, 
+                'max' => 5000,
+                'defaultValue' => 850,
+                'dimension' => 'px',
+                'appearDependOnControl' => ['applyTableContainerMaxWidth', ['checked'], ['unchecked']]
+			]
+		);
+        
 		$this->add_control(
 			'tableBorder',
 			[
@@ -153,7 +177,7 @@ class Table_Settings_Element extends Controls_Stack {
 				'type' => Controls_Manager::ALIGNMENT,
                 'selected' => 1,
                 'selectors' => [
-                    '{{{data.container}}}' => 'float',
+                    '{{{data.container}}}' => 'data-wptb-table-alignment',
                 ]
 			]
 		);

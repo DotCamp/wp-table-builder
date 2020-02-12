@@ -150,10 +150,19 @@ class Control_Size extends Base_Control {
                                                 continue;
                                             }
                                             
-                                            selectorElements[i].style[cssSettingArr[j]] = this.value + '{{{dimension}}}' + '{{{addText}}}';
+                                            if( cssSettingArr[j].indexOf( 'data-' ) === 0 ) {
+                                                selectorElements[i].setAttribute( cssSettingArr[j], this.value );
+                                            } else {
+                                                selectorElements[i].style[cssSettingArr[j]] = this.value + '{{{dimension}}}' + '{{{addText}}}';
+                                            }
                                         }
                                     }
+                                    
+                                    let details = {value: this.value};
+                                    WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElements[0], details );
+                                    WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
                                 };
+                                
 
                                 event.target.onmouseup = function() {
                                     let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
@@ -172,6 +181,8 @@ class Control_Size extends Base_Control {
                                 this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
                             }
                         }
+                        
+                        WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
                     } 
                 }
             } )();

@@ -165,7 +165,6 @@ var WPTB_ActionsField = function() {
                         }
                     } else {
                         this.style.display = 'none';
-                        console.log(this);
                     }
 
                     this.actionsHide();

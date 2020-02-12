@@ -408,7 +408,6 @@ var WPTB_Helper = {
                 }
                 if( containerStylesArrOne && Array.isArray( containerStylesArrOne ) ) {
                     for( let i = 0; i < containerStylesArrOne.length; i++ ) {
-                        console.log( containerStylesArrOne );
                         if( containerStylesArrOne[i] ) {
                             containerStylesSet( containerStylesArrOne[i], containerElement );
                         }
@@ -438,6 +437,7 @@ var WPTB_Helper = {
                         let elementsSettings = elementsSettingsTemplateJs.innerHTML;
                         let controlClassesNames = [];
                         if( elementsSettings ) {
+                            elementsSettings = elementsSettings.trim();
                             elementsSettings = JSON.parse( elementsSettings );
                             if( elementsSettings && typeof elementsSettings === 'object' ) {
                                 if( 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings ) {
@@ -551,6 +551,7 @@ var WPTB_Helper = {
 
                                     let elementsSettings = elementsSettingsTemplateJs.innerHTML;
                                     if( elementsSettings ) {
+                                        elementsSettings = elementsSettings.trim();
                                         elementsSettings = JSON.parse( elementsSettings );
                                         if( elementsSettings && typeof elementsSettings === 'object' && 
                                             ( 'tmpl-wptb-el-datas-' + dependOnControlElementKind ) in elementsSettings ) {
@@ -626,6 +627,7 @@ var WPTB_Helper = {
                         elementsSettingsTemplatesJs = elementsSettingsTemplatesJs[0];
                         elementsSettings = elementsSettingsTemplatesJs.innerHTML;
                         if( elementsSettings ) {
+                            elementsSettings = elementsSettings.trim();
                             elementsSettings = JSON.parse( elementsSettings );
 
                             if( elementsSettings && typeof elementsSettings === 'object' ) {
@@ -695,8 +697,10 @@ var WPTB_Helper = {
                     } else {
                         targetControlValue = 'unchecked';
                     }
-            } else {
+            } else if( targetControls[i].type ) {
                 targetControlValue = targetControls[i].value;
+            } else if( targetControls[i].dataset.alignmentValue && targetControls[i].classList.contains( 'selected' ) ){
+                targetControlValue = targetControls[i].dataset.alignmentValue;
             }
         }
         return targetControlValue;
@@ -716,6 +720,7 @@ var WPTB_Helper = {
                     
                     let elementsSettings = elementsSettingsTemplateJs.innerHTML;
                     if( elementsSettings ) {
+                        elementsSettings = elementsSettings.trim();
                         elementsSettings = JSON.parse( elementsSettings );
                         
                         if( elementsSettings && typeof elementsSettings === 'object' ) {
@@ -751,6 +756,7 @@ var WPTB_Helper = {
             wptbElementDatas = wptbElementDatas[0];
             let elementsSettings = wptbElementDatas.innerHTML;
             if( elementsSettings ) {
+                elementsSettings = elementsSettings.trim();
                 elementsSettings = JSON.parse( elementsSettings );
                 if( elementsSettings && typeof elementsSettings === 'object' &&
                         ( ( 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] ) in elementsSettings ) ) {
@@ -867,8 +873,6 @@ var WPTB_Helper = {
                     controlappearDependOnControl.push( [data.appearDependOnControl, data.elementControlTargetUnicClass] );
                 }
             }
-
-            //console.log( controlTemplate );
 
             let wptbElementOptionContainer = document.createElement( 'div' );
             wptbElementOptionContainer.classList.add( wptbelementOptionClass, 'wptb-settings-items' );
@@ -1200,8 +1204,10 @@ var WPTB_Helper = {
                 messagingArea = document.getElementById( 'wptb-messaging-area' );
 
                 if ( data[0] == 'saved' ) {
-                    console.log(window.wptbTableStateSaving);
-                    window.history.pushState( null, null, document.location.href.replace( '#', '' ) + '&table=' + data[1] );
+                    let builderPageUrl = document.location.href.replace( '#', '' );
+                    let regex = new RegExp( '&table=(.+)', "i" );
+                    builderPageUrl = builderPageUrl.replace( regex, '' );
+                    window.history.pushState( null, null, builderPageUrl + '&table=' + data[1] );
                     
                     WPTB_Helper.saveTable( event, true );
                     return;

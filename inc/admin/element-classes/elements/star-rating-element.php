@@ -226,7 +226,7 @@ class Star_Rating_Element extends Element_Base_Object {
                     $rating_star_zero_set = '<span class="wptb-rating-star-zero-set"></span>';
                 }
 
-                $rating_star .= '<span class="wptb-rating-star-left-signal-part">' . $ratingStarZeroSet . '</span>'
+                $rating_star .= '<span class="wptb-rating-star-left-signal-part"></span>'
                             . '<span class="wptb-filled-rating-star">' . $filled_rating_star_html . '</span>'
                             . '<span class="wptb-not-filled-rating-star">' . $not_filled_rating_star_html . '</span>'
                             . '<span class="wptb-half-filled-rating-star">' . $half_filled_rating_star_html . '</span>'

@@ -64,7 +64,6 @@ let addMedia = function( element, imageChange = false ) {
 
     if ( src == undefined || imageChange == true ) {
         file_frame.open();
-        console.log(file_frame);
         file_frame.menuItemVisibility( 'gallery', 'hide' );
         file_frame.menuItemVisibility( 'playlist', 'hide' ), 
         file_frame.menuItemVisibility( 'video-playlist', 'hide' ), 
@@ -112,7 +111,12 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
-        elementsSettings = JSON.parse( elementsSettings );
+        try{
+            elementsSettings = JSON.parse( elementsSettings );
+        } catch( error ) {
+            console.log( error );
+            console.log("Json Parse Error:" + elementsSettings);
+        }
         if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArrEl[1] ) in elementsSettings ) {
             elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]];
         }

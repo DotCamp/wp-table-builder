@@ -158,6 +158,28 @@ jQuery( document ).ready( function ( $ ) {
                 previewTable = previewTable[0];
                 tableContainerMatrix = tableContainerMatrix[0];
                 previewTable.style.display = 'table';
+                
+                
+                if( previewTable.dataset.wptbTableAlignment ) {
+                    let wptbTableAlignment = previewTable.dataset.wptbTableAlignment;
+                    
+                    let wptbTableContainerWidth = tableContainer.offsetWidth;
+                    if( wptbTableContainerWidth < previewTable.offsetWidth ) {
+                        previewTable.style.float = null;
+                    } else {
+                        if( wptbTableAlignment == 'center' ) {
+                            previewTable.style.float = null;
+                        } else {
+                            previewTable.style.float = wptbTableAlignment;
+                        }
+                    }
+                    
+                    if( wptbTableAlignment == 'center' ) {
+                        tableContainer.style.float = null;
+                    } else {
+                        tableContainer.style.float = wptbTableAlignment;
+                    }
+                }
 
                 // check data parametrs reconstraction and wptbAdaptiveTable if they are both equal 1 then continue
                 if( previewTable.dataset.reconstraction == 1 && previewTable.dataset.wptbAdaptiveTable == 1 ) {
@@ -219,7 +241,6 @@ jQuery( document ).ready( function ( $ ) {
                                     let newTable = document.createElement( 'table' );
 
                                     // add css class for new mobile table
-                                    newTable.classList.add( 'wptb-preview-table-mobile' );
                                     newTable.classList.add( 'wptb-preview-table-mobile' );
                                     let infArr = previewTable.className.match( /wptb-element-main(.+)-(\d+)/i );
                                     if( infArr && Array.isArray( infArr ) ) {
@@ -452,7 +473,7 @@ jQuery( document ).ready( function ( $ ) {
     
     function wptb_tdDefaultWidth() {
         let wptbTableContainers = document.getElementsByClassName( 'wptb-table-container' );
-        let frontendEditLink = document.querySelectorAll( '.wptb-frontend-table-edit-link' );
+        //let frontendEditLink = document.querySelectorAll( '.wptb-frontend-table-edit-link' );
         for( let i = 0; i < wptbTableContainers.length; i++ ) {
             let wptbTableContainer = wptbTableContainers[i];
             
@@ -487,10 +508,10 @@ jQuery( document ).ready( function ( $ ) {
                 if( wptbTableTdsSumMaxWidth < wptbTableContainerWidth ) {
                     if( wptbCellsWidthAutoCount ) {
                         table.style.minWidth = '100%';
-
-                        if( frontendEditLink && frontendEditLink[i] ) {
-                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
-                        }
+                        
+//                        if( frontendEditLink && frontendEditLink[i] ) {
+//                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
+//                        }
 
                         if( table.mergingСellsHorizontally ) {
                             table.style.width = null;
@@ -501,21 +522,21 @@ jQuery( document ).ready( function ( $ ) {
                         } else {
                             table.style.width = '100%';
 
-                            if( frontendEditLink && frontendEditLink[i] ) {
-                                frontendEditLink[i].style.width = '100%';
-                                frontendEditLink[i].style.maxWidth = '100%';
-                            }
+//                            if( frontendEditLink && frontendEditLink[i] ) {
+//                                frontendEditLink[i].style.width = '100%';
+//                                frontendEditLink[i].style.maxWidth = '100%';
+//                            }
                         }
                     } else {
                         table.style.width = null;
                         table.style.minWidth = null;
                         table.style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
-
-                        if( frontendEditLink && frontendEditLink[i] ) {
-                            frontendEditLink[i].style.width = null;
-                            frontendEditLink[i].style.minWidth = null;
-                            frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
-                        }
+                        
+//                        if( frontendEditLink && frontendEditLink[i] ) {
+//                            frontendEditLink[i].style.width = null;
+//                            frontendEditLink[i].style.minWidth = null;
+//                            frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
+//                        }
                     }
                 } else {
                     table.style.maxWidth = null;
@@ -524,11 +545,11 @@ jQuery( document ).ready( function ( $ ) {
                     tableTdWidthAuto = '100';
                     styleElementCreate = true;
 
-                    if( frontendEditLink && frontendEditLink[i] ) {
-                        frontendEditLink[i].style.maxWidth = '100%';
-                        frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
-                        frontendEditLink[i].style.width = null;
-                    }
+//                    if( frontendEditLink && frontendEditLink[i] ) {
+//                        frontendEditLink[i].style.maxWidth = '100%';
+//                        frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
+//                        frontendEditLink[i].style.width = null;
+//                    }
                 }
 
                 let head = document.head;

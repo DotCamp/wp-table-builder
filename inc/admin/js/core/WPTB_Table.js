@@ -774,6 +774,27 @@ var array = [], WPTB_Table = function (columns, rows) {
                 head.appendChild( cssForTdsWidthAuto );
             }
         }
+        
+        if( table.dataset.wptbTableAlignment ) {
+            let wptbTableAlignment = table.dataset.wptbTableAlignment;
+
+            let wptbTableSetupWidth = wptbTableSetup.offsetWidth;
+            if( wptbTableSetupWidth < table.offsetWidth ) {
+                table.style.float = null;
+            } else {
+                if( wptbTableAlignment == 'center' ) {
+                    table.style.float = null;
+                } else {
+                    table.style.float = wptbTableAlignment;
+                }
+            }
+
+            if( wptbTableAlignment == 'center' ) {
+                wptbTableSetup.style.float = null;
+            } else {
+                wptbTableSetup.style.float = wptbTableAlignment;
+            }
+        }
     }
     
     table.addRowHeight = function( value, cleaner ) {

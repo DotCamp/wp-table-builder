@@ -55,6 +55,7 @@ class Control_Color extends Base_Control {
                 name,
                 selectors = [],
                 elemContainer,
+                selectorsJson,
                 targetInputAddClass;
              
             if( data.label ) {

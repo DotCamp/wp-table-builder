@@ -206,7 +206,12 @@ if( elementsSettingsTemplateJs.length > 0 ) {
     elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
     elementsSettings = elementsSettingsTemplateJs.innerHTML;
     if( elementsSettings ) {
-        elementsSettings = JSON.parse( elementsSettings );
+        try{
+            elementsSettings = JSON.parse( elementsSettings );
+        } catch( error ) {
+            console.log( error );
+            console.log("Json Parse Error:" + elementsSettings);
+        }
         if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) {
             elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]];
         }

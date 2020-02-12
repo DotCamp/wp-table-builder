@@ -128,7 +128,7 @@ class Tables {
             }
         }
         
-        $post_edit_link;
+        $post_edit_link = '';
         if( current_user_can( 'manage_options' ) ){
             $post_edit_link = '<div class="wptb-frontend-table-edit-link">'
                     . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
@@ -140,8 +140,12 @@ class Tables {
                 . '    wptbContainer = wptbContainer[0];'
                 . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
                 . '    if( wptbPreviewTable.length > 0 ) {'
-                . '         wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
-                . '         wptbPreviewTable[0].style.display = "none";'
+                . '        wptbPreviewTable = wptbPreviewTable[0];'
+                . '        if( wptbPreviewTable.dataset.wptbTableContainerMaxWidth ) {'
+                . '            wptbContainer.style.maxWidth = wptbPreviewTable.dataset.wptbTableContainerMaxWidth + "px";'
+                . '        }'
+                . '        wptbPreviewTable.classList.remove( "wptb-table-preview-static-indic" );'
+                . '        wptbPreviewTable.style.display = "none";'
                 . '    }'
                 . '}'
                 . '</script>';

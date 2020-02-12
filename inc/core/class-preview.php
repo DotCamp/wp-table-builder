@@ -223,7 +223,7 @@ class Preview {
 	 */
 	public function the_content() {
 
-		$html = esc_html__( 'This is a preview of your table. This page is not publicly accessible.', 'wp-table-builder' );
+		$message = esc_html__( 'This is a preview of your table. This page is not publicly accessible.', 'wp-table-builder' );
         
         do_action( 'wptb_frontend_enqueue_style' );
         do_action( 'wptb_frontend_enqueue_script' );
@@ -265,6 +265,7 @@ class Preview {
         
         //$content = do_shortcode( $content );
         $html = '<div class="wptb-table-container wptb-table-' . absint( $this->table_data->ID ) . '">'
+                . '<div style="text-align:center;">' . $message . '</div>'
                 . '<div class="wptb-table-container-matrix">' . $html . '</div>'
                 . '</div>';
         $html .= '<script>'
@@ -272,8 +273,14 @@ class Preview {
                 . 'if( wptbContainer.length > 0 ) {'
                 . '    wptbContainer = wptbContainer[0];'
                 . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
-                . '    wptbPreviewTable[0].classList.remove( "wptb-table-preview-static-indic" );'
-                . '    wptbPreviewTable[0].style.display = "none";'
+                . '    if( wptbPreviewTable.length > 0 ) {'
+                . '        wptbPreviewTable = wptbPreviewTable[0];'
+                . '        if( wptbPreviewTable.dataset.wptbTableContainerMaxWidth ) {'
+                . '            wptbContainer.style.maxWidth = wptbPreviewTable.dataset.wptbTableContainerMaxWidth + "px";'
+                . '        }'
+                . '        wptbPreviewTable.classList.remove( "wptb-table-preview-static-indic" );'
+                . '        wptbPreviewTable.style.display = "none";'
+                . '    }'
                 . '}'
                 . '</script>';
 

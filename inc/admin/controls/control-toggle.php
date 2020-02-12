@@ -52,7 +52,9 @@ class Control_Toggle extends Base_Control {
             let label,
                 selector,
                 selectors = [],
-                elemContainer;
+                elemContainer,
+                selectorsJson,
+                targetInputAddClass;
             
             if( data.label ) {
                 label = data.label;
@@ -104,7 +106,6 @@ class Control_Toggle extends Base_Control {
                                 }
                                 
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
-                                
                                 if( '{{{selectorsJson}}}' ) {
                                     let selectors = JSON.parse( '{{{selectorsJson}}}' );
                                     
@@ -117,25 +118,51 @@ class Control_Toggle extends Base_Control {
                                                         if( selectors[i][1] && Array.isArray( selectors[i][1] ) ) {
                                                             if( selectors[i][1][0] && Array.isArray( selectors[i][1][0] ) ) {
                                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                                    if( selectors[i][1][k][0] && selectors[i][1][k][1] && selectors[i][1][k][2] ) {
+                                                                    if( selectors[i][1][k][0] ) {
                                                                         let styleValue;
                                                                         if( details.value == 'checked' ) {
-                                                                            styleValue = selectors[i][1][k][1];
+                                                                            styleValue = selectors[i][1][k][1] ? selectors[i][1][k][1] : '';
                                                                         } else {
-                                                                            styleValue = selectors[i][1][k][2];
+                                                                            styleValue = selectors[i][1][k][2] ? selectors[i][1][k][2] : '';
                                                                         }
-                                                                        selectorElements[j].style[selectors[i][1][k][0]] = styleValue;
+                                                                        
+                                                                        if( selectors[i][1][k][0].indexOf( 'data-' ) === 0 ) {
+                                                                            if( styleValue ) {
+                                                                                selectorElements[j].setAttribute( selectors[i][1][k][0], styleValue );
+                                                                            } else {
+                                                                                selectorElements[j].removeAttribute( selectors[i][1][k][0] );
+                                                                            }
+                                                                        } else {
+                                                                            if( styleValue ) {
+                                                                                selectorElements[j].style[selectors[i][1][k][0]] = styleValue;
+                                                                            } else {
+                                                                                selectorElements[j].style[selectors[i][1][k][0]] = '';
+                                                                            }
+                                                                        }
                                                                     }
                                                                 }
                                                             } else {
-                                                                if( selectors[i][1][0] && selectors[i][1][1] && selectors[i][1][2] ) {
+                                                                if( selectors[i][1][0] ) {
                                                                     let styleValue;
                                                                     if( details.value == 'checked' ) {
-                                                                        styleValue = selectors[i][1][1];
+                                                                        styleValue = selectors[i][1][1] ? selectors[i][1][1] : '';
                                                                     } else {
-                                                                        styleValue = selectors[i][1][2];
+                                                                        styleValue = selectors[i][1][2] ? selectors[i][1][2] : '';
                                                                     }
-                                                                    selectorElements[j].style[selectors[i][1][0]] = styleValue;
+                                                                        
+                                                                    if( selectors[i][1][0].indexOf( 'data-' ) === 0 ) {
+                                                                        if( styleValue ) {
+                                                                            selectorElements[j].setAttribute( selectors[i][1][0], styleValue );
+                                                                        } else {
+                                                                            selectorElements[j].removeAttribute( selectors[i][1][0] );
+                                                                        }
+                                                                    } else {
+                                                                        if( styleValue ) {
+                                                                            selectorElements[j].style[selectors[i][1][0]] = styleValue;
+                                                                        } else {
+                                                                            selectorElements[j].style[selectors[i][1][0]] = '';
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
