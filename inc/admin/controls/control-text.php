@@ -51,12 +51,25 @@ class Control_Text extends Base_Control {
 		?>
         <#
             let label,
+                selectors = [],
                 placeholder,
                 elemContainer,
                 targetInputAddClass = '';
                 
             if( data.label ) {
                 label = data.label;
+            }
+            
+            let i = 0;
+            for ( let prop in data.selectors ) {
+                selectors[i] = [];
+                selectors[i][0] = prop;
+                selectors[i][1] = data.selectors[prop];
+                i++;
+            }
+            
+            if( selectors && Array.isArray( selectors ) ) {
+                selectorsJson = JSON.stringify( selectors );
             }
             
             if( data.placeholder ) {
@@ -83,26 +96,99 @@ class Control_Text extends Base_Control {
         <wptb-template-script>
             ( function() {
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
-                if( targetInputs.length > 0 ) {
+                if( targetInputs.length > 0 && targetInputs[0].dataset.element ) {
                     targetInput = targetInputs[0];
-                    let dataSelectorElement = targetInput.dataset.element;
-                    if( dataSelectorElement ) {
-                        let selectorElement = document.querySelector( '.' + dataSelectorElement );
-                        if( selectorElement ) {
-                            targetInput.oninput = function( event ) {
-                                let details = {value: this.value};
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
+                    let selectorElement = document.querySelector( '.' + targetInput.dataset.element );
+                    if( selectorElement ) {
+                        function getSetElementValue( selectors, value ) {
+                            if( selectors && Array.isArray( selectors ) ) {
+                                for( let i = 0; i < selectors.length; i++ ) {
+                                    if( selectors[i] && Array.isArray( selectors[i] ) && typeof selectors[i][0] != 'undefined' && selectors[i][1] != 'undefined' ) {
+                                        let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                        if( selectorElements.length > 0 ) {
+                                            for( let j = 0; j < selectorElements.length; j++ ) {
+                                                if( selectors[i][1] ) {
+                                                    if( Array.isArray( selectors[i][1] ) ) {
+                                                        for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                            if( selectors[i][1][k] ) {
+                                                                if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
+                                                                    if( typeof value != 'undefined' ) {
+                                                                        selectorElements[j].setAttribute( selectors[i][1][k], value );
+                                                                    } else if( selectorElements[j].getAttribute( selectors[i][1][k] ) ) {
+                                                                        return selectorElements[j].getAttribute( selectors[i][1][k] );
+                                                                    }
+                                                                } else {
+                                                                    if( typeof value != 'undefined' ) {
+                                                                        selectorElements[j].style[selectors[i][1][k]] = value;
+                                                                    } else if( parseInt( selectorElements[j].style[selectors[i][1][k]] ) ) {
+                                                                        return parseInt( selectorElements[j].style[selectors[i][1][k]] );
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                if( typeof value != 'undefined' ) {
+                                                                    selectorElements[j].innerHTML = value;
+                                                                } else if( selectorElements[j].innerHTML ) {
+                                                                    return selectorElements[j].innerHTML;
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        if( selectors[i][1] ) {
+                                                            if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
+                                                                if( typeof value != 'undefined' ) {
+                                                                    selectorElements[j].setAttribute( selectors[i][1], value );
+                                                                } else if( selectorElements[j].getAttribute( selectors[i][1] ) ) {
+                                                                    return selectorElements[j].getAttribute( selectors[i][1] );
+                                                                }
+                                                            } else {
+                                                                if( typeof value != 'undefined' ) {
+                                                                    selectorElements[j].style[selectors[i][1]] = value;
+                                                                } else if( parseInt( selectorElements[j].style[selectors[i][1]] ) ) {
+                                                                    return parseInt( selectorElements[j].style[selectors[i][1]] );
+                                                                }
+                                                            }
+                                                        } else {
+                                                            if( typeof value != 'undefined' ) {
+                                                                selectorElements[j].innerHTML = value;
+                                                            } else if( selectorElements[j].innerHTML ) {
+                                                                return selectorElements[j].innerHTML;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                return '';
+                            }
 
-                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
-                            };
-                            
-                            targetInput.onchange = function( event ) {
-                                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                                wptbTableStateSaveManager.tableStateSet();
-                            };
-                            
-                            WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
+                            if( ! value ) {
+                                return '';
+                            }
                         }
+
+                        if( '{{{selectorsJson}}}' ) {
+                            let selectors = JSON.parse( '{{{selectorsJson}}}' );
+
+                            targetInput.value = getSetElementValue( selectors );
+                        }
+                        
+                        targetInput.oninput = function( event ) {
+                            let details = {value: this.value};
+                            WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
+                            if( '{{{selectorsJson}}}' ) {
+                                let selectors = JSON.parse( '{{{selectorsJson}}}' );
+
+                                getSetElementValue( selectors, details.value );
+                            }
+                        };
+
+                        targetInput.onchange = function( event ) {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
                     }
                 }
             } )();

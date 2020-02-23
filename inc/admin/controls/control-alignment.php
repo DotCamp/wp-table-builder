@@ -54,6 +54,7 @@ class Control_Alignment extends Base_Control {
         <#
             let label,
                 selector,
+                selectors = [],
                 selected0,
                 selected1,
                 selected2,
@@ -78,23 +79,16 @@ class Control_Alignment extends Base_Control {
                 }
             }
             
+            let i = 0;
             for ( let prop in data.selectors ) {
-                selector = prop;
-                styleAlignment = data.selectors[prop];
+                selectors[i] = [];
+                selectors[i][0] = prop;
+                selectors[i][1] = data.selectors[prop];
+                i++;
             }
             
-            if( styleAlignment == 'text-align' || styleAlignment.indexOf( 'data-' ) === 0 ) {
-                left = 'left';
-                center = 'center';
-                right = 'right';
-            } else if( styleAlignment == 'justify-content' ) {
-                left = 'flex-start';
-                center = 'center';
-                right = 'flex-end';
-            } else if( styleAlignment == 'float' ) {
-                left = 'left';
-                center = 'none';
-                right = 'right';
+            if( selectors && Array.isArray( selectors ) ) {
+                selectorsJson = JSON.stringify( selectors );
             }
             
             targetAddClass = data.elementControlTargetUnicClass;
@@ -118,15 +112,15 @@ class Control_Alignment extends Base_Control {
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; padding-top: 23px;">
             <ul>
                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
-                    {{{selected0}}} {{{targetAddClass}}}" data-alignment-value="{{{left}}}">
+                    {{{selected0}}} {{{targetAddClass}}}" data-alignment-value="left" data-element="{{{elemContainer}}}">
                     <?php echo $left_align_image_svg; ?>
                 </li>
                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
-                    {{{selected1}}} {{{targetAddClass}}}" data-alignment-value="{{{center}}}">
+                    {{{selected1}}} {{{targetAddClass}}}" data-alignment-value="center" data-element="{{{elemContainer}}}">
                     <?php echo $center_align_image_svg; ?>
                 </li>
                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
-                    {{{selected2}}} {{{targetAddClass}}}" data-alignment-value="{{{right}}}">
+                    {{{selected2}}} {{{targetAddClass}}}" data-alignment-value="right" data-element="{{{elemContainer}}}">
                     <?php echo $right_align_image_svg; ?>
                 </li>
             </ul>
@@ -135,72 +129,135 @@ class Control_Alignment extends Base_Control {
         <wptb-template-script>
             ( function() {
                 let buttons = document.getElementsByClassName( '{{{targetAddClass}}}' );
-                let selectorEl = document.querySelectorAll( '{{{selector}}}' );
-                let selectedButtonAlignment;
-                if( selectorEl.length && '{{{styleAlignment}}}' ) {
-                    for( let i = 0; i < selectorEl.length; i++ ) {
-                        if( i === 0 ) {
-                            if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
-                                selectedButtonAlignment = selectorEl[i].getAttribute( '{{{styleAlignment}}}' );
-                            } else {
-                                selectedButtonAlignment = selectorEl[i].style['{{{styleAlignment}}}'];
-                            }
-                        }
-                        
-                        if( i > 0 ) {
-                            if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
-                                if ( selectedButtonAlignment != selectorEl[i].getAttribute( '{{{styleAlignment}}}' ) ) {
-                                    selectedButtonAlignment = false;
-                                }
-                            } else {
-                                if ( selectedButtonAlignment != selectorEl[i].style['{{{styleAlignment}}}'] ) {
-                                    selectedButtonAlignment = false;
-                                }
-                            }
-                        }
-                    }
-                    
-                }
-                
-                for ( var i = 0; i < buttons.length; i++ ) {
-                    if( selectedButtonAlignment ) {
-                        buttons[i].classList.remove( 'selected' );
-
-                        if( selectedButtonAlignment == buttons[i].dataset.alignmentValue ) {
-                            buttons[i].classList.add( 'selected' );
-                        }
-                    }
-
-                    buttons[i].onclick = function () {
-                        let selectorEl = document.querySelectorAll( '{{{selector}}}' );
-                        if( selectorEl.length > 0 && '{{{styleAlignment}}}' ) {
-                            let buttonDataAlignment = this.dataset.alignmentValue;
-                            
-                            for( let i = 0; i < selectorEl.length; i++ ) {
-                                if( '{{{styleAlignment}}}'.indexOf( 'data-' ) === 0 ) {
-                                    selectorEl[i].setAttribute( '{{{styleAlignment}}}', buttonDataAlignment );
+                if( buttons.length > 0 ) {
+                    let dataSelectorElement = buttons[0].dataset.element;
+                    if( dataSelectorElement ) {
+                        let selectorElement = document.querySelector( '.' + dataSelectorElement );
+                        if( selectorElement ) {
+                            function getSetElementValue( selectors, value ) {
+                                if( selectors && Array.isArray( selectors ) ) {
+                                    for( let i = 0; i < selectors.length; i++ ) {
+                                        if( selectors[i] && Array.isArray( selectors[i] ) && typeof selectors[i][0] != 'undefined' && typeof selectors[i][1] != 'undefined' ) {
+                                            let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                            if( selectorElements.length > 0 ) {
+                                                for( let j = 0; j < selectorElements.length; j++ ) {
+                                                    if( value ) {
+                                                        let convertValue;
+                                                        if( selectors[i][1] == 'justify-content' ) {
+                                                            if( value == 'left' ) {
+                                                                convertValue = 'flex-start';
+                                                            } else if( value == 'center' ) {
+                                                                convertValue = 'center';
+                                                            } else if( value == 'right' ) {
+                                                                convertValue = 'flex-end';
+                                                            }
+                                                        } else if ( selectors[i][1] == 'float' ) {
+                                                            if( value == 'left' ) {
+                                                                convertValue = 'left';
+                                                            } else if( value == 'center' ) {
+                                                                convertValue = 'none';
+                                                            } else if( value == 'right' ) {
+                                                                convertValue = 'right';
+                                                            }
+                                                        } else {
+                                                            if( value == 'left' ) {
+                                                                convertValue = 'left';
+                                                            } else if( value == 'center' ) {
+                                                                convertValue = 'center';
+                                                            } else if( value == 'right' ) {
+                                                                convertValue = 'right';
+                                                            }
+                                                        }
+                                                    
+                                                        if( typeof selectorElements[j].style[selectors[i][1]] != 'undefined' ) {
+                                                            selectorElements[j].style[selectors[i][1]] = convertValue;
+                                                        } else {
+                                                            selectorElements[j].setAttribute( selectors[i][1], convertValue );
+                                                        }
+                                                    } else {
+                                                        let gettingElementValue;
+                                                        if( typeof selectorElements[j].style[selectors[i][1]] != 'undefined' ) {
+                                                            gettingElementValue = selectorElements[j].style[selectors[i][1]];
+                                                        } else {
+                                                            gettingElementValue = selectorElements[j].getAttribute( selectors[i][1] );
+                                                        }
+                                                        
+                                                        if( selectors[i][1] == 'justify-content' ) {
+                                                            if( gettingElementValue == 'flex-start' ) {
+                                                                return 'left';
+                                                            } else if( gettingElementValue == 'center' ) {
+                                                                return 'center';
+                                                            } else if( gettingElementValue == 'flex-end' ) {
+                                                                return 'right';
+                                                            }
+                                                        } else if ( selectors[i][1] == 'float' ) {
+                                                            if( gettingElementValue == 'left' ) {
+                                                                return 'left';
+                                                            } else if( gettingElementValue == 'none' ) {
+                                                                return 'center';
+                                                            } else if( gettingElementValue == 'right' ) {
+                                                                return 'right';
+                                                            }
+                                                        } else {
+                                                            if( gettingElementValue == 'left' ) {
+                                                                return 'left';
+                                                            } else if( gettingElementValue == 'center' ) {
+                                                                return 'center';
+                                                            } else if( gettingElementValue == 'right' ) {
+                                                                return 'right';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    selectorEl[i].style['{{{styleAlignment}}}'] = buttonDataAlignment;
+                                    return false;
+                                }
+
+                                if( ! value ) {
+                                    return false;
                                 }
                             }
+                            
+                            let valueSetting;
+                            if( '{{{selectorsJson}}}' ) {
+                                let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
-                            var b = this.parentNode.getElementsByClassName( 'wptb-btn-size-btn' );
-                            for ( let i = 0; i < b.length; i++ ) {
-                                b[i].classList.remove( 'selected' );
+                                valueSetting = getSetElementValue( selectors );
                             }
-                            this.classList.add( 'selected' );
-                            
-                            let details = {value: buttonDataAlignment};
-                            WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetAddClass}}}', selectorEl[0], details );
-                            WPTB_Helper.controlsStateManager( '{{{targetAddClass}}}', true );
-                            
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
+                
+                            for ( var i = 0; i < buttons.length; i++ ) {
+                                buttons[i].classList.remove( 'selected' );
+                                
+                                if( valueSetting == buttons[i].dataset.alignmentValue ) {
+                                    buttons[i].classList.add( 'selected' );
+                                }
+
+                                buttons[i].onclick = function () {
+                                    var b = this.parentNode.getElementsByClassName( 'wptb-btn-size-btn' );
+                                    for ( let i = 0; i < b.length; i++ ) {
+                                        b[i].classList.remove( 'selected' );
+                                    }
+                                    this.classList.add( 'selected' );
+                                    
+                                    if( this.dataset.alignmentValue && '{{{selectorsJson}}}' ) {
+                                        let selectors = JSON.parse( '{{{selectorsJson}}}' );
+                                        getSetElementValue( selectors, this.dataset.alignmentValue );
+                                        
+                                        let details = {value: this.dataset.alignmentValue};
+                                        console.log( '{{{targetAddClass}}}' );
+                                        WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetAddClass}}}', selectorElement, details );
+                                    }
+
+                                    let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                                    wptbTableStateSaveManager.tableStateSet();
+                                }
+                            }
                         }
                     }
                 }
-                
-                WPTB_Helper.controlsStateManager( '{{{targetAddClass}}}' );
             } )();
         </wptb-template-script>
 		<?php

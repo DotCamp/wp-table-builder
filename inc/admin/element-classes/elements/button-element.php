@@ -175,6 +175,9 @@ class Button_Element extends Element_Base_Object {
 				'label' => __( 'Button Id', 'wp_table_builder' ),
 				'type' => Controls_Manager::TEXT,
                 'placeholder' => __( 'Insert Button ID Here', 'wp_table_builder' ),
+                'selectors' => [
+                    '{{{data.container}}} .wptb-button-wrapper a' => 'id',
+                ]
 			]
 		);
 	}

@@ -1565,6 +1565,7 @@ table.wptb-table {
 
 .mce-content-body {
     min-height: 19px;
+    word-break: break-word;
 }
 
 .mce-tinymce.mce-tinymce-inline.mce-container.mce-panel {
@@ -2217,6 +2218,12 @@ td[class*="wptb-fused-cell"] {
     height: 25px;
     font-size: 25px;
     line-height: 25px;
+}
+
+/* Shortcode */
+
+wptb_shortcode_container_element {
+    display: block;
 }
 
 @media screen and (max-width: 1375px) {

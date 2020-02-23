@@ -66,17 +66,7 @@ var WPTB_TableStateSaveManager = function() {
             }
         }
 
-        let wptbElementDatas = document.getElementsByClassName( 'wptb-element-datas' );
-        if( wptbElementDatas.length > 0 ) {
-            wptbElementDatas = wptbElementDatas[0];
-            wptbElementDatas = wptbElementDatas.innerHTML;
-        } else {
-            wptbElementDatas = '';
-        }
-
-        let styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
-
-        window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue, wptbElementDatas, styleObjJson] );
+        window.wptbTableStateSaving.push( [wptbNewPreviewTable, cssForTdsWidthAutoValue] );
 
         // set new number of state which is showed now
         window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
@@ -216,31 +206,6 @@ var WPTB_TableStateSaveManager = function() {
                 let body = document.getElementsByTagName( 'body' );
                 if( body.length > 0 ) {
                     body = body[0];
-                }
-                
-                // add or change or delete script element from the bottom page which have data for several control types
-                let wptbElementDatas = document.getElementsByClassName( 'wptb-element-datas' );
-                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] && window.wptbTableStateSaving[window.wptbTableStateNumberShow][2] ) {
-                    
-                    if( wptbElementDatas.length > 0 ) {
-                        wptbElementDatas = wptbElementDatas[0];
-                    } else {
-                        wptbElementDatas = document.createElement( 'sctipt' );
-                        wptbElementDatas.classList.add( 'wptb-element-datas' );
-                        body.appendChild( wptbElementDatas );
-                    }
-                    
-                    wptbElementDatas.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
-                } else {
-                    if( wptbElementDatas.length > 0 ) {
-                        wptbElementDatas = wptbElementDatas[0];
-                        body.removeChild( wptbElementDatas );
-                    }
-                }
-                
-                // runs function which adds or create or delete CSS in the head for several element settings
-                if( window.wptbTableStateSaving[window.wptbTableStateNumberShow] ) {
-                    WPTB_Helper.elementsStylesSetFromObject( window.wptbTableStateSaving[window.wptbTableStateNumberShow][3] );
                 }
 
                 WPTB_Helper.elementOptionsPanelClear();

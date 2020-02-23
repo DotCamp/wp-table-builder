@@ -102,6 +102,9 @@ class Custom_Html_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Insert HTML', 'wp_table_builder' ),
 				'type' => Controls_Manager::TEXTAREA,
+                'selectors' => [
+                    '{{{data.container}}} .wptb-custom-html-wrapper',
+                ],
                 'placeholder' => __( 'Insert HTML Code Here', 'wp_table_builder' ),
                 'rows' => 5,
                 'defaultValue' => 'Insert Custom HTML'

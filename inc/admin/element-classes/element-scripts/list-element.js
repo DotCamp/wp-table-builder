@@ -179,71 +179,32 @@ function selectControlsChange( selects, element ) {
     }
 }
 
-WPTB_Helper.controlsInclude( element, selectControlsChange );
+//WPTB_Helper.controlsInclude( element, selectControlsChange );
+function controlsChange( inputs, element ) {
+    if( inputs && typeof inputs === 'object' ) {
+        if( inputs.hasOwnProperty( 'select1' ) ) {
+            console.log(inputs);
+            let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
+            
+            if( infArr ) {
+                let controlSelect2 = document.querySelector( '.wptb-el-' + infArr[1] + '-select2' );
+                if( controlSelect2 ) {
+                    for( let i = 0; i < controlSelect2.options.length; i++ ) {
+                        controlSelect2.options[i].removeAttribute( 'selected' );
 
+                        if( controlSelect2.options[i].value == 'disc' ) {
+                            controlSelect2.options[i].selected = true;
+                        }
+                    }
+                }
+            }
+        }
+    } 
+}
+
+WPTB_Helper.controlsInclude( element, controlsChange );
 
 // for old elements which were before the change of structure of the plugin
 if( element.classList.contains( 'wptb-list-item-container' ) ) {
     element.classList.add( 'wptb-list-container' );
-}
-
-let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
-let elementsSettings;
-let elementSettings;
-if( elementsSettingsTemplateJs.length > 0 ) {
-    elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
-    elementsSettings = elementsSettingsTemplateJs.innerHTML;
-    if( elementsSettings ) {
-        try{
-            elementsSettings = JSON.parse( elementsSettings );
-        } catch( error ) {
-            console.log( error );
-            console.log("Json Parse Error:" + elementsSettings);
-        }
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]];
-        }
-    }
-} else {
-    elementsSettingsTemplateJs = document.createElement( 'script' );
-    elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
-    let body = document.getElementsByTagName('body')[0];
-    body.appendChild( elementsSettingsTemplateJs );
-}
-
-if( ! elementSettings ) {
-
-    let listItems = element.querySelectorAll( 'li' );
-    for( let i = 0; i < listItems.length; i++ ) {
-        let listItem = listItems[i];
-        let p = listItem.querySelector( 'p' );
-        if( p ) {
-            if( infArr && Array.isArray( infArr ) ) {
-                if( ! elementsSettings || typeof elementsSettings !== 'object' ) {
-                    elementsSettings = {};
-                }
-                
-                elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
-                
-                let classAttr = p.className.match( /wptb-list-style-type-(.+)/i );
-                if( classAttr && Array.isArray( classAttr ) ) {
-                    let listType = classAttr[0].replace( 'wptb-list-style-type-', '' );
-                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'unordered';
-                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = listType;
-                } else {
-                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select1'] = 'numbered';
-                    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-select2'] = 'disc';
-                }
-                
-                if( elementsSettings ) {
-                    elementsSettings = JSON.stringify( elementsSettings );
-                    elementsSettingsTemplateJs.innerHTML = elementsSettings;
-                }
-            }
-
-            break;
-        }   
-    }
 }

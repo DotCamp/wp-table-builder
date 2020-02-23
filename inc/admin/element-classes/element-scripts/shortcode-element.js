@@ -26,7 +26,21 @@ if( tinyMceTarget.length > 0 ) {
                     elementControlTextarea = elementControlTextarea[0];
                     elementControlTextarea.value = ed.targetElm.textContent;
                 }
-                WPTB_Helper.controlsStateManager( elementControlTargetUnicClass, true );
+            });
+        
+            ed.on( 'focus', function(  ) {
+                ed.targetElm.innerText = ed.targetElm.innerHTML;
+
+                WPTB_Helper.wptbDocumentEventGenerate( 'click', ed.targetElm );
+                WPTB_Helper.wptbDocumentEventGenerate( 'input', ed.targetElm );
+            });
+
+            ed.on( 'blur', function(  ) {
+                ed.targetElm.innerHTML = ed.targetElm.innerText;
+            });
+
+            ed.on( 'click', function(  ) {
+                WPTB_Helper.wptbDocumentEventGenerate( 'input', ed.targetElm );
             });
 
             ed.on( 'keydown', function( e ) {

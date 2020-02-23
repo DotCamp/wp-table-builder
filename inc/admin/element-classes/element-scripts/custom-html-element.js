@@ -27,15 +27,21 @@ tinyMCE.init({
                 elementControlTextarea = elementControlTextarea[0];
                 elementControlTextarea.value = ed.targetElm.textContent;
             }
-            WPTB_Helper.controlsStateManager( elementControlTargetUnicClass, true );
         });
         
         ed.on( 'focus', function(  ) {
             ed.targetElm.innerText = ed.targetElm.innerHTML;
+            
+            WPTB_Helper.wptbDocumentEventGenerate( 'click', ed.targetElm );
+            WPTB_Helper.wptbDocumentEventGenerate( 'input', ed.targetElm );
         });
         
         ed.on( 'blur', function(  ) {
             ed.targetElm.innerHTML = ed.targetElm.innerText;
+        });
+        
+        ed.on( 'click', function(  ) {
+            WPTB_Helper.wptbDocumentEventGenerate( 'input', ed.targetElm );
         });
         
         ed.on( 'keydown', function( e ) {
@@ -66,11 +72,3 @@ tinyMCE.init({
         });
     }
 });
-
-element.addEventListener( 'wptb-control:' + elementControlTargetUnicClass, function( event ) {
-    let targetElm = element.getElementsByClassName( 'mce-content-body' );
-    if( targetElm.length > 0 ) {
-        targetElm = targetElm[0];
-        targetElm.innerHTML = event.detail.value;
-    }
-}, false );

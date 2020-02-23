@@ -45,10 +45,10 @@ var WPTB_ActionsField = function() {
                 let act = event.target.parentNode.activeElem,
                     el = act.parentNode;
                 let infArr = act.className.match( /wptb-element-(.+)-(\d+)/i );
-                if( act && infArr && Array.isArray( infArr ) ) {
-                    WPTB_Helper.elementControlsStateDelete( act );
-                    WPTB_Helper.externalCssStylesDelete( infArr[0] );
-                }
+//                if( act && infArr && Array.isArray( infArr ) ) {
+//                    WPTB_Helper.elementControlsStateDelete( act );
+//                    WPTB_Helper.externalCssStylesDelete( infArr[0] );
+//                }
                 
                 if( act ) {
                     el.removeChild( act );
@@ -87,8 +87,8 @@ var WPTB_ActionsField = function() {
                     data.elemProt = activeElement;
                     data.tinyMceClear = true;
                     copy = new WPTB_ElementObject( data );
-                    WPTB_Helper.elementControlsStateCopy( activeElement, copy.getDOMElement() );
-                    WPTB_Helper.externalCssStylesCopy( activeElement, copy.getDOMElement() );
+                    //WPTB_Helper.elementControlsStateCopy( activeElement, copy.getDOMElement() );
+                    //WPTB_Helper.externalCssStylesCopy( activeElement, copy.getDOMElement() );
                     //WPTB_Helper.elementStartScript( copy.getDOMElement() );
                     
                     activeElemParent.insertBefore( copy.getDOMElement(), activeElement.nextSibling );

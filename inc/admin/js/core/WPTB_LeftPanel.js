@@ -82,31 +82,31 @@ var WPTB_LeftPanel = function () {
     function controlsChange( inputs, table ) {
         if( inputs && typeof inputs === 'object' ) {
             if( inputs.hasOwnProperty( 'tableTopRowsAsHeader' ) ) {
-                if( inputs.tableTopRowsAsHeader == 'checked' ) {
-                    let rows = table.rows;
-                    table.classList.add( 'wptb-table-preview-head' );
-                } else if( inputs.tableTopRowsAsHeader == 'unchecked' ) {
-                    let rows = table.rows;
-                    table.classList.remove( 'wptb-table-preview-head' );
-
-                    for ( let i = 1; i < rows.length; i++ ) {
-                        let thisRow = rows[i],
-                            thisRowChildren = thisRow.children;
-                        for( let j = 0; j < thisRowChildren.length; j++ ) {
-                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column' );
-                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column-font-size' );
-                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column-color' );
-                            thisRowChildren[j].removeAttribute( 'data-wptb-title-background-color' );
-                            thisRowChildren[j].removeAttribute( 'data-wptb-title-align' );
-                        }
-                    }
-                }
+//                if( inputs.tableTopRowsAsHeader == 'checked' ) {
+//                    let rows = table.rows;
+//                    table.classList.add( 'wptb-table-preview-head' );
+//                } else if( inputs.tableTopRowsAsHeader == 'unchecked' ) {
+//                    let rows = table.rows;
+//                    table.classList.remove( 'wptb-table-preview-head' );
+//
+//                    for ( let i = 1; i < rows.length; i++ ) {
+//                        let thisRow = rows[i],
+//                            thisRowChildren = thisRow.children;
+//                        for( let j = 0; j < thisRowChildren.length; j++ ) {
+//                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column' );
+//                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column-font-size' );
+//                            thisRowChildren[j].removeAttribute( 'data-wptb-title-column-color' );
+//                            thisRowChildren[j].removeAttribute( 'data-wptb-title-background-color' );
+//                            thisRowChildren[j].removeAttribute( 'data-wptb-title-align' );
+//                        }
+//                    }
+//                }
             } else if( inputs.hasOwnProperty( 'makeTableResponsive' ) ) {
-                if( inputs.makeTableResponsive == 'checked' ) {
-                    table.dataset.wptbAdaptiveTable = 1;
-                } else if( inputs.makeTableResponsive == 'unchecked' ) {
-                    table.dataset.wptbAdaptiveTable = 0;
-                }
+//                if( inputs.makeTableResponsive == 'checked' ) {
+//                    table.dataset.wptbAdaptiveTable = 1;
+//                } else if( inputs.makeTableResponsive == 'unchecked' ) {
+//                    table.dataset.wptbAdaptiveTable = 0;
+//                }
             } else if( inputs.hasOwnProperty( 'applyTableContainerMaxWidth' ) ) {
                 let wptbTableSetup = document.querySelector( '.wptb-table-setup' );
                 if( inputs.applyTableContainerMaxWidth == 'checked' ) {

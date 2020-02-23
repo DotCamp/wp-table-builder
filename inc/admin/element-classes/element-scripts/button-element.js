@@ -80,17 +80,6 @@ if( target ) {
 //
 //WPTB_Helper.controlsInclude( element, textControlsChange );
 
-function textControlChange2( controlValue, element ) {
-    let a = element.getElementsByTagName( 'a' );
-    if( a.length > 0 ) {
-        a = a[0];
-        a.setAttribute( 'id', controlValue );
-    }
-}
-
-let controlName = 'button-id';
-WPTB_Helper.oneControlInclude( element, textControlChange2, controlName );
-
 // for old elements which were before the change of structure of the plugin
 let infArr = element.className.match( /wptb-size-([A-Z]+)/i );
 if( infArr && Array.isArray( infArr ) ) {
@@ -102,59 +91,5 @@ if( infArr && Array.isArray( infArr ) ) {
     let wptbButtonWrapper = element.querySelector( '.wptb-button-wrapper' );
     if( wptbButtonWrapper ) {
         wptbButtonWrapper.classList.add( wptbSizeNew );
-    }
-}
-
-let infArrEl = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
-let elementsSettings;
-let elementSettings;
-if( elementsSettingsTemplateJs.length > 0 ) {
-    elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
-    elementsSettings = elementsSettingsTemplateJs.innerHTML;
-    if( elementsSettings ) {
-        try{
-            elementsSettings = JSON.parse( elementsSettings );
-        } catch( error ) {
-            console.log( error );
-            console.log("Json Parse Error:" + elementsSettings);
-        }
-        
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArrEl[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]];
-        }
-    }
-} else {
-    elementsSettingsTemplateJs = document.createElement( 'script' );
-    elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
-    let body = document.getElementsByTagName('body')[0];
-    body.appendChild( elementsSettingsTemplateJs );
-}
-
-
-
-if( ! elementSettings ) {
-    if( ! elementsSettings || typeof elementsSettings !== 'object' ) {
-        elementsSettings = {};
-    }
-
-    elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]] = {};
-    let buttonId;
-    let a = element.getElementsByTagName( 'a' );
-    if( a.length > 0 ) {
-        a = a[0];
-        
-        if( a.hasAttribute( 'id' ) ) {
-            buttonId = a.getAttribute( 'id' );
-            elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = buttonId;
-        } else {
-            elementsSettings['tmpl-wptb-el-datas-' + infArrEl[1]]['data-wptb-el-' + infArrEl[1] + '-button-id'] = '';
-        }
-
-        if( elementsSettings ) {
-            elementsSettings = JSON.stringify( elementsSettings );
-            elementsSettingsTemplateJs.innerHTML = elementsSettings;
-        }
     }
 }

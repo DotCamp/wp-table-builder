@@ -130,6 +130,9 @@ class Star_Rating_Element extends Element_Base_Object {
 				'type' => Controls_Manager::NUMBER,
                 'min' => 1, 
                 'max' => 10,
+                'selectors' => [
+                    '{{{data.container}}}' => 'data-star-count',
+                ],
                 'defaultValue' => 5,
 			]
 		);
@@ -150,7 +153,11 @@ class Star_Rating_Element extends Element_Base_Object {
 			'numberRatingShowHide',
 			[
 				'label' => __( 'Show Number Rating', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE
+				'type' => Controls_Manager::TOGGLE,
+                'selectors' => [
+                    '{{{data.container}}} .wptb-rating-stars-box .wptb-number-rating-box' => ['display', 'block', 'none'],
+                    '{{{data.container}}} .wptb-rating-stars-box .wptb-success-box' => ['display', 'block', 'none'],
+                ],
 			]
 		);
         

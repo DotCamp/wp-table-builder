@@ -101,7 +101,7 @@ class Tables {
         do_action( 'wptb_frontend_enqueue_script' );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
         
-        if ( preg_match_all( '|<wptb_shortcode_container_element>(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) { 
+        if ( preg_match_all( '|<wptb_shortcode_container_element(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) { 
             foreach ( $arr[1] as $value ) {
                 if( ! isset( $args['internal_shortcodes_stop'] ) && $value ) {
                     $pattern = get_shortcode_regex();

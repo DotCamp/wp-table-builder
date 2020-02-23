@@ -794,6 +794,10 @@ var array = [], WPTB_Table = function (columns, rows) {
             } else {
                 wptbTableSetup.style.float = wptbTableAlignment;
             }
+            
+            if( tableTdWidthAuto && table.dataset.wptbTableContainerMaxWidth && table.offsetWidth < table.dataset.wptbTableContainerMaxWidth ) {
+                table.style.width = '100%';
+            }
         } else {
             table.style.float = null;
         }

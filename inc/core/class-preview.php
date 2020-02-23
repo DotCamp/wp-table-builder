@@ -231,12 +231,12 @@ class Preview {
         // Check nonce
         $nonce = sanitize_text_field( $_GET['_wpnonce'] );
         if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
-            $html .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
+            $html = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_', true );
         } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
-            $html .= get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
+            $html = get_post_meta( absint( $this->table_data->ID ) , '_wptb_content_preview_', true );
         }
         
-        if ( preg_match_all( '|<wptb_shortcode_container_element>(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) { 
+        if ( preg_match_all( '|<wptb_shortcode_container_element(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) { 
             foreach ( $arr[1] as $value ) {
                 if( ! isset( $args['internal_shortcodes_stop'] ) && $value ) {
                     $pattern = get_shortcode_regex();

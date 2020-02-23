@@ -146,6 +146,9 @@ class Image_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Image Alternative Text', 'wp_table_builder' ),
 				'type' => Controls_Manager::TEXT,
+                'selectors' => [
+                    '{{{data.container}}} .wptb-image-wrapper a img' => 'alt',
+                ],
                 'placeholder' => __( 'Image Alt Text', 'wp_table_builder' ),
 			]
 		);

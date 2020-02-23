@@ -65,7 +65,7 @@ class Control_Button extends Base_Control {
         
         <div class="wptb-settings-row wptb-settings-middle-xs">
             <div class="wptb-settings-col-xs-12" style="margin: auto; text-align: center;">
-                <input type="button" class="wptb-button {{{targetInputAddClass}}}" data-element="{{{elemContainer}}}" value="{{{label}}}" title="{{{label}}}">
+                <input type="button" class="wptb-element-property wptb-button {{{targetInputAddClass}}}" data-element="{{{elemContainer}}}" value="{{{label}}}" title="{{{label}}}">
             </div> 
         </div>
         
@@ -81,8 +81,6 @@ class Control_Button extends Base_Control {
                             targetInput.onclick = function( event ) {
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
                             };
-                            
-                            WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
                         }
                     }
                 }

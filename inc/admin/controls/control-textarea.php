@@ -51,6 +51,7 @@ class Control_Textarea extends Base_Control {
 		?>
         <#
             let label,
+                selectors = [],
                 placeholder,
                 rows,
                 cols,
@@ -60,6 +61,28 @@ class Control_Textarea extends Base_Control {
                 
             if( data.label ) {
                 label = data.label;
+            }
+            
+            let i = 0;
+            for ( let prop in data.selectors ) {
+                selectors[i] = [];
+                if( Number.isInteger( parseInt( prop ) ) ) {
+                    selectors[i][1] = '';
+                    if( data.selectors[prop] && ! Number.isInteger( parseInt ( data.selectors[prop] ) ) ) {
+                        selectors[i][0] = data.selectors[prop];
+                    } else {
+                        selectors[i][0] = '';
+                    }
+                    continue;
+                }
+                
+                selectors[i][0] = prop;
+                selectors[i][1] = data.selectors[prop];
+                i++;
+            }
+            
+            if( selectors && Array.isArray( selectors ) ) {
+                selectorsJson = JSON.stringify( selectors );
             }
                 
             if( data.rows ) {
@@ -98,26 +121,96 @@ class Control_Textarea extends Base_Control {
         <wptb-template-script>
             ( function() {
                 let targetTextarea = document.getElementsByClassName( '{{{targetTextareaAddClass}}}' );
-                if( targetTextarea.length > 0 ) {
+                if( targetTextarea.length > 0 && targetTextarea[0].dataset.element ) {
                     targetTextarea = targetTextarea[0];
-                    let dataSelectorElement = targetTextarea.dataset.element;
-                    if( dataSelectorElement ) {
-                        let selectorElement = document.querySelector( '.' + dataSelectorElement );
-                        if( selectorElement ) {
-                            targetTextarea.oninput = function( event ) {
-                                let details = {value: this.value};
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetTextareaAddClass}}}', selectorElement, details );
+                    let selectorElement = document.querySelector( '.' + targetTextarea.dataset.element );
+                    if( selectorElement ) {
+                        function getSetElementValue( selectors, value ) {
+                            if( selectors && Array.isArray( selectors ) ) {
+                                for( let i = 0; i < selectors.length; i++ ) {
+                                    if( selectors[i] && Array.isArray( selectors[i] ) && typeof selectors[i][0] != 'undefined' && selectors[i][1] != 'undefined' ) {
+                                        let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                        if( selectorElements.length > 0 ) {
+                                            for( let j = 0; j < selectorElements.length; j++ ) {
+                                                if( selectors[i][1] && Array.isArray( selectors[i][1] ) ) {
+                                                    for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                        if( selectors[i][1][k] ) {
+                                                            if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
+                                                                if( typeof value != 'undefined' ) {
+                                                                    selectorElements[j].setAttribute( selectors[i][1][k], value );
+                                                                } else if( selectorElements[j].getAttribute( selectors[i][1][k] ) ) {
+                                                                    return selectorElements[j].getAttribute( selectors[i][1][k] );
+                                                                }
+                                                            } else {
+                                                                if( typeof value != 'undefined' ) {
+                                                                    selectorElements[j].style[selectors[i][1][k]] = value;
+                                                                } else if( parseInt( selectorElements[j].style[selectors[i][1][k]] ) ) {
+                                                                    return parseInt( selectorElements[j].style[selectors[i][1][k]] );
+                                                                }
+                                                            }
+                                                        } else {
+                                                            if( typeof value != 'undefined' ) {
+                                                                selectorElements[j].innerHTML = value;
+                                                            } else if( selectorElements[j].innerHTML ) {
+                                                                return selectorElements[j].innerHTML;
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    if( selectors[i][1] ) {
+                                                        if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
+                                                            if( typeof value != 'undefined' ) {
+                                                                selectorElements[j].setAttribute( selectors[i][1], value );
+                                                            } else if( selectorElements[j].getAttribute( selectors[i][1] ) ) {
+                                                                return selectorElements[j].getAttribute( selectors[i][1] );
+                                                            }
+                                                        } else {
+                                                            if( typeof value != 'undefined' ) {
+                                                                selectorElements[j].style[selectors[i][1]] = value;
+                                                            } else if( parseInt( selectorElements[j].style[selectors[i][1]] ) ) {
+                                                                return parseInt( selectorElements[j].style[selectors[i][1]] );
+                                                            }
+                                                        }
+                                                    } else {
+                                                        if( typeof value != 'undefined' ) {
+                                                            selectorElements[j].innerHTML = value;
+                                                        } else if( selectorElements[j].innerHTML ) {
+                                                            return selectorElements[j].innerHTML;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                return '';
+                            }
 
-                                WPTB_Helper.controlsStateManager( '{{{targetTextareaAddClass}}}', true );
-                            };
-                            
-                            targetTextarea.onchange = function( event ) {
-                                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                                wptbTableStateSaveManager.tableStateSet();
-                            };
-                            
-                            WPTB_Helper.controlsStateManager( '{{{targetTextareaAddClass}}}' );
+                            if( ! value ) {
+                                return '';
+                            }
                         }
+
+                        if( '{{{selectorsJson}}}' ) {
+                            let selectors = JSON.parse( '{{{selectorsJson}}}' );
+                            targetTextarea.value = getSetElementValue( selectors );
+                        }
+                        
+                        targetTextarea.oninput = function( event ) {
+                            let details = {value: this.value};
+                            WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetTextareaAddClass}}}', selectorElement, details );
+                            if( '{{{selectorsJson}}}' ) {
+                                let selectors = JSON.parse( '{{{selectorsJson}}}' );
+
+                                getSetElementValue( selectors, details.value );
+                            }
+                        };
+
+                        targetTextarea.onchange = function( event ) {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+                        };
                     }
                 }
             } )();

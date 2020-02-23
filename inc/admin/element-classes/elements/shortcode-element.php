@@ -102,6 +102,9 @@ class Shortcode_Element extends Element_Base_Object {
 			[
 				'label' => __( 'Insert Shortcode', 'wp_table_builder' ),
 				'type' => Controls_Manager::TEXTAREA,
+                'selectors' => [
+                    '{{{data.container}}} div',
+                ],
                 'placeholder' => __( 'Insert Shortcode Here', 'wp_table_builder' ),
                 'rows' => 5,
                 'defaultValue' => '[Shortcode]'

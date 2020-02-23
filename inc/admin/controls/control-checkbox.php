@@ -137,13 +137,9 @@ class Control_Checkbox extends Base_Control {
 
                                     WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
 
-                                    WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
-
                                     let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                     wptbTableStateSaveManager.tableStateSet();
                                 };
-
-                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
                             }
                         }
                     }

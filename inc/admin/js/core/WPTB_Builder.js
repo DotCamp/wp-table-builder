@@ -18,16 +18,6 @@
                         
                         let body = document.getElementsByTagName('body')[0];
                         
-                        if( ans[2] ) {
-                            let elementsSettingTemplateJs = document.createElement( 'script' );
-                            elementsSettingTemplateJs.setAttribute( 'type', 'text/html' );
-                            elementsSettingTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
-
-                            elementsSettingTemplateJs.innerHTML = ans[2];
-
-                            body.appendChild( elementsSettingTemplateJs );
-                        }
-                        
                         WPTB_Table();
                         let element = document.querySelector( '.wptb-preview-table' );
                         if( element ) {

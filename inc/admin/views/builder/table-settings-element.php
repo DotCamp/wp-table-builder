@@ -66,6 +66,9 @@ class Table_Settings_Element extends Controls_Stack {
 			[
 				'label' => __( 'Make Table Responsive', 'wp_table_builder' ),
 				'type' => Controls_Manager::TOGGLE,
+                'selectors' => [
+                    '{{{data.container}}}' => ['data-wptb-adaptive-table', '1', '0']
+                ],
 			]
 		);
         
@@ -74,6 +77,9 @@ class Table_Settings_Element extends Controls_Stack {
 			[
 				'label' => __( 'Top Rows As Header', 'wp_table_builder' ),
 				'type' => Controls_Manager::TOGGLE,
+                'selectors' => [
+                    '{{{data.container}}}' => ['class', 'wptb-table-preview-head', '']
+                ],
 			]
 		);
         
@@ -81,7 +87,10 @@ class Table_Settings_Element extends Controls_Stack {
 			'applyTableContainerMaxWidth',
 			[
 				'label' => __( 'Apply Table Container Max Width', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE
+				'type' => Controls_Manager::TOGGLE,
+                'selectors' => [
+                    '{{{data.container}}}' => ['data-wptb-apply-table-container-max-width', '1', null]
+                ],
 			]
 		);
         

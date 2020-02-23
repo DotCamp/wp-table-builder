@@ -186,6 +186,12 @@ function starRatingNumberRatingChenge( starRatingContainer ) {
 
 // for old elements which were before the change of structure of the plugin
 
+if( ! element.dataset.starCount ) {
+    let starsLi = element.querySelectorAll( '.wptb-rating-stars-list .wptb-rating-star' );
+    element.dataset.starCount = starsLi.length;
+}
+
+
 let spans = element.querySelectorAll( 'li span' );
 for( let i = 0; i < spans.length; i++ ) {
     if( spans[i].style.fill ) {
@@ -198,65 +204,12 @@ for( let i = 0; i < spans.length; i++ ) {
     }
 }
 
-let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
-let elementsSettingsTemplateJs  = document.getElementsByClassName( 'wptb-element-datas' );
-let elementsSettings;
-let elementSettings;
-if( elementsSettingsTemplateJs.length > 0 ) {
-    elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
-    elementsSettings = elementsSettingsTemplateJs.innerHTML;
-    if( elementsSettings ) {
-        try{
-            elementsSettings = JSON.parse( elementsSettings );
-        } catch( error ) {
-            console.log( error );
-            console.log("Json Parse Error:" + elementsSettings);
-        }
-        if( typeof elementsSettings === 'object' && ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) {
-            elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]];
-        }
-    }
-} else {
-    elementsSettingsTemplateJs = document.createElement( 'script' );
-    elementsSettingsTemplateJs.setAttribute( 'type', 'text/html' );
-    elementsSettingsTemplateJs.setAttribute( 'class', 'wptb-element-datas' );
-    let body = document.getElementsByTagName('body')[0];
-    body.appendChild( elementsSettingsTemplateJs );
-}
+let wptbSuccessBox = element.querySelector( '.wptb-success-box' );
+if( wptbSuccessBox ) {
+    wptbSuccessBox.classList.add( 'wptb-number-rating-box' );
+    wptbTextMessage = wptbSuccessBox.querySelector( '.wptb-text-message' );
 
-
-
-if( ! elementSettings ) {
-    if( ! elementsSettings || typeof elementsSettings !== 'object' ) {
-        elementsSettings = {};
-    }
-
-    elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
-    
-    let listItems = element.querySelectorAll( 'li' );
-    let listItemsNumber = listItems.length;
-    if( listItemsNumber > 0 ) {
-        elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-starCount'] = listItemsNumber;
-    }
-    
-    let wptbSuccessBox = element.querySelector( '.wptb-success-box' );
-    if( wptbSuccessBox ) {
-        wptbSuccessBox.classList.add( 'wptb-number-rating-box' );
-        wptbTextMessage = wptbSuccessBox.querySelector( '.wptb-text-message' );
-        
-        if( wptbTextMessage ) {
-            wptbTextMessage.classList.add( 'wptb-number-rating' );
-        }
-        
-        if( wptbSuccessBox.style.display == 'block' ) {
-            elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'checked';
-        } else if( wptbSuccessBox.style.display == 'none' ) {
-            elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-wptb-el-' + infArr[1] + '-numberRatingShowHide'] = 'unchecked';
-        }
-    }
-    
-    if( elementsSettings ) {
-        elementsSettings = JSON.stringify( elementsSettings );
-        elementsSettingsTemplateJs.innerHTML = elementsSettings;
+    if( wptbTextMessage ) {
+        wptbTextMessage.classList.add( 'wptb-number-rating' );
     }
 }

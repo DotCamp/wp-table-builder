@@ -26,7 +26,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 let wptbNodeattributes = [...node.attributes];
                 for( let i = 0; i < wptbNodeattributes.length; i++ ) {
                     if( wptbNodeattributes[i] && typeof wptbNodeattributes[i] === 'object' && wptbNodeattributes[i].nodeName ) {
-                        let regularText = new RegExp( 'data-wptb-el-' + element.kind + '-(\\d+)-(.+)', "i" );
+                        let regularText = new RegExp( 'data-wptb-el-' + element.kind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i" );
                         let attr = wptbNodeattributes[i].nodeName.match( regularText );
                         if( attr && Array.isArray( attr ) ) {
                             let newDataAttributeName = wptbNodeattributes[i].nodeName.replace( element.kind + '-' + attr[1], element.kind + '-' + index );

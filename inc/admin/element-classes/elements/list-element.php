@@ -103,8 +103,19 @@ class List_Element extends Element_Base_Object {
 				'label' => __( 'List Type', 'wp_table_builder' ),
 				'type' => Controls_Manager::SELECT,
                 'options' => [
-                    ['Ordered', 'numbered'],
-                    ['Unordered', 'unordered']
+                    ['Ordered', 'numbered', ''],
+                    [
+                        'Unordered', 'unordered', 
+                        [
+                            'wptb-list-style-type-disc', 
+                            'wptb-list-style-type-circle', 
+                            'wptb-list-style-type-square', 
+                            'wptb-list-style-type-none'
+                        ]
+                    ]
+                ],
+                'selectors' => [
+                    '{{{data.container}}} ul li p' => 'class'
                 ],
                 'selectedDefault' => 0,
 			]
@@ -116,10 +127,13 @@ class List_Element extends Element_Base_Object {
 				'label' => __( 'List Icon', 'wp_table_builder' ),
 				'type' => Controls_Manager::SELECT,
                 'options' => [
-                    ['Circle', 'circle'],
-                    ['Square', 'square'],
-                    ['Disc', 'disc'],
-                    ['None', 'none']
+                    ['Circle', 'circle', 'wptb-list-style-type-circle'],
+                    ['Square', 'square', 'wptb-list-style-type-square'],
+                    ['Disc', 'disc', 'wptb-list-style-type-disc'],
+                    ['None', 'none', 'wptb-list-style-type-none']
+                ],
+                'selectors' => [
+                    '{{{data.container}}} ul li p' => 'class'
                 ],
                 'selectedDefault' => 2,
                 'appearDependOnControl' => ['select1', ['unordered'], ['numbered']]

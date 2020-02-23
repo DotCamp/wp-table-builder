@@ -96,72 +96,126 @@ class Control_Toggle extends Base_Control {
                     if( dataSelectorElement ) {
                         let selectorElement = document.querySelector( '.' + dataSelectorElement );
                         if( selectorElement ) {
-                            targetInput.onchange = function( event ) {
-                                let details;
-                                
-                                if( targetInput.checked == true ) {
-                                    details = {value: 'checked'};
-                                } else {
-                                    details = {value: 'unchecked'};
-                                }
-                                
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
-                                if( '{{{selectorsJson}}}' ) {
-                                    let selectors = JSON.parse( '{{{selectorsJson}}}' );
-                                    
-                                    if( selectors && Array.isArray( selectors ) ) {
-                                        for( let i = 0; i < selectors.length; i++ ) {
-                                            if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
-                                                let selectorElements = document.querySelectorAll( selectors[i][0] );
-                                                if( selectorElements.length > 0 ) {
-                                                    for( let j = 0; j < selectorElements.length; j++ ) {
-                                                        if( selectors[i][1] && Array.isArray( selectors[i][1] ) ) {
-                                                            if( selectors[i][1][0] && Array.isArray( selectors[i][1][0] ) ) {
-                                                                for( let k = 0; k < selectors[i][1].length; k++ ) {
+                            function getSetElementValue( selectors, value ) {
+                                if( selectors && Array.isArray( selectors ) ) {
+                                    for( let i = 0; i < selectors.length; i++ ) {
+                                        if( selectors[i] && Array.isArray( selectors[i] ) && typeof selectors[i][0] != 'undefined' && typeof selectors[i][1] != 'undefined' ) {
+                                            let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                            if( selectorElements.length > 0 ) {
+                                                for( let j = 0; j < selectorElements.length; j++ ) {
+                                                    if( selectors[i][1] && Array.isArray( selectors[i][1] ) && typeof selectors[i][1][0] != 'undefined' ) {
+                                                        if( Array.isArray( selectors[i][1][0] ) ) {
+                                                            for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                                if( typeof selectors[i][1][k] != 'undefined' && Array.isArray( selectors[i][1][k] ) ) {
                                                                     if( selectors[i][1][k][0] ) {
                                                                         let styleValue;
-                                                                        if( details.value == 'checked' ) {
-                                                                            styleValue = selectors[i][1][k][1] ? selectors[i][1][k][1] : '';
-                                                                        } else {
-                                                                            styleValue = selectors[i][1][k][2] ? selectors[i][1][k][2] : '';
-                                                                        }
-                                                                        
-                                                                        if( selectors[i][1][k][0].indexOf( 'data-' ) === 0 ) {
-                                                                            if( styleValue ) {
-                                                                                selectorElements[j].setAttribute( selectors[i][1][k][0], styleValue );
+
+                                                                        if( value ) {
+                                                                            if( value == 'checked' ) {
+                                                                                styleValue = typeof selectors[i][1][k][1] != 'undefined' ? selectors[i][1][k][1] : '';
                                                                             } else {
-                                                                                selectorElements[j].removeAttribute( selectors[i][1][k][0] );
+                                                                                styleValue = typeof selectors[i][1][k][2] != 'undefined' ? selectors[i][1][k][2] : '';
+                                                                            }
+                                                                        }
+
+                                                                        if( selectors[i][1][k][0] == 'class' ) {
+                                                                            if( value ) {
+                                                                                if( styleValue ) {
+                                                                                    selectorElements[j].classList.add( styleValue );
+                                                                                } else {
+                                                                                    styleValue = typeof selectors[i][1][1] != 'undefined' ? selectors[i][1][k][1] : '';
+                                                                                    selectorElements[j].classList.remove( styleValue );
+                                                                                }
+                                                                            } else {
+                                                                                if( typeof selectors[i][1][k][1] != 'undefined' && selectorElements[j].classList.contains( selectors[i][1][k][1] ) ) {
+                                                                                    return true;
+                                                                                } else {
+                                                                                    return false;
+                                                                                }
+                                                                            }
+                                                                        } else if( typeof selectorElements[j].style[selectors[i][1][k][0]] == 'undefined' ) {
+                                                                            if( value ) {
+                                                                                if( styleValue ) {
+                                                                                    selectorElements[j].setAttribute( selectors[i][1][k][0], styleValue );
+                                                                                } else {
+                                                                                    selectorElements[j].removeAttribute( selectors[i][1][k][0] );
+                                                                                }
+                                                                            } else {
+                                                                                if( typeof selectors[i][1][k][1] != 'undefined' && selectorElements[j].getAttribute( selectors[i][1][k][0] ) == selectors[i][1][k][1] ) {
+                                                                                    return true;
+                                                                                } else {
+                                                                                    return false;
+                                                                                }
                                                                             }
                                                                         } else {
-                                                                            if( styleValue ) {
-                                                                                selectorElements[j].style[selectors[i][1][k][0]] = styleValue;
+                                                                            if( value ) {
+                                                                                if( styleValue ) {
+                                                                                    selectorElements[j].style[selectors[i][1][k][0]] = styleValue;
+                                                                                } else {
+                                                                                    selectorElements[j].style[selectors[i][1][k][0]] = '';
+                                                                                }
                                                                             } else {
-                                                                                selectorElements[j].style[selectors[i][1][k][0]] = '';
+                                                                                if( typeof selectors[i][1][k][1] != 'undefined' && selectorElements[j].style[selectors[i][1][k][0]] == selectors[i][1][k][1] ) {
+                                                                                    return true;
+                                                                                } else {
+                                                                                    return false;
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
                                                                 }
-                                                            } else {
-                                                                if( selectors[i][1][0] ) {
-                                                                    let styleValue;
-                                                                    if( details.value == 'checked' ) {
-                                                                        styleValue = selectors[i][1][1] ? selectors[i][1][1] : '';
+                                                            }
+                                                        } else {
+                                                            let styleValue;
+                                                            if( value ) {
+                                                                if( value == 'checked' ) {
+                                                                    styleValue = typeof selectors[i][1][1] != 'undefined' ? selectors[i][1][1] : '';
+                                                                } else {
+                                                                    styleValue = typeof selectors[i][1][2] != 'undefined' ? selectors[i][1][2] : '';
+                                                                }
+                                                            }
+
+                                                            if( selectors[i][1][0] == 'class' ) {
+                                                                if( value ) {
+                                                                    if( styleValue ) {
+                                                                        selectorElements[j].classList.add( styleValue );
                                                                     } else {
-                                                                        styleValue = selectors[i][1][2] ? selectors[i][1][2] : '';
+                                                                        styleValue = typeof selectors[i][1][1] != 'undefined' ? selectors[i][1][1] : '';
+                                                                        selectorElements[j].classList.remove( styleValue );
                                                                     }
-                                                                        
-                                                                    if( selectors[i][1][0].indexOf( 'data-' ) === 0 ) {
-                                                                        if( styleValue ) {
-                                                                            selectorElements[j].setAttribute( selectors[i][1][0], styleValue );
-                                                                        } else {
-                                                                            selectorElements[j].removeAttribute( selectors[i][1][0] );
-                                                                        }
+                                                                } else {
+                                                                    if( typeof selectors[i][1][1] != 'undefined' && selectorElements[j].classList.contains( selectors[i][1][1] ) ) {
+                                                                        return true;
                                                                     } else {
-                                                                        if( styleValue ) {
-                                                                            selectorElements[j].style[selectors[i][1][0]] = styleValue;
-                                                                        } else {
-                                                                            selectorElements[j].style[selectors[i][1][0]] = '';
-                                                                        }
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                            } else if( typeof selectorElements[j].style[selectors[i][1][0]] == 'undefined' ) {
+                                                                if( value ) {
+                                                                    if( styleValue ) {
+                                                                        selectorElements[j].setAttribute( selectors[i][1][0], styleValue );
+                                                                    } else {
+                                                                        selectorElements[j].removeAttribute( selectors[i][1][0] );
+                                                                    }
+                                                                } else {
+                                                                    if( typeof selectors[i][1][1] != 'undefined' && selectorElements[j].getAttribute( selectors[i][1][0] ) == selectors[i][1][1] ) {
+                                                                        return true;
+                                                                    } else if( typeof selectors[i][1][2] != 'undefined' && selectorElements[j].getAttribute( selectors[i][1][0] ) == selectors[i][1][2] ) {
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                if( value ) {
+                                                                    if( styleValue ) {
+                                                                        selectorElements[j].style[selectors[i][1][0]] = styleValue;
+                                                                    } else {
+                                                                        selectorElements[j].style[selectors[i][1][0]] = '';
+                                                                    }
+                                                                } else {
+                                                                    if( typeof selectors[i][1][1] != 'undefined' && selectorElements[j].style[selectors[i][1][0]] == selectors[i][1][1] ) {
+                                                                        return true;
+                                                                    } else if( typeof selectors[i][1][2] != 'undefined' && selectorElements[j].style[selectors[i][1][0]] == selectors[i][1][2] ) {
+                                                                        return false;
                                                                     }
                                                                 }
                                                             }
@@ -171,15 +225,41 @@ class Control_Toggle extends Base_Control {
                                             }
                                         }
                                     }
+                                } else {
+                                    return false;
                                 }
-                                
-                                WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}', true );
-                                
+
+                                if( ! value ) {
+                                    return false;
+                                }
+                            }
+
+                            if( '{{{selectorsJson}}}' ) {
+                                let selectors = JSON.parse( '{{{selectorsJson}}}' );
+
+                                targetInput.checked = getSetElementValue( selectors );
+                            }
+
+                            targetInput.onchange = function( event ) {
+                                let details;
+
+                                if( event.target.checked == true ) {
+                                    details = {value: 'checked'};
+                                } else {
+                                    details = {value: 'unchecked'};
+                                }
+
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
+                                if( '{{{selectorsJson}}}' ) {
+                                    let selectors = JSON.parse( '{{{selectorsJson}}}' );
+
+                                    getSetElementValue( selectors, details.value );
+                                }
+
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
                             };
-                            
-                            WPTB_Helper.controlsStateManager( '{{{targetInputAddClass}}}' );
+
                         }
                     }
                 }
