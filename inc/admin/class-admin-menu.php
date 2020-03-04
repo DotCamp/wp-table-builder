@@ -46,7 +46,7 @@ class Admin_Menu {
         
         if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ) {
             
-            if( ! isset( $params->id ) || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
+            if( ! property_exists( $params, 'id') || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
                 $id = wp_insert_post([
                     'post_title' => sanitize_text_field( $params->title ),
                     'post_content' => '',
@@ -87,7 +87,7 @@ class Admin_Menu {
 		$table_html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
 		$name = $post->post_title;
         //$html = json_decode( $html );
-		die( json_encode( [$name, $table_html, $elements_datas] ) );
+		die( json_encode( [$name, $table_html] ) );
 	}
 
 

@@ -514,7 +514,7 @@ jQuery( document ).ready( function ( $ ) {
 //                        }
 
                         if( table.mergingСellsHorizontally ) {
-                            table.style.width = null;
+                            table.style.width = 'auto';
                             let tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
                             tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
                             tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
@@ -528,7 +528,7 @@ jQuery( document ).ready( function ( $ ) {
 //                            }
                         }
                     } else {
-                        table.style.width = null;
+                        table.style.width = 'auto';
                         table.style.minWidth = null;
                         table.style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
                         
@@ -541,7 +541,7 @@ jQuery( document ).ready( function ( $ ) {
                 } else {
                     table.style.maxWidth = null;
                     table.style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
-                    table.style.width = null;
+                    table.style.width = 'auto';
                     tableTdWidthAuto = '100';
                     styleElementCreate = true;
 

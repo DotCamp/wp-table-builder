@@ -172,8 +172,8 @@ class Table_Settings_Element extends Controls_Stack {
                 'selectors' => [
                     '{{{data.container}}} td' => 'padding',
                 ],
-                'min' => 0, 
-                'max' => 50,
+                'min' => '0',
+                'max' => '50',
                 'defaultValue' => 15,
                 'dimension' => 'px'
 			]

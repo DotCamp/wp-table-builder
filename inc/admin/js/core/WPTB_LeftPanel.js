@@ -1,6 +1,6 @@
 var WPTB_LeftPanel = function () {
 
-    var table = document.getElementsByClassName('wptb-preview-table')[0],
+    let table = document.getElementsByClassName('wptb-preview-table')[0],
         wptbElementButtons = document.getElementsByClassName('wptb-element');
     
     let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );
@@ -141,7 +141,7 @@ var WPTB_LeftPanel = function () {
                     table.tdDefaultWidth();
                 }
             } else if( inputs.hasOwnProperty( 'tableManageCells' ) ) {
-                table.toggleTableEditMode();
+                WPTB_Helper.toggleTableEditMode();
             } else if( inputs.hasOwnProperty( 'tableAlignmentCheckbox' ) ) {
                 table.tdDefaultWidth();
             }
@@ -158,8 +158,8 @@ var WPTB_LeftPanel = function () {
     };
     
     if( table ) {
-        document.getElementById( 'wptb-table-edit-mode-close' ).onclick = table.toggleTableEditMode;
-        document.getElementById( 'wptb-left-scroll-panel-curtain-close' ).onclick = table.toggleTableEditMode;
+        document.getElementById( 'wptb-table-edit-mode-close' ).onclick = WPTB_Helper.toggleTableEditMode;
+        document.getElementById( 'wptb-left-scroll-panel-curtain-close' ).onclick = WPTB_Helper.toggleTableEditMode;
         document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
         document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
         document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;

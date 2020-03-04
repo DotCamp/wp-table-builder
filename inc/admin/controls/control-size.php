@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder size control.
  *
- * A control class for creating size control objects 
+ * A control class for creating size control objects
  * for showing size field on the left panel. This fiels set css value for html tag.
  * When this control adds for element, there is opportunity to point css type (width or fontSize ...)
  * and also to point dimension of value
@@ -39,7 +39,7 @@ class Control_Size extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-        
+
 	}
 
 	/**
@@ -60,11 +60,11 @@ class Control_Size extends Base_Control {
                 min,
                 defaultValue,
                 dimension;
-            
+
             if( data.label ) {
                 label = data.label;
             }
-            
+
             if( data.selectors && typeof data.selectors === 'object' ) {
                 let i = 0;
                 for ( let prop in data.selectors ) {
@@ -74,11 +74,11 @@ class Control_Size extends Base_Control {
                     i++;
                 }
             }
-            
+
             if( selectors && Array.isArray( selectors ) ) {
                 selectorsJson = JSON.stringify( selectors );
             }
-            
+
             if( data.max ) {
                 max = data.max;
             } else {
@@ -99,94 +99,37 @@ class Control_Size extends Base_Control {
             } else {
                 dimension = 'px';
             }
-            
+
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
-            
+
             targetInputAddClass = data.elementControlTargetUnicClass;
         #>
-        
+
         <div class='wptb-settings-item-header' >
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-8">
                 <input data-type="size" class="wptb-element-property wptb-size-slider {{{targetInputAddClass}}}"
-                    data-element="{{{elemContainer}}}" type="range" min="{{{min}}}" max="{{{max}}}" 
-                    step="1" value="{{{defaultValue}}}"> 
+                    data-element="{{{elemContainer}}}" type="range" min="{{{min}}}" max="{{{max}}}"
+                    step="1" value="{{{defaultValue}}}">
             </div>
             <div class="wptb-settings-col-xs-4">
-                <input id="wptb-size-number" data-type="size" 
+                <input id="wptb-size-number" data-type="size"
                     class="wptb-size-number wptb-number-input wptb-element-property {{{targetInputAddClass}}}"
                     data-element="{{{elemContainer}}}" type="number" min="{{{min}}}" max="{{{max}}}" step="1" placeholder="{{{defaultValue}}}" pattern="[0-9]*">
                 <span class="wptb-input-px">{{{dimension}}}</span>
             </div>
         </div>
-        
+
         <wptb-template-script>
             ( function() {
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                 if( targetInputs.length > 0 && targetInputs[0].dataset.element ) {
                     let selectorElement = document.querySelector( '.' + targetInputs[0].dataset.element );
                     if( selectorElement ) {
-                        function getSetElementValue( selectors, value ) {
-                            if( selectors && Array.isArray( selectors ) ) {
-                                for( let i = 0; i < selectors.length; i++ ) {
-                                    if( selectors[i] && Array.isArray( selectors[i] ) && typeof selectors[i][0] != 'undefined' && selectors[i][1] != 'undefined' ) {
-                                        let selectorElements = document.querySelectorAll( selectors[i][0] );
-                                        if( selectorElements.length > 0 ) {
-                                            for( let j = 0; j < selectorElements.length; j++ ) {
-                                                if( selectors[i][1] ) {
-                                                    if( Array.isArray( selectors[i][1] ) ) {
-                                                        for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                            if( selectors[i][1][k] ) {
-                                                                if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
-                                                                    if( value ) {
-                                                                        selectorElements[j].setAttribute( selectors[i][1][k], value );
-                                                                    } else if( selectorElements[j].getAttribute( selectors[i][1][k] ) ) {
-                                                                        return selectorElements[j].getAttribute( selectors[i][1][k] );
-                                                                    }
-                                                                } else {
-                                                                    if( value ) {
-                                                                        selectorElements[j].style[selectors[i][1][k]] = value + '{{{dimension}}}';
-                                                                    } else if( parseInt( selectorElements[j].style[selectors[i][1][k]] ) ) {
-                                                                        return parseInt( selectorElements[j].style[selectors[i][1][k]] );
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    } else {
-                                                        if( selectors[i][1] ) {
-                                                            if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
-                                                                if( value ) {
-                                                                    selectorElements[j].setAttribute( selectors[i][1], value );
-                                                                } else if( selectorElements[j].getAttribute( selectors[i][1] ) ) {
-                                                                    return selectorElements[j].getAttribute( selectors[i][1] );
-                                                                }
-                                                            } else {
-                                                                if( value ) {
-                                                                    selectorElements[j].style[selectors[i][1]] = value + '{{{dimension}}}';
-                                                                } else if( parseInt( selectorElements[j].style[selectors[i][1]] ) ) {
-                                                                    return parseInt( selectorElements[j].style[selectors[i][1]] );
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                return false;
-                            }
-
-                            if( ! value ) {
-                                return false;
-                            }
-                        }
-
                         let selectorElementSettingValue;
                         if( '{{{selectorsJson}}}' ) {
                             let selectors = JSON.parse( '{{{selectorsJson}}}' );
@@ -232,12 +175,74 @@ class Control_Size extends Base_Control {
                                     this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
                                 }
                             }
-                        } 
+                        }
+                    }
+                }
+
+                function getSetElementValue(selectors, value) {
+                    console.log( "Hello 123" );
+                    if (selectors && Array.isArray(selectors)) {
+                        for (let i = 0; i < selectors.length; i++) {
+                            if (selectors[i] && Array.isArray(selectors[i]) && typeof selectors[i][0] != 'undefined' && selectors[i][1] != 'undefined') {
+                                let selectorElements = document.querySelectorAll(selectors[i][0]);
+                                if (selectorElements.length > 0) {
+                                    for (let j = 0; j < selectorElements.length; j++) {
+                                        if (selectors[i][1]) {
+                                            if (Array.isArray(selectors[i][1])) {
+                                                for (let k = 0; k < selectors[i][1].length; k++) {
+                                                    if (selectors[i][1][k]) {
+                                                        if (typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined') {
+                                                            if (value) {
+                                                                selectorElements[j].setAttribute(selectors[i][1][k], value);
+                                                            } else if (selectorElements[j].getAttribute(selectors[i][1][k])) {
+                                                                return selectorElements[j].getAttribute(selectors[i][1][k]);
+                                                            }
+                                                        } else {
+                                                            if (value) {
+                                                                selectorElements[j].style[selectors[i][1][k]] = value + '{{{dimension}}}';
+                                                            } else if ( typeof parseInt(selectorElements[j].style[selectors[i][1][k]]) != 'undefined' ) {
+                                                                let returnValue;
+                                                                parseInt( selectorElements[j].style[selectors[i][1][k]] ) === 0 ? returnValue = '0' : returnValue = parseInt( selectorElements[j].style[selectors[i][1][k]] );
+                                                                return returnValue;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                if (selectors[i][1]) {
+                                                    if (typeof selectorElements[j].style[selectors[i][1]] == 'undefined') {
+                                                        if (value) {
+                                                            selectorElements[j].setAttribute(selectors[i][1], value);
+                                                        } else if (selectorElements[j].getAttribute(selectors[i][1])) {
+                                                            return selectorElements[j].getAttribute(selectors[i][1]);
+                                                        }
+                                                    } else {
+                                                        if (value) {
+                                                            selectorElements[j].style[selectors[i][1]] = value + '{{{dimension}}}';
+                                                        } else if ( typeof parseInt(selectorElements[j].style[selectors[i][1]]) != 'undefined' ) {
+                                                            let returnValue;
+                                                            parseInt( selectorElements[j].style[selectors[i][1]] ) === 0 ? returnValue = '0' : returnValue = parseInt( selectorElements[j].style[selectors[i][1]] );
+                                                            return returnValue;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+
+                    if (!value) {
+                        return false;
                     }
                 }
             } )();
         </wptb-template-script>
-        
+
 		<?php
 	}
 }

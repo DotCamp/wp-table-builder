@@ -422,12 +422,13 @@ var WPTB_Helper = {
     controlsInclude: function( element, functionHandler ) {
         if( element && typeof element === 'object' && typeof functionHandler === 'function' ) {
             element.addEventListener( 'element:controls:active', function() {
-                let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i ),
-                    elementKind;
+                if( ! element.hasOwnProperty( 'сontrolsConnectIndic' ) || element.сontrolsConnectIndic !== true ) {
+                    let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i ),
+                        elementKind;
 
-                if( infArr && Array.isArray( infArr ) ) {
-                    elementKind = infArr[1];
-                }
+                    if( infArr && Array.isArray( infArr ) ) {
+                        elementKind = infArr[1];
+                    }
 
 //                if( ! element.hasOwnProperty( 'сontrolsConnectIndic' ) || element.сontrolsConnectIndic !== true && elementKind  ) {
 //                    let elementsSettingsTemplateJs = document.getElementsByClassName( 'wptb-element-datas' );
@@ -457,34 +458,36 @@ var WPTB_Helper = {
 //                        }
 //                    }
 //                }
-                        
-                let elementOptionsContainer = document.querySelector( '.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2] );
+                    if( elementKind ){
+                        let elementOptionsContainer = document.querySelector( '.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2] );
 
-                let elementOptions = elementOptionsContainer.querySelectorAll( '.wptb-element-option' );
+                        let elementOptions = elementOptionsContainer.querySelectorAll( '.wptb-element-option' );
 
-                for( let i = 0; i < elementOptions.length; i++ ) {
-                    let controlActiveElement = elementOptions[i].querySelector( '.wptb-element-property' );
-                    if( controlActiveElement ) {
-                        let regularText = new RegExp( 'wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i" );
-                        let controlInfArr = controlActiveElement.className.match( regularText );
-                        if( controlInfArr && Array.isArray( controlInfArr ) ) {
-                            let controlUnicClassName = controlInfArr[0];
+                        for( let i = 0; i < elementOptions.length; i++ ) {
+                            let controlActiveElement = elementOptions[i].querySelector( '.wptb-element-property' );
+                            if( controlActiveElement ) {
+                                let regularText = new RegExp( 'wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i" );
+                                let controlInfArr = controlActiveElement.className.match( regularText );
+                                if( controlInfArr && Array.isArray( controlInfArr ) ) {
+                                    let controlUnicClassName = controlInfArr[0];
 
-                            element.addEventListener( 'wptb-control:' + controlUnicClassName, function() {
-                                let controls = {};
-                                let controlName = controlInfArr[2];
-                                let control = document.getElementsByClassName( controlUnicClassName );
-                                if( control.length > 0 && controlName ) {
-                                    let targetControlValue = WPTB_Helper.targetControlValueGet( control );
+                                    element.addEventListener( 'wptb-control:' + controlUnicClassName, function() {
+                                        let controls = {};
+                                        let controlName = controlInfArr[2];
+                                        let control = document.getElementsByClassName( controlUnicClassName );
+                                        if( control.length > 0 && controlName ) {
+                                            let targetControlValue = WPTB_Helper.targetControlValueGet( control );
 
-                                    controls[controlName] = targetControlValue;
+                                            controls[controlName] = targetControlValue;
+                                        }
+
+                                        functionHandler( controls, element );
+                                    }, false );
                                 }
 
-                                functionHandler( controls, element );
-                            }, false );
+                                element.сontrolsConnectIndic = true;
+                            }
                         }
-
-                        element.сontrolsConnectIndic = true;
                     }
                 }
             }, false );
@@ -1134,7 +1137,7 @@ var WPTB_Helper = {
             let bar = document.querySelector( '.wptb-edit-bar' );
             if ( bar && bar.classList.contains( 'visible' ) ) {
                 let table = document.getElementsByClassName( 'wptb-preview-table' )[0];
-                table.toggleTableEditMode();
+                WPTB_Helper.toggleTableEditMode();
             }
         }
 
@@ -1331,5 +1334,48 @@ var WPTB_Helper = {
             }
         }
         http.send( params );
+    },
+
+
+    /*
+     * This just toggles visibility of cell edit bar, and toggles
+     * cell selecting mode.
+     */
+
+    toggleTableEditMode: function ( close = false ) {
+        let bar = document.getElementsByClassName('wptb-edit-bar'),
+            cellModeBackground = document.getElementById('wptb-cell_mode_background'),
+            leftScrollPanelCurtain = document.getElementById('wptb-left-scroll-panel-curtain'),
+            leftScrollPanelCellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ),
+            wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
+        if (wptbPreviewTable.length > 0) {
+            wptbPreviewTable = wptbPreviewTable[0];
+        }
+
+        if ( bar.length > 0 ) {
+            for ( let i = 0; i < bar.length; i++ ) {
+                if ( bar[i].classList.contains( 'visible' ) ) {
+                    document.select.deactivateMultipleSelectMode();
+                    bar[i].classList.remove( 'visible' );
+                    cellModeBackground.classList.remove( 'visible' );
+                    leftScrollPanelCurtain.classList.remove( 'visible' );
+                    leftScrollPanelCellSettings.classList.remove( 'visible' );
+                    wptbPreviewTable.parentNode.classList.remove( 'wptb-preview-table-manage-cells' );
+                    let wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName( 'td' );
+                    if ( wptbPreviewTableTds.length > 0 ) {
+                        for ( let i = 0; i < wptbPreviewTableTds.length; i++ ) {
+                            wptbPreviewTableTds[i].classList.remove( 'wptb-highlighted' );
+                        }
+                    }
+                } else if( ! close ) {
+                    document.select.activateMultipleSelectMode();
+                    bar[i].classList.add( 'visible' );
+                    cellModeBackground.classList.add( 'visible' );
+                    leftScrollPanelCurtain.classList.add( 'visible' );
+                    wptbPreviewTable.parentNode.classList.add( 'wptb-preview-table-manage-cells' );
+                }
+            }
+
+        }
     }
 }

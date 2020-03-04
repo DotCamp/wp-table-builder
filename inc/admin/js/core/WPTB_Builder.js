@@ -33,7 +33,7 @@
                             }
                         }
                         
-                        WPTB_LeftPanel();
+                        //WPTB_LeftPanel();
                         WPTB_Settings();
                         
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();

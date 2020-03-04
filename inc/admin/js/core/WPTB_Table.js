@@ -420,48 +420,6 @@ var array = [], WPTB_Table = function (columns, rows) {
     }
 
     /*
-     * This just toggles visibility of cell edit bar, and toggles 
-     * cell selecting mode.
-     */
-
-    table.toggleTableEditMode = function () {
-        let bar = document.getElementsByClassName('wptb-edit-bar'),
-                cellModeBackground = document.getElementById('wptb-cell_mode_background'),
-                leftScrollPanelCurtain = document.getElementById('wptb-left-scroll-panel-curtain'),
-                leftScrollPanelCellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ),
-                wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
-        if (wptbPreviewTable.length > 0) {
-            wptbPreviewTable = wptbPreviewTable[0];
-        }
-
-        if ( bar.length > 0 ) {
-            for ( let i = 0; i < bar.length; i++ ) {
-                if ( bar[i].classList.contains( 'visible' ) ) {
-                    document.select.deactivateMultipleSelectMode();
-                    bar[i].classList.remove( 'visible' );
-                    cellModeBackground.classList.remove( 'visible' );
-                    leftScrollPanelCurtain.classList.remove( 'visible' );
-                    leftScrollPanelCellSettings.classList.remove( 'visible' );
-                    wptbPreviewTable.parentNode.classList.remove( 'wptb-preview-table-manage-cells' );
-                    let wptbPreviewTableTds = wptbPreviewTable.getElementsByTagName( 'td' );
-                    if ( wptbPreviewTableTds.length > 0 ) {
-                        for ( let i = 0; i < wptbPreviewTableTds.length; i++ ) {
-                            wptbPreviewTableTds[i].classList.remove( 'wptb-highlighted' );
-                        }
-                    }
-                } else {
-                    document.select.activateMultipleSelectMode();
-                    bar[i].classList.add( 'visible' );
-                    cellModeBackground.classList.add( 'visible' );
-                    leftScrollPanelCurtain.classList.add( 'visible' );
-                    wptbPreviewTable.parentNode.classList.add( 'wptb-preview-table-manage-cells' );
-                }
-            }
-
-        }
-    }
-
-    /*
      * For assigning to each cell xIndex and y Index attributes,
      * these are the column number and row number of cell in table. 
      */
@@ -737,7 +695,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             if( CellsWidthAutoCount ) {
                 table.style.minWidth = '100%';
                 if( table.mergingСellsHorizontally ) {
-                    table.style.width = null;
+                    table.style.width = 'auto';
                     let tableTdsWidthAutoCommon = wptbTableSetupWidth - tableTdsSumMaxWidthFixed;
                     tableTdWidthAuto = tableTdsWidthAutoCommon / CellsWidthAutoCount;
                     tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
@@ -746,14 +704,14 @@ var array = [], WPTB_Table = function (columns, rows) {
                     table.style.width = '100%';
                 }
             } else {
-                table.style.width = null;
+                table.style.width = 'auto';
                 table.style.minWidth = null;
                 table.style.maxWidth = null;
             }
         } else {
             table.style.maxWidth = null;
             table.style.minWidth = tableTdsSumMaxWidth + 'px';
-            table.style.width = null;
+            table.style.width = 'auto';
             tableTdWidthAuto = '100'
             styleElementCreate = true;
         }
@@ -1633,7 +1591,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             table.getElementsByTagName('tbody')[0].removeChild(table.rows[row]);
             
             if( table.rows.length == 0 ) {
-                table.toggleTableEditMode();
+                WPTB_Helper.toggleTableEditMode();
                 wptbTableSetup.innerHTML = '';
                 document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                 let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
@@ -1697,7 +1655,7 @@ var array = [], WPTB_Table = function (columns, rows) {
             maxAmountOfCells--;
             
             if( table.querySelectorAll( 'td' ).length == 0 ) {
-                table.toggleTableEditMode();
+                WPTB_Helper.toggleTableEditMode();
                 wptbTableSetup.innerHTML = '';
                 document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                 let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
