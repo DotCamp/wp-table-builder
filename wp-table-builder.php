@@ -74,6 +74,33 @@ register_activation_hook( __FILE__, array( NS . 'Inc\Core\Activator', 'activate'
 
 register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deactivate' ) );
 
+if ( ! function_exists( 'wptb_safe_welcome_redirect' ) ) {
+
+    add_action( 'admin_init', 'WP_Table_Builder\wptb_safe_welcome_redirect' );
+
+    function wptb_safe_welcome_redirect() {
+
+        if ( ! get_transient( '_welcome_redirect_wptb' ) ) {
+            return;
+        }
+
+        delete_transient( '_welcome_redirect_wptb' );
+
+        if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+            return;
+        }
+
+        wp_safe_redirect( add_query_arg(
+            array(
+                'page' => 'wp-table-builder-welcome'
+            ),
+            admin_url( 'admin.php' )
+        ) );
+
+    }
+
+}
+
 
 /**
  * Plugin Singleton Container

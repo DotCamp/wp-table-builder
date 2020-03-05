@@ -31,6 +31,8 @@ class Activator {
 			wp_die( 'WP Table Builder requires a minmum PHP Version of ' . $min_php );
 		}
 
+        set_transient( '_welcome_redirect_wptb', true, 60 );
+
 		// Adds the option to check if user is notified for review.
 		add_option( 'wptb_review_notify', 'no' );
 

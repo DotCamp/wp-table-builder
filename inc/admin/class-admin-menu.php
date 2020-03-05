@@ -131,6 +131,16 @@ class Admin_Menu {
 			'wptb-builder',
 			array( $this, 'table_builder' )
 		);
+
+        // Add Welcome sub menu item.
+        $builder_page = add_submenu_page(
+            null,
+            esc_html__( 'Table Builder', 'wp-table-builder' ),
+            esc_html__( 'Add New', 'wp-table-builder' ),
+            $menu_cap,
+            'wp-table-builder-welcome',
+            array( $this, 'welcome' )
+        );
  
 		do_action( 'wptb_admin_menu', $this );
 
@@ -156,8 +166,14 @@ class Admin_Menu {
 			return;
 		}
 
-		
-		if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
+
+        if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wp-table-builder-welcome' ) {
+
+            //wp_enqueue_script( 'wptb-admin-welcome-js', plugin_dir_url( __FILE__ ) . 'js/admin-welcome.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
+            wp_enqueue_style( 'wptb-admin-welcome-css', plugin_dir_url( __FILE__ ) . 'css/admin-welcome.css', array(), NS\PLUGIN_VERSION, 'all' );
+
+        } elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
+
             wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
             wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
             wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
@@ -177,9 +193,12 @@ class Admin_Menu {
                     'security_code'  => wp_create_nonce( 'wptb-security-nonce' ),
                 ] 
             );
+
 		} elseif( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
+
             wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
             wp_enqueue_style( 'wptb-admin-common-css', plugin_dir_url( __FILE__ ) . 'css/admin-common.css', array(), NS\PLUGIN_VERSION, 'all' );
+
         }
 	
 	}
@@ -221,5 +240,14 @@ class Admin_Menu {
 	public function table_builder() {
         require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
 	}
+
+    /**
+     * Wrapper for the hook to render our plugin welcome page.
+     *
+     * @since 1.1.5
+     */
+    public function welcome() {
+        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-welcome.php';
+    }
 
 }; 
