@@ -453,6 +453,13 @@ jQuery( document ).ready( function ( $ ) {
                                     }
 
                                     newTable.dataset.wholeColumnsInContainer = wholeColumnsInContainer;
+                                    let images = newTable.querySelectorAll( '[srcset]' );
+                                    if( images.length > 0 ) {
+                                        for ( let i = 0; i < images.length; i++ ) {
+                                            images[i].removeAttribute( 'srcset' );
+                                        }
+                                    }
+
                                     tableContainer.appendChild( newTable );
                                 }
                             }
