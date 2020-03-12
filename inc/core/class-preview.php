@@ -268,21 +268,6 @@ class Preview {
                 . '<div style="text-align:center;">' . $message . '</div>'
                 . '<div class="wptb-table-container-matrix">' . $html . '</div>'
                 . '</div>';
-        $html .= '<script>'
-                . 'var wptbContainer = document.getElementsByClassName( "wptb-table-' . absint( $this->table_data->ID ) . '" );'
-                . 'if( wptbContainer.length > 0 ) {'
-                . '    wptbContainer = wptbContainer[0];'
-                . '    var wptbPreviewTable = wptbContainer.getElementsByClassName( "wptb-preview-table" );'
-                . '    if( wptbPreviewTable.length > 0 ) {'
-                . '        wptbPreviewTable = wptbPreviewTable[0];'
-                . '        if( wptbPreviewTable.dataset.wptbTableContainerMaxWidth ) {'
-                . '            wptbContainer.style.maxWidth = wptbPreviewTable.dataset.wptbTableContainerMaxWidth + "px";'
-                . '        }'
-                . '        wptbPreviewTable.classList.remove( "wptb-table-preview-static-indic" );'
-                . '        wptbPreviewTable.style.display = "none";'
-                . '    }'
-                . '}'
-                . '</script>';
 
 		return $html;
         
