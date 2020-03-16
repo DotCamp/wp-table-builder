@@ -7,54 +7,30 @@ use WP_Table_Builder as NS;
  */
 
 ?>
-
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-
-<div class="wptb-welcome-container">
-    <div class="wptb-welcome-header">
-        <h1><?php esc_html_e( 'Welcome to WP Table Builder!', 'wp-table-builder' ); ?></h1>
-        <h5><?php esc_html_e( 'The Drag & Drop Wordpress Table Builder', 'wp-table-builder' ); ?></h5>
-        <img src="<?php echo wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/icon-128x128.png' )?>">
-    </div>
-    <div class="wptb-welcome-intro">
-        <p><?php esc_html_e( ' ', 'wp-table-builder' ); ?></p>
-        <h2><span class="color-blue"><?php esc_html_e( '7 elements.', 'wp-table-builder' ); ?></span> <?php esc_html_e( 'More in the making...', 'wp-table-builder' ); ?></h2>
-        <div class="wptb-welcome-button-wrap wptb-after-clear-both">
-            <div class="left">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>" class="wptb-btn wptb-btn-block wptb-btn-lg wptb-btn-blue">
-                    <?php esc_html_e( 'Create Table', 'wp-table-builder' ); ?>
-                </a>
-            </div>
-            <div class="right">
-                <a href="https://wptablebuilder.com/"
-                   class="wptb-btn wptb-btn-block wptb-btn-lg wptb-btn-grey" target="_blank" rel="noopener noreferrer">
-                    <?php esc_html_e( 'Learn More', 'wp-table-builder' ); ?>
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="wptb-container">
+	<div class="wptb-headerPart">
+		<div class="wptb-logoAndText">
+			<img alt="" src="<?php echo wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/wp-table-builder-logo.png' )?>"> <span class="wptb-gettingStarted"><?php esc_html_e( 'Getting Started', 'wp-table-builder' ); ?></span>
+		</div>
+		<div class="wptb-skipToPrevious">
+			<a href="#"><i class="dashicons dashicons-no" style="text-decoration: none" title="Skip"></i></a>
+		</div>
+	</div>
+	<div class="wptb-gettingStartedContent">
+		<div class="wptb-gettingStartedText">
+			<h2><?php esc_html_e( 'Welcome to WP Table Builder!', 'wp-table-builder' ); ?></h2>
+			<p><?php esc_html_e( 'We recommend you to watch this short getting started video, and then start dragging and dropping elements to create your first table.', 'wp-table-builder' ); ?></p>
+		</div>
+		<div class="wptb-gettingStartedViedo">
+            <iframe width="716" height="415" src="https://www.youtube-nocookie.com/embed/j3FWRdGlpTA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+		</div>
+		<div class="wptb-gettingStartedButton">
+			<a class="wptb-buttonPrimary" href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>">
+                <?php esc_html_e( 'Create Your First Table', 'wp-table-builder' ); ?>
+            </a>
+            <a class="wptb-buttonSecondary" href="<?php echo esc_url( "https://wptablebuilder.com/" ); ?>">
+                <?php esc_html_e ( 'Learn More', 'wp-table-builder' ); ?>
+            </a>
+		</div>
+	</div>
 </div>
-
-<div class="wptb-welcome-container">
-    <div class="wptb-welcome-social">
-        <h2><?php esc_html_e( 'Stay Connected with Us!', 'wp-table-builder' ); ?></h2>
-        <p><?php esc_html_e( 'For upcoming plugins updates, news, tips and tutorials on WP Table Builder in general you can stay connected with us.', 'wp-table-builder' ); ?></p>
-        <div class="wptb-welcome-button-wrap wptb-after-clear-both">
-            <div class="left">
-                <a href="https://twitter.com/wptbplugin" target="_blank" class="wptb-btn wptb-btn-block wptb-btn-lg wptb-btn-twitter">
-                    <?php esc_html_e( 'Follow Us On Twitter!', 'wp-table-builder' ); ?>
-                </a>
-            </div>
-            <div class="right">
-                <a href="https://www.facebook.com/groups/497986907442780/"
-                   class="wptb-btn wptb-btn-block wptb-btn-lg wptb-btn-facebook" target="_blank" rel="noopener noreferrer">
-                    <?php esc_html_e( 'Join Our Facebook Group!', 'wp-table-builder' ); ?>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style type="text/css" id="custom-cursor">
-
-</style>
