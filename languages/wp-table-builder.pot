@@ -16,34 +16,34 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-admin-menu.php:109, ../inc/admin/class-admin-menu.php:121
+#: ../inc/admin/class-admin-menu.php:106, ../inc/admin/class-admin-menu.php:118
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:110, ../inc/admin/class-admin-menu.php:131
+#: ../inc/admin/class-admin-menu.php:107, ../inc/admin/class-admin-menu.php:128, ../inc/admin/class-admin-menu.php:138
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:122, ../inc/admin/class-admin-menu.php:201
+#: ../inc/admin/class-admin-menu.php:119, ../inc/admin/class-admin-menu.php:217
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:132, ../inc/admin/class-admin-menu.php:205
+#: ../inc/admin/class-admin-menu.php:129, ../inc/admin/class-admin-menu.php:139, ../inc/admin/class-admin-menu.php:221
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:134
+#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:130
 msgstr ""
 
 #: ../inc/admin/class-tables.php:36
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:195, ../inc/admin/element-classes/elements/shortcode-element.php:40
+#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:191, ../inc/admin/element-classes/elements/shortcode-element.php:40
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:194
+#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:190
 msgid "Title"
 msgstr ""
 
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:151
+#: ../inc/admin/class-tables.php:134
 msgid "Edit Table"
 msgstr ""
 
@@ -64,31 +64,31 @@ msgid "WPTB Tables"
 msgstr ""
 
 #. translators: %s - admin area page builder page URL.
-#: ../inc/admin/class-wptb-listing.php:115
+#: ../inc/admin/class-wptb-listing.php:111
 msgid "Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a go</a>?"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:144
+#: ../inc/admin/class-wptb-listing.php:140
 msgid "Edit This Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:196
+#: ../inc/admin/class-wptb-listing.php:192
 msgid "Created"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:197
+#: ../inc/admin/class-wptb-listing.php:193
 msgid "ID"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:260
+#: ../inc/admin/class-wptb-listing.php:256
 msgid "Table duplicate successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:276
+#: ../inc/admin/class-wptb-listing.php:272
 msgid "Table deleted successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:300
+#: ../inc/admin/class-wptb-listing.php:296
 msgid "Bulk Delete Performed Successfully."
 msgstr ""
 
@@ -108,6 +108,26 @@ msgstr ""
 msgid "This is a preview of your table. This page is not publicly accessible."
 msgstr ""
 
+#: ../inc/admin/views/wptb-welcome.php:13
+msgid "Getting Started"
+msgstr ""
+
+#: ../inc/admin/views/wptb-welcome.php:21
+msgid "Welcome to WP Table Builder!"
+msgstr ""
+
+#: ../inc/admin/views/wptb-welcome.php:22
+msgid "We recommend you to watch this short getting started video, and then start dragging and dropping elements to create your first table."
+msgstr ""
+
+#: ../inc/admin/views/wptb-welcome.php:29
+msgid "Create Your First Table"
+msgstr ""
+
+#: ../inc/admin/views/wptb-welcome.php:32
+msgid "Learn More"
+msgstr ""
+
 #: ../inc/admin/element-classes/elements/button-element.php:40, ../inc/admin/views/builder/additional-element.php:3
 msgid "Button"
 msgstr ""
@@ -124,15 +144,15 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:192
+#: ../inc/admin/element-classes/elements/list-element.php:206
 msgid "List Item 1"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:198
+#: ../inc/admin/element-classes/elements/list-element.php:212
 msgid "List Item 2"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:204
+#: ../inc/admin/element-classes/elements/list-element.php:218
 msgid "List Item 3"
 msgstr ""
 
