@@ -13,7 +13,7 @@ use WP_Table_Builder as NS;
 			<img alt="" src="<?php echo wp_normalize_path( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/wp-table-builder-logo.png' )?>"> <span class="wptb-gettingStarted"><?php esc_html_e( 'Getting Started', 'wp-table-builder' ); ?></span>
 		</div>
 		<div class="wptb-skipToPrevious">
-			<a href="#"><i class="dashicons dashicons-no" style="text-decoration: none" title="Skip"></i></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview' ) ); ?>"><i class="dashicons dashicons-no" style="text-decoration: none" title="Skip"></i></a>
 		</div>
 	</div>
 	<div class="wptb-gettingStartedContent">
