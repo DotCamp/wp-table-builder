@@ -950,7 +950,6 @@ var WPTB_Helper = {
                 script.setAttribute( 'type', 'text/javascript' );
                 script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
                 controlScriptsArr.push( script );
-                console.log( 'Hello' );
             }
 
             i++;

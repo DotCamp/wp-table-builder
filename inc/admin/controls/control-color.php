@@ -129,7 +129,6 @@ class Control_Color extends Base_Control {
                                 if( selectorElements.length > 0 ) {
                                     for( let j = 0; j < selectorElements.length; j++ ) {
                                         if( selectors[i][1] ) {
-                                            console.log("rgbToHex");
                                             if( Array.isArray( selectors[i][1] ) ) {
                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
                                                     if( selectorElements[j].style[selectors[i][1][k]] ) {

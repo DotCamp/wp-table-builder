@@ -247,7 +247,6 @@ class Control_Alignment extends Base_Control {
                                         getSetElementValue( selectors, this.dataset.alignmentValue );
                                         
                                         let details = {value: this.dataset.alignmentValue};
-                                        console.log( '{{{targetAddClass}}}' );
                                         WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetAddClass}}}', selectorElement, details );
                                     }
 

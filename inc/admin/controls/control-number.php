@@ -147,7 +147,6 @@ class Control_Number extends Base_Control {
                         
                         let selectorElementSettingValue;
                         if( '{{{selectorsJson}}}' ) {
-                            console.log( "Hello" );
                             let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
                             selectorElementSettingValue = getSetElementValue( selectors );
