@@ -180,7 +180,6 @@ class Control_Size extends Base_Control {
                 }
 
                 function getSetElementValue(selectors, value) {
-                    console.log( "Hello 123" );
                     if (selectors && Array.isArray(selectors)) {
                         for (let i = 0; i < selectors.length; i++) {
                             if (selectors[i] && Array.isArray(selectors[i]) && typeof selectors[i][0] != 'undefined' && selectors[i][1] != 'undefined') {

@@ -4,7 +4,7 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         copy;
     if( node.classList.contains( 'wptb-ph-element' ) ) {
         if ( kindIndexProt == undefined || copy == true ) {
-            index = document.counter.nextIndex( element.kind );
+            //index = document.counter.nextIndex( element.kind );
             let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
             let elementIndexesArr = [];
             for( let i = 0; i < wptbElements.length; i++ ) {

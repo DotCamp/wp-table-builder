@@ -4,12 +4,31 @@ var WPTB_Helper = {
         return result ? 'rgb(' + parseInt( result[1], 16 ) + ',' + parseInt( result[2], 16 ) + ',' + parseInt( result[3], 16 ) + ')' : null;
     },
     rgbToHex: function ( rgb ) {
-        var rgb = rgb.match( /^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i );
+        if( rgb ) {
+            if( WPTB_Helper.isHex( rgb ) ) return rgb;
 
-        return ( rgb && rgb.length === 4 ) ? "#" +
-            ( "0" + parseInt( rgb[1],10 ).toString( 16 )).slice( -2 ) +
-            ( "0" + parseInt( rgb[2],10 ).toString( 16 )).slice( -2 ) +
-            ( "0" + parseInt( rgb[3],10 ).toString( 16 )).slice( -2 ) : '';
+            let rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?((?:[0-9]*[.])?[0-9]+)[\s+]?\)/i);
+            if ( rgbm && rgbm.length === 5) {
+                return "#" +
+                    ('0' + Math.round(parseFloat(rgbm[4], 10) * 255).toString(16).toUpperCase()).slice(-2) +
+                    ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) +
+                    ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) +
+                    ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
+            } else {
+                rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+                if (rgbm && rgbm.length === 4) {
+                    return "#" +
+                        ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) +
+                        ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) +
+                        ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
+                } else {
+                    return '';
+                }
+            }
+        } else {
+            return '';
+        }
+
     },
     isHex: function( hex ) {
         let regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}$');
@@ -185,9 +204,9 @@ var WPTB_Helper = {
         var url = window.location.href,
             regex = new RegExp('[?&]table(=([^&#]*)|&|#|$)'),
             results = regex.exec(url);
-        if (!results) return false;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        if ( ! results ) return false;
+        if ( ! results[2] ) return '';
+        return decodeURIComponent( results[2].replace(/\+/g, ' ') );
     },
     getColumnWidth: function( table, cell ) {
         let xIndex = cell.dataset.xIndex;
@@ -931,6 +950,7 @@ var WPTB_Helper = {
                 script.setAttribute( 'type', 'text/javascript' );
                 script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
                 controlScriptsArr.push( script );
+                console.log( 'Hello' );
             }
 
             i++;
@@ -1301,7 +1321,10 @@ var WPTB_Helper = {
             WPTB_Helper.elementOptionsSet( 'table_setting', element );
         }
     },
-    // function for sending of element ajax request
+
+    /*
+     * function for sending of element ajax request
+     */
     elementAjax: function( dataAjaxData, element ) {
         let http = new XMLHttpRequest(),
             url = ( wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl ) + "?action=wptb_element_ajax";
@@ -1336,12 +1359,10 @@ var WPTB_Helper = {
         http.send( params );
     },
 
-
     /*
      * This just toggles visibility of cell edit bar, and toggles
      * cell selecting mode.
      */
-
     toggleTableEditMode: function ( close = false ) {
         let bar = document.getElementsByClassName('wptb-edit-bar'),
             cellModeBackground = document.getElementById('wptb-cell_mode_background'),
@@ -1377,5 +1398,213 @@ var WPTB_Helper = {
             }
 
         }
+    },
+
+    /*
+     * checking of dimension of value
+     */
+    checkingDimensionValue: function ( value, dimension ) {
+        value = String( value );
+        dimension = String( dimension );
+        if( value && dimension ) {
+            let searchIndex = value.indexOf( dimension );
+            if ( searchIndex != -1 && searchIndex == ( value.length - dimension.length ) ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    },
+
+    /*
+     * if dimension is included - checking and if it necessary setting value
+     * without dimension - return value
+     */
+    checkSetGetStyleSizeValue: function( element, styleName, computedStyleName, dimension ) {
+        let elemStyleValue = element.style[styleName];
+        elemStyleValue = String( elemStyleValue );
+
+        if( ! elemStyleValue || dimension ? ! ( WPTB_Helper.checkingDimensionValue( elemStyleValue, dimension ) ) : false ){
+            let elementStyles = window.getComputedStyle( element );
+            if( computedStyleName && elementStyles.getPropertyValue( computedStyleName ) && dimension ? WPTB_Helper.checkingDimensionValue( elementStyles.getPropertyValue( computedStyleName ), dimension ) : true ) {
+                if( ! dimension ) {
+                    return elementStyles.getPropertyValue( computedStyleName );
+                } else {
+                    element.style[styleName] = elementStyles.getPropertyValue( computedStyleName );
+                }
+            } else {
+                if( ! dimension ) {
+                    return false;
+                } else {
+                    element.style[styleName] = null;
+                }
+            }
+        } else if( ! dimension ) {
+            return elemStyleValue;
+        }
+
+        return element.style[styleName];
+    },
+
+    /*
+     * function checking that element has the style
+     * if this style is present - checking the format color
+     * if param set is true - setting style for element (consider hex format of color)
+     * if param set is false - getting style from element
+     */
+    checkSetGetStyleColorValue: function ( element, styleName, computedStyleName, set = false ) {
+        let elemStyleColorValue = element.style[styleName];
+
+        if( ! elemStyleColorValue ) {
+            let elementStyles = window.getComputedStyle( element, null );
+
+            if( elementStyles && elementStyles.getPropertyValue( computedStyleName ) ) {
+
+                if( set ) {
+                    elemStyleColorValue = WPTB_Helper.rgbToHex( elementStyles.getPropertyValue( computedStyleName ) );
+                    if( WPTB_Helper.isHex( elemStyleColorValue ) ) {
+                        element.style[styleName] = elemStyleColorValue;
+                    } else {
+                        element.style[styleName] = '';
+                    }
+                } else {
+                    return elementStyles.getPropertyValue( computedStyleName );
+                }
+
+            } else {
+                if( set ) {
+                    element.style[styleName] = '';
+                } else {
+                    return '';
+                }
+            }
+        } else if( ! set ) {
+            return elemStyleColorValue;
+        }
+    },
+
+    /*
+     * function checking that element has the style
+     * if this style is present - checking the format color
+     * if param set is true - setting style for element (consider hex format of color)
+     * if param set is false - getting style from element
+     */
+    checkSetGetStyleValue: function ( element, styleName, computedStyleName, set = false ) {
+        let elemStyleColorValue = element.style[styleName];
+
+        if( ! elemStyleColorValue ) {
+            let elementStyles = window.getComputedStyle( element, null );
+
+            if( elementStyles && elementStyles.getPropertyValue( computedStyleName ) ) {
+
+                if( set ) {
+                    element.style[styleName] = elementStyles.getPropertyValue( computedStyleName );
+                } else {
+                    return elementStyles.getPropertyValue( computedStyleName );
+                }
+
+            } else if( ! set ) {
+                return '';
+            }
+        } else if( ! set ) {
+            return elemStyleColorValue;
+        }
+    },
+
+    /*
+     * get the value of the same elements that have the most count
+     */
+    getValueMaxCountSameElementsInArray: function ( arr ) {
+        if( arr && Array.isArray( arr ) ) {
+            let check = {};
+            for( let i = 0; i < arr.length; i++ ) {
+                if( check[arr[i]] ) {
+                    check[arr[i]]++;
+                } else {
+                    check[arr[i]] = 1;
+                }
+            }
+
+            let maxPropName;
+            for ( let key in check ) {
+                if( ! maxPropName ) {
+                    maxPropName = key;
+                    continue;
+                } else {
+                    if( check[maxPropName] < check[key] ) {
+                        maxPropName = key;
+                    }
+                }
+            }
+
+            return maxPropName;
+        }
+    },
+
+    /*
+     * For assigning to each cell xIndex and y Index attributes,
+     * these are the column number and row number of cell in table.
+     */
+    recalculateIndexes: function ( table ) {
+        let trs = table.getElementsByTagName( 'tr' ),
+            tds, maxCols = 0, maxColsFull = 0, tdsArr = [];
+
+        for ( let i = 0; i < trs.length; i++ ) {
+            tds = trs[i].getElementsByTagName( 'td' );
+
+            if ( tdsArr[i] == undefined ) {
+                tdsArr[i] = [];
+            }
+
+            let jMainIter = 0;
+            for ( let j = 0; j < tds.length; j++ ) {
+                if ( tdsArr[i][j] != undefined ) {
+                    for ( let y = 0; y < 100; y++ ) {
+                        if ( tdsArr[i][jMainIter] != undefined ) {
+                            jMainIter++;
+                            continue;
+                        }
+                        tdsArr[i][jMainIter] = tds[j];
+                        tds[j].dataset.xIndex = jMainIter;
+                        break;
+                    }
+                } else {
+                    tdsArr[i][j] = tds[j];
+                    tds[j].dataset.xIndex = jMainIter;
+                }
+                tds[j].dataset.yIndex = i;
+
+                if ( tds[j].colSpan > 1 ) {
+                    for ( let k = 1; k < tds[j].colSpan; k++ ) {
+                        jMainIter++;
+                        tdsArr[i][jMainIter] = 'tdDummy';
+                    }
+                }
+
+                if ( tds[j].rowSpan > 1 ) {
+                    for ( let x = 1; x < tds[j].rowSpan; x++ ) {
+                        if ( tdsArr[i + x] == undefined ) {
+                            tdsArr[i + x] = [];
+                        }
+                        for ( let z = 0; z < tds[j].colSpan; z++ ) {
+                            tdsArr[i + x][jMainIter - tds[j].colSpan + 1 + z ] = 'tdDummy';
+                        }
+                    }
+                }
+                jMainIter++;
+
+                if ( j > maxCols ) {
+                    maxCols = j;
+                }
+            }
+
+            if( i == 0 ) {
+                maxColsFull = jMainIter;
+            }
+        }
+        table.columns = maxCols;
+        table.maxCols = maxColsFull;
     }
 }

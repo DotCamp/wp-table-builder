@@ -122,13 +122,14 @@ class Control_Color extends Base_Control {
                     if( '{{{selectorsJson}}}' ) {
                         let selectors = JSON.parse( '{{{selectorsJson}}}' );
                         
-                        let thisColorCss;
+                        let thisColorCss, thisColorCssHex;
                         for( let i = 0; i < selectors.length; i++ ) {
                             if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
                                 let selectorElements = document.querySelectorAll( selectors[i][0] );
                                 if( selectorElements.length > 0 ) {
                                     for( let j = 0; j < selectorElements.length; j++ ) {
                                         if( selectors[i][1] ) {
+                                            console.log("rgbToHex");
                                             if( Array.isArray( selectors[i][1] ) ) {
                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
                                                     if( selectorElements[j].style[selectors[i][1][k]] ) {
@@ -140,7 +141,18 @@ class Control_Color extends Base_Control {
                                                         if( ! WPTB_Helper.isHex( thisColorCss ) ) {
                                                             thisColorCss = '';
                                                         }
+
+                                                        if( thisColorCss == 'rgb(0, 0, 0)' ) {
+                                                            console.log("'rgb(0, 0, 0)'");
+                                                        }
+                                                        if( selectors[i][1][k] == 'background-color' ){
+                                                            console.log("1");
+                                                            console.log(selectorElements[j]);
+                                                        }
                                                         selectorElements[j].style[selectors[i][1][k]] = thisColorCss;
+                                                        if( selectors[i][1][k] == 'background-color' ){
+                                                            console.log(selectorElements[j]);
+                                                        }
                                                     }
                                                 }
                                             } else {
