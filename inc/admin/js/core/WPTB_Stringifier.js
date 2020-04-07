@@ -1,7 +1,6 @@
 var WPTB_Stringifier = function ( codeMain ) {
     if ( codeMain ) {
         let code = codeMain.cloneNode( true );
-        code.classList.add( 'wptb-table-preview-static-indic' );
         code.dataset.tableColumns = codeMain.columns;
         code.style.width = null;
         code.style.minWidth = null;

@@ -4,7 +4,6 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
-use WP_Table_Builder\Inc\Core\Preview as Preview;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 
@@ -34,12 +33,21 @@ class Init {
 	 */
 	protected $loader;
 
+    /**
+     * The name of the plugin.
+     *
+     * @since    1.0.0
+     * @access   protected
+     * @var      string    $plugin_name    The name of the plugin.
+     */
+    protected $plugin_name;
+
 	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_base_name    The string used to uniquely identify this plugin.
+	 * @var      string    $plugin_basename    The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_basename;
 
@@ -57,7 +65,7 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string    $plugin_text_domain    The text domain of the plugin.
 	 */
 	protected $plugin_text_domain;
 
@@ -88,7 +96,7 @@ class Init {
 	 * @var Controls_Manager
 	 */
     public $controls_manager;
-    
+
     private function __construct() {
 
 		$this->plugin_name = NS\WP_TABLE_BUILDER;
@@ -101,6 +109,7 @@ class Init {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+        $this->table_import();
         $this->table_preview();
         
         if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
@@ -167,6 +176,7 @@ class Init {
 
 		$tables = new Admin\Tables;
 		$menu = new Admin\Admin_Menu;
+		//$import = new Admin\Import;
         
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -197,7 +207,17 @@ class Init {
 	 * @access    private
 	 */
     private function table_preview() {
-        $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Core\Preview', 'instance' );
+        $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Preview', 'instance' );
+    }
+
+    /**
+     * Сreates an instance of the class that is intended to display
+     * the import
+     *
+     * @access    private
+     */
+    private function table_import() {
+        $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Import', 'instance' );
     }
     
     /**

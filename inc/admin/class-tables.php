@@ -67,6 +67,11 @@ class Tables {
 				
 	    }
 	}
+
+	public function table_exists ( $table_id ) {
+        $table_content = get_post_meta( $table_id , '_wptb_content_', true );
+        return ! empty( $table_content );
+    }
     
 	/**
 	 * Registers the custom post type to be used for table.
@@ -96,7 +101,11 @@ class Tables {
 		add_shortcode( 'wptb', array( $this, 'get_table' ) );
     }
 
-    public function get_table( $args ) { 
+    public function get_table( $args ) {
+	    if( ! $this->table_exists( $args['id'] ) ) {
+	        return '[wptb id="' . $args['id'] . '" not found ]';
+        }
+
         do_action( 'wptb_frontend_enqueue_style' );
         do_action( 'wptb_frontend_enqueue_script' );
     	$html = get_post_meta( $args['id'] , '_wptb_content_', true );
@@ -127,7 +136,7 @@ class Tables {
                 }
             }
         }
-        
+
         $post_edit_link = '';
         if( current_user_can( 'manage_options' ) ){
             $post_edit_link = '<div class="wptb-frontend-table-edit-link">'

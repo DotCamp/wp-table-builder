@@ -4,7 +4,7 @@ var WPTB_ElementObject = function ( data ) {
         DOMElement = document.createElement('div'),
         kindIndexProt = undefined,
         copy = false;
-        DOMElement.classList.add( 'wptb-' + data.kind + '-container', 'wptb-ph-element', 'wptb-item-javascript-indic' );
+        DOMElement.classList.add( 'wptb-' + data.kind + '-container', 'wptb-ph-element' );
     
         let wpTemplateId = 'wptb-' + data.kind + '-content';
         let template = wp.template( wpTemplateId );

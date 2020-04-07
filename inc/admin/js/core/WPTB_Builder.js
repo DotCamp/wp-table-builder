@@ -58,5 +58,10 @@
         settings = WPTB_Settings();
     };
 
-    document.addEventListener('DOMContentLoaded', WPTB_Builder);
+    let url = window.location.href,
+        regex = new RegExp('[?&]page=wptb-builder'),
+        results = regex.exec( url );
+    if ( results ) {
+        document.addEventListener('DOMContentLoaded', WPTB_Builder);
+    }
 })();

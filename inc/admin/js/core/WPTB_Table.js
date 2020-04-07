@@ -1,4 +1,4 @@
-var array = [], WPTB_Table = function (columns, rows) {
+var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
     /* The members of the class */
     var settings = document.getElementsByClassName('wptb-settings-items'),
@@ -374,7 +374,7 @@ var array = [], WPTB_Table = function (columns, rows) {
     jQuery('#wptb-table-border-color').val('');
     jQuery('#wptb-table-padding-number,#wptb-table-padding-slider').val('15');
 
-    if (columns || rows) {
+    if ( columns || rows ) {
         //END OF PRIVATE FUNCTIONS
         for (var i = 0; i < settings.length; i++) {
             if (settings[i].id !== 'wptb-apply-inner-border') {
@@ -402,10 +402,10 @@ var array = [], WPTB_Table = function (columns, rows) {
             }
         }
     } else {
-        let wptb_preview_table = document.getElementsByClassName( 'wptb-preview-table' );
+        if( ! wptb_preview_table ) wptb_preview_table = document.querySelector( '.wptb-preview-table' );
 
-        if (wptb_preview_table.length > 0) {
-            table = wptb_preview_table[0];
+        if ( wptb_preview_table ) {
+            table = wptb_preview_table;
 
             let cells = table.getElementsByTagName('td');
 
@@ -424,85 +424,8 @@ var array = [], WPTB_Table = function (columns, rows) {
      * these are the column number and row number of cell in table. 
      */
 
-    table.recalculateIndexes = function ( start ) {
-        let trs = this.getElementsByTagName('tr'), tds, maxCols = 0, maxColsFull = 0,
-                tdsArr = [];
-        //let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
-        
-        for (var i = 0; i < trs.length; i++) {
-            if ( i == 0 ) {
-//                if( wptbTopRowAsHeader.checked ) {
-//                    if( start == undefined ) {
-//                        this.classList.add( 'wptb-table-preview-head' );               
-//                        trs[i].classList.add( 'wptb-table-head' )
-//                    }  ;
-//                } else {
-//                    if( start == undefined ) {
-//                        this.classList.remove( 'wptb-table-preview-head' );
-//                        trs[i].classList.remove( 'wptb-table-head' );
-//                    }
-//                }
-            } else {
-//                if (i % 2 == 0) {
-//                    trs[i].classList.remove( 'wptb-table-head' );
-//                } else {
-//                    trs[i].classList.remove( 'wptb-table-head' );
-//                }
-            }
-
-            tdsArr[i];
-            tds = trs[i].getElementsByTagName('td');
-
-            if (tdsArr[i] == undefined) {
-                tdsArr[i] = [];
-            }
-
-            let jMainIter = 0;
-            for (var j = 0; j < tds.length; j++) {
-                if (tdsArr[i][j] != undefined) {
-                    for (let y = 0; y < 100; y++) {
-                        if (tdsArr[i][jMainIter] != undefined) {
-                            jMainIter++;
-                            continue;
-                        }
-                        tdsArr[i][jMainIter] = tds[j];
-                        tds[j].dataset.xIndex = jMainIter;
-                        break;
-                    }
-                } else {
-                    tdsArr[i][j] = tds[j];
-                    tds[j].dataset.xIndex = jMainIter;
-                }
-                tds[j].dataset.yIndex = i;
-
-                if (tds[j].colSpan > 1) {
-                    for (let k = 1; k < tds[j].colSpan; k++) {
-                        jMainIter++;
-                        tdsArr[i][jMainIter] = 'tdDummy';
-                    }
-                }
-
-                if (tds[j].rowSpan > 1) {
-                    for (let x = 1; x < tds[j].rowSpan; x++) {
-                        if (tdsArr[i + x] == undefined) {
-                            tdsArr[i + x] = [];
-                        }
-                        for (let z = 0; z < tds[j].colSpan; z++) {
-                            tdsArr[i + x][jMainIter - tds[j].colSpan + 1 + z ] = 'tdDummy';
-                        }
-                    }
-                }
-                jMainIter++;
-                if( i == 0 ) {
-                    maxColsFull = jMainIter;
-                }
-            }
-            if (j > maxCols) {
-                maxCols = j;
-            }
-        }
-        this.columns = maxCols;
-        this.maxCols = maxColsFull;
+    table.recalculateIndexes = function () {
+        WPTB_Helper.recalculateIndexes( this );
     }
     
     table.addColumnWidth = function( value, cleaner ) {

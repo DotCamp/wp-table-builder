@@ -1,6 +1,6 @@
 <?php
 
-namespace WP_Table_Builder\Inc\Core;
+namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Admin\Tables as Tables;
 use WP_Table_Builder as NS;
@@ -63,7 +63,6 @@ class Preview {
         $this->hooks();
         
     }
-    
     
     /**
 	 * Check if the current page request meets the requirements for the table preview page.

@@ -10,7 +10,7 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
         copy;
     if (node.classList.contains('wptb-ph-element')) {
         if (kindIndexProt == undefined || copy == true) {
-            index = document.counter.nextIndex(element.kind);
+            //index = document.counter.nextIndex( element.kind );
             var wptbElements = document.getElementsByClassName('wptb-ph-element');
             var elementIndexesArr = [];
             for (var i = 0; i < wptbElements.length; i++) {
@@ -449,7 +449,12 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
         settings = WPTB_Settings();
     };
 
-    document.addEventListener('DOMContentLoaded', WPTB_Builder);
+    var url = window.location.href,
+        regex = new RegExp('[?&]page=wptb-builder'),
+        results = regex.exec(url);
+    if (results) {
+        document.addEventListener('DOMContentLoaded', WPTB_Builder);
+    }
 })();
 var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
 
@@ -879,7 +884,7 @@ var WPTB_ElementObject = function WPTB_ElementObject(data) {
         copy = void 0;
     if (!data.elemProt) {
         DOMElement = document.createElement('div'), kindIndexProt = undefined, copy = false;
-        DOMElement.classList.add('wptb-' + data.kind + '-container', 'wptb-ph-element', 'wptb-item-javascript-indic');
+        DOMElement.classList.add('wptb-' + data.kind + '-container', 'wptb-ph-element');
 
         var wpTemplateId = 'wptb-' + data.kind + '-content';
         var template = wp.template(wpTemplateId);
@@ -947,9 +952,23 @@ var WPTB_Helper = {
         return result ? 'rgb(' + parseInt(result[1], 16) + ',' + parseInt(result[2], 16) + ',' + parseInt(result[3], 16) + ')' : null;
     },
     rgbToHex: function rgbToHex(rgb) {
-        var rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        if (rgb) {
+            if (WPTB_Helper.isHex(rgb)) return rgb;
 
-        return rgb && rgb.length === 4 ? "#" + ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+            var rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?((?:[0-9]*[.])?[0-9]+)[\s+]?\)/i);
+            if (rgbm && rgbm.length === 5) {
+                return "#" + ('0' + Math.round(parseFloat(rgbm[4], 10) * 255).toString(16).toUpperCase()).slice(-2) + ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) + ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) + ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
+            } else {
+                rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+                if (rgbm && rgbm.length === 4) {
+                    return "#" + ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) + ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) + ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
+                } else {
+                    return '';
+                }
+            }
+        } else {
+            return '';
+        }
     },
     isHex: function isHex(hex) {
         var regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}$');
@@ -1860,6 +1879,7 @@ var WPTB_Helper = {
                 script.setAttribute('type', 'text/javascript');
                 script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
                 controlScriptsArr.push(script);
+                console.log('Hello');
             }
 
             i++;
@@ -2225,7 +2245,10 @@ var WPTB_Helper = {
             WPTB_Helper.elementOptionsSet('table_setting', element);
         }
     },
-    // function for sending of element ajax request
+
+    /*
+     * function for sending of element ajax request
+     */
     elementAjax: function elementAjax(dataAjaxData, element) {
         var http = new XMLHttpRequest(),
             url = (wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl) + "?action=wptb_element_ajax";
@@ -2264,7 +2287,6 @@ var WPTB_Helper = {
      * This just toggles visibility of cell edit bar, and toggles
      * cell selecting mode.
      */
-
     toggleTableEditMode: function toggleTableEditMode() {
         var close = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
@@ -2301,6 +2323,219 @@ var WPTB_Helper = {
                 }
             }
         }
+    },
+
+    /*
+     * checking of dimension of value
+     */
+    checkingDimensionValue: function checkingDimensionValue(value, dimension) {
+        value = String(value);
+        dimension = String(dimension);
+        if (value && dimension) {
+            var searchIndex = value.indexOf(dimension);
+            if (searchIndex != -1 && searchIndex == value.length - dimension.length) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    },
+
+    /*
+     * if dimension is included - checking and if it necessary setting value
+     * without dimension - return value
+     */
+    checkSetGetStyleSizeValue: function checkSetGetStyleSizeValue(element, styleName, computedStyleName, dimension) {
+        var elemStyleValue = element.style[styleName];
+        elemStyleValue = String(elemStyleValue);
+
+        if (!elemStyleValue || dimension ? !WPTB_Helper.checkingDimensionValue(elemStyleValue, dimension) : false) {
+            var elementStyles = window.getComputedStyle(element);
+            if (computedStyleName && elementStyles.getPropertyValue(computedStyleName) && dimension ? WPTB_Helper.checkingDimensionValue(elementStyles.getPropertyValue(computedStyleName), dimension) : true) {
+                if (!dimension) {
+                    return elementStyles.getPropertyValue(computedStyleName);
+                } else {
+                    element.style[styleName] = elementStyles.getPropertyValue(computedStyleName);
+                }
+            } else {
+                if (!dimension) {
+                    return false;
+                } else {
+                    element.style[styleName] = null;
+                }
+            }
+        } else if (!dimension) {
+            return elemStyleValue;
+        }
+
+        return element.style[styleName];
+    },
+
+    /*
+     * function checking that element has the style
+     * if this style is present - checking the format color
+     * if param set is true - setting style for element (consider hex format of color)
+     * if param set is false - getting style from element
+     */
+    checkSetGetStyleColorValue: function checkSetGetStyleColorValue(element, styleName, computedStyleName) {
+        var set = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+        var elemStyleColorValue = element.style[styleName];
+
+        if (!elemStyleColorValue) {
+            var elementStyles = window.getComputedStyle(element, null);
+
+            if (elementStyles && elementStyles.getPropertyValue(computedStyleName)) {
+
+                if (set) {
+                    elemStyleColorValue = WPTB_Helper.rgbToHex(elementStyles.getPropertyValue(computedStyleName));
+                    if (WPTB_Helper.isHex(elemStyleColorValue)) {
+                        element.style[styleName] = elemStyleColorValue;
+                    } else {
+                        element.style[styleName] = '';
+                    }
+                } else {
+                    return elementStyles.getPropertyValue(computedStyleName);
+                }
+            } else {
+                if (set) {
+                    element.style[styleName] = '';
+                } else {
+                    return '';
+                }
+            }
+        } else if (!set) {
+            return elemStyleColorValue;
+        }
+    },
+
+    /*
+     * function checking that element has the style
+     * if this style is present - checking the format color
+     * if param set is true - setting style for element (consider hex format of color)
+     * if param set is false - getting style from element
+     */
+    checkSetGetStyleValue: function checkSetGetStyleValue(element, styleName, computedStyleName) {
+        var set = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+        var elemStyleColorValue = element.style[styleName];
+
+        if (!elemStyleColorValue) {
+            var elementStyles = window.getComputedStyle(element, null);
+
+            if (elementStyles && elementStyles.getPropertyValue(computedStyleName)) {
+
+                if (set) {
+                    element.style[styleName] = elementStyles.getPropertyValue(computedStyleName);
+                } else {
+                    return elementStyles.getPropertyValue(computedStyleName);
+                }
+            } else if (!set) {
+                return '';
+            }
+        } else if (!set) {
+            return elemStyleColorValue;
+        }
+    },
+
+    /*
+     * get the value of the same elements that have the most count
+     */
+    getValueMaxCountSameElementsInArray: function getValueMaxCountSameElementsInArray(arr) {
+        if (arr && Array.isArray(arr)) {
+            var check = {};
+            for (var i = 0; i < arr.length; i++) {
+                if (check[arr[i]]) {
+                    check[arr[i]]++;
+                } else {
+                    check[arr[i]] = 1;
+                }
+            }
+
+            var maxPropName = void 0;
+            for (var key in check) {
+                if (!maxPropName) {
+                    maxPropName = key;
+                    continue;
+                } else {
+                    if (check[maxPropName] < check[key]) {
+                        maxPropName = key;
+                    }
+                }
+            }
+
+            return maxPropName;
+        }
+    },
+
+    /*
+     * For assigning to each cell xIndex and y Index attributes,
+     * these are the column number and row number of cell in table.
+     */
+    recalculateIndexes: function recalculateIndexes(table) {
+        var trs = table.getElementsByTagName('tr'),
+            tds = void 0,
+            maxCols = 0,
+            maxColsFull = 0,
+            tdsArr = [];
+
+        for (var i = 0; i < trs.length; i++) {
+            tds = trs[i].getElementsByTagName('td');
+
+            if (tdsArr[i] == undefined) {
+                tdsArr[i] = [];
+            }
+
+            var jMainIter = 0;
+            for (var j = 0; j < tds.length; j++) {
+                if (tdsArr[i][j] != undefined) {
+                    for (var y = 0; y < 100; y++) {
+                        if (tdsArr[i][jMainIter] != undefined) {
+                            jMainIter++;
+                            continue;
+                        }
+                        tdsArr[i][jMainIter] = tds[j];
+                        tds[j].dataset.xIndex = jMainIter;
+                        break;
+                    }
+                } else {
+                    tdsArr[i][j] = tds[j];
+                    tds[j].dataset.xIndex = jMainIter;
+                }
+                tds[j].dataset.yIndex = i;
+
+                if (tds[j].colSpan > 1) {
+                    for (var k = 1; k < tds[j].colSpan; k++) {
+                        jMainIter++;
+                        tdsArr[i][jMainIter] = 'tdDummy';
+                    }
+                }
+
+                if (tds[j].rowSpan > 1) {
+                    for (var x = 1; x < tds[j].rowSpan; x++) {
+                        if (tdsArr[i + x] == undefined) {
+                            tdsArr[i + x] = [];
+                        }
+                        for (var z = 0; z < tds[j].colSpan; z++) {
+                            tdsArr[i + x][jMainIter - tds[j].colSpan + 1 + z] = 'tdDummy';
+                        }
+                    }
+                }
+                jMainIter++;
+
+                if (j > maxCols) {
+                    maxCols = j;
+                }
+            }
+
+            if (i == 0) {
+                maxColsFull = jMainIter;
+            }
+        }
+        table.columns = maxCols;
+        table.maxCols = maxColsFull;
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -2887,7 +3122,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
     if (codeMain) {
         var code = codeMain.cloneNode(true);
-        code.classList.add('wptb-table-preview-static-indic');
         code.dataset.tableColumns = codeMain.columns;
         code.style.width = null;
         code.style.minWidth = null;
@@ -2990,7 +3224,7 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var array = [],
-    WPTB_Table = function WPTB_Table(columns, rows) {
+    WPTB_Table = function WPTB_Table(columns, rows, wptb_preview_table) {
 
     /* The members of the class */
     var settings = document.getElementsByClassName('wptb-settings-items'),
@@ -3400,10 +3634,10 @@ var array = [],
             }
         }
     } else {
-        var wptb_preview_table = document.getElementsByClassName('wptb-preview-table');
+        if (!wptb_preview_table) wptb_preview_table = document.querySelector('.wptb-preview-table');
 
-        if (wptb_preview_table.length > 0) {
-            table = wptb_preview_table[0];
+        if (wptb_preview_table) {
+            table = wptb_preview_table;
 
             var cells = table.getElementsByTagName('td');
 
@@ -3422,95 +3656,15 @@ var array = [],
      * these are the column number and row number of cell in table. 
      */
 
-    table.recalculateIndexes = function (start) {
-        var trs = this.getElementsByTagName('tr'),
-            tds = void 0,
-            maxCols = 0,
-            maxColsFull = 0,
-            tdsArr = [];
-        //let wptbTopRowAsHeader = document.getElementById( 'wptb-top-row-as-header' );
-
-        for (var i = 0; i < trs.length; i++) {
-            if (i == 0) {
-                //                if( wptbTopRowAsHeader.checked ) {
-                //                    if( start == undefined ) {
-                //                        this.classList.add( 'wptb-table-preview-head' );               
-                //                        trs[i].classList.add( 'wptb-table-head' )
-                //                    }  ;
-                //                } else {
-                //                    if( start == undefined ) {
-                //                        this.classList.remove( 'wptb-table-preview-head' );
-                //                        trs[i].classList.remove( 'wptb-table-head' );
-                //                    }
-                //                }
-            } else {
-                    //                if (i % 2 == 0) {
-                    //                    trs[i].classList.remove( 'wptb-table-head' );
-                    //                } else {
-                    //                    trs[i].classList.remove( 'wptb-table-head' );
-                    //                }
-                }
-
-            tdsArr[i];
-            tds = trs[i].getElementsByTagName('td');
-
-            if (tdsArr[i] == undefined) {
-                tdsArr[i] = [];
-            }
-
-            var jMainIter = 0;
-            for (var j = 0; j < tds.length; j++) {
-                if (tdsArr[i][j] != undefined) {
-                    for (var y = 0; y < 100; y++) {
-                        if (tdsArr[i][jMainIter] != undefined) {
-                            jMainIter++;
-                            continue;
-                        }
-                        tdsArr[i][jMainIter] = tds[j];
-                        tds[j].dataset.xIndex = jMainIter;
-                        break;
-                    }
-                } else {
-                    tdsArr[i][j] = tds[j];
-                    tds[j].dataset.xIndex = jMainIter;
-                }
-                tds[j].dataset.yIndex = i;
-
-                if (tds[j].colSpan > 1) {
-                    for (var _k2 = 1; _k2 < tds[j].colSpan; _k2++) {
-                        jMainIter++;
-                        tdsArr[i][jMainIter] = 'tdDummy';
-                    }
-                }
-
-                if (tds[j].rowSpan > 1) {
-                    for (var x = 1; x < tds[j].rowSpan; x++) {
-                        if (tdsArr[i + x] == undefined) {
-                            tdsArr[i + x] = [];
-                        }
-                        for (var z = 0; z < tds[j].colSpan; z++) {
-                            tdsArr[i + x][jMainIter - tds[j].colSpan + 1 + z] = 'tdDummy';
-                        }
-                    }
-                }
-                jMainIter++;
-                if (i == 0) {
-                    maxColsFull = jMainIter;
-                }
-            }
-            if (j > maxCols) {
-                maxCols = j;
-            }
-        }
-        this.columns = maxCols;
-        this.maxCols = maxColsFull;
+    table.recalculateIndexes = function () {
+        WPTB_Helper.recalculateIndexes(this);
     };
 
     table.addColumnWidth = function (value, cleaner) {
         var highlighted = table.getElementsByClassName('wptb-highlighted');
         if (highlighted.length > 0) {
-            for (var _k3 = 0; _k3 < highlighted.length; _k3++) {
-                var dataXIndex = highlighted[_k3].dataset.xIndex;
+            for (var _k2 = 0; _k2 < highlighted.length; _k2++) {
+                var dataXIndex = highlighted[_k2].dataset.xIndex;
                 if (dataXIndex) {
                     (function () {
                         var tableTdsFor = function tableTdsFor(dataXIndex, colspan) {
@@ -3766,8 +3920,8 @@ var array = [],
     table.addRowHeight = function (value, cleaner) {
         var highlighted = table.getElementsByClassName('wptb-highlighted');
         if (highlighted.length > 0) {
-            for (var _k4 = 0; _k4 < highlighted.length; _k4++) {
-                var dataYIndex = highlighted[_k4].dataset.yIndex;
+            for (var _k3 = 0; _k3 < highlighted.length; _k3++) {
+                var dataYIndex = highlighted[_k3].dataset.yIndex;
                 if (dataYIndex) {
                     (function () {
                         var tableTdsFor = function tableTdsFor(dataYIndex, rowspan) {
@@ -4409,9 +4563,9 @@ var array = [],
                     rowChildrenLength = rowChildren.length;
 
                 if (rowChildrenLength > 0) {
-                    for (var _k5 = 0; _k5 < rowChildrenLength; _k5++) {
-                        if (Number(rowChildren[_k5].dataset.xIndex) > Number(cellXIndex)) {
-                            rowChildInsertBefore = rowChildren[_k5];
+                    for (var _k4 = 0; _k4 < rowChildrenLength; _k4++) {
+                        if (Number(rowChildren[_k4].dataset.xIndex) > Number(cellXIndex)) {
+                            rowChildInsertBefore = rowChildren[_k4];
                             break;
                         }
                     }
@@ -4538,9 +4692,9 @@ var array = [],
                         td.getDOMElement().rowSpan = thisRowChildren[_j8].rowSpan - 1;
 
                         var nextRowChildrenK = undefined;
-                        for (var _k6 = 0; _k6 < nextRowChildrenLength; _k6++) {
-                            if (Number(nextRowChildren[_k6].dataset.xIndex) > Number(thisRowChildren[_j8].dataset.xIndex)) {
-                                nextRowChildrenK = nextRowChildren[_k6];
+                        for (var _k5 = 0; _k5 < nextRowChildrenLength; _k5++) {
+                            if (Number(nextRowChildren[_k5].dataset.xIndex) > Number(thisRowChildren[_j8].dataset.xIndex)) {
+                                nextRowChildrenK = nextRowChildren[_k5];
                                 break;
                             }
                         }
@@ -4554,11 +4708,11 @@ var array = [],
                 }
 
                 if (tdArr.length > 0) {
-                    for (var _k7 = 0; _k7 < tdArr.length; _k7++) {
-                        if (tdArr[_k7][1] != undefined) {
-                            nextRow.insertBefore(tdArr[_k7][0].getDOMElement(), tdArr[_k7][1]);
+                    for (var _k6 = 0; _k6 < tdArr.length; _k6++) {
+                        if (tdArr[_k6][1] != undefined) {
+                            nextRow.insertBefore(tdArr[_k6][0].getDOMElement(), tdArr[_k6][1]);
                         } else {
-                            nextRow.appendChild(tdArr[_k7][0].getDOMElement());
+                            nextRow.appendChild(tdArr[_k6][0].getDOMElement());
                         }
                     }
                 }
@@ -4619,17 +4773,17 @@ var array = [],
                 var rowChildren = table.rows[_j10].children;
                 var rowChildrenLength = rowChildren.length;
                 if (rowChildrenLength > 0) {
-                    for (var _k8 = rowChildrenLength - 1; _k8 >= 0; _k8--) {
-                        if (Number(rowChildren[_k8].dataset.xIndex) == Number(cellXIndex)) {
-                            if (rowChildren[_k8].colSpan > 1) {
-                                rowChildren[_k8].colSpan--;
+                    for (var _k7 = rowChildrenLength - 1; _k7 >= 0; _k7--) {
+                        if (Number(rowChildren[_k7].dataset.xIndex) == Number(cellXIndex)) {
+                            if (rowChildren[_k7].colSpan > 1) {
+                                rowChildren[_k7].colSpan--;
                             } else {
-                                table.rows[_j10].removeChild(rowChildren[_k8]);
+                                table.rows[_j10].removeChild(rowChildren[_k7]);
                             }
                             break;
-                        } else if (Number(rowChildren[_k8].dataset.xIndex) < Number(cellXIndex) && Number(rowChildren[_k8].dataset.xIndex) + Number(rowChildren[_k8].colSpan - 1) >= cellXIndex) {
-                            if (rowChildren[_k8].colSpan > 1) {
-                                rowChildren[_k8].colSpan--;
+                        } else if (Number(rowChildren[_k7].dataset.xIndex) < Number(cellXIndex) && Number(rowChildren[_k7].dataset.xIndex) + Number(rowChildren[_k7].colSpan - 1) >= cellXIndex) {
+                            if (rowChildren[_k7].colSpan > 1) {
+                                rowChildren[_k7].colSpan--;
                             }
                             break;
                         }
