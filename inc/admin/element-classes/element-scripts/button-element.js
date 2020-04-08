@@ -4,65 +4,71 @@ a.onclick = function( e ) {
     e.preventDefault();
 };
 if( target ) {
-    tinyMCE.init({
-        target: target,
-        inline: true,
-        plugins: "link",
-        dialog_type: "modal",
-        theme: 'modern',
-        menubar: false,
-        fixed_toolbar_container: '#wpcd_fixed_toolbar',
-        toolbar: 'bold italic strikethrough',
-        setup : function(ed) {
-            ed.on( 'keydown', function(e) {
-                if (e.keyCode == 13) {
-                    e.preventDefault();
-                }
-                
-                let p = e.target.querySelector( 'p' );
-                let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
-                pText = pText.replace( /&nbsp;/g, '').trim();
+    let tinyMceInitStart = function() {
+        tinyMCE.init({
+            target: target,
+            inline: true,
+            plugins: "link",
+            dialog_type: "modal",
+            theme: 'modern',
+            menubar: false,
+            fixed_toolbar_container: '#wpcd_fixed_toolbar',
+            toolbar: 'bold italic strikethrough',
+            setup : function(ed) {
+                ed.on( 'keydown', function(e) {
+                    if (e.keyCode == 13) {
+                        e.preventDefault();
+                    }
 
-                if( ! window.buttonElemPTextKeyDown ) {
-                    window.buttonElemPTextKeyDown = pText;
-                }
-            });
+                    let p = e.target.querySelector( 'p' );
+                    let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+                    pText = pText.replace( /&nbsp;/g, '').trim();
 
-            ed.on( 'keyup', function(e) {
-                let p = e.target.querySelector( 'p' );
-                let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
-                pText = pText.replace( /&nbsp;/g, '').trim();
-                if( pText !== window.buttonElemPTextKeyDown ) {
-                    e.target.onblur = function() {
-                        let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                        wptbTableStateSaveManager.tableStateSet();
+                    if( ! window.buttonElemPTextKeyDown ) {
+                        window.buttonElemPTextKeyDown = pText;
+                    }
+                });
 
-                        window.buttonElemPTextKeyDown = '';
+                ed.on( 'keyup', function(e) {
+                    let p = e.target.querySelector( 'p' );
+                    let pText = p.innerHTML.replace( /\s+/g, ' ' ).trim();
+                    pText = pText.replace( /&nbsp;/g, '').trim();
+                    if( pText !== window.buttonElemPTextKeyDown ) {
+                        e.target.onblur = function() {
+                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                            wptbTableStateSaveManager.tableStateSet();
+
+                            window.buttonElemPTextKeyDown = '';
+                            e.target.onblur = '';
+                        }
+                    } else {
                         e.target.onblur = '';
                     }
-                } else {
-                    e.target.onblur = '';
-                }
-            });
-        },
-        init_instance_callback: function (editor) {
-            window.currentEditor = editor;
-            editor.on( 'focus', function (e) {
-                var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
-                if (window.currentEditor &&
-                    document.getElementById('wptb_builder').scrollTop >= 55 &&
-                    window.currentEditor.bodyElement.style.display != 'none') {
-                    document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
-                    document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
-                    document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
-                } else {
-                    document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
-                    delete document.getElementById('wpcd_fixed_toolbar').style.right;
-                    delete document.getElementById('wpcd_fixed_toolbar').style.top;
-                }
-            });
-        }
-    });
+                });
+            },
+            init_instance_callback: function (editor) {
+                window.currentEditor = editor;
+                editor.on( 'focus', function (e) {
+                    var totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
+                    if (window.currentEditor &&
+                        document.getElementById('wptb_builder').scrollTop >= 55 &&
+                        window.currentEditor.bodyElement.style.display != 'none') {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'fixed';
+                        document.getElementById('wpcd_fixed_toolbar').style.right = (totalWidth / 2 - document.getElementById('wpcd_fixed_toolbar').offsetWidth / 2) + 'px';
+                        document.getElementById('wpcd_fixed_toolbar').style.top = '100px';
+                    } else {
+                        document.getElementById('wpcd_fixed_toolbar').style.position = 'static';
+                        delete document.getElementById('wpcd_fixed_toolbar').style.right;
+                        delete document.getElementById('wpcd_fixed_toolbar').style.top;
+                    }
+                });
+            }
+        });
+
+        element.removeEventListener( 'mouseover', tinyMceInitStart, false );
+    }
+
+    element.addEventListener( 'mouseover', tinyMceInitStart, false );
 }
 
 //function textControlsChange( inputs, element ) {

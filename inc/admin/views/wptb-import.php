@@ -59,7 +59,8 @@ if ( ! defined( 'WPINC' ) ) {
                         <label for="wptb-topRowAsHeader">Top Row As Header</label>
                     </td>
                     <td>
-                        <button class="button button-primary button-large wptb-importFromPlugin" data-wptb-import-plugin="table-press">
+                        <button class="button button-primary button-large wptb-importFromPlugin" data-wptb-import-plugin="table-press"
+                                data-name="<?php esc_attr_e( 'Importing Tables', 'wp-table-builder' ); ?>">
                             <?php esc_html_e( 'Import', 'wp-table-builder' ); ?>
                         </button>
                     </td>
@@ -74,6 +75,7 @@ if ( ! defined( 'WPINC' ) ) {
 
     <div class="wptb-importPBarContainer">
         <div class="wptb-importPBarProgress">
+            <div class="wptb-nameProcessInBarProgress"></div>
             <div id="wptb-pBarPercent">
                 <span>0%</span>
             </div>
@@ -82,6 +84,12 @@ if ( ! defined( 'WPINC' ) ) {
 
     <div class="wptb-importedTablesSetting">
         <div class="wptb-importMessage wptb-importedTablesCount"><span>0</span> <?php esc_html_e( 'Tables Imported', 'wp-table-builder' ); ?></div>
+
+        <button class="wptb-importTableReplaceShortcodes button button-primary button-large" style="display: none;"
+                data-name="<?php esc_attr_e( 'Replacing Shortcodes', 'wp-table-builder' ); ?>">
+            <?php esc_html_e( 'Replace Shortcode', 'wp-table-builder' ); ?>
+        </button>
+
         <div class="wptb-importedTablesShortcodesList">
             <table>
                 <thead>
@@ -96,8 +104,10 @@ if ( ! defined( 'WPINC' ) ) {
                 </tbody>
             </table>
         </div>
-        <button id="wptb-importTableReplaceShortcodes" class="button button-primary button-large" style="display: none;">
-            <?php esc_html_e( 'Replace', 'wp-table-builder' ); ?>
+
+        <button class="wptb-importTableReplaceShortcodes button button-primary button-large" style="display: none;"
+                data-name="<?php esc_attr_e( 'Replacing Shortcodes', 'wp-table-builder' ); ?>">
+            <?php esc_html_e( 'Replace Shortcode', 'wp-table-builder' ); ?>
         </button>
     </div>
 

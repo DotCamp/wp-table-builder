@@ -41,6 +41,17 @@
     left: calc(50% - 200px);
 }
 
+.wptb-nameProcessInBarProgress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    line-height: 25px;
+    color: #fff;
+    letter-spacing: 5px;
+}
+
 #wptb-pBarPercent {
     height: 20px;
     border-radius: 1px;
@@ -52,6 +63,8 @@
     -webkit-background-size: 40px 40px;
     background-size: 40px 40px;
     background-color: #188fd1;
+    position: relative;
+    z-index: 1;
 }
 
 .wptb-importedTablesSetting,
@@ -66,8 +79,8 @@
     font-size: 20px;
 }
 .wptb-importedTablesShortcodesList {
+    margin-top: 15px;
     margin-bottom: 15px;
-    max-height: 800px;
     overflow: auto;
     max-width: 500px;
 }

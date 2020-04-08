@@ -1,14 +1,22 @@
+let listItement
 let lis = element.getElementsByTagName( 'li' );
 if( lis.length > 0 ) {
     for( let i = 0; i < lis.length; i++ ) {
         lis[i].classList.add( 'wptb-in-element' );
 
-        let listItemContent = lis[i].getElementsByClassName( 'wptb-list-item-content' );
-        if( listItemContent.length > 0 ) {
-            listItemsTinyMceInit( listItemContent[0] );
+        let tinyMceInitStart = function() {
+            let listItemContent = lis[i].getElementsByClassName( 'wptb-list-item-content' );
+            if( listItemContent.length > 0 ) {
+                listItemsTinyMceInit( listItemContent[0] );
+            }
+
+            lis[i].removeEventListener( 'mouseover', tinyMceInitStart, false );
         }
+
+        lis[i].addEventListener( 'mouseover', tinyMceInitStart, false );
     }
 }
+
 
 
 function listItemsRecalculateIndex ( ulElem ) {

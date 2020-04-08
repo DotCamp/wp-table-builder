@@ -431,6 +431,24 @@
                     commonCount = Number( commonCount );
                     if( commonCount > 0 ) {
                         importProgressBarContainer.classList.add( 'wptb-importPBarContainerActive' );
+
+                        let nameProcessingElem = importProgressBarContainer.querySelector( '.wptb-nameProcessInBarProgress' );
+                        if( nameProcessingElem ) {
+                            let nameProcessing = '';
+                            let button;
+                            if( eventPostfix == 'import' ) {
+                                button = document.querySelector( '.wptb-importFromPlugin' );
+                            } else if( eventPostfix == 'replace' ) {
+                                button = document.querySelector( '.wptb-importTableReplaceShortcodes' );
+                            }
+
+                            if( button ) {
+                                nameProcessing = button.dataset.name;
+                                if( nameProcessing ) nameProcessingElem.innerHTML = nameProcessing;
+                            }
+                            if( ! nameProcessing ) nameProcessingElem.innerHTML = '';
+                        }
+
                         // Calculate percent
                         let percent = ( ( count / commonCount ) * 100 ).toFixed( 2 );
                         if( percent > 100 ) percent = 100;
@@ -518,11 +536,13 @@
 
                     importedTablesShortcodesList.style.display = 'block';
 
-                    let importTableReplaceShortcodesButton = document.querySelector( '#wptb-importTableReplaceShortcodes' );
-                    if( importTableReplaceShortcodesButton ) {
-                        importTableReplaceShortcodesButton.style.display = 'block';
+                    let importTableReplaceShortcodesButton = document.querySelectorAll( '.wptb-importTableReplaceShortcodes' );
+                    if( importTableReplaceShortcodesButton.length > 0 ) {
+                        for ( let i = 0; i < importTableReplaceShortcodesButton.length; i++ ) {
+                            importTableReplaceShortcodesButton[i].style.display = 'block';
 
-                        importTableReplaceShortcodesButton.onclick = importedTablesReplaceShortcodes.bind( this, tbody );
+                            importTableReplaceShortcodesButton[i].onclick = importedTablesReplaceShortcodes.bind( this, tbody );
+                        }
                     }
                 }
             }
@@ -629,9 +649,9 @@
         }
 
 
-        /*
+        /**
          * function for change "TablePress" table
-         * for importing it to WPCD
+         * for importing it to WPTB
          */
         function tableDomImportingHandler( tableDomElem, tableContent, iframe, dataTables ) {
             if( tableDomElem ) {
@@ -639,7 +659,8 @@
                  * set including border style for table
                  */
                 tableDomElem.style.borderStyle = 'solid';
-                WPTB_Helper.checkSetGetStyleSizeValue( tableDomElem, 'border-width', 'border-top-width', 'px' );
+                tableDomElem.style.borderWidth = '1px';
+                //WPTB_Helper.checkSetGetStyleSizeValue( tableDomElem, 'border-width', 'border-top-width', 'px' );
                 WPTB_Helper.checkSetGetStyleColorValue( tableDomElem, 'border-color', 'border-top-color', true );
 
                 /*
@@ -767,18 +788,20 @@
                             tds[j].style.width = null;
                             tds[j].style.height = null;
                             tds[j].style.borderStyle = 'solid';
-                            let borderWidth1 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-top-width' );
-                            let borderWidth2 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-left-width' );
-                            let borderWidth3 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-right-width' );
-                            let borderWidth4 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-bottom-width' );
+                            tds[j].style.borderWidth = '1px';
 
-                            let borderWidth = WPTB_Helper.getValueMaxCountSameElementsInArray( [borderWidth1, borderWidth2, borderWidth3, borderWidth4] );
-
-                            if( borderWidth && WPTB_Helper.checkingDimensionValue( borderWidth, 'px' ) ) {
-                                tds[j].style.borderWidth = borderWidth;
-                            } else {
-                                tds[j].style.borderWidth = '';
-                            }
+                            // let borderWidth1 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-top-width' );
+                            // let borderWidth2 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-left-width' );
+                            // let borderWidth3 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-right-width' );
+                            // let borderWidth4 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-bottom-width' );
+                            //
+                            // let borderWidth = WPTB_Helper.getValueMaxCountSameElementsInArray( [borderWidth1, borderWidth2, borderWidth3, borderWidth4] );
+                            //
+                            // if( borderWidth && WPTB_Helper.checkingDimensionValue( borderWidth, 'px' ) ) {
+                            //     tds[j].style.borderWidth = borderWidth;
+                            // } else {
+                            //     tds[j].style.borderWidth = '';
+                            // }
 
                             let borderColor1 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-color', 'border-top-color' );
                             let borderColor2 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-color', 'border-left-color' );
