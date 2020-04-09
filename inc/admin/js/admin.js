@@ -2843,8 +2843,10 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     };
 
     if (table) {
-        document.getElementById('wptb-table-edit-mode-close').onclick = WPTB_Helper.toggleTableEditMode;
-        document.getElementById('wptb-left-scroll-panel-curtain-close').onclick = WPTB_Helper.toggleTableEditMode;
+        var wptbTablesEditModeCloseButton = document.getElementsByClassName('wptb-table-edit-mode-close');
+        for (var _i = 0; _i < wptbTablesEditModeCloseButton.length; _i++) {
+            wptbTablesEditModeCloseButton[_i].onclick = WPTB_Helper.toggleTableEditMode;
+        }
         document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
         document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
         document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;

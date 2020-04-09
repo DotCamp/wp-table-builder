@@ -66,7 +66,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
         <p><?php esc_html_e( 'You are currently editing the table cells. Click "Close" to go back to editing the table.', 'wp-table-builder' ); ?></p>
         <p><?php esc_html_e( 'Click on cells to select them or deselect them. Selected cells will be shown in a green outline.', 'wp-table-builder'); ?></p>
         <div>
-            <button id="wptb-left-scroll-panel-curtain-close" class="wptb-table_change_button" title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' );?>"><?php esc_html_e( 'Close', 'wp-table-builder' ); ?></button>
+            <button class="wptb-table_change_button wptb-table-edit-mode-close" title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' );?>"><?php esc_html_e( 'Close', 'wp-table-builder' ); ?></button>
         </div>
     </div>
     <div id="wptb-left-scroll-panel-cell-settings">

@@ -382,10 +382,14 @@ body>img {
     background-color: #eb4c63;
 }
 
-#wptb-table-edit-mode-close {
+#wptb-left-scroll-panel-curtain .wptb-table-edit-mode-close {
+    margin: auto;
+    display: block;
+}
+
+.wptb-table-edit-mode-close {
     background: #329d3f;
     color: #fff;
-    float: right;
 }
 
 .wptb-edit-bar svg {
@@ -449,13 +453,6 @@ body>img {
 
 #wptb-left-scroll-panel-cell-settings.visible {
     display: block;
-}
-
-#wptb-left-scroll-panel-curtain-close {
-    margin: auto;
-    display: block;
-    background: #329d3f;
-    color: #fff;
 }
 
 .wptb-panel-left {

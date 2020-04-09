@@ -67,6 +67,9 @@ use WP_Table_Builder as NS;
         <button class="wptb-table_change_button wptb-single-action" id="wptb-delete-row" title="<?php esc_attr_e( 'Delete Highlighted Row', 'wp-table-builder' ); ?>">
             <?php esc_html_e( 'Remove Row', 'wp-table-builder' ); ?>
         </button>
+        <button class="wptb-table_change_button wptb-table-edit-mode-close" title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' ); ?>">
+            <?php esc_html_e( 'Close', 'wp-table-builder' ); ?>
+        </button>
     </div>
     
     <div class="wptb-table-setup">
@@ -85,7 +88,7 @@ use WP_Table_Builder as NS;
         <button class="wptb-table_change_button wptb-single-action" id="wptb-add-row-before" title="<?php esc_attr_e( 'Add Row Before Highlighted One', 'wp-table-builder' ); ?>">
             <?php esc_html_e( 'Insert Row Before', 'wp-table-builder' ); ?>
         </button>
-        <button class="wptb-table_change_button"  id="wptb-table-edit-mode-close" title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' ); ?>">
+        <button class="wptb-table_change_button wptb-table-edit-mode-close" title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' ); ?>">
             <?php esc_html_e( 'Close', 'wp-table-builder' ); ?>
         </button>
     </div>

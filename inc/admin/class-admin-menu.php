@@ -28,6 +28,7 @@ class Admin_Menu {
 		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_get_table', array( $this, 'get_table' ) );
 		add_action( 'wp_ajax_nopriv_get_table', array( $this, 'get_table' ) );
+		add_action( 'admin_bar_menu', array( $this, 'add_wp_admin_bar_new_table_create_page' ), 500 );
 	}
     
     public function create_table() {
@@ -90,6 +91,24 @@ class Admin_Menu {
         //$html = json_decode( $html );
 		die( json_encode( [$name, $table_html] ) );
 	}
+
+    /**
+     * Add "WPTB Add New" sub menu to "New" dropdown menu in the WP Admin Bar.
+     *
+     * @since 1.1.5
+     *
+     * @param WP_Admin_Bar $wp_admin_bar object.
+     */
+    public function add_wp_admin_bar_new_table_create_page( $wp_admin_bar ) {
+        if ( current_user_can( 'manage_options' ) ) {
+            $wp_admin_bar->add_menu( array(
+                'parent' => 'new-content',
+                'id'     => 'wptb-add-new',
+                'title'  => __( 'WPTB Add New', 'wp_table_builder' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=wptb-builder' ) ),
+            ) );
+        }
+    }
 
 
 	/**

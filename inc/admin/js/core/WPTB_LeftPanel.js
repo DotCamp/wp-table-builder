@@ -158,8 +158,10 @@ var WPTB_LeftPanel = function () {
     };
     
     if( table ) {
-        document.getElementById( 'wptb-table-edit-mode-close' ).onclick = WPTB_Helper.toggleTableEditMode;
-        document.getElementById( 'wptb-left-scroll-panel-curtain-close' ).onclick = WPTB_Helper.toggleTableEditMode;
+        let wptbTablesEditModeCloseButton = document.getElementsByClassName( 'wptb-table-edit-mode-close' );
+        for ( let i = 0; i < wptbTablesEditModeCloseButton.length; i++ ) {
+            wptbTablesEditModeCloseButton[i].onclick = WPTB_Helper.toggleTableEditMode;
+        }
         document.getElementById('wptb-add-end-row').onclick = table.addRowToTheEnd;
         document.getElementById('wptb-add-start-row').onclick = table.addRowToTheStart;
         document.getElementById('wptb-add-row-before').onclick = table.addRowBefore;
