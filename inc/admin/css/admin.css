@@ -2551,3 +2551,30 @@ wptb_shortcode_container_element {
 .wptb-text-align-right {
     text-align: right;
 }
+
+#wptb-settings-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 90vh
+}
+
+.wptb-settings-sections-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.wptb-settings-sections-wrapper div {
+    border: 1px solid grey;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.wptb-settings-wrapper {
+    background-color: white;
+    min-width: 90%;
+    height: 90%;
+    padding: 10px;
+}

@@ -6,6 +6,7 @@ use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
 
 /**
  * The core plugin class.
@@ -97,6 +98,18 @@ class Init {
 	 */
     public $controls_manager;
 
+
+	/**
+	 * Settings manager.
+	 *
+	 * Holds the plugin settings manager
+	 *
+	 * @access public
+	 *
+	 * @var Settings_Manager
+	 */
+    public $settings_manager;
+
     private function __construct() {
 
 		$this->plugin_name = NS\WP_TABLE_BUILDER;
@@ -140,12 +153,13 @@ class Init {
 	 * - Internationalization_I18n - Defines internationalization functionality.
 	 * - Admin - Defines all hooks for the admin area.
 	 * - Frontend - Defines all hooks for the public side of the site.
+     * - Settings - Setup setting manager for menus and plugin wide settings handling
 	 *
 	 * @access    private
 	 */
 	private function load_dependencies() {
 		$this->loader = new Loader();
-
+		$this->settings_manager = new Settings_Manager('wp_table_builder_settings', $this->loader);
 	}
 
 	/**
