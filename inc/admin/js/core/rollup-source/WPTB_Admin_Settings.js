@@ -2,6 +2,7 @@ import Vue from 'vue';
 
 const frontendData = {...wptbAdminSettingsData};
 const store = {...wptbAdminSettingsData.options};
+const rawStore = {...wptbAdminSettingsData.options};
 
 // remove main data from global space
 wptbAdminSettingsData = undefined;
@@ -13,7 +14,17 @@ console.log(frontendData);
 const withStore = {
     data() {
         return {
-            store
+            store,
+            rawStore
+        }
+    },
+    methods: {
+        revertStore() {
+            Object.keys(this.store).map(k => {
+                if (Object.prototype.hasOwnProperty.call(this.store, k)) {
+                    this.store[k] = this.rawStore[k];
+                }
+            })
         }
     }
 };
@@ -27,6 +38,11 @@ Vue.component('setting-section', {
 Vue.component('setting-field', {
     props: ['fieldData'],
     mixins: [withStore],
+    methods: {
+        isType(type) {
+            return this.fieldData.type === type;
+        }
+    }
 });
 
 // main wrapper component
@@ -37,7 +53,28 @@ Vue.component('settings-app', {
         return {
             sections: [],
             currentSection: '',
-            parsedFields: {}
+            parsedFields: {},
+            resetActive: false,
+            canSubmit: false,
+            fetching: false,
+            fetchMessage: {
+                type: 'ok',
+                show: false,
+                message: 'OK'
+            },
+            showIntervalId: -1,
+        }
+    },
+    watch: {
+        store: {
+            handler() {
+                if (this.resetActive) {
+                    this.canSubmit = false;
+                    this.resetActive = false;
+                } else {
+                    this.canSubmit = true;
+                }
+            }, deep: true
         }
     },
     beforeMount() {
@@ -66,7 +103,17 @@ Vue.component('settings-app', {
         }
     },
     methods: {
+        resetStore() {
+            if (this.canSubmit) {
+                this.revertStore();
+                this.resetActive = true;
+            }
+        },
         submitSettings() {
+            if (!this.canSubmit) {
+                return;
+            }
+
             const formData = new FormData();
 
             // security prep for fetch request
@@ -75,6 +122,8 @@ Vue.component('settings-app', {
 
             formData.append('options', JSON.stringify(this.store));
 
+            this.canSubmit = false;
+            this.fetching = true;
             // fetch request to update plugin options
             fetch(this.settings.ajaxUrl,
                 {
@@ -82,17 +131,33 @@ Vue.component('settings-app', {
                     body: formData
                 }
             ).then(r => {
-                console.log(r);
-                    if (r.ok) {
-                        return r.json();
-                    }
+                if (r.ok) {
+                    return r.json();
+                }
             }).then(resp => {
-                console.log(resp);
+                if (resp.error) {
+                    throw new Error(resp.error);
+                } else {
+                    this.setMessage('ok', resp.message);
+                }
             }).catch(e => {
                 console.error(e);
-            });
+                this.setMessage('error', e);
+            }).finally(() => {
+                this.fetching = false;
+            })
+        },
+        setMessage(type, message) {
+            this.fetchMessage.type = type;
+            this.fetchMessage.message = message;
+            this.fetchMessage.show = true;
+
+            clearInterval(this.showIntervalId);
+            this.showIntervalId = setInterval(() => {
+                this.fetchMessage.show = false;
+            }, 5000);
         }
-    }
+    },
 });
 
 // Vue instance

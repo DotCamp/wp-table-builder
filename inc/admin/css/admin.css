@@ -968,13 +968,13 @@ ul.wptb-tabs {
     width: 47.5%;
     float: left;
     margin: 6px 0 -4px 6px;
-} 
+}
 
 .wptb-element:nth-child(even) {
     width: 47.5%;
     float: right;
     margin: 6px 5px -4px 0;
-} 
+}
 
 .wptb-element p {
     margin: 0;
@@ -2552,29 +2552,199 @@ wptb_shortcode_container_element {
     text-align: right;
 }
 
+/*settings page related styles*/
 #wptb-settings-page {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 90vh
-}
-
-.wptb-settings-sections-wrapper {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 10px;
-}
-
-.wptb-settings-sections-wrapper div {
-    border: 1px solid grey;
-    padding: 10px;
-    cursor: pointer;
+    height: 90vh;
+    color: #4A5568;
+    line-height: normal;
 }
 
 .wptb-settings-wrapper {
     background-color: white;
     min-width: 90%;
     height: 90%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(min-content,max-content) minmax(min-content,max-content) 1fr minmax(min-content,max-content)  ;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.wptb-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3299D1;
     padding: 10px;
+}
+
+.wptb-settings-header * {
+    color: #ffffff;
+}
+
+.wptb-settings-header a {
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0 10px;
+    text-transform: capitalize;
+}
+
+.wptb-settings-header a:hover {
+    color: #CBD5E0;
+}
+
+.wptb-settings-brand {
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
+
+.wptb-settings-header-name {
+    margin-left: 1rem;
+}
+
+.wptb-settings-sections-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #cbd5e0;
+}
+
+.wptb-settings-section-item {
+    text-transform: uppercase;
+    font-size: 1rem;
+    padding: 20px;
+    border-bottom: 2px solid #1A202C;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease-out;
+}
+
+.wptb-settings-section-item:hover{
+   background-color: #EDF2F7;
+}
+
+.wptb-settings-section-item.disabled {
+    color: #CBD5E0 !important;
+}
+
+.wptb-settings-controls-wrapper {
+    padding: 20px 40px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill ,minmax(200px,1fr));
+    grid-auto-rows: minmax(min-content,max-content);
+    grid-auto-flow: row;
+    overflow: auto;
+}
+
+.wptb-setting-control {
+    padding: 20px;
+    transition: all 0.2s ease-out;
+    border: 1px solid transparent;
+}
+
+.wptb-setting-control:hover {
+    border: 1px solid #cbd5e0;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+}
+
+.wptb-setting-control .title {
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+}
+
+.wptb-setting-control-row {
+    margin: 10px 0;
+}
+
+.wptb-settings-footer{
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-top: 1px solid #cbd5e0;
+    padding: 20px 0;
+}
+
+.wptb-settings-messages {
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.wptb-settings-message {
+    font-style: italic;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.wptb-settings-message.ok {
+    color: #3299D1;
+}
+
+.wptb-settings-message.error {
+    color: #E53E3E;
+}
+
+.wptb-settings-fetching {
+    animation: wptb-settings-rotate 1s linear infinite reverse ;
+
+}
+.wptb-settings-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-settings-button {
+    margin: 0 20px;
+    color: #ffffff;
+    font-size: 1.0rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s ease-out;
+}
+
+.wptb-settings-button:hover {
+    color: #CBD5E0;
+}
+
+.wptb-settings-button.primary {
+    background-color: #3299D1;
+}
+
+.wptb-settings-button.danger {
+    background-color: #E53E3E;
+}
+
+.wptb-settings-button.disabled {
+    background-color: #CBD5E0 !important;
+}
+
+.wptb-settings-button.disabled:hover {
+    color: #ffffff !important;
+    cursor: not-allowed;
+}
+
+@keyframes wptb-settings-rotate {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+
 }

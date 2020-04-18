@@ -95,7 +95,7 @@ class Settings_Manager {
 		if ( is_user_logged_in() ) {
 			$current_user = wp_get_current_user();
 
-			// for some reason at this specific hook get_option function doesn't use the default option value that was registered with register_setting, as a work-around provided the default value as second argument
+			// provide default value for get_option
 			$intersection = array_intersect( get_option( $this->options_root, $this->defaults )['allowed_roles'], $current_user->roles );
 
 			if ( sizeof( $intersection ) > 0 ) {
@@ -137,13 +137,13 @@ class Settings_Manager {
 				$data['error'] = esc_html__( "Invalid request body", $this->text_domain );
 			} else {
 				update_option( $this->options_root, $encoded_data );
-				$data['message'] = esc_html__( 'success', $this->text_domain );
+				$data['message'] = esc_html__( 'settings updated', $this->text_domain );
 
 				// TODO [erdembircan] remove for production
 				$data['updatedOptions'] = json_encode( get_option( $this->options_root ) );
 			}
 		} else {
-			$data['error'] = esc_html__( "You don't have permission to use this ajax end-point", $this->text_domain );
+			$data['error'] = esc_html__( "you don not have permission to use this ajax end-point", $this->text_domain );
 		}
 
 		echo json_encode( $data );
@@ -183,10 +183,40 @@ class Settings_Manager {
 				'options' => get_option( $this->options_root ),
 				'fields'  => [
 					'allowed_roles' => [
-						'type'    => 'checkbox',
+						'type'    => 'multiCheckbox',
 						'options' => wp_roles()->role_names,
 						'section' => 'general',
 						'label'   => esc_html__( 'allowed user roles', $this->text_domain )
+					],
+					'test_1' => [
+						'type'    => 'multiCheckbox',
+						'options' => wp_roles()->role_names,
+						'section' => 'general',
+						'label'   => esc_html__( 'dummy setting 1', $this->text_domain )
+					],
+					'test_2' => [
+						'type'    => 'multiCheckbox',
+						'options' => wp_roles()->role_names,
+						'section' => 'general',
+						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
+					],
+					'test_3' => [
+						'type'    => 'multiCheckbox',
+						'options' => wp_roles()->role_names,
+						'section' => 'general',
+						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
+					],
+					'test_4' => [
+						'type'    => 'multiCheckbox',
+						'options' => wp_roles()->role_names,
+						'section' => 'general',
+						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
+					],
+					'test_5' => [
+						'type'    => 'multiCheckbox',
+						'options' => wp_roles()->role_names,
+						'section' => 'general',
+						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
 					],
 				]
 			];
