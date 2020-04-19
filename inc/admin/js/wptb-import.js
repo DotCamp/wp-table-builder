@@ -7,177 +7,416 @@
         importFromFile.onclick = function (e) {
             e.preventDefault();
 
-            let regex = /^([a-zA-Z0-9()\s_\\.\-:])+(.csv)$/;
-            let regex2 = /^([a-zA-Z0-9()\s_\\.\-:])+(.xml)$/;
-            let regex3 = /^([a-zA-Z0-9()\s_\\.\-:])+(.html)$/;
-
             let wptbImportFileInput = document.querySelector( '#wptb-importFile' );
             if( wptbImportFileInput ) {
+
+                let regex = /^([a-zA-Z0-9()\s_\\.\-:])+(.csv)$/;
+                let regex2 = /^([a-zA-Z0-9()\s_\\.\-:])+(.xml)$/;
+                let regex3 = /^([a-zA-Z0-9()\s_\\.\-:])+(.html)$/;
+                let regex4 = /^([a-zA-Z0-9()\s_\\.\-:])+(.zip)$/;
+
                 let is_csv = regex.test( wptbImportFileInput.value.toLowerCase());
                 let is_xml = regex2.test( wptbImportFileInput.value.toLowerCase());
                 let is_html = regex3.test( wptbImportFileInput.value.toLowerCase());
-                let csvDelimiterSelect = document.querySelector( '#wptb-csvDelimiter' );
-                let csvDelimiter;
-                if( csvDelimiterSelect ) {
-                    csvDelimiter = csvDelimiterSelect.value;
-                }
+                let is_zip = regex4.test( wptbImportFileInput.value.toLowerCase());
 
-                if (is_csv || is_xml || is_html ) {
-                    if ( typeof ( FileReader ) != "undefined" ) {
-                        let reader = new FileReader();
-                        reader.onload = function (e) {
-                            let rows;
-                            let data = e.target.result;
-                            if( is_csv ) {
-                                rows = wptb_parseString( data, "\n" );
+                let file = wptbImportFileInput.files[0];
+                if( is_zip ) {
+                    let http = new XMLHttpRequest(),
+                        url = ( wptb_admin_import_js_object ? wptb_admin_import_js_object.ajaxurl : ajaxurl ) +
+                            '?action=zip_unpacker';
 
-                                let arr = CSVToArray( data, csvDelimiter );
-                                console.log(arr);
-                            } else if ( is_xml ) {
-                                rows = wptb_xmlImportFileParse( data );
-                            } else if( is_html ) {
-                                rows = '';
-                            } else if( is_zip ) {
+                    let data = new FormData();
+                    data.append( 'file', file, 'csv_zip.zip' );
+                    data.append( 'security_code', wptb_admin_import_js_object.security_code );
 
-                            }
+                    http.open('POST', url, true );
 
-                            if( rows && Array.isArray( rows ) && rows.length > 0 ) {
-                                // preparing the select ID array
-                                for ( let i = 0; i < rows.length; i++) {
-                                    if( ! rows[i] ) continue;
-                                    // Filter header
-                                    // Cells variable is where the column data can be found.
-                                    let cells;
-                                    if ( is_csv ) {
-                                        cells = wptb_parseString(rows[i]);
-                                    } else if ( is_xml ) {
-                                        cells = rows[i];
-                                    }
+                    http.onreadystatechange = function ( action ) {
+                        if ( this.readyState == 4 && this.status == 200 ) {
+                            let data = http.responseText;
+                            if( data ) data = JSON.parse( data );
 
-                                    if ( cells.length > 0 ) {
+                            if( data && Array.isArray( data ) ) {
+                                if( data[0] == 'success' ) {
+                                    if( data[1] && Array.isArray( data[1] ) ) {
+                                        let dataTable = [];
 
-                                        // Import Loader
-                                        var status = 'no';
-                                        jQuery(".wpcd_import_field_select").each(function () {
-                                            var import_key = jQuery(this).val();
-                                            if (import_key == 'coupon_title') {
-                                                status = 'yes';
+                                        // check file extension, if it "csv" add get this tableData
+                                        for( let i = 0; i < data[1].length; i++ ) {
+                                            if( data[1][i][0] === 'csv' ) {
+                                                dataTable.push( data[1][i][1] );
                                             }
-                                        });
-                                        if (status == 'yes') {
-                                            jQuery(".wpcd_import_form_final_loader").fadeIn();
-                                            wpcd_ajax_import( 'wpcd_process_import', JSON.stringify( wpcp_coupons_data ) );
-                                            jQuery("#wpcd_import_field_error").hide();
-                                        } else {
-                                            jQuery("#wpcd_import_field_error").show();
                                         }
-                                        // End of Import Loader
 
+                                        if( dataTable.length > 0 ) {
+                                            tablesFromCsvSaveRun( dataTable, 0 );
+                                        }
                                     }
                                 }
                             }
+
+                        }
+                    }
+                    http.send( data );
+                } else if( is_csv || is_xml || is_html ) {
+                    if ( typeof ( FileReader ) != "undefined" ) {
+                        let reader = new FileReader();
+                        let data;
+                        reader.onload = function (e) {
+                            data = e.target.result;
+
+                            if( is_csv ) {
+                                tablesFromCsvSaveRun( [data], 0 );
+                            }
                         }
 
-                        reader.readAsText( wptbImportFileInput.files[0]);
-                        // jQuery(".wpcd-import-wrapper").show(); // Second form shows only if file is valid
-                        // jQuery("#wpcd_import_form").hide(); // Hides the first Import Form
+                        reader.readAsText( file );
                     } else {
                         alert("This browser does not support HTML5.");
                     }
                 } else {
                     alert("Please upload a valid file.");
-                    // jQuery('.wpcd-import-wrapper').hide();
-                    jQuery("#wpcd_import_form_wr").show();
+                }
+
+                /**
+                 * run all process for importing tables
+                 */
+                function tablesFromCsvSaveRun( tableDataCsv, index ) {
+                    if( tableDataCsv && Array.isArray( tableDataCsv ) ) {
+                        let csvDelimiterSelect = document.querySelector( '#wptb-csvDelimiter' );
+                        let csvDelimiter;
+                        if( csvDelimiterSelect ) {
+                            csvDelimiter = csvDelimiterSelect.value;
+                            if( csvDelimiter == 'tab' ) csvDelimiter = '\t';
+                        }
+                        if( ! csvDelimiter ) {
+                            csvDelimiter = searchDelimiter(tableDataCsv[index]);
+                            if (!csvDelimiter) {
+                                alert('The delimiter could not be determined');
+
+                                return;
+                            }
+                        }
+
+                        document.addEventListener( 'table:imported:saved', function tabImSave(){
+                            tableImportingProgressBar( index + 1, tableDataCsv.length, 'import' );
+                            if( tableDataCsv.length - index > 1 ) {
+                                tablesFromCsvSaveRun( tableDataCsv, index + 1 );
+                            }
+
+                            document.removeEventListener( 'table:imported:saved', tabImSave );
+                        } );
+
+                        let tableDataArr = parseCsv( tableDataCsv[index], csvDelimiter );
+                        let importedTable = createTableFromDataArray( tableDataArr );
+                        tableImportedSave( importedTable );
+
+                        if( index === 0 ) {
+                            tableImportingProgressBar( 0, 1, 'import' );
+                        }
+                    }
+
                 }
             }
         }
 
+        /**
+         * save html table
+         */
+        function tableImportedSave( table, id ) {
+            let http = new XMLHttpRequest(),
+                url = ( wptb_admin_import_js_object ? wptb_admin_import_js_object.ajaxurl : ajaxurl ) + "?action=save_table",
+                code;
 
-        // function for parse string (analog of split js)
-        function wptb_parseString( str, separator ) {
-            var arr = [];
-            var quote = false;
+            if( id ) {
+                if( table.classList.contains( 'wptb-element-main-table_setting-startedid-0' ) ) {
+                    table.classList.remove( 'wptb-element-main-table_setting-startedid-0' );
+                    table.classList.add( 'wptb-element-main-table_setting-' + id );
+                }
+            }
+            code = WPTB_Stringifier( table );
+            code = code.outerHTML;
 
-            // getting of separator
-            if ( ! separator ) {
-                if ( str != str.split('|')[0] ) {
-                    separator = '|';
-                } else if ( str != str.split( ';' )[0] ) {
-                    separator = ';';
-                } else {
-                    separator = ',';
+            let params = {
+                content: code,
+                security_code: wptb_admin_import_js_object.security_code
+            };
+
+            if ( id ) {
+                params.id = id;
+            }
+            params = JSON.stringify( params );
+
+            http.open('POST', url, true );
+            http.setRequestHeader( 'Content-type', 'application/json; charset=utf-8' );
+
+            http.onreadystatechange = function ( action ) {
+                if ( this.readyState == 4 && this.status == 200 ) {
+                    let data = JSON.parse( http.responseText );
+
+                    if ( data[0] == 'saved' ) {
+                        tableImportedSave( table, data[1] );
+                    } else if( data[0] == 'edited' ) {
+                        WPTB_Helper.wptbDocumentEventGenerate( 'table:imported:saved', document );
+                    }
                 }
             }
 
-            // iterate over each character, keep track of current column (of the returned array)
-            for (var col = 0, c = 0; c < str.length; c++) {
-                var cc = str[c], nc = str[c+1];        // current character, next character
-                arr[col] = arr[col] || '';   // create a new column (start with empty string) if necessary
+            http.send( params );
+        }
 
-                if ( cc == '"' && quote && nc == '"' ) { arr[col] += cc; ++c; continue; }
-                if ( cc == '"' ) {
-                    quote = !quote;
-                    if ( separator == '\n' ) {
-                        arr[col] += cc;
+        /**
+         * create new table from array data
+         */
+        function createTableFromDataArray( tableDataArr ) {
+
+            if( tableDataArr && Array.isArray( tableDataArr ) && tableDataArr.length > 0 ) {
+                let countRows = tableDataArr.length;
+                let countColumns = ( countRows > 0 && tableDataArr[0] && Array.isArray( tableDataArr[0] ) ) ? tableDataArr[0].length : 0;
+
+                // check if table is empty
+                if( 0 === countRows && 0 === countColumns ) {
+                    return false;
+                }
+                /**
+                 * array for saving unique elements indexes
+                 */
+                let elementsIndexes = {
+                    imageElemIndex: 1,
+                    textElemIndex: 1,
+                    customHtmlElemIndex: 1
+                };
+
+                let rowSpan = new Array( countRows );
+                rowSpan.fill( 1 );
+                let colSpan = new Array( countColumns );
+                colSpan.fill( 1 );
+
+                let tBody = document.createElement( 'tbody' );
+
+                let lastRowIdx = countRows - 1;
+                let lastColumnIdx = countColumns - 1;
+
+                for ( let rowIdx = lastRowIdx; rowIdx >= 0; rowIdx-- ) {
+                    let tr = document.createElement( 'tr' );
+                    tr.classList.add( 'wptb-row' );
+                    for ( let colIdx = lastColumnIdx; colIdx >= 0; colIdx-- ) {
+                        let cellContent = tableDataArr[ rowIdx ][ colIdx ];
+
+                        if ( cellContent === '#rowspan#' ) {
+                            if ( ( rowIdx > 0 ) ) {
+                                if( ! rowSpan[ colIdx ] ) rowSpan[ colIdx ] = 1;
+                                rowSpan[ colIdx ]++;
+                                colSpan[ rowIdx ] = 1;
+                                continue;
+                            }
+
+                            cellContent = '';
+                        } else if ( cellContent === '#colspan#' ) {
+                            if ( colIdx > 0 ) {
+                                if( ! colSpan[ rowIdx ] ) colSpan[ rowIdx ] = 1;
+                                colSpan[ rowIdx ]++;
+                                rowSpan[ colIdx ] = 1;
+                                continue;
+                            }
+
+                            cellContent = '';
+                        }
+
+                        let td = document.createElement( 'td' );
+                        td.classList.add( 'wptb-droppable', 'wptb-cell' );
+
+                        td.style.padding = '15px';
+                        td.style.width = null;
+                        td.style.height = null;
+                        td.style.borderStyle = 'solid';
+                        td.style.borderWidth = '1px';
+
+                        td.innerHTML = cellContent;
+
+                        if ( colSpan[ rowIdx ] > 1 ) {
+                            td.colSpan = colSpan[ rowIdx ];
+                        }
+                        if ( rowSpan[ colIdx ] > 1 ) {
+                            td.rowSpan = rowSpan[ colIdx ];
+                        }
+
+                        tr.insertBefore( td, tr.firstChild );
+
+                        colSpan[ rowIdx ] = 1;
+                        rowSpan[ colIdx ] = 1;
                     }
-                    continue;
-                }
-                if ( cc == separator && !quote ) {
-                    ++col;
-                    continue;
+
+                    tBody.insertBefore( tr, tBody.firstChild );
                 }
 
-                arr[col] += cc;
+                let table = document.createElement( 'table' );
+                table.classList.add( 'wptb-preview-table', 'wptb-element-main-table_setting-startedid-0' );
+                /*
+                 * set including border style for table
+                 */
+                table.style.borderStyle = 'solid';
+                table.style.borderWidth = '1px';
+                table.appendChild( tBody );
+
+                addAttributesForTable( table );
+
+                let tds = table.querySelectorAll( 'td' );
+                for( let i = 0; i < tds.length; i++ ) {
+                    let tdChildNodes = [...tds[i].childNodes];
+                    let childNodesHandleredIndexesArr = tdChildNodesHandler( tdChildNodes, elementsIndexes );
+                    let wptbElements;
+                    if( childNodesHandleredIndexesArr && Array.isArray( childNodesHandleredIndexesArr ) ) {
+                        wptbElements = childNodesHandleredIndexesArr[0];
+                        elementsIndexes = childNodesHandleredIndexesArr[1];
+                    }
+
+                    tds[i].innerHTML = '';
+                    if( wptbElements && Array.isArray( wptbElements ) ) {
+                        for( let j = 0; j < wptbElements.length; j++ ) {
+                            tds[i].appendChild( wptbElements[j] );
+                        }
+                    }
+                }
+
+                WPTB_Helper.recalculateIndexes( table );
+
+                return table;
+            }
+
+            return false;
+        }
+
+        /**
+         * add adaptive table data attribute to set table responsive or not
+         * add wptb-table-preview-head class to set top row as header if it chosen
+         */
+        function addAttributesForTable( table ) {
+            let importTableResponsiveCheckbox = document.querySelector( '#wptb-importTableResponsive' );
+            if( importTableResponsiveCheckbox && importTableResponsiveCheckbox.checked ) {
+                table.dataset.wptbAdaptiveTable = '1';
+            } else {
+                table.dataset.wptbAdaptiveTable = '0'
+            }
+
+            let importTableTopRowAsHeaderCheckbox = document.querySelector( '#wptb-topRowAsHeader' );
+            if( importTableTopRowAsHeaderCheckbox && importTableTopRowAsHeaderCheckbox.checked ) {
+                table.classList.add( 'wptb-table-preview-head' );
+            }
+        }
+
+        /**
+         * function for parse CSV to array
+         */
+        function parseCsv( str, separator ) {
+            let arr = [];
+            let quote = false;
+            for (let row = 0, col = 0, c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c+1];
+                arr[row] = arr[row] || [];
+                arr[row][col] = arr[row][col] || '';
+
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == separator && !quote) { ++col; continue; }
+                if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+
+                arr[row][col] += cc;
             }
             return arr;
         }
 
-        // function for parse CSV to array
-        function CSVToArray ( strData, strDelimiter ){
+        /**
+         * Detect the CSV delimiter, by analyzing some rows to determine the most probable delimiter character.
+         * return string Most probable delimiter character.
+         */
+        function searchDelimiter( data ) {
 
-            strDelimiter = ( strDelimiter || "," );
+            let delimiterCollection = {};
+            let quote = false;
+            let currentLine = 0;
+            let nonDelimiterChars = "a-zA-Z0-9\n\r";
 
-            if( strDelimiter == 'tab' ) strDelimiter = '\t';
+            // Walk through each character in the CSV string (up to $this->delimiter_search_max_lines) and search potential delimiter characters.
+            let dataLength = data.length;
+            for ( let i = 0; i < dataLength; i++ ) {
+                let previousChar = ( i - 1 >= 0 ) ? data[ i - 1 ] : '';
+                let currentChar = data[ i ];
+                let nextChar = ( i + 1 < dataLength ) ? data[ i + 1 ] : '';
 
-            let objPattern = new RegExp(
-                (
-                    "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-                    "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-                    "([^\"\\" + strDelimiter + "\\r\\n]*))"
-                ),
-                "gi"
-            );
+                if ( currentChar === '"' ) {
+                    // Open and closing quotes.
+                    if ( ! quote || nextChar !== '"' ) {
+                        quote = ! quote; // Flip bool.
+                    } else if ( quote ) {
+                        i++; // Skip next character.
+                    }
+                } else if ( ( "\n" === currentChar && "\r" !== previousChar || "\r" === currentChar ) && ! quote ) {
+                    // Reached end of a line.
+                    currentLine++;
+                    if ( currentLine >= 15 ) {
+                        break;
+                    }
+                } else if ( ! quote ) {
+                    // At this point, currentChar seems to be used as a delimiter, as it is not quote.
+                    // Count currentChar if it is not in the $this->nonDelimiterChars list
+                    if ( ";,\t".indexOf( currentChar ) !== -1 ) {
+                        if ( typeof delimiterCollection[ currentChar ] == "undefined" ) {
+                            delimiterCollection[ currentChar ] = {};
+                        }
 
-            let arrData = [[]];
-            let arrMatches = null;
-
-            while ( arrMatches = objPattern.exec( strData ) ){
-                let strMatchedDelimiter = arrMatches[ 1 ];
-                if (
-                    strMatchedDelimiter.length &&
-                    strMatchedDelimiter !== strDelimiter
-                ){
-                    arrData.push( [] );
+                        if( typeof delimiterCollection[ currentChar ][ currentLine ] == "undefined" ) {
+                            delimiterCollection[ currentChar ][ currentLine ] = 0; // Initialize empty
+                        }
+                        delimiterCollection[ currentChar ][ currentLine ]++;
+                    }
                 }
-                let strMatchedValue;
-                if (arrMatches[ 2 ]){
-                    strMatchedValue = arrMatches[ 2 ].replace(
-                        new RegExp( "\"\"", "g" ),
-                        "\""
-                    );
+            }
+            let potentialDelimiters = '';
+            for ( let delimiter in delimiterCollection ) {
+                let lineDelimiterCollection = delimiterCollection[delimiter];
+                let lineDelimiterCollectionLength = 0;
+                for ( let lineDelimiter in lineDelimiterCollection ) {
+                    lineDelimiterCollectionLength++;
+                }
+                if ( lineDelimiterCollectionLength !== currentLine ) {
+                    continue;
+                }
+
+                let startCount = false;
+                let delimiterIndic = undefined;
+                for ( let lineDelimiter in lineDelimiterCollection ) {
+                    if ( ! startCount ) {
+                        startCount = lineDelimiterCollection[lineDelimiter];
+                    } else if ( lineDelimiterCollection[lineDelimiter] === startCount &&
+                        ( delimiterIndic || typeof delimiterIndic == 'undefined' ) ) {
+                        delimiterIndic = true;
+                    } else {
+                        delimiterIndic = false;
+                    }
+                }
+
+                if ( currentLine > 1 && ! delimiterIndic ) {
+                    continue;
+                }
+
+                if( ! potentialDelimiters ) {
+                    potentialDelimiters = delimiter;
                 } else {
-                    strMatchedValue = arrMatches[ 3 ];
+                    potentialDelimiters = false;
+                    break;
                 }
-                arrData[ arrData.length - 1 ].push( strMatchedValue );
             }
 
-            return( arrData );
+            return potentialDelimiters;
         }
 
         function wptb_xmlElementChildrenEach( Parent, startIter ) {
             if ( startIter ) {
                 this.mainString = [];
             }
+
             if( Parent.nodeType == 1 ) {
                 if( Parent.children.length > 0 ) {
                     for ( var i = 0; i < Parent.children.length; i++ ) {
@@ -200,7 +439,9 @@
             return this.mainString;
         }
 
-        // function for parse Xml file
+        /**
+         * function for parse Xml file
+         */
         function wptb_xmlImportFileParse( data ) {
             var xmlDoc = $.parseXML( data );
             var xml = $( xmlDoc );
@@ -223,6 +464,10 @@
             return rows;
         }
 
+
+        /**
+         * import table from other plugins
+         */
         function importFromPlugin( event ) {
             if( event && typeof event === 'object' ) {
                 let importedTablesSetting = document.querySelector( '.wptb-importedTablesSetting' );
@@ -729,9 +974,11 @@
 
                 let trs = tableDomElem.querySelectorAll( 'tr' );
                 if( trs.length > 0 ) {
-                    let imageElemIndex = 1,
-                        textElemIndex = 1,
-                        customHtmlElemIndex = 1;
+                    let elementsIndexes = {
+                        imageElemIndex: 1,
+                        textElemIndex: 1,
+                        customHtmlElemIndex: 1
+                    };
 
                     for( let i = 0; i < trs.length; i++ ) {
                         /**
@@ -837,75 +1084,11 @@
 
                                 let tdChildNodes = [...tds[j].childNodes];
 
-                                let wptbElements = [];
-                                for( let k = 0; k < tdChildNodes.length; k++ ) {
-
-                                    if( tdChildNodes[k].nodeType != 1 && tdChildNodes[k].nodeType != 3 ) {
-                                        continue;
-                                    }
-
-                                    let element = document.createElement('div' );
-
-                                    if( tdChildNodes[k].nodeType == 1 ) {
-                                        if( tdChildNodes[k].nodeName.toLowerCase() === 'img' ) {
-                                            tdChildNodes[k].style.width = '100%';
-                                            tdChildNodes[k].removeAttribute( 'class' );
-                                            element.classList.add( 'wptb-image-container', 'wptb-ph-element', 'wptb-element-image-' + imageElemIndex );
-                                            element.innerHTML = '<div class="wptb-image-wrapper">' +
-                                                '<a style="display: block;" target="_blank" rel="nofollow">' +
-                                                tdChildNodes[k].outerHTML +
-                                                '</a>' +
-                                                '</div>';
-                                            let img = element.querySelector( 'img' );
-                                            if( img ) img.style.width = '100%';
-
-                                            imageElemIndex++;
-                                        } else if( tdChildNodes[k].nodeName.toLowerCase() === 'wptb_shortcode_container_element' ) {
-                                            element.classList.add( 'wptb-shortcode-container', 'wptb-ph-element', 'wptb-element-shortcode-' + customHtmlElemIndex );
-                                            element.innerHTML = '<wptb_shortcode_container_element><div>' + tdChildNodes[k].innerHTML + '</div></wptb_shortcode_container_element>';
-
-                                            customHtmlElemIndex++;
-                                        } else {
-                                            element.classList.add( 'wptb-html-container', 'wptb-ph-element', 'wptb-element-custom_html-' + customHtmlElemIndex );
-                                            element.innerHTML = '<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">' +
-                                                tdChildNodes[k].outerHTML +
-                                                '</div>';
-
-                                            customHtmlElemIndex++;
-                                        }
-                                    } else if ( tdChildNodes[k].nodeType == 3 ) {
-                                        element.classList.add( 'wptb-text-container', 'wptb-ph-element', 'wptb-element-text-' + textElemIndex );
-                                        element.innerHTML = '<div><p>' + tdChildNodes[k].nodeValue + '</p></div>';
-                                        tds[j].insertBefore( element, tdChildNodes[k] );
-                                        tds[j].removeChild( tdChildNodes[k] );
-
-                                        let textP = element.querySelector( 'p' );
-                                        if( textP ) {
-                                            let textPFontSize = WPTB_Helper.checkSetGetStyleSizeValue( textP, 'font-size', 'font-size' );
-                                            if( textPFontSize ) {
-                                                if( WPTB_Helper.checkingDimensionValue( textPFontSize, 'px' ) ) {
-                                                    textP.style.fontSize = null;
-                                                    element.style.fontSize = textPFontSize;
-                                                }
-                                            }
-
-                                            let textPColor = WPTB_Helper.checkSetGetStyleColorValue( textP, 'color', 'color' );
-                                            if( textPColor ) {
-                                                if( WPTB_Helper.isHex( textPColor ) ) {
-                                                    textP.style.color = null;
-                                                    element.style.color = textPColor;
-                                                } else if( WPTB_Helper.rgbToHex( textPColor ) ) {
-                                                    textP.style.color = null;
-                                                    textPColor = WPTB_Helper.rgbToHex( textPColor );
-                                                    element.style.color = textPColor;
-                                                }
-                                            }
-                                        }
-
-                                        textElemIndex++;
-                                    }
-
-                                    wptbElements.push( element );
+                                let childNodesHandleredIndexesArr = tdChildNodesHandler( tdChildNodes, elementsIndexes );
+                                let wptbElements;
+                                if( childNodesHandleredIndexesArr && Array.isArray( childNodesHandleredIndexesArr ) ) {
+                                    wptbElements = childNodesHandleredIndexesArr[0];
+                                    elementsIndexes = childNodesHandleredIndexesArr[1];
                                 }
 
                                 tds[j].innerHTML = '';
@@ -930,26 +1113,85 @@
                 tableDomElem.removeAttribute( 'aria-describedby' );
                 tableDomElem.classList.add( 'wptb-preview-table', 'wptb-element-main-table_setting-startedid-0' );
 
-                /*
-                 * add adaptive table data attribute to set table responsive or not
-                 */
-                let importTableResponsiveCheckbox = document.querySelector( '#wptb-importTableResponsive' );
-                if( importTableResponsiveCheckbox && importTableResponsiveCheckbox.checked ) {
-                    tableDomElem.dataset.wptbAdaptiveTable = '1';
-                } else {
-                    tableDomElem.dataset.wptbAdaptiveTable = '0'
-                }
-
-                /*
-                 * add wptb-table-preview-head class to set top row as header if it chosen
-                 */
-                let importTableTopRowAsHeaderCheckbox = document.querySelector( '#wptb-topRowAsHeader' );
-                if( importTableTopRowAsHeaderCheckbox && importTableTopRowAsHeaderCheckbox.checked ) {
-                    tableDomElem.classList.add( 'wptb-table-preview-head' );
-                }
+                addAttributesForTable( tableDomElem );
 
                 tablePressImportStageFour( tableDomElem, iframe, dataTables );
             }
+        }
+
+        function tdChildNodesHandler( tdChildNodes, elementsIndexes ) {
+            let wptbElements = [];
+            for( let k = 0; k < tdChildNodes.length; k++ ) {
+
+                if( tdChildNodes[k].nodeType != 1 && tdChildNodes[k].nodeType != 3 ) {
+                    continue;
+                }
+
+                let element = document.createElement('div' );
+
+                if( tdChildNodes[k].nodeType == 1 ) {
+                    if( tdChildNodes[k].nodeName.toLowerCase() === 'img' ) {
+                        tdChildNodes[k].style.width = '100%';
+                        tdChildNodes[k].removeAttribute( 'class' );
+                        element.classList.add( 'wptb-image-container', 'wptb-ph-element', 'wptb-element-image-' + elementsIndexes.imageElemIndex );
+                        element.innerHTML = '<div class="wptb-image-wrapper">' +
+                            '<a style="display: block;" target="_blank" rel="nofollow">' +
+                            tdChildNodes[k].outerHTML +
+                            '</a>' +
+                            '</div>';
+                        let img = element.querySelector( 'img' );
+                        if( img ) img.style.width = '100%';
+
+                        elementsIndexes.imageElemIndex++;
+                    } else if( tdChildNodes[k].nodeName.toLowerCase() === 'wptb_shortcode_container_element' ) {
+                        element.classList.add( 'wptb-shortcode-container', 'wptb-ph-element', 'wptb-element-shortcode-' + elementsIndexes.customHtmlElemIndex );
+                        element.innerHTML = '<wptb_shortcode_container_element><div>' + tdChildNodes[k].innerHTML + '</div></wptb_shortcode_container_element>';
+
+                        elementsIndexes.customHtmlElemIndex++;
+                    } else {
+                        element.classList.add( 'wptb-html-container', 'wptb-ph-element', 'wptb-element-custom_html-' + elementsIndexes.customHtmlElemIndex );
+                        element.innerHTML = '<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">' +
+                            tdChildNodes[k].outerHTML +
+                            '</div>';
+
+                        elementsIndexes.customHtmlElemIndex++;
+                    }
+                } else if ( tdChildNodes[k].nodeType == 3 ) {
+                    element.classList.add( 'wptb-text-container', 'wptb-ph-element', 'wptb-element-text-' + elementsIndexes.textElemIndex );
+                    element.innerHTML = '<div><p>' + tdChildNodes[k].nodeValue + '</p></div>';
+                    // tds[j].insertBefore( element, tdChildNodes[k] );
+                    // tds[j].removeChild( tdChildNodes[k] );
+
+                    let textP = element.querySelector( 'p' );
+                    if( textP ) {
+                        let textPFontSize = WPTB_Helper.checkSetGetStyleSizeValue( textP, 'font-size', 'font-size' );
+                        if( textPFontSize ) {
+                            if( WPTB_Helper.checkingDimensionValue( textPFontSize, 'px' ) ) {
+                                textP.style.fontSize = null;
+                                element.style.fontSize = textPFontSize;
+                            }
+                        }
+
+                        let textPColor = WPTB_Helper.checkSetGetStyleColorValue( textP, 'color', 'color' );
+                        if( textPColor ) {
+                            if( WPTB_Helper.isHex( textPColor ) ) {
+                                textP.style.color = null;
+                                element.style.color = textPColor;
+                            } else if( WPTB_Helper.rgbToHex( textPColor ) ) {
+                                textP.style.color = null;
+                                textPColor = WPTB_Helper.rgbToHex( textPColor );
+                                element.style.color = textPColor;
+                            }
+                        }
+                    }
+
+                    elementsIndexes.textElemIndex++;
+                }
+
+                wptbElements.push( element );
+            }
+
+            return [wptbElements, elementsIndexes];
         }
 
         // creates hidden iframe

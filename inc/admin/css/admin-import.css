@@ -1,3 +1,19 @@
+.wptb-importWrap {
+    margin-top: 50px;
+}
+
+.wptb-importCommonOptions table {
+    border: 2px solid black;
+}
+
+.wptb-importCommonOptions table td {
+    padding: 10px;
+    vertical-align: middle;
+}
+#wptb-importFormWrap table td {
+    padding: 7px 0px;
+    vertical-align: middle;
+}
 .wptb-importFromPluginsContainer table td {
     padding: 10px 25px 10px 0px;
     vertical-align: middle;

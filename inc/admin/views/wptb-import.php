@@ -11,29 +11,56 @@ if ( ! defined( 'WPINC' ) ) {
  * Table Import Page
  */
 
+
+/* import tables from CSV */
 ?>
-
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-
-<div class="wptb-importWrap" style="display: none;">
+<div class="wptb-importWrap">
+    <div class="wptb-importCommonOptions">
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <input id="wptb-importTableResponsive" type="checkbox" name="wptb-importTableResponsive">
+                    <label for="wptb-importTableResponsive" >Make Table Responsive</label>
+                </td>
+                <td>
+                    <input id="wptb-topRowAsHeader" type="checkbox" name="wptb-topRowAsHeader">
+                    <label for="wptb-topRowAsHeader">Top Row As Header</label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="wptb-importWrap">
     <h2><?php esc_html_e( 'Import Tables from CSV', 'wp-table-builder' ); ?></h2>
     <section id="wptb-importFormWrap">
         <form id="wptb-importForm" enctype='multipart/form-data' method='post'>
-            <p>
-                <?php esc_html_e( 'Here you can import tables from a CSV file. Select the file you want to import, then click on Next.', 'wp-table-builder' ); ?>
-            </p>
-
-            <div>
-                <input type="file" name='wptb-importFile' id="wptb-importFile" required/>
-            </div>
-            <select id="wptb-csvDelimiter" name="wptb-csvDelimiter">
-                <option value=";">; (semicolon)</option>
-                <option value=",">, (comma)</option>
-                <option value="tab">\t (tabulator)</option>
-            </select>
-            <div>
-                <input type="submit" name='wptb-importSubmit' class="button button-primary button-large" id="wptb-importSubmit" value="Import" />
-            </div>
+            <table style="min-width: 300px">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="file" name='wptb-importFile' id="wptb-importFile" required/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="wptb-csvDelimiter" name="wptb-csvDelimiter">
+                                <option value=""></option>
+                                <option value=";">; (semicolon)</option>
+                                <option value=",">, (comma)</option>
+                                <option value="tab">\t (tabulator)</option>
+                            </select>
+                            <label for="wptb-csvDelimiter"><?php esc_html_e( 'CSV Delimiter', 'wp-table-builder'); ?></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" name='wptb-importSubmit' class="button button-primary button-large" id="wptb-importSubmit" value="Import" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <?php if ( isset( $_POST['wptb_import_submit'] ) ) : ?>
                 <p style="font-size: 16px; color: red"><?php esc_html_e( 'File type not allowed.', 'wp-table-builder' ); ?></p>
@@ -42,22 +69,19 @@ if ( ! defined( 'WPINC' ) ) {
         </form>
     </section>
 </div>
-<!--    <hr>-->
+
+<hr>
+
+<?php
+/* import tables from other plugins */
+?>
 <div class="wptb-importWrap">
     <h2><?php esc_html_e( 'Import Tables from other Wordpress plugins', 'wp-table-builder' ); ?></h2>
     <div class="wptb-importFromPluginsContainer">
-        <table style="min-width: 500px;">
+        <table style="min-width: 250px;">
             <tbody>
                 <tr>
                     <td><h3 style="margin: 0px;"><?php esc_html_e( 'Table Press', 'wp-table-builder' ); ?></h3></td>
-                    <td>
-                        <input id="wptb-importTableResponsive" type="checkbox" name="wptb-importTableResponsive">
-                        <label for="wptb-importTableResponsive" >Make Table Responsive</label>
-                    </td>
-                    <td>
-                        <input id="wptb-topRowAsHeader" type="checkbox" name="wptb-topRowAsHeader">
-                        <label for="wptb-topRowAsHeader">Top Row As Header</label>
-                    </td>
                     <td>
                         <button class="button button-primary button-large wptb-importFromPlugin" data-wptb-import-plugin="table-press"
                                 data-name="<?php esc_attr_e( 'Importing Tables', 'wp-table-builder' ); ?>">

@@ -64,6 +64,9 @@ class Import {
         add_action( 'wp_ajax_shortcodes_replace', array( $this, 'shortcodes_replace' ) );
         add_action( 'wp_ajax_nopriv_shortcodes_replace', array( $this, 'shortcodes_replace' ) );
 
+        add_action( 'wp_ajax_zip_unpacker', array( $this, 'zip_unpacker' ) );
+        add_action( 'wp_ajax_nopriv_zip_unpacker', array( $this, 'zip_unpacker' ) );
+
         if ( ! $this->is_import_iframe_page() ) {
             return;
         }
@@ -160,6 +163,72 @@ class Import {
             }
         } else {
             wp_die( json_encode( 'Import Problem' ) );
+        }
+    }
+
+    public function zip_unpacker() {
+        if ( isset( $_POST ) && isset( $_POST['security_code'] ) &&
+            wp_verify_nonce( $_POST['security_code'], 'wptb-import-security-nonce' ) ) {
+            if( class_exists( 'ZipArchive', false ) && apply_filters( 'unzip_file_use_ziparchive', true ) ) {
+
+                $zip_file = new \ZipArchive();
+
+                $uploaddir = NS\WP_TABLE_BUILDER_DIR . '/uploads'; // . - текущая папка где находится submit.php
+
+                // creating a folder if it doesn't exist
+                if( ! is_dir( $uploaddir ) ) mkdir( $uploaddir, 0777 );
+
+                $files = $_FILES; // getting files
+
+                /**
+                 * move files from the temporary directory to the specified
+                 * and also unzip the archive and put the contents in an array
+                 */
+                $data = array();
+                foreach( $files as $file ){
+                    $file_name = $file['name'];
+                    if( move_uploaded_file( $file['tmp_name'], "$uploaddir/$file_name" ) ){
+                        if ( true === $zip_file->open( "$uploaddir/$file_name" ) ) {
+                            for ( $file_idx = 0; $file_idx < $zip_file->numFiles; $file_idx++ ) {
+                                $file_name = $zip_file->getNameIndex( $file_idx );
+                                // Skip directories.
+                                if ( '/' === substr( $file_name, -1 ) ) {
+                                    continue;
+                                }
+                                // Skip the __MACOSX directory.
+                                if ( '__MACOSX/' === substr( $file_name, 0, 9 ) ) {
+                                    continue;
+                                }
+                                $data_one = $zip_file->getFromIndex( $file_idx );
+                                if ( false === $data_one ) {
+                                    continue;
+                                }
+                                $extension = '';
+                                if( class_exists( 'SplFileInfo', false ) ) {
+                                    $info = new \SplFileInfo( $file_name );
+                                    $extension = $info->getExtension();
+                                }
+
+                                $data[$file_idx] = [$extension, $data_one];
+                            };
+                            $zip_file->close();
+                        } else {
+                            @unlink( $uploaddir. '/' . $file['name'] );
+                        }
+                    }
+                    @unlink( $uploaddir. '/' . $file['name'] );
+                }
+
+                rmdir( $uploaddir );
+
+                $data = $data && is_array( $data ) && count( $data ) > 0 ? ['success', $data] : ['unsuccess', 'failed to process file'];
+
+                die( json_encode( $data ) );
+            } else {
+                die( json_encode( ['unsuccess', 'PHP Zip Archive Parser is unavailable'] ) );
+            }
+        } else {
+            die( json_encode( ['unsuccess', 'Security problem'] ) );
         }
     }
 
