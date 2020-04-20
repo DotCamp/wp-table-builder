@@ -7,9 +7,6 @@ const rawStore = {...wptbAdminSettingsData.options};
 // remove main data from global space
 wptbAdminSettingsData = undefined;
 
-// TODO [erdembircan] remove console logging for production
-console.log(frontendData);
-
 // store HOC
 const withStore = {
     data() {

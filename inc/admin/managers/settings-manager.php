@@ -188,36 +188,6 @@ class Settings_Manager {
 						'section' => 'general',
 						'label'   => esc_html__( 'allowed user roles', $this->text_domain )
 					],
-					'test_1' => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'dummy setting 1', $this->text_domain )
-					],
-					'test_2' => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
-					],
-					'test_3' => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
-					],
-					'test_4' => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
-					],
-					'test_5' => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'dummy setting 2', $this->text_domain )
-					],
 				]
 			];
 
