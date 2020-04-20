@@ -49,6 +49,8 @@ define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 define( NS . 'PLUGIN_TEXT_DOMAIN', 'wp-table-builder' );
 
+define(NS . 'PLUGIN__FILE__', __FILE__);
+
 
 /**
  * Autoload Classes
