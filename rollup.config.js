@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import cjs from '@rollup/plugin-commonjs';
 import {uglify} from 'rollup-plugin-uglify';
 import buble from '@rollup/plugin-buble';
+import vuePlugin from 'rollup-plugin-vue';
 import path from 'path';
 
 
@@ -33,10 +34,11 @@ const config = files.map(f => ({
         }),
         resolve(),
         cjs(),
+        vuePlugin(),
         uglify(),
         buble({
            objectAssign: 'Object.assign'
-        })
+        }),
     ]
 }));
 

@@ -1,0 +1,32 @@
+// global data provided from backend
+const store = {...wptbAdminSettingsData.options};
+const rawStore = {...wptbAdminSettingsData.options};
+
+/**
+ * singleton store mixin for Vue components
+ *
+ * @type {{data(): {rawStore: *, store: *}, methods: {revertStore(): void}}}
+ */
+const withStore = {
+    data() {
+        return {
+            store,
+            rawStore
+        }
+    },
+    methods: {
+        revertStore() {
+            Object.keys(this.store).map(k => {
+                if (Object.prototype.hasOwnProperty.call(this.store, k)) {
+                    this.store[k] = this.rawStore[k];
+                }
+            })
+        }
+    }
+};
+
+/**
+ * @module withStore module
+ */
+export default withStore;
+

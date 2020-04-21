@@ -21,7 +21,7 @@
         "presets": [
             "@babel/preset-env"
         ],
-        "plugins" : [
+        "plugins": [
             "@babel/plugin-proposal-object-rest-spread"
         ]
     },
@@ -47,7 +47,9 @@
         "gulp-wp-pot": "^2.0.4",
         "rollup": "^2.6.1",
         "rollup-plugin-uglify": "^6.0.4",
-        "vue": "^2.6.11"
+        "rollup-plugin-vue": "^5.1.6",
+        "vue": "^2.6.11",
+        "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
         "gulp-rename": "^1.4.0"
