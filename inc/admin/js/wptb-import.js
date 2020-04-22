@@ -226,6 +226,7 @@
 
                         let td = document.createElement( 'td' );
                         td.classList.add( 'wptb-droppable', 'wptb-cell' );
+                        td.dataset.wptbCssTdAutoWidth="true";
 
                         td.style.padding = '15px';
                         td.style.width = null;
@@ -260,8 +261,6 @@
                 table.style.borderWidth = '1px';
                 table.appendChild( tBody );
 
-                addAttributesForTable( table );
-
                 let tds = table.querySelectorAll( 'td' );
                 for( let i = 0; i < tds.length; i++ ) {
                     let tdChildNodes = [...tds[i].childNodes];
@@ -282,6 +281,8 @@
 
                 WPTB_Helper.recalculateIndexes( table );
 
+                addAttributesForTable( table );
+
                 return table;
             }
 
@@ -291,6 +292,7 @@
         /**
          * add adaptive table data attribute to set table responsive or not
          * add wptb-table-preview-head class to set top row as header if it chosen
+         * and also other data attributes
          */
         function addAttributesForTable( table ) {
             let importTableResponsiveCheckbox = document.querySelector( '#wptb-importTableResponsive' );
@@ -304,6 +306,12 @@
             if( importTableTopRowAsHeaderCheckbox && importTableTopRowAsHeaderCheckbox.checked ) {
                 table.classList.add( 'wptb-table-preview-head' );
             }
+
+            table.dataset.wptbFixedWidthSize = '0';
+            table.dataset.wptbCellsWidthAutoCount = table.maxCols;
+            let td = table.querySelector( 'td' );
+            let tdPadding = td && td.style.paddingTop ? td.style.paddingTop : 15;
+            table.dataset.wptbTableTdsSumMaxWidth = String( parseInt( table.maxCols ) * ( 100 + 1 + parseInt( tdPadding ) * 2 ) + 1 );
         }
 
         /**

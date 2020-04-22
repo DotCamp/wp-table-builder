@@ -74,7 +74,7 @@ class Preview {
 	public function is_preview_page() {
 
 		// if this is a preview page, then continue
-		if ( empty( $_GET['post_type'] ) && empty( $_GET['p'] ) ) {
+		if ( ( ! isset( $_GET['post_type'] ) || empty( $_GET['post_type'] ) ) || ( ! isset( $_GET['p'] ) || empty( $_GET['p'] ) ) ) {
 			return false;
 		} elseif ( sanitize_text_field( $_GET['post_type'] ) !== 'wptb-tables' ) {
             return false;
@@ -91,12 +91,6 @@ class Preview {
         if ( empty( $this->table_data ) ) {
 			return false;
 		}
-        
-        // Check nonce
-        $nonce = sanitize_text_field( $_GET['_wpnonce'] );
-        if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) && ! wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
-            return false;
-        }
 
 		return true;
         
@@ -110,14 +104,21 @@ class Preview {
         
         if ( ! empty( $id ) ) {
 			$post = get_post( $id );
+            // Check nonce
+            if ( ! isset( $_GET['_wpnonce'] ) || empty( $_GET['_wpnonce'] ) ) {
+                return false;
+            }
             $nonce = sanitize_text_field( $_GET['_wpnonce'] );
             if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table' ) ) {
                 $post = ! empty( $post ) && 'wptb-tables' === $post->post_type && get_post_meta( $id, '_wptb_content_', true ) ? $post : false;
             } else if( $nonce && wp_verify_nonce( $nonce, 'wptb_nonce_table_preview' ) ) {
                 $time_over = false;
+                if ( ! isset( $_GET['preview_id'] ) || empty( $_GET['preview_id'] ) ) {
+                    return false;
+                }
                 $preview_id = absint( $_GET['preview_id'] );
                 $preview_id_meta = get_post_meta( $id, '_wptb_preview_id_', true );
-                $ts = absint( $_GET['ts'] );
+                $ts = isset( $_GET['ts'] ) && ! empty( $_GET['ts'] ) ? absint( $_GET['ts'] ) : '';
                 if( ! $ts ) {
                     $ts = 1;
                 } else {

@@ -333,7 +333,8 @@ class Import {
     public function is_import_iframe_page() {
 
         // if this is a preview page, then continue
-        if ( empty( $_GET['post_type'] ) && empty( $_GET['shortcode'] ) ) {
+        if ( ( ! isset( $_GET['post_type'] ) || empty( $_GET['post_type'] ) ) ||
+            ( ! isset( $_GET['shortcode'] ) || empty( $_GET['shortcode'] ) ) ) {
             return false;
         } elseif ( sanitize_text_field( $_GET['post_type'] ) !== 'wptb-tables-import' ) {
             return false;
@@ -345,6 +346,9 @@ class Import {
         }
 
         // Check nonce
+        if ( ! isset( $_GET['_wpnonce'] ) || empty( $_GET['_wpnonce'] ) ) {
+            return false;
+        }
         $nonce = sanitize_text_field( $_GET['_wpnonce'] );
         if ( ! $nonce || ! wp_verify_nonce( $nonce, 'wptb-import-security-nonce' ) ) {
             return false;
