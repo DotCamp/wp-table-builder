@@ -14,13 +14,14 @@
             </sections>
             <menu-content :center="true">
                 <transition name="wptb-fade" mode="out-in">
-                    <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate">
+                    <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">
                     </component>
                 </transition>
             </menu-content>
         </div>
         <menu-footer>
-            <menu-button>{{strings.importSection}}</menu-button>
+            <portal-target name="footerButtons">
+            </portal-target>
         </menu-footer>
     </div>
 </template>
@@ -35,7 +36,7 @@
     import PluginsImportMenu from "../containers/PluginsImportMenu.vue";
 
     export default {
-        props: ['pluginInfo'],
+        props: ['pluginInfo', 'options'],
         components: {MenuHeader, Sections, SectionItem, MenuContent, MenuFooter, MenuButton},
         data() {
             return {

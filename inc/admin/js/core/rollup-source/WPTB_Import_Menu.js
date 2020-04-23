@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import PortalVue from 'portal-vue';
 import ImportApp from './containers/ImportApp.vue';
 import withStrings from './plugins/strings';
 
@@ -16,10 +17,13 @@ Vue.use(withStrings, {
     strings: importData.strings
 });
 
+Vue.use(PortalVue);
+
 new Vue({
     components: {ImportApp},
     data: {
-        pluginInfo: importData.pluginInfo
+        pluginInfo: importData.pluginInfo,
+        options: importData.options
     }
 }).$mount('#wptb-import-menu')
 

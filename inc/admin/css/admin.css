@@ -2813,7 +2813,7 @@ wptb_shortcode_container_element {
     transition: all 0.2s ease-out;
 }
 
-.wptb-menu-file-drop.dragenter{
+.wptb-menu-file-drop.dragenter {
     background-color: #EDF2F7;
 }
 
@@ -2824,11 +2824,18 @@ wptb_shortcode_container_element {
 .wptb-menu-file-drop .hint {
     font-style: italic;
     color: #cbd5e0;
+    font-size: 1.3rem;
+}
+
+.wptb-menu-file-drop .file {
+    text-transform: none;
+    font-size: 1.3rem;
+    color: inherit;
 }
 
 .wptb-menu-file-drop a {
     text-decoration: underline;
-
+    cursor: pointer;
 }
 
 .wptb-menu-file-drop .file-icon {

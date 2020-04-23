@@ -299,17 +299,24 @@ class Admin_Menu {
 				'csvDelimiter'    => esc_html__( 'CSV delimiter', $wptb_text_domain ),
 				'fileDropHint'    => esc_html__( 'drag and drop files', $wptb_text_domain ),
 				'browse'          => esc_html__( 'browse', $wptb_text_domain ),
+				'clear'           => esc_html__( 'clear', $wptb_text_domain ),
+			];
+
+			$options = [
+				'security_code' => wp_create_nonce( 'wptb-import-security-nonce' ),
+				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 			];
 
 			$data = [
 				'pluginInfo' => $plugin_info,
-				'strings'    => $strings
+				'strings'    => $strings,
+				'options'    => $options,
 			];
 
 			wp_localize_script( $handler, 'wptbImportMenuData', $data );
 
 			// TODO [erdembircan] old import menu functionality, remove after new implementation
-           
+
 //            wp_enqueue_script( 'wptb-import-js', plugin_dir_url( __FILE__ ) . 'js/wptb-import.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
 //            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
 //            wp_enqueue_style( 'wptb-admin-import-css', plugin_dir_url( __FILE__ ) . 'css/admin-import.css', array(), NS\PLUGIN_VERSION, 'all' );

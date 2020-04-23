@@ -6,10 +6,19 @@
             <div v-if="dragActive" key="fileLogo" class="file-icon">
                 <span class="dashicons dashicons-media-spreadsheet"></span>
             </div>
-            <div v-else key="controls" class="wptb-flex wptb-flex-col wptb-flex-align-center">
-                <div class="hint">{{texts.hint}}</div>
-                <div>
-                    <a>{{texts.browse}}</a>
+            <div v-else key="controls">
+                <div v-if="currentFile === null" class="wptb-flex wptb-flex-col wptb-flex-align-center">
+                    <div class="hint">{{texts.hint}}</div>
+                    <div>
+                        <a @click.prevent="openFileSelect">{{texts.browse}}</a>
+                        <input @change="handleFileSelect" ref="fileSelect" type="file" style="display: none">
+                    </div>
+                </div>
+                <div v-else class="wptb-flex wptb-flex-col wptb-flex-align-center">
+                    <div class="file">{{currentFile.name}}</div>
+                    <div>
+                        <a @click.prevent="clearCurrentFile">{{texts.clear}}</a>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -17,10 +26,23 @@
 </template>
 <script>
     export default {
-        props: ['texts'],
+        props: ['texts', 'file', 'allowedFormats'],
+        model: {
+            prop: 'file',
+            event: 'fileChanged'
+        },
         data() {
             return {
-                dragActive: false
+                dragActive: false,
+                currentFile: null,
+            }
+        },
+        mounted() {
+            this.currentFile = this.file;
+        },
+        watch: {
+            currentFile(n) {
+                this.$emit('fileChanged', n)
             }
         },
         computed: {
@@ -32,9 +54,28 @@
             handleDrop(event) {
                 this.dragActive = true;
                 const dt = event.dataTransfer;
-                console.log(dt.files);
+                if (dt.files[0]) {
+                    if (this.isTypeAllowed(dt.files[0])) {
+                        this.currentFile = dt.files[0];
+                    }
+                }
                 this.dragActive = false;
             },
+            isTypeAllowed(fileName) {
+                const extension = fileName.name.split('.').pop();
+                return this.allowedFormats.includes(extension);
+            },
+            openFileSelect() {
+                this.$refs.fileSelect.click();
+            },
+            handleFileSelect(e) {
+                if (e.target.files.length > 0) {
+                    this.currentFile = e.target.files[0];
+                }
+            },
+            clearCurrentFile() {
+                this.currentFile = null;
+            }
         }
     }
 </script>

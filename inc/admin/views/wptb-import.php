@@ -4,7 +4,7 @@ use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-    die;
+	die;
 }
 
 /**
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 /* import tables from CSV */
 ?>
 <div id="wptb-import-menu" class="wptb-menu-page-wrapper">
-    <import-app :plugin-info="pluginInfo"></import-app>
+    <import-app :plugin-info="pluginInfo" :options="options"></import-app>
 </div>
 <!--// TODO [erdembircan] old import menu, remove after new implementation-->
 <!--<div class="wptb-importWrap">-->
