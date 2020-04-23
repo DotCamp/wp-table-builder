@@ -2571,7 +2571,7 @@ wptb_shortcode_container_element {
 }
 
 /*settings page related styles*/
-#wptb-settings-page {
+.wptb-menu-page-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2635,6 +2635,13 @@ wptb_shortcode_container_element {
     border-bottom: 1px solid #cbd5e0;
 }
 
+.wptb-settings-sections-wrapper.child {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -10px;
+}
+
 .wptb-settings-section-item {
     text-transform: uppercase;
     font-size: 1rem;
@@ -2645,22 +2652,37 @@ wptb_shortcode_container_element {
     transition: background-color 0.5s ease-out;
 }
 
+.child .wptb-settings-section-item {
+    font-size: 0.8rem;
+    padding: 10px;
+}
+
 .wptb-settings-section-item:hover {
     background-color: #EDF2F7;
 }
 
 .wptb-settings-section-item.disabled {
     color: #CBD5E0 !important;
+    border-bottom: none;
 }
 
 .wptb-settings-controls-wrapper {
     padding: 20px 40px;
+    overflow: auto;
+}
+
+.wptb-settings-controls-wrapper.grid {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-auto-rows: minmax(min-content, max-content);
     grid-auto-flow: row;
-    overflow: auto;
+}
+
+.wptb-settings-controls-wrapper.center {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .wptb-setting-control {
@@ -2683,7 +2705,19 @@ wptb_shortcode_container_element {
 }
 
 .wptb-setting-control-row {
-    margin: 10px 0;
+    margin: 20px 0;
+}
+
+.wptb-setting-control-row label {
+    text-transform: capitalize;
+}
+
+.wptb-setting-control-row input {
+    margin-right: 20px;
+}
+
+.wptb-setting-control-row select {
+    margin-right: 20px;
 }
 
 .wptb-settings-footer {
@@ -2759,12 +2793,61 @@ wptb_shortcode_container_element {
 }
 
 .wptb-fade-enter-active, .wptb-fade-leave-active {
-    transition: opacity 0.5s;
+    transition: opacity 0.2s ease-out;
 }
 
 .wptb-fade-enter, .wptb-fade-leave-to {
     opacity: 0;
 }
+
+.wptb-menu-file-drop {
+    border: 2px dashed #cbd5e0;
+    width: 500px;
+    height: 200px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-menu-file-drop.dragenter{
+    background-color: #EDF2F7;
+}
+
+.wptb-menu-file-drop div {
+    margin: 10px 0;
+}
+
+.wptb-menu-file-drop .hint {
+    font-style: italic;
+    color: #cbd5e0;
+}
+
+.wptb-menu-file-drop a {
+    text-decoration: underline;
+
+}
+
+.wptb-menu-file-drop .file-icon {
+    color: #cbd5e0;
+    transform: scale(4);
+}
+
+.wptb-flex {
+    display: flex;
+}
+
+.wptb-flex-col {
+    flex-direction: column;
+}
+
+.wptb-flex-align-center {
+    align-items: center;
+}
+
 
 @keyframes wptb-settings-rotate {
     0% {

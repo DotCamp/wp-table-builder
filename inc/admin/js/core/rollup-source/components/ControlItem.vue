@@ -2,18 +2,31 @@
     <div>
         <div v-if="isType('multiCheckbox')">
             <div class="wptb-setting-control-row" v-for="(v,k) in fieldData.options">
-                <input type="checkbox" :value="k" v-model="store[fieldData.id]">
-                <label>{{v}}</label>
+                <input :id="fieldData.id" type="checkbox" :value="k" v-model="modelBind[fieldData.id]">
+                <label :for="fieldData.id">{{v}}</label>
+            </div>
+        </div>
+        <div v-else-if="isType('checkbox')">
+            <div class="wptb-setting-control-row">
+                <input :id="fieldData.id" type="checkbox" v-model="modelBind[fieldData.id]">
+                <label :for="fieldData.id">{{fieldData.label}}</label>
+            </div>
+        </div>
+        <div v-else-if="isType('dropdown')">
+            <div class="wptb-setting-control-row">
+                <select :id="fieldData.id" v-model="modelBind[fieldData.id]">
+                    <option v-for="o in fieldData.options" :value="o.value">
+                        {{o.label}}
+                    </option>
+                </select>
+                <label :for="fieldData.id">{{fieldData.label}}</label>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import withStore from "../mixins/withStore.js";
-
     export default {
-        props: ['fieldData'],
-        mixins: [withStore],
+        props: ['fieldData', 'modelBind'],
         methods: {
             isType(type) {
                 return this.fieldData.type === type;

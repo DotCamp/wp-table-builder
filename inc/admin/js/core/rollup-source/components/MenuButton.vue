@@ -5,7 +5,13 @@
 </template>
 <script>
     export default {
-        props: ['disabled', 'type'],
+        props: {
+            disabled: Boolean,
+            type: {
+                type: String,
+                default: 'primary'
+            }
+        },
         methods: {
             handleClick() {
                 this.$emit('click');

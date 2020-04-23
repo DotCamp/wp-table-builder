@@ -10,7 +10,7 @@
         </sections>
         <menu-content>
             <setting-card v-for="field in currentFields" :key="field.id" :title="field.label">
-                <control-item :field-data="field"></control-item>
+                <control-item :field-data="field" :modelBind="store"></control-item>
             </setting-card>
         </menu-content>
         <menu-footer :message-show="fetchMessage.show" :message-body="fetchMessage.message" :message-busy="fetching"
@@ -22,14 +22,14 @@
 </template>
 <script>
     import withStore from '../mixins/withStore.js';
-    import MenuHeader from "./MenuHeader.vue";
-    import Sections from "./Sections.vue";
-    import SectionItem from "./SectionItem.vue";
-    import MenuContent from "./MenuContent.vue";
-    import SettingCard from "./SettingCard.vue";
-    import ControlItem from "./ControlItem.vue";
-    import MenuFooter from "./MenuFooter.vue";
-    import MenuButton from "./MenuButton.vue";
+    import MenuHeader from "../components/MenuHeader.vue";
+    import Sections from "../components/Sections.vue";
+    import SectionItem from "../components/SectionItem.vue";
+    import MenuContent from "../components/MenuContent.vue";
+    import SettingCard from "../components/SettingCard.vue";
+    import ControlItem from "../components/ControlItem.vue";
+    import MenuFooter from "../components/MenuFooter.vue";
+    import MenuButton from "../components/MenuButton.vue";
 
     export default {
         props: ['fieldsData', 'settings', 'pluginInfo'],

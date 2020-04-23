@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import SettingsApp from "./components/SettingsApp.vue";
+import SettingsApp from "./containers/SettingsApp.vue";
 import withStrings from "./plugins/strings.js";
 
 const frontendData = {...wptbAdminSettingsData};

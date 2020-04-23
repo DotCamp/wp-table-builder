@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
-<div id="wptb-settings-page">
+<div id="wptb-settings-page" class="wptb-menu-page-wrapper">
     <settings-app :fields-data="fieldsData" :settings="settings"
                   :plugin-info="pluginInfo">
     </settings-app>

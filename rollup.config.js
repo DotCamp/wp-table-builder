@@ -13,7 +13,7 @@ const paths = {
     dest: path.resolve(__dirname, './inc/admin/js'),
 };
 
-const files = ['WPTB_Admin_Settings'];
+const files = ['WPTB_Admin_Settings', 'WPTB_Import_Menu'];
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = files.map(f => ({

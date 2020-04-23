@@ -178,7 +178,6 @@ class Settings_Manager {
 			$plugin_name      = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
 
 			$plugin_info = [
-				'textDomain'     => $wptb_text_domain,
 				'pluginHomepage' => esc_attr( $plugin_homepage ),
 				'pluginName'     => esc_html( $plugin_name ),
 				'logo'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png' ),
