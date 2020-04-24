@@ -14,12 +14,13 @@
             </sections>
             <menu-content :center="true">
                 <transition name="wptb-fade" mode="out-in">
-                    <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">
+                    <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate"
+                               :options="options" @messageUp="setMessage" @fetching="handleFetch">
                     </component>
                 </transition>
             </menu-content>
         </div>
-        <menu-footer>
+        <menu-footer :message-busy="message.busy" :message-body="message.body" :message-show="message.show" :message-type="message.type">
             <portal-target name="footerButtons">
             </portal-target>
         </menu-footer>
@@ -40,7 +41,14 @@
         components: {MenuHeader, Sections, SectionItem, MenuContent, MenuFooter, MenuButton},
         data() {
             return {
-                currentSection: 'csv'
+                currentSection: 'csv',
+                message: {
+                    show: false,
+                    busy: false,
+                    body: '',
+                    type: 'ok',
+                    intId: -1
+                }
             }
         },
         methods: {
@@ -49,6 +57,20 @@
                     return;
                 }
                 this.currentSection = name;
+            },
+            setMessage(options) {
+                this.message.body = options.body;
+                this.message.type = options.type;
+                this.message.show = true;
+
+                clearInterval(this.message.intId);
+
+                this.message.intId = setInterval(() => {
+                    this.message.show = false
+                }, 5000);
+            },
+            handleFetch(val){
+                this.message.busy = val;
             }
         },
         computed: {

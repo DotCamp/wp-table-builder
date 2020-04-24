@@ -2811,6 +2811,7 @@ wptb_shortcode_container_element {
     align-items: center;
     text-transform: capitalize;
     transition: all 0.2s ease-out;
+    border-radius: 5px;
 }
 
 .wptb-menu-file-drop.dragenter {

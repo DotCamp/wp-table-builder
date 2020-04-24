@@ -2,7 +2,9 @@ import replace from '@rollup/plugin-replace';
 import alias from '@rollup/plugin-alias';
 import resolve from '@rollup/plugin-node-resolve';
 import cjs from '@rollup/plugin-commonjs';
+import babel from 'rollup-plugin-babel';
 import {uglify} from 'rollup-plugin-uglify';
+import {terser} from 'rollup-plugin-terser';
 import buble from '@rollup/plugin-buble';
 import vuePlugin from 'rollup-plugin-vue';
 import path from 'path';
@@ -32,13 +34,13 @@ const config = files.map(f => ({
                 {find: 'vue', replacement: 'vue/dist/vue.esm.js'}
             ]
         }),
-        resolve(),
+        resolve({
+            browser: true
+        }),
         cjs(),
         vuePlugin(),
-        uglify(),
-        buble({
-           objectAssign: 'Object.assign'
-        }),
+        babel(),
+        terser(),
     ]
 }));
 

@@ -269,6 +269,8 @@ class Admin_Menu {
 			// TODO [erdembircan] this is the entry point for js scripts for import page, check their validity and re-format them in a more meaningful context
 
 			$script_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_version = filemtime($script_path);
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 
@@ -277,7 +279,9 @@ class Admin_Menu {
 			$plugin_version = NS\PLUGIN_VERSION;
 
 			// script and style enqueue
-			wp_enqueue_script( $handler, $script_url, [], $plugin_version, true );
+			wp_enqueue_script( $handler, $script_url, [], $script_version, true );
+            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), $plugin_version, true );
+            wp_enqueue_script( 'wptb-admin-builder-js' );
 			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
 
 			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;

@@ -43,6 +43,9 @@
         watch: {
             currentFile(n) {
                 this.$emit('fileChanged', n)
+            },
+            file(n){
+                this.currentFile = n;
             }
         },
         computed: {
