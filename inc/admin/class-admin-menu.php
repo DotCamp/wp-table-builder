@@ -268,9 +268,9 @@ class Admin_Menu {
 
 			// TODO [erdembircan] this is the entry point for js scripts for import page, check their validity and re-format them in a more meaningful context
 
-			$script_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
-			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
-			$script_version = filemtime($script_path);
+			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_version = filemtime( $script_path );
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 
@@ -280,8 +280,8 @@ class Admin_Menu {
 
 			// script and style enqueue
 			wp_enqueue_script( $handler, $script_url, [], $script_version, true );
-            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), $plugin_version, true );
-            wp_enqueue_script( 'wptb-admin-builder-js' );
+			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), $plugin_version, true );
+			wp_enqueue_script( 'wptb-admin-builder-js' );
 			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
 
 			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;
@@ -295,20 +295,32 @@ class Admin_Menu {
 			];
 
 			$strings = [
-				'logoAlt'         => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
-				'importSection'   => esc_html__( 'import', $wptb_text_domain ),
-				'plugins'         => esc_html__( 'plugins', $wptb_text_domain ),
-				'tableResponsive' => esc_html__( 'make table responsive', $wptb_text_domain ),
-				'topRowHeader'    => esc_html__( 'top row as header', $wptb_text_domain ),
-				'csvDelimiter'    => esc_html__( 'CSV delimiter', $wptb_text_domain ),
-				'fileDropHint'    => esc_html__( 'drag and drop files', $wptb_text_domain ),
-				'browse'          => esc_html__( 'browse', $wptb_text_domain ),
-				'clear'           => esc_html__( 'clear', $wptb_text_domain ),
+				'logoAlt'          => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
+				'importSection'    => esc_html__( 'import', $wptb_text_domain ),
+				'plugins'          => esc_html__( 'plugins', $wptb_text_domain ),
+				'tableResponsive'  => esc_html__( 'make table responsive', $wptb_text_domain ),
+				'topRowHeader'     => esc_html__( 'top row as header', $wptb_text_domain ),
+				'csvDelimiter'     => esc_html__( 'CSV delimiter', $wptb_text_domain ),
+				'fileDropHint'     => esc_html__( 'drag and drop files', $wptb_text_domain ),
+				'browse'           => esc_html__( 'browse', $wptb_text_domain ),
+				'clear'            => esc_html__( 'clear', $wptb_text_domain ),
+				'tableImported'    => esc_html__( 'table imported', $wptb_text_domain ),
+				'errorOccured'     => esc_html__( 'an error occured', $wptb_text_domain ),
+				'operationSuccess' => esc_html__( 'operation is successful', $wptb_text_domain ),
+				'replacedShortcodes' => esc_html__( 'replaced shortcodes', $wptb_text_domain ),
 			];
 
+			$import_iframe_url = add_query_arg(
+				array(
+					'post_type' => 'wptb-tables-import'
+				),
+				home_url()
+			);
+
 			$options = [
-				'security_code' => wp_create_nonce( 'wptb-import-security-nonce' ),
-				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
+				'security_code'     => wp_create_nonce( 'wptb-import-security-nonce' ),
+				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
+				'import_iframe_url' => $import_iframe_url,
 			];
 
 			$data = [

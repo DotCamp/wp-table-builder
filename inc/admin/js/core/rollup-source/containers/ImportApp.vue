@@ -6,7 +6,7 @@
         <sections>
             <section-item :name="strings.importSection"></section-item>
         </sections>
-        <div>
+        <div class="wptb-settings-controls-wrapper">
             <sections :child="true">
                 <section-item @sectionchange="setSection" :current="currentSection" name="csv"></section-item>
                 <section-item @sectionchange="setSection" :current="currentSection"
@@ -21,6 +21,7 @@
             </menu-content>
         </div>
         <menu-footer :message-busy="message.busy" :message-body="message.body" :message-show="message.show" :message-type="message.type">
+            <menu-button style="visibility: hidden">dummy</menu-button>
             <portal-target name="footerButtons">
             </portal-target>
         </menu-footer>

@@ -2761,6 +2761,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-settings-button {
+    width: fit-content;
     margin: 0 20px;
     color: #ffffff;
     font-size: 1.0rem;
@@ -2785,6 +2786,10 @@ wptb_shortcode_container_element {
 
 .wptb-settings-button.disabled {
     background-color: #CBD5E0 !important;
+}
+
+.wptb-settings-button.small {
+    font-size: inherit;
 }
 
 .wptb-settings-button.disabled:hover {
@@ -2856,6 +2861,37 @@ wptb_shortcode_container_element {
     align-items: center;
 }
 
+.wptb-flex-justify-center {
+    justify-content: center;
+}
+
+.wptb-import-tables-wrapper {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.wptb-import-table {
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.wptb-import-table th, td {
+    padding: 15px 10px;
+}
+
+.wptb-import-table th {
+    border-bottom: 1px solid #cbd5e0;
+}
+
+.wptb-import-table tbody tr:hover {
+    background-color: #edf2f7;
+}
+
+.wptb-menu-overflow-auto {
+    overflow: auto;
+}
 
 @keyframes wptb-settings-rotate {
     0% {
@@ -2864,5 +2900,4 @@ wptb_shortcode_container_element {
     100% {
         transform: rotateZ(360deg);
     }
-
 }

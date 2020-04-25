@@ -37,13 +37,13 @@
         mounted() {
             document.addEventListener('table:imported:saved', () => {
                 this.currentFile = null;
-                this.$emit('messageUp', {type: 'ok', body: 'table imported'});
+                this.$emit('messageUp', {type: 'ok', body: this.strings.tableImported});
                 this.fetching = false;
             });
 
             document.addEventListener('table:imported:error', () => {
                 this.currentFile = null;
-                this.$emit('messageUp', {type: 'error', body: 'an error occured'});
+                this.$emit('messageUp', {type: 'error', body: this.strings.errorOccured});
                 this.fetching = false;
             });
 

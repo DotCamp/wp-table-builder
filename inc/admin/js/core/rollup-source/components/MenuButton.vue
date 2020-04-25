@@ -1,5 +1,5 @@
 <template>
-    <div class="wptb-settings-button" :class="[{'disabled' : disabled} , type  ]" @click="handleClick">
+    <div class="wptb-settings-button" :class="[{'disabled' : disabled} , type , size  ]" @click="handleClick">
         <slot></slot>
     </div>
 </template>
@@ -10,6 +10,10 @@
             type: {
                 type: String,
                 default: 'primary'
+            },
+            size: {
+                type: String,
+                default: 'normal'
             }
         },
         methods: {

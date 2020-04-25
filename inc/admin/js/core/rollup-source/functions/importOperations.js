@@ -154,6 +154,10 @@ function ImportOperations(options) {
 
         http.onreadystatechange = function (action) {
             if (this.readyState == 4 && this.status == 200) {
+                if (JSON.parse(http.responseText)[0] === 'security_problem') {
+                    WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document);
+                    return;
+                }
                 let data = JSON.parse(http.responseText);
 
                 if (data[0] == 'saved') {
@@ -490,22 +494,9 @@ function ImportOperations(options) {
      * import table from other plugins
      */
     function importFromPlugin(event) {
-        if (event && typeof event === 'object') {
-            let importedTablesSetting = document.querySelector('.wptb-importedTablesSetting');
-            if (importedTablesSetting) importedTablesSetting.style.display = 'none';
-
-            let importedTablesShortcodesReplace = document.querySelector('.wptb-importedTablesShortcodesReplaced');
-            if (importedTablesShortcodesReplace) importedTablesShortcodesReplace.style.display = 'none';
-
-            let button = event.target;
-
-            let dataPlugin = button.dataset.wptbImportPlugin;
-            if (dataPlugin) {
-                if (dataPlugin === 'table-press') {
-
-                    tablePressImportStageOne();
-
-                }
+        if (event) {
+            if (event === 'table-press') {
+                tablePressImportStageOne();
             }
         }
     }
@@ -516,11 +507,11 @@ function ImportOperations(options) {
      */
     function tablePressImportStageOne() {
         let http = new XMLHttpRequest(),
-            url = (wptb_admin_import_js_object ? wptb_admin_import_js_object.ajaxurl : ajaxurl) + "?action=import_tables";
+            url = (options.ajaxUrl) + "?action=import_tables";
 
         let params = {
             import_plugin_name: 'table-press',
-            security_code: wptb_admin_import_js_object.security_code
+            security_code: options.security_code
         };
 
         params = JSON.stringify(params);
@@ -538,20 +529,26 @@ function ImportOperations(options) {
                             let importIframeSection = document.getElementById('wptb-importIframeSection');
                             if (importIframeSection) {
                                 let iframe = document.createElement('iframe');
-                                iframe.width = '1000';
-                                iframe.height = '1000';
+
+                                // TODO [erdembircan] not sure if iframe dimensions takes a role in the main functionality of the operation, will make sure and come back to here
+
+                                // iframe.width = '1000';
+                                // iframe.height = '1000';
                                 importIframeSection.innerHTML = '';
                                 importIframeSection.appendChild(iframe);
                                 window.wptbImportCommonCountTables = data[1].length;
                                 if (window.wptbImportConvertationShortcodes) {
                                     delete window.wptbImportConvertationShortcodes;
                                 }
-                                tableImportingProgressBar(0, window.wptbImportCommonCountTables, 'import');
+                                // TODO [erdembircan] progress bar here
+                                //  tableImportingProgressBar(0, window.wptbImportCommonCountTables, 'import');
+
                                 tablePressImportStageTwo(iframe, data[1]);
                             }
                         }
                     } else if (data[1]) {
-                        alert(data[1]);
+                        // TODO [erdembircan] error handling here
+                        WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, data[1]);
                     }
                 }
             }
@@ -573,8 +570,10 @@ function ImportOperations(options) {
 
                 let tableContent = dataTable[1];
 
-                let url = wptb_admin_import_js_object ? wptb_admin_import_js_object.import_iframe_url +
-                    '&_wpnonce=' + wptb_admin_import_js_object.security_code + '&shortcode=' + shortcode : '';
+                let url = options.import_iframe_url +
+                    '&_wpnonce=' + options.security_code + '&shortcode=' + shortcode;
+
+
                 iframe.src = url;
                 iframe.onload = tablePressImportStageThree.bind(this, iframe, tableContent, dataTables);
             }
@@ -610,7 +609,7 @@ function ImportOperations(options) {
 
     function tablePressImportStageFour(tableDOMElem, iframe, dataTables, id) {
         let http = new XMLHttpRequest(),
-            url = (wptb_admin_import_js_object ? wptb_admin_import_js_object.ajaxurl : ajaxurl) + "?action=save_table",
+            url = (options.ajaxUrl) + "?action=save_table",
             title,
             code;
         let iframeContent = iframe.contentDocument || iframe.contentWindow.document;
@@ -633,7 +632,7 @@ function ImportOperations(options) {
         let params = {
             title: title,
             content: code,
-            security_code: wptb_admin_import_js_object.security_code
+            security_code: options.security_code
         };
 
         if (id) {
@@ -746,72 +745,76 @@ function ImportOperations(options) {
      * and out button for replace shortcodes in posts
      */
     function importedTablesInfoSettingBox() {
-        let importedTablesSetting = document.querySelector('.wptb-importedTablesSetting');
-        if (importedTablesSetting) {
-            importedTablesSetting.style.display = 'block';
-            let importedTablesCount = '';
-            if (window.wptbImportConvertationShortcodes && Array.isArray(window.wptbImportConvertationShortcodes)) {
-                importedTablesCount = window.wptbImportConvertationShortcodes.length;
-            }
-            let importedTablesCountElem = document.querySelector('.wptb-importedTablesCount span');
-            if (importedTablesCountElem && importedTablesCount) importedTablesCountElem.innerHTML = importedTablesCount;
+        WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
 
-            let importedTablesShortcodesList = document.querySelector('.wptb-importedTablesShortcodesList');
-            if (importedTablesShortcodesList && importedTablesCount > 0) {
-                let table = importedTablesShortcodesList.querySelector('table');
-                let tbody = table.querySelector('tbody');
-                tbody.innerHTML = '';
-                for (let i = 0; i < importedTablesCount; i++) {
-                    let thisIterConvertShortcodes = window.wptbImportConvertationShortcodes[i];
-                    if (thisIterConvertShortcodes && Array.isArray(thisIterConvertShortcodes)) {
-                        let tr = document.createElement('tr');
-                        tr.innerHTML = '<td><input type="checkbox" name="shortcodesReplace[' + i + ']"></td>' +
-                            '<td>' + thisIterConvertShortcodes[0] + '</td>' +
-                            '<td>' + thisIterConvertShortcodes[1] + '</td>';
+        WPTB_Helper.wptbDocumentEventGenerate('table:imported:list', document, {[options.type]: window.wptbImportConvertationShortcodes});
 
-                        tbody.appendChild(tr);
-                    }
-                }
-
-                let thead = table.querySelector('thead');
-                let th = thead.querySelector('th');
-                if (th) {
-                    let thInput = th.firstChild;
-                    thInput.checked = false;
-                    let trs = tbody.children;
-                    if (trs.length > 0) {
-                        thInput.onchange = function () {
-                            for (let i = 0; i < trs.length; i++) {
-                                let tdFirst = trs[i].firstChild;
-                                if (tdFirst) {
-                                    let tdInput = tdFirst.firstChild;
-                                    if (tdInput) {
-                                        if (this.checked) {
-                                            tdInput.checked = true;
-                                        } else {
-                                            tdInput.checked = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        thInput.onchange = '';
-                    }
-                }
-
-                importedTablesShortcodesList.style.display = 'block';
-
-                let importTableReplaceShortcodesButton = document.querySelectorAll('.wptb-importTableReplaceShortcodes');
-                if (importTableReplaceShortcodesButton.length > 0) {
-                    for (let i = 0; i < importTableReplaceShortcodesButton.length; i++) {
-                        importTableReplaceShortcodesButton[i].style.display = 'block';
-
-                        importTableReplaceShortcodesButton[i].onclick = importedTablesReplaceShortcodes.bind(this, tbody);
-                    }
-                }
-            }
-        }
+        // let importedTablesSetting = document.querySelector('.wptb-importedTablesSetting');
+        // if (importedTablesSetting) {
+        //     importedTablesSetting.style.display = 'block';
+        //     let importedTablesCount = '';
+        //     if (window.wptbImportConvertationShortcodes && Array.isArray(window.wptbImportConvertationShortcodes)) {
+        //         importedTablesCount = window.wptbImportConvertationShortcodes.length;
+        //     }
+        //     let importedTablesCountElem = document.querySelector('.wptb-importedTablesCount span');
+        //     if (importedTablesCountElem && importedTablesCount) importedTablesCountElem.innerHTML = importedTablesCount;
+        //
+        //     let importedTablesShortcodesList = document.querySelector('.wptb-importedTablesShortcodesList');
+        //     if (importedTablesShortcodesList && importedTablesCount > 0) {
+        //         let table = importedTablesShortcodesList.querySelector('table');
+        //         let tbody = table.querySelector('tbody');
+        //         tbody.innerHTML = '';
+        //         for (let i = 0; i < importedTablesCount; i++) {
+        //             let thisIterConvertShortcodes = window.wptbImportConvertationShortcodes[i];
+        //             if (thisIterConvertShortcodes && Array.isArray(thisIterConvertShortcodes)) {
+        //                 let tr = document.createElement('tr');
+        //                 tr.innerHTML = '<td><input type="checkbox" name="shortcodesReplace[' + i + ']"></td>' +
+        //                     '<td>' + thisIterConvertShortcodes[0] + '</td>' +
+        //                     '<td>' + thisIterConvertShortcodes[1] + '</td>';
+        //
+        //                 tbody.appendChild(tr);
+        //             }
+        //         }
+        //
+        //         let thead = table.querySelector('thead');
+        //         let th = thead.querySelector('th');
+        //         if (th) {
+        //             let thInput = th.firstChild;
+        //             thInput.checked = false;
+        //             let trs = tbody.children;
+        //             if (trs.length > 0) {
+        //                 thInput.onchange = function () {
+        //                     for (let i = 0; i < trs.length; i++) {
+        //                         let tdFirst = trs[i].firstChild;
+        //                         if (tdFirst) {
+        //                             let tdInput = tdFirst.firstChild;
+        //                             if (tdInput) {
+        //                                 if (this.checked) {
+        //                                     tdInput.checked = true;
+        //                                 } else {
+        //                                     tdInput.checked = false;
+        //                                 }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             } else {
+        //                 thInput.onchange = '';
+        //             }
+        //         }
+        //
+        //         importedTablesShortcodesList.style.display = 'block';
+        //
+        //         let importTableReplaceShortcodesButton = document.querySelectorAll('.wptb-importTableReplaceShortcodes');
+        //         if (importTableReplaceShortcodesButton.length > 0) {
+        //             for (let i = 0; i < importTableReplaceShortcodesButton.length; i++) {
+        //                 importTableReplaceShortcodesButton[i].style.display = 'block';
+        //
+        //                 importTableReplaceShortcodesButton[i].onclick = importedTablesReplaceShortcodes.bind(this, tbody);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     /**
@@ -854,13 +857,13 @@ function ImportOperations(options) {
             }
 
             let http = new XMLHttpRequest(),
-                url = (wptb_admin_import_js_object ? wptb_admin_import_js_object.ajaxurl : ajaxurl) + "?action=shortcodes_replace";
+                url = (options.ajaxUrl) + "?action=shortcodes_replace";
 
             let replacingShortcodesOne = replacingShortcodes.shift();
 
             let params = {
                 replacing_shortcodes: replacingShortcodesOne,
-                security_code: wptb_admin_import_js_object.security_code
+                security_code: options.security_code
             };
 
             params = JSON.stringify(params);
@@ -887,6 +890,8 @@ function ImportOperations(options) {
                     }
 
                     if (percent == 100) {
+                        WPTB_Helper.wptbDocumentEventGenerate('table:shortcode:replace', document , window.wptbImportShortcodesReplacedCount);
+
                         let importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
                         if (importProgressBarContainer) {
                             importProgressBarContainer.addEventListener('wptb-import:progressBar:full:replace', function () {
@@ -1235,7 +1240,7 @@ function ImportOperations(options) {
     }
 
     return {
-        importFromFile
+        importFromFile, importFromPlugin ,replaceShortcodesAjax
     }
 }
 
