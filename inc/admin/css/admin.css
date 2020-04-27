@@ -2833,6 +2833,12 @@ wptb_shortcode_container_element {
     font-size: 1.3rem;
 }
 
+.wptb-menu-file-drop .supported {
+    font-style: italic;
+    color: #cbd5e0;
+    font-size: 1rem;
+}
+
 .wptb-menu-file-drop .file {
     text-transform: none;
     font-size: 1.3rem;
@@ -2891,6 +2897,20 @@ wptb_shortcode_container_element {
 
 .wptb-menu-overflow-auto {
     overflow: auto;
+}
+
+.wptb-text-transform-cap {
+    text-transform: capitalize !important;
+}
+
+.wptb-text-transform-none {
+    text-transform: none !important;
+}
+
+.wptb-import-table-count-info {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-style: italic;
 }
 
 @keyframes wptb-settings-rotate {

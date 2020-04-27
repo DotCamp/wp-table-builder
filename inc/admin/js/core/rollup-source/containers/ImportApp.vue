@@ -6,8 +6,8 @@
         <sections>
             <section-item :name="strings.importSection"></section-item>
         </sections>
-        <div class="wptb-settings-controls-wrapper">
-            <sections :child="true">
+        <div class="wptb-menu-overflow-auto" style="margin-top: -10px">
+            <sections :child="true" style="margin-top: 0 !important">
                 <section-item @sectionchange="setSection" :current="currentSection" name="csv"></section-item>
                 <section-item @sectionchange="setSection" :current="currentSection"
                               :name="strings.plugins"></section-item>
@@ -20,7 +20,8 @@
                 </transition>
             </menu-content>
         </div>
-        <menu-footer :message-busy="message.busy" :message-body="message.body" :message-show="message.show" :message-type="message.type">
+        <menu-footer :message-busy="message.busy" :message-body="message.body" :message-show="message.show"
+                     :message-type="message.type">
             <menu-button style="visibility: hidden">dummy</menu-button>
             <portal-target name="footerButtons">
             </portal-target>
@@ -70,7 +71,7 @@
                     this.message.show = false
                 }, 5000);
             },
-            handleFetch(val){
+            handleFetch(val) {
                 this.message.busy = val;
             }
         },

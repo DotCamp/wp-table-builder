@@ -1,8 +1,8 @@
 <template>
     <div>
-        <menu-button :disabled="busy" v-for="plugin in supportedPlugins"
-                     @click="handleImportFromPlugin(plugin)" :key="plugin">
-            {{plugin}}
+        <menu-button class="wptb-text-transform-cap" :disabled="busy" v-for="(value,key) in supportedPlugins"
+                     @click="handleImportFromPlugin(key)" :key="key">
+            {{importButtonText(value)}}
         </menu-button>
 
         <div id="wptb-importIframeSection" style="display: none"></div>
@@ -10,16 +10,17 @@
             <div v-if="showImportedTables" class="wptb-flex wptb-flex-align-center wptb-flex-col">
                 <div class="wptb-import-tables-wrapper">
                     <div class="wptb-import-tables-list" v-for="(value,key) in importedTables" :key="key">
+                        <div class="wptb-import-table-count-info">{{importedTablesCountInfo(key)}}</div>
                         <table class="wptb-import-table">
                             <thead>
                             <tr>
                                 <th>
                                     <input type="checkbox" @click="selectAllCheckbox(key)">
                                 </th>
-                                <th>
-                                    {{key}}
+                                <th class="wptb-text-transform-cap">
+                                    {{supportedPlugins[key]}}
                                 </th>
-                                <th>
+                                <th class="wptb-text-transform-cap">
                                     wp table builder
                                 </th>
                             </tr>
@@ -43,13 +44,14 @@
                         </table>
                     </div>
                 </div>
-                <menu-button :disabled="selectedReplaceRows.length === 0" size="small" @click="replaceShortcodes">
-                    replace short codes
+                <menu-button class="wptb-text-transform-cap" :disabled="selectedReplaceRows.length === 0" size="small"
+                             @click="replaceShortcodes">
+                    {{__('replace short codes' , options.textDomain)}}
                 </menu-button>
             </div>
         </transition>
 
-        <!--        source code for import functionality is all over the place, makes it impossible to extract the business logic from the view one. this component, unfortunately appears to be a key component for business logic to work. this is the best workaround I found to make the business logic work-->
+        <!--        source code for import functionality is all over the place, makes it really hard to extract the business logic from the view one. this component, unfortunately appears to be a key component for business logic to work. this is the best workaround I found to make the business logic work-->
         <div class="wptb-importPBarContainer" style="visibility: hidden">
             <div class="wptb-importPBarProgress">
                 <div class="wptb-nameProcessInBarProgress"></div>
@@ -62,6 +64,7 @@
 </template>
 <script>
     import {Fragment} from 'vue-fragment';
+    import {_x, sprintf, _nx, __} from '@wordpress/i18n';
     import MenuButton from "../components/MenuButton.vue";
     import ImportOperations from "../functions/importOperations.js";
 
@@ -70,11 +73,13 @@
         components: {MenuButton, Fragment},
         data() {
             return {
-                supportedPlugins: ['table-press'],
+                supportedPlugins: {
+                    'table-press': "TablePress"
+                },
                 fetching: false,
                 busy: false,
                 importedTables: {},
-                selectedReplaceRows: []
+                selectedReplaceRows: [],
             }
         },
         watch: {
@@ -147,13 +152,20 @@
                     return {search: row[0], replace: row[1]}
                 });
 
-                console.log(replaceArray);
-
                 const importOperation = ImportOperations(this.options);
 
                 this.setBusy();
                 importOperation.replaceShortcodesAjax(replaceArray, true);
 
+            },
+            importButtonText(plugin) {
+                return sprintf(_x('import from %s', '%s is a format variable for a name of WordPress plugin', this.options.textDomain), plugin)
+            },
+            importedTablesCountInfo(key) {
+                return sprintf(_nx('%u table imported', '%u tables imported', 'number of tables imported', this.options.textDomain), this.importedTables[key].length)
+            },
+            __(value, domain = this.options.textDomain) {
+                return __(value, domain);
             }
         },
         computed: {
@@ -163,7 +175,6 @@
                         return k
                     }
                 });
-
                 return Array.isArray(keys) ? keys.length > 0 : false;
             },
         }

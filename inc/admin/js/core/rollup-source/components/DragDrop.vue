@@ -7,19 +7,22 @@
                 <span class="dashicons dashicons-media-spreadsheet"></span>
             </div>
             <div v-else key="controls">
-                <div v-if="currentFile === null" class="wptb-flex wptb-flex-col wptb-flex-align-center">
-                    <div class="hint">{{texts.hint}}</div>
-                    <div>
-                        <a @click.prevent="openFileSelect">{{texts.browse}}</a>
-                        <input @change="handleFileSelect" ref="fileSelect" type="file" style="display: none">
+                <transition name="wptb-fade" mode="out-in">
+                    <div v-if="currentFile === null" class="wptb-flex wptb-flex-col wptb-flex-align-center" key="selection">
+                        <div class="hint">{{texts.hint}}</div>
+                        <div class="supported wptb-text-transform-none">({{allowedFormats.join(', ')}})</div>
+                        <div>
+                            <a @click.prevent="openFileSelect">{{texts.browse}}</a>
+                            <input @change="handleFileSelect" ref="fileSelect" type="file" style="display: none">
+                        </div>
                     </div>
-                </div>
-                <div v-else class="wptb-flex wptb-flex-col wptb-flex-align-center">
-                    <div class="file">{{currentFile.name}}</div>
-                    <div>
-                        <a @click.prevent="clearCurrentFile">{{texts.clear}}</a>
+                    <div v-else key="selected" class="wptb-flex wptb-flex-col wptb-flex-align-center">
+                        <div class="file">{{currentFile.name}}</div>
+                        <div>
+                            <a @click.prevent="clearCurrentFile">{{texts.clear}}</a>
+                        </div>
                     </div>
-                </div>
+                </transition>
             </div>
         </transition>
     </div>
@@ -44,7 +47,7 @@
             currentFile(n) {
                 this.$emit('fileChanged', n)
             },
-            file(n){
+            file(n) {
                 this.currentFile = n;
             }
         },
@@ -72,7 +75,7 @@
                 this.$refs.fileSelect.click();
             },
             handleFileSelect(e) {
-                if (e.target.files.length > 0) {
+                if (e.target.files.length > 0 && this.isTypeAllowed(e.target.files[0])) {
                     this.currentFile = e.target.files[0];
                 }
             },

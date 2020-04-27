@@ -100,7 +100,6 @@ function ImportOperations(options) {
             }
 
             document.addEventListener('table:imported:saved', function tabImSave() {
-                // TODO [erdembircan] progressbar here
                 // tableImportingProgressBar(index + 1, tableDataCsv.length, 'import');
                 if (tableDataCsv.length - index > 1) {
                     tablesFromCsvSaveRun(tableDataCsv, index + 1);
@@ -115,7 +114,6 @@ function ImportOperations(options) {
             tableImportedSave(importedTable);
 
             if (index === 0) {
-                // TODO [erdembircan] progressbar here
                 // tableImportingProgressBar(0, 1, 'import');
             }
         }
@@ -530,8 +528,6 @@ function ImportOperations(options) {
                             if (importIframeSection) {
                                 let iframe = document.createElement('iframe');
 
-                                // TODO [erdembircan] not sure if iframe dimensions takes a role in the main functionality of the operation, will make sure and come back to here
-
                                 // iframe.width = '1000';
                                 // iframe.height = '1000';
                                 importIframeSection.innerHTML = '';
@@ -540,14 +536,12 @@ function ImportOperations(options) {
                                 if (window.wptbImportConvertationShortcodes) {
                                     delete window.wptbImportConvertationShortcodes;
                                 }
-                                // TODO [erdembircan] progress bar here
                                 //  tableImportingProgressBar(0, window.wptbImportCommonCountTables, 'import');
 
                                 tablePressImportStageTwo(iframe, data[1]);
                             }
                         }
                     } else if (data[1]) {
-                        // TODO [erdembircan] error handling here
                         WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, data[1]);
                     }
                 }
@@ -749,6 +743,7 @@ function ImportOperations(options) {
 
         WPTB_Helper.wptbDocumentEventGenerate('table:imported:list', document, {[options.type]: window.wptbImportConvertationShortcodes});
 
+        // @deprecated
         // let importedTablesSetting = document.querySelector('.wptb-importedTablesSetting');
         // if (importedTablesSetting) {
         //     importedTablesSetting.style.display = 'block';

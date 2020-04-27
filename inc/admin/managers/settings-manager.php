@@ -138,9 +138,6 @@ class Settings_Manager {
 			} else {
 				update_option( $this->options_root, $encoded_data );
 				$data['message'] = esc_html__( 'settings updated', $this->text_domain );
-
-				// TODO [erdembircan] remove for production
-				$data['updatedOptions'] = json_encode( get_option( $this->options_root ) );
 			}
 		} else {
 			$data['error'] = esc_html__( "you don not have permission to use this ajax end-point", $this->text_domain );

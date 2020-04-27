@@ -266,8 +266,6 @@ class Admin_Menu {
 
 		} else if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-import' ) {
 
-			// TODO [erdembircan] this is the entry point for js scripts for import page, check their validity and re-format them in a more meaningful context
-
 			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
 			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
 			$script_version = filemtime( $script_path );
@@ -321,6 +319,7 @@ class Admin_Menu {
 				'security_code'     => wp_create_nonce( 'wptb-import-security-nonce' ),
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'import_iframe_url' => $import_iframe_url,
+                'textDomain' => $wptb_text_domain
 			];
 
 			$data = [
@@ -330,31 +329,6 @@ class Admin_Menu {
 			];
 
 			wp_localize_script( $handler, 'wptbImportMenuData', $data );
-
-			// TODO [erdembircan] old import menu functionality, remove after new implementation
-
-//            wp_enqueue_script( 'wptb-import-js', plugin_dir_url( __FILE__ ) . 'js/wptb-import.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-//            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-//            wp_enqueue_style( 'wptb-admin-import-css', plugin_dir_url( __FILE__ ) . 'css/admin-import.css', array(), NS\PLUGIN_VERSION, 'all' );
-//            wp_enqueue_script( 'wptb-admin-builder-js' );
-//
-//            $import_iframe_url = add_query_arg(
-//                array(
-//                    'post_type' => 'wptb-tables-import'
-//                ),
-//                home_url()
-//            );
-//
-//            wp_localize_script(
-//                'wptb-import-js',
-//                'wptb_admin_import_js_object',
-//                [
-//                    'ajaxurl'  => admin_url( 'admin-ajax.php' ),
-//                    'import_iframe_url' => $import_iframe_url,
-//                    'security_code'  => wp_create_nonce( 'wptb-import-security-nonce' ),
-//                ]
-//            );
-
 		}
 
 	}

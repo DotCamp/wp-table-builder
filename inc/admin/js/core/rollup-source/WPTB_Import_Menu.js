@@ -8,9 +8,6 @@ const importData = {...wptbImportMenuData};
 //remove global data
 wptbImportMenuData = undefined;
 
-// TODO [erdembircan] remove for production
-console.log(importData);
-
 Vue.config.productionTip = false;
 
 Vue.use(withStrings, {
