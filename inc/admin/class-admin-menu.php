@@ -107,7 +107,7 @@ class Admin_Menu {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'new-content',
 				'id'     => 'wptb-add-new',
-				'title'  => __( 'WPTB Add New', 'wp_table_builder' ),
+				'title'  => __( 'Table', 'wp_table_builder' ),
 				'href'   => esc_url( admin_url( 'admin.php?page=wptb-builder' ) ),
 			) );
 		}
@@ -292,19 +292,19 @@ class Admin_Menu {
 			];
 
 			$strings = [
-				'logoAlt'          => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
-				'importSection'    => esc_html__( 'import', $wptb_text_domain ),
-				'plugins'          => esc_html__( 'plugins', $wptb_text_domain ),
-				'tableResponsive'  => esc_html__( 'make table responsive', $wptb_text_domain ),
-				'topRowHeader'     => esc_html__( 'top row as header', $wptb_text_domain ),
-				'csvDelimiter'     => esc_html__( 'CSV delimiter', $wptb_text_domain ),
-				'fileDropHint'     => esc_html__( 'drag and drop files', $wptb_text_domain ),
-				'browse'           => esc_html__( 'browse', $wptb_text_domain ),
-				'clear'            => esc_html__( 'clear', $wptb_text_domain ),
-				'tableImported'    => esc_html__( 'table imported', $wptb_text_domain ),
-				'errorOccured'     => esc_html__( 'an error occured', $wptb_text_domain ),
-				'operationSuccess' => esc_html__( 'operation is successful', $wptb_text_domain ),
-				'replacedShortcodes' => esc_html__( 'replaced shortcodes', $wptb_text_domain ),
+				'logoAlt'          => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
+				'importSection'    => esc_html__( 'Import', $wptb_text_domain ),
+				'plugins'          => esc_html__( 'Plugins', $wptb_text_domain ),
+				'tableResponsive'  => esc_html__( 'Make Table Responsive', $wptb_text_domain ),
+				'topRowHeader'     => esc_html__( 'Top Row as Header', $wptb_text_domain ),
+				'csvDelimiter'     => esc_html__( 'CSV Delimiter', $wptb_text_domain ),
+				'fileDropHint'     => esc_html__( 'Drag and Drop Files', $wptb_text_domain ),
+				'browse'           => esc_html__( 'Browse', $wptb_text_domain ),
+				'clear'            => esc_html__( 'Blear', $wptb_text_domain ),
+				'tableImported'    => esc_html__( 'Table Imported', $wptb_text_domain ),
+				'errorOccured'     => esc_html__( 'An Error Occured', $wptb_text_domain ),
+				'operationSuccess' => esc_html__( 'Operation is Successful', $wptb_text_domain ),
+				'replacedShortcodes' => esc_html__( 'Replaced Shortcodes', $wptb_text_domain ),
 			];
 
 			$import_iframe_url = add_query_arg(

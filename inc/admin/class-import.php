@@ -261,7 +261,7 @@ class Import {
         $table_press_option = get_option( 'tablepress_tables' );
 
         if( $table_press_option === false ) {
-            wp_die( json_encode( ["unsuccess", "There are not created tables in Tables Press"] ) );
+            wp_die( json_encode( ["unsuccess", "There are no tables created in TablePress"] ) );
         } else {
             $table_press_option = json_decode( $table_press_option, true );
 
@@ -276,7 +276,7 @@ class Import {
             $table_post = $table_press_option['table_post'];
 
             if( count( $table_post ) == 0 ) {
-                wp_die( json_encode( ["unsuccess", "There are not created tables in Tables Press"] ) );
+                wp_die( json_encode( ["unsuccess", "There are no tables created in TablePress"] ) );
             }
 
             $data = array();

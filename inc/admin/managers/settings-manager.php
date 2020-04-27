@@ -134,13 +134,13 @@ class Settings_Manager {
 
 			// request body validation check
 			if ( $encoded_data === null ) {
-				$data['error'] = esc_html__( "Invalid request body", $this->text_domain );
+				$data['error'] = esc_html__( "Invalid Request Body", $this->text_domain );
 			} else {
 				update_option( $this->options_root, $encoded_data );
-				$data['message'] = esc_html__( 'settings updated', $this->text_domain );
+				$data['message'] = esc_html__( 'Settings Updated', $this->text_domain );
 			}
 		} else {
-			$data['error'] = esc_html__( "you don not have permission to use this ajax end-point", $this->text_domain );
+			$data['error'] = esc_html__( "You do not have permission to use this ajax end-point.", $this->text_domain );
 		}
 
 		echo json_encode( $data );
@@ -181,11 +181,11 @@ class Settings_Manager {
 			];
 
 			$strings = [
-				'logoAlt'  => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
-				'homepage' => esc_attr__( 'homepage', $wptb_text_domain ),
-				'revert'   => esc_html__( 'revert', $wptb_text_domain ),
-				'submit'   => esc_html__( 'submit', $wptb_text_domain ),
-				'revertMessage'   => esc_html__( 'changes discarded', $wptb_text_domain ),
+				'logoAlt'  => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
+				'homepage' => esc_attr__( 'Homepage', $wptb_text_domain ),
+				'revert'   => esc_html__( 'Revert', $wptb_text_domain ),
+				'submit'   => esc_html__( 'Submit', $wptb_text_domain ),
+				'revertMessage'   => esc_html__( 'Changes Discarded', $wptb_text_domain ),
 			];
 
 			$frontend_data = [
@@ -201,7 +201,7 @@ class Settings_Manager {
 						'type'    => 'multiCheckbox',
 						'options' => wp_roles()->role_names,
 						'section' => 'general',
-						'label'   => esc_html__( 'allowed user roles', $this->text_domain )
+						'label'   => esc_html__( 'Allowed User Roles', $this->text_domain )
 					],
 				],
 				'pluginInfo' => $plugin_info,
