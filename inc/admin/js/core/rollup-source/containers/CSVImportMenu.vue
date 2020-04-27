@@ -2,7 +2,7 @@
     <div>
         <drag-drop v-model="currentFile"
                    :texts="{hint: strings.fileDropHint , browse: strings.browse , clear: strings.clear }"
-                   :allowed-formats="['zip', 'csv', 'html', 'xml']"></drag-drop>
+                   :allowed-formats="['csv', 'zip']"></drag-drop>
         <div>
             <control-item v-for="field in fieldsData" :key="field.id" :field-data="field"
                           :model-bind="field.modelBind"></control-item>
