@@ -303,8 +303,8 @@ class Admin_Menu {
 				'clear'            => esc_html__( 'Blear', $wptb_text_domain ),
 				'tableImported'    => esc_html__( 'Table Imported', $wptb_text_domain ),
 				'errorOccured'     => esc_html__( 'An Error Occured', $wptb_text_domain ),
-				'operationSuccess' => esc_html__( 'Operation is Successful', $wptb_text_domain ),
-				'replacedShortcodes' => esc_html__( 'Replaced Shortcodes', $wptb_text_domain ),
+				'operationSuccess' => esc_html__( 'Tables Imported', $wptb_text_domain ),
+				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', $wptb_text_domain ),
 			];
 
 			$import_iframe_url = add_query_arg(
