@@ -1,8 +1,10 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
+
 use WP_Table_Builder as NS;
-Use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder\Inc\Common\Helpers;
+use function wp_localize_script;
 
 /**
  * Register menu elements and do other global tasks.
@@ -22,7 +24,7 @@ class Admin_Menu {
 	public function __construct() {
 		// Let's make some menus.
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); 
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_create_table', array( $this, 'create_table' ) );
 		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
@@ -30,85 +32,86 @@ class Admin_Menu {
 		add_action( 'wp_ajax_nopriv_get_table', array( $this, 'get_table' ) );
 		add_action( 'admin_bar_menu', array( $this, 'add_wp_admin_bar_new_table_create_page' ), 500 );
 	}
-    
-    public function create_table() {
-        $id = wp_insert_post([
-            'post_title' => '',
-            'post_content' => '',
-            'post_type' => 'wptb-tables',
-            'post_status' => 'draft'
-        ]);
-        wp_die( json_encode( ['created',$id] ) );
-    }
+
+	public function create_table() {
+		$id = wp_insert_post( [
+			'post_title'   => '',
+			'post_content' => '',
+			'post_type'    => 'wptb-tables',
+			'post_status'  => 'draft'
+		] );
+		wp_die( json_encode( [ 'created', $id ] ) );
+	}
 
 	public function save_table() {
-        
-        $params = json_decode( file_get_contents( 'php://input' ) );
-        
-        if( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
-            wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
-            
-            if( ! property_exists( $params, 'id') || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
-                $id = wp_insert_post([
-                    'post_title' => sanitize_text_field( $params->title ),
-                    'post_content' => '',
-                    'post_type' => 'wptb-tables',
-                    'post_status' => 'draft'
-                ]);
-                
-                add_post_meta( $id, '_wptb_content_', $params->content );
-                
-                wp_die( json_encode( ['saved', $id] ) );
-            } else {
-                wp_update_post([
-                    'ID' => absint( $params->id ),
-                    'post_title' => sanitize_text_field( $params->title ),
-                    'post_content' => '',
-                    'post_type' => 'wptb-tables',
-                    'post_status' => 'draft'
-                ]);
-                
-                if( isset( $params->preview_saving ) && ! empty( (int)$params->preview_saving ) ) {
-                    update_post_meta( absint( $params->id ), '_wptb_preview_id_', $params->preview_saving );
-                    update_post_meta( absint( $params->id ), '_wptb_content_preview_', $params->content );
-                    
-                    wp_die( json_encode( ['preview_edited'] ) );
-                } else {
-                    update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
-                
-                    wp_die( json_encode( ['edited', absint( $params->id )] ) );
-                }
-            }
-        } else {
-            wp_die( json_encode( ['security_problem', ''] ) );
-        }
+
+		$params = json_decode( file_get_contents( 'php://input' ) );
+
+		if ( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
+		     wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
+
+			if ( ! property_exists( $params, 'id' ) || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
+				$id = wp_insert_post( [
+					'post_title'   => sanitize_text_field( $params->title ),
+					'post_content' => '',
+					'post_type'    => 'wptb-tables',
+					'post_status'  => 'draft'
+				] );
+
+				add_post_meta( $id, '_wptb_content_', $params->content );
+
+				wp_die( json_encode( [ 'saved', $id ] ) );
+			} else {
+				wp_update_post( [
+					'ID'           => absint( $params->id ),
+					'post_title'   => sanitize_text_field( $params->title ),
+					'post_content' => '',
+					'post_type'    => 'wptb-tables',
+					'post_status'  => 'draft'
+				] );
+
+				if ( isset( $params->preview_saving ) && ! empty( (int) $params->preview_saving ) ) {
+					update_post_meta( absint( $params->id ), '_wptb_preview_id_', $params->preview_saving );
+					update_post_meta( absint( $params->id ), '_wptb_content_preview_', $params->content );
+
+					wp_die( json_encode( [ 'preview_edited' ] ) );
+				} else {
+					update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+
+					wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
+				}
+			}
+		} else {
+			wp_die( json_encode( [ 'security_problem', '' ] ) );
+		}
 	}
 
-	public function get_table() {  
-		$post = get_post( absint( $_REQUEST['id'] ) );
-		$table_html = get_post_meta( absint( $_REQUEST['id'] ) , '_wptb_content_', true );
-		$name = $post->post_title;
-        //$html = json_decode( $html );
-		die( json_encode( [$name, $table_html] ) );
+	public function get_table() {
+		$post       = get_post( absint( $_REQUEST['id'] ) );
+		$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
+		$name       = $post->post_title;
+		//$html = json_decode( $html );
+		die( json_encode( [ $name, $table_html ] ) );
 	}
 
-    /**
-     * Add "WPTB Add New" sub menu to "New" dropdown menu in the WP Admin Bar.
-     *
-     * @since 1.1.5
-     *
-     * @param WP_Admin_Bar $wp_admin_bar object.
-     */
-    public function add_wp_admin_bar_new_table_create_page( $wp_admin_bar ) {
-        if ( current_user_can( 'manage_options' ) ) {
-            $wp_admin_bar->add_menu( array(
-                'parent' => 'new-content',
-                'id'     => 'wptb-add-new',
-                'title'  => __( 'WPTB Add New', 'wp_table_builder' ),
-                'href'   => esc_url( admin_url( 'admin.php?page=wptb-builder' ) ),
-            ) );
-        }
-    }
+	/**
+	 * Add "WPTB Add New" sub menu to "New" dropdown menu in the WP Admin Bar.
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar object.
+	 *
+	 * @since 1.1.5
+	 *
+	 */
+	public function add_wp_admin_bar_new_table_create_page( $wp_admin_bar ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'new-content',
+				'id'     => 'wptb-add-new',
+				'title'  => __( 'WPTB Add New', 'wp_table_builder' ),
+				'href'   => esc_url( admin_url( 'admin.php?page=wptb-builder' ) ),
+			) );
+		}
+	}
 
 
 	/**
@@ -118,7 +121,7 @@ class Admin_Menu {
 	 */
 	public function register_menus() {
 
-		global $builder_page, $tables_overview, $table_list;  
+		global $builder_page, $tables_overview, $table_list;
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
@@ -132,15 +135,15 @@ class Admin_Menu {
 			apply_filters( 'wptb_menu_position', '50' )
 		);
 
-        // Add Welcome sub menu item.
-        $builder_page = add_submenu_page(
-            null,
-            esc_html__( 'Table Builder', 'wp-table-builder' ),
-            esc_html__( 'Welcome Page', 'wp-table-builder' ),
-            $menu_cap,
-            'wp-table-builder-welcome',
-            array( $this, 'welcome' )
-        );
+		// Add Welcome sub menu item.
+		$builder_page = add_submenu_page(
+			null,
+			esc_html__( 'Table Builder', 'wp-table-builder' ),
+			esc_html__( 'Welcome Page', 'wp-table-builder' ),
+			$menu_cap,
+			'wp-table-builder-welcome',
+			array( $this, 'welcome' )
+		);
 
 		// All Tables sub menu item.
 		$table_list = add_submenu_page(
@@ -162,47 +165,47 @@ class Admin_Menu {
 			array( $this, 'table_builder' )
 		);
 
-        // Add Import sub menu item.
-        $builder_page = add_submenu_page(
-            'wptb-overview',
-            esc_html__( 'Table Builder', 'wp-table-builder' ),
-            esc_html__( 'Import', 'wp-table-builder' ),
-            $menu_cap,
-            'wptb-import',
-            array( $this, 'import' )
-        );
+		// Add Import sub menu item.
+		$builder_page = add_submenu_page(
+			'wptb-overview',
+			esc_html__( 'Table Builder', 'wp-table-builder' ),
+			esc_html__( 'Import', 'wp-table-builder' ),
+			$menu_cap,
+			'wptb-import',
+			array( $this, 'import' )
+		);
 
-        add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
- 
+		add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
+
 		do_action( 'wptb_admin_menu', $this );
 
 	}
 
 
-    /**
-     * Load assets
-     *
-     * @since 1.1.5
-     */
+	/**
+	 * Load assets
+	 *
+	 * @since 1.1.5
+	 */
 	public function load_assets() {
 
-        add_action( 'in_admin_header', [ $this, 'remove_admin_notices' ] );
+		add_action( 'in_admin_header', [ $this, 'remove_admin_notices' ] );
 
-    }
+	}
 
-    /**
-     * Remove all kinds of admin notices
-     *
-     * @since 1.1.5
-     */
-    public function remove_admin_notices() {
+	/**
+	 * Remove all kinds of admin notices
+	 *
+	 * @since 1.1.5
+	 */
+	public function remove_admin_notices() {
 
-        remove_all_actions( 'network_admin_notices' );
-        remove_all_actions( 'user_admin_notices' );
-        remove_all_actions( 'admin_notices' );
-        remove_all_actions( 'all_admin_notices' );
+		remove_all_actions( 'network_admin_notices' );
+		remove_all_actions( 'user_admin_notices' );
+		remove_all_actions( 'admin_notices' );
+		remove_all_actions( 'all_admin_notices' );
 
-    }
+	}
 
 	public function enqueue_scripts( $hook ) {
 		/*
@@ -215,8 +218,8 @@ class Admin_Menu {
 		 * The Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
-		 */ 
-		global $builder_page, $tables_overview, $table_list; 
+		 */
+		global $builder_page, $tables_overview, $table_list;
 
 		wp_enqueue_media();
 
@@ -225,64 +228,108 @@ class Admin_Menu {
 		}
 
 
-        if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wp-table-builder-welcome' ) {
+		if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wp-table-builder-welcome' ) {
 
-            //wp_enqueue_script( 'wptb-admin-welcome-js', plugin_dir_url( __FILE__ ) . 'js/admin-welcome.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-            wp_enqueue_style( 'wptb-admin-welcome-css', plugin_dir_url( __FILE__ ) . 'css/admin-welcome.css', array(), NS\PLUGIN_VERSION, 'all' );
+			//wp_enqueue_script( 'wptb-admin-welcome-js', plugin_dir_url( __FILE__ ) . 'js/admin-welcome.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
+			wp_enqueue_style( 'wptb-admin-welcome-css', plugin_dir_url( __FILE__ ) . 'css/admin-welcome.css', array(), NS\PLUGIN_VERSION, 'all' );
 
-        } elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
+		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
 
-            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery', 'wptb-admin-builder-tinymce-js', 'wp-color-picker' ), NS\PLUGIN_VERSION, true );
-            wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
-            wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
+				'jquery',
+				'wptb-admin-builder-tinymce-js',
+				'wp-color-picker'
+			), NS\PLUGIN_VERSION, true );
+			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
-            wp_enqueue_style( 'wp-color-picker' );
-            
-            wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
-            wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
-            wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
-            wp_enqueue_script( 'wptb-admin-builder-js' );
-            
-            wp_localize_script( 
-                'wptb-admin-builder-js', 
-                'wptb_admin_object', 
-                [
-                    'ajaxurl'  => admin_url( 'admin-ajax.php' ),
-                    'security_code'  => wp_create_nonce( 'wptb-security-nonce' ),
-                ] 
-            );
+			wp_enqueue_style( 'wp-color-picker' );
 
-		} elseif( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
+			wp_enqueue_style( 'wptb-builder-css', plugin_dir_url( __FILE__ ) . 'css/admin.css', array(), NS\PLUGIN_VERSION, 'all' );
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-js' );
+			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
+			wp_enqueue_script( 'wptb-admin-builder-js' );
 
-            wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-            wp_enqueue_style( 'wptb-admin-common-css', plugin_dir_url( __FILE__ ) . 'css/admin-common.css', array(), NS\PLUGIN_VERSION, 'all' );
+			wp_localize_script(
+				'wptb-admin-builder-js',
+				'wptb_admin_object',
+				[
+					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+					'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+				]
+			);
 
-        } else if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-import' ) {
+		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 
-            wp_enqueue_script( 'wptb-import-js', plugin_dir_url( __FILE__ ) . 'js/wptb-import.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-            wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
-            wp_enqueue_style( 'wptb-admin-import-css', plugin_dir_url( __FILE__ ) . 'css/admin-import.css', array(), NS\PLUGIN_VERSION, 'all' );
-            wp_enqueue_script( 'wptb-admin-builder-js' );
+			wp_enqueue_script( 'wptb-overview-js', plugin_dir_url( __FILE__ ) . 'js/wptb-overview.js', array( 'jquery' ), NS\PLUGIN_VERSION, true );
+			wp_enqueue_style( 'wptb-admin-common-css', plugin_dir_url( __FILE__ ) . 'css/admin-common.css', array(), NS\PLUGIN_VERSION, 'all' );
 
-            $import_iframe_url = add_query_arg(
-                array(
-                    'post_type' => 'wptb-tables-import'
-                ),
-                home_url()
-            );
+		} else if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-import' ) {
 
-            wp_localize_script(
-                'wptb-import-js',
-                'wptb_admin_import_js_object',
-                [
-                    'ajaxurl'  => admin_url( 'admin-ajax.php' ),
-                    'import_iframe_url' => $import_iframe_url,
-                    'security_code'  => wp_create_nonce( 'wptb-import-security-nonce' ),
-                ]
-            );
+			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
 
-        }
-	
+			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
+
+
+			$handler        = 'wptb-import-menu';
+			$plugin_version = NS\PLUGIN_VERSION;
+
+			// script and style enqueue
+			wp_enqueue_script( $handler, $script_url, [], $plugin_version, true );
+			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'jquery' ), $plugin_version, true );
+			wp_enqueue_script( 'wptb-admin-builder-js' );
+			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
+
+			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;
+			$plugin_homepage  = get_plugin_data( NS\PLUGIN__FILE__ )['PluginURI'];
+			$plugin_name      = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
+
+			$plugin_info = [
+				'pluginHomepage' => esc_attr( $plugin_homepage ),
+				'pluginName'     => esc_html( $plugin_name ),
+				'logo'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png' ),
+			];
+
+			$strings = [
+				'logoAlt'          => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
+				'importSection'    => esc_html__( 'import', $wptb_text_domain ),
+				'plugins'          => esc_html__( 'plugins', $wptb_text_domain ),
+				'tableResponsive'  => esc_html__( 'make table responsive', $wptb_text_domain ),
+				'topRowHeader'     => esc_html__( 'top row as header', $wptb_text_domain ),
+				'csvDelimiter'     => esc_html__( 'CSV delimiter', $wptb_text_domain ),
+				'fileDropHint'     => esc_html__( 'drag and drop files', $wptb_text_domain ),
+				'browse'           => esc_html__( 'browse', $wptb_text_domain ),
+				'clear'            => esc_html__( 'clear', $wptb_text_domain ),
+				'tableImported'    => esc_html__( 'table imported', $wptb_text_domain ),
+				'errorOccured'     => esc_html__( 'an error occured', $wptb_text_domain ),
+				'operationSuccess' => esc_html__( 'operation is successful', $wptb_text_domain ),
+				'replacedShortcodes' => esc_html__( 'replaced shortcodes', $wptb_text_domain ),
+			];
+
+			$import_iframe_url = add_query_arg(
+				array(
+					'post_type' => 'wptb-tables-import'
+				),
+				home_url()
+			);
+
+			$options = [
+				'security_code'     => wp_create_nonce( 'wptb-import-security-nonce' ),
+				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
+				'import_iframe_url' => $import_iframe_url,
+                'textDomain' => $wptb_text_domain
+			];
+
+			$data = [
+				'pluginInfo' => $plugin_info,
+				'strings'    => $strings,
+				'options'    => $options,
+			];
+
+			wp_localize_script( $handler, 'wptbImportMenuData', $data );
+		}
+
 	}
 
 	/**
@@ -290,65 +337,67 @@ class Admin_Menu {
 	 *
 	 * @since 1.0.0
 	 */
-	public function tables_list() { 
+	public function tables_list() {
 		$table_list = new WPTB_Listing();
 		?>
-			<div class="wrap">
-				<div style="margin-bottom: 30px;">
-					<h1 class="wp-heading-inline">
-						<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
-					</h1>
-					<span class="wptb-split-page-title-action">
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>" class="page-title-action">
+        <div class="wrap">
+            <div style="margin-bottom: 30px;">
+                <h1 class="wp-heading-inline">
+					<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
+                </h1>
+                <span class="wptb-split-page-title-action">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>"
+                           class="page-title-action">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>
-				</div>
-			</div>
-			
+            </div>
+        </div>
+
 		<?php
 		$table_list->prepare_items();
 		?>
-		<form method="post"><?php
-		$table_list->display();?>
-		</form><?php
-    }
-    
-    /**
+        <form method="post"><?php
+		$table_list->display(); ?>
+        </form><?php
+	}
+
+	/**
 	 * Wrapper for the hook to render our tables builder.
 	 *
 	 * @since 1.0.0
 	 */
 	public function table_builder() {
-        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
+		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-builder-ui.php';
 	}
 
-    /**
-     * Wrapper for the hook to render our plugin table import page.
-     *
-     * @since 1.1.5
-     */
-    public function import() {
-        ?>
-            <div class="wrap">
-				<div style="margin-bottom: 30px;">
-					<h1 class="wp-heading-inline">
-						<?php esc_html_e( 'Import', 'wp-table-builder' ); ?>
-					</h1>
-				</div>
-			</div>
-        <?php
+	/**
+	 * Wrapper for the hook to render our plugin table import page.
+	 *
+	 * @since 1.1.5
+	 */
+	public function import() {
+//        ?>
+        <!--            <div class="wrap">-->
+        <!--				<div style="margin-bottom: 30px;">-->
+        <!--					<h1 class="wp-heading-inline">-->
+        <!--						--><?php //esc_html_e( 'Import', 'wp-table-builder' ); ?>
+        <!--					</h1>-->
+        <!--				</div>-->
+        <!--			</div>-->
+        <!--        --><?php
+		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-import.php';
+	}
 
-        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-import.php';
-    }
+	/**
+	 * Wrapper for the hook to render our plugin welcome page.
+	 *
+	 * @since 1.1.5
+	 */
+	public function welcome() {
+		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-welcome.php';
+	}
 
-    /**
-     * Wrapper for the hook to render our plugin welcome page.
-     *
-     * @since 1.1.5
-     */
-    public function welcome() {
-        require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-welcome.php';
-    }
+}
 
-}; 
+;

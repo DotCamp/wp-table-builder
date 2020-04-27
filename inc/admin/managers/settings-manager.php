@@ -138,9 +138,6 @@ class Settings_Manager {
 			} else {
 				update_option( $this->options_root, $encoded_data );
 				$data['message'] = esc_html__( 'settings updated', $this->text_domain );
-
-				// TODO [erdembircan] remove for production
-				$data['updatedOptions'] = json_encode( get_option( $this->options_root ) );
 			}
 		} else {
 			$data['error'] = esc_html__( "you don not have permission to use this ajax end-point", $this->text_domain );
@@ -173,22 +170,42 @@ class Settings_Manager {
 			$ajax_url = get_admin_url( null, 'admin-ajax.php' );
 			$nonce    = wp_create_nonce( $this->options_root );
 
+			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;
+			$plugin_homepage  = get_plugin_data( NS\PLUGIN__FILE__ )['PluginURI'];
+			$plugin_name      = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
+
+			$plugin_info = [
+				'pluginHomepage' => esc_attr( $plugin_homepage ),
+				'pluginName'     => esc_html( $plugin_name ),
+				'logo'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png' ),
+			];
+
+			$strings = [
+				'logoAlt'  => esc_attr__( 'wptb plugin logo', $wptb_text_domain ),
+				'homepage' => esc_attr__( 'homepage', $wptb_text_domain ),
+				'revert'   => esc_html__( 'revert', $wptb_text_domain ),
+				'submit'   => esc_html__( 'submit', $wptb_text_domain ),
+				'revertMessage'   => esc_html__( 'changes discarded', $wptb_text_domain ),
+			];
+
 			$frontend_data = [
-				'data'    => [
+				'data'       => [
 					'mountId' => '#wptb-settings-page',
 					'ajaxUrl' => $ajax_url,
 					'nonce'   => $nonce,
 					'action'  => $this->options_root
 				],
-				'options' => get_option( $this->options_root ),
-				'fields'  => [
+				'options'    => get_option( $this->options_root ),
+				'fields'     => [
 					'allowed_roles' => [
 						'type'    => 'multiCheckbox',
 						'options' => wp_roles()->role_names,
 						'section' => 'general',
 						'label'   => esc_html__( 'allowed user roles', $this->text_domain )
 					],
-				]
+				],
+				'pluginInfo' => $plugin_info,
+				'strings'    => $strings
 			];
 
 			// front-end data enqueue
