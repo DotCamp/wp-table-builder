@@ -16,23 +16,47 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-admin-menu.php:106, ../inc/admin/class-admin-menu.php:118
+#: ../inc/admin/class-admin-menu.php:129, ../inc/admin/class-admin-menu.php:151, ../inc/admin/class-admin-menu.php:161
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:107, ../inc/admin/class-admin-menu.php:128, ../inc/admin/class-admin-menu.php:138
+#: ../inc/admin/class-admin-menu.php:130, ../inc/admin/class-admin-menu.php:141, ../inc/admin/class-admin-menu.php:171
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:119, ../inc/admin/class-admin-menu.php:217
+#: ../inc/admin/class-admin-menu.php:142
+msgid "Welcome Page"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:152, ../inc/admin/class-admin-menu.php:346
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:129, ../inc/admin/class-admin-menu.php:139, ../inc/admin/class-admin-menu.php:221
+#: ../inc/admin/class-admin-menu.php:162, ../inc/admin/class-admin-menu.php:351
 msgid "Add New"
 msgstr ""
 
+#: ../inc/admin/class-admin-menu.php:172
+msgid "Import"
+msgstr ""
+
 #: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:130
+msgstr ""
+
+#: ../inc/admin/class-import.php:410, ../inc/admin/class-preview.php:208
+msgid "%s Preview"
+msgstr ""
+
+#: ../inc/admin/class-import.php:411, ../inc/admin/class-preview.php:209
+msgid "Table"
+msgstr ""
+
+#: ../inc/admin/class-preview.php:135
+msgid "Generating preview..."
+msgstr ""
+
+#: ../inc/admin/class-preview.php:226
+msgid "This is a preview of your table. This page is not publicly accessible."
 msgstr ""
 
 #: ../inc/admin/class-tables.php:36
@@ -51,7 +75,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:134
+#: ../inc/admin/class-tables.php:143
 msgid "Edit Table"
 msgstr ""
 
@@ -92,20 +116,8 @@ msgstr ""
 msgid "Bulk Delete Performed Successfully."
 msgstr ""
 
-#: ../inc/core/class-preview.php:135
-msgid "Generating preview..."
-msgstr ""
-
-#: ../inc/core/class-preview.php:208
-msgid "%s Preview"
-msgstr ""
-
-#: ../inc/core/class-preview.php:209
-msgid "Table"
-msgstr ""
-
-#: ../inc/core/class-preview.php:226
-msgid "This is a preview of your table. This page is not publicly accessible."
+#: ../inc/admin/managers/settings-manager.php:220, ../inc/admin/managers/settings-manager.php:220
+msgid "Settings"
 msgstr ""
 
 #: ../inc/admin/views/wptb-welcome.php:13
@@ -192,11 +204,11 @@ msgstr ""
 msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:70, ../inc/admin/views/builder/wptb-builder-table-setup.php:91
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:89
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:71, ../inc/admin/views/builder/wptb-builder-table-setup.php:92
 msgid "Close"
 msgstr ""
 
@@ -300,34 +312,34 @@ msgstr ""
 msgid "Remove Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:76
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:79
 msgid "Add Column After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:77
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80
 msgid "Insert Column After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:79
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:82
 msgid "Add Column Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:83
 msgid "Insert Column Before"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:82
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:85
 msgid "Add Row After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:83
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:86
 msgid "Insert Row After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:85
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:88
 msgid "Add Row Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:86
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:89
 msgid "Insert Row Before"
 msgstr ""
