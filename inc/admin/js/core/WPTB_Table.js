@@ -387,7 +387,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         table.classList.add( 'wptb-preview-table', 'wptb-element-main-table_setting-startedid-0' );
         table.style.border = '0px solid';
         table.dataset.reconstraction = 1;
-        table.dataset.wptbAdaptiveTable = 1;
+        //table.dataset.wptbAdaptiveTable = 1;
         //Add the data rows.
         for (var i = 0; i < rows; i++) {
 

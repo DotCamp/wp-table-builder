@@ -104,7 +104,13 @@ var WPTB_LeftPanel = function () {
             } else if( inputs.hasOwnProperty( 'makeTableResponsive' ) ) {
                 let infArr = table.className.match(/wptb-element-main(.+)-(\d+)/i);
                 if( infArr && Array.isArray( infArr ) && typeof infArr[2] != 'undefined' ) {
-                    let inputSelector = 'wptb-el-main-table_setting-' + infArr[2] + '-tableTopRowsAsHeader';
+                    let inputSelector;
+                    if( infArr[2] == '0' ) {
+                        inputSelector = 'wptb-el-main-table_setting-startedid-0-tableTopRowsAsHeader';
+                    } else {
+                        inputSelector = 'wptb-el-main-table_setting-' + infArr[2] + '-tableTopRowsAsHeader';
+                    }
+
                     let inputTopAsHeader = document.querySelector( '.' + inputSelector );
                     if( inputTopAsHeader ) {
                         if( inputs.makeTableResponsive == 'checked' ) {
