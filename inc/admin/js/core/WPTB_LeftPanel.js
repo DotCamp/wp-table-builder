@@ -102,11 +102,21 @@ var WPTB_LeftPanel = function () {
 //                    }
 //                }
             } else if( inputs.hasOwnProperty( 'makeTableResponsive' ) ) {
-//                if( inputs.makeTableResponsive == 'checked' ) {
-//                    table.dataset.wptbAdaptiveTable = 1;
-//                } else if( inputs.makeTableResponsive == 'unchecked' ) {
-//                    table.dataset.wptbAdaptiveTable = 0;
-//                }
+                let infArr = table.className.match(/wptb-element-main(.+)-(\d+)/i);
+                if( infArr && Array.isArray( infArr ) && typeof infArr[2] != 'undefined' ) {
+                    let inputSelector = 'wptb-el-main-table_setting-' + infArr[2] + '-tableTopRowsAsHeader';
+                    let inputTopAsHeader = document.querySelector( '.' + inputSelector );
+                    if( inputTopAsHeader ) {
+                        if( inputs.makeTableResponsive == 'checked' ) {
+                            table.classList.add( 'wptb-table-preview-head' );
+                            inputTopAsHeader.checked = true;
+                        } else if( inputs.makeTableResponsive == 'unchecked' ) {
+                            table.classList.remove( 'wptb-table-preview-head' );
+                            inputTopAsHeader.checked = false;
+                        }
+                    }
+
+                }
             } else if( inputs.hasOwnProperty( 'applyTableContainerMaxWidth' ) ) {
                 let wptbTableSetup = document.querySelector( '.wptb-table-setup' );
                 if( inputs.applyTableContainerMaxWidth == 'checked' ) {
