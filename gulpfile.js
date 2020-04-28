@@ -11,7 +11,8 @@ gulp.task('adminJs', function () {
         src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
         .pipe(sourcemaps.init())
         .pipe(babel({
-            presets: [['env', { modules: false }]]
+            presets: [['env', { modules: false }]],
+            babelrc: false
         }))
         .pipe(concat('./inc/admin/js/admin.js'))
         .pipe(sourcemaps.write('.'))

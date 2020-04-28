@@ -5,7 +5,11 @@
     "scripts": {
         "pot": "wp-pot --src '**/*.php' --dest-file 'languages/wp-table-builder.pot' --package 'wptb' --domain 'wp-table-builder' --last-translator 'Imtiaz Rayhan <irayhan.asif@gmail.com>' --team 'WP Table Builder <irayhan.asif@gmail.com>' --bug-report 'https://github.com/imtiazrayhan/wp-table-builder/issues'",
         "rollup:dev": "cross-env NODE_ENV=development rollup -c rollup.config.js -w",
-        "rollup:prod": "cross-env NODE_ENV=production rollup -c rollup.config.js"
+        "rollup:prod": "cross-env NODE_ENV=production rollup -c rollup.config.js",
+        "preinstall": "npx npm-force-resolutions"
+    },
+    "resolutions": {
+        "graceful-fs" : "4.2.3"
     },
     "repository": {
         "type": "git",
