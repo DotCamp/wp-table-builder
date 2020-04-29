@@ -13,8 +13,7 @@
                 <control-item :field-data="field" :modelBind="store"></control-item>
             </setting-card>
         </menu-content>
-        <menu-footer :message-show="fetchMessage.show" :message-body="fetchMessage.message" :message-busy="fetching"
-                     :message-type="fetchMessage.type">
+        <menu-footer>
             <menu-button type="danger" :disabled="!canSubmit" @click="resetStore">{{strings.revert}}</menu-button>
             <menu-button type="primary" :disabled="!canSubmit" @click="submitSettings">{{strings.submit}}</menu-button>
         </menu-footer>
@@ -22,6 +21,7 @@
 </template>
 <script>
     import withStore from '../mixins/withStore.js';
+    import withMessage from "../mixins/withMessage";
     import MenuHeader from "../components/MenuHeader.vue";
     import Sections from "../components/Sections.vue";
     import SectionItem from "../components/SectionItem.vue";
@@ -43,7 +43,7 @@
             ControlItem,
             MenuFooter,
         },
-        mixins: [withStore],
+        mixins: [withStore, withMessage],
         data() {
             return {
                 sections: [],
@@ -52,12 +52,6 @@
                 resetActive: false,
                 canSubmit: false,
                 fetching: false,
-                fetchMessage: {
-                    type: 'ok',
-                    show: false,
-                    message: 'OK'
-                },
-                showIntervalId: -1,
             }
         },
         watch: {
@@ -70,6 +64,9 @@
                         this.canSubmit = true;
                     }
                 }, deep: true
+            },
+            fetching(n){
+                this.setBusy(n);
             }
         },
         beforeMount() {
@@ -102,7 +99,7 @@
                 if (this.canSubmit) {
                     this.revertStore();
                     this.resetActive = true;
-                    this.setMessage('ok', this.strings.revertMessage);
+                    this.setMessage({message: this.strings.revertMessage});
                 }
             },
             submitSettings() {
@@ -135,25 +132,15 @@
                     if (resp.error) {
                         throw new Error(resp.error);
                     } else {
-                        this.setMessage('ok', resp.message);
+                        this.setMessage({message: resp.message});
                     }
                 }).catch(e => {
                     console.error(e);
-                    this.setMessage('error', e);
+                    this.setMessage({type: 'error', message: e});
                 }).finally(() => {
                     this.fetching = false;
                 })
             },
-            setMessage(type, message) {
-                this.fetchMessage.type = type;
-                this.fetchMessage.message = message;
-                this.fetchMessage.show = true;
-
-                clearInterval(this.showIntervalId);
-                this.showIntervalId = setInterval(() => {
-                    this.fetchMessage.show = false;
-                }, 5000);
-            }
         }
     }
 </script>

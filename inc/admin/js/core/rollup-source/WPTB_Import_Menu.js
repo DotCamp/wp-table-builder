@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import PortalVue from 'portal-vue';
-import ImportApp from './containers/ImportApp.vue';
+import ImportExportApp from "./containers/ImportExportApp";
 import withStrings from './plugins/strings';
 
 const importData = {...wptbImportMenuData};
@@ -17,7 +17,7 @@ Vue.use(withStrings, {
 Vue.use(PortalVue);
 
 new Vue({
-    components: {ImportApp},
+    components: {ImportExportApp},
     data: {
         pluginInfo: importData.pluginInfo,
         options: importData.options

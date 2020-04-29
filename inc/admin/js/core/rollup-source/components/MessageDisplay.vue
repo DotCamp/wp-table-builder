@@ -1,13 +1,15 @@
 <template>
     <div class="wptb-settings-messages">
-        <span v-if="busy" class="dashicons dashicons-image-rotate wptb-settings-fetching"></span>
+        <span v-if="withMessageData.busy" class="dashicons dashicons-image-rotate wptb-settings-fetching"></span>
         <transition name="wptb-fade">
-            <span class="wptb-settings-message" :class="[type]" v-if="show">{{message}}</span>
+            <span class="wptb-settings-message" :class="[withMessageData.type]" v-if="withMessageData.show">{{withMessageData.message}}</span>
         </transition>
     </div>
 </template>
 <script>
+    import withMessage from '../mixins/withMessage';
+
     export default {
-        props: ['type', 'show', 'message', 'busy']
+        mixins: [withMessage]
     }
 </script>
