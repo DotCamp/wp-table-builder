@@ -441,6 +441,9 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
             http.send(null);
         } else {
             document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
         document.counter = new ElementCounters();
         document.select = new MultipleSelect();
@@ -2575,13 +2578,11 @@ var WPTB_Initializer = function WPTB_Initializer() {
                 var columns = document.getElementById('wptb-columns-number').value,
                     rows = document.getElementById('wptb-rows-number').value;
 
-                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 //wptbTableStateSaveManager.tableStateClear();
-
-                wptbTableStateSaveManager.tableStateSet(true);
 
                 WPTB_Table(columns, rows);
 
+                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
         };
 };
@@ -3132,6 +3133,14 @@ var WPTB_Settings = function WPTB_Settings() {
             WPTB_Helper.saveTable(event);
         }
     };
+
+    var tableTitleField = document.querySelector('#wptb-setup-name');
+    if (tableTitleField) {
+        tableTitleField.onchange = function () {
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        };
+    }
 };
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -4898,12 +4907,15 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             return;
         }
 
-        // get preview table
-        var wptbPreviewTable = document.getElementsByClassName('wptb-preview-table');
-        if (wptbPreviewTable.length > 0) {
-            wptbPreviewTable = wptbPreviewTable[0];
+        // get table setup
+        var wptbTableSetup = document.getElementsByClassName('wptb-table-setup');
+        var wptbPreviewTable = '';
+        if (wptbTableSetup.length > 0) {
+            wptbTableSetup = wptbTableSetup[0];
+
+            wptbPreviewTable = wptbTableSetup.querySelector('.wptb-preview-table');
         } else {
-            wptbPreviewTable = '';
+            wptbTableSetup = '';
         }
 
         // check if a global array doesn't exist with saved versions of the table 
@@ -4919,30 +4931,30 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
         }
 
         //add new state of table
-        var wptbNewPreviewTable = '';
-        if (wptbPreviewTable) {
-            wptbNewPreviewTable = wptbPreviewTable.cloneNode(true);
-            var wptbHighlighted = wptbNewPreviewTable.getElementsByClassName('wptb-highlighted');
+        var wptbNewTableSetup = '';
+        if (wptbTableSetup) {
+            wptbNewTableSetup = wptbTableSetup.cloneNode(true);
+            var wptbHighlighted = wptbNewTableSetup.getElementsByClassName('wptb-highlighted');
             for (var i = 0; i < wptbHighlighted.length; i++) {
                 wptbHighlighted[i].classList.remove('wptb-highlighted');
             }
-            var wptbDirectlyhovered = wptbNewPreviewTable.getElementsByClassName('wptb-directlyhovered');
+            var wptbDirectlyhovered = wptbNewTableSetup.getElementsByClassName('wptb-directlyhovered');
             for (var _i = 0; _i < wptbDirectlyhovered.length; _i++) {
                 wptbDirectlyhovered[_i].classList.remove('wptb-directlyhovered');
             }
-            var mceContentBodys = wptbNewPreviewTable.querySelectorAll('.mce-content-body');
+            var mceContentBodys = wptbNewTableSetup.querySelectorAll('.mce-content-body');
             if (mceContentBodys.length > 0) {
                 for (var k = 0; k < mceContentBodys.length; k++) {
                     mceContentBodys[k].classList.remove('mce-content-body');
                 }
             }
-            var dataMceStyle = wptbNewPreviewTable.querySelectorAll('[data-mce-style]');
+            var dataMceStyle = wptbNewTableSetup.querySelectorAll('[data-mce-style]');
             if (dataMceStyle.length > 0) {
                 for (var _k = 0; _k < dataMceStyle.length; _k++) {
                     dataMceStyle[_k].removeAttribute('data-mce-style');
                 }
             }
-            var mceIds = wptbNewPreviewTable.querySelectorAll('[id^=mce_]');
+            var mceIds = wptbNewTableSetup.querySelectorAll('[id^=mce_]');
             if (mceIds.length > 0) {
                 for (var _k2 = 0; _k2 < mceIds.length; _k2++) {
                     mceIds[_k2].removeAttribute('id');
@@ -4959,7 +4971,11 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             }
         }
 
-        window.wptbTableStateSaving.push([wptbNewPreviewTable, cssForTdsWidthAutoValue]);
+        var wptbTableTitle = '';
+        var wptbSetupName = document.getElementById('wptb-setup-name');
+        if (wptbSetupName) wptbTableTitle = wptbSetupName.value;
+
+        window.wptbTableStateSaving.push([wptbNewTableSetup, cssForTdsWidthAutoValue, wptbTableTitle]);
 
         // set new number of state which is showed now
         window.wptbTableStateNumberShow = window.wptbTableStateSaving.length - 1;
@@ -5059,23 +5075,23 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             if (wptbTableSetup.length > 0) {
                 wptbTableSetup = wptbTableSetup[0];
 
-                wptbTableSetup.innerHTML = '';
+                //wptbTableSetup.outerHTML = '';
                 if (window.wptbTableStateSaving[window.wptbTableStateNumberShow]) {
                     if (window.wptbTableStateSaving[window.wptbTableStateNumberShow][0] && _typeof(window.wptbTableStateSaving[window.wptbTableStateNumberShow][0]) === 'object') {
                         if ('outerHTML' in window.wptbTableStateSaving[window.wptbTableStateNumberShow][0]) {
-                            wptbTableSetup.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
+                            wptbTableSetup.outerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][0].outerHTML;
                         }
                     }
 
-                    if (!wptbTableSetup.innerHTML) {
+                    var wptbTableSetupNew = document.querySelector('.wptb-table-setup');
+                    if (wptbTableSetupNew && wptbTableSetupNew.children.length == 0) {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                         wptbSaveBtn.classList.add('wptb-save-disabled');
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                     }
-                }
-                // add or change or delete style element in the head for table cells who have auto width
-                if (window.wptbTableStateSaving[window.wptbTableStateNumberShow]) {
+
+                    // add or change or delete style element in the head for table cells who have auto width
                     var head = document.head;
                     if (head) {
                         var cssForTdsWidthAutoOld = head.querySelector('style[data-wptb-td-auto-width="true"]');
@@ -5089,6 +5105,12 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                             cssForTdsWidthAuto.innerHTML = window.wptbTableStateSaving[window.wptbTableStateNumberShow][1];
                             head.appendChild(cssForTdsWidthAuto);
                         }
+                    }
+
+                    // change value of table title field
+                    var wptbSetupName = document.getElementById('wptb-setup-name');
+                    if (typeof window.wptbTableStateSaving[window.wptbTableStateNumberShow][2] != 'undefined') {
+                        if (wptbSetupName) wptbSetupName.value = window.wptbTableStateSaving[window.wptbTableStateNumberShow][2];
                     }
                 }
 

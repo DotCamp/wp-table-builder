@@ -96,4 +96,12 @@ var WPTB_Settings = function () {
             WPTB_Helper.saveTable( event );
         }
     }
+
+    let tableTitleField = document.querySelector( '#wptb-setup-name' );
+    if( tableTitleField ) {
+        tableTitleField.onchange = function () {
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
+    }
 };

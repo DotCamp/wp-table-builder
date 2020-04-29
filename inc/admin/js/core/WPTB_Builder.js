@@ -50,6 +50,9 @@
             http.send(null);
         } else {
             document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+
+            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
         }
         document.counter = new ElementCounters();
         document.select = new MultipleSelect();
