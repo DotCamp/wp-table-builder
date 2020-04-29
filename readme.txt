@@ -2,8 +2,8 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 5.3
-Stable tag: 1.1.5
+Tested up to: 5.4
+Stable tag: 1.1.6
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -31,7 +31,7 @@ All the elements come with customization options of their own.
 
 We have a cell management mode which comes with options like Add New Row, Add New Column, Merge Cells, Split Cells and many more.
 
-= How to Use = 
+## How to Use 
 
 After you install the plugin, you will see a Table Builder menu. Go to Table Builder > Add New. 
 
@@ -42,6 +42,13 @@ You can then drag and drop elements from the left panel into the table cells. On
 After the table is saved, you can embed it in post and pages by using a shortcode. Click on 'Embed' on the top to get the shortcode. 
 
 You can also get the shortcode from the 'All Tables' list under 'Table Builder' menu.
+
+## Import Tables
+
+You can import tables from CSV files. You can import both single and multiple CSV files. Multiple CSV files will have to be zipped.
+
+You can also import tables from TablePress plugin.
+
 
 == Frequently Asked Questions ==
 
@@ -72,6 +79,15 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.1.6 =
+
+* ADD: Option to Import Tables from CSV Files.
+* ADD: Option to Import Tables from TablePress.
+* ADD: Option to Choose Which User Roles Have Access to Add, Edit, Manage tables.
+* ADD: 'Close' Button in Cell Management Mode.
+* ADD: Table item in 'Add New' Menu on Admin bar.
+* FIX: Builder Freezing When Table Has Lots of Columns and Rows.
 
 = 1.1.5 = 
 
