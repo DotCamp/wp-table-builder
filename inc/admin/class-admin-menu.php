@@ -266,8 +266,8 @@ class Admin_Menu {
 
 		} else if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-import' ) {
 
-			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
-			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.js';
+			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 

@@ -155,7 +155,7 @@ class Settings_Manager {
 	 */
 	public function admin_scripts( $hook ) {
 		if ( $hook === $this->settings_menu_slug ) {
-			$script_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Admin_Settings.min.js';
+			$script_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Admin_Settings.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 
