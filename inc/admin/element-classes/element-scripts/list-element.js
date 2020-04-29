@@ -1,4 +1,3 @@
-let listItement
 let lis = element.getElementsByTagName( 'li' );
 if( lis.length > 0 ) {
     for( let i = 0; i < lis.length; i++ ) {
@@ -191,7 +190,6 @@ function selectControlsChange( selects, element ) {
 function controlsChange( inputs, element ) {
     if( inputs && typeof inputs === 'object' ) {
         if( inputs.hasOwnProperty( 'select1' ) ) {
-            console.log(inputs);
             let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
             
             if( infArr ) {

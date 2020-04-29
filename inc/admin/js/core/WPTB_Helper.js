@@ -1605,5 +1605,38 @@ var WPTB_Helper = {
         }
         table.columns = maxCols;
         table.maxCols = maxColsFull;
+    },
+
+    /**
+     * Table Rows colors reinstall
+     */
+    tableRowsColorsReinstall: function ( table ) {
+        let infArr = table.className.match( /wptb-element-main(.+)-(\d+)/i );
+        if( infArr && Array.isArray( infArr ) ) {
+            let tableIndex = '';
+            if( infArr[infArr.length -1] == '0' ) {
+                tableIndex = 'startedid-0';
+            } else {
+                tableIndex = infArr[infArr.length -1];
+            }
+
+            let tableHeaderBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableHeaderBackground' );
+            if(  tableHeaderBackground ) {
+                let details = {value: tableHeaderBackground.value};
+                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableHeaderBackground, details );
+            }
+
+            let tableEvenRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableEvenRowBackground' );
+            if(  tableEvenRowBackground ) {
+                let details = {value: tableEvenRowBackground.value};
+                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableEvenRowBackground, details );
+            }
+
+            let tableOddRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableOddRowBackground' );
+            if(  tableOddRowBackground ) {
+                let details = {value: tableOddRowBackground.value};
+                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
+            }
+        }
     }
 }

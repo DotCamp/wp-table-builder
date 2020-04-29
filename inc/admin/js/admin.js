@@ -2538,6 +2538,39 @@ var WPTB_Helper = {
         }
         table.columns = maxCols;
         table.maxCols = maxColsFull;
+    },
+
+    /**
+     * Table Rows colors reinstall
+     */
+    tableRowsColorsReinstall: function tableRowsColorsReinstall(table) {
+        var infArr = table.className.match(/wptb-element-main(.+)-(\d+)/i);
+        if (infArr && Array.isArray(infArr)) {
+            var tableIndex = '';
+            if (infArr[infArr.length - 1] == '0') {
+                tableIndex = 'startedid-0';
+            } else {
+                tableIndex = infArr[infArr.length - 1];
+            }
+
+            var tableHeaderBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableHeaderBackground');
+            if (tableHeaderBackground) {
+                var details = { value: tableHeaderBackground.value };
+                WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableHeaderBackground, details);
+            }
+
+            var tableEvenRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableEvenRowBackground');
+            if (tableEvenRowBackground) {
+                var _details = { value: tableEvenRowBackground.value };
+                WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableEvenRowBackground, _details);
+            }
+
+            var tableOddRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableOddRowBackground');
+            if (tableOddRowBackground) {
+                var _details2 = { value: tableOddRowBackground.value };
+                WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableOddRowBackground, _details2);
+            }
+        }
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -4264,6 +4297,7 @@ var array = [],
             array.push(aux);
             drawTable(array);
             table.recalculateIndexes();
+            WPTB_Helper.tableRowsColorsReinstall(table);
             table.addColumnWidth();
             WPTB_Helper.dataTitleColumnSet(table);
             undoSelect();
@@ -4304,6 +4338,7 @@ var array = [],
             array.push(aux);
             drawTable(array);
             table.recalculateIndexes();
+            WPTB_Helper.tableRowsColorsReinstall(table);
             table.addColumnWidth();
             WPTB_Helper.dataTitleColumnSet(table);
             undoSelect();
@@ -4413,6 +4448,7 @@ var array = [],
         array.push(aux);
         drawTable(array);
         table.recalculateIndexes();
+        WPTB_Helper.tableRowsColorsReinstall(table);
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet(table);
         undoSelect();
@@ -4773,6 +4809,7 @@ var array = [],
                 }
             } else {
                 table.recalculateIndexes();
+                WPTB_Helper.tableRowsColorsReinstall(table);
                 WPTB_Helper.dataTitleColumnSet(table);
             }
         }

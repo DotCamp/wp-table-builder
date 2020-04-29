@@ -1,4 +1,3 @@
-console.log('Indic');
 let tinyMceInitStart = function() {
     tinyMCE.init({
         target: element.childNodes[0],

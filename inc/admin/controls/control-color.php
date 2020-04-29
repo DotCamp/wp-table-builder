@@ -141,17 +141,7 @@ class Control_Color extends Base_Control {
                                                             thisColorCss = '';
                                                         }
 
-                                                        if( thisColorCss == 'rgb(0, 0, 0)' ) {
-                                                            console.log("'rgb(0, 0, 0)'");
-                                                        }
-                                                        if( selectors[i][1][k] == 'background-color' ){
-                                                            console.log("1");
-                                                            console.log(selectorElements[j]);
-                                                        }
                                                         selectorElements[j].style[selectors[i][1][k]] = thisColorCss;
-                                                        if( selectors[i][1][k] == 'background-color' ){
-                                                            console.log(selectorElements[j]);
-                                                        }
                                                     }
                                                 }
                                             } else {
@@ -176,7 +166,28 @@ class Control_Color extends Base_Control {
                                 }
                             }
                         }
-                        
+
+                        function elementColorSet( selectors, color ) {
+                            for( let i = 0; i < selectors.length; i++ ) {
+                                if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
+                                    let selectorElements = document.querySelectorAll( selectors[i][0] );
+                                    if( selectorElements.length > 0 ) {
+                                        for( let j = 0; j < selectorElements.length; j++ ) {
+                                            if( selectors[i][1] ) {
+                                                if( Array.isArray( selectors[i][1] ) ) {
+                                                    for( let k = 0; k < selectors[i][1].length; k++ ) {
+                                                        selectorElements[j].style[selectors[i][1][k]] = color;
+                                                    }
+                                                } else {
+                                                    selectorElements[j].style[selectors[i][1]] = color;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         jQuery( '.{{{targetInputAddClass}}}' ).wpColorPicker({
                             change: function ( event, ui ) {
                                 let uiColor;
@@ -186,57 +197,32 @@ class Control_Color extends Base_Control {
                                     uiColor = '';
                                 }
 
-                                for( let i = 0; i < selectors.length; i++ ) {
-                                    if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
-                                        let selectorElements = document.querySelectorAll( selectors[i][0] );
-                                        if( selectorElements.length > 0 ) {
-                                            for( let j = 0; j < selectorElements.length; j++ ) {
-                                                if( selectors[i][1] ) {
-                                                    if( Array.isArray( selectors[i][1] ) ) {
-                                                        for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                            selectorElements[j].style[selectors[i][1][k]] = uiColor;
-                                                        }
-                                                    } else {
-                                                        selectorElements[j].style[selectors[i][1]] = uiColor;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                elementColorSet( selectors, uiColor );
 
                                 let targetInput = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                                 if( targetInput.length > 0 ) {
                                     targetInput = targetInput[0];
                                     targetInput.value = uiColor;
                                 }
+
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
                                 wpColorPickerCheckChangeForTableStateSaving( event );
                             },
                             clear: function( event ) {
-                                for( let i = 0; i < selectors.length; i++ ) {
-                                    if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
-                                        let selectorElements = document.querySelectorAll( selectors[i][0] );
-                                        if( selectorElements.length > 0 ) {
-                                            for( let j = 0; j < selectorElements.length; j++ ) {
-                                                if( selectors[i][1] ) {
-                                                    if( Array.isArray( selectors[i][1] ) ) {
-                                                        for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                            selectorElements[j].style[selectors[i][1][k]] = '';
-                                                        }
-                                                    } else {
-                                                        selectorElements[j].style[selectors[i][1]] = '';
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                
+                                elementColorSet( selectors, '' );
+
                                 WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement );
                                 wpColorPickerCheckChangeForTableStateSaving( event );
                             }
                         });
+
+                        let targetInputAddClass = document.querySelector( '.{{{targetInputAddClass}}}' );
+                        if( targetInputAddClass ) {
+                            targetInputAddClass.addEventListener( 'controlColor:change', function( e ) {
+                                let color = e.detail.value;
+                                elementColorSet( selectors, color );
+                            } );
+                        }
                     }
                 }
             } )();
