@@ -185,7 +185,14 @@
                         let previewTableWidth = previewTable.offsetWidth;
 
                         // get count of table columns
-                        let tableColumns = previewTable.dataset.tableColumns;
+                        let tableColumns;
+                        let previewTableRows = previewTable.rows;
+                        if( previewTableRows.length > 0 ) {
+                            let firstRow = previewTableRows[0];
+                            let tdsRow = firstRow.querySelectorAll( 'td' );
+
+                            tableColumns = tdsRow.length;
+                        }
 
                         // check the top line if it is presented as a title
                         let tablePreviewHeadIndic = previewTable.classList.contains( 'wptb-table-preview-head' )

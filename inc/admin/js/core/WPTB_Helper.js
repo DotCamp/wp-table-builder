@@ -1594,8 +1594,8 @@ var WPTB_Helper = {
                 }
                 jMainIter++;
 
-                if ( j + 1 > maxCols ) {
-                    maxCols = j + 1;
+                if ( j > maxCols ) {
+                    maxCols = j;
                 }
             }
 
