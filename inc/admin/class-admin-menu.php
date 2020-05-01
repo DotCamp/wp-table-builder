@@ -377,15 +377,6 @@ class Admin_Menu {
 	 * @since 1.1.5
 	 */
 	public function import() {
-//        ?>
-        <!--            <div class="wrap">-->
-        <!--				<div style="margin-bottom: 30px;">-->
-        <!--					<h1 class="wp-heading-inline">-->
-        <!--						--><?php //esc_html_e( 'Import', 'wp-table-builder' ); ?>
-        <!--					</h1>-->
-        <!--				</div>-->
-        <!--			</div>-->
-        <!--        --><?php
 		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-import.php';
 	}
 
