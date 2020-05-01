@@ -294,6 +294,7 @@ class Admin_Menu {
 			$strings = [
 				'logoAlt'          => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
 				'importSection'    => esc_html__( 'Import', $wptb_text_domain ),
+				'exportSection'    => esc_html__( 'Export', $wptb_text_domain ),
 				'plugins'          => esc_html__( 'Plugins', $wptb_text_domain ),
 				'tableResponsive'  => esc_html__( 'Make Table Responsive', $wptb_text_domain ),
 				'topRowHeader'     => esc_html__( 'Top Row as Header', $wptb_text_domain ),

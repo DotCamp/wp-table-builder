@@ -8,16 +8,16 @@
  * @returns {{strings: boolean}}
  */
 function install(Vue, options) {
-    Vue.mixin({
-        data() {
-            return {
-                strings: options.strings
-            }
-        }
-    })
+  Vue.mixin({
+    data() {
+      return {
+        strings: options.strings,
+      };
+    },
+  });
 }
 
 /**
  * @module strings plugin
  */
-export default {install};
+export default { install };

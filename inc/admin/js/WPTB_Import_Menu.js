@@ -12922,7 +12922,7 @@ exports.default = _default;
       _c("img", { attrs: { src: _vm.logoSrc, alt: _vm.logoAlt } }),
       _vm._v(" "),
       _c("span", { staticClass: "wptb-settings-header-name" }, [
-        _vm._v("\n            " + _vm._s(_vm.pluginName) + "\n                ")
+        _vm._v("\n      " + _vm._s(_vm.pluginName) + "\n    ")
       ])
     ]),
     _vm._v(" "),
@@ -12952,78 +12952,6 @@ render._withStripped = true
             api.createRecord('$4456da', $4456da);
           } else {
             api.reload('$4456da', $4456da);
-          }
-        }
-
-        
-      }
-    })();
-},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/Sections.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    child: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
-exports.default = _default;
-        var $dd2de5 = exports.default || module.exports;
-      
-      if (typeof $dd2de5 === 'function') {
-        $dd2de5 = $dd2de5.options;
-      }
-    
-        /* template */
-        Object.assign($dd2de5, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-settings-sections-wrapper",
-      class: { child: _vm.child }
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$dd2de5', $dd2de5);
-          } else {
-            api.reload('$dd2de5', $dd2de5);
           }
         }
 
@@ -13078,7 +13006,7 @@ exports.default = _default;
         }
       }
     },
-    [_vm._v("\n    " + _vm._s(_vm.name) + "\n")]
+    [_vm._v("\n  " + _vm._s(_vm.name) + "\n")]
   )
 }
 var staticRenderFns = []
@@ -13110,7 +13038,132 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"mixins/withMessage.js":[function(require,module,exports) {
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/Sections.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SectionItem = _interopRequireDefault(require("./SectionItem"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  model: {
+    prop: 'currentSection',
+    event: 'updateSection'
+  },
+  props: {
+    child: {
+      type: Boolean,
+      default: false
+    },
+    items: Array,
+    currentSection: String
+  },
+  components: {
+    SectionItem: _SectionItem.default
+  },
+  data: function data() {
+    return {
+      innerCurrentSection: ''
+    };
+  },
+  mounted: function mounted() {
+    this.innerCurrentSection = this.currentSection || this.items[0];
+  },
+  watch: {
+    innerCurrentSection: function innerCurrentSection(n) {
+      this.$emit('updateSection', n);
+    }
+  },
+  methods: {
+    handleSectionChange: function handleSectionChange(val) {
+      this.innerCurrentSection = val;
+    }
+  }
+};
+exports.default = _default;
+        var $dd2de5 = exports.default || module.exports;
+      
+      if (typeof $dd2de5 === 'function') {
+        $dd2de5 = $dd2de5.options;
+      }
+    
+        /* template */
+        Object.assign($dd2de5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-settings-sections-wrapper",
+          class: { child: _vm.child }
+        },
+        _vm._l(_vm.items, function(item) {
+          return _c("section-item", {
+            attrs: { name: item, current: _vm.innerCurrentSection },
+            on: { sectionchange: _vm.handleSectionChange }
+          })
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _vm._t("default")
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$dd2de5', $dd2de5);
+          } else {
+            api.reload('$dd2de5', $dd2de5);
+          }
+        }
+
+        
+      }
+    })();
+},{"./SectionItem":"components/SectionItem.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"mixins/withMessage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13128,7 +13181,7 @@ var messageData = {
   withMessageData: {
     busy: false,
     show: false,
-    message: "",
+    message: '',
     type: 'ok',
     intervalId: -1,
     intervalTime: 5000
@@ -13175,6 +13228,8 @@ var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -13255,99 +13310,7 @@ render._withStripped = true
         
       }
     })();
-},{"../mixins/withMessage":"mixins/withMessage.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuFooter.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _MessageDisplay = _interopRequireDefault(require("./MessageDisplay.vue"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: ['messageType', 'messageShow', 'messageBody', 'messageBusy'],
-  components: {
-    MessageDisplay: _MessageDisplay.default
-  }
-};
-exports.default = _default;
-        var $a45baf = exports.default || module.exports;
-      
-      if (typeof $a45baf === 'function') {
-        $a45baf = $a45baf.options;
-      }
-    
-        /* template */
-        Object.assign($a45baf, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-settings-footer" },
-    [
-      _c("message-display", {
-        attrs: {
-          busy: _vm.messageBusy,
-          message: _vm.messageBody,
-          show: _vm.messageShow,
-          type: _vm.messageType
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-settings-button-container" },
-        [_vm._t("default")],
-        2
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$a45baf', $a45baf);
-          } else {
-            api.reload('$a45baf', $a45baf);
-          }
-        }
-
-        
-      }
-    })();
-},{"./MessageDisplay.vue":"components/MessageDisplay.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuButton.vue":[function(require,module,exports) {
+},{"../mixins/withMessage":"mixins/withMessage.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13497,7 +13460,7 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../../../../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
+},{"./bundle-url":"../../../../../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"components/MenuFooter.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13505,15 +13468,1996 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _MenuHeader = _interopRequireDefault(require("../components/MenuHeader"));
+var _MessageDisplay = _interopRequireDefault(require("./MessageDisplay.vue"));
 
-var _Sections = _interopRequireDefault(require("../components/Sections"));
+var _MenuButton = _interopRequireDefault(require("./MenuButton"));
 
-var _SectionItem = _interopRequireDefault(require("../components/SectionItem"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _MenuFooter = _interopRequireDefault(require("../components/MenuFooter"));
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['messageType', 'messageShow', 'messageBody', 'messageBusy'],
+  components: {
+    MessageDisplay: _MessageDisplay.default,
+    MenuButton: _MenuButton.default
+  }
+};
+exports.default = _default;
+        var $a45baf = exports.default || module.exports;
+      
+      if (typeof $a45baf === 'function') {
+        $a45baf = $a45baf.options;
+      }
+    
+        /* template */
+        Object.assign($a45baf, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-settings-footer" },
+    [
+      _c("message-display", {
+        attrs: {
+          busy: _vm.messageBusy,
+          message: _vm.messageBody,
+          show: _vm.messageShow,
+          type: _vm.messageType
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-settings-button-container" },
+        [
+          _c("menu-button", { staticStyle: { visibility: "hidden" } }, [
+            _vm._v("dummy")
+          ]),
+          _vm._v(" "),
+          _vm._t("default")
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
 
-var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$a45baf', $a45baf);
+          } else {
+            api.reload('$a45baf', $a45baf);
+          }
+        }
+
+        
+      }
+    })();
+},{"./MessageDisplay.vue":"components/MessageDisplay.vue","./MenuButton":"components/MenuButton.vue","_css_loader":"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuContent.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    center: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $3df909 = exports.default || module.exports;
+      
+      if (typeof $3df909 === 'function') {
+        $3df909 = $3df909.options;
+      }
+    
+        /* template */
+        Object.assign($3df909, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-settings-controls-wrapper",
+      class: [_vm.center ? "center" : "grid"]
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$3df909', $3df909);
+          } else {
+            api.reload('$3df909', $3df909);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/DragDrop.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['texts', 'file', 'allowedFormats'],
+  model: {
+    prop: 'file',
+    event: 'fileChanged'
+  },
+  data: function data() {
+    return {
+      dragActive: false,
+      currentFile: null
+    };
+  },
+  mounted: function mounted() {
+    this.currentFile = this.file;
+  },
+  watch: {
+    currentFile: function currentFile(n) {
+      this.$emit('fileChanged', n);
+    },
+    file: function file(n) {
+      this.currentFile = n;
+    }
+  },
+  computed: {
+    eventClass: function eventClass() {
+      return this.dragActive ? 'dragenter' : '';
+    }
+  },
+  methods: {
+    handleDrop: function handleDrop(event) {
+      this.dragActive = true;
+      var dt = event.dataTransfer;
+
+      if (dt.files[0]) {
+        if (this.isTypeAllowed(dt.files[0])) {
+          this.currentFile = dt.files[0];
+        }
+      }
+
+      this.dragActive = false;
+    },
+    isTypeAllowed: function isTypeAllowed(fileName) {
+      var extension = fileName.name.split('.').pop();
+      return this.allowedFormats.includes(extension);
+    },
+    openFileSelect: function openFileSelect() {
+      this.$refs.fileSelect.click();
+    },
+    handleFileSelect: function handleFileSelect(e) {
+      if (e.target.files.length > 0 && this.isTypeAllowed(e.target.files[0])) {
+        this.currentFile = e.target.files[0];
+      }
+    },
+    clearCurrentFile: function clearCurrentFile() {
+      this.currentFile = null;
+    }
+  }
+};
+exports.default = _default;
+        var $287b39 = exports.default || module.exports;
+      
+      if (typeof $287b39 === 'function') {
+        $287b39 = $287b39.options;
+      }
+    
+        /* template */
+        Object.assign($287b39, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-menu-file-drop",
+      class: _vm.eventClass,
+      on: {
+        dragenter: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = true
+        },
+        dragleave: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = false
+        },
+        drop: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          return _vm.handleDrop($event)
+        },
+        dragover: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = true
+        }
+      }
+    },
+    [
+      _c("transition", { attrs: { name: "wptb-fade", mode: "out-in" } }, [
+        _vm.dragActive
+          ? _c("div", { key: "fileLogo", staticClass: "file-icon" }, [
+              _c("span", {
+                staticClass: "dashicons dashicons-media-spreadsheet"
+              })
+            ])
+          : _c(
+              "div",
+              { key: "controls" },
+              [
+                _c(
+                  "transition",
+                  { attrs: { name: "wptb-fade", mode: "out-in" } },
+                  [
+                    _vm.currentFile === null
+                      ? _c(
+                          "div",
+                          {
+                            key: "selection",
+                            staticClass:
+                              "wptb-flex wptb-flex-col wptb-flex-align-center"
+                          },
+                          [
+                            _c("div", { staticClass: "hint" }, [
+                              _vm._v(_vm._s(_vm.texts.hint))
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "supported wptb-text-transform-none"
+                              },
+                              [
+                                _vm._v(
+                                  "(" +
+                                    _vm._s(_vm.allowedFormats.join(", ")) +
+                                    ")"
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", [
+                              _c(
+                                "a",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openFileSelect($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.texts.browse))]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                ref: "fileSelect",
+                                staticStyle: { display: "none" },
+                                attrs: { type: "file" },
+                                on: { change: _vm.handleFileSelect }
+                              })
+                            ])
+                          ]
+                        )
+                      : _c(
+                          "div",
+                          {
+                            key: "selected",
+                            staticClass:
+                              "wptb-flex wptb-flex-col wptb-flex-align-center"
+                          },
+                          [
+                            _c("div", { staticClass: "file" }, [
+                              _vm._v(_vm._s(_vm.currentFile.name))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", [
+                              _c(
+                                "a",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.clearCurrentFile($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.texts.clear))]
+                              )
+                            ])
+                          ]
+                        )
+                  ]
+                )
+              ],
+              1
+            )
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$287b39', $287b39);
+          } else {
+            api.reload('$287b39', $287b39);
+          }
+        }
+
+        
+      }
+    })();
+},{"_css_loader":"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/ControlItem.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['fieldData', 'modelBind'],
+  methods: {
+    isType: function isType(type) {
+      return this.fieldData.type === type;
+    }
+  }
+};
+exports.default = _default;
+        var $75e9bd = exports.default || module.exports;
+      
+      if (typeof $75e9bd === 'function') {
+        $75e9bd = $75e9bd.options;
+      }
+    
+        /* template */
+        Object.assign($75e9bd, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.isType("multiCheckbox")
+      ? _c(
+          "div",
+          _vm._l(_vm.fieldData.options, function(v, k) {
+            return _c("div", { staticClass: "wptb-setting-control-row" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.modelBind[_vm.fieldData.id],
+                    expression: "modelBind[fieldData.id]"
+                  }
+                ],
+                attrs: { id: _vm.fieldData.id, type: "checkbox" },
+                domProps: {
+                  value: k,
+                  checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
+                    ? _vm._i(_vm.modelBind[_vm.fieldData.id], k) > -1
+                    : _vm.modelBind[_vm.fieldData.id]
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.modelBind[_vm.fieldData.id],
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = k,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(
+                            _vm.modelBind,
+                            _vm.fieldData.id,
+                            $$a.concat([$$v])
+                          )
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.modelBind,
+                            _vm.fieldData.id,
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
+                    }
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: _vm.fieldData.id } }, [
+                _vm._v(_vm._s(v))
+              ])
+            ])
+          }),
+          0
+        )
+      : _vm.isType("checkbox")
+      ? _c("div", [
+          _c("div", { staticClass: "wptb-setting-control-row" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.modelBind[_vm.fieldData.id],
+                  expression: "modelBind[fieldData.id]"
+                }
+              ],
+              attrs: { id: _vm.fieldData.id, type: "checkbox" },
+              domProps: {
+                checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
+                  ? _vm._i(_vm.modelBind[_vm.fieldData.id], null) > -1
+                  : _vm.modelBind[_vm.fieldData.id]
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.modelBind[_vm.fieldData.id],
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 &&
+                        _vm.$set(
+                          _vm.modelBind,
+                          _vm.fieldData.id,
+                          $$a.concat([$$v])
+                        )
+                    } else {
+                      $$i > -1 &&
+                        _vm.$set(
+                          _vm.modelBind,
+                          _vm.fieldData.id,
+                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                        )
+                    }
+                  } else {
+                    _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: _vm.fieldData.id } }, [
+              _vm._v(_vm._s(_vm.fieldData.label))
+            ])
+          ])
+        ])
+      : _vm.isType("dropdown")
+      ? _c("div", [
+          _c("div", { staticClass: "wptb-setting-control-row" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.modelBind[_vm.fieldData.id],
+                    expression: "modelBind[fieldData.id]"
+                  }
+                ],
+                attrs: { id: _vm.fieldData.id },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.$set(
+                      _vm.modelBind,
+                      _vm.fieldData.id,
+                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                    )
+                  }
+                }
+              },
+              _vm._l(_vm.fieldData.options, function(o) {
+                return _c("option", { domProps: { value: o.value } }, [
+                  _vm._v("\n          " + _vm._s(o.label) + "\n        ")
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("label", { attrs: { for: _vm.fieldData.id } }, [
+              _vm._v(_vm._s(_vm.fieldData.label))
+            ])
+          ])
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$75e9bd', $75e9bd);
+          } else {
+            api.reload('$75e9bd', $75e9bd);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"functions/importOperations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/**
+ * ImportOperations class
+ *
+ * @param {Object} options options object
+ * @returns {{importFromFile: importFromFile}}
+ * @constructor
+ */
+function ImportOperations(options) {
+  function importFromFile() {
+    if (options.file) {
+      var regex = /^([a-zA-Z0-9()\s_\\.\-:])+(.csv)$/;
+      var regex2 = /^([a-zA-Z0-9()\s_\\.\-:])+(.xml)$/;
+      var regex3 = /^([a-zA-Z0-9()\s_\\.\-:])+(.html)$/;
+      var regex4 = /^([a-zA-Z0-9()\s_\\.\-:])+(.zip)$/;
+      var is_csv = regex.test(options.file.name.toLowerCase());
+      var is_xml = regex2.test(options.file.name.toLowerCase());
+      var is_html = regex3.test(options.file.name.toLowerCase());
+      var is_zip = regex4.test(options.file.name.toLowerCase());
+      var file = options.file;
+
+      if (is_zip) {
+        var http = new XMLHttpRequest();
+        var url = "".concat(options.ajaxUrl, "?action=zip_unpacker");
+        var data = new FormData();
+        data.append('file', file, 'csv_zip.zip');
+        data.append('security_code', options.nonce);
+        http.open('POST', url, true);
+
+        http.onreadystatechange = function (action) {
+          if (this.readyState == 4 && this.status == 200) {
+            var _data = http.responseText;
+
+            if (JSON.parse(_data)[0] === 'unsuccess') {
+              WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document);
+              return;
+            }
+
+            if (_data) _data = JSON.parse(_data);
+
+            if (_data && Array.isArray(_data)) {
+              if (_data[0] == 'success') {
+                if (_data[1] && Array.isArray(_data[1])) {
+                  var dataTable = []; // check file extension, if it "csv" add get this tableData
+
+                  for (var i = 0; i < _data[1].length; i++) {
+                    if (_data[1][i][0] === 'csv') {
+                      dataTable.push(_data[1][i][1]);
+                    }
+                  }
+
+                  if (dataTable.length > 0) {
+                    tablesFromCsvSaveRun(dataTable, 0);
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        http.send(data);
+      } else if (is_csv || is_xml || is_html) {
+        if (typeof FileReader != 'undefined') {
+          var reader = new FileReader();
+
+          var _data2;
+
+          reader.onload = function (e) {
+            _data2 = e.target.result;
+
+            if (is_csv) {
+              tablesFromCsvSaveRun([_data2], 0);
+            }
+          };
+
+          reader.readAsText(file);
+        } else {
+          alert('This browser does not support HTML5.');
+        }
+      } else {
+        alert('Please upload a valid file.');
+      }
+    }
+  }
+  /**
+   * run all process for importing tables
+   */
+
+
+  function tablesFromCsvSaveRun(tableDataCsv, index) {
+    if (tableDataCsv && Array.isArray(tableDataCsv)) {
+      var csvDelimiter = options.delimiter;
+      if (csvDelimiter == 'tab') csvDelimiter = '\t';
+
+      if (!csvDelimiter) {
+        csvDelimiter = searchDelimiter(tableDataCsv[index]);
+
+        if (!csvDelimiter) {
+          alert('The delimiter could not be determined');
+          return;
+        }
+      }
+
+      document.addEventListener('table:imported:saved', function tabImSave() {
+        // tableImportingProgressBar(index + 1, tableDataCsv.length, 'import');
+        if (tableDataCsv.length - index > 1) {
+          tablesFromCsvSaveRun(tableDataCsv, index + 1);
+        }
+
+        document.removeEventListener('table:imported:saved', tabImSave);
+      });
+      var tableDataArr = parseCsv(tableDataCsv[index], csvDelimiter);
+      var importedTable = createTableFromDataArray(tableDataArr);
+      tableImportedSave(importedTable);
+
+      if (index === 0) {// tableImportingProgressBar(0, 1, 'import');
+      }
+    }
+  }
+  /**
+   * save html table
+   */
+
+
+  function tableImportedSave(table, id) {
+    var http = new XMLHttpRequest();
+    var url = options.ajaxUrl + "?action=save_table";
+    var code;
+
+    if (id) {
+      if (table.classList.contains('wptb-element-main-table_setting-startedid-0')) {
+        table.classList.remove('wptb-element-main-table_setting-startedid-0');
+        table.classList.add("wptb-element-main-table_setting-".concat(id));
+      }
+    }
+
+    code = WPTB_Stringifier(table);
+    code = code.outerHTML;
+    var params = {
+      content: code,
+      security_code: options.nonce
+    };
+
+    if (id) {
+      params.id = id;
+    }
+
+    params = JSON.stringify(params);
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    http.onreadystatechange = function (action) {
+      if (this.readyState == 4 && this.status == 200) {
+        if (JSON.parse(http.responseText)[0] === 'security_problem') {
+          WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document);
+          return;
+        }
+
+        var data = JSON.parse(http.responseText);
+
+        if (data[0] == 'saved') {
+          tableImportedSave(table, data[1]);
+        } else if (data[0] == 'edited') {
+          WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
+        }
+      }
+    };
+
+    http.send(params);
+  }
+  /**
+   * create new table from array data
+   */
+
+
+  function createTableFromDataArray(tableDataArr) {
+    if (tableDataArr && Array.isArray(tableDataArr) && tableDataArr.length > 0) {
+      var countRows = tableDataArr.length;
+      var countColumns = countRows > 0 && tableDataArr[0] && Array.isArray(tableDataArr[0]) ? tableDataArr[0].length : 0; // check if table is empty
+
+      if (countRows === 0 && countColumns === 0) {
+        return false;
+      }
+      /**
+       * array for saving unique elements indexes
+       */
+
+
+      var elementsIndexes = {
+        imageElemIndex: 1,
+        textElemIndex: 1,
+        customHtmlElemIndex: 1
+      };
+      var rowSpan = new Array(countRows);
+      rowSpan.fill(1);
+      var colSpan = new Array(countColumns);
+      colSpan.fill(1);
+      var tBody = document.createElement('tbody');
+      var lastRowIdx = countRows - 1;
+      var lastColumnIdx = countColumns - 1;
+
+      for (var rowIdx = lastRowIdx; rowIdx >= 0; rowIdx--) {
+        var tr = document.createElement('tr');
+        tr.classList.add('wptb-row');
+
+        for (var colIdx = lastColumnIdx; colIdx >= 0; colIdx--) {
+          var cellContent = tableDataArr[rowIdx][colIdx];
+
+          if (cellContent === '#rowspan#') {
+            if (rowIdx > 0) {
+              if (!rowSpan[colIdx]) rowSpan[colIdx] = 1;
+              rowSpan[colIdx]++;
+              colSpan[rowIdx] = 1;
+              continue;
+            }
+
+            cellContent = '';
+          } else if (cellContent === '#colspan#') {
+            if (colIdx > 0) {
+              if (!colSpan[rowIdx]) colSpan[rowIdx] = 1;
+              colSpan[rowIdx]++;
+              rowSpan[colIdx] = 1;
+              continue;
+            }
+
+            cellContent = '';
+          }
+
+          var td = document.createElement('td');
+          td.classList.add('wptb-droppable', 'wptb-cell');
+          td.dataset.wptbCssTdAutoWidth = 'true';
+          td.style.padding = '15px';
+          td.style.width = null;
+          td.style.height = null;
+          td.style.borderStyle = 'solid';
+          td.style.borderWidth = '1px';
+          td.innerHTML = cellContent;
+
+          if (colSpan[rowIdx] > 1) {
+            td.colSpan = colSpan[rowIdx];
+          }
+
+          if (rowSpan[colIdx] > 1) {
+            td.rowSpan = rowSpan[colIdx];
+          }
+
+          tr.insertBefore(td, tr.firstChild);
+          colSpan[rowIdx] = 1;
+          rowSpan[colIdx] = 1;
+        }
+
+        tBody.insertBefore(tr, tBody.firstChild);
+      }
+
+      var table = document.createElement('table');
+      table.classList.add('wptb-preview-table', 'wptb-element-main-table_setting-startedid-0');
+      /*
+       * set including border style for table
+       */
+
+      table.style.borderStyle = 'solid';
+      table.style.borderWidth = '1px';
+      table.appendChild(tBody);
+      var tds = table.querySelectorAll('td');
+
+      for (var i = 0; i < tds.length; i++) {
+        var tdChildNodes = _toConsumableArray(tds[i].childNodes);
+
+        var childNodesHandleredIndexesArr = tdChildNodesHandler(tdChildNodes, elementsIndexes);
+        var wptbElements = void 0;
+
+        if (childNodesHandleredIndexesArr && Array.isArray(childNodesHandleredIndexesArr)) {
+          wptbElements = childNodesHandleredIndexesArr[0];
+          elementsIndexes = childNodesHandleredIndexesArr[1];
+        }
+
+        tds[i].innerHTML = '';
+
+        if (wptbElements && Array.isArray(wptbElements)) {
+          for (var j = 0; j < wptbElements.length; j++) {
+            tds[i].appendChild(wptbElements[j]);
+          }
+        }
+      }
+
+      WPTB_Helper.recalculateIndexes(table);
+      addAttributesForTable(table);
+      return table;
+    }
+
+    return false;
+  }
+  /**
+   * add adaptive table data attribute to set table responsive or not
+   * add wptb-table-preview-head class to set top row as header if it chosen
+   * and also other data attributes
+   */
+
+
+  function addAttributesForTable(table) {
+    if (options.tableResponsive) {
+      table.dataset.wptbAdaptiveTable = '1';
+    } else {
+      table.dataset.wptbAdaptiveTable = '0';
+    }
+
+    if (options.topRowAsHeader) {
+      table.classList.add('wptb-table-preview-head');
+    }
+
+    table.dataset.wptbFixedWidthSize = '0';
+    table.dataset.wptbCellsWidthAutoCount = table.maxCols;
+    var td = table.querySelector('td');
+    var tdPadding = td && td.style.paddingTop ? td.style.paddingTop : 15;
+    table.dataset.wptbTableTdsSumMaxWidth = String(parseInt(table.maxCols) * (100 + 1 + parseInt(tdPadding) * 2) + 1);
+  }
+  /**
+   * function for parse CSV to array
+   */
+
+
+  function parseCsv(str, separator) {
+    var arr = [];
+    var quote = false;
+
+    for (var row = 0, col = 0, c = 0; c < str.length; c++) {
+      var cc = str[c],
+          nc = str[c + 1];
+      arr[row] = arr[row] || [];
+      arr[row][col] = arr[row][col] || '';
+
+      if (cc == '"' && quote && nc == '"') {
+        arr[row][col] += cc;
+        ++c;
+        continue;
+      }
+
+      if (cc == '"') {
+        quote = !quote;
+        continue;
+      }
+
+      if (cc == separator && !quote) {
+        ++col;
+        continue;
+      }
+
+      if (cc == '\n' && !quote) {
+        ++row;
+        col = 0;
+        continue;
+      }
+
+      arr[row][col] += cc;
+    }
+
+    return arr;
+  }
+  /**
+   * Detect the CSV delimiter, by analyzing some rows to determine the most probable delimiter character.
+   * return string Most probable delimiter character.
+   */
+
+
+  function searchDelimiter(data) {
+    var delimiterCollection = {};
+    var quote = false;
+    var currentLine = 0;
+    var nonDelimiterChars = 'a-zA-Z0-9\n\r'; // Walk through each character in the CSV string (up to $this->delimiter_search_max_lines) and search potential delimiter characters.
+
+    var dataLength = data.length;
+
+    for (var i = 0; i < dataLength; i++) {
+      var previousChar = i - 1 >= 0 ? data[i - 1] : '';
+      var currentChar = data[i];
+      var nextChar = i + 1 < dataLength ? data[i + 1] : '';
+
+      if (currentChar === '"') {
+        // Open and closing quotes.
+        if (!quote || nextChar !== '"') {
+          quote = !quote; // Flip bool.
+        } else if (quote) {
+          i++; // Skip next character.
+        }
+      } else if (('\n' === currentChar && '\r' !== previousChar || '\r' === currentChar) && !quote) {
+        // Reached end of a line.
+        currentLine++;
+
+        if (currentLine >= 15) {
+          break;
+        }
+      } else if (!quote) {
+        // At this point, currentChar seems to be used as a delimiter, as it is not quote.
+        // Count currentChar if it is not in the $this->nonDelimiterChars list
+        if (';,\t'.indexOf(currentChar) !== -1) {
+          if (typeof delimiterCollection[currentChar] == 'undefined') {
+            delimiterCollection[currentChar] = {};
+          }
+
+          if (typeof delimiterCollection[currentChar][currentLine] == 'undefined') {
+            delimiterCollection[currentChar][currentLine] = 0; // Initialize empty
+          }
+
+          delimiterCollection[currentChar][currentLine]++;
+        }
+      }
+    }
+
+    var potentialDelimiters = '';
+
+    for (var delimiter in delimiterCollection) {
+      var lineDelimiterCollection = delimiterCollection[delimiter];
+      var lineDelimiterCollectionLength = 0;
+
+      for (var lineDelimiter in lineDelimiterCollection) {
+        lineDelimiterCollectionLength++;
+      }
+
+      if (lineDelimiterCollectionLength !== currentLine) {
+        continue;
+      }
+
+      var startCount = false;
+      var delimiterIndic = void 0;
+
+      for (var _lineDelimiter in lineDelimiterCollection) {
+        if (!startCount) {
+          startCount = lineDelimiterCollection[_lineDelimiter];
+        } else if (lineDelimiterCollection[_lineDelimiter] === startCount && (delimiterIndic || typeof delimiterIndic == 'undefined')) {
+          delimiterIndic = true;
+        } else {
+          delimiterIndic = false;
+        }
+      }
+
+      if (currentLine > 1 && !delimiterIndic) {
+        continue;
+      }
+
+      if (!potentialDelimiters) {
+        potentialDelimiters = delimiter;
+      } else {
+        potentialDelimiters = false;
+        break;
+      }
+    }
+
+    return potentialDelimiters;
+  }
+
+  function wptb_xmlElementChildrenEach(Parent, startIter) {
+    if (startIter) {
+      this.mainString = [];
+    }
+
+    if (Parent.nodeType == 1) {
+      if (Parent.children.length > 0) {
+        for (var i = 0; i < Parent.children.length; i++) {
+          var child = Parent.children[i];
+          wptb_xmlElementChildrenEach(child);
+        }
+      } else if (Parent.childNodes.length > 0) {
+        for (var _i = 0; _i < Parent.childNodes.length; _i++) {
+          var _child = Parent.childNodes[_i];
+          wptb_xmlElementChildrenEach(_child);
+        }
+      } else {
+        this.mainString.push('');
+      }
+    } else if ((Parent.nodeType == 3 || Parent.nodeType == 4) && Parent.data.trim() != '\n' && Parent.data.trim() != '\n' && Parent.data.trim() != '\r' && Parent.data.trim != '\n\r' && Parent.previousSibling === null && Parent.nextSibling === null) {
+      this.mainString.push(Parent.data);
+    }
+
+    return this.mainString;
+  }
+  /**
+   * function for parse Xml file
+   */
+
+
+  function wptb_xmlImportFileParse(data) {
+    var xmlDoc = $.parseXML(data);
+    var xml = $(xmlDoc);
+    var rows = [];
+    var rows_header = [];
+
+    if (xml.length > 0) {
+      var documentElement = xml[0].children;
+
+      if (documentElement.length > 0) {
+        var couponElements = documentElement[0].children;
+
+        for (var i = 0; i < couponElements.length; i++) {
+          if (i == 0) {
+            rows_header[i] = wptb_xmlElementChildrenEach(couponElements[i], true);
+          } else {
+            rows[i] = wptb_xmlElementChildrenEach(couponElements[i], true);
+          }
+        }
+      }
+    }
+
+    rows = rows_header.concat(rows);
+    return rows;
+  }
+  /**
+   * import table from other plugins
+   */
+
+
+  function importFromPlugin(event) {
+    if (event) {
+      if (event === 'table-press') {
+        tablePressImportStageOne();
+      }
+    }
+  }
+  /**
+   * gets array with shortcodes and run
+   * function
+   */
+
+
+  function tablePressImportStageOne() {
+    var http = new XMLHttpRequest();
+    var url = "".concat(options.ajaxUrl, "?action=import_tables");
+    var params = {
+      import_plugin_name: 'table-press',
+      security_code: options.security_code
+    };
+    params = JSON.stringify(params);
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    http.onreadystatechange = function (action) {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(http.responseText);
+
+        if (data && Array.isArray(data)) {
+          if (data[0] == 'success') {
+            if (data[1] && Array.isArray(data[1])) {
+              var importIframeSection = document.getElementById('wptb-importIframeSection');
+
+              if (importIframeSection) {
+                var iframe = document.createElement('iframe'); // iframe.width = '1000';
+                // iframe.height = '1000';
+
+                importIframeSection.innerHTML = '';
+                importIframeSection.appendChild(iframe);
+                window.wptbImportCommonCountTables = data[1].length;
+
+                if (window.wptbImportConvertationShortcodes) {
+                  delete window.wptbImportConvertationShortcodes;
+                } //  tableImportingProgressBar(0, window.wptbImportCommonCountTables, 'import');
+
+
+                tablePressImportStageTwo(iframe, data[1]);
+              }
+            }
+          } else if (data[1]) {
+            WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, data[1]);
+          }
+        }
+      }
+    };
+
+    http.send(params);
+  }
+
+  function tablePressImportStageTwo(iframe, dataTables) {
+    if (dataTables && Array.isArray(dataTables) && dataTables.length > 0) {
+      var dataTable = dataTables.shift();
+
+      if (dataTable && Array.isArray(dataTable) && dataTable.length > 0) {
+        var shortcode = dataTable[0];
+
+        if (!window.wptbImportConvertationShortcodes) {
+          window.wptbImportConvertationShortcodes = [];
+        }
+
+        var thisIterConvertShortcodes = [];
+        thisIterConvertShortcodes.push(shortcode);
+        window.wptbImportConvertationShortcodes.push(thisIterConvertShortcodes);
+        var tableContent = dataTable[1];
+        var url = options.import_iframe_url + '&_wpnonce=' + options.security_code + '&shortcode=' + shortcode;
+        iframe.src = url;
+        iframe.onload = tablePressImportStageThree.bind(this, iframe, tableContent, dataTables);
+      }
+    }
+  }
+
+  function tablePressImportStageThree(iframe, tableContent, dataTables) {
+    var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+    var selectTableLength = iframeContent.querySelector('.dataTables_length select');
+
+    if (selectTableLength) {
+      var selectTableLengthOptions = _toConsumableArray(selectTableLength.options);
+
+      if (Array.isArray(selectTableLengthOptions)) {
+        var optionMaxValue = selectTableLengthOptions.reduce(function (previousValue, currentValue) {
+          var prevVal = previousValue ? Number(previousValue.value) : '';
+          var curVal = currentValue ? Number(currentValue.value) : '';
+
+          if (prevVal < curVal) {
+            previousValue = currentValue;
+          }
+
+          return previousValue;
+        });
+
+        if (optionMaxValue) {
+          selectTableLength.value = optionMaxValue.value;
+          WPTB_Helper.wptbDocumentEventGenerate('change', selectTableLength);
+        }
+      }
+    }
+
+    var tableDOMElem = iframeContent.querySelector('table.tablepress');
+    tableDomImportingHandler(tableDOMElem, tableContent, iframe, dataTables);
+  }
+
+  function tablePressImportStageFour(tableDOMElem, iframe, dataTables, id) {
+    var http = new XMLHttpRequest();
+    var url = options.ajaxUrl + "?action=save_table";
+    var title;
+    var code;
+    var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+    var titleElem = iframeContent.querySelector('.tablepress-table-name');
+
+    if (titleElem) {
+      title = titleElem.innerText;
+    } else {
+      title = '';
+    }
+
+    if (id) {
+      if (tableDOMElem.classList.contains('wptb-element-main-table_setting-startedid-0')) {
+        tableDOMElem.classList.remove('wptb-element-main-table_setting-startedid-0');
+        tableDOMElem.classList.add("wptb-element-main-table_setting-".concat(id));
+      }
+    }
+
+    code = WPTB_Stringifier(tableDOMElem);
+    code = code.outerHTML;
+    var params = {
+      title: title,
+      content: code,
+      security_code: options.security_code
+    };
+
+    if (id) {
+      params.id = id;
+    }
+
+    params = JSON.stringify(params);
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    http.onreadystatechange = function (action) {
+      if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(http.responseText);
+
+        if (data[0] == 'saved') {
+          tablePressImportStageFour(tableDOMElem, iframe, dataTables, data[1]);
+        } else if (data[0] == 'edited') {
+          if (data[1] && window.wptbImportConvertationShortcodes && Array.isArray(window.wptbImportConvertationShortcodes) && window.wptbImportConvertationShortcodes.length > 0) {
+            window.wptbImportConvertationShortcodes[window.wptbImportConvertationShortcodes.length - 1].push('[wptb id=' + data[1] + ']');
+          }
+
+          if (window.wptbImportCommonCountTables) {
+            var commonCount = window.wptbImportCommonCountTables;
+            var importingCount = window.wptbImportCommonCountTables - dataTables.length;
+            var percent = tableImportingProgressBar(importingCount, commonCount, 'import');
+
+            if (percent == 100) {
+              var importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
+
+              if (importProgressBarContainer) {
+                importProgressBarContainer.addEventListener('wptb-import:progressBar:full:import', function () {
+                  importedTablesInfoSettingBox();
+                }, false);
+              }
+            }
+          } else {
+            tableImportingProgressBar(100, 100, 'import');
+          }
+
+          tablePressImportStageTwo(iframe, dataTables);
+        }
+      }
+    };
+
+    http.send(params);
+  }
+  /**
+   * function for working progress bar
+   *
+   * return percent
+   */
+
+
+  function tableImportingProgressBar(count, commonCount, eventPostfix) {
+    var importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
+    var percentElement = document.querySelector('#wptb-pBarPercent');
+    var percentElementSpan = document.querySelector('#wptb-pBarPercent span');
+
+    if (importProgressBarContainer && percentElement && percentElementSpan) {
+      if ((count || count === 0) && commonCount) {
+        count = Number(count);
+        commonCount = Number(commonCount);
+
+        if (commonCount > 0) {
+          importProgressBarContainer.classList.add('wptb-importPBarContainerActive');
+          var nameProcessingElem = importProgressBarContainer.querySelector('.wptb-nameProcessInBarProgress');
+
+          if (nameProcessingElem) {
+            var nameProcessing = '';
+            var button;
+
+            if (eventPostfix == 'import') {
+              button = document.querySelector('.wptb-importFromPlugin');
+            } else if (eventPostfix == 'replace') {
+              button = document.querySelector('.wptb-importTableReplaceShortcodes');
+            }
+
+            if (button) {
+              nameProcessing = button.dataset.name;
+              if (nameProcessing) nameProcessingElem.innerHTML = nameProcessing;
+            }
+
+            if (!nameProcessing) nameProcessingElem.innerHTML = '';
+          } // Calculate percent
+
+
+          var percent = (count / commonCount * 100).toFixed(2);
+          if (percent > 100) percent = 100;
+          percentElementSpan.innerHTML = "".concat(percent, "%");
+
+          if (percent < 3) {
+            percentElement.style.width = '3%';
+          } else {
+            percentElement.style.width = "".concat(percent, "%");
+          }
+
+          if (percent == 100) {
+            setTimeout(function () {
+              importProgressBarContainer.classList.remove('wptb-importPBarContainerActive');
+              eventPostfix = eventPostfix ? ":".concat(eventPostfix) : '';
+              WPTB_Helper.wptbDocumentEventGenerate('wptb-import:progressBar:full' + eventPostfix, importProgressBarContainer);
+            }, 2000);
+          }
+
+          return percent;
+        }
+      }
+    }
+  }
+  /**
+   * function out table with imported shortcodes
+   * and out button for replace shortcodes in posts
+   */
+
+
+  function importedTablesInfoSettingBox() {
+    WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
+    WPTB_Helper.wptbDocumentEventGenerate('table:imported:list', document, _defineProperty({}, options.type, window.wptbImportConvertationShortcodes)); // @deprecated
+    // let importedTablesSetting = document.querySelector('.wptb-importedTablesSetting');
+    // if (importedTablesSetting) {
+    //     importedTablesSetting.style.display = 'block';
+    //     let importedTablesCount = '';
+    //     if (window.wptbImportConvertationShortcodes && Array.isArray(window.wptbImportConvertationShortcodes)) {
+    //         importedTablesCount = window.wptbImportConvertationShortcodes.length;
+    //     }
+    //     let importedTablesCountElem = document.querySelector('.wptb-importedTablesCount span');
+    //     if (importedTablesCountElem && importedTablesCount) importedTablesCountElem.innerHTML = importedTablesCount;
+    //
+    //     let importedTablesShortcodesList = document.querySelector('.wptb-importedTablesShortcodesList');
+    //     if (importedTablesShortcodesList && importedTablesCount > 0) {
+    //         let table = importedTablesShortcodesList.querySelector('table');
+    //         let tbody = table.querySelector('tbody');
+    //         tbody.innerHTML = '';
+    //         for (let i = 0; i < importedTablesCount; i++) {
+    //             let thisIterConvertShortcodes = window.wptbImportConvertationShortcodes[i];
+    //             if (thisIterConvertShortcodes && Array.isArray(thisIterConvertShortcodes)) {
+    //                 let tr = document.createElement('tr');
+    //                 tr.innerHTML = '<td><input type="checkbox" name="shortcodesReplace[' + i + ']"></td>' +
+    //                     '<td>' + thisIterConvertShortcodes[0] + '</td>' +
+    //                     '<td>' + thisIterConvertShortcodes[1] + '</td>';
+    //
+    //                 tbody.appendChild(tr);
+    //             }
+    //         }
+    //
+    //         let thead = table.querySelector('thead');
+    //         let th = thead.querySelector('th');
+    //         if (th) {
+    //             let thInput = th.firstChild;
+    //             thInput.checked = false;
+    //             let trs = tbody.children;
+    //             if (trs.length > 0) {
+    //                 thInput.onchange = function () {
+    //                     for (let i = 0; i < trs.length; i++) {
+    //                         let tdFirst = trs[i].firstChild;
+    //                         if (tdFirst) {
+    //                             let tdInput = tdFirst.firstChild;
+    //                             if (tdInput) {
+    //                                 if (this.checked) {
+    //                                     tdInput.checked = true;
+    //                                 } else {
+    //                                     tdInput.checked = false;
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             } else {
+    //                 thInput.onchange = '';
+    //             }
+    //         }
+    //
+    //         importedTablesShortcodesList.style.display = 'block';
+    //
+    //         let importTableReplaceShortcodesButton = document.querySelectorAll('.wptb-importTableReplaceShortcodes');
+    //         if (importTableReplaceShortcodesButton.length > 0) {
+    //             for (let i = 0; i < importTableReplaceShortcodesButton.length; i++) {
+    //                 importTableReplaceShortcodesButton[i].style.display = 'block';
+    //
+    //                 importTableReplaceShortcodesButton[i].onclick = importedTablesReplaceShortcodes.bind(this, tbody);
+    //             }
+    //         }
+    //     }
+    // }
+  }
+  /**
+   * function for replace imported shortcodes in posts
+   * considering choosing imported shortcodes
+   */
+
+
+  function importedTablesReplaceShortcodes(tbody) {
+    if (tbody && tbody.children && tbody.children.length > 0) {
+      var rows = tbody.children;
+      var replacingShortcodes = [];
+
+      for (var i = 0; i < rows.length; i++) {
+        var tr = rows[i];
+        var tds = tr.children;
+
+        if (tds.length > 0 && tds[0] && tds[1] && tds[2]) {
+          var inputCheckbox = tds[0].querySelector('input');
+
+          if (inputCheckbox && inputCheckbox.checked && tds[1].innerHTML && tds[2].innerHTML) {
+            replacingShortcodes.push({
+              search: tds[1].innerHTML,
+              replace: tds[2].innerHTML
+            });
+          }
+        }
+      }
+
+      if (replacingShortcodes.length > 0) {
+        replaceShortcodesAjax(replacingShortcodes, true);
+      }
+    }
+  }
+
+  function replaceShortcodesAjax(replacingShortcodes, firstRun) {
+    if (replacingShortcodes && Array.isArray(replacingShortcodes) && replacingShortcodes.length > 0) {
+      if (firstRun) {
+        window.wptbImportShortcodesNecessaryReplace = replacingShortcodes.length;
+        window.wptbImportShortcodesReplacedCount = 0;
+        tableImportingProgressBar(0, window.wptbImportShortcodesNecessaryReplace, 'replace');
+      }
+
+      var http = new XMLHttpRequest();
+      var url = "".concat(options.ajaxUrl, "?action=shortcodes_replace");
+      var replacingShortcodesOne = replacingShortcodes.shift();
+      var params = {
+        replacing_shortcodes: replacingShortcodesOne,
+        security_code: options.security_code
+      };
+      params = JSON.stringify(params);
+      http.open('POST', url, true);
+      http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+      http.onreadystatechange = function (action) {
+        if (this.readyState == 4 && this.status == 200) {
+          var data = JSON.parse(http.responseText);
+          var commonCount = window.wptbImportShortcodesNecessaryReplace;
+          var replacedCount = window.wptbImportShortcodesNecessaryReplace - replacingShortcodes.length;
+          var percent = 0;
+
+          if (data && Array.isArray(data) && data[0] == 'success') {
+            percent = tableImportingProgressBar(replacedCount, commonCount, 'replace');
+
+            if (window.wptbImportShortcodesReplacedCount) {
+              window.wptbImportShortcodesReplacedCount += data[1];
+            } else {
+              window.wptbImportShortcodesReplacedCount = data[1];
+            }
+          } else {
+            percent = tableImportingProgressBar(commonCount, commonCount, 'replace');
+          }
+
+          if (percent == 100) {
+            WPTB_Helper.wptbDocumentEventGenerate('table:shortcode:replace', document, window.wptbImportShortcodesReplacedCount);
+            var importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
+
+            if (importProgressBarContainer) {
+              importProgressBarContainer.addEventListener('wptb-import:progressBar:full:replace', function () {
+                var importedTablesShortcodesReplaced = document.querySelector('.wptb-importedTablesShortcodesReplaced');
+
+                if (importedTablesShortcodesReplaced) {
+                  importedTablesShortcodesReplaced.style.display = 'block';
+                  var importedShortcodesReplaceCount = document.querySelector('.wptb-importedShortcodesReplaceCount span');
+
+                  if (importedShortcodesReplaceCount) {
+                    if (window.wptbImportShortcodesReplacedCount) {
+                      importedShortcodesReplaceCount.innerHTML = window.wptbImportShortcodesReplacedCount;
+                    } else {
+                      importedShortcodesReplaceCount.innerHTML = '0';
+                    }
+                  }
+                }
+              }, false);
+            }
+          } else {
+            replaceShortcodesAjax(replacingShortcodes);
+          }
+        }
+      };
+
+      http.send(params);
+    }
+  }
+  /**
+   * function for change "TablePress" table
+   * for importing it to WPTB
+   */
+
+
+  function tableDomImportingHandler(tableDomElem, tableContent, iframe, dataTables) {
+    if (tableDomElem) {
+      /*
+       * set including border style for table
+       */
+      tableDomElem.style.borderStyle = 'solid';
+      tableDomElem.style.borderWidth = '1px'; // WPTB_Helper.checkSetGetStyleSizeValue( tableDomElem, 'border-width', 'border-top-width', 'px' );
+
+      WPTB_Helper.checkSetGetStyleColorValue(tableDomElem, 'border-color', 'border-top-color', true);
+      /*
+       * checking float table and set necessary attributes if it is
+       */
+
+      var tableFloat = WPTB_Helper.checkSetGetStyleValue(tableDomElem, 'float', 'float');
+
+      if (tableFloat && tableFloat != 'none') {
+        tableDomElem.dataset.wptbTableAlignment = tableFloat;
+      }
+      /*
+       * remove 'caption' tag from table
+       */
+
+
+      var caption = tableDomElem.querySelector('caption');
+
+      if (caption) {
+        tableDomElem.removeChild(caption);
+      }
+      /*
+       * remove class attribute from 'tbody' tag
+       */
+
+
+      var tBody = tableDomElem.querySelector('tbody');
+
+      if (tBody) {
+        tBody.removeAttribute('class');
+      }
+
+      var tHead = tableDomElem.querySelector('thead');
+
+      if (tHead) {
+        var tHeadInnerHtml = tHead.innerHTML;
+
+        if (tHeadInnerHtml) {
+          tHeadInnerHtml = WPTB_Helper.replaceAll(tHeadInnerHtml, '<th', '<td');
+          tHeadInnerHtml = WPTB_Helper.replaceAll(tHeadInnerHtml, 'th>', 'td>');
+
+          if (tBody) {
+            var tBodyInnerHtml = tBody.innerHTML;
+            tBodyInnerHtml = tHeadInnerHtml + tBodyInnerHtml;
+            tBody.innerHTML = tBodyInnerHtml;
+          }
+        }
+
+        tableDomElem.removeChild(tHead);
+      }
+
+      var tFoot = tableDomElem.querySelector('tfoot');
+
+      if (tFoot) {
+        var tFootInnerHtml = tFoot.innerHTML;
+
+        if (tFootInnerHtml) {
+          if (tBody) {
+            var _tBodyInnerHtml = tBody.innerHTML;
+            _tBodyInnerHtml += tFootInnerHtml;
+            tBody.innerHTML = _tBodyInnerHtml;
+          }
+        }
+
+        tableDomElem.removeChild(tFoot);
+      }
+      /**
+       * Using recalculateIndexes function to
+       * add X and Y indexes for each cell and
+       * add table columns and maxColumns properties
+       * for tableDomElem object that it'll be necessary
+       */
+
+
+      WPTB_Helper.recalculateIndexes(tableDomElem);
+      var trs = tableDomElem.querySelectorAll('tr');
+
+      if (trs.length > 0) {
+        var elementsIndexes = {
+          imageElemIndex: 1,
+          textElemIndex: 1,
+          customHtmlElemIndex: 1
+        };
+
+        for (var i = 0; i < trs.length; i++) {
+          /**
+           * necessary removes and addings of attributes for td
+           */
+          trs[i].removeAttribute('class');
+          trs[i].removeAttribute('role');
+          trs[i].classList.add('wptb-row');
+          /**
+           * checking value of tr backgroundColor
+           * if it is empty trsBackgroundColorIndic is true
+           */
+
+          var trsBackgroundColorIndic = true;
+          var tdsBackgroundColor = WPTB_Helper.checkSetGetStyleColorValue(trs[i], 'background-color', 'background-color');
+
+          if (tdsBackgroundColor) {
+            if (!WPTB_Helper.isHex(tdsBackgroundColor)) {
+              tdsBackgroundColor = WPTB_Helper.rgbToHex(tdsBackgroundColor);
+            }
+
+            trs[i].style.tdsBackgroundColor = tdsBackgroundColor;
+            trsBackgroundColorIndic = false;
+          } // let tablecontentForRow;
+          // if( tableContent && Array.isArray( tableContent ) ) {
+          //     tablecontentForRow = tableContent[i];
+          // }
+
+
+          var tds = _toConsumableArray(trs[i].children);
+
+          var tdsBackgrounds = void 0;
+          var trInnerHtml = '';
+
+          for (var j = 0; j < tds.length; j++) {
+            /**
+             * checking all backgroundColors styles of cells and saving its in tdsBackgrounds variable
+             * if backgroundColors of cells are different setting tdsBackgrounds is empty
+             */
+            if (trsBackgroundColorIndic) {
+              if (j > 0 && tdsBackgrounds != WPTB_Helper.checkSetGetStyleColorValue(trChildNodes[i], 'background-color', 'background-color')) {
+                tdsBackgrounds = '';
+                trsBackgroundColorIndic = false;
+              } else {
+                tdsBackgrounds = WPTB_Helper.checkSetGetStyleColorValue(trChildNodes[i], 'background-color', 'background-color');
+              }
+            }
+            /**
+             * checkin of border width and border color of cell
+             * and also checking of dimension, if dimension isn't "px"
+             * setting these values null
+             */
+            // WPTB_Helper.checkSetGetStyleSizeValue( tds[j], 'width', 'width', 'px' );
+            // WPTB_Helper.checkSetGetStyleSizeValue( tds[j], 'height', 'height', 'px' );
+
+
+            tds[j].style.width = null;
+            tds[j].style.height = null;
+            tds[j].style.borderStyle = 'solid';
+            tds[j].style.borderWidth = '1px'; // let borderWidth1 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-top-width' );
+            // let borderWidth2 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-left-width' );
+            // let borderWidth3 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-right-width' );
+            // let borderWidth4 = WPTB_Helper.checkSetGetStyleColorValue( tds[j], 'border-width', 'border-bottom-width' );
+            //
+            // let borderWidth = WPTB_Helper.getValueMaxCountSameElementsInArray( [borderWidth1, borderWidth2, borderWidth3, borderWidth4] );
+            //
+            // if( borderWidth && WPTB_Helper.checkingDimensionValue( borderWidth, 'px' ) ) {
+            //     tds[j].style.borderWidth = borderWidth;
+            // } else {
+            //     tds[j].style.borderWidth = '';
+            // }
+
+            var borderColor1 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-top-color');
+            var borderColor2 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-left-color');
+            var borderColor3 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-right-color');
+            var borderColor4 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-bottom-color');
+            var borderColor = WPTB_Helper.getValueMaxCountSameElementsInArray([borderColor1, borderColor2, borderColor3, borderColor4]);
+
+            if (borderColor) {
+              if (!WPTB_Helper.isHex(borderColor)) {
+                borderColor = WPTB_Helper.rgbToHex(borderColor);
+              }
+
+              tds[j].style.borderColor = borderColor;
+            }
+
+            WPTB_Helper.checkSetGetStyleSizeValue(tds[j], 'padding', 'padding-top', 'px');
+            tds[j].dataset.wptbCssTdAutoWidth = 'true';
+            /**
+             * necessary removes and addings of attributes for td
+             */
+
+            tds[j].removeAttribute('class');
+            tds[j].removeAttribute('role');
+            tds[j].classList.add('wptb-droppable', 'wptb-cell');
+            var tdXIndex = tds[j].dataset.xIndex;
+            var tdYIndex = tds[j].dataset.yIndex;
+
+            if (tdXIndex && tdYIndex && Array.isArray(tableContent) && tableContent[tdYIndex] && Array.isArray(tableContent[tdYIndex]) && tableContent[tdYIndex][tdXIndex]) {
+              tds[j].innerHTML = tableContent[tdYIndex][tdXIndex];
+
+              var tdChildNodes = _toConsumableArray(tds[j].childNodes);
+
+              var childNodesHandleredIndexesArr = tdChildNodesHandler(tdChildNodes, elementsIndexes);
+              var wptbElements = void 0;
+
+              if (childNodesHandleredIndexesArr && Array.isArray(childNodesHandleredIndexesArr)) {
+                wptbElements = childNodesHandleredIndexesArr[0];
+                elementsIndexes = childNodesHandleredIndexesArr[1];
+              }
+
+              tds[j].innerHTML = '';
+
+              for (var k = 0; k < wptbElements.length; k++) {
+                tds[j].appendChild(wptbElements[k]);
+              }
+            }
+
+            trInnerHtml += tds[j].outerHTML;
+          }
+
+          trs[i].innerHTML = trInnerHtml;
+          trs[i].style.backgroundColor = WPTB_Helper.rgbToHex(tdsBackgrounds);
+        }
+      }
+
+      tableDomElem.removeAttribute('class');
+      tableDomElem.removeAttribute('role');
+      tableDomElem.removeAttribute('id');
+      tableDomElem.removeAttribute('aria-describedby');
+      tableDomElem.classList.add('wptb-preview-table', 'wptb-element-main-table_setting-startedid-0');
+      addAttributesForTable(tableDomElem);
+      tablePressImportStageFour(tableDomElem, iframe, dataTables);
+    }
+  }
+
+  function tdChildNodesHandler(tdChildNodes, elementsIndexes) {
+    var wptbElements = [];
+
+    for (var k = 0; k < tdChildNodes.length; k++) {
+      if (tdChildNodes[k].nodeType != 1 && tdChildNodes[k].nodeType != 3) {
+        continue;
+      }
+
+      var element = document.createElement('div');
+
+      if (tdChildNodes[k].nodeType == 1) {
+        if (tdChildNodes[k].nodeName.toLowerCase() === 'img') {
+          tdChildNodes[k].style.width = '100%';
+          tdChildNodes[k].removeAttribute('class');
+          element.classList.add('wptb-image-container', 'wptb-ph-element', 'wptb-element-image-' + elementsIndexes.imageElemIndex);
+          element.innerHTML = "".concat('<div class="wptb-image-wrapper">' + '<a style="display: block;" target="_blank" rel="nofollow">').concat(tdChildNodes[k].outerHTML, "</a>") + "</div>";
+          var img = element.querySelector('img');
+          if (img) img.style.width = '100%';
+          elementsIndexes.imageElemIndex++;
+        } else if (tdChildNodes[k].nodeName.toLowerCase() === 'wptb_shortcode_container_element') {
+          element.classList.add('wptb-shortcode-container', 'wptb-ph-element', 'wptb-element-shortcode-' + elementsIndexes.customHtmlElemIndex);
+          element.innerHTML = '<wptb_shortcode_container_element><div>' + tdChildNodes[k].innerHTML + '</div></wptb_shortcode_container_element>';
+          elementsIndexes.customHtmlElemIndex++;
+        } else {
+          element.classList.add('wptb-html-container', 'wptb-ph-element', 'wptb-element-custom_html-' + elementsIndexes.customHtmlElemIndex);
+          element.innerHTML = '<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">' + tdChildNodes[k].outerHTML + '</div>';
+          elementsIndexes.customHtmlElemIndex++;
+        }
+      } else if (tdChildNodes[k].nodeType == 3) {
+        element.classList.add('wptb-text-container', 'wptb-ph-element', 'wptb-element-text-' + elementsIndexes.textElemIndex);
+        element.innerHTML = "<div><p>".concat(tdChildNodes[k].nodeValue, "</p></div>"); // tds[j].insertBefore( element, tdChildNodes[k] );
+        // tds[j].removeChild( tdChildNodes[k] );
+
+        var textP = element.querySelector('p');
+
+        if (textP) {
+          var textPFontSize = WPTB_Helper.checkSetGetStyleSizeValue(textP, 'font-size', 'font-size');
+
+          if (textPFontSize) {
+            if (WPTB_Helper.checkingDimensionValue(textPFontSize, 'px')) {
+              textP.style.fontSize = null;
+              element.style.fontSize = textPFontSize;
+            }
+          }
+
+          var textPColor = WPTB_Helper.checkSetGetStyleColorValue(textP, 'color', 'color');
+
+          if (textPColor) {
+            if (WPTB_Helper.isHex(textPColor)) {
+              textP.style.color = null;
+              element.style.color = textPColor;
+            } else if (WPTB_Helper.rgbToHex(textPColor)) {
+              textP.style.color = null;
+              textPColor = WPTB_Helper.rgbToHex(textPColor);
+              element.style.color = textPColor;
+            }
+          }
+        }
+
+        elementsIndexes.textElemIndex++;
+      }
+
+      wptbElements.push(element);
+    }
+
+    return [wptbElements, elementsIndexes];
+  } // creates hidden iframe
+  // uploading there content by shortcode
+  // and return DOM Html of this content
+  // @deprecated
+
+
+  function getContentShortcodes(shortcode) {// if (shortcode) {
+    //   let importIframeSection = document.getElementById('wptb-importIframeSection');
+    //   if (importIframeSection) {
+    //     let iframe = importIframeSection.querySelector('iframe');
+    //     iframe.style.width = '100%';
+    //     iframe.style.height = '800px';
+    //     let url = wptb_admin_import_js_object
+    //       ? `${wptb_admin_import_js_object.import_iframe_url
+    //                 }&_wpnonce=${  wptb_admin_import_js_object.security_code  }&shortcode=${  shortcode}` : '';
+    //       : '';
+    //     iframe.src = url;
+    //     importIframeSection.appendChild(iframe);
+    //
+    //     return iframe.querySelector('table .tablepress');
+    //   }
+    // }
+  }
+
+  return {
+    importFromFile: importFromFile,
+    importFromPlugin: importFromPlugin,
+    replaceShortcodesAjax: replaceShortcodesAjax
+  };
+}
+/**
+ * @module ImportOperations module
+ */
+
+
+var _default = ImportOperations;
+exports.default = _default;
+},{}],"containers/CSVImportMenu.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _DragDrop = _interopRequireDefault(require("../components/DragDrop.vue"));
+
+var _ControlItem = _interopRequireDefault(require("../components/ControlItem.vue"));
+
+var _MenuButton = _interopRequireDefault(require("../components/MenuButton.vue"));
+
+var _importOperations = _interopRequireDefault(require("../functions/importOperations.js"));
 
 var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 
@@ -13538,15 +15482,2460 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+var _default = {
+  props: ['options'],
+  mixins: [_withMessage.default],
+  components: {
+    DragDrop: _DragDrop.default,
+    ControlItem: _ControlItem.default,
+    MenuButton: _MenuButton.default
+  },
+  data: function data() {
+    return {
+      settings: {
+        responsiveTables: false,
+        topRowAsHeader: false,
+        csvDelimiter: ','
+      },
+      fieldsData: [],
+      currentFile: null,
+      fetching: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    document.addEventListener('table:imported:saved', function () {
+      _this.currentFile = null;
+
+      _this.setMessage({
+        type: 'ok',
+        message: _this.strings.tableImported
+      });
+
+      _this.setBusy(false);
+    });
+    document.addEventListener('table:imported:error', function () {
+      _this.currentFile = null;
+
+      _this.setMessage({
+        type: 'error',
+        message: _this.strings.errorOccured
+      });
+
+      _this.setBusy(false);
+    });
+    this.fieldsData.push({
+      type: 'dropdown',
+      id: 'csvDelimiter',
+      modelBind: this.settings,
+      label: this.strings.csvDelimiter,
+      options: [{
+        value: ',',
+        label: ', (comma)'
+      }, {
+        value: ';',
+        label: '; (semicolon)'
+      }, {
+        value: 'tab',
+        label: '\\t (tabular)'
+      }]
+    }, {
+      type: 'checkbox',
+      id: 'responsiveTables',
+      modelBind: this.settings,
+      label: this.strings.tableResponsive
+    }, {
+      type: 'checkbox',
+      id: 'topRowAsHeader',
+      modelBind: this.settings,
+      label: this.strings.topRowHeader
+    });
+  },
+  computed: {
+    isImportDisabled: function isImportDisabled() {
+      if (this.currentFile === null) {
+        return true;
+      }
+
+      return this.fetching;
+    }
+  },
+  methods: {
+    importFromFile: function importFromFile() {
+      if (this.currentFile !== null) {
+        var options = {
+          file: this.currentFile,
+          ajaxUrl: this.options.ajaxUrl,
+          nonce: this.options.security_code,
+          delimiter: this.settings.csvDelimiter,
+          tableResponsive: this.settings.responsiveTables,
+          topRowAsHeader: this.settings.topRowAsHeader
+        };
+        var operations = (0, _importOperations.default)(options);
+        this.setBusy();
+        operations.importFromFile();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $eda786 = exports.default || module.exports;
+      
+      if (typeof $eda786 === 'function') {
+        $eda786 = $eda786.options;
+      }
+    
+        /* template */
+        Object.assign($eda786, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("drag-drop", {
+        attrs: {
+          texts: {
+            hint: _vm.strings.fileDropHint,
+            browse: _vm.strings.browse,
+            clear: _vm.strings.clear
+          },
+          "allowed-formats": ["csv", "zip"]
+        },
+        model: {
+          value: _vm.currentFile,
+          callback: function($$v) {
+            _vm.currentFile = $$v
+          },
+          expression: "currentFile"
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        _vm._l(_vm.fieldsData, function(field) {
+          return _c("control-item", {
+            key: field.id,
+            attrs: { "field-data": field, "model-bind": field.modelBind }
+          })
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "portal",
+        { attrs: { to: "footerButtons" } },
+        [
+          _c(
+            "menu-button",
+            {
+              attrs: { disabled: _vm.isImportDisabled },
+              on: { click: _vm.importFromFile }
+            },
+            [_vm._v(_vm._s(_vm.strings.importSection) + " ")]
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$eda786', $eda786);
+          } else {
+            api.reload('$eda786', $eda786);
+          }
+        }
+
+        
+      }
+    })();
+},{"../components/DragDrop.vue":"components/DragDrop.vue","../components/ControlItem.vue":"components/ControlItem.vue","../components/MenuButton.vue":"components/MenuButton.vue","../functions/importOperations.js":"functions/importOperations.js","../mixins/withMessage":"mixins/withMessage.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
+
+function _defineProperty(e, n, t) {
+  return n in e ? Object.defineProperty(e, n, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[n] = t, e;
+}
+
+function _objectSpread(e) {
+  for (var n = 1; n < arguments.length; n++) {
+    var t = null != arguments[n] ? arguments[n] : {},
+        r = Object.keys(t);
+    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
+      return Object.getOwnPropertyDescriptor(t, e).enumerable;
+    }))), r.forEach(function (n) {
+      _defineProperty(e, n, t[n]);
+    });
+  }
+
+  return e;
+}
+
+var freeze = function (e, n, t) {
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    get: function () {
+      return t;
+    },
+    set: function (e) {
+      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
+    }
+  });
+},
+    unfreeze = function (e, n) {
+  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    writable: !0,
+    value: t
+  });
+},
+    component = {
+  abstract: !0,
+  name: "Fragment",
+  props: {
+    name: {
+      type: String,
+      default: function () {
+        return Math.floor(Date.now() * Math.random()).toString(16);
+      }
+    }
+  },
+  mounted: function () {
+    var e = this.$el,
+        n = e.parentNode,
+        t = document.createComment("fragment#".concat(this.name, "#head")),
+        r = document.createComment("fragment#".concat(this.name, "#tail"));
+    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.insertBefore = function (t, r) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.removeChild = function (e) {
+      n.removeChild(e), unfreeze(e, "parentNode");
+    }, Array.from(e.childNodes).forEach(function (n) {
+      return e.appendChild(n);
+    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
+    var o = n.insertBefore;
+
+    n.insertBefore = function (r, i) {
+      o.call(n, r, i !== e ? i : t);
+    };
+
+    var i = n.removeChild;
+
+    n.removeChild = function (a) {
+      if (a === e) {
+        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
+
+        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
+      } else i.call(n, a);
+    };
+  },
+  render: function (e) {
+    var n = this,
+        t = this.$slots.default;
+    return t && t.length && t.forEach(function (e) {
+      return e.data = _objectSpread({}, e.data, {
+        attrs: _objectSpread({
+          fragment: n.name
+        }, (e.data || {}).attrs)
+      });
+    }), e("div", {
+      attrs: {
+        fragment: this.name
+      }
+    }, t);
+  }
+};
+
+function ssr(e, n) {
+  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
+}
+
+var Fragment = component,
+    SSR = ssr,
+    Plugin = {
+  install: function (e) {
+    e.component("fragment", component);
+  }
+},
+    index = {
+  Fragment: component,
+  Plugin: Plugin,
+  SSR: ssr
+};
+exports.Plugin = Plugin;
+exports.SSR = SSR;
+exports.Fragment = Fragment;
+var _default = index;
+exports.default = _default;
+},{}],"../../../../../node_modules/memize/index.js":[function(require,module,exports) {
+/**
+ * Memize options object.
+ *
+ * @typedef MemizeOptions
+ *
+ * @property {number} [maxSize] Maximum size of the cache.
+ */
+
+/**
+ * Internal cache entry.
+ *
+ * @typedef MemizeCacheNode
+ *
+ * @property {?MemizeCacheNode|undefined} [prev] Previous node.
+ * @property {?MemizeCacheNode|undefined} [next] Next node.
+ * @property {Array<*>}                   args   Function arguments for cache
+ *                                               entry.
+ * @property {*}                          val    Function result.
+ */
+
+/**
+ * Properties of the enhanced function for controlling cache.
+ *
+ * @typedef MemizeMemoizedFunction
+ *
+ * @property {()=>void} clear Clear the cache.
+ */
+
+/**
+ * Accepts a function to be memoized, and returns a new memoized function, with
+ * optional options.
+ *
+ * @template {Function} F
+ *
+ * @param {F}             fn        Function to memoize.
+ * @param {MemizeOptions} [options] Options object.
+ *
+ * @return {F & MemizeMemoizedFunction} Memoized function.
+ */
+function memize(fn, options) {
+  var size = 0;
+  /** @type {?MemizeCacheNode|undefined} */
+
+  var head;
+  /** @type {?MemizeCacheNode|undefined} */
+
+  var tail;
+  options = options || {};
+
+  function memoized()
+  /* ...args */
+  {
+    var node = head,
+        len = arguments.length,
+        args,
+        i;
+
+    searchCache: while (node) {
+      // Perform a shallow equality test to confirm that whether the node
+      // under test is a candidate for the arguments passed. Two arrays
+      // are shallowly equal if their length matches and each entry is
+      // strictly equal between the two sets. Avoid abstracting to a
+      // function which could incur an arguments leaking deoptimization.
+      // Check whether node arguments match arguments length
+      if (node.args.length !== arguments.length) {
+        node = node.next;
+        continue;
+      } // Check whether node arguments match arguments values
+
+
+      for (i = 0; i < len; i++) {
+        if (node.args[i] !== arguments[i]) {
+          node = node.next;
+          continue searchCache;
+        }
+      } // At this point we can assume we've found a match
+      // Surface matched node to head if not already
+
+
+      if (node !== head) {
+        // As tail, shift to previous. Must only shift if not also
+        // head, since if both head and tail, there is no previous.
+        if (node === tail) {
+          tail = node.prev;
+        } // Adjust siblings to point to each other. If node was tail,
+        // this also handles new tail's empty `next` assignment.
+
+        /** @type {MemizeCacheNode} */
+
+
+        node.prev.next = node.next;
+
+        if (node.next) {
+          node.next.prev = node.prev;
+        }
+
+        node.next = head;
+        node.prev = null;
+        /** @type {MemizeCacheNode} */
+
+        head.prev = node;
+        head = node;
+      } // Return immediately
+
+
+      return node.val;
+    } // No cached value found. Continue to insertion phase:
+    // Create a copy of arguments (avoid leaking deoptimization)
+
+
+    args = new Array(len);
+
+    for (i = 0; i < len; i++) {
+      args[i] = arguments[i];
+    }
+
+    node = {
+      args: args,
+      // Generate the result from original function
+      val: fn.apply(null, args)
+    }; // Don't need to check whether node is already head, since it would
+    // have been returned above already if it was
+    // Shift existing head down list
+
+    if (head) {
+      head.prev = node;
+      node.next = head;
+    } else {
+      // If no head, follows that there's no tail (at initial or reset)
+      tail = node;
+    } // Trim tail if we're reached max size and are pending cache insertion
+
+
+    if (size ===
+    /** @type {MemizeOptions} */
+    options.maxSize) {
+      tail =
+      /** @type {MemizeCacheNode} */
+      tail.prev;
+      /** @type {MemizeCacheNode} */
+
+      tail.next = null;
+    } else {
+      size++;
+    }
+
+    head = node;
+    return node.val;
+  }
+
+  memoized.clear = function () {
+    head = null;
+    tail = null;
+    size = 0;
+  };
+
+  if ("development" === 'test') {
+    // Cache is not exposed in the public API, but used in tests to ensure
+    // expected list progression
+    memoized.getCache = function () {
+      return [head, tail, size];
+    };
+  } // Ignore reason: There's not a clear solution to create an intersection of
+  // the function with additional properties, where the goal is to retain the
+  // function signature of the incoming argument and add control properties
+  // on the return value.
+  // @ts-ignore
+
+
+  return memoized;
+}
+
+module.exports = memize;
+},{}],"../../../../../node_modules/sprintf-js/src/sprintf.js":[function(require,module,exports) {
+var define;
+/* global window, exports, define */
+
+!function() {
+    'use strict'
+
+    var re = {
+        not_string: /[^s]/,
+        not_bool: /[^t]/,
+        not_type: /[^T]/,
+        not_primitive: /[^v]/,
+        number: /[diefg]/,
+        numeric_arg: /[bcdiefguxX]/,
+        json: /[j]/,
+        not_json: /[^j]/,
+        text: /^[^\x25]+/,
+        modulo: /^\x25{2}/,
+        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
+        key: /^([a-z_][a-z_\d]*)/i,
+        key_access: /^\.([a-z_][a-z_\d]*)/i,
+        index_access: /^\[(\d+)\]/,
+        sign: /^[+-]/
+    }
+
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
+    }
+
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
+        for (i = 0; i < tree_length; i++) {
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
+            }
+            else if (typeof parse_tree[i] === 'object') {
+                ph = parse_tree[i] // convenience purposes only
+                if (ph.keys) { // keyword argument
+                    arg = argv[cursor]
+                    for (k = 0; k < ph.keys.length; k++) {
+                        if (arg == undefined) {
+                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+                        }
+                        arg = arg[ph.keys[k]]
+                    }
+                }
+                else if (ph.param_no) { // positional argument (explicit)
+                    arg = argv[ph.param_no]
+                }
+                else { // positional argument (implicit)
+                    arg = argv[cursor++]
+                }
+
+                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
+                    arg = arg()
+                }
+
+                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
+                }
+
+                if (re.number.test(ph.type)) {
+                    is_positive = arg >= 0
+                }
+
+                switch (ph.type) {
+                    case 'b':
+                        arg = parseInt(arg, 10).toString(2)
+                        break
+                    case 'c':
+                        arg = String.fromCharCode(parseInt(arg, 10))
+                        break
+                    case 'd':
+                    case 'i':
+                        arg = parseInt(arg, 10)
+                        break
+                    case 'j':
+                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
+                        break
+                    case 'e':
+                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
+                        break
+                    case 'f':
+                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
+                        break
+                    case 'g':
+                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
+                        break
+                    case 'o':
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
+                    case 's':
+                        arg = String(arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 't':
+                        arg = String(!!arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'T':
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'u':
+                        arg = parseInt(arg, 10) >>> 0
+                        break
+                    case 'v':
+                        arg = arg.valueOf()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'x':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
+                    case 'X':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
+                }
+                if (re.json.test(ph.type)) {
+                    output += arg
+                }
+                else {
+                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
+                        sign = is_positive ? '+' : '-'
+                        arg = arg.toString().replace(re.sign, '')
+                    }
+                    else {
+                        sign = ''
+                    }
+                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
+                    pad_length = ph.width - (sign + arg).length
+                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                }
+            }
+        }
+        return output
+    }
+
+    var sprintf_cache = Object.create(null)
+
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
+        while (_fmt) {
+            if ((match = re.text.exec(_fmt)) !== null) {
+                parse_tree.push(match[0])
+            }
+            else if ((match = re.modulo.exec(_fmt)) !== null) {
+                parse_tree.push('%')
+            }
+            else if ((match = re.placeholder.exec(_fmt)) !== null) {
+                if (match[2]) {
+                    arg_names |= 1
+                    var field_list = [], replacement_field = match[2], field_match = []
+                    if ((field_match = re.key.exec(replacement_field)) !== null) {
+                        field_list.push(field_match[1])
+                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else {
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
+                            }
+                        }
+                    }
+                    else {
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
+                    }
+                    match[2] = field_list
+                }
+                else {
+                    arg_names |= 2
+                }
+                if (arg_names === 3) {
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
+                }
+
+                parse_tree.push(
+                    {
+                        placeholder: match[0],
+                        param_no:    match[1],
+                        keys:        match[2],
+                        sign:        match[3],
+                        pad_char:    match[4],
+                        align:       match[5],
+                        width:       match[6],
+                        precision:   match[7],
+                        type:        match[8]
+                    }
+                )
+            }
+            else {
+                throw new SyntaxError('[sprintf] unexpected placeholder')
+            }
+            _fmt = _fmt.substring(match[0].length)
+        }
+        return sprintf_cache[fmt] = parse_tree
+    }
+
+    /**
+     * export to either browser or node.js
+     */
+    /* eslint-disable quote-props */
+    if (typeof exports !== 'undefined') {
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
+    }
+    if (typeof window !== 'undefined') {
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
+
+        if (typeof define === 'function' && define['amd']) {
+            define(function() {
+                return {
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
+                }
+            })
+        }
+    }
+    /* eslint-enable quote-props */
+}(); // eslint-disable-line
+
+},{}],"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.sprintf = sprintf;
+
+var _memize = _interopRequireDefault(require("memize"));
+
+var _sprintfJs = _interopRequireDefault(require("sprintf-js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * Log to console, once per message; or more precisely, per referentially equal
+ * argument set. Because Jed throws errors, we log these to the console instead
+ * to avoid crashing the application.
+ *
+ * @param {...*} args Arguments to pass to `console.error`
+ */
+var logErrorOnce = (0, _memize.default)(console.error); // eslint-disable-line no-console
+
+/**
+ * Returns a formatted string. If an error occurs in applying the format, the
+ * original format string is returned.
+ *
+ * @param {string}    format The format of the string to generate.
+ * @param {...string} args   Arguments to apply to the format.
+ *
+ * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ *
+ * @return {string} The formatted string.
+ */
+
+function sprintf(format) {
+  try {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    return _sprintfJs.default.sprintf.apply(_sprintfJs.default, [format].concat(args));
+  } catch (error) {
+    logErrorOnce('sprintf error: \n\n' + error.toString());
+    return format;
+  }
+}
+},{"memize":"../../../../../node_modules/memize/index.js","sprintf-js":"../../../../../node_modules/sprintf-js/src/sprintf.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _defineProperty;
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+},{}],"../../../../../node_modules/@tannin/postfix/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = postfix;
+var PRECEDENCE, OPENERS, TERMINATORS, PATTERN;
+/**
+ * Operator precedence mapping.
+ *
+ * @type {Object}
+ */
+
+PRECEDENCE = {
+  '(': 9,
+  '!': 8,
+  '*': 7,
+  '/': 7,
+  '%': 7,
+  '+': 6,
+  '-': 6,
+  '<': 5,
+  '<=': 5,
+  '>': 5,
+  '>=': 5,
+  '==': 4,
+  '!=': 4,
+  '&&': 3,
+  '||': 2,
+  '?': 1,
+  '?:': 1
+};
+/**
+ * Characters which signal pair opening, to be terminated by terminators.
+ *
+ * @type {string[]}
+ */
+
+OPENERS = ['(', '?'];
+/**
+ * Characters which signal pair termination, the value an array with the
+ * opener as its first member. The second member is an optional operator
+ * replacement to push to the stack.
+ *
+ * @type {string[]}
+ */
+
+TERMINATORS = {
+  ')': ['('],
+  ':': ['?', '?:']
+};
+/**
+ * Pattern matching operators and openers.
+ *
+ * @type {RegExp}
+ */
+
+PATTERN = /<=|>=|==|!=|&&|\|\||\?:|\(|!|\*|\/|%|\+|-|<|>|\?|\)|:/;
+/**
+ * Given a C expression, returns the equivalent postfix (Reverse Polish)
+ * notation terms as an array.
+ *
+ * If a postfix string is desired, simply `.join( ' ' )` the result.
+ *
+ * @example
+ *
+ * ```js
+ * import postfix from '@tannin/postfix';
+ *
+ * postfix( 'n > 1' );
+ * // ⇒ [ 'n', '1', '>' ]
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {string[]} Postfix terms.
+ */
+
+function postfix(expression) {
+  var terms = [],
+      stack = [],
+      match,
+      operator,
+      term,
+      element;
+
+  while (match = expression.match(PATTERN)) {
+    operator = match[0]; // Term is the string preceding the operator match. It may contain
+    // whitespace, and may be empty (if operator is at beginning).
+
+    term = expression.substr(0, match.index).trim();
+
+    if (term) {
+      terms.push(term);
+    }
+
+    while (element = stack.pop()) {
+      if (TERMINATORS[operator]) {
+        if (TERMINATORS[operator][0] === element) {
+          // Substitution works here under assumption that because
+          // the assigned operator will no longer be a terminator, it
+          // will be pushed to the stack during the condition below.
+          operator = TERMINATORS[operator][1] || operator;
+          break;
+        }
+      } else if (OPENERS.indexOf(element) >= 0 || PRECEDENCE[element] < PRECEDENCE[operator]) {
+        // Push to stack if either an opener or when pop reveals an
+        // element of lower precedence.
+        stack.push(element);
+        break;
+      } // For each popped from stack, push to terms.
+
+
+      terms.push(element);
+    }
+
+    if (!TERMINATORS[operator]) {
+      stack.push(operator);
+    } // Slice matched fragment from expression to continue match.
+
+
+    expression = expression.substr(match.index + operator.length);
+  } // Push remainder of operand, if exists, to terms.
+
+
+  expression = expression.trim();
+
+  if (expression) {
+    terms.push(expression);
+  } // Pop remaining items from stack into terms.
+
+
+  return terms.concat(stack.reverse());
+}
+},{}],"../../../../../node_modules/@tannin/evaluate/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = evaluate;
+
+/**
+ * Operator callback functions.
+ *
+ * @type {Object}
+ */
+var OPERATORS = {
+  '!': function (a) {
+    return !a;
+  },
+  '*': function (a, b) {
+    return a * b;
+  },
+  '/': function (a, b) {
+    return a / b;
+  },
+  '%': function (a, b) {
+    return a % b;
+  },
+  '+': function (a, b) {
+    return a + b;
+  },
+  '-': function (a, b) {
+    return a - b;
+  },
+  '<': function (a, b) {
+    return a < b;
+  },
+  '<=': function (a, b) {
+    return a <= b;
+  },
+  '>': function (a, b) {
+    return a > b;
+  },
+  '>=': function (a, b) {
+    return a >= b;
+  },
+  '==': function (a, b) {
+    return a === b;
+  },
+  '!=': function (a, b) {
+    return a !== b;
+  },
+  '&&': function (a, b) {
+    return a && b;
+  },
+  '||': function (a, b) {
+    return a || b;
+  },
+  '?:': function (a, b, c) {
+    if (a) {
+      throw b;
+    }
+
+    return c;
+  }
+};
+/**
+ * Given an array of postfix terms and operand variables, returns the result of
+ * the postfix evaluation.
+ *
+ * @example
+ *
+ * ```js
+ * import evaluate from '@tannin/evaluate';
+ *
+ * // 3 + 4 * 5 / 6 ⇒ '3 4 5 * 6 / +'
+ * const terms = [ '3', '4', '5', '*', '6', '/', '+' ];
+ *
+ * evaluate( terms, {} );
+ * // ⇒ 6.333333333333334
+ * ```
+ *
+ * @param {string[]} postfix   Postfix terms.
+ * @param {Object}   variables Operand variables.
+ *
+ * @return {*} Result of evaluation.
+ */
+
+function evaluate(postfix, variables) {
+  var stack = [],
+      i,
+      j,
+      args,
+      getOperatorResult,
+      term,
+      value;
+
+  for (i = 0; i < postfix.length; i++) {
+    term = postfix[i];
+    getOperatorResult = OPERATORS[term];
+
+    if (getOperatorResult) {
+      // Pop from stack by number of function arguments.
+      j = getOperatorResult.length;
+      args = Array(j);
+
+      while (j--) {
+        args[j] = stack.pop();
+      }
+
+      try {
+        value = getOperatorResult.apply(null, args);
+      } catch (earlyReturn) {
+        return earlyReturn;
+      }
+    } else if (variables.hasOwnProperty(term)) {
+      value = variables[term];
+    } else {
+      value = +term;
+    }
+
+    stack.push(value);
+  }
+
+  return stack[0];
+}
+},{}],"../../../../../node_modules/@tannin/compile/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = compile;
+
+var _postfix = _interopRequireDefault(require("@tannin/postfix"));
+
+var _evaluate = _interopRequireDefault(require("@tannin/evaluate"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Given a C expression, returns a function which can be called to evaluate its
+ * result.
+ *
+ * @example
+ *
+ * ```js
+ * import compile from '@tannin/compile';
+ *
+ * const evaluate = compile( 'n > 1' );
+ *
+ * evaluate( { n: 2 } );
+ * // ⇒ true
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {(variables?:{[variable:string]:*})=>*} Compiled evaluator.
+ */
+function compile(expression) {
+  var terms = (0, _postfix.default)(expression);
+  return function (variables) {
+    return (0, _evaluate.default)(terms, variables);
+  };
+}
+},{"@tannin/postfix":"../../../../../node_modules/@tannin/postfix/index.js","@tannin/evaluate":"../../../../../node_modules/@tannin/evaluate/index.js"}],"../../../../../node_modules/@tannin/plural-forms/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = pluralForms;
+
+var _compile = _interopRequireDefault(require("@tannin/compile"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Given a C expression, returns a function which, when called with a value,
+ * evaluates the result with the value assumed to be the "n" variable of the
+ * expression. The result will be coerced to its numeric equivalent.
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {Function} Evaluator function.
+ */
+function pluralForms(expression) {
+  var evaluate = (0, _compile.default)(expression);
+  return function (n) {
+    return +evaluate({
+      n: n
+    });
+  };
+}
+},{"@tannin/compile":"../../../../../node_modules/@tannin/compile/index.js"}],"../../../../../node_modules/tannin/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = Tannin;
+
+var _pluralForms = _interopRequireDefault(require("@tannin/plural-forms"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Tannin constructor options.
+ *
+ * @typedef {Object} TanninOptions
+ *
+ * @property {string}   [contextDelimiter] Joiner in string lookup with context.
+ * @property {Function} [onMissingKey]     Callback to invoke when key missing.
+ */
+
+/**
+ * Domain metadata.
+ *
+ * @typedef {Object} TanninDomainMetadata
+ *
+ * @property {string}            [domain]       Domain name.
+ * @property {string}            [lang]         Language code.
+ * @property {(string|Function)} [plural_forms] Plural forms expression or
+ *                                              function evaluator.
+ */
+
+/**
+ * Domain translation pair respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {[string,string]} TanninTranslation
+ */
+
+/**
+ * Locale data domain. The key is used as reference for lookup, the value an
+ * array of two string entries respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {{[key:string]:TanninDomainMetadata|TanninTranslation,'':TanninDomainMetadata|TanninTranslation}} TanninLocaleDomain
+ */
+
+/**
+ * Jed-formatted locale data.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @typedef {{[domain:string]:TanninLocaleDomain}} TanninLocaleData
+ */
+
+/**
+ * Default Tannin constructor options.
+ *
+ * @type {TanninOptions}
+ */
+var DEFAULT_OPTIONS = {
+  contextDelimiter: '\u0004',
+  onMissingKey: null
+};
+/**
+ * Given a specific locale data's config `plural_forms` value, returns the
+ * expression.
+ *
+ * @example
+ *
+ * ```
+ * getPluralExpression( 'nplurals=2; plural=(n != 1);' ) === '(n != 1)'
+ * ```
+ *
+ * @param {string} pf Locale data plural forms.
+ *
+ * @return {string} Plural forms expression.
+ */
+
+function getPluralExpression(pf) {
+  var parts, i, part;
+  parts = pf.split(';');
+
+  for (i = 0; i < parts.length; i++) {
+    part = parts[i].trim();
+
+    if (part.indexOf('plural=') === 0) {
+      return part.substr(7);
+    }
+  }
+}
+/**
+ * Tannin constructor.
+ *
+ * @class
+ *
+ * @param {TanninLocaleData} data      Jed-formatted locale data.
+ * @param {TanninOptions}    [options] Tannin options.
+ */
+
+
+function Tannin(data, options) {
+  var key;
+  /**
+   * Jed-formatted locale data.
+   *
+   * @name Tannin#data
+   * @type {TanninLocaleData}
+   */
+
+  this.data = data;
+  /**
+   * Plural forms function cache, keyed by plural forms string.
+   *
+   * @name Tannin#pluralForms
+   * @type {Object<string,Function>}
+   */
+
+  this.pluralForms = {};
+  /**
+   * Effective options for instance, including defaults.
+   *
+   * @name Tannin#options
+   * @type {TanninOptions}
+   */
+
+  this.options = {};
+
+  for (key in DEFAULT_OPTIONS) {
+    this.options[key] = options !== undefined && key in options ? options[key] : DEFAULT_OPTIONS[key];
+  }
+}
+/**
+ * Returns the plural form index for the given domain and value.
+ *
+ * @param {string} domain Domain on which to calculate plural form.
+ * @param {number} n      Value for which plural form is to be calculated.
+ *
+ * @return {number} Plural form index.
+ */
+
+
+Tannin.prototype.getPluralForm = function (domain, n) {
+  var getPluralForm = this.pluralForms[domain],
+      config,
+      plural,
+      pf;
+
+  if (!getPluralForm) {
+    config = this.data[domain][''];
+    pf = config['Plural-Forms'] || config['plural-forms'] || // Ignore reason: As known, there's no way to document the empty
+    // string property on a key to guarantee this as metadata.
+    // @ts-ignore
+    config.plural_forms;
+
+    if (typeof pf !== 'function') {
+      plural = getPluralExpression(config['Plural-Forms'] || config['plural-forms'] || // Ignore reason: As known, there's no way to document the empty
+      // string property on a key to guarantee this as metadata.
+      // @ts-ignore
+      config.plural_forms);
+      pf = (0, _pluralForms.default)(plural);
+    }
+
+    getPluralForm = this.pluralForms[domain] = pf;
+  }
+
+  return getPluralForm(n);
+};
+/**
+ * Translate a string.
+ *
+ * @param {string}      domain   Translation domain.
+ * @param {string|void} context  Context distinguishing terms of the same name.
+ * @param {string}      singular Primary key for translation lookup.
+ * @param {string=}     plural   Fallback value used for non-zero plural
+ *                               form index.
+ * @param {number=}     n        Value to use in calculating plural form.
+ *
+ * @return {string} Translated string.
+ */
+
+
+Tannin.prototype.dcnpgettext = function (domain, context, singular, plural, n) {
+  var index, key, entry;
+
+  if (n === undefined) {
+    // Default to singular.
+    index = 0;
+  } else {
+    // Find index by evaluating plural form for value.
+    index = this.getPluralForm(domain, n);
+  }
+
+  key = singular; // If provided, context is prepended to key with delimiter.
+
+  if (context) {
+    key = context + this.options.contextDelimiter + singular;
+  }
+
+  entry = this.data[domain][key]; // Verify not only that entry exists, but that the intended index is within
+  // range and non-empty.
+
+  if (entry && entry[index]) {
+    return entry[index];
+  }
+
+  if (this.options.onMissingKey) {
+    this.options.onMissingKey(singular, domain);
+  } // If entry not found, fall back to singular vs. plural with zero index
+  // representing the singular value.
+
+
+  return index === 0 ? singular : plural;
+};
+},{"@tannin/plural-forms":"../../../../../node_modules/@tannin/plural-forms/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createI18n = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/defineProperty"));
+
+var _tannin = _interopRequireDefault(require("tannin"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        (0, _defineProperty2.default)(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+/**
+ * External dependencies
+ */
+
+
+/**
+ * @typedef {Record<string,any>} LocaleData
+ */
+
+/**
+ * Default locale data to use for Tannin domain when not otherwise provided.
+ * Assumes an English plural forms expression.
+ *
+ * @type {LocaleData}
+ */
+var DEFAULT_LOCALE_DATA = {
+  '': {
+    /** @param {number} n */
+    plural_forms: function plural_forms(n) {
+      return n === 1 ? 0 : 1;
+    }
+  }
+};
+/**
+ * An i18n instance
+ *
+ * @typedef {Object} I18n
+ * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                    Jed-formatted JSON object shape.
+ * @property {Function} __            Retrieve the translation of text.
+ * @property {Function} _x            Retrieve translated string with gettext context.
+ * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
+ *                                    number.
+ * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
+ *                                    number, with gettext context.
+ * @property {Function} isRTL         Check if current locale is RTL.
+ */
+
+/**
+ * Create an i18n instance
+ *
+ * @param {LocaleData} [initialData]    Locale data configuration.
+ * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @return {I18n}                       I18n instance
+ */
+
+var createI18n = function createI18n(initialData, initialDomain) {
+  /**
+   * The underlying instance of Tannin to which exported functions interface.
+   *
+   * @type {Tannin}
+   */
+  var tannin = new _tannin.default({});
+  /**
+   * Merges locale data into the Tannin instance by domain. Accepts data in a
+   * Jed-formatted JSON object shape.
+   *
+   * @see http://messageformat.github.io/Jed/
+   *
+   * @param {LocaleData} [data]   Locale data configuration.
+   * @param {string}     [domain] Domain for which configuration applies.
+   */
+
+  var setLocaleData = function setLocaleData(data) {
+    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
+    // a plural forms expression).
+
+    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
+  };
+  /**
+   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
+   * otherwise previously assigned.
+   *
+   * @param {string|undefined} domain   Domain to retrieve the translated text.
+   * @param {string|undefined} context  Context information for the translators.
+   * @param {string}           single   Text to translate if non-plural. Used as
+   *                                    fallback return value on a caught error.
+   * @param {string}           [plural] The text to be used if the number is
+   *                                    plural.
+   * @param {number}           [number] The number to compare against to use
+   *                                    either the singular or plural form.
+   *
+   * @return {string} The translated string.
+   */
+
+
+  var dcnpgettext = function dcnpgettext() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    var context = arguments.length > 1 ? arguments[1] : undefined;
+    var single = arguments.length > 2 ? arguments[2] : undefined;
+    var plural = arguments.length > 3 ? arguments[3] : undefined;
+    var number = arguments.length > 4 ? arguments[4] : undefined;
+
+    if (!tannin.data[domain]) {
+      setLocaleData(undefined, domain);
+    }
+
+    return tannin.dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Retrieve the translation of text.
+   *
+   * @see https://developer.wordpress.org/reference/functions/__/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated text.
+   */
+
+
+  var __ = function __(text, domain) {
+    return dcnpgettext(domain, undefined, text);
+  };
+  /**
+   * Retrieve translated string with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_x/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated context string without pipe.
+   */
+
+
+  var _x = function _x(text, context, domain) {
+    return dcnpgettext(domain, context, text);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_n/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _n = function _n(single, plural, number, domain) {
+    return dcnpgettext(domain, undefined, single, plural, number);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number, with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_nx/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _nx = function _nx(single, plural, number, context, domain) {
+    return dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Check if current locale is RTL.
+   *
+   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+   *
+   * @return {boolean} Whether locale is RTL.
+   */
+
+
+  var isRTL = function isRTL() {
+    return 'rtl' === _x('ltr', 'text direction');
+  };
+
+  if (initialData) {
+    setLocaleData(initialData, initialDomain);
+  }
+
+  return {
+    setLocaleData: setLocaleData,
+    __: __,
+    _x: _x,
+    _n: _n,
+    _nx: _nx,
+    isRTL: isRTL
+  };
+};
+
+exports.createI18n = createI18n;
+},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isRTL = exports._nx = exports._n = exports._x = exports.__ = exports.setLocaleData = void 0;
+
+var _createI18n = require("./create-i18n");
+
+/**
+ * Internal dependencies
+ */
+var i18n = (0, _createI18n.createI18n)();
+/*
+ * Comments in this file are duplicated from ./i18n due to
+ * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
+ */
+
+/**
+ * @typedef {import('./create-i18n').LocaleData} LocaleData
+ */
+
+/**
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {LocaleData} [data]   Locale data configuration.
+ * @param {string}     [domain] Domain for which configuration applies.
+ */
+
+var setLocaleData = i18n.setLocaleData.bind(i18n);
+/**
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated text.
+ */
+
+exports.setLocaleData = setLocaleData;
+
+var __ = i18n.__.bind(i18n);
+/**
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated context string without pipe.
+ */
+
+
+exports.__ = __;
+
+var _x = i18n._x.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+
+exports._x = _x;
+
+var _n = i18n._n.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+
+exports._n = _n;
+
+var _nx = i18n._nx.bind(i18n);
+/**
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ *
+ * @return {boolean} Whether locale is RTL.
+ */
+
+
+exports._nx = _nx;
+var isRTL = i18n.isRTL.bind(i18n);
+exports.isRTL = isRTL;
+},{"./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  sprintf: true,
+  setLocaleData: true,
+  __: true,
+  _x: true,
+  _n: true,
+  _nx: true,
+  isRTL: true
+};
+Object.defineProperty(exports, "sprintf", {
+  enumerable: true,
+  get: function () {
+    return _sprintf.sprintf;
+  }
+});
+Object.defineProperty(exports, "setLocaleData", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.setLocaleData;
+  }
+});
+Object.defineProperty(exports, "__", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.__;
+  }
+});
+Object.defineProperty(exports, "_x", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._x;
+  }
+});
+Object.defineProperty(exports, "_n", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._n;
+  }
+});
+Object.defineProperty(exports, "_nx", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._nx;
+  }
+});
+Object.defineProperty(exports, "isRTL", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.isRTL;
+  }
+});
+
+var _sprintf = require("./sprintf");
+
+var _createI18n = require("./create-i18n");
+
+Object.keys(_createI18n).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _createI18n[key];
+    }
+  });
+});
+
+var _defaultI18n = require("./default-i18n");
+},{"./sprintf":"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js","./default-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js"}],"containers/PluginsImportMenu.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vueFragment = require("vue-fragment");
+
+var _i18n = require("@wordpress/i18n");
+
+var _MenuButton = _interopRequireDefault(require("../components/MenuButton.vue"));
+
+var _importOperations = _interopRequireDefault(require("../functions/importOperations.js"));
+
+var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: ['options'],
+  mixins: [_withMessage.default],
+  components: {
+    MenuButton: _MenuButton.default,
+    Fragment: _vueFragment.Fragment
+  },
+  data: function data() {
+    return {
+      supportedPlugins: {
+        'table-press': 'TablePress'
+      },
+      importedTables: {},
+      selectedReplaceRows: []
+    };
+  },
+  watch: {
+    fetching: function fetching(n) {
+      this.$emit('fetching', n);
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    // general listener for successful operations
+    document.addEventListener('table:imported:saved', function (_ref) {
+      var detail = _ref.detail;
+
+      _this.setMessage({
+        type: 'ok',
+        message: _this.isDocumentEventPoorlyImplemented(detail) ? _this.strings.operationSuccess : detail
+      });
+
+      _this.setBusy(false);
+    }); // general listener for errors
+
+    document.addEventListener('table:imported:error', function (_ref2) {
+      var detail = _ref2.detail;
+
+      _this.setMessage({
+        type: 'error',
+        message: _this.isDocumentEventPoorlyImplemented(detail) ? _this.strings.errorOccured : detail
+      });
+
+      _this.setBusy(false);
+    }); // listener for import end
+
+    document.addEventListener('table:imported:list', function (_ref3) {
+      var detail = _ref3.detail;
+
+      _this.setBusy(false);
+
+      _this.importedTables = detail;
+    }); // listener for shortcode replace
+
+    document.addEventListener('table:shortcode:replace', function (_ref4) {
+      var detail = _ref4.detail;
+
+      _this.setMessage({
+        type: 'ok',
+        message: "".concat(_this.strings.replacedShortcodes, ": ").concat(detail === true ? 0 : detail)
+      });
+
+      _this.setBusy(false);
+    });
+  },
+  methods: {
+    isDocumentEventPoorlyImplemented: function isDocumentEventPoorlyImplemented(val) {
+      return typeof val === 'boolean';
+    },
+    handleImportFromPlugin: function handleImportFromPlugin(type) {
+      var importOperations = (0, _importOperations.default)(_objectSpread({}, this.options, {
+        type: type
+      }));
+      this.setBusy();
+      importOperations.importFromPlugin(type);
+    },
+    selectAllCheckbox: function selectAllCheckbox(type) {
+      if (this.selectedReplaceRows === this.importedTables[type]) {
+        this.selectedReplaceRows = [];
+      } else {
+        this.selectedReplaceRows = this.importedTables[type];
+      }
+    },
+    replaceShortcodes: function replaceShortcodes() {
+      if (this.selectedReplaceRows.length === 0) {
+        return;
+      }
+
+      var replaceArray = this.selectedReplaceRows.map(function (row) {
+        return {
+          search: row[0],
+          replace: row[1]
+        };
+      });
+      var importOperation = (0, _importOperations.default)(this.options);
+      this.setBusy();
+      importOperation.replaceShortcodesAjax(replaceArray, true);
+    },
+    importButtonText: function importButtonText(plugin) {
+      return (0, _i18n.sprintf)((0, _i18n._x)('import from %s', '%s is a format variable for a name of WordPress plugin', this.options.textDomain), plugin);
+    },
+    importedTablesCountInfo: function importedTablesCountInfo(key) {
+      return (0, _i18n.sprintf)((0, _i18n._nx)('%u table imported', '%u tables imported', 'number of tables imported', this.options.textDomain), this.importedTables[key].length);
+    },
+    // eslint-disable-next-line no-underscore-dangle
+    __: function __(value) {
+      var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.options.textDomain;
+      return (0, _i18n.__)(value, domain);
+    }
+  },
+  computed: {
+    showImportedTables: function showImportedTables() {
+      var _this2 = this;
+
+      var keys = Object.keys(this.importedTables).map(function (k) {
+        if (Object.prototype.hasOwnProperty.call(_this2.importedTables, k)) {
+          return k;
+        }
+
+        return null;
+      });
+      return Array.isArray(keys) ? keys.length > 0 : false;
+    }
+  }
+};
+exports.default = _default;
+        var $e4982f = exports.default || module.exports;
+      
+      if (typeof $e4982f === 'function') {
+        $e4982f = $e4982f.options;
+      }
+    
+        /* template */
+        Object.assign($e4982f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm._l(_vm.supportedPlugins, function(value, key) {
+        return _c(
+          "menu-button",
+          {
+            key: key,
+            staticClass: "wptb-text-transform-cap",
+            attrs: { disabled: _vm.withMessageData.busy },
+            on: {
+              click: function($event) {
+                return _vm.handleImportFromPlugin(key)
+              }
+            }
+          },
+          [_vm._v("\n    " + _vm._s(_vm.importButtonText(value)) + "\n  ")]
+        )
+      }),
+      _vm._v(" "),
+      _c("div", {
+        staticStyle: { display: "none" },
+        attrs: { id: "wptb-importIframeSection" }
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade", mode: "out-in" } }, [
+        _vm.showImportedTables
+          ? _c(
+              "div",
+              { staticClass: "wptb-flex wptb-flex-align-center wptb-flex-col" },
+              [
+                _c(
+                  "div",
+                  { staticClass: "wptb-import-tables-wrapper" },
+                  _vm._l(_vm.importedTables, function(value, key) {
+                    return _c(
+                      "div",
+                      { key: key, staticClass: "wptb-import-tables-list" },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "wptb-import-table-count-info" },
+                          [_vm._v(_vm._s(_vm.importedTablesCountInfo(key)))]
+                        ),
+                        _vm._v(" "),
+                        _c("table", { staticClass: "wptb-import-table" }, [
+                          _c("thead", [
+                            _c("tr", [
+                              _c("th", [
+                                _c("input", {
+                                  attrs: { type: "checkbox" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.selectAllCheckbox(key)
+                                    }
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "th",
+                                { staticClass: "wptb-text-transform-cap" },
+                                [
+                                  _vm._v(
+                                    "\n                  " +
+                                      _vm._s(_vm.supportedPlugins[key]) +
+                                      "\n                "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "th",
+                                { staticClass: "wptb-text-transform-cap" },
+                                [
+                                  _vm._v(
+                                    "\n                  wp table builder\n                "
+                                  )
+                                ]
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "tbody",
+                            _vm._l(value, function(row) {
+                              return _c("fragment", { key: row[0] }, [
+                                _c("tr", [
+                                  _c("td", [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.selectedReplaceRows,
+                                          expression: "selectedReplaceRows"
+                                        }
+                                      ],
+                                      attrs: { type: "checkbox" },
+                                      domProps: {
+                                        value: row,
+                                        checked: Array.isArray(
+                                          _vm.selectedReplaceRows
+                                        )
+                                          ? _vm._i(
+                                              _vm.selectedReplaceRows,
+                                              row
+                                            ) > -1
+                                          : _vm.selectedReplaceRows
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          var $$a = _vm.selectedReplaceRows,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = row,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                (_vm.selectedReplaceRows = $$a.concat(
+                                                  [$$v]
+                                                ))
+                                            } else {
+                                              $$i > -1 &&
+                                                (_vm.selectedReplaceRows = $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1)))
+                                            }
+                                          } else {
+                                            _vm.selectedReplaceRows = $$c
+                                          }
+                                        }
+                                      }
+                                    })
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                    " +
+                                        _vm._s(row[0]) +
+                                        "\n                  "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                    " +
+                                        _vm._s(row[1]) +
+                                        "\n                  "
+                                    )
+                                  ])
+                                ])
+                              ])
+                            }),
+                            1
+                          )
+                        ])
+                      ]
+                    )
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "menu-button",
+                  {
+                    staticClass: "wptb-text-transform-cap",
+                    attrs: {
+                      disabled: _vm.selectedReplaceRows.length === 0,
+                      size: "small"
+                    },
+                    on: { click: _vm.replaceShortcodes }
+                  },
+                  [
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(
+                          _vm.__("replace short codes", _vm.options.textDomain)
+                        ) +
+                        "\n      "
+                    )
+                  ]
+                )
+              ],
+              1
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "wptb-importPBarContainer",
+        staticStyle: { visibility: "hidden" }
+      },
+      [
+        _c("div", { staticClass: "wptb-importPBarProgress" }, [
+          _c("div", { staticClass: "wptb-nameProcessInBarProgress" }),
+          _vm._v(" "),
+          _c("div", { attrs: { id: "wptb-pBarPercent" } }, [
+            _c("span", [_vm._v("0%")])
+          ])
+        ])
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$e4982f', $e4982f);
+          } else {
+            api.reload('$e4982f', $e4982f);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../components/MenuButton.vue":"components/MenuButton.vue","../functions/importOperations.js":"functions/importOperations.js","../mixins/withMessage":"mixins/withMessage.js","_css_loader":"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"containers/ImportApp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Sections = _interopRequireDefault(require("../components/Sections.vue"));
+
+var _SectionItem = _interopRequireDefault(require("../components/SectionItem.vue"));
+
+var _MenuContent = _interopRequireDefault(require("../components/MenuContent.vue"));
+
+var _CSVImportMenu = _interopRequireDefault(require("./CSVImportMenu.vue"));
+
+var _PluginsImportMenu = _interopRequireDefault(require("./PluginsImportMenu.vue"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['options'],
+  components: {
+    Sections: _Sections.default,
+    SectionItem: _SectionItem.default,
+    MenuContent: _MenuContent.default
+  },
+  data: function data() {
+    return {
+      currentSection: 'csv'
+    };
+  },
+  methods: {
+    setSection: function setSection(name) {
+      if (this.currentSection === name) {
+        return;
+      }
+
+      this.currentSection = name;
+    }
+  },
+  computed: {
+    currentTemplate: function currentTemplate() {
+      return this.currentSection === 'csv' ? _CSVImportMenu.default : _PluginsImportMenu.default;
+    }
+  }
+};
+exports.default = _default;
+        var $01888b = exports.default || module.exports;
+      
+      if (typeof $01888b === 'function') {
+        $01888b = $01888b.options;
+      }
+    
+        /* template */
+        Object.assign($01888b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "portal",
+        { attrs: { to: "childSections" } },
+        [
+          _c("sections", {
+            attrs: { child: true, items: ["csv", _vm.strings.plugins] },
+            model: {
+              value: _vm.currentSection,
+              callback: function($$v) {
+                _vm.currentSection = $$v
+              },
+              expression: "currentSection"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "menu-content",
+        { attrs: { center: true } },
+        [
+          _c(
+            "transition",
+            { attrs: { name: "wptb-fade", mode: "out-in" } },
+            [
+              _c(_vm.currentTemplate, {
+                tag: "component",
+                staticClass: "wptb-flex wptb-flex-col wptb-flex-align-center",
+                attrs: { options: _vm.options }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$01888b', $01888b);
+          } else {
+            api.reload('$01888b', $01888b);
+          }
+        }
+
+        
+      }
+    })();
+},{"../components/Sections.vue":"components/Sections.vue","../components/SectionItem.vue":"components/SectionItem.vue","../components/MenuContent.vue":"components/MenuContent.vue","./CSVImportMenu.vue":"containers/CSVImportMenu.vue","./PluginsImportMenu.vue":"containers/PluginsImportMenu.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"containers/ExportApp.vue":[function(require,module,exports) {
+
+        var $973f2f = exports.default || module.exports;
+      
+      if (typeof $973f2f === 'function') {
+        $973f2f = $973f2f.options;
+      }
+    
+        /* template */
+        Object.assign($973f2f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [_c("i", [_vm._v("export app")])])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$973f2f', $973f2f);
+          } else {
+            api.reload('$973f2f', $973f2f);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MenuHeader = _interopRequireDefault(require("../components/MenuHeader"));
+
+var _Sections = _interopRequireDefault(require("../components/Sections"));
+
+var _SectionItem = _interopRequireDefault(require("../components/SectionItem"));
+
+var _MenuFooter = _interopRequireDefault(require("../components/MenuFooter"));
+
+var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
+var _ImportApp = _interopRequireDefault(require("./ImportApp"));
+
+var _ExportApp = _interopRequireDefault(require("./ExportApp"));
+
+var _MenuContent = _interopRequireDefault(require("../components/MenuContent"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ['pluginInfo', 'options'],
   mixins: [_withMessage.default],
   components: {
+    ExportApp: _ExportApp.default,
+    MenuContent: _MenuContent.default,
+    ImportApp: _ImportApp.default,
     MenuHeader: _MenuHeader.default,
-    MenuButton: _MenuButton.default,
     SectionItem: _SectionItem.default,
     Sections: _Sections.default,
     MenuFooter: _MenuFooter.default
+  },
+  data: function data() {
+    return {
+      currentSection: 'Import'
+    };
+  },
+  computed: {
+    currentTemplate: function currentTemplate() {
+      return "".concat(this.currentSection, "App");
+    }
   }
 };
 exports.default = _default;
@@ -13584,38 +17973,37 @@ exports.default = _default;
       _vm._v(" "),
       _c(
         "sections",
-        [_c("section-item", { attrs: { name: _vm.strings.importSection } })],
+        {
+          attrs: {
+            items: [_vm.strings.importSection, _vm.strings.exportSection]
+          },
+          model: {
+            value: _vm.currentSection,
+            callback: function($$v) {
+              _vm.currentSection = $$v
+            },
+            expression: "currentSection"
+          }
+        },
+        [_c("portal-target", { attrs: { name: "childSections" } })],
         1
       ),
       _vm._v(" "),
       _c(
-        "div",
-        { staticClass: "wptb-menu-overflow-auto" },
+        "menu-content",
+        { attrs: { center: true } },
         [
-          _c(
-            "menu-button",
-            {
-              on: {
-                click: function($event) {
-                  return _vm.setMessage({ message: "working" })
-                }
-              }
-            },
-            [_vm._v("message test")]
-          )
+          _c(_vm.currentTemplate, {
+            tag: "component",
+            attrs: { options: _vm.options }
+          })
         ],
         1
       ),
       _vm._v(" "),
       _c(
         "menu-footer",
-        [
-          _c("menu-button", { staticStyle: { visibility: "hidden" } }, [
-            _vm._v("dummy")
-          ]),
-          _vm._v(" "),
-          _c("portal-target", { attrs: { name: "footerButtons" } })
-        ],
+        [_c("portal-target", { attrs: { name: "footerButtons" } })],
         1
       )
     ],
@@ -13651,7 +18039,7 @@ render._withStripped = true
         
       }
     })();
-},{"../components/MenuHeader":"components/MenuHeader.vue","../components/Sections":"components/Sections.vue","../components/SectionItem":"components/SectionItem.vue","../components/MenuFooter":"components/MenuFooter.vue","../components/MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js","_css_loader":"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"plugins/strings.js":[function(require,module,exports) {
+},{"../components/MenuHeader":"components/MenuHeader.vue","../components/Sections":"components/Sections.vue","../components/SectionItem":"components/SectionItem.vue","../components/MenuFooter":"components/MenuFooter.vue","../mixins/withMessage":"mixins/withMessage.js","./ImportApp":"containers/ImportApp.vue","./ExportApp":"containers/ExportApp.vue","../components/MenuContent":"components/MenuContent.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"plugins/strings.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13705,7 +18093,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var importData = _objectSpread({}, wptbImportMenuData); //remove global data
+var importData = _objectSpread({}, wptbImportMenuData); // remove global data
 
 
 wptbImportMenuData = undefined;
@@ -13754,7 +18142,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33257" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32845" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -12056,7 +12056,7 @@ var messageData = {
   withMessageData: {
     busy: false,
     show: false,
-    message: "",
+    message: '',
     type: 'ok',
     intervalId: -1,
     intervalTime: 5000
@@ -12407,7 +12407,7 @@ exports.default = _default;
       _c("img", { attrs: { src: _vm.logoSrc, alt: _vm.logoAlt } }),
       _vm._v(" "),
       _c("span", { staticClass: "wptb-settings-header-name" }, [
-        _vm._v("\n            " + _vm._s(_vm.pluginName) + "\n                ")
+        _vm._v("\n      " + _vm._s(_vm.pluginName) + "\n    ")
       ])
     ]),
     _vm._v(" "),
@@ -12437,78 +12437,6 @@ render._withStripped = true
             api.createRecord('$4456da', $4456da);
           } else {
             api.reload('$4456da', $4456da);
-          }
-        }
-
-        
-      }
-    })();
-},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/Sections.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    child: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
-exports.default = _default;
-        var $dd2de5 = exports.default || module.exports;
-      
-      if (typeof $dd2de5 === 'function') {
-        $dd2de5 = $dd2de5.options;
-      }
-    
-        /* template */
-        Object.assign($dd2de5, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-settings-sections-wrapper",
-      class: { child: _vm.child }
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$dd2de5', $dd2de5);
-          } else {
-            api.reload('$dd2de5', $dd2de5);
           }
         }
 
@@ -12563,7 +12491,7 @@ exports.default = _default;
         }
       }
     },
-    [_vm._v("\n    " + _vm._s(_vm.name) + "\n")]
+    [_vm._v("\n  " + _vm._s(_vm.name) + "\n")]
   )
 }
 var staticRenderFns = []
@@ -12595,7 +12523,132 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuContent.vue":[function(require,module,exports) {
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/Sections.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SectionItem = _interopRequireDefault(require("./SectionItem"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  model: {
+    prop: 'currentSection',
+    event: 'updateSection'
+  },
+  props: {
+    child: {
+      type: Boolean,
+      default: false
+    },
+    items: Array,
+    currentSection: String
+  },
+  components: {
+    SectionItem: _SectionItem.default
+  },
+  data: function data() {
+    return {
+      innerCurrentSection: ''
+    };
+  },
+  mounted: function mounted() {
+    this.innerCurrentSection = this.currentSection || this.items[0];
+  },
+  watch: {
+    innerCurrentSection: function innerCurrentSection(n) {
+      this.$emit('updateSection', n);
+    }
+  },
+  methods: {
+    handleSectionChange: function handleSectionChange(val) {
+      this.innerCurrentSection = val;
+    }
+  }
+};
+exports.default = _default;
+        var $dd2de5 = exports.default || module.exports;
+      
+      if (typeof $dd2de5 === 'function') {
+        $dd2de5 = $dd2de5.options;
+      }
+    
+        /* template */
+        Object.assign($dd2de5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-settings-sections-wrapper",
+          class: { child: _vm.child }
+        },
+        _vm._l(_vm.items, function(item) {
+          return _c("section-item", {
+            attrs: { name: item, current: _vm.innerCurrentSection },
+            on: { sectionchange: _vm.handleSectionChange }
+          })
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _vm._t("default")
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$dd2de5', $dd2de5);
+          } else {
+            api.reload('$dd2de5', $dd2de5);
+          }
+        }
+
+        
+      }
+    })();
+},{"./SectionItem":"components/SectionItem.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuContent.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12939,11 +12992,7 @@ exports.default = _default;
               },
               _vm._l(_vm.fieldData.options, function(o) {
                 return _c("option", { domProps: { value: o.value } }, [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(o.label) +
-                      "\n                "
-                  )
+                  _vm._v("\n          " + _vm._s(o.label) + "\n        ")
                 ])
               }),
               0
@@ -12998,6 +13047,8 @@ var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -13078,99 +13129,7 @@ render._withStripped = true
         
       }
     })();
-},{"../mixins/withMessage":"mixins/withMessage.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuFooter.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _MessageDisplay = _interopRequireDefault(require("./MessageDisplay.vue"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: ['messageType', 'messageShow', 'messageBody', 'messageBusy'],
-  components: {
-    MessageDisplay: _MessageDisplay.default
-  }
-};
-exports.default = _default;
-        var $a45baf = exports.default || module.exports;
-      
-      if (typeof $a45baf === 'function') {
-        $a45baf = $a45baf.options;
-      }
-    
-        /* template */
-        Object.assign($a45baf, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-settings-footer" },
-    [
-      _c("message-display", {
-        attrs: {
-          busy: _vm.messageBusy,
-          message: _vm.messageBody,
-          show: _vm.messageShow,
-          type: _vm.messageType
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-settings-button-container" },
-        [_vm._t("default")],
-        2
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$a45baf', $a45baf);
-          } else {
-            api.reload('$a45baf', $a45baf);
-          }
-        }
-
-        
-      }
-    })();
-},{"./MessageDisplay.vue":"components/MessageDisplay.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuButton.vue":[function(require,module,exports) {
+},{"../mixins/withMessage":"mixins/withMessage.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"components/MenuButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13253,7 +13212,176 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"../../../../../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
+      }
+    }
+
+    cssTimeout = null;
+  }, 50);
+}
+
+module.exports = reloadCSS;
+},{"./bundle-url":"../../../../../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"components/MenuFooter.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MessageDisplay = _interopRequireDefault(require("./MessageDisplay.vue"));
+
+var _MenuButton = _interopRequireDefault(require("./MenuButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['messageType', 'messageShow', 'messageBody', 'messageBusy'],
+  components: {
+    MessageDisplay: _MessageDisplay.default,
+    MenuButton: _MenuButton.default
+  }
+};
+exports.default = _default;
+        var $a45baf = exports.default || module.exports;
+      
+      if (typeof $a45baf === 'function') {
+        $a45baf = $a45baf.options;
+      }
+    
+        /* template */
+        Object.assign($a45baf, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-settings-footer" },
+    [
+      _c("message-display", {
+        attrs: {
+          busy: _vm.messageBusy,
+          message: _vm.messageBody,
+          show: _vm.messageShow,
+          type: _vm.messageType
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-settings-button-container" },
+        [
+          _c("menu-button", { staticStyle: { visibility: "hidden" } }, [
+            _vm._v("dummy")
+          ]),
+          _vm._v(" "),
+          _vm._t("default")
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$a45baf', $a45baf);
+          } else {
+            api.reload('$a45baf', $a45baf);
+          }
+        }
+
+        
+      }
+    })();
+},{"./MessageDisplay.vue":"components/MessageDisplay.vue","./MenuButton":"components/MenuButton.vue","_css_loader":"../../../../../node_modules/parcel-bundler/src/builtins/css-loader.js","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13268,8 +13396,6 @@ var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 var _MenuHeader = _interopRequireDefault(require("../components/MenuHeader.vue"));
 
 var _Sections = _interopRequireDefault(require("../components/Sections.vue"));
-
-var _SectionItem = _interopRequireDefault(require("../components/SectionItem.vue"));
 
 var _MenuContent = _interopRequireDefault(require("../components/MenuContent.vue"));
 
@@ -13295,7 +13421,6 @@ var _default = {
     MenuButton: _MenuButton.default,
     MenuHeader: _MenuHeader.default,
     Sections: _Sections.default,
-    SectionItem: _SectionItem.default,
     MenuContent: _MenuContent.default,
     SettingCard: _SettingCard.default,
     ControlItem: _ControlItem.default,
@@ -13444,21 +13569,16 @@ exports.default = _default;
         ]
       ),
       _vm._v(" "),
-      _c(
-        "sections",
-        _vm._l(_vm.sections, function(section) {
-          return _c("section-item", {
-            key: section,
-            attrs: { name: section },
-            on: {
-              sectionchange: function($event) {
-                _vm.currentSection = $event
-              }
-            }
-          })
-        }),
-        1
-      ),
+      _c("sections", {
+        attrs: { items: _vm.sections },
+        model: {
+          value: _vm.currentSection,
+          callback: function($$v) {
+            _vm.currentSection = $$v
+          },
+          expression: "currentSection"
+        }
+      }),
       _vm._v(" "),
       _c(
         "menu-content",
@@ -13533,7 +13653,7 @@ render._withStripped = true
         
       }
     })();
-},{"../mixins/withStore.js":"mixins/withStore.js","../mixins/withMessage":"mixins/withMessage.js","../components/MenuHeader.vue":"components/MenuHeader.vue","../components/Sections.vue":"components/Sections.vue","../components/SectionItem.vue":"components/SectionItem.vue","../components/MenuContent.vue":"components/MenuContent.vue","../components/SettingCard.vue":"components/SettingCard.vue","../components/ControlItem.vue":"components/ControlItem.vue","../components/MenuFooter.vue":"components/MenuFooter.vue","../components/MenuButton.vue":"components/MenuButton.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"plugins/strings.js":[function(require,module,exports) {
+},{"../mixins/withStore.js":"mixins/withStore.js","../mixins/withMessage":"mixins/withMessage.js","../components/MenuHeader.vue":"components/MenuHeader.vue","../components/Sections.vue":"components/Sections.vue","../components/MenuContent.vue":"components/MenuContent.vue","../components/SettingCard.vue":"components/SettingCard.vue","../components/ControlItem.vue":"components/ControlItem.vue","../components/MenuFooter.vue":"components/MenuFooter.vue","../components/MenuButton.vue":"components/MenuButton.vue","vue-hot-reload-api":"../../../../../node_modules/vue-hot-reload-api/dist/index.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"plugins/strings.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13634,7 +13754,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33257" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32845" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
