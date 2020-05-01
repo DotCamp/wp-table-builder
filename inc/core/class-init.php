@@ -116,7 +116,6 @@ class Init {
 		$this->version = NS\PLUGIN_VERSION;
 		$this->plugin_basename = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
-        
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -126,9 +125,7 @@ class Init {
         $this->table_preview();
         
         if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
-            $this->elements_manager = new Elements_Manager();
-            $this->controls_manager = new Controls_Manager();
-            add_action( 'admin_footer', [$this, 'wp_footer_js_templates'] );
+            $this->elements_resources();
         }
 	}
 
@@ -277,23 +274,22 @@ class Init {
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;
 	}
-    
+
     /**
-	 * WP footer.
-	 *
-	 * Prints Elementor editor with all the editor templates, and render controls,
-	 * widgets and content elements.
-	 *
-	 * Fired by `wp_footer` action.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function wp_footer_js_templates() {
-        $this->elements_manager->output_elements_templates();
-        $this->elements_manager->output_directories_icons();
-        $this->elements_manager->output_elements_scripts();
-        $this->controls_manager->output_controls_templates();
-        $this->controls_manager->output_control_stacks();
-	}
+     * Run all the necessary resources for Elements and Controls
+     *
+     * @since   1.1.5
+     */
+	public function elements_resources() {
+        $this->elements_manager = new Elements_Manager();
+        $this->controls_manager = new Controls_Manager();
+
+        add_action( 'admin_footer', function() {
+            $this->elements_manager->output_elements_templates();
+            $this->elements_manager->output_directories_icons();
+            $this->elements_manager->output_elements_scripts();
+            $this->controls_manager->output_controls_templates();
+            $this->controls_manager->output_control_stacks();
+        } );
+    }
 }

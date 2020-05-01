@@ -29,6 +29,10 @@ spl_autoload_register( function( $class_name ) {
 	// Split the class name into an array to read the namespace and class.
 	$file_parts = explode( '\\', $class_name );
 
+	if( $file_parts[0] !== 'WP_Table_Builder' ) {
+	    return;
+    }
+
 	// Do a reverse loop through $file_parts to build the path to the file.
 	$namespace = '';
 	for ( $i = count( $file_parts ) - 1; $i > 0; $i-- ) {

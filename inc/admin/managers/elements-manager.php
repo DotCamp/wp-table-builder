@@ -65,6 +65,8 @@ class Elements_Manager {
             
             $object->init_controls();
 		}
+
+		do_action( 'wp-table-builder/elements_registered', $this );
 	}
     
     /**
