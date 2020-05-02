@@ -4,8 +4,8 @@
   "description": "Best Table Builder Plugin for WordPress",
   "scripts": {
     "pot": "wp-pot --src '**/*.php' --dest-file 'languages/wp-table-builder.pot' --package 'wptb' --domain 'wp-table-builder' --last-translator 'Imtiaz Rayhan <irayhan.asif@gmail.com>' --team 'WP Table Builder <irayhan.asif@gmail.com>' --bug-report 'https://github.com/imtiazrayhan/wp-table-builder/issues'",
-    "dev:build": "cross-env NODE_ENV=development parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache",
-    "prod:build": "cross-env NODE_ENV=production parcel build ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
+    "dev:build": "cross-env NODE_ENV=development parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-hmr",
+    "prod:build": "cross-env NODE_ENV=production parcel build ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps --no-hmr",
     "lint": "eslint ./inc/admin/js/core/rollup-source --ext .js,.vue",
     "preinstall": "npx npm-force-resolutions"
   },

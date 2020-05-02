@@ -74,13 +74,16 @@ export default {
         this.parsedFields[section].push({ ...this.fieldsData[key], id: key });
         this.sections.push(section);
       }
+
+      return null;
     });
 
-    this.currentSection = Object.keys(this.parsedFields).map((key) => {
+    // eslint-disable-next-line array-callback-return,consistent-return
+    [this.currentSection] = Object.keys(this.parsedFields).map((key) => {
       if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
         return key;
       }
-    })[0];
+    });
 
     this.sections = Array.from(new Set(this.sections));
   },
@@ -118,6 +121,7 @@ export default {
         method: 'POST',
         body: formData,
       })
+        // eslint-disable-next-line consistent-return
         .then((r) => {
           if (r.ok) {
             return r.json();
@@ -131,6 +135,7 @@ export default {
           }
         })
         .catch((e) => {
+          // eslint-disable-next-line no-console
           console.error(e);
           this.setMessage({ type: 'error', message: e });
         })

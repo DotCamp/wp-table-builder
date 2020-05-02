@@ -2633,6 +2633,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-settings-sections-wrapper {
+    position: relative;
     display: flex;
     flex-direction: row;
     margin-bottom: 10px;
@@ -2651,7 +2652,6 @@ wptb_shortcode_container_element {
     text-transform: uppercase;
     font-size: 1rem;
     padding: 20px;
-    border-bottom: 2px solid #1A202C;
     margin: 0 10px;
     cursor: pointer;
     transition: background-color 0.5s ease-out;
@@ -2668,7 +2668,12 @@ wptb_shortcode_container_element {
 
 .wptb-settings-section-item.disabled {
     color: #CBD5E0 !important;
-    border-bottom: none;
+}
+
+.wptb-menu-active-section-indicator {
+    position: absolute;
+    border-bottom: 2px solid #1A202C;
+    transition: all 0.3s ease-out;
 }
 
 .wptb-settings-controls-wrapper {

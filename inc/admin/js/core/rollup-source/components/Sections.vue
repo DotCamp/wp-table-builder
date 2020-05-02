@@ -1,18 +1,25 @@
 <template>
   <div>
-    <div class="wptb-settings-sections-wrapper" :class="{ child }">
+    <div ref="wrapper" class="wptb-settings-sections-wrapper" :class="{ child }">
       <section-item
         v-for="item in items"
         :name="item"
+        :key="item"
         @sectionchange="handleSectionChange"
+        @activeSectionElement="handleActiveSectionElement"
         :current="innerCurrentSection"
       ></section-item>
+      <active-section-indicator
+        :relative-parent="$refs.wrapper"
+        :active-item="activeSectionElement"
+      ></active-section-indicator>
     </div>
     <slot></slot>
   </div>
 </template>
 <script>
 import SectionItem from './SectionItem';
+import ActiveSectionIndicator from './ActiveSectionIndicator';
 
 export default {
   model: {
@@ -27,10 +34,11 @@ export default {
     items: Array,
     currentSection: String,
   },
-  components: { SectionItem },
+  components: { SectionItem, ActiveSectionIndicator },
   data() {
     return {
       innerCurrentSection: '',
+      activeSectionElement: null,
     };
   },
   mounted() {
@@ -44,6 +52,9 @@ export default {
   methods: {
     handleSectionChange(val) {
       this.innerCurrentSection = val;
+    },
+    handleActiveSectionElement(el) {
+      this.activeSectionElement = el;
     },
   },
 };

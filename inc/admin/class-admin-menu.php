@@ -169,7 +169,7 @@ class Admin_Menu {
 		$builder_page = add_submenu_page(
 			'wptb-overview',
 			esc_html__( 'Table Builder', 'wp-table-builder' ),
-			esc_html__( 'Import', 'wp-table-builder' ),
+			esc_html__( 'Import/Export', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-import',
 			array( $this, 'import' )

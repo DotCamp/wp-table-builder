@@ -4,10 +4,8 @@
       <sections :child="true" :items="['csv', strings.plugins]" v-model="currentSection"> </sections>
     </portal>
     <menu-content :center="true">
-      <transition name="wptb-fade" mode="out-in">
-        <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">
-        </component>
-      </transition>
+      <component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">
+      </component>
     </menu-content>
   </div>
 </template>
