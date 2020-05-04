@@ -2714,6 +2714,15 @@ wptb_shortcode_container_element {
     margin-bottom: 30px;
 }
 
+.wptb-menu-export-control-title {
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: capitalize;
+    padding: 10px 0;
+    width: 100%;
+    border-bottom: 1px solid #cbd5e0;
+}
+
 .wptb-setting-control-row {
     margin: 20px 0;
 }
@@ -2873,12 +2882,20 @@ wptb_shortcode_container_element {
     flex-direction: column;
 }
 
+.wptb-flex-row {
+    flex-direction: row;
+}
+
 .wptb-flex-align-center {
     align-items: center;
 }
 
 .wptb-flex-justify-center {
     justify-content: center;
+}
+
+.wptb-flex-justify-space-between {
+    justify-content: space-between;
 }
 
 .wptb-import-tables-wrapper {
@@ -2921,6 +2938,48 @@ wptb_shortcode_container_element {
     margin-bottom: 20px;
     font-weight: bold;
     font-style: italic;
+}
+
+.wptb-menu-export-wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 0.9fr;
+    justify-content: center;
+    align-content: center;
+    grid-gap: 20px;
+    width: 90%;
+    height: 100%;
+}
+
+.wptb-menu-export-card {
+    position: relative;
+    border: 1px solid #cbd5e0;
+    padding: 10px;
+}
+
+.wptb-menu-export-middle-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-menu-export-controls-wrapper {
+    padding: 0 20px;
+}
+
+.wptb-menu-empty-cover {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: #CBD5E0;
 }
 
 @keyframes wptb-settings-rotate {

@@ -16,6 +16,9 @@ const withMessage = {
     return messageData;
   },
   methods: {
+    isBusy() {
+      return this.withMessageData.busy;
+    },
     setMessage(options) {
       const mergedOptions = { ...defaults, ...options };
       this.withMessageData.message = mergedOptions.message;

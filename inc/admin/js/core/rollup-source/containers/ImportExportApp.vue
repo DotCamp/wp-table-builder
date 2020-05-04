@@ -10,7 +10,7 @@
       <component :options="options" :is="currentTemplate"> </component>
     </menu-content>
     <menu-footer>
-      <portal-target name="footerButtons"> </portal-target>
+      <portal-target name="footerButtons"></portal-target>
     </menu-footer>
   </div>
 </template>
@@ -30,7 +30,8 @@ export default {
   components: { ExportApp, MenuContent, ImportApp, MenuHeader, SectionItem, Sections, MenuFooter },
   data() {
     return {
-      currentSection: 'Import',
+      // TODO [erdembircan] change to import for production
+      currentSection: 'Export',
     };
   },
   computed: {

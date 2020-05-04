@@ -12070,6 +12070,9 @@ var withMessage = {
     return messageData;
   },
   methods: {
+    isBusy: function isBusy() {
+      return this.withMessageData.busy;
+    },
     setMessage: function setMessage(options) {
       var _this = this;
 
@@ -12606,57 +12609,61 @@ exports.default = _default;
       ? _c(
           "div",
           _vm._l(_vm.fieldData.options, function(v, k) {
-            return _c("div", { staticClass: "wptb-setting-control-row" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.modelBind[_vm.fieldData.id],
-                    expression: "modelBind[fieldData.id]"
-                  }
-                ],
-                attrs: { id: _vm.fieldData.id, type: "checkbox" },
-                domProps: {
-                  value: k,
-                  checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
-                    ? _vm._i(_vm.modelBind[_vm.fieldData.id], k) > -1
-                    : _vm.modelBind[_vm.fieldData.id]
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.modelBind[_vm.fieldData.id],
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = k,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            _vm.modelBind,
-                            _vm.fieldData.id,
-                            $$a.concat([$$v])
-                          )
+            return _c(
+              "div",
+              { key: v, staticClass: "wptb-setting-control-row" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modelBind[_vm.fieldData.id],
+                      expression: "modelBind[fieldData.id]"
+                    }
+                  ],
+                  attrs: { id: _vm.fieldData.id, type: "checkbox" },
+                  domProps: {
+                    value: k,
+                    checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
+                      ? _vm._i(_vm.modelBind[_vm.fieldData.id], k) > -1
+                      : _vm.modelBind[_vm.fieldData.id]
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.modelBind[_vm.fieldData.id],
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = k,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.modelBind,
+                              _vm.fieldData.id,
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.modelBind,
+                              _vm.fieldData.id,
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
                       } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.modelBind,
-                            _vm.fieldData.id,
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
+                        _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
                       }
-                    } else {
-                      _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
                     }
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: _vm.fieldData.id } }, [
-                _vm._v(_vm._s(v))
-              ])
-            ])
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: _vm.fieldData.id } }, [
+                  _vm._v(_vm._s(v))
+                ])
+              ]
+            )
           }),
           0
         )
@@ -12747,9 +12754,11 @@ exports.default = _default;
                 }
               },
               _vm._l(_vm.fieldData.options, function(o) {
-                return _c("option", { domProps: { value: o.value } }, [
-                  _vm._v("\n          " + _vm._s(o.label) + "\n        ")
-                ])
+                return _c(
+                  "option",
+                  { key: o.label, domProps: { value: o.value } },
+                  [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
+                )
               }),
               0
             ),

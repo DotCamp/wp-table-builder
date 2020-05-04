@@ -54,7 +54,7 @@ class Settings_Manager {
 		'allowed_roles' => 'sanitize_text_field'
 	];
 
-	private $allowed_role_meta_cap = "wptb_allowed_cap";
+	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
 
 	/**
 	 * Settings_Manager constructor.
@@ -99,8 +99,8 @@ class Settings_Manager {
 			$intersection = array_intersect( get_option( $this->options_root, $this->defaults )['allowed_roles'], $current_user->roles );
 
 			if ( sizeof( $intersection ) > 0 ) {
-				if ( ! isset( $all_caps[ $this->allowed_role_meta_cap ] ) ) {
-					$all_caps[ $this->allowed_role_meta_cap ] = true;
+				if ( ! isset( $all_caps[ self::ALLOWED_ROLE_META_CAP ] ) ) {
+					$all_caps[ self::ALLOWED_ROLE_META_CAP ] = true;
 				}
 			}
 
@@ -118,7 +118,7 @@ class Settings_Manager {
 	 * @return string filtered user cap
 	 */
 	public function manage_cap( $current ) {
-		return $this->allowed_role_meta_cap;
+		return self::ALLOWED_ROLE_META_CAP;
 	}
 
 	/**
@@ -181,11 +181,11 @@ class Settings_Manager {
 			];
 
 			$strings = [
-				'logoAlt'  => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
-				'homepage' => esc_attr__( 'Homepage', $wptb_text_domain ),
-				'revert'   => esc_html__( 'Revert', $wptb_text_domain ),
-				'submit'   => esc_html__( 'Submit', $wptb_text_domain ),
-				'revertMessage'   => esc_html__( 'Changes Discarded', $wptb_text_domain ),
+				'logoAlt'       => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
+				'homepage'      => esc_attr__( 'Homepage', $wptb_text_domain ),
+				'revert'        => esc_html__( 'Revert', $wptb_text_domain ),
+				'submit'        => esc_html__( 'Submit', $wptb_text_domain ),
+				'revertMessage' => esc_html__( 'Changes Discarded', $wptb_text_domain ),
 			];
 
 			$frontend_data = [

@@ -120,6 +120,7 @@ class Init {
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->table_export();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
         $this->table_import();
@@ -233,8 +234,12 @@ class Init {
     private function table_import() {
         $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Import', 'instance' );
     }
-    
-    /**
+
+	private function table_export() {
+		$this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Export', 'get_instance' );
+	}
+
+	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 */
 	public function run() {

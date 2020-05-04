@@ -4,6 +4,8 @@ namespace WP_Table_Builder\Inc\Admin;
 
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Helpers;
+use function admin_url;
+use function wp_create_nonce;
 use function wp_localize_script;
 
 /**
@@ -319,7 +321,9 @@ class Admin_Menu {
 				'security_code'     => wp_create_nonce( 'wptb-import-security-nonce' ),
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'import_iframe_url' => $import_iframe_url,
-                'textDomain' => $wptb_text_domain
+                'textDomain' => $wptb_text_domain,
+				'exportNonce' => Export::get_instance()->generate_nonce(),
+                'exportAjaxAction' => Export::SETTING_SLUG,
 			];
 
 			$data = [

@@ -12976,6 +12976,9 @@ var withMessage = {
     return messageData;
   },
   methods: {
+    isBusy: function isBusy() {
+      return this.withMessageData.busy;
+    },
     setMessage: function setMessage(options) {
       var _this = this;
 
@@ -13605,57 +13608,61 @@ exports.default = _default;
       ? _c(
           "div",
           _vm._l(_vm.fieldData.options, function(v, k) {
-            return _c("div", { staticClass: "wptb-setting-control-row" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.modelBind[_vm.fieldData.id],
-                    expression: "modelBind[fieldData.id]"
-                  }
-                ],
-                attrs: { id: _vm.fieldData.id, type: "checkbox" },
-                domProps: {
-                  value: k,
-                  checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
-                    ? _vm._i(_vm.modelBind[_vm.fieldData.id], k) > -1
-                    : _vm.modelBind[_vm.fieldData.id]
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.modelBind[_vm.fieldData.id],
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = k,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            _vm.modelBind,
-                            _vm.fieldData.id,
-                            $$a.concat([$$v])
-                          )
+            return _c(
+              "div",
+              { key: v, staticClass: "wptb-setting-control-row" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modelBind[_vm.fieldData.id],
+                      expression: "modelBind[fieldData.id]"
+                    }
+                  ],
+                  attrs: { id: _vm.fieldData.id, type: "checkbox" },
+                  domProps: {
+                    value: k,
+                    checked: Array.isArray(_vm.modelBind[_vm.fieldData.id])
+                      ? _vm._i(_vm.modelBind[_vm.fieldData.id], k) > -1
+                      : _vm.modelBind[_vm.fieldData.id]
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.modelBind[_vm.fieldData.id],
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = k,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.modelBind,
+                              _vm.fieldData.id,
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.modelBind,
+                              _vm.fieldData.id,
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
                       } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.modelBind,
-                            _vm.fieldData.id,
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
+                        _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
                       }
-                    } else {
-                      _vm.$set(_vm.modelBind, _vm.fieldData.id, $$c)
                     }
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: _vm.fieldData.id } }, [
-                _vm._v(_vm._s(v))
-              ])
-            ])
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: _vm.fieldData.id } }, [
+                  _vm._v(_vm._s(v))
+                ])
+              ]
+            )
           }),
           0
         )
@@ -13746,9 +13753,11 @@ exports.default = _default;
                 }
               },
               _vm._l(_vm.fieldData.options, function(o) {
-                return _c("option", { domProps: { value: o.value } }, [
-                  _vm._v("\n          " + _vm._s(o.label) + "\n        ")
-                ])
+                return _c(
+                  "option",
+                  { key: o.label, domProps: { value: o.value } },
+                  [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
+                )
               }),
               0
             ),
@@ -17382,8 +17391,196 @@ render._withStripped = true
           };
         })());
       
-},{"../components/Sections.vue":"components/Sections.vue","../components/SectionItem.vue":"components/SectionItem.vue","../components/MenuContent.vue":"components/MenuContent.vue","./CSVImportMenu.vue":"containers/CSVImportMenu.vue","./PluginsImportMenu.vue":"containers/PluginsImportMenu.vue"}],"containers/ExportApp.vue":[function(require,module,exports) {
+},{"../components/Sections.vue":"components/Sections.vue","../components/SectionItem.vue":"components/SectionItem.vue","../components/MenuContent.vue":"components/MenuContent.vue","./CSVImportMenu.vue":"containers/CSVImportMenu.vue","./PluginsImportMenu.vue":"containers/PluginsImportMenu.vue"}],"components/EmptyCover.vue":[function(require,module,exports) {
 
+        var $dc87d2 = exports.default || module.exports;
+      
+      if (typeof $dc87d2 === 'function') {
+        $dc87d2 = $dc87d2.options;
+      }
+    
+        /* template */
+        Object.assign($dc87d2, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-menu-empty-cover" },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/ExportApp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _i18n = require("@wordpress/i18n");
+
+var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
+
+var _ControlItem = _interopRequireDefault(require("../components/ControlItem"));
+
+var _EmptyCover = _interopRequireDefault(require("../components/EmptyCover"));
+
+var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['options'],
+  mixins: [_withMessage.default],
+  components: {
+    MenuButton: _MenuButton.default,
+    ControlItem: _ControlItem.default,
+    EmptyCover: _EmptyCover.default
+  },
+  data: function data() {
+    return {
+      userTables: [],
+      selectedTables: {}
+    };
+  },
+  mounted: function mounted() {
+    this.getUserTables();
+  },
+  computed: {
+    remainingTables: function remainingTables() {
+      var _this = this;
+
+      return this.userTables.filter(function (t) {
+        return !_this.selectedTables[t.ID];
+      });
+    },
+    parsedSelectedTables: function parsedSelectedTables() {
+      var _this2 = this;
+
+      return this.userTables.filter(function (t) {
+        return _this2.selectedTables[t.ID];
+      });
+    },
+    exportDisabled: function exportDisabled() {
+      return this.isBusy() || this.isSelectedEmpty();
+    }
+  },
+  methods: {
+    isSelectedEmpty: function isSelectedEmpty() {
+      var _this3 = this;
+
+      return !Object.keys(this.selectedTables).filter(function (t) {
+        if (Object.prototype.hasOwnProperty.call(_this3.selectedTables, t)) {
+          return _this3.selectedTables[t];
+        }
+
+        return false;
+      }).length > 0;
+    },
+    getTranslation: function getTranslation(text) {
+      return (0, _i18n.__)(text, this.options.textDomain);
+    },
+    fieldLabel: function fieldLabel(field) {
+      return field.post_title === '' ? "Table #".concat(field.ID) : field.post_title;
+    },
+    getUserTables: function getUserTables() {
+      var _this4 = this;
+
+      var _this$options = this.options,
+          ajaxUrl = _this$options.ajaxUrl,
+          exportNonce = _this$options.exportNonce,
+          exportAjaxAction = _this$options.exportAjaxAction;
+      var formData = new FormData();
+      formData.append('nonce', exportNonce);
+      formData.append('action', exportAjaxAction);
+      this.setBusy();
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error((0, _i18n.__)('an error occurred, try again later', _this4.options.textDomain));
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        _this4.userTables = resp.data.userTables;
+      }).catch(function (e) {
+        _this4.setMessage({
+          type: 'error',
+          message: e
+        });
+      }).finally(function () {
+        _this4.setBusy(false);
+      });
+    }
+  }
+};
+exports.default = _default;
         var $973f2f = exports.default || module.exports;
       
       if (typeof $973f2f === 'function') {
@@ -17396,14 +17593,171 @@ render._withStripped = true
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "wptb-menu-export-wrapper" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-menu-export-card wptb-menu-overflow-auto" },
+        [
+          _c("div", { staticClass: "wptb-menu-export-control-title" }, [
+            _vm._v(_vm._s(_vm.getTranslation("your tables")))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-menu-export-controls-wrapper" },
+            [
+              _c(
+                "transition-group",
+                { attrs: { name: "wptb-fade", tag: "div" } },
+                _vm._l(_vm.remainingTables, function(table) {
+                  return _c("control-item", {
+                    key: table.ID,
+                    attrs: {
+                      "field-data": {
+                        type: "checkbox",
+                        id: table.ID,
+                        label: _vm.fieldLabel(table)
+                      },
+                      "model-bind": _vm.selectedTables
+                    }
+                  })
+                }),
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "empty-cover",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.userTables.length > 0,
+                  expression: "!userTables.length > 0"
+                }
+              ]
+            },
+            [
+              _vm._v(
+                "\n      " +
+                  _vm._s(_vm.getTranslation("no tables found")) +
+                  "\n    "
+              )
+            ]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-menu-export-card" },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "wptb-menu-export-control-title",
+              staticStyle: { "text-align": "end" }
+            },
+            [_vm._v(_vm._s(_vm.getTranslation("selected tables")))]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-menu-export-controls-wrapper" },
+            [
+              _c(
+                "transition-group",
+                { attrs: { name: "wptb-fade", tag: "div" } },
+                _vm._l(_vm.parsedSelectedTables, function(table) {
+                  return _c("control-item", {
+                    key: table.ID,
+                    attrs: {
+                      "field-data": {
+                        type: "checkbox",
+                        id: table.ID,
+                        label: _vm.fieldLabel(table)
+                      },
+                      "model-bind": _vm.selectedTables
+                    }
+                  })
+                }),
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "empty-cover",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.isSelectedEmpty(),
+                  expression: "isSelectedEmpty()"
+                }
+              ]
+            },
+            [
+              _vm._v(
+                "\n      " +
+                  _vm._s(_vm.getTranslation("no table selected")) +
+                  "\n    "
+              )
+            ]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("portal", { attrs: { to: "footerButtons" } }, [
+        _c(
+          "div",
+          { staticClass: "wptb-settings-button-container" },
+          [
+            _c(
+              "menu-button",
+              {
+                attrs: { disabled: _vm.isBusy() },
+                on: { click: _vm.getUserTables }
+              },
+              [_vm._v(_vm._s(_vm.getTranslation("refresh")))]
+            ),
+            _vm._v(" "),
+            _c(
+              "menu-button",
+              {
+                attrs: { disabled: _vm.exportDisabled },
+                on: { click: function($event) {} }
+              },
+              [_vm._v(_vm._s(_vm.strings.exportSection))]
+            )
+          ],
+          1
+        )
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [_c("i", [_vm._v("export app")])])
+    return _c("div", { staticClass: "wptb-menu-export-middle-section" }, [
+      _c("i", [_vm._v("middle section")])
+    ])
   }
 ]
 render._withStripped = true
@@ -17417,7 +17771,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/ImportExportApp.vue":[function(require,module,exports) {
+},{"@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../components/MenuButton":"components/MenuButton.vue","../components/ControlItem":"components/ControlItem.vue","../components/EmptyCover":"components/EmptyCover.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17473,7 +17827,8 @@ var _default = {
   },
   data: function data() {
     return {
-      currentSection: 'Import'
+      // TODO [erdembircan] change to import for production
+      currentSection: 'Export'
     };
   },
   computed: {
