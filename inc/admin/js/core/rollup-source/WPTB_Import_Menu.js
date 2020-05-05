@@ -2,6 +2,7 @@ import Vue from 'vue';
 import PortalVue from 'portal-vue';
 import ImportExportApp from './containers/ImportExportApp';
 import withStrings from './plugins/strings';
+import Translations from './plugins/translations';
 
 const importData = { ...wptbImportMenuData };
 
@@ -12,6 +13,10 @@ Vue.config.productionTip = false;
 
 Vue.use(withStrings, {
   strings: importData.strings,
+});
+
+Vue.use(Translations, {
+  textDomain: importData.options.textDomain,
 });
 
 Vue.use(PortalVue);

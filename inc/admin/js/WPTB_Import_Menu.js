@@ -13846,16 +13846,33 @@ function ImportOperations(options) {
             if (_data && Array.isArray(_data)) {
               if (_data[0] == 'success') {
                 if (_data[1] && Array.isArray(_data[1])) {
-                  var dataTable = []; // check file extension, if it "csv" add get this tableData
+                  var dataTable = [];
+                  var xmlTables = []; // check file extension, if it "csv" add get this tableData
 
                   for (var i = 0; i < _data[1].length; i++) {
-                    if (_data[1][i][0] === 'csv') {
-                      dataTable.push(_data[1][i][1]);
+                    var extension = _data[1][i][0];
+
+                    switch (extension) {
+                      case 'csv':
+                        dataTable.push(_data[1][i][1]);
+                        break;
+
+                      case 'xml':
+                        xmlTables.push(_data[1][i][1]);
+                        break;
                     }
-                  }
+                  } // TODO [erdembircan] we can tap into xml parsing right here
+
 
                   if (dataTable.length > 0) {
                     tablesFromCsvSaveRun(dataTable, 0);
+                  } else if (xmlTables.length > 0) {
+                    console.log(xmlTables);
+                    importXmlTables(xmlTables);
+                  } else {
+                    WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, {
+                      message: 'invalid file type'
+                    });
                   }
                 }
               }
@@ -13865,7 +13882,7 @@ function ImportOperations(options) {
 
         http.send(data);
       } else if (is_csv || is_xml || is_html) {
-        if (typeof FileReader != 'undefined') {
+        if (typeof FileReader !== 'undefined') {
           var reader = new FileReader();
 
           var _data2;
@@ -13886,6 +13903,15 @@ function ImportOperations(options) {
         alert('Please upload a valid file.');
       }
     }
+  }
+
+  function importXmlTables(tables) {
+    tables.map(function (content) {
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = content;
+      var tableElement = wrapper.querySelector('table');
+      tableImportedSave(tableElement);
+    });
   }
   /**
    * run all process for importing tables
@@ -13929,7 +13955,7 @@ function ImportOperations(options) {
 
   function tableImportedSave(table, id) {
     var http = new XMLHttpRequest();
-    var url = options.ajaxUrl + "?action=save_table";
+    var url = "".concat(options.ajaxUrl, "?action=save_table");
     var code;
 
     if (id) {
@@ -13964,6 +13990,7 @@ function ImportOperations(options) {
         var data = JSON.parse(http.responseText);
 
         if (data[0] == 'saved') {
+          console.log(data);
           tableImportedSave(table, data[1]);
         } else if (data[0] == 'edited') {
           WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
@@ -14129,8 +14156,8 @@ function ImportOperations(options) {
     var quote = false;
 
     for (var row = 0, col = 0, c = 0; c < str.length; c++) {
-      var cc = str[c],
-          nc = str[c + 1];
+      var cc = str[c];
+      var nc = str[c + 1];
       arr[row] = arr[row] || [];
       arr[row][col] = arr[row][col] || '';
 
@@ -14187,7 +14214,7 @@ function ImportOperations(options) {
         } else if (quote) {
           i++; // Skip next character.
         }
-      } else if (('\n' === currentChar && '\r' !== previousChar || '\r' === currentChar) && !quote) {
+      } else if ((currentChar === '\n' && previousChar !== '\r' || currentChar === '\r') && !quote) {
         // Reached end of a line.
         currentLine++;
 
@@ -14198,11 +14225,11 @@ function ImportOperations(options) {
         // At this point, currentChar seems to be used as a delimiter, as it is not quote.
         // Count currentChar if it is not in the $this->nonDelimiterChars list
         if (';,\t'.indexOf(currentChar) !== -1) {
-          if (typeof delimiterCollection[currentChar] == 'undefined') {
+          if (typeof delimiterCollection[currentChar] === 'undefined') {
             delimiterCollection[currentChar] = {};
           }
 
-          if (typeof delimiterCollection[currentChar][currentLine] == 'undefined') {
+          if (typeof delimiterCollection[currentChar][currentLine] === 'undefined') {
             delimiterCollection[currentChar][currentLine] = 0; // Initialize empty
           }
 
@@ -14231,7 +14258,7 @@ function ImportOperations(options) {
       for (var _lineDelimiter in lineDelimiterCollection) {
         if (!startCount) {
           startCount = lineDelimiterCollection[_lineDelimiter];
-        } else if (lineDelimiterCollection[_lineDelimiter] === startCount && (delimiterIndic || typeof delimiterIndic == 'undefined')) {
+        } else if (lineDelimiterCollection[_lineDelimiter] === startCount && (delimiterIndic || typeof delimiterIndic === 'undefined')) {
           delimiterIndic = true;
         } else {
           delimiterIndic = false;
@@ -14387,7 +14414,7 @@ function ImportOperations(options) {
         thisIterConvertShortcodes.push(shortcode);
         window.wptbImportConvertationShortcodes.push(thisIterConvertShortcodes);
         var tableContent = dataTable[1];
-        var url = options.import_iframe_url + '&_wpnonce=' + options.security_code + '&shortcode=' + shortcode;
+        var url = "".concat(options.import_iframe_url, "&_wpnonce=").concat(options.security_code, "&shortcode=").concat(shortcode);
         iframe.src = url;
         iframe.onload = tablePressImportStageThree.bind(this, iframe, tableContent, dataTables);
       }
@@ -14426,7 +14453,7 @@ function ImportOperations(options) {
 
   function tablePressImportStageFour(tableDOMElem, iframe, dataTables, id) {
     var http = new XMLHttpRequest();
-    var url = options.ajaxUrl + "?action=save_table";
+    var url = "".concat(options.ajaxUrl, "?action=save_table");
     var title;
     var code;
     var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
@@ -14469,7 +14496,7 @@ function ImportOperations(options) {
           tablePressImportStageFour(tableDOMElem, iframe, dataTables, data[1]);
         } else if (data[0] == 'edited') {
           if (data[1] && window.wptbImportConvertationShortcodes && Array.isArray(window.wptbImportConvertationShortcodes) && window.wptbImportConvertationShortcodes.length > 0) {
-            window.wptbImportConvertationShortcodes[window.wptbImportConvertationShortcodes.length - 1].push('[wptb id=' + data[1] + ']');
+            window.wptbImportConvertationShortcodes[window.wptbImportConvertationShortcodes.length - 1].push("[wptb id=".concat(data[1], "]"));
           }
 
           if (window.wptbImportCommonCountTables) {
@@ -14551,7 +14578,7 @@ function ImportOperations(options) {
             setTimeout(function () {
               importProgressBarContainer.classList.remove('wptb-importPBarContainerActive');
               eventPostfix = eventPostfix ? ":".concat(eventPostfix) : '';
-              WPTB_Helper.wptbDocumentEventGenerate('wptb-import:progressBar:full' + eventPostfix, importProgressBarContainer);
+              WPTB_Helper.wptbDocumentEventGenerate("wptb-import:progressBar:full".concat(eventPostfix), importProgressBarContainer);
             }, 2000);
           }
 
@@ -14984,22 +15011,22 @@ function ImportOperations(options) {
         if (tdChildNodes[k].nodeName.toLowerCase() === 'img') {
           tdChildNodes[k].style.width = '100%';
           tdChildNodes[k].removeAttribute('class');
-          element.classList.add('wptb-image-container', 'wptb-ph-element', 'wptb-element-image-' + elementsIndexes.imageElemIndex);
+          element.classList.add('wptb-image-container', 'wptb-ph-element', "wptb-element-image-".concat(elementsIndexes.imageElemIndex));
           element.innerHTML = "".concat('<div class="wptb-image-wrapper">' + '<a style="display: block;" target="_blank" rel="nofollow">').concat(tdChildNodes[k].outerHTML, "</a>") + "</div>";
           var img = element.querySelector('img');
           if (img) img.style.width = '100%';
           elementsIndexes.imageElemIndex++;
         } else if (tdChildNodes[k].nodeName.toLowerCase() === 'wptb_shortcode_container_element') {
-          element.classList.add('wptb-shortcode-container', 'wptb-ph-element', 'wptb-element-shortcode-' + elementsIndexes.customHtmlElemIndex);
-          element.innerHTML = '<wptb_shortcode_container_element><div>' + tdChildNodes[k].innerHTML + '</div></wptb_shortcode_container_element>';
+          element.classList.add('wptb-shortcode-container', 'wptb-ph-element', "wptb-element-shortcode-".concat(elementsIndexes.customHtmlElemIndex));
+          element.innerHTML = "<wptb_shortcode_container_element><div>".concat(tdChildNodes[k].innerHTML, "</div></wptb_shortcode_container_element>");
           elementsIndexes.customHtmlElemIndex++;
         } else {
-          element.classList.add('wptb-html-container', 'wptb-ph-element', 'wptb-element-custom_html-' + elementsIndexes.customHtmlElemIndex);
-          element.innerHTML = '<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">' + tdChildNodes[k].outerHTML + '</div>';
+          element.classList.add('wptb-html-container', 'wptb-ph-element', "wptb-element-custom_html-".concat(elementsIndexes.customHtmlElemIndex));
+          element.innerHTML = "<div class=\"wptb-custom-html-wrapper\" data-wptb-new-element=\"1\">".concat(tdChildNodes[k].outerHTML, "</div>");
           elementsIndexes.customHtmlElemIndex++;
         }
       } else if (tdChildNodes[k].nodeType == 3) {
-        element.classList.add('wptb-text-container', 'wptb-ph-element', 'wptb-element-text-' + elementsIndexes.textElemIndex);
+        element.classList.add('wptb-text-container', 'wptb-ph-element', "wptb-element-text-".concat(elementsIndexes.textElemIndex));
         element.innerHTML = "<div><p>".concat(tdChildNodes[k].nodeValue, "</p></div>"); // tds[j].insertBefore( element, tdChildNodes[k] );
         // tds[j].removeChild( tdChildNodes[k] );
 
@@ -17007,11 +17034,6 @@ var _default = {
     },
     importedTablesCountInfo: function importedTablesCountInfo(key) {
       return (0, _i18n.sprintf)((0, _i18n._nx)('%u table imported', '%u tables imported', 'number of tables imported', this.options.textDomain), this.importedTables[key].length);
-    },
-    // eslint-disable-next-line no-underscore-dangle
-    __: function __(value) {
-      var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.options.textDomain;
-      return (0, _i18n.__)(value, domain);
     }
   },
   computed: {
@@ -17219,9 +17241,7 @@ exports.default = _default;
                   [
                     _vm._v(
                       "\n        " +
-                        _vm._s(
-                          _vm.__("replace short codes", _vm.options.textDomain)
-                        ) +
+                        _vm._s(_vm.getTranslation("replace short codes")) +
                         "\n      "
                     )
                   ]
@@ -17432,8 +17452,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _i18n = require("@wordpress/i18n");
-
 var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
 
 var _ControlItem = _interopRequireDefault(require("../components/ControlItem"));
@@ -17489,8 +17507,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
-  props: ['options'],
+  props: ['options', 'pluginInfo'],
   mixins: [_withMessage.default],
   components: {
     MenuButton: _MenuButton.default,
@@ -17537,22 +17557,32 @@ var _default = {
         return false;
       }).length > 0;
     },
-    getTranslation: function getTranslation(text) {
-      return (0, _i18n.__)(text, this.options.textDomain);
+    getSelectedIds: function getSelectedIds() {
+      var _this4 = this;
+
+      var tempArray = [];
+      Object.keys(this.selectedTables).map(function (t) {
+        if (Object.prototype.hasOwnProperty.call(_this4.selectedTables, t)) {
+          if (_this4.selectedTables[t]) {
+            tempArray.push(t);
+          }
+        }
+      });
+      return tempArray;
     },
     fieldLabel: function fieldLabel(field) {
       return field.post_title === '' ? "Table #".concat(field.ID) : field.post_title;
     },
     getUserTables: function getUserTables() {
-      var _this4 = this;
+      var _this5 = this;
 
       var _this$options = this.options,
           ajaxUrl = _this$options.ajaxUrl,
-          exportNonce = _this$options.exportNonce,
-          exportAjaxAction = _this$options.exportAjaxAction;
+          fetchNonce = _this$options.fetchNonce,
+          fetchAjaxAction = _this$options.fetchAjaxAction;
       var formData = new FormData();
-      formData.append('nonce', exportNonce);
-      formData.append('action', exportAjaxAction);
+      formData.append('nonce', fetchNonce);
+      formData.append('action', fetchAjaxAction);
       this.setBusy();
       fetch(ajaxUrl, {
         method: 'POST',
@@ -17562,21 +17592,75 @@ var _default = {
           return r.json();
         }
 
-        throw new Error((0, _i18n.__)('an error occurred, try again later', _this4.options.textDomain));
+        throw new Error(_this5.getTranslation('an error occurred, try again later'));
       }).then(function (resp) {
         if (resp.error) {
           throw new Error(resp.error);
         }
 
-        _this4.userTables = resp.data.userTables;
+        _this5.userTables = resp.data.userTables;
       }).catch(function (e) {
-        _this4.setMessage({
+        _this5.setMessage({
           type: 'error',
           message: e
         });
       }).finally(function () {
-        _this4.setBusy(false);
+        _this5.setBusy(false);
       });
+    },
+    exportTables: function exportTables() {
+      var _this6 = this;
+
+      var _this$options2 = this.options,
+          ajaxUrl = _this$options2.ajaxUrl,
+          exportAjaxAction = _this$options2.exportAjaxAction,
+          exportNonce = _this$options2.exportNonce;
+      var formData = new FormData();
+      formData.append('nonce', exportNonce);
+      formData.append('action', exportAjaxAction);
+      formData.append('ids', JSON.stringify(this.getSelectedIds()));
+      this.setBusy();
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          var contentType = r.headers.get('content-type');
+
+          if (contentType === 'application/octet-stream') {
+            return r.blob();
+          }
+
+          return r.json();
+        }
+
+        throw new Error(_this6.getTranslation('an error occurred, try again later'));
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        var objectData = window.URL.createObjectURL(resp);
+        var fileName = "wptb_export_".concat(Date.now(), ".zip");
+        _this6.$refs.filesave.href = objectData;
+        _this6.$refs.filesave.download = fileName;
+
+        _this6.$refs.filesave.click();
+
+        window.URL.revokeObjectURL(objectData);
+
+        _this6.resetSelections();
+      }).catch(function (e) {
+        _this6.setMessage({
+          type: 'error',
+          message: e
+        });
+      }).finally(function () {
+        _this6.setBusy(false);
+      });
+    },
+    resetSelections: function resetSelections() {
+      this.selectedTables = [];
     }
   }
 };
@@ -17655,7 +17739,14 @@ exports.default = _default;
         1
       ),
       _vm._v(" "),
-      _vm._m(0),
+      _c("div", { staticClass: "wptb-menu-export-middle-section" }, [
+        _c("img", { attrs: { src: _vm.pluginInfo.plainArrow } }),
+        _vm._v(" "),
+        _c("img", {
+          staticClass: "flip",
+          attrs: { src: _vm.pluginInfo.plainArrow }
+        })
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -17721,6 +17812,10 @@ exports.default = _default;
       ),
       _vm._v(" "),
       _c("portal", { attrs: { to: "footerButtons" } }, [
+        _c("a", { ref: "filesave", staticStyle: { display: "none" } }, [
+          _vm._v("filesave")
+        ]),
+        _vm._v(" "),
         _c(
           "div",
           { staticClass: "wptb-settings-button-container" },
@@ -17738,7 +17833,7 @@ exports.default = _default;
               "menu-button",
               {
                 attrs: { disabled: _vm.exportDisabled },
-                on: { click: function($event) {} }
+                on: { click: _vm.exportTables }
               },
               [_vm._v(_vm._s(_vm.strings.exportSection))]
             )
@@ -17750,16 +17845,7 @@ exports.default = _default;
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wptb-menu-export-middle-section" }, [
-      _c("i", [_vm._v("middle section")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -17771,7 +17857,7 @@ render._withStripped = true
           };
         })());
       
-},{"@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../components/MenuButton":"components/MenuButton.vue","../components/ControlItem":"components/ControlItem.vue","../components/EmptyCover":"components/EmptyCover.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
+},{"../components/MenuButton":"components/MenuButton.vue","../components/ControlItem":"components/ControlItem.vue","../components/EmptyCover":"components/EmptyCover.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17894,7 +17980,7 @@ exports.default = _default;
         [
           _c(_vm.currentTemplate, {
             tag: "component",
-            attrs: { options: _vm.options }
+            attrs: { options: _vm.options, "plugin-info": _vm.pluginInfo }
           })
         ],
         1
@@ -17956,7 +18042,45 @@ var _default = {
   install: install
 };
 exports.default = _default;
-},{}],"WPTB_Import_Menu.js":[function(require,module,exports) {
+},{}],"plugins/translations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _i18n = require("@wordpress/i18n");
+
+/**
+ * plugin install method
+ *
+ * plugin for adding WordPress translation API functionality to components
+ *
+ * @param {Vue} Vue object
+ * @param {object} options plugin options
+ * @returns {object} mixin
+ */
+function install(Vue, options) {
+  var textDomain = options.textDomain;
+  Vue.mixin({
+    methods: {
+      getTranslation: function getTranslation(text) {
+        return (0, _i18n.__)(text, textDomain);
+      }
+    }
+  });
+}
+/**
+ * @module translation plugin
+ */
+
+
+var _default = {
+  install: install
+};
+exports.default = _default;
+},{"@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js"}],"WPTB_Import_Menu.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -17966,6 +18090,8 @@ var _portalVue = _interopRequireDefault(require("portal-vue"));
 var _ImportExportApp = _interopRequireDefault(require("./containers/ImportExportApp"));
 
 var _strings = _interopRequireDefault(require("./plugins/strings"));
+
+var _translations = _interopRequireDefault(require("./plugins/translations"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17985,6 +18111,10 @@ _vue.default.use(_strings.default, {
   strings: importData.strings
 });
 
+_vue.default.use(_translations.default, {
+  textDomain: importData.options.textDomain
+});
+
 _vue.default.use(_portalVue.default);
 
 new _vue.default({
@@ -17996,5 +18126,5 @@ new _vue.default({
     options: importData.options
   }
 }).$mount('#wptb-import-menu');
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/ImportExportApp":"containers/ImportExportApp.vue","./plugins/strings":"plugins/strings.js"}]},{},["WPTB_Import_Menu.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/ImportExportApp":"containers/ImportExportApp.vue","./plugins/strings":"plugins/strings.js","./plugins/translations":"plugins/translations.js"}]},{},["WPTB_Import_Menu.js"], null)
 //# sourceMappingURL=/WPTB_Import_Menu.js.map

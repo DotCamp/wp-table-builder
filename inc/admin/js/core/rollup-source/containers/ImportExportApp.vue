@@ -7,7 +7,7 @@
       <portal-target name="childSections"></portal-target>
     </sections>
     <menu-content :center="true">
-      <component :options="options" :is="currentTemplate"> </component>
+      <component :options="options" :plugin-info="pluginInfo" :is="currentTemplate"> </component>
     </menu-content>
     <menu-footer>
       <portal-target name="footerButtons"></portal-target>

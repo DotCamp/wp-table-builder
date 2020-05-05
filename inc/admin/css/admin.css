@@ -2970,16 +2970,32 @@ wptb_shortcode_container_element {
 
 .wptb-menu-empty-cover {
     position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     font-style: italic;
     font-size: 1.2rem;
     color: #CBD5E0;
+}
+
+.wptb-menu-export-middle-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-menu-export-middle-section img {
+    max-width: 100px;
+    width: 50%;
+}
+
+.wptb-menu-export-middle-section .flip {
+    transform: rotateZ(180deg);
 }
 
 @keyframes wptb-settings-rotate {

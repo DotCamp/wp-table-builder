@@ -8,23 +8,22 @@
 function ImportOperations(options) {
   function importFromFile() {
     if (options.file) {
-      let regex = /^([a-zA-Z0-9()\s_\\.\-:])+(.csv)$/;
+      const regex = /^([a-zA-Z0-9()\s_\\.\-:])+(.csv)$/;
       const regex2 = /^([a-zA-Z0-9()\s_\\.\-:])+(.xml)$/;
-      let regex3 = /^([a-zA-Z0-9()\s_\\.\-:])+(.html)$/;
-      let regex4 = /^([a-zA-Z0-9()\s_\\.\-:])+(.zip)$/;
+      const regex3 = /^([a-zA-Z0-9()\s_\\.\-:])+(.html)$/;
+      const regex4 = /^([a-zA-Z0-9()\s_\\.\-:])+(.zip)$/;
 
       const is_csv = regex.test(options.file.name.toLowerCase());
-      let is_xml = regex2.test(options.file.name.toLowerCase());
-      let is_html = regex3.test(options.file.name.toLowerCase());
+      const is_xml = regex2.test(options.file.name.toLowerCase());
+      const is_html = regex3.test(options.file.name.toLowerCase());
       const is_zip = regex4.test(options.file.name.toLowerCase());
 
-      let {file} = options;
+      const { file } = options;
       if (is_zip) {
-        let http = new XMLHttpRequest();
-                    let url = `${options.ajaxUrl 
-                        }?action=zip_unpacker`;
+        const http = new XMLHttpRequest();
+        const url = `${options.ajaxUrl}?action=zip_unpacker`;
 
-        let data = new FormData();
+        const data = new FormData();
         data.append('file', file, 'csv_zip.zip');
         data.append('security_code', options.nonce);
 
@@ -42,17 +41,34 @@ function ImportOperations(options) {
             if (data && Array.isArray(data)) {
               if (data[0] == 'success') {
                 if (data[1] && Array.isArray(data[1])) {
-                  let dataTable = [];
+                  const dataTable = [];
+
+                  const xmlTables = [];
 
                   // check file extension, if it "csv" add get this tableData
                   for (let i = 0; i < data[1].length; i++) {
-                    if (data[1][i][0] === 'csv') {
-                      dataTable.push(data[1][i][1]);
+                    const extension = data[1][i][0];
+                    switch (extension) {
+                      case 'csv':
+                        dataTable.push(data[1][i][1]);
+                        break;
+                      case 'xml':
+                        xmlTables.push(data[1][i][1]);
+                        break;
                     }
                   }
 
+                  // TODO [erdembircan] we can tap into xml parsing right here
+
                   if (dataTable.length > 0) {
                     tablesFromCsvSaveRun(dataTable, 0);
+                  } else if (xmlTables.length > 0) {
+                    console.log(xmlTables);
+                    importXmlTables(xmlTables);
+                  } else {
+                    WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, {
+                      message: 'invalid file type',
+                    });
                   }
                 }
               }
@@ -61,8 +77,8 @@ function ImportOperations(options) {
         };
         http.send(data);
       } else if (is_csv || is_xml || is_html) {
-        if (typeof FileReader != 'undefined') {
-          let reader = new FileReader();
+        if (typeof FileReader !== 'undefined') {
+          const reader = new FileReader();
           let data;
           reader.onload = function (e) {
             data = e.target.result;
@@ -80,6 +96,15 @@ function ImportOperations(options) {
         alert('Please upload a valid file.');
       }
     }
+  }
+
+  function importXmlTables(tables) {
+    tables.map((content) => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = content;
+      const tableElement = wrapper.querySelector('table');
+      tableImportedSave(tableElement);
+    });
   }
 
   /**
@@ -108,7 +133,7 @@ function ImportOperations(options) {
       });
 
       const tableDataArr = parseCsv(tableDataCsv[index], csvDelimiter);
-      let importedTable = createTableFromDataArray(tableDataArr);
+      const importedTable = createTableFromDataArray(tableDataArr);
 
       tableImportedSave(importedTable);
 
@@ -122,14 +147,14 @@ function ImportOperations(options) {
    * save html table
    */
   function tableImportedSave(table, id) {
-    let http = new XMLHttpRequest();
-            let url = (options.ajaxUrl) + "?action=save_table";
-            let code;
+    const http = new XMLHttpRequest();
+    const url = `${options.ajaxUrl}?action=save_table`;
+    let code;
 
     if (id) {
       if (table.classList.contains('wptb-element-main-table_setting-startedid-0')) {
         table.classList.remove('wptb-element-main-table_setting-startedid-0');
-        table.classList.add(`wptb-element-main-table_setting-${  id}`);
+        table.classList.add(`wptb-element-main-table_setting-${id}`);
       }
     }
     code = WPTB_Stringifier(table);
@@ -157,6 +182,7 @@ function ImportOperations(options) {
         const data = JSON.parse(http.responseText);
 
         if (data[0] == 'saved') {
+          console.log(data);
           tableImportedSave(table, data[1]);
         } else if (data[0] == 'edited') {
           WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
@@ -172,8 +198,8 @@ function ImportOperations(options) {
    */
   function createTableFromDataArray(tableDataArr) {
     if (tableDataArr && Array.isArray(tableDataArr) && tableDataArr.length > 0) {
-      let countRows = tableDataArr.length;
-      let countColumns =
+      const countRows = tableDataArr.length;
+      const countColumns =
         countRows > 0 && tableDataArr[0] && Array.isArray(tableDataArr[0]) ? tableDataArr[0].length : 0;
 
       // check if table is empty
@@ -189,18 +215,18 @@ function ImportOperations(options) {
         customHtmlElemIndex: 1,
       };
 
-      let rowSpan = new Array(countRows);
+      const rowSpan = new Array(countRows);
       rowSpan.fill(1);
       const colSpan = new Array(countColumns);
       colSpan.fill(1);
 
-      let tBody = document.createElement('tbody');
+      const tBody = document.createElement('tbody');
 
-      let lastRowIdx = countRows - 1;
+      const lastRowIdx = countRows - 1;
       const lastColumnIdx = countColumns - 1;
 
       for (let rowIdx = lastRowIdx; rowIdx >= 0; rowIdx--) {
-        let tr = document.createElement('tr');
+        const tr = document.createElement('tr');
         tr.classList.add('wptb-row');
         for (let colIdx = lastColumnIdx; colIdx >= 0; colIdx--) {
           let cellContent = tableDataArr[rowIdx][colIdx];
@@ -262,10 +288,10 @@ function ImportOperations(options) {
       table.style.borderWidth = '1px';
       table.appendChild(tBody);
 
-      let tds = table.querySelectorAll('td');
+      const tds = table.querySelectorAll('td');
       for (let i = 0; i < tds.length; i++) {
         const tdChildNodes = [...tds[i].childNodes];
-        let childNodesHandleredIndexesArr = tdChildNodesHandler(tdChildNodes, elementsIndexes);
+        const childNodesHandleredIndexesArr = tdChildNodesHandler(tdChildNodes, elementsIndexes);
         let wptbElements;
         if (childNodesHandleredIndexesArr && Array.isArray(childNodesHandleredIndexesArr)) {
           wptbElements = childNodesHandleredIndexesArr[0];
@@ -308,7 +334,7 @@ function ImportOperations(options) {
 
     table.dataset.wptbFixedWidthSize = '0';
     table.dataset.wptbCellsWidthAutoCount = table.maxCols;
-    let td = table.querySelector('td');
+    const td = table.querySelector('td');
     const tdPadding = td && td.style.paddingTop ? td.style.paddingTop : 15;
     table.dataset.wptbTableTdsSumMaxWidth = String(parseInt(table.maxCols) * (100 + 1 + parseInt(tdPadding) * 2) + 1);
   }
@@ -317,11 +343,11 @@ function ImportOperations(options) {
    * function for parse CSV to array
    */
   function parseCsv(str, separator) {
-    let arr = [];
+    const arr = [];
     let quote = false;
     for (let row = 0, col = 0, c = 0; c < str.length; c++) {
-      let cc = str[c],
-        nc = str[c + 1];
+      const cc = str[c];
+      const nc = str[c + 1];
       arr[row] = arr[row] || [];
       arr[row][col] = arr[row][col] || '';
 
@@ -357,14 +383,14 @@ function ImportOperations(options) {
     const delimiterCollection = {};
     let quote = false;
     let currentLine = 0;
-    let nonDelimiterChars = 'a-zA-Z0-9\n\r';
+    const nonDelimiterChars = 'a-zA-Z0-9\n\r';
 
     // Walk through each character in the CSV string (up to $this->delimiter_search_max_lines) and search potential delimiter characters.
-    let dataLength = data.length;
+    const dataLength = data.length;
     for (let i = 0; i < dataLength; i++) {
-      let previousChar = i - 1 >= 0 ? data[i - 1] : '';
-      let currentChar = data[i];
-      let nextChar = i + 1 < dataLength ? data[i + 1] : '';
+      const previousChar = i - 1 >= 0 ? data[i - 1] : '';
+      const currentChar = data[i];
+      const nextChar = i + 1 < dataLength ? data[i + 1] : '';
 
       if (currentChar === '"') {
         // Open and closing quotes.
@@ -373,7 +399,7 @@ function ImportOperations(options) {
         } else if (quote) {
           i++; // Skip next character.
         }
-      } else if ((('\n' === currentChar && '\r' !== previousChar) || '\r' === currentChar) && !quote) {
+      } else if (((currentChar === '\n' && previousChar !== '\r') || currentChar === '\r') && !quote) {
         // Reached end of a line.
         currentLine++;
         if (currentLine >= 15) {
@@ -383,11 +409,11 @@ function ImportOperations(options) {
         // At this point, currentChar seems to be used as a delimiter, as it is not quote.
         // Count currentChar if it is not in the $this->nonDelimiterChars list
         if (';,\t'.indexOf(currentChar) !== -1) {
-          if (typeof delimiterCollection[currentChar] == 'undefined') {
+          if (typeof delimiterCollection[currentChar] === 'undefined') {
             delimiterCollection[currentChar] = {};
           }
 
-          if (typeof delimiterCollection[currentChar][currentLine] == 'undefined') {
+          if (typeof delimiterCollection[currentChar][currentLine] === 'undefined') {
             delimiterCollection[currentChar][currentLine] = 0; // Initialize empty
           }
           delimiterCollection[currentChar][currentLine]++;
@@ -396,7 +422,7 @@ function ImportOperations(options) {
     }
     let potentialDelimiters = '';
     for (const delimiter in delimiterCollection) {
-      let lineDelimiterCollection = delimiterCollection[delimiter];
+      const lineDelimiterCollection = delimiterCollection[delimiter];
       let lineDelimiterCollectionLength = 0;
       for (const lineDelimiter in lineDelimiterCollection) {
         lineDelimiterCollectionLength++;
@@ -412,7 +438,7 @@ function ImportOperations(options) {
           startCount = lineDelimiterCollection[lineDelimiter];
         } else if (
           lineDelimiterCollection[lineDelimiter] === startCount &&
-          (delimiterIndic || typeof delimiterIndic == 'undefined')
+          (delimiterIndic || typeof delimiterIndic === 'undefined')
         ) {
           delimiterIndic = true;
         } else {
@@ -443,12 +469,12 @@ function ImportOperations(options) {
     if (Parent.nodeType == 1) {
       if (Parent.children.length > 0) {
         for (let i = 0; i < Parent.children.length; i++) {
-          let child = Parent.children[i];
+          const child = Parent.children[i];
           wptb_xmlElementChildrenEach(child);
         }
       } else if (Parent.childNodes.length > 0) {
         for (let i = 0; i < Parent.childNodes.length; i++) {
-          let child = Parent.childNodes[i];
+          const child = Parent.childNodes[i];
           wptb_xmlElementChildrenEach(child);
         }
       } else {
@@ -472,14 +498,14 @@ function ImportOperations(options) {
    * function for parse Xml file
    */
   function wptb_xmlImportFileParse(data) {
-    let xmlDoc = $.parseXML(data);
-    var xml = $(xmlDoc);
-    var rows = [];
-            var rows_header = [];
+    const xmlDoc = $.parseXML(data);
+    const xml = $(xmlDoc);
+    let rows = [];
+    const rows_header = [];
     if (xml.length > 0) {
-      var documentElement = xml[0].children;
+      const documentElement = xml[0].children;
       if (documentElement.length > 0) {
-        var couponElements = documentElement[0].children;
+        const couponElements = documentElement[0].children;
         for (let i = 0; i < couponElements.length; i++) {
           if (i == 0) {
             rows_header[i] = wptb_xmlElementChildrenEach(couponElements[i], true);
@@ -509,8 +535,8 @@ function ImportOperations(options) {
    * function
    */
   function tablePressImportStageOne() {
-    let http = new XMLHttpRequest();
-            let url = `${options.ajaxUrl  }?action=import_tables`;
+    const http = new XMLHttpRequest();
+    const url = `${options.ajaxUrl}?action=import_tables`;
 
     let params = {
       import_plugin_name: 'table-press',
@@ -524,7 +550,7 @@ function ImportOperations(options) {
 
     http.onreadystatechange = function (action) {
       if (this.readyState == 4 && this.status == 200) {
-        let data = JSON.parse(http.responseText);
+        const data = JSON.parse(http.responseText);
 
         if (data && Array.isArray(data)) {
           if (data[0] == 'success') {
@@ -559,17 +585,17 @@ function ImportOperations(options) {
     if (dataTables && Array.isArray(dataTables) && dataTables.length > 0) {
       const dataTable = dataTables.shift();
       if (dataTable && Array.isArray(dataTable) && dataTable.length > 0) {
-        let shortcode = dataTable[0];
+        const shortcode = dataTable[0];
         if (!window.wptbImportConvertationShortcodes) {
           window.wptbImportConvertationShortcodes = [];
         }
-        let thisIterConvertShortcodes = [];
+        const thisIterConvertShortcodes = [];
         thisIterConvertShortcodes.push(shortcode);
         window.wptbImportConvertationShortcodes.push(thisIterConvertShortcodes);
 
-        let tableContent = dataTable[1];
+        const tableContent = dataTable[1];
 
-        let url = options.import_iframe_url + '&_wpnonce=' + options.security_code + '&shortcode=' + shortcode;
+        const url = `${options.import_iframe_url}&_wpnonce=${options.security_code}&shortcode=${shortcode}`;
 
         iframe.src = url;
         iframe.onload = tablePressImportStageThree.bind(this, iframe, tableContent, dataTables);
@@ -578,14 +604,14 @@ function ImportOperations(options) {
   }
 
   function tablePressImportStageThree(iframe, tableContent, dataTables) {
-    let iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+    const iframeContent = iframe.contentDocument || iframe.contentWindow.document;
     const selectTableLength = iframeContent.querySelector('.dataTables_length select');
     if (selectTableLength) {
       const selectTableLengthOptions = [...selectTableLength.options];
       if (Array.isArray(selectTableLengthOptions)) {
         const optionMaxValue = selectTableLengthOptions.reduce(function (previousValue, currentValue) {
-          let prevVal = previousValue ? Number(previousValue.value) : '';
-          let curVal = currentValue ? Number(currentValue.value) : '';
+          const prevVal = previousValue ? Number(previousValue.value) : '';
+          const curVal = currentValue ? Number(currentValue.value) : '';
           if (prevVal < curVal) {
             previousValue = currentValue;
           }
@@ -605,12 +631,12 @@ function ImportOperations(options) {
   }
 
   function tablePressImportStageFour(tableDOMElem, iframe, dataTables, id) {
-    let http = new XMLHttpRequest();
-            let url = (options.ajaxUrl) + "?action=save_table";
-            let title;
-            let code;
-    let iframeContent = iframe.contentDocument || iframe.contentWindow.document;
-    let titleElem = iframeContent.querySelector('.tablepress-table-name');
+    const http = new XMLHttpRequest();
+    const url = `${options.ajaxUrl}?action=save_table`;
+    let title;
+    let code;
+    const iframeContent = iframe.contentDocument || iframe.contentWindow.document;
+    const titleElem = iframeContent.querySelector('.tablepress-table-name');
     if (titleElem) {
       title = titleElem.innerText;
     } else {
@@ -620,14 +646,14 @@ function ImportOperations(options) {
     if (id) {
       if (tableDOMElem.classList.contains('wptb-element-main-table_setting-startedid-0')) {
         tableDOMElem.classList.remove('wptb-element-main-table_setting-startedid-0');
-        tableDOMElem.classList.add(`wptb-element-main-table_setting-${  id}`);
+        tableDOMElem.classList.add(`wptb-element-main-table_setting-${id}`);
       }
     }
     code = WPTB_Stringifier(tableDOMElem);
     code = code.outerHTML;
 
     let params = {
-      title: title,
+      title,
       content: code,
       security_code: options.security_code,
     };
@@ -642,7 +668,7 @@ function ImportOperations(options) {
 
     http.onreadystatechange = function (action) {
       if (this.readyState == 4 && this.status == 200) {
-        let data = JSON.parse(http.responseText);
+        const data = JSON.parse(http.responseText);
 
         if (data[0] == 'saved') {
           tablePressImportStageFour(tableDOMElem, iframe, dataTables, data[1]);
@@ -654,11 +680,11 @@ function ImportOperations(options) {
             window.wptbImportConvertationShortcodes.length > 0
           ) {
             window.wptbImportConvertationShortcodes[window.wptbImportConvertationShortcodes.length - 1].push(
-              '[wptb id=' + data[1] + ']'
+              `[wptb id=${data[1]}]`
             );
           }
           if (window.wptbImportCommonCountTables) {
-            let commonCount = window.wptbImportCommonCountTables;
+            const commonCount = window.wptbImportCommonCountTables;
             const importingCount = window.wptbImportCommonCountTables - dataTables.length;
             const percent = tableImportingProgressBar(importingCount, commonCount, 'import');
 
@@ -693,7 +719,7 @@ function ImportOperations(options) {
    */
   function tableImportingProgressBar(count, commonCount, eventPostfix) {
     const importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
-    let percentElement = document.querySelector('#wptb-pBarPercent');
+    const percentElement = document.querySelector('#wptb-pBarPercent');
     const percentElementSpan = document.querySelector('#wptb-pBarPercent span');
     if (importProgressBarContainer && percentElement && percentElementSpan) {
       if ((count || count === 0) && commonCount) {
@@ -702,7 +728,7 @@ function ImportOperations(options) {
         if (commonCount > 0) {
           importProgressBarContainer.classList.add('wptb-importPBarContainerActive');
 
-          let nameProcessingElem = importProgressBarContainer.querySelector('.wptb-nameProcessInBarProgress');
+          const nameProcessingElem = importProgressBarContainer.querySelector('.wptb-nameProcessInBarProgress');
           if (nameProcessingElem) {
             let nameProcessing = '';
             let button;
@@ -723,19 +749,19 @@ function ImportOperations(options) {
           let percent = ((count / commonCount) * 100).toFixed(2);
           if (percent > 100) percent = 100;
 
-          percentElementSpan.innerHTML = `${percent  }%`;
+          percentElementSpan.innerHTML = `${percent}%`;
           if (percent < 3) {
             percentElement.style.width = '3%';
           } else {
-            percentElement.style.width = `${percent  }%`;
+            percentElement.style.width = `${percent}%`;
           }
 
           if (percent == 100) {
             setTimeout(function () {
               importProgressBarContainer.classList.remove('wptb-importPBarContainerActive');
-              eventPostfix = eventPostfix ? `:${  eventPostfix}` : '';
+              eventPostfix = eventPostfix ? `:${eventPostfix}` : '';
               WPTB_Helper.wptbDocumentEventGenerate(
-                'wptb-import:progressBar:full' + eventPostfix,
+                `wptb-import:progressBar:full${eventPostfix}`,
                 importProgressBarContainer
               );
             }, 2000);
@@ -833,13 +859,13 @@ function ImportOperations(options) {
    */
   function importedTablesReplaceShortcodes(tbody) {
     if (tbody && tbody.children && tbody.children.length > 0) {
-      let rows = tbody.children;
-      let replacingShortcodes = [];
+      const rows = tbody.children;
+      const replacingShortcodes = [];
       for (let i = 0; i < rows.length; i++) {
-        let tr = rows[i];
-        let tds = tr.children;
+        const tr = rows[i];
+        const tds = tr.children;
         if (tds.length > 0 && tds[0] && tds[1] && tds[2]) {
-          let inputCheckbox = tds[0].querySelector('input');
+          const inputCheckbox = tds[0].querySelector('input');
 
           if (inputCheckbox && inputCheckbox.checked && tds[1].innerHTML && tds[2].innerHTML) {
             replacingShortcodes.push({
@@ -865,9 +891,9 @@ function ImportOperations(options) {
       }
 
       const http = new XMLHttpRequest();
-                let url = `${options.ajaxUrl  }?action=shortcodes_replace`;
+      const url = `${options.ajaxUrl}?action=shortcodes_replace`;
 
-      let replacingShortcodesOne = replacingShortcodes.shift();
+      const replacingShortcodesOne = replacingShortcodes.shift();
 
       let params = {
         replacing_shortcodes: replacingShortcodesOne,
@@ -881,9 +907,9 @@ function ImportOperations(options) {
 
       http.onreadystatechange = function (action) {
         if (this.readyState == 4 && this.status == 200) {
-          let data = JSON.parse(http.responseText);
+          const data = JSON.parse(http.responseText);
 
-          let commonCount = window.wptbImportShortcodesNecessaryReplace;
+          const commonCount = window.wptbImportShortcodesNecessaryReplace;
           const replacedCount = window.wptbImportShortcodesNecessaryReplace - replacingShortcodes.length;
           let percent = 0;
           if (data && Array.isArray(data) && data[0] == 'success') {
@@ -909,13 +935,13 @@ function ImportOperations(options) {
               importProgressBarContainer.addEventListener(
                 'wptb-import:progressBar:full:replace',
                 function () {
-                  let importedTablesShortcodesReplaced = document.querySelector(
+                  const importedTablesShortcodesReplaced = document.querySelector(
                     '.wptb-importedTablesShortcodesReplaced'
                   );
                   if (importedTablesShortcodesReplaced) {
                     importedTablesShortcodesReplaced.style.display = 'block';
 
-                    let importedShortcodesReplaceCount = document.querySelector(
+                    const importedShortcodesReplaceCount = document.querySelector(
                       '.wptb-importedShortcodesReplaceCount span'
                     );
                     if (importedShortcodesReplaceCount) {
@@ -972,7 +998,7 @@ function ImportOperations(options) {
       /*
        * remove class attribute from 'tbody' tag
        */
-      let tBody = tableDomElem.querySelector('tbody');
+      const tBody = tableDomElem.querySelector('tbody');
       if (tBody) {
         tBody.removeAttribute('class');
       }
@@ -996,7 +1022,7 @@ function ImportOperations(options) {
 
       const tFoot = tableDomElem.querySelector('tfoot');
       if (tFoot) {
-        let tFootInnerHtml = tFoot.innerHTML;
+        const tFootInnerHtml = tFoot.innerHTML;
         if (tFootInnerHtml) {
           if (tBody) {
             let tBodyInnerHtml = tBody.innerHTML;
@@ -1056,7 +1082,7 @@ function ImportOperations(options) {
           // if( tableContent && Array.isArray( tableContent ) ) {
           //     tablecontentForRow = tableContent[i];
           // }
-          let tds = [...trs[i].children];
+          const tds = [...trs[i].children];
           let tdsBackgrounds;
           let trInnerHtml = '';
           for (let j = 0; j < tds.length; j++) {
@@ -1107,9 +1133,9 @@ function ImportOperations(options) {
             // }
 
             const borderColor1 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-top-color');
-            let borderColor2 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-left-color');
-            let borderColor3 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-right-color');
-            let borderColor4 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-bottom-color');
+            const borderColor2 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-left-color');
+            const borderColor3 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-right-color');
+            const borderColor4 = WPTB_Helper.checkSetGetStyleColorValue(tds[j], 'border-color', 'border-bottom-color');
 
             let borderColor = WPTB_Helper.getValueMaxCountSameElementsInArray([
               borderColor1,
@@ -1136,7 +1162,7 @@ function ImportOperations(options) {
             tds[j].removeAttribute('role');
             tds[j].classList.add('wptb-droppable', 'wptb-cell');
 
-            let tdXIndex = tds[j].dataset.xIndex;
+            const tdXIndex = tds[j].dataset.xIndex;
             const tdYIndex = tds[j].dataset.yIndex;
             if (
               tdXIndex &&
@@ -1148,7 +1174,7 @@ function ImportOperations(options) {
             ) {
               tds[j].innerHTML = tableContent[tdYIndex][tdXIndex];
 
-              let tdChildNodes = [...tds[j].childNodes];
+              const tdChildNodes = [...tds[j].childNodes];
 
               const childNodesHandleredIndexesArr = tdChildNodesHandler(tdChildNodes, elementsIndexes);
               let wptbElements;
@@ -1186,13 +1212,13 @@ function ImportOperations(options) {
   }
 
   function tdChildNodesHandler(tdChildNodes, elementsIndexes) {
-    let wptbElements = [];
+    const wptbElements = [];
     for (let k = 0; k < tdChildNodes.length; k++) {
       if (tdChildNodes[k].nodeType != 1 && tdChildNodes[k].nodeType != 3) {
         continue;
       }
 
-      let element = document.createElement('div');
+      const element = document.createElement('div');
 
       if (tdChildNodes[k].nodeType == 1) {
         if (tdChildNodes[k].nodeName.toLowerCase() === 'img') {
@@ -1201,15 +1227,13 @@ function ImportOperations(options) {
           element.classList.add(
             'wptb-image-container',
             'wptb-ph-element',
-            'wptb-element-image-' + elementsIndexes.imageElemIndex
+            `wptb-element-image-${elementsIndexes.imageElemIndex}`
           );
           element.innerHTML =
-            `${'<div class="wptb-image-wrapper">' +
-                        '<a style="display: block;" target="_blank" rel="nofollow">'}${ 
-                        tdChildNodes[k].outerHTML 
-                        }</a>` +
-                        `</div>`;
-          let img = element.querySelector('img');
+            `${'<div class="wptb-image-wrapper">' + '<a style="display: block;" target="_blank" rel="nofollow">'}${
+              tdChildNodes[k].outerHTML
+            }</a>` + `</div>`;
+          const img = element.querySelector('img');
           if (img) img.style.width = '100%';
 
           elementsIndexes.imageElemIndex++;
@@ -1217,22 +1241,18 @@ function ImportOperations(options) {
           element.classList.add(
             'wptb-shortcode-container',
             'wptb-ph-element',
-            'wptb-element-shortcode-' + elementsIndexes.customHtmlElemIndex
+            `wptb-element-shortcode-${elementsIndexes.customHtmlElemIndex}`
           );
-          element.innerHTML =
-            '<wptb_shortcode_container_element><div>' +
-            tdChildNodes[k].innerHTML +
-            '</div></wptb_shortcode_container_element>';
+          element.innerHTML = `<wptb_shortcode_container_element><div>${tdChildNodes[k].innerHTML}</div></wptb_shortcode_container_element>`;
 
           elementsIndexes.customHtmlElemIndex++;
         } else {
           element.classList.add(
             'wptb-html-container',
             'wptb-ph-element',
-            'wptb-element-custom_html-' + elementsIndexes.customHtmlElemIndex
+            `wptb-element-custom_html-${elementsIndexes.customHtmlElemIndex}`
           );
-          element.innerHTML =
-            '<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">' + tdChildNodes[k].outerHTML + '</div>';
+          element.innerHTML = `<div class="wptb-custom-html-wrapper" data-wptb-new-element="1">${tdChildNodes[k].outerHTML}</div>`;
 
           elementsIndexes.customHtmlElemIndex++;
         }
@@ -1240,15 +1260,15 @@ function ImportOperations(options) {
         element.classList.add(
           'wptb-text-container',
           'wptb-ph-element',
-          'wptb-element-text-' + elementsIndexes.textElemIndex
+          `wptb-element-text-${elementsIndexes.textElemIndex}`
         );
-        element.innerHTML = `<div><p>${  tdChildNodes[k].nodeValue  }</p></div>`;
+        element.innerHTML = `<div><p>${tdChildNodes[k].nodeValue}</p></div>`;
         // tds[j].insertBefore( element, tdChildNodes[k] );
         // tds[j].removeChild( tdChildNodes[k] );
 
-        let textP = element.querySelector('p');
+        const textP = element.querySelector('p');
         if (textP) {
-          let textPFontSize = WPTB_Helper.checkSetGetStyleSizeValue(textP, 'font-size', 'font-size');
+          const textPFontSize = WPTB_Helper.checkSetGetStyleSizeValue(textP, 'font-size', 'font-size');
           if (textPFontSize) {
             if (WPTB_Helper.checkingDimensionValue(textPFontSize, 'px')) {
               textP.style.fontSize = null;

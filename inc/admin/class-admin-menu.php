@@ -291,6 +291,7 @@ class Admin_Menu {
 				'pluginHomepage' => esc_attr( $plugin_homepage ),
 				'pluginName'     => esc_html( $plugin_name ),
 				'logo'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png' ),
+				'plainArrow'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/plain_arrow.svg' ),
 			];
 
 			$strings = [
@@ -322,8 +323,10 @@ class Admin_Menu {
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'import_iframe_url' => $import_iframe_url,
                 'textDomain' => $wptb_text_domain,
-				'exportNonce' => Export::get_instance()->generate_nonce(),
-                'exportAjaxAction' => Export::SETTING_SLUG,
+				'fetchNonce' => Export::get_instance()->generate_nonce('fetch'),
+                'fetchAjaxAction' => Export::EXPORT_FETCH_TABLES,
+				'exportNonce' => Export::get_instance()->generate_nonce('export'),
+				'exportAjaxAction' => Export::EXPORT_TABLES,
 			];
 
 			$data = [

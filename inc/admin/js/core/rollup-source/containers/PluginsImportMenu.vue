@@ -54,12 +54,11 @@
           size="small"
           @click="replaceShortcodes"
         >
-          {{ __('replace short codes', options.textDomain) }}
+          {{ getTranslation('replace short codes') }}
         </menu-button>
       </div>
     </transition>
 
-    <!--        source code for import functionality is all over the place, makes it really hard to extract the business logic from the view one. this component, unfortunately appears to be a key component for business logic to work. this is the best workaround I found to make the business logic work-->
     <div class="wptb-importPBarContainer" style="visibility: hidden;">
       <div class="wptb-importPBarProgress">
         <div class="wptb-nameProcessInBarProgress"></div>
@@ -72,7 +71,7 @@
 </template>
 <script>
 import { Fragment } from 'vue-fragment';
-import { _x, sprintf, _nx, __ } from '@wordpress/i18n';
+import { _x, sprintf, _nx } from '@wordpress/i18n';
 import MenuButton from '../components/MenuButton.vue';
 import ImportOperations from '../functions/importOperations.js';
 import withMessage from '../mixins/withMessage';
@@ -171,10 +170,6 @@ export default {
         _nx('%u table imported', '%u tables imported', 'number of tables imported', this.options.textDomain),
         this.importedTables[key].length
       );
-    },
-    // eslint-disable-next-line no-underscore-dangle
-    __(value, domain = this.options.textDomain) {
-      return __(value, domain);
     },
   },
   computed: {
