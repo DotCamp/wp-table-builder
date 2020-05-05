@@ -87,7 +87,7 @@ table.wptb-preview-table {
 .wptb-table-container table td {
     /*width: 100px;*/
     box-sizing: content-box;
-    padding: 15px;
+    padding: 10px;
     background-color: inherit;
     vertical-align: middle;
 }
