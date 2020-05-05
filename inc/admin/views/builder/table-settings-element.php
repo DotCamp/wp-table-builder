@@ -174,7 +174,7 @@ class Table_Settings_Element extends Controls_Stack {
                 ],
                 'min' => '0',
                 'max' => '50',
-                'defaultValue' => 15,
+                'defaultValue' => 10,
                 'dimension' => 'px'
 			]
 		);
