@@ -58,12 +58,9 @@ function ImportOperations(options) {
                     }
                   }
 
-                  // TODO [erdembircan] we can tap into xml parsing right here
-
                   if (dataTable.length > 0) {
                     tablesFromCsvSaveRun(dataTable, 0);
                   } else if (xmlTables.length > 0) {
-                    console.log(xmlTables);
                     importXmlTables(xmlTables);
                   } else {
                     WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, {
@@ -182,7 +179,6 @@ function ImportOperations(options) {
         const data = JSON.parse(http.responseText);
 
         if (data[0] == 'saved') {
-          console.log(data);
           tableImportedSave(table, data[1]);
         } else if (data[0] == 'edited') {
           WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);

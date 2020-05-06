@@ -1,6 +1,6 @@
 <template>
   <div class="wptb-menu-export-wrapper">
-    <div class="wptb-menu-export-card wptb-menu-overflow-auto">
+    <div class="wptb-menu-export-card">
       <div class="wptb-menu-export-control-title">{{ getTranslation('your tables') }}</div>
       <div class="wptb-menu-export-controls-wrapper">
         <transition-group name="wptb-fade" tag="div">

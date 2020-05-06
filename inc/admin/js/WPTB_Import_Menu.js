@@ -13861,13 +13861,11 @@ function ImportOperations(options) {
                         xmlTables.push(_data[1][i][1]);
                         break;
                     }
-                  } // TODO [erdembircan] we can tap into xml parsing right here
-
+                  }
 
                   if (dataTable.length > 0) {
                     tablesFromCsvSaveRun(dataTable, 0);
                   } else if (xmlTables.length > 0) {
-                    console.log(xmlTables);
                     importXmlTables(xmlTables);
                   } else {
                     WPTB_Helper.wptbDocumentEventGenerate('table:imported:error', document, {
@@ -13990,7 +13988,6 @@ function ImportOperations(options) {
         var data = JSON.parse(http.responseText);
 
         if (data[0] == 'saved') {
-          console.log(data);
           tableImportedSave(table, data[1]);
         } else if (data[0] == 'edited') {
           WPTB_Helper.wptbDocumentEventGenerate('table:imported:saved', document);
@@ -17683,7 +17680,7 @@ exports.default = _default;
     [
       _c(
         "div",
-        { staticClass: "wptb-menu-export-card wptb-menu-overflow-auto" },
+        { staticClass: "wptb-menu-export-card" },
         [
           _c("div", { staticClass: "wptb-menu-export-control-title" }, [
             _vm._v(_vm._s(_vm.getTranslation("your tables")))

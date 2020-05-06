@@ -2956,6 +2956,7 @@ wptb_shortcode_container_element {
     position: relative;
     border: 1px solid #cbd5e0;
     padding: 10px;
+    overflow: auto;
 }
 
 .wptb-menu-export-middle-section {
