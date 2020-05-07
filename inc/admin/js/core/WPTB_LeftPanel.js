@@ -160,6 +160,14 @@ var WPTB_LeftPanel = function () {
                 WPTB_Helper.toggleTableEditMode();
             } else if( inputs.hasOwnProperty( 'tableAlignmentCheckbox' ) ) {
                 table.tdDefaultWidth();
+            } else if( inputs.hasOwnProperty( 'tableCellMinAutoWidth' ) ) {
+                table.tdDefaultWidth();
+            } else if( inputs.hasOwnProperty( 'tableBorder' ) ) {
+                table.tdDefaultWidth();
+            } else if( inputs.hasOwnProperty( 'tableInnerBorderSize' ) ) {
+                table.tdDefaultWidth();
+            } else if( inputs.hasOwnProperty( 'tableCellPadding' ) ) {
+                table.tdDefaultWidth();
             }
         } 
     }

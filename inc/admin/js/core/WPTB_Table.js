@@ -525,7 +525,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                         td.removeAttribute( 'data-wptb-css-td-auto-width' );
                     } else {
                         if( ! td.dataset.wptbFixedWidth ) {
-                            arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] = 100;
+                            arrayCellsWidthAutoHelper[parseFloat( td.dataset.xIndex )] = table.dataset.wptbTdWidthAuto ? parseFloat( table.dataset.wptbTdWidthAuto, 10 ) : 100;
                             td.dataset.wptbCssTdAutoWidth = true;
                         }
                     }
@@ -635,7 +635,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             table.style.maxWidth = null;
             table.style.minWidth = tableTdsSumMaxWidth + 'px';
             table.style.width = 'auto';
-            tableTdWidthAuto = '100'
+            tableTdWidthAuto = table.dataset.wptbTdWidthAuto ? table.dataset.wptbTdWidthAuto : '100';
             styleElementCreate = true;
         }
         

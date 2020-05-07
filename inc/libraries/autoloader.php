@@ -35,6 +35,7 @@ spl_autoload_register( function( $class_name ) {
 
 	// Do a reverse loop through $file_parts to build the path to the file.
 	$namespace = '';
+    $file_name = '';
 	for ( $i = count( $file_parts ) - 1; $i > 0; $i-- ) {
 
 		// Read the current component of the file part.

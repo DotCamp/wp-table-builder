@@ -500,8 +500,8 @@
 
                     table.mergingСellsHorizontally = false;
                     let tds = table.querySelectorAll( 'td' );
-                    for( let i = 0; i < tds.length; i++ ) {
-                        if( tds[i].colSpan > 1 ) {
+                    for( let j = 0; j < tds.length; j++ ) {
+                        if( tds[j].colSpan > 1 ) {
                             table.mergingСellsHorizontally = true;
                         }
                     }
@@ -557,7 +557,7 @@
                         table.style.maxWidth = null;
                         table.style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
                         table.style.width = 'auto';
-                        tableTdWidthAuto = '100';
+                        tableTdWidthAuto = table.dataset.wptbTdWidthAuto ? table.dataset.wptbTdWidthAuto : '100';
                         styleElementCreate = true;
 
 //                    if( frontendEditLink && frontendEditLink[i] ) {

@@ -151,12 +151,13 @@ class Control_Size extends Base_Control {
 
                                     let details = {value: this.value};
 
-                                    WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
                                     if( '{{{selectorsJson}}}' ) {
                                         let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
                                         getSetElementValue( selectors, details.value );
                                     }
+
+                                    WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
 
                                     event.target.onmouseup = function() {
                                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();

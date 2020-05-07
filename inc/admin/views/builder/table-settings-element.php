@@ -109,6 +109,21 @@ class Table_Settings_Element extends Controls_Stack {
                 'appearDependOnControl' => ['applyTableContainerMaxWidth', ['checked'], ['unchecked']]
 			]
 		);
+
+        $this->add_control(
+            'tableCellMinAutoWidth',
+            [
+                'label' => __( 'Table Cell Min Auto Width', 'wp_table_builder' ),
+                'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}}' => ['data-wptb-td-width-auto']
+                ],
+                'min' => 10,
+                'max' => 500,
+                'defaultValue' => 100,
+                'dimension' => 'px'
+            ]
+        );
         
 		$this->add_control(
 			'tableBorder',
