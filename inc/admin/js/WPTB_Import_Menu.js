@@ -13582,6 +13582,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['fieldData', 'modelBind'],
   methods: {
@@ -13721,51 +13722,60 @@ exports.default = _default;
         ])
       : _vm.isType("dropdown")
       ? _c("div", [
-          _c("div", { staticClass: "wptb-setting-control-row" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.modelBind[_vm.fieldData.id],
-                    expression: "modelBind[fieldData.id]"
+          _c(
+            "div",
+            { staticClass: "wptb-setting-control-row" },
+            [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modelBind[_vm.fieldData.id],
+                      expression: "modelBind[fieldData.id]"
+                    }
+                  ],
+                  attrs: { id: _vm.fieldData.id },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.modelBind,
+                        _vm.fieldData.id,
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
                   }
-                ],
-                attrs: { id: _vm.fieldData.id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.modelBind,
-                      _vm.fieldData.id,
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.fieldData.options, function(o) {
-                return _c(
-                  "option",
-                  { key: o.label, domProps: { value: o.value } },
-                  [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("label", { attrs: { for: _vm.fieldData.id } }, [
-              _vm._v(_vm._s(_vm.fieldData.label))
-            ])
-          ])
+                },
+                _vm._l(_vm.fieldData.options, function(o) {
+                  return _c(
+                    "option",
+                    { key: o.label, domProps: { value: o.value } },
+                    [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: _vm.fieldData.id } }, [
+                _vm._v(_vm._s(_vm.fieldData.label))
+              ]),
+              _vm._v(" "),
+              _vm._t("default")
+            ],
+            2
+          )
         ])
       : _vm._e()
   ])
@@ -17441,6 +17451,65 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/PopUp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['message']
+};
+exports.default = _default;
+        var $595f82 = exports.default || module.exports;
+      
+      if (typeof $595f82 === 'function') {
+        $595f82 = $595f82.options;
+      }
+    
+        /* template */
+        Object.assign($595f82, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-menu-popup-wrapper" },
+    [
+      _vm._t("default"),
+      _vm._v(" "),
+      _c("div", { staticClass: "message" }, [
+        _c("div", { staticClass: "arrow" }),
+        _vm._v(" "),
+        _c("span", { domProps: { innerHTML: _vm._s(_vm.message) } })
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"containers/ExportApp.vue":[function(require,module,exports) {
 "use strict";
 
@@ -17455,61 +17524,23 @@ var _ControlItem = _interopRequireDefault(require("../components/ControlItem"));
 
 var _EmptyCover = _interopRequireDefault(require("../components/EmptyCover"));
 
+var _PopUp = _interopRequireDefault(require("../components/PopUp"));
+
 var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   props: ['options', 'pluginInfo'],
   mixins: [_withMessage.default],
   components: {
+    PopUp: _PopUp.default,
     MenuButton: _MenuButton.default,
     ControlItem: _ControlItem.default,
     EmptyCover: _EmptyCover.default
@@ -17517,13 +17548,33 @@ var _default = {
   data: function data() {
     return {
       userTables: [],
-      selectedTables: {}
+      selectedTables: {},
+      exportType: 'CSV',
+      exportTypeControlOptions: {
+        id: 'exportType',
+        type: 'dropdown',
+        label: 'export type',
+        options: [{
+          label: 'csv',
+          value: 'CSV'
+        }, {
+          label: 'xml',
+          value: 'XML'
+        }]
+      }
     };
   },
   mounted: function mounted() {
     this.getUserTables();
   },
   computed: {
+    exportTypeDescription: function exportTypeDescription() {
+      var descriptions = {
+        csvDescription: "<b>CSV:</b> ".concat(this.getTranslation('only text content of your tables will be exported, ideal for usage within other apps/plugins')),
+        xmlDescription: "<b>XML:</b> ".concat(this.getTranslation('an exact copy of your tables will be exported, ideal for backup and share your tables with your other WordPress sites that uses WP Table Builder'))
+      };
+      return this.getTranslation(descriptions["".concat(this.exportType.toLowerCase(), "Description")]);
+    },
     remainingTables: function remainingTables() {
       var _this = this;
 
@@ -17543,6 +17594,17 @@ var _default = {
     }
   },
   methods: {
+    selectAll: function selectAll() {
+      var allSelectedObject = {}; // eslint-disable-next-line array-callback-return
+
+      this.userTables.map(function (t) {
+        allSelectedObject[t.ID] = true;
+      });
+      this.selectedTables = _objectSpread({}, this.selectedTables, {}, allSelectedObject);
+    },
+    deselectAll: function deselectAll() {
+      this.selectedTables = {};
+    },
     isSelectedEmpty: function isSelectedEmpty() {
       var _this3 = this;
 
@@ -17557,7 +17619,8 @@ var _default = {
     getSelectedIds: function getSelectedIds() {
       var _this4 = this;
 
-      var tempArray = [];
+      var tempArray = []; // eslint-disable-next-line array-callback-return
+
       Object.keys(this.selectedTables).map(function (t) {
         if (Object.prototype.hasOwnProperty.call(_this4.selectedTables, t)) {
           if (_this4.selectedTables[t]) {
@@ -17616,6 +17679,7 @@ var _default = {
       formData.append('nonce', exportNonce);
       formData.append('action', exportAjaxAction);
       formData.append('ids', JSON.stringify(this.getSelectedIds()));
+      formData.append('export_type', this.exportType);
       this.setBusy();
       fetch(ajaxUrl, {
         method: 'POST',
@@ -17737,12 +17801,63 @@ exports.default = _default;
       ),
       _vm._v(" "),
       _c("div", { staticClass: "wptb-menu-export-middle-section" }, [
-        _c("img", { attrs: { src: _vm.pluginInfo.plainArrow } }),
+        _c("div", { staticClass: "arrow-holder" }, [
+          _c("img", {
+            attrs: {
+              src: _vm.pluginInfo.plainArrow,
+              title: _vm.getTranslation("select all"),
+              alt: _vm.getTranslation("arrow")
+            },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.selectAll($event)
+              }
+            }
+          })
+        ]),
         _vm._v(" "),
-        _c("img", {
-          staticClass: "flip",
-          attrs: { src: _vm.pluginInfo.plainArrow }
-        })
+        _c(
+          "div",
+          [
+            _c(
+              "control-item",
+              {
+                staticClass:
+                  "wptb-flex wptb-flex-align-center wptb-flex-justify-center",
+                attrs: {
+                  "field-data": _vm.exportTypeControlOptions,
+                  "model-bind": this
+                }
+              },
+              [
+                _c(
+                  "pop-up",
+                  { attrs: { message: _vm.exportTypeDescription } },
+                  [_vm._v("?")]
+                )
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "arrow-holder flip" }, [
+          _c("img", {
+            attrs: {
+              src: _vm.pluginInfo.plainArrow,
+              title: _vm.getTranslation("deselect all"),
+              alt: _vm.getTranslation("arrow")
+            },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.deselectAll($event)
+              }
+            }
+          })
+        ])
       ]),
       _vm._v(" "),
       _c(
@@ -17810,7 +17925,7 @@ exports.default = _default;
       _vm._v(" "),
       _c("portal", { attrs: { to: "footerButtons" } }, [
         _c("a", { ref: "filesave", staticStyle: { display: "none" } }, [
-          _vm._v("filesave")
+          _vm._v("_filesave")
         ]),
         _vm._v(" "),
         _c(
@@ -17854,7 +17969,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/MenuButton":"components/MenuButton.vue","../components/ControlItem":"components/ControlItem.vue","../components/EmptyCover":"components/EmptyCover.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
+},{"../components/MenuButton":"components/MenuButton.vue","../components/ControlItem":"components/ControlItem.vue","../components/EmptyCover":"components/EmptyCover.vue","../components/PopUp":"components/PopUp.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/ImportExportApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

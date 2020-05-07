@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin;
 
+use DOMDocument;
 use WP_Query;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
@@ -9,6 +10,7 @@ use WP_Table_Builder as NS;
 use ZipArchive;
 use function add_action;
 use function current_user_can;
+use function get_post_meta;
 use function request_filesystem_credentials;
 use function wp_create_nonce;
 use function wp_kses_stripslashes;
@@ -47,7 +49,17 @@ class Export {
 	 */
 	const EXPORT_TABLES = 'wptb_table_export_main_export';
 
+	/**
+	 * nonce types
+	 */
 	const NONCE_TYPES = [ 'fetch' => self::EXPORT_FETCH_TABLES, 'export' => self::EXPORT_TABLES ];
+
+	/**
+	 * supported export types
+	 *
+	 * @var string[]
+	 */
+	protected $supported_export_types = [ 'XML' => 'xml', 'CSV' => 'csv' ];
 
 	/**
 	 * plugin text domain
@@ -86,11 +98,8 @@ class Export {
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( self::EXPORT_FETCH_TABLES, 'nonce', false ) ) {
 			$this->set_message( esc_html__( 'success', $this->text_domain ) );
 
-
-			$tables = $this->get_wptb_tables();
+			$tables = $this->get_wptb_tables( 'ID', 'post_title' );
 			$this->append_response_data( $tables, 'userTables' );
-
-			wp_reset_postdata();
 
 		} else {
 			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', $this->text_domain ) );
@@ -99,9 +108,21 @@ class Export {
 		$this->send_json();
 	}
 
+	/**
+	 * Export tables to frontend with a ajax response
+	 */
 	public function wptb_export_main_export() {
-		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( self::EXPORT_TABLES, 'nonce', false ) && isset( $_POST['ids'] ) ) {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( self::EXPORT_TABLES, 'nonce', false ) && isset( $_POST['ids'] ) && isset( $_POST['export_type'] ) ) {
+			$export_type = $_POST['export_type'];
 
+			if ( ! in_array( $export_type, array_keys( $this->supported_export_types ) ) ) {
+				$this->set_error( __( 'invalid export type', $this->text_domain ) );
+
+				return;
+			}
+
+			// get WordPress filesystem credentials
+			// using WordPress related filesystem methods to minimize the bugs I/O operations can cause on various server/hosting setups
 			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
 			if ( ! WP_Filesystem( $creds ) ) {
 				$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
@@ -127,17 +148,24 @@ class Export {
 
 			$file_name = tempnam( $upload_dir, 'zip' );
 			if ( ! class_exists( 'ZipArchive' ) ) {
-				$this->set_error( esc_html__( 'you server do not support zip archieves', $this->text_domain ) );
+				$this->set_error( esc_html__( 'your server do not support zip archives', $this->text_domain ) );
 
 				return;
 			}
 
+			// zip archive creation
+			// creating the archive in memory may cause performance issues at some server/hosting setups, creating/deleting as a temp file seems like the best option
 			$zip = new ZipArchive();
 			$zip->open( $file_name, ZipArchive::OVERWRITE );
 
+			$file_extension = $this->supported_export_types[ $export_type ];
 			foreach ( (array) $table_ids as $id ) {
-				$meta_value = \get_post_meta( $id, '_wptb_content_', true );
-				$zip->addFromString( "table#$id.xml", $meta_value );
+				// calling this class's related function according to requested file type defined in the POST request
+				$meta_value = call_user_func( [
+					$this,
+					"prepare_{$file_extension}_table"
+				], $id );
+				$zip->addFromString( "Table$id.$file_extension", $meta_value );
 			}
 
 			$zip->close();
@@ -147,6 +175,7 @@ class Export {
 			// remove temp file
 			$wp_filesystem->delete( $file_name );
 
+			// this header will be used in front-end to differentiate to parse the data as a glob or json
 			header( 'Content-Type: application/octet-stream' );
 			echo $zip_content;
 
@@ -158,19 +187,78 @@ class Export {
 		$this->send_json();
 	}
 
-	private function get_wptb_tables() {
-		$query_args = [
-			'post_type'      => 'wptb-tables',
-			'posts_per_page' => - 1,
-		];
+	/**
+	 * Prepare individual table data as xml format
+	 *
+	 * @param int $id post id
+	 *
+	 * @return mixed table data
+	 */
+	private function prepare_xml_table( $id ) {
+		return get_post_meta( $id, '_wptb_content_', true );
+	}
 
-		$tables = new WP_Query( $query_args );
+	/**
+	 * Prepare individual table data as csv format
+	 *
+	 * @param int $id post id
+	 *
+	 * @return mixed table data
+	 */
+	private function prepare_csv_table( $id ) {
+		$table_html_content = get_post_meta( $id, '_wptb_content_', true );
 
-		return $tables->get_posts();
+		$dom_table = new DOMDocument();
+		$dom_table->loadHTML( $table_html_content );
+
+		$table_body     = $dom_table->getElementsByTagName( 'tbody' )[0];
+		$top_level_rows = $table_body->getElementsByTagName( 'tr' );
+
+		$row_text_content = [];
+
+		for ( $i = 0; $i < sizeof( $top_level_rows ); $i ++ ) {
+			$data_nodes = $top_level_rows[ $i ]->getElementsByTagName( 'td' );
+
+			foreach ( $data_nodes as $node ) {
+				$row_text_content[ $i ][] = $node->nodeValue;
+			}
+		}
+
+		$row_parsed_text = '';
+
+		foreach ( $row_text_content as $key => $values ) {
+			if ( $key !== 0 ) {
+				$row_parsed_text .= PHP_EOL;
+			}
+
+			$row_parsed_text .= implode( ',', $values );
+		}
+
+		return $row_parsed_text;
+	}
+
+	/**
+	 * Get tables from database
+	 *
+	 * @param array $fields an array of post fields to be returned
+	 *
+	 * @return array post array
+	 */
+	private function get_wptb_tables( ...$fields ) {
+		global $wpdb;
+
+		$parsed_fields = implode( ',', $fields );
+
+		$query = $wpdb->prepare( "SELECT {$parsed_fields} FROM {$wpdb->posts} WHERE post_type = %s", 'wptb-tables' );
+
+		return $wpdb->get_results( $query, ARRAY_A );
 	}
 
 	/**
 	 * Generate nonce for the ajax endpoint
+	 *
+	 * @param string $type nonce type, use this classes's available nonce enum property to avoid errors for invalid type arguments
+	 *
 	 * @return string nonce
 	 */
 	public function generate_nonce( $type ) {

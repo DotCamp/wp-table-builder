@@ -17,8 +17,31 @@
       </empty-cover>
     </div>
     <div class="wptb-menu-export-middle-section">
-      <img :src="pluginInfo.plainArrow" />
-      <img class="flip" :src="pluginInfo.plainArrow" />
+      <div class="arrow-holder">
+        <img
+          @click.prevent="selectAll"
+          :src="pluginInfo.plainArrow"
+          :title="getTranslation('select all')"
+          :alt="getTranslation('arrow')"
+        />
+      </div>
+      <div>
+        <control-item
+          :field-data="exportTypeControlOptions"
+          :model-bind="this"
+          class="wptb-flex wptb-flex-align-center wptb-flex-justify-center"
+        >
+          <pop-up :message="exportTypeDescription">?</pop-up>
+        </control-item>
+      </div>
+      <div class="arrow-holder flip">
+        <img
+          @click.prevent="deselectAll"
+          :src="pluginInfo.plainArrow"
+          :title="getTranslation('deselect all')"
+          :alt="getTranslation('arrow')"
+        />
+      </div>
     </div>
     <div class="wptb-menu-export-card">
       <div class="wptb-menu-export-control-title" style="text-align: end;">{{ getTranslation('selected tables') }}</div>
@@ -37,7 +60,7 @@
       </empty-cover>
     </div>
     <portal to="footerButtons">
-      <a ref="filesave" style="display: none;">filesave</a>
+      <a ref="filesave" style="display: none;">_filesave</a>
       <div class="wptb-settings-button-container">
         <menu-button @click="getUserTables" :disabled="isBusy()">{{ getTranslation('refresh') }}</menu-button>
         <menu-button @click="exportTables" :disabled="exportDisabled">{{ strings.exportSection }}</menu-button>
@@ -49,22 +72,45 @@
 import MenuButton from '../components/MenuButton';
 import ControlItem from '../components/ControlItem';
 import EmptyCover from '../components/EmptyCover';
+import PopUp from '../components/PopUp';
 import withMessage from '../mixins/withMessage';
 
 export default {
   props: ['options', 'pluginInfo'],
   mixins: [withMessage],
-  components: { MenuButton, ControlItem, EmptyCover },
+  components: { PopUp, MenuButton, ControlItem, EmptyCover },
   data() {
     return {
       userTables: [],
       selectedTables: {},
+      exportType: 'CSV',
+      exportTypeControlOptions: {
+        id: 'exportType',
+        type: 'dropdown',
+        label: 'export type',
+        options: [
+          { label: 'csv', value: 'CSV' },
+          { label: 'xml', value: 'XML' },
+        ],
+      },
     };
   },
   mounted() {
     this.getUserTables();
   },
   computed: {
+    exportTypeDescription() {
+      const descriptions = {
+        csvDescription: `<b>CSV:</b> ${this.getTranslation(
+          'only text content of your tables will be exported, ideal for usage within other apps/plugins'
+        )}`,
+        xmlDescription: `<b>XML:</b> ${this.getTranslation(
+          'an exact copy of your tables will be exported, ideal for backup and share your tables with your other WordPress sites that uses WP Table Builder'
+        )}`,
+      };
+
+      return this.getTranslation(descriptions[`${this.exportType.toLowerCase()}Description`]);
+    },
     remainingTables() {
       return this.userTables.filter((t) => {
         return !this.selectedTables[t.ID];
@@ -80,6 +126,18 @@ export default {
     },
   },
   methods: {
+    selectAll() {
+      const allSelectedObject = {};
+      // eslint-disable-next-line array-callback-return
+      this.userTables.map((t) => {
+        allSelectedObject[t.ID] = true;
+      });
+
+      this.selectedTables = { ...this.selectedTables, ...allSelectedObject };
+    },
+    deselectAll() {
+      this.selectedTables = {};
+    },
     isSelectedEmpty() {
       return (
         !Object.keys(this.selectedTables).filter((t) => {
@@ -93,6 +151,7 @@ export default {
     getSelectedIds() {
       const tempArray = [];
 
+      // eslint-disable-next-line array-callback-return
       Object.keys(this.selectedTables).map((t) => {
         if (Object.prototype.hasOwnProperty.call(this.selectedTables, t)) {
           if (this.selectedTables[t]) {
@@ -146,6 +205,7 @@ export default {
       formData.append('nonce', exportNonce);
       formData.append('action', exportAjaxAction);
       formData.append('ids', JSON.stringify(this.getSelectedIds()));
+      formData.append('export_type', this.exportType);
 
       this.setBusy();
 

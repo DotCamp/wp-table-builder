@@ -2724,6 +2724,8 @@ wptb_shortcode_container_element {
 }
 
 .wptb-setting-control-row {
+    display: flex;
+    align-items: center;
     margin: 20px 0;
 }
 
@@ -2959,12 +2961,6 @@ wptb_shortcode_container_element {
     overflow: auto;
 }
 
-.wptb-menu-export-middle-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .wptb-menu-export-controls-wrapper {
     padding: 0 20px;
 }
@@ -2986,18 +2982,76 @@ wptb_shortcode_container_element {
 .wptb-menu-export-middle-section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+}
+
+.wptb-menu-export-middle-section .arrow-holder {
+    max-width: 100px;
+    width: 50%;
+    cursor: pointer;
 }
 
 .wptb-menu-export-middle-section img {
     max-width: 100px;
-    width: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-out;
+}
+
+.wptb-menu-export-middle-section img:hover {
+    transform: scale(1.2);
 }
 
 .wptb-menu-export-middle-section .flip {
     transform: rotateZ(180deg);
 }
+
+.wptb-menu-popup-wrapper {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+    border: 1px solid #cbd5e0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-menu-popup-wrapper:hover {
+    background-color: #cbd5e0;
+}
+
+.wptb-menu-popup-wrapper .message {
+    display: block;
+    position: absolute;
+    background-color: #4A5568;
+    color: white;
+    min-width: 100px;
+    max-width: 500px;
+    padding: 10px;
+    bottom: calc(100% + 10px);
+    transition: opacity 0.2s ease-out;
+    opacity: 0;
+    text-align: start;
+}
+
+.wptb-menu-popup-wrapper:hover .message {
+    opacity: 1
+}
+
+.wptb-menu-popup-wrapper .arrow {
+    position: absolute;
+    background-color: inherit;
+    width: 10px;
+    height: 10px;
+    bottom: -5px;
+    left: calc(100% - 30px);
+    transform: rotateZ(45deg);
+}
+
 
 @keyframes wptb-settings-rotate {
     0% {

@@ -12583,6 +12583,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['fieldData', 'modelBind'],
   methods: {
@@ -12722,51 +12723,60 @@ exports.default = _default;
         ])
       : _vm.isType("dropdown")
       ? _c("div", [
-          _c("div", { staticClass: "wptb-setting-control-row" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.modelBind[_vm.fieldData.id],
-                    expression: "modelBind[fieldData.id]"
+          _c(
+            "div",
+            { staticClass: "wptb-setting-control-row" },
+            [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.modelBind[_vm.fieldData.id],
+                      expression: "modelBind[fieldData.id]"
+                    }
+                  ],
+                  attrs: { id: _vm.fieldData.id },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.modelBind,
+                        _vm.fieldData.id,
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
                   }
-                ],
-                attrs: { id: _vm.fieldData.id },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.$set(
-                      _vm.modelBind,
-                      _vm.fieldData.id,
-                      $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                    )
-                  }
-                }
-              },
-              _vm._l(_vm.fieldData.options, function(o) {
-                return _c(
-                  "option",
-                  { key: o.label, domProps: { value: o.value } },
-                  [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
-                )
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("label", { attrs: { for: _vm.fieldData.id } }, [
-              _vm._v(_vm._s(_vm.fieldData.label))
-            ])
-          ])
+                },
+                _vm._l(_vm.fieldData.options, function(o) {
+                  return _c(
+                    "option",
+                    { key: o.label, domProps: { value: o.value } },
+                    [_vm._v("\n          " + _vm._s(o.label) + "\n        ")]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("label", { attrs: { for: _vm.fieldData.id } }, [
+                _vm._v(_vm._s(_vm.fieldData.label))
+              ]),
+              _vm._v(" "),
+              _vm._t("default")
+            ],
+            2
+          )
         ])
       : _vm._e()
   ])

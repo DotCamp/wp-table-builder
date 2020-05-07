@@ -20,6 +20,7 @@
           </option>
         </select>
         <label :for="fieldData.id">{{ fieldData.label }}</label>
+        <slot></slot>
       </div>
     </div>
   </div>
