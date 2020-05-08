@@ -2,16 +2,11 @@
   <div class="wptb-menu-export-wrapper">
     <div class="wptb-menu-export-card">
       <div class="wptb-menu-export-control-title">{{ getTranslation('all tables') }}</div>
-      <div class="wptb-menu-export-controls-wrapper">
-        <transition-group name="wptb-fade" tag="div">
-          <control-item
-            v-for="table in remainingTables"
-            :field-data="{ type: 'checkbox', id: table.ID, label: fieldLabel(table) }"
-            :model-bind="selectedTables"
-            :key="table.ID"
-          ></control-item>
-        </transition-group>
-      </div>
+      <list-table
+        :row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
+        :row-data="remainingTables"
+        :model-bind="selectedTables"
+      ></list-table>
       <empty-cover v-show="!userTables.length > 0">
         {{ getTranslation('no tables found') }}
       </empty-cover>
@@ -45,16 +40,11 @@
     </div>
     <div class="wptb-menu-export-card">
       <div class="wptb-menu-export-control-title" style="text-align: end;">{{ getTranslation('selected tables') }}</div>
-      <div class="wptb-menu-export-controls-wrapper">
-        <transition-group name="wptb-fade" tag="div">
-          <control-item
-            v-for="table in parsedSelectedTables"
-            :field-data="{ type: 'checkbox', id: table.ID, label: fieldLabel(table) }"
-            :model-bind="selectedTables"
-            :key="table.ID"
-          ></control-item>
-        </transition-group>
-      </div>
+      <list-table
+        :row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
+        :row-data="parsedSelectedTables"
+        :model-bind="selectedTables"
+      ></list-table>
       <empty-cover v-show="isSelectedEmpty()">
         {{ getTranslation('no table selected') }}
       </empty-cover>
@@ -73,12 +63,13 @@ import MenuButton from '../components/MenuButton';
 import ControlItem from '../components/ControlItem';
 import EmptyCover from '../components/EmptyCover';
 import PopUp from '../components/PopUp';
+import ListTable from '../components/ListTable';
 import withMessage from '../mixins/withMessage';
 
 export default {
   props: ['options', 'pluginInfo'],
   mixins: [withMessage],
-  components: { PopUp, MenuButton, ControlItem, EmptyCover },
+  components: { ListTable, PopUp, MenuButton, ControlItem, EmptyCover },
   data() {
     return {
       userTables: [],
@@ -94,8 +85,24 @@ export default {
         ],
       },
       filename: '',
+      // remainingTables: [],
     };
   },
+  // watch: {
+  //   userTables() {
+  //     this.remainingTables = this.userTables.filter((t) => {
+  //       return !this.selectedTables[t.ID];
+  //     });
+  //   },
+  //   selectedTables: {
+  //     handler() {
+  //       this.remainingTables = this.userTables.filter((t) => {
+  //         return !this.selectedTables[t.ID];
+  //       });
+  //     },
+  //     deep: true,
+  //   },
+  // },
   mounted() {
     this.getUserTables();
   },
@@ -190,7 +197,18 @@ export default {
           if (resp.error) {
             throw new Error(resp.error);
           }
-          this.userTables = resp.data.userTables;
+          const parsedTables = [];
+
+          this.userTables = resp.data.userTables.map((t) => {
+            const localDate = new Intl.DateTimeFormat('default').format(new Date(t.post_date));
+            const tempObj = {
+              ID: t.ID,
+              fieldDatas: [this.fieldLabel(t), localDate, t.ID],
+            };
+            parsedTables.push(tempObj);
+          });
+
+          this.userTables = parsedTables;
         })
         .catch((e) => {
           this.setMessage({ type: 'error', message: e });

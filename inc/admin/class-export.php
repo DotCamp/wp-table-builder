@@ -98,7 +98,7 @@ class Export {
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( self::EXPORT_FETCH_TABLES, 'nonce', false ) ) {
 			$this->set_message( esc_html__( 'success', $this->text_domain ) );
 
-			$tables = $this->get_wptb_tables( 'ID', 'post_title' );
+			$tables = $this->get_wptb_tables( 'ID', 'post_title', 'post_date' );
 			$this->append_response_data( $tables, 'userTables' );
 
 		} else {

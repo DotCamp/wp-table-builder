@@ -3,7 +3,7 @@
     <drag-drop
       v-model="currentFile"
       :texts="{ hint: strings.fileDropHint, browse: strings.browse, clear: strings.clear }"
-      :allowed-formats="['csv', 'zip']"
+      :allowed-formats="['csv', 'xml', 'zip']"
     ></drag-drop>
     <div>
       <control-item

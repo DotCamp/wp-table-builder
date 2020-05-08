@@ -2945,16 +2945,20 @@ wptb_shortcode_container_element {
 .wptb-menu-export-wrapper {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr auto 1fr;
     grid-template-rows: 0.9fr;
     justify-content: center;
     align-content: center;
-    grid-gap: 20px;
+    grid-gap: 30px;
     width: 90%;
     height: 100%;
 }
 
 .wptb-menu-export-card {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+    grid-gap: 10px;
     position: relative;
     border: 1px solid #cbd5e0;
     padding: 10px;
@@ -2962,7 +2966,10 @@ wptb_shortcode_container_element {
 }
 
 .wptb-menu-export-controls-wrapper {
-    padding: 0 20px;
+    padding: 10px 0;
+    overflow-y: auto;
+    display: grid;
+    grid-auto-flow: row;
 }
 
 .wptb-menu-empty-cover {
@@ -2995,11 +3002,15 @@ wptb_shortcode_container_element {
 .wptb-menu-export-middle-section img {
     max-width: 100px;
     cursor: pointer;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.1s ease-out;
 }
 
 .wptb-menu-export-middle-section img:hover {
     transform: scale(1.2);
+}
+
+.wptb-menu-export-middle-section img:active {
+    transform: scale(1);
 }
 
 .wptb-menu-export-middle-section .flip {
@@ -3024,34 +3035,56 @@ wptb_shortcode_container_element {
     background-color: #cbd5e0;
 }
 
-.wptb-menu-popup-wrapper .message {
+.wptb-menu-popup-message {
     display: block;
-    position: absolute;
-    background-color: #4A5568;
+    position: fixed;
     color: white;
     min-width: 100px;
-    max-width: 500px;
-    padding: 10px;
-    bottom: calc(100% + 10px);
+    max-width: 200px;
     transition: opacity 0.2s ease-out;
     opacity: 0;
     text-align: start;
+    z-index: 999;
 }
 
-.wptb-menu-popup-wrapper:hover .message {
+.wptb-menu-popup-wrapper:hover .wptb-menu-popup-message {
     opacity: 1
 }
 
-.wptb-menu-popup-wrapper .arrow {
+.wptb-menu-popup-inner-holder {
+    position: relative;
+    background-color: #4A5568;
+    padding: 10px;
+}
+
+.wptb-menu-popup-arrow {
     position: absolute;
     background-color: inherit;
     width: 10px;
     height: 10px;
     bottom: -5px;
-    left: calc(100% - 30px);
+    left: calc(50% - 5px);
     transform: rotateZ(45deg);
 }
 
+.wptb-menu-list-table {
+    border-collapse: collapse;
+}
+
+.wptb-menu-list-table thead {
+    border-bottom: 1px solid #cbd5e0;
+    text-align: start;
+}
+
+.wptb-menu-list-table thead td {
+    font-weight: bold;
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.wptb-menu-list-table td:hover {
+    background-color: #EDF2F7;
+}
 
 @keyframes wptb-settings-rotate {
     0% {

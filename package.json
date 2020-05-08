@@ -54,10 +54,10 @@
   },
   "dependencies": {
     "@wordpress/i18n": "^3.11.0",
+    "gulp-rename": "^1.4.0",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.11",
     "vue-fragment": "^1.5.1",
-    "gulp-rename": "^1.4.0",
     "vue-hot-reload-api": "^2.3.4"
   }
 }
