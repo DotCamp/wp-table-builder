@@ -17561,7 +17561,8 @@ var _default = {
           label: 'xml',
           value: 'XML'
         }]
-      }
+      },
+      filename: ''
     };
   },
   mounted: function mounted() {
@@ -17668,6 +17669,29 @@ var _default = {
         _this5.setBusy(false);
       });
     },
+
+    /**
+     * Parse content-disposition header to extract filename property
+     *
+     * @param {string} headerString content-disposition header
+     * @returns {string} extracted filename
+     *
+     * @throws Error an error will be thrown on no match
+     */
+    parseFilename: function parseFilename(headerString) {
+      var regex = new RegExp(/filename="(.+\..+)"/, 'g');
+      var results = regex.exec(headerString);
+
+      if (results === null) {
+        throw new Error(this.getTranslation('invalid file name header'));
+      }
+
+      return results[1];
+    },
+
+    /**
+     * Main logic for exporting table/s
+     */
     exportTables: function exportTables() {
       var _this6 = this;
 
@@ -17689,6 +17713,7 @@ var _default = {
           var contentType = r.headers.get('content-type');
 
           if (contentType === 'application/octet-stream') {
+            _this6.filename = _this6.parseFilename(r.headers.get('content-disposition'));
             return r.blob();
           }
 
@@ -17702,9 +17727,7 @@ var _default = {
         }
 
         var objectData = window.URL.createObjectURL(resp);
-        var fileName = "wptb_export_".concat(Date.now(), ".zip");
         _this6.$refs.filesave.href = objectData;
-        _this6.$refs.filesave.download = fileName;
 
         _this6.$refs.filesave.click();
 
@@ -17747,7 +17770,7 @@ exports.default = _default;
         { staticClass: "wptb-menu-export-card" },
         [
           _c("div", { staticClass: "wptb-menu-export-control-title" }, [
-            _vm._v(_vm._s(_vm.getTranslation("your tables")))
+            _vm._v(_vm._s(_vm.getTranslation("all tables")))
           ]),
           _vm._v(" "),
           _c(
@@ -17924,9 +17947,15 @@ exports.default = _default;
       ),
       _vm._v(" "),
       _c("portal", { attrs: { to: "footerButtons" } }, [
-        _c("a", { ref: "filesave", staticStyle: { display: "none" } }, [
-          _vm._v("_filesave")
-        ]),
+        _c(
+          "a",
+          {
+            ref: "filesave",
+            staticStyle: { display: "none" },
+            attrs: { download: _vm.filename }
+          },
+          [_vm._v("_filesave")]
+        ),
         _vm._v(" "),
         _c(
           "div",

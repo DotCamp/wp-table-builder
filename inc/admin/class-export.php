@@ -121,70 +121,135 @@ class Export {
 				return;
 			}
 
-			// get WordPress filesystem credentials
-			// using WordPress related filesystem methods to minimize the bugs I/O operations can cause on various server/hosting setups
-			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
-			if ( ! WP_Filesystem( $creds ) ) {
-				$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
-
-				return;
-			}
-
-			global $wp_filesystem;
-
 			$table_ids = json_decode( wp_kses_stripslashes( $_POST['ids'] ) );
 
-			$upload_dir = NS\WP_TABLE_BUILDER_DIR . 'uploads';
-
-			// create upload directory if not available
-			if ( ! $wp_filesystem->is_dir( $upload_dir ) ) {
-				$dir_create_status = $wp_filesystem->mkdir( $upload_dir );
-				if ( ! $dir_create_status ) {
-					$this->set_error( esc_html__( 'failed in creating temp directory for export zip file', $this->text_domain ) );
-
-					return;
-				}
+			// table id check to determine whether a zip or a single file will be sent
+			if ( sizeof( $table_ids ) > 1 ) {
+				$this->zip_archive_creation( $table_ids, $export_type );
+			} else {
+				$this->single_file_serve($table_ids[0], $export_type);
 			}
 
-			$file_name = tempnam( $upload_dir, 'zip' );
-			if ( ! class_exists( 'ZipArchive' ) ) {
-				$this->set_error( esc_html__( 'your server do not support zip archives', $this->text_domain ) );
-
-				return;
-			}
-
-			// zip archive creation
-			// creating the archive in memory may cause performance issues at some server/hosting setups, creating/deleting as a temp file seems like the best option
-			$zip = new ZipArchive();
-			$zip->open( $file_name, ZipArchive::OVERWRITE );
-
-			$file_extension = $this->supported_export_types[ $export_type ];
-			foreach ( (array) $table_ids as $id ) {
-				// calling this class's related function according to requested file type defined in the POST request
-				$meta_value = call_user_func( [
-					$this,
-					"prepare_{$file_extension}_table"
-				], $id );
-				$zip->addFromString( "Table$id.$file_extension", $meta_value );
-			}
-
-			$zip->close();
-
-			$zip_content = $wp_filesystem->get_contents( $file_name );
-
-			// remove temp file
-			$wp_filesystem->delete( $file_name );
-
-			// this header will be used in front-end to differentiate to parse the data as a glob or json
-			header( 'Content-Type: application/octet-stream' );
-			echo $zip_content;
-
+			// exit ajax output
 			die();
 		} else {
 			$this->set_error( esc_html__( 'you are not authorized to access this ajax endpoint', $this->text_domain ) );
 		}
 
 		$this->send_json();
+	}
+
+	/**
+	 * Create and send a single file
+	 *
+	 * @param int $table_id table id
+	 * @param string $export_type file type
+	 */
+	protected function single_file_serve( $table_id, $export_type ) {
+		$file_extension = $this->supported_export_types[ $export_type ];
+
+		$meta_value = call_user_func( [
+			$this,
+			"prepare_{$file_extension}_table"
+		], $table_id );
+
+		$filename = $this->prepare_file_name($file_extension);
+
+		$this->shared_headers($filename);
+
+		echo $meta_value;
+	}
+
+	/**
+	 * Create and send a zip archive with requested tables
+	 *
+	 * @param int[] $table_ids an array of table ids
+	 * @param string $export_type file type for zipped files inside archive
+	 */
+	protected function zip_archive_creation( $table_ids, $export_type ) {
+
+		// get WordPress filesystem credentials
+		// using WordPress related filesystem methods to minimize the bugs I/O operations can cause on various server/hosting setups
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
+		if ( ! WP_Filesystem( $creds ) ) {
+			$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
+
+			return;
+		}
+
+		global $wp_filesystem;
+
+
+		$upload_dir = NS\WP_TABLE_BUILDER_DIR . 'uploads';
+
+		// create upload directory if not available
+		if ( ! $wp_filesystem->is_dir( $upload_dir ) ) {
+			$dir_create_status = $wp_filesystem->mkdir( $upload_dir );
+			if ( ! $dir_create_status ) {
+				$this->set_error( esc_html__( 'failed in creating temp directory for export zip file', $this->text_domain ) );
+
+				return;
+			}
+		}
+
+		$temp_file_name = tempnam( $upload_dir, 'zip' );
+		if ( ! class_exists( 'ZipArchive' ) ) {
+			$this->set_error( esc_html__( 'your server do not support zip archives', $this->text_domain ) );
+
+			return;
+		}
+
+		// zip archive creation
+		// creating the archive in memory may cause performance issues at some server/hosting setups, creating/deleting as a temp file seems like the best option
+		$zip = new ZipArchive();
+		$zip->open( $temp_file_name, ZipArchive::OVERWRITE );
+
+		$file_extension = $this->supported_export_types[ $export_type ];
+		foreach ( (array) $table_ids as $id ) {
+			// calling this class's related function according to requested file type defined in the POST request
+			$meta_value = call_user_func( [
+				$this,
+				"prepare_{$file_extension}_table"
+			], $id );
+			$zip->addFromString( "Table$id.$file_extension", $meta_value );
+		}
+
+		$zip->close();
+
+		$zip_content = $wp_filesystem->get_contents( $temp_file_name );
+
+		// remove temp file
+		$wp_filesystem->delete( $temp_file_name );
+
+		$file_name = $this->prepare_file_name( 'zip' );
+
+		// this header will be used in front-end to differentiate to parse the data as a glob or json
+		$this->shared_headers( $file_name );
+
+		echo $zip_content;
+	}
+
+	/**
+	 * Shared html headers for octet-stream ajax response
+	 *
+	 * @param string $file_name filename to be added to the content-disposition header
+	 */
+	protected function shared_headers( $file_name ) {
+		header( 'Content-Type: application/octet-stream' );
+		header( "Content-Disposition: attachment; filename=\"{$file_name}\"" );
+	}
+
+	/**
+	 * Prepare filename with its extension
+	 *
+	 * @param string $extension file extension
+	 *
+	 * @return string filename
+	 */
+	public function prepare_file_name( $extension ) {
+		$time_stamp = time();
+
+		return "wptb-{$time_stamp}.{$extension}";
 	}
 
 	/**

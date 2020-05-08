@@ -1,7 +1,7 @@
 <template>
   <div class="wptb-menu-export-wrapper">
     <div class="wptb-menu-export-card">
-      <div class="wptb-menu-export-control-title">{{ getTranslation('your tables') }}</div>
+      <div class="wptb-menu-export-control-title">{{ getTranslation('all tables') }}</div>
       <div class="wptb-menu-export-controls-wrapper">
         <transition-group name="wptb-fade" tag="div">
           <control-item
@@ -60,7 +60,7 @@
       </empty-cover>
     </div>
     <portal to="footerButtons">
-      <a ref="filesave" style="display: none;">_filesave</a>
+      <a ref="filesave" style="display: none;" :download="filename">_filesave</a>
       <div class="wptb-settings-button-container">
         <menu-button @click="getUserTables" :disabled="isBusy()">{{ getTranslation('refresh') }}</menu-button>
         <menu-button @click="exportTables" :disabled="exportDisabled">{{ strings.exportSection }}</menu-button>
@@ -93,6 +93,7 @@ export default {
           { label: 'xml', value: 'XML' },
         ],
       },
+      filename: '',
     };
   },
   mounted() {
@@ -198,6 +199,25 @@ export default {
           this.setBusy(false);
         });
     },
+    /**
+     * Parse content-disposition header to extract filename property
+     *
+     * @param {string} headerString content-disposition header
+     * @returns {string} extracted filename
+     *
+     * @throws Error an error will be thrown on no match
+     */
+    parseFilename(headerString) {
+      const regex = new RegExp(/filename="(.+\..+)"/, 'g');
+      const results = regex.exec(headerString);
+      if (results === null) {
+        throw new Error(this.getTranslation('invalid file name header'));
+      }
+      return results[1];
+    },
+    /**
+     * Main logic for exporting table/s
+     */
     exportTables() {
       const { ajaxUrl, exportAjaxAction, exportNonce } = this.options;
 
@@ -216,7 +236,9 @@ export default {
         .then((r) => {
           if (r.ok) {
             const contentType = r.headers.get('content-type');
+
             if (contentType === 'application/octet-stream') {
+              this.filename = this.parseFilename(r.headers.get('content-disposition'));
               return r.blob();
             }
             return r.json();
@@ -229,10 +251,8 @@ export default {
           }
 
           const objectData = window.URL.createObjectURL(resp);
-          const fileName = `wptb_export_${Date.now()}.zip`;
 
           this.$refs.filesave.href = objectData;
-          this.$refs.filesave.download = fileName;
           this.$refs.filesave.click();
 
           window.URL.revokeObjectURL(objectData);
