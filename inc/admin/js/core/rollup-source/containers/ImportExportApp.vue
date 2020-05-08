@@ -30,8 +30,7 @@ export default {
   components: { ExportApp, MenuContent, ImportApp, MenuHeader, SectionItem, Sections, MenuFooter },
   data() {
     return {
-      // TODO [erdembircan] change to import for production
-      currentSection: 'Export',
+      currentSection: 'Import',
     };
   },
   computed: {

@@ -13889,7 +13889,7 @@ function ImportOperations(options) {
         };
 
         http.send(data);
-      } else if (is_csv || is_xml || is_html) {
+      } else if (is_csv || is_xml) {
         if (typeof FileReader !== 'undefined') {
           var reader = new FileReader();
 
@@ -13900,6 +13900,8 @@ function ImportOperations(options) {
 
             if (is_csv) {
               tablesFromCsvSaveRun([_data2], 0);
+            } else if (is_xml) {
+              importXmlTables([_data2]);
             }
           };
 
@@ -17836,33 +17838,17 @@ var _default = {
           value: 'XML'
         }]
       },
-      filename: '' // remainingTables: [],
-
+      filename: ''
     };
   },
-  // watch: {
-  //   userTables() {
-  //     this.remainingTables = this.userTables.filter((t) => {
-  //       return !this.selectedTables[t.ID];
-  //     });
-  //   },
-  //   selectedTables: {
-  //     handler() {
-  //       this.remainingTables = this.userTables.filter((t) => {
-  //         return !this.selectedTables[t.ID];
-  //       });
-  //     },
-  //     deep: true,
-  //   },
-  // },
   mounted: function mounted() {
     this.getUserTables();
   },
   computed: {
     exportTypeDescription: function exportTypeDescription() {
       var descriptions = {
-        csvDescription: "<b>CSV:</b> ".concat(this.getTranslation('only text content of your tables will be exported, ideal for usage within other apps/plugins')),
-        xmlDescription: "<b>XML:</b> ".concat(this.getTranslation('an exact copy of your tables will be exported, ideal for backup and share your tables with your other WordPress sites that uses WP Table Builder'))
+        csvDescription: "<b>CSV:</b> ".concat(this.getTranslation('only text content of your tables will be exported, ideal for usage within other apps/plugins.')),
+        xmlDescription: "<b>XML:</b> ".concat(this.getTranslation('an exact copy of your tables will be exported, ideal for backing up and sharing your tables with your other WordPress sites that uses WP Table Builder.'))
       };
       return this.getTranslation(descriptions["".concat(this.exportType.toLowerCase(), "Description")]);
     },
@@ -17951,7 +17937,11 @@ var _default = {
 
         var parsedTables = [];
         _this5.userTables = resp.data.userTables.map(function (t) {
-          var localDate = new Intl.DateTimeFormat('default').format(new Date(t.post_date));
+          var localDate = new Intl.DateTimeFormat('default', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }).format(new Date(t.post_date));
           var tempObj = {
             ID: t.ID,
             fieldDatas: [_this5.fieldLabel(t), localDate, t.ID]
@@ -18317,8 +18307,7 @@ var _default = {
   },
   data: function data() {
     return {
-      // TODO [erdembircan] change to import for production
-      currentSection: 'Export'
+      currentSection: 'Import'
     };
   },
   computed: {

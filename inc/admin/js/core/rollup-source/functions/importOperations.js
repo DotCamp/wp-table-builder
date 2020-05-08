@@ -73,7 +73,7 @@ function ImportOperations(options) {
           }
         };
         http.send(data);
-      } else if (is_csv || is_xml || is_html) {
+      } else if (is_csv || is_xml) {
         if (typeof FileReader !== 'undefined') {
           const reader = new FileReader();
           let data;
@@ -82,6 +82,8 @@ function ImportOperations(options) {
 
             if (is_csv) {
               tablesFromCsvSaveRun([data], 0);
+            } else if (is_xml) {
+              importXmlTables([data]);
             }
           };
 

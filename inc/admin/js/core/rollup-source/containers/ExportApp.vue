@@ -85,24 +85,8 @@ export default {
         ],
       },
       filename: '',
-      // remainingTables: [],
     };
   },
-  // watch: {
-  //   userTables() {
-  //     this.remainingTables = this.userTables.filter((t) => {
-  //       return !this.selectedTables[t.ID];
-  //     });
-  //   },
-  //   selectedTables: {
-  //     handler() {
-  //       this.remainingTables = this.userTables.filter((t) => {
-  //         return !this.selectedTables[t.ID];
-  //       });
-  //     },
-  //     deep: true,
-  //   },
-  // },
   mounted() {
     this.getUserTables();
   },
@@ -110,10 +94,10 @@ export default {
     exportTypeDescription() {
       const descriptions = {
         csvDescription: `<b>CSV:</b> ${this.getTranslation(
-          'only text content of your tables will be exported, ideal for usage within other apps/plugins'
+          'only text content of your tables will be exported, ideal for usage within other apps/plugins.'
         )}`,
         xmlDescription: `<b>XML:</b> ${this.getTranslation(
-          'an exact copy of your tables will be exported, ideal for backup and share your tables with your other WordPress sites that uses WP Table Builder'
+          'an exact copy of your tables will be exported, ideal for backing up and sharing your tables with your other WordPress sites that uses WP Table Builder.'
         )}`,
       };
 
@@ -200,7 +184,11 @@ export default {
           const parsedTables = [];
 
           this.userTables = resp.data.userTables.map((t) => {
-            const localDate = new Intl.DateTimeFormat('default').format(new Date(t.post_date));
+            const localDate = new Intl.DateTimeFormat('default', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }).format(new Date(t.post_date));
             const tempObj = {
               ID: t.ID,
               fieldDatas: [this.fieldLabel(t), localDate, t.ID],

@@ -2712,6 +2712,8 @@ wptb_shortcode_container_element {
     font-size: 1rem;
     text-transform: capitalize;
     margin-bottom: 30px;
+    border-bottom: 1px solid #cbd5e0;
+    padding: 10px 0;
 }
 
 .wptb-menu-export-control-title {
@@ -3082,7 +3084,12 @@ wptb_shortcode_container_element {
     cursor: pointer;
 }
 
-.wptb-menu-list-table td:hover {
+.wptb-menu-list-table tbody tr:nth-child(even){
+    background-color: #edf2f7;
+
+}
+
+.wptb-menu-list-table thead td:hover {
     background-color: #EDF2F7;
 }
 
