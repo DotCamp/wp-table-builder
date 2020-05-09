@@ -1,3 +1,4 @@
+<!--Drag and Drop Component-->
 <template>
   <div
     class="wptb-menu-file-drop"

@@ -12754,6 +12754,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['activeItem', 'relativeParent'],
   methods: {
@@ -12762,6 +12763,11 @@ var _default = {
     }
   },
   computed: {
+    /**
+     * Calculate position variables of section component
+     *
+     * @returns {{left: string, bottom: number, width: string, height: string}|{}}
+     */
     styleCalculations: function styleCalculations() {
       if (this.activeItem) {
         var posData = this.activeItem.getBoundingClientRect();
@@ -13333,6 +13339,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['texts', 'file', 'allowedFormats'],
   model: {
@@ -13583,9 +13590,16 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['fieldData', 'modelBind'],
   methods: {
+    /**
+     * Checks the input elements type to provided object data
+     *
+     * @param {string} type type of input to be checked agains
+     * @returns {boolean} same type
+     */
     isType: function isType(type) {
       return this.fieldData.type === type;
     }
@@ -17568,14 +17582,18 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['label', 'index'],
   data: function data() {
     return {
-      currentDirection: -1
+      currentDirection: 1
     };
   },
   methods: {
+    /**
+     * Main sort function
+     */
     sort: function sort() {
       this.currentDirection *= -1;
       this.$emit('sort', this.index, this.currentDirection);
@@ -17660,28 +17678,59 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
-  props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
+  // props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
+  props: {
+    rowLabels: Array,
+    rowData: Array,
+    modelBind: Object,
+    sortType: Object
+  },
   components: {
     ColumnSort: _ColumnSort.default
   },
   data: function data() {
     return {
-      innerRowData: []
+      innerRowData: [],
+      sortOptions: {
+        index: 0,
+        direction: 1
+      }
     };
   },
   watch: {
+    /**
+     * Watching row data to update component specific data for mainly sort operations since props should not be mutated
+     *
+     * @param {any} n new value
+     */
     rowData: function rowData(n) {
+      // updates component state data to be in sync with parent sent rowData
       this.innerRowData = n;
+
+      if (this.sortOptions) {
+        this.sort(this.sortOptions.index, this.sortOptions.direction);
+      }
     }
   },
   methods: {
+    /**
+     * Sort column data
+     *
+     * @param {int} index index of fieldData array of element
+     * @param {int}direction negative/positive integer to depict the direction of sort (ascending/descending)
+     */
     sort: function sort(index, direction) {
+      // store latest sort data to use it at reactive updates of component data (field selection/deselection)
+      this.sortOptions.index = index;
+      this.sortOptions.direction = direction;
       var sortAlgs = {
-        defaultSort: function defaultSort(a, b) {
+        // date sorting
+        dateSort: function dateSort(a, b) {
           var status = 0;
-          var aData = a.fieldDatas[index].toLowerCase();
-          var bData = b.fieldDatas[index].toLowerCase();
+          var aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
+          var bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
 
           if (aData < bData) {
             status = 1;
@@ -17693,10 +17742,11 @@ var _default = {
 
           return status * direction;
         },
-        dateSort: function dateSort(a, b) {
+        // default sort based on alphabetical/number sorting
+        defaultSort: function defaultSort(a, b) {
           var status = 0;
-          var aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
-          var bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
+          var aData = a.fieldDatas[index].toLowerCase();
+          var bData = b.fieldDatas[index].toLowerCase();
 
           if (aData < bData) {
             status = 1;

@@ -12242,6 +12242,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['activeItem', 'relativeParent'],
   methods: {
@@ -12250,6 +12251,11 @@ var _default = {
     }
   },
   computed: {
+    /**
+     * Calculate position variables of section component
+     *
+     * @returns {{left: string, bottom: number, width: string, height: string}|{}}
+     */
     styleCalculations: function styleCalculations() {
       if (this.activeItem) {
         var posData = this.activeItem.getBoundingClientRect();
@@ -12584,9 +12590,16 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: ['fieldData', 'modelBind'],
   methods: {
+    /**
+     * Checks the input elements type to provided object data
+     *
+     * @param {string} type type of input to be checked agains
+     * @returns {boolean} same type
+     */
     isType: function isType(type) {
       return this.fieldData.type === type;
     }
@@ -13349,7 +13362,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var frontendData = _objectSpread({}, wptbAdminSettingsData); // // remove main data from global space
+var frontendData = _objectSpread({}, wptbAdminSettingsData); // remove main data from global space
 
 
 wptbAdminSettingsData = undefined;

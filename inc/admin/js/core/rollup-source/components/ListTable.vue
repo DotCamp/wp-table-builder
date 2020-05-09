@@ -1,3 +1,4 @@
+<!--ListTable component for rendering data in a table format-->
 <template>
   <div>
     <table class="wptb-menu-list-table">
@@ -30,25 +31,55 @@
 import ColumnSort from './ColumnSort';
 
 export default {
-  props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
+  // props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
+  props: {
+    rowLabels: Array,
+    rowData: Array,
+    modelBind: Object,
+    sortType: Object,
+  },
   components: { ColumnSort },
   data() {
     return {
       innerRowData: [],
+      sortOptions: {
+        index: 0,
+        direction: 1,
+      },
     };
   },
   watch: {
+    /**
+     * Watching row data to update component specific data for mainly sort operations since props should not be mutated
+     *
+     * @param {any} n new value
+     */
     rowData(n) {
+      // updates component state data to be in sync with parent sent rowData
       this.innerRowData = n;
+      if (this.sortOptions) {
+        this.sort(this.sortOptions.index, this.sortOptions.direction);
+      }
     },
   },
   methods: {
+    /**
+     * Sort column data
+     *
+     * @param {int} index index of fieldData array of element
+     * @param {int}direction negative/positive integer to depict the direction of sort (ascending/descending)
+     */
     sort(index, direction) {
+      // store latest sort data to use it at reactive updates of component data (field selection/deselection)
+      this.sortOptions.index = index;
+      this.sortOptions.direction = direction;
+
       const sortAlgs = {
-        defaultSort(a, b) {
+        // date sorting
+        dateSort(a, b) {
           let status = 0;
-          const aData = a.fieldDatas[index].toLowerCase();
-          const bData = b.fieldDatas[index].toLowerCase();
+          const aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
+          const bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
 
           if (aData < bData) {
             status = 1;
@@ -59,10 +90,11 @@ export default {
 
           return status * direction;
         },
-        dateSort(a, b) {
+        // default sort based on alphabetical/number sorting
+        defaultSort(a, b) {
           let status = 0;
-          const aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
-          const bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
+          const aData = a.fieldDatas[index].toLowerCase();
+          const bData = b.fieldDatas[index].toLowerCase();
 
           if (aData < bData) {
             status = 1;

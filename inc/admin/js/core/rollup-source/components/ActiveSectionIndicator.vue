@@ -1,3 +1,4 @@
+<!--Adds a visual dynamic indicator to sections to show their active status-->
 <template>
   <div class="wptb-menu-active-section-indicator" :style="styleCalculations"></div>
 </template>
@@ -10,6 +11,11 @@ export default {
     },
   },
   computed: {
+    /**
+     * Calculate position variables of section component
+     *
+     * @returns {{left: string, bottom: number, width: string, height: string}|{}}
+     */
     styleCalculations() {
       if (this.activeItem) {
         const posData = this.activeItem.getBoundingClientRect();

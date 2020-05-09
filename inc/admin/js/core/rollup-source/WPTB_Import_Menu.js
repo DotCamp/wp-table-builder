@@ -1,3 +1,6 @@
+/**
+ * Import/Export menu script
+ */
 import Vue from 'vue';
 import PortalVue from 'portal-vue';
 import ImportExportApp from './containers/ImportExportApp';

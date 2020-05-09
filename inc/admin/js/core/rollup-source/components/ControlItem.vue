@@ -1,3 +1,4 @@
+<!--Number of html input elements to be used through out the menus-->
 <template>
   <div>
     <div v-if="isType('multiCheckbox')">
@@ -29,6 +30,12 @@
 export default {
   props: ['fieldData', 'modelBind'],
   methods: {
+    /**
+     * Checks the input elements type to provided object data
+     *
+     * @param {string} type type of input to be checked agains
+     * @returns {boolean} same type
+     */
     isType(type) {
       return this.fieldData.type === type;
     },
