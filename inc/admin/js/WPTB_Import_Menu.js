@@ -13949,7 +13949,12 @@ function ImportOperations(options) {
         }
 
         document.removeEventListener('table:imported:saved', tabImSave);
-      });
+      }); // check for empty tables
+
+      if (tableDataCsv[index] === '') {
+        tableDataCsv[index] = ' ';
+      }
+
       var tableDataArr = parseCsv(tableDataCsv[index], csvDelimiter);
       var importedTable = createTableFromDataArray(tableDataArr);
       tableImportedSave(importedTable);
@@ -17647,6 +17652,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
   components: {
@@ -17722,95 +17735,97 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "table",
-    { staticClass: "wptb-menu-list-table" },
-    [
-      _c("thead", [
-        _c(
-          "tr",
-          [
-            _c("td"),
-            _vm._v(" "),
-            _vm._l(_vm.rowLabels, function(label, i) {
-              return _c("column-sort", {
-                key: label,
-                attrs: { label: label, index: i },
-                on: { sort: _vm.sort }
-              })
-            })
-          ],
-          2
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "transition-group",
-        { attrs: { tag: "tbody", name: "wptb-fade", mode: "out-in" } },
-        _vm._l(_vm.innerRowData, function(row) {
-          return _c(
+  return _c("div", [
+    _c(
+      "table",
+      { staticClass: "wptb-menu-list-table" },
+      [
+        _c("thead", [
+          _c(
             "tr",
-            { key: row.ID },
             [
-              _c("td", [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.modelBind[row.ID],
-                      expression: "modelBind[row.ID]"
-                    }
-                  ],
-                  attrs: { id: row.ID, type: "checkbox" },
-                  domProps: {
-                    checked: Array.isArray(_vm.modelBind[row.ID])
-                      ? _vm._i(_vm.modelBind[row.ID], null) > -1
-                      : _vm.modelBind[row.ID]
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$a = _vm.modelBind[row.ID],
-                        $$el = $event.target,
-                        $$c = $$el.checked ? true : false
-                      if (Array.isArray($$a)) {
-                        var $$v = null,
-                          $$i = _vm._i($$a, $$v)
-                        if ($$el.checked) {
-                          $$i < 0 &&
-                            _vm.$set(_vm.modelBind, row.ID, $$a.concat([$$v]))
-                        } else {
-                          $$i > -1 &&
-                            _vm.$set(
-                              _vm.modelBind,
-                              row.ID,
-                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                            )
-                        }
-                      } else {
-                        _vm.$set(_vm.modelBind, row.ID, $$c)
-                      }
-                    }
-                  }
-                })
-              ]),
+              _c("td"),
               _vm._v(" "),
-              _vm._l(row.fieldDatas, function(data) {
-                return _c("td", { key: data }, [
-                  _c("label", { attrs: { for: row.ID } }, [
-                    _vm._v(_vm._s(data))
-                  ])
-                ])
+              _vm._l(_vm.rowLabels, function(label, i) {
+                return _c("column-sort", {
+                  key: label,
+                  attrs: { label: label, index: i },
+                  on: { sort: _vm.sort }
+                })
               })
             ],
             2
           )
-        }),
-        0
-      )
-    ],
-    1
-  )
+        ]),
+        _vm._v(" "),
+        _c(
+          "transition-group",
+          { attrs: { tag: "tbody", name: "wptb-fade", mode: "out-in" } },
+          _vm._l(_vm.innerRowData, function(row) {
+            return _c(
+              "tr",
+              { key: row.ID },
+              [
+                _c("td", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.modelBind[row.ID],
+                        expression: "modelBind[row.ID]"
+                      }
+                    ],
+                    attrs: { id: row.ID, type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.modelBind[row.ID])
+                        ? _vm._i(_vm.modelBind[row.ID], null) > -1
+                        : _vm.modelBind[row.ID]
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.modelBind[row.ID],
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(_vm.modelBind, row.ID, $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.modelBind,
+                                row.ID,
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.modelBind, row.ID, $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _vm._l(row.fieldDatas, function(data) {
+                  return _c("td", { key: data }, [
+                    _c("label", { attrs: { for: row.ID } }, [
+                      _vm._v(_vm._s(data))
+                    ])
+                  ])
+                })
+              ],
+              2
+            )
+          }),
+          0
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

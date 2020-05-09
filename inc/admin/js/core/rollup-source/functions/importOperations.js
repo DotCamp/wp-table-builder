@@ -131,6 +131,11 @@ function ImportOperations(options) {
         document.removeEventListener('table:imported:saved', tabImSave);
       });
 
+      // check for empty tables
+      if (tableDataCsv[index] === '') {
+        tableDataCsv[index] = ' ';
+      }
+
       const tableDataArr = parseCsv(tableDataCsv[index], csvDelimiter);
       const importedTable = createTableFromDataArray(tableDataArr);
 

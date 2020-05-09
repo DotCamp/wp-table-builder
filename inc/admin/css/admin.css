@@ -3071,6 +3071,7 @@ wptb_shortcode_container_element {
 
 .wptb-menu-list-table {
     border-collapse: collapse;
+    width: 100%;
 }
 
 .wptb-menu-list-table thead {
@@ -3086,7 +3087,6 @@ wptb_shortcode_container_element {
 
 .wptb-menu-list-table tbody tr:nth-child(even) {
     background-color: #edf2f7;
-
 }
 
 .wptb-menu-list-table thead td:hover {

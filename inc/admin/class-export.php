@@ -116,7 +116,7 @@ class Export {
 	 * @param array $post_object WordPress post table array
 	 */
 	private function date_to_iso8601( &$post_object ) {
-		$date_fields = [ 'post_date' ];
+		$date_fields = [ 'post_date', 'post_modified', 'post_date_gmt' ];
 
 		foreach ( $date_fields as $field ) {
 			if ( isset( $post_object[ $field ] ) ) {
