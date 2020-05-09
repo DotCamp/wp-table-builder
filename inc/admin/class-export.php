@@ -11,6 +11,7 @@ use ZipArchive;
 use function add_action;
 use function current_user_can;
 use function get_post_meta;
+use function get_the_title;
 use function request_filesystem_credentials;
 use function wp_create_nonce;
 use function wp_kses_stripslashes;
@@ -99,6 +100,7 @@ class Export {
 			$this->set_message( esc_html__( 'success', $this->text_domain ) );
 
 			$tables = $this->get_wptb_tables( 'ID', 'post_title', 'post_date' );
+
 			$this->append_response_data( $tables, 'userTables' );
 
 		} else {
@@ -106,6 +108,21 @@ class Export {
 		}
 
 		$this->send_json();
+	}
+
+	/**
+	 * Convert specific date fields in a post table to ISO8601 format
+	 *
+	 * @param array $post_object WordPress post table array
+	 */
+	private function date_to_iso8601( &$post_object ) {
+		$date_fields = [ 'post_date' ];
+
+		foreach ( $date_fields as $field ) {
+			if ( isset( $post_object[ $field ] ) ) {
+				$post_object[ $field ] = date( 'c', strtotime( $post_object[ $field ] ) );
+			}
+		}
 	}
 
 	/**
@@ -127,7 +144,7 @@ class Export {
 			if ( sizeof( $table_ids ) > 1 ) {
 				$this->zip_archive_creation( $table_ids, $export_type );
 			} else {
-				$this->single_file_serve($table_ids[0], $export_type);
+				$this->single_file_serve( $table_ids[0], $export_type );
 			}
 
 			// exit ajax output
@@ -153,9 +170,9 @@ class Export {
 			"prepare_{$file_extension}_table"
 		], $table_id );
 
-		$filename = $this->prepare_file_name($file_extension);
+		$filename = $this->prepare_file_name( $file_extension, $table_id );
 
-		$this->shared_headers($filename);
+		$this->shared_headers( $filename );
 
 		echo $meta_value;
 	}
@@ -211,7 +228,7 @@ class Export {
 				$this,
 				"prepare_{$file_extension}_table"
 			], $id );
-			$zip->addFromString( "Table$id.$file_extension", $meta_value );
+			$zip->addFromString( $this->prepare_file_name( $file_extension, $id ), $meta_value );
 		}
 
 		$zip->close();
@@ -244,12 +261,20 @@ class Export {
 	 *
 	 * @param string $extension file extension
 	 *
+	 * @param int $id post id to get title of the post, if a negative integer is supplied, a unix timestamp value will be used
+	 *
 	 * @return string filename
 	 */
-	public function prepare_file_name( $extension ) {
-		$time_stamp = time();
+	public function prepare_file_name( $extension, $id = - 1 ) {
+		$file_base = '';
+		if ( $id < 0 ) {
+			$file_base = time();
+		} else {
+			$title     = get_the_title( $id );
+			$file_base = $title === "" ? "Table{$id}" : $title;
+		}
 
-		return "wptb-{$time_stamp}.{$extension}";
+		return "{$file_base}.{$extension}";
 	}
 
 	/**
@@ -316,7 +341,11 @@ class Export {
 
 		$query = $wpdb->prepare( "SELECT {$parsed_fields} FROM {$wpdb->posts} WHERE post_type = %s", 'wptb-tables' );
 
-		return $wpdb->get_results( $query, ARRAY_A );
+		$tables = $wpdb->get_results( $query, ARRAY_A );
+
+		array_walk( $tables, [ $this, 'date_to_iso8601' ] );
+
+		return $tables;
 	}
 
 	/**
