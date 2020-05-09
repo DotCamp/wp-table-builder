@@ -15,15 +15,15 @@ Vue.config.productionTip = false;
 
 // strings plugin install
 Vue.use(withStrings, {
-  strings: frontendData.strings,
+	strings: frontendData.strings,
 });
 
 // Vue instance
 new Vue({
-  components: { SettingsApp },
-  data: {
-    fieldsData: frontendData.fields,
-    settings: frontendData.data,
-    pluginInfo: frontendData.pluginInfo,
-  },
+	components: { SettingsApp },
+	data: {
+		fieldsData: frontendData.fields,
+		settings: frontendData.data,
+		pluginInfo: frontendData.pluginInfo,
+	},
 }).$mount(frontendData.data.mountId);

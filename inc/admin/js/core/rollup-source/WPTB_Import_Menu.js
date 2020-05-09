@@ -15,19 +15,19 @@ wptbImportMenuData = undefined;
 Vue.config.productionTip = false;
 
 Vue.use(withStrings, {
-  strings: importData.strings,
+	strings: importData.strings,
 });
 
 Vue.use(Translations, {
-  textDomain: importData.options.textDomain,
+	textDomain: importData.options.textDomain,
 });
 
 Vue.use(PortalVue);
 
 new Vue({
-  components: { ImportExportApp },
-  data: {
-    pluginInfo: importData.pluginInfo,
-    options: importData.options,
-  },
+	components: { ImportExportApp },
+	data: {
+		pluginInfo: importData.pluginInfo,
+		options: importData.options,
+	},
 }).$mount('#wptb-import-menu');

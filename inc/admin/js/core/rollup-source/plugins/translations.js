@@ -10,14 +10,14 @@ import { __ } from '@wordpress/i18n';
  * @returns {object} mixin
  */
 function install(Vue, options) {
-  const { textDomain } = options;
-  Vue.mixin({
-    methods: {
-      getTranslation(text) {
-        return __(text, textDomain);
-      },
-    },
-  });
+	const { textDomain } = options;
+	Vue.mixin({
+		methods: {
+			getTranslation(text) {
+				return __(text, textDomain);
+			},
+		},
+	});
 }
 
 /**
