@@ -4,6 +4,8 @@ namespace WP_Table_Builder\Inc\Admin;
 
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Helpers;
+use function admin_url;
+use function wp_create_nonce;
 use function wp_localize_script;
 
 /**
@@ -169,7 +171,7 @@ class Admin_Menu {
 		$builder_page = add_submenu_page(
 			'wptb-overview',
 			esc_html__( 'Table Builder', 'wp-table-builder' ),
-			esc_html__( 'Import', 'wp-table-builder' ),
+			esc_html__( 'Import/Export', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-import',
 			array( $this, 'import' )
@@ -266,8 +268,8 @@ class Admin_Menu {
 
 		} else if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-import' ) {
 
-			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.min.js';
-			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.min.js';
+			$script_url     = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Import_Menu.js';
+			$script_path    = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Import_Menu.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 
@@ -289,18 +291,20 @@ class Admin_Menu {
 				'pluginHomepage' => esc_attr( $plugin_homepage ),
 				'pluginName'     => esc_html( $plugin_name ),
 				'logo'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png' ),
+				'plainArrow'           => esc_attr( NS\WP_TABLE_BUILDER_URL . 'assets/images/plain_arrow.svg' ),
 			];
 
 			$strings = [
 				'logoAlt'          => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
 				'importSection'    => esc_html__( 'Import', $wptb_text_domain ),
+				'exportSection'    => esc_html__( 'Export', $wptb_text_domain ),
 				'plugins'          => esc_html__( 'Plugins', $wptb_text_domain ),
 				'tableResponsive'  => esc_html__( 'Make Table Responsive', $wptb_text_domain ),
 				'topRowHeader'     => esc_html__( 'Top Row as Header', $wptb_text_domain ),
 				'csvDelimiter'     => esc_html__( 'CSV Delimiter', $wptb_text_domain ),
 				'fileDropHint'     => esc_html__( 'Drag and Drop Files', $wptb_text_domain ),
 				'browse'           => esc_html__( 'Browse', $wptb_text_domain ),
-				'clear'            => esc_html__( 'Blear', $wptb_text_domain ),
+				'clear'            => esc_html__( 'Clear', $wptb_text_domain ),
 				'tableImported'    => esc_html__( 'Table Imported', $wptb_text_domain ),
 				'errorOccured'     => esc_html__( 'An Error Occured', $wptb_text_domain ),
 				'operationSuccess' => esc_html__( 'Tables Imported', $wptb_text_domain ),
@@ -318,7 +322,11 @@ class Admin_Menu {
 				'security_code'     => wp_create_nonce( 'wptb-import-security-nonce' ),
 				'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 				'import_iframe_url' => $import_iframe_url,
-                'textDomain' => $wptb_text_domain
+                'textDomain' => $wptb_text_domain,
+				'fetchNonce' => Export::get_instance()->generate_nonce('fetch'),
+                'fetchAjaxAction' => Export::EXPORT_FETCH_TABLES,
+				'exportNonce' => Export::get_instance()->generate_nonce('export'),
+				'exportAjaxAction' => Export::EXPORT_TABLES,
 			];
 
 			$data = [
