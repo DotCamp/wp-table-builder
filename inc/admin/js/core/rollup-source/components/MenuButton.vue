@@ -1,3 +1,4 @@
+<!--Menu button component-->
 <template>
 	<div class="wptb-settings-button" :class="[{ disabled: disabled }, type, size]" @click="handleClick">
 		<slot></slot>
@@ -17,8 +18,13 @@ export default {
 		},
 	},
 	methods: {
+		/**
+		 * Click event callback
+		 */
 		handleClick() {
-			this.$emit('click');
+			if (!this.disabled) {
+				this.$emit('click');
+			}
 		},
 	},
 };

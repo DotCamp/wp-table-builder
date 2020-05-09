@@ -1,11 +1,13 @@
+<!--Plugins Import Menu Container-->
 <template>
 	<div>
 		<menu-button
 			class="wptb-text-transform-cap"
-			:disabled="withMessageData.busy"
+			:disabled="!isPluginInstalled(value) || isBusy()"
 			v-for="(value, key) in supportedPlugins"
 			@click="handleImportFromPlugin(key)"
 			:key="key"
+			:title="isPluginInstalled(value) ? '' : getTranslation('plugin not installed')"
 		>
 			{{ importButtonText(value) }}
 		</menu-button>
@@ -170,6 +172,9 @@ export default {
 				_nx('%u table imported', '%u tables imported', 'number of tables imported', this.options.textDomain),
 				this.importedTables[key].length
 			);
+		},
+		isPluginInstalled(name) {
+			return this.options.installedSupportedPlugins.includes(name);
 		},
 	},
 	computed: {

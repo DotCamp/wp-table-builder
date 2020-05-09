@@ -1,3 +1,4 @@
+<!--Import/Export admin menu component-->
 <template>
 	<div class="wptb-settings-wrapper">
 		<menu-header :logo-src="pluginInfo.logo" :logo-alt="strings.logoAlt" :plugin-name="pluginInfo.pluginName">
@@ -34,6 +35,11 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Get current template component name
+		 *
+		 * @returns {string} current template component name
+		 */
 		currentTemplate() {
 			return `${this.currentSection}App`;
 		},
