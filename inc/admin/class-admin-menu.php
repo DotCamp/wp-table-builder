@@ -304,7 +304,7 @@ class Admin_Menu {
 				'csvDelimiter'     => esc_html__( 'CSV Delimiter', $wptb_text_domain ),
 				'fileDropHint'     => esc_html__( 'Drag and Drop Files', $wptb_text_domain ),
 				'browse'           => esc_html__( 'Browse', $wptb_text_domain ),
-				'clear'            => esc_html__( 'Blear', $wptb_text_domain ),
+				'clear'            => esc_html__( 'Clear', $wptb_text_domain ),
 				'tableImported'    => esc_html__( 'Table Imported', $wptb_text_domain ),
 				'errorOccured'     => esc_html__( 'An Error Occured', $wptb_text_domain ),
 				'operationSuccess' => esc_html__( 'Tables Imported', $wptb_text_domain ),

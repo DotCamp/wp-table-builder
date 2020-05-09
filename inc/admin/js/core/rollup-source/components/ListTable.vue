@@ -22,7 +22,7 @@
 import ColumnSort from './ColumnSort';
 
 export default {
-  props: ['rowLabels', 'rowData', 'modelBind'],
+  props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
   components: { ColumnSort },
   data() {
     return {
@@ -36,9 +36,47 @@ export default {
   },
   methods: {
     sort(index, direction) {
-      this.innerRowData.sort((a, b) => {
-        return (a.fieldDatas[index] > b.fieldDatas[index] ? -1 : 1) * direction;
-      });
+      const sortAlgs = {
+        defaultSort(a, b) {
+          let status = 0;
+          const aData = a.fieldDatas[index].toLowerCase();
+          const bData = b.fieldDatas[index].toLowerCase();
+
+          if (aData < bData) {
+            status = 1;
+          }
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        },
+        dateSort(a, b) {
+          let status = 0;
+          const aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
+          const bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
+
+          if (aData < bData) {
+            status = 1;
+          }
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        },
+      };
+
+      let currentAlg;
+      const requestedType = this.sortType[index];
+
+      if (!requestedType || !sortAlgs[`${requestedType}Sort`]) {
+        currentAlg = sortAlgs.defaultSort;
+      } else {
+        currentAlg = sortAlgs[`${requestedType}Sort`];
+      }
+
+      this.innerRowData.sort(currentAlg);
     },
   },
 };

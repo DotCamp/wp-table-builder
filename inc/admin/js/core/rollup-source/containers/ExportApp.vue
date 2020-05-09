@@ -6,6 +6,7 @@
         :row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
         :row-data="remainingTables"
         :model-bind="selectedTables"
+        :sort-type="{ 1: 'date' }"
       ></list-table>
       <empty-cover v-show="!userTables.length > 0">
         {{ getTranslation('no tables found') }}
@@ -44,6 +45,7 @@
         :row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
         :row-data="parsedSelectedTables"
         :model-bind="selectedTables"
+        :sort-type="{ 1: 'date' }"
       ></list-table>
       <empty-cover v-show="isSelectedEmpty()">
         {{ getTranslation('no table selected') }}

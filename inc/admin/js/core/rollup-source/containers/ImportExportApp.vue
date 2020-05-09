@@ -30,7 +30,7 @@ export default {
   components: { ExportApp, MenuContent, ImportApp, MenuHeader, SectionItem, Sections, MenuFooter },
   data() {
     return {
-      currentSection: 'Import',
+      currentSection: 'Export',
     };
   },
   computed: {

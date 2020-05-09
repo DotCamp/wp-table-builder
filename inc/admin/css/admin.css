@@ -2960,7 +2960,6 @@ wptb_shortcode_container_element {
     display: grid;
     grid-auto-flow: row;
     grid-template-rows: auto 1fr;
-    grid-gap: 10px;
     position: relative;
     border: 1px solid #cbd5e0;
     padding: 10px;
@@ -3047,9 +3046,10 @@ wptb_shortcode_container_element {
     opacity: 0;
     text-align: start;
     z-index: 999;
+    pointer-events: none;
 }
 
-.wptb-menu-popup-wrapper:hover .wptb-menu-popup-message {
+.wptb-menu-popup-wrapper:hover + .wptb-menu-popup-message {
     opacity: 1
 }
 
@@ -3084,7 +3084,7 @@ wptb_shortcode_container_element {
     cursor: pointer;
 }
 
-.wptb-menu-list-table tbody tr:nth-child(even){
+.wptb-menu-list-table tbody tr:nth-child(even) {
     background-color: #edf2f7;
 
 }

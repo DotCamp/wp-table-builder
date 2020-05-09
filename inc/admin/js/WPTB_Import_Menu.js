@@ -17471,6 +17471,8 @@ exports.default = void 0;
 //
 //
 //
+//
+//
 var _default = {
   props: ['message'],
   data: function data() {
@@ -17508,34 +17510,34 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      ref: "wrapper",
-      staticClass: "wptb-menu-popup-wrapper",
-      on: { mouseover: _vm.calculatePopupPosition }
-    },
-    [
-      _vm._t("default"),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          ref: "popup",
-          staticClass: "wptb-menu-popup-message",
-          style: { top: _vm.top, left: _vm.left }
-        },
-        [
-          _c("div", { staticClass: "wptb-menu-popup-inner-holder" }, [
-            _c("div", { ref: "arrow", staticClass: "wptb-menu-popup-arrow" }),
-            _vm._v(" "),
-            _c("span", { domProps: { innerHTML: _vm._s(_vm.message) } })
-          ])
-        ]
-      )
-    ],
-    2
-  )
+  return _c("div", [
+    _c(
+      "div",
+      {
+        ref: "wrapper",
+        staticClass: "wptb-menu-popup-wrapper",
+        on: { mouseover: _vm.calculatePopupPosition }
+      },
+      [_vm._t("default")],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        ref: "popup",
+        staticClass: "wptb-menu-popup-message",
+        style: { top: _vm.top, left: _vm.left }
+      },
+      [
+        _c("div", { staticClass: "wptb-menu-popup-inner-holder" }, [
+          _c("div", { ref: "arrow", staticClass: "wptb-menu-popup-arrow" }),
+          _vm._v(" "),
+          _c("span", { domProps: { innerHTML: _vm._s(_vm.message) } })
+        ])
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -17565,7 +17567,7 @@ var _default = {
   props: ['label', 'index'],
   data: function data() {
     return {
-      currentDirection: 1
+      currentDirection: -1
     };
   },
   methods: {
@@ -17646,7 +17648,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 var _default = {
-  props: ['rowLabels', 'rowData', 'modelBind'],
+  props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
   components: {
     ColumnSort: _ColumnSort.default
   },
@@ -17662,9 +17664,48 @@ var _default = {
   },
   methods: {
     sort: function sort(index, direction) {
-      this.innerRowData.sort(function (a, b) {
-        return (a.fieldDatas[index] > b.fieldDatas[index] ? -1 : 1) * direction;
-      });
+      var sortAlgs = {
+        defaultSort: function defaultSort(a, b) {
+          var status = 0;
+          var aData = a.fieldDatas[index].toLowerCase();
+          var bData = b.fieldDatas[index].toLowerCase();
+
+          if (aData < bData) {
+            status = 1;
+          }
+
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        },
+        dateSort: function dateSort(a, b) {
+          var status = 0;
+          var aData = new Date(a.fieldDatas[index].toLowerCase()).getTime();
+          var bData = new Date(b.fieldDatas[index].toLowerCase()).getTime();
+
+          if (aData < bData) {
+            status = 1;
+          }
+
+          if (aData > bData) {
+            status = -1;
+          }
+
+          return status * direction;
+        }
+      };
+      var currentAlg;
+      var requestedType = this.sortType[index];
+
+      if (!requestedType || !sortAlgs["".concat(requestedType, "Sort")]) {
+        currentAlg = sortAlgs.defaultSort;
+      } else {
+        currentAlg = sortAlgs["".concat(requestedType, "Sort")];
+      }
+
+      this.innerRowData.sort(currentAlg);
     }
   }
 };
@@ -18066,7 +18107,8 @@ exports.default = _default;
             attrs: {
               "row-labels": ["Title", "Created", "ID"].map(_vm.getTranslation),
               "row-data": _vm.remainingTables,
-              "model-bind": _vm.selectedTables
+              "model-bind": _vm.selectedTables,
+              "sort-type": { 1: "date" }
             }
           }),
           _vm._v(" "),
@@ -18171,7 +18213,8 @@ exports.default = _default;
             attrs: {
               "row-labels": ["Title", "Created", "ID"].map(_vm.getTranslation),
               "row-data": _vm.parsedSelectedTables,
-              "model-bind": _vm.selectedTables
+              "model-bind": _vm.selectedTables,
+              "sort-type": { 1: "date" }
             }
           }),
           _vm._v(" "),
@@ -18307,7 +18350,7 @@ var _default = {
   },
   data: function data() {
     return {
-      currentSection: 'Import'
+      currentSection: 'Export'
     };
   },
   computed: {

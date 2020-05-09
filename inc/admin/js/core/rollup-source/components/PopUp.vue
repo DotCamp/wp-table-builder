@@ -1,6 +1,8 @@
 <template>
-  <div ref="wrapper" class="wptb-menu-popup-wrapper" @mouseover="calculatePopupPosition">
-    <slot></slot>
+  <div>
+    <div ref="wrapper" class="wptb-menu-popup-wrapper" @mouseover="calculatePopupPosition">
+      <slot></slot>
+    </div>
     <div ref="popup" class="wptb-menu-popup-message" :style="{ top, left }">
       <div class="wptb-menu-popup-inner-holder">
         <div ref="arrow" class="wptb-menu-popup-arrow"></div>

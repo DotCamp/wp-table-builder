@@ -8,7 +8,7 @@ export default {
   props: ['label', 'index'],
   data() {
     return {
-      currentDirection: 1,
+      currentDirection: -1,
     };
   },
   methods: {
