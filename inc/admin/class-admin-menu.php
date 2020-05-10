@@ -3,9 +3,11 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use function admin_url;
 use function get_plugins;
+use function current_user_can;
 use function wp_create_nonce;
 use function wp_localize_script;
 
@@ -30,27 +32,27 @@ class Admin_Menu {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_create_table', array( $this, 'create_table' ) );
 		add_action( 'wp_ajax_save_table', array( $this, 'save_table' ) );
-		add_action( 'wp_ajax_nopriv_save_table', array( $this, 'save_table' ) );
 		add_action( 'wp_ajax_get_table', array( $this, 'get_table' ) );
-		add_action( 'wp_ajax_nopriv_get_table', array( $this, 'get_table' ) );
 		add_action( 'admin_bar_menu', array( $this, 'add_wp_admin_bar_new_table_create_page' ), 500 );
 	}
 
 	public function create_table() {
-		$id = wp_insert_post( [
-			'post_title'   => '',
-			'post_content' => '',
-			'post_type'    => 'wptb-tables',
-			'post_status'  => 'draft'
-		] );
-		wp_die( json_encode( [ 'created', $id ] ) );
+		if (current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP)) {
+			$id = wp_insert_post( [
+				'post_title'   => '',
+				'post_content' => '',
+				'post_type'    => 'wptb-tables',
+				'post_status'  => 'draft'
+			] );
+			wp_die( json_encode( [ 'created', $id ] ) );
+		}
 	}
 
 	public function save_table() {
 
 		$params = json_decode( file_get_contents( 'php://input' ) );
 
-		if ( wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP) && wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
 		     wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
 
 			if ( ! property_exists( $params, 'id' ) || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
@@ -90,11 +92,12 @@ class Admin_Menu {
 	}
 
 	public function get_table() {
-		$post       = get_post( absint( $_REQUEST['id'] ) );
-		$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
-		$name       = $post->post_title;
-		//$html = json_decode( $html );
-		die( json_encode( [ $name, $table_html ] ) );
+		if ( current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP)) {
+			$post       = get_post( absint( $_REQUEST['id'] ) );
+			$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
+			$name       = $post->post_title;//$html = json_decode( $html );
+			die( json_encode( [ $name, $table_html ] ) );
+		}
 	}
 
 	/**

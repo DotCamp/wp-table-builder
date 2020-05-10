@@ -1,8 +1,10 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Admin;
+use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder as NS;
+use function current_user_can;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -59,13 +61,8 @@ class Import {
      */
     public function __construct() {
         add_action( 'wp_ajax_import_tables', array( $this, 'import_tables' ) );
-        add_action( 'wp_ajax_nopriv_import_tables', array( $this, 'import_tables' ) );
-
         add_action( 'wp_ajax_shortcodes_replace', array( $this, 'shortcodes_replace' ) );
-        add_action( 'wp_ajax_nopriv_shortcodes_replace', array( $this, 'shortcodes_replace' ) );
-
         add_action( 'wp_ajax_zip_unpacker', array( $this, 'zip_unpacker' ) );
-        add_action( 'wp_ajax_nopriv_zip_unpacker', array( $this, 'zip_unpacker' ) );
 
         if ( ! $this->is_import_iframe_page() ) {
             return;
@@ -80,7 +77,7 @@ class Import {
     public function shortcodes_replace() {
         $params = json_decode( file_get_contents( 'php://input' ) );
 
-        if( property_exists( $params, 'security_code' ) && wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) &&
+        if( current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && property_exists( $params, 'security_code' ) && wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) &&
             property_exists( $params, 'replacing_shortcodes' ) ) {
 
             $this->permission_check();
@@ -155,7 +152,7 @@ class Import {
     public function import_tables() {
         $params = json_decode( file_get_contents( 'php://input' ) );
 
-        if( wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
+        if( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP) && wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
             $plugin_name = $params->import_plugin_name;
 
             if( $plugin_name === 'table-press' ) {
@@ -167,8 +164,8 @@ class Import {
     }
 
     public function zip_unpacker() {
-        if ( isset( $_POST ) && isset( $_POST['security_code'] ) &&
-            wp_verify_nonce( $_POST['security_code'], 'wptb-import-security-nonce' ) ) {
+        if ( current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP) && isset( $_POST ) && isset( $_POST['security_code'] ) &&
+             wp_verify_nonce( $_POST['security_code'], 'wptb-import-security-nonce' ) ) {
             if( class_exists( 'ZipArchive', false ) && apply_filters( 'unzip_file_use_ziparchive', true ) ) {
 
                 $zip_file = new \ZipArchive();
