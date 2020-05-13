@@ -4,6 +4,16 @@
  * The file is enqueued from inc/admin/class-admin.php.
  */
 
+/*css constants for plugin styles*/
+:root {
+    --wptb-plugin-sidebar-size-full: 300px;
+    --wptb-plugin-sidebar-size-collapsed: 50px;
+    --wptb-plugin-logo-color: #3299D1;
+    --wptb-plugin-text-color-main: #4A5568;
+    --wptb-plugin-gray-300: #E2E8F0;
+    --wptb-plugin-white: #fff;
+}
+
 html {
     overflow-y: hidden;
 }
@@ -15,8 +25,8 @@ body > img {
 
 .wptb-admin-container {
     background: #fff;
-    color: #444;
-    z-index: 10099;
+    color: var(--wptb-plugin-text-color-main);
+    z-index: 99999999;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -30,8 +40,12 @@ body > img {
 
 .wptb-container {
     position: fixed;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-auto-flow: column;
+    grid-template-areas: "side-bar content";
     left: 0;
-    top: 89px;
+    top: 0;
     right: 0;
     bottom: 0;
     overflow-y: auto;
@@ -52,11 +66,11 @@ body > img {
     background-color: #f8f8f8;
     padding: 0;
     border-bottom: 1px solid #ccc;
-    position: fixed;
-    z-index: 100102;
-    display: block;
-    top: 0;
-    left: 0;
+    /*position: fixed;*/
+    /*z-index: 100102;*/
+    /*display: block;*/
+    /*top: 0;*/
+    /*left: 0;*/
     text-align: center;
 }
 
@@ -409,18 +423,16 @@ body > img {
 
 .wptb-left-panel {
     box-sizing: border-box;
-    left: 0;
-    height: 100%;
-    position: fixed;
-    width: 310px;
-    z-index: 9999;
-    border-right: 1px solid #ccc;
-    background-color: #f0f3f3;
-    display: flex;
-    flex-direction: column;
+    grid-area: side-bar;
+    background-color: var(--wptb-plugin-gray-300);
+    border-right: 1px solid var(--wptb-plugin-gray-300);
     -webkit-transition: left 0.2s ease-out, right 0.2s ease-out;
     -o-transition: left 0.2s ease-out, right 0.2s ease-out;
     transition: left 0.2s ease-out, right 0.2s ease-out;
+}
+
+.collapsed .wptb-left-panel {
+    background-color: var(--wptb-plugin-logo-color);
 }
 
 .wptb-container.collapsed .wptb-left-panel {
@@ -428,8 +440,9 @@ body > img {
 }
 
 .wptb-left-scroll-panel {
-    overflow: auto;
-    height: calc(100% - 89px);
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #wptb-left-scroll-panel-curtain,
@@ -457,8 +470,94 @@ body > img {
 }
 
 .wptb-panel-left {
-    position: relative;
     height: 100%;
+    width: var(--wptb-plugin-sidebar-size-full);
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    transition: all .2s ease-out;
+    grid-template-areas:
+            "brand"
+            "sidebar-tabs"
+            "sidebar-content"
+            "sidebar-footer"
+}
+
+.collapsed .wptb-panel-left {
+    width: var(--wptb-plugin-sidebar-size-collapsed);
+}
+
+.wptb-panel-footer {
+    grid-area: sidebar-footer;
+    padding: 25px 0;
+    background-color: var(--wptb-plugin-logo-color);
+    color: var(--wptb-plugin-white);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.wptb-panel-footer .drawer-toggle{
+    margin: 0 15px;
+    transform: scale(2);
+    cursor: pointer;
+}
+
+.wptb-panel-footer .drawer-toggle:before{
+    content: "\f341";
+}
+
+.collapsed .drawer-toggle:before {
+    content: "\f345";
+}
+
+.wptb-panel-brand {
+    grid-area: brand;
+    background-color: var(--wptb-plugin-logo-color);
+    color: var(--wptb-plugin-white);
+    padding: 25px 0;
+    font-size: 1.7rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "brand-position";
+    text-align: center;
+}
+
+.wptb-brand-name {
+    grid-area: brand-position
+}
+
+.wptb-brand-logo {
+    grid-area: brand-position;
+    display: none;
+}
+
+.collapsed .wptb-brand-name {
+    display: none;
+}
+
+.collapsed .wptb-brand-logo {
+    display: block;
+}
+
+
+.wptb-panel-tabs {
+    grid-area: sidebar-tabs;
+    text-align: center;
+    justify-content: stretch;
+}
+.collapsed .wptb-panel-tabs {
+    display: none;
+}
+
+.wptb-panel-tabs div {
+    width: 100%;
+    margin: 0 !important;
+    font-size: 0.9rem;
+    padding: 10px !important;
 }
 
 .wptb-left-panel-extend {
@@ -868,7 +967,32 @@ input[type="range"]::-ms-thumb {
 */
 
 .wptb-elements-section {
-    height: auto;
+    /*height: auto;*/
+    grid-area: sidebar-content;
+}
+
+.collapsed .wptb-elements-section {
+    display: none;
+}
+
+#element-options-group {
+    grid-area: sidebar-content;
+}
+
+.collapsed #element-options-group {
+    display: none;
+}
+
+.wptb-settings-section {
+    grid-area: sidebar-content;
+}
+
+.collapsed .wptb-settings-section {
+    display: none;
+}
+
+[data-wptb-section] {
+    animation: wptb-basic-appear 0.2s ease-out;
 }
 
 .wptb-tabs {
@@ -1003,15 +1127,16 @@ ul.wptb-tabs {
 */
 
 .wptb-builder-panel {
-    position: relative;
-    left: 300px;
+    /*position: relative;*/
+    /*left: 300px;*/
+    grid-area: content;
     min-height: 100%;
     padding-left: 20px;
     padding-right: 20px;
     -webkit-transition: left 0.2s ease-out, right 0.2s ease-out;
     -o-transition: left 0.2s ease-out, right 0.2s ease-out;
     transition: left 0.2s ease-out, right 0.2s ease-out;
-    width: calc(100% - 300px);
+    /*width: calc(100% - 300px);*/
     text-align: center;
 }
 
@@ -2655,6 +2780,14 @@ wptb_shortcode_container_element {
     transition: background-color 0.5s ease-out;
 }
 
+.wptb-settings-section-item.static-active{
+    border-bottom: 3px solid transparent;
+}
+
+.wptb-settings-section-item.active {
+    border-bottom: 3px solid var(--wptb-plugin-logo-color) !important;
+}
+
 .child .wptb-settings-section-item {
     font-size: 0.8rem;
     padding: 10px;
@@ -3091,11 +3224,24 @@ wptb_shortcode_container_element {
     background-color: #EDF2F7;
 }
 
+.wptb-plugin-box-shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
 @keyframes wptb-settings-rotate {
     0% {
         transform: rotateZ(0deg);
     }
     100% {
         transform: rotateZ(360deg);
+    }
+}
+
+@keyframes wptb-basic-appear {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
     }
 }
