@@ -2238,6 +2238,7 @@ var WPTB_Helper = {
                     if (wptbSaveBtn.length > 0) {
                         wptbSaveBtn = wptbSaveBtn[0];
                         wptbSaveBtn.classList.add('wptb-save-disabled');
+                        wptbSaveBtn.classList.remove('active');
                     }
                 } else if (data[0] == 'edited') {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
@@ -2247,6 +2248,7 @@ var WPTB_Helper = {
                     if (_wptbSaveBtn.length > 0) {
                         _wptbSaveBtn = _wptbSaveBtn[0];
                         _wptbSaveBtn.classList.add('wptb-save-disabled');
+                        _wptbSaveBtn.classList.remove('active');
                     }
                 } else if (data[0] == 'preview_edited') {
                     return;
@@ -4790,6 +4792,7 @@ var array = [],
                         wptbSaveBtn = wptbSaveBtn[0];
 
                         wptbSaveBtn.classList.add('wptb-save-disabled');
+                        wptbSaveBtn.classList.remove('active');
                     }
                 } else {
                     table.recalculateIndexes();
@@ -4852,6 +4855,7 @@ var array = [],
                         wptbSaveBtn = wptbSaveBtn[0];
 
                         wptbSaveBtn.classList.add('wptb-save-disabled');
+                        wptbSaveBtn.classList.remove('active');
                     }
                 } else {
                     table.recalculateIndexes();
@@ -5028,8 +5032,10 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
             wptbSaveBtn = wptbSaveBtn[0];
             if (!wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave || !wptbPreviewTable) {
                 wptbSaveBtn.classList.add('wptb-save-disabled');
+                wptbSaveBtn.classList.remove('active');
             } else {
                 wptbSaveBtn.classList.remove('wptb-save-disabled');
+                wptbSaveBtn.classList.add('active');
             }
         }
     };
@@ -5090,7 +5096,9 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                 wptbSaveBtn = wptbSaveBtn[0];
                 if (!wptbSaveBtn.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 || window.wptbTableStateNumberShow == wptbSaveBtn.dataset.wptbTableStateNumberSave) {
                     wptbSaveBtn.classList.add('wptb-save-disabled');
+                    wptbSaveBtn.classList.remove('active');
                 } else {
+                    wptbSaveBtn.classList.add('active');
                     wptbSaveBtn.classList.remove('wptb-save-disabled');
                 }
             }
@@ -5112,6 +5120,7 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
                     if (wptbTableSetupNew && wptbTableSetupNew.children.length == 0) {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                         wptbSaveBtn.classList.add('wptb-save-disabled');
+                        wptbSaveBtn.classList.remove('active');
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                     }
