@@ -9,19 +9,17 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 ?>
 
-<div class="wptb-left-panel wptb-plugin-box-shadow-md">
+<div class="wptb-left-panel">
     <div class="wptb-left-scroll-panel">
         <div class="wptb-panel-left">
             <div class="wptb-panel-brand">
-                <span class="wptb-brand-logo">
-                    W
-                </span>
                 <span class="wptb-brand-name">
                     WP Table Builder
                 </span>
             </div>
             <div class="wptb-panel-tabs wptb-settings-sections-wrapper wptb-plugin-box-shadow-md">
-                <div class="wptb-settings-section-item static-active" data-wptb-section-Button="elements">
+                <div class="wptb-settings-section-item static-active" data-wptb-section-button="elements"
+                     data-wptb-section-display-type="table">
 					<?php esc_html_e( 'elements', $plugin_textdomain ); ?>
                 </div>
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_settings">
@@ -31,42 +29,49 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
             <div class="wptb-elements-section">
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container" data-wptb-section="elements">
+                        <div class="wptb-panel-toggle-group">
+                            <div class="wptb-panel-toggle">
+                                <div class="header"><?php esc_html_e( 'basic', $plugin_textdomain ); ?></div>
+                                <span class="dashicons toggle-icon"></span>
+                            </div>
+                            <div class="wptb-panel-toggle-target wptb-panel-elements-inner-wrapper">
+			                    <?php
 
-						<?php
+			                    do_action( 'wptb_before_elements' );
 
-						do_action( 'wptb_before_elements' );
+			                    $element_objects = Init::instance()->elements_manager->get_element_objects();
 
-						$element_objects = Init::instance()->elements_manager->get_element_objects();
+			                    foreach ( $element_objects as $element ): ?>
 
-						foreach ( $element_objects as $element ): ?>
+                                    <div class="wptb-element" draggable="true"
+                                         data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
 
-                            <div class="wptb-element" draggable="true"
-                                 data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
+					                    <?php
 
-								<?php
+					                    if ( file_exists( $element->get_directory_icon() ) ) :
+						                    require_once $element->get_directory_icon();
+					                    endif;
 
-								if ( file_exists( $element->get_directory_icon() ) ) :
-									require_once $element->get_directory_icon();
-								endif;
+					                    ?>
 
-								?>
+                                        <p class="wptb-draggable">
 
-                                <p class="wptb-draggable">
+						                    <?php
 
-									<?php
+						                    if ( method_exists( $element, 'get_title' ) ) :
+							                    $element->get_title();
+						                    endif;
 
-									if ( method_exists( $element, 'get_title' ) ) :
-										$element->get_title();
-									endif;
+						                    ?>
 
-									?>
+                                        </p>
 
-                                </p>
+                                    </div>
+
+			                    <?php endforeach; ?>
 
                             </div>
-
-						<?php endforeach; ?>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,12 +80,12 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-settings.php'; ?>
             </div>
 
-            <div id="element-options-group" class="wptb-tab-content" data-wptb-section="options_group" style="display: none;">
+            <div id="element-options-group" class="wptb-tab-content" data-wptb-section="options_group"
+                 style="display: none;">
                 <!-- here will be elements controls -->
             </div>
-
-            <div class="wptb-panel-footer">
-                <span class="dashicons drawer-toggle"></span>
+            <div class="wptb-panel-drawer-toggle">
+                <span class="dashicons wptb-panel-drawer-icon"></span>
             </div>
         </div>
     </div>
@@ -151,18 +156,18 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
             </div>
         </div>
     </div>
-    <a href="javascript:void(0)" class="wptb-left-panel-extend" data-fn="togglePanel"
-       data-title-collapsed="Expand panel" data-title-expanded="Collapse panel" title="Collapse panel">
-        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             x="0px" y="0px" width="512" height="512" viewBox="0 0 357 357" style="enable-background:new 0 0 357 357;"
-             xml:space="preserve" class=""><g transform="matrix(-1, 1.22465e-16, -1.22465e-16, -1, 357, 357)">
-                <g>
-                    <g id="play-arrow">
-                        <polygon points="38.25,0 38.25,357 318.75,178.5   " data-original="#000000" class="active-path"
-                                 style="fill:#3B7EC0" data-old_color="##3B7EC"></polygon>
-                    </g>
-                </g>
-            </g>
-        </svg>
-    </a>
+    <!--    <a href="javascript:void(0)" class="wptb-left-panel-extend" data-fn="togglePanel"-->
+    <!--       data-title-collapsed="Expand panel" data-title-expanded="Collapse panel" title="Collapse panel">-->
+    <!--        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
+    <!--             x="0px" y="0px" width="512" height="512" viewBox="0 0 357 357" style="enable-background:new 0 0 357 357;"-->
+    <!--             xml:space="preserve" class=""><g transform="matrix(-1, 1.22465e-16, -1.22465e-16, -1, 357, 357)">-->
+    <!--                <g>-->
+    <!--                    <g id="play-arrow">-->
+    <!--                        <polygon points="38.25,0 38.25,357 318.75,178.5   " data-original="#000000" class="active-path"-->
+    <!--                                 style="fill:#3B7EC0" data-old_color="##3B7EC"></polygon>-->
+    <!--                    </g>-->
+    <!--                </g>-->
+    <!--            </g>-->
+    <!--        </svg>-->
+    <!--    </a>-->
 </div>

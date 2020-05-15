@@ -1970,7 +1970,8 @@ var WPTB_Helper = {
         sectionButtons.map(s => {
             const sectionName = s.dataset.wptbSectionButton;
             s.addEventListener('click', function() {
-                vm.activateSection(sectionName);
+                const displayType = s.dataset.wptbSectionDisplayType;
+                vm.activateSection(sectionName,displayType);
             })
 
             document.addEventListener('sectionChanged', (e)=> {
@@ -1984,6 +1985,17 @@ var WPTB_Helper = {
             })
         })
     },
+    setupPanelToggleButtons(){
+        const $ = jQuery;
+
+        $('.wptb-panel-toggle-group').each(function(){
+            const vm = $(this);
+            $(this).find('.toggle-icon').click(() => {
+                vm.find('.wptb-panel-toggle-target').slideToggle();
+                vm.toggleClass('wptb-panel-toggle-content');
+            })
+        })
+    },
     /**
      * Trigger a section change event
      *
@@ -1994,13 +2006,17 @@ var WPTB_Helper = {
 
         document.dispatchEvent(sectionEvent);
     },
-    setupSidebarToggle(){
-        const toggleButton = document.querySelector('.drawer-toggle');
+    /**
+     * Setup sidebar toggle element
+     *
+     * @param {string} toggleSelector query selector for drawer toggle element
+     */
+    setupSidebarToggle(toggleSelector){
+        const toggleButton = document.querySelector(toggleSelector);
         if(toggleButton){
             toggleButton.addEventListener('click', (e)=>{
                 e.preventDefault();
                 document.body.classList.toggle('collapsed');
-
             })
         }
     },
@@ -2636,7 +2652,8 @@ var WPTB_Initializer = function WPTB_Initializer() {
     WPTB_Helper.registerSections(['elements', 'table_settings', 'options_group']);
     WPTB_Helper.setupSectionButtons();
     WPTB_Helper.activateSection('elements');
-    WPTB_Helper.setupSidebarToggle();
+    WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
+    WPTB_Helper.setupPanelToggleButtons();
 };
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
@@ -2847,16 +2864,17 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     }
     ;
 
-    document.querySelector('.wptb-left-panel-extend').onclick = function () {
-        var wptbContainer = document.querySelector('.wptb-container');
-        if (wptbContainer) {
-            if (wptbContainer.classList.contains('collapsed')) {
-                wptbContainer.classList.remove('collapsed');
-            } else {
-                wptbContainer.classList.add('collapsed');
-            }
-        }
-    };
+    // TODO [erdembircan] old drawer toggle
+    // document.querySelector('.wptb-left-panel-extend').onclick = function () {
+    //     var wptbContainer = document.querySelector('.wptb-container');
+    //     if (wptbContainer) {
+    //         if (wptbContainer.classList.contains('collapsed')) {
+    //             wptbContainer.classList.remove('collapsed');
+    //         } else {
+    //             wptbContainer.classList.add('collapsed');
+    //         }
+    //     }
+    // };
 
     // this code hides the "element parameters" area 
     // when clicked outside this element and its "tinymce" toolbar 
