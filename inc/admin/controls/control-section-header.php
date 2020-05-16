@@ -59,7 +59,8 @@ class Control_Section_Header extends Base_Control {
                 buttonBack = data.buttonBack;
             }
         #>
-        <div class="wptb-settings-dropdown">
+        <div class="wptb-panel-toggle">
+            <div class="header">
             <#
                 if( buttonBack ) {
                 #>
@@ -77,7 +78,7 @@ class Control_Section_Header extends Base_Control {
                 <#
                 }
             #>
-            <div class="wptb-option-text">{{{label}}}</div>   
+            {{{label}}}</div>
         </div>
         
         <wptb-template-script>

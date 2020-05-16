@@ -23,7 +23,7 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 					<?php esc_html_e( 'elements', $plugin_textdomain ); ?>
                 </div>
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_settings">
-					<?php esc_html_e( 'table', $plugin_textdomain ); ?>
+					<?php esc_html_e( 'settings', $plugin_textdomain ); ?>
                 </div>
             </div>
             <div class="wptb-elements-section">
@@ -42,10 +42,9 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 			                    $element_objects = Init::instance()->elements_manager->get_element_objects();
 
 			                    foreach ( $element_objects as $element ): ?>
-
                                     <div class="wptb-element" draggable="true"
                                          data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
-
+<div class="wptb-element-draggable-icon"><span class="dashicons dashicons-menu"></span></div>
 					                    <?php
 
 					                    if ( file_exists( $element->get_directory_icon() ) ) :

@@ -86,7 +86,7 @@ class Table_Settings_Element extends Controls_Stack {
         $this->add_control(
 			'applyTableContainerMaxWidth',
 			[
-				'label' => __( 'Apply Table Container Max Width', 'wp_table_builder' ),
+				'label' => __( 'Table Container Max Width', 'wp_table_builder' ),
 				'type' => Controls_Manager::TOGGLE,
                 'selectors' => [
                     '{{{data.container}}}' => ['data-wptb-apply-table-container-max-width', '1', null]
