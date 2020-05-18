@@ -95,6 +95,16 @@ class Controls_Manager {
 	const SECTION_GROUP_COLLAPSE_END = 'section_group_collapse_end';
 
 	/**
+	 * Adding start of tabbed section group control.
+	 */
+	const SECTION_GROUP_TABBED_START = 'section_group_tabbed_start';
+
+	/**
+	 * Adding end of tab group content
+	 */
+	const SECTION_GROUP_TAB_CONTENT_END = 'section_group_tab_content_end';
+
+	/**
 	 * Controls.
 	 *
 	 * Holds the list of all the controls. Default is `null`.
@@ -135,6 +145,8 @@ class Controls_Manager {
 			self::BUTTON,
 			self::SECTION_GROUP_COLLAPSE_START,
 			self::SECTION_GROUP_COLLAPSE_END,
+			self::SECTION_GROUP_TABBED_START,
+			self::SECTION_GROUP_TAB_CONTENT_END
 		];
 	}
 

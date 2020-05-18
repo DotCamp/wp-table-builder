@@ -1131,6 +1131,43 @@ ul.wptb-tabs {
     font-size: 80%;
 }
 
+.wptb-section-group-tabbed {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: "header" "tabButtons" "controls";
+    grid-auto-flow: row;
+}
+
+.wptb-section-group-tabbed-header {
+    grid-area: header;
+    justify-content: center !important;
+}
+
+.wptb-section-group-tabbed-tabs-buttons {
+    grid-area: tabButtons;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--wptb-plugin-theme-color-light);
+    text-align: center;
+    justify-content: stretch;
+    border-bottom: 1px solid #E5DFDF;
+}
+
+.wptb-section-group-tabbed-tabs-buttons div {
+    width: 100%;
+    margin: 0 !important;
+    font-size: 90%;
+    padding: 7px !important;
+}
+
+.wptb-section-group-tab-content {
+    grid-area: controls;
+    animation: wptb-basic-appear 0.2s ease-out;
+}
+
+.wptb-plugin-non-visible {
+    display: none !important;
+}
 
 /**
 * Elements
