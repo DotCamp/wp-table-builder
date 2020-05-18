@@ -1073,6 +1073,7 @@ ul.wptb-tabs {
 .wptb-panel-toggle-group {
     background-color: var(--wptb-plugin-theme-color-light);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin: 20px 0;
 }
 
 .wptb-panel-toggle {
@@ -1083,6 +1084,10 @@ ul.wptb-tabs {
     justify-content: space-between;
     align-items: center;
     border-bottom: 3px solid var(--wptb-plugin-theme-sidebar-bg);
+}
+
+.wptb-element-options .wptb-panel-toggle {
+    cursor: pointer;
 }
 
 .wptb-panel-toggle .header {
@@ -1111,6 +1116,10 @@ ul.wptb-tabs {
 .wptb-panel-toggle-target {
     background-color: var(--wptb-plugin-gray-100);
     padding: 20px 10px;
+}
+
+.wptb-panel-section-toggle-target {
+    background-color: var(--wptb-plugin-gray-100);
 }
 
 .wptb-panel-elements-inner-wrapper {

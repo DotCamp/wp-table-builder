@@ -1,5 +1,7 @@
 <?php
+
 namespace WP_Table_Builder\Inc\Admin\Managers;
+
 use WP_Table_Builder\Inc\Admin\Controls\Base_Control as Base_Control;
 use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
 
@@ -17,72 +19,82 @@ if ( ! defined( 'WPINC' ) ) {
  * @since 1.1.2
  */
 class Controls_Manager {
-    
-    /**
+
+	/**
 	 * Size control.
 	 */
 	const SIZE = 'size';
-    
-    /**
+
+	/**
 	 * Color control.
 	 */
 	const COLOR = 'color';
-    
-    /**
+
+	/**
 	 *  Section Header control.
 	 */
 	const SECTION_HEADER = 'section_header';
-    
-    /**
+
+	/**
 	 *  Change Attribute control.
 	 */
 	const CHANGE_ATTRIBUTE = 'change_attribute';
-    
-    /**
+
+	/**
 	 *  Alignment control.
 	 */
-    const ALIGNMENT = 'alignment';
-    
-    /**
+	const ALIGNMENT = 'alignment';
+
+	/**
 	 *  Href control.
 	 */
 	const URL = 'url';
-    
-    /**
+
+	/**
 	 *  Adding text control.
 	 */
 	const TEXT = 'text';
-    
-    /**
+
+	/**
 	 *  Adding number control.
 	 */
 	const NUMBER = 'number';
-    
-    /**
+
+	/**
 	 *  Adding on toggle control.
 	 */
 	const TOGGLE = 'toggle';
-    
-    /**
+
+	/**
 	 *  Adding select control.
 	 */
 	const SELECT = 'select';
-    
-    /**
+
+	/**
 	 *  Adding checkbox control.
 	 */
 	const CHECKBOX = 'checkbox';
-    
-    /**
+
+	/**
 	 *  Adding textarea control.
 	 */
 	const TEXTAREA = 'textarea';
-    /**
+	/**
 	 *  Adding button control.
 	 */
 	const BUTTON = 'button';
-    
-    /**
+
+	/**
+	 * Adding start of collapsible section group control.
+	 */
+	const SECTION_GROUP_COLLAPSE_START = 'section_group_collapse_start';
+
+	/**
+	 * Adding end of collapsible section group control.
+	 */
+	const SECTION_GROUP_COLLAPSE_END = 'section_group_collapse_end';
+
+	/**
 	 * Controls.
 	 *
 	 * Holds the list of all the controls. Default is `null`.
@@ -93,8 +105,8 @@ class Controls_Manager {
 	 * @var Base_Control[]
 	 */
 	private $controls = null;
-    
-    /**
+
+	/**
 	 * Control stacks.
 	 *
 	 * Holds the list of all the control stacks. Default is `null`.
@@ -105,38 +117,40 @@ class Controls_Manager {
 	 * @var array
 	 */
 	private $stacks = null;
-    
-    public static function get_controls_names() {
+
+	public static function get_controls_names() {
 		return [
-			self::COLOR, 
-            self::SIZE,
-            self::SECTION_HEADER,
-            self::CHANGE_ATTRIBUTE,
-            self::ALIGNMENT,
-            self::URL,
-            self::TEXT,
-            self::NUMBER,
-            self::TOGGLE,
-            self::SELECT,
-            self::CHECKBOX,
-            self::TEXTAREA,
-            self::BUTTON
+			self::COLOR,
+			self::SIZE,
+			self::SECTION_HEADER,
+			self::CHANGE_ATTRIBUTE,
+			self::ALIGNMENT,
+			self::URL,
+			self::TEXT,
+			self::NUMBER,
+			self::TOGGLE,
+			self::SELECT,
+			self::CHECKBOX,
+			self::TEXTAREA,
+			self::BUTTON,
+			self::SECTION_GROUP_COLLAPSE_START,
+			self::SECTION_GROUP_COLLAPSE_END,
 		];
 	}
-    
-    /**
+
+	/**
 	 * Add control to stack.
 	 *
 	 * This method adds a new control to the stack.
 	 *
+	 * @param Element_Base_Object $item Item stack.
+	 * @param string $control_id Control ID.
+	 * @param array $control_data Control data.
+	 *
+	 * @return bool True if control added, False otherwise.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @param Element_Base_Object $item      Item stack.
-	 * @param string         $control_id   Control ID.
-	 * @param array          $control_data Control data.
-	 *
-	 * @return bool True if control added, False otherwise.
 	 */
 	public function add_control_to_stack( Controls_Stack $element, $control_id, $control_data ) {
 
@@ -146,6 +160,7 @@ class Controls_Manager {
 
 		if ( ! $control_type_instance ) {
 			_doing_it_wrong( sprintf( '%1$s::%2$s', __CLASS__, __FUNCTION__ ), sprintf( 'Control type "%s" not found.', $control_data['type'] ), '1.0.0' );
+
 			return false;
 		}
 
@@ -158,11 +173,11 @@ class Controls_Manager {
 		}
 
 		$this->stacks[ $stack_id ][ $control_id ] = $control_data;
-        
+
 		return true;
 	}
-    
-    /**
+
+	/**
 	 * Register controls.
 	 *
 	 * This method creates a list of all the supported controls by requiring the
@@ -178,39 +193,40 @@ class Controls_Manager {
 
 		foreach ( self::get_controls_names() as $control_id ) {
 			$control_class_id = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $control_id ) ) );
-			$class_name = '\WP_Table_Builder\Inc\Admin\Controls\Control_' . $control_class_id;
-            if( class_exists( $class_name ) ) {
-                $this->register_control_object( $control_id, new $class_name() );
-            }
+			$class_name       = '\WP_Table_Builder\Inc\Admin\Controls\Control_' . $control_class_id;
+			if ( class_exists( $class_name ) ) {
+				$this->register_control_object( $control_id, new $class_name() );
+			}
 		}
 	}
-    
-    /**
+
+	/**
 	 * Register control object.
 	 *
-	 * This method adds a new control to the controls list. 
+	 * This method adds a new control to the controls list.
+	 *
+	 * @param string $control_id Control ID.
+	 * @param Base_Control $control_instance Control instance, usually the
+	 *                                       current instance.
 	 *
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @param string       $control_id       Control ID.
-	 * @param Base_Control $control_instance Control instance, usually the
-	 *                                       current instance.
 	 */
 	public function register_control_object( $control_id, Base_Control $control_instance ) {
 		$this->controls[ $control_id ] = $control_instance;
 	}
-    
-    
-    /**
+
+
+	/**
 	 * Get controls.
 	 *
 	 * Returns the controls list from the current instance.
 	 *
+	 * @return Base_Control[] Controls list.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return Base_Control[] Controls list.
 	 */
 	public function get_controls() {
 		if ( null === $this->controls ) {
@@ -219,18 +235,18 @@ class Controls_Manager {
 
 		return $this->controls;
 	}
-    
-    /**
+
+	/**
 	 * Get control.
 	 *
 	 * Returns a specific control from the current controls instance.
 	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
 	 * @param string $control_id Control ID.
 	 *
 	 * @return Base_Control Control instance, or False otherwise.
+	 * @since 1.1.2
+	 * @access public
+	 *
 	 */
 	public function get_control( $control_id ) {
 		$controls = $this->get_controls();
@@ -252,22 +268,22 @@ class Controls_Manager {
 			$control->output_template();
 		}
 	}
-    
-    /**
+
+	/**
 	 * Render element content js templates.
 	 *
 	 * @since 1.1.2
 	 * @access public
-	*/
+	 */
 	public function output_control_stacks() {
-        if( ! is_null( $this->stacks ) && is_array( $this->stacks ) ) {
-            foreach( $this->stacks as $key => $value ):
-            ?>
-            <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
-                <?php echo json_encode( $value ); ?>
-            </script>
-            <?php
-            endforeach;
-        }
+		if ( ! is_null( $this->stacks ) && is_array( $this->stacks ) ) {
+			foreach ( $this->stacks as $key => $value ):
+				?>
+                <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
+					<?php echo json_encode( $value ); ?>
+                </script>
+			<?php
+			endforeach;
+		}
 	}
 }

@@ -1,7 +1,9 @@
 <?php
+
 namespace WP_Table_Builder\Inc\Admin\Views\Builder;
 
 use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
+use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -11,13 +13,13 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 class Table_Settings_Element extends Controls_Stack {
-    /**
+	/**
 	 * Get name.
 	 *
+	 * @return string Section name.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Section name.
 	 */
 	public function get_name() {
 		return 'table_setting';
@@ -26,16 +28,16 @@ class Table_Settings_Element extends Controls_Stack {
 	/**
 	 * Get section title.
 	 *
+	 * @return string Section title.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Section title.
 	 */
 	public function get_title() {
 		return esc_html_e( 'Table Setting', 'wp-table-builder' );
 	}
-    
-    /**
+
+	/**
 	 * Register the element controls.
 	 *
 	 * Adds different fields to allow the user to change and customize the element settings.
@@ -45,198 +47,185 @@ class Table_Settings_Element extends Controls_Stack {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-		$this->add_control(
-			'section_header',
-			[
-				'label' => __( 'Table Settings', 'wp_table_builder' ),
-				'type' => Controls_Manager::SECTION_HEADER,
-			]
-		);
-        
-        $this->add_control(
-			'tableManageCells',
-			[
-				'label' => __( 'Manage Cells', 'wp_table_builder' ),
-				'type' => Controls_Manager::BUTTON,
-			]
-		);
-        
-        $this->add_control(
-			'makeTableResponsive',
-			[
-				'label' => __( 'Make Table Responsive', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE,
-                'selectors' => [
-                    '{{{data.container}}}' => ['data-wptb-adaptive-table', '1', '0']
-                ],
-			]
-		);
-        
-        $this->add_control(
-			'tableTopRowsAsHeader',
-			[
-				'label' => __( 'Top Rows As Header', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE,
-                'selectors' => [
-                    '{{{data.container}}}' => ['class', 'wptb-table-preview-head', '']
-                ],
-			]
-		);
-        
-        $this->add_control(
-			'applyTableContainerMaxWidth',
-			[
-				'label' => __( 'Table Container Max Width', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE,
-                'selectors' => [
-                    '{{{data.container}}}' => ['data-wptb-apply-table-container-max-width', '1', null]
-                ],
-			]
-		);
-        
-		$this->add_control(
-			'tableContainerMaxWidth',
-			[
-				'label' => __( 'Table Container Max Width', 'wp_table_builder' ),
-				'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}}' => ['data-wptb-table-container-max-width']
-                ],
-                'min' => 100, 
-                'max' => 5000,
-                'defaultValue' => 850,
-                'dimension' => 'px',
-                'appearDependOnControl' => ['applyTableContainerMaxWidth', ['checked'], ['unchecked']]
-			]
-		);
+		$general_section_group_controls = [
+			'tableManageCells' =>
+				[
+					'label' => __( 'Manage Cells', 'wp_table_builder' ),
+					'type'  => Controls_Manager::BUTTON,
+				],
 
-        $this->add_control(
-            'tableCellMinAutoWidth',
-            [
-                'label' => __( 'Table Cell Min Auto Width', 'wp_table_builder' ),
-                'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}}' => ['data-wptb-td-width-auto']
-                ],
-                'min' => 10,
-                'max' => 500,
-                'defaultValue' => 100,
-                'dimension' => 'px'
-            ]
-        );
-        
-		$this->add_control(
-			'tableBorder',
-			[
-				'label' => __( 'Table Border', 'wp_table_builder' ),
-				'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}}' => 'border-width',
-                ],
-                'min' => '0', 
-                'max' => '50',
-                'defaultValue' => '0',
-                'dimension' => 'px',
-			]
-		);
-        
-        $this->add_control(
-			'applyInnerBorder',
-			[
-				'label' => __( 'Apply Inner Border', 'wp_table_builder' ),
-				'type' => Controls_Manager::TOGGLE,
-                'selectors' => [
-                    '{{{data.container}}} td' => ['border-style', 'solid', 'none'],
-                ],
-			]
-		);
-        
-		$this->add_control(
-			'tableInnerBorderSize',
-			[
-				'label' => __( 'Inner Border Size', 'wp_table_builder' ),
-				'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}} td' => 'border-width',
-                ],
-                'min' => 1, 
-                'max' => 50,
-                'defaultValue' => 1,
-                'dimension' => 'px',
-                'appearDependOnControl' => ['applyInnerBorder', ['checked'], ['unchecked']]
-			]
-		);
-        
-        $this->add_control(
-			'tableBorderColor',
-			[
-				'label' => __( 'BorderColor', 'wp_table_builder' ),
-				'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{{data.container}}}' => ['border-color'],
-                    '{{{data.container}}} td' => ['border-color']
-                ]
-			]
-		);
-        
-		$this->add_control(
-			'tableCellPadding',
-			[
-				'label' => __( 'Cell Padding', 'wp_table_builder' ),
-				'type' => Controls_Manager::SIZE,
-                'selectors' => [
-                    '{{{data.container}}} td' => 'padding',
-                ],
-                'min' => '0',
-                'max' => '50',
-                'defaultValue' => 10,
-                'dimension' => 'px'
-			]
-		);
-        
-		$this->add_control(
-			'tableAlignmentCheckbox',
-			[
-				'label' => __( 'Table Alignment', 'wp_table_builder' ),
-				'type' => Controls_Manager::ALIGNMENT,
-                'selected' => 1,
-                'selectors' => [
-                    '{{{data.container}}}' => 'data-wptb-table-alignment',
-                ]
-			]
-		);
-        
-        $this->add_control(
-			'tableHeaderBackground',
-			[
-				'label' => __( 'Header Background', 'wp_table_builder' ),
-				'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{{data.container}}} tbody tr:nth-child(1)' => ['background-color']
-                ]
-			]
-		);
-        
-        $this->add_control(
-			'tableEvenRowBackground',
-			[
-				'label' => __( 'Even Row Background', 'wp_table_builder' ),
-				'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{{data.container}}} tbody tr:nth-child(2n + 2)' => ['background-color']
-                ]
-			]
-		);
-        
-        $this->add_control(
-			'tableOddRowBackground',
-			[
-				'label' => __( 'Odd Row Background', 'wp_table_builder' ),
-				'type' => Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{{data.container}}} tbody tr:nth-child(2n + 3)' => ['background-color']
-                ]
-			]
-		);
+			'tableCellPadding'            =>
+				[
+					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
+					'type'         => Controls_Manager::SIZE,
+					'selectors'    => [
+						'{{{data.container}}} td' => 'padding',
+					],
+					'min'          => '0',
+					'max'          => '50',
+					'defaultValue' => 10,
+					'dimension'    => 'px'
+				],
+			'tableAlignmentCheckbox'      =>
+				[
+					'label'     => __( 'Table Alignment', 'wp_table_builder' ),
+					'type'      => Controls_Manager::ALIGNMENT,
+					'selected'  => 1,
+					'selectors' => [
+						'{{{data.container}}}' => 'data-wptb-table-alignment',
+					]
+				],
+			'applyTableContainerMaxWidth' =>
+				[
+					'label'     => __( 'Table Container Max Width', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+						'{{{data.container}}}' => [ 'data-wptb-apply-table-container-max-width', '1', null ]
+					],
+				],
+			'tableContainerMaxWidth'      =>
+				[
+					'label'                 => __( 'Table Container Max Width', 'wp_table_builder' ),
+					'type'                  => Controls_Manager::SIZE,
+					'selectors'             => [
+						'{{{data.container}}}' => [ 'data-wptb-table-container-max-width' ]
+					],
+					'min'                   => 100,
+					'max'                   => 5000,
+					'defaultValue'          => 850,
+					'dimension'             => 'px',
+					'appearDependOnControl' => [ 'applyTableContainerMaxWidth', [ 'checked' ], [ 'unchecked' ] ]
+				],
+
+			'tableCellMinAutoWidth' =>
+				[
+					'label'        => __( 'Table Cell Min Auto Width', 'wp_table_builder' ),
+					'type'         => Controls_Manager::SIZE,
+					'selectors'    => [
+						'{{{data.container}}}' => [ 'data-wptb-td-width-auto' ]
+					],
+					'min'          => 10,
+					'max'          => 500,
+					'defaultValue' => 100,
+					'dimension'    => 'px'
+				]
+		];
+
+		$background_section_group_controls = [
+			'tableHeaderBackground'  =>
+				[
+					'label'     => __( 'Header Background', 'wp_table_builder' ),
+					'type'      => Controls_Manager::COLOR,
+					'selectors' => [
+						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color' ]
+					]
+				],
+			'tableEvenRowBackground' =>
+				[
+					'label'     => __( 'Even Row Background', 'wp_table_builder' ),
+					'type'      => Controls_Manager::COLOR,
+					'selectors' => [
+						'{{{data.container}}} tbody tr:nth-child(2n + 2)' => [ 'background-color' ]
+					]
+				],
+
+			'tableOddRowBackground' =>
+				[
+					'label'     => __( 'Odd Row Background', 'wp_table_builder' ),
+					'type'      => Controls_Manager::COLOR,
+					'selectors' => [
+						'{{{data.container}}} tbody tr:nth-child(2n + 3)' => [ 'background-color' ]
+					]
+				]
+		];
+
+		$border_section_group_controls = [
+			'tableBorder' =>
+				[
+					'label'        => __( 'Table Border', 'wp_table_builder' ),
+					'type'         => Controls_Manager::SIZE,
+					'selectors'    => [
+						'{{{data.container}}}' => 'border-width',
+					],
+					'min'          => '0',
+					'max'          => '50',
+					'defaultValue' => '0',
+					'dimension'    => 'px',
+				],
+
+			'tableBorderColor'     =>
+				[
+					'label'     => __( 'BorderColor', 'wp_table_builder' ),
+					'type'      => Controls_Manager::COLOR,
+					'selectors' => [
+						'{{{data.container}}}'    => [ 'border-color' ],
+						'{{{data.container}}} td' => [ 'border-color' ]
+					]
+				],
+			'applyInnerBorder'     =>
+				[
+					'label'     => __( 'Apply Inner Border', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+						'{{{data.container}}} td' => [ 'border-style', 'solid', 'none' ],
+					],
+				],
+			'tableInnerBorderSize' =>
+				[
+					'label'                 => __( 'Inner Border Size', 'wp_table_builder' ),
+					'type'                  => Controls_Manager::SIZE,
+					'selectors'             => [
+						'{{{data.container}}} td' => 'border-width',
+					],
+					'min'                   => 1,
+					'max'                   => 50,
+					'defaultValue'          => 1,
+					'dimension'             => 'px',
+					'appearDependOnControl' => [ 'applyInnerBorder', [ 'checked' ], [ 'unchecked' ] ]
+				]
+		];
+
+		$responsive_section_group_controls = [
+			'makeTableResponsive'  =>
+				[
+					'label'     => __( 'Make Table Responsive', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+						'{{{data.container}}}' => [ 'data-wptb-adaptive-table', '1', '0' ]
+					],
+				],
+			'tableTopRowsAsHeader' =>
+				[
+					'label'     => __( 'Top Rows As Header', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+						'{{{data.container}}}' => [ 'class', 'wptb-table-preview-head', '' ]
+					],
+				]
+		];
+
+		// general section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
+			$this,
+			'add_control'
+		] );
+
+		// background section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_background', esc_html__( 'background', NS\PLUGIN_TEXT_DOMAIN ), $background_section_group_controls, [
+			$this,
+			'add_control'
+		], false );
+
+		// border section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_border', esc_html__( 'border', NS\PLUGIN_TEXT_DOMAIN ), $border_section_group_controls, [
+			$this,
+			'add_control'
+		], false );
+
+		// responsive section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_responsive', esc_html__( 'responsive', NS\PLUGIN_TEXT_DOMAIN ), $responsive_section_group_controls, [
+			$this,
+			'add_control'
+		], false );
 	}
 }
