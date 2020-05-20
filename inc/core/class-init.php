@@ -1,12 +1,14 @@
 <?php
 
 namespace WP_Table_Builder\Inc\Core;
+
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
+use function add_action;
 
 /**
  * The core plugin class.
@@ -18,37 +20,37 @@ use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
  * @author     Imtiaz Rayhan
  */
 class Init {
-    
-    /**
-     * Instance to instantiate object.
-     *
-     * @var $instance
-     */
-    protected static $instance;
 
-    /**
+	/**
+	 * Instance to instantiate object.
+	 *
+	 * @var $instance
+	 */
+	protected static $instance;
+
+	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @var      Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
-    /**
-     * The name of the plugin.
-     *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string    $plugin_name    The name of the plugin.
-     */
-    protected $plugin_name;
+	/**
+	 * The name of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string $plugin_name The name of the plugin.
+	 */
+	protected $plugin_name;
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_basename    The string used to uniquely identify this plugin.
+	 * @var      string $plugin_basename The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_basename;
 
@@ -57,7 +59,7 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
 
@@ -66,15 +68,15 @@ class Init {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_text_domain    The text domain of the plugin.
+	 * @var      string $plugin_text_domain The text domain of the plugin.
 	 */
 	protected $plugin_text_domain;
 
 	/**
 	 * Initialize and define the core functionality of the plugin.
 	 */
-    
-    /**
+
+	/**
 	 * Items manager.
 	 *
 	 * Holds the plugin items manager.
@@ -84,9 +86,9 @@ class Init {
 	 *
 	 * @var elements_manager
 	 */
-    public $elements_manager;
-    
-    /**
+	public $elements_manager;
+
+	/**
 	 * Controls manager.
 	 *
 	 * Holds the plugin controls manager.
@@ -96,7 +98,7 @@ class Init {
 	 *
 	 * @var Controls_Manager
 	 */
-    public $controls_manager;
+	public $controls_manager;
 
 
 	/**
@@ -108,13 +110,13 @@ class Init {
 	 *
 	 * @var Settings_Manager
 	 */
-    public $settings_manager;
+	public $settings_manager;
 
-    private function __construct() {
+	private function __construct() {
 
-		$this->plugin_name = NS\WP_TABLE_BUILDER;
-		$this->version = NS\PLUGIN_VERSION;
-		$this->plugin_basename = NS\PLUGIN_BASENAME;
+		$this->plugin_name        = NS\WP_TABLE_BUILDER;
+		$this->version            = NS\PLUGIN_VERSION;
+		$this->plugin_basename    = NS\PLUGIN_BASENAME;
 		$this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
 
 		$this->load_dependencies();
@@ -122,42 +124,42 @@ class Init {
 		$this->table_export();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-        $this->table_import();
-        $this->table_preview();
-        
-        if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
-            $this->elements_resources();
-        }
+		$this->table_import();
+		$this->table_preview();
+
+		if ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
+			$this->elements_resources();
+		}
 	}
 
-    /**
-     * Singleton pattern, making only one instance of the class.
-     *
-     * @since 1.00
-     */
-    public static function instance() {
-        if ( ! isset( self::$instance ) ) {
-            $className      = __CLASS__;
-            self::$instance = new $className;
-        }
+	/**
+	 * Singleton pattern, making only one instance of the class.
+	 *
+	 * @since 1.00
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			$className      = __CLASS__;
+			self::$instance = new $className;
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
-    /**
+	/**
 	 * Loads the following required dependencies for this plugin.
 	 *
 	 * - Loader - Orchestrates the hooks of the plugin.
 	 * - Internationalization_I18n - Defines internationalization functionality.
 	 * - Admin - Defines all hooks for the admin area.
 	 * - Frontend - Defines all hooks for the public side of the site.
-     * - Settings - Setup setting manager for menus and plugin wide settings handling
+	 * - Settings - Setup setting manager for menus and plugin wide settings handling
 	 *
 	 * @access    private
 	 */
 	private function load_dependencies() {
-		$this->loader = new Loader();
-		$this->settings_manager = new Settings_Manager('wp_table_builder_settings', $this->loader);
+		$this->loader           = new Loader();
+		$this->settings_manager = new Settings_Manager( 'wp_table_builder_settings', $this->loader );
 	}
 
 	/**
@@ -187,14 +189,40 @@ class Init {
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$tables = new Admin\Tables;
-		$menu = new Admin\Admin_Menu;
+		$menu   = new Admin\Admin_Menu;
 		//$import = new Admin\Import;
-        
+
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'review_notice' );
 		$this->loader->add_action( 'wp_ajax_wptbReviewNoticeHide', $plugin_admin, 'wptb_hide_review_notify' );
-        
+
+		add_action( 'admin_head', [ $this, 'content_width_header' ] );
+	}
+
+	/**
+	 * Sets table max-width property.
+	 *
+	 * Width will be set according to global content_width variable that is set by user's current theme.If not found, a default value of 850px will be used.
+	 */
+	public function content_width_header() {
+		// global variable set by themes
+		global $content_width;
+
+		// only change the content width if it is set, else use default css value
+		if ( isset( $content_width ) ) {
+			// currently table element wrappers have different class names for admin and front-end areas, here deciding which one to use depending on the current called action hook
+			$class_name = current_filter() === 'admin_head' ? 'wptb-table-setup' : 'wptb-table-container';
+
+			$style_tag = <<<STYLE
+<style>
+	.${class_name} {
+		max-width: ${content_width}px;
+	}
+</style>
+STYLE;
+			echo $style_tag;
+		}
 	}
 
 	/**
@@ -210,27 +238,29 @@ class Init {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+		add_action( 'wp_head', [ $this, 'content_width_header' ] );
+
 	}
-    
-    /**
-	 * Сreates an instance of the class that is intended to display 
-     * the table preview
+
+	/**
+	 * Сreates an instance of the class that is intended to display
+	 * the table preview
 	 *
 	 * @access    private
 	 */
-    private function table_preview() {
-        $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Preview', 'instance' );
-    }
+	private function table_preview() {
+		$this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Preview', 'instance' );
+	}
 
-    /**
-     * Сreates an instance of the class that is intended to display
-     * the import
-     *
-     * @access    private
-     */
-    private function table_import() {
-        $this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Import', 'instance' );
-    }
+	/**
+	 * Сreates an instance of the class that is intended to display
+	 * the import
+	 *
+	 * @access    private
+	 */
+	private function table_import() {
+		$this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Import', 'instance' );
+	}
 
 	private function table_export() {
 		$this->loader->add_action( 'plugins_loaded', 'WP_Table_Builder\Inc\Admin\Export', 'get_instance' );
@@ -263,8 +293,8 @@ class Init {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_version() {
 		return $this->version;
@@ -273,28 +303,28 @@ class Init {
 	/**
 	 * Retrieve the text domain of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The text domain of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;
 	}
 
-    /**
-     * Run all the necessary resources for Elements and Controls
-     *
-     * @since   1.1.5
-     */
+	/**
+	 * Run all the necessary resources for Elements and Controls
+	 *
+	 * @since   1.1.5
+	 */
 	public function elements_resources() {
-        $this->elements_manager = new Elements_Manager();
-        $this->controls_manager = new Controls_Manager();
+		$this->elements_manager = new Elements_Manager();
+		$this->controls_manager = new Controls_Manager();
 
-        add_action( 'admin_footer', function() {
-            $this->elements_manager->output_elements_templates();
-            $this->elements_manager->output_directories_icons();
-            $this->elements_manager->output_elements_scripts();
-            $this->controls_manager->output_controls_templates();
-            $this->controls_manager->output_control_stacks();
-        } );
-    }
+		add_action( 'admin_footer', function () {
+			$this->elements_manager->output_elements_templates();
+			$this->elements_manager->output_directories_icons();
+			$this->elements_manager->output_elements_scripts();
+			$this->controls_manager->output_controls_templates();
+			$this->controls_manager->output_control_stacks();
+		} );
+	}
 }
