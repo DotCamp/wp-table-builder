@@ -612,6 +612,44 @@
                 }
             }
         }
+
+        /**
+         * Adds hover color change support for supported button elements.
+         */
+        function addHoverSupport() {
+            const buttons = Array.from(document.querySelectorAll('.wptb-button'));
+
+            buttons.map((b) => {
+                let currentBgColor = getComputedStyle(b).backgroundColor;
+                let currentTextColor = getComputedStyle(b).color;
+
+                b.addEventListener('mouseenter', (e) => {
+                    const el = e.target;
+                    if (el.dataset.wptbElementHoverBgColor) {
+                        currentBgColor = getComputedStyle(el).backgroundColor;
+                        el.style.backgroundColor = el.dataset.wptbElementHoverBgColor;
+                    }
+                    if (el.dataset.wptbElementHoverTextColor) {
+                        currentTextColor = getComputedStyle(el).color;
+                        el.style.color = el.dataset.wptbElementHoverTextColor;
+                    }
+                });
+
+                b.addEventListener('mouseleave', (e) => {
+                    const el = e.target;
+                    if (el.dataset.wptbElementHoverBgColor) {
+                        el.style.backgroundColor = currentBgColor;
+                    }
+                    if (el.dataset.wptbElementHoverTextColor) {
+                        el.style.color = currentTextColor;
+                    }
+                });
+            });
+        }
+
+        addHoverSupport();
+
+
     });
 
 })( jQuery );

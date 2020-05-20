@@ -56,12 +56,15 @@ class Control_Color extends Base_Control {
                 selectors = [],
                 elemContainer,
                 selectorsJson,
+                useDataset,
                 targetInputAddClass;
              
             if( data.label ) {
                 label = data.label;
             }
-            
+
+            useDataset = data.useDataset;
+
             if( data.name ) {
                 name = data.name;
             }
@@ -167,7 +170,14 @@ class Control_Color extends Base_Control {
                             }
                         }
 
-                        function elementColorSet( selectors, color ) {
+
+                        function elementColorSet( selectors, color) {
+                            const useDataset = 'true' === '{{{useDataset}}}';
+                            if(useDataset){
+                                addDataSet(selectors, color);
+                                return;
+                            }
+
                             for( let i = 0; i < selectors.length; i++ ) {
                                 if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
                                     let selectorElements = document.querySelectorAll( selectors[i][0] );
@@ -188,6 +198,27 @@ class Control_Color extends Base_Control {
                             }
                         }
 
+                        function assignDataSetsToPicker(selectors){
+                            selectors.map(s => {
+                                const el = document.querySelector(s[0]);
+                                if(el.dataset[s[1]]){
+                                    targetInput.value = el.dataset[s[1]];
+                                }
+                            })
+                        }
+
+                        if('true' === '{{{useDataset}}}'){
+                            assignDataSetsToPicker(selectors);
+                        }
+
+
+                        function addDataSet(selectors, value){
+                            selectors.map(s => {
+                                const el = document.querySelector(s[0]);
+                                el.dataset[s[1]] = value;
+                            });
+                        }
+
                         jQuery( '.{{{targetInputAddClass}}}' ).wpColorPicker({
                             change: function ( event, ui ) {
                                 let uiColor;
@@ -197,7 +228,7 @@ class Control_Color extends Base_Control {
                                     uiColor = '';
                                 }
 
-                                elementColorSet( selectors, uiColor );
+                                elementColorSet( selectors, uiColor);
 
                                 let targetInput = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                                 if( targetInput.length > 0 ) {

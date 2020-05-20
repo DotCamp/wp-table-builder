@@ -90,6 +90,8 @@ class Button_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
+		$text_domain = NS\PLUGIN_TEXT_DOMAIN;
+
 		$general_controls = [
 			'buttonSizeCheckbox'      =>
 				[
@@ -145,10 +147,7 @@ class Button_Element extends Element_Base_Object {
 						'{{{data.container}}} .wptb-button-wrapper' => 'justify-content',
 					]
 				],
-		];
-
-		$hover_controls = [
-			'button-id' =>
+			'button-id'               =>
 				[
 					'label'       => __( 'Button Id', 'wp_table_builder' ),
 					'type'        => Controls_Manager::TEXT,
@@ -159,10 +158,31 @@ class Button_Element extends Element_Base_Object {
 				]
 		];
 
+		$hover_controls = [
+			'hoverBgColor' =>
+				[
+					'label'      => __( 'Color', $text_domain ),
+					'type'       => Controls_Manager::COLOR,
+					'useDataset' => true,
+					'selectors'  => [
+						'{{{data.container}}} .wptb-button-wrapper a div' => 'wptbElementHoverBgColor',
+					]
+				],
+			'hoverTextColor' =>
+				[
+					'label'      => __( 'Text Color', $text_domain ),
+					'type'       => Controls_Manager::COLOR,
+					'useDataset' => true,
+					'selectors'  => [
+						'{{{data.container}}} .wptb-button-wrapper a div' => 'wptbElementHoverTextColor',
+					]
+				],
+		];
+
 
 		$button_controls = [
-			'general' => $general_controls,
-			'hover'   => $hover_controls,
+			esc_html__( 'general', $text_domain ) => $general_controls,
+			esc_html__( 'hover', $text_domain )   => $hover_controls,
 		];
 
 		Control_Section_Group_Tabbed::add_section( 'buttonElementOptions', 'button options', $button_controls, [

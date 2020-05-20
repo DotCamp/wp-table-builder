@@ -1664,6 +1664,7 @@ table.wptb-table {
     border-radius: 5px;
     border: 0;
     box-shadow: none;
+    transition: background-color 0.2s ease-out;
 }
 
 .wptb-button:hover {
@@ -2866,9 +2867,23 @@ wptb_shortcode_container_element {
     position: relative;
     display: flex;
     flex-direction: row;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #cbd5e0;
+}
+
+.wptb-plugins-m-b-40 {
+    margin-bottom: 40px;
+}
+
+.wptb-settings-checkbox-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5px 0;
+    width: 100%;
+
 }
 
 .wptb-settings-sections-wrapper.child {
