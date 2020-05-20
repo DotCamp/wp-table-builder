@@ -1665,6 +1665,18 @@ table.wptb-table {
     border: 0;
     box-shadow: none;
     transition: background-color 0.2s ease-out;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wptb-button-icon {
+    margin: 0 5px;
+}
+
+.wptb-plugin-button-order-right .wptb-button-icon {
+    order: 2;
 }
 
 .wptb-button:hover {
@@ -1982,6 +1994,7 @@ br[data-mce-bogus="1"] {
     margin: 0em 0.1em 0 0.05em;
     width: 16px;
     height: 16px;
+    order: 2;
 }
 
 .wptb-cell-management .wptb-button {
@@ -2114,6 +2127,7 @@ br[data-mce-bogus="1"] {
     cursor: move;
     width: 16px;
     height: 16px;
+    order: -1;
 }
 
 .wptb-no-cell-action:not(.visible),

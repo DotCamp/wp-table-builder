@@ -225,6 +225,18 @@ table.wptb-preview-table {
 .wptb-button {
     background: #329d3f;
     color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wptb-button .wptb-button-icon {
+    margin: 0 5px;
+}
+
+.wptb-plugin-button-order-right .wptb-button-icon {
+    order: 2;
 }
 
 .wptb-ph-element .wptb-button p {

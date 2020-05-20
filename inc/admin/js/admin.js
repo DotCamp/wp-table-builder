@@ -181,7 +181,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                 };
             }
 
-            actions.style.display = 'block';
+            actions.style.display = 'flex';
 
             _this.wptbActions = actions;
         }
@@ -199,7 +199,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
         }
 
         if (_this.wptbActions && _this.wptbActions.classList.contains('wptb-actions')) {
-            _this.wptbActions.style.display = 'block';
+            _this.wptbActions.style.display = 'flex';
         } else {
             return;
         }
@@ -216,7 +216,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
         _this.wptbActions.style.top = parseFloat(coordinatesElement.top) - 15 + 'px';
         _this.wptbActions.style.left = parseFloat(coordinatesElement.right) - parseFloat(_this.wptbActions.clientWidth) + 1 + 'px';
 
-        _this.wptbActions.style.display = 'block';
+        _this.wptbActions.style.display = 'flex';
         thisNode.classList.add('wptb-directlyhovered');
 
         wptbContainer.addEventListener('scroll', correctTop, false);

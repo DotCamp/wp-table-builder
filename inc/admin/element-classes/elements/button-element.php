@@ -155,11 +155,30 @@ class Button_Element extends Element_Base_Object {
 					'selectors'   => [
 						'{{{data.container}}} .wptb-button-wrapper a' => 'id',
 					]
+				],
+			'iconId'                  => [
+				'label'       => __( 'FontAwesome icon id', $text_domain ),
+				'type'        => Controls_Manager::TEXT,
+				'placeholder' => __( 'Insert fontawesome icon id here', $text_domain ),
+				'selectors'   => [
+				        '{{{data.container}}} .wptb-button-wrapper .wptb-button-icon img' => 'src'
+                ]
+			],
+			'iconPosition'            => [
+				'label'     => __( 'Icon Position', $text_domain ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => [
+					[ esc_html__( 'Left', $text_domain ), 'left', '' ],
+					[ esc_html__( 'Right', $text_domain ), 'right', 'wptb-plugin-button-order-right' ],
+				],
+				'selectors' => [
+					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
 				]
+			]
 		];
 
 		$hover_controls = [
-			'hoverBgColor' =>
+			'hoverBgColor'   =>
 				[
 					'label'      => __( 'Color', $text_domain ),
 					'type'       => Controls_Manager::COLOR,
@@ -178,7 +197,6 @@ class Button_Element extends Element_Base_Object {
 					]
 				],
 		];
-
 
 		$button_controls = [
 			esc_html__( 'general', $text_domain ) => $general_controls,
@@ -205,6 +223,7 @@ class Button_Element extends Element_Base_Object {
             <a>
                 <div class="wptb-button"
                      style="position: relative;">
+                    <div class="wptb-button-icon">X</div>
                     <p>Button Text</p>
                 </div>
             </a>
