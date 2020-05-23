@@ -197,7 +197,7 @@ class Init {
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'review_notice' );
 		$this->loader->add_action( 'wp_ajax_wptbReviewNoticeHide', $plugin_admin, 'wptb_hide_review_notify' );
 
-		add_action( 'admin_head', [ $this, 'content_width_header' ] );
+//		add_action( 'admin_head', [ $this, 'content_width_header' ] );
 	}
 
 	/**
@@ -238,7 +238,7 @@ STYLE;
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		add_action( 'wp_head', [ $this, 'content_width_header' ] );
+//		add_action( 'wp_head', [ $this, 'content_width_header' ] );
 
 	}
 

@@ -241,6 +241,8 @@ class Admin_Menu {
 
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
 
+		    wp_enqueue_script('wptb-controls-manager-js', plugin_dir_url(__FILE__) . 'js/WPTB_ControlsManager.js' , [], NS\PLUGIN_VERSION , false);
+
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',

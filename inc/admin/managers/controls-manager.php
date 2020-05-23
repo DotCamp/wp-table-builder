@@ -104,6 +104,8 @@ class Controls_Manager {
 	 */
 	const SECTION_GROUP_TAB_CONTENT_END = 'section_group_tab_content_end';
 
+	const ICON_SELECT = 'icon_select';
+
 	/**
 	 * Controls.
 	 *
@@ -146,7 +148,8 @@ class Controls_Manager {
 			self::SECTION_GROUP_COLLAPSE_START,
 			self::SECTION_GROUP_COLLAPSE_END,
 			self::SECTION_GROUP_TABBED_START,
-			self::SECTION_GROUP_TAB_CONTENT_END
+			self::SECTION_GROUP_TAB_CONTENT_END,
+			self::ICON_SELECT
 		];
 	}
 

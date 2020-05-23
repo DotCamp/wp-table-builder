@@ -14,6 +14,8 @@ if (target) {
 			menubar: false,
 			fixed_toolbar_container: '#wpcd_fixed_toolbar',
 			toolbar: 'bold italic strikethrough',
+			extended_valid_elements: 'svg[*]',
+			verify_html: false,
 			setup(ed) {
 				ed.on('keydown', function (e) {
 					if (e.keyCode == 13) {
@@ -138,4 +140,23 @@ function addHoverSupport() {
 	});
 }
 
+function addIconSupport() {
+	const buttonElements = Array.from(
+		document.querySelectorAll('.wptb-preview-table .wptb-button-container .wptb-button')
+	);
+
+	buttonElements.map((b) => {
+		if (!b.querySelector('.wptb-button-icon')) {
+			const range = document.createRange();
+			range.setStart(b, 0);
+
+			const iconElementString = '<div class="wptb-button-icon" data-wptb-button-icon-src=""></div>';
+			const iconElement = range.createContextualFragment(iconElementString);
+
+			b.appendChild(iconElement);
+		}
+	});
+}
+
 addHoverSupport();
+addIconSupport();

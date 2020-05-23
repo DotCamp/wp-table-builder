@@ -6,6 +6,7 @@ use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Tabbed;
 use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
+use function trailingslashit;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -156,25 +157,6 @@ class Button_Element extends Element_Base_Object {
 						'{{{data.container}}} .wptb-button-wrapper a' => 'id',
 					]
 				],
-			'iconId'                  => [
-				'label'       => __( 'FontAwesome icon id', $text_domain ),
-				'type'        => Controls_Manager::TEXT,
-				'placeholder' => __( 'Insert fontawesome icon id here', $text_domain ),
-				'selectors'   => [
-				        '{{{data.container}}} .wptb-button-wrapper .wptb-button-icon img' => 'src'
-                ]
-			],
-			'iconPosition'            => [
-				'label'     => __( 'Icon Position', $text_domain ),
-				'type'      => Controls_Manager::SELECT,
-				'options'   => [
-					[ esc_html__( 'Left', $text_domain ), 'left', '' ],
-					[ esc_html__( 'Right', $text_domain ), 'right', 'wptb-plugin-button-order-right' ],
-				],
-				'selectors' => [
-					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
-				]
-			]
 		];
 
 		$hover_controls = [
@@ -198,15 +180,63 @@ class Button_Element extends Element_Base_Object {
 				],
 		];
 
+		$icon_controls = [
+			'buttonIcon'   => [
+				'label'   => __( 'Button Icon', $text_domain ),
+				'type'    => Controls_Manager::ICON_SELECT,
+				'icons'   => $this->readIcons( 'svg', path_join( NS\WP_TABLE_BUILDER_DIR, 'inc/frontend/views/icons' ), join( '', [
+					NS\WP_TABLE_BUILDER_URL,
+					'inc/frontend/views/icons'
+				] ) ),
+				'perPage' => 20,
+			],
+			'iconPosition' => [
+				'label'     => __( 'Icon Position', $text_domain ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => [
+					[ esc_html__( 'Left', $text_domain ), 'left', '' ],
+					[ esc_html__( 'Right', $text_domain ), 'right', 'wptb-plugin-button-order-right' ],
+				],
+				'selectors' => [
+					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
+				]
+			]
+		];
+
 		$button_controls = [
 			esc_html__( 'general', $text_domain ) => $general_controls,
 			esc_html__( 'hover', $text_domain )   => $hover_controls,
+			esc_html__( 'icon', $text_domain )    => $icon_controls,
 		];
 
 		Control_Section_Group_Tabbed::add_section( 'buttonElementOptions', 'button options', $button_controls, [
 			$this,
 			'add_control'
 		] );
+	}
+
+	protected function readIcons( $extension, $icon_dir, $icon_url ) {
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, null );
+		if ( ! WP_Filesystem( $creds ) ) {
+			return;
+		}
+
+		global $wp_filesystem;
+
+		$filtered_files = [];
+		if ( $wp_filesystem->is_dir( $icon_dir ) ) {
+			$icons = $wp_filesystem->dirlist( $icon_dir );
+			foreach ( $icons as $name => $info ) {
+				$current_file_path = path_join( $icon_dir, $name );
+				$file_info         = pathinfo( $current_file_path );
+				if ( $file_info['extension'] === $extension ) {
+					$current_file_url                         = join( '', [ trailingslashit( $icon_url ), $name ] );
+					$filtered_files[ $file_info['filename'] ] = $current_file_url;
+				}
+			}
+		}
+
+		return $filtered_files;
 	}
 
 	/**
@@ -223,8 +253,9 @@ class Button_Element extends Element_Base_Object {
             <a>
                 <div class="wptb-button"
                      style="position: relative;">
-                    <div class="wptb-button-icon">X</div>
                     <p>Button Text</p>
+                    <div class="wptb-button-icon" data-wptb-button-icon-src="">
+                    </div>
                 </div>
             </a>
         </div>

@@ -15,7 +15,15 @@ if ( ! defined( 'WPINC' ) ) {
  * @abstract
  */
 abstract class Base_Control {
-    /**
+	/**
+	 * Base_Control constructor.
+	 */
+	public function __construct() {
+	    $this->enqueue();
+	}
+
+
+	/**
 	 * Get control type.
 	 *
 	 * Return the control type.

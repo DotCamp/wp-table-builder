@@ -92,7 +92,7 @@ class Table_Settings_Element extends Controls_Stack {
 					],
 					'min'                   => 100,
 					'max'                   => 5000,
-					'defaultValue'          => 850,
+					'defaultValue'          => 700,
 					'dimension'             => 'px',
 					'appearDependOnControl' => [ 'applyTableContainerMaxWidth', [ 'checked' ], [ 'unchecked' ] ]
 				],

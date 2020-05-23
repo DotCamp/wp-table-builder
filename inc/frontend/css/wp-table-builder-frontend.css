@@ -229,10 +229,22 @@ table.wptb-preview-table {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.2s ease-out;
 }
 
 .wptb-button .wptb-button-icon {
     margin: 0 5px;
+    order: -1;
+    width: 25px;
+}
+
+.wptb-button .wptb-button-icon svg{
+    fill: currentColor;
+    width:25px;
+}
+
+.wptb-button-icon[data-wptb-button-icon-src=""] {
+    display: none;
 }
 
 .wptb-plugin-button-order-right .wptb-button-icon {
