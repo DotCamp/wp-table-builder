@@ -109,9 +109,15 @@ class Button_Element extends Element_Base_Object {
 				[
 					'label'     => __( 'Button Color', 'wp_table_builder' ),
 					'type'      => Controls_Manager::COLOR,
+                    'startupValueSelector' =>[
+	                    '{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
+                    ],
 					'selectors' => [
-						'{{{data.container}}} .wptb-button-wrapper a div' => 'background-color',
-					]
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'background-color',
+					],
+                    'dataSets' => [
+	                    '{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
+                    ]
 				],
 			'buttonTextSize'          =>
 				[
@@ -129,8 +135,14 @@ class Button_Element extends Element_Base_Object {
 				[
 					'label'     => __( 'Button Text Color', 'wp_table_builder' ),
 					'type'      => Controls_Manager::COLOR,
+					'startupValueSelector' =>[
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementColor',
+					],
+					'dataSets' =>[
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementColor',
+					],
 					'selectors' => [
-						'{{{data.container}}} .wptb-button-wrapper a div' => 'color',
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'color',
 					]
 				],
 			'buttonLink'              =>

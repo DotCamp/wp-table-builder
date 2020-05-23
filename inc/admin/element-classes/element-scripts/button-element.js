@@ -110,40 +110,38 @@ if (infArr && Array.isArray(infArr)) {
  * Adds hover color change support for supported button elements.
  */
 function addHoverSupport() {
-	const buttons = Array.from(document.querySelectorAll('.wptb-button'));
+	const buttons = Array.from(element.querySelectorAll('.wptb-button'));
 
 	buttons.map((b) => {
-		let currentBgColor = getComputedStyle(b).backgroundColor;
-		let currentTextColor = getComputedStyle(b).color;
+		if (!b.dataset.wptbElementBgColor) {
+			b.dataset.wptbElementBgColor = getComputedStyle(b).backgroundColor;
+		}
+		if (!b.dataset.wptbElementColor) {
+			b.dataset.wptbElementColor = getComputedStyle(b).color;
+		}
 
-		b.addEventListener('mouseenter', (e) => {
-			const el = e.target;
-			if (el.dataset.wptbElementHoverBgColor) {
-				currentBgColor = getComputedStyle(el).backgroundColor;
-				el.style.backgroundColor = el.dataset.wptbElementHoverBgColor;
+		b.addEventListener('mouseenter', ( ) => {
+			if (b.dataset.wptbElementHoverBgColor) {
+				b.style.backgroundColor = b.dataset.wptbElementHoverBgColor;
 			}
-			if (el.dataset.wptbElementHoverTextColor) {
-				currentTextColor = getComputedStyle(el).color;
-				el.style.color = el.dataset.wptbElementHoverTextColor;
+			if (b.dataset.wptbElementHoverTextColor) {
+				b.style.color = b.dataset.wptbElementHoverTextColor;
 			}
 		});
 
-		b.addEventListener('mouseleave', (e) => {
-			const el = e.target;
-			if (el.dataset.wptbElementHoverBgColor) {
-				el.style.backgroundColor = currentBgColor;
+		b.addEventListener('mouseleave', ( ) => {
+			if (b.dataset.wptbElementHoverBgColor) {
+				b.style.backgroundColor = b.dataset.wptbElementBgColor;
 			}
-			if (el.dataset.wptbElementHoverTextColor) {
-				el.style.color = currentTextColor;
+			if (b.dataset.wptbElementHoverTextColor) {
+				b.style.color = b.dataset.wptbElementColor;
 			}
 		});
 	});
 }
 
 function addIconSupport() {
-	const buttonElements = Array.from(
-		document.querySelectorAll('.wptb-preview-table .wptb-button-container .wptb-button')
-	);
+	const buttonElements = Array.from(element.querySelectorAll('.wptb-button'));
 
 	buttonElements.map((b) => {
 		if (!b.querySelector('.wptb-button-icon')) {
