@@ -119,6 +119,9 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"WPTB_ControlsManager.js":[function(require,module,exports) {
 var global = arguments[3];
+/**
+ * Global ControlsManager
+ */
 (function ControlsManager(global, factory) {
   global.WPTB_ControlsManager = factory();
 })(self || this, function () {

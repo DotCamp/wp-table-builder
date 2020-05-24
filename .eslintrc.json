@@ -33,6 +33,7 @@
   "globals": {
     "wptbAdminSettingsData": true,
     "wptbImportMenuData": true,
-    "WPTB_ControlsManager": true
+    "WPTB_ControlsManager": true,
+    "WPTB_TableStateSaveManager": true
   }
 }

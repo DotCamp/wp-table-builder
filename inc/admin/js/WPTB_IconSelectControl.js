@@ -12210,6 +12210,7 @@ var _default = {
       return Object.keys(this.icons).filter(function (k) {
         return k.includes(_this4.filterText);
       }).slice(0, this.paginationIndex * this.perPage).reduce(function (result, key) {
+        // eslint-disable-next-line no-param-reassign
         result[key] = _this4.icons[key];
         return result;
       }, {});
@@ -12328,7 +12329,7 @@ exports.default = _default;
                         "wptb-icon-select-drawer-preview wptb-icon-reset",
                       on: {
                         click: function($event) {
-                          return _vm.setIcon(null, null)
+                          return _vm.setIcon("", "")
                         }
                       }
                     }),
@@ -12401,6 +12402,15 @@ var _IconSelectControl = _interopRequireDefault(require("./containers/IconSelect
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Icon Selection Control
+ */
+
+/**
+ *	Icon control script implementation.
+ *
+ * @param {string} uniqueId unique id for control element
+ */
 function iconControlSelectJS(uniqueId) {
   var data = WPTB_ControlsManager.getControlData(uniqueId);
   new _vue.default({
@@ -12408,8 +12418,9 @@ function iconControlSelectJS(uniqueId) {
     components: {
       IconSelectControl: _IconSelectControl.default
     }
-  }).$mount('#iconSelectTest');
-}
+  }).$mount("#".concat(uniqueId));
+} // add required scripts to global control manager to be called by content template
+
 
 WPTB_ControlsManager.addControlScript('ControlIconSelect', iconControlSelectJS);
 },{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/IconSelectControl":"containers/IconSelectControl.vue"}]},{},["WPTB_IconSelectControl.js"], null)

@@ -36,7 +36,7 @@ class Control_Icon_Select extends Base_Control {
 		$script_url = NS\WP_TABLE_BUILDER_URL . '/inc/admin/js/WPTB_IconSelectControl.js';
 		$script_path = NS\WP_TABLE_BUILDER_DIR . '/inc/admin/js/WPTB_IconSelectControl.js';
 
-		wp_enqueue_script( 'test_script', $script_url, [], filemtime($script_path), true );
+		wp_enqueue_script( 'control_icon_select', $script_url, [], filemtime($script_path), true );
 	}
 
 
@@ -51,12 +51,11 @@ class Control_Icon_Select extends Base_Control {
 	public function content_template() {
 		?>
         <#
-
         const uniqueItemClass = data.elementControlTargetUnicClass;
 
         WPTB_ControlsManager.setControlData(uniqueItemClass , data);
         #>
-        <div id="iconSelectTest">
+        <div id="{{{uniqueItemClass}}}">
             <icon-select-control :label="label" :icons="icons" :per-page="perPage" :target-class="elemContainer"></icon-select-control>
         </div>
         <wptb-template-script>

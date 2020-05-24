@@ -1,3 +1,6 @@
+/**
+ * Global ControlsManager
+ */
 (function ControlsManager(global, factory) {
 	global.WPTB_ControlsManager = factory();
 })(self || this, () => {

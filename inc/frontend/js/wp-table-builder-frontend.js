@@ -641,10 +641,7 @@
                 });
             });
         }
-
         addHoverSupport();
-
-
     });
 
 })( jQuery );

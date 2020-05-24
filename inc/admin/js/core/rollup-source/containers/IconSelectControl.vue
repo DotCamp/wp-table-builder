@@ -19,7 +19,7 @@
 						<div class="wptb-icon-previews">
 							<div
 								class="wptb-icon-select-drawer-preview wptb-icon-reset"
-								@click="setIcon(null, null)"
+								@click="setIcon('', '')"
 							></div>
 							<div
 								v-for="(iconUrl, name) in fullIconList()"
@@ -135,6 +135,7 @@ export default {
 				.filter((k) => k.includes(this.filterText))
 				.slice(0, this.paginationIndex * this.perPage)
 				.reduce((result, key) => {
+					// eslint-disable-next-line no-param-reassign
 					result[key] = this.icons[key];
 					return result;
 				}, {});

@@ -245,8 +245,8 @@ table.wptb-preview-table {
 
 .wptb-button .wptb-button-icon svg {
     fill: currentColor;
-    width: 25px;
-    height: 25px;
+    width: 100%;
+    height: 100%;
 }
 
 .wptb-button-icon[data-wptb-button-icon-src=""] {

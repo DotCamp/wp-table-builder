@@ -140,6 +140,9 @@ function addHoverSupport() {
 	});
 }
 
+/**
+ * Add icon support for button elements
+ */
 function addIconSupport() {
 	const buttonElements = Array.from(element.querySelectorAll('.wptb-button'));
 

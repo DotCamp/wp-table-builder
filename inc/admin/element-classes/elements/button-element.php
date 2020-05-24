@@ -107,17 +107,17 @@ class Button_Element extends Element_Base_Object {
 				],
 			'buttonColor'             =>
 				[
-					'label'     => __( 'Button Color', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR,
-                    'startupValueSelector' =>[
-	                    '{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
-                    ],
-					'selectors' => [
+					'label'                => __( 'Button Color', 'wp_table_builder' ),
+					'type'                 => Controls_Manager::COLOR,
+					'startupValueSelector' => [
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
+					],
+					'selectors'            => [
 						'{{{data.container}}} .wptb-button-wrapper a > div' => 'background-color',
 					],
-                    'dataSets' => [
-	                    '{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
-                    ]
+					'dataSets'             => [
+						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementBgColor',
+					]
 				],
 			'buttonTextSize'          =>
 				[
@@ -133,15 +133,15 @@ class Button_Element extends Element_Base_Object {
 				],
 			'textColor'               =>
 				[
-					'label'     => __( 'Button Text Color', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR,
-					'startupValueSelector' =>[
+					'label'                => __( 'Button Text Color', 'wp_table_builder' ),
+					'type'                 => Controls_Manager::COLOR,
+					'startupValueSelector' => [
 						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementColor',
 					],
-					'dataSets' =>[
+					'dataSets'             => [
 						'{{{data.container}}} .wptb-button-wrapper a > div' => 'wptbElementColor',
 					],
-					'selectors' => [
+					'selectors'            => [
 						'{{{data.container}}} .wptb-button-wrapper a > div' => 'color',
 					]
 				],
@@ -212,7 +212,19 @@ class Button_Element extends Element_Base_Object {
 				'selectors' => [
 					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
 				]
-			]
+			],
+			'iconSize'     =>
+				[
+					'label'        => __( 'Icon Size', 'wp_table_builder' ),
+					'type'         => Controls_Manager::SIZE,
+					'selectors'    => [
+						'{{{data.container}}} .wptb-button-icon'     => [ 'width', 'height' ],
+					],
+					'min'          => 15,
+					'max'          => 100,
+					'defaultValue' => 25,
+					'dimension'    => 'px'
+				],
 		];
 
 		$button_controls = [
