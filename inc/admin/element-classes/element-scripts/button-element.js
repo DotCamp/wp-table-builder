@@ -120,21 +120,31 @@ function addHoverSupport() {
 			b.dataset.wptbElementColor = getComputedStyle(b).color;
 		}
 
-		b.addEventListener('mouseenter', ( ) => {
+		b.addEventListener('mouseenter', () => {
+			// hover background-color
 			if (b.dataset.wptbElementHoverBgColor) {
 				b.style.backgroundColor = b.dataset.wptbElementHoverBgColor;
 			}
+			// hover color
 			if (b.dataset.wptbElementHoverTextColor) {
 				b.style.color = b.dataset.wptbElementHoverTextColor;
 			}
+			// hover scale
+			if (b.dataset.wptbElementHoverScale) {
+				b.style.transform = `scale(${b.dataset.wptbElementHoverScale})`;
+			}
 		});
 
-		b.addEventListener('mouseleave', ( ) => {
+		b.addEventListener('mouseleave', () => {
+			// reset all supported hover properties to their default value
 			if (b.dataset.wptbElementHoverBgColor) {
 				b.style.backgroundColor = b.dataset.wptbElementBgColor;
 			}
 			if (b.dataset.wptbElementHoverTextColor) {
 				b.style.color = b.dataset.wptbElementColor;
+			}
+			if (b.dataset.wptbElementHoverScale) {
+				b.style.transform = 'scale(1)';
 			}
 		});
 	});

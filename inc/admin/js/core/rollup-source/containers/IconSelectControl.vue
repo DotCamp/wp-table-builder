@@ -17,10 +17,7 @@
 							<input type="text" placeholder="Search for icons..." v-model.trim="debunkedFilterText" />
 						</div>
 						<div class="wptb-icon-previews">
-							<div
-								class="wptb-icon-select-drawer-preview wptb-icon-reset"
-								@click="setIcon('', '')"
-							></div>
+							<div class="wptb-icon-select-drawer-preview wptb-icon-reset" @click="setIcon('', '')"></div>
 							<div
 								v-for="(iconUrl, name) in fullIconList()"
 								class="wptb-icon-select-drawer-preview"
@@ -45,6 +42,7 @@
 </template>
 <script>
 import IntersectionObserver from '../components/IntersectionObserver';
+import ControlBase from '../mixins/ControlBase';
 
 export default {
 	props: {
@@ -54,8 +52,8 @@ export default {
 			type: Number,
 			default: 20,
 		},
-		targetClass: String,
 	},
+	mixins: [ControlBase],
 	components: { IntersectionObserver },
 	data() {
 		return {
@@ -73,7 +71,6 @@ export default {
 			drawerPosition: {
 				left: 0,
 			},
-			targetElement: null,
 		};
 	},
 	mounted() {
@@ -83,10 +80,7 @@ export default {
 			}
 		});
 
-		this.targetElement = document.querySelector(`.${this.targetClass}`);
-
-		const buttonIcon = this.targetElement.querySelector('.wptb-button-icon');
-		const selectedIcon = buttonIcon.dataset.wptbButtonIconSrc;
+		const selectedIcon = this.startupValue;
 
 		this.selectedIcon.name = selectedIcon === '' ? null : selectedIcon;
 		this.selectedIcon.url = selectedIcon === '' ? null : this.icons[selectedIcon];
@@ -101,13 +95,13 @@ export default {
 		},
 		selectedIcon: {
 			handler() {
-				const targetObj = this.targetElement.querySelector('.wptb-button-icon');
+				const targetObj = this.targetElements[0].element;
 				if (targetObj) {
 					if (this.selectedIcon.url) {
 						fetch(this.selectedIcon.url)
 							.then((r) => r.text())
 							.then((resp) => {
-								targetObj.dataset.wptbButtonIconSrc = this.selectedIcon.name;
+								this.setTargetValue(this.targetElements[0], this.selectedIcon.name);
 								targetObj.innerHTML = '';
 
 								const range = document.createRange();
@@ -120,7 +114,6 @@ export default {
 						targetObj.dataset.wptbButtonIconSrc = '';
 						targetObj.innerHTML = '';
 					}
-					new WPTB_TableStateSaveManager().tableStateSet();
 				}
 			},
 			deep: true,
@@ -149,6 +142,7 @@ export default {
 			this.selectedIcon.url = iconUrl;
 			this.selectedIcon.name = iconName;
 			this.toggleIconDrawer();
+			this.setTableDirty();
 		},
 		observerVisible() {
 			this.paginationIndex += 1;

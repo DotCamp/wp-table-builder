@@ -100,11 +100,24 @@ class Controls_Manager {
 	const SECTION_GROUP_TABBED_START = 'section_group_tabbed_start';
 
 	/**
-	 * Adding end of tab group content
+	 * Adding end of tab group content.
 	 */
 	const SECTION_GROUP_TAB_CONTENT_END = 'section_group_tab_content_end';
 
+	/**
+	 * Adding icon selection control.
+	 */
 	const ICON_SELECT = 'icon_select';
+
+	/**
+	 * Adding range control.
+	 */
+	const RANGE = 'range';
+
+
+	// Control elements query types
+	const CLASSTYPE = 'class';
+	const DATASET = 'dataset';
 
 	/**
 	 * Controls.
@@ -149,7 +162,8 @@ class Controls_Manager {
 			self::SECTION_GROUP_COLLAPSE_END,
 			self::SECTION_GROUP_TABBED_START,
 			self::SECTION_GROUP_TAB_CONTENT_END,
-			self::ICON_SELECT
+			self::ICON_SELECT,
+			self::RANGE
 		];
 	}
 

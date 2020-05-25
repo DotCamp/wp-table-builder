@@ -622,21 +622,31 @@
             buttons.map((b) => {
                 b.addEventListener('mouseenter', (e) => {
                     const el = e.target;
+                    // hover background-color
                     if (el.dataset.wptbElementHoverBgColor) {
                         el.style.backgroundColor = el.dataset.wptbElementHoverBgColor;
                     }
+                    // hover color
                     if (el.dataset.wptbElementHoverTextColor) {
                         el.style.color = el.dataset.wptbElementHoverTextColor;
+                    }
+                    // hover scale
+                    if (b.dataset.wptbElementHoverScale) {
+                        b.style.transform = `scale(${b.dataset.wptbElementHoverScale})`;
                     }
                 });
 
                 b.addEventListener('mouseleave', (e) => {
+                    // reset all supported hover properties to their default value
                     const el = e.target;
                     if (el.dataset.wptbElementHoverBgColor) {
                         el.style.backgroundColor = el.dataset.wptbElementBgColor;
                     }
                     if (el.dataset.wptbElementHoverTextColor) {
                         el.style.color = el.dataset.wptbElementColor;
+                    }
+                    if (b.dataset.wptbElementHoverScale) {
+                        b.style.transform = 'scale(1)';
                     }
                 });
             });

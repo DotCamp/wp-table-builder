@@ -172,7 +172,7 @@ class Button_Element extends Element_Base_Object {
 		];
 
 		$hover_controls = [
-			'hoverBgColor'   =>
+			'hoverBgColor'     =>
 				[
 					'label'      => __( 'Color', $text_domain ),
 					'type'       => Controls_Manager::COLOR,
@@ -181,7 +181,7 @@ class Button_Element extends Element_Base_Object {
 						'{{{data.container}}} .wptb-button-wrapper a div' => 'wptbElementHoverBgColor',
 					]
 				],
-			'hoverTextColor' =>
+			'hoverTextColor'   =>
 				[
 					'label'      => __( 'Text Color', $text_domain ),
 					'type'       => Controls_Manager::COLOR,
@@ -190,17 +190,39 @@ class Button_Element extends Element_Base_Object {
 						'{{{data.container}}} .wptb-button-wrapper a div' => 'wptbElementHoverTextColor',
 					]
 				],
+			'hoverButtonScale' => [
+				'label'        => __( 'Scale', $text_domain ),
+				'type'         => Controls_Manager::RANGE,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}} .wptb-button-wrapper a div',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbElementHoverScale'
+					]
+				],
+				'min'          => 1,
+				'max'          => 3,
+				'step'         => 0.1,
+                'defaultValue' => 1
+			]
 		];
 
 		$icon_controls = [
 			'buttonIcon'   => [
-				'label'   => __( 'Button Icon', $text_domain ),
-				'type'    => Controls_Manager::ICON_SELECT,
-				'icons'   => $this->readIcons( 'svg', path_join( NS\WP_TABLE_BUILDER_DIR, 'inc/frontend/views/icons' ), join( '', [
+				'label'     => __( 'Button Icon', $text_domain ),
+				'type'      => Controls_Manager::ICON_SELECT,
+				'icons'     => $this->readIcons( 'svg', path_join( NS\WP_TABLE_BUILDER_DIR, 'inc/frontend/views/icons' ), join( '', [
 					NS\WP_TABLE_BUILDER_URL,
 					'inc/frontend/views/icons'
 				] ) ),
-				'perPage' => 20,
+				'perPage'   => 20,
+				'selectors' => [
+					[
+						'query' => '{{{data.container}}} .wptb-button-icon',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbButtonIconSrc'
+					]
+				]
 			],
 			'iconPosition' => [
 				'label'     => __( 'Icon Position', $text_domain ),
@@ -218,7 +240,7 @@ class Button_Element extends Element_Base_Object {
 					'label'        => __( 'Icon Size', 'wp_table_builder' ),
 					'type'         => Controls_Manager::SIZE,
 					'selectors'    => [
-						'{{{data.container}}} .wptb-button-icon'     => [ 'width', 'height' ],
+						'{{{data.container}}} .wptb-button-icon' => [ 'width', 'height' ],
 					],
 					'min'          => 15,
 					'max'          => 100,

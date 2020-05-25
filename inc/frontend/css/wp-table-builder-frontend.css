@@ -230,7 +230,7 @@ table.wptb-preview-table {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.2s ease-out;
+    transition: all 0.2s ease-out;
 }
 
 .wptb-button .wptb-button-icon {

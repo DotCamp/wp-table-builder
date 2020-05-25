@@ -1665,7 +1665,7 @@ table.wptb-table {
     border-radius: 5px;
     border: 0;
     box-shadow: none;
-    transition: background-color 0.2s ease-out;
+    transition: all 0.2s ease-out;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

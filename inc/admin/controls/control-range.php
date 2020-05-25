@@ -4,25 +4,28 @@ namespace WP_Table_Builder\Inc\Admin\Controls;
 
 use WP_Table_Builder as NS;
 
-// if called directly, abort;
+// if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
 /**
- * Class Control_Icon_Select
+ * Class Control_Range
  *
- * Icon selection for elements
+ * Range slider control for elements
  *
  * Accepted options
  *  label => label for control element
  *  selectors => selector array to get/set certain values to html elements
- *  icons => an array of key(icon name) => value(icon url) pairs
- *  perPage => number of icons to be displayed at every lazy-load sessions of scroll event
+ *  min => minimum value of the slider
+ *  max => maximum value of the slider
+ *  step => step value of the slider
+ *  defaultValue => default value of the slider
  *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
-class Control_Icon_Select extends Base_Control {
+class Control_Range extends Base_Control {
+
 	/**
 	 * Get control type.
 	 *
@@ -32,7 +35,7 @@ class Control_Icon_Select extends Base_Control {
 	 * @access public
 	 */
 	public function get_type() {
-		return 'icon_select';
+		return 'range';
 	}
 
 	/**
@@ -48,14 +51,13 @@ class Control_Icon_Select extends Base_Control {
         <#
         const uniqueItemClass = data.elementControlTargetUnicClass;
 
-        WPTB_ControlsManager.setControlData(uniqueItemClass , data);
+        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         #>
         <div id="{{{uniqueItemClass}}}">
-            <icon-select-control :label="label" :icons="icons" :per-page="perPage"
-                                 :selectors="selectors"></icon-select-control>
+            <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step" :default-value="defaultValue"></range-control>
         </div>
         <wptb-template-script>
-            WPTB_ControlsManager.callControlScript('ControlIconSelect','{{{uniqueItemClass}}}');
+            WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');
         </wptb-template-script>
 		<?php
 	}
