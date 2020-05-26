@@ -10,13 +10,12 @@
 					<div
 						v-show="openDrawer"
 						class="wptb-icon-select-drawer wptb-plugin-box-shadow-md"
-						ref="drawerRefElement"
 						:style="drawerPosition"
 					>
 						<div class="wptb-icon-search-wrapper">
 							<input type="text" placeholder="Search for icons..." v-model.trim="debunkedFilterText" />
 						</div>
-						<div class="wptb-icon-previews">
+						<div class="wptb-icon-previews" ref="drawerRefElement">
 							<div class="wptb-icon-select-drawer-preview wptb-icon-reset" @click="setIcon('', '')"></div>
 							<div
 								v-for="(iconUrl, name) in fullIconList()"
@@ -26,14 +25,14 @@
 							>
 								<img :src="iconUrl" :title="name" @click="setIcon(name, iconUrl)" />
 							</div>
+							<intersection-observer
+								:relative-element="innerDrawerRef"
+								@visible="observerVisible"
+								:force-hide="observerHide"
+							>
+								<div class="wptb-icon-select-drawer-end"></div>
+							</intersection-observer>
 						</div>
-						<intersection-observer
-							:relative-element="innerDrawerRef"
-							@visible="observerVisible"
-							:force-hide="observerHide"
-						>
-							<div class="wptb-icon-select-drawer-end"></div>
-						</intersection-observer>
 					</div>
 				</div>
 			</div>

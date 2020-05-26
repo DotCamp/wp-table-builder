@@ -27,7 +27,7 @@ export default {
 			}
 			const scrollAmount = this.relativeElement.scrollTop;
 			const posY = this.$refs.observerElement.offsetTop;
-			const relativeHeight = this.relativeElement.offsetHeight;
+			const relativeHeight = this.relativeElement.clientHeight;
 			if (scrollAmount + relativeHeight >= posY) {
 				this.$emit('visible');
 			}

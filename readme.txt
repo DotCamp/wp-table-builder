@@ -80,6 +80,14 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.1.9 =
+
+* IMPROVEMENTS: Complete overhaul of table builder screen with better elements and setting groupings.
+* IMPROVEMENTS: Clean and modern UI styles.
+* ADD: Button hover controls (background color, text color and scale).
+* ADD: Icon options for button element with more than 1400+ icons to select from.
+* ADD: Icon position and icon size options for button element.
+
 = 1.1.8 =
 
 * ADD: Export Tables to XML Files.
