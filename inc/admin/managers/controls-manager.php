@@ -114,6 +114,11 @@ class Controls_Manager {
 	 */
 	const RANGE = 'range';
 
+	/**
+	 * Adding html output control.
+	 */
+	const HTML_OUTPUT = 'html_output';
+
 
 	// Control elements query types
 	const CLASSTYPE = 'class';
@@ -163,7 +168,8 @@ class Controls_Manager {
 			self::SECTION_GROUP_TABBED_START,
 			self::SECTION_GROUP_TAB_CONTENT_END,
 			self::ICON_SELECT,
-			self::RANGE
+			self::RANGE,
+			self::HTML_OUTPUT
 		];
 	}
 

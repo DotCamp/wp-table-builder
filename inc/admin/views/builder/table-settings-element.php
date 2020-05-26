@@ -6,6 +6,7 @@ use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
+use function sprintf;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -204,6 +205,14 @@ class Table_Settings_Element extends Controls_Stack {
 				]
 		];
 
+		$help_support_section_grup_controls = [
+			'helpSupportLinks' => [
+				'label' => 'test',
+				'type' => Controls_Manager::HTML_OUTPUT,
+				'html' => sprintf('<div><a href="https://wptablebuilder.com/">%s</a></div><div><a href="https://wptablebuilder.com/community/">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/">%s</a></div>', esc_html__('Our Website' , 'wp_table_builder'), esc_html__('Support Community Forum' , 'wp_table_builder'), esc_html__('Facebook Group' , 'wp_table_builder'))
+			]
+		];
+
 		// general section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_general', esc_html__( 'general', NS\PLUGIN_TEXT_DOMAIN ), $general_section_group_controls, [
 			$this,
@@ -224,6 +233,12 @@ class Table_Settings_Element extends Controls_Stack {
 
 		// responsive section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_responsive', esc_html__( 'responsive', NS\PLUGIN_TEXT_DOMAIN ), $responsive_section_group_controls, [
+			$this,
+			'add_control'
+		], false );
+
+		// help&support section group
+		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_grup_controls, [
 			$this,
 			'add_control'
 		], false );

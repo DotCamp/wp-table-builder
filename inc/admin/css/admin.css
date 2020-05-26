@@ -3516,3 +3516,19 @@ wptb_shortcode_container_element {
     cursor: pointer;
 }
 
+.wptb-help-support-controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0 ;
+}
+
+.wptb-help-support-controls-wrapper div {
+    margin: 10px 0;
+}
+
+.wptb-help-support-controls-wrapper div:last-child {
+    margin-bottom: 40px;
+}
+
