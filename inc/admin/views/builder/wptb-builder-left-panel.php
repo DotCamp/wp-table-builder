@@ -99,7 +99,7 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
     <div id="wptb-left-scroll-panel-cell-settings">
         <div class="wptb-settings-section">
             <div class="wptb-settings-dropdown">
-                Cell Settings
+                <?php esc_html_e( 'Cell Settings', 'wp-table-builder' ); ?>
             </div>
             <div class="wptb-settings-items">
                 <div class="wptb-settings-item-header">

@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.4
-Stable tag: 1.1.8
+Stable tag: 1.2.0
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -64,6 +64,7 @@ That's it. You're done!
 ## Join Us To Get Updates and Resources
 
 * [Visit WP Table Builder Website](https://wptablebuilder.com/)
+* [WP Table Builder Support Community](https://wptablebuilder.com/community/)
 * [Follow Us on Twitter](https://twitter.com/wptbplugin)
 * [Join Our Facebook Group](https://www.facebook.com/groups/497986907442780/)
 
@@ -80,13 +81,11 @@ That's it. You're done!
 
 == Changelog ==
 
-= 1.1.9 =
+= 1.2.0 =
 
-* IMPROVEMENTS: Complete overhaul of table builder screen with better elements and setting groupings.
-* IMPROVEMENTS: Clean and modern UI styles.
-* ADD: Button hover controls (background color, text color and scale).
-* ADD: Icon options for button element with more than 1400+ icons to select from.
-* ADD: Icon position and icon size options for button element.
+* ADD: Button Hover Settings.
+* ADD: Button Icon Settings.
+* IMPROVEMENT: Builder Interface Redesign for Faster, Better Table Building.
 
 = 1.1.8 =
 
