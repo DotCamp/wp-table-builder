@@ -81,12 +81,12 @@ class Control_Url extends Base_Control {
                 <input type="text" data-type="element-link" placeholder="Insert Link Here" 
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
             </div>
-            <div class="wptb-settings-col-xs-8">
+            <div class="wptb-settings-checkbox-row">
                 <input type="checkbox" data-type="element-link-target" id="element-link-target{{{postfixIdFor}}}"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
                 <label for="element-link-target{{{postfixIdFor}}}">Open Link in New Tab</label>
             </div>
-            <div class="wptb-settings-col-xs-8">
+            <div class="wptb-settings-checkbox-row">
                 <input type="checkbox" data-type="element-link-nofollow" id="element-link-nofollow{{{postfixIdFor}}}" 
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
                 <label for="element-link-nofollow{{{postfixIdFor}}}">Nofollow Link</label>

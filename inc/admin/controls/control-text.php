@@ -36,7 +36,7 @@ class Control_Text extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-        
+
 	}
 
 	/**
@@ -55,11 +55,23 @@ class Control_Text extends Base_Control {
                 placeholder,
                 elemContainer,
                 targetInputAddClass = '';
-                
-            if( data.label ) {
+
+            const {dataSelectors,attributeSelectors} = data;
+            let dataSelectorsJson = null;
+            let attributeSelectorsJson = null;
+
+            if(dataSelectors){
+                dataSelectorsJson = JSON.stringify(dataSelectors);
+            }
+
+            if(attributeSelectors){
+                attributeSelectorsJson = JSON.stringify(attributeSelectors);
+            }
+
+        if( data.label ) {
                 label = data.label;
             }
-            
+
             let i = 0;
             for ( let prop in data.selectors ) {
                 selectors[i] = [];
@@ -67,32 +79,32 @@ class Control_Text extends Base_Control {
                 selectors[i][1] = data.selectors[prop];
                 i++;
             }
-            
+
             if( selectors && Array.isArray( selectors ) ) {
                 selectorsJson = JSON.stringify( selectors );
             }
-            
+
             if( data.placeholder ) {
                 placeholder = data.placeholder;
             }
-            
+
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
-            
+
             targetInputAddClass = data.elementControlTargetUnicClass;
         #>
-        
+
         <div class='wptb-settings-item-header' >
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 12px; padding-top: 23px;">
             <div class="wptb-settings-col-xs-8">
-                <input class="wptb-number wptb-element-property {{{targetInputAddClass}}}" 
+                <input class="wptb-number wptb-element-property {{{targetInputAddClass}}}"
                        type="text" data-element="{{{elemContainer}}}" placeholder="{{{placeholder}}}">
             </div>
         </div>
-        
+
         <wptb-template-script>
             ( function() {
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
@@ -169,12 +181,29 @@ class Control_Text extends Base_Control {
                             }
                         }
 
+                        function setDataSets(selectors, value) {
+                            Object.keys(selectors).map(s => {
+                            if (Object.prototype.hasOwnProperty.call(selectors, s)) {
+                            document.querySelector(s).dataset[selectors[s]] = value;
+                            }
+                            })
+                        }
+
+
+                        function setAttributes(selectors, value) {
+                            Object.keys(selectors).map(s => {
+                            if (Object.prototype.hasOwnProperty.call(selectors, s)) {
+                            document.querySelector(s).setAttribute(selectors[s], value);
+                            }
+                            })
+                        }
+
                         if( '{{{selectorsJson}}}' ) {
                             let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
                             targetInput.value = getSetElementValue( selectors );
                         }
-                        
+
                         targetInput.oninput = function( event ) {
                             let details = {value: this.value};
                             WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
@@ -183,9 +212,17 @@ class Control_Text extends Base_Control {
 
                                 getSetElementValue( selectors, details.value );
                             }
-                        };
 
-                        targetInput.onchange = function( event ) {
+                            if('{{{dataSelectorsJson}}}'){
+                                setDataSets(JSON.parse('{{{dataSelectorsJson}}}'), details.value);
+                            }
+
+                            if('{{{attributeSelectorsJson}}}'){
+                            setAttributes(JSON.parse('{{{attributeSelectorsJson}}}'), details.value);
+                            }
+            };
+
+            targetInput.onchange = function( event ) {
                             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                             wptbTableStateSaveManager.tableStateSet();
                         };
@@ -193,7 +230,7 @@ class Control_Text extends Base_Control {
                 }
             } )();
         </wptb-template-script>
-        
+
 		<?php
 	}
 }

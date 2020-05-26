@@ -18,7 +18,7 @@
   },
   "rules": {
     "import/extensions": "off",
-    "import/no-unresolved" : "off",
+    "import/no-unresolved": "off",
     "prettier/prettier": [
       "error",
       {
@@ -31,7 +31,8 @@
     ]
   },
   "globals": {
-    "wptbAdminSettingsData" : true,
-    "wptbImportMenuData" : true
+    "wptbAdminSettingsData": true,
+    "wptbImportMenuData": true,
+    "WPTB_TableStateSaveManager": true
   }
 }

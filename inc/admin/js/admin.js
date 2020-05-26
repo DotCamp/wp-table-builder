@@ -181,7 +181,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
                 };
             }
 
-            actions.style.display = 'block';
+            actions.style.display = 'flex';
 
             _this.wptbActions = actions;
         }
@@ -199,7 +199,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
         }
 
         if (_this.wptbActions && _this.wptbActions.classList.contains('wptb-actions')) {
-            _this.wptbActions.style.display = 'block';
+            _this.wptbActions.style.display = 'flex';
         } else {
             return;
         }
@@ -216,7 +216,7 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
         _this.wptbActions.style.top = parseFloat(coordinatesElement.top) - 15 + 'px';
         _this.wptbActions.style.left = parseFloat(coordinatesElement.right) - parseFloat(_this.wptbActions.clientWidth) + 1 + 'px';
 
-        _this.wptbActions.style.display = 'block';
+        _this.wptbActions.style.display = 'flex';
         thisNode.classList.add('wptb-directlyhovered');
 
         wptbContainer.addEventListener('scroll', correctTop, false);
@@ -2263,7 +2263,6 @@ var WPTB_Helper = {
         };
         http.send(params);
     },
-    // TODO [erdembircan] reset to elements menu is here
     clickOnFreeSpace: function clickOnFreeSpace() {
         // document.getElementsByClassName('wptb-elements-container')[0].style.display = 'table';
         // document.getElementsByClassName('wptb-settings-section')[0].style.display = 'block';
@@ -2866,19 +2865,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
     }
     ;
 
-    // TODO [erdembircan] old drawer toggle
-    // document.querySelector('.wptb-left-panel-extend').onclick = function () {
-    //     var wptbContainer = document.querySelector('.wptb-container');
-    //     if (wptbContainer) {
-    //         if (wptbContainer.classList.contains('collapsed')) {
-    //             wptbContainer.classList.remove('collapsed');
-    //         } else {
-    //             wptbContainer.classList.add('collapsed');
-    //         }
-    //     }
-    // };
-
-    // this code hides the "element parameters" area 
+    // this code hides the "element parameters" area
     // when clicked outside this element and its "tinymce" toolbar 
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
     wptbBuilderPanel.onclick = function (e) {

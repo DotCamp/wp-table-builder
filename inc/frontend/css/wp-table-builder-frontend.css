@@ -55,18 +55,18 @@ table.wptb-preview-table-mobile {
 }
 
 table.wptb-preview-table {
-    opacity:0;
+    opacity: 0;
     animation: show 0.3s 1;
     animation-fill-mode: forwards;
     animation-delay: 0.7s;
 }
 
-@keyframes show{
-    0%{
-        opacity:0;
+@keyframes show {
+    0% {
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
@@ -137,6 +137,7 @@ table.wptb-preview-table {
     width: 100%;
     clear: both;
 }
+
 .wptb-image-wrapper a {
     display: block !important;
     max-width: 100%;
@@ -154,8 +155,8 @@ table.wptb-preview-table {
     height: auto;
 }
 
-.wptb-text-container>div,
-.wptb-text-container>div>p {
+.wptb-text-container > div,
+.wptb-text-container > div > p {
     font-size: inherit;
     color: inherit;
 }
@@ -170,7 +171,7 @@ table.wptb-preview-table {
     text-decoration: none !important;
 }
 
-.wptb-button-wrapper>a {
+.wptb-button-wrapper > a {
     max-width: 100%;
 }
 
@@ -225,6 +226,35 @@ table.wptb-preview-table {
 .wptb-button {
     background: #329d3f;
     color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-button .wptb-button-icon {
+    margin: 0 5px;
+    order: -1;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-button .wptb-button-icon svg {
+    fill: currentColor;
+    width: 100%;
+    height: 100%;
+}
+
+.wptb-button-icon[data-wptb-button-icon-src=""] {
+    display: none;
+}
+
+.wptb-plugin-button-order-right .wptb-button-icon {
+    order: 2;
 }
 
 .wptb-ph-element .wptb-button p {
@@ -285,6 +315,7 @@ table.wptb-preview-table {
 .wptb-star_rating-container {
     text-align: center;
 }
+
 .wptb-rating-stars-box {
     text-align: center;
     display: inline-block;
@@ -292,11 +323,11 @@ table.wptb-preview-table {
 }
 
 .wptb-rating-stars-box ul {
-    list-style-type:none;
-    padding:0;
+    list-style-type: none;
+    padding: 0;
 
-    -moz-user-select:none;
-    -webkit-user-select:none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
     padding: 0.5em 0.2em 0.2em;
 }
 
@@ -320,8 +351,9 @@ table.wptb-preview-table {
     left: 0px;
     z-index: 10;
 }
+
 .wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-left-signal-part,
-.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-right-signal-part{
+.wptb-rating-stars-box ul > li.wptb-rating-star span.wptb-rating-star-right-signal-part {
     height: 100%;
     width: 50%;
     z-index: 20;
@@ -398,13 +430,13 @@ table.wptb-preview-table {
 }
 
 .wptb-number-rating-box > div {
-  vertical-align:top;
-  display:inline-block;
-  color:#888;
-  text-align: center;
-  height: 25px;
-  font-size: 25px;
-  line-height: 25px;
+    vertical-align: top;
+    display: inline-block;
+    color: #888;
+    text-align: center;
+    height: 25px;
+    font-size: 25px;
+    line-height: 25px;
 }
 
 .wptb-column-title-mobile-container {
@@ -529,6 +561,7 @@ table.wptb-preview-table {
     .wptb-table-container table {
         min-width: auto;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic tr td {
         display: block;
         width: 100% !important;
@@ -537,24 +570,30 @@ table.wptb-preview-table {
         min-height: 60px;
         overflow: hidden;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic td.wptb-column-title-mobile-not-elements {
         padding: 0px !important;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic td .wptb-column-title-mobile-container {
         display: block;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic td .wptb-ph-element {
         display: inline-block;
         width: 50%;
         margin-left: 50%;
         padding-left: inherit;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic td {
         border-width: 0 1px 1px 1px !important;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic tr td:nth-of-type(1) {
         border-top-width: 1px !important;
     }
+
     .wptb-table-container table.wptb-table-preview-head.wptb-table-preview-static-indic tr:first-child {
         display: none;
     }

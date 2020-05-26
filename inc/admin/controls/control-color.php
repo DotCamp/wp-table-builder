@@ -56,12 +56,29 @@ class Control_Color extends Base_Control {
                 selectors = [],
                 elemContainer,
                 selectorsJson,
-                targetInputAddClass;
+                useDataset,
+                targetInputAddClass,
+                dataSets,
+                startupValueSelector;
              
             if( data.label ) {
                 label = data.label;
             }
-            
+
+            useDataset = data.useDataset;
+
+            startupValueSelector = data.startupValueSelector;
+            let startupJson = null;
+            if(startupValueSelector){
+                startupJson = JSON.stringify(startupValueSelector);
+            }
+
+            dataSets = data.dataSets;
+            let dataSetsJson = null;
+            if(dataSets){
+                dataSetsJson = JSON.stringify(dataSets);
+            }
+
             if( data.name ) {
                 name = data.name;
             }
@@ -167,7 +184,18 @@ class Control_Color extends Base_Control {
                             }
                         }
 
-                        function elementColorSet( selectors, color ) {
+
+                        function elementColorSet( selectors, color) {
+                            const useDataset = 'true' === '{{{useDataset}}}';
+                            if(useDataset){
+                                addDataSet(selectors, color);
+                                return;
+                            }
+
+                            if('' !== '{{{dataSetsJson}}}'){
+                                addToDataSetSelectors(color);
+                            }
+
                             for( let i = 0; i < selectors.length; i++ ) {
                                 if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
                                     let selectorElements = document.querySelectorAll( selectors[i][0] );
@@ -188,6 +216,52 @@ class Control_Color extends Base_Control {
                             }
                         }
 
+
+                        function addToDataSetSelectors(val) {
+                            const selectorsObj = JSON.parse('{{{dataSetsJson}}}');
+
+                            Object.keys(selectorsObj).map(s => {
+                                if(Object.prototype.hasOwnProperty.call(selectorsObj , s)){
+                                    const tempEl = document.querySelector(s);
+                                    tempEl.dataset[selectorsObj[s]] = val;
+                                }
+                            });
+                        }
+
+                        function assignDataSetsToPicker(selectors){
+                            selectors.map(s => {
+                                const el = document.querySelector(s[0]);
+                                if(el.dataset[s[1]]){
+                                    targetInput.value = el.dataset[s[1]];
+                                }
+                            })
+                        }
+
+                        function assignStartupData(selectors){
+                            Object.keys(selectors).map(s => {
+                                if(Object.prototype.hasOwnProperty.call(selectors , s) ){
+                                    const dataVal = document.querySelector(s).dataset[selectors[s]];
+                                    targetInput.value = dataVal;
+                                }
+                            });
+                        }
+
+                        if('true' === '{{{useDataset}}}'){
+                            assignDataSetsToPicker(selectors);
+                        }
+
+                        if('' !== '{{{startupJson}}}'){
+                            const startupSelectorObj = JSON.parse('{{{startupJson}}}');
+                            assignStartupData(startupSelectorObj);
+                        }
+
+                        function addDataSet(selectors, value){
+                            selectors.map(s => {
+                                const el = document.querySelector(s[0]);
+                                el.dataset[s[1]] = value;
+                            });
+                        }
+
                         jQuery( '.{{{targetInputAddClass}}}' ).wpColorPicker({
                             change: function ( event, ui ) {
                                 let uiColor;
@@ -197,7 +271,7 @@ class Control_Color extends Base_Control {
                                     uiColor = '';
                                 }
 
-                                elementColorSet( selectors, uiColor );
+                                elementColorSet( selectors, uiColor);
 
                                 let targetInput = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
                                 if( targetInput.length > 0 ) {

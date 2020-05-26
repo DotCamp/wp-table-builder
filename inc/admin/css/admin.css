@@ -451,7 +451,7 @@ body > img {
     -o-transition: all 0.2s ease-out, right 0.2s ease-out;
     transition: all 0.2s ease-out, right 0.2s ease-out;
     box-shadow: 0 0 5px 3px rgba(0, 0, 0, .2);
-    z-index: 1;
+    z-index: 100001;
     font-size: var(--wptb-plugin-theme-side-bar-font-size-base);
 }
 
@@ -1073,6 +1073,7 @@ ul.wptb-tabs {
 .wptb-panel-toggle-group {
     background-color: var(--wptb-plugin-theme-color-light);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin: 20px 0;
 }
 
 .wptb-panel-toggle {
@@ -1083,6 +1084,10 @@ ul.wptb-tabs {
     justify-content: space-between;
     align-items: center;
     border-bottom: 3px solid var(--wptb-plugin-theme-sidebar-bg);
+}
+
+.wptb-element-options .wptb-panel-toggle {
+    cursor: pointer;
 }
 
 .wptb-panel-toggle .header {
@@ -1113,6 +1118,10 @@ ul.wptb-tabs {
     padding: 20px 10px;
 }
 
+.wptb-panel-section-toggle-target {
+    background-color: var(--wptb-plugin-gray-100);
+}
+
 .wptb-panel-elements-inner-wrapper {
     display: grid;
     grid-auto-flow: row;
@@ -1122,6 +1131,43 @@ ul.wptb-tabs {
     font-size: 80%;
 }
 
+.wptb-section-group-tabbed {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: "header" "tabButtons" "controls";
+    grid-auto-flow: row;
+}
+
+.wptb-section-group-tabbed-header {
+    grid-area: header;
+    justify-content: center !important;
+}
+
+.wptb-section-group-tabbed-tabs-buttons {
+    grid-area: tabButtons;
+    display: flex;
+    flex-direction: row;
+    background-color: var(--wptb-plugin-theme-color-light);
+    text-align: center;
+    justify-content: stretch;
+    border-bottom: 1px solid #E5DFDF;
+}
+
+.wptb-section-group-tabbed-tabs-buttons div {
+    width: 100%;
+    margin: 0 !important;
+    font-size: 90%;
+    padding: 7px !important;
+}
+
+.wptb-section-group-tab-content {
+    grid-area: controls;
+    animation: wptb-basic-appear 0.2s ease-out;
+}
+
+.wptb-plugin-non-visible {
+    display: none !important;
+}
 
 /**
 * Elements
@@ -1209,6 +1255,7 @@ ul.wptb-tabs {
     transition: all 0.2s ease-out, right 0.2s ease-out;
     width: calc(100% - var(--wptb-plugin-sidebar-size-full));
     text-align: center;
+    z-index: 100000;
 }
 
 .collapsed .wptb-builder-panel {
@@ -1286,7 +1333,7 @@ ul.wptb-tabs {
     background: #fff;
     margin-top: 30px;
     margin-bottom: 30px;
-    max-width: 850px;
+    max-width: 700px;
     overflow-x: auto;
     overflow-y: hidden;
 }
@@ -1618,6 +1665,35 @@ table.wptb-table {
     border-radius: 5px;
     border: 0;
     box-shadow: none;
+    transition: all 0.2s ease-out;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wptb-button-icon {
+    margin: 0 5px;
+    order: -1;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-button-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.wptb-button-icon[data-wptb-button-icon-src=""] {
+    display: none;
+}
+
+.wptb-plugin-button-order-right .wptb-button-icon {
+    order: 2;
 }
 
 .wptb-button:hover {
@@ -1935,6 +2011,7 @@ br[data-mce-bogus="1"] {
     margin: 0em 0.1em 0 0.05em;
     width: 16px;
     height: 16px;
+    order: 2;
 }
 
 .wptb-cell-management .wptb-button {
@@ -2067,6 +2144,7 @@ br[data-mce-bogus="1"] {
     cursor: move;
     width: 16px;
     height: 16px;
+    order: -1;
 }
 
 .wptb-no-cell-action:not(.visible),
@@ -2820,9 +2898,23 @@ wptb_shortcode_container_element {
     position: relative;
     display: flex;
     flex-direction: row;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #cbd5e0;
+}
+
+.wptb-plugins-m-b-40 {
+    margin-bottom: 40px;
+}
+
+.wptb-settings-checkbox-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 5px 0;
+    width: 100%;
+
 }
 
 .wptb-settings-sections-wrapper.child {
@@ -3311,3 +3403,113 @@ wptb_shortcode_container_element {
         opacity: 1
     }
 }
+
+.wptb-settings-space-between {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.wptb-icon-select-wrapper {
+    align-items: center;
+    height: 100%;
+}
+
+.wptb-icon-select-display {
+    width: 50px;
+    height: 50px;
+    background-color: var(--wptb-plugin-theme-color-light);
+    border: 1px solid var(--wptb-plugin-gray-400);
+    border-radius: 5px;
+    position: relative;
+}
+
+.wptb-icon-select-preview {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.wptb-icon-select-preview img[src=''] {
+    display: none;
+}
+
+.wptb-icon-select-preview img {
+    width: 100%;
+    height: 100%;
+}
+
+.wptb-icon-select-drawer {
+    position: fixed;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-gap: 15px;
+    background-color: var(--wptb-plugin-theme-color-light);
+    border: 1px solid var(--wptb-plugin-gray-400);
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px;
+    max-height: 200px;
+    overflow-y: scroll;
+    z-index: 110000;
+}
+
+.wptb-icon-search-wrapper {
+    width: 100%;
+}
+
+.wptb-icon-search-wrapper input {
+    width: 100%;
+}
+
+.wptb-icon-previews {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: row;
+    grid-gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-icon-select-drawer-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-icon-select-drawer-preview img {
+    width: 25px;
+    height: 25px;
+    transition: transform .2s ease-out;
+    cursor: pointer;
+}
+
+.wptb-icon-select-drawer-preview img:hover {
+    transform: scale(1.2);
+}
+
+.wptb-icon-select-drawer-end {
+    border: 1px solid red;
+}
+
+.wptb-icon-preview-active {
+    border: 2px solid var(--wptb-plugin-logo-color);
+}
+
+.wptb-icon-reset {
+    border: 1px solid var(--wptb-plugin-theme-sidebar-bg);
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
