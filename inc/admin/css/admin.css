@@ -3501,7 +3501,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-icon-select-drawer-end {
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }
 
 .wptb-icon-preview-active {

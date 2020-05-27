@@ -2,6 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Core;
 
+use WP_Table_Builder as NS;
+
 /**
  * Define the internationalization functionality.
  *
@@ -20,15 +22,16 @@ class Internationalization_I18n {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $text_domain    The text domain of the plugin.
+	 * @var      string $text_domain The text domain of the plugin.
 	 */
 	private $text_domain;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
+	 * @param string $plugin_text_domain The text domain of this plugin.
+	 *
 	 * @since    1.0.0
-	 * @param      string $plugin_text_domain       The text domain of this plugin.
 	 */
 	public function __construct( $plugin_text_domain ) {
 
@@ -42,11 +45,13 @@ class Internationalization_I18n {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
+		// relative path of languages folder to the base of WordPress plugin folder
+		$rel_path = dirname( plugin_basename( NS\PLUGIN__FILE__ ) ) . '/languages/';
 
 		load_plugin_textdomain(
 			$this->text_domain,
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			$rel_path
 		);
 	}
 
