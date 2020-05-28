@@ -866,11 +866,12 @@ var WPTB_Helper = {
             }
             
             // hide wptb-elements-container and wptb-settings-section
-            document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'none';
-            document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'none';
+            // document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'none';
+            // document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'none';
 
             // show element-options-group 
-            document.getElementById( 'element-options-group' ).style.display = 'block';
+            // document.getElementById( 'element-options-group' ).style.display = 'block';
+            this.activateSection('options_group');
             
             elementOptionsGroupId = 'element-options-group';
             wptbelementOptionClass = 'wptb-element-option';
@@ -1058,6 +1059,100 @@ var WPTB_Helper = {
                     head.appendChild( cssForThisElement );
                 }
             }
+        }
+    },
+    /**
+     *
+     * Register section parts for sidebar
+     *
+     * @param {array} sections an array of section names
+     */
+    registerSections(sections) {
+        this.sections = {};
+        if (!Array.isArray(sections)) {
+            sections = [sections];
+        }
+
+        sections.map(s => {
+            const sectionElement = document.querySelector(`[data-wptb-section=${s}]`);
+            if (sectionElement) {
+                this.sections[s] = sectionElement;
+            }
+        })
+    },
+    /**
+     * Activate a registered section and deactivates others
+     *
+     * @param {string} sectionDataId section name to be activated
+     * @param {string} displayType display type override for section to be used in its display style property
+     */
+    activateSection(sectionDataId, displayType = 'block') {
+        this.triggerSectionEvent(sectionDataId);
+        Object.keys(this.sections).map(k => {
+            if (Object.prototype.hasOwnProperty.call(this.sections, k)) {
+                const visibility = sectionDataId === k ? displayType : 'none';
+                this.sections[k].style = `display: ${visibility} !important`;
+            }
+        })
+    },
+    /**
+     * Set up related buttons and links to trigger certain elements
+     */
+    setupSectionButtons() {
+        const sectionButtons = Array.from( document.querySelectorAll('[data-wptb-section-button'));
+        const vm = this;
+
+        sectionButtons.map(s => {
+            const sectionName = s.dataset.wptbSectionButton;
+            s.addEventListener('click', function() {
+                const displayType = s.dataset.wptbSectionDisplayType;
+                vm.activateSection(sectionName, displayType);
+            })
+
+            document.addEventListener('sectionChanged', (e)=> {
+                if(e.detail === sectionName){
+                    s.classList.remove('disabled');
+                    s.classList.add('active');
+                }else{
+                    s.classList.remove('active');
+                    s.classList.add('disabled');
+                }
+            })
+        })
+    },
+    setupPanelToggleButtons(){
+        const $ = jQuery;
+
+        $('.wptb-panel-toggle-group').each(function(){
+            const vm = $(this);
+            $(this).find('.toggle-icon').click(() => {
+                vm.find('.wptb-panel-toggle-target').slideToggle();
+                vm.toggleClass('wptb-panel-toggle-content');
+            })
+        })
+    },
+    /**
+     * Trigger a section change event
+     *
+     * @param {string} sectionName section name
+     */
+    triggerSectionEvent(sectionName){
+        const sectionEvent = new CustomEvent('sectionChanged', {detail: sectionName});
+
+        document.dispatchEvent(sectionEvent);
+    },
+    /**
+     * Setup sidebar toggle element
+     *
+     * @param {string} toggleSelector query selector for drawer toggle element
+     */
+    setupSidebarToggle(toggleSelector){
+        const toggleButton = document.querySelector(toggleSelector);
+        if(toggleButton){
+            toggleButton.addEventListener('click', (e)=>{
+                e.preventDefault();
+                document.body.classList.toggle('collapsed');
+            })
         }
     },
     // function for deleting all external CSS for the element
@@ -1283,6 +1378,7 @@ var WPTB_Helper = {
                     if( wptbSaveBtn.length > 0 ) {
                         wptbSaveBtn = wptbSaveBtn[0];
                         wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                        wptbSaveBtn.classList.remove('active');
                     }
                 } else if( data[0] == 'edited' ) {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
@@ -1292,6 +1388,7 @@ var WPTB_Helper = {
                     if( wptbSaveBtn.length > 0 ) {
                         wptbSaveBtn = wptbSaveBtn[0];
                         wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                        wptbSaveBtn.classList.remove('active');
                     }
                 } else if( data[0] == 'preview_edited' ) {
                     return;
@@ -1308,9 +1405,11 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function() {
-        document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
-        document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
-        document.getElementById( 'element-options-group' ).style.display = 'none';
+        // document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
+        // document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
+        // document.getElementById( 'element-options-group' ).style.display = 'none';
+        this.activateSection('elements');
+
         let wpcdFixedToolbar = document.getElementById( 'wpcd_fixed_toolbar' );
         if( wpcdFixedToolbar.hasAttribute( 'data-toolbar-active-id' ) ) {
             document.getElementById( wpcdFixedToolbar.getAttribute( 'data-toolbar-active-id' ) ).classList.remove( 'toolbar-active' );

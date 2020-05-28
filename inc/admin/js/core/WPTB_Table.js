@@ -1525,6 +1525,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                     wptbSaveBtn = wptbSaveBtn[0];
                     
                     wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                    wptbSaveBtn.classList.remove('active');
                 }
             } else {
                 table.recalculateIndexes();
@@ -1590,6 +1591,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                     wptbSaveBtn = wptbSaveBtn[0];
                     
                     wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                    wptbSaveBtn.classList.remove('active');
                 }
             } else {
                 table.recalculateIndexes();

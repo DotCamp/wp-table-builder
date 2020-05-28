@@ -49,4 +49,9 @@ var WPTB_Initializer = function () {
             wptbTableStateSaveManager.tableStateSet();
     }
 
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'options_group']);
+    WPTB_Helper.setupSectionButtons();
+    WPTB_Helper.activateSection('elements');
+    WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
+    WPTB_Helper.setupPanelToggleButtons();
 };

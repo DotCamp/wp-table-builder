@@ -175,7 +175,7 @@ var WPTB_ActionsField = function() {
                 }
             }
 
-            actions.style.display = 'block';
+            actions.style.display = 'flex';
 
             this.wptbActions = actions;
         } 
@@ -193,7 +193,7 @@ var WPTB_ActionsField = function() {
         }
         
         if( this.wptbActions && this.wptbActions.classList.contains( 'wptb-actions' ) ) {
-            this.wptbActions.style.display = 'block';
+            this.wptbActions.style.display = 'flex';
         } else {
             return;
         }
@@ -210,7 +210,7 @@ var WPTB_ActionsField = function() {
         this.wptbActions.style.top = parseFloat( coordinatesElement.top ) - 15 + 'px';
         this.wptbActions.style.left = ( parseFloat( coordinatesElement.right ) - parseFloat( this.wptbActions.clientWidth ) ) + 1 + 'px';
         
-        this.wptbActions.style.display = 'block';
+        this.wptbActions.style.display = 'flex';
         thisNode.classList.add( 'wptb-directlyhovered' );
         
         wptbContainer.addEventListener( 'scroll', correctTop, false );
