@@ -62,9 +62,27 @@ var WPTB_Helper = {
             }
         }
     },
-    linkHttpCheckChange: function( link ) {
+    linkHttpCheckChange: function( link, convertToAbs = false ) {
         if ( link ) {
-            if ( link.indexOf( 'http://' ) == -1 && link.indexOf( 'https://' ) == -1 ) {
+            // relative link checking
+            // if link starts with '/', assume it is a relative link to the origin of the current site
+            if( link.match(/^\/([\S]+)$/) ){
+                if (convertToAbs) {
+                    const currentLocation = document.location;
+                    let {origin} = currentLocation;
+
+
+                    // strip out the '/' at the end of the origin name if there is any
+                    if (origin.match(/^(.+)\/$/)) {
+                        origin = origin.slice(-1);
+                    }
+
+                    return `${origin}${link}`;
+                }else{
+                    return link;
+                }
+            }
+            else if ( link.indexOf( 'http://' ) == -1 && link.indexOf( 'https://' ) == -1 ) {
                 let linkArr = link.split( '/' ),
                     linkClean;
                 if ( Array.isArray( linkArr ) && linkArr.length > 0 ) {
