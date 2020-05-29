@@ -29,48 +29,67 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
             <div class="wptb-elements-section">
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container" data-wptb-section="elements">
-                        <div class="wptb-panel-toggle-group">
-                            <div class="wptb-panel-toggle">
-                                <div class="header"><?php esc_html_e( 'basic', $plugin_textdomain ); ?></div>
-                                <span class="dashicons toggle-icon"></span>
+						<?php
+
+						$element_objects = Init::instance()->elements_manager->get_element_objects();
+
+						$element_objects_by_type = [];
+
+						foreach ( $element_objects as $element ) {
+							$type = $element->get_type();
+
+							$element_objects_by_type[ $type ][] = $element;
+						}
+
+						foreach ( $element_objects_by_type as $type => $elements ):
+
+							?>
+                            <div class="wptb-panel-toggle-group">
+                                <div class="wptb-panel-toggle">
+                                    <div class="header"><?php
+										/* translators: dynamic value here is one of element types that is defined in elements-manager.php as a constant */
+										esc_html_e( $type, NS\PLUGIN_TEXT_DOMAIN ); ?></div>
+                                    <span class="dashicons toggle-icon"></span>
+                                </div>
+                                <div class="wptb-panel-toggle-target wptb-panel-elements-inner-wrapper">
+									<?php
+
+									// fire up wptb_before_elements action hook with type argument of the current elements group
+									do_action( 'wptb_before_elements', $type );
+
+
+									foreach ( $elements as $element ): ?>
+                                        <div class="wptb-element" draggable="true"
+                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
+                                            <div class="wptb-element-draggable-icon"><span
+                                                        class="dashicons dashicons-menu"></span></div>
+											<?php
+
+											if ( file_exists( $element->get_directory_icon() ) ) :
+												require_once $element->get_directory_icon();
+											endif;
+
+											?>
+
+                                            <p class="wptb-draggable">
+
+												<?php
+
+												if ( method_exists( $element, 'get_title' ) ) :
+													$element->get_title();
+												endif;
+
+												?>
+
+                                            </p>
+
+                                        </div>
+
+									<?php endforeach; ?>
+
+                                </div>
                             </div>
-                            <div class="wptb-panel-toggle-target wptb-panel-elements-inner-wrapper">
-			                    <?php
-
-			                    do_action( 'wptb_before_elements' );
-
-			                    $element_objects = Init::instance()->elements_manager->get_element_objects();
-
-			                    foreach ( $element_objects as $element ): ?>
-                                    <div class="wptb-element" draggable="true"
-                                         data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
-<div class="wptb-element-draggable-icon"><span class="dashicons dashicons-menu"></span></div>
-					                    <?php
-
-					                    if ( file_exists( $element->get_directory_icon() ) ) :
-						                    require_once $element->get_directory_icon();
-					                    endif;
-
-					                    ?>
-
-                                        <p class="wptb-draggable">
-
-						                    <?php
-
-						                    if ( method_exists( $element, 'get_title' ) ) :
-							                    $element->get_title();
-						                    endif;
-
-						                    ?>
-
-                                        </p>
-
-                                    </div>
-
-			                    <?php endforeach; ?>
-
-                            </div>
-                        </div>
+						<?php endforeach ?>
                     </div>
                 </div>
             </div>
@@ -97,13 +116,10 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
         </div>
     </div>
     <div id="wptb-left-scroll-panel-cell-settings">
-        <div class="wptb-settings-section">
-            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-cell-settings.php'; ?>
-        </div>
-
         <div id="element-cell-options-group" class="wptb-tab-content" data-wptb-section="cell_settings"
              style="display: none;">
             <!-- here will be cell controls -->
         </div>
+        <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-cell-settings.php'; ?>
     </div>
 </div>
