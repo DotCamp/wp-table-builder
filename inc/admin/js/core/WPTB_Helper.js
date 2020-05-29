@@ -846,11 +846,19 @@ var WPTB_Helper = {
         let wptbelementOptionsScriptsContainer = document.createElement( 'div' );
             
         let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
-        if( ! infArr && element.classList.contains( 'wptb-preview-table' ) ) {
+        if( ! infArr ) {
             let table_id = WPTB_Helper.detectMode();
-            element.classList.add( 'wptb-element-main-table_setting-' + table_id );
+            if( element.classList.contains( 'wptb-preview-table' ) ) {
+                element.classList.add( 'wptb-element-main-table_setting-' + table_id );
+            } else if( element.classList.contains( 'wptb-cell' ) ) {
+                let cellEditActiveClass = document.querySelector( '.wptb-element-table_cell-' + table_id );
+                if( cellEditActiveClass ) cellEditActiveClass.classList.remove( 'wptb-element-table_cell-' + table_id );
+                element.classList.add( 'wptb-element-table_cell-' + table_id );
+            }
+
             infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
         }
+
         data = {
             container: '.' + infArr[0]
         };
@@ -858,25 +866,30 @@ var WPTB_Helper = {
         elementContainerClass = infArr[0];
         elementOptionClassIndic = infArr[1];
         
-        if( ! element.classList.contains( 'wptb-preview-table' ) ) {
+        if( element.classList.contains( 'wptb-preview-table' ) ) {
+            elementOptionsGroupId = 'table-settings-group';
+            wptbelementOptionClass = 'wptb-element-option';
+        } else if( element.classList.contains( 'wptb-cell' ) ) {
+            elementOptionsGroupId = 'element-cell-options-group';
+            wptbelementOptionClass = 'wptb-element-option';
+
+            this.activateSection('cell_settings');
+        } else {
             let children = document.getElementById( 'element-options-group' ).childNodes;
             for ( let i = 0; i < children.length; i++) {
                 if ( children[i].style )
                     children[i].style.display = 'none';
             }
-            
+
             // hide wptb-elements-container and wptb-settings-section
             // document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'none';
             // document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'none';
 
-            // show element-options-group 
+            // show element-options-group
             // document.getElementById( 'element-options-group' ).style.display = 'block';
             this.activateSection('options_group');
-            
+
             elementOptionsGroupId = 'element-options-group';
-            wptbelementOptionClass = 'wptb-element-option';
-        } else {
-            elementOptionsGroupId = 'table-settings-group';
             wptbelementOptionClass = 'wptb-element-option';
         }
         
@@ -1405,6 +1418,10 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function() {
+        let cellModeBackground = document.querySelector( '#wptb-cell_mode_background' );
+        if( cellModeBackground && cellModeBackground.classList.contains( 'visible' ) ) {
+            return;
+        }
         // document.getElementsByClassName( 'wptb-elements-container' )[0].style.display = 'table';
         // document.getElementsByClassName( 'wptb-settings-section' )[0].style.display = 'block';
         // document.getElementById( 'element-options-group' ).style.display = 'none';

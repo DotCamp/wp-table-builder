@@ -19,7 +19,6 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
     var mark = function ( event ) {
         var rs = this.rowSpan,
             cs = this.colSpan,
-            markedCells,
             noCells = document.getElementsByClassName('wptb-no-cell-action'),
             singleCells = document.getElementsByClassName('wptb-single-action'),
             multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
@@ -46,7 +45,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             }
         }
 
-        markedCells = document.getElementsByClassName('wptb-highlighted').length;
+        let cellHighlighted = document.getElementsByClassName('wptb-highlighted'),
+            markedCells = cellHighlighted.length;
         if (markedCells === 0) {
             for (var i = 0; i < multipleCells.length; i++) {
                 multipleCells[i].classList.remove('visible');
@@ -74,47 +74,53 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                 singleCells[i].classList.add('visible');
                 singleCells[i].removeAttribute('disabled');
             }
-            let cellHighlighted = document.querySelector( '.wptb-highlighted' );
-            if( cellHighlighted ) {
-                let wptbTableColumnWidthSlider = document.getElementById( 'wptb-table-column-width-slider' );
-                let wptbTableColumnWidthNumber = document.getElementById( 'wptb-table-column-width-number' );
-                let tableColumnWidthAutoFixedCheckbox = document.getElementById( 'wptb-table-column-width-auto-fixed' );
-                let width = cellHighlighted.style.width;
-                if( width ) {
-                    wptbTableColumnWidthSlider.value = parseFloat( width, 10 );
-                    wptbTableColumnWidthNumber.value = parseFloat( width, 10 );
-                    tableColumnWidthAutoFixedCheckbox.checked = true;
-                } else if( cellHighlighted.dataset.wptbFixedWidth ) {
-                    wptbTableColumnWidthSlider.value = cellHighlighted.dataset.wptbFixedWidth;
-                    wptbTableColumnWidthNumber.value = cellHighlighted.dataset.wptbFixedWidth;
-                    tableColumnWidthAutoFixedCheckbox.checked = true;
-                } else {
-                    let cellWidth = WPTB_Helper.getColumnWidth( table, cellHighlighted );
-                    wptbTableColumnWidthSlider.value = cellWidth;
-                    wptbTableColumnWidthNumber.value = cellWidth;
-                    tableColumnWidthAutoFixedCheckbox.checked = false;
+
+            cellHighlighted = cellHighlighted[0];
+            WPTB_Helper.elementOptionsSet( 'table_cell', cellHighlighted );
+
+            let infArr = cellHighlighted.className.match( /wptb-element-((.+-)\d+)/i );
+
+            const controlElemIds = ['cellWidth', 'cellHeight'];
+
+            controlElemIds.map(s => {
+                let elementControlSizeUnicClass = `wptb-el-${infArr[1]}-${s}`,
+                    elementControlSizeFixedUnicClass = `wptb-el-${infArr[1]}-${s}Fixed`;
+                if(s === 'cellWidth' || s === 'cellHeight') {
+                    let sizeName = '',
+                        getSizeFunctionName = '';
+                    if(s === 'cellWidth') {
+                        sizeName = 'width';
+                        getSizeFunctionName = 'getColumnWidth';
+                    } else if(s === 'cellHeight') {
+                        sizeName = 'height';
+                        getSizeFunctionName = 'getRowHeight';
+                    }
+                    let size = cellHighlighted.style[sizeName],
+                        cellSizeInputs = document.querySelectorAll( '.' + elementControlSizeUnicClass ),
+                        cellSizeFixedInput = document.querySelector( '.' + elementControlSizeFixedUnicClass  );
+                    cellSizeInputs = [...cellSizeInputs];
+
+                    if(!size && !cellHighlighted.dataset[`wptbFixed${sizeName.toUpperCase()}`]) {
+                        size = WPTB_Helper[getSizeFunctionName](table, cellHighlighted);
+                        cellSizeInputs.map(s => {
+                            s.value = size;
+                        });
+
+                        cellSizeFixedInput.checked = false;
+                    } else {
+                        cellSizeInputs.map(s => {
+                            if( size ) {
+                                s.value = parseFloat( size, 10 );
+                            } else if( cellHighlighted.dataset[`wptbFixed${sizeName.toUpperCase()}`] ) {
+                                s.value = cellHighlighted.dataset[`wptbFixed${sizeName.toUpperCase()}`];
+                            }
+                        });
+
+                        cellSizeFixedInput.checked = true;
+                    }
                 }
-                
-                
-                let wptbTableRowHeightSlider = document.getElementById( 'wptb-table-row-height-slider' );
-                let wptbTableRowHeightNumber = document.getElementById( 'wptb-table-row-height-number' );
-                let tableRowHeightAutoFixedCheckbox = document.getElementById( 'wptb-table-row-height-auto-fixed' );
-                let height = cellHighlighted.style.height;
-                if( height ) {
-                    wptbTableRowHeightSlider.value = parseFloat( height, 10 );
-                    wptbTableRowHeightNumber.value = parseFloat( height, 10 );
-                    tableRowHeightAutoFixedCheckbox.checked = true;
-                } else if( cellHighlighted.dataset.wptbFixedHeight ) {
-                    wptbTableRowHeightSlider.value = cellHighlighted.dataset.wptbFixedHeight;
-                    wptbTableRowHeightNumber.value = cellHighlighted.dataset.wptbFixedHeight;
-                    tableRowHeightAutoFixedCheckbox.checked = true;
-                } else {
-                    let cellHeight = WPTB_Helper.getRowHeight( table, cellHighlighted );
-                    wptbTableRowHeightSlider.value = cellHeight;
-                    wptbTableRowHeightNumber.value = cellHeight;
-                    tableRowHeightAutoFixedCheckbox.checked = false;
-                }
-            }
+            });
+
             cellSettings.classList.add( 'visible' );
         } else {
             for (var i = 0; i < multipleCells.length; i++) {
@@ -449,10 +455,6 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                                             td.style.width = value + 'px';
                                             td.removeAttribute( 'data-wptb-fixed-width' );
                                             widthIsSet = true;
-                                            let tableColumnWidthAutoFixedCheckbox = document.getElementById( 'wptb-table-column-width-auto-fixed' );
-                                            if( ! tableColumnWidthAutoFixedCheckbox.checked ) {
-                                                tableColumnWidthAutoFixedCheckbox.checked = true;
-                                            }
                                         } else {
                                             td.style.width = null;
                                             td.dataset.wptbFixedWidth = value;
@@ -705,10 +707,6 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                                             td.style.height = value + 'px';
                                             td.removeAttribute( 'data-wptb-fixed-heidht' );
                                             heightIsSet = true;
-                                            let tableColumnHeightAutoFixedCheckbox = document.getElementById( 'wptb-table-row-height-auto-fixed' );
-                                            if( ! tableColumnHeightAutoFixedCheckbox.checked ) {
-                                                tableColumnHeightAutoFixedCheckbox.checked = true;
-                                            }
                                             continue;
                                         } else {
                                             td.style.height = null;

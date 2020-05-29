@@ -98,61 +98,12 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
     </div>
     <div id="wptb-left-scroll-panel-cell-settings">
         <div class="wptb-settings-section">
-            <div class="wptb-settings-dropdown">
-                <?php esc_html_e( 'Cell Settings', 'wp-table-builder' ); ?>
-            </div>
-            <div class="wptb-settings-items">
-                <div class="wptb-settings-item-header">
-                    <p style="margin: 0">
-						<?php esc_html_e( 'Column Width', 'wp-table-builder' ); ?>
-                    </p>
-                </div>
-                <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
-                    <div class="wptb-settings-col-xs-8">
-                        <input id="wptb-table-column-width-slider" type="range" min="50" max="500" step="1" value="30">
-                    </div>
-                    <div class="wptb-settings-col-xs-4">
-                        <input id="wptb-table-column-width-number" class="wptb-number-input" type="number" min="50"
-                               max="500" step="1" placeholder="30" pattern="[0-9]*">
-                        <span class="wptb-input-px">px</span>
-                    </div>
-                    <div class="wptb-settings-col-xs-12">
-                        <label class="wptb-toggle wptb-column-width-fix-auto">
-                            <input id="wptb-table-column-width-auto-fixed" type="checkbox"/>
-                            <i>
-                                <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>
-                                <div class="wptb-column-auto"><?php esc_html_e( 'Auto', 'wp-table-builder' ); ?></div>
-                            </i>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="wptb-settings-items">
-                <div class="wptb-settings-item-header">
-                    <p style="margin: 0">
-						<?php esc_html_e( 'Row Height', 'wp-table-builder' ); ?>
-                    </p>
-                </div>
-                <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
-                    <div class="wptb-settings-col-xs-8">
-                        <input id="wptb-table-row-height-slider" type="range" min="10" max="200" step="1" value="10">
-                    </div>
-                    <div class="wptb-settings-col-xs-4">
-                        <input id="wptb-table-row-height-number" class="wptb-number-input" type="number" min="10"
-                               max="200" step="1" placeholder="10" pattern="[0-9]*">
-                        <span class="wptb-input-px">px</span>
-                    </div>
-                    <div class="wptb-settings-col-xs-12">
-                        <label class="wptb-toggle wptb-column-width-fix-auto">
-                            <input id="wptb-table-row-height-auto-fixed" type="checkbox"/>
-                            <i>
-                                <div class="wptb-column-fixed"><?php esc_html_e( 'Fixed', 'wp-table-builder' ); ?></div>
-                                <div class="wptb-column-auto"><?php esc_html_e( 'Auto', 'wp-table-builder' ); ?></div>
-                            </i>
-                        </label>
-                    </div>
-                </div>
-            </div>
+            <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-cell-settings.php'; ?>
+        </div>
+
+        <div id="element-cell-options-group" class="wptb-tab-content" data-wptb-section="cell_settings"
+             style="display: none;">
+            <!-- here will be cell controls -->
         </div>
     </div>
 </div>
