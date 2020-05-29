@@ -31,4 +31,4 @@ gulp.task('watch', function () {
     gulp.watch(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'], ['adminJs']);
 });
 
-gulp.task('default', ['adminJs']);
+gulp.task('default', ['adminJs', 'minify']);
