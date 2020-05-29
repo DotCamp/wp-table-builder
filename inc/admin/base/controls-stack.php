@@ -63,6 +63,7 @@ abstract class Controls_Stack extends Base_Object {
 	 */
 	public function init_controls() {
 		$this->_register_controls();
+        do_action( 'wp-table-builder/register_controls/' . $this->get_name(), $this );
 	}
     
     /**
