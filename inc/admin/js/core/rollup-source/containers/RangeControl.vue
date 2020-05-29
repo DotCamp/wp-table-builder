@@ -9,13 +9,13 @@
 					:min="min"
 					:max="max"
 					:step="step"
-					v-model="sliderValue"
+					v-model="elementMainValue"
 				/>
 			</div>
 			<div class="wptb-settings-col-xs-4">
 				<input
 					type="number"
-					v-model="sliderValue"
+					v-model="elementMainValue"
 					class="wptb-size-number wptb-number-input wptb-element-property"
 					:min="min"
 					:max="max"
@@ -54,25 +54,18 @@ export default {
 	mixins: [ControlBase],
 	data() {
 		return {
-			sliderValue: this.defaultValue,
-			mountDataUpdate: false,
+			elementMainValue: this.defaultValue,
 		};
 	},
 	mounted() {
-		if (this.startupValue) {
-			this.mountDataUpdate = true;
-			this.sliderValue = this.startupValue;
-		}
+		this.assignDefaultValue();
 	},
 	watch: {
-		sliderValue(n) {
+		elementMainValue(n) {
 			const clampedValue = this.clampValue(n);
 			this.setTargetValue(this.targetElements[0], clampedValue);
 			// check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
-			if (!this.mountDataUpdate) {
-				this.setTableDirty();
-			}
-			this.mountDataUpdate = false;
+			this.setTableDirty(true);
 		},
 	},
 	methods: {

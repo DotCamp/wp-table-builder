@@ -18,8 +18,15 @@ const global = self || this;
 // adding controls manager to global space
 global.WPTB_ControlsManager = WPTB_ControlsManager;
 
-// icon select
-WPTB_ControlsManager.addControlScript(WPTB_IconSelectControl.name, WPTB_IconSelectControl.handler);
+const controls = [WPTB_IconSelectControl, WPTB_RangeControl, WPTB_ControlsManager];
 
-// range slider
-WPTB_ControlsManager.addControlScript(WPTB_RangeControl.name, WPTB_RangeControl.handler);
+/**
+ * Register control element.
+ *
+ * @param {object} controlObject control element object
+ */
+function registerControl(controlObject) {
+	WPTB_ControlsManager.addControlScript(controlObject.name, controlObject.handler);
+}
+
+controls.map(registerControl);

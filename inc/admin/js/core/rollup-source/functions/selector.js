@@ -24,7 +24,7 @@ function operationSelect(element, type) {
 }
 
 /**
- * Get value of HTMLElement
+ * Get value of HTMLElement.
  *
  * Supported value types: dataset
  *
@@ -43,11 +43,29 @@ function getTargetValue(selector) {
 	throw new Error(`no related operation found with a type of [${type}]`);
 }
 
+/**
+ * Set value for an individual selector object.
+ *
+ * @param {object} selector selector object
+ * @param {any} value value to be assigned to selector element
+ */
 function setTargetValue(selector, value) {
 	const { element, type, key } = selector;
 	const operation = operationSelect(element, type);
 
 	operation[key] = value;
+}
+
+/**
+ * Set values of target selectors.
+ *
+ * @param {array} selectors an array of selector objects
+ * @param {any} value value to be assigned to selector elements
+ */
+function setAllValues(selectors, value) {
+	selectors.map((s) => {
+		setTargetValue(s, value);
+	});
 }
 
 /**
@@ -78,4 +96,7 @@ function getAllValues(selectors) {
 	return allObj;
 }
 
-export default { getTargetValue, getAllValues, setTargetValue };
+/**
+ * @module selector module
+ */
+export default { getTargetValue, getAllValues, setTargetValue, setAllValues };
