@@ -85,30 +85,34 @@ class Frontend {
         wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
     }
 
-    /**
-	 * Register the JavaScript for the public-facing side of the site.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_scripts() {
+    // as a best practice, do not call script enqueue operations from custom action hooks
+//    /**
+//	 * Register the JavaScript for the public-facing side of the site.
+//	 *
+//	 * @since    1.0.0
+//	 */
+//	public function enqueue_scripts() {
+//
+//		/**
+//		 * This function is provided for demonstration purposes only.
+//		 *
+//		 * An instance of this class should be passed to the run() function
+//		 * defined in Loader as all of the hooks are defined
+//		 * in that particular class.
+//		 *
+//		 * The Loader will then create the relationship
+//		 * between the defined hooks and the functions defined in this
+//		 * class.
+//		 */
+//		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
+//
+//	}
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */ 
-		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
-
-	}
-    
+	// this callback was added to a custom action hook called as wptb_frontend_enqueue_script which was fired up on the_content hook. this hook is too late to enqueue scripts to header, this is why wp_enqueue_script is not adding the scripts to header when it is told to do so. will call this hook from wp_enqueue_scripts hook as it should be.
     public function unqueue_script_start() {
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+
+	    wp_enqueue_script( 'event-catcher', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-event-catcher.js', array( 'jquery' ), $this->version, false );
     }
 
 }
