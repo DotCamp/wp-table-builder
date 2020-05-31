@@ -327,7 +327,9 @@
                                                         tdLeftHeader = previewTable.rows[0].children[j - sectionNumber*tableColumns].cloneNode( true ),
                                                         td;
                                                     let rowFirstStyles = window.getComputedStyle( previewTable.rows[0] );
-                                                    tdLeftHeader.style.backgroundColor = rowFirstStyles.backgroundColor;
+                                                    if(!tdLeftHeader.style.backgroundColor) {
+                                                        tdLeftHeader.style.backgroundColor = rowFirstStyles.backgroundColor;
+                                                    }
                                                     tdLeftHeader.style.width = null;
                                                     tdLeftHeader.style.height = null;
                                                     tdLeftHeader.removeAttribute( 'data-x-index' );
@@ -348,7 +350,9 @@
                                                         if( k < previewTable.rows.length ) {
                                                             td = previewTable.rows[k].children[j - sectionNumber*tableColumns].cloneNode( true );
                                                             let rowKStyles = window.getComputedStyle( previewTable.rows[k] );
-                                                            td.style.backgroundColor = rowKStyles.backgroundColor;
+                                                            if(!td.style.backgroundColor) {
+                                                                td.style.backgroundColor = rowKStyles.backgroundColor;
+                                                            }
 
                                                             td.style.width = null;
                                                             td.style.height = null;
@@ -438,7 +442,7 @@
 
                                                     for ( let j = jStart; j < jMax; j++ ) {
                                                         let newTd = row.children[j].cloneNode( true );
-                                                        if( ! newTd.style.background ) {
+                                                        if(!newTd.style.backgroundColor) {
                                                             let rowStyles = window.getComputedStyle( row );
                                                             newTd.style.backgroundColor = rowStyles.backgroundColor;
                                                         }
@@ -450,7 +454,6 @@
                                                     }
 
                                                     newTable.appendChild( tr );
-
                                                 }
                                             }
                                         }
