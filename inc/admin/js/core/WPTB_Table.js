@@ -1529,6 +1529,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                 table.recalculateIndexes();
                 WPTB_Helper.tableRowsColorsReinstall( table );
                 WPTB_Helper.dataTitleColumnSet( table );
+                table.reconstraction();
             }
         }
         
@@ -1595,6 +1596,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                 table.recalculateIndexes();
                 table.tdDefaultWidth();
                 WPTB_Helper.dataTitleColumnSet( table );
+                table.reconstraction();
             }
         }
         

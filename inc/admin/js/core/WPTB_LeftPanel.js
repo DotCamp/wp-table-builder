@@ -45,7 +45,10 @@ var WPTB_LeftPanel = function () {
                             inputTopAsHeader.checked = false;
                         }
                     }
-
+                    
+                    if(table.hasOwnProperty( 'reconstraction' )) {
+                        table.reconstraction();
+                    }
                 }
             } else if( inputs.hasOwnProperty( 'applyTableContainerMaxWidth' ) ) {
                 let wptbTableSetup = document.querySelector( '.wptb-table-setup' );

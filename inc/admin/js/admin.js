@@ -2947,6 +2947,10 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
                             inputTopAsHeader.checked = false;
                         }
                     }
+
+                    if (table.hasOwnProperty('reconstraction')) {
+                        table.reconstraction();
+                    }
                 }
             } else if (inputs.hasOwnProperty('applyTableContainerMaxWidth')) {
                 var wptbTableSetup = document.querySelector('.wptb-table-setup');
@@ -4929,6 +4933,7 @@ var array = [],
                 table.recalculateIndexes();
                 WPTB_Helper.tableRowsColorsReinstall(table);
                 WPTB_Helper.dataTitleColumnSet(table);
+                table.reconstraction();
             }
         }
 
@@ -4992,6 +4997,7 @@ var array = [],
                 table.recalculateIndexes();
                 table.tdDefaultWidth();
                 WPTB_Helper.dataTitleColumnSet(table);
+                table.reconstraction();
             }
         }
 
