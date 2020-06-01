@@ -33,6 +33,48 @@
 
     jQuery( document ).ready( function ( $ ) {
         /**
+         * Adds hover color change support for supported button elements.
+         */
+        function addHoverSupport(querySelector) {
+            const buttons = Array.from(document.querySelectorAll(querySelector));
+
+            buttons.map((b) => {
+                b.addEventListener('mouseenter', (e) => {
+                    const el = e.target;
+                    // hover background-color
+                    if (el.dataset.wptbElementHoverBgColor) {
+                        el.style.backgroundColor = el.dataset.wptbElementHoverBgColor;
+                    }
+                    // hover color
+                    if (el.dataset.wptbElementHoverTextColor) {
+                        el.style.color = el.dataset.wptbElementHoverTextColor;
+                    }
+                    // hover scale
+                    if (el.dataset.wptbElementHoverScale) {
+                        el.style.transform = `scale(${b.dataset.wptbElementHoverScale})`;
+                    }
+                });
+
+                b.addEventListener('mouseleave', (e) => {
+                    // reset all supported hover properties to their default value
+                    const el = e.target;
+                    if (el.dataset.wptbElementHoverBgColor) {
+                        el.style.backgroundColor = el.dataset.wptbElementBgColor;
+                    }
+                    if (el.dataset.wptbElementHoverTextColor) {
+                        el.style.color = el.dataset.wptbElementColor;
+                    }
+                    if (el.dataset.wptbElementHoverScale) {
+                        el.style.transform = 'scale(1)';
+                    }
+                });
+            });
+        }
+
+        // add all kind of functions that have event listeners before responsive table reconstruction to make sure those event listeners are carried over to their clones
+        addHoverSupport('.wptb-preview-table .wptb-button');
+
+        /**
          * function wptb_tableContainerSectionSmall
          * add class ( wptb-section-small ) in small width
          * remove this class in large width
@@ -464,6 +506,9 @@
                                         }
 
                                         tableContainer.appendChild( newTable );
+
+                                        // restore events to element clones
+                                        WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
                                     }
                                 }
                             } else {
@@ -613,45 +658,6 @@
             }
         }
 
-        /**
-         * Adds hover color change support for supported button elements.
-         */
-        function addHoverSupport() {
-            const buttons = Array.from(document.querySelectorAll('.wptb-button'));
-
-            buttons.map((b) => {
-                b.addEventListener('mouseenter', (e) => {
-                    const el = e.target;
-                    // hover background-color
-                    if (el.dataset.wptbElementHoverBgColor) {
-                        el.style.backgroundColor = el.dataset.wptbElementHoverBgColor;
-                    }
-                    // hover color
-                    if (el.dataset.wptbElementHoverTextColor) {
-                        el.style.color = el.dataset.wptbElementHoverTextColor;
-                    }
-                    // hover scale
-                    if (b.dataset.wptbElementHoverScale) {
-                        b.style.transform = `scale(${b.dataset.wptbElementHoverScale})`;
-                    }
-                });
-
-                b.addEventListener('mouseleave', (e) => {
-                    // reset all supported hover properties to their default value
-                    const el = e.target;
-                    if (el.dataset.wptbElementHoverBgColor) {
-                        el.style.backgroundColor = el.dataset.wptbElementBgColor;
-                    }
-                    if (el.dataset.wptbElementHoverTextColor) {
-                        el.style.color = el.dataset.wptbElementColor;
-                    }
-                    if (b.dataset.wptbElementHoverScale) {
-                        b.style.transform = 'scale(1)';
-                    }
-                });
-            });
-        }
-        addHoverSupport();
     });
 
 })( jQuery );

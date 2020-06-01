@@ -1,5 +1,7 @@
 /**
  * Event catcher for table element clone operations
+ *
+ * cloneNode function of HTMLElement can not copy event listeners attached to said elements. In order to reflect those event listeners to element clones, we have to intercept events and keep a list of them for any future table element clone operations. Only events belonging to table elements will be intercepted while all other events will be send to their original targets.
  */
 
 // assign event catcher object to global space
@@ -8,12 +10,14 @@
 })(self ? self : global, () => {
 
     /**
-     * Event catcher singleton factory
+     * Event catcher singleton factory.
      *
+     * @param {string} mainTableQuery query selector for the main table
+     * @param {string} cloneTableQuery query selector for the clone table
      * @returns {{getInstance: (function(): EventCatcherSingle)}}
      * @constructor
      */
-    function WptbEventCatcher() {
+    function WptbEventCatcher(mainTableQuery, cloneTableQuery) {
         /**
          * Check current element for relation with wptb
          *
@@ -42,7 +46,7 @@
         }
 
         /**
-         * Generate unique id .
+         * Generate unique id.
          *
          * @param {number} idLength id length
          * @returns {string} generated unique id
@@ -61,10 +65,12 @@
         }
 
         /**
-         * Event catcher object
+         * Event catcher object.
+         *
+         * @param {string} cloneParentQuery query for clone parent
          * @constructor
          */
-        function EventCatcherSingle() {
+        function EventCatcherSingle(cloneParentQuery) {
             // assign the current context to use its properties at other contexts
             const vm = this;
 
@@ -113,23 +119,33 @@
 
                 if (isWptbRelated) {
                     let captureId = null;
+                    let fullCaptureClass = null;
 
                     // find if current element has registered any events
                     this.classList.forEach(c => {
                         const testResult = captureRegex.exec(c);
                         if (testResult) {
                             captureId = testResult[1];
+                            fullCaptureClass = testResult[0];
                         }
                     });
 
-                    // if this element don't have an entry for captured elements, assign unique class
-                    if (captureId === null) {
-                        captureId = generateUniqueId(5);
-                        this.classList.add(`${captureClassTemplate}${captureId}`);
-                    }
+                    // check if main element is already cloned or not
+                    const elementClone = document.querySelector(`${cloneParentQuery} .${fullCaptureClass}`);
 
-                    // capture the event for the current element
-                    vm.addToCaptured(captureId, eventName, callback);
+                    if (elementClone) {
+                        // if there is already a clone of element, then redirect the event to that clone instead of capturing and storing it
+                        elementClone._addEventListener(eventName, callback);
+                    } else {
+                        // if this element don't have an entry for captured elements, assign unique class
+                        if (captureId === null) {
+                            captureId = generateUniqueId(5);
+                            this.classList.add(`${captureClassTemplate}${captureId}`);
+                        }
+
+                        // capture the event for the current element
+                        vm.addToCaptured(captureId, eventName, callback);
+                    }
                 }
 
                 // call default event listener to attach it to the element
@@ -137,7 +153,7 @@
             }
 
             /**
-             * Restore events to element clones
+             * Restore events to element clones.
              *
              * @param {string} parentTableQuery query string for table clone
              */
@@ -171,7 +187,7 @@
             }
         }
 
-        const instance = new EventCatcherSingle();
+        const instance = new EventCatcherSingle(cloneTableQuery);
 
         /**
          * Get event catcher instance
@@ -186,8 +202,5 @@
     }
 
 
-    return WptbEventCatcher();
+    return WptbEventCatcher('.wptb-preview-table', '.wptb-preview-table-mobile');
 })
-
-
-
