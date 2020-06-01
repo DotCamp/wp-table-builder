@@ -236,10 +236,12 @@ STYLE;
 		$plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		// had to split footer and header scripts to load header scripts with higher priority to overwrite certain functionality, and footer scripts with lower priority to let third party scripts make their manipulations before responsive table reconstructions begin
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_header_scripts', PHP_INT_MIN );
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public , 'enqueue_footer_scripts', PHP_INT_MAX);
 
 //		add_action( 'wp_head', [ $this, 'content_width_header' ] );
-
 	}
 
 	/**
