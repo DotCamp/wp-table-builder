@@ -21,6 +21,7 @@ if ( ! defined( 'WPINC' ) ) {
  *  max => maximum value of the slider
  *  step => step value of the slider
  *  defaultValue => default value of the slider
+ *  suffix => suffix to be added to the end of value
  *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
@@ -50,11 +51,14 @@ class Control_Range extends Base_Control {
 		?>
         <#
         const uniqueItemClass = data.elementControlTargetUnicClass;
-
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+        const elemContainer = data.elemContainer;
+        const suffix = data.suffix;
         #>
         <div id="{{{uniqueItemClass}}}">
-            <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step" :default-value="defaultValue"></range-control>
+            <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step"
+                           :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
+                           elem-container="{{{elemContainer}}}" suffix="{{{suffix}}}"></range-control>
         </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');

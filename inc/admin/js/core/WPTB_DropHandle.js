@@ -60,11 +60,13 @@ var WPTB_DropHandle = function (thisElem, e) {
             }
             
             let td;
+            // at successful dom mounts, will be firing element:mounted:dom event to mark the exact moment element is mounted to the dom
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
                 thisElem = wptbDropHandle.getDOMParentElement();
                 if ( thisElem.nodeName.toLowerCase() == 'td' ) {
                     td = wptbDropHandle.getDOMParentElement();
                     td.appendChild( element );
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 }
             } else {
                 let innerElement = wptbDropHandle.getDOMParentElement();
@@ -72,9 +74,11 @@ var WPTB_DropHandle = function (thisElem, e) {
                 
                 if( wptbDropHandle.dataset.text == 'Above Element' ) {
                     td.insertBefore( element, innerElement );
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 } else if( wptbDropHandle.dataset.text == 'Below Element' ) {
                     let innerElementNext = innerElement.nextSibling;
                     td.insertBefore( element, innerElementNext );
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 }
             }
             

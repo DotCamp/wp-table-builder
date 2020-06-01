@@ -15,6 +15,9 @@ function operationSelect(element, type) {
 		case 'dataset':
 			operation = element.dataset;
 			break;
+		case 'style':
+			operation = element.style;
+			break;
 		default:
 			operation = element.dataset;
 			break;

@@ -65,15 +65,20 @@ class Controls_Manager {
 	 */
 	const TOGGLE = 'toggle';
 
-    /**
-     *  Adding on toggle2 control.
-     */
-    const TOGGLE2 = 'toggle2';
+	/**
+	 *  Adding on toggle2 control.
+	 */
+	const TOGGLE2 = 'toggle2';
 
 	/**
 	 *  Adding select control.
 	 */
 	const SELECT = 'select';
+
+	/**
+	 *  Adding select control.
+	 */
+	const SELECT2 = 'select2';
 
 	/**
 	 *  Adding checkbox control.
@@ -139,6 +144,7 @@ class Controls_Manager {
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
+	const STYLE = 'style';
 
 	/**
 	 * Controls.
@@ -175,8 +181,9 @@ class Controls_Manager {
 			self::TEXT,
 			self::NUMBER,
 			self::TOGGLE,
-            self::TOGGLE2,
+			self::TOGGLE2,
 			self::SELECT,
+			self::SELECT2,
 			self::CHECKBOX,
 			self::TEXTAREA,
 			self::BUTTON,

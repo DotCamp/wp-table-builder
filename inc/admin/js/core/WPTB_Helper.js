@@ -464,8 +464,8 @@ var WPTB_Helper = {
         }
     },
     // function which set handler for event of changes of control
-    controlsInclude: function( element, functionHandler ) {
-        if( element && typeof element === 'object' && functionHandler && typeof functionHandler === 'function' ) {
+    controlsInclude: function( element, functionHandler, acceptEventValues = false ) {
+        if( element && typeof element === 'object' && typeof functionHandler === 'function' ) {
             element.addEventListener( 'element:controls:active', function() {
                 if(!element.hasOwnProperty('controlConnectFunctionsName') ||
                     !Array.isArray(element.controlConnectFunctionsName) ||
@@ -529,9 +529,15 @@ var WPTB_Helper = {
                                             if( control.length > 0 && controlName ) {
                                                 let targetControlValue = WPTB_Helper.targetControlValueGet( control );
 
-                                                controls[controlName] = targetControlValue;
+                                                if(acceptEventValues) {
+                                                    controls[controlName] = {
+                                                        targetValue: targetControlValue,
+                                                        eventValue: e.detail.value
+                                                    }
+                                                }else {
+                                                    controls[controlName] = targetControlValue;
+                                                }
                                             }
-
                                             functionHandler( controls, element );
                                         }, false );
                                     }
