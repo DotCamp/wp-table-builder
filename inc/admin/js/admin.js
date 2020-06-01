@@ -1385,6 +1385,11 @@ var WPTB_Helper = {
                     if (elementKind) {
                         var elementOptionsContainer = document.querySelector('.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2]);
 
+                        // from time to time depend on table cells hierarchy, cell td items may catch mouse clicks which are intended for elements. since the active section is not cell management, this will gives and unharmfull error of not found element, simple check for null equality will be sufficient for now.
+                        if (!elementOptionsContainer) {
+                            return;
+                        }
+
                         var elementOptions = elementOptionsContainer.querySelectorAll('.wptb-element-option');
 
                         for (var i = 0; i < elementOptions.length; i++) {
