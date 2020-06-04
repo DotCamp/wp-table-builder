@@ -56,11 +56,6 @@ export default {
 			default: 1,
 			required: false,
 		},
-		suffix: {
-			type: String,
-			default: '',
-			required: false,
-		},
 	},
 	mixins: [ControlBase],
 	mounted() {
@@ -68,24 +63,10 @@ export default {
 	},
 	watch: {
 		elementMainValue(n) {
-			if (this.suffix !== '') {
-				const suffixTestRegex = new RegExp(`^(.+)${this.suffix}$`, 'g');
-				const testResult = suffixTestRegex.exec(n);
-
-				if (testResult) {
-					this.elementMainValue = testResult[1];
-					return;
-				}
-			}
-
-			let clampedValue = this.clampValue(n);
-
-			// add suffix to final value before applying it to selectors
-			if (this.suffix !== '') {
-				clampedValue += this.suffix;
-			}
+			const clampedValue = this.clampValue(n);
 
 			this.setAllValues(clampedValue);
+
 			// check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
 			this.generateChangeEvent(clampedValue);
 

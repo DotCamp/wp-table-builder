@@ -3995,3 +3995,48 @@ wptb_shortcode_container_element {
     opacity: 1 !important;
 }
 
+.wptb-cell-related-drop-handle {
+    position: fixed;
+    display: none;
+    background-color: #e2e8f0c7;
+    z-index: 300000;
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+    animation: wptb-basic-appear 0.2s ease-out;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #4a5568;
+}
+
+.wptb-control-media-select-button {
+    width: 100px;
+    height: 50px;
+    border: 1px solid var(--wptb-plugin-gray-400);
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.wptb-control-media-button-wrapper {
+    position: relative;
+}
+
+.wptb-control-media-clear-button{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -5px;
+    right: -10px;
+    color: red;
+    cursor: pointer;
+}
+
+.wptb-control-media-clear-button span {
+    transform: scale(1.8);
+}
+
+

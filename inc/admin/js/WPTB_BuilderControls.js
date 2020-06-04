@@ -12163,6 +12163,8 @@ exports.default = void 0;
 
 /**
  * Selector helper functions for element data retrieval.
+ *
+ * One of the advanced functionality of selector module is, it can get/set values with a defined format so only raw values will be get and formatted values can be set. Format replace string is {$}. This operator will be replaced with the raw value of the control element. For example; a format of '{$}px' will be translated to '15px' in a control with a value of 15. When getting that value, 15 will be returned. While setting it, this value will be formatted into '15px'.
  */
 
 /**
@@ -12204,16 +12206,30 @@ function operationSelect(element, type) {
 function getTargetValue(selector) {
   var query = selector.query,
       type = selector.type,
-      key = selector.key;
+      key = selector.key,
+      format = selector.format;
   var element = document.querySelector(query);
   var operation = operationSelect(element, type);
 
   if (operation) {
+    var value = operation[key];
+
+    if (format) {
+      var regExpFormat = format.replace('{$}', '(.+)');
+      var regExp = new RegExp("^".concat(regExpFormat, "$"), 'g');
+      var testResult = regExp.exec(value);
+
+      if (testResult) {
+        value = testResult[1];
+      }
+    }
+
     return {
       element: element,
-      value: operation[key],
+      value: value,
       type: type,
-      key: key
+      key: key,
+      format: format
     };
   }
 
@@ -12230,9 +12246,17 @@ function getTargetValue(selector) {
 function setTargetValue(selector, value) {
   var element = selector.element,
       type = selector.type,
-      key = selector.key;
+      key = selector.key,
+      format = selector.format;
   var operation = operationSelect(element, type);
-  operation[key] = value;
+  var tempVal = value;
+
+  if (format) {
+    tempVal = format.replace('{$}', value);
+    tempVal = tempVal.replace(new RegExp(/\\/g), '');
+  }
+
+  operation[key] = tempVal;
 }
 /**
  * Set values of target selectors.
@@ -12853,11 +12877,6 @@ var _default = {
       type: Number,
       default: 1,
       required: false
-    },
-    suffix: {
-      type: String,
-      default: '',
-      required: false
     }
   },
   mixins: [_ControlBase.default],
@@ -12866,22 +12885,7 @@ var _default = {
   },
   watch: {
     elementMainValue: function elementMainValue(n) {
-      if (this.suffix !== '') {
-        var suffixTestRegex = new RegExp("^(.+)".concat(this.suffix, "$"), 'g');
-        var testResult = suffixTestRegex.exec(n);
-
-        if (testResult) {
-          this.elementMainValue = testResult[1];
-          return;
-        }
-      }
-
-      var clampedValue = this.clampValue(n); // add suffix to final value before applying it to selectors
-
-      if (this.suffix !== '') {
-        clampedValue += this.suffix;
-      }
-
+      var clampedValue = this.clampValue(n);
       this.setAllValues(clampedValue); // check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
 
       this.generateChangeEvent(clampedValue);
@@ -13199,7 +13203,187 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Select2Control":"containers/Select2Control.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Select2Control":"containers/Select2Control.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"containers/MediaSelectControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  mixins: [_ControlBase.default],
+  props: {
+    mediaAttr: {
+      type: Object,
+      required: false,
+      default: function _default() {
+        return {
+          title: 'Media Select',
+          button: {
+            text: 'Select'
+          },
+          multiple: false
+        };
+      }
+    }
+  },
+  data: function data() {
+    return {
+      frame: null
+    };
+  },
+  mounted: function mounted() {
+    this.assignDefaultValue();
+  },
+  watch: {
+    elementMainValue: function elementMainValue(n) {
+      this.setAllValues(n);
+      this.setTableDirty(true);
+    }
+  },
+  computed: {
+    previewImageUrl: function previewImageUrl() {
+      return "url(\"".concat(this.elementMainValue, "\")");
+    }
+  },
+  methods: {
+    open: function open() {
+      var _this = this;
+
+      if (this.frame) {
+        this.frame.open();
+      } else {
+        this.frame = wp.media(this.mediaAttr);
+        this.frame.on('select', function () {
+          var _this$frame$state$get = _this.frame.state().get('selection').first().toJSON(),
+              url = _this$frame$state$get.url;
+
+          _this.elementMainValue = url;
+        });
+        this.frame.open();
+      }
+    },
+    resetImg: function resetImg() {
+      this.elementMainValue = '';
+    }
+  }
+};
+exports.default = _default;
+        var $d9cab9 = exports.default || module.exports;
+      
+      if (typeof $d9cab9 === 'function') {
+        $d9cab9 = $d9cab9.options;
+      }
+    
+        /* template */
+        Object.assign($d9cab9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
+    [
+      _c("div", { staticClass: "wptb-settings-space-between" }, [
+        _c("p", { staticClass: "wptb-settings-item-title" }, [
+          _vm._v(_vm._s(_vm.label))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-control-media-button-wrapper" }, [
+          _c("div", {
+            staticClass: "wptb-control-media-select-button",
+            style: { backgroundImage: _vm.previewImageUrl },
+            on: { click: _vm.open }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "wptb-control-media-clear-button",
+              on: {
+                "!click": function($event) {
+                  return _vm.resetImg($event)
+                }
+              }
+            },
+            [_c("span", { staticClass: "dashicons dashicons-dismiss" })]
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_MediaSelectControl.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _MediaSelectControl = _interopRequireDefault(require("../containers/MediaSelectControl"));
+
+var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Media select control
+ */
+
+/* eslint-disable camelcase */
+var _default = {
+  name: 'ControlMediaSelect',
+  handler: function rangeControlJS(uniqueId) {
+    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
+
+    new _vue.default({
+      data: data,
+      components: {
+        MediaSelectControl: _MediaSelectControl.default
+      }
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/MediaSelectControl":"containers/MediaSelectControl.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -13210,6 +13394,8 @@ var _WPTB_IconSelectControl = _interopRequireDefault(require("./mountPoints/WPTB
 var _WPTB_RangeControl = _interopRequireDefault(require("./mountPoints/WPTB_RangeControl"));
 
 var _WPTB_Select2Control = _interopRequireDefault(require("./mountPoints/WPTB_Select2Control"));
+
+var _WPTB_MediaSelectControl = _interopRequireDefault(require("./mountPoints/WPTB_MediaSelectControl"));
 
 var _WPTB_ControlsManager = _interopRequireDefault(require("./functions/WPTB_ControlsManager"));
 
@@ -13228,7 +13414,7 @@ _vue.default.config.productionTip = false; // eslint-disable-next-line no-restri
 var global = self || void 0; // adding controls manager to global space
 
 global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default];
 /**
  * Register control element.
  *
@@ -13240,5 +13426,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

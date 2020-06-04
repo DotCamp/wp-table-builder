@@ -42,6 +42,17 @@ class Elements_Manager extends Elements_Manager_Base {
 	 */
 	const PRO = 'pro';
 
+
+	/**
+	 * Elements position on table is relative to the table data
+	 */
+	const TD_RELATIVE = 'td_relative';
+
+	/**
+	 * Element's position on table is relative to other elements
+	 */
+	const ELEMENT_RELATIVE = 'element_relative';
+
 	/**
 	 * Elements names array.
 	 *

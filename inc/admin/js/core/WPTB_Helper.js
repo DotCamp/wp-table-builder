@@ -1895,5 +1895,33 @@ var WPTB_Helper = {
                 WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
             }
         }
-    }
+    },
+    /**
+     * Get parent html element of given type
+     *
+     * @param {string} parentType type of parent element
+     * @param {HTMLElement} el current element
+     * @returns {*} html element of type
+     */
+    getParentOfType: (parentType, el) => {
+       if(el.nodeName === parentType.toUpperCase()) {
+           return el;
+       }
+
+       return WPTB_Helper.getParentOfType(parentType , el.parentElement);
+    },
+    // current relative type of drag element
+    // this type is used on differentiating certain elements based on their positioning on table
+    dragRelativeType : '',
+    /**
+     *
+     * @param {string} val drag relative type
+     */
+    setDragRelativeType: function (val){
+        this.dragRelativeType = val;
+    },
+    // get drag relative type
+    getDragRelativeType : function(){
+        return this.dragRelativeType;
+    },
 }

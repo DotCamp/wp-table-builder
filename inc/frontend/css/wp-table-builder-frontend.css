@@ -59,6 +59,7 @@ table.wptb-preview-table {
     animation: show 0.3s 1;
     animation-fill-mode: forwards;
     animation-delay: 0.7s;
+    overflow: visible;
 }
 
 @keyframes show {

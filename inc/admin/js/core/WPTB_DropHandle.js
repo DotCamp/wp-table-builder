@@ -1,11 +1,54 @@
-var WPTB_DropHandle = function (thisElem, e) {
-    
+var WPTB_DropHandle = function (thisElem, e, hide = false) {
+
     let wptbDropHandle,
         wptbDropBorderMarker,
         wptbDropBorderMarkerTop,
         wptbDropBorderMarkerRight,
         wptbDropBorderMarkerBottom,
         wptbDropBorderMarkerLeft;
+
+    /**
+     * Add px suffix to a value
+     *
+     * @param {any} val value
+     * @returns {string} string value suffixed with px
+     */
+    function toPx(val){
+        return `${val}px`;
+    }
+
+    if(WPTB_Helper.getDragRelativeType() === 'td_relative'){
+        let cellRelatedDropHandle = document.querySelector('.wptb-cell-related-drop-handle');
+        if(hide && cellRelatedDropHandle ){
+            cellRelatedDropHandle.style.display = 'none';
+            return;
+        }
+       if(cellRelatedDropHandle === null){
+           const range = document.createRange();
+           range.setStart(document.body , 0);
+
+           const shadowRoot = range.createContextualFragment('<div class="wptb-cell-related-drop-handle">Add to cell</div>').children[0];
+
+           document.body.appendChild(shadowRoot);
+           cellRelatedDropHandle = shadowRoot.children[0];
+       }
+
+       const parentTd = WPTB_Helper.getParentOfType('td', thisElem);
+       const {top,left,width,height} = parentTd.getBoundingClientRect();
+
+       if(!cellRelatedDropHandle){
+           return;
+       }
+
+        cellRelatedDropHandle.style.display = 'flex';
+        cellRelatedDropHandle.style.top = toPx(top);
+        cellRelatedDropHandle.style.width = toPx(width);
+        cellRelatedDropHandle.style.height = toPx(height);
+        cellRelatedDropHandle.style.left = toPx(left);
+
+       return;
+    }
+
     if ( document.getElementsByClassName( 'wptb-drop-handle' ).length == 0 ) {
         wptbDropHandle = document.createElement( 'div' );
         wptbDropHandle.classList.add( 'wptb-drop-handle' );
@@ -60,7 +103,6 @@ var WPTB_DropHandle = function (thisElem, e) {
             }
             
             let td;
-            // at successful dom mounts, will be firing element:mounted:dom event to mark the exact moment element is mounted to the dom
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
                 thisElem = wptbDropHandle.getDOMParentElement();
                 if ( thisElem.nodeName.toLowerCase() == 'td' ) {

@@ -626,9 +626,58 @@ var WPTB_Cell = function WPTB_Cell(callback, DOMElement) {
     return this;
 };
 var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
+    var hide = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
 
     var wptbDropHandle = void 0,
         wptbDropBorderMarker = void 0;
+
+    /**
+     * Add px suffix to a value
+     *
+     * @param {any} val value
+     * @returns {string} string value suffixed with px
+     */
+    function toPx(val) {
+        return val + 'px';
+    }
+
+    if (WPTB_Helper.getDragRelativeType() === 'td_relative') {
+        var cellRelatedDropHandle = document.querySelector('.wptb-cell-related-drop-handle');
+        if (hide && cellRelatedDropHandle) {
+            cellRelatedDropHandle.style.display = 'none';
+            return;
+        }
+        if (cellRelatedDropHandle === null) {
+            var range = document.createRange();
+            range.setStart(document.body, 0);
+
+            var shadowRoot = range.createContextualFragment('<div class="wptb-cell-related-drop-handle">Add to cell</div>').children[0];
+
+            document.body.appendChild(shadowRoot);
+            cellRelatedDropHandle = shadowRoot.children[0];
+        }
+
+        var parentTd = WPTB_Helper.getParentOfType('td', thisElem);
+
+        var _parentTd$getBounding = parentTd.getBoundingClientRect(),
+            _top = _parentTd$getBounding.top,
+            _left = _parentTd$getBounding.left,
+            width = _parentTd$getBounding.width,
+            _height = _parentTd$getBounding.height;
+
+        if (!cellRelatedDropHandle) {
+            return;
+        }
+
+        cellRelatedDropHandle.style.display = 'flex';
+        cellRelatedDropHandle.style.top = toPx(_top);
+        cellRelatedDropHandle.style.width = toPx(width);
+        cellRelatedDropHandle.style.height = toPx(_height);
+        cellRelatedDropHandle.style.left = toPx(_left);
+
+        return;
+    }
     if (document.getElementsByClassName('wptb-drop-handle').length == 0) {
         wptbDropHandle = document.createElement('div');
         wptbDropHandle.classList.add('wptb-drop-handle');
@@ -679,7 +728,6 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             }
 
             var td = void 0;
-            // at successful dom mounts, will be firing element:mounted:dom event to mark the exact moment element is mounted to the dom
             if (wptbDropHandle.dataset.text == 'Drop Here') {
                 thisElem = wptbDropHandle.getDOMParentElement();
                 if (thisElem.nodeName.toLowerCase() == 'td') {
@@ -2670,6 +2718,34 @@ var WPTB_Helper = {
                 WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableOddRowBackground, _details2);
             }
         }
+    },
+    /**
+     * Get parent html element of given type
+     *
+     * @param {string} parentType type of parent element
+     * @param {HTMLElement} el current element
+     * @returns {*} html element of type
+     */
+    getParentOfType: function getParentOfType(parentType, el) {
+        if (el.nodeName === parentType.toUpperCase()) {
+            return el;
+        }
+
+        return WPTB_Helper.getParentOfType(parentType, el.parentElement);
+    },
+    // current relative type of drag element
+    // this type is used on differentiating certain elements based on their positioning on table
+    dragRelativeType: '',
+    /**
+     *
+     * @param {string} val drag relative type
+     */
+    setDragRelativeType: function setDragRelativeType(val) {
+        this.dragRelativeType = val;
+    },
+    // get drag relative type
+    getDragRelativeType: function getDragRelativeType() {
+        return this.dragRelativeType;
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -3025,6 +3101,9 @@ var WPTB_Settings = function WPTB_Settings() {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData('wptbElement', event.target.dataset.wptbElement);
             event.dataTransfer.setData('wptbElIndic-' + event.target.dataset.wptbElement, 'wptbElIndic-' + event.target.dataset.wptbElement);
+
+            // set drag relative helper field for future use
+            WPTB_Helper.setDragRelativeType(this.dataset.wptbRelativeElements || '');
         };
         elems[i].ondragend = function () {
             WPTB_Helper.elementDragEndClear();
@@ -5164,7 +5243,9 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
         e.preventDefault();
         WPTB_DropHandle(this, e);
     };
-    element.ondragleave = function () {};
+    element.ondragleave = function (e) {
+        WPTB_DropHandle(this, e, true);
+    };
     element.ondrop = function (e) {
         this.classList.remove('wptb-ondragenter');
         var element = void 0,
@@ -5193,20 +5274,29 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
             //element.classList.remove( 'wptb-moving-mode' );
         }
 
-        if (wptbDropHandle.style.display == 'block') {
+        if (WPTB_Helper.getDragRelativeType() === 'td_relative') {
+            WPTB_DropHandle(this, e, true);
+            var parentCell = WPTB_Helper.getParentOfType('td', e.target);
+
+            parentCell.appendChild(element);
+            WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
+        } else if (wptbDropHandle.style.display == 'block') {
             var td = void 0;
             if (wptbDropHandle.dataset.text == 'Drop Here') {
                 td = wptbDropHandle.getDOMParentElement();
                 td.appendChild(element);
+                WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
             } else {
                 var innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
 
                 if (wptbDropHandle.dataset.text == 'Above Element') {
                     td.insertBefore(element, innerElement);
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 } else if (wptbDropHandle.dataset.text == 'Below Element') {
                     var innerElementNext = innerElement.nextSibling;
                     td.insertBefore(element, innerElementNext);
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 }
             }
 
@@ -5229,8 +5319,10 @@ var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
             return;
         }
 
-        wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
+        if (wptbDropHandle) {
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
+        }
 
         WPTB_innerElementSet(element);
 

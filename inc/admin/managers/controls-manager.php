@@ -130,6 +130,11 @@ class Controls_Manager {
 	const RANGE = 'range';
 
 	/**
+	 * Adding media select control.
+	 */
+	const MEDIA = 'media_select';
+
+	/**
 	 * Adding html output control.
 	 */
 	const HTML_OUTPUT = 'html_output';
@@ -194,8 +199,9 @@ class Controls_Manager {
 			self::SECTION_GROUP_TAB_CONTENT_END,
 			self::ICON_SELECT,
 			self::RANGE,
-			self::HTML_OUTPUT,
-			self::DATA_MULE
+			self::DATA_MULE,
+			self::MEDIA,
+			self::HTML_OUTPUT
 		];
 	}
 
