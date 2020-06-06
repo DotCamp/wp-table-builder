@@ -120,6 +120,5 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
              style="display: none;">
             <!-- here will be cell controls -->
         </div>
-        <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-cell-settings-element.php'; ?>
     </div>
 </div>

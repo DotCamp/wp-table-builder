@@ -1,7 +1,11 @@
 var WPTB_DropHandle = function (thisElem, e) {
     
     let wptbDropHandle,
-        wptbDropBorderMarker;
+        wptbDropBorderMarker,
+        wptbDropBorderMarkerTop,
+        wptbDropBorderMarkerRight,
+        wptbDropBorderMarkerBottom,
+        wptbDropBorderMarkerLeft;
     if ( document.getElementsByClassName( 'wptb-drop-handle' ).length == 0 ) {
         wptbDropHandle = document.createElement( 'div' );
         wptbDropHandle.classList.add( 'wptb-drop-handle' );
@@ -9,10 +13,10 @@ var WPTB_DropHandle = function (thisElem, e) {
         wptbDropBorderMarker = document.createElement( 'div' );
         wptbDropBorderMarker.classList.add( 'wptb-drop-border-marker' );
         
-        let wptbDropBorderMarkerTop = document.createElement( 'div' ),
-            wptbDropBorderMarkerRight = document.createElement( 'div' ),
-            wptbDropBorderMarkerBottom = document.createElement( 'div' ),
-            wptbDropBorderMarkerLeft = document.createElement( 'div' );
+        wptbDropBorderMarkerTop = document.createElement( 'div' ),
+        wptbDropBorderMarkerRight = document.createElement( 'div' ),
+        wptbDropBorderMarkerBottom = document.createElement( 'div' ),
+        wptbDropBorderMarkerLeft = document.createElement( 'div' );
         
         wptbDropBorderMarkerTop.classList.add( 'wptb-drop-border-marker-top' );
         wptbDropBorderMarkerRight.classList.add( 'wptb-drop-border-marker-right' );
@@ -81,13 +85,6 @@ var WPTB_DropHandle = function (thisElem, e) {
                 if( table.classList.contains( 'wptb-table-preview-head' ) ) {
                     WPTB_Helper.dataTitleColumnSet( table );
                 }
-            }
-            
-            // start item javascript if item is new
-            let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
-            let elemKind = infArr[1];
-            if ( e.dataTransfer.getData( 'wptbElement' ) && ( elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list' ) ) {
-                //WPTB_Helper.elementStartScript( element );
             }
             
             wptbDropHandle.style.display = 'none';

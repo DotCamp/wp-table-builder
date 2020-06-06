@@ -2,7 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Base;
 
-use WP_Table_Builder\Inc\Admin\Base\Controls_Stack;
+use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager;
 use WP_Table_Builder\Inc\Core\Init as Init;
 use WP_Table_Builder as NS;
@@ -23,7 +23,7 @@ if ( ! defined( 'WPINC' ) ) {
  * @since 1.1.2
  * @abstract
  */
-abstract class Element_Base_Object extends Controls_Stack {
+abstract class Element_Base extends Element_Base_Object {
 	/**
 	 * Get directory icon.
 	 *
@@ -47,15 +47,6 @@ abstract class Element_Base_Object extends Controls_Stack {
 	 *
 	 */
 	abstract public function get_url_icon();
-
-	/**
-	 * Include file with js script for element
-	 *
-	 * @since 1.1.2
-	 * @access protected
-	 */
-	public function element_script() {
-	}
 
 	/**
 	 * Render element output in the editor.
@@ -93,25 +84,6 @@ abstract class Element_Base_Object extends Controls_Stack {
         </script>
 
 		<?php
-	}
-
-	/**
-	 * Output element script.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 */
-	public function output_scripts() {
-		$directory_sctipt = $this->element_script();
-		if ( $directory_sctipt && file_exists( $directory_sctipt ) ) {
-			?>
-            <script type="text/javascript">
-                WPTB_ElementsScriptsLauncher['<?php echo $this->get_name(); ?>'] = function (element) {
-					<?php include $directory_sctipt; ?>
-                }
-            </script>
-			<?php
-		}
 	}
 
 	/**

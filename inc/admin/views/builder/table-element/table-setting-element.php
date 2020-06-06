@@ -1,8 +1,8 @@
 <?php
 
-namespace WP_Table_Builder\Inc\Admin\Views\Builder;
+namespace WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element;
 
-use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
+use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Table_Settings_Element extends Controls_Stack {
+class Table_Setting_Element extends Element_Base_Object {
 	/**
 	 * Get name.
 	 *
@@ -37,6 +37,16 @@ class Table_Settings_Element extends Controls_Stack {
 	public function get_title() {
 		return esc_html_e( 'Table Setting', 'wp-table-builder' );
 	}
+
+    /**
+     * Include file with js script for element button
+     *
+     * @since 1.1.2
+     * @access protected
+     */
+    public function element_script() {
+        return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-settings.js' );
+    }
 
 	/**
 	 * Register the element controls.

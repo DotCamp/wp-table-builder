@@ -76,7 +76,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             }
 
             cellHighlighted = cellHighlighted[0];
-            WPTB_Helper.elementOptionsSet( 'table_cell', cellHighlighted );
+            WPTB_Helper.elementOptionsSet( 'table_cell_setting', cellHighlighted );
 
             let infArr = cellHighlighted.className.match( /wptb-element-((.+-)\d+)/i );
 
@@ -804,6 +804,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
@@ -848,6 +851,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
@@ -954,6 +960,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             table.addRowHeight();
             WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
+
+            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();
         }
@@ -1011,6 +1020,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             table.addColumnWidth();
             WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
+
+            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();
         }
@@ -1052,6 +1064,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             table.addColumnWidth();
             WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
+
+            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();
         }
@@ -1166,6 +1181,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         table.addColumnWidth();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after');
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
@@ -1297,6 +1315,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
@@ -1365,6 +1386,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         table.addRowHeight();
         WPTB_Helper.dataTitleColumnSet( table );
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };
@@ -1534,6 +1558,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
         
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     }
@@ -1601,6 +1628,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
         
         undoSelect();
+
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
     };

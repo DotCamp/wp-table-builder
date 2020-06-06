@@ -1,7 +1,7 @@
 <?php
 namespace WP_Table_Builder\Inc\Admin\Element_Classes\Elements;
 
-use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base_Object as Element_Base_Object;
+use WP_Table_Builder\Inc\Admin\Element_Classes\Base\Element_Base as Element_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -10,7 +10,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-class Text_Element extends Element_Base_Object {
+class Text_Element extends Element_Base {
     
     /**
 	 * Get element name.

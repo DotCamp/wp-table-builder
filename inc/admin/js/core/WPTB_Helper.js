@@ -314,12 +314,16 @@ var WPTB_Helper = {
         }
     },
     // run script for the pointed element
-    elementStartScript: function( element ) {
+    elementStartScript: function( element, kind ) {
         //let script = element.getElementsByTagName( 'script' );
-        let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
-        if( infArr && Array.isArray( infArr ) ) {
-            let kind = infArr[1];
-            if( kind ) {
+        if(!kind) {
+            let infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+            if( infArr && Array.isArray( infArr ) ) {
+                kind = infArr[1];
+            }
+        }
+
+        if( kind ) {
 //                let wpTemplateId = 'wptb-' + kind + '-script';
 //                let template = wp.template( wpTemplateId );
 //                let data  = {elemClass: infArr[0]};
@@ -330,11 +334,10 @@ var WPTB_Helper = {
 //                scriptNew.setAttribute( 'type', 'text/javascript' );
 //                scriptNew.innerHTML = elementScriptText;
 //                element.parentNode.appendChild( scriptNew );
-                
+
 //                element.parentNode.removeChild( scriptNew );
-                if( kind in WPTB_ElementsScriptsLauncher ) {
-                    WPTB_ElementsScriptsLauncher[kind]( element );
-                }
+            if( kind in WPTB_ElementsScriptsLauncher ) {
+                WPTB_ElementsScriptsLauncher[kind]( element );
             }
         }
     },
@@ -439,9 +442,11 @@ var WPTB_Helper = {
     },
     // function which set handler for event of changes of control
     controlsInclude: function( element, functionHandler ) {
-        if( element && typeof element === 'object' && typeof functionHandler === 'function' ) {
+        if( element && typeof element === 'object' && functionHandler && typeof functionHandler === 'function' ) {
             element.addEventListener( 'element:controls:active', function() {
-                if( ! element.hasOwnProperty( 'сontrolsConnectIndic' ) || element.сontrolsConnectIndic !== true ) {
+                if(!element.hasOwnProperty('controlConnectFunctionsName') ||
+                    !Array.isArray(element.controlConnectFunctionsName) ||
+                    element.controlConnectFunctionsName.indexOf(functionHandler.name) == -1) {
                     let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i ),
                         elementKind;
 
@@ -503,10 +508,14 @@ var WPTB_Helper = {
                                         functionHandler( controls, element );
                                     }, false );
                                 }
-
-                                element.сontrolsConnectIndic = true;
                             }
                         }
+                        
+                        if(!element.controlConnectFunctionsName && !Array.isArray(element.controlConnectFunctionsName)) {
+                            element.controlConnectFunctionsName = [];
+                        }
+
+                        element.controlConnectFunctionsName.push( functionHandler.name );
                     }
                 }
             }, false );
@@ -851,9 +860,9 @@ var WPTB_Helper = {
             if( element.classList.contains( 'wptb-preview-table' ) ) {
                 element.classList.add( 'wptb-element-main-table_setting-' + table_id );
             } else if( element.classList.contains( 'wptb-cell' ) ) {
-                let cellEditActiveClass = document.querySelector( '.wptb-element-table_cell-' + table_id );
-                if( cellEditActiveClass ) cellEditActiveClass.classList.remove( 'wptb-element-table_cell-' + table_id );
-                element.classList.add( 'wptb-element-table_cell-' + table_id );
+                let cellEditActiveClass = document.querySelector( '.wptb-element-table_cell_setting-' + table_id );
+                if( cellEditActiveClass ) cellEditActiveClass.classList.remove( 'wptb-element-table_cell_setting-' + table_id );
+                element.classList.add( 'wptb-element-table_cell_setting-' + table_id );
             }
 
             infArr = element.className.match( /wptb-element-((.+-)\d+)/i );

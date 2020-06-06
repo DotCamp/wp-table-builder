@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager_Base;
 use WP_Table_Builder as NS;
 
 // If this file is called directly, abort.
@@ -17,18 +18,18 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * @since 1.1.2
  */
-class Elements_Manager {
+class Elements_Manager extends Elements_Manager_Base {
 	/**
 	 * Elements objects.
 	 *
 	 * Holds the list of all the element objects.
 	 *
 	 * @since 1.1.2
-	 * @access private
+	 * @access protected
 	 *
 	 * @var WPTB_Element_Base_Object[]
 	 */
-	private $_element_objects = null;
+	protected $_element_objects = null;
 
 	// element types
 	/**
@@ -42,16 +43,16 @@ class Elements_Manager {
 	const PRO = 'pro';
 
 	/**
-	 * Elements file names array.
+	 * Elements names array.
 	 *
-	 * Holds the list of all the files names which have element objects.
+	 * Holds the list of all the names which have element objects.
 	 *
 	 * @since 1.1.2
-	 * @access private
+	 * @access protected
 	 *
 	 * @var array
 	 */
-	private $_build_elements_name = [
+    protected $_build_elements_name = [
 		'text',
 		'button',
 		'image',
@@ -69,76 +70,28 @@ class Elements_Manager {
 	 * @since 1.1.2
 	 * @access private
 	 */
-	private function element_elements() {
-		$this->_element_objects = [];
-
-		foreach ( $this->_build_elements_name as $element_name ) {
-			$object = $this->get_element_object( $element_name );
-
-			$this->register_element_object( $object );
-
-			$object->init_controls();
-		}
+	public function element_elements() {
+		parent::element_elements();
 
 		do_action( 'wp-table-builder/elements_registered', $this );
 	}
 
-	/**
-	 * Element Object Create.
-	 *
-	 * Return Element Object. Include the necessary element files.
-	 *
-	 * @since 1.1.2
-	 * @access private
-	 */
-	private function get_element_object( $element_name ) {
+    /**
+     * Element Object Create.
+     *
+     * Return Element Object. Include the necessary element files.
+     *
+     * @param $element_name
+     * @return mixed
+     * @since 1.1.2
+     * @access protected
+     */
+	protected function get_element_object( $element_name ) {
 		$class_name = ucfirst( $element_name ) . '_Element';
 
 		$class_name = '\WP_Table_Builder\Inc\Admin\Element_Classes\Elements\\' . $class_name;
 
 		return new $class_name();
-	}
-
-	/**
-	 * Register element object.
-	 *
-	 * Add a new element object to the list of registered element objects.
-	 *
-	 * @param WPTB_Element_Base_Object $element WP Table Builder element.
-	 *
-	 * @return true True if the element was registered.
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 */
-	public function register_element_object( $element ) {
-		$this->_element_objects[ $element->get_name() ] = $element;
-
-		return true;
-	}
-
-	/**
-	 * Get element objects.
-	 *
-	 * Returns the registered element objects list.
-	 *
-	 * @param string $element_name Optional. Element name. Default is null.
-	 *
-	 * @return WPTB_Element_Base_Object|WPTB_Element_Base_Object[]|null Registered element objects.
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 */
-	public function get_element_objects( $element_name = null ) {
-		if ( is_null( $this->_element_objects ) ) {
-			$this->element_elements();
-		}
-
-		if ( null !== $element_name ) {
-			return isset( $this->_element_objects[ $element_name ] ) ? $this->_element_objects[ $element_name ] : null;
-		}
-
-		return $this->_element_objects;
 	}
 
 	/**
@@ -151,25 +104,6 @@ class Elements_Manager {
 		foreach ( $this->get_element_objects() as $element ) {
 			if ( method_exists( $element, 'output_template' ) ) {
 				$element->output_template();
-			}
-		}
-	}
-
-	/**
-	 * Render Elements scripts.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 */
-	public function output_elements_scripts() {
-		?>
-        <script type="text/javascript">
-            var WPTB_ElementsScriptsLauncher = {};
-        </script>
-		<?php
-		foreach ( $this->get_element_objects() as $element ) {
-			if ( method_exists( $element, 'output_scripts' ) ) {
-				$element->output_scripts();
 			}
 		}
 	}

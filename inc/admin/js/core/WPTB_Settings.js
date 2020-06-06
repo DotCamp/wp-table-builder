@@ -11,7 +11,7 @@ var WPTB_Settings = function () {
             WPTB_Helper.elementDragEndClear();
         }
     };
-    let table = document.getElementsByClassName( 'wptb-preview-table' );
+
     let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
     let wptbUndo = document.getElementsByClassName( 'wptb-undo' );
     if( wptbUndo.length > 0 ) {
@@ -21,15 +21,19 @@ var WPTB_Settings = function () {
             if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
                 wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
                 let wptbUndoRedoContainer = document.getElementsByClassName( 'wptb-undo-redo-container' );
-                if( wptbUndoRedoContainer.length > 0 && table.length > 0 ) {
+                if(wptbUndoRedoContainer.length > 0) {
                     wptbUndoRedoContainer = wptbUndoRedoContainer[0];
                     wptbUndoRedoContainer.onmouseleave = function( event ) {
                         event.target.onmouseleave = '';
+                        let table = document.querySelector( '.wptb-preview-table' );
                         WPTB_Table();
+
+                        WPTB_Helper.elementOptionsSet( 'table_setting', table );
+                        WPTB_Helper.elementStartScript( table, 'table_setting' );
+                        WPTB_Helper.wptbDocumentEventGenerate( 'element:controls:active', table )
                     }
                 }
             }
-            
         }
     }
     
@@ -41,11 +45,16 @@ var WPTB_Settings = function () {
             if( ! this.classList.contains( 'wptb-undoredo-disabled' ) ) {
                 wptbTableStateSaveManager.tableStateGet( this.dataset.wptbUndoredo );
                 let wptbUndoRedoContainer = document.getElementsByClassName( 'wptb-undo-redo-container' );
-                if( wptbUndoRedoContainer.length > 0 && table.length > 0 ) {
+                if(wptbUndoRedoContainer.length > 0) {
                     wptbUndoRedoContainer = wptbUndoRedoContainer[0];
                     wptbUndoRedoContainer.onmouseleave = function( event ) {
                         event.target.onmouseleave = '';
+                        let table = document.querySelector( '.wptb-preview-table' );
                         WPTB_Table();
+
+                        WPTB_Helper.elementOptionsSet( 'table_setting', table );
+                        WPTB_Helper.elementStartScript( table, 'table_setting' );
+                        WPTB_Helper.wptbDocumentEventGenerate( 'element:controls:active', table )
                     }
                 }
             }

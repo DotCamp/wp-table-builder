@@ -1,8 +1,8 @@
 <?php
 
-namespace WP_Table_Builder\Inc\Admin\Views\Builder;
+namespace WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element;
 
-use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
+use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-class Table_Cell_Settings_Element extends Controls_Stack {
+class Table_Cell_Setting_Element extends Element_Base_Object {
     /**
      * Get name.
      *
@@ -23,7 +23,7 @@ class Table_Cell_Settings_Element extends Controls_Stack {
      *
      */
     public function get_name() {
-        return 'table_cell';
+        return 'table_cell_setting';
     }
 
     /**
@@ -106,6 +106,3 @@ class Table_Cell_Settings_Element extends Controls_Stack {
         );
     }
 }
-
-$table_cell_settings_element = new Table_Cell_Settings_Element();
-$table_cell_settings_element->init_controls();

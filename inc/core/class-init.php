@@ -6,6 +6,7 @@ use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Table_Elements_Manager as Table_Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager as Settings_Manager;
 use function add_action;
@@ -87,6 +88,18 @@ class Init {
 	 * @var elements_manager
 	 */
 	public $elements_manager;
+
+    /**
+     * Table elements manager.
+     *
+     * Holds the plugin Table Elements manager.
+     *
+     * @since 1.2.1
+     * @access public
+     *
+     * @var elements_manager
+     */
+    public $table_elements_manager;
 
 	/**
 	 * Controls manager.
@@ -319,12 +332,14 @@ STYLE;
 	 */
 	public function elements_resources() {
 		$this->elements_manager = new Elements_Manager();
+        $this->table_elements_manager = new Table_Elements_Manager();
 		$this->controls_manager = new Controls_Manager();
 
 		add_action( 'admin_footer', function () {
 			$this->elements_manager->output_elements_templates();
 			$this->elements_manager->output_directories_icons();
 			$this->elements_manager->output_elements_scripts();
+            $this->table_elements_manager->output_elements_scripts();
 			$this->controls_manager->output_controls_templates();
 			$this->controls_manager->output_control_stacks();
 		} );
