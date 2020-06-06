@@ -1052,8 +1052,27 @@ var WPTB_Helper = {
         }
     },
     linkHttpCheckChange: function linkHttpCheckChange(link) {
+        var convertToAbs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
         if (link) {
-            if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
+            // relative link checking
+            // if link starts with '/', assume it is a relative link to the origin of the current site
+            if (link.match(/^\/([\S]+)$/)) {
+                if (convertToAbs) {
+                    var currentLocation = document.location;
+                    var origin = currentLocation.origin;
+
+                    // strip out the '/' at the end of the origin name if there is any
+
+                    if (origin.match(/^(.+)\/$/)) {
+                        origin = origin.slice(-1);
+                    }
+
+                    return '' + origin + link;
+                } else {
+                    return link;
+                }
+            } else if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
                 var linkArr = link.split('/'),
                     linkClean = void 0;
                 if (Array.isArray(linkArr) && linkArr.length > 0) {
@@ -1473,6 +1492,11 @@ var WPTB_Helper = {
                     //                }
                     if (elementKind) {
                         var elementOptionsContainer = document.querySelector('.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2]);
+
+                        // from time to time depend on table cells hierarchy, cell td items may catch mouse clicks which are intended for elements. since the active section is not cell management, this will gives and unharmfull error of not found element, simple check for null equality will be sufficient for now.
+                        if (!elementOptionsContainer) {
+                            return;
+                        }
 
                         var elementOptions = elementOptionsContainer.querySelectorAll('.wptb-element-option');
 
