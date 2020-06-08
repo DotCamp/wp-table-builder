@@ -5,6 +5,11 @@ a.onclick = function (e) {
 };
 if (target) {
 	const tinyMceInitStart = function () {
+		// users tent to use native button implementation of plugin in their custom html elements, using this check to not invalidate any custom html code with tinyMCE
+		if (element.parentNode.classList.contains('wptb-custom-html-wrapper')) {
+			console.warn('element is part of custom html, aborting tinyMCE init for button.');
+			return;
+		}
 		tinyMCE.init({
 			target,
 			inline: true,

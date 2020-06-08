@@ -1,95 +1,5 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
-    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-    var node = element.getDOMElement(),
-        index,
-        copy;
-    if (node.classList.contains('wptb-ph-element')) {
-        if (kindIndexProt == undefined || copy == true) {
-            //index = document.counter.nextIndex( element.kind );
-            var wptbElements = document.getElementsByClassName('wptb-ph-element');
-            var elementIndexesArr = [];
-            for (var i = 0; i < wptbElements.length; i++) {
-                var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
-                var infArr = wptbElements[i].className.match(regex);
-                if (infArr) {
-                    elementIndexesArr.push(infArr[1]);
-                }
-            }
-            if (elementIndexesArr.length > 0) {
-                var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
-                index = elementIndexMax + 1;
-            } else {
-                index = 1;
-            }
-
-            if (copy) {
-                // change all data-elements which save parameters for different controls
-                var wptbNodeattributes = [].concat(_toConsumableArray(node.attributes));
-                for (var _i = 0; _i < wptbNodeattributes.length; _i++) {
-                    if (wptbNodeattributes[_i] && _typeof(wptbNodeattributes[_i]) === 'object' && wptbNodeattributes[_i].nodeName) {
-                        var regularText = new RegExp('data-wptb-el-' + element.kind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i");
-                        var attr = wptbNodeattributes[_i].nodeName.match(regularText);
-                        if (attr && Array.isArray(attr)) {
-                            var newDataAttributeName = wptbNodeattributes[_i].nodeName.replace(element.kind + '-' + attr[1], element.kind + '-' + index);
-                            var newDataAttributeValue = wptbNodeattributes[_i].nodeValue;
-                            node.removeAttribute(wptbNodeattributes[_i].nodeName);
-                            node.setAttribute(newDataAttributeName, newDataAttributeValue);
-                        }
-                    }
-                }
-            }
-        } else if (kindIndexProt && !copy) {
-            var kindIndexProtArr = kindIndexProt.split('-');
-            index = kindIndexProtArr[kindIndexProtArr.length - 1];
-            // start element javascript if element is new
-        }
-
-        var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
-        if (node_wptb_element_kind_num) {
-            node.classList.remove(node_wptb_element_kind_num[0]);
-        }
-        if (!node.classList.contains('wptb-ph-element')) {
-            node.classList.add('wptb-ph-element');
-            if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-                node.classList.add('wptb-element-' + element.kind + '-' + index);
-            }
-        } else {
-            if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
-                node.classList.add('wptb-element-' + element.kind + '-' + index);
-            }
-        }
-        new WPTB_ElementOptions(element, index, kindIndexProt);
-        WPTB_Helper.elementStartScript(element.getDOMElement());
-        document.counter.increment(element.kind);
-    }
-
-    node.onmouseenter = function (event) {
-        if (event.target.classList.contains('wptb-moving-mode')) {
-            return;
-        }
-
-        var wptbActionsField = new WPTB_ActionsField();
-
-        wptbActionsField.addActionField(1, node);
-
-        wptbActionsField.setParameters(node);
-
-        node.classList.remove('wptb-ondragenter');
-    };
-
-    node.onmouseleave = function (event) {
-        var wptbActionsField = new WPTB_ActionsField();
-
-        wptbActionsField.leaveFromField(event, node);
-    };
-};
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var WPTB_ActionsField = function WPTB_ActionsField() {
     var _this = this;
 
@@ -1055,33 +965,37 @@ var WPTB_Helper = {
         var convertToAbs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
         if (link) {
+            // even though it is not a best practice and a huge security risk, sometimes our users use javascript tag at href attributes, this check will make sure those tags will not be modified and returned as they are
+            if (link.match(/^(javascript:)(.+)$/)) {
+                return link;
+            }
             // relative link checking
             // if link starts with '/', assume it is a relative link to the origin of the current site
-            if (link.match(/^\/([\S]+)$/)) {
-                if (convertToAbs) {
-                    var currentLocation = document.location;
-                    var origin = currentLocation.origin;
+            else if (link.match(/^\/([\S]+)$/)) {
+                    if (convertToAbs) {
+                        var currentLocation = document.location;
+                        var origin = currentLocation.origin;
 
-                    // strip out the '/' at the end of the origin name if there is any
+                        // strip out the '/' at the end of the origin name if there is any
 
-                    if (origin.match(/^(.+)\/$/)) {
-                        origin = origin.slice(-1);
+                        if (origin.match(/^(.+)\/$/)) {
+                            origin = origin.slice(-1);
+                        }
+
+                        return '' + origin + link;
+                    } else {
+                        return link;
                     }
-
-                    return '' + origin + link;
+                } else if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
+                    var linkArr = link.split('/'),
+                        linkClean = void 0;
+                    if (Array.isArray(linkArr) && linkArr.length > 0) {
+                        linkClean = linkArr[linkArr.length - 1];
+                    }
+                    return document.location.protocol + '//' + linkClean;
                 } else {
                     return link;
                 }
-            } else if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
-                var linkArr = link.split('/'),
-                    linkClean = void 0;
-                if (Array.isArray(linkArr) && linkArr.length > 0) {
-                    linkClean = linkArr[linkArr.length - 1];
-                }
-                return document.location.protocol + '//' + linkClean;
-            } else {
-                return link;
-            }
         } else {
             return '';
         }
@@ -2829,102 +2743,6 @@ var WPTB_Initializer = function WPTB_Initializer() {
         WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
         WPTB_Helper.setupPanelToggleButtons();
 };
-var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
-
-    element.ondragenter = function (e) {
-        var div;
-        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
-            return;
-        }
-        WPTB_DropHandle(this, e);
-
-        element.classList.add('wptb-ondragenter');
-    };
-    element.ondragover = function (e) {
-        e.preventDefault();
-        WPTB_DropHandle(this, e);
-    };
-    element.ondragleave = function () {};
-    element.ondrop = function (e) {
-        this.classList.remove('wptb-ondragenter');
-        var element = void 0,
-            classId = void 0;
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
-            return;
-        }
-        var wptbDropHandle = void 0,
-            wptbDropBorderMarker = void 0;
-        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
-            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
-        }
-        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
-            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
-        }
-
-        if (e.dataTransfer.getData('wptbElement')) {
-            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
-            element = element.getDOMElement();
-        } else {
-            classId = e.dataTransfer.getData('node');
-            element = document.getElementsByClassName(classId)[0];
-            //element.classList.remove( 'wptb-moving-mode' );
-        }
-
-        if (wptbDropHandle.style.display == 'block') {
-            var td = void 0;
-            if (wptbDropHandle.dataset.text == 'Drop Here') {
-                td = wptbDropHandle.getDOMParentElement();
-                td.appendChild(element);
-            } else {
-                var innerElement = wptbDropHandle.getDOMParentElement();
-                td = innerElement.parentNode;
-
-                if (wptbDropHandle.dataset.text == 'Above Element') {
-                    td.insertBefore(element, innerElement);
-                } else if (wptbDropHandle.dataset.text == 'Below Element') {
-                    var innerElementNext = innerElement.nextSibling;
-                    td.insertBefore(element, innerElementNext);
-                }
-            }
-
-            var thisRow = td.parentNode;
-            if (WPTB_Helper.rowIsTop(thisRow)) {
-                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
-
-                if (table.classList.contains('wptb-table-preview-head')) {
-                    WPTB_Helper.dataTitleColumnSet(table);
-                }
-            }
-
-            // start item javascript if item is new
-            var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
-            var elemKind = infArr[1];
-            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list')) {
-                //WPTB_Helper.elementStartScript( element );
-            }
-        } else {
-            return;
-        }
-
-        wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
-
-        WPTB_innerElementSet(element);
-
-        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
-            element.classList.remove('wptb-moving-mode');
-            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-        }
-        return true;
-    };
-    element.onmouseover = function (e) {
-        element.classList.remove('wptb-ondragenter');
-    };
-};
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
     var table = document.getElementsByClassName('wptb-preview-table')[0],
@@ -2956,19 +2774,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         document.getElementById('wptb-split-cell').onclick = table.splitCell;
     };
 
-    // TODO [erdembircan] old drawer toggle
-    // document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
-    //     let wptbContainer = document.querySelector( '.wptb-container' );
-    //     if( wptbContainer ) {
-    //         if ( wptbContainer.classList.contains( 'collapsed' ) ) {
-    //             wptbContainer.classList.remove( 'collapsed' );
-    //         } else {
-    //             wptbContainer.classList.add( 'collapsed' );
-    //         }
-    //     }
-    // };
-
-    // this code hides the "element parameters" area 
+    // this code hides the "element parameters" area
     // when clicked outside this element and its "tinymce" toolbar 
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
     wptbBuilderPanel.onclick = function (e) {
@@ -5288,6 +5094,192 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
 
             wptbRedo.classList.add('wptb-undoredo-disabled');
         }
+    };
+};
+var WPTB_innerElementSet = function WPTB_innerElementSet(element) {
+
+    element.ondragenter = function (e) {
+        var div;
+        if (e.dataTransfer.types.indexOf('wptbelement') == -1 && e.dataTransfer.types.indexOf('wptb-moving-mode') == -1) {
+            return;
+        }
+        WPTB_DropHandle(this, e);
+
+        element.classList.add('wptb-ondragenter');
+    };
+    element.ondragover = function (e) {
+        e.preventDefault();
+        WPTB_DropHandle(this, e);
+    };
+    element.ondragleave = function () {};
+    element.ondrop = function (e) {
+        this.classList.remove('wptb-ondragenter');
+        var element = void 0,
+            classId = void 0;
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!e.dataTransfer.getData('wptbElement') && !e.dataTransfer.getData('node')) {
+            return;
+        }
+        var wptbDropHandle = void 0,
+            wptbDropBorderMarker = void 0;
+        if (document.getElementsByClassName('wptb-drop-handle').length > 0) {
+            wptbDropHandle = document.getElementsByClassName('wptb-drop-handle')[0];
+        }
+        if (document.getElementsByClassName('wptb-drop-border-marker').length > 0) {
+            wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
+        }
+
+        if (e.dataTransfer.getData('wptbElement')) {
+            element = WPTB_Helper.newElementProxy(e.dataTransfer.getData('wptbElement'));
+            element = element.getDOMElement();
+        } else {
+            classId = e.dataTransfer.getData('node');
+            element = document.getElementsByClassName(classId)[0];
+            //element.classList.remove( 'wptb-moving-mode' );
+        }
+
+        if (wptbDropHandle.style.display == 'block') {
+            var td = void 0;
+            if (wptbDropHandle.dataset.text == 'Drop Here') {
+                td = wptbDropHandle.getDOMParentElement();
+                td.appendChild(element);
+            } else {
+                var innerElement = wptbDropHandle.getDOMParentElement();
+                td = innerElement.parentNode;
+
+                if (wptbDropHandle.dataset.text == 'Above Element') {
+                    td.insertBefore(element, innerElement);
+                } else if (wptbDropHandle.dataset.text == 'Below Element') {
+                    var innerElementNext = innerElement.nextSibling;
+                    td.insertBefore(element, innerElementNext);
+                }
+            }
+
+            var thisRow = td.parentNode;
+            if (WPTB_Helper.rowIsTop(thisRow)) {
+                var table = WPTB_Helper.findAncestor(thisRow, 'wptb-preview-table');
+
+                if (table.classList.contains('wptb-table-preview-head')) {
+                    WPTB_Helper.dataTitleColumnSet(table);
+                }
+            }
+
+            // start item javascript if item is new
+            var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i);
+            var elemKind = infArr[1];
+            if (e.dataTransfer.getData('wptbElement') && (elemKind == 'text' || elemKind == 'button' || elemKind == 'image' || elemKind == 'star_rating' || elemKind == 'list')) {
+                //WPTB_Helper.elementStartScript( element );
+            }
+        } else {
+            return;
+        }
+
+        wptbDropHandle.style.display = 'none';
+        wptbDropBorderMarker.style.display = 'none';
+
+        WPTB_innerElementSet(element);
+
+        if (!element.classList.contains('wptb-image-container') || element.classList.contains('wptb-moving-mode')) {
+            element.classList.remove('wptb-moving-mode');
+            var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+            wptbTableStateSaveManager.tableStateSet();
+        }
+        return true;
+    };
+    element.onmouseover = function (e) {
+        element.classList.remove('wptb-ondragenter');
+    };
+};
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var applyGenericItemSettings = function applyGenericItemSettings(element, kindIndexProt) {
+    var copy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+    var node = element.getDOMElement(),
+        index,
+        copy;
+    if (node.classList.contains('wptb-ph-element')) {
+        if (kindIndexProt == undefined || copy == true) {
+            //index = document.counter.nextIndex( element.kind );
+            var wptbElements = document.getElementsByClassName('wptb-ph-element');
+            var elementIndexesArr = [];
+            for (var i = 0; i < wptbElements.length; i++) {
+                var regex = new RegExp('wptb-element-' + element.kind + '-(\\d+)', "i");
+                var infArr = wptbElements[i].className.match(regex);
+                if (infArr) {
+                    elementIndexesArr.push(infArr[1]);
+                }
+            }
+            if (elementIndexesArr.length > 0) {
+                var elementIndexMax = Math.max.apply(Math, elementIndexesArr);
+                index = elementIndexMax + 1;
+            } else {
+                index = 1;
+            }
+
+            if (copy) {
+                // change all data-elements which save parameters for different controls
+                var wptbNodeattributes = [].concat(_toConsumableArray(node.attributes));
+                for (var _i = 0; _i < wptbNodeattributes.length; _i++) {
+                    if (wptbNodeattributes[_i] && _typeof(wptbNodeattributes[_i]) === 'object' && wptbNodeattributes[_i].nodeName) {
+                        var regularText = new RegExp('data-wptb-el-' + element.kind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i");
+                        var attr = wptbNodeattributes[_i].nodeName.match(regularText);
+                        if (attr && Array.isArray(attr)) {
+                            var newDataAttributeName = wptbNodeattributes[_i].nodeName.replace(element.kind + '-' + attr[1], element.kind + '-' + index);
+                            var newDataAttributeValue = wptbNodeattributes[_i].nodeValue;
+                            node.removeAttribute(wptbNodeattributes[_i].nodeName);
+                            node.setAttribute(newDataAttributeName, newDataAttributeValue);
+                        }
+                    }
+                }
+            }
+        } else if (kindIndexProt && !copy) {
+            var kindIndexProtArr = kindIndexProt.split('-');
+            index = kindIndexProtArr[kindIndexProtArr.length - 1];
+            // start element javascript if element is new
+        }
+
+        var node_wptb_element_kind_num = node.className.match(/wptb-element-(.+)-(\d+)/i);
+        if (node_wptb_element_kind_num) {
+            node.classList.remove(node_wptb_element_kind_num[0]);
+        }
+        if (!node.classList.contains('wptb-ph-element')) {
+            node.classList.add('wptb-ph-element');
+            if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+                node.classList.add('wptb-element-' + element.kind + '-' + index);
+            }
+        } else {
+            if (!node.classList.contains('wptb-element-' + element.kind + '-' + index)) {
+                node.classList.add('wptb-element-' + element.kind + '-' + index);
+            }
+        }
+        new WPTB_ElementOptions(element, index, kindIndexProt);
+        WPTB_Helper.elementStartScript(element.getDOMElement());
+        document.counter.increment(element.kind);
+    }
+
+    node.onmouseenter = function (event) {
+        if (event.target.classList.contains('wptb-moving-mode')) {
+            return;
+        }
+
+        var wptbActionsField = new WPTB_ActionsField();
+
+        wptbActionsField.addActionField(1, node);
+
+        wptbActionsField.setParameters(node);
+
+        node.classList.remove('wptb-ondragenter');
+    };
+
+    node.onmouseleave = function (event) {
+        var wptbActionsField = new WPTB_ActionsField();
+
+        wptbActionsField.leaveFromField(event, node);
     };
 };
 //# sourceMappingURL=admin.js.map
