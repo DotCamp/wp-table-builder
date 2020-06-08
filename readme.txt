@@ -45,10 +45,15 @@ You can also get the shortcode from the 'All Tables' list under 'Table Builder' 
 
 ## Import Tables
 
-You can import tables from CSV files. You can import both single and multiple CSV files. Multiple CSV files will have to be zipped.
+You can import tables from CSV or XML files. You can import both single and multiple CSV or XML files. Multiple files will have to be zipped.
 
 You can also import tables from TablePress plugin.
 
+## Export Tables
+
+Just like importing you can import the tables to CSV or XML files. 
+
+If you are looking to move tables created with WP Table Builder to another site, XML is the better choice as it will preserve table settings.
 
 == Frequently Asked Questions ==
 
@@ -83,10 +88,10 @@ That's it. You're done!
 
 = 1.2.1 =
 
-* FIX: Internationalization fixes for better translation options.
-* ADD: Relative link support for elements with url controls.
-* IMPROVEMENT: Better custom html element parsing and rendering.
-* IMPROVEMENT: Responsive table events.
+* FIX: Internationalization Fixes for Better Translation Options.
+* ADD: Relative Link Support for Elements with URL Controls.
+* IMPROVEMENT: Better Custom HTML Element Parsing and Rendering.
+* IMPROVEMENT: Responsive Table Events.
 
 = 1.2.0 =
 
