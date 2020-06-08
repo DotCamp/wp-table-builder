@@ -17,7 +17,7 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
                     WP Table Builder
                 </span>
             </div>
-            <div class="wptb-panel-tabs wptb-settings-sections-wrapper wptb-plugins-m-b-40 wptb-plugin-box-shadow-md">
+            <div class="wptb-panel-tabs wptb-settings-sections-wrapper wptb-plugin-box-shadow-md">
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="elements"
                      data-wptb-section-display-type="table">
 					<?php esc_html_e( 'elements', $plugin_textdomain ); ?>
