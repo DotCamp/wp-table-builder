@@ -58,8 +58,8 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
                 node.classList.add( 'wptb-element-' + element.kind + '-' + index );
             }
         }
-        new WPTB_ElementOptions( element, index, kindIndexProt );
         WPTB_Helper.elementStartScript( element.getDOMElement() );
+        new WPTB_ElementOptions( element, index, kindIndexProt );
         document.counter.increment(element.kind);
     }
     

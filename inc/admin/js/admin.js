@@ -63,8 +63,8 @@ var applyGenericItemSettings = function applyGenericItemSettings(element, kindIn
                 node.classList.add('wptb-element-' + element.kind + '-' + index);
             }
         }
-        new WPTB_ElementOptions(element, index, kindIndexProt);
         WPTB_Helper.elementStartScript(element.getDOMElement());
+        new WPTB_ElementOptions(element, index, kindIndexProt);
         document.counter.increment(element.kind);
     }
 
@@ -429,10 +429,6 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
 
                         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
-
-                        WPTB_Helper.elementOptionsSet('table_setting', element);
-                        WPTB_Helper.elementStartScript(element, 'table_setting');
-                        WPTB_Helper.wptbDocumentEventGenerate('element:controls:active', element);
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }
@@ -1859,6 +1855,9 @@ var WPTB_Helper = {
         var infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
         if (!infArr) {
             var table_id = WPTB_Helper.detectMode();
+            if (!table_id) {
+                table_id = 'startedid-0';
+            }
             if (element.classList.contains('wptb-preview-table')) {
                 element.classList.add('wptb-element-main-table_setting-' + table_id);
             } else if (element.classList.contains('wptb-cell')) {
@@ -3147,10 +3146,6 @@ var WPTB_Settings = function WPTB_Settings() {
                         event.target.onmouseleave = '';
                         var table = document.querySelector('.wptb-preview-table');
                         WPTB_Table();
-
-                        WPTB_Helper.elementOptionsSet('table_setting', table);
-                        WPTB_Helper.elementStartScript(table, 'table_setting');
-                        WPTB_Helper.wptbDocumentEventGenerate('element:controls:active', table);
                     };
                 }
             }
@@ -3171,10 +3166,6 @@ var WPTB_Settings = function WPTB_Settings() {
                         event.target.onmouseleave = '';
                         var table = document.querySelector('.wptb-preview-table');
                         WPTB_Table();
-
-                        WPTB_Helper.elementOptionsSet('table_setting', table);
-                        WPTB_Helper.elementStartScript(table, 'table_setting');
-                        WPTB_Helper.wptbDocumentEventGenerate('element:controls:active', table);
                     };
                 }
             }
@@ -4992,6 +4983,9 @@ var array = [],
     };
 
     WPTB_LeftPanel();
+
+    WPTB_Helper.elementStartScript(table, 'table_setting');
+    WPTB_Helper.elementOptionsSet('table_setting', table);
 
     // this code gets the ID of the active element in the toolbar 
     // and stores it in the data attribute of the common container element "wpcd_fixed_toolbar"

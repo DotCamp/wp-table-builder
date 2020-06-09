@@ -38,10 +38,6 @@
                         
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
-                        
-                        WPTB_Helper.elementOptionsSet( 'table_setting', element );
-                        WPTB_Helper.elementStartScript( element, 'table_setting' );
-                        WPTB_Helper.wptbDocumentEventGenerate( 'element:controls:active', element );
                     } else {
                         document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
                     }

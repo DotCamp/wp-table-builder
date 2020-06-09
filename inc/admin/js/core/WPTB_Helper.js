@@ -881,6 +881,9 @@ var WPTB_Helper = {
         let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
         if( ! infArr ) {
             let table_id = WPTB_Helper.detectMode();
+            if (!table_id) {
+                table_id = 'startedid-0';
+            }
             if( element.classList.contains( 'wptb-preview-table' ) ) {
                 element.classList.add( 'wptb-element-main-table_setting-' + table_id );
             } else if( element.classList.contains( 'wptb-cell' ) ) {

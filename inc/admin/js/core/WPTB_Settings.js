@@ -27,10 +27,6 @@ var WPTB_Settings = function () {
                         event.target.onmouseleave = '';
                         let table = document.querySelector( '.wptb-preview-table' );
                         WPTB_Table();
-
-                        WPTB_Helper.elementOptionsSet( 'table_setting', table );
-                        WPTB_Helper.elementStartScript( table, 'table_setting' );
-                        WPTB_Helper.wptbDocumentEventGenerate( 'element:controls:active', table )
                     }
                 }
             }
@@ -51,10 +47,6 @@ var WPTB_Settings = function () {
                         event.target.onmouseleave = '';
                         let table = document.querySelector( '.wptb-preview-table' );
                         WPTB_Table();
-
-                        WPTB_Helper.elementOptionsSet( 'table_setting', table );
-                        WPTB_Helper.elementStartScript( table, 'table_setting' );
-                        WPTB_Helper.wptbDocumentEventGenerate( 'element:controls:active', table )
                     }
                 }
             }

@@ -1654,6 +1654,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
     };
 
     WPTB_LeftPanel();
+
+    WPTB_Helper.elementStartScript( table, 'table_setting' );
+    WPTB_Helper.elementOptionsSet( 'table_setting', table );
     
     // this code gets the ID of the active element in the toolbar 
     // and stores it in the data attribute of the common container element "wpcd_fixed_toolbar"

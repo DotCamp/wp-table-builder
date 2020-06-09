@@ -26,7 +26,7 @@ class Control_Section_Group_Collapse {
 	 * @param bool $open_state force section to start as opened or not
 	 */
 	public static function add_section( $section_id, $section_label, $section_controls, $control_call, $open_state = true ) {
-        $section_controls = apply_filters( 'wp-table-builder/register-controls-section-group/' . $section_id, $section_controls );
+        $section_controls = apply_filters( 'wp-table-builder/register-controls-section-group/' . $section_id, $section_controls, $section_id );
 		$start_section_id = "${section_id}_section-group-start";
 		$end_section_id   = "${section_id}_section-group-end";
 
