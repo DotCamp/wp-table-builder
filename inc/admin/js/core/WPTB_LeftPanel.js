@@ -29,19 +29,7 @@ var WPTB_LeftPanel = function () {
         document.getElementById('wptb-split-cell').onclick = table.splitCell;
     };
 
-    // TODO [erdembircan] old drawer toggle
-    // document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
-    //     let wptbContainer = document.querySelector( '.wptb-container' );
-    //     if( wptbContainer ) {
-    //         if ( wptbContainer.classList.contains( 'collapsed' ) ) {
-    //             wptbContainer.classList.remove( 'collapsed' );
-    //         } else {
-    //             wptbContainer.classList.add( 'collapsed' );
-    //         }
-    //     }
-    // };
-    
-    // this code hides the "element parameters" area 
+    // this code hides the "element parameters" area
     // when clicked outside this element and its "tinymce" toolbar 
     let wptbBuilderPanel = document.getElementsByClassName( 'wptb-builder-panel' )[0];
     wptbBuilderPanel.onclick = function( e ) {

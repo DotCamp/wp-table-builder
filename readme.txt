@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -45,10 +45,15 @@ You can also get the shortcode from the 'All Tables' list under 'Table Builder' 
 
 ## Import Tables
 
-You can import tables from CSV files. You can import both single and multiple CSV files. Multiple CSV files will have to be zipped.
+You can import tables from CSV or XML files. You can import both single and multiple CSV or XML files. Multiple files will have to be zipped.
 
 You can also import tables from TablePress plugin.
 
+## Export Tables
+
+Just like importing you can import the tables to CSV or XML files. 
+
+If you are looking to move tables created with WP Table Builder to another site, XML is the better choice as it will preserve table settings.
 
 == Frequently Asked Questions ==
 
@@ -80,6 +85,13 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.1 =
+
+* FIX: Internationalization Fixes for Better Translation Options.
+* ADD: Relative Link Support for Elements with URL Controls.
+* IMPROVEMENT: Better Custom HTML Element Parsing and Rendering.
+* IMPROVEMENT: Responsive Table Events.
 
 = 1.2.0 =
 

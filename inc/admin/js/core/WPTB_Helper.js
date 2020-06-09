@@ -64,9 +64,13 @@ var WPTB_Helper = {
     },
     linkHttpCheckChange: function( link, convertToAbs = false ) {
         if ( link ) {
+            // even though it is not a best practice and a huge security risk, sometimes our users use javascript tag at href attributes, this check will make sure those tags will not be modified and returned as they are
+            if(link.match(/^(javascript:)(.+)$/)){
+                return link;
+            }
             // relative link checking
             // if link starts with '/', assume it is a relative link to the origin of the current site
-            if( link.match(/^\/([\S]+)$/) ){
+            else if( link.match(/^\/([\S]+)$/) ){
                 if (convertToAbs) {
                     const currentLocation = document.location;
                     let {origin} = currentLocation;

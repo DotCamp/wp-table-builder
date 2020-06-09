@@ -111,7 +111,7 @@ class Admin {
 		$tables_count  = wp_count_posts( 'wptb-tables' );
 		$tables_number = $tables_count->draft;
 
-		if ( $tables_number >= 10 && get_option( 'wptb_review_notify' ) == "no" ) {
+		if ( $tables_number >= 5 && get_option( 'wptb_review_notify' ) == "no" ) {
 			?>
             <div class="wptb-review-notice notice notice-info">
                 <p style="font-size: 14px;">

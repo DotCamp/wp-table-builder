@@ -151,10 +151,10 @@ class WPTB_Listing  extends \WP_List_Table{
         );
         
 	  	$actions = [
-	    	'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $nonce ),
-            'duplicate' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Duplicate</a>', esc_attr( $_REQUEST['page'] ), 'duplicate', absint( $item->ID ), $nonce ),
-            'preview_' => sprintf( '<a href="%s" target="_blank">Preview</a>', $wptb_preview_button_url ),
-			'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) )
+	    	'edit' => sprintf( '<a href="?page=wptb-builder&table=%d">Edit</a>',  absint( $item->ID ) ),
+			'duplicate' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Duplicate</a>', esc_attr( $_REQUEST['page'] ), 'duplicate', absint( $item->ID ), $nonce ),
+			'preview_' => sprintf( '<a href="%s" target="_blank">Preview</a>', $wptb_preview_button_url ),
+			'delete' => sprintf( '<a href="?page=%s&action=%s&table_id=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->ID ), $nonce )          
 	  	];
 
 	  	return $title . $this->row_actions( $actions );

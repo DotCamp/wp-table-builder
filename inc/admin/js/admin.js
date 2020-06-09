@@ -1051,33 +1051,37 @@ var WPTB_Helper = {
         var convertToAbs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
         if (link) {
+            // even though it is not a best practice and a huge security risk, sometimes our users use javascript tag at href attributes, this check will make sure those tags will not be modified and returned as they are
+            if (link.match(/^(javascript:)(.+)$/)) {
+                return link;
+            }
             // relative link checking
             // if link starts with '/', assume it is a relative link to the origin of the current site
-            if (link.match(/^\/([\S]+)$/)) {
-                if (convertToAbs) {
-                    var currentLocation = document.location;
-                    var origin = currentLocation.origin;
+            else if (link.match(/^\/([\S]+)$/)) {
+                    if (convertToAbs) {
+                        var currentLocation = document.location;
+                        var origin = currentLocation.origin;
 
-                    // strip out the '/' at the end of the origin name if there is any
+                        // strip out the '/' at the end of the origin name if there is any
 
-                    if (origin.match(/^(.+)\/$/)) {
-                        origin = origin.slice(-1);
+                        if (origin.match(/^(.+)\/$/)) {
+                            origin = origin.slice(-1);
+                        }
+
+                        return '' + origin + link;
+                    } else {
+                        return link;
                     }
-
-                    return '' + origin + link;
+                } else if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
+                    var linkArr = link.split('/'),
+                        linkClean = void 0;
+                    if (Array.isArray(linkArr) && linkArr.length > 0) {
+                        linkClean = linkArr[linkArr.length - 1];
+                    }
+                    return document.location.protocol + '//' + linkClean;
                 } else {
                     return link;
                 }
-            } else if (link.indexOf('http://') == -1 && link.indexOf('https://') == -1) {
-                var linkArr = link.split('/'),
-                    linkClean = void 0;
-                if (Array.isArray(linkArr) && linkArr.length > 0) {
-                    linkClean = linkArr[linkArr.length - 1];
-                }
-                return document.location.protocol + '//' + linkClean;
-            } else {
-                return link;
-            }
         } else {
             return '';
         }
@@ -2955,19 +2959,7 @@ var WPTB_LeftPanel = function WPTB_LeftPanel() {
         document.getElementById('wptb-split-cell').onclick = table.splitCell;
     };
 
-    // TODO [erdembircan] old drawer toggle
-    // document.querySelector( '.wptb-left-panel-extend' ).onclick = function() {
-    //     let wptbContainer = document.querySelector( '.wptb-container' );
-    //     if( wptbContainer ) {
-    //         if ( wptbContainer.classList.contains( 'collapsed' ) ) {
-    //             wptbContainer.classList.remove( 'collapsed' );
-    //         } else {
-    //             wptbContainer.classList.add( 'collapsed' );
-    //         }
-    //     }
-    // };
-
-    // this code hides the "element parameters" area 
+    // this code hides the "element parameters" area
     // when clicked outside this element and its "tinymce" toolbar 
     var wptbBuilderPanel = document.getElementsByClassName('wptb-builder-panel')[0];
     wptbBuilderPanel.onclick = function (e) {

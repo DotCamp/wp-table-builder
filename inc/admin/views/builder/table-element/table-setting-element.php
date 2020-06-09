@@ -219,7 +219,7 @@ class Table_Setting_Element extends Element_Base_Object {
 			'helpSupportLinks' => [
 				'label' => 'test',
 				'type' => Controls_Manager::HTML_OUTPUT,
-				'html' => sprintf('<div><a href="https://wptablebuilder.com/">%s</a></div><div><a href="https://wptablebuilder.com/community/">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/">%s</a></div>', esc_html__('Our Website' , 'wp_table_builder'), esc_html__('Support Community Forum' , 'wp_table_builder'), esc_html__('Facebook Group' , 'wp_table_builder'))
+				'html' => sprintf('<div><a href="https://wptablebuilder.com/" target="_blank">%s</a></div><div><a href="https://wptablebuilder.com/community/" target="_blank">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/" target="_blank">%s</a></div>', esc_html__('Our Website' , 'wp_table_builder'), esc_html__('Support Community Forum' , 'wp_table_builder'), esc_html__('Facebook Group' , 'wp_table_builder'))
 			]
 		];
 
