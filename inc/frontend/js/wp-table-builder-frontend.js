@@ -32,6 +32,8 @@
 	 */
 
     jQuery( document ).ready( function ( $ ) {
+       // TODO [erdembircan] remove for production
+       console.log('builder frontend loaded');
         /**
          * Adds hover color change support for supported button elements.
          */
@@ -511,8 +513,7 @@
                                         tableContainer.appendChild( newTable );
 
                                         // restore events to element clones
-                                        // TODO [erdembircan] working on possible bug related to this class
-                                        // WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
+                                        WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
                                     }
                                 }
                             } else {

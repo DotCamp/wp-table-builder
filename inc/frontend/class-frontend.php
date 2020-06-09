@@ -2,6 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Frontend;
 
+use WP_Table_Builder\Inc\Admin\Preview;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -86,42 +88,79 @@ class Frontend {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
 	}
 
-//    /**
-//	 * Register the JavaScript for the public-facing side of the site.
-//	 *
-//	 * @since    1.0.0
-//	 */
-//	public function enqueue_scripts() {
-//
-//		/**
-//		 * This function is provided for demonstration purposes only.
-//		 *
-//		 * An instance of this class should be passed to the run() function
-//		 * defined in Loader as all of the hooks are defined
-//		 * in that particular class.
-//		 *
-//		 * The Loader will then create the relationship
-//		 * between the defined hooks and the functions defined in this
-//		 * class.
-//		 */
-//		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
-//
-//	}
+    /**
+	 * Register the JavaScript for the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_scripts() {
+
+		/**
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
+	}
+
+	/**
+	 * Enqueue scripts at custom plugin hook
+	 */
+	public function unqueue_script_start(  ) {
+		wp_enqueue_script( 'event-catcher', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-event-catcher.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, true );
+	}
 
 	/**
 	 * Enqueue header scripts.
 	 */
 	public function enqueue_header_scripts() {
-		// Enqueuing the event catcher to header with a high priority in order to be loaded before other scripts. But if, a third party script that manipulates (add/remove events) elements enqueued their script file with low priority to header tag with using jQuery document ready event, bugs may occur. But this is not our responsibility since any script that modifies the rendered elements should go to footer.
-		// TODO [erdembircan] working on possible bug with this class
-//		wp_enqueue_script( 'event-catcher', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-event-catcher.js', array( 'jquery' ), $this->version, false );
+		global $post;
+
+		$includes_shortcode = Frontend::has_shortcode( $post );
+
+		if ( $includes_shortcode ) {
+			wp_enqueue_script( 'event-catcher', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-event-catcher.js', array( 'jquery' ), $this->version, true );
+		}
 	}
 
 	/**
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		// even though we are using ready event of jquery, since we are modifying dom elements, as a best practice, this script should go to footer
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+		global $post;
+
+		$includes_shortcode = Frontend::has_shortcode( $post );
+
+		if ( $includes_shortcode ) {
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, true );
+		}
+
+	}
+
+	/**
+	 * Check if supplied post object has our shortcode.
+	 *
+	 * @param {object} $current_post post object
+	 *
+	 * @return bool whether post has the plugin shortcode or not
+	 */
+	public static function has_shortcode( $current_post ) {
+		if ( $current_post !== null ) {
+			$content = $current_post->post_content;
+
+			if ( $content === null || $content === "" ) {
+				return false;
+			}
+
+			// regexp test for checking current post content has the shortcode of our plugin
+			return filter_var( preg_match( '/.*(\[wptb (.+)?\]).*/', $content ), FILTER_VALIDATE_BOOLEAN );
+		}
 	}
 }

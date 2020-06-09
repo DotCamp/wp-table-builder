@@ -89,17 +89,17 @@ class Init {
 	 */
 	public $elements_manager;
 
-    /**
-     * Table elements manager.
-     *
-     * Holds the plugin Table Elements manager.
-     *
-     * @since 1.2.1
-     * @access public
-     *
-     * @var elements_manager
-     */
-    public $table_elements_manager;
+	/**
+	 * Table elements manager.
+	 *
+	 * Holds the plugin Table Elements manager.
+	 *
+	 * @since 1.2.1
+	 * @access public
+	 *
+	 * @var elements_manager
+	 */
+	public $table_elements_manager;
 
 	/**
 	 * Controls manager.
@@ -245,18 +245,10 @@ STYLE;
 	 * @access    private
 	 */
 	private function define_public_hooks() {
-
 		$plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-
-		// had to split footer and header scripts to load header scripts with higher priority to overwrite certain functionality, and footer scripts with lower priority to let third party scripts make their manipulations before responsive table reconstructions begin
-		// TODO [erdembircan] working on possible bug related to this class
-//		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_header_scripts', PHP_INT_MIN );
-
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public , 'enqueue_footer_scripts');
-
-//		add_action( 'wp_head', [ $this, 'content_width_header' ] );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts', 0 );
 	}
 
 	/**
@@ -333,15 +325,15 @@ STYLE;
 	 * @since   1.1.5
 	 */
 	public function elements_resources() {
-		$this->elements_manager = new Elements_Manager();
-        $this->table_elements_manager = new Table_Elements_Manager();
-		$this->controls_manager = new Controls_Manager();
+		$this->elements_manager       = new Elements_Manager();
+		$this->table_elements_manager = new Table_Elements_Manager();
+		$this->controls_manager       = new Controls_Manager();
 
 		add_action( 'admin_footer', function () {
 			$this->elements_manager->output_elements_templates();
 			$this->elements_manager->output_directories_icons();
 			$this->elements_manager->output_elements_scripts();
-            $this->table_elements_manager->output_elements_scripts();
+			$this->table_elements_manager->output_elements_scripts();
 			$this->controls_manager->output_controls_templates();
 			$this->controls_manager->output_control_stacks();
 		} );
