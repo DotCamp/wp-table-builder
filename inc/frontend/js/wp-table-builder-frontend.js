@@ -511,7 +511,8 @@
                                         tableContainer.appendChild( newTable );
 
                                         // restore events to element clones
-                                        WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
+                                        // TODO [erdembircan] working on possible bug related to this class
+                                        // WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
                                     }
                                 }
                             } else {
