@@ -251,8 +251,10 @@ STYLE;
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 
 		// had to split footer and header scripts to load header scripts with higher priority to overwrite certain functionality, and footer scripts with lower priority to let third party scripts make their manipulations before responsive table reconstructions begin
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_header_scripts', PHP_INT_MIN );
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public , 'enqueue_footer_scripts', PHP_INT_MAX);
+		// TODO [erdembircan] working on possible bug related to this class
+//		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_header_scripts', PHP_INT_MIN );
+
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public , 'enqueue_footer_scripts');
 
 //		add_action( 'wp_head', [ $this, 'content_width_header' ] );
 	}
