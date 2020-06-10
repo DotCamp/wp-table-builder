@@ -249,12 +249,12 @@ class Control_Toggle extends Base_Control {
                                     details = {value: 'unchecked'};
                                 }
 
-                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
                                 if( '{{{selectorsJson}}}' ) {
                                     let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
                                     getSetElementValue( selectors, details.value );
                                 }
+                                WPTB_Helper.wptbDocumentEventGenerate( 'wptb-control:{{{targetInputAddClass}}}', selectorElement, details );
 
                                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                                 wptbTableStateSaveManager.tableStateSet();
