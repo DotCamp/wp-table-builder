@@ -1655,6 +1655,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
     WPTB_LeftPanel();
 
+    // event hook to signal that table is generated and ready to be used
+    WPTB_Helper.wptbDocumentEventGenerate('wptb:table:generated', document);
+
     WPTB_Helper.elementStartScript( table, 'table_setting' );
     WPTB_Helper.elementOptionsSet( 'table_setting', table );
     

@@ -49,9 +49,22 @@ var WPTB_Initializer = function () {
             wptbTableStateSaveManager.tableStateSet();
     }
 
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group']);
+    // register and setup section buttons
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu']);
     WPTB_Helper.setupSectionButtons();
+
+    // activate elements section for startup
     WPTB_Helper.activateSection('elements');
+
+    // side bar toggle setup
     WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
+
+    // setup panel sections that have the ability to be toggled on/off
     WPTB_Helper.setupPanelToggleButtons();
+
+    // setup responsive menu both at left and builder panel
+    new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp');
+
+    // TODO [erdembircan] using this method for a better development environment while working on specific sections to get rid of clicking section buttons every time at page refresh
+    WPTB_Helper.getSectionFromUrl();
 };

@@ -8,6 +8,7 @@ import Vue from 'vue';
 import WPTB_IconSelectControl from './mountPoints/WPTB_IconSelectControl';
 import WPTB_RangeControl from './mountPoints/WPTB_RangeControl';
 import WPTB_ControlsManager from './functions/WPTB_ControlsManager';
+import WPTB_ResponsiveTable from "./mountPoints/WPTB_ResponsiveTable";
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -18,7 +19,7 @@ const global = self || this;
 // adding controls manager to global space
 global.WPTB_ControlsManager = WPTB_ControlsManager;
 
-const controls = [WPTB_IconSelectControl, WPTB_RangeControl, WPTB_ControlsManager];
+const controls = [WPTB_IconSelectControl, WPTB_RangeControl, WPTB_ControlsManager, WPTB_ResponsiveTable];
 
 /**
  * Register control element.

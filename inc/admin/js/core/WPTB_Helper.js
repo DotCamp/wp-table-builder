@@ -93,7 +93,7 @@ var WPTB_Helper = {
                     linkClean = linkArr[linkArr.length - 1];
                 }
                 return document.location.protocol + '//' + linkClean;
-            } else { 
+            } else {
                 return link;
             }
         } else {
@@ -104,12 +104,12 @@ var WPTB_Helper = {
         let rows = table.rows,
             rowHead = rows[0];
         let computedStyleRowHead = getComputedStyle( rowHead );
-        
+
         let rowHeadChildren = rowHead.children;
         let contentsForHeader = {};
         for( let i = 0; i < rowHeadChildren.length; i++ ) {
             let tdElements = rowHeadChildren[i].children;
-            
+
             for( let j = 0; j < tdElements.length; j++ ) {
                 let element = tdElements[j];
                 if( element.classList.contains( 'wptb-ph-element' ) ) {
@@ -118,14 +118,14 @@ var WPTB_Helper = {
                         let p = element.querySelector( 'p' ),
                             textContent = p.textContent,
                             textAlign = p.style.textAlign;
-                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, 
+                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize,
                                 element.style.color, computedStyleRowHead.backgroundColor, textAlign];
                         break;
                     }
                 }
             }
             if( ! contentsForHeader[rowHeadChildren[i].dataset.xIndex] ) {
-                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '', 
+                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '',
                             '', computedStyleRowHead.backgroundColor, ''];
             }
         }
@@ -194,7 +194,7 @@ var WPTB_Helper = {
     irisStripMouseUpStateSaveManager: function() {
         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
-        
+
         let body = document.getElementsByTagName( 'body' )[0];
         body.removeEventListener( 'mouseup', WPTB_Helper.irisStripMouseUpStateSaveManager, false );
     },
@@ -265,7 +265,7 @@ var WPTB_Helper = {
         } else {
             uiColor = '';
         }
-        
+
         let parent = WPTB_Helper.findAncestor( event.target, 'wp-picker-input-wrap' ).getElementsByClassName( 'wptb-color-picker' )[0], classe, type, ps, number;
         classe = parent.dataset.element.match(/wptb-options-(.+)-(\d+)/i);
         type = classe[1];
@@ -318,7 +318,7 @@ var WPTB_Helper = {
             if ( parseInt( thisValue, 10 ) > parseInt( maxValue, 10 ) ) {
                 this.value = maxValue;
             }
-            
+
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();
         }
@@ -396,7 +396,7 @@ var WPTB_Helper = {
                 dataMceStyle[k].removeAttribute( 'data-mce-style' );
             }
         }
-        
+
         let mceEditFocus = element.querySelectorAll( '.mce-edit-focus' );
         if( mceEditFocus.length > 0 ) {
             for ( let k = 0; k < mceEditFocus.length; k++ ) {
@@ -424,7 +424,7 @@ var WPTB_Helper = {
                 mceIds[k].removeAttribute( 'id' );
             }
         }
-        
+
         return element;
     },
     elementOptionContainerCustomClassSet: function( targetInput, customClassForContainer ) {
@@ -538,7 +538,7 @@ var WPTB_Helper = {
                                 }
                             }
                         }
-                        
+
                         if(!element.controlConnectFunctionsName && !Array.isArray(element.controlConnectFunctionsName)) {
                             element.controlConnectFunctionsName = [];
                         }
@@ -553,10 +553,10 @@ var WPTB_Helper = {
         if( element && typeof element === 'object' && typeof functionHandler === 'function' && typeof controlName === 'string' ) {
             let infArr = element.className.match( /wptb-element-((.+-)\d+)/i ),
             elementKind;
-            
+
             if( infArr && Array.isArray( infArr ) ) {
                 elementKind = infArr[1].split( '-' )[0];
-                
+
                 let wptbContrlStacksConfigId = 'wptb-' + elementKind + '-control-stack';
                 let tmplControlsConfig = wp.template( wptbContrlStacksConfigId );
                 let data = {
@@ -564,10 +564,10 @@ var WPTB_Helper = {
                 };
                 let jsonControlsConfigJson = tmplControlsConfig( data );
                 let jsonControlsConfig = JSON.parse( jsonControlsConfigJson );
-                
+
                 if( jsonControlsConfig && typeof jsonControlsConfig === 'object' && jsonControlsConfig.hasOwnProperty( controlName ) ) {
                     let controlClassName = 'wptb-el-' + infArr[1] + '-' + controlName;
-                    
+
                     element.addEventListener( 'wptb-control:' + controlClassName, function( event ) {
                         let control = document.getElementsByClassName( controlClassName );
                         if( control.length > 0 ) {
@@ -599,7 +599,7 @@ var WPTB_Helper = {
         if( Array.isArray( dependOn ) ) {
             let dependOnControlName = dependOn[0];
             let infArr = targetControlElementClass.match( /wptb-el-((.+-)\d+)-(.+)/i );
-            
+
             if( infArr && Array.isArray( infArr ) ) {
                 let controlName = infArr[3];
 
@@ -616,7 +616,7 @@ var WPTB_Helper = {
 
                         if( controlContainerElem ) {
                             function showHideDependOnControlElement( dependOnControlElementClass, dependOn ) {
-                                
+
 //                                let elementsSettingsTemplateJs = document.getElementsByClassName( 'wptb-element-datas' );
 //                                if( elementsSettingsTemplateJs.length > 0 ) {
 //                                    elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
@@ -625,18 +625,18 @@ var WPTB_Helper = {
 //                                    if( elementsSettings ) {
 //                                        elementsSettings = elementsSettings.trim();
 //                                        elementsSettings = JSON.parse( elementsSettings );
-//                                        if( elementsSettings && typeof elementsSettings === 'object' && 
+//                                        if( elementsSettings && typeof elementsSettings === 'object' &&
 //                                            ( 'tmpl-wptb-el-datas-' + dependOnControlElementKind ) in elementsSettings ) {
 //                                            let elementSettings = elementsSettings['tmpl-wptb-el-datas-' + dependOnControlElementKind];
-//                                            if( elementSettings && typeof elementSettings === 'object' && 
+//                                            if( elementSettings && typeof elementSettings === 'object' &&
 //                                                    ( 'data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName ) in elementSettings ) {
 //                                                let elementSettingValue = elementSettings['data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName];
-//                                                
+//
 //                                                if( elementSettingValue ) {
-//                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) && 
+//                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) &&
 //                                                        ( dependOn[1].indexOf( elementSettingValue ) !== -1 ) ) {
 //                                                        controlContainerElem.style.display = 'block';
-//                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) && 
+//                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) &&
 //                                                        ( dependOn[2].indexOf( elementSettingValue ) !== -1 ) ) {
 //                                                        controlContainerElem.style.display = 'none';
 //                                                    }
@@ -649,11 +649,11 @@ var WPTB_Helper = {
                                     let dependOnControlElements = document.getElementsByClassName( dependOnControlElementClass );
                                     if( dependOnControlElements.length > 0 ) {
                                         let targetControlValue = WPTB_Helper.targetControlValueGet( dependOnControlElements );
-                                        
-                                        if( dependOn[1] && Array.isArray( dependOn[1] ) && 
+
+                                        if( dependOn[1] && Array.isArray( dependOn[1] ) &&
                                             ( dependOn[1].indexOf( targetControlValue ) !== -1 ) ) {
                                             controlContainerElem.style.display = 'block';
-                                        } else if( dependOn[2] && Array.isArray( dependOn[2] ) && 
+                                        } else if( dependOn[2] && Array.isArray( dependOn[2] ) &&
                                             ( dependOn[2].indexOf( targetControlValue ) !== -1 ) ) {
                                             controlContainerElem.style.display = 'none';
                                         }
@@ -677,13 +677,13 @@ var WPTB_Helper = {
         let targetControls = document.getElementsByClassName( targetControlClass );
         if( targetControls.length > 0 ) {
             //targetControls = targetControls[0];
-            
+
             let infArr = targetControlClass.match( /wptb-el-((.+-)\d+)-(.+)/i );
-            
+
             if( infArr && Array.isArray( infArr ) ) {
                 let selectorElement;
                 selectorElement = document.querySelector( '.wptb-element-' + infArr[1] );
-                
+
                 if( selectorElement  ) {
                     let elementsSettingsTemplatesJs;
                     let elementSettings = {};
@@ -717,28 +717,28 @@ var WPTB_Helper = {
                             elementsSettings = JSON.parse( elementsSettings );
 
                             if( elementsSettings && typeof elementsSettings === 'object' ) {
-                                
-                                
+
+
                                 if( controlChangeIndic ) {
                                     let targetControlValue = WPTB_Helper.targetControlValueGet( targetControls );
-                                    if( ! ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) || 
+                                    if( ! ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) ||
                                             typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] !== 'object') {
                                         elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
                                     }
                                     elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass] = targetControlValue;
                                     elementsSettingsTemplatesJs.innerHTML = JSON.stringify( elementsSettings );
-                                } else if( ! ( ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) && 
-                                        typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] === 'object' && 
+                                } else if( ! ( ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) &&
+                                        typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] === 'object' &&
                                          ( 'data-' + targetControlClass ) in elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] ) ) {
                                     let targetControlValue = WPTB_Helper.targetControlValueGet( targetControls );
-                                    if( ! ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) || 
+                                    if( ! ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) ||
                                             typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] !== 'object') {
                                         elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] = {};
                                     }
                                     elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass] = targetControlValue;
                                     elementsSettingsTemplatesJs.innerHTML = JSON.stringify( elementsSettings );
-                                } else if( ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) && 
-                                        typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] === 'object' && 
+                                } else if( ( ( 'tmpl-wptb-el-datas-' + infArr[1] ) in elementsSettings ) &&
+                                        typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] === 'object' &&
                                         ( 'data-' + targetControlClass ) in elementsSettings['tmpl-wptb-el-datas-' + infArr[1]] ) {
                                     for( let i = 0; i < targetControls.length; i++ ) {
                                         if( targetControls[i].type == 'checkbox' ) {
@@ -748,7 +748,7 @@ var WPTB_Helper = {
                                             } else {
                                                 targetControlValue = elementsSettings['tmpl-wptb-el-datas-' + infArr[1]]['data-' + targetControlClass];
                                             }
-                                            
+
                                             if( targetControlValue == 'checked' ) {
                                                 targetControls[i].checked = true;
                                             } else if( targetControlValue == 'unchecked' ) {
@@ -803,26 +803,26 @@ var WPTB_Helper = {
                 let elementsSettingsTemplateJs = document.getElementsByClassName( 'wptb-element-datas' );
                 if( elementsSettingsTemplateJs.length > 0 ) {
                     elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
-                    
+
                     let elementsSettings = elementsSettingsTemplateJs.innerHTML;
                     if( elementsSettings ) {
                         elementsSettings = elementsSettings.trim();
                         elementsSettings = JSON.parse( elementsSettings );
-                        
+
                         if( elementsSettings && typeof elementsSettings === 'object' ) {
                             let elementSettingsProt = elementsSettings['tmpl-wptb-el-datas-' + elemProtKind];
                             if( elementSettingsProt && typeof elementSettingsProt === 'object' ) {
                                 let elementSettingsCopy = {};
-                                
+
                                 Object.keys( elementSettingsProt ).forEach( function( key ) {
                                     let elementSettingValue = elementSettingsProt[key];
                                     let elementSettingKeyCopy = key.replace( elemProtKind, elemCopyKind );
                                     elementSettingsCopy[elementSettingKeyCopy] = elementSettingValue;
                                 });
-                                
+
                                 if( Object.keys( elementSettingsCopy ).length > 0 ) {
                                     elementsSettings['tmpl-wptb-el-datas-' + elemCopyKind] = elementSettingsCopy;
-                                    
+
                                     elementsSettings = JSON.stringify( elementsSettings );
                                     elementsSettingsTemplateJs.innerHTML = elementsSettings;
                                 }
@@ -849,7 +849,7 @@ var WPTB_Helper = {
                     if( ! nameControl ) {
                         delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
                     } else {
-                        if( elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] && 
+                        if( elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] &&
                                 typeof elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] === 'object' &&
                             ( 'data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl ) in elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]] ) {
                            delete elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]]['data-wptb-el-' + infArr[1] + '-' + infArr[2] + '-' + nameControl];
@@ -866,7 +866,7 @@ var WPTB_Helper = {
             }
         }
     },
-    // 
+    //
     elementOptionsSet: function( kind, element ) {
         // get controls config for this element
         let wptbContrlStacksConfigId = 'wptb-' + kind + '-control-stack';
@@ -877,11 +877,11 @@ var WPTB_Helper = {
         let elementOptionsGroup;
         let elementOptionsGroupId;
         let wptbelementOptionClass;
-        
+
         // create containers for inserting controls of this item and their scripts
         let wptbelementOptionsContainer = document.createElement( 'div' );
         let wptbelementOptionsScriptsContainer = document.createElement( 'div' );
-            
+
         let infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
         if( ! infArr ) {
             let table_id = WPTB_Helper.detectMode();
@@ -894,6 +894,8 @@ var WPTB_Helper = {
                 let cellEditActiveClass = document.querySelector( '.wptb-element-table_cell_setting-' + table_id );
                 if( cellEditActiveClass ) cellEditActiveClass.classList.remove( 'wptb-element-table_cell_setting-' + table_id );
                 element.classList.add( 'wptb-element-table_cell_setting-' + table_id );
+            }else if (element.classList.contains('wptb-responsive')){
+                element.classList.add('wptb-element-table_responsive_setting-' + table_id);
             }
 
             infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
@@ -905,7 +907,7 @@ var WPTB_Helper = {
 
         elementContainerClass = infArr[0];
         elementOptionClassIndic = infArr[1];
-        
+
         if( element.classList.contains( 'wptb-preview-table' ) ) {
             elementOptionsGroupId = 'table-settings-group';
             wptbelementOptionClass = 'wptb-element-option';
@@ -914,7 +916,11 @@ var WPTB_Helper = {
             wptbelementOptionClass = 'wptb-element-option';
 
             this.activateSection('cell_settings');
-        } else {
+        }else if (element.classList.contains('wptb-responsive')){
+            elementOptionsGroupId = 'table-responsive-group';
+            wptbelementOptionClass = 'wptb-element-option';
+        }
+        else {
             let children = document.getElementById( 'element-options-group' ).childNodes;
             for ( let i = 0; i < children.length; i++) {
                 if ( children[i].style )
@@ -932,7 +938,7 @@ var WPTB_Helper = {
             elementOptionsGroupId = 'element-options-group';
             wptbelementOptionClass = 'wptb-element-option';
         }
-        
+
         wptbelementOptionsContainer.classList.add( 'wptb-element-options', 'wptb-options-' + infArr[1] );
         wptbelementOptionsScriptsContainer.classList.add( 'wptb-element-options-scripts', 'wptb-options-' + infArr[1] );
 
@@ -947,14 +953,14 @@ var WPTB_Helper = {
             elementOptionsGroup.removeChild( elementOptionsGroupChildren[i] );
         }
 
-        
+
         // insert created container into element-option-group tag
         document.getElementById( elementOptionsGroupId ).appendChild( wptbelementOptionsContainer );
         document.getElementById( elementOptionsGroupId ).appendChild( wptbelementOptionsScriptsContainer );
 
         // show created container
         wptbelementOptionsContainer.style.display = 'block';
-        
+
         // array for save all scrips for each controls
         let controlScriptsArr = [];
 
@@ -1028,17 +1034,17 @@ var WPTB_Helper = {
         let infArr = elementContainer.match( /wptb-element-main(.+)-(\d+)/i );
         if( ! infArr || ! Array.isArray( infArr ) ) {
             let table = document.getElementsByClassName( 'wptb-preview-table' );
-            
+
             if( table.length > 0 ) {
                 table = table[0];
-                
+
                 let infArr = table.className.match( /wptb-element-main(.+)-(\d+)/i );
                 if( infArr && Array.isArray( infArr ) ) {
                     selector = '.' + infArr[0] + ' ' + selector;
                 }
             }
         }
-        
+
         let head = document.head;
         if( head ) {
             let cssForThisElement = head.querySelector( '#styles-' + elementContainer );
@@ -1062,7 +1068,7 @@ var WPTB_Helper = {
                                     } else {
                                         cssTextArrThird.splice( j, 1 );
                                     }
-                                    
+
                                     cssTextArrSecond[1] = cssTextArrThird.join( ';' ) ? cssTextArrThird.join( ';' ) + ';' : '';
                                     cssNameExists = true;
                                     break;
@@ -1083,7 +1089,7 @@ var WPTB_Helper = {
                             } else {
                                 head.removeChild( cssForThisElement );
                             }
-                            
+
                             selectorExists = true;
                             break;
                         }
@@ -1122,6 +1128,7 @@ var WPTB_Helper = {
      */
     registerSections(sections) {
         this.sections = {};
+        this.currentSection = '';
         if (!Array.isArray(sections)) {
             sections = [sections];
         }
@@ -1140,6 +1147,7 @@ var WPTB_Helper = {
      * @param {string} displayType display type override for section to be used in its display style property
      */
     activateSection(sectionDataId, displayType = 'block') {
+        this.currentSection=sectionDataId;
         this.triggerSectionEvent(sectionDataId);
         Object.keys(this.sections).map(k => {
             if (Object.prototype.hasOwnProperty.call(this.sections, k)) {
@@ -1147,6 +1155,26 @@ var WPTB_Helper = {
                 this.sections[k].style = `display: ${visibility} !important`;
             }
         })
+    },
+    /**
+     * Get id of current active section
+     *
+     * @returns {string} active section i
+     */
+    getCurrentSection(){
+        return this.currentSection;
+    },
+    /**
+     * Get current section from search parameter 'wptb-builder-section' of window location
+     */
+    getSectionFromUrl(){
+        const parsedUrl = new URL(window.location.href);
+        const urlSection = parsedUrl.searchParams.get('wptb-builder-section');
+        if(urlSection){
+            if(Object.keys(this.sections).some(key => key===urlSection)){
+                this.activateSection(urlSection);
+            }
+        }
     },
     /**
      * Set up related buttons and links to trigger certain elements
@@ -1162,7 +1190,7 @@ var WPTB_Helper = {
                 vm.activateSection(sectionName, displayType);
             })
 
-            document.addEventListener('sectionChanged', (e)=> {
+            document.addEventListener('wptbSectionChanged', (e)=> {
                 if(e.detail === sectionName){
                     s.classList.remove('disabled');
                     s.classList.add('active');
@@ -1190,7 +1218,7 @@ var WPTB_Helper = {
      * @param {string} sectionName section name
      */
     triggerSectionEvent(sectionName){
-        const sectionEvent = new CustomEvent('sectionChanged', {detail: sectionName});
+        const sectionEvent = new CustomEvent('wptbSectionChanged', {detail: sectionName});
 
         document.dispatchEvent(sectionEvent);
     },
@@ -1213,7 +1241,7 @@ var WPTB_Helper = {
         let head = document.head;
         if( head ) {
             let cssForThisElement = head.querySelector( '#styles-' + elementContainerClass );
-            
+
             if( cssForThisElement ) {
                 head.removeChild( cssForThisElement );
             }
@@ -1225,16 +1253,16 @@ var WPTB_Helper = {
             let infArr = activeElement.className.match( /wptb-element-(.+)-(\d+)/i );
             if( infArr && Array.isArray( infArr ) ) {
                 let activeElemClass = infArr[0];
-                
+
                     let head = document.head;
                     if( head ) {
                         let cssForActiveElement = head.querySelector( '#styles-' + activeElemClass );
 
                         if( cssForActiveElement ) {
                             let cssForNewElement = cssForActiveElement.cloneNode( true );
-                            
+
                             cssForNewElement.removeAttribute( 'id', 'styles-' + activeElemClass );
-                            
+
                             let infArrCopyEl = copyElement.className.match( /wptb-element-(.+)-(\d+)/i );
                             if( infArrCopyEl && Array.isArray( infArrCopyEl ) ) {
                                 cssForNewElement.setAttribute( 'id', 'styles-' + infArrCopyEl[0] );
@@ -1259,7 +1287,7 @@ var WPTB_Helper = {
                 stylesObj[styleElemId] = stylesElements[i].innerHTML;
             }
         }
-        
+
         if( Object.keys( stylesObj ).length != 0 ) {
             return JSON.stringify( stylesObj );
         }
@@ -1294,12 +1322,12 @@ var WPTB_Helper = {
     // function for table saving
     saveTable: function( event, startSaving, previewSaving ) {
         if( ! previewSaving && ! startSaving ) {
-            if( ( ! event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) || 
+            if( ( ! event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0 ) ||
                     window.wptbTableStateNumberShow == event.target.dataset.wptbTableStateNumberSave ) {
                 //return;
             }
         }
-        
+
         if( ! previewSaving ) {
             let bar = document.querySelector( '.wptb-edit-bar' );
             if ( bar && bar.classList.contains( 'visible' ) ) {
@@ -1314,9 +1342,9 @@ var WPTB_Helper = {
             messagingArea,
             code,
             datas;
-    
+
         code = document.getElementsByClassName( 'wptb-preview-table' );
-        
+
         let postId;
         if (( rs = WPTB_Helper.detectMode() ) || ( rs = document.wptbId )) {
             postId = rs;
@@ -1335,10 +1363,10 @@ var WPTB_Helper = {
             codeClone.columns = code.columns;
             code = WPTB_Stringifier( codeClone );
             code = code.outerHTML;
-        } else { 
+        } else {
             code = '';
         }
-        
+
         if( ! previewSaving ) {
             datas = '';
             let datas_containers = document.getElementsByClassName( 'wptb-element-datas' );
@@ -1348,10 +1376,10 @@ var WPTB_Helper = {
                     datas = datas_containers[0].innerHTML;
 
                     if( paramIdsNecessaryChange ) {
-                        datas = WPTB_Helper.replaceAll( datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0', 
+                        datas = WPTB_Helper.replaceAll( datas, 'tmpl-wptb-el-datas-main-table_setting-startedid-0',
                         'tmpl-wptb-el-datas-main-table_setting-' + postId );
 
-                        datas = WPTB_Helper.replaceAll( datas, 'data-wptb-el-main-table_setting-startedid-0', 
+                        datas = WPTB_Helper.replaceAll( datas, 'data-wptb-el-main-table_setting-startedid-0',
                         'data-wptb-el-main-table_setting-' + postId );
                     }
                 }
@@ -1360,10 +1388,10 @@ var WPTB_Helper = {
 
         let styleObjJson = WPTB_Helper.elementsStylesConvertToObject();
         if( paramIdsNecessaryChange ) {
-            styleObjJson = WPTB_Helper.replaceAll( styleObjJson, '.wptb-element-main-table_setting-startedid-0', 
+            styleObjJson = WPTB_Helper.replaceAll( styleObjJson, '.wptb-element-main-table_setting-startedid-0',
                     '.wptb-element-main-table_setting-' + postId );
         }
-            
+
         if ( t === '' && code === '' ) {
             let messagingAreaText = '';
             if( t === '' ) messagingAreaText += 'You must assign a name to the table before saving it.</br>';
@@ -1384,12 +1412,12 @@ var WPTB_Helper = {
             elements_styles: styleObjJson,
             security_code: wptb_admin_object.security_code
         };
-        
-        
+
+
         if( previewSaving ) {
             params.preview_saving = previewSaving;
         }
-        
+
         if ( postId ) {
             params.id = postId;
         }
@@ -1408,7 +1436,7 @@ var WPTB_Helper = {
                     let regex = new RegExp( '&table=(.+)', "i" );
                     builderPageUrl = builderPageUrl.replace( regex, '' );
                     window.history.pushState( null, null, builderPageUrl + '&table=' + data[1] );
-                    
+
                     WPTB_Helper.saveTable( event, true );
                     return;
                 } else if( data[0] == 'edited' && startSaving ) {
@@ -1425,7 +1453,7 @@ var WPTB_Helper = {
                         wptbPreviewBtnHref = wptbPreviewBtnHref.replace( 'empty', data[1] );
                         wptbPreviewBtn.setAttribute( 'href', wptbPreviewBtnHref );
                     }
-                    
+
                     event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
                     let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
                     if( wptbSaveBtn.length > 0 ) {
@@ -1436,7 +1464,7 @@ var WPTB_Helper = {
                 } else if( data[0] == 'edited' ) {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
                     event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
-                    
+
                     let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
                     if( wptbSaveBtn.length > 0 ) {
                         wptbSaveBtn = wptbSaveBtn[0];
@@ -1458,6 +1486,11 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function() {
+        // if current active section is responsive menu, ignore this functionality
+        if(this.getCurrentSection() === 'table_responsive_menu'){
+            return;
+        }
+
         let cellModeBackground = document.querySelector( '#wptb-cell_mode_background' );
         if( cellModeBackground && cellModeBackground.classList.contains( 'visible' ) ) {
             return;
@@ -1488,7 +1521,7 @@ var WPTB_Helper = {
         if( infArr && Array.isArray( infArr ) ) {
             element_name = infArr[1];
         }
-        
+
         let params = {
             element_ajax_data: dataAjaxData,
             element_name: element_name,

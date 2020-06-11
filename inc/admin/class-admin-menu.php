@@ -244,6 +244,15 @@ class Admin_Menu {
 			// builder controls
 			wp_enqueue_script('wptb-controls-manager-js', plugin_dir_url(__FILE__) . 'js/WPTB_BuilderControls.js' , [], NS\PLUGIN_VERSION , false);
 
+			// script for responsive capabilities of table
+			$relative_path =  'inc/admin/js/WPTB_ResponsiveFrontend.js';
+			$responsive_script_url = trailingslashit(NS\WP_TABLE_BUILDER_URL) . $relative_path;
+			$responsive_script_dir = trailingslashit(NS\WP_TABLE_BUILDER_DIR) . $relative_path;
+
+			// TODO [erdembircan] for development purposes, in order to force reset browser cache, using file's last modified time as version, remove and use plugin version number for production
+			wp_enqueue_script('wptb-responsive-table-js', $responsive_script_url, [], filemtime($responsive_script_dir), true);
+
+
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',

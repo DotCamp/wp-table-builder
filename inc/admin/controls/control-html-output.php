@@ -45,7 +45,7 @@ class Control_Html_Output extends Base_Control {
         <#
         const {html} = data;
         #>
-		<div class="wptb-settings-row wptb-help-support-controls-wrapper">
+		<div class="wptb-settings-row wptb-html-control-wrapper">
             {{{html}}}
         </div>
 <?php

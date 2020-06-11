@@ -2,6 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Frontend;
 
+use WP_Table_Builder as NS;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -123,5 +125,13 @@ class Frontend {
 	public function enqueue_footer_scripts() {
 		// even though we are using ready event of jquery, since we are modifying dom elements, as a best practice, this script should go to footer
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+
+		// TODO [erdembircan] entry position for responsive frontend script
+		$relative_path =  'inc/admin/js/WPTB_ResponsiveFrontend.js';
+		$responsive_script_url = trailingslashit(NS\WP_TABLE_BUILDER_URL) . $relative_path;
+		$responsive_script_dir = trailingslashit(NS\WP_TABLE_BUILDER_DIR) . $relative_path;
+
+		// TODO [erdembircan] for development purposes, in order to force reset browser cache, using file's last modified time as version, remove and use plugin version number for production
+		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], filemtime($responsive_script_dir), true);
 	}
 }

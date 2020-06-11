@@ -1522,18 +1522,18 @@ var WPTB_Helper = {
                                 //                                    if( elementsSettings ) {
                                 //                                        elementsSettings = elementsSettings.trim();
                                 //                                        elementsSettings = JSON.parse( elementsSettings );
-                                //                                        if( elementsSettings && typeof elementsSettings === 'object' && 
+                                //                                        if( elementsSettings && typeof elementsSettings === 'object' &&
                                 //                                            ( 'tmpl-wptb-el-datas-' + dependOnControlElementKind ) in elementsSettings ) {
                                 //                                            let elementSettings = elementsSettings['tmpl-wptb-el-datas-' + dependOnControlElementKind];
-                                //                                            if( elementSettings && typeof elementSettings === 'object' && 
+                                //                                            if( elementSettings && typeof elementSettings === 'object' &&
                                 //                                                    ( 'data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName ) in elementSettings ) {
                                 //                                                let elementSettingValue = elementSettings['data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName];
-                                //                                                
+                                //
                                 //                                                if( elementSettingValue ) {
-                                //                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) && 
+                                //                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) &&
                                 //                                                        ( dependOn[1].indexOf( elementSettingValue ) !== -1 ) ) {
                                 //                                                        controlContainerElem.style.display = 'block';
-                                //                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) && 
+                                //                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) &&
                                 //                                                        ( dependOn[2].indexOf( elementSettingValue ) !== -1 ) ) {
                                 //                                                        controlContainerElem.style.display = 'none';
                                 //                                                    }
@@ -1750,7 +1750,7 @@ var WPTB_Helper = {
             }
         }
     },
-    // 
+    //
     elementOptionsSet: function elementOptionsSet(kind, element) {
         // get controls config for this element
         var wptbContrlStacksConfigId = 'wptb-' + kind + '-control-stack';
@@ -1778,6 +1778,8 @@ var WPTB_Helper = {
                 var cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + table_id);
                 if (cellEditActiveClass) cellEditActiveClass.classList.remove('wptb-element-table_cell_setting-' + table_id);
                 element.classList.add('wptb-element-table_cell_setting-' + table_id);
+            } else if (element.classList.contains('wptb-responsive')) {
+                element.classList.add('wptb-element-table_responsive_setting-' + table_id);
             }
 
             infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
@@ -1798,6 +1800,9 @@ var WPTB_Helper = {
             wptbelementOptionClass = 'wptb-element-option';
 
             this.activateSection('cell_settings');
+        } else if (element.classList.contains('wptb-responsive')) {
+            elementOptionsGroupId = 'table-responsive-group';
+            wptbelementOptionClass = 'wptb-element-option';
         } else {
             var children = document.getElementById('element-options-group').childNodes;
             for (var _i5 = 0; _i5 < children.length; _i5++) {
@@ -2006,6 +2011,7 @@ var WPTB_Helper = {
         var _this = this;
 
         this.sections = {};
+        this.currentSection = '';
         if (!Array.isArray(sections)) {
             sections = [sections];
         }
@@ -2029,6 +2035,7 @@ var WPTB_Helper = {
 
         var displayType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'block';
 
+        this.currentSection = sectionDataId;
         this.triggerSectionEvent(sectionDataId);
         Object.keys(this.sections).map(function (k) {
             if (Object.prototype.hasOwnProperty.call(_this2.sections, k)) {
@@ -2036,6 +2043,30 @@ var WPTB_Helper = {
                 _this2.sections[k].style = 'display: ' + visibility + ' !important';
             }
         });
+    },
+
+    /**
+     * Get id of current active section
+     *
+     * @returns {string} active section i
+     */
+    getCurrentSection: function getCurrentSection() {
+        return this.currentSection;
+    },
+
+    /**
+     * Get current section from search parameter 'wptb-builder-section' of window location
+     */
+    getSectionFromUrl: function getSectionFromUrl() {
+        var parsedUrl = new URL(window.location.href);
+        var urlSection = parsedUrl.searchParams.get('wptb-builder-section');
+        if (urlSection) {
+            if (Object.keys(this.sections).some(function (key) {
+                return key === urlSection;
+            })) {
+                this.activateSection(urlSection);
+            }
+        }
     },
 
     /**
@@ -2052,7 +2083,7 @@ var WPTB_Helper = {
                 vm.activateSection(sectionName, displayType);
             });
 
-            document.addEventListener('sectionChanged', function (e) {
+            document.addEventListener('wptbSectionChanged', function (e) {
                 if (e.detail === sectionName) {
                     s.classList.remove('disabled');
                     s.classList.add('active');
@@ -2081,7 +2112,7 @@ var WPTB_Helper = {
      * @param {string} sectionName section name
      */
     triggerSectionEvent: function triggerSectionEvent(sectionName) {
-        var sectionEvent = new CustomEvent('sectionChanged', { detail: sectionName });
+        var sectionEvent = new CustomEvent('wptbSectionChanged', { detail: sectionName });
 
         document.dispatchEvent(sectionEvent);
     },
@@ -2346,6 +2377,11 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function clickOnFreeSpace() {
+        // if current active section is responsive menu, ignore this functionality
+        if (this.getCurrentSection() === 'table_responsive_menu') {
+            return;
+        }
+
         var cellModeBackground = document.querySelector('#wptb-cell_mode_background');
         if (cellModeBackground && cellModeBackground.classList.contains('visible')) {
             return;
@@ -2736,11 +2772,24 @@ var WPTB_Initializer = function WPTB_Initializer() {
                 wptbTableStateSaveManager.tableStateSet();
         };
 
-        WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group']);
+        // register and setup section buttons
+        WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu']);
         WPTB_Helper.setupSectionButtons();
+
+        // activate elements section for startup
         WPTB_Helper.activateSection('elements');
+
+        // side bar toggle setup
         WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
+
+        // setup panel sections that have the ability to be toggled on/off
         WPTB_Helper.setupPanelToggleButtons();
+
+        // setup responsive menu both at left and builder panel
+        new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp');
+
+        // TODO [erdembircan] using this method for a better development environment while working on specific sections to get rid of clicking section buttons every time at page refresh
+        WPTB_Helper.getSectionFromUrl();
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
@@ -2922,6 +2971,78 @@ if (!Object.keys) {
             return result;
         };
     }();
+}
+/**
+ * Responsive menu and options class.
+ *
+ * @param {string} sectionName section name
+ * @param {string} responsiveWrapperId id for mount point
+ * @constructor
+ */
+// eslint-disable-next-line no-unused-vars
+function WptbResponsive(sectionName, responsiveWrapperId) {
+	var _this = this;
+
+	this.sectionName = sectionName;
+	this.responsiveWrapperId = responsiveWrapperId;
+	this.responsiveTable = null;
+	this.loaded = false;
+
+	/**
+  * Add responsive container to dom.
+  */
+	this.addContainerToDom = function () {
+		var responsiveContainer = document.querySelector('#' + _this.responsiveWrapperId);
+		if (!responsiveContainer) {
+			var mainContainer = document.querySelector('.wptb-table-setup');
+
+			var range = document.createRange();
+			range.setStart(mainContainer, 0);
+
+			var responsiveElement = range.createContextualFragment('<div class="wptb-responsive" id="' + _this.responsiveWrapperId + '">responsive element</div>');
+			mainContainer.appendChild(responsiveElement);
+			_this.loaded = true;
+		}
+
+		_this.responsiveTable = document.querySelector('#' + _this.responsiveWrapperId);
+	};
+
+	/**
+  * Load and make necessary mount preparations for component.
+  */
+	this.load = function () {
+		if (!_this.loaded) {
+			_this.addContainerToDom();
+
+			WPTB_Helper.elementOptionsSet('table_responsive_menu', _this.responsiveTable);
+			WPTB_ControlsManager.callControlScript('ResponsiveTable', _this.responsiveWrapperId);
+		}
+	};
+
+	/**
+  * Startup hook for the component.
+  */
+	this.startUp = function () {
+		// event listener for section change events
+		document.addEventListener('wptbSectionChanged', function (e) {
+			var tablePreview = document.querySelector('.wptb-preview-table');
+
+			// check if activated section is related to responsive and there is a main table already in the view
+			if (e.detail === _this.sectionName && tablePreview) {
+				_this.load();
+			}
+		});
+
+		// event listener for table ready signal
+		document.addEventListener('wptb:table:generated', function () {
+			// check current section to be sure that responsive menu is the active one before calling load related scripts
+			if (WPTB_Helper.getCurrentSection() === 'table_responsive_menu') {
+				_this.load();
+			}
+		});
+	};
+
+	this.startUp();
 }
 var WPTB_Settings = function WPTB_Settings() {
     var elems = document.getElementsByClassName('wptb-element');
@@ -4789,6 +4910,9 @@ var array = [],
     };
 
     WPTB_LeftPanel();
+
+    // event hook to signal that table is generated and ready to be used
+    WPTB_Helper.wptbDocumentEventGenerate('wptb:table:generated', document);
 
     WPTB_Helper.elementStartScript(table, 'table_setting');
     WPTB_Helper.elementOptionsSet('table_setting', table);

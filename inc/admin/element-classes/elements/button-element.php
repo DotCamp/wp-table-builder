@@ -203,7 +203,7 @@ class Button_Element extends Element_Base {
 				'min'          => 1,
 				'max'          => 3,
 				'step'         => 0.1,
-                'defaultValue' => 1
+				'defaultValue' => 1
 			]
 		];
 
@@ -255,7 +255,7 @@ class Button_Element extends Element_Base {
 			esc_html__( 'icon', $text_domain )    => $icon_controls,
 		];
 
-		Control_Section_Group_Tabbed::add_section( 'buttonElementOptions', 'button options', $button_controls, [
+		Control_Section_Group_Tabbed::add_section( 'buttonElementOptions', __( 'button options', 'wp-table-builder' ), $button_controls, [
 			$this,
 			'add_control'
 		] );

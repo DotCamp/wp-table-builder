@@ -124,6 +124,12 @@ class Controls_Manager {
 	 */
 	const HTML_OUTPUT = 'html_output';
 
+	/**
+	 * Adding html output control.
+	 */
+	const DATA_MULE = 'data_mule';
+
+
 
 	// Control elements query types
 	const CLASSTYPE = 'class';
@@ -175,7 +181,8 @@ class Controls_Manager {
 			self::SECTION_GROUP_TAB_CONTENT_END,
 			self::ICON_SELECT,
 			self::RANGE,
-			self::HTML_OUTPUT
+			self::HTML_OUTPUT,
+			self::DATA_MULE
 		];
 	}
 

@@ -32,6 +32,7 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * @return string Section title.
 	 * @since 1.1.2
 	 * @access public
+	 * @deprecated
 	 *
 	 */
 	public function get_title() {
