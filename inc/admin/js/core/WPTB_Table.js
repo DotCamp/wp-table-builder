@@ -142,6 +142,9 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             }
             cellSettings.classList.remove( 'visible' );
         }
+
+        let details = {countMarkedCells:markedCells};
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', this, details);
     };
 
     /* 

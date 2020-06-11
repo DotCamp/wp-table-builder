@@ -25,6 +25,9 @@ use WP_Table_Builder as NS;
 
     </div>
 
+    <!-- after html -->
+    <?php echo do_action( 'wp_table_builder:html_code_after' ); ?>
+    
 </div>
 
 <style type="text/css" id="custom-cursor">
