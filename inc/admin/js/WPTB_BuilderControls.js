@@ -13018,6 +13018,7 @@ var _default = {
     clone: function clone(n) {
       this.cloneInner = n;
     },
+    // switch to decide whether to clone the main table into responsive area or not
     cloneInner: function cloneInner(n) {
       if (n) {
         this.startClone();
@@ -13044,11 +13045,15 @@ var _default = {
       }
 
       this.clonedTable = mainTable.cloneNode(true);
-      this.$refs.tableClone.appendChild(this.clonedTable);
+      this.$refs.tableClone.appendChild(this.clonedTable); // emit an event signalling cloning main table is completed
+
+      this.$emit('tableCloned');
     },
     addDirectivesToTable: function addDirectivesToTable(n) {
       if (this.clonedTable) {
-        this.clonedTable.dataset.wptbResponsiveDirectives = n;
+        this.clonedTable.dataset.wptbResponsiveDirectives = n; // emit an event signalling end of directive copy operation
+
+        this.$emit('directivesCopied');
       }
     }
   }
@@ -13948,12 +13953,19 @@ var _default = {
     isVisible: function isVisible() {
       return this.directives.responsiveMode === this.mode;
     },
-    // pass parent context to slot scope
+    // pass parent context to slot scope, this way any element added as child can call methods and access properties of this parent component
     parentContext: function parentContext() {
       return this;
     }
   },
   methods: {
+    /**
+     * Decide whether control is disabled or not.
+     *
+     * Currently, as default, disabled state of controls are calculated according to if screen size fits in the range of 'desktop' or responsive mode is activated.
+     *
+     * @return {boolean} control is disabled or not
+     */
     isDisabled: function isDisabled() {
       return this.rangeName.id === 'desktop' || !this.directives.responsiveEnabled;
     }
@@ -13972,34 +13984,25 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.isVisible
-    ? _c("div", { staticClass: "wptb-responsive-toolbox-dynamic-wrapper" }, [
-        _c(
-          "div",
-          {
-            staticClass:
-              "wptb-controls-flex-row wptb-responsive-size-range-name"
-          },
-          [
-            _vm._v(
-              "\n\t\t" + _vm._s(_vm._f("cap")(_vm.rangeName.name)) + "\n\t"
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-responsive-toolbox-dynamic-controls-holder" },
-          [
-            _vm._t("default", null, {
-              context: _vm.parentContext,
-              directives: _vm.directives
-            })
-          ],
-          2
-        )
-      ])
-    : _vm._e()
+  return _c("div", { staticClass: "wptb-responsive-toolbox-dynamic-wrapper" }, [
+    _c(
+      "div",
+      { staticClass: "wptb-controls-flex-row wptb-responsive-size-range-name" },
+      [_vm._v("\n\t\t" + _vm._s(_vm._f("cap")(_vm.rangeName.name)) + "\n\t")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "wptb-responsive-toolbox-dynamic-controls-holder" },
+      [
+        _vm._t("default", null, {
+          context: _vm.parentContext,
+          directives: _vm.directives
+        })
+      ],
+      2
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -14013,7 +14016,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
+},{}],"components/AutoToolbox.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14021,40 +14024,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _PopUp = _interopRequireDefault(require("./PopUp"));
-
 var _ResponsiveDynamicToolbox = _interopRequireDefault(require("./ResponsiveDynamicToolbox"));
+
+var _PopUp = _interopRequireDefault(require("./PopUp"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -14088,8 +14063,241 @@ var _default = {
     sizeRange: Object
   },
   components: {
+    ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default,
+    PopUp: _PopUp.default
+  }
+};
+exports.default = _default;
+        var $ffb4dd = exports.default || module.exports;
+      
+      if (typeof $ffb4dd === 'function') {
+        $ffb4dd = $ffb4dd.options;
+      }
+    
+        /* template */
+        Object.assign($ffb4dd, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("responsive-dynamic-toolbox", {
+    attrs: { mode: "auto", "range-name": _vm.sizeRange },
+    scopedSlots: _vm._u([
+      {
+        key: "default",
+        fn: function(ref) {
+          var context = ref.context
+          return [
+            _c(
+              "div",
+              { staticClass: "wptb-controls-flex-row" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.directives.modeOptions.auto.topRowAsHeader,
+                      expression: "directives.modeOptions.auto.topRowAsHeader"
+                    }
+                  ],
+                  attrs: {
+                    id: "wptbTopRowHeader",
+                    type: "checkbox",
+                    disabled: context.isDisabled()
+                  },
+                  domProps: {
+                    checked: Array.isArray(
+                      _vm.directives.modeOptions.auto.topRowAsHeader
+                    )
+                      ? _vm._i(
+                          _vm.directives.modeOptions.auto.topRowAsHeader,
+                          null
+                        ) > -1
+                      : _vm.directives.modeOptions.auto.topRowAsHeader
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.directives.modeOptions.auto.topRowAsHeader,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.directives.modeOptions.auto,
+                              "topRowAsHeader",
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.directives.modeOptions.auto,
+                              "topRowAsHeader",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(
+                          _vm.directives.modeOptions.auto,
+                          "topRowAsHeader",
+                          $$c
+                        )
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "wptbTopRowHeader" } }, [
+                  _vm._v(" " + _vm._s(_vm.strings.topRowHeader) + ": ")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "pop-up",
+                  { attrs: { message: _vm.strings.topRowHeaderHelp } },
+                  [_vm._v("?")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "wptb-controls-flex-row" },
+              [
+                _c("label", { attrs: { for: "wptbStackDirection" } }, [
+                  _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ": ")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value:
+                          _vm.directives.modeOptions.auto.cellStackDirection,
+                        expression:
+                          "directives.modeOptions.auto.cellStackDirection"
+                      }
+                    ],
+                    attrs: {
+                      id: "wptbStackDirection",
+                      disabled: context.isDisabled()
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.directives.modeOptions.auto,
+                          "cellStackDirection",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "row" } }, [
+                      _vm._v(_vm._s(_vm._f("cap")(_vm.strings.row)))
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "column" } }, [
+                      _vm._v(_vm._s(_vm._f("cap")(_vm.strings.column)))
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "pop-up",
+                  { attrs: { message: _vm.strings.stackDirectionHelp } },
+                  [_vm._v("?")]
+                )
+              ],
+              1
+            )
+          ]
+        }
+      }
+    ])
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./PopUp":"components/PopUp.vue"}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PopUp = _interopRequireDefault(require("./PopUp"));
+
+var _ResponsiveDynamicToolbox = _interopRequireDefault(require("./ResponsiveDynamicToolbox"));
+
+var _AutoToolbox = _interopRequireDefault(require("./AutoToolbox"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    sizeRange: Object
+  },
+  components: {
     PopUp: _PopUp.default,
-    ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default
+    ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default,
+    AutoToolbox: _AutoToolbox.default
+  },
+  computed: {
+    dynamicToolbox: function dynamicToolbox() {
+      var currentMode = this.directives.responsiveMode;
+      return "".concat(currentMode[0].toUpperCase() + currentMode.slice(1), "Toolbox");
+    }
   },
   methods: {
     isCurrentMode: function isCurrentMode(mode) {
@@ -14229,14 +14437,6 @@ exports.default = _default;
                 [
                   _c("option", { attrs: { value: "auto" } }, [
                     _vm._v(_vm._s(_vm._f("cap")(_vm.strings.auto)))
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "pattern" } }, [
-                    _vm._v(_vm._s(_vm._f("cap")(_vm.strings.pattern)))
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "full" } }, [
-                    _vm._v(_vm._s(_vm._f("cap")(_vm.strings.full)))
                   ])
                 ]
               ),
@@ -14256,173 +14456,10 @@ exports.default = _default;
         ]
       ),
       _vm._v(" "),
-      _c("responsive-dynamic-toolbox", {
-        attrs: { mode: "auto", "range-name": _vm.sizeRange },
-        scopedSlots: _vm._u([
-          {
-            key: "default",
-            fn: function(ref) {
-              var context = ref.context
-              return [
-                _c(
-                  "div",
-                  { staticClass: "wptb-controls-flex-row" },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.directives.modeOptions.auto.topRowAsHeader,
-                          expression:
-                            "directives.modeOptions.auto.topRowAsHeader"
-                        }
-                      ],
-                      attrs: {
-                        id: "wptbTopRowHeader",
-                        type: "checkbox",
-                        disabled: context.isDisabled()
-                      },
-                      domProps: {
-                        checked: Array.isArray(
-                          _vm.directives.modeOptions.auto.topRowAsHeader
-                        )
-                          ? _vm._i(
-                              _vm.directives.modeOptions.auto.topRowAsHeader,
-                              null
-                            ) > -1
-                          : _vm.directives.modeOptions.auto.topRowAsHeader
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a =
-                              _vm.directives.modeOptions.auto.topRowAsHeader,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                _vm.$set(
-                                  _vm.directives.modeOptions.auto,
-                                  "topRowAsHeader",
-                                  $$a.concat([$$v])
-                                )
-                            } else {
-                              $$i > -1 &&
-                                _vm.$set(
-                                  _vm.directives.modeOptions.auto,
-                                  "topRowAsHeader",
-                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                )
-                            }
-                          } else {
-                            _vm.$set(
-                              _vm.directives.modeOptions.auto,
-                              "topRowAsHeader",
-                              $$c
-                            )
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("label", { attrs: { for: "wptbTopRowHeader" } }, [
-                      _vm._v(" " + _vm._s(_vm.strings.topRowHeader) + ": ")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "pop-up",
-                      { attrs: { message: _vm.strings.topRowHeaderHelp } },
-                      [_vm._v("?")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-controls-flex-row" },
-                  [
-                    _c("label", { attrs: { for: "wptbStackDirection" } }, [
-                      _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ": ")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "select",
-                      {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value:
-                              _vm.directives.modeOptions.auto
-                                .cellStackDirection,
-                            expression:
-                              "directives.modeOptions.auto.cellStackDirection"
-                          }
-                        ],
-                        attrs: {
-                          id: "wptbStackDirection",
-                          disabled: context.isDisabled()
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$selectedVal = Array.prototype.filter
-                              .call($event.target.options, function(o) {
-                                return o.selected
-                              })
-                              .map(function(o) {
-                                var val = "_value" in o ? o._value : o.value
-                                return val
-                              })
-                            _vm.$set(
-                              _vm.directives.modeOptions.auto,
-                              "cellStackDirection",
-                              $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            )
-                          }
-                        }
-                      },
-                      [
-                        _c("option", { attrs: { value: "row" } }, [
-                          _vm._v(_vm._s(_vm._f("cap")(_vm.strings.row)))
-                        ]),
-                        _vm._v(" "),
-                        _c("option", { attrs: { value: "column" } }, [
-                          _vm._v(_vm._s(_vm._f("cap")(_vm.strings.column)))
-                        ])
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "pop-up",
-                      { attrs: { message: _vm.strings.stackDirectionHelp } },
-                      [_vm._v("?")]
-                    )
-                  ],
-                  1
-                )
-              ]
-            }
-          }
-        ])
-      }),
-      _vm._v(" "),
-      _c(
-        "responsive-dynamic-toolbox",
-        { attrs: { mode: "pattern", "range-name": _vm.sizeRange } },
-        [_c("i", [_vm._v("pattern controls")])]
-      ),
-      _vm._v(" "),
-      _c(
-        "responsive-dynamic-toolbox",
-        { attrs: { mode: "full", "range-name": _vm.sizeRange } },
-        [_c("i", [_vm._v("full controls")])]
-      )
+      _c(_vm.dynamicToolbox, {
+        tag: "component",
+        attrs: { "size-range": _vm.sizeRange }
+      })
     ],
     1
   )
@@ -14439,7 +14476,270 @@ render._withStripped = true
           };
         })());
       
-},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue"}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
+},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
+var global = arguments[3];
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/**
+ * Responsive class assignment for frontend operations.
+ *
+ * This function can be used as an UMD
+ */
+(function assignToGlobal(key, context, factory) {
+  if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
+    module.exports = factory();
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    context[key] = factory();
+  } // eslint-disable-next-line no-restricted-globals
+
+})('WPTB_ResponsiveFrontend', self || global, function () {
+  /**
+   * Object implementation for table element operations.
+   *
+   * @param {HTMLElement} tableEl table element
+   * @return {object} instance
+   * @constructor
+   */
+  function TableObject(tableEl) {
+    var _this = this;
+
+    /**
+     * Table element
+     * @private
+     * @type {HTMLElement}
+     */
+    this.tableElement = tableEl;
+    /**
+     * Parsed table object.
+     *
+     * @private
+     * @type {array}
+     */
+
+    this.parsedTable = [];
+    /**
+     * Assign table cells into row and column numbers
+     */
+
+    this.parseTable = function () {
+      var rows = Array.from(_this.tableElement.querySelectorAll('tr'));
+      rows.map(function (r, ri) {
+        var cells = Array.from(r.querySelectorAll('td'));
+        cells.map(function (c) {
+          if (!_this.parsedTable[ri]) {
+            _this.parsedTable[ri] = [];
+          }
+
+          _this.parsedTable[ri].push(c);
+        });
+      });
+    };
+    /**
+     * Add a row to the table.
+     * @param {array} classList an array of class names to be added to row
+     */
+
+
+    this.addRow = function (classList) {
+      if (!Array.isArray(classList)) {
+        // eslint-disable-next-line no-param-reassign
+        classList = [classList];
+      }
+
+      var range = document.createRange();
+      range.setStart(_this.tableElement, 0);
+      var tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>"));
+
+      _this.tableElement.appendChild(tempRow);
+    };
+    /**
+     * Clear the contents of table element
+     */
+
+
+    this.clearTable = function () {
+      _this.tableElement.innerHTML = '';
+    };
+
+    this.parseTable();
+    return {
+      parsedTable: this.parsedTable,
+      addRow: this.addRow,
+      clearTable: this.clearTable
+    };
+  } // default options for responsive class
+
+
+  var responsiveClassDefaultOptions = {
+    query: '.wptb-preview-table'
+  };
+  /**
+   * Class for handling operations related to responsive functionalities of tables.
+   *
+   * @constructor
+   * @param {object} options options object
+   */
+
+  function ResponsiveFront() {
+    var _this2 = this;
+
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    // merge default options with user sent options
+    this.options = _objectSpread({}, responsiveClassDefaultOptions, {}, options);
+    this.elements = Array.from(document.querySelectorAll(this.options.query));
+    /**
+     * Get responsive directives of table element.
+     *
+     * @private
+     * @param {HTMLElement} el table element
+     * @return {object|null} JSON representation of the directive element, if not available, null will be returned
+     */
+
+    this.getDirective = function (el) {
+      var directiveString = el.dataset.wptbResponsiveDirectives;
+
+      if (!directiveString) {
+        return null;
+      }
+
+      return JSON.parse(atob(directiveString));
+    };
+    /**
+     * Rebuild table in auto mode.
+     *
+     * @param {HTMLElement} tableEl table element
+     * @param {string} sizeRange range id for current screen size
+     * @param {object} autoOption mode options
+     */
+
+
+    this.autoBuild = function (tableEl, sizeRange, autoOption) {
+      var tableObject = new TableObject(tableEl);
+      var direction = autoOption.cellStackDirection;
+      tableObject.clearTable();
+    };
+    /**
+     * Calculate range id for given size value.
+     *
+     * @param {number} val value
+     * @param {object} stops an object containing stop ids as keys and respectible sizes as values
+     * @return {string} range id
+     */
+
+
+    this.calculateRangeId = function (val, stops) {
+      // eslint-disable-next-line prefer-destructuring
+      var sortedStops = Object.keys(stops).sort(function (a, b) {
+        return stops[a] - stops[b];
+      });
+      var rangeId = sortedStops[0];
+      sortedStops.map(function (s) {
+        if (val >= stops[s]) {
+          rangeId = s;
+        }
+      });
+      return rangeId;
+    };
+    /**
+     * Rebuild table according to its responsive directives.
+     *
+     * @private
+     * @param {HTMLElement} el table element
+     * @param {number} size size in pixels
+     */
+
+
+    this.rebuildTable = function (el, size) {
+      var directive = _this2.getDirective(el);
+
+      if (directive) {
+        var mode = directive.responsiveMode; // main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
+
+        var buildCallable = _this2["".concat(mode, "Build")];
+
+        var sizeRangeId = _this2.calculateRangeId(size, directive.stops);
+
+        if (buildCallable) {
+          var modeOptions = directive.modeOptions[mode];
+          buildCallable.call(_this2, el, sizeRangeId, modeOptions);
+        } else {
+          throw new Error("No build mode named as [".concat(mode, "] found."));
+        }
+      }
+    };
+    /**
+     * Batch rebuild tables.
+     */
+
+
+    this.rebuildTables = function (size) {
+      // eslint-disable-next-line array-callback-return
+      _this2.elements.map(function (e) {
+        _this2.rebuildTable(e, size);
+      });
+    };
+
+    return {
+      rebuildTables: this.rebuildTables
+    };
+  }
+
+  return ResponsiveFront;
+});
+},{}],"functions/DeBouncer.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * ⛹️‍️Debounce class.
+ *
+ * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
+ *
+ * @return {function} main debounce function
+ * @constructor
+ */
+function DeBouncer() {
+  var actionIds = {};
+  /**
+   * Main debounce function.
+   *
+   * @param {number} id unique id for action
+   * @param {function} callable function to be called
+   * @param {number} timeout timeout duration in milliseconds
+   */
+
+  function deBounce(id, callable) {
+    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
+
+    if (Object.keys(actionIds).includes(id)) {
+      clearTimeout(actionIds[id]);
+    }
+
+    actionIds[id] = setTimeout(callable, timeout);
+  }
+
+  return deBounce;
+}
+/**
+ * @module DeBouncer module
+ */
+
+
+var _default = DeBouncer();
+
+exports.default = _default;
+},{}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14454,6 +14754,10 @@ var _ScreenSizeSlider = _interopRequireDefault(require("../components/ScreenSize
 var _SizeInput = _interopRequireDefault(require("../components/SizeInput"));
 
 var _ResponsiveToolbox = _interopRequireDefault(require("../components/ResponsiveToolbox"));
+
+var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("../../../WPTB_ResponsiveFrontend"));
+
+var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14485,6 +14789,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+
+/* eslint-disable camelcase */
 var _default = {
   props: {
     cloneQuery: {
@@ -14506,7 +14814,9 @@ var _default = {
       currentSize: 0,
       currentDirectives: null,
       currentSizeRangeName: 'desktop',
-      sliderPadding: 20
+      sliderPadding: 20,
+      sizeStops: {},
+      responsiveFrontend: null
     };
   },
   watch: {
@@ -14517,18 +14827,42 @@ var _default = {
       deep: true
     },
     currentSize: function currentSize(n) {
+      var _this = this;
+
+      var previousRangeName = this.currentSizeRangeName;
       this.currentSizeRangeName = this.calculateSizeRangeName(n);
+
+      if (previousRangeName !== this.currentSizeRangeName) {
+        (0, _DeBouncer.default)('currentSize', function () {
+          _this.responsiveFrontend.rebuildTables(_this.currentSize);
+        }, 2000);
+      }
     }
   },
+  beforeMount: function beforeMount() {
+    // calculate slider size stops before mounting the component
+    this.sizeStops = this.sliderSizeStops();
+  },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     // add a listener to section change event to hide/show component
     document.addEventListener('wptbSectionChanged', function (e) {
-      _this.isVisible = e.detail === 'table_responsive_menu';
+      _this2.isVisible = e.detail === 'table_responsive_menu';
     });
   },
-  computed: {
+  methods: {
+    // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class
+    tableCloned: function tableCloned() {
+      this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
+        query: '.wptb-builder-responsive table'
+      });
+    },
+    // handler for event that signals end of directive copy operation to table on DOM
+    directivesCopied: function directivesCopied() {
+      this.responsiveFrontend.rebuildTables(this.currentSize);
+    },
+
     /**
      * Recreate an object compatible with screen-size-slider component.
      *
@@ -14537,22 +14871,22 @@ var _default = {
      * @returns {object} reformatted slider size object
      */
     sliderSizeStops: function sliderSizeStops() {
-      var _this2 = this;
+      var _this3 = this;
 
       var normalizedStops = Object.keys(this.screenSizes).reduce(function (p, c) {
-        if (Object.prototype.hasOwnProperty.call(_this2.screenSizes, c)) {
+        if (Object.prototype.hasOwnProperty.call(_this3.screenSizes, c)) {
           // eslint-disable-next-line no-param-reassign
-          p[_this2.screenSizes[c].name] = _this2.screenSizes[c].width;
+          p[_this3.screenSizes[c].name] = _this3.screenSizes[c].width;
         }
 
         return p;
       }, {}); // add stops to directives
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
 
       this.directives.stops = normalizedStops;
       return normalizedStops;
-    }
-  },
-  methods: {
+    },
+
     /**
      * Find out the range key name for the size value
      *
@@ -14560,12 +14894,12 @@ var _default = {
      * @return {string} range key name
      */
     calculateSizeRangeName: function calculateSizeRangeName(val) {
-      var _this3 = this;
+      var _this4 = this;
 
       var mainObject = this.screenSizes;
       var ranges = Object.keys(mainObject).filter(function (s) {
         if (Object.prototype.hasOwnProperty.call(mainObject, s)) {
-          return mainObject[s].width <= val + _this3.sliderPadding;
+          return mainObject[s].width <= val + _this4.sliderPadding;
         }
 
         return false;
@@ -14627,7 +14961,7 @@ exports.default = _default;
               _c("screen-size-slider", {
                 attrs: {
                   "end-padding": _vm.sliderPadding,
-                  stops: _vm.sliderSizeStops,
+                  stops: _vm.sizeStops,
                   "model-val": _vm.currentSize
                 },
                 on: { slide: _vm.handleSizeSlideChange }
@@ -14665,6 +14999,10 @@ exports.default = _default;
                   clone: _vm.isVisible,
                   "clone-query": _vm.cloneQuery,
                   "table-directives": _vm.currentDirectives
+                },
+                on: {
+                  tableCloned: _vm.tableCloned,
+                  directivesCopied: _vm.directivesCopied
                 }
               }),
               _vm._v(" "),
@@ -14694,7 +15032,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue"}],"plugins/filters.js":[function(require,module,exports) {
+},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14801,7 +15139,9 @@ var _default = {
           cellStackDirection: 'row'
         }
       }
-    };
+    }; // flux store object
+    // this object implementation will give us the ability to persist the state of certain data properties across all app
+
     var optionsStore = {
       // eslint-disable-next-line no-shadow
       install: function install(Vue, options) {

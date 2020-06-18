@@ -87,7 +87,6 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					]
 				],
 				'compareSizes' => [
-					'iPad Pro'  => 1024,
 					'iPad'      => 768,
 					'iPhone X'  => 375,
 					'Pixel 2'   => 411,
@@ -104,12 +103,12 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'auto'                 => esc_html__( 'auto', 'wp-table-builder' ),
 					'pattern'              => esc_html__( 'pattern', 'wp-table-builder' ),
 					'full'                 => esc_html__( 'full', 'wp-table-builder' ),
-					// for help text of responsive modes, use the format of `{modename}Help`, this will be parsed dynamically to change the help text at frontend
-					'autoHelp'             => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns' ),
-					'patternHelp'          => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table' ),
-					'fullHelp'             => esc_html__( 'Full: You have full control over how table will be constructed' ),
-					'stackDirectionHelp' => esc_html__('The order of stacking, either by row or by columns'),
-					'topRowHeaderHelp' => esc_html__('Use the top most row of table as a header')
+					// for help text of responsive modes, use the format of `{mode_name}Help`, this will be parsed dynamically to change the help text at frontend
+					'autoHelp'             => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.' ),
+					'patternHelp'          => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.' ),
+					'fullHelp'             => esc_html__( 'Full: You have full control over how table will be constructed.' ),
+					'stackDirectionHelp' => esc_html__('The order of stacking, either by row or by columns.'),
+					'topRowHeaderHelp' => esc_html__('Use the top most row of table as a header.')
 				]
 			]
 		] );

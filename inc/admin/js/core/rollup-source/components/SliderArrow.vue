@@ -57,6 +57,7 @@ export default {
 			if (screenX === 0 && screenY === 0) {
 				return;
 			}
+
 			this.$emit('arrowDrag', e);
 		},
 	},

@@ -4,7 +4,7 @@
 			<div class="wptb-responsive-menu-tools">
 				<screen-size-slider
 					:end-padding="sliderPadding"
-					:stops="sliderSizeStops"
+					:stops="sizeStops"
 					@slide="handleSizeSlideChange"
 					:model-val="currentSize"
 				></screen-size-slider>
@@ -18,6 +18,8 @@
 					:clone="isVisible"
 					:clone-query="cloneQuery"
 					:table-directives="currentDirectives"
+					@tableCloned="tableCloned"
+					@directivesCopied="directivesCopied"
 				></table-clone>
 				<transition name="wptb-fade">
 					<div v-if="!directives.responsiveEnabled" class="wptb-responsive-disabled-table-overlay"></div>
@@ -27,10 +29,14 @@
 	</transition>
 </template>
 <script>
+/* eslint-disable camelcase */
+
 import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
 import SizeInput from '../components/SizeInput';
 import ResponsiveToolbox from '../components/ResponsiveToolbox';
+import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
+import DeBouncer from '../functions/DeBouncer';
 
 export default {
 	props: {
@@ -49,6 +55,8 @@ export default {
 			currentDirectives: null,
 			currentSizeRangeName: 'desktop',
 			sliderPadding: 20,
+			sizeStops: {},
+			responsiveFrontend: null,
 		};
 	},
 	watch: {
@@ -59,8 +67,23 @@ export default {
 			deep: true,
 		},
 		currentSize(n) {
+			const previousRangeName = this.currentSizeRangeName;
 			this.currentSizeRangeName = this.calculateSizeRangeName(n);
+
+			if (previousRangeName !== this.currentSizeRangeName) {
+				DeBouncer(
+					'currentSize',
+					() => {
+						this.responsiveFrontend.rebuildTables(this.currentSize);
+					},
+					2000
+				);
+			}
 		},
+	},
+	beforeMount() {
+		// calculate slider size stops before mounting the component
+		this.sizeStops = this.sliderSizeStops();
 	},
 	mounted() {
 		// add a listener to section change event to hide/show component
@@ -68,7 +91,15 @@ export default {
 			this.isVisible = e.detail === 'table_responsive_menu';
 		});
 	},
-	computed: {
+	methods: {
+		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class
+		tableCloned() {
+			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
+		},
+		// handler for event that signals end of directive copy operation to table on DOM
+		directivesCopied() {
+			this.responsiveFrontend.rebuildTables(this.currentSize);
+		},
 		/**
 		 * Recreate an object compatible with screen-size-slider component.
 		 *
@@ -82,17 +113,15 @@ export default {
 					// eslint-disable-next-line no-param-reassign
 					p[this.screenSizes[c].name] = this.screenSizes[c].width;
 				}
-
 				return p;
 			}, {});
 
 			// add stops to directives
+			// eslint-disable-next-line vue/no-side-effects-in-computed-properties
 			this.directives.stops = normalizedStops;
 
 			return normalizedStops;
 		},
-	},
-	methods: {
 		/**
 		 * Find out the range key name for the size value
 		 *

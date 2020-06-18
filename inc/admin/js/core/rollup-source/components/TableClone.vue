@@ -39,6 +39,7 @@ export default {
 		clone(n) {
 			this.cloneInner = n;
 		},
+		// switch to decide whether to clone the main table into responsive area or not
 		cloneInner(n) {
 			if (n) {
 				this.startClone();
@@ -66,10 +67,16 @@ export default {
 
 			this.clonedTable = mainTable.cloneNode(true);
 			this.$refs.tableClone.appendChild(this.clonedTable);
+
+			// emit an event signalling cloning main table is completed
+			this.$emit('tableCloned');
 		},
 		addDirectivesToTable(n) {
 			if (this.clonedTable) {
 				this.clonedTable.dataset.wptbResponsiveDirectives = n;
+
+				// emit an event signalling end of directive copy operation
+				this.$emit('directivesCopied');
 			}
 		},
 	},

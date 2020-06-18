@@ -29,6 +29,8 @@ export default {
 			},
 		};
 
+		// flux store object
+		// this object implementation will give us the ability to persist the state of certain data properties across all app
 		const optionsStore = {
 			// eslint-disable-next-line no-shadow
 			install(Vue, options) {
