@@ -1794,5 +1794,39 @@ var WPTB_Helper = {
                 WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
             }
         }
+    },
+
+    /**
+     * It resets all the bits of our abstract representation
+     * to 0 and removes the highlighting class of all cells.
+     */
+    undoSelect: function (table) {
+        let noCells = document.getElementsByClassName('wptb-no-cell-action'),
+            singleCells = document.getElementsByClassName('wptb-single-action'),
+            multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
+            cellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' );
+        if(!table) table = document.querySelector('.wptb-preview-table');
+            let tds = table.getElementsByClassName('wptb-highlighted');
+        while (tds.length) {
+            tds[0].classList.remove('wptb-highlighted');
+        }
+        cellSettings.classList.remove( 'visible' );
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < array[i].length; j++) {
+                array[i][j] = 0;
+            }
+        }
+        for (let i = 0; i < multipleCells.length; i++) {
+            multipleCells[i].classList.remove('visible');
+            multipleCells[i].setAttribute('disabled', 'disabled');
+        }
+        for (let i = 0; i < noCells.length; i++) {
+            noCells[i].classList.add('visible');
+            noCells[i].removeAttribute('disabled');
+        }
+        for (let i = 0; i < singleCells.length; i++) {
+            singleCells[i].classList.remove('visible');
+            singleCells[i].setAttribute('disabled', 'disabled');
+        }
     }
 }

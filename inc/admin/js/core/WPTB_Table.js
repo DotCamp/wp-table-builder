@@ -17,27 +17,28 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
      * @param Event this is the event instance of the click performed over a cell.
      */
     var mark = function ( event ) {
-        var rs = this.rowSpan,
-            cs = this.colSpan,
+        let thisElem = event.target;
+        let rs = thisElem.rowSpan,
+            cs = thisElem.colSpan,
             noCells = document.getElementsByClassName('wptb-no-cell-action'),
             singleCells = document.getElementsByClassName('wptb-single-action'),
             multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
             cellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ),
-            position = getCoords(this),
+            position = getCoords(thisElem),
             row = position[0],
             column = position[1];
         if ( ! document.select.isActivated() ) {
             return;
         }
-        if (this.className.match(/wptb-highlighted/)) {
-            this.classList.remove('wptb-highlighted');
+        if (thisElem.className.match(/wptb-highlighted/)) {
+            thisElem.classList.remove('wptb-highlighted');
             for (var i = 0; i < rs; i++) {
                 for (var j = 0; j < cs; j++) {
                     array[row + i][column + j] = 0;
                 }
             }
         } else {
-            this.classList.add('wptb-highlighted');
+            thisElem.classList.add('wptb-highlighted');
             for (var i = 0; i < rs; i++) {
                 for (var j = 0; j < cs; j++) {
                     array[row + i][column + j] = 1;
@@ -144,7 +145,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
 
         let details = {countMarkedCells:markedCells};
-        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', this, details);
+        WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', thisElem, details);
     };
 
     /* 
@@ -266,32 +267,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
      */
 
     var undoSelect = function () {
-        var noCells = document.getElementsByClassName('wptb-no-cell-action'),
-                singleCells = document.getElementsByClassName('wptb-single-action'),
-                multipleCells = document.getElementsByClassName('wptb-multiple-select-action'),
-                cellSettings = document.getElementById( 'wptb-left-scroll-panel-cell-settings' ),
-                tds = table.getElementsByClassName('wptb-highlighted');
-        while (tds.length) {
-            tds[0].classList.remove('wptb-highlighted');
-        }
-        cellSettings.classList.remove( 'visible' );
-        for (var i = 0; i < array.length; i++) {
-            for (var j = 0; j < array[i].length; j++) {
-                array[i][j] = 0;
-            }
-        }
-        for (var i = 0; i < multipleCells.length; i++) {
-            multipleCells[i].classList.remove('visible');
-            multipleCells[i].setAttribute('disabled', 'disabled');
-        }
-        for (var i = 0; i < noCells.length; i++) {
-            noCells[i].classList.add('visible');
-            noCells[i].removeAttribute('disabled');
-        }
-        for (var i = 0; i < singleCells.length; i++) {
-            singleCells[i].classList.remove('visible');
-            singleCells[i].setAttribute('disabled', 'disabled');
-        }
+        WPTB_Helper.undoSelect();
     };
 
     /*
@@ -426,6 +402,10 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         } else {
             return;
         }
+    }
+
+    table.mark = (event) => {
+        mark(event);
     }
 
     /*
