@@ -13001,7 +13001,9 @@ var _default = {
     return {
       // in order to not mutate the prop sent from the parent component, will be modifying the data prop instead
       cloneInner: false,
-      clonedTable: null
+      clonedTable: null,
+      mainTable: null,
+      tableDirectiveDatasetId: 'wptbResponsiveDirectives'
     };
   },
   mounted: function mounted() {
@@ -13011,7 +13013,7 @@ var _default = {
     /**
      * Watch clone prop.
      *
-     * In order to prevent the mutation of the prop sent by parent element, will be directing any value change coming from parent to data property
+     * In order to prevent the mutation of the prop sent by parent element, will be directing any value change coming from parent to data property.
      *
      * @param {boolean} n new value
      */
@@ -13033,25 +13035,42 @@ var _default = {
   },
   methods: {
     /**
-     * Start clone operation
+     * Start clone operation.
      *
      * Basic logic of this clone operation is to clone the main table from table builder and mount it to referenced element at template. This way, we will have the exact same copy of the element from table builder, and will only focus on responsive functionality of it.
      */
     startClone: function startClone() {
-      var mainTable = document.querySelector(this.cloneQuery);
+      this.mainTable = document.querySelector(this.cloneQuery);
 
-      if (!mainTable) {
+      if (!this.mainTable) {
         throw new Error("no clone target is found with a query value of ".concat(this.cloneQuery));
       }
 
-      this.clonedTable = mainTable.cloneNode(true);
-      this.$refs.tableClone.appendChild(this.clonedTable); // emit an event signalling cloning main table is completed
+      this.clonedTable = this.mainTable.cloneNode(true);
+      this.$refs.tableClone.appendChild(this.clonedTable); // directives that are already present in the main table
+      // this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
 
-      this.$emit('tableCloned');
+      var mainTableDirectives = this.mainTable.dataset[this.tableDirectiveDatasetId]; // since this component will be re-cloning the table at every visibility change of responsive menu, we should add necessary table directives to cloned table without waiting for them to be automatically added on change
+
+      if (this.tableDirectives) {
+        this.addDirectivesToTable(this.tableDirectives);
+      } // emit an event signalling cloning main table is completed
+
+
+      this.$emit('tableCloned', mainTableDirectives);
     },
+
+    /**
+     * Add directives to dataset of cloned table and main table.
+     *
+     * @param {string} n new directives
+     */
     addDirectivesToTable: function addDirectivesToTable(n) {
-      if (this.clonedTable) {
-        this.clonedTable.dataset.wptbResponsiveDirectives = n; // emit an event signalling end of directive copy operation
+      if (this.clonedTable && this.mainTable) {
+        // add directives to clone
+        this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to main table
+
+        this.mainTable.dataset[this.tableDirectiveDatasetId] = n; // emit an event signalling end of directive copy operation
 
         this.$emit('directivesCopied');
       }
@@ -14489,7 +14508,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 /**
  * Responsive class assignment for frontend operations.
  *
- * This function can be used as an UMD
+ * This file can be used as an UMD.
  */
 (function assignToGlobal(key, context, factory) {
   if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
@@ -14524,14 +14543,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      */
 
     this.parsedTable = [];
+    this.rowCache = [];
     /**
      * Assign table cells into row and column numbers
      */
 
     this.parseTable = function () {
-      var rows = Array.from(_this.tableElement.querySelectorAll('tr'));
+      var rows = Array.from(_this.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
+
       rows.map(function (r, ri) {
-        var cells = Array.from(r.querySelectorAll('td'));
+        var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
+
         cells.map(function (c) {
           if (!_this.parsedTable[ri]) {
             _this.parsedTable[ri] = [];
@@ -14553,26 +14575,121 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         classList = [classList];
       }
 
-      var range = document.createRange();
-      range.setStart(_this.tableElement, 0);
-      var tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>"));
+      var tableBody = _this.tableElement.querySelector('tbody');
 
-      _this.tableElement.appendChild(tempRow);
+      var range = document.createRange();
+      range.setStart(tableBody, 0);
+      var tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>")).childNodes[0]; // add row to table body
+
+      tableBody.appendChild(tempRow); // cache row for future use
+
+      _this.rowCache.push(tempRow);
+
+      return {
+        el: tempRow,
+        id: _this.rowCache.length - 1
+      };
     };
     /**
-     * Clear the contents of table element
+     * Clear the contents of table element.
      */
 
 
     this.clearTable = function () {
-      _this.tableElement.innerHTML = '';
+      // clear row cache
+      _this.rowCache = []; // clear children of `tbody` element
+
+      _this.tableElement.querySelector('tbody').innerHTML = '';
+    };
+    /**
+     * Get row element from cache.
+     *
+     * @param {number} id row id
+     * @return {null|HTMLElement} row element if present or null if not
+     */
+
+
+    this.getRow = function (id) {
+      if (_this.rowCache[id]) {
+        return _this.rowCache[id];
+      }
+
+      console.warn("[WPTB]: no row with id [".concat(id, "] found in the cache."));
+      return null;
+    };
+    /**
+     * Get maximum number of rows available at table.
+     *
+     * @return {number} maximum amount of rows
+     */
+
+
+    this.maxRows = function () {
+      return _this.parsedTable.length;
+    };
+    /**
+     * Get the number of maximum available column count in the table.
+     *
+     * @return {number} maximum available column count
+     */
+
+
+    this.maxColumns = function () {
+      return _this.parsedTable.reduce(function (p, c) {
+        if (c.length > p) {
+          // eslint-disable-next-line no-param-reassign
+          p = c.length;
+        }
+
+        return p;
+      }, 0);
+    };
+    /**
+     * Get the table cell at specified row-column location.
+     *
+     * As in arrays, row and column numbering starts from number 0.
+     *
+     * @param {number} r row number
+     * @param {number} c column number
+     * @return {HTMLElement | null} element if address is possible, null if not
+     */
+
+
+    this.getCell = function (r, c) {
+      if (_this.parsedTable[r][c]) {
+        return _this.parsedTable[r][c];
+      }
+
+      console.warn("[WPTB]: no cell found at the given address of [".concat(r, "-").concat(c, "]"));
+      return null;
+    };
+    /**
+     * Append the cell with given ids to a cached row
+     *
+     * @param {number} cellRowId cell row id
+     * @param {number} cellColumnId cell column id
+     * @param {number} rowId id of row in row cache
+     */
+
+
+    this.appendToRow = function (cellRowId, cellColumnId, rowId) {
+      var cachedRow = _this.getRow(rowId);
+
+      var cell = _this.getCell(cellRowId, cellColumnId);
+
+      if (cell && cachedRow) {
+        cachedRow.appendChild(cell);
+      }
     };
 
     this.parseTable();
     return {
-      parsedTable: this.parsedTable,
+      maxRows: this.maxRows,
+      maxColumns: this.maxColumns,
       addRow: this.addRow,
-      clearTable: this.clearTable
+      clearTable: this.clearTable,
+      getCell: this.getCell,
+      appendToRow: this.appendToRow
     };
   } // default options for responsive class
 
@@ -14594,6 +14711,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // merge default options with user sent options
     this.options = _objectSpread({}, responsiveClassDefaultOptions, {}, options);
     this.elements = Array.from(document.querySelectorAll(this.options.query));
+    this.elementObjects = this.elements.map(function (e) {
+      return {
+        el: e,
+        tableObject: new TableObject(e)
+      };
+    });
     /**
      * Get responsive directives of table element.
      *
@@ -14614,22 +14737,84 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Rebuild table in auto mode.
      *
+     * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
+     *
      * @param {HTMLElement} tableEl table element
      * @param {string} sizeRange range id for current screen size
      * @param {object} autoOption mode options
+     * @param {TableObject} tableObj table object
      */
 
 
-    this.autoBuild = function (tableEl, sizeRange, autoOption) {
-      var tableObject = new TableObject(tableEl);
+    this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
       var direction = autoOption.cellStackDirection;
-      tableObject.clearTable();
+      tableObj.clearTable();
+
+      if (sizeRange === 'desktop') {
+        _this2.buildDefault(tableObj);
+      } else {
+        _this2.autoDirectionBuild(tableObj, direction);
+      }
+    };
+    /**
+     * Rebuild table with a direction to read cells.
+     *
+     * Direction in question in here is either by row or column:
+     * * row: cells will be read row by row, in each row starting from the first column
+     * * column: cells will be read column by column, in each column starting from the first row of the table
+     *
+     * @param {TableObject} tableObj table object
+     * @param {string} direction direction to read cells
+     */
+
+
+    this.autoDirectionBuild = function (tableObj, direction) {
+      var rows = tableObj.maxRows();
+      var columns = tableObj.maxColumns();
+      var isRowStacked = direction === 'row'; // TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
+
+      if (isRowStacked) {
+        for (var r = 0; r < rows; r += 1) {
+          for (var c = 0; c < columns; c += 1) {
+            var rowId = tableObj.addRow('wptb-row').id;
+            tableObj.appendToRow(r, c, rowId);
+          }
+        }
+      } else {
+        for (var _c = 0; _c < columns; _c += 1) {
+          for (var _r = 0; _r < rows; _r += 1) {
+            var _rowId = tableObj.addRow('wptb-row').id;
+            tableObj.appendToRow(_r, _c, _rowId);
+          }
+        }
+      }
+    };
+    /**
+     * Build table in its default form.
+     *
+     * Default form of table is the layout it has in desktop breakpoint.
+     *
+     * @param {TableObject} tableObj table object
+     */
+
+
+    this.buildDefault = function (tableObj) {
+      var rows = tableObj.maxRows();
+      var columns = tableObj.maxColumns();
+
+      for (var r = 0; r < rows; r += 1) {
+        var rowId = tableObj.addRow('wptb-row').id;
+
+        for (var c = 0; c < columns; c += 1) {
+          tableObj.appendToRow(r, c, rowId);
+        }
+      }
     };
     /**
      * Calculate range id for given size value.
      *
      * @param {number} val value
-     * @param {object} stops an object containing stop ids as keys and respectible sizes as values
+     * @param {object} stops an object containing stop ids as keys and respective sizes as values
      * @return {string} range id
      */
 
@@ -14639,7 +14824,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var sortedStops = Object.keys(stops).sort(function (a, b) {
         return stops[a] - stops[b];
       });
-      var rangeId = sortedStops[0];
+      var rangeId = sortedStops[0]; // eslint-disable-next-line array-callback-return
+
       sortedStops.map(function (s) {
         if (val >= stops[s]) {
           rangeId = s;
@@ -14653,13 +14839,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * @private
      * @param {HTMLElement} el table element
      * @param {number} size size in pixels
+     * @param {TableObject} tableObj table object instance
      */
 
 
-    this.rebuildTable = function (el, size) {
+    this.rebuildTable = function (el, size, tableObj) {
       var directive = _this2.getDirective(el);
 
       if (directive) {
+        if (!directive.responsiveEnabled) {
+          _this2.buildDefault(tableObj);
+
+          return;
+        }
+
         var mode = directive.responsiveMode; // main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
 
         var buildCallable = _this2["".concat(mode, "Build")];
@@ -14668,21 +14861,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this2, el, sizeRangeId, modeOptions);
+          buildCallable.call(_this2, el, sizeRangeId, modeOptions, tableObj);
         } else {
           throw new Error("No build mode named as [".concat(mode, "] found."));
         }
       }
     };
     /**
-     * Batch rebuild tables.
+     * Rebuild tables with the given screen size.
+     *
+     * @param {number} size screen size
      */
 
 
     this.rebuildTables = function (size) {
-      // eslint-disable-next-line array-callback-return
-      _this2.elements.map(function (e) {
-        _this2.rebuildTable(e, size);
+      _this2.elementObjects.map(function (o) {
+        _this2.rebuildTable(o.el, size, o.tableObject);
       });
     };
 
@@ -14761,38 +14955,14 @@ var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-/* eslint-disable camelcase */
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var _default = {
   props: {
     cloneQuery: {
@@ -14816,7 +14986,9 @@ var _default = {
       currentSizeRangeName: 'desktop',
       sliderPadding: 20,
       sizeStops: {},
-      responsiveFrontend: null
+      responsiveFrontend: null,
+      rebuilding: false,
+      debounceTime: 1000
     };
   },
   watch: {
@@ -14833,9 +15005,13 @@ var _default = {
       this.currentSizeRangeName = this.calculateSizeRangeName(n);
 
       if (previousRangeName !== this.currentSizeRangeName) {
+        this.rebuilding = true;
         (0, _DeBouncer.default)('currentSize', function () {
+          // rebuilt table according to its responsive directives
           _this.responsiveFrontend.rebuildTables(_this.currentSize);
-        }, 2000);
+
+          _this.rebuilding = false;
+        }, this.debounceTime);
       }
     }
   },
@@ -14852,21 +15028,60 @@ var _default = {
     });
   },
   methods: {
-    // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class
-    tableCloned: function tableCloned() {
+    // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
+    tableCloned: function tableCloned(mainDirectives) {
       this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
         query: '.wptb-builder-responsive table'
+      }); // there is already a directive at main table, decode and assign it to current ones
+
+      if (mainDirectives) {
+        var decodedMainDirectives = this.decodeResponsiveDirectives(mainDirectives);
+
+        try {
+          var mainDirectiveObj = JSON.parse(decodedMainDirectives);
+          this.deepMergeObject(this.directives, mainDirectiveObj);
+        } catch (e) {
+          console.warn('[WPTB]: invalid directive found at main table');
+        }
+      }
+    },
+
+    /**
+     * Deep merge two objects 🐋🐋.
+     *
+     * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way object reference link will not be broken and reactive abilities of the store will continue to function.
+     *
+     * @param {object} baseObj base object
+     * @param {object} targetObj target object
+     */
+    deepMergeObject: function deepMergeObject(baseObj, targetObj) {
+      // eslint-disable-next-line array-callback-return
+      Object.keys(targetObj).map(function (key) {
+        if (Object.prototype.hasOwnProperty.call(targetObj, key)) {
+          if (baseObj[key] !== undefined) {
+            if (_typeof(baseObj[key]) === 'object') {
+              // eslint-disable-next-line no-param-reassign
+              baseObj[key] = _objectSpread({}, baseObj[key], {}, targetObj[key]);
+            } else {
+              // eslint-disable-next-line no-param-reassign
+              baseObj[key] = targetObj[key];
+            }
+          }
+        }
       });
     },
     // handler for event that signals end of directive copy operation to table on DOM
     directivesCopied: function directivesCopied() {
+      // rebuilt table according to its responsive directives
       this.responsiveFrontend.rebuildTables(this.currentSize);
+      new WPTB_TableStateSaveManager().tableStateSet();
+      this.rebuilding = false;
     },
 
     /**
      * Recreate an object compatible with screen-size-slider component.
      *
-     * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component
+     * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
      *
      * @returns {object} reformatted slider size object
      */
@@ -14888,7 +15103,7 @@ var _default = {
     },
 
     /**
-     * Find out the range key name for the size value
+     * Find out the range key name for the size value.
      *
      * @param {number} val size value
      * @return {string} range key name
@@ -15012,6 +15227,24 @@ exports.default = _default;
                       staticClass: "wptb-responsive-disabled-table-overlay"
                     })
                   : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("transition", { attrs: { name: "wptb-fade" } }, [
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.rebuilding,
+                        expression: "rebuilding"
+                      }
+                    ],
+                    staticClass: "wptb-responsive-wait-overlay"
+                  },
+                  [_vm._v(_vm._s(_vm.strings.rebuilding))]
+                )
               ])
             ],
             1

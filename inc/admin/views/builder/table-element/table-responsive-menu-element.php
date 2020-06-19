@@ -54,15 +54,17 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
+		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu, can choose from a list of devices or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.' );
+
 		$help_section_group_controls = [
 			'helpAndInfo' => [
 				'label' => 'none',
 				'type'  => Controls_Manager::HTML_OUTPUT,
-				'html'  => '<div style="font-size: 80%; padding: 0 20px"><i>info and help about usage of this menu will be here...</i></div>',
+				'html'  => '<div style="font-size: 80%; padding: 0 20px"><i>' . $how_to_text . '</i></div>',
 			]
 		];
 
-		Control_Section_Group_Collapse::add_section( 'table_responsive_panel', esc_html__( 'info', 'wp-table-builder' ), $help_section_group_controls, [
+		Control_Section_Group_Collapse::add_section( 'table_responsive_panel', esc_html__( 'how to', 'wp-table-builder' ), $help_section_group_controls, [
 			$this,
 			'add_control'
 		], true );
@@ -93,10 +95,11 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'Galaxy S5' => 360,
 				],
 				'strings'      => [
+					'rebuilding'           => esc_html__( 'rebuilding', 'wp-table-builder' ),
 					'enableResponsive'     => esc_html__( 'enable responsive table', 'wp-table-builder' ),
 					'enableResponsiveHelp' => esc_html__( 'Enable responsive capabilities of current table', 'wp-table-builder' ),
-					'stackDirection' => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
-					'topRowHeader' => esc_html__( 'Top row as header', 'wp-table-builder' ),
+					'stackDirection'       => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
+					'topRowHeader'         => esc_html__( 'Top row as header', 'wp-table-builder' ),
 					'row'                  => esc_html__( 'row', 'wp-table-builder' ),
 					'column'               => esc_html__( 'column', 'wp-table-builder' ),
 					'mode'                 => esc_html__( 'mode', 'wp-table-builder' ),
@@ -107,8 +110,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'autoHelp'             => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.' ),
 					'patternHelp'          => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.' ),
 					'fullHelp'             => esc_html__( 'Full: You have full control over how table will be constructed.' ),
-					'stackDirectionHelp' => esc_html__('The order of stacking, either by row or by columns.'),
-					'topRowHeaderHelp' => esc_html__('Use the top most row of table as a header.')
+					'stackDirectionHelp'   => esc_html__( 'The order of stacking, either by row or by columns.' ),
+					'topRowHeaderHelp'     => esc_html__( 'Use the top most row of table as a header.' )
 				]
 			]
 		] );

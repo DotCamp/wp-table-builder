@@ -24,6 +24,9 @@
 				<transition name="wptb-fade">
 					<div v-if="!directives.responsiveEnabled" class="wptb-responsive-disabled-table-overlay"></div>
 				</transition>
+				<transition name="wptb-fade">
+					<div v-show="rebuilding" class="wptb-responsive-wait-overlay">{{ strings.rebuilding }}</div>
+				</transition>
 			</div>
 		</div>
 	</transition>
@@ -57,6 +60,8 @@ export default {
 			sliderPadding: 20,
 			sizeStops: {},
 			responsiveFrontend: null,
+			rebuilding: false,
+			debounceTime: 1000,
 		};
 	},
 	watch: {
@@ -71,12 +76,15 @@ export default {
 			this.currentSizeRangeName = this.calculateSizeRangeName(n);
 
 			if (previousRangeName !== this.currentSizeRangeName) {
+				this.rebuilding = true;
 				DeBouncer(
 					'currentSize',
 					() => {
+						// rebuilt table according to its responsive directives
 						this.responsiveFrontend.rebuildTables(this.currentSize);
+						this.rebuilding = false;
 					},
-					2000
+					this.debounceTime
 				);
 			}
 		},
@@ -92,18 +100,59 @@ export default {
 		});
 	},
 	methods: {
-		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class
-		tableCloned() {
+		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
+		tableCloned(mainDirectives) {
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
+			// there is already a directive at main table, decode and assign it to current ones
+			if (mainDirectives) {
+				const decodedMainDirectives = this.decodeResponsiveDirectives(mainDirectives);
+
+				try {
+					const mainDirectiveObj = JSON.parse(decodedMainDirectives);
+
+					this.deepMergeObject(this.directives, mainDirectiveObj);
+				} catch (e) {
+					console.warn('[WPTB]: invalid directive found at main table');
+				}
+			}
+		},
+		/**
+		 * Deep merge two objects 🐋🐋.
+		 *
+		 * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way object reference link will not be broken and reactive abilities of the store will continue to function.
+		 *
+		 * @param {object} baseObj base object
+		 * @param {object} targetObj target object
+		 */
+		deepMergeObject(baseObj, targetObj) {
+			// eslint-disable-next-line array-callback-return
+			Object.keys(targetObj).map((key) => {
+				if (Object.prototype.hasOwnProperty.call(targetObj, key)) {
+					if (baseObj[key] !== undefined) {
+						if (typeof baseObj[key] === 'object') {
+							// eslint-disable-next-line no-param-reassign
+							baseObj[key] = { ...baseObj[key], ...targetObj[key] };
+						} else {
+							// eslint-disable-next-line no-param-reassign
+							baseObj[key] = targetObj[key];
+						}
+					}
+				}
+			});
 		},
 		// handler for event that signals end of directive copy operation to table on DOM
 		directivesCopied() {
+			// rebuilt table according to its responsive directives
 			this.responsiveFrontend.rebuildTables(this.currentSize);
+
+			new WPTB_TableStateSaveManager().tableStateSet();
+
+			this.rebuilding = false;
 		},
 		/**
 		 * Recreate an object compatible with screen-size-slider component.
 		 *
-		 * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component
+		 * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
 		 *
 		 * @returns {object} reformatted slider size object
 		 */
@@ -123,7 +172,7 @@ export default {
 			return normalizedStops;
 		},
 		/**
-		 * Find out the range key name for the size value
+		 * Find out the range key name for the size value.
 		 *
 		 * @param {number} val size value
 		 * @return {string} range key name
