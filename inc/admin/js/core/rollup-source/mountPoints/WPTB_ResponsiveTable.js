@@ -14,8 +14,17 @@ export default {
 		const data = WPTB_ControlsManager.getControlData('responsiveMenuData');
 		const mainTableQuery = '.wptb-preview-table';
 
-		// various app options that affects the functionality
-		const appOptions = {};
+		/**
+		 * Various options that will be used all around the app
+		 *
+		 * * identifyCells -> show visual unique identification for table cell elements
+		 * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
+		 *
+		 */
+		const appOptions = {
+			identifyCells: false,
+			hasLegacyResponsive: false,
+		};
 
 		// directives for responsive features
 		const directives = {

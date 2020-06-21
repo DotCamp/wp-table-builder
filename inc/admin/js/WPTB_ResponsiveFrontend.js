@@ -13,6 +13,74 @@
 	// eslint-disable-next-line no-restricted-globals
 })('WPTB_ResponsiveFrontend', self || global, () => {
 	/**
+	 * Object implementation for cell element operations
+	 *
+	 * @param {HTMLElement} cellElement cell element
+	 * @constructor
+	 */
+	function CellObject(cellElement) {
+		this.element = cellElement;
+		this.modifications = {};
+
+		/**
+		 * Get cell element.
+		 * @return {HTMLElement} cell element
+		 */
+		this.getElement = () => {
+			return this.element;
+		};
+
+		/**
+		 * Add attribute to cell element.
+		 *
+		 * This function have the ability to add/remove attributes from cell element.
+		 *
+		 * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
+		 * @param {any} attributeValue attribute value
+		 */
+		this.setAttribute = (attributeKey, attributeValue) => {
+			let defaultVal = this.getElement()[attributeKey];
+			if (this.modifications[attributeKey]) {
+				defaultVal = this.modifications[attributeKey].default;
+			}
+
+			this.modifications[attributeKey] = { value: attributeValue, default: defaultVal };
+
+			this.getElement()[attributeKey] = attributeValue;
+		};
+
+		/**
+		 * Reset a modified attribute to its default value
+		 *
+		 * @param {string} attributeKey attribute name
+		 */
+		this.resetAttribute = (attributeKey) => {
+			if (this.modifications[attributeKey]) {
+				this.getElement()[attributeKey] = this.modifications[attributeKey].default;
+				this.getElement()[attributeKey] = undefined;
+			}
+		};
+
+		/**
+		 * Reset all modified attributes of cell element to their default values.
+		 */
+		this.resetAllAttributes = () => {
+			Object.keys(this.modifications).map((k) => {
+				if (Object.prototype.hasOwnProperty.call(this.modifications, k)) {
+					this.resetAttribute(k);
+				}
+			});
+		};
+
+		return {
+			getElement: this.getElement,
+			el: this.element,
+			setAttribute: this.setAttribute,
+			resetAllAttributes: this.resetAllAttributes,
+		};
+	}
+
+	/**
 	 * Object implementation for table element operations.
 	 *
 	 * @param {HTMLElement} tableEl table element
@@ -53,7 +121,7 @@
 						this.parsedTable[ri] = [];
 					}
 
-					this.parsedTable[ri].push(c);
+					this.parsedTable[ri].push(new CellObject(c));
 				});
 			});
 		};
@@ -141,14 +209,35 @@
 		 *
 		 * @param {number} r row number
 		 * @param {number} c column number
-		 * @return {HTMLElement | null} element if address is possible, null if not
+		 * @param {boolean} returnObject return object instead of HTMLElement
+		 * @return {HTMLElement | null | CellObject} element if address is possible, null if not
 		 */
-		this.getCell = (r, c) => {
+		this.getCell = (r, c, returnObject = false) => {
 			if (this.parsedTable[r][c]) {
-				return this.parsedTable[r][c];
+				if (returnObject) {
+					return this.parsedTable[r][c];
+				}
+				return this.parsedTable[r][c].el;
 			}
 			console.warn(`[WPTB]: no cell found at the given address of [${r}-${c}]`);
 			return null;
+		};
+
+		/**
+		 * Get cells at a given row.
+		 *
+		 * @param {number} rowId row id
+		 * @return {array} cells in row
+		 */
+		this.getCellsAtRow = (rowId) => {
+			const cells = [];
+			for (let c = 0; c < this.maxColumns(); c += 1) {
+				const tempCell = this.getCell(rowId, c);
+				if (tempCell) {
+					cells.push(tempCell);
+				}
+			}
+			return cells;
 		};
 
 		/**
@@ -160,11 +249,12 @@
 		 */
 		this.appendToRow = (cellRowId, cellColumnId, rowId) => {
 			const cachedRow = this.getRow(rowId);
-			const cell = this.getCell(cellRowId, cellColumnId);
+			const cell = this.getCell(cellRowId, cellColumnId, true);
 
 			if (cell && cachedRow) {
-				cachedRow.appendChild(cell);
+				cachedRow.appendChild(cell.getElement());
 			}
+			return cell;
 		};
 
 		this.parseTable();
@@ -176,12 +266,15 @@
 			clearTable: this.clearTable,
 			getCell: this.getCell,
 			appendToRow: this.appendToRow,
+			getCellsAtRow: this.getCellsAtRow,
 		};
 	}
 
 	// default options for responsive class
 	const responsiveClassDefaultOptions = {
 		query: '.wptb-preview-table',
+		defaultClasses: ['wptb-plugin-responsive-base'],
+		bindToResize: false,
 	};
 
 	/**
@@ -204,6 +297,15 @@
 		});
 
 		/**
+		 * Bind rebuilding of tables to window resize event.
+		 */
+		this.bindRebuildToResize = () => {
+			window.addEventListener('resize', (e) => {
+				this.rebuildTables(e.target.innerWidth);
+			});
+		};
+
+		/**
 		 * Get responsive directives of table element.
 		 *
 		 * @private
@@ -221,6 +323,25 @@
 		};
 
 		/**
+		 * Add default classes to rebuilt tables.
+		 *
+		 * This classes are added to lay out a base style for the responsive table.
+		 *
+		 * @param {HTMLElement} el table element
+		 */
+		this.addDefaultClasses = (el) => {
+			el.classList.add(this.options.defaultClasses);
+		};
+
+		/**
+		 * Remove default classes from target table.
+		 * @param {HTMLElement} el table element
+		 */
+		this.removeDefaultClasses = (el) => {
+			el.classList.remove(this.options.defaultClasses);
+		};
+
+		/**
 		 * Rebuild table in auto mode.
 		 *
 		 * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
@@ -232,13 +353,16 @@
 		 */
 		this.autoBuild = (tableEl, sizeRange, autoOption, tableObj) => {
 			const direction = autoOption.cellStackDirection;
+			const { topRowAsHeader } = autoOption;
 
 			tableObj.clearTable();
 
 			if (sizeRange === 'desktop') {
 				this.buildDefault(tableObj);
+				this.removeDefaultClasses(tableEl);
 			} else {
-				this.autoDirectionBuild(tableObj, direction);
+				this.autoDirectionBuild(tableObj, direction, topRowAsHeader);
+				this.addDefaultClasses(tableEl);
 			}
 		};
 
@@ -251,25 +375,47 @@
 		 *
 		 * @param {TableObject} tableObj table object
 		 * @param {string} direction direction to read cells
+		 * @param {boolean} topRowAsHeader use top row as header
 		 */
-		this.autoDirectionBuild = (tableObj, direction) => {
+		this.autoDirectionBuild = (tableObj, direction, topRowAsHeader = false) => {
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
 
+			const rowStartIndex = topRowAsHeader ? 1 : 0;
+			const topRowCellCount = tableObj.getCellsAtRow(0).length;
+
+			if (topRowAsHeader) {
+				const headerId = tableObj.addRow('wptb-row').id;
+				const maxColumns = tableObj.maxColumns();
+
+				for (let hc = 0; hc < maxColumns; hc += 1) {
+					const tempCell =tableObj.appendToRow(0, hc, headerId);
+					tempCell.resetAllAttributes();
+				}
+			}
+
 			// TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
 			if (isRowStacked) {
-				for (let r = 0; r < rows; r += 1) {
+				for (let r = rowStartIndex; r < rows; r += 1) {
 					for (let c = 0; c < columns; c += 1) {
 						const rowId = tableObj.addRow('wptb-row').id;
-						tableObj.appendToRow(r, c, rowId);
+						const tempCell = tableObj.appendToRow(r, c, rowId);
+						tempCell.resetAllAttributes();
+						if (topRowAsHeader) {
+							tempCell.setAttribute('colSpan', topRowCellCount);
+						}
 					}
 				}
 			} else {
 				for (let c = 0; c < columns; c += 1) {
-					for (let r = 0; r < rows; r += 1) {
+					for (let r = rowStartIndex; r < rows; r += 1) {
 						const rowId = tableObj.addRow('wptb-row').id;
-						tableObj.appendToRow(r, c, rowId);
+						const tempCell = tableObj.appendToRow(r, c, rowId);
+						tempCell.resetAllAttributes();
+						if (topRowAsHeader) {
+							tempCell.setAttribute('colSpan', topRowCellCount);
+						}
 					}
 				}
 			}
@@ -289,7 +435,9 @@
 			for (let r = 0; r < rows; r += 1) {
 				const rowId = tableObj.addRow('wptb-row').id;
 				for (let c = 0; c < columns; c += 1) {
-					tableObj.appendToRow(r, c, rowId);
+					const tempCell = tableObj.appendToRow(r, c, rowId);
+					// reset all modified attributes of cell to their default values
+					tempCell.resetAllAttributes();
 				}
 			}
 		};
@@ -338,6 +486,12 @@
 
 				// main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
 				const buildCallable = this[`${mode}Build`];
+
+				if (!size) {
+					// eslint-disable-next-line no-param-reassign
+					size = el.getBoundingClientRect().width;
+				}
+
 				const sizeRangeId = this.calculateRangeId(size, directive.stops);
 
 				if (buildCallable) {
@@ -355,10 +509,15 @@
 		 * @param {number} size screen size
 		 */
 		this.rebuildTables = (size) => {
+			// eslint-disable-next-line array-callback-return
 			this.elementObjects.map((o) => {
 				this.rebuildTable(o.el, size, o.tableObject);
 			});
 		};
+
+		if (this.options.bindToResize) {
+			this.bindRebuildToResize();
+		}
 
 		return { rebuildTables: this.rebuildTables };
 	}

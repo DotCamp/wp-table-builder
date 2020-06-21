@@ -95,23 +95,26 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'Galaxy S5' => 360,
 				],
 				'strings'      => [
-					'rebuilding'           => esc_html__( 'rebuilding', 'wp-table-builder' ),
-					'enableResponsive'     => esc_html__( 'enable responsive table', 'wp-table-builder' ),
-					'enableResponsiveHelp' => esc_html__( 'Enable responsive capabilities of current table', 'wp-table-builder' ),
-					'stackDirection'       => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
-					'topRowHeader'         => esc_html__( 'Top row as header', 'wp-table-builder' ),
-					'row'                  => esc_html__( 'row', 'wp-table-builder' ),
-					'column'               => esc_html__( 'column', 'wp-table-builder' ),
-					'mode'                 => esc_html__( 'mode', 'wp-table-builder' ),
-					'auto'                 => esc_html__( 'auto', 'wp-table-builder' ),
-					'pattern'              => esc_html__( 'pattern', 'wp-table-builder' ),
-					'full'                 => esc_html__( 'full', 'wp-table-builder' ),
+					'rebuilding'              => esc_html__( 'rebuilding', 'wp-table-builder' ),
+					'enableResponsive'        => esc_html__( 'enable responsive table', 'wp-table-builder' ),
+					'enableResponsiveHelp'    => esc_html__( 'Enable responsive capabilities of current table', 'wp-table-builder' ),
+					'stackDirection'          => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
+					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
+					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
+					'row'                     => esc_html__( 'row', 'wp-table-builder' ),
+					'column'                  => esc_html__( 'column', 'wp-table-builder' ),
+					'mode'                    => esc_html__( 'mode', 'wp-table-builder' ),
+					'auto'                    => esc_html__( 'auto', 'wp-table-builder' ),
+					'pattern'                 => esc_html__( 'pattern', 'wp-table-builder' ),
+					'full'                    => esc_html__( 'full', 'wp-table-builder' ),
+					'okay'                    => esc_html__( 'Okay', 'wp-table-builder' ),
 					// for help text of responsive modes, use the format of `{mode_name}Help`, this will be parsed dynamically to change the help text at frontend
-					'autoHelp'             => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.' ),
-					'patternHelp'          => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.' ),
-					'fullHelp'             => esc_html__( 'Full: You have full control over how table will be constructed.' ),
-					'stackDirectionHelp'   => esc_html__( 'The order of stacking, either by row or by columns.' ),
-					'topRowHeaderHelp'     => esc_html__( 'Use the top most row of table as a header.' )
+					'autoHelp'                => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.', 'wp-table-builder' ),
+					'patternHelp'             => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.', 'wp-table-builder' ),
+					'fullHelp'                => esc_html__( 'Full: You have full control over how table will be constructed.', 'wp-table-builder' ),
+					'stackDirectionHelp'      => esc_html__( 'The order of stacking, either by rows or by columns.', 'wp-table-builder' ),
+					'topRowHeaderHelp'        => esc_html__( 'Use the top most row of table as a header.', 'wp-table-builder' ),
+					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' )
 				]
 			]
 		] );

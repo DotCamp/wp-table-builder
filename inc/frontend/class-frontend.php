@@ -123,15 +123,16 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		// even though we are using ready event of jquery, since we are modifying dom elements, as a best practice, this script should go to footer
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
-
 		// TODO [erdembircan] entry position for responsive frontend script
 		$relative_path =  'inc/admin/js/WPTB_ResponsiveFrontend.js';
 		$responsive_script_url = trailingslashit(NS\WP_TABLE_BUILDER_URL) . $relative_path;
 		$responsive_script_dir = trailingslashit(NS\WP_TABLE_BUILDER_DIR) . $relative_path;
 
 		// TODO [erdembircan] for development purposes, in order to force reset browser cache, using file's last modified time as version, remove and use plugin version number for production
-		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], filemtime($responsive_script_dir), true);
+		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], filemtime($responsive_script_dir), false);
+
+		// even though we are using ready event of jquery, since we are modifying dom elements, as a best practice, this script should go to footer
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+
 	}
 }

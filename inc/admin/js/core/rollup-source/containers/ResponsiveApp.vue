@@ -1,6 +1,6 @@
 <template>
 	<transition name="wptb-fade">
-		<div v-if="isVisible" class="wptb-builder-responsive">
+		<div ref="builderResponsive" v-if="isVisible" class="wptb-builder-responsive">
 			<div class="wptb-responsive-menu-tools">
 				<screen-size-slider
 					:end-padding="sliderPadding"
@@ -20,6 +20,7 @@
 					:table-directives="currentDirectives"
 					@tableCloned="tableCloned"
 					@directivesCopied="directivesCopied"
+					:table-style="tableStyle"
 				></table-clone>
 				<transition name="wptb-fade">
 					<div v-if="!directives.responsiveEnabled" class="wptb-responsive-disabled-table-overlay"></div>
@@ -27,19 +28,29 @@
 				<transition name="wptb-fade">
 					<div v-show="rebuilding" class="wptb-responsive-wait-overlay">{{ strings.rebuilding }}</div>
 				</transition>
+				<modal-window
+					:visible="appOptions.hasLegacyResponsive"
+					:message="strings.legacyResponsiveWarning"
+					:relative-ref="modalRelative"
+					:callback="
+						() => {
+							appOptions.hasLegacyResponsive = false;
+						}
+					"
+				></modal-window>
 			</div>
 		</div>
 	</transition>
 </template>
 <script>
-/* eslint-disable camelcase */
-
 import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
 import SizeInput from '../components/SizeInput';
 import ResponsiveToolbox from '../components/ResponsiveToolbox';
+/* eslint-disable camelcase */
 import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
 import DeBouncer from '../functions/DeBouncer';
+import ModalWindow from '../components/ModalWindow';
 
 export default {
 	props: {
@@ -50,7 +61,7 @@ export default {
 		screenSizes: Object,
 		compareSizes: Object,
 	},
-	components: { TableClone, ScreenSizeSlider, SizeInput, ResponsiveToolbox },
+	components: { TableClone, ScreenSizeSlider, SizeInput, ResponsiveToolbox, ModalWindow },
 	data() {
 		return {
 			isVisible: true,
@@ -62,6 +73,8 @@ export default {
 			responsiveFrontend: null,
 			rebuilding: false,
 			debounceTime: 1000,
+			sizeLimitMin: 100,
+			sizeLimitMax: 0,
 		};
 	},
 	watch: {
@@ -98,8 +111,51 @@ export default {
 		document.addEventListener('wptbSectionChanged', (e) => {
 			this.isVisible = e.detail === 'table_responsive_menu';
 		});
+
+		this.sizeLimitMax = this.$refs.builderResponsive.getBoundingClientRect().width;
+	},
+	computed: {
+		/**
+		 * Calculate certain properties of responsive table element's style
+		 */
+		tableStyle() {
+			// don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
+			if (this.currentSizeRangeName === 'desktop') {
+				return {};
+			}
+
+			const width = this.limitToRange(
+				this.currentSize,
+				Math.min(this.sizeLimitMin, this.sizeLimitMax),
+				Math.max(this.sizeLimitMin, this.sizeLimitMax)
+			);
+
+			return {
+				width: `${width}px`,
+			};
+		},
+		modalRelative() {
+			return document.querySelector('.wptb-builder-panel');
+		},
 	},
 	methods: {
+		/**
+		 * Limit a number between a min/max range.
+		 *
+		 * @param {number} val value to be limited
+		 * @param {number} min minimum value of range
+		 * @param {number} max maximum value of range
+		 * @return {number} limited value
+		 */
+		limitToRange(val, min, max) {
+			if (val > max) {
+				return max;
+			}
+			if (val < min) {
+				return min;
+			}
+			return val;
+		},
 		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
 		tableCloned(mainDirectives) {
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
@@ -141,11 +197,14 @@ export default {
 			});
 		},
 		// handler for event that signals end of directive copy operation to table on DOM
-		directivesCopied() {
+		directivesCopied(mainTableHaveDirectives) {
 			// rebuilt table according to its responsive directives
 			this.responsiveFrontend.rebuildTables(this.currentSize);
 
-			new WPTB_TableStateSaveManager().tableStateSet();
+			// if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
+			if (!mainTableHaveDirectives) {
+				new WPTB_TableStateSaveManager().tableStateSet();
+			}
 
 			this.rebuilding = false;
 		},

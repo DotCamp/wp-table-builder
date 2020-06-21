@@ -1,7 +1,14 @@
 <template>
-	<div ref="tableClone" class="wptb-responsive-clone-wrapper"></div>
+	<div
+		class="wptb-responsive-clone-wrapper wptb-checkerboard-pattern wptb-plugin-inset-shadow-md"
+		style="overflow: hidden;"
+	>
+		<div ref="tableClone" class="wptb-plugin-box-shadow-xl" :style="tableStyle" style="margin: 0 10px;"></div>
+	</div>
 </template>
 <script>
+import DeBouncer from '../functions/DeBouncer';
+
 export default {
 	props: {
 		clone: {
@@ -17,7 +24,15 @@ export default {
 			type: String,
 			default: '',
 		},
+		tableStyle: {
+			type: Object,
+			default: () => {
+				{
+				}
+			},
+		},
 	},
+	inheritAttrs: false,
 	data() {
 		return {
 			// in order to not mutate the prop sent from the parent component, will be modifying the data prop instead
@@ -25,6 +40,7 @@ export default {
 			clonedTable: null,
 			mainTable: null,
 			tableDirectiveDatasetId: 'wptbResponsiveDirectives',
+			tableHaveDirectives: false,
 		};
 	},
 	mounted() {
@@ -53,6 +69,21 @@ export default {
 				this.addDirectivesToTable(n);
 			}
 		},
+		'appOptions.identifyCells': {
+			handler(n) {
+				if (n) {
+					this.showCellIdentification();
+					this.appOptions.identifyCells = false;
+				}
+			},
+		},
+		'directives.responsiveEnabled': {
+			handler(n) {
+				if (n) {
+					this.mainTable.dataset.wptbAdaptiveTable = 0;
+				}
+			},
+		},
 	},
 	methods: {
 		/**
@@ -67,9 +98,11 @@ export default {
 				throw new Error(`no clone target is found with a query value of ${this.cloneQuery}`);
 			}
 
+			// check for legacy responsive functionality on main table
+			this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
+
 			this.clonedTable = this.mainTable.cloneNode(true);
 			this.$refs.tableClone.appendChild(this.clonedTable);
-
 
 			// directives that are already present in the main table
 			// this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
@@ -79,6 +112,11 @@ export default {
 			if (this.tableDirectives) {
 				this.addDirectivesToTable(this.tableDirectives);
 			}
+
+			// switch for determining if we will merge already present directives at main table
+			this.tableHaveDirectives = mainTableDirectives !== undefined;
+
+			this.setupCellIdentification(this.clonedTable);
 
 			// emit an event signalling cloning main table is completed
 			this.$emit('tableCloned', mainTableDirectives);
@@ -97,8 +135,56 @@ export default {
 				this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
 
 				// emit an event signalling end of directive copy operation
-				this.$emit('directivesCopied');
+				this.$emit('directivesCopied', this.tableHaveDirectives);
+
+				this.tableHaveDirectives = false;
 			}
+		},
+		/**
+		 * Setup cell identification elements.
+		 *
+		 * @param {HTMLElement} tableElement parent table element
+		 */
+		setupCellIdentification(tableElement) {
+			const cells = Array.from(tableElement.querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
+			cells.map((c, i) => {
+				if (getComputedStyle(c).position !== 'relative') {
+					// eslint-disable-next-line no-param-reassign
+					c.style.position = 'relative';
+				}
+
+				const range = document.createRange();
+				range.setStart(c, 0);
+
+				const lightnessPercent = i % 2 === 0 ? 70 : 90;
+				const style = `background-color: hsla(211, 25%, ${lightnessPercent}%, 80%)`;
+
+				const identifierStringRepresentation = `<div class="wptb-responsive-cell-identifier" style="${style}">${
+					i + 1
+				}</div>`;
+
+				const cellIdentifier = range.createContextualFragment(identifierStringRepresentation);
+
+				c.appendChild(cellIdentifier.childNodes[0]);
+			});
+		},
+		/**
+		 * Show cell identifications for table cells
+		 */
+		showCellIdentification() {
+			const visibilityClass = 'wptb-responsive-show-cell-identifier';
+
+			this.clonedTable.classList.add(visibilityClass);
+
+			DeBouncer(
+				'cellIdentification',
+				() => {
+					this.clonedTable.classList.remove(visibilityClass);
+				},
+				2000
+			);
 		},
 	},
 };

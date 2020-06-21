@@ -35,6 +35,7 @@
     "wptbImportMenuData": true,
     "WPTB_TableStateSaveManager": true,
     "WPTB_ControlsManager": true,
-    "WPTB_Helper" : true
+    "WPTB_Helper" : true,
+    "WPTB_ResponsiveFrontend" : true
   }
 }

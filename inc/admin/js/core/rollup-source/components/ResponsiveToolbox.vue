@@ -17,6 +17,9 @@
 				</select>
 				<pop-up :message="strings[`${directives.responsiveMode}Help`]">?</pop-up>
 			</div>
+			<div class="wptb-controls-flex-row wptb-responsive-identify-cells-wrapper">
+				<material-button size="fit-content" :click="showCellIdentifications">{{ strings.identifyCells }}</material-button>
+			</div>
 		</div>
 		<component :is="dynamicToolbox" :size-range="sizeRange"></component>
 	</div>
@@ -25,12 +28,13 @@
 import PopUp from './PopUp';
 import ResponsiveDynamicToolbox from './ResponsiveDynamicToolbox';
 import AutoToolbox from './AutoToolbox';
+import MaterialButton from './MaterialButton';
 
 export default {
 	props: {
 		sizeRange: Object,
 	},
-	components: { PopUp, ResponsiveDynamicToolbox, AutoToolbox },
+	components: { PopUp, ResponsiveDynamicToolbox, AutoToolbox, MaterialButton },
 	computed: {
 		dynamicToolbox() {
 			const currentMode = this.directives.responsiveMode;
@@ -41,6 +45,9 @@ export default {
 	methods: {
 		isCurrentMode(mode) {
 			return this.directives.responsiveMode === mode;
+		},
+		showCellIdentifications() {
+			this.appOptions.identifyCells = true;
 		},
 	},
 };

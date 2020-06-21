@@ -12971,13 +12971,69 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/RangeControl":"containers/RangeControl.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"components/TableClone.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/RangeControl":"containers/RangeControl.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"functions/DeBouncer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+/**
+ * ⛹️‍️Debounce class.
+ *
+ * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
+ *
+ * @return {function} main debounce function
+ * @constructor
+ */
+function DeBouncer() {
+  var actionIds = {};
+  /**
+   * Main debounce function.
+   *
+   * @param {number} id unique id for action
+   * @param {function} callable function to be called
+   * @param {number} timeout timeout duration in milliseconds
+   */
+
+  function deBounce(id, callable) {
+    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
+
+    if (Object.keys(actionIds).includes(id)) {
+      clearTimeout(actionIds[id]);
+    }
+
+    actionIds[id] = setTimeout(callable, timeout);
+  }
+
+  return deBounce;
+}
+/**
+ * @module DeBouncer module
+ */
+
+
+var _default = DeBouncer();
+
+exports.default = _default;
+},{}],"components/TableClone.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12995,15 +13051,23 @@ var _default = {
     tableDirectives: {
       type: String,
       default: ''
+    },
+    tableStyle: {
+      type: Object,
+      default: function _default() {
+        {}
+      }
     }
   },
+  inheritAttrs: false,
   data: function data() {
     return {
       // in order to not mutate the prop sent from the parent component, will be modifying the data prop instead
       cloneInner: false,
       clonedTable: null,
       mainTable: null,
-      tableDirectiveDatasetId: 'wptbResponsiveDirectives'
+      tableDirectiveDatasetId: 'wptbResponsiveDirectives',
+      tableHaveDirectives: false
     };
   },
   mounted: function mounted() {
@@ -13031,6 +13095,21 @@ var _default = {
       if (n) {
         this.addDirectivesToTable(n);
       }
+    },
+    'appOptions.identifyCells': {
+      handler: function handler(n) {
+        if (n) {
+          this.showCellIdentification();
+          this.appOptions.identifyCells = false;
+        }
+      }
+    },
+    'directives.responsiveEnabled': {
+      handler: function handler(n) {
+        if (n) {
+          this.mainTable.dataset.wptbAdaptiveTable = 0;
+        }
+      }
     }
   },
   methods: {
@@ -13044,8 +13123,10 @@ var _default = {
 
       if (!this.mainTable) {
         throw new Error("no clone target is found with a query value of ".concat(this.cloneQuery));
-      }
+      } // check for legacy responsive functionality on main table
 
+
+      this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
       this.clonedTable = this.mainTable.cloneNode(true);
       this.$refs.tableClone.appendChild(this.clonedTable); // directives that are already present in the main table
       // this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
@@ -13054,8 +13135,11 @@ var _default = {
 
       if (this.tableDirectives) {
         this.addDirectivesToTable(this.tableDirectives);
-      } // emit an event signalling cloning main table is completed
+      } // switch for determining if we will merge already present directives at main table
 
+
+      this.tableHaveDirectives = mainTableDirectives !== undefined;
+      this.setupCellIdentification(this.clonedTable); // emit an event signalling cloning main table is completed
 
       this.$emit('tableCloned', mainTableDirectives);
     },
@@ -13072,8 +13156,46 @@ var _default = {
 
         this.mainTable.dataset[this.tableDirectiveDatasetId] = n; // emit an event signalling end of directive copy operation
 
-        this.$emit('directivesCopied');
+        this.$emit('directivesCopied', this.tableHaveDirectives);
+        this.tableHaveDirectives = false;
       }
+    },
+
+    /**
+     * Setup cell identification elements.
+     *
+     * @param {HTMLElement} tableElement parent table element
+     */
+    setupCellIdentification: function setupCellIdentification(tableElement) {
+      var cells = Array.from(tableElement.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
+
+      cells.map(function (c, i) {
+        if (getComputedStyle(c).position !== 'relative') {
+          // eslint-disable-next-line no-param-reassign
+          c.style.position = 'relative';
+        }
+
+        var range = document.createRange();
+        range.setStart(c, 0);
+        var lightnessPercent = i % 2 === 0 ? 70 : 90;
+        var style = "background-color: hsla(211, 25%, ".concat(lightnessPercent, "%, 80%)");
+        var identifierStringRepresentation = "<div class=\"wptb-responsive-cell-identifier\" style=\"".concat(style, "\">").concat(i + 1, "</div>");
+        var cellIdentifier = range.createContextualFragment(identifierStringRepresentation);
+        c.appendChild(cellIdentifier.childNodes[0]);
+      });
+    },
+
+    /**
+     * Show cell identifications for table cells
+     */
+    showCellIdentification: function showCellIdentification() {
+      var _this = this;
+
+      var visibilityClass = 'wptb-responsive-show-cell-identifier';
+      this.clonedTable.classList.add(visibilityClass);
+      (0, _DeBouncer.default)('cellIdentification', function () {
+        _this.clonedTable.classList.remove(visibilityClass);
+      }, 2000);
     }
   }
 };
@@ -13090,10 +13212,22 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", {
-    ref: "tableClone",
-    staticClass: "wptb-responsive-clone-wrapper"
-  })
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-responsive-clone-wrapper wptb-checkerboard-pattern wptb-plugin-inset-shadow-md",
+      staticStyle: { overflow: "hidden" }
+    },
+    [
+      _c("div", {
+        ref: "tableClone",
+        staticClass: "wptb-plugin-box-shadow-xl",
+        staticStyle: { margin: "0 10px" },
+        style: _vm.tableStyle
+      })
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -13107,7 +13241,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/SliderStop.vue":[function(require,module,exports) {
+},{"../functions/DeBouncer":"functions/DeBouncer.js"}],"components/SliderStop.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13669,7 +13803,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"components/SizeInput.vue":[function(require,module,exports) {
+},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"components/NumberPostfixInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13686,7 +13820,163 @@ exports.default = void 0;
 //
 //
 var _default = {
+  inheritAttrs: false,
+  props: {
+    postFix: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: Number,
+      default: 0
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  },
+  computed: {
+    /**
+     * Add a post fix to the value.
+     *
+     * Value will be chosen from the component prop.
+     */
+    postFixIt: function postFixIt() {
+      return "".concat(this.innerValue).concat(this.postFix);
+    }
+  },
+  methods: {
+    handleInput: function handleInput(e) {
+      this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+    },
+
+    /**
+     * Handle key press event for input
+     *
+     * This callback will give up/down arrow key press incrementation to input
+     *
+     * @param {string} type type of key
+     */
+    handleKeyPress: function handleKeyPress() {
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
+      var value = this.innerValue;
+
+      switch (type) {
+        case 'up':
+          value += 1;
+          break;
+
+        case 'down':
+          value -= 1;
+          break;
+
+        default:
+          value += 1;
+          break;
+      }
+
+      this.$emit('valueChanged', value);
+    }
+  }
+};
+exports.default = _default;
+        var $9d7547 = exports.default || module.exports;
+      
+      if (typeof $9d7547 === 'function') {
+        $9d7547 = $9d7547.options;
+      }
+    
+        /* template */
+        Object.assign($9d7547, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("input", {
+    attrs: { type: "text" },
+    domProps: { value: _vm.postFixIt },
+    on: {
+      input: _vm.handleInput,
+      keydown: [
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "up", 38, $event.key, ["Up", "ArrowUp"])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("up")
+        },
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "down", 40, $event.key, [
+              "Down",
+              "ArrowDown"
+            ])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("down")
+        }
+      ]
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/SizeInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
   props: ['size', 'compareSizes'],
+  components: {
+    NumberPostfixInput: _NumberPostfixInput.default
+  },
   model: {
     prop: 'size',
     event: 'sizeChanged'
@@ -13767,70 +14057,65 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-size-input-wrapper" }, [
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.currentSizeCompare,
-            expression: "currentSizeCompare"
-          }
-        ],
-        on: {
-          change: function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.currentSizeCompare = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          }
-        }
-      },
-      [
-        _c("option", { attrs: { value: "responsive" } }, [
-          _vm._v("Responsive")
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.compareSizes, function(value, key) {
-          return _c("option", { key: key, domProps: { value: key } }, [
-            _vm._v(" " + _vm._s(key))
-          ])
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
+  return _c(
+    "div",
+    { staticClass: "wptb-size-input-wrapper" },
+    [
+      _c(
+        "select",
         {
-          name: "model",
-          rawName: "v-model",
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.currentSizeCompare,
+              expression: "currentSizeCompare"
+            }
+          ],
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.currentSizeCompare = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        [
+          _c("option", { attrs: { value: "responsive" } }, [
+            _vm._v("Responsive")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.compareSizes, function(value, key) {
+            return _c("option", { key: key, domProps: { value: key } }, [
+              _vm._v(" " + _vm._s(key))
+            ])
+          })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("number-postfix-input", {
+        staticClass: "wptb-size-input",
+        attrs: { "post-fix": " px" },
+        model: {
           value: _vm.innerSize,
+          callback: function($$v) {
+            _vm.innerSize = $$v
+          },
           expression: "innerSize"
         }
-      ],
-      staticClass: "wptb-size-input",
-      attrs: { type: "number" },
-      domProps: { value: _vm.innerSize },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.innerSize = $event.target.value
-        }
-      }
-    })
-  ])
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -13844,7 +14129,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PopUp.vue":[function(require,module,exports) {
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/PopUp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14264,7 +14549,78 @@ render._withStripped = true
           };
         })());
       
-},{"./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./PopUp":"components/PopUp.vue"}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
+},{"./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./PopUp":"components/PopUp.vue"}],"components/MaterialButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+var _default = {
+  props: {
+    click: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('Material button clicked');
+      }
+    },
+    size: {
+      type: String,
+      default: 'fit-content'
+    }
+  },
+  computed: {
+    buttonClass: function buttonClass() {
+      return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  }
+};
+exports.default = _default;
+        var $9d5ffc = exports.default || module.exports;
+      
+      if (typeof $9d5ffc === 'function') {
+        $9d5ffc = $9d5ffc.options;
+      }
+    
+        /* template */
+        Object.assign($9d5ffc, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-plugin-button-material",
+      class: _vm.buttonClass,
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.click($event)
+        }
+      }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14278,8 +14634,13 @@ var _ResponsiveDynamicToolbox = _interopRequireDefault(require("./ResponsiveDyna
 
 var _AutoToolbox = _interopRequireDefault(require("./AutoToolbox"));
 
+var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
 //
 //
 //
@@ -14310,7 +14671,8 @@ var _default = {
   components: {
     PopUp: _PopUp.default,
     ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default,
-    AutoToolbox: _AutoToolbox.default
+    AutoToolbox: _AutoToolbox.default,
+    MaterialButton: _MaterialButton.default
   },
   computed: {
     dynamicToolbox: function dynamicToolbox() {
@@ -14321,6 +14683,9 @@ var _default = {
   methods: {
     isCurrentMode: function isCurrentMode(mode) {
       return this.directives.responsiveMode === mode;
+    },
+    showCellIdentifications: function showCellIdentifications() {
+      this.appOptions.identifyCells = true;
     }
   }
 };
@@ -14471,6 +14836,27 @@ exports.default = _default;
               )
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-controls-flex-row wptb-responsive-identify-cells-wrapper"
+            },
+            [
+              _c(
+                "material-button",
+                {
+                  attrs: {
+                    size: "fit-content",
+                    click: _vm.showCellIdentifications
+                  }
+                },
+                [_vm._v(_vm._s(_vm.strings.identifyCells))]
+              )
+            ],
+            1
           )
         ]
       ),
@@ -14495,7 +14881,7 @@ render._withStripped = true
           };
         })());
       
-},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
+},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue","./MaterialButton":"components/MaterialButton.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
 var global = arguments[3];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -14520,14 +14906,91 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 })('WPTB_ResponsiveFrontend', self || global, function () {
   /**
+   * Object implementation for cell element operations
+   *
+   * @param {HTMLElement} cellElement cell element
+   * @constructor
+   */
+  function CellObject(cellElement) {
+    var _this = this;
+
+    this.element = cellElement;
+    this.modifications = {};
+    /**
+     * Get cell element.
+     * @return {HTMLElement} cell element
+     */
+
+    this.getElement = function () {
+      return _this.element;
+    };
+    /**
+     * Add attribute to cell element.
+     *
+     * This function have the ability to add/remove attributes from cell element.
+     *
+     * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
+     * @param {any} attributeValue attribute value
+     */
+
+
+    this.setAttribute = function (attributeKey, attributeValue) {
+      var defaultVal = _this.getElement()[attributeKey];
+
+      if (_this.modifications[attributeKey]) {
+        defaultVal = _this.modifications[attributeKey].default;
+      }
+
+      _this.modifications[attributeKey] = {
+        value: attributeValue,
+        default: defaultVal
+      };
+      _this.getElement()[attributeKey] = attributeValue;
+    };
+    /**
+     * Reset a modified attribute to its default value
+     *
+     * @param {string} attributeKey attribute name
+     */
+
+
+    this.resetAttribute = function (attributeKey) {
+      if (_this.modifications[attributeKey]) {
+        _this.getElement()[attributeKey] = _this.modifications[attributeKey].default;
+        _this.getElement()[attributeKey] = undefined;
+      }
+    };
+    /**
+     * Reset all modified attributes of cell element to their default values.
+     */
+
+
+    this.resetAllAttributes = function () {
+      Object.keys(_this.modifications).map(function (k) {
+        if (Object.prototype.hasOwnProperty.call(_this.modifications, k)) {
+          _this.resetAttribute(k);
+        }
+      });
+    };
+
+    return {
+      getElement: this.getElement,
+      el: this.element,
+      setAttribute: this.setAttribute,
+      resetAllAttributes: this.resetAllAttributes
+    };
+  }
+  /**
    * Object implementation for table element operations.
    *
    * @param {HTMLElement} tableEl table element
    * @return {object} instance
    * @constructor
    */
+
+
   function TableObject(tableEl) {
-    var _this = this;
+    var _this2 = this;
 
     /**
      * Table element
@@ -14549,17 +15012,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      */
 
     this.parseTable = function () {
-      var rows = Array.from(_this.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
+      var rows = Array.from(_this2.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
 
       rows.map(function (r, ri) {
         var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
 
         cells.map(function (c) {
-          if (!_this.parsedTable[ri]) {
-            _this.parsedTable[ri] = [];
+          if (!_this2.parsedTable[ri]) {
+            _this2.parsedTable[ri] = [];
           }
 
-          _this.parsedTable[ri].push(c);
+          _this2.parsedTable[ri].push(new CellObject(c));
         });
       });
     };
@@ -14575,7 +15038,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         classList = [classList];
       }
 
-      var tableBody = _this.tableElement.querySelector('tbody');
+      var tableBody = _this2.tableElement.querySelector('tbody');
 
       var range = document.createRange();
       range.setStart(tableBody, 0);
@@ -14583,11 +15046,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       tableBody.appendChild(tempRow); // cache row for future use
 
-      _this.rowCache.push(tempRow);
+      _this2.rowCache.push(tempRow);
 
       return {
         el: tempRow,
-        id: _this.rowCache.length - 1
+        id: _this2.rowCache.length - 1
       };
     };
     /**
@@ -14597,9 +15060,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.clearTable = function () {
       // clear row cache
-      _this.rowCache = []; // clear children of `tbody` element
+      _this2.rowCache = []; // clear children of `tbody` element
 
-      _this.tableElement.querySelector('tbody').innerHTML = '';
+      _this2.tableElement.querySelector('tbody').innerHTML = '';
     };
     /**
      * Get row element from cache.
@@ -14610,8 +15073,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.getRow = function (id) {
-      if (_this.rowCache[id]) {
-        return _this.rowCache[id];
+      if (_this2.rowCache[id]) {
+        return _this2.rowCache[id];
       }
 
       console.warn("[WPTB]: no row with id [".concat(id, "] found in the cache."));
@@ -14625,7 +15088,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.maxRows = function () {
-      return _this.parsedTable.length;
+      return _this2.parsedTable.length;
     };
     /**
      * Get the number of maximum available column count in the table.
@@ -14635,7 +15098,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.maxColumns = function () {
-      return _this.parsedTable.reduce(function (p, c) {
+      return _this2.parsedTable.reduce(function (p, c) {
         if (c.length > p) {
           // eslint-disable-next-line no-param-reassign
           p = c.length;
@@ -14651,17 +15114,45 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      *
      * @param {number} r row number
      * @param {number} c column number
-     * @return {HTMLElement | null} element if address is possible, null if not
+     * @param {boolean} returnObject return object instead of HTMLElement
+     * @return {HTMLElement | null | CellObject} element if address is possible, null if not
      */
 
 
     this.getCell = function (r, c) {
-      if (_this.parsedTable[r][c]) {
-        return _this.parsedTable[r][c];
+      var returnObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      if (_this2.parsedTable[r][c]) {
+        if (returnObject) {
+          return _this2.parsedTable[r][c];
+        }
+
+        return _this2.parsedTable[r][c].el;
       }
 
       console.warn("[WPTB]: no cell found at the given address of [".concat(r, "-").concat(c, "]"));
       return null;
+    };
+    /**
+     * Get cells at a given row.
+     *
+     * @param {number} rowId row id
+     * @return {array} cells in row
+     */
+
+
+    this.getCellsAtRow = function (rowId) {
+      var cells = [];
+
+      for (var c = 0; c < _this2.maxColumns(); c += 1) {
+        var tempCell = _this2.getCell(rowId, c);
+
+        if (tempCell) {
+          cells.push(tempCell);
+        }
+      }
+
+      return cells;
     };
     /**
      * Append the cell with given ids to a cached row
@@ -14673,13 +15164,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.appendToRow = function (cellRowId, cellColumnId, rowId) {
-      var cachedRow = _this.getRow(rowId);
+      var cachedRow = _this2.getRow(rowId);
 
-      var cell = _this.getCell(cellRowId, cellColumnId);
+      var cell = _this2.getCell(cellRowId, cellColumnId, true);
 
       if (cell && cachedRow) {
-        cachedRow.appendChild(cell);
+        cachedRow.appendChild(cell.getElement());
       }
+
+      return cell;
     };
 
     this.parseTable();
@@ -14689,13 +15182,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       addRow: this.addRow,
       clearTable: this.clearTable,
       getCell: this.getCell,
-      appendToRow: this.appendToRow
+      appendToRow: this.appendToRow,
+      getCellsAtRow: this.getCellsAtRow
     };
   } // default options for responsive class
 
 
   var responsiveClassDefaultOptions = {
-    query: '.wptb-preview-table'
+    query: '.wptb-preview-table',
+    defaultClasses: ['wptb-plugin-responsive-base'],
+    bindToResize: false
   };
   /**
    * Class for handling operations related to responsive functionalities of tables.
@@ -14705,7 +15201,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    */
 
   function ResponsiveFront() {
-    var _this2 = this;
+    var _this3 = this;
 
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     // merge default options with user sent options
@@ -14718,12 +15214,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       };
     });
     /**
+     * Bind rebuilding of tables to window resize event.
+     */
+
+    this.bindRebuildToResize = function () {
+      window.addEventListener('resize', function (e) {
+        _this3.rebuildTables(e.target.innerWidth);
+      });
+    };
+    /**
      * Get responsive directives of table element.
      *
      * @private
      * @param {HTMLElement} el table element
      * @return {object|null} JSON representation of the directive element, if not available, null will be returned
      */
+
 
     this.getDirective = function (el) {
       var directiveString = el.dataset.wptbResponsiveDirectives;
@@ -14733,6 +15239,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       return JSON.parse(atob(directiveString));
+    };
+    /**
+     * Add default classes to rebuilt tables.
+     *
+     * This classes are added to lay out a base style for the responsive table.
+     *
+     * @param {HTMLElement} el table element
+     */
+
+
+    this.addDefaultClasses = function (el) {
+      el.classList.add(_this3.options.defaultClasses);
+    };
+    /**
+     * Remove default classes from target table.
+     * @param {HTMLElement} el table element
+     */
+
+
+    this.removeDefaultClasses = function (el) {
+      el.classList.remove(_this3.options.defaultClasses);
     };
     /**
      * Rebuild table in auto mode.
@@ -14748,12 +15275,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
       var direction = autoOption.cellStackDirection;
+      var topRowAsHeader = autoOption.topRowAsHeader;
       tableObj.clearTable();
 
       if (sizeRange === 'desktop') {
-        _this2.buildDefault(tableObj);
+        _this3.buildDefault(tableObj);
+
+        _this3.removeDefaultClasses(tableEl);
       } else {
-        _this2.autoDirectionBuild(tableObj, direction);
+        _this3.autoDirectionBuild(tableObj, direction, topRowAsHeader);
+
+        _this3.addDefaultClasses(tableEl);
       }
     };
     /**
@@ -14765,26 +15297,55 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      *
      * @param {TableObject} tableObj table object
      * @param {string} direction direction to read cells
+     * @param {boolean} topRowAsHeader use top row as header
      */
 
 
     this.autoDirectionBuild = function (tableObj, direction) {
+      var topRowAsHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
-      var isRowStacked = direction === 'row'; // TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
+      var isRowStacked = direction === 'row';
+      var rowStartIndex = topRowAsHeader ? 1 : 0;
+      var topRowCellCount = tableObj.getCellsAtRow(0).length;
+
+      if (topRowAsHeader) {
+        var headerId = tableObj.addRow('wptb-row').id;
+        var maxColumns = tableObj.maxColumns();
+
+        for (var hc = 0; hc < maxColumns; hc += 1) {
+          var tempCell = tableObj.appendToRow(0, hc, headerId);
+          tempCell.resetAllAttributes();
+        }
+      } // TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
+
 
       if (isRowStacked) {
-        for (var r = 0; r < rows; r += 1) {
+        for (var r = rowStartIndex; r < rows; r += 1) {
           for (var c = 0; c < columns; c += 1) {
             var rowId = tableObj.addRow('wptb-row').id;
-            tableObj.appendToRow(r, c, rowId);
+
+            var _tempCell = tableObj.appendToRow(r, c, rowId);
+
+            _tempCell.resetAllAttributes();
+
+            if (topRowAsHeader) {
+              _tempCell.setAttribute('colSpan', topRowCellCount);
+            }
           }
         }
       } else {
         for (var _c = 0; _c < columns; _c += 1) {
-          for (var _r = 0; _r < rows; _r += 1) {
+          for (var _r = rowStartIndex; _r < rows; _r += 1) {
             var _rowId = tableObj.addRow('wptb-row').id;
-            tableObj.appendToRow(_r, _c, _rowId);
+
+            var _tempCell2 = tableObj.appendToRow(_r, _c, _rowId);
+
+            _tempCell2.resetAllAttributes();
+
+            if (topRowAsHeader) {
+              _tempCell2.setAttribute('colSpan', topRowCellCount);
+            }
           }
         }
       }
@@ -14806,7 +15367,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var rowId = tableObj.addRow('wptb-row').id;
 
         for (var c = 0; c < columns; c += 1) {
-          tableObj.appendToRow(r, c, rowId);
+          var tempCell = tableObj.appendToRow(r, c, rowId); // reset all modified attributes of cell to their default values
+
+          tempCell.resetAllAttributes();
         }
       }
     };
@@ -14844,24 +15407,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.rebuildTable = function (el, size, tableObj) {
-      var directive = _this2.getDirective(el);
+      var directive = _this3.getDirective(el);
 
       if (directive) {
         if (!directive.responsiveEnabled) {
-          _this2.buildDefault(tableObj);
+          _this3.buildDefault(tableObj);
 
           return;
         }
 
         var mode = directive.responsiveMode; // main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
 
-        var buildCallable = _this2["".concat(mode, "Build")];
+        var buildCallable = _this3["".concat(mode, "Build")];
 
-        var sizeRangeId = _this2.calculateRangeId(size, directive.stops);
+        if (!size) {
+          // eslint-disable-next-line no-param-reassign
+          size = el.getBoundingClientRect().width;
+        }
+
+        var sizeRangeId = _this3.calculateRangeId(size, directive.stops);
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this2, el, sizeRangeId, modeOptions, tableObj);
+          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
         } else {
           throw new Error("No build mode named as [".concat(mode, "] found."));
         }
@@ -14875,10 +15443,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.rebuildTables = function (size) {
-      _this2.elementObjects.map(function (o) {
-        _this2.rebuildTable(o.el, size, o.tableObject);
+      // eslint-disable-next-line array-callback-return
+      _this3.elementObjects.map(function (o) {
+        _this3.rebuildTable(o.el, size, o.tableObject);
       });
     };
+
+    if (this.options.bindToResize) {
+      this.bindRebuildToResize();
+    }
 
     return {
       rebuildTables: this.rebuildTables
@@ -14887,7 +15460,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   return ResponsiveFront;
 });
-},{}],"functions/DeBouncer.js":[function(require,module,exports) {
+},{}],"components/ModalWindow.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14895,45 +15468,125 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-/**
- * ⛹️‍️Debounce class.
- *
- * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
- *
- * @return {function} main debounce function
- * @constructor
- */
-function DeBouncer() {
-  var actionIds = {};
-  /**
-   * Main debounce function.
-   *
-   * @param {number} id unique id for action
-   * @param {function} callable function to be called
-   * @param {number} timeout timeout duration in milliseconds
-   */
+var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
 
-  function deBounce(id, callable) {
-    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    if (Object.keys(actionIds).includes(id)) {
-      clearTimeout(actionIds[id]);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    message: {
+      type: String,
+      default: 'This is a default message for modal window.'
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    relativeRef: {
+      type: HTMLElement,
+      required: true
+    },
+    callback: {
+      type: Function,
+      default: function _default() {
+        console.log('modal button clicked');
+      }
     }
-
-    actionIds[id] = setTimeout(callable, timeout);
+  },
+  components: {
+    MaterialButton: _MaterialButton.default
+  },
+  mounted: function mounted() {
+    this.relativeRef.appendChild(this.$refs.mainWrapper);
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.$refs.mainWrapper.remove();
   }
-
-  return deBounce;
-}
-/**
- * @module DeBouncer module
- */
-
-
-var _default = DeBouncer();
-
+};
 exports.default = _default;
-},{}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
+        var $e4a18a = exports.default || module.exports;
+      
+      if (typeof $e4a18a === 'function') {
+        $e4a18a = $e4a18a.options;
+      }
+    
+        /* template */
+        Object.assign($e4a18a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.visible,
+          expression: "visible"
+        }
+      ],
+      ref: "mainWrapper",
+      staticClass: "wptb-plugin-modal-window"
+    },
+    [
+      _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-plugin-modal-message" }, [
+          _vm._v(_vm._s(_vm.message))
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-plugin-modal-button-container" },
+          [
+            _c(
+              "material-button",
+              { attrs: { size: "full-size", click: _vm.callback } },
+              [_vm._v(_vm._s(_vm.strings.okay))]
+            )
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "wptb-plugin-modal-icon" }, [
+      _c("span", { staticClass: "dashicons dashicons-warning" })
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./MaterialButton":"components/MaterialButton.vue"}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14952,6 +15605,8 @@ var _ResponsiveToolbox = _interopRequireDefault(require("../components/Responsiv
 var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("../../../WPTB_ResponsiveFrontend"));
 
 var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
+
+var _ModalWindow = _interopRequireDefault(require("../components/ModalWindow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -14976,7 +15631,8 @@ var _default = {
     TableClone: _TableClone.default,
     ScreenSizeSlider: _ScreenSizeSlider.default,
     SizeInput: _SizeInput.default,
-    ResponsiveToolbox: _ResponsiveToolbox.default
+    ResponsiveToolbox: _ResponsiveToolbox.default,
+    ModalWindow: _ModalWindow.default
   },
   data: function data() {
     return {
@@ -14988,7 +15644,9 @@ var _default = {
       sizeStops: {},
       responsiveFrontend: null,
       rebuilding: false,
-      debounceTime: 1000
+      debounceTime: 1000,
+      sizeLimitMin: 100,
+      sizeLimitMax: 0
     };
   },
   watch: {
@@ -15026,8 +15684,47 @@ var _default = {
     document.addEventListener('wptbSectionChanged', function (e) {
       _this2.isVisible = e.detail === 'table_responsive_menu';
     });
+    this.sizeLimitMax = this.$refs.builderResponsive.getBoundingClientRect().width;
+  },
+  computed: {
+    /**
+     * Calculate certain properties of responsive table element's style
+     */
+    tableStyle: function tableStyle() {
+      // don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
+      if (this.currentSizeRangeName === 'desktop') {
+        return {};
+      }
+
+      var width = this.limitToRange(this.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
+      return {
+        width: "".concat(width, "px")
+      };
+    },
+    modalRelative: function modalRelative() {
+      return document.querySelector('.wptb-builder-panel');
+    }
   },
   methods: {
+    /**
+     * Limit a number between a min/max range.
+     *
+     * @param {number} val value to be limited
+     * @param {number} min minimum value of range
+     * @param {number} max maximum value of range
+     * @return {number} limited value
+     */
+    limitToRange: function limitToRange(val, min, max) {
+      if (val > max) {
+        return max;
+      }
+
+      if (val < min) {
+        return min;
+      }
+
+      return val;
+    },
     // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
     tableCloned: function tableCloned(mainDirectives) {
       this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
@@ -15071,10 +15768,14 @@ var _default = {
       });
     },
     // handler for event that signals end of directive copy operation to table on DOM
-    directivesCopied: function directivesCopied() {
+    directivesCopied: function directivesCopied(mainTableHaveDirectives) {
       // rebuilt table according to its responsive directives
-      this.responsiveFrontend.rebuildTables(this.currentSize);
-      new WPTB_TableStateSaveManager().tableStateSet();
+      this.responsiveFrontend.rebuildTables(this.currentSize); // if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
+
+      if (!mainTableHaveDirectives) {
+        new WPTB_TableStateSaveManager().tableStateSet();
+      }
+
       this.rebuilding = false;
     },
 
@@ -15168,88 +15869,104 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c("transition", { attrs: { name: "wptb-fade" } }, [
     _vm.isVisible
-      ? _c("div", { staticClass: "wptb-builder-responsive" }, [
-          _c(
-            "div",
-            { staticClass: "wptb-responsive-menu-tools" },
-            [
-              _c("screen-size-slider", {
-                attrs: {
-                  "end-padding": _vm.sliderPadding,
-                  stops: _vm.sizeStops,
-                  "model-val": _vm.currentSize
-                },
-                on: { slide: _vm.handleSizeSlideChange }
-              }),
-              _vm._v(" "),
-              _c("size-input", {
-                attrs: { "compare-sizes": _vm.compareSizes },
-                model: {
-                  value: _vm.currentSize,
-                  callback: function($$v) {
-                    _vm.currentSize = $$v
+      ? _c(
+          "div",
+          { ref: "builderResponsive", staticClass: "wptb-builder-responsive" },
+          [
+            _c(
+              "div",
+              { staticClass: "wptb-responsive-menu-tools" },
+              [
+                _c("screen-size-slider", {
+                  attrs: {
+                    "end-padding": _vm.sliderPadding,
+                    stops: _vm.sizeStops,
+                    "model-val": _vm.currentSize
                   },
-                  expression: "currentSize"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "wptb-responsive-builder-main" },
-            [
-              _c("responsive-toolbox", {
-                attrs: {
-                  "size-range": {
-                    name: _vm.screenSizes[_vm.currentSizeRangeName].name,
-                    id: _vm.currentSizeRangeName
+                  on: { slide: _vm.handleSizeSlideChange }
+                }),
+                _vm._v(" "),
+                _c("size-input", {
+                  attrs: { "compare-sizes": _vm.compareSizes },
+                  model: {
+                    value: _vm.currentSize,
+                    callback: function($$v) {
+                      _vm.currentSize = $$v
+                    },
+                    expression: "currentSize"
                   }
-                }
-              }),
-              _vm._v(" "),
-              _c("table-clone", {
-                attrs: {
-                  clone: _vm.isVisible,
-                  "clone-query": _vm.cloneQuery,
-                  "table-directives": _vm.currentDirectives
-                },
-                on: {
-                  tableCloned: _vm.tableCloned,
-                  directivesCopied: _vm.directivesCopied
-                }
-              }),
-              _vm._v(" "),
-              _c("transition", { attrs: { name: "wptb-fade" } }, [
-                !_vm.directives.responsiveEnabled
-                  ? _c("div", {
-                      staticClass: "wptb-responsive-disabled-table-overlay"
-                    })
-                  : _vm._e()
-              ]),
-              _vm._v(" "),
-              _c("transition", { attrs: { name: "wptb-fade" } }, [
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.rebuilding,
-                        expression: "rebuilding"
-                      }
-                    ],
-                    staticClass: "wptb-responsive-wait-overlay"
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "wptb-responsive-builder-main" },
+              [
+                _c("responsive-toolbox", {
+                  attrs: {
+                    "size-range": {
+                      name: _vm.screenSizes[_vm.currentSizeRangeName].name,
+                      id: _vm.currentSizeRangeName
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("table-clone", {
+                  attrs: {
+                    clone: _vm.isVisible,
+                    "clone-query": _vm.cloneQuery,
+                    "table-directives": _vm.currentDirectives,
+                    "table-style": _vm.tableStyle
                   },
-                  [_vm._v(_vm._s(_vm.strings.rebuilding))]
-                )
-              ])
-            ],
-            1
-          )
-        ])
+                  on: {
+                    tableCloned: _vm.tableCloned,
+                    directivesCopied: _vm.directivesCopied
+                  }
+                }),
+                _vm._v(" "),
+                _c("transition", { attrs: { name: "wptb-fade" } }, [
+                  !_vm.directives.responsiveEnabled
+                    ? _c("div", {
+                        staticClass: "wptb-responsive-disabled-table-overlay"
+                      })
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("transition", { attrs: { name: "wptb-fade" } }, [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.rebuilding,
+                          expression: "rebuilding"
+                        }
+                      ],
+                      staticClass: "wptb-responsive-wait-overlay"
+                    },
+                    [_vm._v(_vm._s(_vm.strings.rebuilding))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("modal-window", {
+                  attrs: {
+                    visible: _vm.appOptions.hasLegacyResponsive,
+                    message: _vm.strings.legacyResponsiveWarning,
+                    "relative-ref": _vm.modalRelative,
+                    callback: function() {
+                      _vm.appOptions.hasLegacyResponsive = false
+                    }
+                  }
+                })
+              ],
+              1
+            )
+          ]
+        )
       : _vm._e()
   ])
 }
@@ -15265,7 +15982,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js"}],"plugins/filters.js":[function(require,module,exports) {
+},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15359,9 +16076,19 @@ var _default = {
   handler: function responsiveTableJS(uniqueId) {
     var data = _WPTB_ControlsManager.default.getControlData('responsiveMenuData');
 
-    var mainTableQuery = '.wptb-preview-table'; // various app options that affects the functionality
+    var mainTableQuery = '.wptb-preview-table';
+    /**
+     * Various options that will be used all around the app
+     *
+     * * identifyCells -> show visual unique identification for table cell elements
+     * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
+     *
+     */
 
-    var appOptions = {}; // directives for responsive features
+    var appOptions = {
+      identifyCells: false,
+      hasLegacyResponsive: false
+    }; // directives for responsive features
 
     var directives = {
       responsiveEnabled: false,
