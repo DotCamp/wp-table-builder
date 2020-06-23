@@ -1,10 +1,27 @@
 <template>
-	<div ref="wrapper" class="wptb-slider-stop" :style="wrapperStyle" @click.prevent.capture="clickEvent" :class="{'wptb-slider-stop-active': active}">
+	<div
+		ref="wrapper"
+		class="wptb-slider-stop"
+		:style="wrapperStyle"
+		@click.prevent.capture="clickEvent"
+		:class="{ 'wptb-slider-stop-active': active }"
+	>
 		<div ref="knob" class="wptb-slider-stop-knob"></div>
 		<div class="wptb-slider-stop-label"><slot></slot></div>
+		<div>
+			<number-postfix-input
+				class="wptb-size-input"
+				style="font-size: 90%;"
+				:enable-dynamic-width="true"
+				v-model="this.rawValue"
+				post-fix="px"
+			></number-postfix-input>
+		</div>
 	</div>
 </template>
 <script>
+import NumberPostfixInput from './NumberPostfixInput';
+
 export default {
 	props: {
 		value: {
@@ -20,13 +37,16 @@ export default {
 			default: false,
 		},
 	},
+	components: { NumberPostfixInput },
 	data() {
 		return {
 			wrapperStyle: { left: 0, top: 0 },
 		};
 	},
 	mounted() {
-		this.calculateStyle();
+		this.$nextTick(() => {
+			this.calculateStyle();
+		});
 	},
 	methods: {
 		clickEvent() {

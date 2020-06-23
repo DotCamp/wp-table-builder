@@ -56,7 +56,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 	protected function _register_controls() {
 		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu, can choose from a list of devices or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.' );
 
-		$help_section_group_controls = [
+		$howto_section_group_controls = [
 			'helpAndInfo' => [
 				'label' => 'none',
 				'type'  => Controls_Manager::HTML_OUTPUT,
@@ -64,7 +64,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 			]
 		];
 
-		Control_Section_Group_Collapse::add_section( 'table_responsive_panel', esc_html__( 'how to', 'wp-table-builder' ), $help_section_group_controls, [
+		Control_Section_Group_Collapse::add_section( 'table_responsive_how_to', esc_html__( 'how to', 'wp-table-builder' ), $howto_section_group_controls, [
 			$this,
 			'add_control'
 		], true );

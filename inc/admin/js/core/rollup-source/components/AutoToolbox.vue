@@ -1,7 +1,7 @@
 <template>
 	<responsive-dynamic-toolbox mode="auto" :range-name="sizeRange">
 		<template v-slot:default="{ context }">
-			<div class="wptb-controls-flex-row">
+			<responsive-controls-row>
 				<input
 					v-model="directives.modeOptions.auto.topRowAsHeader"
 					id="wptbTopRowHeader"
@@ -10,8 +10,8 @@
 				/>
 				<label for="wptbTopRowHeader"> {{ strings.topRowHeader }}: </label>
 				<pop-up :message="strings.topRowHeaderHelp">?</pop-up>
-			</div>
-			<div class="wptb-controls-flex-row">
+			</responsive-controls-row>
+			<responsive-controls-row>
 				<label for="wptbStackDirection"> {{ strings.stackDirection }}: </label>
 				<select
 					v-model="directives.modeOptions.auto.cellStackDirection"
@@ -22,7 +22,7 @@
 					<option value="column">{{ strings.column | cap }}</option>
 				</select>
 				<pop-up :message="strings.stackDirectionHelp">?</pop-up>
-			</div>
+			</responsive-controls-row>
 		</template>
 	</responsive-dynamic-toolbox>
 </template>
@@ -34,6 +34,6 @@ export default {
 	props: {
 		sizeRange: Object,
 	},
-	components: { ResponsiveDynamicToolbox, PopUp },
+	components: { ResponsiveDynamicToolbox, PopUp},
 };
 </script>

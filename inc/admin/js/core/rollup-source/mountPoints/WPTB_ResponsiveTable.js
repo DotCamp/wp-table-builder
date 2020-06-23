@@ -3,6 +3,7 @@
  */
 import Vue from 'vue';
 import ResponsiveApp from '../containers/ResponsiveApp';
+import ResponsiveControlsRow from '../components/ResponsiveControlsRow';
 // eslint-disable-next-line camelcase
 import WPTB_ControlsManager from '../functions/WPTB_ControlsManager';
 import filters from '../plugins/filters';
@@ -50,6 +51,19 @@ export default {
 				});
 			},
 		};
+
+		// app wide components that will be available for every component
+		const appWideComponents = {
+			// eslint-disable-next-line no-shadow
+			install(Vue, { components }) {
+				Vue.mixin({
+					components,
+				});
+			},
+		};
+
+		// app wide components setup
+		Vue.use(appWideComponents, { components: { ResponsiveControlsRow } });
 
 		// options store setup
 		Vue.use(optionsStore, { data: { appOptions, directives } });

@@ -13241,13 +13241,199 @@ render._withStripped = true
           };
         })());
       
-},{"../functions/DeBouncer":"functions/DeBouncer.js"}],"components/SliderStop.vue":[function(require,module,exports) {
+},{"../functions/DeBouncer":"functions/DeBouncer.js"}],"components/NumberPostfixInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  inheritAttrs: false,
+  props: {
+    postFix: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+    enableDynamicWidth: {
+      type: Boolean,
+      default: false
+    },
+    dynamicWidthPadding: {
+      type: Number,
+      default: 3
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  },
+  computed: {
+    /**
+     * Add a post fix to the value.
+     *
+     * Value will be chosen from the component prop.
+     */
+    postFixIt: function postFixIt() {
+      return "".concat(this.innerValue).concat(this.postFix);
+    },
+    dynamicWidth: function dynamicWidth() {
+      if (this.enableDynamicWidth) {
+        return {
+          width: "calc(".concat(this.innerValue.toString().length + this.postFix.length + this.dynamicWidthPadding, "ch) !important")
+        };
+      }
+
+      return {};
+    }
+  },
+  methods: {
+    handleInput: function handleInput(e) {
+      this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+    },
+
+    /**
+     * Handle key press event for input
+     *
+     * This callback will give up/down arrow key press incrementation to input
+     *
+     * @param {string} type type of key
+     */
+    handleKeyPress: function handleKeyPress() {
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
+      var value = this.innerValue;
+
+      switch (type) {
+        case 'up':
+          value += 1;
+          break;
+
+        case 'down':
+          value -= 1;
+          break;
+
+        default:
+          value += 1;
+          break;
+      }
+
+      this.$emit('valueChanged', value);
+    }
+  }
+};
+exports.default = _default;
+        var $9d7547 = exports.default || module.exports;
+      
+      if (typeof $9d7547 === 'function') {
+        $9d7547 = $9d7547.options;
+      }
+    
+        /* template */
+        Object.assign($9d7547, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("input", {
+    style: _vm.dynamicWidth,
+    attrs: { type: "text" },
+    domProps: { value: _vm.postFixIt },
+    on: {
+      input: _vm.handleInput,
+      keydown: [
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "up", 38, $event.key, ["Up", "ArrowUp"])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("up")
+        },
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "down", 40, $event.key, [
+              "Down",
+              "ArrowDown"
+            ])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("down")
+        }
+      ]
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/SliderStop.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13269,6 +13455,9 @@ var _default = {
       default: false
     }
   },
+  components: {
+    NumberPostfixInput: _NumberPostfixInput.default
+  },
   data: function data() {
     return {
       wrapperStyle: {
@@ -13278,7 +13467,11 @@ var _default = {
     };
   },
   mounted: function mounted() {
-    this.calculateStyle();
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.calculateStyle();
+    });
   },
   methods: {
     clickEvent: function clickEvent() {
@@ -13339,6 +13532,25 @@ exports.default = _default;
         { staticClass: "wptb-slider-stop-label" },
         [_vm._t("default")],
         2
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c("number-postfix-input", {
+            staticClass: "wptb-size-input",
+            staticStyle: { "font-size": "90%" },
+            attrs: { "enable-dynamic-width": true, "post-fix": "px" },
+            model: {
+              value: this.rawValue,
+              callback: function($$v) {
+                _vm.$set(this, "rawValue", $$v)
+              },
+              expression: "this.rawValue"
+            }
+          })
+        ],
+        1
       )
     ]
   )
@@ -13355,7 +13567,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/SliderFill.vue":[function(require,module,exports) {
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/SliderFill.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13803,154 +14015,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"components/NumberPostfixInput.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  inheritAttrs: false,
-  props: {
-    postFix: {
-      type: String,
-      default: ''
-    },
-    value: {
-      type: Number,
-      default: 0
-    }
-  },
-  model: {
-    prop: 'value',
-    event: 'valueChanged'
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
-    }
-  },
-  data: function data() {
-    return {
-      innerValue: 0
-    };
-  },
-  mounted: function mounted() {
-    this.innerValue = this.value;
-  },
-  computed: {
-    /**
-     * Add a post fix to the value.
-     *
-     * Value will be chosen from the component prop.
-     */
-    postFixIt: function postFixIt() {
-      return "".concat(this.innerValue).concat(this.postFix);
-    }
-  },
-  methods: {
-    handleInput: function handleInput(e) {
-      this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
-    },
-
-    /**
-     * Handle key press event for input
-     *
-     * This callback will give up/down arrow key press incrementation to input
-     *
-     * @param {string} type type of key
-     */
-    handleKeyPress: function handleKeyPress() {
-      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
-      var value = this.innerValue;
-
-      switch (type) {
-        case 'up':
-          value += 1;
-          break;
-
-        case 'down':
-          value -= 1;
-          break;
-
-        default:
-          value += 1;
-          break;
-      }
-
-      this.$emit('valueChanged', value);
-    }
-  }
-};
-exports.default = _default;
-        var $9d7547 = exports.default || module.exports;
-      
-      if (typeof $9d7547 === 'function') {
-        $9d7547 = $9d7547.options;
-      }
-    
-        /* template */
-        Object.assign($9d7547, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("input", {
-    attrs: { type: "text" },
-    domProps: { value: _vm.postFixIt },
-    on: {
-      input: _vm.handleInput,
-      keydown: [
-        function($event) {
-          if (
-            !$event.type.indexOf("key") &&
-            _vm._k($event.keyCode, "up", 38, $event.key, ["Up", "ArrowUp"])
-          ) {
-            return null
-          }
-          $event.preventDefault()
-          return _vm.handleKeyPress("up")
-        },
-        function($event) {
-          if (
-            !$event.type.indexOf("key") &&
-            _vm._k($event.keyCode, "down", 40, $event.key, [
-              "Down",
-              "ArrowDown"
-            ])
-          ) {
-            return null
-          }
-          $event.preventDefault()
-          return _vm.handleKeyPress("down")
-        }
-      ]
-    }
-  })
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/SizeInput.vue":[function(require,module,exports) {
+},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"components/SizeInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14393,8 +14458,7 @@ exports.default = _default;
           var context = ref.context
           return [
             _c(
-              "div",
-              { staticClass: "wptb-controls-flex-row" },
+              "responsive-controls-row",
               [
                 _c("input", {
                   directives: [
@@ -14468,8 +14532,7 @@ exports.default = _default;
             ),
             _vm._v(" "),
             _c(
-              "div",
-              { staticClass: "wptb-controls-flex-row" },
+              "responsive-controls-row",
               [
                 _c("label", { attrs: { for: "wptbStackDirection" } }, [
                   _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ": ")
@@ -14620,7 +14683,123 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
+},{}],"components/BreakpointEdit.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    NumberPostfixInput: _NumberPostfixInput.default
+  },
+  mounted: function mounted() {
+    var _this$$refs = this.$refs,
+        toggleControl = _this$$refs.toggleControl,
+        toggleTarget = _this$$refs.toggleTarget;
+    toggleControl.addEventListener('click', function () {
+      jQuery(toggleTarget).slideToggle();
+    });
+  }
+};
+exports.default = _default;
+        var $897b08 = exports.default || module.exports;
+      
+      if (typeof $897b08 === 'function') {
+        $897b08 = $897b08.options;
+      }
+    
+        /* template */
+        Object.assign($897b08, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", [
+      _c("div", { ref: "toggleControl", staticStyle: { cursor: "pointer" } }, [
+        _vm._v("toggleControl")
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "toggleTarget",
+          staticClass: "wptb-responsive-breakpoint-edit-wrapper"
+        },
+        [
+          _c("label", [_vm._v("Desktop")]),
+          _vm._v(" "),
+          _c("number-postfix-input", {
+            staticClass: "wptb-size-input",
+            attrs: { "enable-dynamic-width": true, "post-fix": "px" }
+          }),
+          _vm._v(" "),
+          _c("label", [_vm._v("Tablet")]),
+          _vm._v(" "),
+          _c("number-postfix-input", {
+            staticClass: "wptb-size-input",
+            attrs: { "enable-dynamic-width": true, "post-fix": "px" }
+          }),
+          _vm._v(" "),
+          _c("label", [_vm._v("Mobile")]),
+          _vm._v(" "),
+          _c("number-postfix-input", {
+            staticClass: "wptb-size-input",
+            attrs: { "enable-dynamic-width": true, "post-fix": "px" }
+          })
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/ResponsiveToolbox.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14636,8 +14815,15 @@ var _AutoToolbox = _interopRequireDefault(require("./AutoToolbox"));
 
 var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
 
+var _BreakpointEdit = _interopRequireDefault(require("./BreakpointEdit"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14672,7 +14858,8 @@ var _default = {
     PopUp: _PopUp.default,
     ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default,
     AutoToolbox: _AutoToolbox.default,
-    MaterialButton: _MaterialButton.default
+    MaterialButton: _MaterialButton.default,
+    BreakpointEdit: _BreakpointEdit.default
   },
   computed: {
     dynamicToolbox: function dynamicToolbox() {
@@ -14714,8 +14901,7 @@ exports.default = _default;
         },
         [
           _c(
-            "div",
-            { staticClass: "wptb-controls-flex-row" },
+            "responsive-controls-row",
             [
               _c("input", {
                 directives: [
@@ -14776,8 +14962,7 @@ exports.default = _default;
           ),
           _vm._v(" "),
           _c(
-            "div",
-            { staticClass: "wptb-controls-flex-row" },
+            "responsive-controls-row",
             [
               _c("label", { attrs: { for: "wptbResponsiveMode" } }, [
                 _vm._v(_vm._s(_vm._f("cap")(_vm.strings.mode)) + ":")
@@ -14839,11 +15024,7 @@ exports.default = _default;
           ),
           _vm._v(" "),
           _c(
-            "div",
-            {
-              staticClass:
-                "wptb-controls-flex-row wptb-responsive-identify-cells-wrapper"
-            },
+            "responsive-controls-row",
             [
               _c(
                 "material-button",
@@ -14853,12 +15034,13 @@ exports.default = _default;
                     click: _vm.showCellIdentifications
                   }
                 },
-                [_vm._v(_vm._s(_vm.strings.identifyCells))]
+                [_vm._v(_vm._s(_vm.strings.identifyCells) + "\n\t\t\t\t")]
               )
             ],
             1
           )
-        ]
+        ],
+        1
       ),
       _vm._v(" "),
       _c(_vm.dynamicToolbox, {
@@ -14881,7 +15063,7 @@ render._withStripped = true
           };
         })());
       
-},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue","./MaterialButton":"components/MaterialButton.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
+},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue","./MaterialButton":"components/MaterialButton.vue","./BreakpointEdit":"components/BreakpointEdit.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
 var global = arguments[3];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -15982,7 +16164,40 @@ render._withStripped = true
           };
         })());
       
-},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue"}],"plugins/filters.js":[function(require,module,exports) {
+},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../components/SizeInput":"components/SizeInput.vue","../components/ResponsiveToolbox":"components/ResponsiveToolbox.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
+
+        var $1afd82 = exports.default || module.exports;
+      
+      if (typeof $1afd82 === 'function') {
+        $1afd82 = $1afd82.options;
+      }
+    
+        /* template */
+        Object.assign($1afd82, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-controls-flex-row" },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16057,6 +16272,8 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _ResponsiveApp = _interopRequireDefault(require("../containers/ResponsiveApp"));
 
+var _ResponsiveControlsRow = _interopRequireDefault(require("../components/ResponsiveControlsRow"));
+
 var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
 
 var _filters = _interopRequireDefault(require("../plugins/filters"));
@@ -16111,7 +16328,24 @@ var _default = {
           }
         });
       }
-    }; // options store setup
+    }; // app wide components that will be available for every component
+
+    var appWideComponents = {
+      // eslint-disable-next-line no-shadow
+      install: function install(Vue, _ref) {
+        var components = _ref.components;
+        Vue.mixin({
+          components: components
+        });
+      }
+    }; // app wide components setup
+
+    _vue.default.use(appWideComponents, {
+      components: {
+        ResponsiveControlsRow: _ResponsiveControlsRow.default
+      }
+    }); // options store setup
+
 
     _vue.default.use(optionsStore, {
       data: {
@@ -16139,7 +16373,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 

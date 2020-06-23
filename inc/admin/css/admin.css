@@ -3565,7 +3565,7 @@ wptb_shortcode_container_element {
     grid-template-areas: 'content';
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 }
 
 .wptb-screen-size-slider-empty {
@@ -3891,4 +3891,17 @@ wptb_shortcode_container_element {
 .wptb-plugin-responsive-base {
     min-width: auto !important;
     width: 100% !important;
+}
+
+/*visual update for popup components inside responsive menu*/
+.wptb-responsive-toolbox-wrapper .wptb-menu-popup-wrapper {
+    margin-right: 0 !important;
+}
+
+.wptb-responsive-breakpoint-edit-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: row;
+    align-items: center;
+
 }

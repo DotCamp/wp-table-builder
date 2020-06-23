@@ -5,6 +5,7 @@
 		@input="handleInput"
 		@keydown.prevent.up="handleKeyPress('up')"
 		@keydown.prevent.down="handleKeyPress('down')"
+		:style="dynamicWidth"
 	/>
 </template>
 <script>
@@ -18,6 +19,14 @@ export default {
 		value: {
 			type: Number,
 			default: 0,
+		},
+		enableDynamicWidth: {
+			type: Boolean,
+			default: false,
+		},
+		dynamicWidthPadding: {
+			type: Number,
+			default: 3,
 		},
 	},
 	model: {
@@ -45,6 +54,16 @@ export default {
 		 */
 		postFixIt() {
 			return `${this.innerValue}${this.postFix}`;
+		},
+		dynamicWidth() {
+			if (this.enableDynamicWidth) {
+				return {
+					width: `calc(${
+						this.innerValue.toString().length + this.postFix.length + this.dynamicWidthPadding
+					}ch) !important`,
+				};
+			}
+			return {};
 		},
 	},
 	methods: {
