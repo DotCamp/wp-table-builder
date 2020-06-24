@@ -37,6 +37,7 @@ export default {
 					cellStackDirection: 'row',
 				},
 			},
+			breakpoints: data.screenSizes,
 		};
 
 		// flux store object

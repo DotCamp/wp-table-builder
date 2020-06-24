@@ -13852,11 +13852,11 @@ var _default = {
      */
     calculateMinMax: function calculateMinMax() {
       var sortedValues = Object.values(this.stops).sort(function (a, b) {
-        return (b - a) * -1;
+        return (b.width - a.width) * -1;
       });
-      this.min = sortedValues[0] - this.endPadding;
-      this.max = sortedValues[sortedValues.length - 1] + this.endPadding;
-      this.currentVal = sortedValues[sortedValues.length - 1];
+      this.min = sortedValues[0].width - this.endPadding;
+      this.max = sortedValues[sortedValues.length - 1].width + this.endPadding;
+      this.currentVal = sortedValues[sortedValues.length - 1].width;
     },
 
     /**
@@ -13982,19 +13982,21 @@ exports.default = _default;
             }
           }),
           _vm._v(" "),
-          _vm._l(_vm.stops, function(value, key) {
+          _vm._l(_vm.stops, function(ref, key) {
+            var name = ref.name
+            var width = ref.width
             return _c(
               "slider-stop",
               {
                 key: key,
                 attrs: {
-                  active: _vm.isStopActive(value),
-                  value: _vm.translateIntoPercent(value),
-                  "raw-value": value
+                  active: _vm.isStopActive(width),
+                  value: _vm.translateIntoPercent(width),
+                  "raw-value": width
                 },
                 on: { click: _vm.slide }
               },
-              [_vm._v(_vm._s(key))]
+              [_vm._v(_vm._s(name))]
             )
           })
         ],
@@ -14847,9 +14849,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
 var _default = {
   props: {
     sizeRange: Object
@@ -15034,7 +15033,7 @@ exports.default = _default;
                     click: _vm.showCellIdentifications
                   }
                 },
-                [_vm._v(_vm._s(_vm.strings.identifyCells) + "\n\t\t\t\t")]
+                [_vm._v(_vm._s(_vm.strings.identifyCells) + "\n\t\t\t")]
               )
             ],
             1
@@ -15567,12 +15566,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.calculateRangeId = function (val, stops) {
       // eslint-disable-next-line prefer-destructuring
       var sortedStops = Object.keys(stops).sort(function (a, b) {
-        return stops[a] - stops[b];
+        return stops[a].width - stops[b].width;
       });
       var rangeId = sortedStops[0]; // eslint-disable-next-line array-callback-return
 
       sortedStops.map(function (s) {
-        if (val >= stops[s]) {
+        if (val >= stops[s].width) {
           rangeId = s;
         }
       });
@@ -15607,7 +15606,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           size = el.getBoundingClientRect().width;
         }
 
-        var sizeRangeId = _this3.calculateRangeId(size, directive.stops);
+        var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
@@ -15855,9 +15854,8 @@ var _default = {
       }
     }
   },
-  beforeMount: function beforeMount() {
-    // calculate slider size stops before mounting the component
-    this.sizeStops = this.sliderSizeStops();
+  beforeMount: function beforeMount() {// calculate slider size stops before mounting the component
+    // this.sizeStops = this.sliderSizeStops();
   },
   mounted: function mounted() {
     var _this2 = this;
@@ -15962,6 +15960,7 @@ var _default = {
     },
 
     /**
+     * @deprecated
      * Recreate an object compatible with screen-size-slider component.
      *
      * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
@@ -16062,7 +16061,7 @@ exports.default = _default;
                 _c("screen-size-slider", {
                   attrs: {
                     "end-padding": _vm.sliderPadding,
-                    stops: _vm.sizeStops,
+                    stops: _vm.directives.breakpoints,
                     "model-val": _vm.currentSize
                   },
                   on: { slide: _vm.handleSizeSlideChange }
@@ -16315,7 +16314,8 @@ var _default = {
           topRowAsHeader: false,
           cellStackDirection: 'row'
         }
-      }
+      },
+      breakpoints: data.screenSizes
     }; // flux store object
     // this object implementation will give us the ability to persist the state of certain data properties across all app
 

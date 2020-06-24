@@ -4,7 +4,7 @@
 			<div class="wptb-responsive-menu-tools">
 				<screen-size-slider
 					:end-padding="sliderPadding"
-					:stops="sizeStops"
+					:stops="directives.breakpoints"
 					@slide="handleSizeSlideChange"
 					:model-val="currentSize"
 				></screen-size-slider>
@@ -104,7 +104,7 @@ export default {
 	},
 	beforeMount() {
 		// calculate slider size stops before mounting the component
-		this.sizeStops = this.sliderSizeStops();
+		// this.sizeStops = this.sliderSizeStops();
 	},
 	mounted() {
 		// add a listener to section change event to hide/show component
@@ -209,6 +209,7 @@ export default {
 			this.rebuilding = false;
 		},
 		/**
+		 * @deprecated
 		 * Recreate an object compatible with screen-size-slider component.
 		 *
 		 * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.

@@ -8,13 +8,13 @@
 			></slider-arrow>
 			<slider-fill :amount="translateIntoPercent(limitToRange(currentVal))"></slider-fill>
 			<slider-stop
-				:active="isStopActive(value)"
-				v-for="(value, key) in stops"
+				v-for="({ name, width }, key) in stops"
+				:active="isStopActive(width)"
 				:key="key"
-				:value="translateIntoPercent(value)"
-				:raw-value="value"
+				:value="translateIntoPercent(width)"
+				:raw-value="width"
 				@click="slide"
-				>{{ key }}</slider-stop
+				>{{ name }}</slider-stop
 			>
 		</div>
 	</div>
@@ -62,12 +62,12 @@ export default {
 		 * Calculate min/max values for the current slider.
 		 */
 		calculateMinMax() {
-			const sortedValues = Object.values(this.stops).sort((a, b) => (b - a) * -1);
+			const sortedValues = Object.values(this.stops).sort((a, b) => (b.width - a.width) * -1);
 
-			this.min = sortedValues[0] - this.endPadding;
-			this.max = sortedValues[sortedValues.length - 1] + this.endPadding;
+			this.min = sortedValues[0].width - this.endPadding;
+			this.max = sortedValues[sortedValues.length - 1].width + this.endPadding;
 
-			this.currentVal = sortedValues[sortedValues.length - 1];
+			this.currentVal = sortedValues[sortedValues.length - 1].width;
 		},
 		/**
 		 * Translate the supplied value into percentage within the context of min/max values of slider.

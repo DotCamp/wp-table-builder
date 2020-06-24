@@ -390,7 +390,7 @@
 				const maxColumns = tableObj.maxColumns();
 
 				for (let hc = 0; hc < maxColumns; hc += 1) {
-					const tempCell =tableObj.appendToRow(0, hc, headerId);
+					const tempCell = tableObj.appendToRow(0, hc, headerId);
 					tempCell.resetAllAttributes();
 				}
 			}
@@ -451,13 +451,13 @@
 		 */
 		this.calculateRangeId = (val, stops) => {
 			// eslint-disable-next-line prefer-destructuring
-			const sortedStops = Object.keys(stops).sort((a, b) => stops[a] - stops[b]);
+			const sortedStops = Object.keys(stops).sort((a, b) => stops[a].width - stops[b].width);
 
 			let rangeId = sortedStops[0];
 
 			// eslint-disable-next-line array-callback-return
 			sortedStops.map((s) => {
-				if (val >= stops[s]) {
+				if (val >= stops[s].width) {
 					rangeId = s;
 				}
 			});
@@ -492,7 +492,7 @@
 					size = el.getBoundingClientRect().width;
 				}
 
-				const sizeRangeId = this.calculateRangeId(size, directive.stops);
+				const sizeRangeId = this.calculateRangeId(size, directive.breakpoints);
 
 				if (buildCallable) {
 					const modeOptions = directive.modeOptions[mode];

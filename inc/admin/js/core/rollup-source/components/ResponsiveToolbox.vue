@@ -22,9 +22,6 @@
 					>{{ strings.identifyCells }}
 				</material-button>
 			</responsive-controls-row>
-<!--			<responsive-controls-row>-->
-<!--				<breakpoint-edit></breakpoint-edit>-->
-<!--			</responsive-controls-row>-->
 		</div>
 		<component :is="dynamicToolbox" :size-range="sizeRange"></component>
 	</div>
