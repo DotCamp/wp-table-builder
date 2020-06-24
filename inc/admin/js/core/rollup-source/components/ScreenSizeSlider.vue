@@ -13,7 +13,9 @@
 				:key="key"
 				:value="translateIntoPercent(width)"
 				:raw-value="width"
+				:stop-id="key"
 				@click="slide"
+				@breakpointChange="handleBreakpointChange"
 				>{{ name }}</slider-stop
 			>
 		</div>
@@ -58,6 +60,13 @@ export default {
 		},
 	},
 	methods: {
+		handleBreakpointChange(newSize, breakpointId) {
+			if (this.directives.breakpoints[breakpointId]) {
+				this.directives.breakpoints[breakpointId].width = newSize;
+			} else {
+				throw new Error(`no breakpoint found with the given ID: [${breakpointId}]`);
+			}
+		},
 		/**
 		 * Calculate min/max values for the current slider.
 		 */

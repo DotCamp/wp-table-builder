@@ -13,7 +13,7 @@
 				class="wptb-size-input"
 				style="font-size: 90%;"
 				:enable-dynamic-width="true"
-				v-model="this.rawValue"
+				v-model="innerRawValue"
 				post-fix="px"
 			></number-postfix-input>
 		</div>
@@ -36,12 +36,25 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		stopId: String,
 	},
 	components: { NumberPostfixInput },
 	data() {
 		return {
 			wrapperStyle: { left: 0, top: 0 },
+			innerRawValue: this.rawValue,
 		};
+	},
+	watch: {
+		rawValue(n) {
+			this.innerRawValue = n;
+		},
+		value(n) {
+			this.calculateStyle();
+		},
+		innerRawValue(n) {
+			this.$emit('breakpointChange', n, this.stopId);
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {

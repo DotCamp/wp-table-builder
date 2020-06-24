@@ -13453,7 +13453,8 @@ var _default = {
     active: {
       type: Boolean,
       default: false
-    }
+    },
+    stopId: String
   },
   components: {
     NumberPostfixInput: _NumberPostfixInput.default
@@ -13463,8 +13464,20 @@ var _default = {
       wrapperStyle: {
         left: 0,
         top: 0
-      }
+      },
+      innerRawValue: this.rawValue
     };
+  },
+  watch: {
+    rawValue: function rawValue(n) {
+      this.innerRawValue = n;
+    },
+    value: function value(n) {
+      this.calculateStyle();
+    },
+    innerRawValue: function innerRawValue(n) {
+      this.$emit('breakpointChange', n, this.stopId);
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -13542,11 +13555,11 @@ exports.default = _default;
             staticStyle: { "font-size": "90%" },
             attrs: { "enable-dynamic-width": true, "post-fix": "px" },
             model: {
-              value: this.rawValue,
+              value: _vm.innerRawValue,
               callback: function($$v) {
-                _vm.$set(this, "rawValue", $$v)
+                _vm.innerRawValue = $$v
               },
-              expression: "this.rawValue"
+              expression: "innerRawValue"
             }
           })
         ],
@@ -13809,6 +13822,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
   props: {
     stops: Object,
@@ -13847,6 +13862,14 @@ var _default = {
     }
   },
   methods: {
+    handleBreakpointChange: function handleBreakpointChange(newSize, breakpointId) {
+      if (this.directives.breakpoints[breakpointId]) {
+        this.directives.breakpoints[breakpointId].width = newSize;
+      } else {
+        throw new Error("no breakpoint found with the given ID: [".concat(breakpointId, "]"));
+      }
+    },
+
     /**
      * Calculate min/max values for the current slider.
      */
@@ -13992,9 +14015,13 @@ exports.default = _default;
                 attrs: {
                   active: _vm.isStopActive(width),
                   value: _vm.translateIntoPercent(width),
-                  "raw-value": width
+                  "raw-value": width,
+                  "stop-id": key
                 },
-                on: { click: _vm.slide }
+                on: {
+                  click: _vm.slide,
+                  breakpointChange: _vm.handleBreakpointChange
+                }
               },
               [_vm._v(_vm._s(name))]
             )
@@ -14029,7 +14056,6 @@ var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
 //
 //
 //
