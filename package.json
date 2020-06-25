@@ -7,7 +7,7 @@
     "dev:build": "cross-env NODE_ENV=development parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-hmr",
     "prod:build": "cross-env NODE_ENV=production parcel build ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
     "prod:build:watch": "cross-env NODE_ENV=production parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
-    "lint": "eslint ./inc/admin/js/core/rollup-source --ext .js,.vue",
+    "lint": "eslint ./inc/admin/js/core/rollup-source --ignore-pattern '/inc/admin/js/core/rollup-source/functions/importOperations.js' --ext .js,.vue",
     "preinstall": "npx npm-force-resolutions"
   },
   "alias": {

@@ -29,6 +29,7 @@ export default {
 		callback: {
 			type: Function,
 			default: () => {
+				// eslint-disable-next-line no-console
 				console.log('modal button clicked');
 			},
 		},

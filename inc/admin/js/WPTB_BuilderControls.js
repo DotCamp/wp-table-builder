@@ -12239,6 +12239,7 @@ function setTargetValue(selector, value) {
 
 
 function setAllValues(selectors, value) {
+  // eslint-disable-next-line array-callback-return
   selectors.map(function (s) {
     setTargetValue(s, value);
   });
@@ -12255,7 +12256,8 @@ function getAllValues(selectors) {
   var allObj = {
     elements: [],
     startupValue: null
-  };
+  }; // eslint-disable-next-line array-callback-return
+
   selectors.map(function (s) {
     var elementValue = getTargetValue(s);
     allObj.elements.push(getTargetValue(s));
@@ -13055,6 +13057,7 @@ var _default = {
     tableStyle: {
       type: Object,
       default: function _default() {
+        // eslint-disable-next-line no-empty,no-lone-blocks
         {}
       }
     }
@@ -13258,6 +13261,16 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   inheritAttrs: false,
   props: {
@@ -13269,13 +13282,20 @@ var _default = {
       type: Number,
       default: 0
     },
+    // with this prop is enabled, width of the component will be calculated according to its contents
     enableDynamicWidth: {
       type: Boolean,
       default: false
     },
+    // extra padding value that will be applied to input element
     dynamicWidthPadding: {
       type: Number,
       default: 3
+    },
+    // only enable data update with enter key down
+    onlyEnter: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -13304,6 +13324,10 @@ var _default = {
     postFixIt: function postFixIt() {
       return "".concat(this.innerValue).concat(this.postFix);
     },
+
+    /**
+     * Calculate width of input element according to its contents.
+     */
     dynamicWidth: function dynamicWidth() {
       if (this.enableDynamicWidth) {
         return {
@@ -13315,14 +13339,34 @@ var _default = {
     }
   },
   methods: {
-    handleInput: function handleInput(e) {
-      this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+    /**
+     * Handle input value change.
+     *
+     * @param {Event} e input event
+     */
+    handleOnInput: function handleOnInput(e) {
+      // don't update prop data if only enter key update is enabled
+      if (!this.onlyEnter) {
+        this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+      }
+    },
+
+    /**
+     * Handle enter value change.
+     *
+     * @param {Event} e input event
+     */
+    handleEnterInput: function handleEnterInput(e) {
+      // only update prop data if enter key update is enabled
+      if (this.onlyEnter) {
+        this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+      }
     },
 
     /**
      * Handle key press event for input
      *
-     * This callback will give up/down arrow key press incrementation to input
+     * This callback will give up/down arrow key press incrementation to input.
      *
      * @param {string} type type of key
      */
@@ -13366,7 +13410,7 @@ exports.default = _default;
     attrs: { type: "text" },
     domProps: { value: _vm.postFixIt },
     on: {
-      input: _vm.handleInput,
+      input: _vm.handleOnInput,
       keydown: [
         function($event) {
           if (
@@ -13390,6 +13434,16 @@ exports.default = _default;
           }
           $event.preventDefault()
           return _vm.handleKeyPress("down")
+        },
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleEnterInput($event)
         }
       ]
     }
@@ -13419,6 +13473,7 @@ var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -13472,7 +13527,7 @@ var _default = {
     rawValue: function rawValue(n) {
       this.innerRawValue = n;
     },
-    value: function value(n) {
+    value: function value() {
       this.calculateStyle();
     },
     innerRawValue: function innerRawValue(n) {
@@ -13553,7 +13608,11 @@ exports.default = _default;
           _c("number-postfix-input", {
             staticClass: "wptb-size-input",
             staticStyle: { "font-size": "90%" },
-            attrs: { "enable-dynamic-width": true, "post-fix": "px" },
+            attrs: {
+              "enable-dynamic-width": true,
+              "only-enter": true,
+              "post-fix": "px"
+            },
             model: {
               value: _vm.innerRawValue,
               callback: function($$v) {
@@ -13824,6 +13883,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   props: {
     stops: Object,
@@ -13847,7 +13911,9 @@ var _default = {
       min: 0,
       max: 100,
       currentVal: 0,
-      isDragging: false
+      isDragging: false,
+      minSizeBetweenBreakpoints: 100,
+      repaintId: 0
     };
   },
   beforeMount: function beforeMount() {
@@ -13863,8 +13929,33 @@ var _default = {
   },
   methods: {
     handleBreakpointChange: function handleBreakpointChange(newSize, breakpointId) {
-      if (this.directives.breakpoints[breakpointId]) {
-        this.directives.breakpoints[breakpointId].width = newSize;
+      var breakpointObj = this.directives.breakpoints;
+
+      if (breakpointObj[breakpointId]) {
+        var sortedIds = Object.keys(breakpointObj).sort(function (a, b) {
+          return breakpointObj[a].width - breakpointObj[b].width;
+        });
+        var currentIndex = sortedIds.indexOf(breakpointId);
+        var minSibling = sortedIds[currentIndex - 1];
+        var maxSibling = sortedIds[currentIndex + 1];
+
+        if (minSibling) {
+          if (breakpointObj[minSibling].width >= newSize) {
+            // eslint-disable-next-line no-param-reassign
+            newSize = breakpointObj[minSibling].width + this.minSizeBetweenBreakpoints;
+          }
+        }
+
+        if (maxSibling) {
+          if (breakpointObj[maxSibling].width <= newSize) {
+            // eslint-disable-next-line no-param-reassign
+            newSize = breakpointObj[maxSibling].width - this.minSizeBetweenBreakpoints;
+          }
+        }
+
+        breakpointObj[breakpointId].width = newSize;
+        this.calculateMinMax();
+        this.repaintId += 1;
       } else {
         throw new Error("no breakpoint found with the given ID: [".concat(breakpointId, "]"));
       }
@@ -13916,7 +14007,7 @@ var _default = {
      * Limit given value to min/max values.
      *
      * @param {number} val value
-     * @param {boolean} floor floor the value to nearest integet
+     * @param {boolean} floor floor the value to nearest integer
      * @returns {number} limited value
      */
     limitToRange: function limitToRange(val) {
@@ -13976,6 +14067,7 @@ exports.default = _default;
   return _c(
     "div",
     {
+      key: _vm.repaintId,
       ref: "sliderWrapper",
       staticClass: "wptb-screen-size-slider-wrapper",
       class: { "wptb-drag-active": _vm.isDragging }
@@ -14056,6 +14148,11 @@ var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14197,7 +14294,7 @@ exports.default = _default;
       _vm._v(" "),
       _c("number-postfix-input", {
         staticClass: "wptb-size-input",
-        attrs: { "post-fix": " px" },
+        attrs: { "post-fix": " px", "only-enter": true },
         model: {
           value: _vm.innerSize,
           callback: function($$v) {
@@ -15707,6 +15804,7 @@ var _default = {
     callback: {
       type: Function,
       default: function _default() {
+        // eslint-disable-next-line no-console
         console.log('modal button clicked');
       }
     }
@@ -15944,6 +16042,7 @@ var _default = {
           var mainDirectiveObj = JSON.parse(decodedMainDirectives);
           this.deepMergeObject(this.directives, mainDirectiveObj);
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.warn('[WPTB]: invalid directive found at main table');
         }
       }
@@ -16017,12 +16116,10 @@ var _default = {
      * @return {string} range key name
      */
     calculateSizeRangeName: function calculateSizeRangeName(val) {
-      var _this4 = this;
-
-      var mainObject = this.screenSizes;
+      var mainObject = this.directives.breakpoints;
       var ranges = Object.keys(mainObject).filter(function (s) {
         if (Object.prototype.hasOwnProperty.call(mainObject, s)) {
-          return mainObject[s].width <= val + _this4.sliderPadding;
+          return mainObject[s].width <= val;
         }
 
         return false;

@@ -27,6 +27,7 @@ export default {
 		tableStyle: {
 			type: Object,
 			default: () => {
+				// eslint-disable-next-line no-empty,no-lone-blocks
 				{
 				}
 			},

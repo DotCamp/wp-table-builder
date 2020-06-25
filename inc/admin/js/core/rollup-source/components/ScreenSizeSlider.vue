@@ -1,5 +1,10 @@
 <template>
-	<div class="wptb-screen-size-slider-wrapper" :class="{ 'wptb-drag-active': isDragging }" ref="sliderWrapper">
+	<div
+		:key="repaintId"
+		class="wptb-screen-size-slider-wrapper"
+		:class="{ 'wptb-drag-active': isDragging }"
+		ref="sliderWrapper"
+	>
 		<div class="wptb-screen-size-slider-empty">
 			<slider-arrow
 				:position-percentage="translateIntoPercent(limitToRange(currentVal))"
@@ -46,6 +51,8 @@ export default {
 			max: 100,
 			currentVal: 0,
 			isDragging: false,
+			minSizeBetweenBreakpoints: 100,
+			repaintId: 0,
 		};
 	},
 	beforeMount() {
@@ -61,8 +68,33 @@ export default {
 	},
 	methods: {
 		handleBreakpointChange(newSize, breakpointId) {
-			if (this.directives.breakpoints[breakpointId]) {
-				this.directives.breakpoints[breakpointId].width = newSize;
+			const breakpointObj = this.directives.breakpoints;
+			if (breakpointObj[breakpointId]) {
+				const sortedIds = Object.keys(breakpointObj).sort((a, b) => {
+					return breakpointObj[a].width - breakpointObj[b].width;
+				});
+
+				const currentIndex = sortedIds.indexOf(breakpointId);
+
+				const minSibling = sortedIds[currentIndex - 1];
+				const maxSibling = sortedIds[currentIndex + 1];
+
+				if (minSibling) {
+					if (breakpointObj[minSibling].width >= newSize) {
+						// eslint-disable-next-line no-param-reassign
+						newSize = breakpointObj[minSibling].width + this.minSizeBetweenBreakpoints;
+					}
+				}
+				if (maxSibling) {
+					if (breakpointObj[maxSibling].width <= newSize) {
+						// eslint-disable-next-line no-param-reassign
+						newSize = breakpointObj[maxSibling].width - this.minSizeBetweenBreakpoints;
+					}
+				}
+
+				breakpointObj[breakpointId].width = newSize;
+				this.calculateMinMax();
+				this.repaintId += 1;
 			} else {
 				throw new Error(`no breakpoint found with the given ID: [${breakpointId}]`);
 			}
@@ -111,7 +143,7 @@ export default {
 		 * Limit given value to min/max values.
 		 *
 		 * @param {number} val value
-		 * @param {boolean} floor floor the value to nearest integet
+		 * @param {boolean} floor floor the value to nearest integer
 		 * @returns {number} limited value
 		 */
 		limitToRange(val, floor = false) {

@@ -18059,7 +18059,8 @@ var _default = {
           throw new Error(resp.error);
         }
 
-        var parsedTables = [];
+        var parsedTables = []; // eslint-disable-next-line array-callback-return
+
         _this5.userTables = resp.data.userTables.map(function (t) {
           var localDate = new Intl.DateTimeFormat('default', {
             year: 'numeric',

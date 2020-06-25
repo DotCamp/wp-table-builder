@@ -168,6 +168,7 @@ export default {
 
 					this.deepMergeObject(this.directives, mainDirectiveObj);
 				} catch (e) {
+					// eslint-disable-next-line no-console
 					console.warn('[WPTB]: invalid directive found at main table');
 				}
 			}
@@ -238,12 +239,12 @@ export default {
 		 * @return {string} range key name
 		 */
 		calculateSizeRangeName(val) {
-			const mainObject = this.screenSizes;
+			const mainObject = this.directives.breakpoints;
 
 			const ranges = Object.keys(mainObject)
 				.filter((s) => {
 					if (Object.prototype.hasOwnProperty.call(mainObject, s)) {
-						return mainObject[s].width <= val + this.sliderPadding;
+						return mainObject[s].width <= val;
 					}
 					return false;
 				})

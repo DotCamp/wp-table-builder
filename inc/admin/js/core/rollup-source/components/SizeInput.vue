@@ -4,7 +4,12 @@
 			<option value="responsive">Responsive</option>
 			<option v-for="(value, key) in compareSizes" :key="key" :value="key"> {{ key }}</option>
 		</select>
-		<number-postfix-input class="wptb-size-input" v-model="innerSize" post-fix=" px"></number-postfix-input>
+		<number-postfix-input
+			class="wptb-size-input"
+			v-model="innerSize"
+			post-fix=" px"
+			:only-enter="true"
+		></number-postfix-input>
 	</div>
 </template>
 <script>

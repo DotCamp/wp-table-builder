@@ -14,6 +14,7 @@
 				style="font-size: 90%;"
 				:enable-dynamic-width="true"
 				v-model="innerRawValue"
+				:only-enter="true"
 				post-fix="px"
 			></number-postfix-input>
 		</div>
@@ -49,7 +50,7 @@ export default {
 		rawValue(n) {
 			this.innerRawValue = n;
 		},
-		value(n) {
+		value() {
 			this.calculateStyle();
 		},
 		innerRawValue(n) {

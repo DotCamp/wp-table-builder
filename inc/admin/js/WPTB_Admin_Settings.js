@@ -12024,6 +12024,7 @@ var withStore = {
     revertStore: function revertStore() {
       var _this = this;
 
+      // eslint-disable-next-line array-callback-return
       Object.keys(this.store).map(function (k) {
         if (Object.prototype.hasOwnProperty.call(_this.store, k)) {
           _this.store[k] = _this.rawStore[k];

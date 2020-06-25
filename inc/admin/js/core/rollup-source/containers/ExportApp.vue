@@ -187,6 +187,7 @@ export default {
 					}
 					const parsedTables = [];
 
+					// eslint-disable-next-line array-callback-return
 					this.userTables = resp.data.userTables.map((t) => {
 						const localDate = new Intl.DateTimeFormat('default', {
 							year: 'numeric',

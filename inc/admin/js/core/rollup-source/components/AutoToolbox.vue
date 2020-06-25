@@ -34,6 +34,6 @@ export default {
 	props: {
 		sizeRange: Object,
 	},
-	components: { ResponsiveDynamicToolbox, PopUp},
+	components: { ResponsiveDynamicToolbox, PopUp },
 };
 </script>
