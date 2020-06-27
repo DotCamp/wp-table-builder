@@ -13,9 +13,10 @@
 	// eslint-disable-next-line no-restricted-globals
 })('WPTB_ResponsiveFrontend', self || global, () => {
 	/**
-	 * Object implementation for cell element operations
+	 * Object implementation for cell element operations.
+	 * If an empty cellElement parameter is given, a fresh cell element will be created.
 	 *
-	 * @param {HTMLElement} cellElement cell element
+	 * @param {HTMLElement | null} cellElement cell element
 	 * @constructor
 	 */
 	function CellObject(cellElement) {
@@ -30,10 +31,20 @@
 			return this.element;
 		};
 
+		this.createCellElement = () => {
+			return document.createElement('td');
+		};
+
+		// create a new cell element if no cellElement argument is given with constructor function
+		if (!cellElement) {
+			this.element = this.createCellElement();
+		}
+
 		/**
 		 * Add attribute to cell element.
 		 *
 		 * This function have the ability to add/remove attributes from cell element.
+		 * All attributes modified with this function will be cached with their before value for an easy reset on demand.
 		 *
 		 * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
 		 * @param {any} attributeValue attribute value
@@ -57,7 +68,7 @@
 		this.resetAttribute = (attributeKey) => {
 			if (this.modifications[attributeKey]) {
 				this.getElement()[attributeKey] = this.modifications[attributeKey].default;
-				this.getElement()[attributeKey] = undefined;
+				this.modifications[attributeKey] = undefined;
 			}
 		};
 
@@ -65,6 +76,7 @@
 		 * Reset all modified attributes of cell element to their default values.
 		 */
 		this.resetAllAttributes = () => {
+			// eslint-disable-next-line array-callback-return
 			Object.keys(this.modifications).map((k) => {
 				if (Object.prototype.hasOwnProperty.call(this.modifications, k)) {
 					this.resetAttribute(k);
@@ -103,6 +115,10 @@
 		 */
 		this.parsedTable = [];
 
+		/**
+		 * An array of created table rows elements that are id'd according to their index in array
+		 * @type {[HTMLElement]}
+		 */
 		this.rowCache = [];
 
 		/**
@@ -173,6 +189,7 @@
 				return this.rowCache[id];
 			}
 
+			// eslint-disable-next-line no-console
 			console.warn(`[WPTB]: no row with id [${id}] found in the cache.`);
 			return null;
 		};
@@ -219,6 +236,7 @@
 				}
 				return this.parsedTable[r][c].el;
 			}
+			// eslint-disable-next-line no-console
 			console.warn(`[WPTB]: no cell found at the given address of [${r}-${c}]`);
 			return null;
 		};
@@ -257,6 +275,20 @@
 			return cell;
 		};
 
+		/**
+		 * Append html element to a cached row.
+		 *
+		 * @param {HTMLElement} el element
+		 * @param {number} rowId if of row in row cache
+		 */
+		this.appendElementToRow = (el, rowId) => {
+			const cachedRow = this.getRow(rowId);
+
+			if (el && cachedRow) {
+				cachedRow.appendChild(el);
+			}
+		};
+
 		this.parseTable();
 
 		return {
@@ -266,7 +298,9 @@
 			clearTable: this.clearTable,
 			getCell: this.getCell,
 			appendToRow: this.appendToRow,
+			appendElementToRow: this.appendElementToRow,
 			getCellsAtRow: this.getCellsAtRow,
+			el: this.tableElement,
 		};
 	}
 
@@ -353,7 +387,10 @@
 		 */
 		this.autoBuild = (tableEl, sizeRange, autoOption, tableObj) => {
 			const direction = autoOption.cellStackDirection;
-			const { topRowAsHeader } = autoOption;
+			// eslint-disable-next-line prefer-destructuring
+			const topRowAsHeader = autoOption.topRowAsHeader;
+
+			const cellsPerRow = autoOption.cellsPerRow[sizeRange];
 
 			tableObj.clearTable();
 
@@ -361,7 +398,7 @@
 				this.buildDefault(tableObj);
 				this.removeDefaultClasses(tableEl);
 			} else {
-				this.autoDirectionBuild(tableObj, direction, topRowAsHeader);
+				this.autoDirectionBuild(tableObj, direction, topRowAsHeader, cellsPerRow);
 				this.addDefaultClasses(tableEl);
 			}
 		};
@@ -376,46 +413,75 @@
 		 * @param {TableObject} tableObj table object
 		 * @param {string} direction direction to read cells
 		 * @param {boolean} topRowAsHeader use top row as header
+		 * @param {number} cellsPerRow cells per row
 		 */
-		this.autoDirectionBuild = (tableObj, direction, topRowAsHeader = false) => {
+		this.autoDirectionBuild = (tableObj, direction, topRowAsHeader = false, cellsPerRow = 1) => {
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
 
 			const rowStartIndex = topRowAsHeader ? 1 : 0;
-			const topRowCellCount = tableObj.getCellsAtRow(0).length;
+			// const topRowCellCount = tableObj.getCellsAtRow(0).length;
 
 			if (topRowAsHeader) {
 				const headerId = tableObj.addRow('wptb-row').id;
 				const maxColumns = tableObj.maxColumns();
 
+				// in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any
+				const wrapperCell = new CellObject();
+				tableObj.appendElementToRow(wrapperCell.getElement(), headerId);
+
+				// because class, responsible for styling(in our case specifically padding) of cell elements are bound to parent child related class naming, all cell elements under main table is susceptible to a padding, which also includes our wrapper cell. because of this, resetting padding value of wrapper cell. in the future, if any layout defining style options are added in that way, reset them here too
+				wrapperCell.setAttribute('style', 'padding:0px');
+
+				// classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
+				const mainTableClasses = tableObj.el.getAttribute('class');
+
+				const tempTableRange = document.createRange();
+				tempTableRange.setStart(wrapperCell.getElement(), 0);
+				const tempTableStringified = `<table class="${mainTableClasses}"><tbody><tr></tr></tbody></table>`;
+				const tempTable = tempTableRange.createContextualFragment(tempTableStringified).childNodes[0];
+
+				// wrapper table style overrides
+				tempTable.style.margin = 0;
+				tempTable.style.width = '100%';
+
+				wrapperCell.getElement().appendChild(tempTable);
+
+				// add necessary colspan value to support 'cells per row' option with 'top row as header' option is enabled
+				wrapperCell.setAttribute('colSpan', cellsPerRow);
+
+				const tempWrapperRow = tempTable.querySelector('tr');
 				for (let hc = 0; hc < maxColumns; hc += 1) {
-					const tempCell = tableObj.appendToRow(0, hc, headerId);
-					tempCell.resetAllAttributes();
+					// const tempCell = tableObj.appendToRow(0, hc, headerId);
+					const tempCell = tableObj.getCell(0, hc, true);
+					if (tempCell) {
+						tempWrapperRow.appendChild(tempCell.getElement());
+						tempCell.resetAllAttributes();
+						tempCell.setAttribute('style', 'width: 100%');
+					}
 				}
 			}
 
-			// TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
 			if (isRowStacked) {
 				for (let r = rowStartIndex; r < rows; r += 1) {
-					for (let c = 0; c < columns; c += 1) {
+					for (let c = 0; c < columns; c += cellsPerRow) {
 						const rowId = tableObj.addRow('wptb-row').id;
-						const tempCell = tableObj.appendToRow(r, c, rowId);
-						tempCell.resetAllAttributes();
-						if (topRowAsHeader) {
-							tempCell.setAttribute('colSpan', topRowCellCount);
+						for (let pR = 0; pR < cellsPerRow; pR += 1) {
+							const tempCell = tableObj.appendToRow(r, c + pR, rowId);
+							if (tempCell) {
+								tempCell.resetAllAttributes();
+								tempCell.setAttribute('colSpan', 1);
+								tempCell.setAttribute('rowSpan', 1);
+							}
 						}
 					}
 				}
 			} else {
 				for (let c = 0; c < columns; c += 1) {
-					for (let r = rowStartIndex; r < rows; r += 1) {
+					for (let r = rowStartIndex; r < rows; r += cellsPerRow) {
 						const rowId = tableObj.addRow('wptb-row').id;
 						const tempCell = tableObj.appendToRow(r, c, rowId);
-						tempCell.resetAllAttributes();
-						if (topRowAsHeader) {
-							tempCell.setAttribute('colSpan', topRowCellCount);
-						}
 					}
 				}
 			}
@@ -437,7 +503,9 @@
 				for (let c = 0; c < columns; c += 1) {
 					const tempCell = tableObj.appendToRow(r, c, rowId);
 					// reset all modified attributes of cell to their default values
-					tempCell.resetAllAttributes();
+					if (tempCell) {
+						tempCell.resetAllAttributes();
+					}
 				}
 			}
 		};
@@ -509,6 +577,10 @@
 		 * @param {number} size screen size
 		 */
 		this.rebuildTables = (size) => {
+			if (!size) {
+				// eslint-disable-next-line no-param-reassign
+				size = window.innerWidth;
+			}
 			// eslint-disable-next-line array-callback-return
 			this.elementObjects.map((o) => {
 				this.rebuildTable(o.el, size, o.tableObject);

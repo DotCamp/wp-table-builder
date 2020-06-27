@@ -12,7 +12,7 @@
 				<pop-up :message="strings.topRowHeaderHelp">?</pop-up>
 			</responsive-controls-row>
 			<responsive-controls-row>
-				<label for="wptbStackDirection"> {{ strings.stackDirection }}: </label>
+				<label for="wptbStackDirection"> {{ strings.stackDirection }}:</label>
 				<select
 					v-model="directives.modeOptions.auto.cellStackDirection"
 					id="wptbStackDirection"
@@ -23,17 +23,30 @@
 				</select>
 				<pop-up :message="strings.stackDirectionHelp">?</pop-up>
 			</responsive-controls-row>
+			<responsive-controls-row>
+				<number-postfix-input
+					class="wptb-size-input"
+					:enable-dynamic-width="true"
+					v-model="directives.modeOptions.auto.cellsPerRow[sizeRange.id]"
+					:min="0"
+					:max="100"
+					:enable-limit="true"
+					:disabled="context.isDisabled()"
+				></number-postfix-input>
+				<label for="cellsPerRow"> {{ strings.cellsPerRow | cap }}</label>
+			</responsive-controls-row>
 		</template>
 	</responsive-dynamic-toolbox>
 </template>
 <script>
 import ResponsiveDynamicToolbox from './ResponsiveDynamicToolbox';
 import PopUp from './PopUp';
+import NumberPostfixInput from './NumberPostfixInput';
 
 export default {
 	props: {
 		sizeRange: Object,
 	},
-	components: { ResponsiveDynamicToolbox, PopUp },
+	components: { NumberPostfixInput, ResponsiveDynamicToolbox, PopUp },
 };
 </script>

@@ -51,6 +51,7 @@ export default {
 			max: 100,
 			currentVal: 0,
 			isDragging: false,
+			// minimum size between breakpoints to avoid them overlap or share the same breakpoint size
 			minSizeBetweenBreakpoints: 100,
 			repaintId: 0,
 		};
@@ -74,6 +75,7 @@ export default {
 					return breakpointObj[a].width - breakpointObj[b].width;
 				});
 
+				// limit assigning a higher or lower value then the changed breakpoints logical place
 				const currentIndex = sortedIds.indexOf(breakpointId);
 
 				const minSibling = sortedIds[currentIndex - 1];

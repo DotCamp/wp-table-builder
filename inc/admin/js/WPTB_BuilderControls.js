@@ -13271,6 +13271,7 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   inheritAttrs: false,
   props: {
@@ -13294,6 +13295,18 @@ var _default = {
     },
     // only enable data update with enter key down
     onlyEnter: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 1000
+    },
+    enableLimit: {
       type: Boolean,
       default: false
     }
@@ -13340,6 +13353,34 @@ var _default = {
   },
   methods: {
     /**
+     * Retrieve integer from a string in the base of 10 and limit it between min/max values of the component.
+     *
+     * @param {number|string} val value
+     * @return {number} retrieved integer
+     */
+    getValue: function getValue(val) {
+      var parsedValue = Number.parseInt(val, 10);
+      return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
+    },
+
+    /**
+     * Limit given value between min/max properties of the component.
+     *
+     * @param {number} val value to be limited
+     */
+    limitValue: function limitValue(val) {
+      if (val < this.min) {
+        return this.min;
+      }
+
+      if (val > this.max) {
+        return this.max;
+      }
+
+      return val;
+    },
+
+    /**
      * Handle input value change.
      *
      * @param {Event} e input event
@@ -13347,7 +13388,7 @@ var _default = {
     handleOnInput: function handleOnInput(e) {
       // don't update prop data if only enter key update is enabled
       if (!this.onlyEnter) {
-        this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+        this.$emit('valueChanged', this.getValue(e.target.value));
       }
     },
 
@@ -13359,7 +13400,7 @@ var _default = {
     handleEnterInput: function handleEnterInput(e) {
       // only update prop data if enter key update is enabled
       if (this.onlyEnter) {
-        this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+        this.$emit('valueChanged', this.getValue(e.target.value));
       }
     },
 
@@ -13372,7 +13413,7 @@ var _default = {
      */
     handleKeyPress: function handleKeyPress() {
       var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
-      var value = this.innerValue;
+      var value = this.getValue(this.innerValue);
 
       switch (type) {
         case 'up':
@@ -13388,6 +13429,7 @@ var _default = {
           break;
       }
 
+      value = this.getValue(value);
       this.$emit('valueChanged', value);
     }
   }
@@ -13407,7 +13449,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c("input", {
     style: _vm.dynamicWidth,
-    attrs: { type: "text" },
+    attrs: { type: "text", disabled: _vm.$attrs.disabled },
     domProps: { value: _vm.postFixIt },
     on: {
       input: _vm.handleOnInput,
@@ -13912,6 +13954,7 @@ var _default = {
       max: 100,
       currentVal: 0,
       isDragging: false,
+      // minimum size between breakpoints to avoid them overlap or share the same breakpoint size
       minSizeBetweenBreakpoints: 100,
       repaintId: 0
     };
@@ -13934,7 +13977,8 @@ var _default = {
       if (breakpointObj[breakpointId]) {
         var sortedIds = Object.keys(breakpointObj).sort(function (a, b) {
           return breakpointObj[a].width - breakpointObj[b].width;
-        });
+        }); // limit assigning a higher or lower value then the changed breakpoints logical place
+
         var currentIndex = sortedIds.indexOf(breakpointId);
         var minSibling = sortedIds[currentIndex - 1];
         var maxSibling = sortedIds[currentIndex + 1];
@@ -14522,8 +14566,22 @@ var _ResponsiveDynamicToolbox = _interopRequireDefault(require("./ResponsiveDyna
 
 var _PopUp = _interopRequireDefault(require("./PopUp"));
 
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14557,6 +14615,7 @@ var _default = {
     sizeRange: Object
   },
   components: {
+    NumberPostfixInput: _NumberPostfixInput.default,
     ResponsiveDynamicToolbox: _ResponsiveDynamicToolbox.default,
     PopUp: _PopUp.default
   }
@@ -14660,7 +14719,7 @@ exports.default = _default;
               "responsive-controls-row",
               [
                 _c("label", { attrs: { for: "wptbStackDirection" } }, [
-                  _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ": ")
+                  _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ":")
                 ]),
                 _vm._v(" "),
                 _c(
@@ -14718,6 +14777,42 @@ exports.default = _default;
                 )
               ],
               1
+            ),
+            _vm._v(" "),
+            _c(
+              "responsive-controls-row",
+              [
+                _c("number-postfix-input", {
+                  staticClass: "wptb-size-input",
+                  attrs: {
+                    "enable-dynamic-width": true,
+                    min: 0,
+                    max: 100,
+                    "enable-limit": true,
+                    disabled: context.isDisabled()
+                  },
+                  model: {
+                    value:
+                      _vm.directives.modeOptions.auto.cellsPerRow[
+                        _vm.sizeRange.id
+                      ],
+                    callback: function($$v) {
+                      _vm.$set(
+                        _vm.directives.modeOptions.auto.cellsPerRow,
+                        _vm.sizeRange.id,
+                        $$v
+                      )
+                    },
+                    expression:
+                      "directives.modeOptions.auto.cellsPerRow[sizeRange.id]"
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "cellsPerRow" } }, [
+                  _vm._v(" " + _vm._s(_vm._f("cap")(_vm.strings.cellsPerRow)))
+                ])
+              ],
+              1
             )
           ]
         }
@@ -14737,7 +14832,7 @@ render._withStripped = true
           };
         })());
       
-},{"./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./PopUp":"components/PopUp.vue"}],"components/MaterialButton.vue":[function(require,module,exports) {
+},{"./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./PopUp":"components/PopUp.vue","./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/MaterialButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15210,9 +15305,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 })('WPTB_ResponsiveFrontend', self || global, function () {
   /**
-   * Object implementation for cell element operations
+   * Object implementation for cell element operations.
+   * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
-   * @param {HTMLElement} cellElement cell element
+   * @param {HTMLElement | null} cellElement cell element
    * @constructor
    */
   function CellObject(cellElement) {
@@ -15228,10 +15324,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.getElement = function () {
       return _this.element;
     };
+
+    this.createCellElement = function () {
+      return document.createElement('td');
+    }; // create a new cell element if no cellElement argument is given with constructor function
+
+
+    if (!cellElement) {
+      this.element = this.createCellElement();
+    }
     /**
      * Add attribute to cell element.
      *
      * This function have the ability to add/remove attributes from cell element.
+     * All attributes modified with this function will be cached with their before value for an easy reset on demand.
      *
      * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
      * @param {any} attributeValue attribute value
@@ -15261,7 +15367,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.resetAttribute = function (attributeKey) {
       if (_this.modifications[attributeKey]) {
         _this.getElement()[attributeKey] = _this.modifications[attributeKey].default;
-        _this.getElement()[attributeKey] = undefined;
+        _this.modifications[attributeKey] = undefined;
       }
     };
     /**
@@ -15270,6 +15376,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.resetAllAttributes = function () {
+      // eslint-disable-next-line array-callback-return
       Object.keys(_this.modifications).map(function (k) {
         if (Object.prototype.hasOwnProperty.call(_this.modifications, k)) {
           _this.resetAttribute(k);
@@ -15310,6 +15417,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      */
 
     this.parsedTable = [];
+    /**
+     * An array of created table rows elements that are id'd according to their index in array
+     * @type {[HTMLElement]}
+     */
+
     this.rowCache = [];
     /**
      * Assign table cells into row and column numbers
@@ -15379,7 +15491,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.getRow = function (id) {
       if (_this2.rowCache[id]) {
         return _this2.rowCache[id];
-      }
+      } // eslint-disable-next-line no-console
+
 
       console.warn("[WPTB]: no row with id [".concat(id, "] found in the cache."));
       return null;
@@ -15432,7 +15545,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }
 
         return _this2.parsedTable[r][c].el;
-      }
+      } // eslint-disable-next-line no-console
+
 
       console.warn("[WPTB]: no cell found at the given address of [".concat(r, "-").concat(c, "]"));
       return null;
@@ -15478,6 +15592,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       return cell;
     };
+    /**
+     * Append html element to a cached row.
+     *
+     * @param {HTMLElement} el element
+     * @param {number} rowId if of row in row cache
+     */
+
+
+    this.appendElementToRow = function (el, rowId) {
+      var cachedRow = _this2.getRow(rowId);
+
+      if (el && cachedRow) {
+        cachedRow.appendChild(el);
+      }
+    };
 
     this.parseTable();
     return {
@@ -15487,7 +15616,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       clearTable: this.clearTable,
       getCell: this.getCell,
       appendToRow: this.appendToRow,
-      getCellsAtRow: this.getCellsAtRow
+      appendElementToRow: this.appendElementToRow,
+      getCellsAtRow: this.getCellsAtRow,
+      el: this.tableElement
     };
   } // default options for responsive class
 
@@ -15578,8 +15709,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
-      var direction = autoOption.cellStackDirection;
+      var direction = autoOption.cellStackDirection; // eslint-disable-next-line prefer-destructuring
+
       var topRowAsHeader = autoOption.topRowAsHeader;
+      var cellsPerRow = autoOption.cellsPerRow[sizeRange];
       tableObj.clearTable();
 
       if (sizeRange === 'desktop') {
@@ -15587,7 +15720,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         _this3.removeDefaultClasses(tableEl);
       } else {
-        _this3.autoDirectionBuild(tableObj, direction, topRowAsHeader);
+        _this3.autoDirectionBuild(tableObj, direction, topRowAsHeader, cellsPerRow);
 
         _this3.addDefaultClasses(tableEl);
       }
@@ -15602,54 +15735,76 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * @param {TableObject} tableObj table object
      * @param {string} direction direction to read cells
      * @param {boolean} topRowAsHeader use top row as header
+     * @param {number} cellsPerRow cells per row
      */
 
 
     this.autoDirectionBuild = function (tableObj, direction) {
       var topRowAsHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var cellsPerRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
       var isRowStacked = direction === 'row';
-      var rowStartIndex = topRowAsHeader ? 1 : 0;
-      var topRowCellCount = tableObj.getCellsAtRow(0).length;
+      var rowStartIndex = topRowAsHeader ? 1 : 0; // const topRowCellCount = tableObj.getCellsAtRow(0).length;
 
       if (topRowAsHeader) {
         var headerId = tableObj.addRow('wptb-row').id;
-        var maxColumns = tableObj.maxColumns();
+        var maxColumns = tableObj.maxColumns(); // in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any
+
+        var wrapperCell = new CellObject();
+        tableObj.appendElementToRow(wrapperCell.getElement(), headerId); // because class, responsible for styling(in our case specifically padding) of cell elements are bound to parent child related class naming, all cell elements under main table is susceptible to a padding, which also includes our wrapper cell. because of this, resetting padding value of wrapper cell. in the future, if any layout defining style options are added in that way, reset them here too
+
+        wrapperCell.setAttribute('style', 'padding:0px'); // classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
+
+        var mainTableClasses = tableObj.el.getAttribute('class');
+        var tempTableRange = document.createRange();
+        tempTableRange.setStart(wrapperCell.getElement(), 0);
+        var tempTableStringified = "<table class=\"".concat(mainTableClasses, "\"><tbody><tr></tr></tbody></table>");
+        var tempTable = tempTableRange.createContextualFragment(tempTableStringified).childNodes[0]; // wrapper table style overrides
+
+        tempTable.style.margin = 0;
+        tempTable.style.width = '100%';
+        wrapperCell.getElement().appendChild(tempTable); // add necessary colspan value to support 'cells per row' option with 'top row as header' option is enabled
+
+        wrapperCell.setAttribute('colSpan', cellsPerRow);
+        var tempWrapperRow = tempTable.querySelector('tr');
 
         for (var hc = 0; hc < maxColumns; hc += 1) {
-          var tempCell = tableObj.appendToRow(0, hc, headerId);
-          tempCell.resetAllAttributes();
-        }
-      } // TODO [erdembircan] this algorithm can be simplified, but don't do it until a future feature is added to this build function, this way, till that comes, this class can be debugged much easily and will be much more easy to read and understand
+          // const tempCell = tableObj.appendToRow(0, hc, headerId);
+          var tempCell = tableObj.getCell(0, hc, true);
 
+          if (tempCell) {
+            tempWrapperRow.appendChild(tempCell.getElement());
+            tempCell.resetAllAttributes();
+            tempCell.setAttribute('style', 'width: 100%');
+          }
+        }
+      }
 
       if (isRowStacked) {
         for (var r = rowStartIndex; r < rows; r += 1) {
-          for (var c = 0; c < columns; c += 1) {
+          for (var c = 0; c < columns; c += cellsPerRow) {
             var rowId = tableObj.addRow('wptb-row').id;
 
-            var _tempCell = tableObj.appendToRow(r, c, rowId);
+            for (var pR = 0; pR < cellsPerRow; pR += 1) {
+              var _tempCell = tableObj.appendToRow(r, c + pR, rowId);
 
-            _tempCell.resetAllAttributes();
+              if (_tempCell) {
+                _tempCell.resetAllAttributes();
 
-            if (topRowAsHeader) {
-              _tempCell.setAttribute('colSpan', topRowCellCount);
+                _tempCell.setAttribute('colSpan', 1);
+
+                _tempCell.setAttribute('rowSpan', 1);
+              }
             }
           }
         }
       } else {
         for (var _c = 0; _c < columns; _c += 1) {
-          for (var _r = rowStartIndex; _r < rows; _r += 1) {
+          for (var _r = rowStartIndex; _r < rows; _r += cellsPerRow) {
             var _rowId = tableObj.addRow('wptb-row').id;
 
             var _tempCell2 = tableObj.appendToRow(_r, _c, _rowId);
-
-            _tempCell2.resetAllAttributes();
-
-            if (topRowAsHeader) {
-              _tempCell2.setAttribute('colSpan', topRowCellCount);
-            }
           }
         }
       }
@@ -15673,7 +15828,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         for (var c = 0; c < columns; c += 1) {
           var tempCell = tableObj.appendToRow(r, c, rowId); // reset all modified attributes of cell to their default values
 
-          tempCell.resetAllAttributes();
+          if (tempCell) {
+            tempCell.resetAllAttributes();
+          }
         }
       }
     };
@@ -15747,7 +15904,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.rebuildTables = function (size) {
-      // eslint-disable-next-line array-callback-return
+      if (!size) {
+        // eslint-disable-next-line no-param-reassign
+        size = window.innerWidth;
+      } // eslint-disable-next-line array-callback-return
+
+
       _this3.elementObjects.map(function (o) {
         _this3.rebuildTable(o.el, size, o.tableObject);
       });
@@ -16428,6 +16590,7 @@ var _default = {
       identifyCells: false,
       hasLegacyResponsive: false
     }; // directives for responsive features
+    // add default options value at here instead of assigning them at app dynamically. this way default options can be used for error checking and will prevent bugs/security concerns beforehand
 
     var directives = {
       responsiveEnabled: false,
@@ -16435,7 +16598,12 @@ var _default = {
       modeOptions: {
         auto: {
           topRowAsHeader: false,
-          cellStackDirection: 'row'
+          cellStackDirection: 'row',
+          cellsPerRow: {
+            desktop: 1,
+            tablet: 1,
+            mobile: 1
+          }
         }
       },
       breakpoints: data.screenSizes

@@ -720,5 +720,7 @@
 			query: '.wptb-preview-table',
 			bindToResize: true,
 		});
+
+		responsiveFront.rebuildTables();
 	});
 })(jQuery);

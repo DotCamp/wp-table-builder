@@ -16,6 +16,7 @@ Has a functionality to enable updating data on enter keydown instead of value in
 		@keydown.prevent.down="handleKeyPress('down')"
 		@keydown.prevent.enter="handleEnterInput"
 		:style="dynamicWidth"
+		:disabled="$attrs.disabled"
 	/>
 </template>
 <script>
@@ -42,6 +43,18 @@ export default {
 		},
 		// only enable data update with enter key down
 		onlyEnter: {
+			type: Boolean,
+			default: false,
+		},
+		min: {
+			type: Number,
+			default: 0,
+		},
+		max: {
+			type: Number,
+			default: 1000,
+		},
+		enableLimit: {
 			type: Boolean,
 			default: false,
 		},
@@ -88,6 +101,31 @@ export default {
 	},
 	methods: {
 		/**
+		 * Retrieve integer from a string in the base of 10 and limit it between min/max values of the component.
+		 *
+		 * @param {number|string} val value
+		 * @return {number} retrieved integer
+		 */
+		getValue(val) {
+			const parsedValue = Number.parseInt(val, 10);
+
+			return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
+		},
+		/**
+		 * Limit given value between min/max properties of the component.
+		 *
+		 * @param {number} val value to be limited
+		 */
+		limitValue(val) {
+			if (val < this.min) {
+				return this.min;
+			}
+			if (val > this.max) {
+				return this.max;
+			}
+			return val;
+		},
+		/**
 		 * Handle input value change.
 		 *
 		 * @param {Event} e input event
@@ -95,7 +133,7 @@ export default {
 		handleOnInput(e) {
 			// don't update prop data if only enter key update is enabled
 			if (!this.onlyEnter) {
-				this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+				this.$emit('valueChanged', this.getValue(e.target.value));
 			}
 		},
 		/**
@@ -106,7 +144,7 @@ export default {
 		handleEnterInput(e) {
 			// only update prop data if enter key update is enabled
 			if (this.onlyEnter) {
-				this.$emit('valueChanged', Number.parseInt(e.target.value, 10));
+				this.$emit('valueChanged', this.getValue(e.target.value));
 			}
 		},
 		/**
@@ -117,7 +155,7 @@ export default {
 		 * @param {string} type type of key
 		 */
 		handleKeyPress(type = 'up') {
-			let value = this.innerValue;
+			let value = this.getValue(this.innerValue);
 
 			switch (type) {
 				case 'up':
@@ -130,6 +168,8 @@ export default {
 					value += 1;
 					break;
 			}
+
+			value = this.getValue(value);
 
 			this.$emit('valueChanged', value);
 		},

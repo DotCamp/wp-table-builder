@@ -101,6 +101,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'stackDirection'          => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
+					'cellsPerRow'              => esc_html__( 'Cells per row', 'wp-table-builder' ),
 					'row'                     => esc_html__( 'row', 'wp-table-builder' ),
 					'column'                  => esc_html__( 'column', 'wp-table-builder' ),
 					'mode'                    => esc_html__( 'mode', 'wp-table-builder' ),

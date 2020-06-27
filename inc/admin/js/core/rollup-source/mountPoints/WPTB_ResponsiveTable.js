@@ -28,6 +28,7 @@ export default {
 		};
 
 		// directives for responsive features
+		// add default options value at here instead of assigning them at app dynamically. this way default options can be used for error checking and will prevent bugs/security concerns beforehand
 		const directives = {
 			responsiveEnabled: false,
 			responsiveMode: 'auto',
@@ -35,6 +36,11 @@ export default {
 				auto: {
 					topRowAsHeader: false,
 					cellStackDirection: 'row',
+					cellsPerRow: {
+						desktop: 1,
+						tablet: 1,
+						mobile: 1,
+					},
 				},
 			},
 			breakpoints: data.screenSizes,
