@@ -28,12 +28,13 @@
 					class="wptb-size-input"
 					:enable-dynamic-width="true"
 					v-model="directives.modeOptions.auto.cellsPerRow[sizeRange.id]"
-					:min="0"
+					:min="1"
 					:max="100"
 					:enable-limit="true"
 					:disabled="context.isDisabled()"
 				></number-postfix-input>
 				<label for="cellsPerRow"> {{ strings.cellsPerRow | cap }}</label>
+				<pop-up :message="strings.cellsPerRowHelp">?</pop-up>
 			</responsive-controls-row>
 		</template>
 	</responsive-dynamic-toolbox>

@@ -115,6 +115,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'fullHelp'                => esc_html__( 'Full: You have full control over how table will be constructed.', 'wp-table-builder' ),
 					'stackDirectionHelp'      => esc_html__( 'The order of stacking, either by rows or by columns.', 'wp-table-builder' ),
 					'topRowHeaderHelp'        => esc_html__( 'Use the top most row of table as a header.', 'wp-table-builder' ),
+					'cellsPerRowHelp' => esc_html__('Amount of cells that will be available per row', 'wp-table-builder'),
 					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' )
 				]
 			]

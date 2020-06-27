@@ -14610,6 +14610,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     sizeRange: Object
@@ -14786,7 +14787,7 @@ exports.default = _default;
                   staticClass: "wptb-size-input",
                   attrs: {
                     "enable-dynamic-width": true,
-                    min: 0,
+                    min: 1,
                     max: 100,
                     "enable-limit": true,
                     disabled: context.isDisabled()
@@ -14810,7 +14811,13 @@ exports.default = _default;
                 _vm._v(" "),
                 _c("label", { attrs: { for: "cellsPerRow" } }, [
                   _vm._v(" " + _vm._s(_vm._f("cap")(_vm.strings.cellsPerRow)))
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "pop-up",
+                  { attrs: { message: _vm.strings.cellsPerRowHelp } },
+                  [_vm._v("?")]
+                )
               ],
               1
             )
@@ -15280,8 +15287,218 @@ render._withStripped = true
           };
         })());
       
-},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue","./MaterialButton":"components/MaterialButton.vue","./BreakpointEdit":"components/BreakpointEdit.vue"}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
+},{"./PopUp":"components/PopUp.vue","./ResponsiveDynamicToolbox":"components/ResponsiveDynamicToolbox.vue","./AutoToolbox":"components/AutoToolbox.vue","./MaterialButton":"components/MaterialButton.vue","./BreakpointEdit":"components/BreakpointEdit.vue"}],"../../../../../node_modules/process/browser.js":[function(require,module,exports) {
+
+// shim for using process in browser
+var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+  throw new Error('setTimeout has not been defined');
+}
+
+function defaultClearTimeout() {
+  throw new Error('clearTimeout has not been defined');
+}
+
+(function () {
+  try {
+    if (typeof setTimeout === 'function') {
+      cachedSetTimeout = setTimeout;
+    } else {
+      cachedSetTimeout = defaultSetTimout;
+    }
+  } catch (e) {
+    cachedSetTimeout = defaultSetTimout;
+  }
+
+  try {
+    if (typeof clearTimeout === 'function') {
+      cachedClearTimeout = clearTimeout;
+    } else {
+      cachedClearTimeout = defaultClearTimeout;
+    }
+  } catch (e) {
+    cachedClearTimeout = defaultClearTimeout;
+  }
+})();
+
+function runTimeout(fun) {
+  if (cachedSetTimeout === setTimeout) {
+    //normal enviroments in sane situations
+    return setTimeout(fun, 0);
+  } // if setTimeout wasn't available but was latter defined
+
+
+  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+    cachedSetTimeout = setTimeout;
+    return setTimeout(fun, 0);
+  }
+
+  try {
+    // when when somebody has screwed with setTimeout but no I.E. maddness
+    return cachedSetTimeout(fun, 0);
+  } catch (e) {
+    try {
+      // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+      return cachedSetTimeout.call(null, fun, 0);
+    } catch (e) {
+      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+      return cachedSetTimeout.call(this, fun, 0);
+    }
+  }
+}
+
+function runClearTimeout(marker) {
+  if (cachedClearTimeout === clearTimeout) {
+    //normal enviroments in sane situations
+    return clearTimeout(marker);
+  } // if clearTimeout wasn't available but was latter defined
+
+
+  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+    cachedClearTimeout = clearTimeout;
+    return clearTimeout(marker);
+  }
+
+  try {
+    // when when somebody has screwed with setTimeout but no I.E. maddness
+    return cachedClearTimeout(marker);
+  } catch (e) {
+    try {
+      // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+      return cachedClearTimeout.call(null, marker);
+    } catch (e) {
+      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+      // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+      return cachedClearTimeout.call(this, marker);
+    }
+  }
+}
+
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+  if (!draining || !currentQueue) {
+    return;
+  }
+
+  draining = false;
+
+  if (currentQueue.length) {
+    queue = currentQueue.concat(queue);
+  } else {
+    queueIndex = -1;
+  }
+
+  if (queue.length) {
+    drainQueue();
+  }
+}
+
+function drainQueue() {
+  if (draining) {
+    return;
+  }
+
+  var timeout = runTimeout(cleanUpNextTick);
+  draining = true;
+  var len = queue.length;
+
+  while (len) {
+    currentQueue = queue;
+    queue = [];
+
+    while (++queueIndex < len) {
+      if (currentQueue) {
+        currentQueue[queueIndex].run();
+      }
+    }
+
+    queueIndex = -1;
+    len = queue.length;
+  }
+
+  currentQueue = null;
+  draining = false;
+  runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+  var args = new Array(arguments.length - 1);
+
+  if (arguments.length > 1) {
+    for (var i = 1; i < arguments.length; i++) {
+      args[i - 1] = arguments[i];
+    }
+  }
+
+  queue.push(new Item(fun, args));
+
+  if (queue.length === 1 && !draining) {
+    runTimeout(drainQueue);
+  }
+}; // v8 likes predictible objects
+
+
+function Item(fun, array) {
+  this.fun = fun;
+  this.array = array;
+}
+
+Item.prototype.run = function () {
+  this.fun.apply(null, this.array);
+};
+
+process.title = 'browser';
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) {
+  return [];
+};
+
+process.binding = function (name) {
+  throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () {
+  return '/';
+};
+
+process.chdir = function (dir) {
+  throw new Error('process.chdir is not supported');
+};
+
+process.umask = function () {
+  return 0;
+};
+},{}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
 var global = arguments[3];
+var process = require("process");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -15305,12 +15522,31 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 })('WPTB_ResponsiveFrontend', self || global, function () {
   /**
+   * Log a message to console.
+   *
+   * @param {string} message message to be logged
+   * @param {string} type console log type (e.g info, warn, error)
+   */
+  function logToConsole(message) {
+    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
+
+    if (typeof process !== 'undefined' && "development" === 'development') {
+      if (console[type]) {
+        console[type]("[WPTB]: ".concat(message));
+      } else {
+        throw new Error("no logging type found with given type value of [".concat(type, "]"));
+      }
+    }
+  }
+  /**
    * Object implementation for cell element operations.
    * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
    * @param {HTMLElement | null} cellElement cell element
    * @constructor
    */
+
+
   function CellObject(cellElement) {
     var _this = this;
 
@@ -15494,7 +15730,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } // eslint-disable-next-line no-console
 
 
-      console.warn("[WPTB]: no row with id [".concat(id, "] found in the cache."));
+      logToConsole("no row with id [".concat(id, "] found in the cache."), 'warn');
       return null;
     };
     /**
@@ -15548,22 +15784,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       } // eslint-disable-next-line no-console
 
 
-      console.warn("[WPTB]: no cell found at the given address of [".concat(r, "-").concat(c, "]"));
+      logToConsole("no cell found at the given address of [".concat(r, "-").concat(c, "]"), 'warn');
       return null;
     };
     /**
      * Get cells at a given row.
      *
      * @param {number} rowId row id
+     * @param {boolean} returnObj return an array of CellObject instead
      * @return {array} cells in row
      */
 
 
     this.getCellsAtRow = function (rowId) {
+      var returnObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var cells = [];
 
       for (var c = 0; c < _this2.maxColumns(); c += 1) {
-        var tempCell = _this2.getCell(rowId, c);
+        var tempCell = _this2.getCell(rowId, c, returnObj);
 
         if (tempCell) {
           cells.push(tempCell);
@@ -15745,7 +15983,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
       var isRowStacked = direction === 'row';
-      var rowStartIndex = topRowAsHeader ? 1 : 0; // const topRowCellCount = tableObj.getCellsAtRow(0).length;
 
       if (topRowAsHeader) {
         var headerId = tableObj.addRow('wptb-row').id;
@@ -15764,33 +16001,55 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         tempTable.style.margin = 0;
         tempTable.style.width = '100%';
-        wrapperCell.getElement().appendChild(tempTable); // add necessary colspan value to support 'cells per row' option with 'top row as header' option is enabled
+        wrapperCell.getElement().appendChild(tempTable); // add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
 
         wrapperCell.setAttribute('colSpan', cellsPerRow);
         var tempWrapperRow = tempTable.querySelector('tr');
 
         for (var hc = 0; hc < maxColumns; hc += 1) {
-          // const tempCell = tableObj.appendToRow(0, hc, headerId);
           var tempCell = tableObj.getCell(0, hc, true);
 
           if (tempCell) {
             tempWrapperRow.appendChild(tempCell.getElement());
-            tempCell.resetAllAttributes();
-            tempCell.setAttribute('style', 'width: 100%');
+            tempCell.resetAllAttributes(); // override style attribute to make cells fit to table
+
+            tempCell.setAttribute('style', 'width: 100% !important');
           }
         }
-      }
+      } // cell stack direction is selected as row
+      // for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
+
 
       if (isRowStacked) {
-        for (var r = rowStartIndex; r < rows; r += 1) {
-          for (var c = 0; c < columns; c += cellsPerRow) {
-            var rowId = tableObj.addRow('wptb-row').id;
+        (function () {
+          var allCellsByRow = []; // get cells by reading row by row
+
+          for (var r = 0; r < rows; r += 1) {
+            // eslint-disable-next-line no-loop-func
+            tableObj.getCellsAtRow(r, true).forEach(function (c) {
+              return allCellsByRow.push(c);
+            });
+          } // if 'top row as header' option is enabled, slice the table to use remaining cells
+
+
+          if (topRowAsHeader) {
+            allCellsByRow = allCellsByRow.slice(tableObj.getCellsAtRow(0).length);
+          }
+
+          var cellCount = allCellsByRow.length;
+
+          for (var c = 0; c < cellCount; c += cellsPerRow) {
+            var rowId = tableObj.addRow('wptb-row').id; // place cells by 'cells by row' option value
 
             for (var pR = 0; pR < cellsPerRow; pR += 1) {
-              var _tempCell = tableObj.appendToRow(r, c + pR, rowId);
+              var _tempCell = allCellsByRow[c + pR];
 
               if (_tempCell) {
+                tableObj.appendElementToRow(_tempCell.getElement(), rowId);
+
                 _tempCell.resetAllAttributes();
+
+                _tempCell.setAttribute('style', 'width: 100% !important');
 
                 _tempCell.setAttribute('colSpan', 1);
 
@@ -15798,16 +16057,44 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }
           }
-        }
-      } else {
-        for (var _c = 0; _c < columns; _c += 1) {
-          for (var _r = rowStartIndex; _r < rows; _r += cellsPerRow) {
-            var _rowId = tableObj.addRow('wptb-row').id;
+        })();
+      } // cell stack direction is selected as column
+      else {
+          var allCellsByCol = [];
+          var rowStartIndex = topRowAsHeader ? 1 : 0; // read all cells column by column
 
-            var _tempCell2 = tableObj.appendToRow(_r, _c, _rowId);
+          for (var c = 0; c < columns; c += 1) {
+            for (var r = rowStartIndex; r < rows; r += 1) {
+              var tCell = tableObj.getCell(r, c, true);
+
+              if (tCell) {
+                allCellsByCol.push(tCell);
+              }
+            }
+          }
+
+          var cellCount = allCellsByCol.length;
+
+          for (var _c = 0; _c < cellCount; _c += cellsPerRow) {
+            var rowId = tableObj.addRow('wptb-row').id;
+
+            for (var cR = 0; cR < cellsPerRow; cR += 1) {
+              var _tempCell2 = allCellsByCol[_c + cR];
+
+              if (_tempCell2) {
+                tableObj.appendElementToRow(_tempCell2.getElement(), rowId);
+
+                _tempCell2.resetAllAttributes();
+
+                _tempCell2.setAttribute('style', 'width: 100% !important');
+
+                _tempCell2.setAttribute('colSpan', 1);
+
+                _tempCell2.setAttribute('rowSpan', 1);
+              }
+            }
           }
         }
-      }
     };
     /**
      * Build table in its default form.
@@ -15926,7 +16213,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   return ResponsiveFront;
 });
-},{}],"components/ModalWindow.vue":[function(require,module,exports) {
+},{"process":"../../../../../node_modules/process/browser.js"}],"components/ModalWindow.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

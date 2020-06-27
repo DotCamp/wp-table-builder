@@ -13,6 +13,22 @@
 	// eslint-disable-next-line no-restricted-globals
 })('WPTB_ResponsiveFrontend', self || global, () => {
 	/**
+	 * Log a message to console.
+	 *
+	 * @param {string} message message to be logged
+	 * @param {string} type console log type (e.g info, warn, error)
+	 */
+	function logToConsole(message, type = 'log') {
+		if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+			if (console[type]) {
+				console[type](`[WPTB]: ${message}`);
+			} else {
+				throw new Error(`no logging type found with given type value of [${type}]`);
+			}
+		}
+	}
+
+	/**
 	 * Object implementation for cell element operations.
 	 * If an empty cellElement parameter is given, a fresh cell element will be created.
 	 *
@@ -190,7 +206,7 @@
 			}
 
 			// eslint-disable-next-line no-console
-			console.warn(`[WPTB]: no row with id [${id}] found in the cache.`);
+			logToConsole(`no row with id [${id}] found in the cache.`, 'warn');
 			return null;
 		};
 
@@ -237,7 +253,7 @@
 				return this.parsedTable[r][c].el;
 			}
 			// eslint-disable-next-line no-console
-			console.warn(`[WPTB]: no cell found at the given address of [${r}-${c}]`);
+			logToConsole(`no cell found at the given address of [${r}-${c}]`, 'warn');
 			return null;
 		};
 
@@ -245,12 +261,13 @@
 		 * Get cells at a given row.
 		 *
 		 * @param {number} rowId row id
+		 * @param {boolean} returnObj return an array of CellObject instead
 		 * @return {array} cells in row
 		 */
-		this.getCellsAtRow = (rowId) => {
+		this.getCellsAtRow = (rowId, returnObj = false) => {
 			const cells = [];
 			for (let c = 0; c < this.maxColumns(); c += 1) {
-				const tempCell = this.getCell(rowId, c);
+				const tempCell = this.getCell(rowId, c, returnObj);
 				if (tempCell) {
 					cells.push(tempCell);
 				}
@@ -420,9 +437,6 @@
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
 
-			const rowStartIndex = topRowAsHeader ? 1 : 0;
-			// const topRowCellCount = tableObj.getCellsAtRow(0).length;
-
 			if (topRowAsHeader) {
 				const headerId = tableObj.addRow('wptb-row').id;
 				const maxColumns = tableObj.maxColumns();
@@ -448,40 +462,89 @@
 
 				wrapperCell.getElement().appendChild(tempTable);
 
-				// add necessary colspan value to support 'cells per row' option with 'top row as header' option is enabled
+				// add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
 				wrapperCell.setAttribute('colSpan', cellsPerRow);
 
 				const tempWrapperRow = tempTable.querySelector('tr');
 				for (let hc = 0; hc < maxColumns; hc += 1) {
-					// const tempCell = tableObj.appendToRow(0, hc, headerId);
 					const tempCell = tableObj.getCell(0, hc, true);
 					if (tempCell) {
 						tempWrapperRow.appendChild(tempCell.getElement());
 						tempCell.resetAllAttributes();
-						tempCell.setAttribute('style', 'width: 100%');
+
+						// override style attribute to make cells fit to table
+						tempCell.setAttribute('style', 'width: 100% !important');
 					}
 				}
 			}
 
+			// cell stack direction is selected as row
+			// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
 			if (isRowStacked) {
-				for (let r = rowStartIndex; r < rows; r += 1) {
-					for (let c = 0; c < columns; c += cellsPerRow) {
-						const rowId = tableObj.addRow('wptb-row').id;
-						for (let pR = 0; pR < cellsPerRow; pR += 1) {
-							const tempCell = tableObj.appendToRow(r, c + pR, rowId);
-							if (tempCell) {
-								tempCell.resetAllAttributes();
-								tempCell.setAttribute('colSpan', 1);
-								tempCell.setAttribute('rowSpan', 1);
-							}
+				let allCellsByRow = [];
+
+				// get cells by reading row by row
+				for (let r = 0; r < rows; r += 1) {
+					// eslint-disable-next-line no-loop-func
+					tableObj.getCellsAtRow(r, true).forEach((c) => allCellsByRow.push(c));
+				}
+
+				// if 'top row as header' option is enabled, slice the table to use remaining cells
+				if (topRowAsHeader) {
+					allCellsByRow = allCellsByRow.slice(tableObj.getCellsAtRow(0).length);
+				}
+
+				const cellCount = allCellsByRow.length;
+
+				for (let c = 0; c < cellCount; c += cellsPerRow) {
+					const rowId = tableObj.addRow('wptb-row').id;
+
+					// place cells by 'cells by row' option value
+					for (let pR = 0; pR < cellsPerRow; pR += 1) {
+						const tempCell = allCellsByRow[c + pR];
+
+						if (tempCell) {
+							tableObj.appendElementToRow(tempCell.getElement(), rowId);
+
+							tempCell.resetAllAttributes();
+							tempCell.setAttribute('style', 'width: 100% !important');
+							tempCell.setAttribute('colSpan', 1);
+							tempCell.setAttribute('rowSpan', 1);
 						}
 					}
 				}
-			} else {
+			}
+			// cell stack direction is selected as column
+			else {
+				const allCellsByCol = [];
+				const rowStartIndex = topRowAsHeader ? 1 : 0;
+
+				// read all cells column by column
 				for (let c = 0; c < columns; c += 1) {
-					for (let r = rowStartIndex; r < rows; r += cellsPerRow) {
-						const rowId = tableObj.addRow('wptb-row').id;
-						const tempCell = tableObj.appendToRow(r, c, rowId);
+					for (let r = rowStartIndex; r < rows; r += 1) {
+						const tCell = tableObj.getCell(r, c, true);
+						if (tCell) {
+							allCellsByCol.push(tCell);
+						}
+					}
+				}
+
+				const cellCount = allCellsByCol.length;
+
+				for (let c = 0; c < cellCount; c += cellsPerRow) {
+					const rowId = tableObj.addRow('wptb-row').id;
+
+					for (let cR = 0; cR < cellsPerRow; cR += 1) {
+						const tempCell = allCellsByCol[c + cR];
+
+						if (tempCell) {
+							tableObj.appendElementToRow(tempCell.getElement(), rowId);
+
+							tempCell.resetAllAttributes();
+							tempCell.setAttribute('style', 'width: 100% !important');
+							tempCell.setAttribute('colSpan', 1);
+							tempCell.setAttribute('rowSpan', 1);
+						}
 					}
 				}
 			}
