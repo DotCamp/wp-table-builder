@@ -32,6 +32,7 @@ export default {
 		const directives = {
 			responsiveEnabled: false,
 			responsiveMode: 'auto',
+			preserveRowColor: false,
 			modeOptions: {
 				auto: {
 					topRowAsHeader: false,

@@ -102,6 +102,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
 					'cellsPerRow'              => esc_html__( 'Cells per row', 'wp-table-builder' ),
+					'preserveRowColor' => esc_html__('Preserve row color', 'wp-table-builder'),
 					'row'                     => esc_html__( 'row', 'wp-table-builder' ),
 					'column'                  => esc_html__( 'column', 'wp-table-builder' ),
 					'mode'                    => esc_html__( 'mode', 'wp-table-builder' ),
@@ -115,8 +116,9 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'fullHelp'                => esc_html__( 'Full: You have full control over how table will be constructed.', 'wp-table-builder' ),
 					'stackDirectionHelp'      => esc_html__( 'The order of stacking, either by rows or by columns.', 'wp-table-builder' ),
 					'topRowHeaderHelp'        => esc_html__( 'Use the top most row of table as a header.', 'wp-table-builder' ),
-					'cellsPerRowHelp' => esc_html__('Amount of cells that will be available per row', 'wp-table-builder'),
-					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' )
+					'cellsPerRowHelp' => esc_html__('Amount of cells that will be available per row. Can be further customized for different breakpoints.', 'wp-table-builder'),
+					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' ),
+					'preserveRowColorHelp' => esc_html__('Preserve the original row color for cell, or use even/odd row colors', 'wp-table-builder')
 				]
 			]
 		] );

@@ -1,12 +1,16 @@
 /**
  * Responsive menu and options class.
  *
+ * This class will be called and instanced at table builder menu to add it the responsive menu and its controls.
+ *
  * @param {string} sectionName section name
  * @param {string} responsiveWrapperId id for mount point
+ * @param {string} mainContainerQuery query to find parent container for responsive menu
+ * @throws {Error} will throw an error if mainContainerQuery failed to find any element
  * @constructor
  */
 // eslint-disable-next-line no-unused-vars
-function WptbResponsive(sectionName, responsiveWrapperId) {
+function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 	this.sectionName = sectionName;
 	this.responsiveWrapperId = responsiveWrapperId;
 	this.responsiveTable = null;
@@ -18,7 +22,14 @@ function WptbResponsive(sectionName, responsiveWrapperId) {
 	this.addContainerToDom = () => {
 		const responsiveContainer = document.querySelector(`#${this.responsiveWrapperId}`);
 		if (!responsiveContainer) {
-			const mainContainer = document.querySelector('.wptb-table-setup');
+			const mainContainer = document.querySelector(mainContainerQuery);
+
+			// parent container not found, throw error
+			if (!mainContainer) {
+				throw new Error(
+					`[WPTB_Responsive]: no parent container is found with the given query of [${mainContainerQuery}]`
+				);
+			}
 
 			const range = document.createRange();
 			range.setStart(mainContainer, 0);

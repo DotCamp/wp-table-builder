@@ -67,6 +67,12 @@
 		 */
 		this.setAttribute = (attributeKey, attributeValue) => {
 			let defaultVal = this.getElement()[attributeKey];
+
+			// if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
+			if (typeof defaultVal === 'function' || typeof defaultVal === 'object') {
+				defaultVal = this.getElement().getAttribute(attributeKey);
+			}
+
 			if (this.modifications[attributeKey]) {
 				defaultVal = this.modifications[attributeKey].default;
 			}
@@ -117,7 +123,7 @@
 	 */
 	function TableObject(tableEl) {
 		/**
-		 * Table element
+		 * Table element.
 		 * @private
 		 * @type {HTMLElement}
 		 */
@@ -132,19 +138,41 @@
 		this.parsedTable = [];
 
 		/**
-		 * An array of created table rows elements that are id'd according to their index in array
+		 * An array of created table rows elements that are id'd according to their index in array.
 		 * @type {[HTMLElement]}
 		 */
 		this.rowCache = [];
 
 		/**
-		 * Assign table cells into row and column numbers
+		 * Original table elements minus the cells.
+		 * @type {{rows: []}}
+		 * @private
+		 */
+		this.originals = { rows: [] };
+
+		/**
+		 * Row colors of original table.
+		 * @type {{even: string, header: string, odd: string}}
+		 * @private
+		 */
+		this.rowColors = {
+			header: null,
+			even: null,
+			odd: null,
+		};
+
+		/**
+		 * Assign table cells into row and column numbers.
+		 * @private
 		 */
 		this.parseTable = () => {
 			const rows = Array.from(this.tableElement.querySelectorAll('tr'));
 
 			// eslint-disable-next-line array-callback-return
 			rows.map((r, ri) => {
+				// cache original rows for future use
+				this.originals.rows.push(r);
+
 				const cells = Array.from(r.querySelectorAll('td'));
 
 				// eslint-disable-next-line array-callback-return
@@ -156,23 +184,69 @@
 					this.parsedTable[ri].push(new CellObject(c));
 				});
 			});
+			this.parseRowColors(rows);
+		};
+
+		/**
+		 * Parse row colors of original table for futures uses.
+		 * @param {[HTMLElement]} rows html row elements
+		 * @private
+		 */
+		this.parseRowColors = (rows) => {
+			if (!rows || rows.length <= 0) {
+				logToConsole('no rows are found to parse their colors', 'error');
+			}
+
+			const headerRowColor = rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor;
+
+			// header row color
+			this.rowColors.header = headerRowColor;
+
+			// eslint-disable-next-line no-nested-ternary
+			// calculate needed number of rows to get even and odd row background colors
+			const rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2;
+
+			// create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
+			for (let rn = 0; rn < rowsNeeded; rn += 1) {
+				const tempRow = document.createElement('tr');
+
+				this.tableElement.querySelector('tbody').appendChild(tempRow);
+				rows.push(tempRow);
+			}
+
+			// even & odd row colors
+			this.rowColors.even = getComputedStyle(rows[1]).backgroundColor;
+			this.rowColors.odd = getComputedStyle(rows[2]).backgroundColor;
+
+			// remove created rows from DOM
+			for (let r = 0; r < rowsNeeded; r += 1) {
+				rows[rows.length - (r + 1)].remove();
+			}
 		};
 
 		/**
 		 * Add a row to the table.
 		 * @param {array} classList an array of class names to be added to row
+		 * @param {boolean} fromOriginals use rows from original table instead of creating a new one
+		 * @param {number} originalIndex original row index
 		 */
-		this.addRow = (classList) => {
+		this.addRow = (classList, fromOriginals = false, originalIndex = 0) => {
 			if (!Array.isArray(classList)) {
 				// eslint-disable-next-line no-param-reassign
 				classList = [classList];
 			}
 
 			const tableBody = this.tableElement.querySelector('tbody');
+			let tempRow;
 
-			const range = document.createRange();
-			range.setStart(tableBody, 0);
-			const tempRow = range.createContextualFragment(`<tr class="${classList.join(' ')}"></tr>`).childNodes[0];
+			if (!fromOriginals) {
+				const range = document.createRange();
+				range.setStart(tableBody, 0);
+				// eslint-disable-next-line prefer-destructuring
+				tempRow = range.createContextualFragment(`<tr class="${classList.join(' ')}"></tr>`).childNodes[0];
+			} else {
+				tempRow = this.originals.rows[originalIndex];
+			}
 
 			// add row to table body
 			tableBody.appendChild(tempRow);
@@ -441,7 +515,7 @@
 				const headerId = tableObj.addRow('wptb-row').id;
 				const maxColumns = tableObj.maxColumns();
 
-				// in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any
+				// in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any number
 				const wrapperCell = new CellObject();
 				tableObj.appendElementToRow(wrapperCell.getElement(), headerId);
 
@@ -451,6 +525,7 @@
 				// classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
 				const mainTableClasses = tableObj.el.getAttribute('class');
 
+				// creating a table inside out wrapper cell to support any cells per row value when 'top row as header' option is active. this table will be holding the real cells that are assigned to the top row.
 				const tempTableRange = document.createRange();
 				tempTableRange.setStart(wrapperCell.getElement(), 0);
 				const tempTableStringified = `<table class="${mainTableClasses}"><tbody><tr></tr></tbody></table>`;
@@ -459,7 +534,10 @@
 				// wrapper table style overrides
 				tempTable.style.margin = 0;
 				tempTable.style.width = '100%';
+				tempTable.style.animation = 'none';
+				tempTable.style.opacity = 1;
 
+				// add header table to header wrapper cell
 				wrapperCell.getElement().appendChild(tempTable);
 
 				// add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
@@ -562,7 +640,7 @@
 			const columns = tableObj.maxColumns();
 
 			for (let r = 0; r < rows; r += 1) {
-				const rowId = tableObj.addRow('wptb-row').id;
+				const rowId = tableObj.addRow('', true, r).id;
 				for (let c = 0; c < columns; c += 1) {
 					const tempCell = tableObj.appendToRow(r, c, rowId);
 					// reset all modified attributes of cell to their default values
@@ -609,7 +687,7 @@
 
 			if (directive) {
 				if (!directive.responsiveEnabled) {
-					this.buildDefault(tableObj);
+					// this.buildDefault(tableObj);
 					return;
 				}
 

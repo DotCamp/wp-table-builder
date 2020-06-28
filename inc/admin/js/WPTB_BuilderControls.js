@@ -14611,6 +14611,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     sizeRange: Object
@@ -14704,7 +14715,9 @@ exports.default = _default;
                 }),
                 _vm._v(" "),
                 _c("label", { attrs: { for: "wptbTopRowHeader" } }, [
-                  _vm._v(" " + _vm._s(_vm.strings.topRowHeader) + ": ")
+                  _vm._v(
+                    " " + _vm._s(_vm._f("cap")(_vm.strings.topRowHeader)) + ": "
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
@@ -14720,7 +14733,11 @@ exports.default = _default;
               "responsive-controls-row",
               [
                 _c("label", { attrs: { for: "wptbStackDirection" } }, [
-                  _vm._v(" " + _vm._s(_vm.strings.stackDirection) + ":")
+                  _vm._v(
+                    " " +
+                      _vm._s(_vm._f("cap")(_vm.strings.stackDirection)) +
+                      ":"
+                  )
                 ]),
                 _vm._v(" "),
                 _c(
@@ -14790,7 +14807,8 @@ exports.default = _default;
                     min: 1,
                     max: 100,
                     "enable-limit": true,
-                    disabled: context.isDisabled()
+                    disabled: context.isDisabled(),
+                    id: "cellsPerRow"
                   },
                   model: {
                     value:
@@ -14816,6 +14834,71 @@ exports.default = _default;
                 _c(
                   "pop-up",
                   { attrs: { message: _vm.strings.cellsPerRowHelp } },
+                  [_vm._v("?")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "responsive-controls-row",
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.directives.preserveRowColor,
+                      expression: "directives.preserveRowColor"
+                    }
+                  ],
+                  attrs: {
+                    type: "checkbox",
+                    id: "wptbResponsivePreserveColor",
+                    disabled: context.isDisabled()
+                  },
+                  domProps: {
+                    checked: Array.isArray(_vm.directives.preserveRowColor)
+                      ? _vm._i(_vm.directives.preserveRowColor, null) > -1
+                      : _vm.directives.preserveRowColor
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.directives.preserveRowColor,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(
+                              _vm.directives,
+                              "preserveRowColor",
+                              $$a.concat([$$v])
+                            )
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.directives,
+                              "preserveRowColor",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
+                      } else {
+                        _vm.$set(_vm.directives, "preserveRowColor", $$c)
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "wptbResponsivePreserveColor" } }, [
+                  _vm._v(_vm._s(_vm._f("cap")(_vm.strings.preserveRowColor)))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "pop-up",
+                  { attrs: { message: _vm.strings.preserveRowColorHelp } },
                   [_vm._v("?")]
                 )
               ],
@@ -15581,7 +15664,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.setAttribute = function (attributeKey, attributeValue) {
-      var defaultVal = _this.getElement()[attributeKey];
+      var defaultVal = _this.getElement()[attributeKey]; // if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
+
+
+      if (typeof defaultVal === 'function' || _typeof(defaultVal) === 'object') {
+        defaultVal = _this.getElement().getAttribute(attributeKey);
+      }
 
       if (_this.modifications[attributeKey]) {
         defaultVal = _this.modifications[attributeKey].default;
@@ -15640,7 +15728,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var _this2 = this;
 
     /**
-     * Table element
+     * Table element.
      * @private
      * @type {HTMLElement}
      */
@@ -15654,19 +15742,43 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.parsedTable = [];
     /**
-     * An array of created table rows elements that are id'd according to their index in array
+     * An array of created table rows elements that are id'd according to their index in array.
      * @type {[HTMLElement]}
      */
 
     this.rowCache = [];
     /**
-     * Assign table cells into row and column numbers
+     * Original table elements minus the cells.
+     * @type {{rows: []}}
+     * @private
+     */
+
+    this.originals = {
+      rows: []
+    };
+    /**
+     * Row colors of original table.
+     * @type {{even: string, header: string, odd: string}}
+     * @private
+     */
+
+    this.rowColors = {
+      header: null,
+      even: null,
+      odd: null
+    };
+    /**
+     * Assign table cells into row and column numbers.
+     * @private
      */
 
     this.parseTable = function () {
       var rows = Array.from(_this2.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
 
       rows.map(function (r, ri) {
+        // cache original rows for future use
+        _this2.originals.rows.push(r);
+
         var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
 
         cells.map(function (c) {
@@ -15677,14 +15789,56 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           _this2.parsedTable[ri].push(new CellObject(c));
         });
       });
+
+      _this2.parseRowColors(rows);
+    };
+    /**
+     * Parse row colors of original table for futures uses.
+     * @param {[HTMLElement]} rows html row elements
+     * @private
+     */
+
+
+    this.parseRowColors = function (rows) {
+      if (!rows || rows.length <= 0) {
+        logToConsole('no rows are found to parse their colors', 'error');
+      }
+
+      var headerRowColor = rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor; // header row color
+
+      _this2.rowColors.header = headerRowColor; // eslint-disable-next-line no-nested-ternary
+      // calculate needed number of rows to get even and odd row background colors
+
+      var rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2; // create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
+
+      for (var rn = 0; rn < rowsNeeded; rn += 1) {
+        var tempRow = document.createElement('tr');
+
+        _this2.tableElement.querySelector('tbody').appendChild(tempRow);
+
+        rows.push(tempRow);
+      } // even & odd row colors
+
+
+      _this2.rowColors.even = getComputedStyle(rows[1]).backgroundColor;
+      _this2.rowColors.odd = getComputedStyle(rows[2]).backgroundColor; // remove created rows from DOM
+
+      for (var r = 0; r < rowsNeeded; r += 1) {
+        rows[rows.length - (r + 1)].remove();
+      }
     };
     /**
      * Add a row to the table.
      * @param {array} classList an array of class names to be added to row
+     * @param {boolean} fromOriginals use rows from original table instead of creating a new one
+     * @param {number} originalIndex original row index
      */
 
 
     this.addRow = function (classList) {
+      var fromOriginals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var originalIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
       if (!Array.isArray(classList)) {
         // eslint-disable-next-line no-param-reassign
         classList = [classList];
@@ -15692,9 +15846,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       var tableBody = _this2.tableElement.querySelector('tbody');
 
-      var range = document.createRange();
-      range.setStart(tableBody, 0);
-      var tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>")).childNodes[0]; // add row to table body
+      var tempRow;
+
+      if (!fromOriginals) {
+        var range = document.createRange();
+        range.setStart(tableBody, 0); // eslint-disable-next-line prefer-destructuring
+
+        tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>")).childNodes[0];
+      } else {
+        tempRow = _this2.originals.rows[originalIndex];
+      } // add row to table body
+
 
       tableBody.appendChild(tempRow); // cache row for future use
 
@@ -15986,14 +16148,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       if (topRowAsHeader) {
         var headerId = tableObj.addRow('wptb-row').id;
-        var maxColumns = tableObj.maxColumns(); // in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any
+        var maxColumns = tableObj.maxColumns(); // in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any number
 
         var wrapperCell = new CellObject();
         tableObj.appendElementToRow(wrapperCell.getElement(), headerId); // because class, responsible for styling(in our case specifically padding) of cell elements are bound to parent child related class naming, all cell elements under main table is susceptible to a padding, which also includes our wrapper cell. because of this, resetting padding value of wrapper cell. in the future, if any layout defining style options are added in that way, reset them here too
 
         wrapperCell.setAttribute('style', 'padding:0px'); // classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
 
-        var mainTableClasses = tableObj.el.getAttribute('class');
+        var mainTableClasses = tableObj.el.getAttribute('class'); // creating a table inside out wrapper cell to support any cells per row value when 'top row as header' option is active. this table will be holding the real cells that are assigned to the top row.
+
         var tempTableRange = document.createRange();
         tempTableRange.setStart(wrapperCell.getElement(), 0);
         var tempTableStringified = "<table class=\"".concat(mainTableClasses, "\"><tbody><tr></tr></tbody></table>");
@@ -16001,6 +16164,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         tempTable.style.margin = 0;
         tempTable.style.width = '100%';
+        tempTable.style.animation = 'none';
+        tempTable.style.opacity = 1; // add header table to header wrapper cell
+
         wrapperCell.getElement().appendChild(tempTable); // add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
 
         wrapperCell.setAttribute('colSpan', cellsPerRow);
@@ -16110,7 +16276,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var columns = tableObj.maxColumns();
 
       for (var r = 0; r < rows; r += 1) {
-        var rowId = tableObj.addRow('wptb-row').id;
+        var rowId = tableObj.addRow('', true, r).id;
 
         for (var c = 0; c < columns; c += 1) {
           var tempCell = tableObj.appendToRow(r, c, rowId); // reset all modified attributes of cell to their default values
@@ -16159,8 +16325,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       if (directive) {
         if (!directive.responsiveEnabled) {
-          _this3.buildDefault(tableObj);
-
+          // this.buildDefault(tableObj);
           return;
         }
 
@@ -16882,6 +17047,7 @@ var _default = {
     var directives = {
       responsiveEnabled: false,
       responsiveMode: 'auto',
+      preserveRowColor: false,
       modeOptions: {
         auto: {
           topRowAsHeader: false,

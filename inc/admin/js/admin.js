@@ -2786,7 +2786,7 @@ var WPTB_Initializer = function WPTB_Initializer() {
         WPTB_Helper.setupPanelToggleButtons();
 
         // setup responsive menu both at left and builder panel
-        new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp');
+        new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-table-setup');
 
         // TODO [erdembircan] using this method for a better development environment while working on specific sections to get rid of clicking section buttons every time at page refresh
         WPTB_Helper.getSectionFromUrl();
@@ -2975,12 +2975,16 @@ if (!Object.keys) {
 /**
  * Responsive menu and options class.
  *
+ * This class will be called and instanced at table builder menu to add it the responsive menu and its controls.
+ *
  * @param {string} sectionName section name
  * @param {string} responsiveWrapperId id for mount point
+ * @param {string} mainContainerQuery query to find parent container for responsive menu
+ * @throws {Error} will throw an error if mainContainerQuery failed to find any element
  * @constructor
  */
 // eslint-disable-next-line no-unused-vars
-function WptbResponsive(sectionName, responsiveWrapperId) {
+function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 	var _this = this;
 
 	this.sectionName = sectionName;
@@ -2994,7 +2998,12 @@ function WptbResponsive(sectionName, responsiveWrapperId) {
 	this.addContainerToDom = function () {
 		var responsiveContainer = document.querySelector('#' + _this.responsiveWrapperId);
 		if (!responsiveContainer) {
-			var mainContainer = document.querySelector('.wptb-table-setup');
+			var mainContainer = document.querySelector(mainContainerQuery);
+
+			// parent container not found, throw error
+			if (!mainContainer) {
+				throw new Error('[WPTB_Responsive]: no parent container is found with the given query of [' + mainContainerQuery + ']');
+			}
 
 			var range = document.createRange();
 			range.setStart(mainContainer, 0);

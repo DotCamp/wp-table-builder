@@ -8,11 +8,11 @@
 					type="checkbox"
 					:disabled="context.isDisabled()"
 				/>
-				<label for="wptbTopRowHeader"> {{ strings.topRowHeader }}: </label>
+				<label for="wptbTopRowHeader"> {{ strings.topRowHeader | cap }}: </label>
 				<pop-up :message="strings.topRowHeaderHelp">?</pop-up>
 			</responsive-controls-row>
 			<responsive-controls-row>
-				<label for="wptbStackDirection"> {{ strings.stackDirection }}:</label>
+				<label for="wptbStackDirection"> {{ strings.stackDirection | cap }}:</label>
 				<select
 					v-model="directives.modeOptions.auto.cellStackDirection"
 					id="wptbStackDirection"
@@ -32,9 +32,20 @@
 					:max="100"
 					:enable-limit="true"
 					:disabled="context.isDisabled()"
+					id="cellsPerRow"
 				></number-postfix-input>
 				<label for="cellsPerRow"> {{ strings.cellsPerRow | cap }}</label>
 				<pop-up :message="strings.cellsPerRowHelp">?</pop-up>
+			</responsive-controls-row>
+			<responsive-controls-row>
+				<input
+					type="checkbox"
+					id="wptbResponsivePreserveColor"
+					v-model="directives.preserveRowColor"
+					:disabled="context.isDisabled()"
+				/>
+				<label for="wptbResponsivePreserveColor">{{ strings.preserveRowColor | cap }}</label>
+				<pop-up :message="strings.preserveRowColorHelp">?</pop-up>
 			</responsive-controls-row>
 		</template>
 	</responsive-dynamic-toolbox>
