@@ -61,7 +61,13 @@ export default {
 		screenSizes: Object,
 		compareSizes: Object,
 	},
-	components: { TableClone, ScreenSizeSlider, SizeInput, ResponsiveToolbox, ModalWindow },
+	components: {
+		TableClone,
+		ScreenSizeSlider,
+		SizeInput,
+		ResponsiveToolbox,
+		ModalWindow,
+	},
 	data() {
 		return {
 			isVisible: true,
@@ -78,6 +84,9 @@ export default {
 		};
 	},
 	watch: {
+		currentSizeRangeName(n) {
+			this.appOptions.currentBreakpoint = n;
+		},
 		directives: {
 			handler() {
 				this.currentDirectives = this.encodeResponsiveDirectives();

@@ -511,6 +511,7 @@
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
 
+			// TODO [erdembircan] rewrite with new functionality, and try to make it compatible with current cell functions
 			if (topRowAsHeader) {
 				const headerId = tableObj.addRow('wptb-row').id;
 				const maxColumns = tableObj.maxColumns();

@@ -2,7 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element;
 
-use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object;
+use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
@@ -54,13 +54,36 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
+		// general control group
+		$general_section_group_controls = [
+			'generalResponsiveControls' => [
+				'label' => 'none',
+				'type' => Controls_Manager::HTML_OUTPUT,
+				'html' => '<div id="responsiveBuilderLeftPanelGeneralControls"></div>',
+			],
+		];
+
+		Control_Section_Group_Collapse::add_section('table_responsive_general_controls', esc_html__('general', 'wp-table-builder'),$general_section_group_controls, [$this,'add_control']);
+
+		$mode_options = [
+			'modeOptions' => [
+				'label' => 'none',
+				'type' => Controls_Manager::HTML_OUTPUT,
+				'html' => '<div id="responsiveBuilderLeftPanelModeOptions"></div>'
+			]
+		];
+
+		Control_Section_Group_Collapse::add_section('table_responsive_mode_options', esc_html__('mode options', 'wp-table-builder'), $mode_options, [$this, 'add_control']);
+
+		// TODO [erdembircan] update how-to section text according to the updated builder controls/layout
 		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu, can choose from a list of devices or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.' );
 
+		// how-to control group
 		$howto_section_group_controls = [
 			'helpAndInfo' => [
 				'label' => 'none',
 				'type'  => Controls_Manager::HTML_OUTPUT,
-				'html'  => '<div style="font-size: 80%; padding: 0 20px"><i>' . $how_to_text . '</i></div>',
+				'html'  => '<div style="font-size: 80%; padding: 20px 20px"><i>' . $how_to_text . '</i></div>',
 			]
 		];
 
@@ -68,7 +91,6 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 			$this,
 			'add_control'
 		], true );
-
 
 		$this->add_control( 'responsiveData', [
 			'type'    => Controls_Manager::DATA_MULE,
@@ -101,8 +123,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'stackDirection'          => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
-					'cellsPerRow'              => esc_html__( 'Cells per row', 'wp-table-builder' ),
-					'preserveRowColor' => esc_html__('Preserve row color', 'wp-table-builder'),
+					'cellsPerRow'             => esc_html__( 'Cells per row', 'wp-table-builder' ),
+					'preserveRowColor'        => esc_html__( 'Preserve row color', 'wp-table-builder' ),
 					'row'                     => esc_html__( 'row', 'wp-table-builder' ),
 					'column'                  => esc_html__( 'column', 'wp-table-builder' ),
 					'mode'                    => esc_html__( 'mode', 'wp-table-builder' ),
@@ -116,9 +138,9 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'fullHelp'                => esc_html__( 'Full: You have full control over how table will be constructed.', 'wp-table-builder' ),
 					'stackDirectionHelp'      => esc_html__( 'The order of stacking, either by rows or by columns.', 'wp-table-builder' ),
 					'topRowHeaderHelp'        => esc_html__( 'Use the top most row of table as a header.', 'wp-table-builder' ),
-					'cellsPerRowHelp' => esc_html__('Amount of cells that will be available per row. Can be further customized for different breakpoints.', 'wp-table-builder'),
+					'cellsPerRowHelp'         => esc_html__( 'Amount of cells that will be available per row. Can be further customized for different breakpoints.', 'wp-table-builder' ),
 					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' ),
-					'preserveRowColorHelp' => esc_html__('Preserve the original row color for cell, or use even/odd row colors', 'wp-table-builder')
+					'preserveRowColorHelp'    => esc_html__( 'Preserve the original row color for cell, or use even/odd row colors', 'wp-table-builder' )
 				]
 			]
 		] );

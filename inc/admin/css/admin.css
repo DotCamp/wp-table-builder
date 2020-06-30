@@ -117,6 +117,10 @@ body > img {
     margin: 0 !important;
 }
 
+.wptb-plugin-width-full {
+    width: 100%;
+}
+
 .wptb-plugin-height-full {
     height: 100%;
 }
@@ -3537,8 +3541,8 @@ wptb_shortcode_container_element {
     /*margin: 20px 0;*/
 }
 
-.wptb-html-control-wrapper div {
-    margin: 10px 0;
+.wptb-html-control-wrapper > div {
+    /*margin: 10px 0;*/
 }
 
 .wptb-html-control-wrapper div:last-child {
@@ -3816,6 +3820,7 @@ wptb_shortcode_container_element {
     opacity: 0;
     transition: opacity 0.5s ease-out;
 }
+
 .wptb-responsive-show-cell-identifier .wptb-responsive-cell-identifier {
     opacity: 1 !important;
 }

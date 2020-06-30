@@ -15134,29 +15134,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   props: {
     sizeRange: Object
@@ -15200,156 +15177,6 @@ exports.default = _default;
     "div",
     { staticClass: "wptb-responsive-toolbox-wrapper" },
     [
-      _c(
-        "div",
-        {
-          staticClass:
-            "wptb-responsive-toolbox-top-static wptb-responsive-toolbox-row"
-        },
-        [
-          _c(
-            "responsive-controls-row",
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.directives.responsiveEnabled,
-                    expression: "directives.responsiveEnabled"
-                  }
-                ],
-                attrs: { id: "wptbResponsiveEnabled", type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.directives.responsiveEnabled)
-                    ? _vm._i(_vm.directives.responsiveEnabled, null) > -1
-                    : _vm.directives.responsiveEnabled
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.directives.responsiveEnabled,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(
-                            _vm.directives,
-                            "responsiveEnabled",
-                            $$a.concat([$$v])
-                          )
-                      } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.directives,
-                            "responsiveEnabled",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
-                      }
-                    } else {
-                      _vm.$set(_vm.directives, "responsiveEnabled", $$c)
-                    }
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "wptbResponsiveEnabled" } }, [
-                _vm._v(_vm._s(_vm._f("cap")(_vm.strings.enableResponsive)))
-              ]),
-              _vm._v(" "),
-              _c(
-                "pop-up",
-                { attrs: { message: _vm.strings.enableResponsiveHelp } },
-                [_vm._v("?")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "responsive-controls-row",
-            [
-              _c("label", { attrs: { for: "wptbResponsiveMode" } }, [
-                _vm._v(_vm._s(_vm._f("cap")(_vm.strings.mode)) + ":")
-              ]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.directives.responsiveMode,
-                      expression: "directives.responsiveMode"
-                    }
-                  ],
-                  attrs: {
-                    id: "wptbResponsiveMode",
-                    disabled: !_vm.directives.responsiveEnabled
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.directives,
-                        "responsiveMode",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "auto" } }, [
-                    _vm._v(_vm._s(_vm._f("cap")(_vm.strings.auto)))
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "pop-up",
-                {
-                  attrs: {
-                    message: _vm.strings[_vm.directives.responsiveMode + "Help"]
-                  }
-                },
-                [_vm._v("?")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "responsive-controls-row",
-            [
-              _c(
-                "material-button",
-                {
-                  attrs: {
-                    size: "fit-content",
-                    click: _vm.showCellIdentifications
-                  }
-                },
-                [_vm._v(_vm._s(_vm.strings.identifyCells) + "\n\t\t\t")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
       _c(_vm.dynamicToolbox, {
         tag: "component",
         attrs: { "size-range": _vm.sizeRange }
@@ -16144,7 +15971,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var cellsPerRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
-      var isRowStacked = direction === 'row';
+      var isRowStacked = direction === 'row'; // TODO [erdembircan] rewrite with new functionality, and try to make it compatible with current cell functions
 
       if (topRowAsHeader) {
         var headerId = tableObj.addRow('wptb-row').id;
@@ -16569,6 +16396,9 @@ var _default = {
     };
   },
   watch: {
+    currentSizeRangeName: function currentSizeRangeName(n) {
+      this.appOptions.currentBreakpoint = n;
+    },
     directives: {
       handler: function handler() {
         this.currentDirectives = this.encodeResponsiveDirectives();
@@ -16996,7 +16826,637 @@ var _default = {
   install: install
 };
 exports.default = _default;
-},{}],"mountPoints/WPTB_ResponsiveTable.js":[function(require,module,exports) {
+},{}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
+
+function _defineProperty(e, n, t) {
+  return n in e ? Object.defineProperty(e, n, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[n] = t, e;
+}
+
+function _objectSpread(e) {
+  for (var n = 1; n < arguments.length; n++) {
+    var t = null != arguments[n] ? arguments[n] : {},
+        r = Object.keys(t);
+    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
+      return Object.getOwnPropertyDescriptor(t, e).enumerable;
+    }))), r.forEach(function (n) {
+      _defineProperty(e, n, t[n]);
+    });
+  }
+
+  return e;
+}
+
+var freeze = function (e, n, t) {
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    get: function () {
+      return t;
+    },
+    set: function (e) {
+      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
+    }
+  });
+},
+    unfreeze = function (e, n) {
+  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    writable: !0,
+    value: t
+  });
+},
+    component = {
+  abstract: !0,
+  name: "Fragment",
+  props: {
+    name: {
+      type: String,
+      default: function () {
+        return Math.floor(Date.now() * Math.random()).toString(16);
+      }
+    }
+  },
+  mounted: function () {
+    var e = this.$el,
+        n = e.parentNode,
+        t = document.createComment("fragment#".concat(this.name, "#head")),
+        r = document.createComment("fragment#".concat(this.name, "#tail"));
+    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.insertBefore = function (t, r) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.removeChild = function (e) {
+      n.removeChild(e), unfreeze(e, "parentNode");
+    }, Array.from(e.childNodes).forEach(function (n) {
+      return e.appendChild(n);
+    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
+    var o = n.insertBefore;
+
+    n.insertBefore = function (r, i) {
+      o.call(n, r, i !== e ? i : t);
+    };
+
+    var i = n.removeChild;
+
+    n.removeChild = function (a) {
+      if (a === e) {
+        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
+
+        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
+      } else i.call(n, a);
+    };
+  },
+  render: function (e) {
+    var n = this,
+        t = this.$slots.default;
+    return t && t.length && t.forEach(function (e) {
+      return e.data = _objectSpread({}, e.data, {
+        attrs: _objectSpread({
+          fragment: n.name
+        }, (e.data || {}).attrs)
+      });
+    }), e("div", {
+      attrs: {
+        fragment: this.name
+      }
+    }, t);
+  }
+};
+
+function ssr(e, n) {
+  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
+}
+
+var Fragment = component,
+    SSR = ssr,
+    Plugin = {
+  install: function (e) {
+    e.component("fragment", component);
+  }
+},
+    index = {
+  Fragment: component,
+  Plugin: Plugin,
+  SSR: ssr
+};
+exports.Plugin = Plugin;
+exports.SSR = SSR;
+exports.Fragment = Fragment;
+var _default = index;
+exports.default = _default;
+},{}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Base for left panel controls that will be hooked directly to Vue instances.
+ */
+var PanelControlBase = {
+  props: {
+    label: String,
+    value: {
+      type: null
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: ''
+    };
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('valueChanged', n);
+    }
+  }
+};
+var _default = PanelControlBase;
+exports.default = _default;
+},{}],"components/PanelToggleControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $e81eb3 = exports.default || module.exports;
+      
+      if (typeof $e81eb3 === 'function') {
+        $e81eb3 = $e81eb3.options;
+      }
+    
+        /* template */
+        Object.assign($e81eb3, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("label", { staticClass: "wptb-toggle" }, [
+          _c("span", { staticStyle: { "font-size": "16px" } }, [
+            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.innerValue,
+                expression: "innerValue"
+              }
+            ],
+            staticClass: "wptb-element-property",
+            attrs: { type: "checkbox", disabled: _vm.disabled },
+            domProps: {
+              checked: Array.isArray(_vm.innerValue)
+                ? _vm._i(_vm.innerValue, null) > -1
+                : _vm.innerValue
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.innerValue,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.innerValue = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.innerValue = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.innerValue = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("i")
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/PanelDropdownControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    options: {
+      type: Object,
+      default: function _default() {}
+    }
+  },
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $99ea68 = exports.default || module.exports;
+      
+      if (typeof $99ea68 === 'function') {
+        $99ea68 = $99ea68.options;
+      }
+    
+        /* template */
+        Object.assign($99ea68, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("label", { staticClass: "wptb-toggle" }, [
+          _c("span", { staticStyle: { "font-size": "16px" } }, [
+            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+          ]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              domProps: { value: _vm.value },
+              on: {
+                change: function($event) {
+                  return _vm.$emit("valueChanged", $event.target.value)
+                }
+              }
+            },
+            _vm._l(_vm.options, function(name, key) {
+              return _c("option", { key: key, domProps: { value: key } }, [
+                _vm._v(_vm._s(_vm._f("cap")(name)))
+              ])
+            }),
+            0
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vueFragment = require("vue-fragment");
+
+var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    PanelToggleControl: _PanelToggleControl.default,
+    PanelDropdownControl: _PanelDropdownControl.default,
+    Fragment: _vueFragment.Fragment
+  }
+};
+exports.default = _default;
+        var $e5c51b = exports.default || module.exports;
+      
+      if (typeof $e5c51b === 'function') {
+        $e5c51b = $e5c51b.options;
+      }
+    
+        /* template */
+        Object.assign($e5c51b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "fragment",
+    [
+      _c("panel-toggle-control", {
+        attrs: { label: _vm._f("cap")(_vm.strings.enableResponsive) },
+        model: {
+          value: _vm.directives.responsiveEnabled,
+          callback: function($$v) {
+            _vm.$set(_vm.directives, "responsiveEnabled", $$v)
+          },
+          expression: "directives.responsiveEnabled"
+        }
+      }),
+      _vm._v(" "),
+      _c("panel-dropdown-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.strings.mode),
+          options: { auto: "auto" }
+        },
+        model: {
+          value: _vm.directives.responsiveMode,
+          callback: function($$v) {
+            _vm.$set(_vm.directives, "responsiveMode", $$v)
+          },
+          expression: "directives.responsiveMode"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue"}],"components/PanelSectionGroupTabbed.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    header: {
+      type: String,
+      default: 'Tab Header'
+    },
+    sections: {
+      type: Object,
+      default: function _default() {}
+    }
+  }
+};
+exports.default = _default;
+        var $4d7fa5 = exports.default || module.exports;
+      
+      if (typeof $4d7fa5 === 'function') {
+        $4d7fa5 = $4d7fa5.options;
+      }
+    
+        /* template */
+        Object.assign($4d7fa5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-section-group-tabbed wptb-plugin-box-shadow-md wptb-plugin-width-full"
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-panel-toggle wptb-section-group-tabbed-header" },
+        [_c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.header))])]
+      ),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-section-group-tab-content" },
+        [_vm._t("default")],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "wptb-section-group-tabbed-tabs-buttons" },
+      [
+        _c(
+          "div",
+          { staticClass: "wptb-settings-section-item static-active active" },
+          [_vm._v("mobile")]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-settings-section-item static-active disabled" },
+          [_vm._v("tablet")]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-settings-section-item static-active disabled" },
+          [_vm._v("desktop")]
+        )
+      ]
+    )
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelSectionGroupTabbed = _interopRequireDefault(require("./PanelSectionGroupTabbed"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    PanelSectionGroupTabbed: _PanelSectionGroupTabbed.default
+  }
+};
+exports.default = _default;
+        var $bffd0d = exports.default || module.exports;
+      
+      if (typeof $bffd0d === 'function') {
+        $bffd0d = $bffd0d.options;
+      }
+    
+        /* template */
+        Object.assign($bffd0d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("panel-section-group-tabbed", [_c("i", [_vm._v("sections")])])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue"}],"mountPoints/WPTB_ResponsiveTable.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17015,6 +17475,10 @@ var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_Co
 var _filters = _interopRequireDefault(require("../plugins/filters"));
 
 var _strings = _interopRequireDefault(require("../plugins/strings"));
+
+var _ResponsivePanelGeneralControls = _interopRequireDefault(require("../components/ResponsivePanelGeneralControls"));
+
+var _ResponsivePanelModeControls = _interopRequireDefault(require("../components/ResponsivePanelModeControls"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17102,7 +17566,7 @@ var _default = {
     _vue.default.use(_filters.default); // translation strings setup
 
 
-    _vue.default.use(_strings.default, data); // vue instance
+    _vue.default.use(_strings.default, data); // vue builder instance
 
 
     new _vue.default({
@@ -17113,11 +17577,26 @@ var _default = {
         mainTableQuery: mainTableQuery
       }, data),
       template: '<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>'
-    }).$mount("#".concat(uniqueId));
+    }).$mount("#".concat(uniqueId)); // left panel general controls instance
+
+    new _vue.default({
+      components: {
+        ResponsivePanelGeneralControls: _ResponsivePanelGeneralControls.default
+      },
+      template: '<responsive-panel-general-controls></responsive-panel-general-controls>'
+    }).$mount('#responsiveBuilderLeftPanelGeneralControls'); // left panel mode controls
+
+    new _vue.default({
+      components: {
+        ResponsivePanelModeControls: _ResponsivePanelModeControls.default
+      },
+      data: _objectSpread({}, data),
+      template: '<responsive-panel-mode-controls></responsive-panel-mode-controls>'
+    }).$mount('#responsiveBuilderLeftPanelModeOptions');
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js","../components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","../components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 

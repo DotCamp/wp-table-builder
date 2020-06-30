@@ -8,6 +8,8 @@ import ResponsiveControlsRow from '../components/ResponsiveControlsRow';
 import WPTB_ControlsManager from '../functions/WPTB_ControlsManager';
 import filters from '../plugins/filters';
 import strings from '../plugins/strings';
+import ResponsivePanelGeneralControls from '../components/ResponsivePanelGeneralControls';
+import ResponsivePanelModeControls from '../components/ResponsivePanelModeControls';
 
 export default {
 	name: 'ResponsiveTable',
@@ -82,12 +84,25 @@ export default {
 		// translation strings setup
 		Vue.use(strings, data);
 
-		// vue instance
+		// vue builder instance
 		new Vue({
 			components: { ResponsiveApp },
 			data: { mainTableQuery, ...data },
 			template:
 				'<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>',
 		}).$mount(`#${uniqueId}`);
+
+		// left panel general controls instance
+		new Vue({
+			components: { ResponsivePanelGeneralControls },
+			template: '<responsive-panel-general-controls></responsive-panel-general-controls>',
+		}).$mount('#responsiveBuilderLeftPanelGeneralControls');
+
+		// left panel mode controls
+		new Vue({
+			components: { ResponsivePanelModeControls },
+			data: { ...data },
+			template: '<responsive-panel-mode-controls></responsive-panel-mode-controls>',
+		}).$mount('#responsiveBuilderLeftPanelModeOptions');
 	},
 };

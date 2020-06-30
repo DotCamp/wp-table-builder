@@ -51,6 +51,7 @@ function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 		if (!this.loaded) {
 			this.addContainerToDom();
 
+			WPTB_Helper.elementStartScript(this.responsiveTable , 'table_responsive_menu');
 			WPTB_Helper.elementOptionsSet('table_responsive_menu', this.responsiveTable);
 			WPTB_ControlsManager.callControlScript('ResponsiveTable', this.responsiveWrapperId);
 		}

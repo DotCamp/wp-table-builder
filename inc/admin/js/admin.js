@@ -3023,6 +3023,7 @@ function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 		if (!_this.loaded) {
 			_this.addContainerToDom();
 
+			WPTB_Helper.elementStartScript(_this.responsiveTable, 'table_responsive_menu');
 			WPTB_Helper.elementOptionsSet('table_responsive_menu', _this.responsiveTable);
 			WPTB_ControlsManager.callControlScript('ResponsiveTable', _this.responsiveWrapperId);
 		}
