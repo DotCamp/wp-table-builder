@@ -75,54 +75,8 @@ var WPTB_Cell = function ( callback, DOMElement ) {
     
     WPTB_innerElementSet( DOMElement );
 
-    function controlsChange( inputs, DOMElement ) {
-        if( inputs && typeof inputs === 'object' ) {
-            let table = WPTB_Helper.findAncestor( DOMElement, 'wptb-preview-table' ),
-                highlighted = table.querySelector( '.wptb-highlighted' );
-            if( highlighted ) {
-                let infArr = highlighted.className.match(/wptb-element-((.+-)\d+)/i);
+    WPTB_Helper.elementStartScript( DOMElement, 'table_cell_setting' );
 
-                let controlUnicClassCommonPart = '';
-                if(infArr && Array.isArray(infArr)) {
-                    controlUnicClassCommonPart = infArr[1]
-                }
-
-                if( inputs.hasOwnProperty( 'cellWidth' ) ) {
-                    table.addColumnWidth( inputs.cellWidth );
-
-                    if( controlUnicClassCommonPart ) {
-                        let cellWidthFixedControl = document.querySelector(`.wptb-el-${controlUnicClassCommonPart}-cellWidthFixed`);
-
-                        if(cellWidthFixedControl && !cellWidthFixedControl.checked) cellWidthFixedControl.checked = true;
-                    }
-                } else if( inputs.hasOwnProperty( 'cellWidthFixed' ) ) {
-                    if(  inputs.cellWidthFixed == 'checked' ) {
-                        let width = WPTB_Helper.getColumnWidth( table, highlighted );
-                        table.addColumnWidth( width );
-                    } else {
-                        table.addColumnWidth( false, true );
-                    }
-                } else if( inputs.hasOwnProperty( 'cellHeight' ) ) {
-                    table.addRowHeight( inputs.cellHeight );
-
-                    if( controlUnicClassCommonPart ) {
-                        let cellWidthFixedControl = document.querySelector(`.wptb-el-${controlUnicClassCommonPart}-cellHeightFixed`);
-
-                        if(cellWidthFixedControl && !cellWidthFixedControl.checked) cellWidthFixedControl.checked = true;
-                    }
-                } else if( inputs.hasOwnProperty( 'cellHeightFixed' ) ) {
-                    if( inputs.cellHeightFixed == 'checked' ) {
-                        let height = WPTB_Helper.getRowHeight( table, highlighted );
-                        table.addRowHeight( height );
-                    } else {
-                        table.addRowHeight( false, true );
-                    }
-                }
-            }
-        }
-    }
-    WPTB_Helper.controlsInclude( DOMElement, controlsChange );
-    
     let wptbPhElement = DOMElement.getElementsByClassName( 'wptb-ph-element' );
                                             
     if ( wptbPhElement.length > 0 ) {

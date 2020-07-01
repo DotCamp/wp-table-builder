@@ -39,6 +39,16 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
     }
 
     /**
+     * Include file with js script for element button
+     *
+     * @since 1.2.2
+     * @access protected
+     */
+    public function element_script() {
+        return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-cell-settings.js' );
+    }
+
+    /**
      * Register the element controls.
      *
      * Adds different fields to allow the user to change and customize the element settings.

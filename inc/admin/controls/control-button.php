@@ -50,10 +50,15 @@ class Control_Button extends Base_Control {
 		?>
         <#
             let label,
+                style,
                 elemContainer;
             
             if( data.label ) {
                 label = data.label;
+            }
+
+            if(data.style) {
+                style = 'style="' + data.style + '"';
             }
             
             if( data.elemContainer ) {
@@ -65,7 +70,7 @@ class Control_Button extends Base_Control {
         
         <div class="wptb-settings-row wptb-settings-middle-xs">
             <div class="wptb-settings-col-xs-12" style="margin: auto; text-align: center;">
-                <input type="button" class="wptb-element-property wptb-button {{{targetInputAddClass}}}" data-element="{{{elemContainer}}}" value="{{{label}}}" title="{{{label}}}">
+                <input type="button" {{{style}}} class="wptb-element-property wptb-button {{{targetInputAddClass}}}" data-element="{{{elemContainer}}}" value="{{{label}}}" title="{{{label}}}">
             </div> 
         </div>
         

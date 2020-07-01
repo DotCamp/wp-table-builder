@@ -431,14 +431,45 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         }
     }
 
+    /**
+     * this method run "mark" method of WPTB_Table object
+     * @param event
+     */
     table.mark = (event) => {
         mark(event);
     }
 
+    /**
+     * this method run "undoSelect" method of WPTB_Table object
+     * @param event
+     */
     table.undoSelect = () => {
         undoSelect();
     }
 
+    /**
+     * method for set value for maxAmountOfCells
+     * @param value
+     */
+    table.setMaxAmountOfCells = (value) => {
+        maxAmountOfCells = value;
+    }
+
+    /**
+     * this method return maxAmountOfCells value
+     * @returns {*}
+     */
+    table.getMaxAmountOfCells = () => {
+        return maxAmountOfCells;
+    }
+
+    /**
+     * this method run "fillTableArray" method of WPTB_Table object
+     * @returns {[]}
+     */
+    table.fillTableArray = () => {
+        return fillTableArray();
+    }
     /*
      * For assigning to each cell xIndex and y Index attributes,
      * these are the column number and row number of cell in table. 
@@ -505,6 +536,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             }
             
             table.tdDefaultWidth();
+
+            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
         }
     }
     
@@ -755,6 +788,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                     tableTdsFor( dataYIndex, 1 );
                 }
             }
+
+            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
         }
     }
     
@@ -881,104 +916,77 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
     table.addColumnAfter = function (c_pos) {
         let rows = table.rows,
-            cellPointer,
-            cellsBuffer,
-            cell = document.querySelector('.wptb-highlighted'),
-            cellStyle = cell.getAttribute('style'),
-            pos = c_pos != undefined && typeof c_pos === 'number' ? c_pos : getCoords(cell)[1];
-    
-        
-    
-        if( maxAmountOfCells - pos - cell.colSpan + 1 == 1 ) {
-            table.addColumnEnd();
+            cell,
+            cellStyle,
+            pos;
+
+        if(c_pos != undefined && typeof c_pos === 'number') {
+            pos = c_pos;
+            cell = document.querySelector('[data-x-index="' + pos + '"]');
         } else {
-            let pendingInsertion = false,
-                stepsToMove,
-                td, bro,
-                carriedRowspans = [],
-                currentCell;
+            cell = document.querySelector('.wptb-highlighted');
+            pos = getCoords(cell)[1];
+        }
 
-            for (var i = 0; i < maxAmountOfCells; i++) {
-                carriedRowspans.push(0);
-            }
+        if(cell) {
+            cellStyle = cell.getAttribute('style');
 
-            for (var i = 0; i < rows.length; i++) {
-                cellPointer = 0;
-                cellsBuffer = rows[i].getElementsByTagName('td');
-                pendingInsertion = false;
-                for (var xPosition = 0;
-                        xPosition < maxAmountOfCells;
-                        xPosition += stepsToMove) {
-                    stepsToMove = 1;
-
-                    if (pendingInsertion) {
-                        td = new WPTB_Cell(mark);
-                        if (cellStyle) {
-                            td.getDOMElement().setAttribute('style', cellStyle);
-                            td.getDOMElement().style.width = null;
-                            td.getDOMElement().style.height = null;
-                        }
-                        if (currentCell && rows[i].contains(currentCell)) {
-                            bro = currentCell.nextSibling;
-                            if (bro) {
-                                rows[i].insertBefore(td.getDOMElement(), bro);
-                            } else {
-                                rows[i].appendChild(td.getDOMElement());
-                            }
-                        } else {
-                            rows[i].insertBefore(td.getDOMElement(), cellsBuffer[0]);
-                        }
-                        break;
-                    } else if (carriedRowspans[xPosition] > 0) {
-                        // If no pending insertion, let's check if no rowspan from upper cells is pending in current position
-                        if (pos == xPosition) {
-                            pendingInsertion = true;
-                        }
-                    } else {
-                        currentCell = cellsBuffer[cellPointer++];
-                        if (currentCell.rowSpan > 1) {
-                            stepsToMove = currentCell.colSpan;
-                            for (var k = 0; k < currentCell.colSpan; k++) {
-                                carriedRowspans[xPosition + k] = currentCell.rowSpan;
-                                if (xPosition + k == pos) {
-                                    pendingInsertion = true;
+            if( maxAmountOfCells - pos - cell.colSpan + 1 == 1 ) {
+                table.addColumnEnd();
+            } else {
+                for(let i = 0; i < rows.length; i++) {
+                    let tds = rows[i].children;
+                    for(let j = 0; j < tds.length; j++) {
+                        if(parseInt(tds[j].dataset.xIndex) <= pos) {
+                            if(parseInt(tds[j].dataset.xIndex) + tds[j].colSpan == pos + cell.colSpan) {
+                                let td = newTd(cellStyle);
+                                let nextSib = tds[j].nextSibling;
+                                if (nextSib) {
+                                    rows[i].insertBefore(td.getDOMElement(), nextSib);
+                                } else {
+                                    rows[i].appendChild(td.getDOMElement());
                                 }
+
+                                break;
+                            } else if(parseInt(tds[j].dataset.xIndex) + tds[j].colSpan > pos + cell.colSpan) {
+                                tds[j].colSpan++;
+                                if(tds[j].rowSpan > 1) i += tds[j].rowSpan - 1;
+                                break;
                             }
-                        } else if (currentCell.colSpan > 1) {
-                            stepsToMove = currentCell.colSpan;
-                            for (var k = 0; k < currentCell.colSpan; k++) {
-                                if (xPosition + k == pos) {
-                                    pendingInsertion = true;
-                                }
-                            }
-                        } else if (xPosition == pos) {
-                            pendingInsertion = true;
+                        } else if(parseInt(tds[j].dataset.xIndex) > pos) {
+                            let td = newTd(cellStyle);
+                            rows[i].insertBefore(td.getDOMElement(), tds[j]);
+                            break;
                         }
                     }
                 }
 
-                for (var l = 0; l < maxAmountOfCells; l++) {
-                    if (carriedRowspans[l] > 0)
-                        carriedRowspans[l]--;
+                function newTd(cellStyle) {
+                    let td = new WPTB_Cell(mark);
+                    if (cellStyle) {
+                        td.getDOMElement().setAttribute('style', cellStyle);
+                        td.getDOMElement().style.width = null;
+                        td.getDOMElement().style.height = null;
+                    }
+                    return td;
                 }
 
+                for (var i = 0; i < array.length; i++) {
+                    array[i].push(0);
+                }
+                maxAmountOfCells++;
+                drawTable(array);
+                table.recalculateIndexes();
+                table.addColumnWidth();
+                table.addRowHeight();
+                WPTB_Helper.dataTitleColumnSet( table );
+                undoSelect();
+
+                WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
+
+                let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+                wptbTableStateSaveManager.tableStateSet();
             }
-
-            for (var i = 0; i < array.length; i++) {
-                array[i].push(0);
-            }
-            maxAmountOfCells++;
-            drawTable(array);
-            table.recalculateIndexes();
-            table.addColumnWidth();
-            table.addRowHeight();
-            WPTB_Helper.dataTitleColumnSet( table );
-            undoSelect();
-
-            WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/table-changed/after', table);
-
-            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
         }
     };
 

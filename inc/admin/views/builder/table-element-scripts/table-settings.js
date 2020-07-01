@@ -96,3 +96,4 @@ function controlsChange( inputs, table ) {
 }
 WPTB_Helper.controlsInclude( table, controlsChange );
 
+

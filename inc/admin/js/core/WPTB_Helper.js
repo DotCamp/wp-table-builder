@@ -101,53 +101,54 @@ var WPTB_Helper = {
         }
     },
     dataTitleColumnSet: function( table ) {
-        let rows = table.rows,
-            rowHead = rows[0];
-        let computedStyleRowHead = getComputedStyle( rowHead );
-        
-        let rowHeadChildren = rowHead.children;
-        let contentsForHeader = {};
-        for( let i = 0; i < rowHeadChildren.length; i++ ) {
-            let tdElements = rowHeadChildren[i].children;
-            
-            for( let j = 0; j < tdElements.length; j++ ) {
-                let element = tdElements[j];
-                if( element.classList.contains( 'wptb-ph-element' ) ) {
-                    let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
-                    if( infArr[1] == 'text' ) {
-                        let p = element.querySelector( 'p' ),
-                            textContent = p.textContent,
-                            textAlign = p.style.textAlign;
-                            contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize, 
-                                element.style.color, computedStyleRowHead.backgroundColor, textAlign];
-                        break;
-                    }
-                }
-            }
-            if( ! contentsForHeader[rowHeadChildren[i].dataset.xIndex] ) {
-                contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '', 
-                            '', computedStyleRowHead.backgroundColor, ''];
-            }
-        }
-        for ( let i = 1; i < rows.length; i++ ) {
-            let thisRow = rows[i],
-                thisRowChildren = thisRow.children;
-            for( let j = 0; j < thisRowChildren.length; j++ ) {
-                if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
-                    thisRowChildren[j].dataset.wptbTitleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
-                    thisRowChildren[j].dataset.wptbTitleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
-                    thisRowChildren[j].dataset.wptbTitleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
-                    thisRowChildren[j].dataset.wptbTitleBackgroundColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
-                    thisRowChildren[j].dataset.wptbTitleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][4];
-                } else {
-                    thisRowChildren[j].dataset.wptbTitleColumn = '';
-                    thisRowChildren[j].dataset.wptbTitleColumnFontSize = '';
-                    thisRowChildren[j].dataset.wptbTitleColumnColor = '';
-                    thisRowChildren[j].dataset.wptbTitleBackgroundColor = '';
-                    thisRowChildren[j].dataset.wptbTitleAlign = '';
-                }
-            }
-        }
+        // TODO dataTitleColumnSet
+        // let rows = table.rows,
+        //     rowHead = rows[0];
+        // let computedStyleRowHead = getComputedStyle( rowHead );
+        //
+        // let rowHeadChildren = rowHead.children;
+        // let contentsForHeader = {};
+        // for( let i = 0; i < rowHeadChildren.length; i++ ) {
+        //     let tdElements = rowHeadChildren[i].children;
+        //
+        //     for( let j = 0; j < tdElements.length; j++ ) {
+        //         let element = tdElements[j];
+        //         if( element.classList.contains( 'wptb-ph-element' ) ) {
+        //             let infArr = element.className.match( /wptb-element-(.+)-(\d+)/i );
+        //             if( infArr[1] == 'text' ) {
+        //                 let p = element.querySelector( 'p' ),
+        //                     textContent = p.textContent,
+        //                     textAlign = p.style.textAlign;
+        //                     contentsForHeader[rowHeadChildren[i].dataset.xIndex] = [textContent, element.style.fontSize,
+        //                         element.style.color, computedStyleRowHead.backgroundColor, textAlign];
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if( ! contentsForHeader[rowHeadChildren[i].dataset.xIndex] ) {
+        //         contentsForHeader[rowHeadChildren[i].dataset.xIndex] = ['', '',
+        //                     '', computedStyleRowHead.backgroundColor, ''];
+        //     }
+        // }
+        // for ( let i = 1; i < rows.length; i++ ) {
+        //     let thisRow = rows[i],
+        //         thisRowChildren = thisRow.children;
+        //     for( let j = 0; j < thisRowChildren.length; j++ ) {
+        //         if ( contentsForHeader[thisRowChildren[j].dataset.xIndex] ) {
+        //             thisRowChildren[j].dataset.wptbTitleColumn = contentsForHeader[thisRowChildren[j].dataset.xIndex][0];
+        //             thisRowChildren[j].dataset.wptbTitleColumnFontSize = contentsForHeader[thisRowChildren[j].dataset.xIndex][1];
+        //             thisRowChildren[j].dataset.wptbTitleColumnColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][2];
+        //             thisRowChildren[j].dataset.wptbTitleBackgroundColor = contentsForHeader[thisRowChildren[j].dataset.xIndex][3];
+        //             thisRowChildren[j].dataset.wptbTitleAlign = contentsForHeader[thisRowChildren[j].dataset.xIndex][4];
+        //         } else {
+        //             thisRowChildren[j].dataset.wptbTitleColumn = null;
+        //             thisRowChildren[j].dataset.wptbTitleColumnFontSize = null;
+        //             thisRowChildren[j].dataset.wptbTitleColumnColor = null;
+        //             thisRowChildren[j].dataset.wptbTitleBackgroundColor = null;
+        //             thisRowChildren[j].dataset.wptbTitleAlign = null;
+        //         }
+        //     }
+        // }
     },
     findAncestor: function( el, cls ) {
         while ( ( el = el.parentElement ) && !el.classList.contains( cls ) );
@@ -1329,6 +1330,12 @@ var WPTB_Helper = {
                 if( codeClone.classList.contains( 'wptb-element-main-table_setting-startedid-0' ) ) {
                     codeClone.classList.remove( 'wptb-element-main-table_setting-startedid-0' );
                     codeClone.classList.add( 'wptb-element-main-table_setting-' + postId );
+                    let wptbTableSetup = document.querySelector('.wptb-table-setup');
+                    if(wptbTableSetup) {
+                        wptbTableSetup.innerHTML = '';
+                        wptbTableSetup.appendChild(codeClone);
+                        WPTB_Table();
+                    }
                     paramIdsNecessaryChange = true;
                 }
             }

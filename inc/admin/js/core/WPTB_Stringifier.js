@@ -9,10 +9,8 @@ var WPTB_Stringifier = function ( codeMain ) {
         let tds = code.getElementsByTagName( 'td' );
         if ( tds.length > 0 ) {
             for ( let i = 0; i < tds.length; i++ ) {
-                
-                if ( codeMain.querySelector( 'wptb-table-preview-head' ) ) {
-                    tds[i].removeAttribute( 'data-x-index' );
-                }
+
+                tds[i].removeAttribute( 'data-x-index' );
                 tds[i].removeAttribute( 'data-y-index' );
                 tds[i].removeAttribute( 'draggable' );
                 tds[i].classList.remove( 'wptb-droppable' );
@@ -79,22 +77,23 @@ var WPTB_Stringifier = function ( codeMain ) {
                         }
                     }
                 }
-                
-                if( tds[i].hasAttribute( 'data-wptb-title-column' ) ) {
-                    let columnNameDivContainer = document.createElement( 'div' ),
-                        columnNameDiv = document.createElement( 'div' );
-                    columnNameDivContainer.classList.add( 'wptb-column-title-mobile-container' );
-                    columnNameDiv.classList.add( 'wptb-column-title-mobile' );
-                    columnNameDiv.dataset.wptbTitleColumn = tds[i].dataset.wptbTitleColumn;
-                    columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.wptbTitleColumnFontSize + '; \n\
-                        color:' + tds[i].dataset.wptbTitleColumnColor + '; background-color:' + tds[i].dataset.wptbTitleBackgroundColor + '; text-align:' + tds[i].dataset.wptbTitleAlign + ';' );
-                    columnNameDiv.style.padding = tds[i].style.padding;
-                    if( tds[i].children.length == 0 ) {
-                        tds[i].classList.add( 'wptb-column-title-mobile-not-elements' );
-                    }
-                    columnNameDivContainer.appendChild( columnNameDiv );
-                    tds[i].insertBefore( columnNameDivContainer, tds[i].firstChild );
-                }
+
+                // TODO dataTitleColumnSet
+                // if( tds[i].hasAttribute( 'data-wptb-title-column' ) ) {
+                //     let columnNameDivContainer = document.createElement( 'div' ),
+                //         columnNameDiv = document.createElement( 'div' );
+                //     columnNameDivContainer.classList.add( 'wptb-column-title-mobile-container' );
+                //     columnNameDiv.classList.add( 'wptb-column-title-mobile' );
+                //     columnNameDiv.dataset.wptbTitleColumn = tds[i].dataset.wptbTitleColumn;
+                //     columnNameDiv.setAttribute( 'style', 'font-size:' + tds[i].dataset.wptbTitleColumnFontSize + '; \n\
+                //         color:' + tds[i].dataset.wptbTitleColumnColor + '; background-color:' + tds[i].dataset.wptbTitleBackgroundColor + '; text-align:' + tds[i].dataset.wptbTitleAlign + ';' );
+                //     columnNameDiv.style.padding = tds[i].style.padding;
+                //     if( tds[i].children.length == 0 ) {
+                //         tds[i].classList.add( 'wptb-column-title-mobile-not-elements' );
+                //     }
+                //     columnNameDivContainer.appendChild( columnNameDiv );
+                //     tds[i].insertBefore( columnNameDivContainer, tds[i].firstChild );
+                // }
             }
         }
         
