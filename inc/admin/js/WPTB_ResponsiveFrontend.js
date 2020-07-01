@@ -477,9 +477,9 @@
 		 * @param {TableObject} tableObj table object
 		 */
 		this.autoBuild = (tableEl, sizeRange, autoOption, tableObj) => {
-			const direction = autoOption.cellStackDirection;
+			const direction = autoOption.cellStackDirection[sizeRange];
 			// eslint-disable-next-line prefer-destructuring
-			const topRowAsHeader = autoOption.topRowAsHeader;
+			const topRowAsHeader = autoOption.topRowAsHeader[sizeRange];
 
 			const cellsPerRow = autoOption.cellsPerRow[sizeRange];
 
@@ -510,52 +510,7 @@
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
-
-			// TODO [erdembircan] rewrite with new functionality, and try to make it compatible with current cell functions
-			if (topRowAsHeader) {
-				const headerId = tableObj.addRow('wptb-row').id;
-				const maxColumns = tableObj.maxColumns();
-
-				// in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any number
-				const wrapperCell = new CellObject();
-				tableObj.appendElementToRow(wrapperCell.getElement(), headerId);
-
-				// because class, responsible for styling(in our case specifically padding) of cell elements are bound to parent child related class naming, all cell elements under main table is susceptible to a padding, which also includes our wrapper cell. because of this, resetting padding value of wrapper cell. in the future, if any layout defining style options are added in that way, reset them here too
-				wrapperCell.setAttribute('style', 'padding:0px');
-
-				// classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
-				const mainTableClasses = tableObj.el.getAttribute('class');
-
-				// creating a table inside out wrapper cell to support any cells per row value when 'top row as header' option is active. this table will be holding the real cells that are assigned to the top row.
-				const tempTableRange = document.createRange();
-				tempTableRange.setStart(wrapperCell.getElement(), 0);
-				const tempTableStringified = `<table class="${mainTableClasses}"><tbody><tr></tr></tbody></table>`;
-				const tempTable = tempTableRange.createContextualFragment(tempTableStringified).childNodes[0];
-
-				// wrapper table style overrides
-				tempTable.style.margin = 0;
-				tempTable.style.width = '100%';
-				tempTable.style.animation = 'none';
-				tempTable.style.opacity = 1;
-
-				// add header table to header wrapper cell
-				wrapperCell.getElement().appendChild(tempTable);
-
-				// add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
-				wrapperCell.setAttribute('colSpan', cellsPerRow);
-
-				const tempWrapperRow = tempTable.querySelector('tr');
-				for (let hc = 0; hc < maxColumns; hc += 1) {
-					const tempCell = tableObj.getCell(0, hc, true);
-					if (tempCell) {
-						tempWrapperRow.appendChild(tempCell.getElement());
-						tempCell.resetAllAttributes();
-
-						// override style attribute to make cells fit to table
-						tempCell.setAttribute('style', 'width: 100% !important');
-					}
-				}
-			}
+			const headerCells = tableObj.getCellsAtRow(0, true);
 
 			// cell stack direction is selected as row
 			// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
@@ -570,12 +525,18 @@
 
 				// if 'top row as header' option is enabled, slice the table to use remaining cells
 				if (topRowAsHeader) {
-					allCellsByRow = allCellsByRow.slice(tableObj.getCellsAtRow(0).length);
+					allCellsByRow = allCellsByRow.slice(headerCells.length);
 				}
 
 				const cellCount = allCellsByRow.length;
 
 				for (let c = 0; c < cellCount; c += cellsPerRow) {
+					if (topRowAsHeader) {
+						const currentHeaderId = tableObj.addRow('wptb-row').id;
+						headerCells.map((h) => {
+							tableObj.appendElementToRow(h.el, currentHeaderId);
+						});
+					}
 					const rowId = tableObj.addRow('wptb-row').id;
 
 					// place cells by 'cells by row' option value
@@ -610,19 +571,39 @@
 
 				const cellCount = allCellsByCol.length;
 
-				for (let c = 0; c < cellCount; c += cellsPerRow) {
-					const rowId = tableObj.addRow('wptb-row').id;
+				const rowsDynamic = topRowAsHeader ? rows - 1 : cellCount;
+				const firstIteration = topRowAsHeader ? cellsPerRow : 1;
 
-					for (let cR = 0; cR < cellsPerRow; cR += 1) {
-						const tempCell = allCellsByCol[c + cR];
+				for (let c = 0; c < rowsDynamic; c += cellsPerRow) {
+					if (topRowAsHeader) {
+						const currentHeaderId = tableObj.addRow('wptb-row').id;
+						// eslint-disable-next-line array-callback-return
+						headerCells.map((h) => {
+							tableObj.appendElementToRow(h.el.cloneNode(true), currentHeaderId);
+						});
+					}
 
-						if (tempCell) {
-							tableObj.appendElementToRow(tempCell.getElement(), rowId);
+					for (let f = 0; f < firstIteration; f += 1) {
+						const rowId = tableObj.addRow('wptb-row').id;
 
-							tempCell.resetAllAttributes();
-							tempCell.setAttribute('style', 'width: 100% !important');
-							tempCell.setAttribute('colSpan', 1);
-							tempCell.setAttribute('rowSpan', 1);
+						const cellsPerRowDynamic = topRowAsHeader ? columns : cellsPerRow;
+
+						for (let cR = 0; cR < cellsPerRowDynamic; cR += 1) {
+							let tempCell = allCellsByCol[c + cR + f];
+
+							if (topRowAsHeader) {
+								const index = c + cR * (rows - 1);
+								tempCell = allCellsByCol[index];
+							}
+
+							if (tempCell) {
+								tableObj.appendElementToRow(tempCell.getElement(), rowId);
+
+								tempCell.resetAllAttributes();
+								tempCell.setAttribute('style', 'width: 100% !important');
+								tempCell.setAttribute('colSpan', 1);
+								tempCell.setAttribute('rowSpan', 1);
+							}
 						}
 					}
 				}

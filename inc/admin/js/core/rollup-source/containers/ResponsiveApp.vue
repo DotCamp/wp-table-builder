@@ -6,14 +6,14 @@
 					:end-padding="sliderPadding"
 					:stops="directives.breakpoints"
 					@slide="handleSizeSlideChange"
-					:model-val="currentSize"
+					:model-val="appOptions.currentSize"
 				></screen-size-slider>
-				<size-input v-model="currentSize" :compare-sizes="compareSizes"></size-input>
+				<size-input v-model="appOptions.currentSize" :compare-sizes="compareSizes"></size-input>
 			</div>
 			<div class="wptb-responsive-builder-main">
-				<responsive-toolbox
-					:size-range="{ name: screenSizes[currentSizeRangeName].name, id: currentSizeRangeName }"
-				></responsive-toolbox>
+<!--				<responsive-toolbox-->
+<!--					:size-range="{ name: screenSizes[currentSizeRangeName].name, id: currentSizeRangeName }"-->
+<!--				></responsive-toolbox>-->
 				<table-clone
 					:clone="isVisible"
 					:clone-query="cloneQuery"
@@ -93,22 +93,24 @@ export default {
 			},
 			deep: true,
 		},
-		currentSize(n) {
-			const previousRangeName = this.currentSizeRangeName;
-			this.currentSizeRangeName = this.calculateSizeRangeName(n);
+		'appOptions.currentSize': {
+			handler(n) {
+				const previousRangeName = this.currentSizeRangeName;
+				this.currentSizeRangeName = this.calculateSizeRangeName(n);
 
-			if (previousRangeName !== this.currentSizeRangeName) {
-				this.rebuilding = true;
-				DeBouncer(
-					'currentSize',
-					() => {
-						// rebuilt table according to its responsive directives
-						this.responsiveFrontend.rebuildTables(this.currentSize);
-						this.rebuilding = false;
-					},
-					this.debounceTime
-				);
-			}
+				if (previousRangeName !== this.currentSizeRangeName) {
+					this.rebuilding = true;
+					DeBouncer(
+						'currentSize',
+						() => {
+							// rebuilt table according to its responsive directives
+							this.responsiveFrontend.rebuildTables(this.appOptions.currentSize);
+							this.rebuilding = false;
+						},
+						this.debounceTime
+					);
+				}
+			},
 		},
 	},
 	beforeMount() {
@@ -134,7 +136,7 @@ export default {
 			}
 
 			const width = this.limitToRange(
-				this.currentSize,
+				this.appOptions.currentSize,
 				Math.min(this.sizeLimitMin, this.sizeLimitMax),
 				Math.max(this.sizeLimitMin, this.sizeLimitMax)
 			);
@@ -209,7 +211,7 @@ export default {
 		// handler for event that signals end of directive copy operation to table on DOM
 		directivesCopied(mainTableHaveDirectives) {
 			// rebuilt table according to its responsive directives
-			this.responsiveFrontend.rebuildTables(this.currentSize);
+			this.responsiveFrontend.rebuildTables(this.appOptions.currentSize);
 
 			// if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
 			if (!mainTableHaveDirectives) {
@@ -268,7 +270,7 @@ export default {
 			return ranges[ranges.length - 1];
 		},
 		handleSizeSlideChange(e) {
-			this.currentSize = e;
+			this.appOptions.currentSize = e;
 		},
 		/**
 		 * Encode responsive directives.

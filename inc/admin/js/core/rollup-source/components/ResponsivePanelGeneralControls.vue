@@ -8,6 +8,7 @@
 			:label="strings.mode | cap"
 			v-model="directives.responsiveMode"
 			:options="{ auto: 'auto' }"
+			:disabled="!directives.responsiveEnabled"
 		></panel-dropdown-control>
 	</fragment>
 </template>

@@ -13280,7 +13280,7 @@ var _default = {
       default: ''
     },
     value: {
-      type: Number,
+      type: null,
       default: 0
     },
     // with this prop is enabled, width of the component will be calculated according to its contents
@@ -13359,7 +13359,9 @@ var _default = {
      * @return {number} retrieved integer
      */
     getValue: function getValue(val) {
-      var parsedValue = Number.parseInt(val, 10);
+      var parsedValue = Number.parseInt(val, 10); // eslint-disable-next-line no-restricted-globals
+
+      parsedValue = isNaN(parsedValue) ? 0 : parsedValue;
       return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
     },
 
@@ -15936,9 +15938,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
-      var direction = autoOption.cellStackDirection; // eslint-disable-next-line prefer-destructuring
+      var direction = autoOption.cellStackDirection[sizeRange]; // eslint-disable-next-line prefer-destructuring
 
-      var topRowAsHeader = autoOption.topRowAsHeader;
+      var topRowAsHeader = autoOption.topRowAsHeader[sizeRange];
       var cellsPerRow = autoOption.cellsPerRow[sizeRange];
       tableObj.clearTable();
 
@@ -15971,47 +15973,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var cellsPerRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
-      var isRowStacked = direction === 'row'; // TODO [erdembircan] rewrite with new functionality, and try to make it compatible with current cell functions
-
-      if (topRowAsHeader) {
-        var headerId = tableObj.addRow('wptb-row').id;
-        var maxColumns = tableObj.maxColumns(); // in order for cell per row functionality to work at every number of cells (even/odd), will be wrapping the top row inside a table so that wrapper cell can be adjusted to colspan any number
-
-        var wrapperCell = new CellObject();
-        tableObj.appendElementToRow(wrapperCell.getElement(), headerId); // because class, responsible for styling(in our case specifically padding) of cell elements are bound to parent child related class naming, all cell elements under main table is susceptible to a padding, which also includes our wrapper cell. because of this, resetting padding value of wrapper cell. in the future, if any layout defining style options are added in that way, reset them here too
-
-        wrapperCell.setAttribute('style', 'padding:0px'); // classes of main table element. this classes will be added to wrapper table to reflect the same styling options to header cells
-
-        var mainTableClasses = tableObj.el.getAttribute('class'); // creating a table inside out wrapper cell to support any cells per row value when 'top row as header' option is active. this table will be holding the real cells that are assigned to the top row.
-
-        var tempTableRange = document.createRange();
-        tempTableRange.setStart(wrapperCell.getElement(), 0);
-        var tempTableStringified = "<table class=\"".concat(mainTableClasses, "\"><tbody><tr></tr></tbody></table>");
-        var tempTable = tempTableRange.createContextualFragment(tempTableStringified).childNodes[0]; // wrapper table style overrides
-
-        tempTable.style.margin = 0;
-        tempTable.style.width = '100%';
-        tempTable.style.animation = 'none';
-        tempTable.style.opacity = 1; // add header table to header wrapper cell
-
-        wrapperCell.getElement().appendChild(tempTable); // add necessary colspan value to support 'cells per row' option while 'top row as header' option is enabled
-
-        wrapperCell.setAttribute('colSpan', cellsPerRow);
-        var tempWrapperRow = tempTable.querySelector('tr');
-
-        for (var hc = 0; hc < maxColumns; hc += 1) {
-          var tempCell = tableObj.getCell(0, hc, true);
-
-          if (tempCell) {
-            tempWrapperRow.appendChild(tempCell.getElement());
-            tempCell.resetAllAttributes(); // override style attribute to make cells fit to table
-
-            tempCell.setAttribute('style', 'width: 100% !important');
-          }
-        }
-      } // cell stack direction is selected as row
+      var isRowStacked = direction === 'row';
+      var headerCells = tableObj.getCellsAtRow(0, true); // cell stack direction is selected as row
       // for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
-
 
       if (isRowStacked) {
         (function () {
@@ -16026,27 +15990,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
           if (topRowAsHeader) {
-            allCellsByRow = allCellsByRow.slice(tableObj.getCellsAtRow(0).length);
+            allCellsByRow = allCellsByRow.slice(headerCells.length);
           }
 
           var cellCount = allCellsByRow.length;
 
           for (var c = 0; c < cellCount; c += cellsPerRow) {
+            if (topRowAsHeader) {
+              (function () {
+                var currentHeaderId = tableObj.addRow('wptb-row').id;
+                headerCells.map(function (h) {
+                  tableObj.appendElementToRow(h.el, currentHeaderId);
+                });
+              })();
+            }
+
             var rowId = tableObj.addRow('wptb-row').id; // place cells by 'cells by row' option value
 
             for (var pR = 0; pR < cellsPerRow; pR += 1) {
-              var _tempCell = allCellsByRow[c + pR];
+              var tempCell = allCellsByRow[c + pR];
 
-              if (_tempCell) {
-                tableObj.appendElementToRow(_tempCell.getElement(), rowId);
-
-                _tempCell.resetAllAttributes();
-
-                _tempCell.setAttribute('style', 'width: 100% !important');
-
-                _tempCell.setAttribute('colSpan', 1);
-
-                _tempCell.setAttribute('rowSpan', 1);
+              if (tempCell) {
+                tableObj.appendElementToRow(tempCell.getElement(), rowId);
+                tempCell.resetAllAttributes();
+                tempCell.setAttribute('style', 'width: 100% !important');
+                tempCell.setAttribute('colSpan', 1);
+                tempCell.setAttribute('rowSpan', 1);
               }
             }
           }
@@ -16067,23 +16036,39 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
 
           var cellCount = allCellsByCol.length;
+          var rowsDynamic = topRowAsHeader ? rows - 1 : cellCount;
+          var firstIteration = topRowAsHeader ? cellsPerRow : 1;
 
-          for (var _c = 0; _c < cellCount; _c += cellsPerRow) {
-            var rowId = tableObj.addRow('wptb-row').id;
+          for (var _c = 0; _c < rowsDynamic; _c += cellsPerRow) {
+            if (topRowAsHeader) {
+              (function () {
+                var currentHeaderId = tableObj.addRow('wptb-row').id; // eslint-disable-next-line array-callback-return
 
-            for (var cR = 0; cR < cellsPerRow; cR += 1) {
-              var _tempCell2 = allCellsByCol[_c + cR];
+                headerCells.map(function (h) {
+                  tableObj.appendElementToRow(h.el.cloneNode(true), currentHeaderId);
+                });
+              })();
+            }
 
-              if (_tempCell2) {
-                tableObj.appendElementToRow(_tempCell2.getElement(), rowId);
+            for (var f = 0; f < firstIteration; f += 1) {
+              var rowId = tableObj.addRow('wptb-row').id;
+              var cellsPerRowDynamic = topRowAsHeader ? columns : cellsPerRow;
 
-                _tempCell2.resetAllAttributes();
+              for (var cR = 0; cR < cellsPerRowDynamic; cR += 1) {
+                var tempCell = allCellsByCol[_c + cR + f];
 
-                _tempCell2.setAttribute('style', 'width: 100% !important');
+                if (topRowAsHeader) {
+                  var index = _c + cR * (rows - 1);
+                  tempCell = allCellsByCol[index];
+                }
 
-                _tempCell2.setAttribute('colSpan', 1);
-
-                _tempCell2.setAttribute('rowSpan', 1);
+                if (tempCell) {
+                  tableObj.appendElementToRow(tempCell.getElement(), rowId);
+                  tempCell.resetAllAttributes();
+                  tempCell.setAttribute('style', 'width: 100% !important');
+                  tempCell.setAttribute('colSpan', 1);
+                  tempCell.setAttribute('rowSpan', 1);
+                }
               }
             }
           }
@@ -16405,20 +16390,22 @@ var _default = {
       },
       deep: true
     },
-    currentSize: function currentSize(n) {
-      var _this = this;
+    'appOptions.currentSize': {
+      handler: function handler(n) {
+        var _this = this;
 
-      var previousRangeName = this.currentSizeRangeName;
-      this.currentSizeRangeName = this.calculateSizeRangeName(n);
+        var previousRangeName = this.currentSizeRangeName;
+        this.currentSizeRangeName = this.calculateSizeRangeName(n);
 
-      if (previousRangeName !== this.currentSizeRangeName) {
-        this.rebuilding = true;
-        (0, _DeBouncer.default)('currentSize', function () {
-          // rebuilt table according to its responsive directives
-          _this.responsiveFrontend.rebuildTables(_this.currentSize);
+        if (previousRangeName !== this.currentSizeRangeName) {
+          this.rebuilding = true;
+          (0, _DeBouncer.default)('currentSize', function () {
+            // rebuilt table according to its responsive directives
+            _this.responsiveFrontend.rebuildTables(_this.appOptions.currentSize);
 
-          _this.rebuilding = false;
-        }, this.debounceTime);
+            _this.rebuilding = false;
+          }, this.debounceTime);
+        }
       }
     }
   },
@@ -16444,7 +16431,7 @@ var _default = {
         return {};
       }
 
-      var width = this.limitToRange(this.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
+      var width = this.limitToRange(this.appOptions.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
       return {
         width: "".concat(width, "px")
       };
@@ -16519,7 +16506,7 @@ var _default = {
     // handler for event that signals end of directive copy operation to table on DOM
     directivesCopied: function directivesCopied(mainTableHaveDirectives) {
       // rebuilt table according to its responsive directives
-      this.responsiveFrontend.rebuildTables(this.currentSize); // if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
+      this.responsiveFrontend.rebuildTables(this.appOptions.currentSize); // if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
 
       if (!mainTableHaveDirectives) {
         new WPTB_TableStateSaveManager().tableStateSet();
@@ -16578,7 +16565,7 @@ var _default = {
       return ranges[ranges.length - 1];
     },
     handleSizeSlideChange: function handleSizeSlideChange(e) {
-      this.currentSize = e;
+      this.appOptions.currentSize = e;
     },
 
     /**
@@ -16629,7 +16616,7 @@ exports.default = _default;
                   attrs: {
                     "end-padding": _vm.sliderPadding,
                     stops: _vm.directives.breakpoints,
-                    "model-val": _vm.currentSize
+                    "model-val": _vm.appOptions.currentSize
                   },
                   on: { slide: _vm.handleSizeSlideChange }
                 }),
@@ -16637,11 +16624,11 @@ exports.default = _default;
                 _c("size-input", {
                   attrs: { "compare-sizes": _vm.compareSizes },
                   model: {
-                    value: _vm.currentSize,
+                    value: _vm.appOptions.currentSize,
                     callback: function($$v) {
-                      _vm.currentSize = $$v
+                      _vm.$set(_vm.appOptions, "currentSize", $$v)
                     },
-                    expression: "currentSize"
+                    expression: "appOptions.currentSize"
                   }
                 })
               ],
@@ -16652,15 +16639,6 @@ exports.default = _default;
               "div",
               { staticClass: "wptb-responsive-builder-main" },
               [
-                _c("responsive-toolbox", {
-                  attrs: {
-                    "size-range": {
-                      name: _vm.screenSizes[_vm.currentSizeRangeName].name,
-                      id: _vm.currentSizeRangeName
-                    }
-                  }
-                }),
-                _vm._v(" "),
                 _c("table-clone", {
                   attrs: {
                     clone: _vm.isVisible,
@@ -16993,6 +16971,9 @@ var PanelControlBase = {
     innerValue: function innerValue(n) {
       this.$emit('valueChanged', n);
     }
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
   }
 };
 var _default = PanelControlBase;
@@ -17164,29 +17145,54 @@ exports.default = _default;
     },
     [
       _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c("label", { staticClass: "wptb-toggle" }, [
-          _c("span", { staticStyle: { "font-size": "16px" } }, [
-            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              domProps: { value: _vm.value },
-              on: {
-                change: function($event) {
-                  return _vm.$emit("valueChanged", $event.target.value)
+        _c(
+          "label",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
+          },
+          [
+            _c("span", { staticStyle: { "font-size": "16px" } }, [
+              _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+            ]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.innerValue,
+                    expression: "innerValue"
+                  }
+                ],
+                attrs: { disabled: _vm.disabled },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.innerValue = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
                 }
-              }
-            },
-            _vm._l(_vm.options, function(name, key) {
-              return _c("option", { key: key, domProps: { value: key } }, [
-                _vm._v(_vm._s(_vm._f("cap")(name)))
-              ])
-            }),
-            0
-          )
-        ])
+              },
+              _vm._l(_vm.options, function(name, key) {
+                return _c("option", { key: key, domProps: { value: key } }, [
+                  _vm._v(_vm._s(_vm._f("cap")(name)))
+                ])
+              }),
+              0
+            )
+          ]
+        )
       ])
     ]
   )
@@ -17219,6 +17225,7 @@ var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownContr
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -17269,7 +17276,8 @@ exports.default = _default;
       _c("panel-dropdown-control", {
         attrs: {
           label: _vm._f("cap")(_vm.strings.mode),
-          options: { auto: "auto" }
+          options: { auto: "auto" },
+          disabled: !_vm.directives.responsiveEnabled
         },
         model: {
           value: _vm.directives.responsiveMode,
@@ -17317,15 +17325,47 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     header: {
       type: String,
       default: 'Tab Header'
     },
-    sections: {
+    // tabs object, keys for tab ids, values for translated tab names
+    tabs: {
       type: Object,
-      default: function _default() {}
+      default: function _default() {
+        return {
+          default: 'Default'
+        };
+      }
+    },
+    // id of currentTab
+    currentTab: {
+      type: String,
+      default: 'default'
+    }
+  },
+  methods: {
+    // decide if the tab is active based on current active tab property
+    isActiveTab: function isActiveTab(tabId) {
+      return this.currentTab === tabId;
+    },
+    handleTabClick: function handleTabClick(tabId) {
+      this.$emit('tabClicked', tabId);
     }
   }
 };
@@ -17355,7 +17395,31 @@ exports.default = _default;
         [_c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.header))])]
       ),
       _vm._v(" "),
-      _vm._m(0),
+      _c(
+        "div",
+        { staticClass: "wptb-section-group-tabbed-tabs-buttons" },
+        _vm._l(_vm.tabs, function(name, id) {
+          return _c(
+            "div",
+            {
+              key: id,
+              staticClass: "wptb-settings-section-item static-active",
+              class: {
+                active: _vm.isActiveTab(id),
+                disabled: !_vm.isActiveTab(id)
+              },
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  return _vm.handleTabClick(id)
+                }
+              }
+            },
+            [_vm._v("\n\t\t\t" + _vm._s(name) + "\n\t\t")]
+          )
+        }),
+        0
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -17366,36 +17430,7 @@ exports.default = _default;
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "wptb-section-group-tabbed-tabs-buttons" },
-      [
-        _c(
-          "div",
-          { staticClass: "wptb-settings-section-item static-active active" },
-          [_vm._v("mobile")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-settings-section-item static-active disabled" },
-          [_vm._v("tablet")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-settings-section-item static-active disabled" },
-          [_vm._v("desktop")]
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -17407,7 +17442,270 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
+},{}],"components/PanelInputControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    NumberPostfixInput: _NumberPostfixInput.default
+  },
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $98215b = exports.default || module.exports;
+      
+      if (typeof $98215b === 'function') {
+        $98215b = $98215b.options;
+      }
+    
+        /* template */
+        Object.assign($98215b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c(
+          "label",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
+          },
+          [
+            _c("span", { staticStyle: { "font-size": "16px" } }, [
+              _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+            ]),
+            _vm._v(" "),
+            _c("number-postfix-input", {
+              attrs: {
+                "enable-dynamic-width": true,
+                min: 1,
+                max: 100,
+                "enable-limit": true,
+                disabled: _vm.disabled
+              },
+              model: {
+                value: _vm.innerValue,
+                callback: function($$v) {
+                  _vm.innerValue = $$v
+                },
+                expression: "innerValue"
+              }
+            })
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/AutoModePanelControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vueFragment = require("vue-fragment");
+
+var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+
+var _PanelInputControl = _interopRequireDefault(require("./PanelInputControl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    Fragment: _vueFragment.Fragment,
+    PanelToggleControl: _PanelToggleControl.default,
+    PanelDropdownControl: _PanelDropdownControl.default,
+    PanelInputControl: _PanelInputControl.default
+  },
+  methods: {
+    isDisabled: function isDisabled() {
+      return this.appOptions.currentBreakpoint === 'desktop' || !this.directives.responsiveEnabled;
+    }
+  },
+  computed: {
+    perLabelString: function perLabelString() {
+      return this.directives.modeOptions.auto.topRowAsHeader[this.appOptions.currentBreakpoint] ? this.strings.itemsPerHeader : this.strings.cellsPerRow;
+    }
+  }
+};
+exports.default = _default;
+        var $645535 = exports.default || module.exports;
+      
+      if (typeof $645535 === 'function') {
+        $645535 = $645535.options;
+      }
+    
+        /* template */
+        Object.assign($645535, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "fragment",
+    [
+      _c("panel-toggle-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.strings.topRowHeader),
+          disabled: _vm.isDisabled()
+        },
+        model: {
+          value:
+            _vm.directives.modeOptions.auto.topRowAsHeader[
+              _vm.appOptions.currentBreakpoint
+            ],
+          callback: function($$v) {
+            _vm.$set(
+              _vm.directives.modeOptions.auto.topRowAsHeader,
+              _vm.appOptions.currentBreakpoint,
+              $$v
+            )
+          },
+          expression:
+            "directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
+        }
+      }),
+      _vm._v(" "),
+      _c("panel-dropdown-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.strings.stackDirection),
+          options: { row: _vm.strings.row, column: _vm.strings.column },
+          disabled: _vm.isDisabled()
+        },
+        model: {
+          value:
+            _vm.directives.modeOptions.auto.cellStackDirection[
+              _vm.appOptions.currentBreakpoint
+            ],
+          callback: function($$v) {
+            _vm.$set(
+              _vm.directives.modeOptions.auto.cellStackDirection,
+              _vm.appOptions.currentBreakpoint,
+              $$v
+            )
+          },
+          expression:
+            "directives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint]"
+        }
+      }),
+      _vm._v(" "),
+      _c("panel-input-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.perLabelString),
+          disabled: _vm.isDisabled()
+        },
+        model: {
+          value:
+            _vm.directives.modeOptions.auto.cellsPerRow[
+              _vm.appOptions.currentBreakpoint
+            ],
+          callback: function($$v) {
+            _vm.$set(
+              _vm.directives.modeOptions.auto.cellsPerRow,
+              _vm.appOptions.currentBreakpoint,
+              $$v
+            )
+          },
+          expression:
+            "directives.modeOptions.auto.cellsPerRow[appOptions.currentBreakpoint]"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelInputControl":"components/PanelInputControl.vue"}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17417,6 +17715,8 @@ exports.default = void 0;
 
 var _PanelSectionGroupTabbed = _interopRequireDefault(require("./PanelSectionGroupTabbed"));
 
+var _AutoModePanelControls = _interopRequireDefault(require("./AutoModePanelControls"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -17424,9 +17724,51 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
-    PanelSectionGroupTabbed: _PanelSectionGroupTabbed.default
+    PanelSectionGroupTabbed: _PanelSectionGroupTabbed.default,
+    AutoModePanelControls: _AutoModePanelControls.default
+  },
+  computed: {
+    breakpointsObject: function breakpointsObject() {
+      var _this = this;
+
+      return Object.keys(this.directives.breakpoints).sort(function (a, b) {
+        // sort breakpoints by their width ascending
+        return _this.directives.breakpoints[a].width - _this.directives.breakpoints[b].width;
+      }).reduce(function (c, k) {
+        if (Object.prototype.hasOwnProperty.call(_this.directives.breakpoints, k)) {
+          // eslint-disable-next-line no-param-reassign
+          c[k] = _this.directives.breakpoints[k].name;
+        }
+
+        return c;
+      }, {});
+    },
+    currentPanelControls: function currentPanelControls() {
+      return "".concat(this.directives.responsiveMode[0].toUpperCase() + this.directives.responsiveMode.slice(1), "ModePanelControls");
+    }
+  },
+  methods: {
+    /**
+     * Handle tab change
+     * @param {string} tabId breakpoint id
+     */
+    handleTabChange: function handleTabChange(tabId) {
+      // assign tabId to breakpoint id property of global store
+      this.appOptions.currentBreakpoint = tabId; // get breakpoint size and assign to size property of global store to force a rebuilding process
+
+      this.appOptions.currentSize = this.directives.breakpoints[tabId].width;
+    }
   }
 };
 exports.default = _default;
@@ -17442,7 +17784,19 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("panel-section-group-tabbed", [_c("i", [_vm._v("sections")])])
+  return _c(
+    "panel-section-group-tabbed",
+    {
+      attrs: {
+        "current-tab": _vm.appOptions.currentBreakpoint,
+        tabs: _vm.breakpointsObject,
+        header: _vm.strings[_vm.directives.responsiveMode]
+      },
+      on: { tabClicked: _vm.handleTabChange }
+    },
+    [_c(_vm.currentPanelControls, { tag: "component" })],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -17456,7 +17810,7 @@ render._withStripped = true
           };
         })());
       
-},{"./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue"}],"mountPoints/WPTB_ResponsiveTable.js":[function(require,module,exports) {
+},{"./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue","./AutoModePanelControls":"components/AutoModePanelControls.vue"}],"mountPoints/WPTB_ResponsiveTable.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17499,12 +17853,16 @@ var _default = {
      *
      * * identifyCells -> show visual unique identification for table cell elements
      * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
+     * * currentBreakpoint -> id of the current breakpoint
+     * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
      *
      */
 
     var appOptions = {
       identifyCells: false,
-      hasLegacyResponsive: false
+      hasLegacyResponsive: false,
+      currentBreakpoint: 'desktop',
+      currentSize: 0
     }; // directives for responsive features
     // add default options value at here instead of assigning them at app dynamically. this way default options can be used for error checking and will prevent bugs/security concerns beforehand
 
@@ -17514,8 +17872,16 @@ var _default = {
       preserveRowColor: false,
       modeOptions: {
         auto: {
-          topRowAsHeader: false,
-          cellStackDirection: 'row',
+          topRowAsHeader: {
+            desktop: false,
+            tablet: false,
+            mobile: false
+          },
+          cellStackDirection: {
+            desktop: 'row',
+            tablet: 'row',
+            mobile: 'row'
+          },
           cellsPerRow: {
             desktop: 1,
             tablet: 1,
@@ -17524,7 +17890,7 @@ var _default = {
         }
       },
       breakpoints: data.screenSizes
-    }; // flux store object
+    }; // singleton store object
     // this object implementation will give us the ability to persist the state of certain data properties across all app
 
     var optionsStore = {

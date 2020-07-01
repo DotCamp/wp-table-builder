@@ -22,11 +22,15 @@ export default {
 		 *
 		 * * identifyCells -> show visual unique identification for table cell elements
 		 * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
+		 * * currentBreakpoint -> id of the current breakpoint
+		 * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
 		 *
 		 */
 		const appOptions = {
 			identifyCells: false,
 			hasLegacyResponsive: false,
+			currentBreakpoint: 'desktop',
+			currentSize: 0,
 		};
 
 		// directives for responsive features
@@ -37,8 +41,16 @@ export default {
 			preserveRowColor: false,
 			modeOptions: {
 				auto: {
-					topRowAsHeader: false,
-					cellStackDirection: 'row',
+					topRowAsHeader: {
+						desktop: false,
+						tablet: false,
+						mobile: false,
+					},
+					cellStackDirection: {
+						desktop: 'row',
+						tablet: 'row',
+						mobile: 'row',
+					},
 					cellsPerRow: {
 						desktop: 1,
 						tablet: 1,
@@ -49,7 +61,7 @@ export default {
 			breakpoints: data.screenSizes,
 		};
 
-		// flux store object
+		// singleton store object
 		// this object implementation will give us the ability to persist the state of certain data properties across all app
 		const optionsStore = {
 			// eslint-disable-next-line no-shadow

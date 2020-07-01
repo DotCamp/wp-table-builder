@@ -58,22 +58,28 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 		$general_section_group_controls = [
 			'generalResponsiveControls' => [
 				'label' => 'none',
-				'type' => Controls_Manager::HTML_OUTPUT,
-				'html' => '<div id="responsiveBuilderLeftPanelGeneralControls"></div>',
+				'type'  => Controls_Manager::HTML_OUTPUT,
+				'html'  => '<div id="responsiveBuilderLeftPanelGeneralControls"></div>',
 			],
 		];
 
-		Control_Section_Group_Collapse::add_section('table_responsive_general_controls', esc_html__('general', 'wp-table-builder'),$general_section_group_controls, [$this,'add_control']);
+		Control_Section_Group_Collapse::add_section( 'table_responsive_general_controls', esc_html__( 'general', 'wp-table-builder' ), $general_section_group_controls, [
+			$this,
+			'add_control'
+		] );
 
 		$mode_options = [
 			'modeOptions' => [
 				'label' => 'none',
-				'type' => Controls_Manager::HTML_OUTPUT,
-				'html' => '<div id="responsiveBuilderLeftPanelModeOptions"></div>'
+				'type'  => Controls_Manager::HTML_OUTPUT,
+				'html'  => '<div id="responsiveBuilderLeftPanelModeOptions"></div>'
 			]
 		];
 
-		Control_Section_Group_Collapse::add_section('table_responsive_mode_options', esc_html__('mode options', 'wp-table-builder'), $mode_options, [$this, 'add_control']);
+		Control_Section_Group_Collapse::add_section( 'table_responsive_mode_options', esc_html__( 'mode options', 'wp-table-builder' ), $mode_options, [
+			$this,
+			'add_control'
+		] );
 
 		// TODO [erdembircan] update how-to section text according to the updated builder controls/layout
 		$how_to_text = esc_html__( 'You can check out the layout of your table by selecting any size breakpoint from the top slider menu, can choose from a list of devices or even input your custom size to see the reaction of your table. After selecting the breakpoint, you can work on the layout for that breakpoint.' );
@@ -90,7 +96,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 		Control_Section_Group_Collapse::add_section( 'table_responsive_how_to', esc_html__( 'how to', 'wp-table-builder' ), $howto_section_group_controls, [
 			$this,
 			'add_control'
-		], true );
+		], false );
 
 		$this->add_control( 'responsiveData', [
 			'type'    => Controls_Manager::DATA_MULE,
@@ -124,6 +130,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
 					'cellsPerRow'             => esc_html__( 'Cells per row', 'wp-table-builder' ),
+					'itemsPerHeader'          => esc_html__( 'Items per header', 'wp-table-builder' ),
 					'preserveRowColor'        => esc_html__( 'Preserve row color', 'wp-table-builder' ),
 					'row'                     => esc_html__( 'row', 'wp-table-builder' ),
 					'column'                  => esc_html__( 'column', 'wp-table-builder' ),

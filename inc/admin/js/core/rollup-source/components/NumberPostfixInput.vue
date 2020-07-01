@@ -28,7 +28,7 @@ export default {
 			default: '',
 		},
 		value: {
-			type: Number,
+			type: null,
 			default: 0,
 		},
 		// with this prop is enabled, width of the component will be calculated according to its contents
@@ -107,7 +107,9 @@ export default {
 		 * @return {number} retrieved integer
 		 */
 		getValue(val) {
-			const parsedValue = Number.parseInt(val, 10);
+			let parsedValue = Number.parseInt(val, 10);
+			// eslint-disable-next-line no-restricted-globals
+			parsedValue = isNaN(parsedValue) ? 0 : parsedValue;
 
 			return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
 		},

@@ -29,6 +29,9 @@ const PanelControlBase = {
 			this.$emit('valueChanged', n);
 		},
 	},
+	mounted() {
+		this.innerValue = this.value;
+	},
 };
 
 export default PanelControlBase;
