@@ -7,13 +7,11 @@
 					:stops="directives.breakpoints"
 					@slide="handleSizeSlideChange"
 					:model-val="appOptions.currentSize"
+					:enable-breakpoint-customization="false"
 				></screen-size-slider>
-				<size-input v-model="appOptions.currentSize" :compare-sizes="compareSizes"></size-input>
+				<!--				<size-input v-model="appOptions.currentSize" :compare-sizes="compareSizes"></size-input>-->
 			</div>
 			<div class="wptb-responsive-builder-main">
-<!--				<responsive-toolbox-->
-<!--					:size-range="{ name: screenSizes[currentSizeRangeName].name, id: currentSizeRangeName }"-->
-<!--				></responsive-toolbox>-->
 				<table-clone
 					:clone="isVisible"
 					:clone-query="cloneQuery"

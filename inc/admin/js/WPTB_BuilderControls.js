@@ -13553,7 +13553,11 @@ var _default = {
       type: Boolean,
       default: false
     },
-    stopId: String
+    stopId: String,
+    enableBreakpointCustomization: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     NumberPostfixInput: _NumberPostfixInput.default
@@ -13648,6 +13652,16 @@ exports.default = _default;
       _vm._v(" "),
       _c(
         "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.enableBreakpointCustomization,
+              expression: "enableBreakpointCustomization"
+            }
+          ]
+        },
         [
           _c("number-postfix-input", {
             staticClass: "wptb-size-input",
@@ -13932,6 +13946,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     stops: Object,
@@ -13943,6 +13958,10 @@ var _default = {
     modelVal: {
       type: Number,
       default: 0
+    },
+    enableBreakpointCustomization: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -14154,7 +14173,9 @@ exports.default = _default;
                   active: _vm.isStopActive(width),
                   value: _vm.translateIntoPercent(width),
                   "raw-value": width,
-                  "stop-id": key
+                  "stop-id": key,
+                  enableBreakpointCustomization:
+                    _vm.enableBreakpointCustomization
                 },
                 on: {
                   click: _vm.slide,
@@ -15489,26 +15510,40 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      *
      * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
      * @param {any} attributeValue attribute value
+     * @param {boolean} append append the value or replace it
+     * @param {string} glue glue to join attribute value if append option is enabled
      */
 
 
     this.setAttribute = function (attributeKey, attributeValue) {
+      var append = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var glue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ',';
+
       var defaultVal = _this.getElement()[attributeKey]; // if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
 
 
       if (typeof defaultVal === 'function' || _typeof(defaultVal) === 'object') {
         defaultVal = _this.getElement().getAttribute(attributeKey);
-      }
+      } // if there is already a default value defined, use that instead
+
 
       if (_this.modifications[attributeKey]) {
         defaultVal = _this.modifications[attributeKey].default;
       }
 
+      var currentVal = defaultVal; // join attributes
+
+      if (append) {
+        currentVal += "".concat(currentVal).concat(glue).concat(attributeValue);
+      } else {
+        currentVal = attributeValue;
+      }
+
       _this.modifications[attributeKey] = {
-        value: attributeValue,
+        value: currentVal,
         default: defaultVal
       };
-      _this.getElement()[attributeKey] = attributeValue;
+      _this.getElement()[attributeKey] = currentVal;
     };
     /**
      * Reset a modified attribute to its default value
@@ -15766,12 +15801,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.getCell = function (r, c) {
       var returnObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-      if (_this2.parsedTable[r][c]) {
-        if (returnObject) {
-          return _this2.parsedTable[r][c];
-        }
+      try {
+        if (_this2.parsedTable[r][c]) {
+          if (returnObject) {
+            return _this2.parsedTable[r][c];
+          }
 
-        return _this2.parsedTable[r][c].el;
+          return _this2.parsedTable[r][c].el;
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        logToConsole("no cell found at the given address of [".concat(r, "-").concat(c, "]"), 'warn');
+        return null;
       } // eslint-disable-next-line no-console
 
 
@@ -15847,7 +15888,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       appendToRow: this.appendToRow,
       appendElementToRow: this.appendElementToRow,
       getCellsAtRow: this.getCellsAtRow,
-      el: this.tableElement
+      el: this.tableElement,
+      rowColors: this.rowColors
     };
   } // default options for responsive class
 
@@ -15962,7 +16004,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * * column: cells will be read column by column, in each column starting from the first row of the table
      *
      * @param {TableObject} tableObj table object
-     * @param {string} direction direction to read cells
+     * @param {string} direction direction to read cells, possible options [row, column]
      * @param {boolean} topRowAsHeader use top row as header
      * @param {number} cellsPerRow cells per row
      */
@@ -15973,94 +16015,65 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var cellsPerRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
       var rows = tableObj.maxRows();
       var columns = tableObj.maxColumns();
-      var isRowStacked = direction === 'row';
-      var headerCells = tableObj.getCellsAtRow(0, true); // cell stack direction is selected as row
-      // for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
+      var isRowStacked = direction === 'row'; // build table with top row as header
 
-      if (isRowStacked) {
-        (function () {
-          var allCellsByRow = []; // get cells by reading row by row
+      if (topRowAsHeader) {
+        _this3.headerBuild(tableObj, direction, cellsPerRow);
+      } else {
+        // cell stack direction is selected as row
+        // for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
+        // eslint-disable-next-line no-lonely-if
+        if (isRowStacked) {
+          (function () {
+            var allCellsByRow = []; // get cells by reading row by row
 
-          for (var r = 0; r < rows; r += 1) {
-            // eslint-disable-next-line no-loop-func
-            tableObj.getCellsAtRow(r, true).forEach(function (c) {
-              return allCellsByRow.push(c);
-            });
-          } // if 'top row as header' option is enabled, slice the table to use remaining cells
-
-
-          if (topRowAsHeader) {
-            allCellsByRow = allCellsByRow.slice(headerCells.length);
-          }
-
-          var cellCount = allCellsByRow.length;
-
-          for (var c = 0; c < cellCount; c += cellsPerRow) {
-            if (topRowAsHeader) {
-              (function () {
-                var currentHeaderId = tableObj.addRow('wptb-row').id;
-                headerCells.map(function (h) {
-                  tableObj.appendElementToRow(h.el, currentHeaderId);
-                });
-              })();
+            for (var r = 0; r < rows; r += 1) {
+              // eslint-disable-next-line no-loop-func
+              tableObj.getCellsAtRow(r, true).forEach(function (c) {
+                return allCellsByRow.push(c);
+              });
             }
 
-            var rowId = tableObj.addRow('wptb-row').id; // place cells by 'cells by row' option value
+            var cellCount = allCellsByRow.length;
 
-            for (var pR = 0; pR < cellsPerRow; pR += 1) {
-              var tempCell = allCellsByRow[c + pR];
+            for (var c = 0; c < cellCount; c += cellsPerRow) {
+              var rowId = tableObj.addRow('wptb-row').id; // place cells by 'cells by row' option value
 
-              if (tempCell) {
-                tableObj.appendElementToRow(tempCell.getElement(), rowId);
-                tempCell.resetAllAttributes();
-                tempCell.setAttribute('style', 'width: 100% !important');
-                tempCell.setAttribute('colSpan', 1);
-                tempCell.setAttribute('rowSpan', 1);
-              }
-            }
-          }
-        })();
-      } // cell stack direction is selected as column
-      else {
-          var allCellsByCol = [];
-          var rowStartIndex = topRowAsHeader ? 1 : 0; // read all cells column by column
+              for (var pR = 0; pR < cellsPerRow; pR += 1) {
+                var tempCell = allCellsByRow[c + pR];
 
-          for (var c = 0; c < columns; c += 1) {
-            for (var r = rowStartIndex; r < rows; r += 1) {
-              var tCell = tableObj.getCell(r, c, true);
-
-              if (tCell) {
-                allCellsByCol.push(tCell);
-              }
-            }
-          }
-
-          var cellCount = allCellsByCol.length;
-          var rowsDynamic = topRowAsHeader ? rows - 1 : cellCount;
-          var firstIteration = topRowAsHeader ? cellsPerRow : 1;
-
-          for (var _c = 0; _c < rowsDynamic; _c += cellsPerRow) {
-            if (topRowAsHeader) {
-              (function () {
-                var currentHeaderId = tableObj.addRow('wptb-row').id; // eslint-disable-next-line array-callback-return
-
-                headerCells.map(function (h) {
-                  tableObj.appendElementToRow(h.el.cloneNode(true), currentHeaderId);
-                });
-              })();
-            }
-
-            for (var f = 0; f < firstIteration; f += 1) {
-              var rowId = tableObj.addRow('wptb-row').id;
-              var cellsPerRowDynamic = topRowAsHeader ? columns : cellsPerRow;
-
-              for (var cR = 0; cR < cellsPerRowDynamic; cR += 1) {
-                var tempCell = allCellsByCol[_c + cR + f];
-
-                if (topRowAsHeader) {
-                  var index = _c + cR * (rows - 1);
-                  tempCell = allCellsByCol[index];
+                if (tempCell) {
+                  tableObj.appendElementToRow(tempCell.getElement(), rowId);
+                  tempCell.resetAllAttributes();
+                  tempCell.setAttribute('style', 'width: 100% !important');
+                  tempCell.setAttribute('colSpan', 1);
+                  tempCell.setAttribute('rowSpan', 1);
                 }
+              }
+            }
+          })();
+        } // cell stack direction is selected as column
+        else {
+            var allCellsByCol = [];
+            var rowStartIndex = 0; // read all cells column by column
+
+            for (var c = 0; c < columns; c += 1) {
+              for (var r = rowStartIndex; r < rows; r += 1) {
+                var tCell = tableObj.getCell(r, c, true);
+
+                if (tCell) {
+                  allCellsByCol.push(tCell);
+                }
+              }
+            }
+
+            var cellCount = allCellsByCol.length;
+
+            for (var _c = 0; _c < cellCount; _c += cellsPerRow) {
+              var rowId = tableObj.addRow('wptb-row').id;
+
+              for (var cR = 0; cR < cellsPerRow; cR += 1) {
+                var tempCell = allCellsByCol[_c + cR];
 
                 if (tempCell) {
                   tableObj.appendElementToRow(tempCell.getElement(), rowId);
@@ -16072,7 +16085,118 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }
           }
+      }
+    };
+    /**
+     * Build table with top row assigned as header.
+     *
+     * @param {TableObject} tableObj table object
+     * @param {string} direction cell stack direction, possible options are [row, column]
+     * @param {number} itemsPerHeader items bound to each header element
+     */
+
+
+    this.headerBuild = function (tableObj, direction) {
+      var itemsPerHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      // cells at header
+      // applying header row color to cells
+      var headerCells = tableObj.getCellsAtRow(0, true).map(function (h) {
+        h.setAttribute('style', "background-color: ".concat(tableObj.rowColors.header), true, ';');
+        return h;
+      });
+      var stackedAsColumn = direction === 'column'; // row count
+
+      var rows = tableObj.maxRows(); // column count
+
+      var columns = tableObj.maxColumns();
+      var rowBorderStyle = '3px solid gray'; // stack direction is column
+
+      if (stackedAsColumn) {
+        /**
+         * Add header cells as new row to table.
+         * @param {boolean} addBorder add top border to header row
+         */
+        // eslint-disable-next-line no-inner-declarations
+        var addHeaderCells = function addHeaderCells() {
+          var addBorder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+          var rowObj = tableObj.addRow('wptb-row');
+
+          if (addBorder) {
+            rowObj.el.style.borderTop = rowBorderStyle;
+          } // eslint-disable-next-line array-callback-return
+
+
+          headerCells.map(function (h) {
+            // clone header cell to reuse it for multiple rows
+            tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
+          });
+        }; // count of header rows that will be created
+
+
+        var headerCount = Math.ceil((rows - 1) / itemsPerHeader); // row index on original table
+
+        var currentOriginalRow = 1;
+
+        for (var r = 0; r < headerCount; r += 1) {
+          // create header row and add to table
+          addHeaderCells(r > 0);
+
+          for (var c = 0; c < itemsPerHeader; c += 1) {
+            // break iteration when current row surpasses original row amount
+            if (currentOriginalRow >= rows) {
+              break;
+            }
+
+            var rowObj = tableObj.addRow('wptb-row'); // apply row color relative to current header row
+
+            rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
+
+            for (var cc = 0; cc < columns; cc += 1) {
+              tableObj.appendToRow(currentOriginalRow, cc, rowObj.id);
+            }
+
+            currentOriginalRow += 1;
+          }
         }
+      } else {
+        // number of headers that will be created
+        var _headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+
+        var _currentOriginalRow = 1;
+
+        for (var hc = 0; hc < _headerCount; hc += 1) {
+          for (var _c2 = 0; _c2 < columns; _c2 += 1) {
+            var _rowObj = tableObj.addRow('wptb-row'); // clear out row color to override row color with cell colors
+
+
+            _rowObj.el.style.background = 'none';
+
+            if (hc > 0 && _c2 === 0) {
+              _rowObj.el.style.borderTop = rowBorderStyle;
+            }
+
+            tableObj.appendElementToRow(headerCells[_c2].el.cloneNode(true), _rowObj.id);
+
+            for (var _r = 0; _r < itemsPerHeader; _r += 1) {
+              if (_currentOriginalRow + _r >= rows) {
+                break;
+              }
+
+              var currentCell = tableObj.appendToRow(_currentOriginalRow + _r, _c2, _rowObj.id); // color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
+
+              var colorIndex = (_currentOriginalRow + _r + hc) % 2 === 0 ? 'even' : 'odd'; // for better visuals and distinction for tables with 1 item per header, using this calculation for color index
+
+              if (itemsPerHeader === 1) {
+                colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
+              }
+
+              currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
+            }
+          }
+
+          _currentOriginalRow += itemsPerHeader;
+        }
+      }
     };
     /**
      * Build table in its default form.
@@ -16616,20 +16740,10 @@ exports.default = _default;
                   attrs: {
                     "end-padding": _vm.sliderPadding,
                     stops: _vm.directives.breakpoints,
-                    "model-val": _vm.appOptions.currentSize
+                    "model-val": _vm.appOptions.currentSize,
+                    "enable-breakpoint-customization": false
                   },
                   on: { slide: _vm.handleSizeSlideChange }
-                }),
-                _vm._v(" "),
-                _c("size-input", {
-                  attrs: { "compare-sizes": _vm.compareSizes },
-                  model: {
-                    value: _vm.appOptions.currentSize,
-                    callback: function($$v) {
-                      _vm.$set(_vm.appOptions, "currentSize", $$v)
-                    },
-                    expression: "appOptions.currentSize"
-                  }
                 })
               ],
               1

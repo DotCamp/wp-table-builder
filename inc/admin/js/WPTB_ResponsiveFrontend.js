@@ -64,8 +64,10 @@
 		 *
 		 * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
 		 * @param {any} attributeValue attribute value
+		 * @param {boolean} append append the value or replace it
+		 * @param {string} glue glue to join attribute value if append option is enabled
 		 */
-		this.setAttribute = (attributeKey, attributeValue) => {
+		this.setAttribute = (attributeKey, attributeValue, append = false, glue = ',') => {
 			let defaultVal = this.getElement()[attributeKey];
 
 			// if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
@@ -73,13 +75,23 @@
 				defaultVal = this.getElement().getAttribute(attributeKey);
 			}
 
+			// if there is already a default value defined, use that instead
 			if (this.modifications[attributeKey]) {
 				defaultVal = this.modifications[attributeKey].default;
 			}
 
-			this.modifications[attributeKey] = { value: attributeValue, default: defaultVal };
+			let currentVal = defaultVal;
 
-			this.getElement()[attributeKey] = attributeValue;
+			// join attributes
+			if (append) {
+				currentVal += `${currentVal}${glue}${attributeValue}`;
+			} else {
+				currentVal = attributeValue;
+			}
+
+			this.modifications[attributeKey] = { value: currentVal, default: defaultVal };
+
+			this.getElement()[attributeKey] = currentVal;
 		};
 
 		/**
@@ -320,11 +332,17 @@
 		 * @return {HTMLElement | null | CellObject} element if address is possible, null if not
 		 */
 		this.getCell = (r, c, returnObject = false) => {
-			if (this.parsedTable[r][c]) {
-				if (returnObject) {
-					return this.parsedTable[r][c];
+			try {
+				if (this.parsedTable[r][c]) {
+					if (returnObject) {
+						return this.parsedTable[r][c];
+					}
+					return this.parsedTable[r][c].el;
 				}
-				return this.parsedTable[r][c].el;
+			} catch (e) {
+				// eslint-disable-next-line no-console
+				logToConsole(`no cell found at the given address of [${r}-${c}]`, 'warn');
+				return null;
 			}
 			// eslint-disable-next-line no-console
 			logToConsole(`no cell found at the given address of [${r}-${c}]`, 'warn');
@@ -392,6 +410,7 @@
 			appendElementToRow: this.appendElementToRow,
 			getCellsAtRow: this.getCellsAtRow,
 			el: this.tableElement,
+			rowColors: this.rowColors,
 		};
 	}
 
@@ -502,7 +521,7 @@
 		 * * column: cells will be read column by column, in each column starting from the first row of the table
 		 *
 		 * @param {TableObject} tableObj table object
-		 * @param {string} direction direction to read cells
+		 * @param {string} direction direction to read cells, possible options [row, column]
 		 * @param {boolean} topRowAsHeader use top row as header
 		 * @param {number} cellsPerRow cells per row
 		 */
@@ -510,91 +529,31 @@
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
-			const headerCells = tableObj.getCellsAtRow(0, true);
 
-			// cell stack direction is selected as row
-			// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
-			if (isRowStacked) {
-				let allCellsByRow = [];
+			// build table with top row as header
+			if (topRowAsHeader) {
+				this.headerBuild(tableObj, direction, cellsPerRow);
+			} else {
+				// cell stack direction is selected as row
+				// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
+				// eslint-disable-next-line no-lonely-if
+				if (isRowStacked) {
+					const allCellsByRow = [];
 
-				// get cells by reading row by row
-				for (let r = 0; r < rows; r += 1) {
-					// eslint-disable-next-line no-loop-func
-					tableObj.getCellsAtRow(r, true).forEach((c) => allCellsByRow.push(c));
-				}
-
-				// if 'top row as header' option is enabled, slice the table to use remaining cells
-				if (topRowAsHeader) {
-					allCellsByRow = allCellsByRow.slice(headerCells.length);
-				}
-
-				const cellCount = allCellsByRow.length;
-
-				for (let c = 0; c < cellCount; c += cellsPerRow) {
-					if (topRowAsHeader) {
-						const currentHeaderId = tableObj.addRow('wptb-row').id;
-						headerCells.map((h) => {
-							tableObj.appendElementToRow(h.el, currentHeaderId);
-						});
-					}
-					const rowId = tableObj.addRow('wptb-row').id;
-
-					// place cells by 'cells by row' option value
-					for (let pR = 0; pR < cellsPerRow; pR += 1) {
-						const tempCell = allCellsByRow[c + pR];
-
-						if (tempCell) {
-							tableObj.appendElementToRow(tempCell.getElement(), rowId);
-
-							tempCell.resetAllAttributes();
-							tempCell.setAttribute('style', 'width: 100% !important');
-							tempCell.setAttribute('colSpan', 1);
-							tempCell.setAttribute('rowSpan', 1);
-						}
-					}
-				}
-			}
-			// cell stack direction is selected as column
-			else {
-				const allCellsByCol = [];
-				const rowStartIndex = topRowAsHeader ? 1 : 0;
-
-				// read all cells column by column
-				for (let c = 0; c < columns; c += 1) {
-					for (let r = rowStartIndex; r < rows; r += 1) {
-						const tCell = tableObj.getCell(r, c, true);
-						if (tCell) {
-							allCellsByCol.push(tCell);
-						}
-					}
-				}
-
-				const cellCount = allCellsByCol.length;
-
-				const rowsDynamic = topRowAsHeader ? rows - 1 : cellCount;
-				const firstIteration = topRowAsHeader ? cellsPerRow : 1;
-
-				for (let c = 0; c < rowsDynamic; c += cellsPerRow) {
-					if (topRowAsHeader) {
-						const currentHeaderId = tableObj.addRow('wptb-row').id;
-						// eslint-disable-next-line array-callback-return
-						headerCells.map((h) => {
-							tableObj.appendElementToRow(h.el.cloneNode(true), currentHeaderId);
-						});
+					// get cells by reading row by row
+					for (let r = 0; r < rows; r += 1) {
+						// eslint-disable-next-line no-loop-func
+						tableObj.getCellsAtRow(r, true).forEach((c) => allCellsByRow.push(c));
 					}
 
-					for (let f = 0; f < firstIteration; f += 1) {
+					const cellCount = allCellsByRow.length;
+
+					for (let c = 0; c < cellCount; c += cellsPerRow) {
 						const rowId = tableObj.addRow('wptb-row').id;
 
-						const cellsPerRowDynamic = topRowAsHeader ? columns : cellsPerRow;
-
-						for (let cR = 0; cR < cellsPerRowDynamic; cR += 1) {
-							let tempCell = allCellsByCol[c + cR + f];
-
-							if (topRowAsHeader) {
-								const index = c + cR * (rows - 1);
-								tempCell = allCellsByCol[index];
-							}
+						// place cells by 'cells by row' option value
+						for (let pR = 0; pR < cellsPerRow; pR += 1) {
+							const tempCell = allCellsByRow[c + pR];
 
 							if (tempCell) {
 								tableObj.appendElementToRow(tempCell.getElement(), rowId);
@@ -606,6 +565,154 @@
 							}
 						}
 					}
+				}
+				// cell stack direction is selected as column
+				else {
+					const allCellsByCol = [];
+					const rowStartIndex = 0;
+
+					// read all cells column by column
+					for (let c = 0; c < columns; c += 1) {
+						for (let r = rowStartIndex; r < rows; r += 1) {
+							const tCell = tableObj.getCell(r, c, true);
+							if (tCell) {
+								allCellsByCol.push(tCell);
+							}
+						}
+					}
+
+					const cellCount = allCellsByCol.length;
+
+					for (let c = 0; c < cellCount; c += cellsPerRow) {
+						const rowId = tableObj.addRow('wptb-row').id;
+
+						for (let cR = 0; cR < cellsPerRow; cR += 1) {
+							const tempCell = allCellsByCol[c + cR];
+
+							if (tempCell) {
+								tableObj.appendElementToRow(tempCell.getElement(), rowId);
+
+								tempCell.resetAllAttributes();
+								tempCell.setAttribute('style', 'width: 100% !important');
+								tempCell.setAttribute('colSpan', 1);
+								tempCell.setAttribute('rowSpan', 1);
+							}
+						}
+					}
+				}
+			}
+		};
+
+		/**
+		 * Build table with top row assigned as header.
+		 *
+		 * @param {TableObject} tableObj table object
+		 * @param {string} direction cell stack direction, possible options are [row, column]
+		 * @param {number} itemsPerHeader items bound to each header element
+		 */
+		this.headerBuild = (tableObj, direction, itemsPerHeader = 1) => {
+			// cells at header
+			// applying header row color to cells
+			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
+				h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
+				return h;
+			});
+
+			const stackedAsColumn = direction === 'column';
+
+			// row count
+			const rows = tableObj.maxRows();
+			// column count
+			const columns = tableObj.maxColumns();
+
+			const rowBorderStyle = '3px solid gray';
+
+			// stack direction is column
+			if (stackedAsColumn) {
+				/**
+				 * Add header cells as new row to table.
+				 * @param {boolean} addBorder add top border to header row
+				 */
+				// eslint-disable-next-line no-inner-declarations
+				function addHeaderCells(addBorder = false) {
+					const rowObj = tableObj.addRow('wptb-row');
+
+					if (addBorder) {
+						rowObj.el.style.borderTop = rowBorderStyle;
+					}
+
+					// eslint-disable-next-line array-callback-return
+					headerCells.map((h) => {
+						// clone header cell to reuse it for multiple rows
+						tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
+					});
+				}
+
+				// count of header rows that will be created
+				const headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+				// row index on original table
+				let currentOriginalRow = 1;
+				for (let r = 0; r < headerCount; r += 1) {
+					// create header row and add to table
+					addHeaderCells(r > 0);
+					for (let c = 0; c < itemsPerHeader; c += 1) {
+						// break iteration when current row surpasses original row amount
+						if (currentOriginalRow >= rows) {
+							break;
+						}
+						const rowObj = tableObj.addRow('wptb-row');
+
+						// apply row color relative to current header row
+						rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
+						for (let cc = 0; cc < columns; cc += 1) {
+							tableObj.appendToRow(currentOriginalRow, cc, rowObj.id);
+						}
+						currentOriginalRow += 1;
+					}
+				}
+			} else {
+				// number of headers that will be created
+				const headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+
+				let currentOriginalRow = 1;
+
+				for (let hc = 0; hc < headerCount; hc += 1) {
+					for (let c = 0; c < columns; c += 1) {
+						const rowObj = tableObj.addRow('wptb-row');
+
+						// clear out row color to override row color with cell colors
+						rowObj.el.style.background = 'none';
+
+						if (hc > 0 && c === 0) {
+							rowObj.el.style.borderTop = rowBorderStyle;
+						}
+
+						tableObj.appendElementToRow(headerCells[c].el.cloneNode(true), rowObj.id);
+
+						for (let r = 0; r < itemsPerHeader; r += 1) {
+							if (currentOriginalRow + r >= rows) {
+								break;
+							}
+
+							const currentCell = tableObj.appendToRow(currentOriginalRow + r, c, rowObj.id);
+
+							// color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
+							let colorIndex = (currentOriginalRow + r + hc) % 2 === 0 ? 'even' : 'odd';
+
+							// for better visuals and distinction for tables with 1 item per header, using this calculation for color index
+							if (itemsPerHeader === 1) {
+								colorIndex = currentOriginalRow % 2 === 0 ? 'even' : 'odd';
+							}
+
+							currentCell.setAttribute(
+								'style',
+								`background-color: ${tableObj.rowColors[colorIndex]}`,
+								true,
+								';'
+							);
+						}
+					}
+					currentOriginalRow += itemsPerHeader;
 				}
 			}
 		};

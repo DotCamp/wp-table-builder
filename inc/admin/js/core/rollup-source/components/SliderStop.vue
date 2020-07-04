@@ -8,7 +8,7 @@
 	>
 		<div ref="knob" class="wptb-slider-stop-knob"></div>
 		<div class="wptb-slider-stop-label"><slot></slot></div>
-		<div>
+		<div v-show="enableBreakpointCustomization">
 			<number-postfix-input
 				class="wptb-size-input"
 				style="font-size: 90%;"
@@ -38,6 +38,10 @@ export default {
 			default: false,
 		},
 		stopId: String,
+		enableBreakpointCustomization: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	components: { NumberPostfixInput },
 	data() {

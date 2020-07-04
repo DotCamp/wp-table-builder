@@ -20,6 +20,7 @@
 				:raw-value="width"
 				:stop-id="key"
 				@click="slide"
+				:enableBreakpointCustomization="enableBreakpointCustomization"
 				@breakpointChange="handleBreakpointChange"
 				>{{ name }}</slider-stop
 			>
@@ -42,6 +43,10 @@ export default {
 		modelVal: {
 			type: Number,
 			default: 0,
+		},
+		enableBreakpointCustomization: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	components: { SliderStop, SliderFill, SliderArrow },
