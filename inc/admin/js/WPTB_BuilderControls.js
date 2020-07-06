@@ -15459,6 +15459,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    *
    * @param {string} message message to be logged
    * @param {string} type console log type (e.g info, warn, error)
+   * @throws An error will be given for invalid type value
    */
   function logToConsole(message) {
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
@@ -15476,6 +15477,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
    * @param {HTMLElement | null} cellElement cell element
+   * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
    * @constructor
    */
 
@@ -15483,16 +15485,129 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function CellObject(cellElement) {
     var _this = this;
 
+    var reference = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    // cell element
     this.element = cellElement;
-    this.modifications = {};
+    this.referenceObject = reference; // variable for deciding part of merged cells to be visible or not
+
+    this.mergedRenderStatus = true; // connected merged cell references
+
+    this.mergedCells = {
+      row: [],
+      column: []
+    };
+    /**
+     * Get merged render status.
+     * @return {boolean} render status
+     */
+
+    this.getMergedRenderStatus = function () {
+      return _this.mergedRenderStatus;
+    };
+    /**
+     * Set merged render status.
+     * @param {boolean} status render status
+     */
+
+
+    this.setMergedRenderStatus = function (status) {
+      _this.mergedRenderStatus = status;
+    };
+    /**
+     * Add merged cells.
+     *
+     * @param {string} mergeType merge type
+     * @param {CellObject} cellObj cell object instance
+     */
+
+
+    this.addToMergedCells = function (mergeType, cellObj) {
+      _this.mergedCells[mergeType].push(cellObj);
+    };
+    /**
+     * Determine if current cell is a reference to a main cell.
+     * @return {boolean} a reference or not
+     */
+
+
+    this.isReference = function () {
+      return _this.referenceObject !== null;
+    };
+
+    if (this.isReference()) {
+      this.element = cellElement.cloneNode(true);
+    } // modifications object
+    // this object will keep track of the modifications that has done to the cell to make sure we can roll them back to their original values
+
+
+    this.modifications = {}; // spans object for cell's original merge values
+
+    this.spans = {
+      row: 1,
+      col: 1
+    };
+    this.remainingSpans = {
+      row: 0,
+      col: 0
+    };
+    /**
+     * Cache cell element's original span values.
+     * @private
+     */
+
+    this.cacheSpanValues = function () {
+      // eslint-disable-next-line array-callback-return
+      Object.keys(_this.spans).map(function (k) {
+        if (Object.prototype.hasOwnProperty.call(_this.spans, k)) {
+          var defaultVal = _this.spans[k];
+          _this.spans[k] = _this.element.getAttribute("".concat(k, "Span")) || defaultVal;
+        }
+      });
+    };
+
+    this.cacheSpanValues();
+    /**
+     * Get original span value of cell object.
+     *
+     * @param {string} spanType span type, available values are row-column
+     * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
+     * @throws An error will be given for invalid span type
+     */
+
+    this.getSpan = function (spanType) {
+      var fromElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var spanVal = fromElement ? _this.getElement().getAttribute("".concat(spanType, "Span")) : _this.spans[spanType];
+
+      if (spanVal) {
+        return spanVal;
+      }
+
+      throw new Error("no span value found with the given type of [".concat(spanType, "]"));
+    };
+
+    this.getRemainingSpans = function (spanType) {
+      return _this.remainingSpans[spanType];
+    };
+
+    this.setRemainingSpans = function (spanType, value) {
+      _this.remainingSpans[spanType] = value;
+    };
     /**
      * Get cell element.
+     *
      * @return {HTMLElement} cell element
      */
+
 
     this.getElement = function () {
       return _this.element;
     };
+    /**
+     * Create a cell element.
+     * @private
+     * @return {HTMLTableDataCellElement}
+     */
+
 
     this.createCellElement = function () {
       return document.createElement('td');
@@ -15510,8 +15625,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      *
      * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
      * @param {any} attributeValue attribute value
-     * @param {boolean} append append the value or replace it
-     * @param {string} glue glue to join attribute value if append option is enabled
+     * @param {boolean} [append=false] append the value or replace it
+     * @param {string} [glue=,] glue to join attribute value if append option is enabled
      */
 
 
@@ -15546,6 +15661,65 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       _this.getElement()[attributeKey] = currentVal;
     };
     /**
+     * Set row/colspan for cell.
+     *
+     * @param {string} spanType span type
+     * @param {number} value value to assign to span
+     * @return {boolean} if any space left to render the element
+     */
+
+
+    this.setSpan = function (spanType, value) {
+      // working on main cell
+      if (!_this.isReference()) {
+        var _valueToApply = _this.getSpan(spanType) - value < 0 ? _this.getSpan(spanType) : value;
+
+        _this.setAttribute("".concat(spanType, "Span"), _valueToApply); // calculate remaining cells amount to merge in this span type
+
+
+        _this.setRemainingSpans(spanType, _this.getSpan(spanType) - _valueToApply); // set visibility of connected merge group cells to false to not render them since we added necessary span values to main cell which will leak into their position
+
+
+        for (var mc = 0; mc < _valueToApply - 1; mc += 1) {
+          _this.mergedCells[spanType][mc].setMergedRenderStatus(false);
+        }
+
+        return true;
+      } // working on reference
+
+
+      if (!_this.getMergedRenderStatus()) {
+        return false;
+      }
+
+      var remainingVal = _this.referenceObject.getRemainingSpans(spanType); // no space left to put cell
+
+
+      if (remainingVal === 0) {
+        return false;
+      }
+
+      var valueToApply = remainingVal - value < 0 ? remainingVal : value;
+      var remainingParentSpans = remainingVal - valueToApply;
+
+      _this.referenceObject.setRemainingSpans(spanType, remainingParentSpans);
+
+      _this.setAttribute("".concat(spanType, "Span"), valueToApply); // change render status of remaining connected merge cells
+
+
+      if (remainingParentSpans !== 0) {
+        var totalConnectedCells = _this.referenceObject.mergedCells[spanType].length;
+        var startIndex = totalConnectedCells - remainingVal + 1;
+        var endIndex = startIndex + valueToApply - 1;
+
+        for (var _mc = startIndex; _mc < endIndex; _mc += 1) {
+          _this.mergedCells[spanType][_mc].setMergedRenderStatus(false);
+        }
+      }
+
+      return true;
+    };
+    /**
      * Reset a modified attribute to its default value
      *
      * @param {string} attributeKey attribute name
@@ -15576,9 +15750,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       getElement: this.getElement,
       el: this.element,
       setAttribute: this.setAttribute,
-      resetAllAttributes: this.resetAllAttributes
+      resetAllAttributes: this.resetAllAttributes,
+      getSpan: this.getSpan,
+      setSpan: this.setSpan,
+      getRemainingSpans: this.getRemainingSpans,
+      setRemainingSpans: this.setRemainingSpans,
+      isReference: this.isReference,
+      addToMergedCells: this.addToMergedCells,
+      mergedCells: this.mergedCells,
+      setMergedRenderStatus: this.setMergedRenderStatus,
+      getMergedRenderStatus: this.getMergedRenderStatus
     };
   }
+
+  CellObject.spanTypes = {
+    row: 'row',
+    column: 'col'
+  };
   /**
    * Object implementation for table element operations.
    *
@@ -15586,7 +15774,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * @return {object} instance
    * @constructor
    */
-
 
   function TableObject(tableEl) {
     var _this2 = this;
@@ -15623,7 +15810,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Row colors of original table.
      * @type {{even: string, header: string, odd: string}}
-     * @private
      */
 
     this.rowColors = {
@@ -15632,9 +15818,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       odd: null
     };
     /**
+     * Add cell to parsed array.
+     *
+     * @private
+     * @param {number} r row id
+     * @param {number} c column id
+     * @param {CellObject} cellObject cell object to add to parsed array
+     */
+
+    this.addToParsed = function (r, c, cellObject) {
+      if (!_this2.parsedTable[r]) {
+        _this2.parsedTable[r] = [];
+      }
+
+      _this2.parsedTable[r][c] = cellObject;
+    };
+    /**
      * Assign table cells into row and column numbers.
      * @private
      */
+
 
     this.parseTable = function () {
       var rows = Array.from(_this2.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
@@ -15645,12 +15848,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
 
-        cells.map(function (c) {
-          if (!_this2.parsedTable[ri]) {
-            _this2.parsedTable[ri] = [];
+        cells.map(function (c, ci) {
+          var currentCellObject = new CellObject(c);
+
+          _this2.addToParsed(ri, ci, currentCellObject);
+
+          var spanRow = currentCellObject.getSpan(CellObject.spanTypes.row);
+          var spanCol = currentCellObject.getSpan(CellObject.spanTypes.column);
+
+          if (spanRow > 1) {
+            for (var sr = 1; sr < spanRow; sr += 1) {
+              var referenceCell = new CellObject(c, currentCellObject);
+              currentCellObject.addToMergedCells('row', referenceCell);
+
+              _this2.addToParsed(ri + sr, ci, referenceCell);
+            }
           }
 
-          _this2.parsedTable[ri].push(new CellObject(c));
+          if (spanCol > 1) {
+            for (var sc = 1; sc < spanCol; sc += 1) {
+              var _referenceCell = new CellObject(c, currentCellObject);
+
+              currentCellObject.addToMergedCells('column', _referenceCell);
+
+              _this2.addToParsed(ri, ci + sc, _referenceCell);
+            }
+          }
         });
       });
 
@@ -15666,12 +15889,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.parseRowColors = function (rows) {
       if (!rows || rows.length <= 0) {
         logToConsole('no rows are found to parse their colors', 'error');
-      }
+      } // header row color
 
-      var headerRowColor = rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor; // header row color
 
-      _this2.rowColors.header = headerRowColor; // eslint-disable-next-line no-nested-ternary
-      // calculate needed number of rows to get even and odd row background colors
+      _this2.rowColors.header = rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor; // calculate needed number of rows to get even and odd row background colors
+      // eslint-disable-next-line no-nested-ternary
 
       var rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2; // create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
 
@@ -15877,6 +16099,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         cachedRow.appendChild(el);
       }
     };
+    /**
+     * Add cell object to a cached row.
+     *
+     * @param {CellObject} cellObj cell object
+     * @param {number} rowId row id
+     */
+
+
+    this.appendObjectToRow = function (cellObj, rowId) {
+      var cachedRow = _this2.getRow(rowId);
+
+      if (cellObj && cachedRow) {
+        cachedRow.appendChild(cellObj.getElement());
+      }
+    };
 
     this.parseTable();
     return {
@@ -15887,6 +16124,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       getCell: this.getCell,
       appendToRow: this.appendToRow,
       appendElementToRow: this.appendElementToRow,
+      appendObjectToRow: this.appendObjectToRow,
       getCellsAtRow: this.getCellsAtRow,
       el: this.tableElement,
       rowColors: this.rowColors
@@ -16152,13 +16390,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
 
             for (var cc = 0; cc < columns; cc += 1) {
-              tableObj.appendToRow(currentOriginalRow, cc, rowObj.id);
+              var currentCell = tableObj.getCell(currentOriginalRow, cc, true);
+
+              if (currentCell) {
+                currentCell.resetAllAttributes(); // status to decide whether render cell or not
+
+                var cellAddStatus = true;
+                var rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
+                var colSpan = currentCell.getSpan(CellObject.spanTypes.column);
+
+                if (rowSpan > 1) {
+                  // items remaining in current header
+                  var remainingItems = itemsPerHeader - c; // calculate whether to apply full rowspan value or remaining item value depending on the current position of the cell
+
+                  var currentRowSpan = Math.min(rowSpan, remainingItems);
+                  cellAddStatus = currentCell.setSpan(CellObject.spanTypes.row, currentRowSpan); // reset render status of cell to visible for future use
+
+                  currentCell.setMergedRenderStatus(true);
+                }
+
+                if (cellAddStatus) {
+                  tableObj.appendObjectToRow(currentCell, rowObj.id);
+                }
+              }
             }
 
             currentOriginalRow += 1;
           }
         }
       } else {
+        // stack direction is row
         // number of headers that will be created
         var _headerCount = Math.ceil((rows - 1) / itemsPerHeader);
 
@@ -16169,28 +16430,67 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var _rowObj = tableObj.addRow('wptb-row'); // clear out row color to override row color with cell colors
 
 
-            _rowObj.el.style.background = 'none';
+            _rowObj.el.style.backgroundColor = 'none';
 
             if (hc > 0 && _c2 === 0) {
               _rowObj.el.style.borderTop = rowBorderStyle;
             }
 
-            tableObj.appendElementToRow(headerCells[_c2].el.cloneNode(true), _rowObj.id);
+            var clonedHeaderCell = headerCells[_c2].el.cloneNode(true); // apply header row color to header cell
+
+
+            clonedHeaderCell.style.backgroundColor = "".concat(tableObj.rowColors.header, " !important");
+            tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
 
             for (var _r = 0; _r < itemsPerHeader; _r += 1) {
               if (_currentOriginalRow + _r >= rows) {
                 break;
+              } // const currentCell = tableObj.appendToRow(currentOriginalRow + r, c, rowObj.id);
+
+
+              var _currentCell = tableObj.getCell(_currentOriginalRow + _r, _c2, true);
+
+              if (_currentCell) {
+                _currentCell.resetAllAttributes();
+
+                var _cellAddStatus = true;
+
+                var _rowSpan = _currentCell.getSpan(CellObject.spanTypes.row);
+
+                var _colSpan = _currentCell.getSpan(CellObject.spanTypes.column);
+
+                if (_rowSpan > 1) {
+                  var _remainingItems = itemsPerHeader - _r;
+
+                  var _currentRowSpan = Math.min(_rowSpan, _remainingItems);
+
+                  _cellAddStatus = _currentCell.setSpan(CellObject.spanTypes.row, _currentRowSpan);
+
+                  var rS = _currentCell.el.getAttribute('rowSpan');
+
+                  var cS = _currentCell.el.getAttribute('colSpan'); // switch span values
+
+
+                  _currentCell.setAttribute('rowSpan', cS);
+
+                  _currentCell.setAttribute('colSpan', rS);
+
+                  _currentCell.setMergedRenderStatus(true);
+                }
+
+                if (_cellAddStatus) {
+                  // color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
+                  var colorIndex = (_currentOriginalRow + _r + hc) % 2 === 0 ? 'even' : 'odd'; // for better visuals and distinction for tables with 1 item per header, using this calculation for color index
+
+                  if (itemsPerHeader === 1) {
+                    colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
+                  }
+
+                  _currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
+
+                  tableObj.appendObjectToRow(_currentCell, _rowObj.id);
+                }
               }
-
-              var currentCell = tableObj.appendToRow(_currentOriginalRow + _r, _c2, _rowObj.id); // color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
-
-              var colorIndex = (_currentOriginalRow + _r + hc) % 2 === 0 ? 'even' : 'odd'; // for better visuals and distinction for tables with 1 item per header, using this calculation for color index
-
-              if (itemsPerHeader === 1) {
-                colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
-              }
-
-              currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
             }
           }
 
@@ -16215,10 +16515,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var rowId = tableObj.addRow('', true, r).id;
 
         for (var c = 0; c < columns; c += 1) {
-          var tempCell = tableObj.appendToRow(r, c, rowId); // reset all modified attributes of cell to their default values
+          var tempCell = tableObj.getCell(r, c, true); // only render cell if a valid cell is found and it is not a reference
 
-          if (tempCell) {
+          if (tempCell && !tempCell.isReference()) {
+            // reset all modified attributes of cell to their default values
             tempCell.resetAllAttributes();
+            tableObj.appendElementToRow(tempCell.getElement(), rowId);
           }
         }
       }
@@ -16253,6 +16555,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * @param {HTMLElement} el table element
      * @param {number} size size in pixels
      * @param {TableObject} tableObj table object instance
+     * @throws An error will be given for invalid mode name
      */
 
 
