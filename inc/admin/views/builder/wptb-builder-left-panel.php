@@ -24,17 +24,17 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
             <div class="wptb-panel-tabs wptb-settings-sections-wrapper wptb-plugin-box-shadow-md">
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="elements"
                      data-wptb-section-display-type="table">
-					<?php esc_html_e( 'elements', $plugin_textdomain ); ?>
+					<?php esc_html_e( 'elements', 'wp-table-builder'); ?>
                 </div>
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_settings">
-					<?php esc_html_e( 'settings', $plugin_textdomain ); ?>
+					<?php esc_html_e( 'settings', 'wp-table-builder'); ?>
                 </div>
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_responsive_menu">
 					<?php esc_html_e( 'responsive', 'wp-table-builder' ); ?>
                 </div>
             </div>
             <!--            available elements list-->
-            <div class="wptb-elements-section">
+            <div class="wptb-elements-section wptb-left-panel-sidebar-content">
                 <div class="wptb-add-elements wptb-tab-content">
                     <div class="wptb-elements-container" data-wptb-section="elements">
 						<?php
@@ -103,22 +103,22 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
             </div>
 
             <!--            table settings-->
-            <div class="wptb-settings-section" data-wptb-section="table_settings" style="display: none">
+            <div class="wptb-settings-section wptb-left-panel-sidebar-content" data-wptb-section="table_settings" style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-settings.php'; ?>
             </div>
 
             <!--            responsive menu-->
-            <div class="wptb-responsive-section" data-wptb-section="table_responsive_menu" style="display: none">
+            <div class="wptb-responsive-section wptb-left-panel-sidebar-content" data-wptb-section="table_responsive_menu" style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-responsive-panel.php'; ?>
             </div>
             <!--            element controls-->
-            <div id="element-options-group" class="wptb-tab-content" data-wptb-section="options_group"
+            <div id="element-options-group wptb-left-panel-sidebar-content" class="wptb-tab-content" data-wptb-section="options_group"
                  style="display: none;">
                 <!-- here will be elements controls -->
             </div>
             <!--            left panel toggle element-->
-            <div class="wptb-panel-drawer-toggle">
-                <span class="dashicons wptb-panel-drawer-icon"></span>
+            <div class="wptb-panel-toggle-section wptb-plugin-box-shadow-up-md">
+                    <span class="dashicons wptb-panel-drawer-icon"></span>
             </div>
         </div>
     </div>

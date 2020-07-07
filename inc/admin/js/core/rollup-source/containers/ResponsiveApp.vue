@@ -9,9 +9,22 @@
 					:model-val="appOptions.currentSize"
 					:enable-breakpoint-customization="false"
 				></screen-size-slider>
-				<!--				<size-input v-model="appOptions.currentSize" :compare-sizes="compareSizes"></size-input>-->
 			</div>
-			<div class="wptb-responsive-builder-main">
+			<div class="wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md">
+				<div class="wptb-responsive-builder-toolbox-float">
+					<number-postfix-input
+						class="wptb-size-input wptb-plugin-box-shadow-xl"
+						v-model="appOptions.currentSize"
+						post-fix="px"
+						:only-enter="true"
+					></number-postfix-input>
+					<material-button
+						size="fit-content"
+						class="wptb-plugin-box-shadow-xl"
+						:click="showCellIdentifications"
+						>{{ strings.identifyCells | cap }}
+					</material-button>
+				</div>
 				<table-clone
 					:clone="isVisible"
 					:clone-query="cloneQuery"
@@ -19,6 +32,7 @@
 					@tableCloned="tableCloned"
 					@directivesCopied="directivesCopied"
 					:table-style="tableStyle"
+					ref="tableClone"
 				></table-clone>
 				<transition name="wptb-fade">
 					<div v-if="!directives.responsiveEnabled" class="wptb-responsive-disabled-table-overlay"></div>
@@ -43,12 +57,12 @@
 <script>
 import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
-import SizeInput from '../components/SizeInput';
-import ResponsiveToolbox from '../components/ResponsiveToolbox';
 /* eslint-disable camelcase */
 import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
 import DeBouncer from '../functions/DeBouncer';
 import ModalWindow from '../components/ModalWindow';
+import MaterialButton from '../components/MaterialButton';
+import NumberPostfixInput from '../components/NumberPostfixInput';
 
 export default {
 	props: {
@@ -62,9 +76,9 @@ export default {
 	components: {
 		TableClone,
 		ScreenSizeSlider,
-		SizeInput,
-		ResponsiveToolbox,
 		ModalWindow,
+		MaterialButton,
+		NumberPostfixInput,
 	},
 	data() {
 		return {
@@ -96,7 +110,7 @@ export default {
 				const previousRangeName = this.currentSizeRangeName;
 				this.currentSizeRangeName = this.calculateSizeRangeName(n);
 
-				if (previousRangeName !== this.currentSizeRangeName) {
+				if (previousRangeName !== this.currentSizeRangeName && this.directives.responsiveEnabled) {
 					this.rebuilding = true;
 					DeBouncer(
 						'currentSize',
@@ -128,10 +142,13 @@ export default {
 		 * Calculate certain properties of responsive table element's style
 		 */
 		tableStyle() {
-			// don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
-			if (this.currentSizeRangeName === 'desktop') {
+			if (!this.directives.responsiveEnabled) {
 				return {};
 			}
+			// don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
+			// if (this.currentSizeRangeName === 'desktop') {
+			// 	return {};
+			// }
 
 			const width = this.limitToRange(
 				this.appOptions.currentSize,
@@ -288,6 +305,9 @@ export default {
 		 */
 		decodeResponsiveDirectives(val) {
 			return atob(val);
+		},
+		showCellIdentifications() {
+			this.appOptions.identifyCells = true;
 		},
 	},
 };

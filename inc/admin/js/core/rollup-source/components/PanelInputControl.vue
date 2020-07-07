@@ -8,6 +8,7 @@
 					{{ label }}
 				</span>
 				<number-postfix-input
+					class="wptb-size-input"
 					:enable-dynamic-width="true"
 					v-model="innerValue"
 					:min="1"

@@ -1,9 +1,8 @@
 <template>
-	<div
-		class="wptb-responsive-clone-wrapper wptb-checkerboard-pattern wptb-plugin-inset-shadow-md"
-		style="overflow: hidden;"
-	>
-		<div ref="tableClone" class="wptb-plugin-box-shadow-xl" :style="tableStyle" style="margin: 0 10px;"></div>
+	<div class="wptb-responsive-clone-wrapper">
+		<div class="wptb-responsive-clone-inner-wrapper">
+			<div ref="tableClone" class="wptb-plugin-box-shadow-xl" :style="tableStyle"></div>
+		</div>
 	</div>
 </template>
 <script>

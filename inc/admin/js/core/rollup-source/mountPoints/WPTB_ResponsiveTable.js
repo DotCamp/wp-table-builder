@@ -34,7 +34,7 @@ export default {
 		};
 
 		// directives for responsive features
-		// add default options value at here instead of assigning them at app dynamically. this way default options can be used for error checking and will prevent bugs/security concerns beforehand
+		// add default options value at here instead of assigning them at app dynamically. this way, default options can be used for error checking and will prevent bugs/security concerns beforehand
 		const directives = {
 			responsiveEnabled: false,
 			responsiveMode: 'auto',

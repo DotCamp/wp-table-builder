@@ -26,9 +26,6 @@ export default {
 		isCurrentMode(mode) {
 			return this.directives.responsiveMode === mode;
 		},
-		showCellIdentifications() {
-			this.appOptions.identifyCells = true;
-		},
 	},
 };
 </script>
