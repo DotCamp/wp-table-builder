@@ -14,6 +14,8 @@ var WPTB_Stringifier = function ( codeMain ) {
                 tds[i].removeAttribute( 'data-y-index' );
                 tds[i].removeAttribute( 'draggable' );
                 tds[i].classList.remove( 'wptb-droppable' );
+                let infArr = tds[i].className.match( /wptb-element-((.+-)\d+)/i );
+                if(infArr) tds[i].classList.remove(infArr[0]);
                 let innerElements = tds[i].getElementsByClassName( 'wptb-ph-element' );
                 
                 if ( innerElements.length > 0 ) {

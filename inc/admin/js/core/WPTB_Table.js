@@ -17,7 +17,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
      * @param Event this is the event instance of the click performed over a cell.
      */
     var mark = function ( event ) {
-        let thisElem = event.target;
+        let thisElem = event.currentTarget;
         let rs = thisElem.rowSpan,
             cs = thisElem.colSpan,
             noCells = document.getElementsByClassName('wptb-no-cell-action'),

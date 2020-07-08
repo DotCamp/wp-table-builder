@@ -42,7 +42,7 @@ use WP_Table_Builder as NS;
 </div>
 <div class="wptb-management_table_container">
 
-    <div class="wptb-management wptb-bar wptb-edit-bar">
+    <div id="wptb-bar-top" class="wptb-management wptb-bar wptb-edit-bar">
         <button class="wptb-table_change_button wptb-no-cell-action visible" id="wptb-add-start-column"
                 title="<?php esc_attr_e( 'Add Column to the Start', 'wp-table-builder' ); ?>">
 			<?php esc_html_e( 'Add Left Column', 'wp-table-builder' ); ?>
@@ -84,7 +84,7 @@ use WP_Table_Builder as NS;
     <div class="wptb-table-setup">
 
     </div>
-    <div class="wptb-management wptb-bar wptb-edit-bar">
+    <div id="wptb-bar-bottom" class="wptb-management wptb-bar wptb-edit-bar">
         <button class="wptb-table_change_button wptb-single-action" id="wptb-add-column-after"
                 title="<?php esc_attr_e( 'Add Column After Highlighted One', 'wp-table-builder' ); ?>">
 			<?php esc_html_e( 'Insert Column After', 'wp-table-builder' ); ?>

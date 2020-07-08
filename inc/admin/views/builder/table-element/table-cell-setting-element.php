@@ -58,6 +58,9 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
      * @access protected
      */
     protected function _register_controls() {
+        $this->setDefaultControlArg( 'elementOptionsGroupId', 'element-cell-options-group' );
+        $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
+
         $this->add_control(
             'section_header',
             [
