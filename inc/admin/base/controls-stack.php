@@ -20,6 +20,13 @@ if ( ! defined( 'WPINC' ) ) {
  * @abstract
  */
 abstract class Controls_Stack extends Base_Object {
+
+    protected $defaultControlArgs = [
+        'elementOptionsContainerOn' => 'true',
+        'elementOptionContainerOn' => 'true',
+        'elementOptionsGroupId' => 'element-options-group',
+        'elementOptionClass' => 'wptb-element-option'
+    ];
     
     /**
 	 * Get stack.
@@ -65,24 +72,53 @@ abstract class Controls_Stack extends Base_Object {
 		$this->_register_controls();
         do_action( 'wp-table-builder/register_controls/' . $this->get_name(), $this );
 	}
-    
+
     /**
-	 * Add new control to stack.
-	 *
-	 * Register a single control to allow the user to set/update data.
-	 *
-	 * This method should be used inside `_register_controls()`.
-	 *
-	 * @since 1.1.2
-	 * @access public
-	 *
-	 * @param string $id      Control ID.
-	 * @param array  $args    Control arguments.
-	 *
-	 * @return bool True if control added, False otherwise.
-	 */
+     * Return default control args
+     * @since 1.1.2
+     * @access public
+     *
+     * @return array
+     */
+	public function getDefaultControlArgs() {
+        return $this->defaultControlArgs;
+    }
+
+    /**
+     * Change default control args
+     *
+     * @param $name
+     * @param $value
+     * @since 1.1.2
+     * @access public
+     *
+     */
+    public function setDefaultControlArg( $name, $value ) {
+        $this->defaultControlArgs[$name] = $value;
+    }
+
+    /**
+     * Add new control to stack.
+     *
+     * Register a single control to allow the user to set/update data.
+     *
+     * This method should be used inside `_register_controls()`.
+     *
+     * @param string $id Control ID.
+     * @param array $args Control arguments.
+     *
+     * @param int $control_pos
+     * @return bool True if control added, False otherwise.
+     * @since 1.1.2
+     * @access public
+     *
+     */
     
-	public function add_control( $id, array $args ) {
-        return Init::instance()->controls_manager->add_control_to_stack( $this, $id, $args );
+	public function add_control( $id, array $args, $control_pos = 0 ) {
+	    $defaultControlArgs = $this->getDefaultControlArgs();
+	    if( $defaultControlArgs && is_array( $defaultControlArgs ) ) {
+	        $args = array_merge( $defaultControlArgs, $args );
+        }
+        return Init::instance()->controls_manager->add_control_to_stack( $this, $id, $args, $control_pos );
 	}
 }

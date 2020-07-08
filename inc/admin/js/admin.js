@@ -1416,83 +1416,100 @@ var WPTB_Helper = {
         if (element && (typeof element === 'undefined' ? 'undefined' : _typeof(element)) === 'object' && functionHandler && typeof functionHandler === 'function') {
             element.addEventListener('element:controls:active', function () {
                 if (!element.hasOwnProperty('controlConnectFunctionsName') || !Array.isArray(element.controlConnectFunctionsName) || element.controlConnectFunctionsName.indexOf(functionHandler.name) == -1) {
-                    var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i),
-                        elementKind = void 0;
+                    (function () {
+                        var infArr = element.className.match(/wptb-element-(.+)-(\d+)/i),
+                            elementKind = void 0;
 
-                    if (infArr && Array.isArray(infArr)) {
-                        elementKind = infArr[1];
-                    }
-
-                    //                if( ! element.hasOwnProperty( 'сontrolsConnectIndic' ) || element.сontrolsConnectIndic !== true && elementKind  ) {
-                    //                    let elementsSettingsTemplateJs = document.getElementsByClassName( 'wptb-element-datas' );
-                    //                    if( elementsSettingsTemplateJs.length > 0 ) {
-                    //                        elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
-                    //
-                    //                        let elementsSettings = elementsSettingsTemplateJs.innerHTML;
-                    //                        let controlClassesNames = [];
-                    //                        if( elementsSettings ) {
-                    //                            elementsSettings = elementsSettings.trim();
-                    //                            elementsSettings = JSON.parse( elementsSettings );
-                    //                            if( elementsSettings && typeof elementsSettings === 'object' ) {
-                    //                                if( 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings ) {
-                    //                                    let elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
-                    //                                    if( elementSettings && typeof elementSettings === 'object' ) {
-                    //                                        Object.keys( elementSettings ).forEach( function( key ) {
-                    //                                            let regularText = new RegExp( 'data-wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i" );
-                    //                                            let keyInfArr = key.match( regularText );
-                    //                                            if( keyInfArr && Array.isArray( keyInfArr ) ) {
-                    //                                                let controlClass = key.replace( 'data-', '' );
-                    //                                                controlClassesNames.push( [controlClass, keyInfArr[2]] );
-                    //                                            }
-                    //                                        });
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                    }
-                    //                }
-                    if (elementKind) {
-                        var elementOptionsContainer = document.querySelector('.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2]);
-
-                        // from time to time depend on table cells hierarchy, cell td items may catch mouse clicks which are intended for elements. since the active section is not cell management, this will gives and unharmfull error of not found element, simple check for null equality will be sufficient for now.
-                        if (!elementOptionsContainer) {
-                            return;
+                        if (infArr && Array.isArray(infArr)) {
+                            elementKind = infArr[1];
                         }
 
-                        var elementOptions = elementOptionsContainer.querySelectorAll('.wptb-element-option');
+                        //                if( ! element.hasOwnProperty( 'сontrolsConnectIndic' ) || element.сontrolsConnectIndic !== true && elementKind  ) {
+                        //                    let elementsSettingsTemplateJs = document.getElementsByClassName( 'wptb-element-datas' );
+                        //                    if( elementsSettingsTemplateJs.length > 0 ) {
+                        //                        elementsSettingsTemplateJs = elementsSettingsTemplateJs[0];
+                        //
+                        //                        let elementsSettings = elementsSettingsTemplateJs.innerHTML;
+                        //                        let controlClassesNames = [];
+                        //                        if( elementsSettings ) {
+                        //                            elementsSettings = elementsSettings.trim();
+                        //                            elementsSettings = JSON.parse( elementsSettings );
+                        //                            if( elementsSettings && typeof elementsSettings === 'object' ) {
+                        //                                if( 'tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2] in elementsSettings ) {
+                        //                                    let elementSettings = elementsSettings['tmpl-wptb-el-datas-' + infArr[1] + '-' + infArr[2]];
+                        //                                    if( elementSettings && typeof elementSettings === 'object' ) {
+                        //                                        Object.keys( elementSettings ).forEach( function( key ) {
+                        //                                            let regularText = new RegExp( 'data-wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i" );
+                        //                                            let keyInfArr = key.match( regularText );
+                        //                                            if( keyInfArr && Array.isArray( keyInfArr ) ) {
+                        //                                                let controlClass = key.replace( 'data-', '' );
+                        //                                                controlClassesNames.push( [controlClass, keyInfArr[2]] );
+                        //                                            }
+                        //                                        });
+                        //                                    }
+                        //                                }
+                        //                            }
+                        //                        }
+                        //                    }
+                        //                }
+                        if (elementKind) {
+                            var elementOptionsGroupIds = element.optionsGroupIds;
+                            if (elementOptionsGroupIds && Array.isArray(elementOptionsGroupIds)) {
+                                for (var i = 0; i < elementOptionsGroupIds.length; i++) {
+                                    var elementOptionsGroupId = elementOptionsGroupIds[i];
 
-                        for (var i = 0; i < elementOptions.length; i++) {
-                            var controlActiveElement = elementOptions[i].querySelector('.wptb-element-property');
-                            if (controlActiveElement) {
-                                (function () {
-                                    var regularText = new RegExp('wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i");
-                                    var controlInfArr = controlActiveElement.className.match(regularText);
-                                    if (controlInfArr && Array.isArray(controlInfArr)) {
-                                        var controlUnicClassName = controlInfArr[0];
+                                    var elementOptionsGroup = document.getElementById(elementOptionsGroupId);
 
-                                        element.addEventListener('wptb-control:' + controlUnicClassName, function () {
-                                            var controls = {};
-                                            var controlName = controlInfArr[2];
-                                            var control = document.getElementsByClassName(controlUnicClassName);
-                                            if (control.length > 0 && controlName) {
-                                                var targetControlValue = WPTB_Helper.targetControlValueGet(control);
+                                    var controlActiveElements = elementOptionsGroup.querySelectorAll('.wptb-element-property');
+                                    controlActiveElements = [].concat(_toConsumableArray(controlActiveElements));
 
-                                                controls[controlName] = targetControlValue;
-                                            }
+                                    controlActiveElements.map(function (controlActiveElement) {
+                                        var regularText = new RegExp('wptb-el-' + elementKind + '-(\\d+)-([a-zA-Z0-9_-]+)', "i");
+                                        var controlInfArr = controlActiveElement.className.match(regularText);
+                                        if (controlInfArr && Array.isArray(controlInfArr)) {
+                                            var controlUnicClassName = controlInfArr[0];
 
-                                            functionHandler(controls, element);
-                                        }, false);
-                                    }
-                                })();
+                                            element.addEventListener('wptb-control:' + controlUnicClassName, function () {
+                                                var controls = {};
+                                                var controlName = controlInfArr[2];
+                                                var control = document.getElementsByClassName(controlUnicClassName);
+                                                if (control.length > 0 && controlName) {
+                                                    var targetControlValue = WPTB_Helper.targetControlValueGet(control);
+
+                                                    controls[controlName] = targetControlValue;
+                                                }
+
+                                                functionHandler(controls, element);
+                                            }, false);
+                                        }
+                                    });
+                                }
                             }
-                        }
+                            //let elementOptionsContainer = document.querySelector( '.wptb-element-options.wptb-options-' + infArr[1] + '-' + infArr[2] );
 
-                        if (!element.controlConnectFunctionsName && !Array.isArray(element.controlConnectFunctionsName)) {
-                            element.controlConnectFunctionsName = [];
-                        }
+                            // from time to time depend on table cells hierarchy, cell td items may catch mouse clicks which are intended for elements. since the active section is not cell management, this will gives and unharmfull error of not found element, simple check for null equality will be sufficient for now.
+                            // if(!elementOptionsContainer){
+                            //     return;
+                            // }
 
-                        element.controlConnectFunctionsName.push(functionHandler.name);
-                    }
+                            // let elementOptions = elementOptionsContainer.querySelectorAll( '.wptb-element-option' );
+                            // let controlActiveElements = elementOptions[i].querySelector( '.wptb-element-property' );
+                            //
+                            //
+                            // for( let i = 0; i < elementOptions.length; i++ ) {
+                            //     let controlActiveElement = elementOptions[i].querySelector( '.wptb-element-property' );
+                            //     if( controlActiveElement ) {
+                            //
+                            //     }
+                            // }
+
+                            if (!element.controlConnectFunctionsName && !Array.isArray(element.controlConnectFunctionsName)) {
+                                element.controlConnectFunctionsName = [];
+                            }
+
+                            element.controlConnectFunctionsName.push(functionHandler.name);
+                        }
+                    })();
                 }
             }, false);
         }
@@ -1810,12 +1827,9 @@ var WPTB_Helper = {
         var elementContainerClass = void 0;
         var elementOptionClassIndic = void 0;
         var elementOptionsGroup = void 0;
-        var elementOptionsGroupId = void 0;
-        var wptbelementOptionClass = void 0;
 
-        // create containers for inserting controls of this item and their scripts
-        var wptbelementOptionsContainer = document.createElement('div');
-        var wptbelementOptionsScriptsContainer = document.createElement('div');
+        var controlElementParent = void 0;
+        var elementOptionsScriptsContainer = void 0;
 
         var infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
         if (!infArr) {
@@ -1826,9 +1840,8 @@ var WPTB_Helper = {
             if (element.classList.contains('wptb-preview-table')) {
                 element.classList.add('wptb-element-main-table_setting-' + table_id);
             } else if (element.classList.contains('wptb-cell')) {
-                var cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + table_id);
-                if (cellEditActiveClass) cellEditActiveClass.classList.remove('wptb-element-table_cell_setting-' + table_id);
-                element.classList.add('wptb-element-table_cell_setting-' + table_id);
+                var cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
+                if (!cellEditActiveClass) element.classList.add('wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
             }
 
             infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
@@ -1841,13 +1854,7 @@ var WPTB_Helper = {
         elementContainerClass = infArr[0];
         elementOptionClassIndic = infArr[1];
 
-        if (element.classList.contains('wptb-preview-table')) {
-            elementOptionsGroupId = 'table-settings-group';
-            wptbelementOptionClass = 'wptb-element-option';
-        } else if (element.classList.contains('wptb-cell')) {
-            elementOptionsGroupId = 'element-cell-options-group';
-            wptbelementOptionClass = 'wptb-element-option';
-
+        if (element.classList.contains('wptb-preview-table')) {} else if (element.classList.contains('wptb-cell')) {
             this.activateSection('cell_settings');
         } else {
             var children = document.getElementById('element-options-group').childNodes;
@@ -1862,39 +1869,23 @@ var WPTB_Helper = {
             // show element-options-group
             // document.getElementById( 'element-options-group' ).style.display = 'block';
             this.activateSection('options_group');
-
-            elementOptionsGroupId = 'element-options-group';
-            wptbelementOptionClass = 'wptb-element-option';
         }
-
-        wptbelementOptionsContainer.classList.add('wptb-element-options', 'wptb-options-' + infArr[1]);
-        wptbelementOptionsScriptsContainer.classList.add('wptb-element-options-scripts', 'wptb-options-' + infArr[1]);
 
         var jsonControlsConfigJson = tmplControlsConfig(data);
         var jsonControlsConfig = JSON.parse(jsonControlsConfigJson);
 
-        // clear elements from options group
-        //document.getElementById( 'element-options-group' ).innerHTML = '';
-        elementOptionsGroup = document.getElementById(elementOptionsGroupId);
-        var elementOptionsGroupChildren = [].concat(_toConsumableArray(elementOptionsGroup.children));
-        for (var _i5 = 0; _i5 < elementOptionsGroupChildren.length; _i5++) {
-            elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i5]);
-        }
+        var elementOptionsGroupIdsInvolved = [],
+            elementOptionsGroupInvolved = {},
+            elementOptionsContainerInvolved = {};
 
-        // insert created container into element-option-group tag
-        document.getElementById(elementOptionsGroupId).appendChild(wptbelementOptionsContainer);
-        document.getElementById(elementOptionsGroupId).appendChild(wptbelementOptionsScriptsContainer);
-
-        // show created container
-        wptbelementOptionsContainer.style.display = 'block';
-
-        // array for save all scrips for each controls
-        var controlScriptsArr = [];
+        // object for save all scrips for each controls
+        var controlScriptsObj = {};
 
         // array for keep "appear depend on" parametrs
         var controlappearDependOnControl = [];
 
         // create controls
+        var elementOptionsScriptsContainerIndic = false;
         var i = 0;
         Object.keys(jsonControlsConfig).forEach(function (key) {
             var data = jsonControlsConfig[key];
@@ -1913,41 +1904,88 @@ var WPTB_Helper = {
                 }
             }
 
-            var wptbElementOptionContainer = document.createElement('div');
-            wptbElementOptionContainer.classList.add(wptbelementOptionClass, 'wptb-settings-items');
+            function elementOptionsContainerInvolvedGet(elementOptionsGroupId, elementOptionsContainerInvolved) {
+                if (!elementOptionsContainerInvolved[elementOptionsGroupId]) {
+                    var elementOptionsContainer = document.createElement('div');
+                    elementOptionsContainer.classList.add('wptb-element-options', 'wptb-options-' + infArr[1]);
+                    document.getElementById(elementOptionsGroupId).appendChild(elementOptionsContainer);
+                    elementOptionsContainerInvolved[elementOptionsGroupId] = elementOptionsContainer;
+                }
 
-            if (data.customClassForContainer) {
-                wptbElementOptionContainer.classList.add(data.customClassForContainer);
+                return elementOptionsContainerInvolved[elementOptionsGroupId];
             }
 
-            if (data.containerAdditionalStyles) {
-                wptbElementOptionContainer.setAttribute('style', data.containerAdditionalStyles);
+            if (elementOptionsGroupIdsInvolved.indexOf(data.elementOptionsGroupId) == -1) {
+                elementOptionsGroupIdsInvolved.push(data.elementOptionsGroupId);
+
+                // clear elements from options group
+                //document.getElementById( 'element-options-group' ).innerHTML = '';
+                elementOptionsGroup = document.getElementById(data.elementOptionsGroupId);
+                var elementOptionsGroupChildren = [].concat(_toConsumableArray(elementOptionsGroup.children));
+                for (var _i5 = 0; _i5 < elementOptionsGroupChildren.length; _i5++) {
+                    elementOptionsGroup.removeChild(elementOptionsGroupChildren[_i5]);
+                }
+                elementOptionsGroupInvolved[data.elementOptionsGroupId] = elementOptionsGroup;
             }
 
-            wptbElementOptionContainer.innerHTML = controlTemplate;
+            controlElementParent = elementOptionsGroupInvolved[data.elementOptionsGroupId];
 
-            wptbelementOptionsContainer.appendChild(wptbElementOptionContainer);
+            if (data.elementOptionsContainerOn === 'true') {
+                controlElementParent = elementOptionsContainerInvolvedGet(data.elementOptionsGroupId, elementOptionsContainerInvolved);
+            }
 
-            var helperJavascriptElem = wptbElementOptionContainer.getElementsByTagName('wptb-template-script');
+            if (data.elementOptionContainerOn === 'true') {
+                var elementOptionContainer = document.createElement('div');
+                elementOptionContainer.classList.add(data.elementOptionClass, 'wptb-settings-items');
+
+                if (data.customClassForContainer) {
+                    elementOptionContainer.classList.add(data.customClassForContainer);
+                }
+
+                if (data.containerAdditionalStyles) {
+                    elementOptionContainer.setAttribute('style', data.containerAdditionalStyles);
+                }
+
+                controlElementParent.appendChild(elementOptionContainer);
+
+                controlElementParent = elementOptionContainer;
+            }
+
+            controlElementParent.innerHTML = controlElementParent.innerHTML + controlTemplate;
+
+            var helperJavascriptElem = controlElementParent.getElementsByTagName('wptb-template-script');
             if (helperJavascriptElem.length > 0) {
                 helperJavascriptElem = helperJavascriptElem[0];
                 var helperJavascriptCode = helperJavascriptElem.innerText;
-                wptbElementOptionContainer.removeChild(helperJavascriptElem);
+                controlElementParent.removeChild(helperJavascriptElem);
                 var script = document.createElement('script');
                 script.setAttribute('type', 'text/javascript');
                 script.innerHTML = helperJavascriptCode.replace(/\r|\n|\t/g, '').trim();
-                controlScriptsArr.push(script);
+                if (!controlScriptsObj[data.elementOptionsGroupId] || !Array.isArray(controlScriptsObj[data.elementOptionsGroupId])) {
+                    controlScriptsObj[data.elementOptionsGroupId] = [];
+                }
+                controlScriptsObj[data.elementOptionsGroupId].push(script);
             }
 
             i++;
         });
 
-        // run the scripts of controls
-        if (controlScriptsArr.length > 0) {
-            for (var _i6 = 0; _i6 < controlScriptsArr.length; _i6++) {
-                wptbelementOptionsScriptsContainer.appendChild(controlScriptsArr[_i6]);
+        element.optionsGroupIds = elementOptionsGroupIdsInvolved;
+
+        Object.keys(controlScriptsObj).forEach(function (elementOptionsGroupId) {
+            var controlScriptsArr = controlScriptsObj[elementOptionsGroupId];
+            elementOptionsScriptsContainer = document.createElement('div');
+            elementOptionsScriptsContainer.classList.add('wptb-element-options-scripts', 'wptb-options-' + infArr[1]);
+            elementOptionsGroupInvolved[elementOptionsGroupId].appendChild(elementOptionsScriptsContainer);
+            if (controlScriptsArr.length > 0) {
+                for (var _i6 = 0; _i6 < controlScriptsArr.length; _i6++) {
+                    elementOptionsScriptsContainer.appendChild(controlScriptsArr[_i6]);
+                }
             }
-        }
+        });
+
+        // run the scripts of controls
+
 
         // run appearDependOnControl function
         for (var _i7 = 0; _i7 < controlappearDependOnControl.length; _i7++) {
@@ -1956,7 +1994,15 @@ var WPTB_Helper = {
 
         WPTB_Helper.wptbDocumentEventGenerate('element:controls:active', element);
     },
-    // function for create, update css for element
+
+    /**
+     * function for create, update css for element
+     *
+     * @param elementContainer
+     * @param selector
+     * @param cssName
+     * @param cssValue
+     */
     managerExternalCssStyles: function managerExternalCssStyles(elementContainer, selector, cssName, cssValue) {
         var infArr = elementContainer.match(/wptb-element-main(.+)-(\d+)/i);
         if (!infArr || !Array.isArray(infArr)) {
@@ -3206,6 +3252,8 @@ var WPTB_Stringifier = function WPTB_Stringifier(codeMain) {
                 tds[i].removeAttribute('data-y-index');
                 tds[i].removeAttribute('draggable');
                 tds[i].classList.remove('wptb-droppable');
+                var infArr = tds[i].className.match(/wptb-element-((.+-)\d+)/i);
+                if (infArr) tds[i].classList.remove(infArr[0]);
                 var innerElements = tds[i].getElementsByClassName('wptb-ph-element');
 
                 if (innerElements.length > 0) {
@@ -3317,7 +3365,7 @@ var array = [],
      * @param Event this is the event instance of the click performed over a cell.
      */
     var mark = function mark(event) {
-        var thisElem = event.target;
+        var thisElem = event.currentTarget;
         var rs = thisElem.rowSpan,
             cs = thisElem.colSpan,
             noCells = document.getElementsByClassName('wptb-no-cell-action'),

@@ -91,6 +91,32 @@ function controlsChange( inputs, table ) {
             table.tdDefaultWidth();
         } else if( inputs.hasOwnProperty( 'tableCellPadding' ) ) {
             table.tdDefaultWidth();
+        } else if(inputs.hasOwnProperty('addLeftColumn')) {
+            table.addColumnStart();
+        } else if(inputs.hasOwnProperty('addRightColumn')) {
+            table.addColumnEnd();
+        } else if(inputs.hasOwnProperty('addTopRow')) {
+            table.addRowToTheStart();
+        } else if(inputs.hasOwnProperty('addBottomRow')) {
+            table.addRowToTheEnd();
+        } else if(inputs.hasOwnProperty('mergeSelectedCells')) {
+            table.mergeCells();
+        } else if(inputs.hasOwnProperty('splitSelectedSell')) {
+            table.splitCell();
+        } else if(inputs.hasOwnProperty('deleteHighlightedColumn')) {
+            table.deleteColumn();
+        } else if(inputs.hasOwnProperty('deleteHighlightedRow')) {
+            table.deleteRow();
+        } else if(inputs.hasOwnProperty('closeManageCellsModeTop') || inputs.hasOwnProperty('closeManageCellsModeBottom')) {
+            WPTB_Helper.toggleTableEditMode();
+        } else if(inputs.hasOwnProperty('insertColumnAfter')) {
+            table.addColumnAfter();
+        } else if(inputs.hasOwnProperty('insertColumnBefore')) {
+            table.addColumnBefore();
+        } else if(inputs.hasOwnProperty('insertRowAfter')) {
+            table.addRowAfter();
+        } else if(inputs.hasOwnProperty('insertRowBefore')) {
+            table.addRowBefore();
         }
     }
 }
