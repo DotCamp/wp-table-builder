@@ -558,10 +558,6 @@
 										}
 
 										tableContainer.appendChild(newTable);
-
-										// restore events to element clones
-										// TODO [erdembircan] working on possible bug related to this class
-										// WptbEventCatcher.getInstance().restoreEvents('.wptb-preview-table-mobile');
 									}
 								}
 							} else {

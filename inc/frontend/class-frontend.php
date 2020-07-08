@@ -114,24 +114,18 @@ class Frontend {
 	 * Enqueue header scripts.
 	 */
 	public function enqueue_header_scripts() {
-		// Enqueuing the event catcher to header with a high priority in order to be loaded before other scripts. But if, a third party script that manipulates (add/remove events) elements enqueued their script file with low priority to header tag with using jQuery document ready event, bugs may occur. But this is not our responsibility since any script that modifies the rendered elements should go to footer.
-		// TODO [erdembircan] working on possible bug with this class
-//		wp_enqueue_script( 'event-catcher', plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-event-catcher.js', array( 'jquery' ), $this->version, false );
+		// nothing here...
 	}
 
 	/**
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		// TODO [erdembircan] entry position for responsive frontend script
 		$relative_path =  'inc/admin/js/WPTB_ResponsiveFrontend.js';
 		$responsive_script_url = trailingslashit(NS\WP_TABLE_BUILDER_URL) . $relative_path;
-		$responsive_script_dir = trailingslashit(NS\WP_TABLE_BUILDER_DIR) . $relative_path;
 
-		// TODO [erdembircan] for development purposes, in order to force reset browser cache, using file's last modified time as version, remove and use plugin version number for production
-		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], filemtime($responsive_script_dir), false);
+		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false);
 
-		// even though we are using ready event of jquery, since we are modifying dom elements, as a best practice, this script should go to footer
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
 
 	}

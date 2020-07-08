@@ -2787,11 +2787,9 @@ var WPTB_Initializer = function WPTB_Initializer() {
         WPTB_Helper.setupPanelToggleButtons();
 
         // setup responsive menu both at left and builder panel
-        // TODO [erdembircan] remove commented line for production
-        // new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-table-setup');
         new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-builder-content');
 
-        // TODO [erdembircan] using this method for a better development environment while working on specific sections to get rid of clicking section buttons every time at page refresh
+        // get builder section from url parameter for easy switch at page load
         WPTB_Helper.getSectionFromUrl();
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {

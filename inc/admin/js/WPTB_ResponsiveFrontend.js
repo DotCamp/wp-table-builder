@@ -771,18 +771,22 @@
 
 					const cellCount = allCellsByRow.length;
 
-					for (let c = 0; c < cellCount; c += cellsPerRow) {
-						const rowId = tableObj.addRow('wptb-row').id;
+					for (let c = 0, r = 0; c < cellCount; c += cellsPerRow, r += 1) {
+						// const rowId = tableObj.addRow('wptb-row').id;
+						const rowObj = tableObj.addRow('wptb-row');
+
+						// preserve original row colors for even and odd rows
+						rowObj.el.style.backgroundColor = tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
 
 						// place cells by 'cells by row' option value
 						for (let pR = 0; pR < cellsPerRow; pR += 1) {
 							const tempCell = allCellsByRow[c + pR];
 
 							if (tempCell) {
-								tableObj.appendElementToRow(tempCell.getElement(), rowId);
+								tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
 
 								tempCell.resetAllAttributes();
-								tempCell.setAttribute('style', 'width: 100% !important');
+								tempCell.setAttribute('style', 'width: 100% !important', true, ';');
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
 							}
@@ -806,17 +810,20 @@
 
 					const cellCount = allCellsByCol.length;
 
-					for (let c = 0; c < cellCount; c += cellsPerRow) {
-						const rowId = tableObj.addRow('wptb-row').id;
+					for (let c = 0, r = 0; c < cellCount; c += cellsPerRow, r += 1) {
+						const rowObj = tableObj.addRow('wptb-row');
+
+						// preserve original row colors for even and odd rows
+						rowObj.el.style.backgroundColor = tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
 
 						for (let cR = 0; cR < cellsPerRow; cR += 1) {
 							const tempCell = allCellsByCol[c + cR];
 
 							if (tempCell) {
-								tableObj.appendElementToRow(tempCell.getElement(), rowId);
+								tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
 
 								tempCell.resetAllAttributes();
-								tempCell.setAttribute('style', 'width: 100% !important');
+								tempCell.setAttribute('style', 'width: 100% !important', true, ';');
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
 							}
