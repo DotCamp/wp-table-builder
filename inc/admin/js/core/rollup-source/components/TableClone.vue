@@ -1,7 +1,7 @@
 <template>
 	<div class="wptb-responsive-clone-wrapper">
 		<div class="wptb-responsive-clone-inner-wrapper">
-			<div ref="tableClone" class="wptb-plugin-box-shadow-xl" :style="tableStyle"></div>
+			<div ref="tableClone" :style="tableStyle"></div>
 		</div>
 	</div>
 </template>
@@ -102,6 +102,7 @@ export default {
 			this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
 
 			this.clonedTable = this.mainTable.cloneNode(true);
+			this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');
 			this.$refs.tableClone.appendChild(this.clonedTable);
 
 			// directives that are already present in the main table

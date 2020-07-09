@@ -1025,10 +1025,10 @@ input[type="range"]::-ms-thumb {
 
 .wptb-responsive-section {
     grid-area: sidebar-content;
-    padding-top: 20px;
 }
 
 [data-wptb-section] {
+    padding-top: 20px;
     animation: wptb-basic-appear 0.2s ease-out;
 }
 

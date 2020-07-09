@@ -54,6 +54,9 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
+		$this->setDefaultControlArg('elementOptionsGroupId', 'table-responsive-group');
+		$this->setDefaultControlArg('elementOptionClass', 'wptb-element-option');
+
 		// general control group
 		$general_section_group_controls = [
 			'generalResponsiveControls' => [
