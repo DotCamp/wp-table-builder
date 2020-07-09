@@ -642,18 +642,18 @@ var WPTB_Helper = {
 //                                    if( elementsSettings ) {
 //                                        elementsSettings = elementsSettings.trim();
 //                                        elementsSettings = JSON.parse( elementsSettings );
-//                                        if( elementsSettings && typeof elementsSettings === 'object' && 
+//                                        if( elementsSettings && typeof elementsSettings === 'object' &&
 //                                            ( 'tmpl-wptb-el-datas-' + dependOnControlElementKind ) in elementsSettings ) {
 //                                            let elementSettings = elementsSettings['tmpl-wptb-el-datas-' + dependOnControlElementKind];
-//                                            if( elementSettings && typeof elementSettings === 'object' && 
+//                                            if( elementSettings && typeof elementSettings === 'object' &&
 //                                                    ( 'data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName ) in elementSettings ) {
 //                                                let elementSettingValue = elementSettings['data-wptb-el-' + dependOnControlElementKind + '-' + dependOnControlName];
-//                                                
+//
 //                                                if( elementSettingValue ) {
-//                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) && 
+//                                                    if( dependOn[1] && Array.isArray( dependOn[1] ) &&
 //                                                        ( dependOn[1].indexOf( elementSettingValue ) !== -1 ) ) {
 //                                                        controlContainerElem.style.display = 'block';
-//                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) && 
+//                                                    } else if( dependOn[2] && Array.isArray( dependOn[2] ) &&
 //                                                        ( dependOn[2].indexOf( elementSettingValue ) !== -1 ) ) {
 //                                                        controlContainerElem.style.display = 'none';
 //                                                    }
@@ -883,7 +883,7 @@ var WPTB_Helper = {
             }
         }
     },
-    // 
+    //
     elementOptionsSet: function( kind, element ) {
         // get controls config for this element
         let wptbContrlStacksConfigId = 'wptb-' + kind + '-control-stack';
@@ -907,6 +907,8 @@ var WPTB_Helper = {
             } else if( element.classList.contains( 'wptb-cell' ) ) {
                 let cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
                 if( ! cellEditActiveClass ) element.classList.add('wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
+            }else if (element.classList.contains('wptb-responsive')){
+                element.classList.add('wptb-element-table_responsive_setting-' + table_id);
             }
 
             infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
@@ -923,7 +925,11 @@ var WPTB_Helper = {
 
         } else if( element.classList.contains( 'wptb-cell' ) ) {
             this.activateSection('cell_settings');
-        } else {
+        }else if (element.classList.contains('wptb-responsive')){
+            elementOptionsGroupId = 'table-responsive-group';
+            wptbelementOptionClass = 'wptb-element-option';
+        }
+        else {
             let children = document.getElementById( 'element-options-group' ).childNodes;
             for ( let i = 0; i < children.length; i++) {
                 if ( children[i].style )
@@ -1172,6 +1178,7 @@ var WPTB_Helper = {
      */
     registerSections(sections) {
         this.sections = {};
+        this.currentSection = '';
         if (!Array.isArray(sections)) {
             sections = [sections];
         }
@@ -1190,6 +1197,7 @@ var WPTB_Helper = {
      * @param {string} displayType display type override for section to be used in its display style property
      */
     activateSection(sectionDataId, displayType = 'block') {
+        this.currentSection=sectionDataId;
         this.triggerSectionEvent(sectionDataId);
         Object.keys(this.sections).map(k => {
             if (Object.prototype.hasOwnProperty.call(this.sections, k)) {
@@ -1197,6 +1205,26 @@ var WPTB_Helper = {
                 this.sections[k].style = `display: ${visibility} !important`;
             }
         })
+    },
+    /**
+     * Get id of current active section
+     *
+     * @returns {string} active section i
+     */
+    getCurrentSection(){
+        return this.currentSection;
+    },
+    /**
+     * Get current section from search parameter 'wptb-builder-section' of window location
+     */
+    getSectionFromUrl(){
+        const parsedUrl = new URL(window.location.href);
+        const urlSection = parsedUrl.searchParams.get('wptb-builder-section');
+        if(urlSection){
+            if(Object.keys(this.sections).some(key => key===urlSection)){
+                this.activateSection(urlSection);
+            }
+        }
     },
     /**
      * Set up related buttons and links to trigger certain elements
@@ -1212,7 +1240,7 @@ var WPTB_Helper = {
                 vm.activateSection(sectionName, displayType);
             })
 
-            document.addEventListener('sectionChanged', (e)=> {
+            document.addEventListener('wptbSectionChanged', (e)=> {
                 if(e.detail === sectionName){
                     s.classList.remove('disabled');
                     s.classList.add('active');
@@ -1240,7 +1268,7 @@ var WPTB_Helper = {
      * @param {string} sectionName section name
      */
     triggerSectionEvent(sectionName){
-        const sectionEvent = new CustomEvent('sectionChanged', {detail: sectionName});
+        const sectionEvent = new CustomEvent('wptbSectionChanged', {detail: sectionName});
 
         document.dispatchEvent(sectionEvent);
     },
@@ -1514,6 +1542,11 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function() {
+        // if current active section is responsive menu, ignore this functionality
+        if(this.getCurrentSection() === 'table_responsive_menu'){
+            return;
+        }
+
         let cellModeBackground = document.querySelector( '#wptb-cell_mode_background' );
         if( cellModeBackground && cellModeBackground.classList.contains( 'visible' ) ) {
             return;

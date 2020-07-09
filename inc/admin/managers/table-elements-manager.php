@@ -42,7 +42,8 @@ class Table_Elements_Manager extends Elements_Manager_Base {
      */
     protected $_build_elements_name = [
         'table_setting',
-        'table_cell_setting'
+        'table_cell_setting',
+        'table_responsive_menu'
     ];
 
     /**

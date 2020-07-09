@@ -32,6 +32,7 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * @return string Section title.
 	 * @since 1.1.2
 	 * @access public
+	 * @deprecated
 	 *
 	 */
 	public function get_title() {
@@ -244,10 +245,11 @@ class Table_Setting_Element extends Element_Base_Object {
 		], false );
 
 		// responsive section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_responsive', esc_html__( 'responsive', NS\PLUGIN_TEXT_DOMAIN ), $responsive_section_group_controls, [
-			$this,
-			'add_control'
-		], false );
+		//@deprecated
+//		Control_Section_Group_Collapse::add_section( 'table_settings_responsive', esc_html__( 'responsive', NS\PLUGIN_TEXT_DOMAIN ), $responsive_section_group_controls, [
+//			$this,
+//			'add_control'
+//		], false );
 
 		// help&support section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_grup_controls, [

@@ -58,7 +58,7 @@ function ControlsManager() {
 	 * @returns {object} data associated with control item
 	 */
 	function getControlData(id) {
-		if(!controlData[id]){
+		if (!controlData[id]) {
 			throw new Error(`Control data for [${id}] not found.`);
 		}
 		return controlData[id];
