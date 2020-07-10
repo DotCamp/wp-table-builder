@@ -27,6 +27,7 @@ const controls = [
 	WPTB_ControlsManager,
 	WPTB_Select2Control,
 	WPTB_MediaSelectControl,
+	WPTB_ResponsiveTable,
 ];
 
 /**

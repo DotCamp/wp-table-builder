@@ -522,7 +522,7 @@ var WPTB_Helper = {
                                     if( controlInfArr && Array.isArray( controlInfArr ) ) {
                                         let controlUnicClassName = controlInfArr[0];
 
-                                        element.addEventListener( 'wptb-control:' + controlUnicClassName, function() {
+                                        element.addEventListener( 'wptb-control:' + controlUnicClassName, function(e) {
                                             let controls = {};
                                             let controlName = controlInfArr[2];
                                             let control = document.getElementsByClassName( controlUnicClassName );
