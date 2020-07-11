@@ -598,3 +598,8 @@ table.wptb-preview-table {
         display: none;
     }
 }
+
+.wptb-plugin-responsive-base {
+    min-width: auto !important;
+    width: 100% !important;
+}

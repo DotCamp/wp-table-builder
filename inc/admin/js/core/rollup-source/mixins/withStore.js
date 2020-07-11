@@ -16,6 +16,7 @@ const withStore = {
 	},
 	methods: {
 		revertStore() {
+			// eslint-disable-next-line array-callback-return
 			Object.keys(this.store).map((k) => {
 				if (Object.prototype.hasOwnProperty.call(this.store, k)) {
 					this.store[k] = this.rawStore[k];

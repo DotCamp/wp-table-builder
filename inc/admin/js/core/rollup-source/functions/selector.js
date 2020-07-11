@@ -63,6 +63,7 @@ function setTargetValue(selector, value) {
  * @param {any} value value to be assigned to selector elements
  */
 function setAllValues(selectors, value) {
+	// eslint-disable-next-line array-callback-return
 	selectors.map((s) => {
 		setTargetValue(s, value);
 	});
@@ -80,6 +81,7 @@ function getAllValues(selectors) {
 		startupValue: null,
 	};
 
+	// eslint-disable-next-line array-callback-return
 	selectors.map((s) => {
 		const elementValue = getTargetValue(s);
 		allObj.elements.push(getTargetValue(s));
