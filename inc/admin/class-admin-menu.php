@@ -28,6 +28,13 @@ class Admin_Menu {
 	 */
 	public function __construct() {
 		// Let's make some menus.
+        add_filter( 'set_screen_option_'.'tables_per_page', function( $status, $option, $value ){
+            return (int) $value;
+        }, 10, 3 );
+
+        add_filter( 'set-screen-option', function( $status, $option, $value ){
+            return ( $option == 'tables_per_page' ) ? (int) $value : $status;
+        }, 10, 3 );
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_create_table', array( $this, 'create_table' ) );
@@ -182,6 +189,14 @@ class Admin_Menu {
 		);
 
 		add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
+
+		add_action(  'load-' . $tables_overview, function () {
+            add_screen_option( 'per_page', array(
+                'label' => 'Number of items per page:',
+                'default' => 15,
+                'option' => 'tables_per_page', // название опции, будет записано в метаполе юзера
+            ) );
+        } );
 
 		do_action( 'wptb_admin_menu', $this );
 
@@ -383,14 +398,18 @@ class Admin_Menu {
 						</a>
 					</span>
             </div>
+            <?php
+            $table_list->prepare_items();
+            $table_list->views();
+            ?>
+            <form method="get">
+            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+            <?php
+            $table_list->search_box( 'Search Tables', 'search_tables' );
+            $table_list->display(); ?>
+            </form>
         </div>
-
-		<?php
-		$table_list->prepare_items();
-		?>
-        <form method="post"><?php
-		$table_list->display(); ?>
-        </form><?php
+        <?php
 	}
 
 	/**
