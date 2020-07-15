@@ -84,15 +84,15 @@ class Control_Size extends Base_Control {
             } else {
                 max = 100;
             }
-            if( data.min ) {
-                min = data.min;
-            } else {
+            if(isNaN(data.min)) {
                 min = 10;
-            }
-            if( data.defaultValue ) {
-                defaultValue = data.defaultValue;
             } else {
+                min = data.min;
+            }
+            if( isNaN(data.defaultValue )) {
                 defaultValue = 15;
+            } else {
+                defaultValue = data.defaultValue;
             }
             if( data.dimension ) {
                 dimension = data.dimension;

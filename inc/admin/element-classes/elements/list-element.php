@@ -190,6 +190,21 @@ class List_Element extends Element_Base {
                 'dimension' => 'px'
 			]
 		);
+
+		$this->add_control(
+			'spacing',
+			[
+				'label' => __( 'Item Spacing', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}} ul li' => 'marginBottom',
+                ],
+                'min' => 0, 
+                'max' => 30,
+                'defaultValue' => 0,
+                'dimension' => 'px'
+			]
+		);
         
 		$this->add_control(
 			'listAlignment',
