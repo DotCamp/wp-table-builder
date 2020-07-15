@@ -1,0 +1,384 @@
+# Copyright (C) 2020 wptb
+# This file is distributed under the same license as the wptb package.
+msgid ""
+msgstr ""
+"Project-Id-Version: wptb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: Deutsch\n"
+"Last-Translator: \n"
+"Report-Msgid-Bugs-To: https://github.com/imtiazrayhan/wp-table-"
+"builder/issues\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:"
+"1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;"
+"esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"POT-Creation-Date: 2020-07-15 09:34+0000\n"
+"PO-Revision-Date: 2020-07-15 12:24+0000\n"
+"Language: de-DE\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.0; wp-5.4.2"
+
+#: ../inc/admin/class-admin-menu.php:129, 
+#: ../inc/admin/class-admin-menu.php:151, ../inc/admin/class-admin-menu.php:161
+msgid "WP Table Builder"
+msgstr "WP Table Builder"
+
+#: ../inc/admin/class-admin-menu.php:130, 
+#: ../inc/admin/class-admin-menu.php:141, ../inc/admin/class-admin-menu.php:171
+msgid "Table Builder"
+msgstr "Table Builder"
+
+#: ../inc/admin/class-admin-menu.php:142
+msgid "Welcome Page"
+msgstr "Willkommensseite"
+
+#: ../inc/admin/class-admin-menu.php:152, ../inc/admin/class-admin-menu.php:346
+msgid "All Tables"
+msgstr "Alle Tabellen"
+
+#: ../inc/admin/class-admin-menu.php:162, ../inc/admin/class-admin-menu.php:351
+msgid "Add New"
+msgstr "Neu hinzufügen"
+
+#: ../inc/admin/class-admin-menu.php:172
+msgid "Import"
+msgstr "Importieren"
+
+#: ../inc/admin/class-import.php:410, ../inc/admin/class-preview.php:208
+msgid "%s Preview"
+msgstr "%s Vorschau"
+
+#: ../inc/admin/class-import.php:411, ../inc/admin/class-preview.php:209
+msgid "Table"
+msgstr "Tabelle"
+
+#: ../inc/admin/class-preview.php:135
+msgid "Generating preview..."
+msgstr "Generiere Vorschau"
+
+#: ../inc/admin/class-preview.php:226
+msgid "This is a preview of your table. This page is not publicly accessible."
+msgstr ""
+"Dies sit eine Vorschau Deiner Tabelle. Diese Seite ist noicht öffentlich "
+"zugänglich."
+
+#: ../inc/admin/class-tables.php:36
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, 
+#: ../inc/admin/class-wptb-listing.php:191, 
+#: ../inc/admin/element-classes/elements/shortcode-element.php:40
+msgid "Shortcode"
+msgstr "Shortcode"
+
+#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:190
+msgid "Title"
+msgstr "Titel"
+
+#: ../inc/admin/class-tables.php:50
+msgid "Date"
+msgstr "Datum"
+
+#: ../inc/admin/class-tables.php:143
+msgid "Edit Table"
+msgstr "Tabelle bearbeiten"
+
+#: ../inc/admin/class-wptb-listing.php:23
+msgid "WPTB Table"
+msgstr "WPTB Table"
+
+#: ../inc/admin/class-wptb-listing.php:24
+msgid "WPTB Tables"
+msgstr "WPTB Tables"
+
+#. translators: %s - admin area page builder page URL.
+#: ../inc/admin/class-wptb-listing.php:111
+msgid ""
+"Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a "
+"go</a>?"
+msgstr ""
+"Huch, Du hast noch keine Tabelle angelegt. Magst Du es <a href=\"%s\">"
+"ausprobieren</a>?"
+
+#: ../inc/admin/class-wptb-listing.php:140
+msgid "Edit This Table"
+msgstr "Diese Tabelle bearbeiten"
+
+#: ../inc/admin/class-wptb-listing.php:192
+msgid "Created"
+msgstr "Angelegt"
+
+#: ../inc/admin/class-wptb-listing.php:193
+msgid "ID"
+msgstr "ID"
+
+#: ../inc/admin/class-wptb-listing.php:256
+msgid "Table duplicate successfully."
+msgstr "Tabelle erfolgreich dupliziert"
+
+#: ../inc/admin/class-wptb-listing.php:272
+msgid "Table deleted successfully."
+msgstr "Tabelle erfolgreich gelöscht"
+
+#: ../inc/admin/class-wptb-listing.php:296
+msgid "Bulk Delete Performed Successfully."
+msgstr "Mehrfachlöschung erfolgreich durchgeführt."
+
+#: ../inc/admin/managers/settings-manager.php:220, 
+#: ../inc/admin/managers/settings-manager.php:220
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../inc/admin/views/wptb-welcome.php:13
+msgid "Getting Started"
+msgstr "Los geht's"
+
+#: ../inc/admin/views/wptb-welcome.php:21
+msgid "Welcome to WP Table Builder!"
+msgstr "Willkommen bei WP Table Builder!"
+
+#: ../inc/admin/views/wptb-welcome.php:22
+msgid ""
+"We recommend you to watch this short getting started video, and then start "
+"dragging and dropping elements to create your first table."
+msgstr ""
+"Wir empfehlen Dir, das folgende Erklär-Video anzusehen und dann die "
+"verschiedenen Elemente zu nutzen, um Deine erste Tabelle zu erstellen."
+
+#: ../inc/admin/views/wptb-welcome.php:29
+msgid "Create Your First Table"
+msgstr "Lege Deine erste Tabelle an"
+
+#: ../inc/admin/views/wptb-welcome.php:32
+msgid "Learn More"
+msgstr "Mehr erfahren"
+
+#: ../inc/admin/element-classes/elements/button-element.php:40, 
+#: ../inc/admin/views/builder/additional-element.php:3
+msgid "Button"
+msgstr "Button"
+
+#: ../inc/admin/element-classes/elements/custom-html-element.php:40
+msgid "Custom HTML"
+msgstr "Benutzerdefiniertes HTML"
+
+#: ../inc/admin/element-classes/elements/image-element.php:40
+msgid "Image"
+msgstr "Bild"
+
+#: ../inc/admin/element-classes/elements/list-element.php:40
+msgid "List"
+msgstr "Liste"
+
+#: ../inc/admin/element-classes/elements/list-element.php:206
+msgid "List Item 1"
+msgstr "Listenbegriff 1"
+
+#: ../inc/admin/element-classes/elements/list-element.php:212
+msgid "List Item 2"
+msgstr "Listenbegriff 2"
+
+#: ../inc/admin/element-classes/elements/list-element.php:218
+msgid "List Item 3"
+msgstr "Listenbegriff 3"
+
+#: ../inc/admin/element-classes/elements/star-rating-element.php:40
+msgid "Star Rating"
+msgstr "Bewertung"
+
+#: ../inc/admin/element-classes/elements/text-element.php:40
+msgid "Text"
+msgstr "Text"
+
+#: ../inc/admin/views/builder/table-settings-element.php:35
+msgid "Table Setting"
+msgstr "Tabelleneinstellungen"
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:83
+msgid "</> Embed"
+msgstr "</> Einbetten"
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:90
+msgid "Preview"
+msgstr "Vorschau"
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:95
+msgid "Save Table"
+msgstr "Tabelle speichern"
+
+#: ../inc/admin/views/builder/wptb-builder-header.php:108
+msgid ""
+"To embed this table on your site, please paste the following shortcode "
+"inside a post or page."
+msgstr ""
+"Um diese Tabelle auf Deiner Seite zu veröffentlichen, musst Du folgenden "
+"Shortcode in einen beitrag oder eine Seite einfügen."
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:66
+msgid ""
+"You are currently editing the table cells. Click \"Close\" to go back to "
+"editing the table."
+msgstr ""
+"Du bearbeitest derzeit die Zellen der Tabelle. Klicke auf \"Schließen\", um "
+"zum bearbeiten der Tabelle zurückzukehren."
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:67
+msgid ""
+"Click on cells to select them or deselect them. Selected cells will be shown "
+"in a green outline."
+msgstr ""
+"Zellen zum Wählen oder Abwählen anklicken. Ausgewählte Zellen haben eine "
+"grüne Umrandung."
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, 
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:70, 
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:91
+msgid "Close Manage Cells Mode"
+msgstr "Zellenverwaltungsmodus schließen"
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, 
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:71, 
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:92
+msgid "Close"
+msgstr "Schließen"
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:80
+msgid "Column Width"
+msgstr "Spaltenbreite"
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:95, 
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:120
+msgid "Fixed"
+msgstr "Gelöst"
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:96, 
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:121
+msgid "Auto"
+msgstr "Automatisch"
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:105
+msgid "Row Height"
+msgstr "Zeilenhöhe"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:13
+msgid "Table Name"
+msgstr "Tabellennname"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:14
+msgid "Enter Table Name Here"
+msgstr "Tabellennamen hier eintragen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:21
+msgid "Columns"
+msgstr "Spalten"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:22
+msgid "Rows"
+msgstr "Zeilen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:35
+msgid "Generate"
+msgstr "Anlegen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:46
+msgid "Add Column to the Start"
+msgstr "Spalte am Anfang einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:47
+msgid "Add Left Column"
+msgstr "Linke Spalte einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:49
+msgid "Add Column to the End"
+msgstr "Spalte am Schluss einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:50
+msgid "Add Right Column"
+msgstr "Rechte Spalte hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:52
+msgid "Add Row to the Start"
+msgstr "Zeile am Anfang hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:53
+msgid "Add Top Row"
+msgstr "Zeile am Kopf hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:55
+msgid "Add Row to the End"
+msgstr "Zeile am Schluss hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:56
+msgid "Add Bottom Row"
+msgstr "Zeile am Fuß einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:58
+msgid "Merge Selected Cells"
+msgstr "Ausgewählte Zellen zusammenführen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:59
+msgid "Merge"
+msgstr "Zusammenführen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:61
+msgid "Unmerge Selected Cell"
+msgstr "Zusammenfühung der ausgewählten Zelle rückgängig machen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:62
+msgid "Split"
+msgstr "Teilen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:64
+msgid "Delete Highlighted Column"
+msgstr "Ausgewählte Spalte löschen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:65
+msgid "Remove Column"
+msgstr "Spalte löschen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:67
+msgid "Delete Highlighted Row"
+msgstr "Ausgewählte Zeile löschen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:68
+msgid "Remove Row"
+msgstr "Zeile löschen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:79
+msgid "Add Column After Highlighted One"
+msgstr "Spalte nach markierter Spalte einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80
+msgid "Insert Column After"
+msgstr "Spalte einfügen nach"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:82
+msgid "Add Column Before Highlighted One"
+msgstr "Spalte vor markierter Spalte einfügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:83
+msgid "Insert Column Before"
+msgstr "Spalte einfügen vor"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:85
+msgid "Add Row After Highlighted One"
+msgstr "Zeile nach markierter Zeile hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:86
+msgid "Insert Row After"
+msgstr "Zeile einfügen nach"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+msgid "Add Row Before Highlighted One"
+msgstr "Zeile vor markierter Zeile hinzufügen"
+
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:89
+msgid "Insert Row Before"
+msgstr "Zeile einfügen vor"
