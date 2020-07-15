@@ -154,16 +154,7 @@ class Table_Setting_Element extends Element_Base_Object {
 		];
 
 		$border_section_group_controls = [
-			'headerInnerBorder'     =>
-				[
-					'label'     => __( 'Header Inner Border', 'wp_table_builder' ),
-					'type'      => Controls_Manager::TOGGLE,
-					'selectors' => [
-						'{{{data.container}}} tr:first-child td' => [ 'border-style', 'solid', 'none' ],
-					],
-					'checked' => true,
-					'appearDependOnControl' => [ 'applyInnerBorder', [ 'checked' ], [ 'unchecked' ] ]
-				],
+			
 			'tableBorder' =>
 				[
 					'label'        => __( 'Table Border', 'wp_table_builder' ),
@@ -193,6 +184,16 @@ class Table_Setting_Element extends Element_Base_Object {
 					'selectors' => [
 						'{{{data.container}}} td' => [ 'border-style', 'solid', 'none' ],
 					],
+				],
+			'headerInnerBorder'     =>
+				[
+					'label'     => __( 'Header Inner Border', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
+					'selectors' => [
+						'{{{data.container}}} tr:first-child td' => [ 'border-style', 'solid', 'none' ],
+					],
+					'checked' => true,
+					'appearDependOnControl' => [ 'applyInnerBorder', [ 'checked' ], [ 'unchecked' ] ]
 				],
 			'tableInnerBorderSize' =>
 				[
