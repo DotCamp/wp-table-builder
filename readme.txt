@@ -2,8 +2,8 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 5.4
-Stable tag: 1.2.2
+Tested up to: 5.5
+Stable tag: 1.2.3
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -85,6 +85,15 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.2 =
+
+* NEW: Responsive Table System with more controls.
+* NEW: German Translation. Thanks to Stefan Butz.
+* NEW: Option to Control List Item Font Size.
+* NEW: Option to control List Item Spacing.
+* NEW: Option to Toggle Header Inner Border.
+* NEW: Search and Pagination options in Table List.
 
 = 1.2.2 =
 
