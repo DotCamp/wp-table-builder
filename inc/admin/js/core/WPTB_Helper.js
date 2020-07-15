@@ -670,6 +670,10 @@ var WPTB_Helper = {
                                         if( dependOn[1] && Array.isArray( dependOn[1] ) &&
                                             ( dependOn[1].indexOf( targetControlValue ) !== -1 ) ) {
                                             controlContainerElem.style.display = 'block';
+                                            let childCheck = controlContainerElem.querySelector('input[type="checkbox"]')
+                                            if (childCheck) {
+                                                childCheck.checked = true;
+                                            }
                                         } else if( dependOn[2] && Array.isArray( dependOn[2] ) &&
                                             ( dependOn[2].indexOf( targetControlValue ) !== -1 ) ) {
                                             controlContainerElem.style.display = 'none';

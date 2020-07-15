@@ -54,7 +54,8 @@ class Control_Toggle extends Base_Control {
                 selectors = [],
                 elemContainer,
                 selectorsJson,
-                targetInputAddClass;
+                targetInputAddClass,
+                checked = false;
             
             if( data.label ) {
                 label = data.label;
@@ -74,6 +75,10 @@ class Control_Toggle extends Base_Control {
             
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
+            }
+
+            if( data.checked ) {
+                checked = true
             }
             
             targetInputAddClass = data.elementControlTargetUnicClass;
@@ -237,7 +242,7 @@ class Control_Toggle extends Base_Control {
                             if( '{{{selectorsJson}}}' ) {
                                 let selectors = JSON.parse( '{{{selectorsJson}}}' );
 
-                                targetInput.checked = getSetElementValue( selectors );
+                                targetInput.checked = getSetElementValue( selectors ) || {{{checked}}};
                             }
 
                             targetInput.onchange = function( event ) {
