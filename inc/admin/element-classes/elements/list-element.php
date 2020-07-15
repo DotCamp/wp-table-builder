@@ -175,6 +175,36 @@ class List_Element extends Element_Base {
                 ]
 			]
 		);
+
+		$this->add_control(
+			'size',
+			[
+				'label' => __( 'Font Size', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}} ul li p' => 'fontSize',
+                ],
+                'min' => 10, 
+                'max' => 50,
+                'defaultValue' => 15,
+                'dimension' => 'px'
+			]
+		);
+
+		$this->add_control(
+			'spacing',
+			[
+				'label' => __( 'Item Spacing', 'wp_table_builder' ),
+				'type' => Controls_Manager::SIZE,
+                'selectors' => [
+                    '{{{data.container}}} ul li' => 'marginBottom',
+                ],
+                'min' => 0, 
+                'max' => 30,
+                'defaultValue' => 0,
+                'dimension' => 'px'
+			]
+		);
         
 		$this->add_control(
 			'listAlignment',

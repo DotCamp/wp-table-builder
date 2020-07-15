@@ -1934,6 +1934,7 @@ br[data-mce-bogus="1"] {
 .wptb-droppable.wptb-cell li .wptb-list-item-content p {
     word-wrap: break-word;
     line-height: 30px;
+    font-size: 15px;
 }
 
 .wptb-list-container ul li > div > p::before {
@@ -1941,7 +1942,7 @@ br[data-mce-bogus="1"] {
     display: inline-block;
     line-height: 30px;
     padding: 0 5px 0 0;
-    font-size: 15px;
+    /* font-size: 15px; */
     font-family: verdana, sans-serif;
     cursor: text;
 }
