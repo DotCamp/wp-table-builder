@@ -3409,6 +3409,10 @@ wptb_shortcode_container_element {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+.wptb-plugin-filter-box-shadow-md {
+    filter: drop-shadow(4px 6px 2px rgba(0, 0, 0, 0.1))
+}
+
 .wptb-plugin-box-shadow-up-md {
     box-shadow: 0 -5px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -4025,7 +4029,7 @@ wptb_shortcode_container_element {
     position: relative;
 }
 
-.wptb-control-media-clear-button{
+.wptb-control-media-clear-button {
     position: absolute;
     width: 20px;
     height: 20px;
