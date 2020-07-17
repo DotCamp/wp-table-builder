@@ -107,6 +107,17 @@ class Text_Element extends Element_Base {
                 ]
 			]
 		);
+
+		$this->add_control(
+			'linkColor',
+			[
+				'label' => __( 'Link Font Color', 'wp_table_builder' ),
+				'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{{data.container}}} a' => 'color',
+                ]
+			]
+		);
         
 		$this->add_control(
 			'size',
