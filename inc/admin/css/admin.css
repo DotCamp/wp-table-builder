@@ -1900,6 +1900,10 @@ br[data-mce-bogus="1"] {
     display: none;
 }
 
+.wptb-text-container .mce-content-body a {
+    color: rgb(30, 115, 190);
+}
+
 .wptb-droppable.wptb-cell ul,
 .wptb-droppable.wptb-cell ol {
     border: 1px solid transparent;
