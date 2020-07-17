@@ -261,30 +261,6 @@ class Button_Element extends Element_Base {
 		] );
 	}
 
-	protected function readIcons( $extension, $icon_dir, $icon_url ) {
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, null );
-		if ( ! WP_Filesystem( $creds ) ) {
-			return;
-		}
-
-		global $wp_filesystem;
-
-		$filtered_files = [];
-		if ( $wp_filesystem->is_dir( $icon_dir ) ) {
-			$icons = $wp_filesystem->dirlist( $icon_dir );
-			foreach ( $icons as $name => $info ) {
-				$current_file_path = path_join( $icon_dir, $name );
-				$file_info         = pathinfo( $current_file_path );
-				if ( $file_info['extension'] === $extension ) {
-					$current_file_url                         = join( '', [ trailingslashit( $icon_url ), $name ] );
-					$filtered_files[ $file_info['filename'] ] = $current_file_url;
-				}
-			}
-		}
-
-		return $filtered_files;
-	}
-
 	/**
 	 * Render text editor element output in the editor.
 	 *

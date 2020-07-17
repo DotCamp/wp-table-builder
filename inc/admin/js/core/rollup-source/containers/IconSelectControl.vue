@@ -23,7 +23,7 @@
 								:class="{ 'wptb-icon-preview-active': selectedIcon.name === name }"
 								:key="name"
 							>
-								<img :src="iconUrl" :title="name" @click="setIcon(name, iconUrl)" />
+								<img :src="iconUrl" :title="name" :draggable="false" @click="setIcon(name, iconUrl)" />
 							</div>
 							<intersection-observer
 								:relative-element="innerDrawerRef"
@@ -110,7 +110,7 @@ export default {
 								targetObj.appendChild(newSvgElement);
 							});
 					} else {
-						targetObj.dataset.wptbButtonIconSrc = '';
+						this.setTargetValue(this.targetElements[0], '');
 						targetObj.innerHTML = '';
 					}
 				}

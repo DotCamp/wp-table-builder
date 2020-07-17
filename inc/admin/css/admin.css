@@ -1852,7 +1852,7 @@ table.wptb-table {
     box-shadow: inset 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
 }
 
-.wptb-btn-size-switcher.selected {
+.wptb-btn-size-switcher.bnt-selected {
     background: #fff;
     box-shadow: inset 0px 0px 20px 4px rgba(0, 0, 0, 0.15);
     cursor: default;

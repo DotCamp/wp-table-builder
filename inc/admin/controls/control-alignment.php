@@ -71,11 +71,11 @@ class Control_Alignment extends Base_Control {
                     
             if( 'selected' in data ) {
                 if( data.selected == 0 ) {
-                    selected0 = 'selected';
+                    selected0 = 'bnt-selected';
                 } else if( data.selected == 1 ) {
-                    selected1 = 'selected';
+                    selected1 = 'bnt-selected';
                 } else if( data.selected == 2 ) {
-                    selected2 = 'selected';
+                    selected2 = 'bnt-selected';
                 }
             }
             
@@ -229,18 +229,18 @@ class Control_Alignment extends Base_Control {
                             }
                 
                             for ( var i = 0; i < buttons.length; i++ ) {
-                                buttons[i].classList.remove( 'selected' );
+                                buttons[i].classList.remove( 'bnt-selected' );
                                 
                                 if( valueSetting == buttons[i].dataset.alignmentValue ) {
-                                    buttons[i].classList.add( 'selected' );
+                                    buttons[i].classList.add( 'bnt-selected' );
                                 }
 
                                 buttons[i].onclick = function () {
                                     var b = this.parentNode.getElementsByClassName( 'wptb-btn-size-btn' );
                                     for ( let i = 0; i < b.length; i++ ) {
-                                        b[i].classList.remove( 'selected' );
+                                        b[i].classList.remove( 'bnt-selected' );
                                     }
-                                    this.classList.add( 'selected' );
+                                    this.classList.add( 'bnt-selected' );
                                     
                                     if( this.dataset.alignmentValue && '{{{selectorsJson}}}' ) {
                                         let selectors = JSON.parse( '{{{selectorsJson}}}' );
