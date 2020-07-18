@@ -233,19 +233,19 @@ class List_Element extends Element_Base {
             <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
-                    <p data-list-style-type-index="1."><?php esc_html_e( 'List Item 1', 'wp-table-builder' ); ?></p>
+                    <p data-list-style-type-index="1."><span class="content"><?php esc_html_e( 'List Item 1', 'wp-table-builder' ); ?></span></p>
                 </div>
             </li>
             <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
-                    <p data-list-style-type-index="2."><?php esc_html_e( 'List Item 2', 'wp-table-builder' ); ?></p>
+                    <p data-list-style-type-index="2."><span class="content"><?php esc_html_e( 'List Item 2', 'wp-table-builder' ); ?></span></p>
                 </div>
             </li>
             <li class="wptb-in-element">
                 <div class="wptb-list-item-content" 
                      style="position: relative;" spellcheck="false" contenteditable="true">
-                    <p data-list-style-type-index="3."><?php esc_html_e( 'List Item 3', 'wp-table-builder' ); ?></p>
+                    <p data-list-style-type-index="3."><span class="content"><?php esc_html_e( 'List Item 3', 'wp-table-builder' ); ?></span></p>
                 </div>
             </li>
         </ul>

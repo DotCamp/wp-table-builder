@@ -58,7 +58,7 @@ function listItemsTinyMceInit( listItem ) {
                         }
 
                         applyGenericItemSettings( duplicate );
-                        e.target.querySelector( 'p' ).innerText = 'New List Item';
+                        e.target.querySelector( 'p' ).innerHTML = '<span class="content">New List Item</span>';
                         article.parentNode.insertBefore( elementCopy, article );
                         elementCopy.classList.remove( 'wptb-directlyhovered' );
                         article.classList.remove( 'wptb-directlyhovered' );
