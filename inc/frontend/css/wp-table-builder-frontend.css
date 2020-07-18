@@ -610,5 +610,5 @@ table.wptb-preview-table {
 }
 
 .wptb-plugin-filter-box-shadow-md {
-    filter: drop-shadow(4px 6px 2px rgba(0, 0, 0, 0.3))
+    filter: drop-shadow(4px 6px 2px rgba(0, 0, 0, 0.1))
 }
