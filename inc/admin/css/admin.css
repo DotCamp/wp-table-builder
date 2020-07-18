@@ -70,6 +70,12 @@ body > img {
 * Header Section
 */
 
+.wptb-builder-header {
+    position: sticky !important;
+    top: 0px;
+    z-index: 10;
+}
+
 .wptb-header {
     width: 100%;
     background-color: var(--wptb-plugin-theme-color-light);
@@ -1803,7 +1809,7 @@ table.wptb-table {
     min-height: 55px;
     text-align: center;
     position: sticky !important;
-    top: 20px;
+    top: 80px;
     z-index: 100;
     display: inline-block;
 }
