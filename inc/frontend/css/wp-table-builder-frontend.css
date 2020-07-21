@@ -277,7 +277,7 @@ table.wptb-preview-table {
 
 .wptb-list-container li p {
     word-wrap: break-word;
-    line-height: 20px;
+    line-height: inherit;
     padding-left: 20px;
 }
 
