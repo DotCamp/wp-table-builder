@@ -278,7 +278,7 @@ table.wptb-preview-table {
 .wptb-list-container li p {
     word-wrap: break-word;
     line-height: 20px;
-    display: inline-flex;
+    padding-left: 20px;
 }
 
 .wptb-list-container li p::before {
@@ -294,7 +294,7 @@ table.wptb-preview-table {
 }
 
 .wptb-list-container li p::before {
-    padding-right: 10px;
+    margin-left: -20px;
 }
 
 .wptb-list-container li p.wptb-list-style-type-disc::before {
