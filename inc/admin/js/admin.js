@@ -1617,6 +1617,10 @@ var WPTB_Helper = {
 
                                         if (dependOn[1] && Array.isArray(dependOn[1]) && dependOn[1].indexOf(targetControlValue) !== -1) {
                                             controlContainerElem.style.display = 'block';
+                                            var childCheck = controlContainerElem.querySelector('input[type="checkbox"]');
+                                            if (childCheck) {
+                                                childCheck.checked = true;
+                                            }
                                         } else if (dependOn[2] && Array.isArray(dependOn[2]) && dependOn[2].indexOf(targetControlValue) !== -1) {
                                             controlContainerElem.style.display = 'none';
                                         }
@@ -1902,7 +1906,6 @@ var WPTB_Helper = {
             data.elemContainer = elementContainerClass;
             data.elementControlTargetUnicClass = 'wptb-el-' + elementOptionClassIndic + '-' + data.controlKey;
             var controlTemplate = tmplControlTemplate(data);
-
             if ('appearDependOnControl' in data) {
                 if (Array.isArray(data.appearDependOnControl)) {
                     controlappearDependOnControl.push([data.appearDependOnControl, data.elementControlTargetUnicClass]);

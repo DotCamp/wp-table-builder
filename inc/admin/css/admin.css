@@ -1945,6 +1945,7 @@ br[data-mce-bogus="1"] {
     word-wrap: break-word;
     line-height: 30px;
     font-size: 15px;
+    padding-left: 20px;
 }
 
 .wptb-list-container ul li > div > p::before {
@@ -1955,10 +1956,15 @@ br[data-mce-bogus="1"] {
     /* font-size: 15px; */
     font-family: verdana, sans-serif;
     cursor: text;
+    min-width: fit-content;
+}
+
+.wptb-droppable.wptb-cell li .wptb-list-item-content p span.content {
+    display: block;
 }
 
 .wptb-list-container ul li > div > p::before {
-    padding-right: 10px;
+    margin-left: -20px;       
 }
 
 .wptb-list-container ul li > div > p.wptb-list-style-type-disc::before {

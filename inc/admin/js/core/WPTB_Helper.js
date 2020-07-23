@@ -975,7 +975,6 @@ var WPTB_Helper = {
             data.elemContainer = elementContainerClass;
             data.elementControlTargetUnicClass = 'wptb-el-' + elementOptionClassIndic + '-' + data.controlKey;
             let controlTemplate = tmplControlTemplate( data );
-
             if( 'appearDependOnControl' in data ) {
                 if( Array.isArray( data.appearDependOnControl ) ) {
                     controlappearDependOnControl.push( [data.appearDependOnControl, data.elementControlTargetUnicClass] );

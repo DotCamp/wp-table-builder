@@ -15,7 +15,7 @@
  * Plugin Name:       WP Table Builder
  * Plugin URI:        https://wptablebuilder.com/
  * Description:       Drag and Drop Responsive Table Builder Plugin for WordPress.
- * Version:           1.2.3
+ * Version:           1.2.4
  * Author:            WP Table Builder
  * Author URI:        https://wptablebuilder.com//
  * License:           GPL-3.0+
@@ -31,6 +31,42 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+if ( ! function_exists( 'wptb_fs' ) ) {
+    // Create a helper function for easy SDK access.
+    function wptb_fs() {
+        global $wptb_fs;
+
+        if ( ! isset( $wptb_fs ) ) {
+            // Include Freemius SDK.
+            require_once dirname(__FILE__) . '/inc/core/freemius/start.php';
+
+            $wptb_fs = fs_dynamic_init( array(
+                'id'                  => '6602',
+                'slug'                => 'wp-table-builder',
+                'type'                => 'plugin',
+                'public_key'          => 'pk_6bf7fb67d8b8bcce83459fd46432e',
+                'is_premium'          => false,
+                'has_addons'          => false,
+                'has_paid_plans'      => false,
+                'menu'                => array(
+                    'slug'           => 'wptb-overview',
+                    'first-path'     => 'admin.php?page=wp-table-builder-welcome',
+                    'account'        => false,
+                    'contact'        => false,
+                    'support'        => false,
+                ),
+            ) );
+        }
+
+        return $wptb_fs;
+    }
+
+    // Init Freemius.
+    wptb_fs();
+    // Signal that SDK was initiated.
+    do_action( 'wptb_fs_loaded' );
+}
+
 /**
  * Define Constants
  */
@@ -39,7 +75,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'WP_TABLE_BUILDER', 'wp-table-builder' );
 
-define( NS . 'PLUGIN_VERSION', '1.2.3' );
+define( NS . 'PLUGIN_VERSION', '1.2.4' );
 
 define( NS . 'WP_TABLE_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 
