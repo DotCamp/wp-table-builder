@@ -51,7 +51,7 @@ class Star_Rating_Element extends Element_Base {
 	 * @return string Directory Element icon.
 	 */
 	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/half-filled-rating-star.svg'; ;
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/star_rating.svg'; ;
 	}
     
     /**
@@ -65,7 +65,7 @@ class Star_Rating_Element extends Element_Base {
 	 * @return string Url Element icon.
 	 */
 	public function get_url_icon() {
-		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/half-filled-rating-star.svg' );
+		return wp_normalize_path ( NS\WP_TABLE_BUILDER_URL . 'inc/admin/views/builder/icons/star_rating.svg' );
 	}
     
     /**

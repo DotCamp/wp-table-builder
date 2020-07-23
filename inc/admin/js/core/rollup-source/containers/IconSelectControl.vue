@@ -94,24 +94,27 @@ export default {
 		},
 		selectedIcon: {
 			handler() {
-				const targetObj = this.targetElements[0].element;
-				if (targetObj) {
+				const targetObjs = this.targetElements[0].elements;
+				if (targetObjs && Array.isArray(targetObjs)) {
 					if (this.selectedIcon.url) {
 						fetch(this.selectedIcon.url)
 							.then((r) => r.text())
 							.then((resp) => {
 								this.setTargetValue(this.targetElements[0], this.selectedIcon.name);
-								targetObj.innerHTML = '';
-
 								const range = document.createRange();
-								range.setStart(targetObj, 0);
+								targetObjs.map((s) => {
+									s.innerHTML = '';
 
-								const newSvgElement = range.createContextualFragment(resp);
-								targetObj.appendChild(newSvgElement);
+									range.setStart(s, 0);
+									const newSvgElement = range.createContextualFragment(resp);
+									s.appendChild(newSvgElement);
+								});
 							});
 					} else {
 						this.setTargetValue(this.targetElements[0], '');
-						targetObj.innerHTML = '';
+						targetObjs.map((s) => {
+							s.innerHTML = '';
+						})
 					}
 				}
 			},

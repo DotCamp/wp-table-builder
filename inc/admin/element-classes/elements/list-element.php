@@ -51,7 +51,7 @@ class List_Element extends Element_Base {
 	 * @return string Directory Element icon.
 	 */
 	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.svg'; ;
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/list.svg';
 	}
     
     /**

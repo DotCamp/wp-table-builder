@@ -29,17 +29,19 @@ function operationSelect(element, type) {
  * Supported value types: dataset
  *
  * @param {string} selector query string for element search
- * @returns {{value: *, element: HTMLElement}}  returns an object of element and its queried value
+ * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
  */
 function getTargetValue(selector) {
 	const { query, type, key } = selector;
-	const element = document.querySelector(query);
+	const elements = [...document.querySelectorAll(query)];
+	if(elements.length > 0) {
+		const operation = operationSelect(elements[0], type);
 
-	const operation = operationSelect(element, type);
-
-	if (operation) {
-		return { element, value: operation[key], type, key };
+		if (operation) {
+			return { elements, value: operation[key], type, key };
+		}
 	}
+
 	throw new Error(`no related operation found with a type of [${type}]`);
 }
 
@@ -50,10 +52,14 @@ function getTargetValue(selector) {
  * @param {any} value value to be assigned to selector element
  */
 function setTargetValue(selector, value) {
-	const { element, type, key } = selector;
-	const operation = operationSelect(element, type);
+	const { elements, type, key } = selector;
+	if(Array.isArray(elements) && elements.length > 0) {
+		elements.map((s) => {
+			let operation = operationSelect(s, type);
 
-	operation[key] = value;
+			operation[key] = value;
+		});
+	}
 }
 
 /**
