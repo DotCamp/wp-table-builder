@@ -65,15 +65,20 @@ class Controls_Manager {
 	 */
 	const TOGGLE = 'toggle';
 
-    /**
-     *  Adding on toggle2 control.
-     */
-    const TOGGLE2 = 'toggle2';
+	/**
+	 *  Adding on toggle2 control.
+	 */
+	const TOGGLE2 = 'toggle2';
 
 	/**
 	 *  Adding select control.
 	 */
 	const SELECT = 'select';
+
+	/**
+	 *  Adding select control.
+	 */
+	const SELECT2 = 'select2';
 
 	/**
 	 *  Adding checkbox control.
@@ -125,6 +130,11 @@ class Controls_Manager {
 	const RANGE = 'range';
 
 	/**
+	 * Adding media select control.
+	 */
+	const MEDIA = 'media_select';
+
+	/**
 	 * Adding html output control.
 	 */
 	const HTML_OUTPUT = 'html_output';
@@ -139,6 +149,7 @@ class Controls_Manager {
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
+	const STYLE = 'style';
 
 	/**
 	 * Controls.
@@ -175,8 +186,9 @@ class Controls_Manager {
 			self::TEXT,
 			self::NUMBER,
 			self::TOGGLE,
-            self::TOGGLE2,
+			self::TOGGLE2,
 			self::SELECT,
+			self::SELECT2,
 			self::CHECKBOX,
 			self::TEXTAREA,
 			self::BUTTON,
@@ -187,8 +199,9 @@ class Controls_Manager {
 			self::SECTION_GROUP_TAB_CONTENT_END,
 			self::ICON_SELECT,
 			self::RANGE,
-			self::HTML_OUTPUT,
-			self::DATA_MULE
+			self::DATA_MULE,
+			self::MEDIA,
+			self::HTML_OUTPUT
 		];
 	}
 

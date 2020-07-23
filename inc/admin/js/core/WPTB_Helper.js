@@ -464,8 +464,8 @@ var WPTB_Helper = {
         }
     },
     // function which set handler for event of changes of control
-    controlsInclude: function( element, functionHandler ) {
-        if( element && typeof element === 'object' && functionHandler && typeof functionHandler === 'function' ) {
+    controlsInclude: function( element, functionHandler, acceptEventValues = false ) {
+        if( element && typeof element === 'object' && typeof functionHandler === 'function' ) {
             element.addEventListener( 'element:controls:active', function() {
                 if(!element.hasOwnProperty('controlConnectFunctionsName') ||
                     !Array.isArray(element.controlConnectFunctionsName) ||
@@ -522,16 +522,22 @@ var WPTB_Helper = {
                                     if( controlInfArr && Array.isArray( controlInfArr ) ) {
                                         let controlUnicClassName = controlInfArr[0];
 
-                                        element.addEventListener( 'wptb-control:' + controlUnicClassName, function() {
+                                        element.addEventListener( 'wptb-control:' + controlUnicClassName, function(e) {
                                             let controls = {};
                                             let controlName = controlInfArr[2];
                                             let control = document.getElementsByClassName( controlUnicClassName );
                                             if( control.length > 0 && controlName ) {
                                                 let targetControlValue = WPTB_Helper.targetControlValueGet( control );
 
-                                                controls[controlName] = targetControlValue;
+                                                if(acceptEventValues) {
+                                                    controls[controlName] = {
+                                                        targetValue: targetControlValue,
+                                                        eventValue: e.detail.value
+                                                    }
+                                                }else {
+                                                    controls[controlName] = targetControlValue;
+                                                }
                                             }
-
                                             functionHandler( controls, element );
                                         }, false );
                                     }
@@ -1890,5 +1896,33 @@ var WPTB_Helper = {
                 WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
             }
         }
-    }
+    },
+    /**
+     * Get parent html element of given type
+     *
+     * @param {string} parentType type of parent element
+     * @param {HTMLElement} el current element
+     * @returns {*} html element of type
+     */
+    getParentOfType: (parentType, el) => {
+       if(el.nodeName === parentType.toUpperCase()) {
+           return el;
+       }
+
+       return WPTB_Helper.getParentOfType(parentType , el.parentElement);
+    },
+    // current relative type of drag element
+    // this type is used on differentiating certain elements based on their positioning on table
+    dragRelativeType : '',
+    /**
+     *
+     * @param {string} val drag relative type
+     */
+    setDragRelativeType: function (val){
+        this.dragRelativeType = val;
+    },
+    // get drag relative type
+    getDragRelativeType : function(){
+        return this.dragRelativeType;
+    },
 }

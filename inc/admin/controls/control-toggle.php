@@ -35,7 +35,7 @@ class Control_Toggle extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-        
+
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Control_Toggle extends Base_Control {
             if( data.label ) {
                 label = data.label;
             }
-            
+
             let i = 0;
             for ( let prop in data.selectors ) {
                 selectors[i] = [];
@@ -68,11 +68,11 @@ class Control_Toggle extends Base_Control {
                 selectors[i][1] = data.selectors[prop];
                 i++;
             }
-            
+
             if( selectors && Array.isArray( selectors ) ) {
                 selectorsJson = JSON.stringify( selectors );
             }
-            
+
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
@@ -83,15 +83,15 @@ class Control_Toggle extends Base_Control {
             
             targetInputAddClass = data.elementControlTargetUnicClass;
         #>
-        
-        <div class="wptb-settings-row wptb-settings-middle-xs">
+
+        <div id="{{{targetInputAddClass}}}" class="wptb-settings-row wptb-settings-middle-xs">
             <label class="wptb-toggle">
                 <span style="font-size: 16px">{{{label}}}</span>
                 <input class="wptb-element-property {{{targetInputAddClass}}}" type="checkbox" data-element="{{{elemContainer}}}">
                 <i></i>
-            </label>  
+            </label>
         </div>
-        
+
         <wptb-template-script>
             ( function() {
                 let targetInputs = document.getElementsByClassName( '{{{targetInputAddClass}}}' );
@@ -270,7 +270,7 @@ class Control_Toggle extends Base_Control {
                 }
             } )();
         </wptb-template-script>
-        
+
 		<?php
 	}
 }

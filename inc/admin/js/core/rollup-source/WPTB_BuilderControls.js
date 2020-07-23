@@ -7,6 +7,8 @@
 import Vue from 'vue';
 import WPTB_IconSelectControl from './mountPoints/WPTB_IconSelectControl';
 import WPTB_RangeControl from './mountPoints/WPTB_RangeControl';
+import WPTB_Select2Control from './mountPoints/WPTB_Select2Control';
+import WPTB_MediaSelectControl from './mountPoints/WPTB_MediaSelectControl';
 import WPTB_ControlsManager from './functions/WPTB_ControlsManager';
 import WPTB_ResponsiveTable from './mountPoints/WPTB_ResponsiveTable';
 
@@ -19,7 +21,14 @@ const global = self || this;
 // adding controls manager to global space
 global.WPTB_ControlsManager = WPTB_ControlsManager;
 
-const controls = [WPTB_IconSelectControl, WPTB_RangeControl, WPTB_ControlsManager, WPTB_ResponsiveTable];
+const controls = [
+	WPTB_IconSelectControl,
+	WPTB_RangeControl,
+	WPTB_ControlsManager,
+	WPTB_Select2Control,
+	WPTB_MediaSelectControl,
+	WPTB_ResponsiveTable,
+];
 
 /**
  * Register control element.

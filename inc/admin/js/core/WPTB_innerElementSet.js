@@ -13,8 +13,9 @@ var WPTB_innerElementSet = function  ( element ) {
         e.preventDefault();
         WPTB_DropHandle(this, e);
     }
-    element.ondragleave = function () {
-        
+    element.ondragleave = function (e) {
+        WPTB_DropHandle(this, e, true);
+
     }
     element.ondrop = function(e) {
         this.classList.remove( 'wptb-ondragenter' );
@@ -42,21 +43,31 @@ var WPTB_innerElementSet = function  ( element ) {
             element = document.getElementsByClassName( classId )[0];
             //element.classList.remove( 'wptb-moving-mode' );
         }
-        
-        if( wptbDropHandle.style.display == 'block' ) {
+
+        if(WPTB_Helper.getDragRelativeType() === 'td_relative'){
+            WPTB_DropHandle(this, e, true);
+            const parentCell = WPTB_Helper.getParentOfType('td', e.target);
+
+            parentCell.appendChild(element);
+            WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
+
+        }else if( wptbDropHandle.style.display == 'block' ) {
             let td;
             if( wptbDropHandle.dataset.text == 'Drop Here' ) {
                 td = wptbDropHandle.getDOMParentElement();
                 td.appendChild( element );
+                WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
             } else {
                 let innerElement = wptbDropHandle.getDOMParentElement();
                 td = innerElement.parentNode;
 
                 if( wptbDropHandle.dataset.text == 'Above Element' ) {
                     td.insertBefore( element, innerElement );
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 } else if( wptbDropHandle.dataset.text == 'Below Element' ) {
                     let innerElementNext = innerElement.nextSibling;
                     td.insertBefore( element, innerElementNext );
+                    WPTB_Helper.wptbDocumentEventGenerate('element:mounted:dom', element);
                 }
             }
             
@@ -78,9 +89,11 @@ var WPTB_innerElementSet = function  ( element ) {
         } else {
             return;
         }
-        
-        wptbDropHandle.style.display = 'none';
-        wptbDropBorderMarker.style.display = 'none';
+
+        if(wptbDropHandle){
+            wptbDropHandle.style.display = 'none';
+            wptbDropBorderMarker.style.display = 'none';
+        }
 
         WPTB_innerElementSet( element );
         

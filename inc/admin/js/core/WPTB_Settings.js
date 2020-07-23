@@ -6,6 +6,9 @@ var WPTB_Settings = function () {
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.setData( 'wptbElement', event.target.dataset.wptbElement );
             event.dataTransfer.setData( 'wptbElIndic-' + event.target.dataset.wptbElement, 'wptbElIndic-' + event.target.dataset.wptbElement );
+
+            // set drag relative helper field for future use
+            WPTB_Helper.setDragRelativeType(this.dataset.wptbRelativeElements || '');
         }
         elems[i].ondragend = function () {
             WPTB_Helper.elementDragEndClear();

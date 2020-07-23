@@ -102,13 +102,15 @@ class Control_Color extends Base_Control {
             targetInputAddClass = data.elementControlTargetUnicClass;
             let dataJson = JSON.stringify( data );
         #>
-        <div class='wptb-settings-item-header' >
-            <p class="wptb-settings-item-title">{{{label}}}</p>
-        </div>
-        <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
-            <div class='wptb-settings-col-xs-8'>
-                <input type="text" class="wptb-element-property wptb-color-picker {{{targetInputAddClass}}}" 
-                       data-element="{{{elemContainer}}}" data-type="color" value=""/>
+        <div id="{{{targetInputAddClass}}}">
+            <div class='wptb-settings-item-header'>
+                <p class="wptb-settings-item-title">{{{label}}}</p>
+            </div>
+            <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-top: 25px; padding-bottom: 10px;">
+                <div class='wptb-settings-col-xs-8'>
+                    <input type="text" class="wptb-element-property wptb-color-picker {{{targetInputAddClass}}}"
+                           data-element="{{{elemContainer}}}" data-type="color" value=""/>
+                </div>
             </div>
         </div>
         

@@ -121,4 +121,15 @@ abstract class Element_Base extends Element_Base_Object {
 	public function get_type() {
 		return Elements_Manager::BASIC;
 	}
+
+
+	/**
+     * Get relative of element
+     * This function will be used to determine the positioning of elements on drop events
+     *
+	 * @return string position relative
+	 */
+	public function position_relative(  ) {
+	    return Elements_Manager::ELEMENT_RELATIVE;
+	}
 }

@@ -6,6 +6,9 @@
 				<input
 					class="wptb-element-property wptb-size-slider"
 					type="range"
+					:class="uniqueId"
+					:data-element="elemContainer"
+					data-type="range"
 					:min="min"
 					:max="max"
 					:step="step"
@@ -20,6 +23,9 @@
 					:min="min"
 					:max="max"
 					:step="step"
+					:class="uniqueId"
+					:data-element="elemContainer"
+					data-type="range"
 				/>
 			</div>
 		</div>
@@ -52,19 +58,18 @@ export default {
 		},
 	},
 	mixins: [ControlBase],
-	data() {
-		return {
-			elementMainValue: this.defaultValue,
-		};
-	},
 	mounted() {
 		this.assignDefaultValue();
 	},
 	watch: {
 		elementMainValue(n) {
 			const clampedValue = this.clampValue(n);
-			this.setTargetValue(this.targetElements[0], clampedValue);
+
+			this.setAllValues(clampedValue);
+
 			// check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
+			this.generateChangeEvent(clampedValue);
+
 			this.setTableDirty(true);
 		},
 	},

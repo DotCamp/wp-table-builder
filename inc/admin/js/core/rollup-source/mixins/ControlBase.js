@@ -1,4 +1,5 @@
 import selectorOperations from '../functions/selector';
+
 /**
  * Base mixin for control items
  */
@@ -11,6 +12,17 @@ const ControlBase = {
 			default: () => {
 				return [];
 			},
+		},
+		defaultValue: null,
+		uniqueId: {
+			type: String,
+			required: false,
+			default: '',
+		},
+		elemContainer: {
+			type: String,
+			required: false,
+			default: '',
 		},
 	},
 	data() {
@@ -31,14 +43,27 @@ const ControlBase = {
 	},
 	methods: {
 		/**
+		 * Generate a control value changed event.
+		 *
+		 * @param {any} value value to be emitted
+		 */
+		generateChangeEvent(value) {
+			WPTB_Helper.wptbDocumentEventGenerate(`wptb-control:${this.uniqueId}`, this.targetElements[0].element, {
+				value,
+			});
+		},
+		/**
 		 * Assign startup value of default selector to the main element value.
 		 *
-		 * This startup value will be fetched from the DOM element according to the default selector objects properties.
+		 * This startup value will be fetched from the DOM element according to the default selector objects properties. If no startup value is found, then defaultValue prop will be used
 		 */
 		assignDefaultValue() {
-			if (this.startupValue) {
+			if (this.startupValue !== undefined && this.startupValue !== '') {
 				this.mountedDataUpdate = true;
 				this.elementMainValue = this.startupValue;
+			} else if (this.defaultValue !== null) {
+				this.mountedDataUpdate = true;
+				this.elementMainValue = this.defaultValue;
 			}
 		},
 		/**

@@ -68,7 +68,7 @@ $plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 
 									foreach ( $elements as $element ): ?>
                                         <div class="wptb-element" draggable="true"
-                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>">
+                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>" data-wptb-relative-elements="<?php echo esc_attr($element->position_relative()); ?>">
                                             <div class="wptb-element-draggable-icon"><span
                                                         class="dashicons dashicons-menu"></span></div>
 											<?php

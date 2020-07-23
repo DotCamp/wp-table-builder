@@ -1,5 +1,7 @@
 /**
  * Selector helper functions for element data retrieval.
+ *
+ * One of the advanced functionality of selector module is, it can get/set values with a defined format so only raw values will be get and formatted values can be set. Format replace string is {$}. This operator will be replaced with the raw value of the control element. For example; a format of '{$}px' will be translated to '15px' in a control with a value of 15. When getting that value, 15 will be returned. While setting it, this value will be formatted into '15px'.
  */
 
 /**
@@ -14,6 +16,9 @@ function operationSelect(element, type) {
 	switch (type) {
 		case 'dataset':
 			operation = element.dataset;
+			break;
+		case 'style':
+			operation = element.style;
 			break;
 		default:
 			operation = element.dataset;
@@ -32,16 +37,29 @@ function operationSelect(element, type) {
  * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
  */
 function getTargetValue(selector) {
-	const { query, type, key } = selector;
+	const { query, type, key, format } = selector;
 	const elements = [...document.querySelectorAll(query)];
-	if(elements.length > 0) {
+	if (elements.length > 0) {
 		const operation = operationSelect(elements[0], type);
 
 		if (operation) {
-			return { elements, value: operation[key], type, key };
+			let value = operation[key];
+
+			if (format) {
+				const regExpFormat = format.replace('{$}', '(.+)');
+
+				const regExp = new RegExp(`^${regExpFormat}$`, 'g');
+				const testResult = regExp.exec(value);
+
+				if (testResult) {
+					// eslint-disable-next-line prefer-destructuring
+					value = testResult[1];
+				}
+			}
+
+			return { elements, value, type, key, format };
 		}
 	}
-
 	throw new Error(`no related operation found with a type of [${type}]`);
 }
 
@@ -52,12 +70,20 @@ function getTargetValue(selector) {
  * @param {any} value value to be assigned to selector element
  */
 function setTargetValue(selector, value) {
-	const { elements, type, key } = selector;
-	if(Array.isArray(elements) && elements.length > 0) {
+	const { elements, type, key, format } = selector;
+	if (Array.isArray(elements) && elements.length > 0) {
+		// eslint-disable-next-line array-callback-return
 		elements.map((s) => {
-			let operation = operationSelect(s, type);
+			const operation = operationSelect(s, type);
 
-			operation[key] = value;
+			let tempVal = value;
+
+			if (format) {
+				tempVal = format.replace('{$}', value);
+				tempVal = tempVal.replace(new RegExp(/\\/g), '');
+			}
+
+			operation[key] = tempVal;
 		});
 	}
 }
