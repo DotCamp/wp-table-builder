@@ -48,8 +48,14 @@ const ControlBase = {
 		 * @param {any} value value to be emitted
 		 */
 		generateChangeEvent(value) {
-			WPTB_Helper.wptbDocumentEventGenerate(`wptb-control:${this.uniqueId}`, this.targetElements[0].element, {
-				value,
+			// eslint-disable-next-line array-callback-return
+			this.targetElements.map((t) => {
+				// eslint-disable-next-line array-callback-return
+				t.elements.map((el) => {
+					WPTB_Helper.wptbDocumentEventGenerate(`wptb-control:${this.uniqueId}`, el, {
+						value,
+					});
+				});
 			});
 		},
 		/**
