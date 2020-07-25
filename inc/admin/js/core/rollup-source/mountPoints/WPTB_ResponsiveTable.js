@@ -46,6 +46,11 @@ export default {
 						tablet: false,
 						mobile: false,
 					},
+					staticTopRow: {
+						desktop: false,
+						tablet: false,
+						mobile: false,
+					},
 					cellStackDirection: {
 						desktop: 'row',
 						tablet: 'row',

@@ -200,9 +200,9 @@ export default {
 			}
 		},
 		/**
-		 * Deep merge two objects 🐋🐋.
+		 * Deep merge two objects.
 		 *
-		 * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way object reference link will not be broken and reactive abilities of the store will continue to function.
+		 * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way, object reference link will not be broken and reactive abilities of the store will continue to function.
 		 *
 		 * @param {object} baseObj base object
 		 * @param {object} targetObj target object
@@ -214,7 +214,7 @@ export default {
 					if (baseObj[key] !== undefined) {
 						if (typeof baseObj[key] === 'object') {
 							// eslint-disable-next-line no-param-reassign
-							baseObj[key] = { ...baseObj[key], ...targetObj[key] };
+							this.deepMergeObject(baseObj[key], targetObj[key]);
 						} else {
 							// eslint-disable-next-line no-param-reassign
 							baseObj[key] = targetObj[key];

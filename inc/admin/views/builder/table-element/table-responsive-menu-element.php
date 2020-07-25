@@ -130,6 +130,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'enableResponsiveHelp'    => esc_html__( 'Enable responsive capabilities of current table', 'wp-table-builder' ),
 					'stackDirection'          => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
+					'staticTopRow'            => esc_html__( 'Static top row', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
 					'cellsPerRow'             => esc_html__( 'Cells per row', 'wp-table-builder' ),
 					'itemsPerHeader'          => esc_html__( 'Items per header', 'wp-table-builder' ),

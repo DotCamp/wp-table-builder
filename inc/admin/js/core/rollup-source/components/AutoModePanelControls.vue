@@ -4,6 +4,30 @@
 			v-model="directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
 			:label="strings.topRowHeader | cap"
 			:disabled="isDisabled()"
+			:depends-value="directives.modeOptions.auto.staticTopRow[appOptions.currentBreakpoint]"
+			:depends-callback="
+				(d, c) => {
+					if (d === true) {
+						return false;
+					}
+					return c;
+				}
+			"
+		>
+		</panel-toggle-control>
+		<panel-toggle-control
+			v-model="directives.modeOptions.auto.staticTopRow[appOptions.currentBreakpoint]"
+			:label="strings.staticTopRow | cap"
+			:disabled="isDisabled()"
+			:depends-value="directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
+			:depends-callback="
+				(d, c) => {
+					if (d === true) {
+						return false;
+					}
+					return c;
+				}
+			"
 		>
 		</panel-toggle-control>
 		<panel-dropdown-control

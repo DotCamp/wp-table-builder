@@ -11,6 +11,16 @@ const PanelControlBase = {
 			type: Boolean,
 			default: false,
 		},
+		dependsValue: {
+			type: null,
+			default: null,
+		},
+		dependsCallback: {
+			type: Function,
+			default: (d, c) => {
+				return c;
+			},
+		},
 	},
 	data() {
 		return {
@@ -27,6 +37,12 @@ const PanelControlBase = {
 		},
 		innerValue(n) {
 			this.$emit('valueChanged', n);
+		},
+		dependsValue(n) {
+			if (n === null) {
+				return;
+			}
+			this.innerValue = this.dependsCallback.call(this, n, this.innerValue);
 		},
 	},
 	mounted() {

@@ -225,7 +225,9 @@
 
 				// set visibility of connected merge group cells to false to not render them since we added necessary span values to main cell which will leak into their position
 				for (let mc = 0; mc < valueToApply - 1; mc += 1) {
-					this.mergedCells[spanType][mc].setMergedRenderStatus(false);
+					if (this.mergedCells[spanType] && this.mergedCells[spanType][mc]) {
+						this.mergedCells[spanType][mc].setMergedRenderStatus(false);
+					}
 				}
 
 				return true;
@@ -719,11 +721,14 @@
 		 * @param {TableObject} tableObj table object
 		 */
 		this.autoBuild = (tableEl, sizeRange, autoOption, tableObj) => {
+			// base options
 			const direction = autoOption.cellStackDirection[sizeRange];
 			// eslint-disable-next-line prefer-destructuring
 			const topRowAsHeader = autoOption.topRowAsHeader[sizeRange];
-
 			const cellsPerRow = autoOption.cellsPerRow[sizeRange];
+
+			// new options
+			const staticTopRow = autoOption.staticTopRow ? autoOption.staticTopRow[sizeRange] : false;
 
 			tableObj.clearTable();
 
@@ -731,7 +736,7 @@
 				this.buildDefault(tableObj);
 				this.removeDefaultClasses(tableEl);
 			} else {
-				this.autoDirectionBuild(tableObj, direction, topRowAsHeader, cellsPerRow);
+				this.autoDirectionBuild(tableObj, direction, topRowAsHeader, staticTopRow, cellsPerRow);
 				this.addDefaultClasses(tableEl);
 			}
 		};
@@ -746,9 +751,16 @@
 		 * @param {TableObject} tableObj table object
 		 * @param {string} direction direction to read cells, possible options [row, column]
 		 * @param {boolean} topRowAsHeader use top row as header
+		 * @param {boolean} staticTopRow use top row as static
 		 * @param {number} cellsPerRow cells per row
 		 */
-		this.autoDirectionBuild = (tableObj, direction, topRowAsHeader = false, cellsPerRow = 1) => {
+		this.autoDirectionBuild = (
+			tableObj,
+			direction,
+			topRowAsHeader = false,
+			staticTopRow = false,
+			cellsPerRow = 1
+		) => {
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
 			const isRowStacked = direction === 'row';
@@ -762,9 +774,28 @@
 				// eslint-disable-next-line no-lonely-if
 				if (isRowStacked) {
 					const allCellsByRow = [];
+					let rowStartIndex = 0;
+
+					// static top row option is enabled
+					if (staticTopRow) {
+						const topCells = tableObj.getCellsAtRow(0, true);
+
+						const baseCells = topCells.filter((c) => !c.isReference());
+
+						// eslint-disable-next-line array-callback-return
+						baseCells.map((b) => {
+							rowStartIndex += 1;
+							const rowObj = tableObj.addRow('wptb-row');
+							rowObj.el.style.backgroundColor = tableObj.rowColors.header;
+
+							tableObj.appendObjectToRow(b, rowObj.id);
+
+							b.setAttribute('colSpan', cellsPerRow);
+						});
+					}
 
 					// get cells by reading row by row
-					for (let r = 0; r < rows; r += 1) {
+					for (let r = rowStartIndex; r < rows; r += 1) {
 						// eslint-disable-next-line no-loop-func
 						tableObj.getCellsAtRow(r, true).forEach((c) => allCellsByRow.push(c));
 					}
@@ -796,7 +827,25 @@
 				// cell stack direction is selected as column
 				else {
 					const allCellsByCol = [];
-					const rowStartIndex = 0;
+					let rowStartIndex = 0;
+
+					// static top row option is enabled
+					if (staticTopRow) {
+						const topCells = tableObj.getCellsAtRow(0, true);
+
+						const baseCells = topCells.filter((t) => !t.isReference());
+
+						// eslint-disable-next-line array-callback-return
+						baseCells.map((b) => {
+							rowStartIndex += 1;
+							const rowObj = tableObj.addRow('wptb-row');
+							rowObj.el.style.backgroundColor = tableObj.rowColors.header;
+
+							tableObj.appendObjectToRow(b, rowObj.id);
+
+							b.setAttribute('colSpan', cellsPerRow);
+						});
+					}
 
 					// read all cells column by column
 					for (let c = 0; c < columns; c += 1) {
