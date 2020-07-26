@@ -422,8 +422,19 @@
 				logToConsole('no rows are found to parse their colors', 'error');
 			}
 
+			// get row colors if they are defined as datasets on table element
+			const headerDatasetColor = this.tableElement.dataset.wptbHeaderBackgroundColor;
+			const evenRowDatasetColor = this.tableElement.dataset.wptbEvenRowBackgroundColor;
+			const oddRowDatasetColor = this.tableElement.dataset.wptbOddRowBackgroundColor;
+
 			// header row color
-			this.rowColors.header = rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor;
+			this.rowColors.header =
+				// eslint-disable-next-line no-nested-ternary
+				headerDatasetColor !== undefined
+					? headerDatasetColor
+					: rows[0].style.backgroundColor === ''
+					? null
+					: rows[0].style.backgroundColor;
 
 			// calculate needed number of rows to get even and odd row background colors
 			// eslint-disable-next-line no-nested-ternary
@@ -438,8 +449,9 @@
 			}
 
 			// even & odd row colors
-			this.rowColors.even = getComputedStyle(rows[1]).backgroundColor;
-			this.rowColors.odd = getComputedStyle(rows[2]).backgroundColor;
+			// dataset colors have priority over colors gathered from computed row styles
+			this.rowColors.even = evenRowDatasetColor || getComputedStyle(rows[1]).backgroundColor;
+			this.rowColors.odd = evenRowDatasetColor ? oddRowDatasetColor : getComputedStyle(rows[2]).backgroundColor;
 
 			// remove created rows from DOM
 			for (let r = 0; r < rowsNeeded; r += 1) {
