@@ -35,7 +35,16 @@ class Control_Section_Group_Collapse {
 
 		// add group controls
 		foreach ( $section_controls as $control_id => $control_args ) {
-			call_user_func( $control_call, $control_id, $control_args );
+		    $control_pos = 0;
+		    if( is_array( $control_args ) ) {
+                if( array_key_exists( 'control_pos', $control_args ) ) {
+                    $control_pos = $control_args['control_pos'];
+                }
+		        if( array_key_exists( 'control_args', $control_args ) ) {
+		            $control_args = $control_args['control_args'];
+                }
+            }
+			call_user_func( $control_call, $control_id, $control_args, $control_pos );
 		}
 
 		// add section end

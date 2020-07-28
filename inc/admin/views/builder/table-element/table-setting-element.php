@@ -177,18 +177,6 @@ class Table_Setting_Element extends Element_Base_Object {
 						'{{{data.container}}} td' => [ 'border-color' ]
 					]
 				],
-            'tableBorderRadius' =>
-                [
-                    'label'        => __( 'Table Border Radius', 'wp_table_builder' ),
-                    'type'         => Controls_Manager::SIZE,
-                    'selectors'    => [
-                        '{{{data.container}}}' => 'border-radius',
-                    ],
-                    'min'          => '0',
-                    'max'          => '50',
-                    'defaultValue' => '0',
-                    'dimension'    => 'px',
-                ],
 			'applyInnerBorder'     =>
 				[
 					'label'     => __( 'Apply Inner Border', 'wp_table_builder' ),

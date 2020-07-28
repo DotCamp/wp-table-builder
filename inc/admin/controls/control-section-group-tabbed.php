@@ -47,7 +47,16 @@ class Control_Section_Group_Tabbed {
 	 */
 	private static function add_controls( $section_id, $tab_id, $section_controls, $control_call ) {
 		foreach($section_controls as $control_id => $control_options){
-			call_user_func($control_call , $control_id , $control_options);
+            $control_pos = 0;
+            if( is_array( $control_options ) ) {
+                if( array_key_exists( 'control_pos', $control_options ) ) {
+                    $control_pos = $control_options['control_pos'];
+                }
+                if( array_key_exists( 'control_args', $control_options ) ) {
+                    $control_options = $control_options['control_args'];
+                }
+            }
+			call_user_func($control_call , $control_id , $control_options, $control_pos);
 		}
 
 		// end tab content end control
