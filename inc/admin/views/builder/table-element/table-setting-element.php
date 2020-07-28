@@ -131,7 +131,10 @@ class Table_Setting_Element extends Element_Base_Object {
 					'label'     => __( 'Header Background', 'wp_table_builder' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => [
-						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color' ]
+						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color' ],
+					],
+					'dataSets' => [
+						'{{{data.container}}}' => 'wptbHeaderBackgroundColor'
 					]
 				],
 			'tableEvenRowBackground' =>
@@ -140,6 +143,9 @@ class Table_Setting_Element extends Element_Base_Object {
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{{data.container}}} tbody tr:nth-child(2n + 2)' => [ 'background-color' ]
+					],
+					'dataSets' => [
+						'{{{data.container}}}' => 'wptbEvenRowBackgroundColor'
 					]
 				],
 
@@ -149,6 +155,9 @@ class Table_Setting_Element extends Element_Base_Object {
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => [
 						'{{{data.container}}} tbody tr:nth-child(2n + 3)' => [ 'background-color' ]
+					],
+					'dataSets' => [
+						'{{{data.container}}}' => 'wptbOddRowBackgroundColor'
 					]
 				]
 		];

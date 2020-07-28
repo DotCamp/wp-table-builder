@@ -2,6 +2,18 @@ const infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
 const controlKey = 'textarea';
 const elementControlTargetUnicClass = `wptb-el-${infArr[1]}-${controlKey}`;
 
+const allowedChildrenTags = ['div', 'a', 'p', 'ul', 'li', 'ol', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'center'];
+
+const innerChildTextArray = Array.from(allowedChildrenTags);
+innerChildTextArray.push('#text');
+const innerChildText = innerChildTextArray.join('|');
+
+const greatTextWallOfValidChildren = allowedChildrenTags.reduce((p, c) => {
+	const formedValidChildren = `${c}[${innerChildText}]`;
+	p.push(formedValidChildren);
+	return p;
+}, []);
+
 const tinyMceInitStart = function () {
 	tinyMCE.init({
 		target: element.childNodes[0],
@@ -15,21 +27,8 @@ const tinyMceInitStart = function () {
 		forced_root_block: '',
 		paste_as_text: false,
 		toolbar: false,
-		extended_valid_elements:
-			'ul[*],ol[*],p[*],span[*],div[*],ul[*],a[*],svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],\n\
-                            mask[*],path[*],line[*],marker[*],rect[*],circle[*],\n\
-                            ellipse[*],polygon[*],polyline[*],linearGradient[*],\n\
-                            radialGradient[*],stop[*],image[*],view[*],text[*],\n\
-                            textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]',
-		valid_children:
-			'div[div|a|p|ul|li|ol|span|#text],' +
-			'a[div|a|p|ul|li|ol|span|#text],' +
-			'p[div|a|p|ul|li|ol|span|#text],' +
-			'ul[div|a|p|ul|li|ol|span|#text],' +
-			'li[div|a|p|ul|li|ol|span|#text],' +
-			'ol[div|a|p|ul|li|ol|span|#text],' +
-			'span[div|a|p|ul|li|ol|span|#text]' +
-			'',
+		valid_elements: '*[*]',
+		valid_children: greatTextWallOfValidChildren.join(','),
 		allow_script_urls: true,
 		verify_html: false,
 		setup(ed) {

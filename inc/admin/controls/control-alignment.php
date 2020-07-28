@@ -110,16 +110,16 @@ class Control_Alignment extends Base_Control {
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; padding-top: 23px;">
-            <ul>
-                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
+            <ul class="wptb-controls-ul-row">
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
                     {{{selected0}}} {{{targetAddClass}}}" data-alignment-value="left" data-element="{{{elemContainer}}}">
                     <?php echo $left_align_image_svg; ?>
                 </li>
-                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
                     {{{selected1}}} {{{targetAddClass}}}" data-alignment-value="center" data-element="{{{elemContainer}}}">
                     <?php echo $center_align_image_svg; ?>
                 </li>
-                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher 
+                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
                     {{{selected2}}} {{{targetAddClass}}}" data-alignment-value="right" data-element="{{{elemContainer}}}">
                     <?php echo $right_align_image_svg; ?>
                 </li>
