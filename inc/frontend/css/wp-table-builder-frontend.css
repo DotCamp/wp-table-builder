@@ -270,6 +270,7 @@ table.wptb-preview-table {
 .wptb-list-container.wptb-ph-element ul li {
     list-style: none;
     margin: 0px 0px 10px;
+    position: relative;
 }
 
 .wptb-list-container.wptb-ph-element ul li:last-child {
