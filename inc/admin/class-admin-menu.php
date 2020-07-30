@@ -257,7 +257,9 @@ class Admin_Menu {
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
 
 			// builder controls
-			wp_enqueue_script('wptb-controls-manager-js', plugin_dir_url(__FILE__) . 'js/WPTB_BuilderControls.js' , [], NS\PLUGIN_VERSION , false);
+            $builder_path = plugin_dir_path(__FILE__) . 'js/WPTB_BuilderControls.js';
+
+			wp_enqueue_script('wptb-controls-manager-js', plugin_dir_url(__FILE__) . 'js/WPTB_BuilderControls.js' , [], filemtime($builder_path), false);
 
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
