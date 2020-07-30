@@ -64,7 +64,7 @@ const ControlBase = {
 		 * This startup value will be fetched from the DOM element according to the default selector objects properties. If no startup value is found, then defaultValue prop will be used
 		 */
 		assignDefaultValue() {
-			if (this.startupValue !== undefined && this.startupValue !== '') {
+			if (this.startupValue !== undefined && this.startupValue !== '' && this.startupValue !== null) {
 				this.mountedDataUpdate = true;
 				this.elementMainValue = this.startupValue;
 			} else if (this.defaultValue !== null) {

@@ -4089,6 +4089,7 @@ wptb_shortcode_container_element {
     height: 16px;
     cursor: pointer;
     transition: transform 0.1s ease-out;
+    filter: opacity(0.7);
 }
 
 .wptb-sides-link-icon-wrapper:active {

@@ -14,6 +14,11 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * Side value assign control with value type selection.
  *
+ * Accepted options
+ *  label => label for control element
+ *  selectors => selector array to get/set certain values to html elements
+ *  defaultValue => default value of the slider. use full default value for all sides, don't use shorthand definitions. e.g use '10 10 10 10' instead of '10 10'
+ *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
 class Control_Sides extends Base_Control {
@@ -54,21 +59,22 @@ class Control_Sides extends Base_Control {
 		];
 
 		$json_strings = json_encode( $strings );
-		$json_icons = json_encode( $control_icons );
+		$json_icons   = json_encode( $control_icons );
 		?>
-        <#
-        const uniqueItemClass = data.elementControlTargetUnicClass;
-        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-        const elemContainer = data.elemContainer;
-        data.strings = JSON.parse('<?php echo $json_strings; ?>');
-        data.icons = JSON.parse('<?php echo $json_icons; ?>');
-        #>
-        <div id="{{{uniqueItemClass}}}">
-            <sides-control :label="label" :link-icon="icons.link" :unlink-icon="icons.unlink" :strings="strings"></sides-control>
-        </div>
-        <wptb-template-script>
-            WPTB_ControlsManager.callControlScript('ControlSides', '{{{uniqueItemClass}}}');
-        </wptb-template-script>
+      <#
+      const uniqueItemClass = data.elementControlTargetUnicClass;
+      WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+      const elemContainer = data.elemContainer;
+      data.strings = JSON.parse('<?php echo $json_strings; ?>');
+      data.icons = JSON.parse('<?php echo $json_icons; ?>');
+      #>
+      <div id="{{{uniqueItemClass}}}">
+        <sides-control :label="label" :link-icon="icons.link" :unlink-icon="icons.unlink" :strings="strings"
+                       :default-value="defaultValue" :selectors="selectors"></sides-control>
+      </div>
+      <wptb-template-script>
+        WPTB_ControlsManager.callControlScript('ControlSides', '{{{uniqueItemClass}}}');
+      </wptb-template-script>
 		<?php
 	}
 }

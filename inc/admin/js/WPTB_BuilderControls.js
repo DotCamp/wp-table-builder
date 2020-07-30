@@ -12416,7 +12416,7 @@ var ControlBase = {
      * This startup value will be fetched from the DOM element according to the default selector objects properties. If no startup value is found, then defaultValue prop will be used
      */
     assignDefaultValue: function assignDefaultValue() {
-      if (this.startupValue !== undefined && this.startupValue !== '') {
+      if (this.startupValue !== undefined && this.startupValue !== '' && this.startupValue !== null) {
         this.mountedDataUpdate = true;
         this.elementMainValue = this.startupValue;
       } else if (this.defaultValue !== null) {
@@ -18105,7 +18105,7 @@ var _default = {
       this.innerValue = n;
     },
     innerValue: function innerValue(n) {
-      this.$emit('valueChanged', n);
+      this.$emit('valueChanged', Number.parseInt(n, 10));
     }
   }
 };
@@ -18165,7 +18165,56 @@ render._withStripped = true
         })());
       
 },{}],"components/SideDropdown.vue":[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    value: {
+      type: String,
+      default: 'px'
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      options: ['px', '%'],
+      innerValue: ''
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('valueChanged', n);
+    }
+  },
+  methods: {
+    isSelected: function isSelected(k) {
+      return this.innerValue === k;
+    }
+  }
+};
+exports.default = _default;
         var $d95020 = exports.default || module.exports;
       
       if (typeof $d95020 === 'function') {
@@ -18178,36 +18227,58 @@ render._withStripped = true
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-side-control-input-wrapper wptb-side-control-dropdown-wrapper"
+    },
+    [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.innerValue,
+              expression: "innerValue"
+            }
+          ],
+          staticClass:
+            "wptb-side-control-main-input wptb-side-control-dropdown",
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.innerValue = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        _vm._l(_vm.options, function(option) {
+          return _c(
+            "option",
+            {
+              key: option,
+              domProps: { value: option, selected: _vm.isSelected(option) }
+            },
+            [_vm._v(_vm._s(option))]
+          )
+        }),
+        0
+      )
+    ]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "wptb-side-control-input-wrapper wptb-side-control-dropdown-wrapper"
-      },
-      [
-        _c(
-          "select",
-          {
-            staticClass:
-              "wptb-side-control-main-input wptb-side-control-dropdown"
-          },
-          [
-            _c("option", { attrs: { value: "px" } }, [_vm._v("px")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "%" } }, [_vm._v("%")])
-          ]
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -18235,33 +18306,26 @@ var _SideDropdown = _interopRequireDefault(require("../components/SideDropdown")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var _default = {
   props: {
     linkIcon: {
@@ -18275,6 +18339,10 @@ var _default = {
     strings: {
       type: Object,
       required: true
+    },
+    defaultValue: {
+      type: String,
+      default: '0 0 0 0'
     }
   },
   mixins: [_ControlBase.default],
@@ -18287,15 +18355,133 @@ var _default = {
       linkValues: false,
       sideValues: {
         top: 0,
-        right: 10,
+        right: 0,
         bottom: 0,
         left: 0
-      }
+      },
+      type: 'px'
     };
+  },
+  mounted: function mounted() {
+    this.assignDefaultValue();
+    this.parseElementValue();
+  },
+  watch: {
+    sideValues: {
+      handler: function handler() {
+        this.calculateElementValue();
+      },
+      deep: true
+    },
+    'sideValues.top': {
+      handler: function handler() {
+        this.assignLinkedValues();
+      }
+    },
+    linkValues: function linkValues() {
+      this.assignLinkedValues();
+    },
+    elementMainValue: function elementMainValue(n) {
+      this.setAllValues(n);
+      this.generateChangeEvent(n);
+      this.setTableDirty(true);
+    },
+    type: function type() {
+      this.calculateElementValue();
+    }
   },
   methods: {
     controlDisabled: function controlDisabled(index) {
       return this.linkValues && index > 0;
+    },
+    calculateElementValue: function calculateElementValue() {
+      var _this = this;
+
+      this.elementMainValue = Object.keys(this.sideValues) // eslint-disable-next-line array-callback-return,consistent-return
+      .map(function (k) {
+        if (Object.prototype.hasOwnProperty.call(_this.sideValues, k)) {
+          return _this.sideValues[k] + _this.type;
+        }
+      }).join(' ');
+    },
+    assignLinkedValues: function assignLinkedValues() {
+      var _this2 = this;
+
+      if (this.linkValues) {
+        Object.keys(this.sideValues).filter(function (f) {
+          return f !== 'top';
+        }) // eslint-disable-next-line array-callback-return
+        .map(function (k) {
+          if (Object.prototype.hasOwnProperty.call(_this2.sideValues, k)) {
+            _this2.sideValues[k] = _this2.sideValues.top;
+          }
+        });
+      }
+    },
+    parseElementValue: function parseElementValue() {
+      var parsedType = 'px'; // find out value type from element main value or use the default type
+      // eslint-disable-next-line array-callback-return
+
+      this.elementMainValue.split(' ').map(function (s) {
+        var match = s.match(/([a-z%?]+)/);
+
+        if (match && match[1]) {
+          var _match = _slicedToArray(match, 2);
+
+          parsedType = _match[1];
+        }
+      });
+      this.type = parsedType;
+
+      var values = _toConsumableArray(this.elementMainValue.matchAll(/[\d]+/g)).flatMap(function (s) {
+        return Number.parseInt(s[0], 10);
+      });
+
+      if (values) {
+        if (values.length === 1) {
+          var _values = _slicedToArray(values, 1);
+
+          this.sideValues.top = _values[0];
+
+          var _values2 = _slicedToArray(values, 1);
+
+          this.sideValues.bottom = _values2[0];
+
+          var _values3 = _slicedToArray(values, 1);
+
+          this.sideValues.left = _values3[0];
+
+          var _values4 = _slicedToArray(values, 1);
+
+          this.sideValues.right = _values4[0];
+          // link values if all of the parsed values are the same
+          this.linkValues = true;
+        } else if (values.length === 2) {
+          var _values5 = _slicedToArray(values, 2);
+
+          this.sideValues.bottom = _values5[0];
+          this.sideValues.left = _values5[1];
+
+          var _values6 = _slicedToArray(values, 2);
+
+          this.sideValues.top = _values6[0];
+          this.sideValues.right = _values6[1];
+        } else if (values.length === 3) {
+          var _values7 = _slicedToArray(values, 3);
+
+          this.sideValues.top = _values7[0];
+          this.sideValues.right = _values7[1];
+          this.sideValues.bottom = _values7[2];
+          this.sideValues.left = 0;
+        } else {
+          var _values8 = _slicedToArray(values, 4);
+
+          this.sideValues.top = _values8[0];
+          this.sideValues.right = _values8[1];
+          this.sideValues.bottom = _values8[2];
+          this.sideValues.left = _values8[3];
+        }
+      }
     }
   }
 };
@@ -18365,7 +18551,15 @@ exports.default = _default;
           })
         }),
         _vm._v(" "),
-        _c("side-dropdown")
+        _c("side-dropdown", {
+          model: {
+            value: _vm.type,
+            callback: function($$v) {
+              _vm.type = $$v
+            },
+            expression: "type"
+          }
+        })
       ],
       2
     )

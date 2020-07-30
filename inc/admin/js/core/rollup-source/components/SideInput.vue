@@ -41,7 +41,7 @@ export default {
 			this.innerValue = n;
 		},
 		innerValue(n) {
-			this.$emit('valueChanged', n);
+			this.$emit('valueChanged', Number.parseInt(n, 10));
 		},
 	},
 };
