@@ -13,13 +13,16 @@
 				</div>
 			</div>
 		</div>
-		<div class="wptb-settings-row wptb-settings-middle-xs wptb-sides-controls-wrapper">
+		<div
+			class="wptb-settings-row wptb-settings-middle-xs wptb-sides-controls-wrapper"
+			:class="{ 'wptb-side-values-linked': linkValues }"
+		>
 			<side-input
-				v-for="(v, k, i) in sideValues"
+				v-for="(v, k) in sideValues"
 				:label="strings[k]"
 				:key="k"
 				v-model="sideValues[k]"
-				:disabled="controlDisabled(i)"
+				@changedFromFront="inputChanged"
 			></side-input>
 			<side-dropdown v-model="type"></side-dropdown>
 		</div>
@@ -60,6 +63,7 @@ export default {
 				bottom: 0,
 				left: 0,
 			},
+			lastEdited: 'top',
 			type: 'px',
 		};
 	},
@@ -74,28 +78,24 @@ export default {
 			},
 			deep: true,
 		},
-		'sideValues.top': {
-			handler() {
-				this.assignLinkedValues();
-			},
-		},
-		linkValues() {
-			this.assignLinkedValues();
-		},
 		elementMainValue(n) {
 			this.setAllValues(n);
 			this.generateChangeEvent(n);
 			this.setTableDirty(true);
+		},
+		linkValues() {
+			this.calculateElementValue();
 		},
 		type() {
 			this.calculateElementValue();
 		},
 	},
 	methods: {
-		controlDisabled(index) {
-			return this.linkValues && index > 0;
+		inputChanged(key) {
+			this.lastEdited = key;
 		},
 		calculateElementValue() {
+			this.assignLinkedValues();
 			this.elementMainValue = Object.keys(this.sideValues)
 				// eslint-disable-next-line array-callback-return,consistent-return
 				.map((k) => {
@@ -108,11 +108,11 @@ export default {
 		assignLinkedValues() {
 			if (this.linkValues) {
 				Object.keys(this.sideValues)
-					.filter((f) => f !== 'top')
+					.filter((f) => f !== this.lastEdited)
 					// eslint-disable-next-line array-callback-return
 					.map((k) => {
 						if (Object.prototype.hasOwnProperty.call(this.sideValues, k)) {
-							this.sideValues[k] = this.sideValues.top;
+							this.sideValues[k] = this.sideValues[this.lastEdited];
 						}
 					});
 			}
@@ -129,13 +129,16 @@ export default {
 				}
 			});
 
+			// assign startup value type
 			this.type = parsedType;
 
+			// fetch style syntaxed values and split them into array elements
 			const values = [...this.elementMainValue.matchAll(/[\d]+/g)].flatMap((s) => {
 				return Number.parseInt(s[0], 10);
 			});
 
 			if (values) {
+				// assign values to their respective properties
 				if (values.length === 1) {
 					[this.sideValues.top] = values;
 					[this.sideValues.bottom] = values;

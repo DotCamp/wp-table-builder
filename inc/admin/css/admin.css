@@ -4115,6 +4115,15 @@ wptb_shortcode_container_element {
     text-align: center;
 }
 
+.wptb-side-control-number-input {
+    transition: all 0.3s ease-out;
+    margin-left: 5px;
+}
+
+.wptb-side-values-linked .wptb-side-control-number-input {
+    margin-left: 0;
+}
+
 .wptb-side-control-main-input:active, .wptb-side-control-main-input:focus {
     outline: none !important;
     box-shadow: none !important;

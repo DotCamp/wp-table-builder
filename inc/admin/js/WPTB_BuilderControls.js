@@ -18073,6 +18073,12 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     label: {
@@ -18107,6 +18113,12 @@ var _default = {
     innerValue: function innerValue(n) {
       this.$emit('valueChanged', Number.parseInt(n, 10));
     }
+  },
+  methods: {
+    inputChange: function inputChange(e) {
+      this.$emit('changedFromFront', this.$vnode.key, e.target.value);
+      this.innerValue = e.target.value;
+    }
   }
 };
 exports.default = _default;
@@ -18122,35 +18134,27 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-side-control-input-wrapper" }, [
-    _c("div", { staticClass: "wptb-side-control-header" }, [
-      _vm._v("\n\t\t" + _vm._s(_vm._f("cap")(_vm.label)) + "\n\t")
-    ]),
-    _vm._v(" "),
-    _c("div", [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.innerValue,
-            expression: "innerValue"
-          }
-        ],
-        staticClass: "wptb-side-control-main-input",
-        attrs: { type: "number", disabled: _vm.disabled },
-        domProps: { value: _vm.innerValue },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.innerValue = $event.target.value
-          }
-        }
-      })
-    ])
-  ])
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-side-control-input-wrapper wptb-side-control-number-input"
+    },
+    [
+      _c("div", { staticClass: "wptb-side-control-header" }, [
+        _vm._v("\n\t\t" + _vm._s(_vm._f("cap")(_vm.label)) + "\n\t")
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c("input", {
+          staticClass: "wptb-side-control-main-input",
+          attrs: { type: "number", disabled: _vm.disabled },
+          domProps: { value: _vm.innerValue },
+          on: { input: _vm.inputChange }
+        })
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -18359,6 +18363,7 @@ var _default = {
         bottom: 0,
         left: 0
       },
+      lastEdited: 'top',
       type: 'px'
     };
   },
@@ -18373,30 +18378,26 @@ var _default = {
       },
       deep: true
     },
-    'sideValues.top': {
-      handler: function handler() {
-        this.assignLinkedValues();
-      }
-    },
-    linkValues: function linkValues() {
-      this.assignLinkedValues();
-    },
     elementMainValue: function elementMainValue(n) {
       this.setAllValues(n);
       this.generateChangeEvent(n);
       this.setTableDirty(true);
+    },
+    linkValues: function linkValues() {
+      this.calculateElementValue();
     },
     type: function type() {
       this.calculateElementValue();
     }
   },
   methods: {
-    controlDisabled: function controlDisabled(index) {
-      return this.linkValues && index > 0;
+    inputChanged: function inputChanged(key) {
+      this.lastEdited = key;
     },
     calculateElementValue: function calculateElementValue() {
       var _this = this;
 
+      this.assignLinkedValues();
       this.elementMainValue = Object.keys(this.sideValues) // eslint-disable-next-line array-callback-return,consistent-return
       .map(function (k) {
         if (Object.prototype.hasOwnProperty.call(_this.sideValues, k)) {
@@ -18409,11 +18410,11 @@ var _default = {
 
       if (this.linkValues) {
         Object.keys(this.sideValues).filter(function (f) {
-          return f !== 'top';
+          return f !== _this2.lastEdited;
         }) // eslint-disable-next-line array-callback-return
         .map(function (k) {
           if (Object.prototype.hasOwnProperty.call(_this2.sideValues, k)) {
-            _this2.sideValues[k] = _this2.sideValues.top;
+            _this2.sideValues[k] = _this2.sideValues[_this2.lastEdited];
           }
         });
       }
@@ -18430,14 +18431,16 @@ var _default = {
 
           parsedType = _match[1];
         }
-      });
-      this.type = parsedType;
+      }); // assign startup value type
+
+      this.type = parsedType; // fetch style syntaxed values and split them into array elements
 
       var values = _toConsumableArray(this.elementMainValue.matchAll(/[\d]+/g)).flatMap(function (s) {
         return Number.parseInt(s[0], 10);
       });
 
       if (values) {
+        // assign values to their respective properties
         if (values.length === 1) {
           var _values = _slicedToArray(values, 1);
 
@@ -18534,13 +18537,15 @@ exports.default = _default;
       "div",
       {
         staticClass:
-          "wptb-settings-row wptb-settings-middle-xs wptb-sides-controls-wrapper"
+          "wptb-settings-row wptb-settings-middle-xs wptb-sides-controls-wrapper",
+        class: { "wptb-side-values-linked": _vm.linkValues }
       },
       [
-        _vm._l(_vm.sideValues, function(v, k, i) {
+        _vm._l(_vm.sideValues, function(v, k) {
           return _c("side-input", {
             key: k,
-            attrs: { label: _vm.strings[k], disabled: _vm.controlDisabled(i) },
+            attrs: { label: _vm.strings[k] },
+            on: { changedFromFront: _vm.inputChanged },
             model: {
               value: _vm.sideValues[k],
               callback: function($$v) {

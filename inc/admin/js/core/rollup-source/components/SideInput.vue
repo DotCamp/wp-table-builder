@@ -1,10 +1,16 @@
 <template>
-	<div class="wptb-side-control-input-wrapper">
+	<div class="wptb-side-control-input-wrapper wptb-side-control-number-input">
 		<div class="wptb-side-control-header">
 			{{ label | cap }}
 		</div>
 		<div>
-			<input class="wptb-side-control-main-input" type="number" v-model="innerValue" :disabled="disabled" />
+			<input
+				class="wptb-side-control-main-input"
+				type="number"
+				:value="innerValue"
+				@input="inputChange"
+				:disabled="disabled"
+			/>
 		</div>
 	</div>
 </template>
@@ -42,6 +48,12 @@ export default {
 		},
 		innerValue(n) {
 			this.$emit('valueChanged', Number.parseInt(n, 10));
+		},
+	},
+	methods: {
+		inputChange(e) {
+			this.$emit('changedFromFront', this.$vnode.key, e.target.value);
+			this.innerValue = e.target.value;
 		},
 	},
 };
