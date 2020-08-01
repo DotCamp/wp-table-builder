@@ -78,11 +78,14 @@ var WPTB_DropHandle = function (thisElem, e, hide = false) {
         }
         
         wptbDropHandle.ondragenter = function () {
-
+            if (e.target.classList.contains('wptb-empty')) {
+                e.preventDefault();
+                return false;
+            }
         }
 
         wptbDropHandle.ondragover = function (e) {
-            e.preventDefault();
+            e.preventDefault();            
         }
 
         wptbDropHandle.ondragleave = function () {
@@ -153,7 +156,12 @@ var WPTB_DropHandle = function (thisElem, e, hide = false) {
         wptbDropBorderMarker = document.getElementsByClassName( 'wptb-drop-border-marker' )[0];
     }
     if( thisElem && thisElem.nodeName.toLowerCase() == 'td' && 
-            thisElem.getElementsByClassName( 'wptb-ph-element' ).length != 0 ) {
+            thisElem.getElementsByClassName( 'wptb-ph-element' ).length != 0) {
+        return;
+    }
+
+    if( thisElem && thisElem.nodeName.toLowerCase() == 'td' && 
+            thisElem.classList.contains('wptb-empty')) {
         return;
     }
     
