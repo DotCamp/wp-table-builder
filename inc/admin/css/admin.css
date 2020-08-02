@@ -3593,7 +3593,6 @@ wptb_shortcode_container_element {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*margin: 20px 0;*/
 }
 
 .wptb-html-control-wrapper > div {
@@ -3602,6 +3601,18 @@ wptb_shortcode_container_element {
 
 .wptb-html-control-wrapper div:last-child {
     /*margin-bottom: 40px;*/
+}
+
+.wptb-help-support-section-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.wptb-help-support-section-wrapper div {
+    margin: 5px 0;
 }
 
 .wptb-builder-responsive {

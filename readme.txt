@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.5
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -85,6 +85,15 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.5 =
+
+* NEW: Static Top Row Option for Responsive Builder.
+* FIX: Issue of Some Elements Being Removed from Custom HTML.
+* FIX: Row Color Logic is Updated for Responsive Builder.
+* IMPROVEMENT: Minor Control Related Updates to Both Functionality And Visuals.
+* IMPROVEMENT: Cell Management Operations.
+* IMPROVEMENT: Updates to App Security and Performance.
 
 = 1.2.4 =
 
