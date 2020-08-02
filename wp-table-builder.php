@@ -75,7 +75,7 @@ define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'WP_TABLE_BUILDER', 'wp-table-builder' );
 
-define( NS . 'PLUGIN_VERSION', '1.2.4' );
+define( NS . 'PLUGIN_VERSION', '1.2.5' );
 
 define( NS . 'WP_TABLE_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 
