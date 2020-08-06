@@ -1,5 +1,9 @@
 <template>
-	<div class="wptb-settings-row wptb-settings-middle-xs">
+	<div
+		class="wptb-settings-row wptb-settings-middle-xs wptb-element-property"
+		:class="uniqueId"
+		:data-element="elemContainer"
+	>
 		<div class="wptb-settings-space-between">
 			<p class="wptb-settings-item-title">{{ label }}</p>
 			<div class="wptb-named-toggle-control-wrapper">

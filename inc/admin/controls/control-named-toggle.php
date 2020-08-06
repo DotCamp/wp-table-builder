@@ -47,9 +47,12 @@ class Control_Named_Toggle extends Base_Control {
       <#
       const uniqueItemClass = data.elementControlTargetUnicClass;
       WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+      const elemContainer = data.elemContainer;
       #>
       <div id="{{{uniqueItemClass}}}">
-        <named-toggle-control :label="label" :items="items" :selectors="selectors" :default-value="defaultValue"></named-toggle-control>
+        <named-toggle-control :label="label" :items="items" :selectors="selectors" :default-value="defaultValue"
+                              elem-container="{{{elemContainer}}}"
+                              unique-id="{{{uniqueItemClass}}}"></named-toggle-control>
       </div>
       <wptb-template-script>
         WPTB_ControlsManager.callControlScript('ControlNamedToggle', '{{{uniqueItemClass}}}');
