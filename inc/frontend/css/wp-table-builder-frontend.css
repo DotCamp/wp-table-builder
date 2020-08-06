@@ -254,6 +254,11 @@ table.wptb-preview-table {
     display: none;
 }
 
+
+[data-wptb-button-icon-position='right'] .wptb-button-icon {
+    order: 2
+}
+
 .wptb-plugin-button-order-right .wptb-button-icon {
     order: 2;
 }

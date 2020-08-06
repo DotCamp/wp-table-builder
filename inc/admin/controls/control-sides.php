@@ -64,7 +64,6 @@ class Control_Sides extends Base_Control {
       <#
       const uniqueItemClass = data.elementControlTargetUnicClass;
       WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-      const elemContainer = data.elemContainer;
       data.strings = JSON.parse('<?php echo $json_strings; ?>');
       data.icons = JSON.parse('<?php echo $json_icons; ?>');
       #>

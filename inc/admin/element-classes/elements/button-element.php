@@ -224,16 +224,36 @@ class Button_Element extends Element_Base {
 					]
 				]
 			],
+//			'iconPosition'     => [
+//				'label'     => __( 'Icon Position', $text_domain ),
+//				'type'      => Controls_Manager::SELECT,
+//				'options'   => [
+//					[ esc_html__( 'Left', $text_domain ), 'left', '' ],
+//					[ esc_html__( 'Right', $text_domain ), 'right', 'wptb-plugin-button-order-right' ],
+//				],
+//				'selectors' => [
+//					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
+//				]
+//			],
 			'iconPosition' => [
-				'label'     => __( 'Icon Position', $text_domain ),
-				'type'      => Controls_Manager::SELECT,
-				'options'   => [
-					[ esc_html__( 'Left', $text_domain ), 'left', '' ],
-					[ esc_html__( 'Right', $text_domain ), 'right', 'wptb-plugin-button-order-right' ],
+				'label'        => esc_html__( 'Icon Position', 'wp-table-builder' ),
+				'type'         => Controls_Manager::NAMED_TOGGLE,
+				'items'        => [
+					'left'  => esc_html__( 'left', 'wp-table-builder' ),
+					'right' => esc_html__( 'right', 'wp-table-builder' ),
 				],
-				'selectors' => [
-					'{{{data.container}}} .wptb-button-wrapper a .wptb-button' => 'class'
-				]
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbButtonIconPosition'
+					],
+            [
+                'query' => '{{{data.container}}}',
+                'type' => Controls_Manager::CLASSTYPE,
+            ]
+				],
+				'defaultValue' => 'left'
 			],
 			'iconSize'     =>
 				[
@@ -271,16 +291,16 @@ class Button_Element extends Element_Base {
 	 */
 	protected function _content_template() {
 		?>
-        <div class="wptb-button-wrapper wptb-size-m">
-            <a>
-                <div class="wptb-button"
-                     style="position: relative;">
-                    <p>Button Text</p>
-                    <div class="wptb-button-icon" data-wptb-button-icon-src="">
-                    </div>
-                </div>
-            </a>
-        </div>
+      <div class="wptb-button-wrapper wptb-size-m">
+        <a>
+          <div class="wptb-button"
+               style="position: relative;">
+            <p>Button Text</p>
+            <div class="wptb-button-icon" data-wptb-button-icon-src="">
+            </div>
+          </div>
+        </a>
+      </div>
 		<?php
 	}
 }

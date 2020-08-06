@@ -1,5 +1,5 @@
 /**
- * Range slider control
+ * Range slider control.
  */
 /* eslint-disable camelcase */
 import Vue from 'vue';
