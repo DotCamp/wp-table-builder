@@ -12161,6 +12161,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -12184,7 +12194,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  *
  * @param {HTMLElement} element html element
  * @param {string} type element attribute/property type
- * @returns {DOMStringMap|(function(): *)} suitable operation for supplied arguments
+ * @returns {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
  */
 function operationSelect(element, type) {
   var operation = null;
@@ -12198,6 +12208,10 @@ function operationSelect(element, type) {
       operation = element.style;
       break;
 
+    case 'class':
+      operation = 'class';
+      break;
+
     default:
       operation = element.dataset;
       break;
@@ -12208,7 +12222,7 @@ function operationSelect(element, type) {
 /**
  * Get value of HTMLElement.
  *
- * Supported value types: dataset
+ * Supported value types: dataset, style, classList
  *
  * @param {string} selector query string for element search
  * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
@@ -12227,16 +12241,39 @@ function getTargetValue(selector) {
     var operation = operationSelect(elements[0], type);
 
     if (operation) {
-      var value = operation[key];
+      var value;
+
+      if (operation === 'class') {
+        value = elements[0].getAttribute('class');
+      } else {
+        value = operation[key];
+      }
 
       if (format) {
         var regExpFormat = format.replace('{$}', '(.+)');
+        var testResult;
         var regExp = new RegExp("^".concat(regExpFormat, "$"), 'g');
-        var testResult = regExp.exec(value);
+
+        if (operation === 'class') {
+          value.split(' ').some(function (s) {
+            var result = regExp.exec(s);
+
+            if (result === null) {
+              return false;
+            }
+
+            testResult = result;
+            return true;
+          });
+        } else {
+          testResult = regExp.exec(value);
+        }
 
         if (testResult) {
           // eslint-disable-next-line prefer-destructuring
           value = testResult[1];
+        } else {
+          value = null;
         }
       }
 
@@ -12269,15 +12306,55 @@ function setTargetValue(selector, value) {
   if (Array.isArray(elements) && elements.length > 0) {
     // eslint-disable-next-line array-callback-return
     elements.map(function (s) {
-      var operation = operationSelect(s, type);
-      var tempVal = value;
+      var operation = operationSelect(s, type); // class type specific operations
 
-      if (format) {
-        tempVal = format.replace('{$}', value);
-        tempVal = tempVal.replace(new RegExp(/\\/g), '');
+      if (operation === 'class') {
+        var currentClass = null;
+        var val; // find if another class with the same format is present
+        // if it is, it will signal us that this class should be removed before our formatted class can be added. this way class toggle operation will be provided with different class names with the same format
+        // eslint-disable-next-line no-restricted-syntax
+
+        var _iterator = _createForOfIteratorHelper(s.classList.entries()),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var _step$value = _slicedToArray(_step.value, 2);
+
+            val = _step$value[1];
+            var regExpFormat = format.replace('{$}', '(.+)');
+            var match = val.match("^".concat(regExpFormat, "$"));
+
+            if (match) {
+              var _match = _slicedToArray(match, 2);
+
+              currentClass = _match[1];
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        if (currentClass) {
+          var toggleClass = format.replace('{$}', currentClass); // remove any class with the same format for toggle operation
+
+          s.classList.remove(toggleClass);
+        }
+
+        var addClass = format.replace('{$}', value);
+        s.classList.add(addClass);
+      } else {
+        var tempVal = value;
+
+        if (format) {
+          tempVal = format.replace('{$}', value);
+          tempVal = tempVal.replace(new RegExp(/\\/g), '');
+        }
+
+        operation[key] = tempVal;
       }
-
-      operation[key] = tempVal;
     });
   }
 }

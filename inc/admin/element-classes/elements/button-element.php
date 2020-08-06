@@ -224,6 +224,10 @@ class Button_Element extends Element_Base {
 					]
 				]
 			],
+			/**
+			 * changed with new named toggle
+			 * @deprecated
+			 */
 //			'iconPosition'     => [
 //				'label'     => __( 'Icon Position', $text_domain ),
 //				'type'      => Controls_Manager::SELECT,
@@ -244,14 +248,10 @@ class Button_Element extends Element_Base {
 				],
 				'selectors'    => [
 					[
-						'query' => '{{{data.container}}}',
-						'type'  => Controls_Manager::DATASET,
-						'key'   => 'wptbButtonIconPosition'
-					],
-            [
-                'query' => '{{{data.container}}}',
-                'type' => Controls_Manager::CLASSTYPE,
-            ]
+						'query'  => '{{{data.container}}} .wptb-button-wrapper a .wptb-button',
+						'type'   => Controls_Manager::CLASSTYPE,
+						'format' => 'wptb-plugin-button-order-{$}'
+					]
 				],
 				'defaultValue' => 'left'
 			],
