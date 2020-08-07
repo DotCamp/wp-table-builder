@@ -59,29 +59,17 @@ abstract class Element_Base extends Element_Base_Object {
 	protected function _content_template() {
 	}
 
-    protected function readIcons( $extension, $icon_dir, $icon_url ) {
-        $creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, null );
-        if ( ! WP_Filesystem( $creds ) ) {
-            return;
-        }
+	/**
+	 * Get a list of available icons through icon manager.
+	 *
+	 * @param string $extension file extension to filter out results
+	 *
+	 * @return array associated array of icon list, keys for icon names and values for icon urls
+	 */
+	protected function read_icons( $extension = 'svg' ) {
+		return Init::instance()->getIconManager()->get_icon_list( $extension );
 
-        global $wp_filesystem;
-
-        $filtered_files = [];
-        if ( $wp_filesystem->is_dir( $icon_dir ) ) {
-            $icons = $wp_filesystem->dirlist( $icon_dir );
-            foreach ( $icons as $name => $info ) {
-                $current_file_path = path_join( $icon_dir, $name );
-                $file_info         = pathinfo( $current_file_path );
-                if ( $file_info['extension'] === $extension ) {
-                    $current_file_url                         = join( '', [ trailingslashit( $icon_url ), $name ] );
-                    $filtered_files[ $file_info['filename'] ] = $current_file_url;
-                }
-            }
-        }
-
-        return $filtered_files;
-    }
+	}
 
 	/**
 	 * Output element template and script.
@@ -103,9 +91,9 @@ abstract class Element_Base extends Element_Base_Object {
 		}
 
 		?>
-        <script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_name() ); ?>-content">
-			<?php echo $template_content; ?>
-        </script>
+      <script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_name() ); ?>-content">
+		  <?php echo $template_content; ?>
+      </script>
 
 		<?php
 	}
@@ -124,12 +112,12 @@ abstract class Element_Base extends Element_Base_Object {
 
 
 	/**
-     * Get relative of element
-     * This function will be used to determine the positioning of elements on drop events
-     *
+	 * Get relative of element
+	 * This function will be used to determine the positioning of elements on drop events
+	 *
 	 * @return string position relative
 	 */
-	public function position_relative(  ) {
-	    return Elements_Manager::ELEMENT_RELATIVE;
+	public function position_relative() {
+		return Elements_Manager::ELEMENT_RELATIVE;
 	}
 }

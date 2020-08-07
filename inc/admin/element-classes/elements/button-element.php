@@ -211,10 +211,7 @@ class Button_Element extends Element_Base {
 			'buttonIcon'   => [
 				'label'     => __( 'Button Icon', $text_domain ),
 				'type'      => Controls_Manager::ICON_SELECT,
-				'icons'     => $this->readIcons( 'svg', path_join( NS\WP_TABLE_BUILDER_DIR, 'inc/frontend/views/icons' ), join( '', [
-					NS\WP_TABLE_BUILDER_URL,
-					'inc/frontend/views/icons'
-				] ) ),
+				'icons'     => $this->read_icons(),
 				'perPage'   => 20,
 				'selectors' => [
 					[
