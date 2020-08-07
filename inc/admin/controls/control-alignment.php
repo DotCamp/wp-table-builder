@@ -63,12 +63,23 @@ class Control_Alignment extends Base_Control {
                 center,
                 right,
                 dataElement,
+                alignmentAxis = 'horizontal',
                 targetAddClass;
+
                     
             if( data.label ) {
                 label = data.label;
             }
-                    
+
+            if( data.alignmentAxis ) {
+              alignmentAxis = data.alignmentAxis;
+            }
+
+            let alignmentValues = ['left', 'center', 'right'];
+            if( alignmentAxis === 'vertical' ) {
+              alignmentValues = ['top' , 'center', 'bottom'];
+            }
+
             if( 'selected' in data ) {
                 if( data.selected == 0 ) {
                     selected0 = 'bnt-selected';
@@ -105,24 +116,54 @@ class Control_Alignment extends Base_Control {
             ob_start();
             require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/right_align.php';
             $right_align_image_svg = ob_get_clean();
-        ?>
-        <div class="wptb-settings-item-header">
+
+            ob_start();
+            require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/top_align.svg';
+            $top_align_image_svg = ob_get_clean();
+
+            ob_start();
+            require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/vertical_center_align.svg';
+            $vertical_center_align_svg = ob_get_clean();
+
+            ob_start();
+            require NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/bottom_align.svg';
+            $bottom_align_svg = ob_get_clean();
+	  ?>
+    <div class="wptb-settings-item-header">
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 0px; padding-top: 23px;">
             <ul class="wptb-controls-ul-row">
                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
-                    {{{selected0}}} {{{targetAddClass}}}" data-alignment-value="left" data-element="{{{elemContainer}}}">
+                    {{{selected0}}} {{{targetAddClass}}}" data-alignment-value="{{{alignmentValues[0]}}}" data-element="{{{elemContainer}}}">
+                    <# if(alignmentAxis === 'horizontal'){
+                    #>
                     <?php echo $left_align_image_svg; ?>
+                  <# }else{
+                 #>
+	                <?php echo $top_align_image_svg; ?>
+                  <# } #>
                 </li>
                 <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
-                    {{{selected1}}} {{{targetAddClass}}}" data-alignment-value="center" data-element="{{{elemContainer}}}">
-                    <?php echo $center_align_image_svg; ?>
+                    {{{selected1}}} {{{targetAddClass}}}" data-alignment-value="{{{alignmentValues[1]}}}" data-element="{{{elemContainer}}}">
+                  <# if(alignmentAxis === 'horizontal'){
+                  #>
+	                <?php echo $center_align_image_svg; ?>
+                  <# }else{
+                  #>
+	                <?php echo $vertical_center_align_svg; ?>
+                  <# } #>
                 </li>
-                <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
-                    {{{selected2}}} {{{targetAddClass}}}" data-alignment-value="right" data-element="{{{elemContainer}}}">
-                    <?php echo $right_align_image_svg; ?>
-                </li>
+              <li class="wptb-btn-size-btn wptb-element-property wptb-btn-size-switcher wptb-button-svg-center
+                    {{{selected2}}} {{{targetAddClass}}}" data-alignment-value="{{{alignmentValues[2]}}}" data-element="{{{elemContainer}}}">
+                <# if(alignmentAxis === 'horizontal'){
+                #>
+	              <?php echo $right_align_image_svg; ?>
+                <# }else{
+                #>
+	              <?php echo $bottom_align_svg; ?>
+                <# } #>
+              </li>
             </ul>
         </div>
 
@@ -160,13 +201,14 @@ class Control_Alignment extends Base_Control {
                                                                 convertValue = 'right';
                                                             }
                                                         } else {
-                                                            if( value == 'left' ) {
-                                                                convertValue = 'left';
-                                                            } else if( value == 'center' ) {
-                                                                convertValue = 'center';
-                                                            } else if( value == 'right' ) {
-                                                                convertValue = 'right';
-                                                            }
+<!--                                                            if( value == 'left' ) {-->
+<!--                                                                convertValue = 'left';-->
+<!--                                                            } else if( value == 'center' ) {-->
+<!--                                                                convertValue = 'center';-->
+<!--                                                            } else if( value == 'right' ) {-->
+<!--                                                                convertValue = 'right';-->
+<!--                                                            }-->
+                                                          convertValue = value;
                                                         }
                                                     
                                                         if( typeof selectorElements[j].style[selectors[i][1]] != 'undefined' ) {
@@ -199,13 +241,14 @@ class Control_Alignment extends Base_Control {
                                                                 return 'right';
                                                             }
                                                         } else {
-                                                            if( gettingElementValue == 'left' ) {
-                                                                return 'left';
-                                                            } else if( gettingElementValue == 'center' ) {
-                                                                return 'center';
-                                                            } else if( gettingElementValue == 'right' ) {
-                                                                return 'right';
-                                                            }
+<!--                                                            if( gettingElementValue == 'left' ) {-->
+<!--                                                                return 'left';-->
+<!--                                                            } else if( gettingElementValue == 'center' ) {-->
+<!--                                                                return 'center';-->
+<!--                                                            } else if( gettingElementValue == 'right' ) {-->
+<!--                                                                return 'right';-->
+<!--                                                            }-->
+                                                          return gettingElementValue;
                                                         }
                                                     }
                                                 }

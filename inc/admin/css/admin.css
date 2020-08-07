@@ -4216,3 +4216,17 @@ wptb_shortcode_container_element {
 }
 
 /*endregion*/
+
+/*region cell vertical alignment*/
+.wptb-cell[data-wptb-cell-vertical-alignment="top"] {
+    vertical-align: baseline;
+}
+
+.wptb-cell[data-wptb-cell-vertical-alignment="center"] {
+    vertical-align: center;
+}
+
+.wptb-cell[data-wptb-cell-vertical-alignment="bottom"] {
+    vertical-align: bottom;
+}
+/*endregion*/
