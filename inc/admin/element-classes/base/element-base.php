@@ -67,8 +67,21 @@ abstract class Element_Base extends Element_Base_Object {
 	 * @return array associated array of icon list, keys for icon names and values for icon urls
 	 */
 	protected function read_icons( $extension = 'svg' ) {
-		return Init::instance()->getIconManager()->get_icon_list( $extension );
+		return Init::instance()->get_icon_manager()->get_icon_list( $extension );
 
+	}
+
+	/**
+	 * Get an icon through icon manager.
+	 *
+	 * @param string $name icon name
+	 * @param boolean $echo echo to output buffer
+	 * @param string $extension extra filename info for icon
+	 *
+	 * @return string|void return a string representation of the icon of void depending on to chose to output to buffer
+	 */
+	protected function get_icon( $name, $echo = false, $extension = 'svg' ) {
+		return Init::instance()->get_icon_manager()->get_icon( $name, $echo, $extension );
 	}
 
 	/**

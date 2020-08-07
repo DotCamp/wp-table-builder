@@ -50,7 +50,7 @@ class Icon_Manager {
 	 * @return array an associated array of icon list with keys as icon name and values as icon url
 	 */
 	public function get_icon_list( $extension = 'svg' ) {
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false);
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
 
 		// return an empty array if filesystem credential check fails
 		if ( ! WP_Filesystem( $creds ) ) {
@@ -77,5 +77,36 @@ class Icon_Manager {
 		}
 
 		return $filtered_files;
+	}
+
+
+	/**
+	 * Get an icon.
+	 *
+	 * @param string $icon_name icon name
+	 * @param boolean $echo_to_output whether add the icon to output buffer or return as string
+	 * @param string $extension extra filename info for icon
+	 *
+	 * @return string|void return a string representation of the icon or void depending on to chose to output to buffer
+	 */
+	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg' ) {
+		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+
+		// check for filesystem credentials
+		if ( ! WP_Filesystem( $creds ) ) {
+			return;
+		}
+
+		global $wp_filesystem;
+
+		$file_path = path_join( $this->icon_dir_path, join( '.', [ $icon_name, $extension ] ) );
+		if ( $wp_filesystem->is_file( $file_path ) ) {
+			$icon_string = $wp_filesystem->get_contents( $file_path );
+			if ( $echo_to_output ) {
+				echo $icon_string;
+			} else {
+				return $icon_string;
+			}
+		}
 	}
 }

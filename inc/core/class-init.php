@@ -233,7 +233,7 @@ class Init {
 	 *
 	 * @return Icon_Manager
 	 */
-	public function getIconManager() {
+	public function get_icon_manager() {
 		return $this->icon_manager;
 	}
 
