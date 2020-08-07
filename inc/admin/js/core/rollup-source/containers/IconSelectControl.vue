@@ -79,7 +79,9 @@ export default {
 			}
 		});
 
-		const selectedIcon = this.startupValue;
+		this.assignDefaultValue();
+
+		const selectedIcon = this.elementMainValue;
 
 		this.selectedIcon.name = selectedIcon === '' ? null : selectedIcon;
 		this.selectedIcon.url = selectedIcon === '' ? null : this.icons[selectedIcon];

@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use function path_join;
 use function request_filesystem_credentials;
 use function WP_Filesystem;
 
