@@ -22,8 +22,8 @@
 				@click="slide"
 				:enableBreakpointCustomization="enableBreakpointCustomization"
 				@breakpointChange="handleBreakpointChange"
-				>{{ name }}</slider-stop
-			>
+				>{{ directives.relativeWidth === 'window' ? name : `${width}px` }}
+			</slider-stop>
 		</div>
 	</div>
 </template>
@@ -70,6 +70,12 @@ export default {
 		},
 		modelVal(n) {
 			this.currentVal = Math.floor(n);
+		},
+		'directives.relativeWidth': {
+			handler() {
+				this.repaintId += 1;
+			},
+			deep: true,
 		},
 	},
 	methods: {

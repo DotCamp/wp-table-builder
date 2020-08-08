@@ -39,6 +39,7 @@ export default {
 			responsiveEnabled: false,
 			responsiveMode: 'auto',
 			preserveRowColor: false,
+			relativeWidth: 'window',
 			modeOptions: {
 				auto: {
 					topRowAsHeader: {

@@ -71,9 +71,9 @@ export default {
 				this.frame.open();
 			}
 		},
-		resetImg(){
+		resetImg() {
 			this.elementMainValue = '';
-		}
+		},
 	},
 };
 </script>

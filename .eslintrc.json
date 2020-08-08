@@ -37,6 +37,7 @@
     "WPTB_ControlsManager": true,
     "WPTB_Helper": true,
     "WPTB_ResponsiveFrontend": true,
-    "jQuery": true
+    "jQuery": true,
+    "wp": true
   }
 }

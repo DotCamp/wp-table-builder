@@ -104,7 +104,9 @@ export default {
 							.then((resp) => {
 								this.setTargetValue(this.targetElements[0], this.selectedIcon.name);
 								const range = document.createRange();
+								// eslint-disable-next-line array-callback-return
 								targetObjs.map((s) => {
+									// eslint-disable-next-line no-param-reassign
 									s.innerHTML = '';
 
 									range.setStart(s, 0);
@@ -114,9 +116,11 @@ export default {
 							});
 					} else {
 						this.setTargetValue(this.targetElements[0], '');
+						// eslint-disable-next-line array-callback-return
 						targetObjs.map((s) => {
+							// eslint-disable-next-line no-param-reassign
 							s.innerHTML = '';
-						})
+						});
 					}
 				}
 			},

@@ -1,5 +1,6 @@
 /**
  * Event catcher for table element clone operations
+ * @deprecated
  *
  * cloneNode function of HTMLElement can not copy event listeners attached to said elements. In order to reflect those event listeners to element clones, we have to intercept events and keep a list of them for any future table element clone operations. Only events belonging to table elements will be intercepted while all other events will be send to their original targets.
  */
