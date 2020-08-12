@@ -65,7 +65,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'section_header',
             [
-                'label' => __( 'Cell Settings ', 'wp_table_builder' ),
+                'label' => __( 'Cell Settings ', 'wp-table-builder' ),
                 'type' => Controls_Manager::SECTION_HEADER,
                 'buttonBack' => false
             ]
@@ -74,7 +74,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellWidth',
             [
-                'label' => __( 'Column Width', 'wp_table_builder' ),
+                'label' => __( 'Column Width', 'wp-table-builder' ),
                 'type' => Controls_Manager::SIZE,
                 'selectors' => [
                     '{{{data.container}}}' => 'width',
@@ -89,8 +89,8 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellWidthFixed',
             [
-                'labelOn' => __( 'Fixed', 'wp_table_builder' ),
-                'labelOff' => __( 'Auto', 'wp_table_builder' ),
+                'labelOn' => __( 'Fixed', 'wp-table-builder' ),
+                'labelOff' => __( 'Auto', 'wp-table-builder' ),
                 'type' => Controls_Manager::TOGGLE2,
             ]
         );
@@ -98,7 +98,7 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellHeight',
             [
-                'label' => __( 'Row Height', 'wp_table_builder' ),
+                'label' => __( 'Row Height', 'wp-table-builder' ),
                 'type' => Controls_Manager::SIZE,
                 'selectors' => [
                     '{{{data.container}}}' => 'height',
@@ -113,10 +113,20 @@ class Table_Cell_Setting_Element extends Element_Base_Object {
         $this->add_control(
             'cellHeightFixed',
             [
-                'labelOn' => __( 'Fixed', 'wp_table_builder' ),
-                'labelOff' => __( 'Auto', 'wp_table_builder' ),
+                'labelOn' => __( 'Fixed', 'wp-table-builder' ),
+                'labelOff' => __( 'Auto', 'wp-table-builder' ),
                 'type' => Controls_Manager::TOGGLE2,
             ]
         );
+
+        $this->add_control('cellVerticalAlignment', [
+        	'label' => esc_html__('Cell Vertical Alignment', 'wp-table-builder'),
+	        'type'      => Controls_Manager::ALIGNMENT,
+	        'selected'  => 1,
+	        'alignmentAxis' => 'vertical',
+	        'selectors' => [
+		        '{{{data.container}}}' => 'data-wptb-cell-vertical-alignment'
+	        ]
+        ]);
     }
 }

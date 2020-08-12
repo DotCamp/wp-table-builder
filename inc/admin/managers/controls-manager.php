@@ -144,7 +144,15 @@ class Controls_Manager {
 	 */
 	const DATA_MULE = 'data_mule';
 
+	/**
+	 * Adding sides control.
+	 */
+	const SIDES = 'sides';
 
+	/**
+	 * Adding named toggle control.
+	 */
+	const NAMED_TOGGLE = 'named_toggle';
 
 	// Control elements query types
 	const CLASSTYPE = 'class';
@@ -201,8 +209,10 @@ class Controls_Manager {
 			self::RANGE,
 			self::DATA_MULE,
 			self::MEDIA,
-			self::HTML_OUTPUT
-		];
+			self::HTML_OUTPUT,
+			self::SIDES,
+      self::NAMED_TOGGLE
+	];
 	}
 
     /**

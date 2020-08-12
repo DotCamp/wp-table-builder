@@ -754,7 +754,12 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
             body[0].appendChild(wptbDropBorderMarker);
         }
 
-        wptbDropHandle.ondragenter = function () {};
+        wptbDropHandle.ondragenter = function () {
+            if (e.target.classList.contains('wptb-empty')) {
+                e.preventDefault();
+                return false;
+            }
+        };
 
         wptbDropHandle.ondragover = function (e) {
             e.preventDefault();
@@ -826,6 +831,10 @@ var WPTB_DropHandle = function WPTB_DropHandle(thisElem, e) {
         wptbDropBorderMarker = document.getElementsByClassName('wptb-drop-border-marker')[0];
     }
     if (thisElem && thisElem.nodeName.toLowerCase() == 'td' && thisElem.getElementsByClassName('wptb-ph-element').length != 0) {
+        return;
+    }
+
+    if (thisElem && thisElem.nodeName.toLowerCase() == 'td' && thisElem.classList.contains('wptb-empty')) {
         return;
     }
 
@@ -3815,13 +3824,13 @@ var array = [],
             cellHighlighted = cellHighlighted[0];
             WPTB_Helper.elementOptionsSet('table_cell_setting', cellHighlighted);
 
-            var infArr = cellHighlighted.className.match(/wptb-element-((.+-)\d+)/i);
+            var _infArr = cellHighlighted.className.match(/wptb-element-((.+-)\d+)/i);
 
             var controlElemIds = ['cellWidth', 'cellHeight'];
 
             controlElemIds.map(function (s) {
-                var elementControlSizeUnicClass = 'wptb-el-' + infArr[1] + '-' + s,
-                    elementControlSizeFixedUnicClass = 'wptb-el-' + infArr[1] + '-' + s + 'Fixed';
+                var elementControlSizeUnicClass = 'wptb-el-' + _infArr[1] + '-' + s,
+                    elementControlSizeFixedUnicClass = 'wptb-el-' + _infArr[1] + '-' + s + 'Fixed';
                 if (s === 'cellWidth' || s === 'cellHeight') {
                     var sizeName = '',
                         getSizeFunctionName = '';
@@ -3878,6 +3887,20 @@ var array = [],
                 singleCells[i].setAttribute('disabled', 'disabled');
             }
             cellSettings.classList.remove('visible');
+        }
+
+        /**
+         * empty cell setting
+         */
+        // let emptySetting = document.
+        var infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
+        if (infArr && infArr.length > 1) {
+            var controlKey = 'emptyCell';
+            var settingId = 'wptb-el-table_cell_setting-' + infArr[1] + '-' + controlKey;
+            var settingElem = document.getElementById(settingId);
+            if (settingElem) {
+                settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty');
+            }
         }
 
         var details = { countMarkedCells: markedCells };

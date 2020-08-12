@@ -45,18 +45,18 @@ class Control_Icon_Select extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-        <#
-        const uniqueItemClass = data.elementControlTargetUnicClass;
+      <#
+      const uniqueItemClass = data.elementControlTargetUnicClass;
 
-        WPTB_ControlsManager.setControlData(uniqueItemClass , data);
-        #>
-        <div id="{{{uniqueItemClass}}}">
-            <icon-select-control :label="label" :icons="icons" :per-page="perPage"
-                                 :selectors="selectors"></icon-select-control>
-        </div>
-        <wptb-template-script>
-            WPTB_ControlsManager.callControlScript('ControlIconSelect','{{{uniqueItemClass}}}');
-        </wptb-template-script>
+      WPTB_ControlsManager.setControlData(uniqueItemClass , data);
+      #>
+      <div id="{{{uniqueItemClass}}}">
+        <icon-select-control :label="label" :icons="icons" :per-page="perPage"
+                             :selectors="selectors" :default-value="defaultValue"></icon-select-control>
+      </div>
+      <wptb-template-script>
+        WPTB_ControlsManager.callControlScript('ControlIconSelect','{{{uniqueItemClass}}}');
+      </wptb-template-script>
 		<?php
 	}
 }

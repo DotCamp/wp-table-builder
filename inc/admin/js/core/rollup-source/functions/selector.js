@@ -9,7 +9,7 @@
  *
  * @param {HTMLElement} element html element
  * @param {string} type element attribute/property type
- * @returns {DOMStringMap|(function(): *)} suitable operation for supplied arguments
+ * @returns {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
  */
 function operationSelect(element, type) {
 	let operation = null;
@@ -19,6 +19,9 @@ function operationSelect(element, type) {
 			break;
 		case 'style':
 			operation = element.style;
+			break;
+		case 'class':
+			operation = 'class';
 			break;
 		default:
 			operation = element.dataset;
@@ -31,7 +34,7 @@ function operationSelect(element, type) {
 /**
  * Get value of HTMLElement.
  *
- * Supported value types: dataset
+ * Supported value types: dataset, style, classList
  *
  * @param {string} selector query string for element search
  * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
@@ -43,17 +46,36 @@ function getTargetValue(selector) {
 		const operation = operationSelect(elements[0], type);
 
 		if (operation) {
-			let value = operation[key];
+			let value;
+			if (operation === 'class') {
+				value = elements[0].getAttribute('class');
+			} else {
+				value = operation[key];
+			}
 
 			if (format) {
 				const regExpFormat = format.replace('{$}', '(.+)');
-
+				let testResult;
 				const regExp = new RegExp(`^${regExpFormat}$`, 'g');
-				const testResult = regExp.exec(value);
+
+				if (operation === 'class') {
+					value.split(' ').some((s) => {
+						const result = regExp.exec(s);
+						if (result === null) {
+							return false;
+						}
+						testResult = result;
+						return true;
+					});
+				} else {
+					testResult = regExp.exec(value);
+				}
 
 				if (testResult) {
 					// eslint-disable-next-line prefer-destructuring
 					value = testResult[1];
+				} else {
+					value = null;
 				}
 			}
 
@@ -76,14 +98,40 @@ function setTargetValue(selector, value) {
 		elements.map((s) => {
 			const operation = operationSelect(s, type);
 
-			let tempVal = value;
+			// class type specific operations
+			if (operation === 'class') {
+				let currentClass = null;
 
-			if (format) {
-				tempVal = format.replace('{$}', value);
-				tempVal = tempVal.replace(new RegExp(/\\/g), '');
+				let val;
+				// find if another class with the same format is present
+				// if it is, it will signal us that this class should be removed before our formatted class can be added. this way class toggle operation will be provided with different class names with the same format
+				// eslint-disable-next-line no-restricted-syntax
+				for ([, val] of s.classList.entries()) {
+					const regExpFormat = format.replace('{$}', '(.+)');
+					const match = val.match(`^${regExpFormat}$`);
+					if (match) {
+						[, currentClass] = match;
+					}
+				}
+
+				if (currentClass) {
+					const toggleClass = format.replace('{$}', currentClass);
+					// remove any class with the same format for toggle operation
+					s.classList.remove(toggleClass);
+				}
+
+				const addClass = format.replace('{$}', value);
+				s.classList.add(addClass);
+			} else {
+				let tempVal = value;
+
+				if (format) {
+					tempVal = format.replace('{$}', value);
+					tempVal = tempVal.replace(new RegExp(/\\/g), '');
+				}
+
+				operation[key] = tempVal;
 			}
-
-			operation[key] = tempVal;
 		});
 	}
 }

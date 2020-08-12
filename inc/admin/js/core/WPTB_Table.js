@@ -144,6 +144,21 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             cellSettings.classList.remove( 'visible' );
         }
 
+        /**
+         * empty cell setting
+         */
+        // let emptySetting = document.
+        const infArr = thisElem.className.match(/wptb-element-table_cell_setting-((.+-)\d+)/i);
+        if (infArr && infArr.length > 1) {
+            const controlKey = 'emptyCell';
+            const settingId = `wptb-el-table_cell_setting-${infArr[1]}-${controlKey}`;
+            const settingElem = document.getElementById(settingId);
+            if (settingElem) {
+                settingElem.querySelector('input[type="checkbox"]').checked = thisElem.classList.contains('wptb-empty')
+            }
+        }
+        
+
         let details = {countMarkedCells:markedCells};
         WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', thisElem, details);
     };

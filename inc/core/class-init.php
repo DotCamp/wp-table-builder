@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Core;
 
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
+use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Table_Elements_Manager as Table_Elements_Manager;
@@ -89,17 +90,17 @@ class Init {
 	 */
 	public $elements_manager;
 
-    /**
-     * Table elements manager.
-     *
-     * Holds the plugin Table Elements manager.
-     *
-     * @since 1.2.1
-     * @access public
-     *
-     * @var elements_manager
-     */
-    public $table_elements_manager;
+	/**
+	 * Table elements manager.
+	 *
+	 * Holds the plugin Table Elements manager.
+	 *
+	 * @since 1.2.1
+	 * @access public
+	 *
+	 * @var elements_manager
+	 */
+	public $table_elements_manager;
 
 	/**
 	 * Controls manager.
@@ -124,6 +125,14 @@ class Init {
 	 * @var Settings_Manager
 	 */
 	public $settings_manager;
+
+	/**
+	 * Icon manager instance
+	 *
+	 * @private
+	 * @var Icon_Manager
+	 */
+	private $icon_manager;
 
 	private function __construct() {
 
@@ -173,6 +182,12 @@ class Init {
 	private function load_dependencies() {
 		$this->loader           = new Loader();
 		$this->settings_manager = new Settings_Manager( 'wp_table_builder_settings', $this->loader );
+
+		// initialize icon manager instance
+		$icon_dir_path = trailingslashit( NS\WP_TABLE_BUILDER_DIR ) . 'inc/frontend/views/icons';
+		$icon_dir_url  = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'inc/frontend/views/icons';
+
+		$this->icon_manager = new Icon_Manager( $icon_dir_path, $icon_dir_url );
 	}
 
 	/**
@@ -214,6 +229,15 @@ class Init {
 	}
 
 	/**
+	 * Get icon manager instance.
+	 *
+	 * @return Icon_Manager
+	 */
+	public function get_icon_manager() {
+		return $this->icon_manager;
+	}
+
+	/**
 	 * Sets table max-width property.
 	 *
 	 * Width will be set according to global content_width variable that is set by user's current theme.If not found, a default value of 850px will be used.
@@ -250,7 +274,7 @@ STYLE;
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 
-		$this->loader->add_action('wp_enqueue_scripts', $plugin_public , 'enqueue_footer_scripts');
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_footer_scripts' );
 
 //		add_action( 'wp_head', [ $this, 'content_width_header' ] );
 	}
@@ -329,15 +353,15 @@ STYLE;
 	 * @since   1.1.5
 	 */
 	public function elements_resources() {
-		$this->elements_manager = new Elements_Manager();
-        $this->table_elements_manager = new Table_Elements_Manager();
-		$this->controls_manager = new Controls_Manager();
+		$this->elements_manager       = new Elements_Manager();
+		$this->table_elements_manager = new Table_Elements_Manager();
+		$this->controls_manager       = new Controls_Manager();
 
 		add_action( 'admin_footer', function () {
 			$this->elements_manager->output_elements_templates();
 			$this->elements_manager->output_directories_icons();
 			$this->elements_manager->output_elements_scripts();
-            $this->table_elements_manager->output_elements_scripts();
+			$this->table_elements_manager->output_elements_scripts();
 			$this->controls_manager->output_controls_templates();
 			$this->controls_manager->output_control_stacks();
 		} );

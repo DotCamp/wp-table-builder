@@ -254,6 +254,11 @@ table.wptb-preview-table {
     display: none;
 }
 
+
+[data-wptb-button-icon-position='right'] .wptb-button-icon {
+    order: 2
+}
+
 .wptb-plugin-button-order-right .wptb-button-icon {
     order: 2;
 }
@@ -270,6 +275,7 @@ table.wptb-preview-table {
 .wptb-list-container.wptb-ph-element ul li {
     list-style: none;
     margin: 0px 0px 10px;
+    position: relative;
 }
 
 .wptb-list-container.wptb-ph-element ul li:last-child {
@@ -619,3 +625,17 @@ table.wptb-preview-table {
 .wptb-plugin-filter-box-shadow-md-close {
     filter: drop-shadow(4px 1px 2px rgba(0, 0, 0, 0.1))
 }
+
+/*region cell vertical alignment*/
+.wptb-cell[data-wptb-cell-vertical-alignment="top"] {
+    vertical-align: baseline;
+}
+
+.wptb-cell[data-wptb-cell-vertical-alignment="center"] {
+    vertical-align: center;
+}
+
+.wptb-cell[data-wptb-cell-vertical-alignment="bottom"] {
+    vertical-align: bottom;
+}
+/*endregion*/
