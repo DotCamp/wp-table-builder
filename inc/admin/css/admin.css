@@ -1368,7 +1368,8 @@ ul.wptb-tabs {
     margin-top: 30px;
     margin-bottom: 30px;
     max-width: 700px;
-    overflow: visible;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 #wptb-cell_mode_background {

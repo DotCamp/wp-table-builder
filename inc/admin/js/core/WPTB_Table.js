@@ -841,6 +841,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
                 td.getDOMElement().style.width = null;
                 td.getDOMElement().style.height = null;
+                td.getDOMElement().style.borderColor = WPTB_TableSettingsData.getTableSetting('borderColor');
             }
             
             table.rows[i].appendChild(td.getDOMElement());
@@ -884,6 +885,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                 td.getDOMElement().setAttribute('style', currentTdStyle);
                 td.getDOMElement().style.width = null;
                 td.getDOMElement().style.height = null;
+                td.getDOMElement().style.borderColor = WPTB_TableSettingsData.getTableSetting('borderColor');
             }
             firstCell = table.rows[i].getElementsByTagName('td')[0];
             if (firstCell) {
@@ -968,6 +970,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
                         td.getDOMElement().style.width = null;
                         td.getDOMElement().style.height = null;
                     }
+                    td.getDOMElement().style.borderColor = WPTB_TableSettingsData.getTableSetting('borderColor');
                     return td;
                 }
 
@@ -1189,9 +1192,13 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         
         for ( j = 0; j < cellsColSpan; j++ ) {
             let td = new WPTB_Cell( mark );
-            td.getDOMElement().setAttribute( 'style', cellStyle );
-            td.getDOMElement().style.width = null;
-            td.getDOMElement().style.height = null;
+            let currentTableTd = table.querySelector('[data-x-index="' + j + '"]');
+            if( currentTableTd ) {
+                let currentTdStyle = currentTableTd.getAttribute( 'style' );
+
+                td.getDOMElement().setAttribute( 'style', currentTdStyle );
+                td.getDOMElement().style.height = null;
+            }
             r.appendChild( td.getDOMElement() );
         }
 

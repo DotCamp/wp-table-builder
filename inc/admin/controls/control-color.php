@@ -55,7 +55,6 @@ class Control_Color extends Base_Control {
                 name,
                 selectors = [],
                 elemContainer,
-                selectorsJson,
                 useDataset,
                 targetInputAddClass,
                 dataSets,
@@ -91,16 +90,14 @@ class Control_Color extends Base_Control {
                 i++;
             }
             
-            if( selectors && Array.isArray( selectors ) ) {
-                selectorsJson = JSON.stringify( selectors );
-            }
-            
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
             
             targetInputAddClass = data.elementControlTargetUnicClass;
-            let dataJson = JSON.stringify( data );
+            if(!window[targetInputAddClass]) window[targetInputAddClass] = [];
+            if(!window[targetInputAddClass]['control-color']) window[targetInputAddClass]['control-color'] = [];
+            window[targetInputAddClass]['control-color']['selectors'] = selectors;
         #>
         <div id="{{{targetInputAddClass}}}">
             <div class='wptb-settings-item-header'>
@@ -138,16 +135,18 @@ class Control_Color extends Base_Control {
                 }
                 
                 if( targetInput && selectorElement ) {
-                    if( '{{{selectorsJson}}}' ) {
-                        let selectors = JSON.parse( '{{{selectorsJson}}}' );
+                    if( window['{{{targetInputAddClass}}}']['control-color']['selectors'] ) {
+                        let selectors = window['{{{targetInputAddClass}}}']['control-color']['selectors'];
                         
                         let thisColorCss, thisColorCssHex;
                         for( let i = 0; i < selectors.length; i++ ) {
                             if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
                                 let selectorElements = document.querySelectorAll( selectors[i][0] );
                                 if( selectorElements.length > 0 ) {
+                                    let thisColorCssArr = [];
                                     for( let j = 0; j < selectorElements.length; j++ ) {
                                         if( selectors[i][1] ) {
+                                            thisColorCss = '';
                                             if( Array.isArray( selectors[i][1] ) ) {
                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
                                                     if( selectorElements[j].style[selectors[i][1][k]] ) {
@@ -177,15 +176,16 @@ class Control_Color extends Base_Control {
                                                 }
                                             }
 
-                                            if( thisColorCss ) {
-                                                targetInput.value = thisColorCss;
-                                            }
+                                            thisColorCssArr.push(thisColorCss);
                                         }
+                                    }
+
+                                    if( thisColorCssArr.length > 0 ) {
+                                        targetInput.value = WPTB_Helper.getValueMaxCountSameElementsInArray(thisColorCssArr);
                                     }
                                 }
                             }
                         }
-
 
                         function elementColorSet( selectors, color) {
                             const useDataset = 'true' === '{{{useDataset}}}';

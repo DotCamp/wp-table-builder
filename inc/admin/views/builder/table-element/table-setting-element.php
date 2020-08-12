@@ -182,8 +182,8 @@ class Table_Setting_Element extends Element_Base_Object {
 					'label'     => __( 'BorderColor', 'wp_table_builder' ),
 					'type'      => Controls_Manager::COLOR,
 					'selectors' => [
-						'{{{data.container}}}'    => [ 'border-color' ],
-						'{{{data.container}}} td' => [ 'border-color' ]
+						'{{{data.container}}} td' => [ 'border-color' ],
+						'{{{data.container}}}'    => [ 'border-color' ]
 					]
 				],
 			'applyInnerBorder'     =>

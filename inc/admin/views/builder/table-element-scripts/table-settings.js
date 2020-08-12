@@ -1,4 +1,5 @@
 let table = element;
+console.log("Hello15");
 function controlsChange( inputs, table ) {
     if( inputs && typeof inputs === 'object' ) {
         if( inputs.hasOwnProperty( 'tableTopRowsAsHeader' ) ) {
@@ -87,6 +88,8 @@ function controlsChange( inputs, table ) {
             table.tdDefaultWidth();
         } else if( inputs.hasOwnProperty( 'tableBorder' ) ) {
             table.tdDefaultWidth();
+        } else if(inputs.hasOwnProperty('tableBorderColor')) {
+            WPTB_TableSettingsData.setTableSetting('borderColor', inputs.tableBorderColor);
         } else if( inputs.hasOwnProperty( 'tableInnerBorderSize' ) ) {
             table.tdDefaultWidth();
         } else if( inputs.hasOwnProperty( 'tableCellPadding' ) ) {
@@ -121,5 +124,11 @@ function controlsChange( inputs, table ) {
     }
 }
 WPTB_Helper.controlsInclude( table, controlsChange );
+
+let tableBorderColor = WPTB_Helper.getElementColorStylesHex(table, 'borderColor');
+WPTB_TableSettingsData.setTableSetting('borderColor', tableBorderColor);
+// table.addEventListener('wp-table-builder/table-changed/after', function () {
+//     WPTB_Helper.elementOptionsSet( 'table_setting', table );
+// }, true);
 
 
