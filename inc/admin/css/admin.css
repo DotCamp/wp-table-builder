@@ -3022,6 +3022,10 @@ wptb_shortcode_container_element {
     color: #CBD5E0 !important;
 }
 
+.wptb-panel-tabs .wptb-settings-section-item.disabled{
+    color: inherit !important;
+}
+
 .wptb-menu-active-section-indicator {
     position: absolute;
     border-bottom: 2px solid #1A202C;
