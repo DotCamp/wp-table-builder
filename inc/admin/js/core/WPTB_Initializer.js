@@ -68,4 +68,11 @@ var WPTB_Initializer = function () {
 
     // get builder section from url parameter for easy switch at page load
     WPTB_Helper.getSectionFromUrl();
+
+    // automatically show element controls when dropped to table
+    WPTB_Helper.showControlsOnElementMount();
+
+    // show elements list menu on left panel on removing elements from table
+    WPTB_Helper.showElementsListOnRemove();
+
 };

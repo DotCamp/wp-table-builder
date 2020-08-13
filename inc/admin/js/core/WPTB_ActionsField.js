@@ -71,6 +71,8 @@ var WPTB_ActionsField = function() {
                 
                 let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                 wptbTableStateSaveManager.tableStateSet();
+
+                WPTB_Helper.wptbDocumentEventGenerate('element:removed:dom', document, act);
             };
 
             btnCopy.onclick = ( event ) => {

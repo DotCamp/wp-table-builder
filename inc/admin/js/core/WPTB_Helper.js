@@ -2085,5 +2085,21 @@ var WPTB_Helper = {
             color = '';
         }
         return color;
+    },
+    /**
+     * Show element controls on adding them to table.
+     */
+    showControlsOnElementMount(){
+        document.addEventListener('element:mounted:dom', function(e){
+            e.target.click();
+        });
+    },
+    /**
+     * Show elements list menu on left panel on removing element from table
+     */
+    showElementsListOnRemove(){
+        document.addEventListener('element:removed:dom', function(){
+            WPTB_Helper.activateSection('elements');
+        })
     }
 }
