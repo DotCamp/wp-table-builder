@@ -329,7 +329,9 @@ class WPTB_Listing  extends \WP_List_Table{
         $this->request_url_clear();
         ?>
         <script>
-            window.history.pushState( null, null, "<?php echo home_url() . $_SERVER['REQUEST_URI']; ?>" );
+            // with sub-folder WordPress installations, this function adding extra invalid url paths to browser history, thus changing all the links that formats themselves according to current url. since the url it created is invalid, most of the links on the page become invalid and broken too.
+            // @deprecated
+            //window.history.pushState( null, null, "<?php //echo home_url() . $_SERVER['REQUEST_URI']; ?>//" );
         </script>
         <?php
 	}
