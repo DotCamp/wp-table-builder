@@ -54,6 +54,10 @@ export default {
 			type: Number,
 			default: 1000,
 		},
+		step: {
+			type: Number,
+			default: 1,
+		},
 		enableLimit: {
 			type: Boolean,
 			default: false,
@@ -107,7 +111,16 @@ export default {
 		 * @return {number} retrieved integer
 		 */
 		getValue(val) {
-			let parsedValue = Number.parseInt(val, 10);
+			let parsedValue = Number.parseFloat(val);
+
+			// get rid of unnecessary decimal points by fixing the number based on step value
+			const regex = new RegExp(/^([0-9]+)\.([0-9]+)/, 'g');
+			const match = regex.exec(this.step.toString());
+			if (match) {
+				const decimalPoint = match[2].length;
+				parsedValue = Number.parseFloat(parsedValue.toFixed(decimalPoint));
+			}
+
 			// eslint-disable-next-line no-restricted-globals
 			parsedValue = isNaN(parsedValue) ? 0 : parsedValue;
 
@@ -161,13 +174,13 @@ export default {
 
 			switch (type) {
 				case 'up':
-					value += 1;
+					value += this.step;
 					break;
 				case 'down':
-					value -= 1;
+					value -= this.step;
 					break;
 				default:
-					value += 1;
+					value += this.step;
 					break;
 			}
 

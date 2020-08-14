@@ -203,7 +203,8 @@ class Button_Element extends Element_Base {
 				'min'          => 1,
 				'max'          => 3,
 				'step'         => 0.1,
-				'defaultValue' => 1
+				'defaultValue' => 1,
+				'postFix'      => esc_html__( ' times', 'wp-table-builder' )
 			]
 		];
 

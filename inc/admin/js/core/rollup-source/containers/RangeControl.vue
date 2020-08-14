@@ -16,23 +16,39 @@
 				/>
 			</div>
 			<div class="wptb-settings-col-xs-4">
-				<input
-					type="number"
+				<!--				<input-->
+				<!--					type="number"-->
+				<!--					v-model="elementMainValue"-->
+				<!--					class="wptb-size-number wptb-number-input wptb-element-property"-->
+				<!--					:min="min"-->
+				<!--					:max="max"-->
+				<!--					:step="step"-->
+				<!--					:class="uniqueId"-->
+				<!--					:data-element="elemContainer"-->
+				<!--					data-type="range"-->
+				<!--				/>-->
+				<number-postfix-input
 					v-model="elementMainValue"
+					:post-fix="postFix"
+					:only-enter="true"
 					class="wptb-size-number wptb-number-input wptb-element-property"
+					style="text-align: center;"
 					:min="min"
 					:max="max"
-					:step="step"
 					:class="uniqueId"
 					:data-element="elemContainer"
+					:step="step"
+					:enable-limit="true"
 					data-type="range"
-				/>
+				>
+				</number-postfix-input>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
 import ControlBase from '../mixins/ControlBase';
+import NumberPostfixInput from '../components/NumberPostfixInput';
 
 export default {
 	props: {
@@ -56,8 +72,13 @@ export default {
 			default: 1,
 			required: false,
 		},
+		postFix: {
+			type: String,
+			default: '',
+		},
 	},
 	mixins: [ControlBase],
+	components: { NumberPostfixInput },
 	mounted() {
 		this.assignDefaultValue();
 	},

@@ -2,7 +2,6 @@
 
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
-use WP_Table_Builder as NS;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -21,7 +20,7 @@ if ( ! defined( 'WPINC' ) ) {
  *  max => maximum value of the slider
  *  step => step value of the slider
  *  defaultValue => default value of the slider
- *  suffix => suffix to be added to the end of value
+ *  postFix => suffix to be added to the end of value
  *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
@@ -49,20 +48,23 @@ class Control_Range extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-        <#
-        const uniqueItemClass = data.elementControlTargetUnicClass;
-        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-        const elemContainer = data.elemContainer;
-        #>
-        <div id="{{{uniqueItemClass}}}">
-            <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step"
-                           :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
-                           elem-container="{{{elemContainer}}}"></range-control>
-        </div>
-        <wptb-template-script>
-            WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');
-        </wptb-template-script>
+      <#
+      const uniqueItemClass = data.elementControlTargetUnicClass;
+      WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+      const elemContainer = data.elemContainer;
+
+      if(!data.postFix){
+      data.postFix='';
+      }
+      #>
+      <div id="{{{uniqueItemClass}}}">
+        <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step"
+                       :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
+                       elem-container="{{{elemContainer}}}" :post-fix="postFix"></range-control>
+      </div>
+      <wptb-template-script>
+        WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');
+      </wptb-template-script>
 		<?php
 	}
 }
-
