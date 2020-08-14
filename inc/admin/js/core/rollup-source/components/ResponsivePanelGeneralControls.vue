@@ -5,6 +5,13 @@
 			:label="strings.enableResponsive | cap"
 		></panel-toggle-control>
 		<panel-dropdown-control
+			:label="strings.relative | cap"
+			v-model="directives.relativeWidth"
+			:options="{ window: strings.window, container: strings.container }"
+			:disabled="!directives.responsiveEnabled"
+		>
+		</panel-dropdown-control>
+		<panel-dropdown-control
 			:label="strings.mode | cap"
 			v-model="directives.responsiveMode"
 			:options="{ auto: 'auto' }"

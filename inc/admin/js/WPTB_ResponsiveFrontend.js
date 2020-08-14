@@ -681,8 +681,8 @@
 		 * Bind rebuilding of tables to window resize event.
 		 */
 		this.bindRebuildToResize = () => {
-			window.addEventListener('resize', (e) => {
-				this.rebuildTables(e.target.innerWidth);
+			window.addEventListener('resize', () => {
+				this.rebuildTables();
 			});
 		};
 
@@ -1163,13 +1163,34 @@
 		 * @param {number} size screen size
 		 */
 		this.rebuildTables = (size) => {
-			if (!size) {
-				// eslint-disable-next-line no-param-reassign
-				size = window.innerWidth;
-			}
 			// eslint-disable-next-line array-callback-return
 			this.elementObjects.map((o) => {
-				this.rebuildTable(o.el, size, o.tableObject);
+				let innerSize = size;
+				if (!size) {
+					// eslint-disable-next-line no-param-reassign
+					innerSize = window.innerWidth;
+
+					const directives = this.getDirective(o.el);
+					// calculate size according to relative width directive
+					if (directives && directives.relativeWidth) {
+						switch (directives.relativeWidth) {
+							case 'window':
+								// eslint-disable-next-line no-param-reassign
+								innerSize = window.innerWidth;
+								break;
+							case 'container':
+								// get the size of the container table is in
+								// eslint-disable-next-line no-param-reassign
+								innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
+								break;
+							default:
+								// eslint-disable-next-line no-param-reassign
+								innerSize = window.innerWidth;
+								break;
+						}
+					}
+				}
+				this.rebuildTable(o.el, innerSize, o.tableObject);
 			});
 		};
 

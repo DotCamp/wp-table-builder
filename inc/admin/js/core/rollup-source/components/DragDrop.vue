@@ -72,7 +72,7 @@ export default {
 			const dt = event.dataTransfer;
 			if (dt.files[0]) {
 				if (this.isTypeAllowed(dt.files[0])) {
-					this.currentFile = dt.files[0];
+					[this.currentFile] = dt.files;
 				}
 			}
 			this.dragActive = false;
@@ -86,7 +86,7 @@ export default {
 		},
 		handleFileSelect(e) {
 			if (e.target.files.length > 0 && this.isTypeAllowed(e.target.files[0])) {
-				this.currentFile = e.target.files[0];
+				[this.currentFile] = e.target.files;
 			}
 		},
 		clearCurrentFile() {

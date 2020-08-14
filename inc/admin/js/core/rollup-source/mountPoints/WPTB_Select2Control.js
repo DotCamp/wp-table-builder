@@ -3,6 +3,7 @@
  */
 import Vue from 'vue';
 import Select2Control from '../containers/Select2Control';
+// eslint-disable-next-line camelcase
 import WPTB_ControlsManager from '../functions/WPTB_ControlsManager';
 
 export default {

@@ -54,8 +54,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-		$this->setDefaultControlArg('elementOptionsGroupId', 'table-responsive-group');
-		$this->setDefaultControlArg('elementOptionClass', 'wptb-element-option');
+		$this->setDefaultControlArg( 'elementOptionsGroupId', 'table-responsive-group' );
+		$this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
 
 		// general control group
 		$general_section_group_controls = [
@@ -142,6 +142,9 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'pattern'                 => esc_html__( 'pattern', 'wp-table-builder' ),
 					'full'                    => esc_html__( 'full', 'wp-table-builder' ),
 					'okay'                    => esc_html__( 'Okay', 'wp-table-builder' ),
+					'relative'                => esc_html__( 'target width', 'wp-table-builder' ),
+					'window'                => esc_html__( 'window', 'wp-table-builder' ),
+					'container'                => esc_html__( 'container', 'wp-table-builder' ),
 					// for help text of responsive modes, use the format of `{mode_name}Help`, this will be parsed dynamically to change the help text at frontend
 					'autoHelp'                => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.', 'wp-table-builder' ),
 					'patternHelp'             => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.', 'wp-table-builder' ),
