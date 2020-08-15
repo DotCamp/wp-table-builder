@@ -107,6 +107,12 @@ const ControlBase = {
 
 			this.mountedDataUpdate = false;
 		},
+		/**
+		 * Reset mounted state of component.
+		 */
+		resetMountedState() {
+			this.mountedDataUpdate = true;
+		},
 	},
 };
 

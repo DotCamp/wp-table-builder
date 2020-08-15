@@ -65,11 +65,15 @@ export default {
 			},
 			lastEdited: 'top',
 			type: 'px',
+			suppressDirty: true,
 		};
 	},
 	mounted() {
 		this.assignDefaultValue();
 		this.parseElementValue();
+	},
+	updated() {
+		this.suppressDirty = false;
 	},
 	watch: {
 		sideValues: {
@@ -78,10 +82,16 @@ export default {
 			},
 			deep: true,
 		},
-		elementMainValue(n) {
-			this.setAllValues(n);
-			this.generateChangeEvent(n);
-			this.setTableDirty(true);
+		elementMainValue: {
+			handler(n) {
+				this.setAllValues(n);
+				this.generateChangeEvent(n);
+				if (this.suppressDirty) {
+					this.resetMountedState();
+				}
+				this.setTableDirty(true);
+			},
+			immediate: true,
 		},
 		linkValues() {
 			this.calculateElementValue();
