@@ -2,7 +2,22 @@ const infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
 const controlKey = 'textarea';
 const elementControlTargetUnicClass = `wptb-el-${infArr[1]}-${controlKey}`;
 
-const allowedChildrenTags = ['div', 'a', 'p', 'ul', 'li', 'ol', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'center'];
+const allowedChildrenTags = [
+	'div',
+	'a',
+	'p',
+	'ul',
+	'li',
+	'ol',
+	'span',
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'center',
+	'iframe',
+];
 
 const innerChildTextArray = Array.from(allowedChildrenTags);
 innerChildTextArray.push('#text');
