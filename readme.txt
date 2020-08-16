@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.5
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -85,6 +85,18 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.6 =
+
+* NEW: Vertical align option for table cells.
+* NEW: More border customizations.
+* NEW: Target width option for responsive menu.
+* IMPROVEMENT: Element control show/hide logic updated.
+* IMPROVEMENT: Visibility of main tab buttons updated.
+* IMPROVEMENT: Better suffix display for range sliders.
+* FIX: An issue affecting sub-folder WordPress installations.
+* FIX: An issue targeting usage of YouTube embeds in Custom HTML element.
+* UPDATE: Freemius SDK.
 
 = 1.2.5 =
 
