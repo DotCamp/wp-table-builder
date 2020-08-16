@@ -91,6 +91,7 @@ That's it. You're done!
 * NEW: Vertical align option for table cells.
 * NEW: More border customizations.
 * NEW: Target width option for responsive menu.
+* NEW: `nofollow` option for text links.
 * IMPROVEMENT: Element control show/hide logic updated.
 * IMPROVEMENT: Visibility of main tab buttons updated.
 * IMPROVEMENT: Better suffix display for range sliders.

@@ -12,6 +12,10 @@ let tinyMceInitStart = function() {
         fixed_toolbar_container: '#wpcd_fixed_toolbar',
         paste_as_text: true,
         toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
+        rel_list: [
+            {title: 'None', value: ''},
+            {title: 'nofollow', value: 'nofollow'}
+        ],
         setup : function( ed ) {
             ed.on( 'change', function(e) {
                 let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
