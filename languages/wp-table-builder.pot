@@ -16,38 +16,38 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../inc/admin/class-admin-menu.php:129, ../inc/admin/class-admin-menu.php:151, ../inc/admin/class-admin-menu.php:161
+#: ../inc/admin/class-admin-menu.php:142, ../inc/admin/class-admin-menu.php:164, ../inc/admin/class-admin-menu.php:174
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:130, ../inc/admin/class-admin-menu.php:141, ../inc/admin/class-admin-menu.php:171
+#: ../inc/admin/class-admin-menu.php:143, ../inc/admin/class-admin-menu.php:154, ../inc/admin/class-admin-menu.php:184
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:142
+#: ../inc/admin/class-admin-menu.php:155
 msgid "Welcome Page"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:152, ../inc/admin/class-admin-menu.php:346
+#: ../inc/admin/class-admin-menu.php:165, ../inc/admin/class-admin-menu.php:394
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:162, ../inc/admin/class-admin-menu.php:351
+#: ../inc/admin/class-admin-menu.php:175, ../inc/admin/class-admin-menu.php:399
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:172
-msgid "Import"
+#: ../inc/admin/class-admin-menu.php:185
+msgid "Import/Export"
 msgstr ""
 
-#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:130
+#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:144
 msgstr ""
 
-#: ../inc/admin/class-import.php:410, ../inc/admin/class-preview.php:208
+#: ../inc/admin/class-import.php:407, ../inc/admin/class-preview.php:208
 msgid "%s Preview"
 msgstr ""
 
-#: ../inc/admin/class-import.php:411, ../inc/admin/class-preview.php:209
+#: ../inc/admin/class-import.php:408, ../inc/admin/class-preview.php:209
 msgid "Table"
 msgstr ""
 
@@ -63,11 +63,11 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:191, ../inc/admin/element-classes/elements/shortcode-element.php:40
+#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:211, ../inc/admin/element-classes/elements/shortcode-element.php:40
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:190
+#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:210
 msgid "Title"
 msgstr ""
 
@@ -88,32 +88,56 @@ msgid "WPTB Tables"
 msgstr ""
 
 #. translators: %s - admin area page builder page URL.
-#: ../inc/admin/class-wptb-listing.php:111
+#: ../inc/admin/class-wptb-listing.php:125
 msgid "Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a go</a>?"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:140
+#: ../inc/admin/class-wptb-listing.php:154
 msgid "Edit This Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:192
+#: ../inc/admin/class-wptb-listing.php:212
 msgid "Created"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:193
+#: ../inc/admin/class-wptb-listing.php:213
 msgid "ID"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:256
+#: ../inc/admin/class-wptb-listing.php:287
 msgid "Table duplicate successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:272
+#: ../inc/admin/class-wptb-listing.php:301
 msgid "Table deleted successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:296
+#: ../inc/admin/class-wptb-listing.php:324
 msgid "Bulk Delete Performed Successfully."
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:48
+msgid "top"
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:49, ../inc/admin/element-classes/elements/button-element.php:245
+msgid "right"
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:50
+msgid "bottom"
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:51, ../inc/admin/element-classes/elements/button-element.php:244
+msgid "left"
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:52
+msgid "link values"
+msgstr ""
+
+#: ../inc/admin/controls/control-sides.php:53
+msgid "unlink values"
 msgstr ""
 
 #: ../inc/admin/managers/settings-manager.php:220, ../inc/admin/managers/settings-manager.php:220
@@ -140,8 +164,20 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:40, ../inc/admin/views/builder/additional-element.php:3
+#: ../inc/admin/element-classes/elements/button-element.php:43, ../inc/admin/views/builder/additional-element.php:3
 msgid "Button"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:207
+msgid " times"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:241
+msgid "Icon Position"
+msgstr ""
+
+#: ../inc/admin/element-classes/elements/button-element.php:276
+msgid "button options"
 msgstr ""
 
 #: ../inc/admin/element-classes/elements/custom-html-element.php:40
@@ -156,15 +192,15 @@ msgstr ""
 msgid "List"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:206
+#: ../inc/admin/element-classes/elements/list-element.php:236
 msgid "List Item 1"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:212
+#: ../inc/admin/element-classes/elements/list-element.php:242
 msgid "List Item 2"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/list-element.php:218
+#: ../inc/admin/element-classes/elements/list-element.php:248
 msgid "List Item 3"
 msgstr ""
 
@@ -176,71 +212,63 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ../inc/admin/views/builder/table-settings-element.php:35
-msgid "Table Setting"
+#: ../inc/admin/views/builder/wptb-builder-header.php:14
+msgid "Enter table name here..."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:83
-msgid "</> Embed"
+#: ../inc/admin/views/builder/wptb-builder-header.php:82
+msgid "Embed"
 msgstr ""
 
 #: ../inc/admin/views/builder/wptb-builder-header.php:90
 msgid "Preview"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:95
+#: ../inc/admin/views/builder/wptb-builder-header.php:96
 msgid "Save Table"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:108
+#: ../inc/admin/views/builder/wptb-builder-header.php:106
 msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:66
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:27
+msgid "elements"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:30
+msgid "settings"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:33
+msgid "responsive"
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:129
 msgid "You are currently editing the table cells. Click \"Close\" to go back to editing the table."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:67
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:130
 msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:70, ../inc/admin/views/builder/wptb-builder-table-setup.php:91
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:133, ../inc/admin/views/builder/wptb-builder-table-setup.php:79, ../inc/admin/views/builder/wptb-builder-table-setup.php:105, ../inc/admin/views/builder/table-element/table-setting-element.php:378, ../inc/admin/views/builder/table-element/table-setting-element.php:434
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:69, ../inc/admin/views/builder/wptb-builder-table-setup.php:71, ../inc/admin/views/builder/wptb-builder-table-setup.php:92
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:133, ../inc/admin/views/builder/wptb-builder-table-setup.php:80, ../inc/admin/views/builder/wptb-builder-table-setup.php:106
 msgid "Close"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:80
-msgid "Column Width"
+#: ../inc/admin/views/builder/wptb-builder-responsive-panel.php:15
+msgid "Responsive options will be available when a new table is generated."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:95, ../inc/admin/views/builder/wptb-builder-left-panel.php:120
-msgid "Fixed"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:96, ../inc/admin/views/builder/wptb-builder-left-panel.php:121
-msgid "Auto"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:105
-msgid "Row Height"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:13
-msgid "Table Name"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:14
-msgid "Enter Table Name Here"
-msgstr ""
-
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:21
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:17
 msgid "Columns"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:22
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:18
 msgid "Rows"
 msgstr ""
 
@@ -248,98 +276,266 @@ msgstr ""
 msgid "Generate"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:46
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:47, ../inc/admin/views/builder/table-element/table-setting-element.php:291
 msgid "Add Column to the Start"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:47
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:48
 msgid "Add Left Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:49
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:51, ../inc/admin/views/builder/table-element/table-setting-element.php:302
 msgid "Add Column to the End"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:50
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:52
 msgid "Add Right Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:52
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:55, ../inc/admin/views/builder/table-element/table-setting-element.php:313
 msgid "Add Row to the Start"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:53
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:56
 msgid "Add Top Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:55
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:59, ../inc/admin/views/builder/table-element/table-setting-element.php:324
 msgid "Add Row to the End"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:56
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:60
 msgid "Add Bottom Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:58
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:63, ../inc/admin/views/builder/table-element/table-setting-element.php:335
 msgid "Merge Selected Cells"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:59
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:64
 msgid "Merge"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:61
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:67, ../inc/admin/views/builder/table-element/table-setting-element.php:346
 msgid "Unmerge Selected Cell"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:62
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:68
 msgid "Split"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:64
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:71, ../inc/admin/views/builder/table-element/table-setting-element.php:357
 msgid "Delete Highlighted Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:65
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:72
 msgid "Remove Column"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:67
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:75, ../inc/admin/views/builder/table-element/table-setting-element.php:368
 msgid "Delete Highlighted Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:68
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:76
 msgid "Remove Row"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:79
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:89, ../inc/admin/views/builder/table-element/table-setting-element.php:391
 msgid "Add Column After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:80
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:90
 msgid "Insert Column After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:82
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:93, ../inc/admin/views/builder/table-element/table-setting-element.php:402
 msgid "Add Column Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:83
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:94
 msgid "Insert Column Before"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:85
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:97, ../inc/admin/views/builder/table-element/table-setting-element.php:413
 msgid "Add Row After Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:86
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:98
 msgid "Insert Row After"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:88
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:101, ../inc/admin/views/builder/table-element/table-setting-element.php:424
 msgid "Add Row Before Highlighted One"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-table-setup.php:89
+#: ../inc/admin/views/builder/wptb-builder-table-setup.php:102
 msgid "Insert Row Before"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:39
+msgid "Cell Settings"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:68
+msgid "Cell Settings "
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:77
+msgid "Column Width"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:92, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:116
+msgid "Fixed"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:93, ../inc/admin/views/builder/table-element/table-cell-setting-element.php:117
+msgid "Auto"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:101
+msgid "Row Height"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-cell-setting-element.php:123
+msgid "Cell Vertical Alignment"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:69
+msgid "general"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:82
+msgid "mode options"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:98
+msgid "how to"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:109
+msgid "desktop"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:113
+msgid "tablet"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:117
+msgid "mobile"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:128
+msgid "rebuilding"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:129
+msgid "enable responsive table"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:130
+msgid "Enable responsive capabilities of current table"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:131
+msgid "Cell stack direction"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:132
+msgid "Top row as header"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:133
+msgid "Static top row"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:134
+msgid "Identify cells"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:135
+msgid "Cells per row"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:136
+msgid "Items per header"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:137
+msgid "Preserve row color"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:138
+msgid "row"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:139
+msgid "column"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:140
+msgid "mode"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:141
+msgid "auto"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:142
+msgid "pattern"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:143
+msgid "full"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:144
+msgid "Okay"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:145
+msgid "target width"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:146
+msgid "window"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:147
+msgid "container"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:149
+msgid "Auto: Table will be reconstructed automatically with the given options by stacking rows/columns."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:150
+msgid "Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:151
+msgid "Full: You have full control over how table will be constructed."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:152
+msgid "The order of stacking, either by rows or by columns."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:153
+msgid "Use the top most row of table as a header."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:154
+msgid "Amount of cells that will be available per row. Can be further customized for different breakpoints."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:155
+msgid "Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version."
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:156
+msgid "Preserve the original row color for cell, or use even/odd row colors"
+msgstr ""
+
+#: ../inc/admin/views/builder/table-element/table-setting-element.php:39
+msgid "Table Setting"
 msgstr ""
