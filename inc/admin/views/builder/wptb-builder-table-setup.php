@@ -12,6 +12,9 @@ use WP_Table_Builder as NS;
 <div id="wpcd_fixed_toolbar" class="wptb-fixed-toolbar">
 </div>
 
+<div id="wptbGenerate">
+</div>
+
 <table class="wptb-table-generator" style="display: none;">
     <tr>
         <td style="font-size: 20px"><?php esc_html_e( 'Columns', 'wp-table-builder' ); ?></td>

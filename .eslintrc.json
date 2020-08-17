@@ -38,6 +38,8 @@
     "WPTB_Helper": true,
     "WPTB_ResponsiveFrontend": true,
     "jQuery": true,
-    "wp": true
+    "wp": true,
+    "wptbGenerateMenuData": true,
+    "wptbGenerateMenuProData": true
   }
 }

@@ -3022,7 +3022,7 @@ wptb_shortcode_container_element {
     color: #CBD5E0 !important;
 }
 
-.wptb-panel-tabs .wptb-settings-section-item.disabled{
+.wptb-panel-tabs .wptb-settings-section-item.disabled {
     color: inherit !important;
 }
 
@@ -4234,4 +4234,39 @@ wptb_shortcode_container_element {
 .wptb-cell[data-wptb-cell-vertical-alignment="bottom"] {
     vertical-align: bottom;
 }
+
+/*endregion*/
+
+/*region generate menu*/
+.wptb-generate-menu {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'header' 'listing';
+}
+
+.wptb-generate-menu-header {
+    grid-area: header;
+}
+
+.wptb-generate-menu-listing {
+    grid-area: listing;
+}
+
+.wptb-generate-search {
+    border: 1px solid var(--wptb-plugin-gray-300) !important;
+    text-align: center;
+    font-size: 90%;
+    color: inherit;
+}
+
+.wptb-generate-search::placeholder {
+    color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-generate-search:active, .wptb-generate-search:focus {
+    border: 1px solid var(--wptb-plugin-gray-400) !important;
+    inset: 0 !important;
+    box-shadow: none !important;
+}
+
 /*endregion*/
