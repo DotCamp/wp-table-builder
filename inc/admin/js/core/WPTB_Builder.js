@@ -47,7 +47,8 @@
             };
             http.send(null);
         } else {
-            document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+            // @deprecated old generate logic
+            // document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
 
             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();

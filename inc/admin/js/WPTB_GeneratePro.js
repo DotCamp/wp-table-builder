@@ -11988,7 +11988,7 @@ function getOuterHTML(el) {
 Vue.compile = compileToFunctions;
 var _default = Vue;
 exports.default = _default;
-},{}],"containers/GenerateMain.vue":[function(require,module,exports) {
+},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12002,31 +12002,484 @@ exports.default = void 0;
 //
 //
 //
+var _default = {
+  props: {
+    orientation: {
+      type: String,
+      default: 'row'
+    },
+    value: {
+      type: Number,
+      default: 0
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.toNumber(this.value);
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('input', this.limitVal(n));
+      this.innerValue = this.limitVal(n);
+    }
+  },
+  methods: {
+    valueChanged: function valueChanged(e) {
+      this.innerValue = this.toNumber(e.target.value);
+    },
+    toNumber: function toNumber(n) {
+      return Number.parseInt(n, 10);
+    },
+    limitVal: function limitVal(n) {
+      if (n <= 0) {
+        return 1;
+      }
+
+      return n;
+    },
+    effectValue: function effectValue(effect) {
+      this.innerValue += effect;
+    }
+  }
+};
+exports.default = _default;
+        var $43bbee = exports.default || module.exports;
+      
+      if (typeof $43bbee === 'function') {
+        $43bbee = $43bbee.options;
+      }
+    
+        /* template */
+        Object.assign($43bbee, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-control",
+      attrs: { "data-orientation": _vm.orientation }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(-1)
+            }
+          }
+        },
+        [_vm._v("-")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "wptb-prebuilt-control-input",
+        domProps: { value: _vm.innerValue },
+        on: { input: _vm.valueChanged }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(1)
+            }
+          }
+        },
+        [_vm._v("+")]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
 //
 //
 //
 var _default = {
+  props: {
+    rows: {
+      type: Number,
+      default: 1
+    },
+    cols: {
+      type: Number,
+      default: 1
+    }
+  },
+  computed: {
+    calculateStyle: function calculateStyle() {
+      return {
+        gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
+        gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
+      };
+    },
+    itemsNumber: function itemsNumber() {
+      return Array(this.rows * this.cols);
+    }
+  }
+};
+exports.default = _default;
+        var $78d93d = exports.default || module.exports;
+      
+      if (typeof $78d93d === 'function') {
+        $78d93d = $78d93d.options;
+      }
+    
+        /* template */
+        Object.assign($78d93d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-live-display wptb-unselectable" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
+        _vm._l(_vm.itemsNumber, function(v, k) {
+          return _c("div", { key: k, staticClass: "wptb-prebuilt-live-cell" })
+        }),
+        0
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltCard.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl"));
+
+var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    table: {
+      type: String,
+      default: '<p class="wptb-prebuilt-blank">+</p>'
+    },
+    isActive: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  components: {
+    PrebuiltCardControl: _PrebuiltCardControl.default,
+    PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default
+  },
+  data: function data() {
+    return {
+      rows: 1,
+      columns: 1
+    };
+  },
+  methods: {
+    setCardActive: function setCardActive() {
+      if (!this.isActive) {
+        this.$emit('cardActive', this.id);
+      }
+    },
+    cardGenerate: function cardGenerate() {
+      this.$emit('cardGenerate', this.id, this.columns, this.rows);
+    }
+  }
+};
+exports.default = _default;
+        var $a4e562 = exports.default || module.exports;
+      
+      if (typeof $a4e562 === 'function') {
+        $a4e562 = $a4e562.options;
+      }
+    
+        /* template */
+        Object.assign($a4e562, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-card",
+      class: { "wptb-prebuilt-card-active": _vm.isActive },
+      on: { click: _vm.setCardActive }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-card-preview" },
+        [
+          !_vm.isActive
+            ? _c("div", [
+                _c("div", { domProps: { innerHTML: _vm._s(_vm.table) } })
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive
+            ? _c("prebuilt-live-display", {
+                attrs: { rows: _vm.rows, cols: _vm.columns }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive
+            ? _c(
+                "div",
+                { staticClass: "wptb-prebuilt-card-controls" },
+                [
+                  _c("prebuilt-card-control", {
+                    attrs: { orientation: "row" },
+                    model: {
+                      value: _vm.columns,
+                      callback: function($$v) {
+                        _vm.columns = $$v
+                      },
+                      expression: "columns"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("prebuilt-card-control", {
+                    attrs: { orientation: "col" },
+                    model: {
+                      value: _vm.rows,
+                      callback: function($$v) {
+                        _vm.rows = $$v
+                      },
+                      expression: "rows"
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-prebuilt-card-footer" }, [
+        !_vm.isActive
+          ? _c("div", { staticClass: "wptb-prebuilt-card-footer-element" }, [
+              _vm._v(_vm._s(_vm._f("cap")(_vm.name)))
+            ])
+          : _c(
+              "div",
+              {
+                staticClass:
+                  "wptb-prebuilt-card-footer-element wptb-prebuilt-generate-button wptb-unselectable",
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.cardGenerate($event)
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n\t\t\t" +
+                    _vm._s(_vm._f("cap")(_vm.strings.generate)) +
+                    "\n\t\t"
+                )
+              ]
+            )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    PrebuiltCard: _PrebuiltCard.default
+  },
   props: {
     version: {
       type: String,
       default: 'normal'
     }
   },
+  data: function data() {
+    return {
+      searchString: '',
+      prebuiltTables: {
+        blank: {
+          name: 'blank'
+        }
+      },
+      activeCard: ''
+    };
+  },
   mounted: function mounted() {
-    var _this = this;
+    window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
-    window.addEventListener('keyup', function (e) {
-      if (e.key !== undefined && e.key === '/') {
-        _this.focusToSearch();
-      } else if (e.keyCode !== undefined && e.keyCode === 191) {
-        _this.focusToSearch();
-      }
-    });
+    this.prebuiltTables.blank.name = this.strings.blank;
   },
   methods: {
-    focusToSearch: function focusToSearch() {
-      this.$refs.search.focus();
+    focusToSearch: function focusToSearch(e) {
+      var vm = this;
+
+      if (e.key !== undefined && e.key === '/') {
+        vm.$refs.search.focus();
+      } else if (e.keyCode !== undefined && e.keyCode === 191) {
+        vm.$refs.search.focus();
+      }
+    },
+    isCardActive: function isCardActive(id) {
+      return this.activeCard === id;
+    },
+    cardActive: function cardActive(cardId) {
+      this.activeCard = cardId;
+    },
+    cardGenerate: function cardGenerate(cardId, cols, rows) {
+      if (cardId === 'blank') {
+        WPTB_Table(cols, rows);
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+      }
     }
+  },
+  beforeDestroy: function beforeDestroy() {
+    // TODO [erdembircan] remove for production
+    console.log('destroyed');
+    window.removeEventListener('keyup', this.focusToSearch);
   }
 };
 exports.default = _default;
@@ -12042,26 +12495,57 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-generate-menu" }, [
-    _c("div", { staticClass: "wptb-generate-menu-header" }, [
-      _c("input", {
-        ref: "search",
-        staticClass: "wptb-generate-search",
-        attrs: { type: "text", placeholder: "Search(/ to focus)" }
-      })
-    ]),
-    _vm._v(" "),
-    _vm._m(0)
+  return _c("div", { staticClass: "wptb-generate-wrapper" }, [
+    _c("div", { staticClass: "wptb-generate-menu" }, [
+      _c("div", { staticClass: "wptb-generate-menu-header" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.searchString,
+              expression: "searchString",
+              modifiers: { trim: true }
+            }
+          ],
+          ref: "search",
+          staticClass: "wptb-generate-search",
+          attrs: { type: "text", placeholder: "Search(/ to focus)" },
+          domProps: { value: _vm.searchString },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchString = $event.target.value.trim()
+            },
+            blur: function($event) {
+              return _vm.$forceUpdate()
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-generate-menu-listing" },
+        _vm._l(_vm.prebuiltTables, function(v, k) {
+          return _c("prebuilt-card", {
+            key: k,
+            attrs: {
+              id: k,
+              name: _vm._f("cap")(v.name),
+              "is-active": _vm.isCardActive(k)
+            },
+            on: { cardActive: _vm.cardActive, cardGenerate: _vm.cardGenerate }
+          })
+        }),
+        1
+      )
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wptb-generate-menu-listing" }, [_c("i")])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -12073,12 +12557,42 @@ render._withStripped = true
           };
         })());
       
+},{"../components/PrebuiltCard":"components/PrebuiltCard.vue"}],"plugins/filters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Plugin for reusable.
+ *
+ * @param {object} Vue Vue instance
+ * @param {object} options filter options
+ */
+// eslint-disable-next-line no-unused-vars
+function install(Vue, options) {
+  // capitalize filter
+  Vue.filter('cap', function (val) {
+    return val.split(' ').map(function (v) {
+      return v[0].toUpperCase() + v.slice(1);
+    }).join(' ');
+  });
+}
+
+var _default = {
+  install: install
+};
+exports.default = _default;
 },{}],"WPTB_GeneratePro.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
 
 var _GenerateMain = _interopRequireDefault(require("./containers/GenerateMain"));
+
+var _filters = _interopRequireDefault(require("./plugins/filters"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12088,7 +12602,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-_vue.default.config.productionTip = false;
+_vue.default.config.productionTip = false; // filter setup
+
+_vue.default.use(_filters.default);
+
 var proData = wptbGenerateMenuProData || {};
 
 var data = _objectSpread({}, wptbGenerateMenuData, {}, proData);
@@ -12100,5 +12617,5 @@ new _vue.default({
   template: '<generate-main :version="version"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue"}]},{},["WPTB_GeneratePro.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js"}]},{},["WPTB_GeneratePro.js"], null)
 //# sourceMappingURL=/WPTB_GeneratePro.js.map

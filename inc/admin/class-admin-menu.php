@@ -277,7 +277,12 @@ class Admin_Menu {
 			wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
 			$generate_data = [
 				'mountId' => 'wptbGenerate',
-				'version' => 'normal'
+				'version' => 'normal',
+				'strings' => [
+					'blank'    => esc_html__( 'blank', 'wp-table-builder' ),
+					'generate' => esc_html__( 'generate', 'wp-table-builder' ),
+				]
+
 			];
 			wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 

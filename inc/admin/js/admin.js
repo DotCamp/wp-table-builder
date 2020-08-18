@@ -350,7 +350,8 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
             };
             http.send(null);
         } else {
-            document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+            // @deprecated old generate logic
+            // document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
 
             var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
             wptbTableStateSaveManager.tableStateSet();
@@ -3027,75 +3028,75 @@ var WPTB_Helper = {
 };
 var WPTB_Initializer = function WPTB_Initializer() {
 
-        var MIN_COLUMNS = 1,
-            MIN_ROWS = 1,
-            MAX_COLUMNS = 30,
-            MAX_ROWS = 30;
+    var MIN_COLUMNS = 1,
+        MIN_ROWS = 1,
+        MAX_COLUMNS = 30,
+        MAX_ROWS = 30;
 
-        var tableGenerator = document.body;
-        columnsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[0], columnsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[0], rowsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[1], rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1], columnsInput = document.getElementById('wptb-columns-number'), rowsInput = document.getElementById('wptb-rows-number');
+    var tableGenerator = document.body;
+    columnsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[0], columnsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[0], rowsDecrementButton = tableGenerator.getElementsByClassName('wptb-input-number-decrement')[1], rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1], columnsInput = document.getElementById('wptb-columns-number'), rowsInput = document.getElementById('wptb-rows-number');
 
-        columnsDecrementButton.onclick = function () {
-                if (columnsInput.value > MIN_COLUMNS) {
-                        columnsInput.value--;
-                }
-        };
+    // columnsDecrementButton.onclick = function () {
+    //         if (columnsInput.value > MIN_COLUMNS) {
+    //                 columnsInput.value--;
+    //         }
+    // };
+    //
+    // columnsIncrementButton.onclick = function () {
+    //         if (columnsInput.value < MAX_COLUMNS) {
+    //                 columnsInput.value++;
+    //         }
+    // };
+    //
+    // rowsDecrementButton.onclick = function () {
+    //         if (rowsInput.value > MIN_ROWS) {
+    //                 rowsInput.value--;
+    //         }
+    // };
+    //
+    // rowsIncrementButton.onclick = function () {
+    //         if (rowsInput.value < MAX_ROWS) {
+    //                 rowsInput.value++;
+    //         }
+    // };
 
-        columnsIncrementButton.onclick = function () {
-                if (columnsInput.value < MAX_COLUMNS) {
-                        columnsInput.value++;
-                }
-        };
+    // document.getElementById( 'wptb-generate-table' ).onclick = function (  ) {
+    //         var columns = document.getElementById('wptb-columns-number').value,
+    //             rows = document.getElementById('wptb-rows-number').value;
+    //
+    //         //wptbTableStateSaveManager.tableStateClear();
+    //
+    //         WPTB_Table(columns, rows);
+    //
+    //         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+    //         wptbTableStateSaveManager.tableStateSet();
+    // }
 
-        rowsDecrementButton.onclick = function () {
-                if (rowsInput.value > MIN_ROWS) {
-                        rowsInput.value--;
-                }
-        };
+    // register and setup section buttons
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu']);
+    WPTB_Helper.setupSectionButtons();
 
-        rowsIncrementButton.onclick = function () {
-                if (rowsInput.value < MAX_ROWS) {
-                        rowsInput.value++;
-                }
-        };
+    // activate elements section for startup
+    WPTB_Helper.activateSection('elements');
 
-        document.getElementById('wptb-generate-table').onclick = function () {
-                var columns = document.getElementById('wptb-columns-number').value,
-                    rows = document.getElementById('wptb-rows-number').value;
+    // side bar toggle setup
+    // WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
+    WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');
 
-                //wptbTableStateSaveManager.tableStateClear();
+    // setup panel sections that have the ability to be toggled on/off
+    WPTB_Helper.setupPanelToggleButtons();
 
-                WPTB_Table(columns, rows);
+    // setup responsive menu both at left and builder panel
+    new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-builder-content');
 
-                var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                wptbTableStateSaveManager.tableStateSet();
-        };
+    // get builder section from url parameter for easy switch at page load
+    WPTB_Helper.getSectionFromUrl();
 
-        // register and setup section buttons
-        WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu']);
-        WPTB_Helper.setupSectionButtons();
+    // automatically show element controls when dropped to table
+    WPTB_Helper.showControlsOnElementMount();
 
-        // activate elements section for startup
-        WPTB_Helper.activateSection('elements');
-
-        // side bar toggle setup
-        // WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
-        WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');
-
-        // setup panel sections that have the ability to be toggled on/off
-        WPTB_Helper.setupPanelToggleButtons();
-
-        // setup responsive menu both at left and builder panel
-        new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-builder-content');
-
-        // get builder section from url parameter for easy switch at page load
-        WPTB_Helper.getSectionFromUrl();
-
-        // automatically show element controls when dropped to table
-        WPTB_Helper.showControlsOnElementMount();
-
-        // show elements list menu on left panel on removing elements from table
-        WPTB_Helper.showElementsListOnRemove();
+    // show elements list menu on left panel on removing elements from table
+    WPTB_Helper.showElementsListOnRemove();
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
@@ -5247,7 +5248,8 @@ var array = [],
         wptbTableStateSaveManager.tableStateSet();
     };
 
-    document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+    // @deprecated old generate logic
+    // document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 
     array = fillTableArray();
 

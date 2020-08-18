@@ -40,6 +40,7 @@
     "jQuery": true,
     "wp": true,
     "wptbGenerateMenuData": true,
-    "wptbGenerateMenuProData": true
+    "wptbGenerateMenuProData": true,
+    "WPTB_Table": true
   }
 }

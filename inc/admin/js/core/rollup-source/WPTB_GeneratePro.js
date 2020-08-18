@@ -1,7 +1,14 @@
+/**
+ * @deprecated
+ */
 import Vue from 'vue';
 import GenerateMain from './containers/GenerateMain';
+import filters from './plugins/filters';
 
 Vue.config.productionTip = false;
+
+// filter setup
+Vue.use(filters);
 
 const proData = wptbGenerateMenuProData || {};
 
