@@ -12,7 +12,8 @@
                     document.getElementById('wptb-setup-name').value = ans[0];
                         
                     if( ans[1] ) {
-                        document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+                        // @deprecated old generate logic
+                        // document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
                         let wptbTableSetupEl = document.getElementsByClassName('wptb-table-setup')[0];
                         wptbTableSetupEl.appendChild( WPTB_Parser( ans[1] ) );
                         

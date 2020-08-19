@@ -5,12 +5,14 @@ import strings from './plugins/strings';
 
 Vue.config.productionTip = false;
 
+// setup filters
 Vue.use(filters);
 
 const proData = global.wptbGenerateMenuProData ?? {};
 
 const data = { ...wptbGenerateMenuData, ...proData };
 
+// setup translation strings
 Vue.use(strings, data);
 
 const vm = new Vue({
@@ -19,7 +21,22 @@ const vm = new Vue({
 	data,
 }).$mount(`#${data.mountId}`);
 
+const tableContainer = document.querySelector('.wptb-management_table_container');
+
+// hide table container
+tableContainer.style.opacity = 0;
+
 document.addEventListener('wptb:table:generated', () => {
-	vm.$destroy();
-	document.querySelector('.wptb-generate-wrapper').remove();
+	const generateWrapper = document.querySelector('.wptb-generate-wrapper');
+
+	generateWrapper.addEventListener('animationend', (e) => {
+		if (e.animationName === 'wptb-basic-disappear') {
+			vm.$destroy();
+			generateWrapper.remove();
+			// show table container
+			tableContainer.style.opacity = 1;
+		}
+	});
+
+	generateWrapper.classList.add('wptb-plugin-basic-disappear');
 });

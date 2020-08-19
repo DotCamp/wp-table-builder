@@ -6,8 +6,8 @@
 			</div>
 			<prebuilt-live-display v-if="isActive" :rows="rows" :cols="columns"></prebuilt-live-display>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
-				<prebuilt-card-control orientation="row" v-model="columns"></prebuilt-card-control>
-				<prebuilt-card-control orientation="col" v-model="rows"></prebuilt-card-control>
+				<prebuilt-card-control :disabled="disabled" orientation="row" v-model="columns"></prebuilt-card-control>
+				<prebuilt-card-control :disabled="disabled" orientation="col" v-model="rows"></prebuilt-card-control>
 			</div>
 		</div>
 		<div class="wptb-prebuilt-card-footer">
@@ -63,7 +63,9 @@ export default {
 			}
 		},
 		cardGenerate() {
-			this.$emit('cardGenerate', this.id, this.columns, this.rows);
+			if (!this.disabled) {
+				this.$emit('cardGenerate', this.id, this.columns, this.rows);
+			}
 		},
 	},
 };

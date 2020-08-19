@@ -1,8 +1,25 @@
 <template>
 	<div class="wptb-prebuilt-control" :data-orientation="orientation">
-		<div class="wptb-prebuilt-control-increment-box wptb-unselectable" @click.prevent="effectValue(-1)">-</div>
-		<input class="wptb-prebuilt-control-input" :value="innerValue" @input="valueChanged" />
-		<div class="wptb-prebuilt-control-increment-box wptb-unselectable" @click.prevent="effectValue(1)">+</div>
+		<div
+			class="wptb-prebuilt-control-increment-box wptb-unselectable"
+			:disabled="disabled"
+			@click.prevent="effectValue(-1)"
+		>
+			-
+		</div>
+		<input
+			class="wptb-prebuilt-control-input"
+			:value="innerValue"
+			@input="valueChanged"
+			:disabled="disabled === true"
+		/>
+		<div
+			class="wptb-prebuilt-control-increment-box wptb-unselectable"
+			:disabled="disabled"
+			@click.prevent="effectValue(1)"
+		>
+			+
+		</div>
 	</div>
 </template>
 <script>
@@ -15,6 +32,10 @@ export default {
 		value: {
 			type: Number,
 			default: 0,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	data() {
@@ -48,7 +69,9 @@ export default {
 			return n;
 		},
 		effectValue(effect) {
-			this.innerValue += effect;
+			if (!this.disabled) {
+				this.innerValue += effect;
+			}
 		},
 	},
 };

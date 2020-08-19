@@ -12002,6 +12002,23 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     orientation: {
@@ -12011,6 +12028,10 @@ var _default = {
     value: {
       type: Number,
       default: 0
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data: function data() {
@@ -12045,7 +12066,9 @@ var _default = {
       return n;
     },
     effectValue: function effectValue(effect) {
-      this.innerValue += effect;
+      if (!this.disabled) {
+        this.innerValue += effect;
+      }
     }
   }
 };
@@ -12073,6 +12096,7 @@ exports.default = _default;
         "div",
         {
           staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled },
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -12080,11 +12104,12 @@ exports.default = _default;
             }
           }
         },
-        [_vm._v("-")]
+        [_vm._v("\n\t\t-\n\t")]
       ),
       _vm._v(" "),
       _c("input", {
         staticClass: "wptb-prebuilt-control-input",
+        attrs: { disabled: _vm.disabled === true },
         domProps: { value: _vm.innerValue },
         on: { input: _vm.valueChanged }
       }),
@@ -12093,6 +12118,7 @@ exports.default = _default;
         "div",
         {
           staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled },
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -12100,7 +12126,7 @@ exports.default = _default;
             }
           }
         },
-        [_vm._v("+")]
+        [_vm._v("\n\t\t+\n\t")]
       )
     ]
   )
@@ -12272,7 +12298,9 @@ var _default = {
       }
     },
     cardGenerate: function cardGenerate() {
-      this.$emit('cardGenerate', this.id, this.columns, this.rows);
+      if (!this.disabled) {
+        this.$emit('cardGenerate', this.id, this.columns, this.rows);
+      }
     }
   }
 };
@@ -12319,7 +12347,7 @@ exports.default = _default;
                 { staticClass: "wptb-prebuilt-card-controls" },
                 [
                   _c("prebuilt-card-control", {
-                    attrs: { orientation: "row" },
+                    attrs: { disabled: _vm.disabled, orientation: "row" },
                     model: {
                       value: _vm.columns,
                       callback: function($$v) {
@@ -12330,7 +12358,7 @@ exports.default = _default;
                   }),
                   _vm._v(" "),
                   _c("prebuilt-card-control", {
-                    attrs: { orientation: "col" },
+                    attrs: { disabled: _vm.disabled, orientation: "col" },
                     model: {
                       value: _vm.rows,
                       callback: function($$v) {
@@ -12426,6 +12454,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
   components: {
     PrebuiltCard: _PrebuiltCard.default
@@ -12444,7 +12474,8 @@ var _default = {
           name: 'blank'
         }
       },
-      activeCard: ''
+      activeCard: '',
+      generating: false
     };
   },
   mounted: function mounted() {
@@ -12469,6 +12500,8 @@ var _default = {
       this.activeCard = cardId;
     },
     cardGenerate: function cardGenerate(cardId, cols, rows) {
+      this.generating = true;
+
       if (cardId === 'blank') {
         WPTB_Table(cols, rows);
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
@@ -12477,8 +12510,6 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
-    // TODO [erdembircan] remove for production
-    console.log('destroyed');
     window.removeEventListener('keyup', this.focusToSearch);
   }
 };
@@ -12510,7 +12541,11 @@ exports.default = _default;
           ],
           ref: "search",
           staticClass: "wptb-generate-search",
-          attrs: { type: "text", placeholder: "Search(/ to focus)" },
+          attrs: {
+            type: "text",
+            placeholder: _vm.strings.searchPlaceholder,
+            disabled: _vm.version === "normal"
+          },
           domProps: { value: _vm.searchString },
           on: {
             input: function($event) {
@@ -12535,7 +12570,8 @@ exports.default = _default;
             attrs: {
               id: k,
               name: _vm._f("cap")(v.name),
-              "is-active": _vm.isCardActive(k)
+              "is-active": _vm.isCardActive(k),
+              disabled: _vm.generating
             },
             on: { cardActive: _vm.cardActive, cardGenerate: _vm.cardGenerate }
           })

@@ -273,18 +273,20 @@ class Admin_Menu {
 			// generate controls
 			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
 
-			// enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
-			wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
-			$generate_data = [
-				'mountId' => 'wptbGenerate',
-				'version' => 'normal',
-				'strings' => [
-					'blank'    => esc_html__( 'blank', 'wp-table-builder' ),
-					'generate' => esc_html__( 'generate', 'wp-table-builder' ),
-				]
+			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
+				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
+				$generate_data = [
+					'mountId' => 'wptbGenerate',
+					'version' => 'normal',
+					'strings' => [
+						'blank'             => esc_html__( 'blank', 'wp-table-builder' ),
+						'generate'          => esc_html__( 'generate', 'wp-table-builder' ),
+						'searchPlaceholder' => esc_html__( 'Search (/ to focus)', 'wp-table-builder' )
+					]
 
-			];
-			wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
+				];
+				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
+			}
 
 
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(

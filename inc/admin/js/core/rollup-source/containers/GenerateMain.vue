@@ -7,7 +7,8 @@
 					ref="search"
 					class="wptb-generate-search"
 					type="text"
-					placeholder="Search(/ to focus)"
+					:placeholder="strings.searchPlaceholder"
+					:disabled="version === 'normal'"
 				/>
 			</div>
 			<div class="wptb-generate-menu-listing">
@@ -19,6 +20,7 @@
 					:is-active="isCardActive(k)"
 					@cardActive="cardActive"
 					@cardGenerate="cardGenerate"
+					:disabled="generating"
 				></prebuilt-card>
 			</div>
 		</div>
@@ -44,6 +46,7 @@ export default {
 				},
 			},
 			activeCard: '',
+			generating: false,
 		};
 	},
 	mounted() {
@@ -68,6 +71,7 @@ export default {
 			this.activeCard = cardId;
 		},
 		cardGenerate(cardId, cols, rows) {
+			this.generating = true;
 			if (cardId === 'blank') {
 				WPTB_Table(cols, rows);
 
@@ -77,8 +81,6 @@ export default {
 		},
 	},
 	beforeDestroy() {
-		// TODO [erdembircan] remove for production
-		console.log('destroyed');
 		window.removeEventListener('keyup', this.focusToSearch);
 	},
 };
