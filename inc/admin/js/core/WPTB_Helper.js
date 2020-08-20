@@ -1627,6 +1627,12 @@ var WPTB_Helper = {
         if ( postId ) {
             params.id = postId;
         }
+
+        // prebuilt checking
+        if(WPTB_Prebuilt && WPTB_Prebuilt.isPrebuiltEnabled()){
+            params.prebuilt = true;
+        }
+
         params = JSON.stringify( params );
 
         http.open('POST', url, true);

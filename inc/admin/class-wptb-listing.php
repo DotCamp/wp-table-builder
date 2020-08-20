@@ -3,6 +3,8 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 
+use function apply_filters;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	die('NOT?');
 	require_once( ABSPATH . 'wp-admin\includes\class-wp-list-table.php' );
@@ -46,8 +48,10 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
 	  	$params['order'] = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
-	  	
-	  	$loop = new \WP_Query( $params ); 
+
+	  	$params = apply_filters('wp-table-builder/get_tables_args', $params);
+
+	  	$loop = new \WP_Query( $params );
 		$result=[];
 		while ( $loop->have_posts() ) { $loop->the_post(); $result[] = $post; } 
 	  	

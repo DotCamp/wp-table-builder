@@ -12456,6 +12456,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   components: {
     PrebuiltCard: _PrebuiltCard.default
@@ -12464,6 +12468,9 @@ var _default = {
     version: {
       type: String,
       default: 'normal'
+    },
+    adLink: {
+      type: String
     }
   },
   data: function data() {
@@ -12482,6 +12489,11 @@ var _default = {
     window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
     this.prebuiltTables.blank.name = this.strings.blank;
+  },
+  computed: {
+    isPro: function isPro() {
+      return this.version === 'pro';
+    }
   },
   methods: {
     focusToSearch: function focusToSearch(e) {
@@ -12544,7 +12556,7 @@ exports.default = _default;
           attrs: {
             type: "text",
             placeholder: _vm.strings.searchPlaceholder,
-            disabled: _vm.version === "normal"
+            disabled: !_vm.isPro
           },
           domProps: { value: _vm.searchString },
           on: {
@@ -12578,7 +12590,21 @@ exports.default = _default;
         }),
         1
       )
-    ])
+    ]),
+    _vm._v(" "),
+    !_vm.isPro
+      ? _c("div", { staticClass: "wptb-prebuilt-ad" }, [
+          _vm._v("\n\t\t" + _vm._s(_vm.strings.prebuiltAdPart1) + ",\n\t\t"),
+          _c(
+            "a",
+            {
+              staticClass: "wptb-prebuilt-ad-link",
+              attrs: { href: _vm.adLink }
+            },
+            [_vm._v(_vm._s(_vm.strings.prebuiltAdPart2))]
+          )
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -12693,7 +12719,7 @@ var vm = new _vue.default({
   components: {
     GenerateMain: _GenerateMain.default
   },
-  template: '<generate-main :version="version"></generate-main>',
+  template: '<generate-main :version="version" :ad-link="adLink"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
@@ -12701,15 +12727,18 @@ var tableContainer = document.querySelector('.wptb-management_table_container');
 tableContainer.style.opacity = 0;
 document.addEventListener('wptb:table:generated', function () {
   var generateWrapper = document.querySelector('.wptb-generate-wrapper');
-  generateWrapper.addEventListener('animationend', function (e) {
-    if (e.animationName === 'wptb-basic-disappear') {
-      vm.$destroy();
-      generateWrapper.remove(); // show table container
 
-      tableContainer.style.opacity = 1;
-    }
-  });
-  generateWrapper.classList.add('wptb-plugin-basic-disappear');
+  if (generateWrapper) {
+    generateWrapper.addEventListener('animationend', function (e) {
+      if (e.animationName === 'wptb-basic-disappear') {
+        vm.$destroy();
+        generateWrapper.remove(); // show table container
+
+        tableContainer.style.opacity = 1;
+      }
+    });
+    generateWrapper.classList.add('wptb-plugin-basic-disappear');
+  }
 });
 },{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js"}]},{},["WPTB_Generate.js"], null)
 //# sourceMappingURL=/WPTB_Generate.js.map

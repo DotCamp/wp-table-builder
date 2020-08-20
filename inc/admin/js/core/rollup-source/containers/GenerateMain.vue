@@ -8,7 +8,7 @@
 					class="wptb-generate-search"
 					type="text"
 					:placeholder="strings.searchPlaceholder"
-					:disabled="version === 'normal'"
+					:disabled="!isPro"
 				/>
 			</div>
 			<div class="wptb-generate-menu-listing">
@@ -24,6 +24,10 @@
 				></prebuilt-card>
 			</div>
 		</div>
+		<div v-if="!isPro" class="wptb-prebuilt-ad">
+			{{ strings.prebuiltAdPart1 }},
+			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>
+		</div>
 	</div>
 </template>
 <script>
@@ -35,6 +39,9 @@ export default {
 		version: {
 			type: String,
 			default: 'normal',
+		},
+		adLink: {
+			type: String,
 		},
 	},
 	data() {
@@ -54,6 +61,11 @@ export default {
 
 		// add correct translation of blank at mounted
 		this.prebuiltTables.blank.name = this.strings.blank;
+	},
+	computed: {
+		isPro() {
+			return this.version === 'pro';
+		},
 	},
 	methods: {
 		focusToSearch(e) {

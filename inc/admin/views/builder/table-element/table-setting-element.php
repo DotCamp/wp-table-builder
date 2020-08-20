@@ -6,6 +6,7 @@ use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager as Controls_Manager;
 use WP_Table_Builder as NS;
+use function do_action;
 use function sprintf;
 
 // If this file is called directly, abort.
@@ -270,6 +271,9 @@ class Table_Setting_Element extends Element_Base_Object {
 //			$this,
 //			'add_control'
 //		], false );
+
+		// table settings registered action hook
+		do_action('wp-table-builder/table_settings_registered', $this);
 
 		// help&support section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_grup_controls, [

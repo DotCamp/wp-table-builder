@@ -79,6 +79,13 @@ class Admin_Menu {
 
 				add_post_meta( $id, '_wptb_content_', $params->content );
 
+				// if table is marked as prebuilt, updated its meta or delete its meta accordingly
+				if ( property_exists( $params, 'prebuilt' ) ) {
+					add_post_meta( $id, '_wptb_prebuilt_', $params->prebuilt );
+				} else {
+					delete_post_meta( $id, '_wptb_prebuilt_' );
+				}
+
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
 				wp_update_post( [
@@ -96,6 +103,13 @@ class Admin_Menu {
 					wp_die( json_encode( [ 'preview_edited' ] ) );
 				} else {
 					update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+
+					// if table is marked as prebuilt, updated its meta or delete its meta accordingly
+					if ( property_exists( $params, 'prebuilt' ) ) {
+						update_post_meta( absint( $params->id ), '_wptb_prebuilt_', true );
+					} else {
+						delete_post_meta( absint( $params->id ), '_wptb_prebuilt_' );
+					}
 
 					wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
 				}
@@ -278,10 +292,13 @@ class Admin_Menu {
 				$generate_data = [
 					'mountId' => 'wptbGenerate',
 					'version' => 'normal',
+					'adLink'  => 'https://wptablebuilder.com/',
 					'strings' => [
 						'blank'             => esc_html__( 'blank', 'wp-table-builder' ),
 						'generate'          => esc_html__( 'generate', 'wp-table-builder' ),
-						'searchPlaceholder' => esc_html__( 'Search (/ to focus)', 'wp-table-builder' )
+						'searchPlaceholder' => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
+						'prebuiltAdPart1'   => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+						'prebuiltAdPart2'   => esc_html__( 'Go PRO', 'wp-table-builder' ),
 					]
 
 				];

@@ -17,7 +17,7 @@ Vue.use(strings, data);
 
 const vm = new Vue({
 	components: { GenerateMain },
-	template: '<generate-main :version="version"></generate-main>',
+	template: '<generate-main :version="version" :ad-link="adLink"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 
@@ -29,14 +29,16 @@ tableContainer.style.opacity = 0;
 document.addEventListener('wptb:table:generated', () => {
 	const generateWrapper = document.querySelector('.wptb-generate-wrapper');
 
-	generateWrapper.addEventListener('animationend', (e) => {
-		if (e.animationName === 'wptb-basic-disappear') {
-			vm.$destroy();
-			generateWrapper.remove();
-			// show table container
-			tableContainer.style.opacity = 1;
-		}
-	});
+	if (generateWrapper) {
+		generateWrapper.addEventListener('animationend', (e) => {
+			if (e.animationName === 'wptb-basic-disappear') {
+				vm.$destroy();
+				generateWrapper.remove();
+				// show table container
+				tableContainer.style.opacity = 1;
+			}
+		});
 
-	generateWrapper.classList.add('wptb-plugin-basic-disappear');
+		generateWrapper.classList.add('wptb-plugin-basic-disappear');
+	}
 });
