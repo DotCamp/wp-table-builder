@@ -17,7 +17,7 @@ Vue.use(strings, data);
 
 const vm = new Vue({
 	components: { GenerateMain },
-	template: '<generate-main :version="version" :ad-link="adLink"></generate-main>',
+	template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 
@@ -25,6 +25,7 @@ const tableContainer = document.querySelector('.wptb-management_table_container'
 
 // hide table container
 tableContainer.style.opacity = 0;
+tableContainer.style.display = 'none';
 
 document.addEventListener('wptb:table:generated', () => {
 	const generateWrapper = document.querySelector('.wptb-generate-wrapper');
@@ -35,6 +36,7 @@ document.addEventListener('wptb:table:generated', () => {
 				vm.$destroy();
 				generateWrapper.remove();
 				// show table container
+				tableContainer.style.display = 'unset';
 				tableContainer.style.opacity = 1;
 			}
 		});

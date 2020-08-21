@@ -1,10 +1,17 @@
 <template>
 	<div class="wptb-prebuilt-card" @click="setCardActive" :class="{ 'wptb-prebuilt-card-active': isActive }">
 		<div class="wptb-prebuilt-card-preview">
-			<div v-if="!isActive">
-				<div v-html="table"></div>
-			</div>
-			<prebuilt-live-display v-if="isActive" :rows="rows" :cols="columns"></prebuilt-live-display>
+			<div
+				ref="tablePreview"
+				v-show="!liveDisplayEnabled || !isActive"
+				class="wptb-prebuilt-table-wrapper wptb-unselectable"
+				v-html="table"
+			></div>
+			<prebuilt-live-display
+				v-if="isActive && liveDisplayEnabled"
+				:rows="rows"
+				:cols="columns"
+			></prebuilt-live-display>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
 				<prebuilt-card-control :disabled="disabled" orientation="row" v-model="columns"></prebuilt-card-control>
 				<prebuilt-card-control :disabled="disabled" orientation="col" v-model="rows"></prebuilt-card-control>
@@ -48,6 +55,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		liveDisplayEnabled: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	components: { PrebuiltCardControl, PrebuiltLiveDisplay },
 	data() {
@@ -55,6 +66,23 @@ export default {
 			rows: 1,
 			columns: 1,
 		};
+	},
+	mounted() {
+		this.$nextTick(() => {
+			const { tablePreview } = this.$refs;
+			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
+
+			const prebuilt = tablePreview.querySelector('table');
+
+			if (prebuilt) {
+				const padding = 40;
+				const { width: prebuiltWidth, height: prebuiltHeight } = prebuilt.getBoundingClientRect();
+				const widthScale = wrapperWidth / (prebuiltWidth + padding);
+				const heightScale = wrapperHeight / (prebuiltHeight + padding);
+
+				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
+			}
+		});
 	},
 	methods: {
 		setCardActive() {

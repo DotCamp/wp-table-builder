@@ -12,10 +12,9 @@ use WP_Table_Builder as NS;
 <div id="wpcd_fixed_toolbar" class="wptb-fixed-toolbar">
 </div>
 
-<div id="wptbGenerate">
-</div>
 
-<!--@deprecated old generate logic-->
+<!--region old generate logic-->
+<!--@deprecated -->
 <!--<table class="wptb-table-generator" style="display: none;">-->
 <!--    <tr>-->
 <!--        <td style="font-size: 20px">--><?php //esc_html_e( 'Columns', 'wp-table-builder' ); ?><!--</td>-->
@@ -41,6 +40,7 @@ use WP_Table_Builder as NS;
 <!--        </td>-->
 <!--    </tr>-->
 <!--</table>-->
+<!--endregion-->
 <div id="wptb-cell_mode_background">
 
 </div>
@@ -111,5 +111,9 @@ use WP_Table_Builder as NS;
     </button>
   </div>
 </div>
+
+<div id="wptbGenerate">
+</div>
+
 <div id="wptb-messaging-area">
 </div>

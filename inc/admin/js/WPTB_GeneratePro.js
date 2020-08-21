@@ -12258,6 +12258,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     name: {
@@ -12279,6 +12286,10 @@ var _default = {
     disabled: {
       type: Boolean,
       default: false
+    },
+    liveDisplayEnabled: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -12290,6 +12301,31 @@ var _default = {
       rows: 1,
       columns: 1
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var tablePreview = _this.$refs.tablePreview;
+
+      var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
+          wrapperWidth = _tablePreview$getBoun.width,
+          wrapperHeight = _tablePreview$getBoun.height;
+
+      var prebuilt = tablePreview.querySelector('table');
+
+      if (prebuilt) {
+        var padding = 40;
+
+        var _prebuilt$getBounding = prebuilt.getBoundingClientRect(),
+            prebuiltWidth = _prebuilt$getBounding.width,
+            prebuiltHeight = _prebuilt$getBounding.height;
+
+        var widthScale = wrapperWidth / (prebuiltWidth + padding);
+        var heightScale = wrapperHeight / (prebuiltHeight + padding);
+        prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")");
+      }
+    });
   },
   methods: {
     setCardActive: function setCardActive() {
@@ -12329,13 +12365,21 @@ exports.default = _default;
         "div",
         { staticClass: "wptb-prebuilt-card-preview" },
         [
-          !_vm.isActive
-            ? _c("div", [
-                _c("div", { domProps: { innerHTML: _vm._s(_vm.table) } })
-              ])
-            : _vm._e(),
+          _c("div", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.liveDisplayEnabled || !_vm.isActive,
+                expression: "!liveDisplayEnabled || !isActive"
+              }
+            ],
+            ref: "tablePreview",
+            staticClass: "wptb-prebuilt-table-wrapper wptb-unselectable",
+            domProps: { innerHTML: _vm._s(_vm.table) }
+          }),
           _vm._v(" "),
-          _vm.isActive
+          _vm.isActive && _vm.liveDisplayEnabled
             ? _c("prebuilt-live-display", {
                 attrs: { rows: _vm.rows, cols: _vm.columns }
               })
@@ -12428,38 +12472,12 @@ var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   components: {
     PrebuiltCard: _PrebuiltCard.default
@@ -12471,14 +12489,20 @@ var _default = {
     },
     adLink: {
       type: String
+    },
+    prebuiltTables: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
     }
   },
   data: function data() {
     return {
       searchString: '',
-      prebuiltTables: {
+      fixedTables: {
         blank: {
-          name: 'blank'
+          title: 'blank'
         }
       },
       activeCard: '',
@@ -12488,7 +12512,8 @@ var _default = {
   mounted: function mounted() {
     window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
-    this.prebuiltTables.blank.name = this.strings.blank;
+    this.fixedTables.blank.title = this.strings.blank;
+    this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
   },
   computed: {
     isPro: function isPro() {
@@ -12496,6 +12521,53 @@ var _default = {
     }
   },
   methods: {
+    sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
+      var _this = this;
+
+      var ids, i, currentTable;
+      return regeneratorRuntime.wrap(function sortedTables$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              ids = Object.keys(this.fixedTables);
+              ids.sort(function (a, b) {
+                if (a === 'blank') {
+                  return -1;
+                }
+
+                if (b === 'blank') {
+                  return 1;
+                }
+
+                var aTitle = _this.fixedTables[a].name;
+                var bTitle = _this.fixedTables[b].name;
+                return aTitle - bTitle;
+              });
+              i = 0;
+
+            case 3:
+              if (!(i < ids.length)) {
+                _context.next = 11;
+                break;
+              }
+
+              currentTable = this.fixedTables[ids[i]];
+              currentTable.id = ids[i];
+              _context.next = 8;
+              return currentTable;
+
+            case 8:
+              i += 1;
+              _context.next = 3;
+              break;
+
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, sortedTables, this);
+    }),
     focusToSearch: function focusToSearch(e) {
       var vm = this;
 
@@ -12518,6 +12590,22 @@ var _default = {
         WPTB_Table(cols, rows);
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
+      } else {
+        var tableWrapper = document.querySelector('.wptb-table-setup');
+        tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content)); // unmark inserted template as prebuilt table
+
+        delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+        WPTB_Table();
+        WPTB_Settings();
+
+        var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+
+        _wptbTableStateSaveManager.tableStateSet();
+
+        document.counter = new ElementCounters();
+        document.select = new MultipleSelect();
+        WPTB_Initializer();
+        WPTB_Settings();
       }
     }
   },
@@ -12576,14 +12664,15 @@ exports.default = _default;
       _c(
         "div",
         { staticClass: "wptb-generate-menu-listing" },
-        _vm._l(_vm.prebuiltTables, function(v, k) {
+        _vm._l(_vm.sortedTables(), function(v) {
           return _c("prebuilt-card", {
-            key: k,
+            key: v.id,
             attrs: {
-              id: k,
-              name: _vm._f("cap")(v.name),
-              "is-active": _vm.isCardActive(k),
-              disabled: _vm.generating
+              id: v.id,
+              name: v.title,
+              "is-active": _vm.isCardActive(v.id),
+              disabled: _vm.generating,
+              table: v.content
             },
             on: { cardActive: _vm.cardActive, cardGenerate: _vm.cardGenerate }
           })

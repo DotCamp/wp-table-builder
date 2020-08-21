@@ -13,15 +13,16 @@
 			</div>
 			<div class="wptb-generate-menu-listing">
 				<prebuilt-card
-					v-for="(v, k) in prebuiltTables"
-					:key="k"
-					:id="k"
-					:name="v.name | cap"
-					:is-active="isCardActive(k)"
+					v-for="v in sortedTables()"
+					:key="v.id"
+					:id="v.id"
+					:name="v.title"
+					:is-active="isCardActive(v.id)"
 					@cardActive="cardActive"
 					@cardGenerate="cardGenerate"
 					:disabled="generating"
-				></prebuilt-card>
+					:table="v.content"
+			></prebuilt-card>
 			</div>
 		</div>
 		<div v-if="!isPro" class="wptb-prebuilt-ad">
@@ -43,13 +44,19 @@ export default {
 		adLink: {
 			type: String,
 		},
+		prebuiltTables: {
+			type: Object,
+			default() {
+				return {};
+			},
+		},
 	},
 	data() {
 		return {
 			searchString: '',
-			prebuiltTables: {
+			fixedTables: {
 				blank: {
-					name: 'blank',
+					title: 'blank',
 				},
 			},
 			activeCard: '',
@@ -60,7 +67,9 @@ export default {
 		window.addEventListener('keyup', this.focusToSearch);
 
 		// add correct translation of blank at mounted
-		this.prebuiltTables.blank.name = this.strings.blank;
+		this.fixedTables.blank.title = this.strings.blank;
+
+		this.fixedTables = { ...this.fixedTables, ...this.prebuiltTables };
 	},
 	computed: {
 		isPro() {
@@ -68,6 +77,28 @@ export default {
 		},
 	},
 	methods: {
+		sortedTables: function* sortedTables() {
+			const ids = Object.keys(this.fixedTables);
+
+			ids.sort((a, b) => {
+				if (a === 'blank') {
+					return -1;
+				}
+				if (b === 'blank') {
+					return 1;
+				}
+				const aTitle = this.fixedTables[a].name;
+				const bTitle = this.fixedTables[b].name;
+
+				return aTitle - bTitle;
+			});
+
+			for (let i = 0; i < ids.length; i += 1) {
+				const currentTable = this.fixedTables[ids[i]];
+				currentTable.id = ids[i];
+				yield currentTable;
+			}
+		},
 		focusToSearch(e) {
 			const vm = this;
 			if (e.key !== undefined && e.key === '/') {
@@ -89,6 +120,24 @@ export default {
 
 				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 				wptbTableStateSaveManager.tableStateSet();
+			} else {
+				const tableWrapper = document.querySelector('.wptb-table-setup');
+				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+
+				// unmark inserted template as prebuilt table
+				delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+
+				WPTB_Table();
+
+				WPTB_Settings();
+				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+				wptbTableStateSaveManager.tableStateSet();
+
+				document.counter = new ElementCounters();
+				document.select = new MultipleSelect();
+
+				WPTB_Initializer();
+				WPTB_Settings();
 			}
 		},
 	},
