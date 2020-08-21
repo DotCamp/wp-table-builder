@@ -4292,7 +4292,7 @@ wptb_shortcode_container_element {
     grid-template-rows: 125px auto;
     grid-template-areas: 'main' 'footer';
     border-radius: 5px;
-    transition: box-shadow 0.4s ease-out;
+    transition: all 0.4s ease-out;
     background-color: var(--wptb-plugin-theme-color-light);
     cursor: pointer;
     margin: calc(var(--wptb-prebuilt-card-control-size) + 10px);
@@ -4514,6 +4514,15 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-table-wrapper table {
     width: 700px;
+}
+
+.wptb-prebuilt-card-search-indicator-main {
+    color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-prebuilt-card-search-indicator {
+    color: var(--wptb-plugin-logo-color) !important;
+    font-weight: bold;
 }
 
 /*endregion*/

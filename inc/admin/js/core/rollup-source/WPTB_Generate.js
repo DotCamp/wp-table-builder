@@ -25,7 +25,7 @@ const tableContainer = document.querySelector('.wptb-management_table_container'
 
 // hide table container
 tableContainer.style.opacity = 0;
-tableContainer.style.display = 'none';
+tableContainer.style.height = '0px';
 
 document.addEventListener('wptb:table:generated', () => {
 	const generateWrapper = document.querySelector('.wptb-generate-wrapper');
@@ -36,8 +36,8 @@ document.addEventListener('wptb:table:generated', () => {
 				vm.$destroy();
 				generateWrapper.remove();
 				// show table container
-				tableContainer.style.display = 'unset';
 				tableContainer.style.opacity = 1;
+				tableContainer.style.height = 'unset';
 			}
 		});
 

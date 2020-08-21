@@ -12268,7 +12268,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   props: {
     name: {
-      type: String,
       required: true
     },
     id: {
@@ -12284,12 +12283,15 @@ var _default = {
       default: false
     },
     disabled: {
-      type: Boolean,
       default: false
     },
     liveDisplayEnabled: {
       type: Boolean,
       default: true
+    },
+    searchString: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -12301,6 +12303,17 @@ var _default = {
       rows: 1,
       columns: 1
     };
+  },
+  computed: {
+    transformedName: function transformedName() {
+      if (this.searchString !== '') {
+        var regexp = new RegExp("(".concat(this.searchString, ")"), 'ig');
+        var transform = this.name.replace(regexp, '<span class="wptb-prebuilt-card-search-indicator">$&</span>');
+        return "<span class=\"wptb-prebuilt-card-search-indicator-main\">".concat(transform, "</span>");
+      }
+
+      return this.name;
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -12421,9 +12434,10 @@ exports.default = _default;
       _vm._v(" "),
       _c("div", { staticClass: "wptb-prebuilt-card-footer" }, [
         !_vm.isActive
-          ? _c("div", { staticClass: "wptb-prebuilt-card-footer-element" }, [
-              _vm._v(_vm._s(_vm._f("cap")(_vm.name)))
-            ])
+          ? _c("div", {
+              staticClass: "wptb-prebuilt-card-footer-element",
+              domProps: { innerHTML: _vm._s(_vm.transformedName) }
+            })
           : _c(
               "div",
               {
@@ -12521,15 +12535,26 @@ var _default = {
     }
   },
   methods: {
-    sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
+    filteredTables: function filteredTables() {
       var _this = this;
+
+      return Object.keys(this.fixedTables).reduce(function (carry, id) {
+        if (_this.fixedTables[id].title.toLowerCase().includes(_this.searchString)) {
+          carry[id] = _this.fixedTables[id];
+        }
+
+        return carry;
+      }, {});
+    },
+    sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
+      var _this2 = this;
 
       var ids, i, currentTable;
       return regeneratorRuntime.wrap(function sortedTables$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              ids = Object.keys(this.fixedTables);
+              ids = Object.keys(this.filteredTables());
               ids.sort(function (a, b) {
                 if (a === 'blank') {
                   return -1;
@@ -12539,8 +12564,8 @@ var _default = {
                   return 1;
                 }
 
-                var aTitle = _this.fixedTables[a].name;
-                var bTitle = _this.fixedTables[b].name;
+                var aTitle = _this2.fixedTables[a].name;
+                var bTitle = _this2.fixedTables[b].name;
                 return aTitle - bTitle;
               });
               i = 0;
@@ -12672,7 +12697,8 @@ exports.default = _default;
               name: v.title,
               "is-active": _vm.isCardActive(v.id),
               disabled: _vm.generating,
-              table: v.content
+              table: v.content,
+              "search-string": _vm.searchString
             },
             on: { cardActive: _vm.cardActive, cardGenerate: _vm.cardGenerate }
           })

@@ -18,7 +18,7 @@
 			</div>
 		</div>
 		<div class="wptb-prebuilt-card-footer">
-			<div class="wptb-prebuilt-card-footer-element" v-if="!isActive">{{ name | cap }}</div>
+			<div class="wptb-prebuilt-card-footer-element" v-if="!isActive" v-html="transformedName"></div>
 			<div
 				class="wptb-prebuilt-card-footer-element wptb-prebuilt-generate-button wptb-unselectable"
 				@click.prevent="cardGenerate"
@@ -36,7 +36,6 @@ import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
 export default {
 	props: {
 		name: {
-			type: String,
 			required: true,
 		},
 		id: {
@@ -52,12 +51,15 @@ export default {
 			default: false,
 		},
 		disabled: {
-			type: Boolean,
 			default: false,
 		},
 		liveDisplayEnabled: {
 			type: Boolean,
 			default: true,
+		},
+		searchString: {
+			type: String,
+			default: '',
 		},
 	},
 	components: { PrebuiltCardControl, PrebuiltLiveDisplay },
@@ -66,6 +68,20 @@ export default {
 			rows: 1,
 			columns: 1,
 		};
+	},
+	computed: {
+		transformedName() {
+			if (this.searchString !== '') {
+				const regexp = new RegExp(`(${this.searchString})`, 'ig');
+				const transform = this.name.replace(
+					regexp,
+					'<span class="wptb-prebuilt-card-search-indicator">$&</span>'
+				);
+				return `<span class="wptb-prebuilt-card-search-indicator-main">${transform}</span>`;
+			}
+
+			return this.name;
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {

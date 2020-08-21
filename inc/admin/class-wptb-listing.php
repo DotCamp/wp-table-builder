@@ -111,6 +111,8 @@ class WPTB_Listing  extends \WP_List_Table{
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
 
+		$params = apply_filters('wp-table-builder/record_count', $params);
+
 		if( $search_text ) $params['s'] = $search_text;
 
 	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';

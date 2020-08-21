@@ -22,7 +22,8 @@
 					@cardGenerate="cardGenerate"
 					:disabled="generating"
 					:table="v.content"
-			></prebuilt-card>
+					:search-string="searchString"
+				></prebuilt-card>
 			</div>
 		</div>
 		<div v-if="!isPro" class="wptb-prebuilt-ad">
@@ -77,8 +78,16 @@ export default {
 		},
 	},
 	methods: {
+		filteredTables() {
+			return Object.keys(this.fixedTables).reduce((carry, id) => {
+				if (this.fixedTables[id].title.toLowerCase().includes(this.searchString)) {
+					carry[id] = this.fixedTables[id];
+				}
+				return carry;
+			}, {});
+		},
 		sortedTables: function* sortedTables() {
-			const ids = Object.keys(this.fixedTables);
+			const ids = Object.keys(this.filteredTables());
 
 			ids.sort((a, b) => {
 				if (a === 'blank') {
