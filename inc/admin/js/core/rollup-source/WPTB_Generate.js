@@ -17,7 +17,8 @@ Vue.use(strings, data);
 
 const vm = new Vue({
 	components: { GenerateMain },
-	template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"></generate-main>',
+	template:
+		'<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables" :fav-icon="favIcon" :security="security"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 

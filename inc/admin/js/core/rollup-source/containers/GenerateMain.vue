@@ -17,12 +17,15 @@
 					:key="v.id"
 					:id="v.id"
 					:name="v.title"
+					:fav="v.fav"
 					:is-active="isCardActive(v.id)"
 					@cardActive="cardActive"
 					@cardGenerate="cardGenerate"
 					:disabled="generating"
 					:table="v.content"
 					:search-string="searchString"
+					:fav-icon="cardFavIcon(v.id)"
+					@favAction="favAction"
 				></prebuilt-card>
 			</div>
 		</div>
@@ -46,6 +49,16 @@ export default {
 			type: String,
 		},
 		prebuiltTables: {
+			type: Object,
+			default() {
+				return {};
+			},
+		},
+		favIcon: {
+			type: String,
+			default: '',
+		},
+		security: {
 			type: Object,
 			default() {
 				return {};
@@ -78,9 +91,42 @@ export default {
 		},
 	},
 	methods: {
+		favAction(cardId) {
+			const { favAction, favNonce, ajaxUrl } = this.security;
+
+			const formData = new FormData();
+			formData.append('action', favAction);
+			formData.append('nonce', favNonce);
+			formData.append('id', cardId);
+
+			fetch(ajaxUrl, {
+				method: 'POST',
+				body: formData,
+			})
+				.then((r) => {
+					if (r.ok) {
+						return r.json();
+					}
+					throw new Error(r.status);
+				})
+				.then((resp) => {
+					if (resp.error) {
+						throw new Error(resp.error);
+					} else {
+						this.fixedTables[cardId].fav = resp.message;
+					}
+				})
+				.catch((e) => {
+					console.error('an error occurred with fav operation request: ', e);
+				});
+		},
+		cardFavIcon(cardId) {
+			return cardId === 'blank' ? '' : this.favIcon;
+		},
 		filteredTables() {
 			return Object.keys(this.fixedTables).reduce((carry, id) => {
 				if (this.fixedTables[id].title.toLowerCase().includes(this.searchString)) {
+					// eslint-disable-next-line no-param-reassign
 					carry[id] = this.fixedTables[id];
 				}
 				return carry;

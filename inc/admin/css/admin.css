@@ -4525,4 +4525,28 @@ wptb_shortcode_container_element {
     font-weight: bold;
 }
 
+.wptb-prebuilt-card-fav-icon {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.wptb-prebuilt-card-fav-icon svg {
+    transition: fill 0.2s ease-out;
+    fill: transparent;
+    stroke-width: 40;
+    stroke: var(--wptb-plugin-theme-color-light);
+}
+
+.wptb-prebuilt-card-fav-icon.is-fav svg{
+    fill: var(--wptb-plugin-logo-color) !important;
+    stroke-width: 0 !important;
+}
+
+.wptb-prebuilt-card-fav-icon:hover svg {
+    fill: var(--wptb-plugin-theme-color-light);
+}
+
 /*endregion*/

@@ -12265,6 +12265,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     name: {
@@ -12290,6 +12297,14 @@ var _default = {
       default: true
     },
     searchString: {
+      type: String,
+      default: ''
+    },
+    fav: {
+      type: Boolean,
+      default: false
+    },
+    favIcon: {
       type: String,
       default: ''
     }
@@ -12350,6 +12365,9 @@ var _default = {
       if (!this.disabled) {
         this.$emit('cardGenerate', this.id, this.columns, this.rows);
       }
+    },
+    favAction: function favAction() {
+      this.$emit('favAction', this.id);
     }
   }
 };
@@ -12427,6 +12445,22 @@ exports.default = _default;
                 ],
                 1
               )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.isActive
+            ? _c("div", {
+                staticClass:
+                  "wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
+                class: { "is-fav": _vm.fav },
+                domProps: { innerHTML: _vm._s(_vm.favIcon) },
+                on: {
+                  "!click": function($event) {
+                    $event.preventDefault()
+                    $event.stopPropagation()
+                    return _vm.favAction($event)
+                  }
+                }
+              })
             : _vm._e()
         ],
         1
@@ -12509,6 +12543,16 @@ var _default = {
       default: function _default() {
         return {};
       }
+    },
+    favIcon: {
+      type: String,
+      default: ''
+    },
+    security: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
     }
   },
   data: function data() {
@@ -12535,19 +12579,53 @@ var _default = {
     }
   },
   methods: {
-    filteredTables: function filteredTables() {
+    favAction: function favAction(cardId) {
       var _this = this;
 
+      var _this$security = this.security,
+          favAction = _this$security.favAction,
+          favNonce = _this$security.favNonce,
+          ajaxUrl = _this$security.ajaxUrl;
+      var formData = new FormData();
+      formData.append('action', favAction);
+      formData.append('nonce', favNonce);
+      formData.append('id', cardId);
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error(r.status);
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        } else {
+          _this.fixedTables[cardId].fav = resp.message;
+        }
+      }).catch(function (e) {
+        console.error('an error occurred with fav operation request: ', e);
+      });
+    },
+    cardFavIcon: function cardFavIcon(cardId) {
+      return cardId === 'blank' ? '' : this.favIcon;
+    },
+    filteredTables: function filteredTables() {
+      var _this2 = this;
+
       return Object.keys(this.fixedTables).reduce(function (carry, id) {
-        if (_this.fixedTables[id].title.toLowerCase().includes(_this.searchString)) {
-          carry[id] = _this.fixedTables[id];
+        if (_this2.fixedTables[id].title.toLowerCase().includes(_this2.searchString)) {
+          // eslint-disable-next-line no-param-reassign
+          carry[id] = _this2.fixedTables[id];
         }
 
         return carry;
       }, {});
     },
     sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
-      var _this2 = this;
+      var _this3 = this;
 
       var ids, i, currentTable;
       return regeneratorRuntime.wrap(function sortedTables$(_context) {
@@ -12564,8 +12642,8 @@ var _default = {
                   return 1;
                 }
 
-                var aTitle = _this2.fixedTables[a].name;
-                var bTitle = _this2.fixedTables[b].name;
+                var aTitle = _this3.fixedTables[a].name;
+                var bTitle = _this3.fixedTables[b].name;
                 return aTitle - bTitle;
               });
               i = 0;
@@ -12695,12 +12773,18 @@ exports.default = _default;
             attrs: {
               id: v.id,
               name: v.title,
+              fav: v.fav,
               "is-active": _vm.isCardActive(v.id),
               disabled: _vm.generating,
               table: v.content,
-              "search-string": _vm.searchString
+              "search-string": _vm.searchString,
+              "fav-icon": _vm.cardFavIcon(v.id)
             },
-            on: { cardActive: _vm.cardActive, cardGenerate: _vm.cardGenerate }
+            on: {
+              cardActive: _vm.cardActive,
+              cardGenerate: _vm.cardGenerate,
+              favAction: _vm.favAction
+            }
           })
         }),
         1
@@ -12834,7 +12918,7 @@ var vm = new _vue.default({
   components: {
     GenerateMain: _GenerateMain.default
   },
-  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"></generate-main>',
+  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables" :fav-icon="favIcon" :security="security"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container

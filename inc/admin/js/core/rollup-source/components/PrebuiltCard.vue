@@ -16,6 +16,13 @@
 				<prebuilt-card-control :disabled="disabled" orientation="row" v-model="columns"></prebuilt-card-control>
 				<prebuilt-card-control :disabled="disabled" orientation="col" v-model="rows"></prebuilt-card-control>
 			</div>
+			<div
+				v-if="!isActive"
+				class="wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
+				:class="{ 'is-fav': fav }"
+				v-html="favIcon"
+				@click.capture.prevent.stop="favAction"
+			></div>
 		</div>
 		<div class="wptb-prebuilt-card-footer">
 			<div class="wptb-prebuilt-card-footer-element" v-if="!isActive" v-html="transformedName"></div>
@@ -58,6 +65,14 @@ export default {
 			default: true,
 		},
 		searchString: {
+			type: String,
+			default: '',
+		},
+		fav: {
+			type: Boolean,
+			default: false,
+		},
+		favIcon: {
 			type: String,
 			default: '',
 		},
@@ -110,6 +125,9 @@ export default {
 			if (!this.disabled) {
 				this.$emit('cardGenerate', this.id, this.columns, this.rows);
 			}
+		},
+		favAction() {
+			this.$emit('favAction', this.id);
 		},
 	},
 };
