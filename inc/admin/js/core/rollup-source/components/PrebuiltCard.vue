@@ -4,7 +4,7 @@
 			<div
 				ref="tablePreview"
 				v-show="!liveDisplayEnabled || !isActive"
-				class="wptb-prebuilt-table-wrapper wptb-unselectable"
+				class="wptb-prebuilt-table-wrapper wptb-unselectable wptb-no-pointer-events"
 				v-html="table"
 			></div>
 			<prebuilt-live-display

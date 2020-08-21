@@ -12406,7 +12406,8 @@ exports.default = _default;
               }
             ],
             ref: "tablePreview",
-            staticClass: "wptb-prebuilt-table-wrapper wptb-unselectable",
+            staticClass:
+              "wptb-prebuilt-table-wrapper wptb-unselectable wptb-no-pointer-events",
             domProps: { innerHTML: _vm._s(_vm.table) }
           }),
           _vm._v(" "),
@@ -12639,6 +12640,14 @@ var _default = {
                 }
 
                 if (b === 'blank') {
+                  return 1;
+                }
+
+                if (a.startsWith('wptb_team')) {
+                  return -1;
+                }
+
+                if (b.startsWith('wptb_team')) {
                   return 1;
                 }
 

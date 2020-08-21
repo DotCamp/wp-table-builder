@@ -142,6 +142,12 @@ export default {
 				if (b === 'blank') {
 					return 1;
 				}
+				if (a.startsWith('wptb_team')) {
+					return -1;
+				}
+				if (b.startsWith('wptb_team')) {
+					return 1;
+				}
 				const aTitle = this.fixedTables[a].name;
 				const bTitle = this.fixedTables[b].name;
 

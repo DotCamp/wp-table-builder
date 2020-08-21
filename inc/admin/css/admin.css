@@ -4269,6 +4269,7 @@ wptb_shortcode_container_element {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .wptb-generate-search {
@@ -4478,6 +4479,10 @@ wptb_shortcode_container_element {
     user-select: none;
 }
 
+.wptb-no-pointer-events {
+    pointer-events: none;
+}
+
 .wptb-plugin-basic-disappear {
     animation: wptb-basic-disappear 0.1s ease-out;
 }
@@ -4540,7 +4545,7 @@ wptb_shortcode_container_element {
     stroke: var(--wptb-plugin-theme-color-light);
 }
 
-.wptb-prebuilt-card-fav-icon.is-fav svg{
+.wptb-prebuilt-card-fav-icon.is-fav svg {
     fill: var(--wptb-plugin-logo-color) !important;
     stroke-width: 0 !important;
 }
