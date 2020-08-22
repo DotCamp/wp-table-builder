@@ -12272,6 +12272,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     name: {
@@ -12328,6 +12340,9 @@ var _default = {
       }
 
       return this.name;
+    },
+    editEnabled: function editEnabled() {
+      return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
     }
   },
   mounted: function mounted() {
@@ -12364,6 +12379,11 @@ var _default = {
     cardGenerate: function cardGenerate() {
       if (!this.disabled) {
         this.$emit('cardGenerate', this.id, this.columns, this.rows);
+      }
+    },
+    cardEdit: function cardEdit() {
+      if (!this.disabled) {
+        this.$emit('cardEdit', this.id);
       }
     },
     favAction: function favAction() {
@@ -12477,20 +12497,55 @@ exports.default = _default;
               "div",
               {
                 staticClass:
-                  "wptb-prebuilt-card-footer-element wptb-prebuilt-generate-button wptb-unselectable",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.cardGenerate($event)
-                  }
+                  "wptb-prebuilt-card-footer-element wptb-prebuilt-card-footer-button-holder",
+                class: {
+                  "wptb-prebuilt-card-footer-button-holder-single": !_vm.editEnabled
                 }
               },
               [
-                _vm._v(
-                  "\n\t\t\t" +
-                    _vm._s(_vm._f("cap")(_vm.strings.generate)) +
-                    "\n\t\t"
-                )
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.cardGenerate($event)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t" +
+                        _vm._s(_vm._f("cap")(_vm.strings.generate)) +
+                        "\n\t\t\t"
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.editEnabled
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wptb-prebuilt-footer-button wptb-prebuilt-footer-edit wptb-unselectable",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.cardEdit($event)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t" +
+                            _vm._s(_vm._f("cap")(_vm.strings.edit)) +
+                            "\n\t\t\t"
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]
             )
       ])
@@ -12695,7 +12750,14 @@ var _default = {
     cardActive: function cardActive(cardId) {
       this.activeCard = cardId;
     },
+    cardEdit: function cardEdit(cardId) {
+      this.cardGenerate(cardId, 0, 0, true);
+      var currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+      window.history.pushState(null, null, currentUrl.toString());
+    },
     cardGenerate: function cardGenerate(cardId, cols, rows) {
+      var edit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
       this.generating = true;
 
       if (cardId === 'blank') {
@@ -12705,8 +12767,17 @@ var _default = {
       } else {
         var tableWrapper = document.querySelector('.wptb-table-setup');
         tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content)); // unmark inserted template as prebuilt table
+        // only unmark it if edit mode is not enabled
 
-        delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+        if (!edit) {
+          delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+        }
+
+        if (edit) {
+          // fill in the name of the selected prebuilt table on edit mode
+          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
+        }
+
         WPTB_Table();
         WPTB_Settings();
 
@@ -12792,6 +12863,7 @@ exports.default = _default;
             on: {
               cardActive: _vm.cardActive,
               cardGenerate: _vm.cardGenerate,
+              cardEdit: _vm.cardEdit,
               favAction: _vm.favAction
             }
           })
@@ -12890,6 +12962,37 @@ var _default = {
   install: install
 };
 exports.default = _default;
+},{}],"plugins/genericStore.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Plugin install method.
+ *
+ * Plugin for adding app wide generic store.
+ *
+ * @param {object} Vue Vue object
+ * @param {options} options app data to be used
+ * @return {{appData: *}}
+ */
+function install(Vue, options) {
+  Vue.mixin({
+    data: function data() {
+      return {
+        appData: options
+      };
+    }
+  });
+}
+
+var _default = {
+  install: install
+};
+exports.default = _default;
 },{}],"WPTB_Generate.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
@@ -12901,6 +13004,8 @@ var _GenerateMain = _interopRequireDefault(require("./containers/GenerateMain"))
 var _filters = _interopRequireDefault(require("./plugins/filters"));
 
 var _strings = _interopRequireDefault(require("./plugins/strings"));
+
+var _genericStore = _interopRequireDefault(require("./plugins/genericStore"));
 
 var _global$wptbGenerateM;
 
@@ -12918,7 +13023,14 @@ _vue.default.use(_filters.default);
 
 var proData = (_global$wptbGenerateM = global.wptbGenerateMenuProData) !== null && _global$wptbGenerateM !== void 0 ? _global$wptbGenerateM : {};
 
-var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup translation strings
+var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup app store
+
+
+var store = {
+  teamTablePrefix: data.teamBuildTablePrefix
+};
+
+_vue.default.use(_genericStore.default, store); // setup translation strings
 
 
 _vue.default.use(_strings.default, data);
@@ -12950,5 +13062,5 @@ document.addEventListener('wptb:table:generated', function () {
     generateWrapper.classList.add('wptb-plugin-basic-disappear');
   }
 });
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js"}]},{},["WPTB_Generate.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js","./plugins/genericStore":"plugins/genericStore.js"}]},{},["WPTB_Generate.js"], null)
 //# sourceMappingURL=/WPTB_Generate.js.map

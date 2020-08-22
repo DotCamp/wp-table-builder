@@ -12272,6 +12272,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     name: {
@@ -12328,6 +12340,9 @@ var _default = {
       }
 
       return this.name;
+    },
+    editEnabled: function editEnabled() {
+      return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
     }
   },
   mounted: function mounted() {
@@ -12364,6 +12379,11 @@ var _default = {
     cardGenerate: function cardGenerate() {
       if (!this.disabled) {
         this.$emit('cardGenerate', this.id, this.columns, this.rows);
+      }
+    },
+    cardEdit: function cardEdit() {
+      if (!this.disabled) {
+        this.$emit('cardEdit', this.id);
       }
     },
     favAction: function favAction() {
@@ -12477,20 +12497,55 @@ exports.default = _default;
               "div",
               {
                 staticClass:
-                  "wptb-prebuilt-card-footer-element wptb-prebuilt-generate-button wptb-unselectable",
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.cardGenerate($event)
-                  }
+                  "wptb-prebuilt-card-footer-element wptb-prebuilt-card-footer-button-holder",
+                class: {
+                  "wptb-prebuilt-card-footer-button-holder-single": !_vm.editEnabled
                 }
               },
               [
-                _vm._v(
-                  "\n\t\t\t" +
-                    _vm._s(_vm._f("cap")(_vm.strings.generate)) +
-                    "\n\t\t"
-                )
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.cardGenerate($event)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t" +
+                        _vm._s(_vm._f("cap")(_vm.strings.generate)) +
+                        "\n\t\t\t"
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.editEnabled
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wptb-prebuilt-footer-button wptb-prebuilt-footer-edit wptb-unselectable",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.cardEdit($event)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t" +
+                            _vm._s(_vm._f("cap")(_vm.strings.edit)) +
+                            "\n\t\t\t"
+                        )
+                      ]
+                    )
+                  : _vm._e()
               ]
             )
       ])
@@ -12695,7 +12750,14 @@ var _default = {
     cardActive: function cardActive(cardId) {
       this.activeCard = cardId;
     },
+    cardEdit: function cardEdit(cardId) {
+      this.cardGenerate(cardId, 0, 0, true);
+      var currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+      window.history.pushState(null, null, currentUrl.toString());
+    },
     cardGenerate: function cardGenerate(cardId, cols, rows) {
+      var edit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
       this.generating = true;
 
       if (cardId === 'blank') {
@@ -12705,8 +12767,17 @@ var _default = {
       } else {
         var tableWrapper = document.querySelector('.wptb-table-setup');
         tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content)); // unmark inserted template as prebuilt table
+        // only unmark it if edit mode is not enabled
 
-        delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+        if (!edit) {
+          delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+        }
+
+        if (edit) {
+          // fill in the name of the selected prebuilt table on edit mode
+          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
+        }
+
         WPTB_Table();
         WPTB_Settings();
 
@@ -12792,6 +12863,7 @@ exports.default = _default;
             on: {
               cardActive: _vm.cardActive,
               cardGenerate: _vm.cardGenerate,
+              cardEdit: _vm.cardEdit,
               favAction: _vm.favAction
             }
           })

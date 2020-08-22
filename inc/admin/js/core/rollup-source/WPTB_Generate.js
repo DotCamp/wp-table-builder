@@ -2,6 +2,7 @@ import Vue from 'vue';
 import GenerateMain from './containers/GenerateMain';
 import filters from './plugins/filters';
 import strings from './plugins/strings';
+import genericStore from './plugins/genericStore';
 
 Vue.config.productionTip = false;
 
@@ -11,6 +12,12 @@ Vue.use(filters);
 const proData = global.wptbGenerateMenuProData ?? {};
 
 const data = { ...wptbGenerateMenuData, ...proData };
+
+// setup app store
+const store = {
+	teamTablePrefix: data.teamBuildTablePrefix,
+};
+Vue.use(genericStore, store);
 
 // setup translation strings
 Vue.use(strings, data);

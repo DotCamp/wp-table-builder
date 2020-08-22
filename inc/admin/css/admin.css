@@ -15,7 +15,8 @@
     --wptb-plugin-gray-400: #CBD5E0;
     --wptb-plugin-gray-500: #A0AEC0;
     --wptb-plugin-gray-700: #4A5568;
-    --wptb-plugin-white: #fff;
+    --wptb-plugin-green-500: #48BB78;
+    --wptb-plugin-white: #FFF;
 
     /*theme*/
     --wptb-plugin-theme-text-color-main: var(--wptb-plugin-gray-700);
@@ -4451,24 +4452,55 @@ wptb_shortcode_container_element {
     border-radius: 0 0 5px 5px;
 }
 
+.wptb-prebuilt-card-footer-button-holder {
+    padding: 0 !important;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1px;
+    background-color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-prebuilt-card-footer-button-holder-single {
+    grid-template-columns: 1fr !important;
+}
+
 .wptb-prebuilt-blank {
     font-size: 400%;
     color: var(--wptb-plugin-gray-500);
     margin: 0 !important;
 }
 
-.wptb-prebuilt-generate-button {
+.wptb-prebuilt-footer-button {
     width: 100%;
     height: 100%;
-    background-color: var(--wptb-plugin-logo-color);
-    color: var(--wptb-plugin-gray-400);
-    border: var(--wptb-prebuilt-card-border-size) solid var(--wptb-plugin-logo-color);
     cursor: pointer;
     transition: color 0.2s ease-out;
     font-weight: bold;
+    padding: 15px;
+    color: var(--wptb-plugin-gray-400);
 }
 
-.wptb-prebuilt-generate-button:hover {
+.wptb-prebuilt-footer-generate {
+    background-color: var(--wptb-plugin-logo-color);
+}
+
+.wptb-prebuilt-footer-edit {
+    background-color: var(--wptb-plugin-green-500);
+}
+
+.wptb-prebuilt-footer-button:first-of-type {
+    border-radius: 0 0 0 5px;
+}
+
+.wptb-prebuilt-footer-button:last-of-type {
+    border-radius: 0 0 5px 0;
+}
+
+.wptb-prebuilt-footer-button:only-of-type {
+    border-radius: 0 0 5px 5px;
+}
+
+.wptb-prebuilt-footer-button:hover {
     color: var(--wptb-plugin-theme-color-light);
 }
 
@@ -4545,6 +4577,10 @@ wptb_shortcode_container_element {
     stroke: var(--wptb-plugin-theme-color-light);
 }
 
+.wptb-prebuilt-card-fav-icon:active {
+    animation: wptb-push 0.2s ease-out;
+}
+
 .wptb-prebuilt-card-fav-icon.is-fav svg {
     fill: var(--wptb-plugin-logo-color) !important;
     stroke-width: 0 !important;
@@ -4552,6 +4588,18 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-card-fav-icon:hover svg {
     fill: var(--wptb-plugin-theme-color-light);
+}
+
+@keyframes wptb-push {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.7);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /*endregion*/

@@ -296,6 +296,7 @@ class Admin_Menu {
 					'strings' => [
 						'blank'             => esc_html__( 'blank', 'wp-table-builder' ),
 						'generate'          => esc_html__( 'generate', 'wp-table-builder' ),
+						'edit'              => esc_html__( 'edit', 'wp-table-builder' ),
 						'searchPlaceholder' => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
 						'prebuiltAdPart1'   => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
 						'prebuiltAdPart2'   => esc_html__( 'Go PRO', 'wp-table-builder' ),

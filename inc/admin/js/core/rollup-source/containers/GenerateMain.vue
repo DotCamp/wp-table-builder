@@ -21,6 +21,7 @@
 					:is-active="isCardActive(v.id)"
 					@cardActive="cardActive"
 					@cardGenerate="cardGenerate"
+					@cardEdit="cardEdit"
 					:disabled="generating"
 					:table="v.content"
 					:search-string="searchString"
@@ -174,7 +175,13 @@ export default {
 		cardActive(cardId) {
 			this.activeCard = cardId;
 		},
-		cardGenerate(cardId, cols, rows) {
+		cardEdit(cardId) {
+			this.cardGenerate(cardId, 0, 0, true);
+			const currentUrl = new URL(window.location.href);
+			currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+			window.history.pushState(null, null, currentUrl.toString());
+		},
+		cardGenerate(cardId, cols, rows, edit = false) {
 			this.generating = true;
 			if (cardId === 'blank') {
 				WPTB_Table(cols, rows);
@@ -186,7 +193,15 @@ export default {
 				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
 
 				// unmark inserted template as prebuilt table
-				delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+				// only unmark it if edit mode is not enabled
+				if (!edit) {
+					delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+				}
+
+				if (edit) {
+					// fill in the name of the selected prebuilt table on edit mode
+					document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
+				}
 
 				WPTB_Table();
 

@@ -27,11 +27,23 @@
 		<div class="wptb-prebuilt-card-footer">
 			<div class="wptb-prebuilt-card-footer-element" v-if="!isActive" v-html="transformedName"></div>
 			<div
-				class="wptb-prebuilt-card-footer-element wptb-prebuilt-generate-button wptb-unselectable"
-				@click.prevent="cardGenerate"
+				class="wptb-prebuilt-card-footer-element wptb-prebuilt-card-footer-button-holder"
+				:class="{ 'wptb-prebuilt-card-footer-button-holder-single': !editEnabled }"
 				v-else
 			>
-				{{ strings.generate | cap }}
+				<div
+					class="wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable"
+					@click.prevent="cardGenerate"
+				>
+					{{ strings.generate | cap }}
+				</div>
+				<div
+					v-if="editEnabled"
+					class="wptb-prebuilt-footer-button wptb-prebuilt-footer-edit wptb-unselectable"
+					@click.prevent="cardEdit"
+				>
+					{{ strings.edit | cap }}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -97,6 +109,9 @@ export default {
 
 			return this.name;
 		},
+		editEnabled() {
+			return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {
@@ -124,6 +139,11 @@ export default {
 		cardGenerate() {
 			if (!this.disabled) {
 				this.$emit('cardGenerate', this.id, this.columns, this.rows);
+			}
+		},
+		cardEdit() {
+			if (!this.disabled) {
+				this.$emit('cardEdit', this.id);
 			}
 		},
 		favAction() {
