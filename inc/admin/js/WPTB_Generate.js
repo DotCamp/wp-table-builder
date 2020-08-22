@@ -12635,6 +12635,9 @@ var _default = {
     }
   },
   methods: {
+    deselect: function deselect() {
+      this.activeCard = '';
+    },
     favAction: function favAction(cardId) {
       var _this = this;
 

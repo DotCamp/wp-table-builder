@@ -92,6 +92,9 @@ export default {
 		},
 	},
 	methods: {
+		deselect() {
+			this.activeCard = '';
+		},
 		favAction(cardId) {
 			const { favAction, favNonce, ajaxUrl } = this.security;
 
