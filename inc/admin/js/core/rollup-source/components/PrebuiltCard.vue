@@ -13,8 +13,18 @@
 				:cols="columns"
 			></prebuilt-live-display>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
-				<prebuilt-card-control :disabled="disabled" orientation="row" v-model="columns"></prebuilt-card-control>
-				<prebuilt-card-control :disabled="disabled" orientation="col" v-model="rows"></prebuilt-card-control>
+				<prebuilt-card-control
+					:disabled="disabled || id !== 'blank'"
+					orientation="row"
+					v-model="columns"
+				></prebuilt-card-control>
+				<prebuilt-card-control
+					:disabled="disabled"
+					orientation="col"
+					v-model="rows"
+					:min="min.rows"
+					:max="max.rows"
+				></prebuilt-card-control>
 			</div>
 			<div
 				v-if="!isActive"
@@ -107,6 +117,14 @@ export default {
 		return {
 			rows: 1,
 			columns: 1,
+			min: {
+				rows: 1,
+				cols: 1,
+			},
+			max: {
+				rows: 30,
+				cols: 30,
+			},
 		};
 	},
 	computed: {
@@ -140,6 +158,26 @@ export default {
 				const heightScale = wrapperHeight / (prebuiltHeight + padding);
 
 				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
+
+				if (this.id !== 'blank') {
+					const tableRows = Array.from(prebuilt.querySelectorAll('tr'));
+					const totalRows = tableRows.length;
+					this.rows = totalRows;
+					this.min.rows = totalRows;
+
+					let minCols = 1;
+
+					tableRows.map((t) => {
+						const totalCells = t.querySelectorAll('td').length;
+						if (minCols < totalCells) {
+							minCols = totalCells;
+						}
+					});
+
+					this.min.cols = minCols;
+					this.max.cols = minCols;
+					this.columns = minCols;
+				}
 			}
 		});
 	},

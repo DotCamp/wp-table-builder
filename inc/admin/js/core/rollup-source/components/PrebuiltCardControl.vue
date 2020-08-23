@@ -2,7 +2,7 @@
 	<div class="wptb-prebuilt-control" :data-orientation="orientation">
 		<div
 			class="wptb-prebuilt-control-increment-box wptb-unselectable"
-			:disabled="disabled"
+			:disabled="disabled || hitToMin()"
 			@click.prevent="effectValue(-1)"
 		>
 			-
@@ -15,7 +15,7 @@
 		/>
 		<div
 			class="wptb-prebuilt-control-increment-box wptb-unselectable"
-			:disabled="disabled"
+			:disabled="disabled || hitToMax()"
 			@click.prevent="effectValue(1)"
 		>
 			+
@@ -36,6 +36,14 @@ export default {
 		disabled: {
 			type: Boolean,
 			default: false,
+		},
+		min: {
+			type: Number,
+			default: 1,
+		},
+		max: {
+			type: Number,
+			default: 30,
 		},
 	},
 	data() {
@@ -63,10 +71,19 @@ export default {
 			return Number.parseInt(n, 10);
 		},
 		limitVal(n) {
-			if (n <= 0) {
-				return 1;
+			if (n > this.max) {
+				return this.max;
+			}
+			if (n < this.min) {
+				return this.min;
 			}
 			return n;
+		},
+		hitToMax() {
+			return this.innerValue === this.max;
+		},
+		hitToMin() {
+			return this.innerValue === this.min;
 		},
 		effectValue(effect) {
 			if (!this.disabled) {

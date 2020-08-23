@@ -4433,7 +4433,7 @@ wptb_shortcode_container_element {
 .wptb-prebuilt-control-increment-box[disabled] {
     background-color: var(--wptb-plugin-gray-200) !important;
     color: var(--wptb-plugin-gray-400) !important;
-    cursor: none;
+    cursor: default;
 }
 
 .wptb-prebuilt-card-footer {

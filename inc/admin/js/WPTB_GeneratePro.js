@@ -12032,6 +12032,14 @@ var _default = {
     disabled: {
       type: Boolean,
       default: false
+    },
+    min: {
+      type: Number,
+      default: 1
+    },
+    max: {
+      type: Number,
+      default: 30
     }
   },
   data: function data() {
@@ -12059,11 +12067,21 @@ var _default = {
       return Number.parseInt(n, 10);
     },
     limitVal: function limitVal(n) {
-      if (n <= 0) {
-        return 1;
+      if (n > this.max) {
+        return this.max;
+      }
+
+      if (n < this.min) {
+        return this.min;
       }
 
       return n;
+    },
+    hitToMax: function hitToMax() {
+      return this.innerValue === this.max;
+    },
+    hitToMin: function hitToMin() {
+      return this.innerValue === this.min;
     },
     effectValue: function effectValue(effect) {
       if (!this.disabled) {
@@ -12096,7 +12114,7 @@ exports.default = _default;
         "div",
         {
           staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled },
+          attrs: { disabled: _vm.disabled || _vm.hitToMin() },
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -12118,7 +12136,7 @@ exports.default = _default;
         "div",
         {
           staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled },
+          attrs: { disabled: _vm.disabled || _vm.hitToMax() },
           on: {
             click: function($event) {
               $event.preventDefault()
@@ -12454,6 +12472,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     name: {
@@ -12503,7 +12531,15 @@ var _default = {
   data: function data() {
     return {
       rows: 1,
-      columns: 1
+      columns: 1,
+      min: {
+        rows: 1,
+        cols: 1
+      },
+      max: {
+        rows: 30,
+        cols: 30
+      }
     };
   },
   computed: {
@@ -12542,6 +12578,24 @@ var _default = {
         var widthScale = wrapperWidth / (prebuiltWidth + padding);
         var heightScale = wrapperHeight / (prebuiltHeight + padding);
         prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")");
+
+        if (_this.id !== 'blank') {
+          var tableRows = Array.from(prebuilt.querySelectorAll('tr'));
+          var totalRows = tableRows.length;
+          _this.rows = totalRows;
+          _this.min.rows = totalRows;
+          var minCols = 1;
+          tableRows.map(function (t) {
+            var totalCells = t.querySelectorAll('td').length;
+
+            if (minCols < totalCells) {
+              minCols = totalCells;
+            }
+          });
+          _this.min.cols = minCols;
+          _this.max.cols = minCols;
+          _this.columns = minCols;
+        }
       }
     });
   },
@@ -12621,7 +12675,10 @@ exports.default = _default;
                 { staticClass: "wptb-prebuilt-card-controls" },
                 [
                   _c("prebuilt-card-control", {
-                    attrs: { disabled: _vm.disabled, orientation: "row" },
+                    attrs: {
+                      disabled: _vm.disabled || _vm.id !== "blank",
+                      orientation: "row"
+                    },
                     model: {
                       value: _vm.columns,
                       callback: function($$v) {
@@ -12632,7 +12689,12 @@ exports.default = _default;
                   }),
                   _vm._v(" "),
                   _c("prebuilt-card-control", {
-                    attrs: { disabled: _vm.disabled, orientation: "col" },
+                    attrs: {
+                      disabled: _vm.disabled,
+                      orientation: "col",
+                      min: _vm.min.rows,
+                      max: _vm.max.rows
+                    },
                     model: {
                       value: _vm.rows,
                       callback: function($$v) {
