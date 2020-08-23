@@ -294,12 +294,13 @@ class Admin_Menu {
 					'version' => 'normal',
 					'adLink'  => 'https://wptablebuilder.com/',
 					'strings' => [
-						'blank'             => esc_html__( 'blank', 'wp-table-builder' ),
-						'generate'          => esc_html__( 'generate', 'wp-table-builder' ),
-						'edit'              => esc_html__( 'edit', 'wp-table-builder' ),
-						'searchPlaceholder' => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
-						'prebuiltAdPart1'   => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
-						'prebuiltAdPart2'   => esc_html__( 'Go PRO', 'wp-table-builder' ),
+						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
+						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
+						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
+						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
+						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
+						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
 					]
 
 				];

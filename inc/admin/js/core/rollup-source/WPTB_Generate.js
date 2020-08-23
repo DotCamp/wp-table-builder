@@ -16,8 +16,9 @@ const data = { ...wptbGenerateMenuData, ...proData };
 // setup app store
 const store = {
 	teamTablePrefix: data.teamBuildTablePrefix,
+	icons: data.icons,
 };
-Vue.use(genericStore, store);
+Vue.use(genericStore, { key: 'appData', data: store });
 
 // setup translation strings
 Vue.use(strings, data);
@@ -25,7 +26,7 @@ Vue.use(strings, data);
 const vm = new Vue({
 	components: { GenerateMain },
 	template:
-		'<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables" :fav-icon="favIcon" :security="security"></generate-main>',
+		'<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 

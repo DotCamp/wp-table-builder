@@ -22,11 +22,13 @@
 					@cardActive="cardActive"
 					@cardGenerate="cardGenerate"
 					@cardEdit="cardEdit"
+					@favAction="favAction"
+					@deleteAction="deleteAction"
 					:disabled="generating"
 					:table="v.content"
 					:search-string="searchString"
 					:fav-icon="cardFavIcon(v.id)"
-					@favAction="favAction"
+					:delete-icon="cardDeleteIcon(v.id)"
 				></prebuilt-card>
 			</div>
 		</div>
@@ -54,10 +56,6 @@ export default {
 			default() {
 				return {};
 			},
-		},
-		favIcon: {
-			type: String,
-			default: '',
 		},
 		security: {
 			type: Object,
@@ -125,7 +123,12 @@ export default {
 				});
 		},
 		cardFavIcon(cardId) {
-			return cardId === 'blank' ? '' : this.favIcon;
+			return cardId === 'blank' ? '' : this.appData.icons.favIcon;
+		},
+		cardDeleteIcon(cardId) {
+			return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix)
+				? ''
+				: this.appData.icons.deleteIcon;
 		},
 		filteredTables() {
 			return Object.keys(this.fixedTables).reduce((carry, id) => {
@@ -218,6 +221,38 @@ export default {
 				WPTB_Initializer();
 				WPTB_Settings();
 			}
+		},
+		deleteAction(cardId) {
+			const { ajaxUrl, deleteAction, deleteNonce } = this.security;
+
+			const form = new FormData();
+			form.append('action', deleteAction);
+			form.append('nonce', deleteNonce);
+			form.append('id', cardId);
+
+			fetch(ajaxUrl, {
+				method: 'POST',
+				body: form,
+			})
+				.then((r) => {
+					if (r.ok) {
+						return r.json();
+					}
+					throw new Error('an error occured while deleting prebuilt table, try again later');
+				})
+				.then((resp) => {
+					if (resp.error) {
+						throw new Error(resp.error);
+					}
+					if (resp.message === true) {
+						this.$delete(this.fixedTables, cardId);
+					} else {
+						throw new Error('an error occured while deleting prebuilt table, try again later');
+					}
+				})
+				.catch((e) => {
+					console.error(e.message);
+				});
 		},
 	},
 	beforeDestroy() {

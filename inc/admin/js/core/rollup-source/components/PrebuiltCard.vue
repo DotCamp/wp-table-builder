@@ -18,11 +18,19 @@
 			</div>
 			<div
 				v-if="!isActive"
-				class="wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
+				class="wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
 				:class="{ 'is-fav': fav }"
 				v-html="favIcon"
 				@click.capture.prevent.stop="favAction"
 			></div>
+			<prebuilt-card-delete-module
+				v-if="isActive && deleteIcon !== ''"
+				:delete-icon="deleteIcon"
+				:message="strings.deleteConfirmation"
+				:yes-icon="appData.icons.checkIcon"
+				:no-icon="appData.icons.crossIcon"
+				@confirm="deleteAction"
+			></prebuilt-card-delete-module>
 		</div>
 		<div class="wptb-prebuilt-card-footer">
 			<div class="wptb-prebuilt-card-footer-element" v-if="!isActive" v-html="transformedName"></div>
@@ -51,6 +59,7 @@
 <script>
 import PrebuiltCardControl from './PrebuiltCardControl';
 import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
+import PrebuiltCardDeleteModule from './PrebuiltCardDeleteModule';
 
 export default {
 	props: {
@@ -88,8 +97,12 @@ export default {
 			type: String,
 			default: '',
 		},
+		deleteIcon: {
+			type: String,
+			default: '',
+		},
 	},
-	components: { PrebuiltCardControl, PrebuiltLiveDisplay },
+	components: { PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
 	data() {
 		return {
 			rows: 1,
@@ -148,6 +161,9 @@ export default {
 		},
 		favAction() {
 			this.$emit('favAction', this.id);
+		},
+		deleteAction() {
+			this.$emit('deleteAction', this.id);
 		},
 	},
 };

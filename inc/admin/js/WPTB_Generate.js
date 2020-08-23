@@ -12220,6 +12220,166 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    deleteIcon: {
+      type: String,
+      default: ''
+    },
+    message: {
+      type: String,
+      default: 'Delete?'
+    },
+    yesIcon: {
+      type: String,
+      default: 'Y'
+    },
+    noIcon: {
+      type: String,
+      default: 'N'
+    }
+  },
+  data: function data() {
+    return {
+      confirmActive: false
+    };
+  },
+  methods: {
+    toggleConfirmOverlay: function toggleConfirmOverlay() {
+      this.confirmActive = !this.confirmActive;
+    },
+    confirm: function confirm() {
+      this.$emit('confirm');
+    }
+  }
+};
+exports.default = _default;
+        var $61edfa = exports.default || module.exports;
+      
+      if (typeof $61edfa === 'function') {
+        $61edfa = $61edfa.options;
+      }
+    
+        /* template */
+        Object.assign($61edfa, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-card-delete-module" },
+    [
+      _c("div", {
+        staticClass:
+          "wptb-prebuilt-card-icon wptb-prebuilt-card-delete-icon wptb-plugin-filter-box-shadow-md-close",
+        domProps: { innerHTML: _vm._s(_vm.deleteIcon) },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            return _vm.toggleConfirmOverlay($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.confirmActive
+          ? _c(
+              "div",
+              {
+                staticClass: "wptb-prebuilt-delete-module-confirmation-overlay"
+              },
+              [
+                _c("div", [
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.message) + "\n\t\t\t")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-prebuilt-delete-button-container" },
+                  [
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "positive" },
+                      domProps: { innerHTML: _vm._s(_vm.yesIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.confirm($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "negative" },
+                      domProps: { innerHTML: _vm._s(_vm.noIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.toggleConfirmOverlay($event)
+                        }
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/PrebuiltCard.vue":[function(require,module,exports) {
 "use strict";
 
@@ -12232,8 +12392,18 @@ var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl
 
 var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
 
+var _PrebuiltCardDeleteModule = _interopRequireDefault(require("./PrebuiltCardDeleteModule"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12319,11 +12489,16 @@ var _default = {
     favIcon: {
       type: String,
       default: ''
+    },
+    deleteIcon: {
+      type: String,
+      default: ''
     }
   },
   components: {
     PrebuiltCardControl: _PrebuiltCardControl.default,
-    PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default
+    PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default,
+    PrebuiltCardDeleteModule: _PrebuiltCardDeleteModule.default
   },
   data: function data() {
     return {
@@ -12388,6 +12563,9 @@ var _default = {
     },
     favAction: function favAction() {
       this.$emit('favAction', this.id);
+    },
+    deleteAction: function deleteAction() {
+      this.$emit('deleteAction', this.id);
     }
   }
 };
@@ -12471,7 +12649,7 @@ exports.default = _default;
           !_vm.isActive
             ? _c("div", {
                 staticClass:
-                  "wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
+                  "wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
                 class: { "is-fav": _vm.fav },
                 domProps: { innerHTML: _vm._s(_vm.favIcon) },
                 on: {
@@ -12481,6 +12659,18 @@ exports.default = _default;
                     return _vm.favAction($event)
                   }
                 }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive && _vm.deleteIcon !== ""
+            ? _c("prebuilt-card-delete-module", {
+                attrs: {
+                  "delete-icon": _vm.deleteIcon,
+                  message: _vm.strings.deleteConfirmation,
+                  "yes-icon": _vm.appData.icons.checkIcon,
+                  "no-icon": _vm.appData.icons.crossIcon
+                },
+                on: { confirm: _vm.deleteAction }
               })
             : _vm._e()
         ],
@@ -12564,7 +12754,7 @@ render._withStripped = true
           };
         })());
       
-},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
+},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12599,10 +12789,6 @@ var _default = {
       default: function _default() {
         return {};
       }
-    },
-    favIcon: {
-      type: String,
-      default: ''
     },
     security: {
       type: Object,
@@ -12669,7 +12855,10 @@ var _default = {
       });
     },
     cardFavIcon: function cardFavIcon(cardId) {
-      return cardId === 'blank' ? '' : this.favIcon;
+      return cardId === 'blank' ? '' : this.appData.icons.favIcon;
+    },
+    cardDeleteIcon: function cardDeleteIcon(cardId) {
+      return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
     },
     filteredTables: function filteredTables() {
       var _this2 = this;
@@ -12793,6 +12982,40 @@ var _default = {
         WPTB_Initializer();
         WPTB_Settings();
       }
+    },
+    deleteAction: function deleteAction(cardId) {
+      var _this4 = this;
+
+      var _this$security2 = this.security,
+          ajaxUrl = _this$security2.ajaxUrl,
+          deleteAction = _this$security2.deleteAction,
+          deleteNonce = _this$security2.deleteNonce;
+      var form = new FormData();
+      form.append('action', deleteAction);
+      form.append('nonce', deleteNonce);
+      form.append('id', cardId);
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: form
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error('an error occured while deleting prebuilt table, try again later');
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        if (resp.message === true) {
+          _this4.$delete(_this4.fixedTables, cardId);
+        } else {
+          throw new Error('an error occured while deleting prebuilt table, try again later');
+        }
+      }).catch(function (e) {
+        console.error(e.message);
+      });
     }
   },
   beforeDestroy: function beforeDestroy() {
@@ -12861,13 +13084,15 @@ exports.default = _default;
               disabled: _vm.generating,
               table: v.content,
               "search-string": _vm.searchString,
-              "fav-icon": _vm.cardFavIcon(v.id)
+              "fav-icon": _vm.cardFavIcon(v.id),
+              "delete-icon": _vm.cardDeleteIcon(v.id)
             },
             on: {
               cardActive: _vm.cardActive,
               cardGenerate: _vm.cardGenerate,
               cardEdit: _vm.cardEdit,
-              favAction: _vm.favAction
+              favAction: _vm.favAction,
+              deleteAction: _vm.deleteAction
             }
           })
         }),
@@ -12973,6 +13198,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Plugin install method.
  *
@@ -12982,12 +13209,12 @@ exports.default = void 0;
  * @param {options} options app data to be used
  * @return {{appData: *}}
  */
-function install(Vue, options) {
+function install(Vue, _ref) {
+  var key = _ref.key,
+      _data = _ref.data;
   Vue.mixin({
     data: function data() {
-      return {
-        appData: options
-      };
+      return _defineProperty({}, key, _data);
     }
   });
 }
@@ -13030,10 +13257,14 @@ var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup app st
 
 
 var store = {
-  teamTablePrefix: data.teamBuildTablePrefix
+  teamTablePrefix: data.teamBuildTablePrefix,
+  icons: data.icons
 };
 
-_vue.default.use(_genericStore.default, store); // setup translation strings
+_vue.default.use(_genericStore.default, {
+  key: 'appData',
+  data: store
+}); // setup translation strings
 
 
 _vue.default.use(_strings.default, data);
@@ -13042,7 +13273,7 @@ var vm = new _vue.default({
   components: {
     GenerateMain: _GenerateMain.default
   },
-  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables" :fav-icon="favIcon" :security="security"></generate-main>',
+  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container

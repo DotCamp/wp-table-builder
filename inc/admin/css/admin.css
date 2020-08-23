@@ -4562,12 +4562,49 @@ wptb_shortcode_container_element {
     font-weight: bold;
 }
 
-.wptb-prebuilt-card-fav-icon {
+.wptb-prebuilt-card-icon {
     width: 25px;
     height: 25px;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-prebuilt-card-icon svg {
+    width: 100%;
+    height: 100%;
+
+}
+
+.wptb-prebuilt-card-fav-icon {
+    left: 8px;
+    top: 8px;
+}
+
+.wptb-prebuilt-card-delete-icon {
+    background-color: var(--wptb-plugin-gray-200);
+    padding: 6px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    right: -15px;
+    top: -15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--wptb-plugin-gray-400);
+    transition: all 0.2s ease-out;
+    z-index: 120;
+}
+
+.wptb-prebuilt-card-delete-icon:hover {
+    transform: scale(1.1);
+}
+
+.wptb-prebuilt-card-delete-icon {
+    fill: red;
 }
 
 .wptb-prebuilt-card-fav-icon svg {
@@ -4600,6 +4637,61 @@ wptb_shortcode_container_element {
     100% {
         transform: scale(1);
     }
+}
+
+.wptb-prebuilt-delete-module-confirmation-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    color: var(--wptb-plugin-theme-color-light);
+    z-index: 100;
+    border-radius: 5px 5px 0 0;
+}
+.wptb-prebuilt-delete-module-confirmation-overlay div {
+    margin: 5px;
+}
+
+.wptb-prebuilt-delete-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.wptb-prebuilt-card-circle-icon-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--wptb-plugin-theme-color-light)
+}
+
+.wptb-prebuilt-card-circle-icon-button svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.wptb-prebuilt-card-circle-icon-button:active {
+    animation: wptb-push 0.2s ease-out;
+}
+
+.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='positive']{
+    background-color: var(--wptb-plugin-green-500);
+}
+
+.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='negative']{
+    background-color: red;
 }
 
 /*endregion*/
