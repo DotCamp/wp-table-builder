@@ -12184,6 +12184,32 @@ var _default = {
     cols: {
       type: Number,
       default: 1
+    },
+    table: {
+      type: HTMLElement
+    }
+  },
+  data: function data() {
+    return {
+      mergeDirectives: [],
+      cells: [],
+      initial: {
+        rows: 1
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.table) {
+      this.cells = Array.from(this.table.querySelectorAll('td'));
+      this.initial.rows = this.table.querySelectorAll('tr').length; // eslint-disable-next-line array-callback-return
+
+      this.cells.map(function (c) {
+        var colSpan = c.colSpan;
+
+        _this.mergeDirectives.push(colSpan);
+      });
     }
   },
   computed: {
@@ -12194,7 +12220,20 @@ var _default = {
       };
     },
     itemsNumber: function itemsNumber() {
-      return Array(this.rows * this.cols);
+      if (!this.table) {
+        return Array(this.rows * this.cols);
+      }
+
+      var extraCells = (this.rows - this.initial.rows) * this.cols;
+      return this.cells.length + extraCells;
+    }
+  },
+  methods: {
+    cellSpan: function cellSpan(index) {
+      var spanAmount = this.mergeDirectives[index];
+      return {
+        gridColumn: "span ".concat(spanAmount || 1)
+      };
     }
   }
 };
@@ -12219,7 +12258,11 @@ exports.default = _default;
         "div",
         { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
         _vm._l(_vm.itemsNumber, function(v, k) {
-          return _c("div", { key: k, staticClass: "wptb-prebuilt-live-cell" })
+          return _c("div", {
+            key: k,
+            staticClass: "wptb-prebuilt-live-cell",
+            style: _vm.cellSpan(k)
+          })
         }),
         0
       )
@@ -12482,6 +12525,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     name: {
@@ -12532,6 +12576,10 @@ var _default = {
     return {
       rows: 1,
       columns: 1,
+      initial: {
+        rows: 1,
+        columns: 1
+      },
       min: {
         rows: 1,
         cols: 1
@@ -12554,11 +12602,16 @@ var _default = {
     },
     editEnabled: function editEnabled() {
       return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
+    },
+    previewTableElement: function previewTableElement() {
+      return this.$refs.tablePreview.querySelector('table');
     }
   },
   mounted: function mounted() {
     var _this = this;
 
+    this.initial.rows = this.rows;
+    this.initial.columns = this.columns;
     this.$nextTick(function () {
       var tablePreview = _this.$refs.tablePreview;
 
@@ -12665,7 +12718,11 @@ exports.default = _default;
           _vm._v(" "),
           _vm.isActive && _vm.liveDisplayEnabled
             ? _c("prebuilt-live-display", {
-                attrs: { rows: _vm.rows, cols: _vm.columns }
+                attrs: {
+                  rows: _vm.rows,
+                  cols: _vm.columns,
+                  table: _vm.previewTableElement
+                }
               })
             : _vm._e(),
           _vm._v(" "),

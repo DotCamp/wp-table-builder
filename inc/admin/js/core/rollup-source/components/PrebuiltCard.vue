@@ -11,6 +11,7 @@
 				v-if="isActive && liveDisplayEnabled"
 				:rows="rows"
 				:cols="columns"
+				:table="previewTableElement"
 			></prebuilt-live-display>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
 				<prebuilt-card-control
@@ -117,6 +118,10 @@ export default {
 		return {
 			rows: 1,
 			columns: 1,
+			initial: {
+				rows: 1,
+				columns: 1,
+			},
 			min: {
 				rows: 1,
 				cols: 1,
@@ -143,8 +148,14 @@ export default {
 		editEnabled() {
 			return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
 		},
+		previewTableElement() {
+			return this.$refs.tablePreview.querySelector('table');
+		},
 	},
 	mounted() {
+		this.initial.rows = this.rows;
+		this.initial.columns = this.columns;
+
 		this.$nextTick(() => {
 			const { tablePreview } = this.$refs;
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
