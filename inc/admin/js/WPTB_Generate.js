@@ -12885,6 +12885,18 @@ var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -13068,6 +13080,8 @@ var _default = {
       window.history.pushState(null, null, currentUrl.toString());
     },
     cardGenerate: function cardGenerate(cardId, cols, rows) {
+      var _this4 = this;
+
       var edit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
       this.generating = true;
 
@@ -13076,34 +13090,79 @@ var _default = {
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
       } else {
-        var tableWrapper = document.querySelector('.wptb-table-setup');
-        tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content)); // unmark inserted template as prebuilt table
-        // only unmark it if edit mode is not enabled
+        (function () {
+          var tableWrapper = document.querySelector('.wptb-table-setup');
+          tableWrapper.appendChild(WPTB_Parser(_this4.fixedTables[cardId].content));
+          var table = tableWrapper.querySelector('table'); // unmark inserted template as prebuilt table
+          // only unmark it if edit mode is not enabled
 
-        if (!edit) {
-          delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
-        }
+          if (!edit) {
+            delete table.dataset.wptbPrebuiltTable; // add extra rows to table
 
-        if (edit) {
-          // fill in the name of the selected prebuilt table on edit mode
-          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
-        }
+            var tableRows = table.querySelectorAll('tr');
+            var lastRow = tableRows[tableRows.length - 1];
+            var extraRows = rows - tableRows.length;
 
-        WPTB_Table();
-        WPTB_Settings();
+            for (var i = 0; i < extraRows; i += 1) {
+              var clonedRow = lastRow.cloneNode(true);
+              table.appendChild(clonedRow); // eslint-disable-next-line array-callback-return
 
-        var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+              Array.from(clonedRow.querySelectorAll('div')).map(function (e) {
+                var className = null; // find the divs related to elements with this unique pattern
 
-        _wptbTableStateSaveManager.tableStateSet();
+                var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+                e.classList.forEach(function (c) {
+                  if (c.match(classRegExp)) {
+                    className = c;
+                  }
+                }); // main wrapper div found for an element
 
-        document.counter = new ElementCounters();
-        document.select = new MultipleSelect();
-        WPTB_Initializer();
-        WPTB_Settings();
+                if (className) {
+                  e.classList.remove(className); // find out the kind of the element
+
+                  var _classRegExp$exec = classRegExp.exec(className),
+                      _classRegExp$exec2 = _slicedToArray(_classRegExp$exec, 2),
+                      kind = _classRegExp$exec2[1];
+
+                  var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
+
+                  var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
+                    item.classList.forEach(function (c) {
+                      var match = regExp.exec(c);
+
+                      if (match) {
+                        var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+
+                        carry = carry > numberId ? carry : numberId;
+                      }
+                    });
+                    return carry;
+                  }, 0); // increment unique class id of the element
+
+                  e.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
+                }
+              });
+            }
+          }
+
+          if (edit) {
+            // fill in the name of the selected prebuilt table on edit mode
+            document.querySelector('#wptb-setup-name').value = _this4.fixedTables[cardId].title;
+          }
+
+          WPTB_Table();
+          WPTB_Settings();
+          var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+          wptbTableStateSaveManager.tableStateSet();
+          document.counter = new ElementCounters();
+          document.select = new MultipleSelect();
+          WPTB_Initializer();
+          WPTB_Settings();
+        })();
       }
     },
     deleteAction: function deleteAction(cardId) {
-      var _this4 = this;
+      var _this5 = this;
 
       var _this$security2 = this.security,
           ajaxUrl = _this$security2.ajaxUrl,
@@ -13121,16 +13180,16 @@ var _default = {
           return r.json();
         }
 
-        throw new Error('an error occured while deleting prebuilt table, try again later');
+        throw new Error('an error occurred while deleting prebuilt table, try again later');
       }).then(function (resp) {
         if (resp.error) {
           throw new Error(resp.error);
         }
 
         if (resp.message === true) {
-          _this4.$delete(_this4.fixedTables, cardId);
+          _this5.$delete(_this5.fixedTables, cardId);
         } else {
-          throw new Error('an error occured while deleting prebuilt table, try again later');
+          throw new Error('an error occurred while deleting prebuilt table, try again later');
         }
       }).catch(function (e) {
         console.error(e.message);

@@ -197,11 +197,61 @@ export default {
 			} else {
 				const tableWrapper = document.querySelector('.wptb-table-setup');
 				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+				const table = tableWrapper.querySelector('table');
 
 				// unmark inserted template as prebuilt table
 				// only unmark it if edit mode is not enabled
 				if (!edit) {
-					delete tableWrapper.querySelector('table').dataset.wptbPrebuiltTable;
+					delete table.dataset.wptbPrebuiltTable;
+
+					// add extra rows to table
+					const tableRows = table.querySelectorAll('tr');
+					const lastRow = tableRows[tableRows.length - 1];
+
+					const extraRows = rows - tableRows.length;
+
+					for (let i = 0; i < extraRows; i += 1) {
+						const clonedRow = lastRow.cloneNode(true);
+						table.appendChild(clonedRow);
+
+						// eslint-disable-next-line array-callback-return
+						Array.from(clonedRow.querySelectorAll('div')).map((e) => {
+							let className = null;
+							// find the divs related to elements with this unique pattern
+							const classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+
+							e.classList.forEach((c) => {
+								if (c.match(classRegExp)) {
+									className = c;
+								}
+							});
+
+							// main wrapper div found for an element
+							if (className) {
+								e.classList.remove(className);
+								// find out the kind of the element
+								const [, kind] = classRegExp.exec(className);
+								const regExp = new RegExp(`^wptb-element-${kind}-([0-9]+)$`, 'g');
+
+								// find out the same kind of element with the biggest number id
+								const highestId = Array.from(table.querySelectorAll('div')).reduce((carry, item) => {
+									item.classList.forEach((c) => {
+										const match = regExp.exec(c);
+										if (match) {
+											const numberId = Number.parseInt(match[1], 10);
+											// eslint-disable-next-line no-param-reassign
+											carry = carry > numberId ? carry : numberId;
+										}
+									});
+
+									return carry;
+								}, 0);
+
+								// increment unique class id of the element
+								e.classList.add(`wptb-element-${kind}-${highestId + 1}`);
+							}
+						});
+					}
 				}
 
 				if (edit) {
@@ -238,7 +288,7 @@ export default {
 					if (r.ok) {
 						return r.json();
 					}
-					throw new Error('an error occured while deleting prebuilt table, try again later');
+					throw new Error('an error occurred while deleting prebuilt table, try again later');
 				})
 				.then((resp) => {
 					if (resp.error) {
@@ -247,7 +297,7 @@ export default {
 					if (resp.message === true) {
 						this.$delete(this.fixedTables, cardId);
 					} else {
-						throw new Error('an error occured while deleting prebuilt table, try again later');
+						throw new Error('an error occurred while deleting prebuilt table, try again later');
 					}
 				})
 				.catch((e) => {
