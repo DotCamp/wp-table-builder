@@ -13469,6 +13469,7 @@ document.addEventListener('wptb:table:generated', function () {
 
         tableContainer.style.opacity = 1;
         tableContainer.style.height = 'unset';
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:table:visible', document);
       }
     });
     generateWrapper.classList.add('wptb-plugin-basic-disappear');

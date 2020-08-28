@@ -2078,6 +2078,14 @@ br[data-mce-bogus="1"] {
     height: 16px;
 }
 
+.wptb-actions .dashicons.wptb-prebuilt-mark-action {
+    font-size: 10pt;
+    margin: 0em 0.05em 0 0.1em;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 .wptb-actions .dashicons.dashicons-trash.wptb-delete-action {
     font-size: 10pt;
     margin: 0em 0.1em 0 0.05em;
@@ -4692,6 +4700,32 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='negative']{
     background-color: red;
+}
+
+.wptb-prebuilt-mark-indicator {
+    position: absolute;
+    pointer-events: none;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    top: -5px;
+    left: -5px;
+    background: repeating-linear-gradient(45deg, white, white 5px, var(--wptb-plugin-logo-color) 5px, var(--wptb-plugin-logo-color) 10px);
+    background-size: 400% 400%;
+    animation: linear-gradient-move 20s linear infinite reverse;
+    opacity: 0.2;
+}
+
+@keyframes linear-gradient-move {
+    0%{
+        background-position: 0% 50%;
+    }
+    100%{
+        background-position: 100% 50%;
+    }
+}
+
+.wptb-prebuilt-card .wptb-prebuilt-mark-indicator {
+    display: none;
 }
 
 /*endregion*/

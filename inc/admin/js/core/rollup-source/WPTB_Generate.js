@@ -44,9 +44,12 @@ document.addEventListener('wptb:table:generated', () => {
 			if (e.animationName === 'wptb-basic-disappear') {
 				vm.$destroy();
 				generateWrapper.remove();
+
 				// show table container
 				tableContainer.style.opacity = 1;
 				tableContainer.style.height = 'unset';
+
+				WPTB_Helper.wptbDocumentEventGenerate('wptb:table:visible', document);
 			}
 		});
 

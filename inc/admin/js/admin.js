@@ -183,6 +183,8 @@ var WPTB_ActionsField = function WPTB_ActionsField() {
 
             _this.wptbActions = actions;
         }
+
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:actionfield:generated', document);
     };
 
     this.setParameters = function (thisNode) {
