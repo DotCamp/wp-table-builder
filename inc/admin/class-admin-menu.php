@@ -77,14 +77,12 @@ class Admin_Menu {
 					'post_status'  => 'draft'
 				] );
 
-				add_post_meta( $id, '_wptb_content_', $params->content );
+				// apply table content filter
+				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content );
+				add_post_meta( $id, '_wptb_content_', $table_content );
 
-				// if table is marked as prebuilt, updated its meta or delete its meta accordingly
-				if ( property_exists( $params, 'prebuilt' ) ) {
-					add_post_meta( $id, '_wptb_prebuilt_', $params->prebuilt );
-				} else {
-					delete_post_meta( $id, '_wptb_prebuilt_' );
-				}
+				// new table saved action hook
+				do_action( 'wp-table-builder/new_table_saved', $params->id, $params );
 
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
@@ -102,14 +100,12 @@ class Admin_Menu {
 
 					wp_die( json_encode( [ 'preview_edited' ] ) );
 				} else {
-					update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+					// apply table content filter
+					$table_content = apply_filters( 'wp-table-builder/table_content', $params->content );
+					update_post_meta( absint( $params->id ), '_wptb_content_', $table_content );
 
-					// if table is marked as prebuilt, updated its meta or delete its meta accordingly
-					if ( property_exists( $params, 'prebuilt' ) ) {
-						update_post_meta( absint( $params->id ), '_wptb_prebuilt_', true );
-					} else {
-						delete_post_meta( absint( $params->id ), '_wptb_prebuilt_' );
-					}
+					// table edited action hook
+					do_action( 'wp-table-builder/table_edited', $params->id, $params );
 
 					wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
 				}
