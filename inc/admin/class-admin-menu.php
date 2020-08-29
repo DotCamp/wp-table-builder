@@ -78,7 +78,7 @@ class Admin_Menu {
 				] );
 
 				// apply table content filter
-				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content );
+				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
 				add_post_meta( $id, '_wptb_content_', $table_content );
 
 				// new table saved action hook
@@ -101,7 +101,7 @@ class Admin_Menu {
 					wp_die( json_encode( [ 'preview_edited' ] ) );
 				} else {
 					// apply table content filter
-					$table_content = apply_filters( 'wp-table-builder/table_content', $params->content );
+					$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
 					update_post_meta( absint( $params->id ), '_wptb_content_', $table_content );
 
 					// table edited action hook
