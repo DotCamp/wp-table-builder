@@ -268,7 +268,7 @@ export default {
 				document.counter = new ElementCounters();
 				document.select = new MultipleSelect();
 
-				WPTB_Initializer();
+				// WPTB_Initializer();
 				WPTB_Settings();
 			}
 		},

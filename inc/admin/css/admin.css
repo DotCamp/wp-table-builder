@@ -4651,17 +4651,18 @@ wptb_shortcode_container_element {
     position: absolute;
     width: 100%;
     height: 100%;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     color: var(--wptb-plugin-theme-color-light);
     z-index: 100;
     border-radius: 5px 5px 0 0;
 }
+
 .wptb-prebuilt-delete-module-confirmation-overlay div {
     margin: 5px;
 }
@@ -4694,11 +4695,11 @@ wptb_shortcode_container_element {
     animation: wptb-push 0.2s ease-out;
 }
 
-.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='positive']{
+.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='positive'] {
     background-color: var(--wptb-plugin-green-500);
 }
 
-.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='negative']{
+.wptb-prebuilt-card-circle-icon-button[data-wptb-button-type='negative'] {
     background-color: red;
 }
 
@@ -4716,16 +4717,71 @@ wptb_shortcode_container_element {
 }
 
 @keyframes linear-gradient-move {
-    0%{
+    0% {
         background-position: 0% 50%;
     }
-    100%{
+    100% {
         background-position: 100% 50%;
     }
 }
 
 .wptb-prebuilt-card .wptb-prebuilt-mark-indicator {
     display: none;
+}
+
+.wptb-prebuilt-tab-control {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    border: 1px solid var(--wptb-plugin-gray-400);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.wptb-prebuilt-tab-control div {
+    padding: 5px;
+}
+
+.wptb-prebuilt-tab-control-label {
+    text-transform: capitalize;
+    border-right: 1px solid var(--wptb-plugin-gray-400);
+    white-space: nowrap;
+}
+
+.wptb-prebuilt-tab-control-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.wptb-prebuilt-tab-control-icon {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-prebuilt-tab-control-icon[data-wptb-prebuilt-tab-control-type="stop"] {
+    fill: red;
+}
+
+.wptb-prebuilt-tab-control-icon[data-wptb-prebuilt-tab-control-type="restart"] {
+    fill: var(--wptb-plugin-green-500);
+}
+
+.wptb-prebuilt-tab-control-icon svg {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.wptb-prebuilt-tab-control-icon svg:active {
+    animation: wptb-push 0.2s ease-out;
 }
 
 /*endregion*/

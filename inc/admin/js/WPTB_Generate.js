@@ -13155,8 +13155,8 @@ var _default = {
           var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
           wptbTableStateSaveManager.tableStateSet();
           document.counter = new ElementCounters();
-          document.select = new MultipleSelect();
-          WPTB_Initializer();
+          document.select = new MultipleSelect(); // WPTB_Initializer();
+
           WPTB_Settings();
         })();
       }
