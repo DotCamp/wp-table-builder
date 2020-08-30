@@ -16,6 +16,7 @@ let tinyMceInitStart = function() {
             {title: 'None', value: ''},
             {title: 'nofollow', value: 'nofollow'}
         ],
+        convert_urls: false,
         setup : function( ed ) {
             ed.on( 'change', function(e) {
                 let row = WPTB_Helper.findAncestor( element, 'wptb-row' );
