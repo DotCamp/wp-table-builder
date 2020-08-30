@@ -2547,10 +2547,8 @@ var WPTB_Helper = {
             params.id = postId;
         }
 
-        // prebuilt checking
-        if (WPTB_Prebuilt && WPTB_Prebuilt.isPrebuiltEnabled()) {
-            params.prebuilt = true;
-        }
+        // wptb save before event
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:save:before', document, params);
 
         params = JSON.stringify(params);
 
