@@ -148,6 +148,9 @@ class WPTB_Listing  extends \WP_List_Table{
 		$table_title = $item->post_title;
 
 		$title = ! empty( $table_title ) ? $table_title : __( 'Table (ID #' . absint( $item->ID ) . ')', 'wp-table-builder' );
+
+		// title listing filter hook
+		$title = apply_filters('wp-table-builder/title_listing', $title, $item->ID);
 		  
 		$title = sprintf(
 			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
@@ -192,8 +195,10 @@ class WPTB_Listing  extends \WP_List_Table{
 		switch ( $column_name ) { 
 			case 'id': 
 				return $item->ID;
-			case 'shortcode': 
-				return '[wptb id='.$item->ID.']';
+			case 'shortcode':
+			  $shortcode = '[wptb id='.$item->ID.']';
+			  $shortcode = apply_filters('wp-table-builder/shortcode_listing', $shortcode , $item->ID);
+				return $shortcode;
 			case 'created':
 				return get_the_date( '', $item->ID );
 				break;     
