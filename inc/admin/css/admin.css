@@ -4640,7 +4640,7 @@ wptb_shortcode_container_element {
         transform: scale(1);
     }
     50% {
-        transform: scale(0.7);
+        transform: scale(0.9);
     }
     100% {
         transform: scale(1);
@@ -4781,6 +4781,42 @@ wptb_shortcode_container_element {
 }
 
 .wptb-prebuilt-tab-control-icon svg:active {
+    animation: wptb-push 0.2s ease-out;
+}
+
+.wptb-prebuilt-dev-tool {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: 1px solid var(--wptb-plugin-gray-400);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.wptb-prebuilt-dev-tool div {
+    padding: 5px;
+}
+
+.wptb-prebuilt-dev-tool .label {
+    font-weight: bold;
+    border-bottom: 1px solid var(--wptb-plugin-gray-400);
+}
+
+.wptb-prebuilt-dev-tool .prebuilt-button {
+    width: fit-content;
+    padding: 10px;
+    margin: 5px;
+    color: var(--wptb-plugin-theme-color-light);
+    background-color: var(--wptb-plugin-logo-color);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.wptb-prebuilt-dev-tool .prebuilt-button:active {
     animation: wptb-push 0.2s ease-out;
 }
 

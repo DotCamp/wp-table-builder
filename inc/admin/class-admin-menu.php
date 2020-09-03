@@ -82,7 +82,7 @@ class Admin_Menu {
 				add_post_meta( $id, '_wptb_content_', $table_content );
 
 				// new table saved action hook
-				do_action( 'wp-table-builder/new_table_saved', $params->id, $params );
+				do_action( 'wp-table-builder/new_table_saved', $id, $params );
 
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
