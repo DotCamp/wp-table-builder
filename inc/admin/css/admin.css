@@ -4344,6 +4344,10 @@ wptb_shortcode_container_element {
     border-radius: 5px 5px 0 0;
 }
 
+.wptb-team-prebuilt {
+    border: var(--wptb-prebuilt-card-border-size) solid var(--wptb-plugin-logo-color) !important;
+}
+
 .wptb-prebuilt-card-controls {
     grid-area: preview;
     position: relative;

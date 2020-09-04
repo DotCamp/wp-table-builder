@@ -12601,6 +12601,10 @@ var _default = {
       return this.name;
     },
     editEnabled: function editEnabled() {
+      if (this.isDevBuild()) {
+        return this.id !== 'blank' && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
+      }
+
       return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
     },
     previewTableElement: function previewTableElement() {
@@ -12916,7 +12920,7 @@ var _default = {
       type: String
     },
     prebuiltTables: {
-      type: Object,
+      type: Object | Array,
       default: function _default() {
         return {};
       }
@@ -12989,6 +12993,10 @@ var _default = {
       return cardId === 'blank' ? '' : this.appData.icons.favIcon;
     },
     cardDeleteIcon: function cardDeleteIcon(cardId) {
+      if (this.isDevBuild()) {
+        return cardId === 'blank' ? '' : this.appData.icons.deleteIcon;
+      }
+
       return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
     },
     filteredTables: function filteredTables() {
@@ -13147,7 +13155,9 @@ var _default = {
 
           if (edit) {
             // fill in the name of the selected prebuilt table on edit mode
-            document.querySelector('#wptb-setup-name').value = _this4.fixedTables[cardId].title;
+            document.querySelector('#wptb-setup-name').value = _this4.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+
+            table.dataset.wptbPrebuiltTable = 1;
           }
 
           WPTB_Table();
@@ -13167,11 +13177,18 @@ var _default = {
       var _this$security2 = this.security,
           ajaxUrl = _this$security2.ajaxUrl,
           deleteAction = _this$security2.deleteAction,
-          deleteNonce = _this$security2.deleteNonce;
+          deleteNonce = _this$security2.deleteNonce,
+          devModeNonce = _this$security2.devModeNonce;
       var form = new FormData();
       form.append('action', deleteAction);
       form.append('nonce', deleteNonce);
       form.append('id', cardId);
+
+      if (cardId.startsWith(this.appData.teamTablePrefix)) {
+        form.append('deleteCSV', true);
+        form.append('devModeNonce', devModeNonce);
+      }
+
       fetch(ajaxUrl, {
         method: 'POST',
         body: form
@@ -13388,12 +13405,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * @return {{appData: *}}
  */
 function install(Vue, _ref) {
-  var key = _ref.key,
-      _data = _ref.data;
+  var _ref$data = _ref.data,
+      key = _ref$data.key,
+      _data = _ref$data.data,
+      methods = _ref.methods;
   Vue.mixin({
     data: function data() {
       return _defineProperty({}, key, _data);
-    }
+    },
+    methods: methods
   });
 }
 
@@ -13436,12 +13456,22 @@ var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup app st
 
 var store = {
   teamTablePrefix: data.teamBuildTablePrefix,
-  icons: data.icons
+  icons: data.icons,
+  env: "development"
+}; // store methods
+
+var storeMethods = {
+  isDevBuild: function isDevBuild() {
+    return "development";
+  }
 };
 
 _vue.default.use(_genericStore.default, {
-  key: 'appData',
-  data: store
+  data: {
+    key: 'appData',
+    data: store
+  },
+  methods: storeMethods
 }); // setup translation strings
 
 

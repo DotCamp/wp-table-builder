@@ -10,7 +10,6 @@ use function get_plugins;
 use function current_user_can;
 use function wp_create_nonce;
 use function wp_localize_script;
-use const wp_enqueue_script;
 
 /**
  * Register menu elements and do other global tasks.
@@ -80,6 +79,9 @@ class Admin_Menu {
 				// apply table content filter
 				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
 				add_post_meta( $id, '_wptb_content_', $table_content );
+
+				// new table id filter hook
+				$id = apply_filters( 'wp-table-builder/new_table_id', $id , $params );
 
 				// new table saved action hook
 				do_action( 'wp-table-builder/new_table_saved', $id, $params );

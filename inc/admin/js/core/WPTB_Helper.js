@@ -1647,7 +1647,28 @@ var WPTB_Helper = {
                     builderPageUrl = builderPageUrl.replace( regex, '' );
                     window.history.pushState( null, null, builderPageUrl + '&table=' + data[1] );
 
-                    WPTB_Helper.saveTable( event, true );
+                    document.wptbId = data[1];
+                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+                    document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-button-disable' );
+                    document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
+                    let wptbPreviewTable = document.querySelector( '.wptb-preview-table' );
+                    let wptbPreviewBtn = document.getElementsByClassName( 'wptb-preview-btn' );
+                    if( wptbPreviewBtn.length > 0 ) {
+                        wptbPreviewBtn = wptbPreviewBtn[0];
+                        wptbPreviewBtn.classList.remove( 'wptb-button-disable' );
+                        let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+                        wptbPreviewBtnHref = wptbPreviewBtnHref.replace( 'empty', data[1] );
+                        wptbPreviewBtn.setAttribute( 'href', wptbPreviewBtnHref );
+                    }
+
+                    event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+                    let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+                    if( wptbSaveBtn.length > 0 ) {
+                        wptbSaveBtn = wptbSaveBtn[0];
+                        wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                        wptbSaveBtn.classList.remove('active');
+                    }
+                    // WPTB_Helper.saveTable( event, true );
                     return;
                 } else if( data[0] == 'edited' && startSaving ) {
                     document.wptbId = data[1];

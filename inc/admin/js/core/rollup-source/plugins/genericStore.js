@@ -7,13 +7,14 @@
  * @param {options} options app data to be used
  * @return {{appData: *}}
  */
-function install(Vue, { key, data }) {
+function install(Vue, { data: { key, data }, methods }) {
 	Vue.mixin({
 		data() {
 			return {
 				[key]: data,
 			};
 		},
+		methods,
 	});
 }
 

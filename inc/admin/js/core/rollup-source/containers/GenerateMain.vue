@@ -52,7 +52,7 @@ export default {
 			type: String,
 		},
 		prebuiltTables: {
-			type: Object,
+			type: Object | Array,
 			default() {
 				return {};
 			},
@@ -126,6 +126,9 @@ export default {
 			return cardId === 'blank' ? '' : this.appData.icons.favIcon;
 		},
 		cardDeleteIcon(cardId) {
+			if (this.isDevBuild()) {
+				return cardId === 'blank' ? '' : this.appData.icons.deleteIcon;
+			}
 			return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix)
 				? ''
 				: this.appData.icons.deleteIcon;
@@ -257,6 +260,9 @@ export default {
 				if (edit) {
 					// fill in the name of the selected prebuilt table on edit mode
 					document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title;
+
+					// force enable prebuilt functionality on edit mode
+					table.dataset.wptbPrebuiltTable = 1;
 				}
 
 				WPTB_Table();
@@ -273,12 +279,17 @@ export default {
 			}
 		},
 		deleteAction(cardId) {
-			const { ajaxUrl, deleteAction, deleteNonce } = this.security;
+			const { ajaxUrl, deleteAction, deleteNonce, devModeNonce } = this.security;
 
 			const form = new FormData();
 			form.append('action', deleteAction);
 			form.append('nonce', deleteNonce);
 			form.append('id', cardId);
+
+			if (cardId.startsWith(this.appData.teamTablePrefix)) {
+				form.append('deleteCSV', true);
+				form.append('devModeNonce', devModeNonce);
+			}
 
 			fetch(ajaxUrl, {
 				method: 'POST',

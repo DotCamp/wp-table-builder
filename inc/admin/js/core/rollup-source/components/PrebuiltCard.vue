@@ -146,6 +146,14 @@ export default {
 			return this.name;
 		},
 		editEnabled() {
+			if (this.isDevBuild()) {
+				return (
+					this.id !== 'blank' &&
+					(this.id.startsWith(this.appData.teamTablePrefix) ||
+						!this.id.startsWith(this.appData.teamTablePrefix))
+				);
+			}
+
 			return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
 		},
 		previewTableElement() {

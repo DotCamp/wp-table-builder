@@ -17,8 +17,17 @@ const data = { ...wptbGenerateMenuData, ...proData };
 const store = {
 	teamTablePrefix: data.teamBuildTablePrefix,
 	icons: data.icons,
+	env: process.env.NODE_ENV,
 };
-Vue.use(genericStore, { key: 'appData', data: store });
+
+// store methods
+const storeMethods = {
+	isDevBuild() {
+		return process.env.NODE_ENV;
+	},
+};
+
+Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
 
 // setup translation strings
 Vue.use(strings, data);
