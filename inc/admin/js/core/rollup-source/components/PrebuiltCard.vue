@@ -166,6 +166,7 @@ export default {
 
 		this.$nextTick(() => {
 			const { tablePreview } = this.$refs;
+			// eslint-disable-next-line no-unused-vars
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
 
 			const prebuilt = tablePreview.querySelector('table');
@@ -174,7 +175,7 @@ export default {
 				const padding = 40;
 				const { width: prebuiltWidth, height: prebuiltHeight } = prebuilt.getBoundingClientRect();
 				const widthScale = wrapperWidth / (prebuiltWidth + padding);
-				const heightScale = wrapperHeight / (prebuiltHeight + padding);
+				const heightScale = 125 / (prebuiltHeight + padding);
 
 				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
 

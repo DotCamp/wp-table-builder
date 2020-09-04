@@ -12617,7 +12617,7 @@ var _default = {
     this.initial.rows = this.rows;
     this.initial.columns = this.columns;
     this.$nextTick(function () {
-      var tablePreview = _this.$refs.tablePreview;
+      var tablePreview = _this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
 
       var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
           wrapperWidth = _tablePreview$getBoun.width,
@@ -12633,7 +12633,7 @@ var _default = {
             prebuiltHeight = _prebuilt$getBounding.height;
 
         var widthScale = wrapperWidth / (prebuiltWidth + padding);
-        var heightScale = wrapperHeight / (prebuiltHeight + padding);
+        var heightScale = 125 / (prebuiltHeight + padding);
         prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")");
 
         if (_this.id !== 'blank') {
