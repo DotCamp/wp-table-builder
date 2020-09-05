@@ -179,6 +179,17 @@ export default {
 
 				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
 
+				// fix for chrome browsers where table previews are distorted for tables with seperated columns and row
+				if (window.navigator.vendor.includes('Google')) {
+					const borderCollapseType = prebuilt.style.borderCollapse;
+					if (borderCollapseType === 'separate') {
+						const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+						const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+
+						prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+					}
+				}
+
 				if (this.id !== 'blank') {
 					const tableRows = Array.from(prebuilt.querySelectorAll('tr'));
 					const totalRows = tableRows.length;

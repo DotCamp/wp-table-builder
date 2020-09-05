@@ -4552,7 +4552,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-prebuilt-table-wrapper {
-    /*height: 100%;*/
+    width: 100%;
     overflow: hidden !important;
     display: flex;
     justify-content: center;
@@ -4822,6 +4822,10 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-dev-tool .prebuilt-button:active {
     animation: wptb-push 0.2s ease-out;
+}
+
+.wptb-prebuilt-display-calculate {
+    width: 700px;
 }
 
 /*endregion*/
