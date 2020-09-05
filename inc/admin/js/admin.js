@@ -1900,6 +1900,10 @@ var WPTB_Helper = {
                 var cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
                 if (!cellEditActiveClass) element.classList.add('wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
             } else if (element.classList.contains('wptb-responsive')) {
+                // if table id parsed from url is starting with 'wptb-team', it means it is team built prebuilt table with a unique id that doesn't fit infArr match regex, in that case, use default id for elements options
+                if (table_id.startsWith('wptb_team')) {
+                    table_id = 'startedid-0';
+                }
                 element.classList.add('wptb-element-table_responsive_setting-' + table_id);
             }
 
