@@ -20,7 +20,7 @@ var WPTB_Cell = function ( callback, DOMElement ) {
     function highlightColumn(td) {
 
         var index,
-            parentRow = td.parentNode;
+            parentRow = td.parentNode,
         columnCount = parseInt(document.getElementById('wptb-columns-number').value), rowCount = parseInt(document.getElementById('wptb-rows-number').value), table = document.getElementsByClassName('wptb-preview-table')[0];
         for (var i = 0; i < columnCount; i++) {
             if (parentRow.getElementsByTagName('td')[i] === td) {
@@ -37,7 +37,7 @@ var WPTB_Cell = function ( callback, DOMElement ) {
             }
         }
     }
-    
+
     if( ! DOMElement ) {
         DOMElement = document.createElement("td");
 
@@ -47,7 +47,7 @@ var WPTB_Cell = function ( callback, DOMElement ) {
 
         if (innerBorderWidth != '' && parseInt(innerBorderWidth) != 0) {
             DOMElement.style.border = innerBorderWidth + 'px solid ' + jQuery('#wptb-table-border-color').val();
-        } 
+        }
 
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');
     }
@@ -56,37 +56,39 @@ var WPTB_Cell = function ( callback, DOMElement ) {
     if ( callback ) {
         DOMElement.onclick = callback;
     }
-    
+
     // Cell double click handler
     DOMElement.ondblclick = function( event ) {
         event.stopPropagation();
-        if( ! WPTB_Helper.findAncestor( DOMElement, 'wptb-preview-table-manage-cells' ) && event.target == event.currentTarget ) {
-            
-            WPTB_Helper.wptbDocumentEventGenerate( 'table:cell:dblclick', event.target );
-            
-            let element = WPTB_Helper.newElementProxy( 'text' );
-            element = element.getDOMElement();
-            
-            DOMElement.appendChild( element );
-            
+        let wptbTableSetup = document.querySelector('.wptb-table-setup')
+        if(wptbTableSetup && !wptbTableSetup.classList.contains('wptb-preview-table-manage-cells') &&
+            (event.target.dataset.yIndex !== '0' || wptbTableSetup.dataset.wptbSortableTable !== '1') &&
+            event.target == event.currentTarget) {
+            WPTB_Helper.wptbDocumentEventGenerate( 'table:cell:dblclick', event.target )
+
+            let element = WPTB_Helper.newElementProxy( 'text' )
+            element = element.getDOMElement()
+
+            DOMElement.appendChild( element )
+
             WPTB_innerElementSet( element );
         }
     }
-    
+
     WPTB_innerElementSet( DOMElement );
 
     WPTB_Helper.elementStartScript( DOMElement, 'table_cell_setting' );
 
     let wptbPhElement = DOMElement.getElementsByClassName( 'wptb-ph-element' );
-                                            
+
     if ( wptbPhElement.length > 0 ) {
         for( let i = 0; i < wptbPhElement.length; i++ ) {
             wptbPhElement[i].getDOMElement = function() {
                 return wptbPhElement[i];
             }
-            
+
             WPTB_innerElementSet( wptbPhElement[i] );
-            
+
             let wptbElementTypeClass = wptbPhElement[i].className.match( /wptb-element-((.+-)\d+)/i );
             if( wptbElementTypeClass && Array.isArray( wptbElementTypeClass ) ) {
                 let wptbTypeElementArr = wptbElementTypeClass[1].split( '-' );
@@ -99,7 +101,7 @@ var WPTB_Cell = function ( callback, DOMElement ) {
                         wptbInternalActiveElementObj.getDOMElement = function() {
                             return wptbInternalActiveElement[j];
                         }
-                        
+
                         applyGenericItemSettings( wptbInternalActiveElementObj );
                     }
                 }
@@ -128,7 +130,7 @@ var WPTB_Cell = function ( callback, DOMElement ) {
     this.appendElement = function (node) {
         getDOMElement().appendChild(node);
     };
-    
+
     DOMElement.getCellDimensions = function() {
 
         let tdStyleObj = window.getComputedStyle( this, null );
