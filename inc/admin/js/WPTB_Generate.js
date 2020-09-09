@@ -12161,13 +12161,288 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+},{}],"components/PrebuiltDisplayDirectionButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    side: {
+      type: String,
+      default: 'up'
+    }
+  },
+  computed: {
+    calculateTransform: function calculateTransform() {
+      var transformDegrees = {
+        up: 0,
+        right: 90,
+        down: 180,
+        left: 270
+      };
+      return {
+        transform: "rotateZ(".concat(transformDegrees[this.side], "deg)")
+      };
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('click', this.side);
+    }
+  }
+};
+exports.default = _default;
+        var $8bc701 = exports.default || module.exports;
+      
+      if (typeof $8bc701 === 'function') {
+        $8bc701 = $8bc701.options;
+      }
+    
+        /* template */
+        Object.assign($8bc701, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-control",
+      style: _vm.calculateTransform,
+      attrs: { "data-type": _vm.side },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._v("\n\t⬇️\n")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltLiveDisplayCell.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltDisplayDirectionButton = _interopRequireDefault(require("./PrebuiltDisplayDirectionButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* eslint-disable no-param-reassign */
+var _default = {
+  props: {
+    row: {
+      type: Number,
+      default: 1
+    },
+    col: {
+      type: Number,
+      default: 1
+    },
+    maxCol: {
+      type: Number,
+      default: 1
+    },
+    maxRow: {
+      type: Number,
+      default: 1
+    },
+    original: {
+      type: Boolean,
+      default: true
+    },
+    selected: {
+      type: Boolean,
+      default: false
+    }
+  },
+  components: {
+    PrebuiltDisplayDirectionButton: _PrebuiltDisplayDirectionButton.default
+  },
+  data: function data() {
+    return {
+      enabledControls: []
+    };
+  },
+  mounted: function mounted() {
+    if (this.row === 0) {
+      this.enabledControls.push('up');
+    }
+
+    if (this.col === 0) {
+      this.enabledControls.push('left');
+    }
+
+    if (this.row === this.maxRow - 1) {
+      this.enabledControls.push('down');
+    }
+
+    if (this.col === this.maxCol - 1) {
+      this.enabledControls.push('right');
+    }
+  },
+  methods: {
+    getIndex: function getIndex() {
+      return {
+        row: this.row,
+        col: this.col
+      };
+    },
+    handleLeave: function handleLeave(e) {
+      e.target.classList.remove('wptb-prebuilt-live-cell-hover');
+    },
+    handleHover: function handleHover(e) {
+      var controls = Array.from(e.target.querySelectorAll('[data-type]'));
+
+      if (controls.length > 0) {
+        e.target.classList.add('wptb-prebuilt-live-cell-hover');
+      } // eslint-disable-next-line array-callback-return
+
+
+      controls.map(function (c) {
+        var _c$getBoundingClientR = c.getBoundingClientRect(),
+            width = _c$getBoundingClientR.width,
+            height = _c$getBoundingClientR.height;
+
+        var type = c.dataset.type;
+
+        switch (type) {
+          case 'up':
+            c.style.top = "".concat(-height, "px");
+            break;
+
+          case 'left':
+            c.style.left = "".concat(-width, "px");
+            break;
+
+          case 'down':
+            c.style.bottom = "".concat(-height, "px");
+            break;
+
+          case 'right':
+            c.style.right = "".concat(-width, "px");
+            break;
+
+          default:
+            c.style.top = "".concat(-height, "px");
+        }
+      });
+    },
+    handleControlClick: function handleControlClick(side) {
+      this.$emit('cellControlSelected', side, this.row, this.col);
+    }
+  }
+};
+exports.default = _default;
+        var $b60284 = exports.default || module.exports;
+      
+      if (typeof $b60284 === 'function') {
+        $b60284 = $b60284.options;
+      }
+    
+        /* template */
+        Object.assign($b60284, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-cell",
+      class: {
+        "wptb-prebuilt-live-control-hide": !_vm.original,
+        "wptb-prebuilt-live-control-active": _vm.selected
+      },
+      on: { mouseover: _vm.handleHover, mouseleave: _vm.handleLeave }
+    },
+    _vm._l(_vm.enabledControls, function(side) {
+      return _c("prebuilt-display-direction-button", {
+        key: side,
+        attrs: { side: side },
+        on: { click: _vm.handleControlClick }
+      })
+    }),
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltDisplayDirectionButton":"components/PrebuiltDisplayDirectionButton.vue"}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltLiveDisplayCell = _interopRequireDefault(require("./PrebuiltLiveDisplayCell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12189,12 +12464,21 @@ var _default = {
       type: HTMLElement
     }
   },
+  components: {
+    PrebuiltLiveDisplayCell: _PrebuiltLiveDisplayCell.default
+  },
   data: function data() {
     return {
-      mergeDirectives: [],
-      cells: [],
+      parsedCells: [],
+      parsedMergeDirectives: [],
       initial: {
-        rows: 1
+        rows: 1,
+        cols: 1
+      },
+      innerParsedCells: [],
+      selectedCells: {
+        rowOperation: [],
+        colOperation: []
       }
     };
   },
@@ -12202,14 +12486,35 @@ var _default = {
     var _this = this;
 
     if (this.table) {
-      this.cells = Array.from(this.table.querySelectorAll('td'));
-      this.initial.rows = this.table.querySelectorAll('tr').length; // eslint-disable-next-line array-callback-return
+      this.initial.rows = this.table.querySelectorAll('tr').length;
+      this.initial.cols = Array.from(this.table.querySelectorAll('tr')).reduce(function (carry, current) {
+        var cellLength = current.querySelectorAll('td').length;
+        return cellLength > carry ? cellLength : carry;
+      }, 1); // eslint-disable-next-line array-callback-return
 
-      this.cells.map(function (c) {
-        var colSpan = c.colSpan;
+      Array.from(this.table.querySelectorAll('tr')).map(function (tr, i) {
+        if (!Array.isArray(_this.parsedCells[i])) {
+          _this.parsedCells[i] = [];
+        } // eslint-disable-next-line array-callback-return
 
-        _this.mergeDirectives.push(colSpan);
+
+        Array.from(tr.querySelectorAll('td')).map(function (td) {
+          _this.parsedCells[i].push(td);
+        });
       });
+      this.innerParsedCells = this.parsedCells.slice(0);
+      this.prepareTable();
+    }
+  },
+  watch: {
+    rows: function rows() {
+      this.prepareTable();
+    },
+    selectedCells: {
+      handler: function handler() {
+        this.$emit('cellsSelected', this.selectedCells);
+      },
+      deep: true
     }
   },
   computed: {
@@ -12218,22 +12523,74 @@ var _default = {
         gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
         gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
       };
-    },
-    itemsNumber: function itemsNumber() {
-      if (!this.table) {
-        return Array(this.rows * this.cols);
-      }
-
-      var extraCells = (this.rows - this.initial.rows) * this.cols;
-      return this.cells.length + extraCells;
     }
   },
   methods: {
+    prepareTable: function prepareTable() {
+      var _this2 = this;
+
+      this.innerParsedCells = this.parsedCells.slice(0);
+      var extraRows = this.rows - this.initial.rows; // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(extraRows)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(_this2.cols)).map(function () {
+          var rowIndex = _this2.initial.rows + r;
+
+          if (!Array.isArray(_this2.innerParsedCells[rowIndex])) {
+            _this2.innerParsedCells[rowIndex] = [];
+          }
+
+          _this2.innerParsedCells[rowIndex].push('a');
+        });
+      });
+    },
+    getParsedCellElement: function getParsedCellElement(r, c) {
+      return this.parsedCells[r][c];
+    },
     cellSpan: function cellSpan(index) {
       var spanAmount = this.mergeDirectives[index];
       return {
         gridColumn: "span ".concat(spanAmount || 1)
       };
+    },
+    isOriginalCell: function isOriginalCell(r, c) {
+      return r < this.initial.rows && c < this.initial.cols;
+    },
+    calculateClass: function calculateClass(r, c) {
+      return {
+        'wptb-prebuilt-added-cell': !this.isOriginalCell(r, c)
+      };
+    },
+    isCellSelected: function isCellSelected(row, col) {
+      return this.selectedCells.colOperation.includes(this.encodeSelectedCell(row, col)) || this.selectedCells.rowOperation.includes(this.encodeSelectedCell(row, col));
+    },
+    encodeSelectedCell: function encodeSelectedCell(row, col) {
+      return "".concat(row, "-").concat(col);
+    },
+    handleCellControlSelect: function handleCellControlSelect(side, row, col) {
+      if (side === 'up' || side === 'down') {
+        var direction = side === 'up' ? 1 : -1;
+
+        for (var i = 0; i < this.initial.rows; i += 1) {
+          this.toggleSelection('colOperation', this.encodeSelectedCell(row + i * direction, col));
+        }
+      } else {
+        for (var _i = 0; _i < this.initial.cols; _i += 1) {
+          var _direction = side === 'left' ? 1 : -1;
+
+          this.toggleSelection('rowOperation', this.encodeSelectedCell(row, col + _i * _direction));
+        }
+      }
+    },
+    toggleSelection: function toggleSelection(operation, encodedCellPosition) {
+      var index = this.selectedCells[operation].indexOf(encodedCellPosition);
+
+      if (index >= 0) {
+        this.selectedCells[operation].splice(index, 1);
+      } else {
+        this.selectedCells[operation].push(encodedCellPosition);
+      }
     }
   }
 };
@@ -12257,14 +12614,26 @@ exports.default = _default;
       _c(
         "div",
         { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
-        _vm._l(_vm.itemsNumber, function(v, k) {
-          return _c("div", {
-            key: k,
-            staticClass: "wptb-prebuilt-live-cell",
-            style: _vm.cellSpan(k)
+        [
+          _vm._l(_vm.innerParsedCells, function(r, i) {
+            return _vm._l(r, function(c, k) {
+              return _c("prebuilt-live-display-cell", {
+                key: i + "-" + k,
+                class: _vm.calculateClass(i, k),
+                attrs: {
+                  row: i,
+                  col: k,
+                  "max-col": _vm.initial.cols,
+                  "max-row": _vm.initial.rows,
+                  original: _vm.isOriginalCell(i, k),
+                  selected: _vm.isCellSelected(i, k)
+                },
+                on: { cellControlSelected: _vm.handleCellControlSelect }
+              })
+            })
           })
-        }),
-        0
+        ],
+        2
       )
     ]
   )
@@ -12281,7 +12650,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
+},{"./PrebuiltLiveDisplayCell":"components/PrebuiltLiveDisplayCell.vue"}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12725,20 +13094,9 @@ exports.default = _default;
               }
             ],
             ref: "tablePreview",
-            staticClass:
-              "wptb-prebuilt-table-wrapper wptb-unselectable wptb-no-pointer-events",
+            staticClass: "wptb-prebuilt-table-wrapper wptb-unselectable",
             domProps: { innerHTML: _vm._s(_vm.table) }
           }),
-          _vm._v(" "),
-          _vm.isActive && _vm.liveDisplayEnabled
-            ? _c("prebuilt-live-display", {
-                attrs: {
-                  rows: _vm.rows,
-                  cols: _vm.columns,
-                  table: _vm.previewTableElement
-                }
-              })
-            : _vm._e(),
           _vm._v(" "),
           _vm.isActive
             ? _c(
@@ -12777,6 +13135,16 @@ exports.default = _default;
                 ],
                 1
               )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive && _vm.liveDisplayEnabled
+            ? _c("prebuilt-live-display", {
+                attrs: {
+                  rows: _vm.rows,
+                  cols: _vm.columns,
+                  table: _vm.previewTableElement
+                }
+              })
             : _vm._e(),
           _vm._v(" "),
           !_vm.isActive

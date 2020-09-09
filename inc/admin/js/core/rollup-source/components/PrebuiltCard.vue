@@ -4,15 +4,9 @@
 			<div
 				ref="tablePreview"
 				v-show="!liveDisplayEnabled || !isActive"
-				class="wptb-prebuilt-table-wrapper wptb-unselectable wptb-no-pointer-events"
+				class="wptb-prebuilt-table-wrapper wptb-unselectable"
 				v-html="table"
 			></div>
-			<prebuilt-live-display
-				v-if="isActive && liveDisplayEnabled"
-				:rows="rows"
-				:cols="columns"
-				:table="previewTableElement"
-			></prebuilt-live-display>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
 				<prebuilt-card-control
 					:disabled="disabled || id !== 'blank'"
@@ -27,6 +21,12 @@
 					:max="max.rows"
 				></prebuilt-card-control>
 			</div>
+			<prebuilt-live-display
+				v-if="isActive && liveDisplayEnabled"
+				:rows="rows"
+				:cols="columns"
+				:table="previewTableElement"
+			></prebuilt-live-display>
 			<div
 				v-if="!isActive"
 				class="wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
