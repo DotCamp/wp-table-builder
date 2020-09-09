@@ -22,19 +22,25 @@ use function wp_localize_script;
 class Admin_Menu {
 
 	/**
+	 * Script hook name for generate menu.
+	 * @var string
+	 */
+	public static $generate_menu_script_hook = 'wptb-generate-js';
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
 		// Let's make some menus.
-        add_filter( 'set_screen_option_'.'tables_per_page', function( $status, $option, $value ){
-            return (int) $value;
-        }, 10, 3 );
+		add_filter( 'set_screen_option_' . 'tables_per_page', function ( $status, $option, $value ) {
+			return (int) $value;
+		}, 10, 3 );
 
-        add_filter( 'set-screen-option', function( $status, $option, $value ){
-            return ( $option == 'tables_per_page' ) ? (int) $value : $status;
-        }, 10, 3 );
+		add_filter( 'set-screen-option', function ( $status, $option, $value ) {
+			return ( $option == 'tables_per_page' ) ? (int) $value : $status;
+		}, 10, 3 );
 		add_action( 'admin_menu', array( $this, 'register_menus' ), 9 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_create_table', array( $this, 'create_table' ) );
@@ -44,7 +50,7 @@ class Admin_Menu {
 	}
 
 	public function create_table() {
-		if (current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP)) {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
 			$id = wp_insert_post( [
 				'post_title'   => '',
 				'post_content' => '',
@@ -59,7 +65,7 @@ class Admin_Menu {
 
 		$params = json_decode( file_get_contents( 'php://input' ) );
 
-		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP) && wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && wp_verify_nonce( $params->security_code, 'wptb-security-nonce' ) ||
 		     wp_verify_nonce( $params->security_code, 'wptb-import-security-nonce' ) ) {
 
 			if ( ! property_exists( $params, 'id' ) || ! absint( $params->id ) || get_post_status( absint( $params->id ) ) != 'draft' ) {
@@ -70,7 +76,15 @@ class Admin_Menu {
 					'post_status'  => 'draft'
 				] );
 
-				add_post_meta( $id, '_wptb_content_', $params->content );
+				// apply table content filter
+				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
+				add_post_meta( $id, '_wptb_content_', $table_content );
+
+				// new table id filter hook
+				$id = apply_filters( 'wp-table-builder/new_table_id', $id , $params );
+
+				// new table saved action hook
+				do_action( 'wp-table-builder/new_table_saved', $id, $params );
 
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
@@ -88,7 +102,12 @@ class Admin_Menu {
 
 					wp_die( json_encode( [ 'preview_edited' ] ) );
 				} else {
-					update_post_meta( absint( $params->id ), '_wptb_content_', $params->content );
+					// apply table content filter
+					$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
+					update_post_meta( absint( $params->id ), '_wptb_content_', $table_content );
+
+					// table edited action hook
+					do_action( 'wp-table-builder/table_edited', $params->id, $params );
 
 					wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
 				}
@@ -99,7 +118,7 @@ class Admin_Menu {
 	}
 
 	public function get_table() {
-		if ( current_user_can(Settings_Manager::ALLOWED_ROLE_META_CAP)) {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
 			$post       = get_post( absint( $_REQUEST['id'] ) );
 			$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
 			$name       = $post->post_title;//$html = json_decode( $html );
@@ -134,7 +153,7 @@ class Admin_Menu {
 	 */
 	public function register_menus() {
 
-		global $builder_page, $tables_overview, $table_list;
+		global $builder_page, $tables_overview, $table_list, $builder_tool_page;
 		$menu_cap = Helpers::wptb_get_capability_manage_options();
 
 		// Default Tables top level menu item.
@@ -169,7 +188,7 @@ class Admin_Menu {
 		);
 
 		// Add New Table sub menu item.
-		$builder_page = add_submenu_page(
+		$builder_tool_page = add_submenu_page(
 			'wptb-overview',
 			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
 			esc_html__( 'Add New', 'wp-table-builder' ),
@@ -177,6 +196,8 @@ class Admin_Menu {
 			'wptb-builder',
 			array( $this, 'table_builder' )
 		);
+
+		$builder_page = $builder_tool_page;
 
 		// Add Import sub menu item.
 		$builder_page = add_submenu_page(
@@ -190,13 +211,13 @@ class Admin_Menu {
 
 		add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
 
-		add_action(  'load-' . $tables_overview, function () {
-            add_screen_option( 'per_page', array(
-                'label' => 'Number of items per page:',
-                'default' => 15,
-                'option' => 'tables_per_page', // название опции, будет записано в метаполе юзера
-            ) );
-        } );
+		add_action( 'load-' . $tables_overview, function () {
+			add_screen_option( 'per_page', array(
+				'label'   => 'Number of items per page:',
+				'default' => 15,
+				'option'  => 'tables_per_page', // название опции, будет записано в метаполе юзера
+			) );
+		} );
 
 		do_action( 'wptb_admin_menu', $this );
 
@@ -257,9 +278,33 @@ class Admin_Menu {
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-builder' ) {
 
 			// builder controls
-            $builder_path = plugin_dir_path(__FILE__) . 'js/WPTB_BuilderControls.js';
+			$builder_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_BuilderControls.js';
 
-			wp_enqueue_script('wptb-controls-manager-js', plugin_dir_url(__FILE__) . 'js/WPTB_BuilderControls.js' , [], filemtime($builder_path), false);
+			wp_enqueue_script( 'wptb-controls-manager-js', plugin_dir_url( __FILE__ ) . 'js/WPTB_BuilderControls.js', [], filemtime( $builder_path ), false );
+
+			// generate controls
+			$generate_path = plugin_dir_path( __FILE__ ) . 'js/WPTB_Generate.js';
+
+			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
+				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
+				$generate_data = [
+					'mountId' => 'wptbGenerate',
+					'version' => 'normal',
+					'adLink'  => 'https://wptablebuilder.com/',
+					'strings' => [
+						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
+						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
+						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
+						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
+						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
+						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
+					]
+
+				];
+				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
+			}
+
 
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
@@ -388,30 +433,30 @@ class Admin_Menu {
 	public function tables_list() {
 		$table_list = new WPTB_Listing();
 		?>
-        <div class="wrap">
-            <div style="margin-bottom: 30px;">
-                <h1 class="wp-heading-inline">
-					<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
-                </h1>
-                <span class="wptb-split-page-title-action">
+      <div class="wrap">
+        <div style="margin-bottom: 30px;">
+          <h1 class="wp-heading-inline">
+			  <?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
+          </h1>
+          <span class="wptb-split-page-title-action">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>"
-                           class="page-title-action">
+               class="page-title-action">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>
-            </div>
-            <?php
-            $table_list->prepare_items();
-            $table_list->views();
-            ?>
-            <form method="get">
-            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
-            <?php
-            $table_list->search_box( 'Search Tables', 'search_tables' );
-            $table_list->display(); ?>
-            </form>
         </div>
-        <?php
+		  <?php
+		  $table_list->prepare_items();
+		  $table_list->views();
+		  ?>
+        <form method="get">
+          <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
+			<?php
+			$table_list->search_box( 'Search Tables', 'search_tables' );
+			$table_list->display(); ?>
+        </form>
+      </div>
+		<?php
 	}
 
 	/**

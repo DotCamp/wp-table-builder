@@ -180,7 +180,9 @@ var WPTB_ActionsField = function() {
             actions.style.display = 'flex';
 
             this.wptbActions = actions;
-        } 
+        }
+
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:actionfield:generated', document);
     }
     
     this.setParameters = ( thisNode ) => {
@@ -236,7 +238,8 @@ var WPTB_ActionsField = function() {
             if ( event.relatedTarget.classList.contains( 'wptb-actions' ) ||
                 event.relatedTarget.classList.contains( 'wptb-move-action' ) ||
                 event.relatedTarget.classList.contains( 'wptb-duplicate-action' ) ||
-                event.relatedTarget.classList.contains( 'wptb-delete-action' ) ) {
+                event.relatedTarget.classList.contains( 'wptb-delete-action' )  || event.relatedTarget.classList.contains( 'wptb-prebuilt-mark-action' ) )
+            {
                 if( ! this.wptbActions ) {
                     this.wptbActions = document.getElementsByClassName( 'wptb-actions' )[0];
                 }

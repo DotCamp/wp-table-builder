@@ -11988,603 +11988,13 @@ function getOuterHTML(el) {
 Vue.compile = compileToFunctions;
 var _default = Vue;
 exports.default = _default;
-},{}],"functions/WPTB_ControlsManager.js":[function(require,module,exports) {
+},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-/**
- * Controls manager for builder element's control options
- *
- * It is a singleton class that will always be sending the referenced object to all callers.
- *
- * @returns {{setControlData: setControlData, getControlData: (function(*): *), addControlScript: addControlScript, callControlScript: callControlScript}}
- * @constructor
- */
-function ControlsManager() {
-  var controlScripts = {};
-  var controlData = {};
-  /**
-   * Add a control element script to ControlsManager
-   *
-   * This is the register function for control items. Without registering the control items, you can not mount them from their inline underscore.js template. Keep the underscore.js template as clean as possible since all the work should be handled by the view element and not the business logic of the backend.
-   *
-   * @param {string} key control type key
-   * @param {function} script function to mount the control to view
-   */
-
-  function addControlScript(key, script) {
-    controlScripts[key] = script;
-  }
-  /**
-   * Call a control element and mount it to view
-   *
-   * This is the place where items are mounted on to the view. In the background already defined control logic will be called and mounted to the unique id html element.
-   *
-   * @param {string} key control type key that was registered with addControlScript
-   * @param {any} args  arguments to call the script with
-   */
-
-
-  function callControlScript(key, args) {
-    if (!controlScripts[key]) {
-      throw new Error("Called control element not found: [".concat(key, "]"));
-    }
-
-    controlScripts[key](args);
-  }
-  /**
-   * Register data for a control item
-   *
-   * Currently, when control items are defined in background, a data object with a needed data items are mounted with this function.
-   *
-   * @param {string} id control item unique id
-   * @param {object} data control item data
-   */
-
-
-  function setControlData(id, data) {
-    controlData[id] = data;
-  }
-  /**
-   * Retrieve data for a control item
-   *
-   * Data objects that are registered for specific control items can be fetched with the  correct id. With this way, components can reach their data with the correct unique keys.
-   *
-   * @param {string} id control item unique key
-   * @returns {object} data associated with control item
-   */
-
-
-  function getControlData(id) {
-    if (!controlData[id]) {
-      throw new Error("Control data for [".concat(id, "] not found."));
-    }
-
-    return controlData[id];
-  }
-
-  return {
-    addControlScript: addControlScript,
-    callControlScript: callControlScript,
-    setControlData: setControlData,
-    getControlData: getControlData
-  };
-}
-/**
- * @module ControlsManager module
- */
-
-
-var _default = ControlsManager();
-
-exports.default = _default;
-},{}],"components/IntersectionObserver.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: ['relativeElement', 'forceHide'],
-  data: function data() {
-    return {
-      listening: false
-    };
-  },
-  watch: {
-    relativeElement: function relativeElement() {
-      if (this.relativeElement && !this.listening) {
-        this.relativeElement.addEventListener('scroll', this.handleScroll);
-        this.handleScroll();
-        this.listening = true;
-      }
-    }
-  },
-  methods: {
-    handleScroll: function handleScroll() {
-      if (this.forceHide) {
-        return;
-      }
-
-      var scrollAmount = this.relativeElement.scrollTop;
-      var posY = this.$refs.observerElement.offsetTop;
-      var relativeHeight = this.relativeElement.clientHeight;
-
-      if (scrollAmount + relativeHeight >= posY) {
-        this.$emit('visible');
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $7aa961 = exports.default || module.exports;
-      
-      if (typeof $7aa961 === 'function') {
-        $7aa961 = $7aa961.options;
-      }
-    
-        /* template */
-        Object.assign($7aa961, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { ref: "observerElement" }, [_vm._t("default")], 2)
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"functions/selector.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-/**
- * Selector helper functions for element data retrieval.
- *
- * One of the advanced functionality of selector module is, it can get/set values with a defined format so only raw values will be get and formatted values can be set. Format replace string is {$}. This operator will be replaced with the raw value of the control element. For example; a format of '{$}px' will be translated to '15px' in a control with a value of 15. When getting that value, 15 will be returned. While setting it, this value will be formatted into '15px'.
- */
-
-/**
- * Select element operation to get/set certain element attributes/properties.
- *
- * @param {HTMLElement} element html element
- * @param {string} type element attribute/property type
- * @returns {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
- */
-function operationSelect(element, type) {
-  var operation = null;
-
-  switch (type) {
-    case 'dataset':
-      operation = element.dataset;
-      break;
-
-    case 'style':
-      operation = element.style;
-      break;
-
-    case 'class':
-      operation = 'class';
-      break;
-
-    default:
-      operation = element.dataset;
-      break;
-  }
-
-  return operation;
-}
-/**
- * Get value of HTMLElement.
- *
- * Supported value types: dataset, style, classList
- *
- * @param {string} selector query string for element search
- * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
- */
-
-
-function getTargetValue(selector) {
-  var query = selector.query,
-      type = selector.type,
-      key = selector.key,
-      format = selector.format;
-
-  var elements = _toConsumableArray(document.querySelectorAll(query));
-
-  if (elements.length > 0) {
-    var operation = operationSelect(elements[0], type);
-
-    if (operation) {
-      var value;
-
-      if (operation === 'class') {
-        value = elements[0].getAttribute('class');
-      } else {
-        value = operation[key];
-      }
-
-      if (format) {
-        var regExpFormat = format.replace('{$}', '(.+)');
-        var testResult;
-        var regExp = new RegExp("^".concat(regExpFormat, "$"), 'g');
-
-        if (operation === 'class') {
-          value.split(' ').some(function (s) {
-            var result = regExp.exec(s);
-
-            if (result === null) {
-              return false;
-            }
-
-            testResult = result;
-            return true;
-          });
-        } else {
-          testResult = regExp.exec(value);
-        }
-
-        if (testResult) {
-          // eslint-disable-next-line prefer-destructuring
-          value = testResult[1];
-        } else {
-          value = null;
-        }
-      }
-
-      return {
-        elements: elements,
-        value: value,
-        type: type,
-        key: key,
-        format: format
-      };
-    }
-  }
-
-  throw new Error("no related operation found with a type of [".concat(type, "]"));
-}
-/**
- * Set value for an individual selector object.
- *
- * @param {object} selector selector object
- * @param {any} value value to be assigned to selector element
- */
-
-
-function setTargetValue(selector, value) {
-  var elements = selector.elements,
-      type = selector.type,
-      key = selector.key,
-      format = selector.format;
-
-  if (Array.isArray(elements) && elements.length > 0) {
-    // eslint-disable-next-line array-callback-return
-    elements.map(function (s) {
-      var operation = operationSelect(s, type); // class type specific operations
-
-      if (operation === 'class') {
-        var currentClass = null;
-        var val; // find if another class with the same format is present
-        // if it is, it will signal us that this class should be removed before our formatted class can be added. this way class toggle operation will be provided with different class names with the same format
-        // eslint-disable-next-line no-restricted-syntax
-
-        var _iterator = _createForOfIteratorHelper(s.classList.entries()),
-            _step;
-
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var _step$value = _slicedToArray(_step.value, 2);
-
-            val = _step$value[1];
-            var regExpFormat = format.replace('{$}', '(.+)');
-            var match = val.match("^".concat(regExpFormat, "$"));
-
-            if (match) {
-              var _match = _slicedToArray(match, 2);
-
-              currentClass = _match[1];
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-
-        if (currentClass) {
-          var toggleClass = format.replace('{$}', currentClass); // remove any class with the same format for toggle operation
-
-          s.classList.remove(toggleClass);
-        }
-
-        var addClass = format.replace('{$}', value);
-        s.classList.add(addClass);
-      } else {
-        var tempVal = value;
-
-        if (format) {
-          tempVal = format.replace('{$}', value);
-          tempVal = tempVal.replace(new RegExp(/\\/g), '');
-        }
-
-        operation[key] = tempVal;
-      }
-    });
-  }
-}
-/**
- * Set values of target selectors.
- *
- * @param {array} selectors an array of selector objects
- * @param {any} value value to be assigned to selector elements
- */
-
-
-function setAllValues(selectors, value) {
-  // eslint-disable-next-line array-callback-return
-  selectors.map(function (s) {
-    setTargetValue(s, value);
-  });
-}
-/**
- * Get all values from an array of selectors.
- *
- * @param {array} selectors an array of selector objects
- * @returns {{startupValue: null, elements: []}} object with selector values
- */
-
-
-function getAllValues(selectors) {
-  var allObj = {
-    elements: [],
-    startupValue: null
-  }; // eslint-disable-next-line array-callback-return
-
-  selectors.map(function (s) {
-    var elementValue = getTargetValue(s);
-    allObj.elements.push(getTargetValue(s));
-
-    if (s.useAsStartup) {
-      allObj.startupValue = elementValue;
-    }
-  }); // if no startup value is defined, use the value of the first element
-
-  if (!allObj.startupValue) {
-    allObj.startupValue = allObj.elements[0].value;
-  }
-
-  return allObj;
-}
-/**
- * @module selector module
- */
-
-
-var _default = {
-  getTargetValue: getTargetValue,
-  getAllValues: getAllValues,
-  setTargetValue: setTargetValue,
-  setAllValues: setAllValues
-};
-exports.default = _default;
-},{}],"mixins/ControlBase.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _selector = _interopRequireDefault(require("../functions/selector"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Base mixin for control items
- */
-var ControlBase = {
-  props: {
-    label: String,
-    selectors: {
-      type: Array,
-      required: false,
-      default: function _default() {
-        return [];
-      }
-    },
-    defaultValue: null,
-    uniqueId: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    elemContainer: {
-      type: String,
-      required: false,
-      default: ''
-    }
-  },
-  data: function data() {
-    return {
-      startupValue: null,
-      targetElements: [],
-      elementMainValue: '',
-      mountedDataUpdate: false
-    };
-  },
-  mounted: function mounted() {
-    // find and retrieve selector elements
-    if (this.selectors.length > 0) {
-      var operationObj = _selector.default.getAllValues(this.selectors);
-
-      this.targetElements = operationObj.elements;
-      this.startupValue = operationObj.startupValue;
-    }
-  },
-  methods: {
-    /**
-     * Generate a control value changed event.
-     *
-     * @param {any} value value to be emitted
-     */
-    generateChangeEvent: function generateChangeEvent(value) {
-      var _this = this;
-
-      // eslint-disable-next-line array-callback-return
-      this.targetElements.map(function (t) {
-        // eslint-disable-next-line array-callback-return
-        t.elements.map(function (el) {
-          WPTB_Helper.wptbDocumentEventGenerate("wptb-control:".concat(_this.uniqueId), el, {
-            value: value
-          });
-        });
-      });
-    },
-
-    /**
-     * Assign startup value of default selector to the main element value.
-     *
-     * This startup value will be fetched from the DOM element according to the default selector objects properties. If no startup value is found, then defaultValue prop will be used
-     */
-    assignDefaultValue: function assignDefaultValue() {
-      if (this.startupValue !== undefined && this.startupValue !== '' && this.startupValue !== null) {
-        this.mountedDataUpdate = true;
-        this.elementMainValue = this.startupValue;
-      } else if (this.defaultValue !== null) {
-        this.mountedDataUpdate = true;
-        this.elementMainValue = this.defaultValue;
-      }
-    },
-
-    /**
-     * Sets the value of the selector object.
-     *
-     * @param {object} selectorObj selector object
-     * @param {any} value value to be set
-     */
-    setTargetValue: function setTargetValue(selectorObj, value) {
-      _selector.default.setTargetValue(selectorObj, value);
-    },
-
-    /**
-     * Set the value to all selector objects.
-     *
-     * @param {any} value value to be assigned to all selector objects
-     */
-    setAllValues: function setAllValues(value) {
-      _selector.default.setAllValues(this.targetElements, value);
-    },
-
-    /**
-     * Sets the current table as modified.
-     *
-     * @param checkMountedState whether to check if value is updated at mounted hook. This check can be done to make sure assigning default value or saved value that has been fetched from the target selector element will not set the table as dirty at mount.
-     */
-    setTableDirty: function setTableDirty() {
-      var checkMountedState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-      if (checkMountedState) {
-        if (!this.mountedDataUpdate) {
-          new WPTB_TableStateSaveManager().tableStateSet();
-        }
-      } else {
-        new WPTB_TableStateSaveManager().tableStateSet();
-      }
-
-      this.mountedDataUpdate = false;
-    },
-
-    /**
-     * Reset mounted state of component.
-     */
-    resetMountedState: function resetMountedState() {
-      this.mountedDataUpdate = true;
-    }
-  }
-};
-/**
- * @module ControlBase module
- */
-
-var _default = ControlBase;
-exports.default = _default;
-},{"../functions/selector":"functions/selector.js"}],"containers/IconSelectControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _IntersectionObserver = _interopRequireDefault(require("../components/IntersectionObserver"));
-
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -12611,418 +12021,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   props: {
-    label: String,
-    icons: Object,
-    perPage: {
-      type: Number,
-      default: 20
-    }
-  },
-  mixins: [_ControlBase.default],
-  components: {
-    IntersectionObserver: _IntersectionObserver.default
-  },
-  data: function data() {
-    return {
-      selectedIcon: {
-        url: null,
-        name: null
-      },
-      openDrawer: false,
-      innerDrawerRef: null,
-      paginationIndex: 1,
-      observerHide: false,
-      debunkedFilterText: '',
-      debunkId: -1,
-      filterText: '',
-      drawerPosition: {
-        left: 0
-      }
-    };
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    document.addEventListener('keyup', function (e) {
-      if (e.code === 'Escape' && _this.openDrawer) {
-        _this.setDrawerState(false);
-      }
-    });
-    this.assignDefaultValue();
-    var selectedIcon = this.elementMainValue;
-    this.selectedIcon.name = selectedIcon === '' ? null : selectedIcon;
-    this.selectedIcon.url = selectedIcon === '' ? null : this.icons[selectedIcon];
-  },
-  watch: {
-    debunkedFilterText: function debunkedFilterText(n) {
-      var _this2 = this;
-
-      clearTimeout(this.debunkId);
-      this.debunkId = setTimeout(function () {
-        _this2.filterText = n;
-      }, 500);
-    },
-    selectedIcon: {
-      handler: function handler() {
-        var _this3 = this;
-
-        var targetObjs = this.targetElements[0].elements;
-
-        if (targetObjs && Array.isArray(targetObjs)) {
-          if (this.selectedIcon.url) {
-            fetch(this.selectedIcon.url).then(function (r) {
-              return r.text();
-            }).then(function (resp) {
-              _this3.setTargetValue(_this3.targetElements[0], _this3.selectedIcon.name);
-
-              var range = document.createRange(); // eslint-disable-next-line array-callback-return
-
-              targetObjs.map(function (s) {
-                // eslint-disable-next-line no-param-reassign
-                s.innerHTML = '';
-                range.setStart(s, 0);
-                var newSvgElement = range.createContextualFragment(resp);
-                s.appendChild(newSvgElement);
-              });
-            });
-          } else {
-            this.setTargetValue(this.targetElements[0], ''); // eslint-disable-next-line array-callback-return
-
-            targetObjs.map(function (s) {
-              // eslint-disable-next-line no-param-reassign
-              s.innerHTML = '';
-            });
-          }
-        }
-      },
-      deep: true
-    }
-  },
-  methods: {
-    setDrawerState: function setDrawerState(state) {
-      this.openDrawer = state;
-    },
-    fullIconList: function fullIconList() {
-      var _this4 = this;
-
-      return Object.keys(this.icons).filter(function (k) {
-        return k.includes(_this4.filterText);
-      }).slice(0, this.paginationIndex * this.perPage).reduce(function (result, key) {
-        // eslint-disable-next-line no-param-reassign
-        result[key] = _this4.icons[key];
-        return result;
-      }, {});
-    },
-    toggleIconDrawer: function toggleIconDrawer() {
-      this.calculateDrawerPosition();
-      this.openDrawer = !this.openDrawer;
-      this.innerDrawerRef = this.$refs.drawerRefElement;
-    },
-    setIcon: function setIcon(iconName, iconUrl) {
-      this.selectedIcon.url = iconUrl;
-      this.selectedIcon.name = iconName;
-      this.toggleIconDrawer();
-      this.setTableDirty();
-    },
-    observerVisible: function observerVisible() {
-      this.paginationIndex += 1;
-    },
-    calculateDrawerPosition: function calculateDrawerPosition() {
-      var xPadding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
-      var buttonElement = this.$refs.iconSelectButton;
-      var posObject = buttonElement.getBoundingClientRect();
-      var drawerLeft = posObject.x + posObject.width + xPadding;
-      var drawerTop = posObject.y;
-      this.drawerPosition.top = this.toPx(drawerTop);
-      this.drawerPosition.left = this.toPx(drawerLeft);
-    },
-    toPx: function toPx(val) {
-      return "".concat(val, "px");
-    }
-  }
-};
-exports.default = _default;
-        var $4a7874 = exports.default || module.exports;
-      
-      if (typeof $4a7874 === 'function') {
-        $4a7874 = $4a7874.options;
-      }
-    
-        /* template */
-        Object.assign($4a7874, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
-    [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("p", { staticClass: "wptb-settings-item-title" }, [
-          _vm._v(_vm._s(_vm.label))
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wptb-icon-select-wrapper" }, [
-          _c("div", { staticClass: "wptb-icon-select-display" }, [
-            _c(
-              "div",
-              {
-                ref: "iconSelectButton",
-                staticClass: "wptb-icon-select-preview",
-                on: { click: _vm.toggleIconDrawer }
-              },
-              [_c("img", { attrs: { src: _vm.selectedIcon.url } })]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.openDrawer,
-                    expression: "openDrawer"
-                  }
-                ],
-                staticClass:
-                  "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
-                style: _vm.drawerPosition
-              },
-              [
-                _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model.trim",
-                        value: _vm.debunkedFilterText,
-                        expression: "debunkedFilterText",
-                        modifiers: { trim: true }
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "Search for icons..." },
-                    domProps: { value: _vm.debunkedFilterText },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.debunkedFilterText = $event.target.value.trim()
-                      },
-                      blur: function($event) {
-                        return _vm.$forceUpdate()
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    ref: "drawerRefElement",
-                    staticClass: "wptb-icon-previews"
-                  },
-                  [
-                    _c("div", {
-                      staticClass:
-                        "wptb-icon-select-drawer-preview wptb-icon-reset",
-                      on: {
-                        click: function($event) {
-                          return _vm.setIcon("", "")
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._l(_vm.fullIconList(), function(iconUrl, name) {
-                      return _c(
-                        "div",
-                        {
-                          key: name,
-                          staticClass: "wptb-icon-select-drawer-preview",
-                          class: {
-                            "wptb-icon-preview-active":
-                              _vm.selectedIcon.name === name
-                          }
-                        },
-                        [
-                          _c("img", {
-                            attrs: {
-                              src: iconUrl,
-                              title: name,
-                              draggable: false
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.setIcon(name, iconUrl)
-                              }
-                            }
-                          })
-                        ]
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "intersection-observer",
-                      {
-                        attrs: {
-                          "relative-element": _vm.innerDrawerRef,
-                          "force-hide": _vm.observerHide
-                        },
-                        on: { visible: _vm.observerVisible }
-                      },
-                      [
-                        _c("div", {
-                          staticClass: "wptb-icon-select-drawer-end"
-                        })
-                      ]
-                    )
-                  ],
-                  2
-                )
-              ]
-            )
-          ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../components/IntersectionObserver":"components/IntersectionObserver.vue","../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_IconSelectControl.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-var _IconSelectControl = _interopRequireDefault(require("../containers/IconSelectControl"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Icon Selection Control
- */
-// eslint-disable-next-line camelcase
-var _default = {
-  name: 'ControlIconSelect',
-
-  /**
-   *    Icon control script implementation.
-   *
-   * @param {string} uniqueId unique id for control element
-   */
-  handler: function iconControlSelectJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
-
-    if (data.defaultValue === undefined) {
-      data.defaultValue = null;
-    }
-
-    new _vue.default({
-      data: data,
-      components: {
-        IconSelectControl: _IconSelectControl.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/IconSelectControl":"containers/IconSelectControl.vue"}],"components/NumberPostfixInput.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  inheritAttrs: false,
-  props: {
-    postFix: {
+    orientation: {
       type: String,
-      default: ''
+      default: 'row'
     },
     value: {
-      type: null,
+      type: Number,
       default: 0
     },
-    // with this prop is enabled, width of the component will be calculated according to its contents
-    enableDynamicWidth: {
-      type: Boolean,
-      default: false
-    },
-    // extra padding value that will be applied to input element
-    dynamicWidthPadding: {
-      type: Number,
-      default: 3
-    },
-    // only enable data update with enter key down
-    onlyEnter: {
+    disabled: {
       type: Boolean,
       default: false
     },
     min: {
       type: Number,
-      default: 0
+      default: 1
     },
     max: {
       type: Number,
-      default: 1000
-    },
-    step: {
-      type: Number,
-      default: 1
-    },
-    enableLimit: {
-      type: Boolean,
-      default: false
-    }
-  },
-  model: {
-    prop: 'value',
-    event: 'valueChanged'
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
+      default: 30
     }
   },
   data: function data() {
@@ -13031,181 +12048,106 @@ var _default = {
     };
   },
   mounted: function mounted() {
-    this.innerValue = this.value;
+    this.innerValue = this.toNumber(this.value);
   },
-  computed: {
-    /**
-     * Add a post fix to the value.
-     *
-     * Value will be chosen from the component prop.
-     */
-    postFixIt: function postFixIt() {
-      return "".concat(this.innerValue).concat(this.postFix);
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
     },
-
-    /**
-     * Calculate width of input element according to its contents.
-     */
-    dynamicWidth: function dynamicWidth() {
-      if (this.enableDynamicWidth) {
-        return {
-          width: "calc(".concat(this.innerValue.toString().length + this.postFix.length + this.dynamicWidthPadding, "ch) !important")
-        };
-      }
-
-      return {};
+    innerValue: function innerValue(n) {
+      this.$emit('input', this.limitVal(n));
+      this.innerValue = this.limitVal(n);
     }
   },
   methods: {
-    /**
-     * Retrieve integer from a string in the base of 10 and limit it between min/max values of the component.
-     *
-     * @param {number|string} val value
-     * @return {number} retrieved integer
-     */
-    getValue: function getValue(val) {
-      var parsedValue = Number.parseFloat(val); // get rid of unnecessary decimal points by fixing the number based on step value
-
-      var regex = new RegExp(/^([0-9]+)\.([0-9]+)/, 'g');
-      var match = regex.exec(this.step.toString());
-
-      if (match) {
-        var decimalPoint = match[2].length;
-        parsedValue = Number.parseFloat(parsedValue.toFixed(decimalPoint));
-      } // eslint-disable-next-line no-restricted-globals
-
-
-      parsedValue = isNaN(parsedValue) ? 0 : parsedValue;
-      return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
+    valueChanged: function valueChanged(e) {
+      this.innerValue = this.toNumber(e.target.value);
     },
-
-    /**
-     * Limit given value between min/max properties of the component.
-     *
-     * @param {number} val value to be limited
-     */
-    limitValue: function limitValue(val) {
-      if (val < this.min) {
-        return this.min;
-      }
-
-      if (val > this.max) {
+    toNumber: function toNumber(n) {
+      return Number.parseInt(n, 10);
+    },
+    limitVal: function limitVal(n) {
+      if (n > this.max) {
         return this.max;
       }
 
-      return val;
-    },
-
-    /**
-     * Handle input value change.
-     *
-     * @param {Event} e input event
-     */
-    handleOnInput: function handleOnInput(e) {
-      // don't update prop data if only enter key update is enabled
-      if (!this.onlyEnter) {
-        this.$emit('valueChanged', this.getValue(e.target.value));
-      }
-    },
-
-    /**
-     * Handle enter value change.
-     *
-     * @param {Event} e input event
-     */
-    handleEnterInput: function handleEnterInput(e) {
-      // only update prop data if enter key update is enabled
-      if (this.onlyEnter) {
-        this.$emit('valueChanged', this.getValue(e.target.value));
-      }
-    },
-
-    /**
-     * Handle key press event for input
-     *
-     * This callback will give up/down arrow key press incrementation to input.
-     *
-     * @param {string} type type of key
-     */
-    handleKeyPress: function handleKeyPress() {
-      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
-      var value = this.getValue(this.innerValue);
-
-      switch (type) {
-        case 'up':
-          value += this.step;
-          break;
-
-        case 'down':
-          value -= this.step;
-          break;
-
-        default:
-          value += this.step;
-          break;
+      if (n < this.min) {
+        return this.min;
       }
 
-      value = this.getValue(value);
-      this.$emit('valueChanged', value);
+      return n;
+    },
+    hitToMax: function hitToMax() {
+      return this.innerValue === this.max;
+    },
+    hitToMin: function hitToMin() {
+      return this.innerValue === this.min;
+    },
+    effectValue: function effectValue(effect) {
+      if (!this.disabled) {
+        this.innerValue += effect;
+      }
     }
   }
 };
 exports.default = _default;
-        var $ea3a7f = exports.default || module.exports;
+        var $43bbee = exports.default || module.exports;
       
-      if (typeof $ea3a7f === 'function') {
-        $ea3a7f = $ea3a7f.options;
+      if (typeof $43bbee === 'function') {
+        $43bbee = $43bbee.options;
       }
     
         /* template */
-        Object.assign($ea3a7f, (function () {
+        Object.assign($43bbee, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("input", {
-    style: _vm.dynamicWidth,
-    attrs: { type: "text", disabled: _vm.$attrs.disabled },
-    domProps: { value: _vm.postFixIt },
-    on: {
-      input: _vm.handleOnInput,
-      keydown: [
-        function($event) {
-          if (
-            !$event.type.indexOf("key") &&
-            _vm._k($event.keyCode, "up", 38, $event.key, ["Up", "ArrowUp"])
-          ) {
-            return null
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-control",
+      attrs: { "data-orientation": _vm.orientation }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled || _vm.hitToMin() },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(-1)
+            }
           }
-          $event.preventDefault()
-          return _vm.handleKeyPress("up")
         },
-        function($event) {
-          if (
-            !$event.type.indexOf("key") &&
-            _vm._k($event.keyCode, "down", 40, $event.key, [
-              "Down",
-              "ArrowDown"
-            ])
-          ) {
-            return null
+        [_vm._v("\n\t\t-\n\t")]
+      ),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "wptb-prebuilt-control-input",
+        attrs: { disabled: _vm.disabled === true },
+        domProps: { value: _vm.innerValue },
+        on: { input: _vm.valueChanged }
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
+          attrs: { disabled: _vm.disabled || _vm.hitToMax() },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.effectValue(1)
+            }
           }
-          $event.preventDefault()
-          return _vm.handleKeyPress("down")
         },
-        function($event) {
-          if (
-            !$event.type.indexOf("key") &&
-            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-          ) {
-            return null
-          }
-          $event.preventDefault()
-          return _vm.handleEnterInput($event)
-        }
-      ]
-    }
-  })
+        [_vm._v("\n\t\t+\n\t")]
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -13219,7 +12161,287 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/RangeControl.vue":[function(require,module,exports) {
+},{}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    rows: {
+      type: Number,
+      default: 1
+    },
+    cols: {
+      type: Number,
+      default: 1
+    },
+    table: {
+      type: HTMLElement
+    }
+  },
+  data: function data() {
+    return {
+      mergeDirectives: [],
+      cells: [],
+      initial: {
+        rows: 1
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.table) {
+      this.cells = Array.from(this.table.querySelectorAll('td'));
+      this.initial.rows = this.table.querySelectorAll('tr').length; // eslint-disable-next-line array-callback-return
+
+      this.cells.map(function (c) {
+        var colSpan = c.colSpan;
+
+        _this.mergeDirectives.push(colSpan);
+      });
+    }
+  },
+  computed: {
+    calculateStyle: function calculateStyle() {
+      return {
+        gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
+        gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
+      };
+    },
+    itemsNumber: function itemsNumber() {
+      if (!this.table) {
+        return Array(this.rows * this.cols);
+      }
+
+      var extraCells = (this.rows - this.initial.rows) * this.cols;
+      return this.cells.length + extraCells;
+    }
+  },
+  methods: {
+    cellSpan: function cellSpan(index) {
+      var spanAmount = this.mergeDirectives[index];
+      return {
+        gridColumn: "span ".concat(spanAmount || 1)
+      };
+    }
+  }
+};
+exports.default = _default;
+        var $78d93d = exports.default || module.exports;
+      
+      if (typeof $78d93d === 'function') {
+        $78d93d = $78d93d.options;
+      }
+    
+        /* template */
+        Object.assign($78d93d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-live-display wptb-unselectable" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
+        _vm._l(_vm.itemsNumber, function(v, k) {
+          return _c("div", {
+            key: k,
+            staticClass: "wptb-prebuilt-live-cell",
+            style: _vm.cellSpan(k)
+          })
+        }),
+        0
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    deleteIcon: {
+      type: String,
+      default: ''
+    },
+    message: {
+      type: String,
+      default: 'Delete?'
+    },
+    yesIcon: {
+      type: String,
+      default: 'Y'
+    },
+    noIcon: {
+      type: String,
+      default: 'N'
+    }
+  },
+  data: function data() {
+    return {
+      confirmActive: false
+    };
+  },
+  methods: {
+    toggleConfirmOverlay: function toggleConfirmOverlay() {
+      this.confirmActive = !this.confirmActive;
+    },
+    confirm: function confirm() {
+      this.$emit('confirm');
+    }
+  }
+};
+exports.default = _default;
+        var $61edfa = exports.default || module.exports;
+      
+      if (typeof $61edfa === 'function') {
+        $61edfa = $61edfa.options;
+      }
+    
+        /* template */
+        Object.assign($61edfa, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-card-delete-module" },
+    [
+      _c("div", {
+        staticClass:
+          "wptb-prebuilt-card-icon wptb-prebuilt-card-delete-icon wptb-plugin-filter-box-shadow-md-close",
+        domProps: { innerHTML: _vm._s(_vm.deleteIcon) },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            return _vm.toggleConfirmOverlay($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.confirmActive
+          ? _c(
+              "div",
+              {
+                staticClass: "wptb-prebuilt-delete-module-confirmation-overlay"
+              },
+              [
+                _c("div", [
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.message) + "\n\t\t\t")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-prebuilt-delete-button-container" },
+                  [
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "positive" },
+                      domProps: { innerHTML: _vm._s(_vm.yesIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.confirm($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "negative" },
+                      domProps: { innerHTML: _vm._s(_vm.noIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.toggleConfirmOverlay($event)
+                        }
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltCard.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13227,9 +12449,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl"));
 
-var _NumberPostfixInput = _interopRequireDefault(require("../components/NumberPostfixInput"));
+var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
+
+var _PrebuiltCardDeleteModule = _interopRequireDefault(require("./PrebuiltCardDeleteModule"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13281,112 +12505,771 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
-    min: {
-      type: Number,
-      default: 1,
-      required: false
+    name: {
+      required: true
     },
-    max: {
-      type: Number,
-      default: 10,
-      required: false
+    id: {
+      type: String,
+      required: true
     },
-    step: {
-      type: Number,
-      default: 1,
-      required: false
+    table: {
+      type: String,
+      default: '<p class="wptb-prebuilt-blank">+</p>'
     },
-    defaultValue: {
-      type: Number,
-      default: 1,
-      required: false
+    isActive: {
+      type: Boolean,
+      default: false
     },
-    postFix: {
+    disabled: {
+      default: false
+    },
+    liveDisplayEnabled: {
+      type: Boolean,
+      default: true
+    },
+    searchString: {
+      type: String,
+      default: ''
+    },
+    fav: {
+      type: Boolean,
+      default: false
+    },
+    favIcon: {
+      type: String,
+      default: ''
+    },
+    deleteIcon: {
       type: String,
       default: ''
     }
   },
-  mixins: [_ControlBase.default],
   components: {
-    NumberPostfixInput: _NumberPostfixInput.default
+    PrebuiltCardControl: _PrebuiltCardControl.default,
+    PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default,
+    PrebuiltCardDeleteModule: _PrebuiltCardDeleteModule.default
   },
-  mounted: function mounted() {
-    this.assignDefaultValue();
+  data: function data() {
+    return {
+      rows: 1,
+      columns: 1,
+      initial: {
+        rows: 1,
+        columns: 1
+      },
+      min: {
+        rows: 1,
+        cols: 1
+      },
+      max: {
+        rows: 30,
+        cols: 30
+      }
+    };
   },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      var clampedValue = this.clampValue(n);
-      this.setAllValues(clampedValue); // check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
+  computed: {
+    transformedName: function transformedName() {
+      if (this.searchString !== '') {
+        var regexp = new RegExp("(".concat(this.searchString, ")"), 'ig');
+        var transform = this.name.replace(regexp, '<span class="wptb-prebuilt-card-search-indicator">$&</span>');
+        return "<span class=\"wptb-prebuilt-card-search-indicator-main\">".concat(transform, "</span>");
+      }
 
-      this.generateChangeEvent(clampedValue);
-      this.setTableDirty(true);
+      return this.name;
+    },
+    editEnabled: function editEnabled() {
+      if (this.isDevBuild()) {
+        return this.id !== 'blank' && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
+      }
+
+      return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
+    },
+    previewTableElement: function previewTableElement() {
+      return this.$refs.tablePreview.querySelector('table');
     }
   },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.initial.rows = this.rows;
+    this.initial.columns = this.columns;
+    this.$nextTick(function () {
+      var tablePreview = _this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
+
+      var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
+          wrapperWidth = _tablePreview$getBoun.width,
+          wrapperHeight = _tablePreview$getBoun.height;
+
+      var prebuilt = tablePreview.querySelector('table');
+
+      if (prebuilt) {
+        var padding = 40;
+
+        var _prebuilt$getBounding = prebuilt.getBoundingClientRect(),
+            prebuiltWidth = _prebuilt$getBounding.width,
+            prebuiltHeight = _prebuilt$getBounding.height;
+
+        var widthScale = wrapperWidth / (prebuiltWidth + padding);
+        var heightScale = 125 / (prebuiltHeight + padding);
+        prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")"); // fix for chrome browsers where table previews are distorted for tables with seperated columns and row
+
+        if (window.navigator.vendor.includes('Google')) {
+          var borderCollapseType = prebuilt.style.borderCollapse;
+
+          if (borderCollapseType === 'separate') {
+            var borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+            var cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+            prebuilt.style.marginLeft = "".concat((cellCount + 1) * borderHorizontalSpacing * -1, "px");
+          }
+        }
+
+        if (_this.id !== 'blank') {
+          var tableRows = Array.from(prebuilt.querySelectorAll('tr'));
+          var totalRows = tableRows.length;
+          _this.rows = totalRows;
+          _this.min.rows = totalRows;
+          var minCols = 1;
+          tableRows.map(function (t) {
+            var totalCells = t.querySelectorAll('td').length;
+
+            if (minCols < totalCells) {
+              minCols = totalCells;
+            }
+          });
+          _this.min.cols = minCols;
+          _this.max.cols = minCols;
+          _this.columns = minCols;
+        }
+      }
+    });
+  },
   methods: {
-    /**
-     * Clamp the value between min/max range.
-     *
-     * @param {Number} val value
-     * @returns {number} clamped value
-     */
-    clampValue: function clampValue(val) {
-      if (val < this.min) {
-        return this.min;
+    setCardActive: function setCardActive() {
+      if (!this.isActive) {
+        this.$emit('cardActive', this.id);
       }
-
-      if (val > this.max) {
-        return this.max;
+    },
+    cardGenerate: function cardGenerate() {
+      if (!this.disabled) {
+        this.$emit('cardGenerate', this.id, this.columns, this.rows);
       }
-
-      return val;
+    },
+    cardEdit: function cardEdit() {
+      if (!this.disabled) {
+        this.$emit('cardEdit', this.id);
+      }
+    },
+    favAction: function favAction() {
+      this.$emit('favAction', this.id);
+    },
+    deleteAction: function deleteAction() {
+      this.$emit('deleteAction', this.id);
     }
   }
 };
 exports.default = _default;
-        var $eeeedf = exports.default || module.exports;
+        var $a4e562 = exports.default || module.exports;
       
-      if (typeof $eeeedf === 'function') {
-        $eeeedf = $eeeedf.options;
+      if (typeof $a4e562 === 'function') {
+        $a4e562 = $a4e562.options;
       }
     
         /* template */
-        Object.assign($eeeedf, (function () {
+        Object.assign($a4e562, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "wptb-settings-item-header" }, [
-      _vm._v(_vm._s(_vm.label))
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-      _c("div", { staticClass: "wptb-settings-col-xs-8" }, [
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-card",
+      class: { "wptb-prebuilt-card-active": _vm.isActive },
+      on: { click: _vm.setCardActive }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-card-preview" },
+        [
+          _c("div", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.liveDisplayEnabled || !_vm.isActive,
+                expression: "!liveDisplayEnabled || !isActive"
+              }
+            ],
+            ref: "tablePreview",
+            staticClass:
+              "wptb-prebuilt-table-wrapper wptb-unselectable wptb-no-pointer-events",
+            domProps: { innerHTML: _vm._s(_vm.table) }
+          }),
+          _vm._v(" "),
+          _vm.isActive && _vm.liveDisplayEnabled
+            ? _c("prebuilt-live-display", {
+                attrs: {
+                  rows: _vm.rows,
+                  cols: _vm.columns,
+                  table: _vm.previewTableElement
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive
+            ? _c(
+                "div",
+                { staticClass: "wptb-prebuilt-card-controls" },
+                [
+                  _c("prebuilt-card-control", {
+                    attrs: {
+                      disabled: _vm.disabled || _vm.id !== "blank",
+                      orientation: "row"
+                    },
+                    model: {
+                      value: _vm.columns,
+                      callback: function($$v) {
+                        _vm.columns = $$v
+                      },
+                      expression: "columns"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("prebuilt-card-control", {
+                    attrs: {
+                      disabled: _vm.disabled,
+                      orientation: "col",
+                      min: _vm.min.rows,
+                      max: _vm.max.rows
+                    },
+                    model: {
+                      value: _vm.rows,
+                      callback: function($$v) {
+                        _vm.rows = $$v
+                      },
+                      expression: "rows"
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.isActive
+            ? _c("div", {
+                staticClass:
+                  "wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
+                class: { "is-fav": _vm.fav },
+                domProps: { innerHTML: _vm._s(_vm.favIcon) },
+                on: {
+                  "!click": function($event) {
+                    $event.preventDefault()
+                    $event.stopPropagation()
+                    return _vm.favAction($event)
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive && _vm.deleteIcon !== ""
+            ? _c("prebuilt-card-delete-module", {
+                attrs: {
+                  "delete-icon": _vm.deleteIcon,
+                  message: _vm.strings.deleteConfirmation,
+                  "yes-icon": _vm.appData.icons.checkIcon,
+                  "no-icon": _vm.appData.icons.crossIcon
+                },
+                on: { confirm: _vm.deleteAction }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-prebuilt-card-footer" }, [
+        !_vm.isActive
+          ? _c("div", {
+              staticClass: "wptb-prebuilt-card-footer-element",
+              domProps: { innerHTML: _vm._s(_vm.transformedName) }
+            })
+          : _c(
+              "div",
+              {
+                staticClass:
+                  "wptb-prebuilt-card-footer-element wptb-prebuilt-card-footer-button-holder",
+                class: {
+                  "wptb-prebuilt-card-footer-button-holder-single": !_vm.editEnabled
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.cardGenerate($event)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t" +
+                        _vm._s(_vm._f("cap")(_vm.strings.generate)) +
+                        "\n\t\t\t"
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.editEnabled
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wptb-prebuilt-footer-button wptb-prebuilt-footer-edit wptb-unselectable",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.cardEdit($event)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t" +
+                            _vm._s(_vm._f("cap")(_vm.strings.edit)) +
+                            "\n\t\t\t"
+                        )
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"containers/GenerateMain.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    PrebuiltCard: _PrebuiltCard.default
+  },
+  props: {
+    version: {
+      type: String,
+      default: 'normal'
+    },
+    adLink: {
+      type: String
+    },
+    prebuiltTables: {
+      type: Object | Array,
+      default: function _default() {
+        return {};
+      }
+    },
+    security: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  data: function data() {
+    return {
+      searchString: '',
+      fixedTables: {
+        blank: {
+          title: 'blank'
+        }
+      },
+      activeCard: '',
+      generating: false
+    };
+  },
+  mounted: function mounted() {
+    window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
+
+    this.fixedTables.blank.title = this.strings.blank;
+    this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
+  },
+  computed: {
+    isPro: function isPro() {
+      return this.version === 'pro';
+    }
+  },
+  methods: {
+    deselect: function deselect() {
+      this.activeCard = '';
+    },
+    favAction: function favAction(cardId) {
+      var _this = this;
+
+      var _this$security = this.security,
+          favAction = _this$security.favAction,
+          favNonce = _this$security.favNonce,
+          ajaxUrl = _this$security.ajaxUrl;
+      var formData = new FormData();
+      formData.append('action', favAction);
+      formData.append('nonce', favNonce);
+      formData.append('id', cardId);
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error(r.status);
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        } else {
+          _this.fixedTables[cardId].fav = resp.message;
+        }
+      }).catch(function (e) {
+        console.error('an error occurred with fav operation request: ', e);
+      });
+    },
+    cardFavIcon: function cardFavIcon(cardId) {
+      return cardId === 'blank' ? '' : this.appData.icons.favIcon;
+    },
+    cardDeleteIcon: function cardDeleteIcon(cardId) {
+      if (this.isDevBuild()) {
+        return cardId === 'blank' ? '' : this.appData.icons.deleteIcon;
+      }
+
+      return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
+    },
+    filteredTables: function filteredTables() {
+      var _this2 = this;
+
+      return Object.keys(this.fixedTables).reduce(function (carry, id) {
+        if (_this2.fixedTables[id].title.toLowerCase().includes(_this2.searchString)) {
+          // eslint-disable-next-line no-param-reassign
+          carry[id] = _this2.fixedTables[id];
+        }
+
+        return carry;
+      }, {});
+    },
+    sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
+      var _this3 = this;
+
+      var ids, i, currentTable;
+      return regeneratorRuntime.wrap(function sortedTables$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              ids = Object.keys(this.filteredTables());
+              ids.sort(function (a, b) {
+                if (a === 'blank') {
+                  return -1;
+                }
+
+                if (b === 'blank') {
+                  return 1;
+                }
+
+                if (a.startsWith('wptb_team')) {
+                  return -1;
+                }
+
+                if (b.startsWith('wptb_team')) {
+                  return 1;
+                }
+
+                var aTitle = _this3.fixedTables[a].name;
+                var bTitle = _this3.fixedTables[b].name;
+                return aTitle - bTitle;
+              });
+              i = 0;
+
+            case 3:
+              if (!(i < ids.length)) {
+                _context.next = 11;
+                break;
+              }
+
+              currentTable = this.fixedTables[ids[i]];
+              currentTable.id = ids[i];
+              _context.next = 8;
+              return currentTable;
+
+            case 8:
+              i += 1;
+              _context.next = 3;
+              break;
+
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, sortedTables, this);
+    }),
+    focusToSearch: function focusToSearch(e) {
+      var vm = this;
+
+      if (e.key !== undefined && e.key === '/') {
+        vm.$refs.search.focus();
+      } else if (e.keyCode !== undefined && e.keyCode === 191) {
+        vm.$refs.search.focus();
+      }
+    },
+    isCardActive: function isCardActive(id) {
+      return this.activeCard === id;
+    },
+    cardActive: function cardActive(cardId) {
+      this.activeCard = cardId;
+    },
+    cardEdit: function cardEdit(cardId) {
+      this.cardGenerate(cardId, 0, 0, true);
+      var currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+      window.history.pushState(null, null, currentUrl.toString());
+    },
+    cardGenerate: function cardGenerate(cardId, cols, rows) {
+      var _this4 = this;
+
+      var edit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      this.generating = true;
+
+      if (cardId === 'blank') {
+        WPTB_Table(cols, rows);
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+      } else {
+        (function () {
+          var tableWrapper = document.querySelector('.wptb-table-setup');
+          tableWrapper.appendChild(WPTB_Parser(_this4.fixedTables[cardId].content));
+          var table = tableWrapper.querySelector('table'); // unmark inserted template as prebuilt table
+          // only unmark it if edit mode is not enabled
+
+          if (!edit) {
+            delete table.dataset.wptbPrebuiltTable; // add extra rows to table
+
+            var tableRows = table.querySelectorAll('tr');
+            var lastRow = tableRows[tableRows.length - 1];
+            var extraRows = rows - tableRows.length;
+
+            for (var i = 0; i < extraRows; i += 1) {
+              var clonedRow = lastRow.cloneNode(true);
+              table.appendChild(clonedRow); // eslint-disable-next-line array-callback-return
+
+              Array.from(clonedRow.querySelectorAll('div')).map(function (e) {
+                var className = null; // find the divs related to elements with this unique pattern
+
+                var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+                e.classList.forEach(function (c) {
+                  if (c.match(classRegExp)) {
+                    className = c;
+                  }
+                }); // main wrapper div found for an element
+
+                if (className) {
+                  e.classList.remove(className); // find out the kind of the element
+
+                  var _classRegExp$exec = classRegExp.exec(className),
+                      _classRegExp$exec2 = _slicedToArray(_classRegExp$exec, 2),
+                      kind = _classRegExp$exec2[1];
+
+                  var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
+
+                  var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
+                    item.classList.forEach(function (c) {
+                      var match = regExp.exec(c);
+
+                      if (match) {
+                        var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+
+                        carry = carry > numberId ? carry : numberId;
+                      }
+                    });
+                    return carry;
+                  }, 0); // increment unique class id of the element
+
+                  e.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
+                }
+              });
+            }
+          }
+
+          if (edit) {
+            // fill in the name of the selected prebuilt table on edit mode
+            document.querySelector('#wptb-setup-name').value = _this4.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+
+            table.dataset.wptbPrebuiltTable = 1;
+          }
+
+          WPTB_Table();
+          WPTB_Settings();
+          var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+          wptbTableStateSaveManager.tableStateSet();
+          document.counter = new ElementCounters();
+          document.select = new MultipleSelect(); // WPTB_Initializer();
+
+          WPTB_Settings();
+        })();
+      }
+    },
+    deleteAction: function deleteAction(cardId) {
+      var _this5 = this;
+
+      var _this$security2 = this.security,
+          ajaxUrl = _this$security2.ajaxUrl,
+          deleteAction = _this$security2.deleteAction,
+          deleteNonce = _this$security2.deleteNonce,
+          devModeNonce = _this$security2.devModeNonce;
+      var form = new FormData();
+      form.append('action', deleteAction);
+      form.append('nonce', deleteNonce);
+      form.append('id', cardId);
+
+      if (cardId.startsWith(this.appData.teamTablePrefix)) {
+        form.append('deleteCSV', true);
+        form.append('devModeNonce', devModeNonce);
+      }
+
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: form
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error('an error occurred while deleting prebuilt table, try again later');
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        if (resp.message === true) {
+          _this5.$delete(_this5.fixedTables, cardId);
+        } else {
+          throw new Error('an error occurred while deleting prebuilt table, try again later');
+        }
+      }).catch(function (e) {
+        console.error(e.message);
+      });
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    window.removeEventListener('keyup', this.focusToSearch);
+  }
+};
+exports.default = _default;
+        var $94e6ae = exports.default || module.exports;
+      
+      if (typeof $94e6ae === 'function') {
+        $94e6ae = $94e6ae.options;
+      }
+    
+        /* template */
+        Object.assign($94e6ae, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-generate-wrapper" }, [
+    _c("div", { staticClass: "wptb-generate-menu" }, [
+      _c("div", { staticClass: "wptb-generate-menu-header" }, [
         _c("input", {
           directives: [
             {
               name: "model",
-              rawName: "v-model",
-              value: _vm.elementMainValue,
-              expression: "elementMainValue"
+              rawName: "v-model.trim",
+              value: _vm.searchString,
+              expression: "searchString",
+              modifiers: { trim: true }
             }
           ],
-          staticClass: "wptb-element-property wptb-size-slider",
-          class: _vm.uniqueId,
+          ref: "search",
+          staticClass: "wptb-generate-search",
           attrs: {
-            type: "range",
-            "data-element": _vm.elemContainer,
-            "data-type": "range",
-            min: _vm.min,
-            max: _vm.max,
-            step: _vm.step
+            type: "text",
+            placeholder: _vm.strings.searchPlaceholder,
+            disabled: !_vm.isPro
           },
-          domProps: { value: _vm.elementMainValue },
+          domProps: { value: _vm.searchString },
           on: {
-            __r: function($event) {
-              _vm.elementMainValue = $event.target.value
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchString = $event.target.value.trim()
+            },
+            blur: function($event) {
+              return _vm.$forceUpdate()
             }
           }
         })
@@ -13394,3477 +13277,46 @@ exports.default = _default;
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "wptb-settings-col-xs-4" },
-        [
-          _c("number-postfix-input", {
-            staticClass:
-              "wptb-size-number wptb-number-input wptb-element-property",
-            class: _vm.uniqueId,
-            staticStyle: { "text-align": "center" },
+        { staticClass: "wptb-generate-menu-listing" },
+        _vm._l(_vm.sortedTables(), function(v) {
+          return _c("prebuilt-card", {
+            key: v.id,
             attrs: {
-              "post-fix": _vm.postFix,
-              "only-enter": true,
-              min: _vm.min,
-              max: _vm.max,
-              "data-element": _vm.elemContainer,
-              step: _vm.step,
-              "enable-limit": true,
-              "data-type": "range"
-            },
-            model: {
-              value: _vm.elementMainValue,
-              callback: function($$v) {
-                _vm.elementMainValue = $$v
-              },
-              expression: "elementMainValue"
-            }
-          })
-        ],
-        1
-      )
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/NumberPostfixInput":"components/NumberPostfixInput.vue"}],"mountPoints/WPTB_RangeControl.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _RangeControl = _interopRequireDefault(require("../containers/RangeControl"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Range slider control.
- */
-
-/* eslint-disable camelcase */
-var _default = {
-  name: 'ControlRange',
-  handler: function rangeControlJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
-
-    new _vue.default({
-      data: data,
-      components: {
-        RangeControl: _RangeControl.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/RangeControl":"containers/RangeControl.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"containers/Select2Control.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    options: Object
-  },
-  mixins: [_ControlBase.default],
-  mounted: function mounted() {
-    this.assignDefaultValue();
-  },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      this.generateChangeEvent(n);
-      this.setAllValues(n);
-      this.setTableDirty(true);
-    }
-  }
-};
-exports.default = _default;
-        var $72f762 = exports.default || module.exports;
-      
-      if (typeof $72f762 === 'function') {
-        $72f762 = $72f762.options;
-      }
-    
-        /* template */
-        Object.assign($72f762, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
-    [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("p", { staticClass: "wptb-settings-item-title" }, [
-          _vm._v(_vm._s(_vm.label))
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.elementMainValue,
-                  expression: "elementMainValue"
-                }
-              ],
-              ref: "selectElement",
-              staticClass: "wptb-element-property",
-              class: _vm.uniqueId,
-              attrs: {
-                "data-element": _vm.elemContainer,
-                "data-type": "select2"
-              },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.elementMainValue = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.options, function(value, key) {
-              return _c("option", { key: key, domProps: { value: key } }, [
-                _vm._v(_vm._s(value))
-              ])
-            }),
-            0
-          )
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_Select2Control.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _Select2Control = _interopRequireDefault(require("../containers/Select2Control"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Select2 control
- */
-// eslint-disable-next-line camelcase
-var _default = {
-  name: 'Select2',
-  handler: function select2ControlJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
-
-    new _vue.default({
-      data: data,
-      components: {
-        Select2Control: _Select2Control.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Select2Control":"containers/Select2Control.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"containers/MediaSelectControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  mixins: [_ControlBase.default],
-  props: {
-    mediaAttr: {
-      type: Object,
-      required: false,
-      default: function _default() {
-        return {
-          title: 'Media Select',
-          button: {
-            text: 'Select'
-          },
-          multiple: false
-        };
-      }
-    }
-  },
-  data: function data() {
-    return {
-      frame: null
-    };
-  },
-  mounted: function mounted() {
-    this.assignDefaultValue();
-  },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      this.setAllValues(n);
-      this.setTableDirty(true);
-    }
-  },
-  computed: {
-    previewImageUrl: function previewImageUrl() {
-      return "url(\"".concat(this.elementMainValue, "\")");
-    }
-  },
-  methods: {
-    open: function open() {
-      var _this = this;
-
-      if (this.frame) {
-        this.frame.open();
-      } else {
-        this.frame = wp.media(this.mediaAttr);
-        this.frame.on('select', function () {
-          var _this$frame$state$get = _this.frame.state().get('selection').first().toJSON(),
-              url = _this$frame$state$get.url;
-
-          _this.elementMainValue = url;
-        });
-        this.frame.open();
-      }
-    },
-    resetImg: function resetImg() {
-      this.elementMainValue = '';
-    }
-  }
-};
-exports.default = _default;
-        var $d9cab9 = exports.default || module.exports;
-      
-      if (typeof $d9cab9 === 'function') {
-        $d9cab9 = $d9cab9.options;
-      }
-    
-        /* template */
-        Object.assign($d9cab9, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
-    [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("p", { staticClass: "wptb-settings-item-title" }, [
-          _vm._v(_vm._s(_vm.label))
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wptb-control-media-button-wrapper" }, [
-          _c("div", {
-            staticClass: "wptb-control-media-select-button",
-            style: { backgroundImage: _vm.previewImageUrl },
-            on: { click: _vm.open }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "wptb-control-media-clear-button",
-              on: {
-                "!click": function($event) {
-                  return _vm.resetImg($event)
-                }
-              }
-            },
-            [_c("span", { staticClass: "dashicons dashicons-dismiss" })]
-          )
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_MediaSelectControl.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _MediaSelectControl = _interopRequireDefault(require("../containers/MediaSelectControl"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Media select control
- */
-
-/* eslint-disable camelcase */
-var _default = {
-  name: 'ControlMediaSelect',
-  handler: function rangeControlJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
-
-    new _vue.default({
-      data: data,
-      components: {
-        MediaSelectControl: _MediaSelectControl.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/MediaSelectControl":"containers/MediaSelectControl.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js"}],"functions/DeBouncer.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * ⛹️‍️Debounce class.
- *
- * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
- *
- * @return {function} main debounce function
- * @constructor
- */
-function DeBouncer() {
-  var actionIds = {};
-  /**
-   * Main debounce function.
-   *
-   * @param {number} id unique id for action
-   * @param {function} callable function to be called
-   * @param {number} timeout timeout duration in milliseconds
-   */
-
-  function deBounce(id, callable) {
-    var timeout = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2000;
-
-    if (Object.keys(actionIds).includes(id)) {
-      clearTimeout(actionIds[id]);
-    }
-
-    actionIds[id] = setTimeout(callable, timeout);
-  }
-
-  return deBounce;
-}
-/**
- * @module DeBouncer module
- */
-
-
-var _default = DeBouncer();
-
-exports.default = _default;
-},{}],"components/TableClone.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    clone: {
-      type: Boolean,
-      default: false,
-      required: false
-    },
-    cloneQuery: {
-      type: String,
-      required: true
-    },
-    tableDirectives: {
-      type: String,
-      default: ''
-    },
-    tableStyle: {
-      type: Object,
-      default: function _default() {
-        // eslint-disable-next-line no-empty,no-lone-blocks
-        {}
-      }
-    }
-  },
-  inheritAttrs: false,
-  data: function data() {
-    return {
-      // in order to not mutate the prop sent from the parent component, will be modifying the data prop instead
-      cloneInner: false,
-      clonedTable: null,
-      mainTable: null,
-      tableDirectiveDatasetId: 'wptbResponsiveDirectives',
-      tableHaveDirectives: false
-    };
-  },
-  mounted: function mounted() {
-    this.cloneInner = this.clone;
-  },
-  watch: {
-    /**
-     * Watch clone prop.
-     *
-     * In order to prevent the mutation of the prop sent by parent element, will be directing any value change coming from parent to data property.
-     *
-     * @param {boolean} n new value
-     */
-    clone: function clone(n) {
-      this.cloneInner = n;
-    },
-    // switch to decide whether to clone the main table into responsive area or not
-    cloneInner: function cloneInner(n) {
-      if (n) {
-        this.startClone();
-        this.cloneInner = false;
-      }
-    },
-    tableDirectives: function tableDirectives(n) {
-      if (n) {
-        this.addDirectivesToTable(n);
-      }
-    },
-    'appOptions.identifyCells': {
-      handler: function handler(n) {
-        if (n) {
-          this.showCellIdentification();
-          this.appOptions.identifyCells = false;
-        }
-      }
-    },
-    'directives.responsiveEnabled': {
-      handler: function handler(n) {
-        if (n) {
-          this.mainTable.dataset.wptbAdaptiveTable = 0;
-        }
-      }
-    }
-  },
-  methods: {
-    /**
-     * Start clone operation.
-     *
-     * Basic logic of this clone operation is to clone the main table from table builder and mount it to referenced element at template. This way, we will have the exact same copy of the element from table builder, and will only focus on responsive functionality of it.
-     */
-    startClone: function startClone() {
-      this.mainTable = document.querySelector(this.cloneQuery);
-
-      if (!this.mainTable) {
-        throw new Error("no clone target is found with a query value of ".concat(this.cloneQuery));
-      } // check for legacy responsive functionality on main table
-
-
-      this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
-      this.clonedTable = this.mainTable.cloneNode(true);
-      this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');
-      this.$refs.tableClone.appendChild(this.clonedTable); // directives that are already present in the main table
-      // this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
-
-      var mainTableDirectives = this.mainTable.dataset[this.tableDirectiveDatasetId]; // since this component will be re-cloning the table at every visibility change of responsive menu, we should add necessary table directives to cloned table without waiting for them to be automatically added on change
-
-      if (this.tableDirectives) {
-        this.addDirectivesToTable(this.tableDirectives);
-      } // switch for determining if we will merge already present directives at main table
-
-
-      this.tableHaveDirectives = mainTableDirectives !== undefined;
-      this.setupCellIdentification(this.clonedTable); // emit an event signalling cloning main table is completed
-
-      this.$emit('tableCloned', mainTableDirectives);
-    },
-
-    /**
-     * Add directives to dataset of cloned table and main table.
-     *
-     * @param {string} n new directives
-     */
-    addDirectivesToTable: function addDirectivesToTable(n) {
-      if (this.clonedTable && this.mainTable) {
-        // add directives to clone
-        this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to main table
-
-        this.mainTable.dataset[this.tableDirectiveDatasetId] = n; // emit an event signalling end of directive copy operation
-
-        this.$emit('directivesCopied', this.tableHaveDirectives);
-        this.tableHaveDirectives = false;
-      }
-    },
-
-    /**
-     * Setup cell identification elements.
-     *
-     * @param {HTMLElement} tableElement parent table element
-     */
-    setupCellIdentification: function setupCellIdentification(tableElement) {
-      var cells = Array.from(tableElement.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
-
-      cells.map(function (c, i) {
-        if (getComputedStyle(c).position !== 'relative') {
-          // eslint-disable-next-line no-param-reassign
-          c.style.position = 'relative';
-        }
-
-        var range = document.createRange();
-        range.setStart(c, 0);
-        var lightnessPercent = i % 2 === 0 ? 70 : 90;
-        var style = "background-color: hsla(211, 25%, ".concat(lightnessPercent, "%, 80%)");
-        var identifierStringRepresentation = "<div class=\"wptb-responsive-cell-identifier\" style=\"".concat(style, "\">").concat(i + 1, "</div>");
-        var cellIdentifier = range.createContextualFragment(identifierStringRepresentation);
-        c.appendChild(cellIdentifier.childNodes[0]);
-      });
-    },
-
-    /**
-     * Show cell identifications for table cells
-     */
-    showCellIdentification: function showCellIdentification() {
-      var _this = this;
-
-      var visibilityClass = 'wptb-responsive-show-cell-identifier';
-      this.clonedTable.classList.add(visibilityClass);
-      (0, _DeBouncer.default)('cellIdentification', function () {
-        _this.clonedTable.classList.remove(visibilityClass);
-      }, 2000);
-    }
-  }
-};
-exports.default = _default;
-        var $e62505 = exports.default || module.exports;
-      
-      if (typeof $e62505 === 'function') {
-        $e62505 = $e62505.options;
-      }
-    
-        /* template */
-        Object.assign($e62505, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-responsive-clone-wrapper" }, [
-    _c("div", { staticClass: "wptb-responsive-clone-inner-wrapper" }, [
-      _c("div", { ref: "tableClone", style: _vm.tableStyle })
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../functions/DeBouncer":"functions/DeBouncer.js"}],"components/SliderStop.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    value: {
-      type: Number,
-      default: 0
-    },
-    rawValue: {
-      type: Number,
-      default: 0
-    },
-    active: {
-      type: Boolean,
-      default: false
-    },
-    stopId: String,
-    enableBreakpointCustomization: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {
-    NumberPostfixInput: _NumberPostfixInput.default
-  },
-  data: function data() {
-    return {
-      wrapperStyle: {
-        left: 0,
-        top: 0
-      },
-      innerRawValue: this.rawValue
-    };
-  },
-  watch: {
-    rawValue: function rawValue(n) {
-      this.innerRawValue = n;
-    },
-    value: function value() {
-      this.calculateStyle();
-    },
-    innerRawValue: function innerRawValue(n) {
-      this.$emit('breakpointChange', n, this.stopId);
-    }
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    this.$nextTick(function () {
-      _this.calculateStyle();
-    });
-  },
-  methods: {
-    clickEvent: function clickEvent() {
-      this.$emit('click', this.rawValue);
-    },
-    calculateStyle: function calculateStyle() {
-      var wrapperElement = this.$refs.wrapper;
-      var knobElement = this.$refs.knob;
-
-      if (wrapperElement) {
-        var _wrapperElement$getBo = wrapperElement.getBoundingClientRect(),
-            width = _wrapperElement$getBo.width;
-
-        this.wrapperStyle.left = "calc(".concat(this.value, "% - ").concat(width / 2, "px)");
-      }
-
-      if (knobElement) {
-        var _knobElement$getBound = knobElement.getBoundingClientRect(),
-            height = _knobElement$getBound.height;
-
-        this.wrapperStyle.top = "-".concat(height / 2, "px");
-      }
-    }
-  }
-};
-exports.default = _default;
-        var $3c0812 = exports.default || module.exports;
-      
-      if (typeof $3c0812 === 'function') {
-        $3c0812 = $3c0812.options;
-      }
-    
-        /* template */
-        Object.assign($3c0812, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      ref: "wrapper",
-      staticClass: "wptb-slider-stop",
-      class: { "wptb-slider-stop-active": _vm.active },
-      style: _vm.wrapperStyle,
-      on: {
-        "!click": function($event) {
-          $event.preventDefault()
-          return _vm.clickEvent($event)
-        }
-      }
-    },
-    [
-      _c("div", { ref: "knob", staticClass: "wptb-slider-stop-knob" }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-slider-stop-label" },
-        [_vm._t("default")],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.enableBreakpointCustomization,
-              expression: "enableBreakpointCustomization"
-            }
-          ]
-        },
-        [
-          _c("number-postfix-input", {
-            staticClass: "wptb-size-input",
-            staticStyle: { "font-size": "90%" },
-            attrs: {
-              "enable-dynamic-width": true,
-              "only-enter": true,
-              "post-fix": "px"
-            },
-            model: {
-              value: _vm.innerRawValue,
-              callback: function($$v) {
-                _vm.innerRawValue = $$v
-              },
-              expression: "innerRawValue"
-            }
-          })
-        ],
-        1
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/SliderFill.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-var _default = {
-  props: {
-    amount: {
-      type: Number,
-      default: 0
-    }
-  },
-  computed: {
-    calculateStyle: function calculateStyle() {
-      return {
-        width: "".concat(this.amount, "%")
-      };
-    }
-  }
-};
-exports.default = _default;
-        var $1f3acb = exports.default || module.exports;
-      
-      if (typeof $1f3acb === 'function') {
-        $1f3acb = $1f3acb.options;
-      }
-    
-        /* template */
-        Object.assign($1f3acb, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", {
-    staticClass: "wptb-screen-size-slider-fill",
-    style: _vm.calculateStyle
-  })
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/SliderArrow.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    positionPercentage: {
-      type: Number,
-      default: 0
-    }
-  },
-  data: function data() {
-    return {
-      style: {
-        left: 0
-      }
-    };
-  },
-  watch: {
-    positionPercentage: {
-      handler: function handler() {
-        this.calculateStyle();
-      },
-      deep: true
-    }
-  },
-  mounted: function mounted() {
-    this.calculateStyle();
-  },
-  methods: {
-    calculateStyle: function calculateStyle() {
-      var arrowWrapperElement = this.$refs.arrowWrapper;
-
-      var _arrowWrapperElement$ = arrowWrapperElement.getBoundingClientRect(),
-          width = _arrowWrapperElement$.width;
-
-      this.style.left = "calc(".concat(this.positionPercentage, "% - ").concat(width / 2, "px)");
-    },
-    handleDrag: function handleDrag(e) {
-      var screenX = e.screenX,
-          screenY = e.screenY; // drag is interrupted/canceled prematurely
-
-      if (screenX === 0 && screenY === 0) {
-        return;
-      }
-
-      this.$emit('arrowDrag', e);
-    }
-  }
-};
-exports.default = _default;
-        var $221e87 = exports.default || module.exports;
-      
-      if (typeof $221e87 === 'function') {
-        $221e87 = $221e87.options;
-      }
-    
-        /* template */
-        Object.assign($221e87, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      ref: "arrowWrapper",
-      staticClass: "wptb-screen-size-slider-arrow",
-      style: _vm.style,
-      attrs: { draggable: "true" },
-      on: {
-        drag: function($event) {
-          $event.preventDefault()
-          return _vm.handleDrag($event)
-        },
-        dragover: function($event) {
-          $event.preventDefault()
-        },
-        dragend: function($event) {
-          $event.preventDefault()
-          return _vm.$emit("arrowDragEnd")
-        },
-        drop: function($event) {
-          $event.preventDefault()
-        },
-        dragexit: function($event) {
-          $event.preventDefault()
-        },
-        dragleave: function($event) {
-          $event.preventDefault()
-        }
-      }
-    },
-    [
-      _c(
-        "svg",
-        {
-          attrs: {
-            width: "17",
-            height: "16",
-            viewBox: "0 0 17 16",
-            fill: "none",
-            xmlns: "http://www.w3.org/2000/svg"
-          }
-        },
-        [
-          _c("path", {
-            attrs: {
-              d: "M8.5 16L0 0H17L8.5 16Z",
-              fill: "var(--wptb-plugin-logo-color)"
-            }
-          })
-        ]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/ScreenSizeSlider.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _SliderStop = _interopRequireDefault(require("./SliderStop"));
-
-var _SliderFill = _interopRequireDefault(require("./SliderFill"));
-
-var _SliderArrow = _interopRequireDefault(require("./SliderArrow"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    stops: Object,
-    // with endPadding, slider will ignore min/max values and calculate those with the supplied stops by adding/subtracting this endPadding prop
-    endPadding: {
-      type: Number,
-      default: 0
-    },
-    modelVal: {
-      type: Number,
-      default: 0
-    },
-    enableBreakpointCustomization: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {
-    SliderStop: _SliderStop.default,
-    SliderFill: _SliderFill.default,
-    SliderArrow: _SliderArrow.default
-  },
-  data: function data() {
-    return {
-      min: 0,
-      max: 100,
-      currentVal: 0,
-      isDragging: false,
-      // minimum size between breakpoints to avoid them overlap or share the same breakpoint size
-      minSizeBetweenBreakpoints: 100,
-      repaintId: 0
-    };
-  },
-  beforeMount: function beforeMount() {
-    this.calculateMinMax();
-  },
-  watch: {
-    currentVal: function currentVal() {
-      this.$emit('slide', this.currentVal);
-    },
-    modelVal: function modelVal(n) {
-      this.currentVal = Math.floor(n);
-    },
-    'directives.relativeWidth': {
-      handler: function handler() {
-        this.repaintId += 1;
-      },
-      deep: true
-    }
-  },
-  methods: {
-    handleBreakpointChange: function handleBreakpointChange(newSize, breakpointId) {
-      var breakpointObj = this.directives.breakpoints;
-
-      if (breakpointObj[breakpointId]) {
-        var sortedIds = Object.keys(breakpointObj).sort(function (a, b) {
-          return breakpointObj[a].width - breakpointObj[b].width;
-        }); // limit assigning a higher or lower value then the changed breakpoints logical place
-
-        var currentIndex = sortedIds.indexOf(breakpointId);
-        var minSibling = sortedIds[currentIndex - 1];
-        var maxSibling = sortedIds[currentIndex + 1];
-
-        if (minSibling) {
-          if (breakpointObj[minSibling].width >= newSize) {
-            // eslint-disable-next-line no-param-reassign
-            newSize = breakpointObj[minSibling].width + this.minSizeBetweenBreakpoints;
-          }
-        }
-
-        if (maxSibling) {
-          if (breakpointObj[maxSibling].width <= newSize) {
-            // eslint-disable-next-line no-param-reassign
-            newSize = breakpointObj[maxSibling].width - this.minSizeBetweenBreakpoints;
-          }
-        }
-
-        breakpointObj[breakpointId].width = newSize;
-        this.calculateMinMax();
-        this.repaintId += 1;
-      } else {
-        throw new Error("no breakpoint found with the given ID: [".concat(breakpointId, "]"));
-      }
-    },
-
-    /**
-     * Calculate min/max values for the current slider.
-     */
-    calculateMinMax: function calculateMinMax() {
-      var sortedValues = Object.values(this.stops).sort(function (a, b) {
-        return (b.width - a.width) * -1;
-      });
-      this.min = sortedValues[0].width - this.endPadding;
-      this.max = sortedValues[sortedValues.length - 1].width + this.endPadding;
-      this.currentVal = sortedValues[sortedValues.length - 1].width;
-    },
-
-    /**
-     * Translate the supplied value into percentage within the context of min/max values of slider.
-     *
-     * @param {Number} val value
-     * @returns {number} percent
-     */
-    translateIntoPercent: function translateIntoPercent(val) {
-      var range = this.max - this.min;
-      return (val - this.min) * 100 / range;
-    },
-    slide: function slide(val) {
-      this.currentVal = val;
-    },
-    handleArrowDrag: function handleArrowDrag(e) {
-      this.isDragging = true;
-      var sliderWrapper = this.$refs.sliderWrapper;
-
-      var _sliderWrapper$getBou = sliderWrapper.getBoundingClientRect(),
-          left = _sliderWrapper$getBou.left,
-          width = _sliderWrapper$getBou.width; // relative position of arrow to the slider
-
-
-      var relativePosition = e.clientX - left;
-      var range = this.max - this.min; // value limited to range of min-max values
-
-      var offsetVal = relativePosition * range / width; // floor the value to nearest integer
-
-      this.currentVal = this.limitToRange(this.min + offsetVal);
-    },
-
-    /**
-     * Limit given value to min/max values.
-     *
-     * @param {number} val value
-     * @param {boolean} floor floor the value to nearest integer
-     * @returns {number} limited value
-     */
-    limitToRange: function limitToRange(val) {
-      var floor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var tempVal = val;
-
-      if (val < this.min) {
-        tempVal = this.min;
-      }
-
-      if (val > this.max) {
-        tempVal = this.max;
-      }
-
-      if (floor) {
-        tempVal = Math.floor(tempVal);
-      }
-
-      return tempVal;
-    },
-
-    /**
-     * Calculate if given value represents the active section of the responsive range.
-     *
-     * @param {number} val value
-     * @returns {boolean} is active
-     */
-    isStopActive: function isStopActive(val) {
-      var _this = this;
-
-      if (this.currentVal >= val) {
-        var smallerVals = Object.values(this.stops).filter(function (s) {
-          return s <= _this.currentVal;
-        });
-        return smallerVals.every(function (s) {
-          return s <= val;
-        });
-      }
-
-      return false;
-    }
-  }
-};
-exports.default = _default;
-        var $a9eb9a = exports.default || module.exports;
-      
-      if (typeof $a9eb9a === 'function') {
-        $a9eb9a = $a9eb9a.options;
-      }
-    
-        /* template */
-        Object.assign($a9eb9a, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      key: _vm.repaintId,
-      ref: "sliderWrapper",
-      staticClass: "wptb-screen-size-slider-wrapper",
-      class: { "wptb-drag-active": _vm.isDragging }
-    },
-    [
-      _c(
-        "div",
-        { staticClass: "wptb-screen-size-slider-empty" },
-        [
-          _c("slider-arrow", {
-            attrs: {
-              "position-percentage": _vm.translateIntoPercent(
-                _vm.limitToRange(_vm.currentVal)
-              )
+              id: v.id,
+              name: v.title,
+              fav: v.fav,
+              "is-active": _vm.isCardActive(v.id),
+              disabled: _vm.generating,
+              table: v.content,
+              "search-string": _vm.searchString,
+              "fav-icon": _vm.cardFavIcon(v.id),
+              "delete-icon": _vm.cardDeleteIcon(v.id)
             },
             on: {
-              arrowDrag: _vm.handleArrowDrag,
-              arrowDragEnd: function($event) {
-                _vm.isDragging = false
-              }
+              cardActive: _vm.cardActive,
+              cardGenerate: _vm.cardGenerate,
+              cardEdit: _vm.cardEdit,
+              favAction: _vm.favAction,
+              deleteAction: _vm.deleteAction
             }
-          }),
-          _vm._v(" "),
-          _c("slider-fill", {
-            attrs: {
-              amount: _vm.translateIntoPercent(_vm.limitToRange(_vm.currentVal))
-            }
-          }),
-          _vm._v(" "),
-          _vm._l(_vm.stops, function(ref, key) {
-            var name = ref.name
-            var width = ref.width
-            return _c(
-              "slider-stop",
-              {
-                key: key,
-                attrs: {
-                  active: _vm.isStopActive(width),
-                  value: _vm.translateIntoPercent(width),
-                  "raw-value": width,
-                  "stop-id": key,
-                  enableBreakpointCustomization:
-                    _vm.enableBreakpointCustomization
-                },
-                on: {
-                  click: _vm.slide,
-                  breakpointChange: _vm.handleBreakpointChange
-                }
-              },
-              [
-                _vm._v(
-                  _vm._s(
-                    _vm.directives.relativeWidth === "window"
-                      ? name
-                      : width + "px"
-                  ) + "\n\t\t"
-                )
-              ]
-            )
           })
-        ],
-        2
+        }),
+        1
       )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./SliderStop":"components/SliderStop.vue","./SliderFill":"components/SliderFill.vue","./SliderArrow":"components/SliderArrow.vue"}],"../../../../../node_modules/process/browser.js":[function(require,module,exports) {
-
-// shim for using process in browser
-var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-  throw new Error('setTimeout has not been defined');
-}
-
-function defaultClearTimeout() {
-  throw new Error('clearTimeout has not been defined');
-}
-
-(function () {
-  try {
-    if (typeof setTimeout === 'function') {
-      cachedSetTimeout = setTimeout;
-    } else {
-      cachedSetTimeout = defaultSetTimout;
-    }
-  } catch (e) {
-    cachedSetTimeout = defaultSetTimout;
-  }
-
-  try {
-    if (typeof clearTimeout === 'function') {
-      cachedClearTimeout = clearTimeout;
-    } else {
-      cachedClearTimeout = defaultClearTimeout;
-    }
-  } catch (e) {
-    cachedClearTimeout = defaultClearTimeout;
-  }
-})();
-
-function runTimeout(fun) {
-  if (cachedSetTimeout === setTimeout) {
-    //normal enviroments in sane situations
-    return setTimeout(fun, 0);
-  } // if setTimeout wasn't available but was latter defined
-
-
-  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-    cachedSetTimeout = setTimeout;
-    return setTimeout(fun, 0);
-  }
-
-  try {
-    // when when somebody has screwed with setTimeout but no I.E. maddness
-    return cachedSetTimeout(fun, 0);
-  } catch (e) {
-    try {
-      // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-      return cachedSetTimeout.call(null, fun, 0);
-    } catch (e) {
-      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-      return cachedSetTimeout.call(this, fun, 0);
-    }
-  }
-}
-
-function runClearTimeout(marker) {
-  if (cachedClearTimeout === clearTimeout) {
-    //normal enviroments in sane situations
-    return clearTimeout(marker);
-  } // if clearTimeout wasn't available but was latter defined
-
-
-  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-    cachedClearTimeout = clearTimeout;
-    return clearTimeout(marker);
-  }
-
-  try {
-    // when when somebody has screwed with setTimeout but no I.E. maddness
-    return cachedClearTimeout(marker);
-  } catch (e) {
-    try {
-      // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-      return cachedClearTimeout.call(null, marker);
-    } catch (e) {
-      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-      // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-      return cachedClearTimeout.call(this, marker);
-    }
-  }
-}
-
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-  if (!draining || !currentQueue) {
-    return;
-  }
-
-  draining = false;
-
-  if (currentQueue.length) {
-    queue = currentQueue.concat(queue);
-  } else {
-    queueIndex = -1;
-  }
-
-  if (queue.length) {
-    drainQueue();
-  }
-}
-
-function drainQueue() {
-  if (draining) {
-    return;
-  }
-
-  var timeout = runTimeout(cleanUpNextTick);
-  draining = true;
-  var len = queue.length;
-
-  while (len) {
-    currentQueue = queue;
-    queue = [];
-
-    while (++queueIndex < len) {
-      if (currentQueue) {
-        currentQueue[queueIndex].run();
-      }
-    }
-
-    queueIndex = -1;
-    len = queue.length;
-  }
-
-  currentQueue = null;
-  draining = false;
-  runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-  var args = new Array(arguments.length - 1);
-
-  if (arguments.length > 1) {
-    for (var i = 1; i < arguments.length; i++) {
-      args[i - 1] = arguments[i];
-    }
-  }
-
-  queue.push(new Item(fun, args));
-
-  if (queue.length === 1 && !draining) {
-    runTimeout(drainQueue);
-  }
-}; // v8 likes predictible objects
-
-
-function Item(fun, array) {
-  this.fun = fun;
-  this.array = array;
-}
-
-Item.prototype.run = function () {
-  this.fun.apply(null, this.array);
-};
-
-process.title = 'browser';
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) {
-  return [];
-};
-
-process.binding = function (name) {
-  throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () {
-  return '/';
-};
-
-process.chdir = function (dir) {
-  throw new Error('process.chdir is not supported');
-};
-
-process.umask = function () {
-  return 0;
-};
-},{}],"../../WPTB_ResponsiveFrontend.js":[function(require,module,exports) {
-var global = arguments[3];
-var process = require("process");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-/**
- * Responsive class assignment for frontend operations.
- *
- * This file can be used as an UMD.
- */
-(function assignToGlobal(key, context, factory) {
-  if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
-    module.exports = factory();
-  } else {
-    // eslint-disable-next-line no-param-reassign
-    context[key] = factory();
-  } // eslint-disable-next-line no-restricted-globals
-
-})('WPTB_ResponsiveFrontend', self || global, function () {
-  /**
-   * Log a message to console.
-   *
-   * @param {string} message message to be logged
-   * @param {string} type console log type (e.g info, warn, error)
-   * @throws An error will be given for invalid type value
-   */
-  function logToConsole(message) {
-    var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
-
-    if (typeof process !== 'undefined' && "development" === 'development') {
-      if (console[type]) {
-        console[type]("[WPTB]: ".concat(message));
-      } else {
-        throw new Error("no logging type found with given type value of [".concat(type, "]"));
-      }
-    }
-  }
-  /**
-   * Object implementation for cell element operations.
-   * If an empty cellElement parameter is given, a fresh cell element will be created.
-   *
-   * @param {HTMLElement | null} cellElement cell element
-   * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
-   * @constructor
-   */
-
-
-  function CellObject(cellElement) {
-    var _this = this;
-
-    var reference = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    // cell element
-    this.element = cellElement;
-    this.referenceObject = reference; // variable for deciding part of merged cells to be visible or not
-
-    this.mergedRenderStatus = true; // connected merged cell references
-
-    this.mergedCells = {
-      row: [],
-      column: []
-    };
-    /**
-     * Get merged render status.
-     * @return {boolean} render status
-     */
-
-    this.getMergedRenderStatus = function () {
-      return _this.mergedRenderStatus;
-    };
-    /**
-     * Set merged render status.
-     * @param {boolean} status render status
-     */
-
-
-    this.setMergedRenderStatus = function (status) {
-      _this.mergedRenderStatus = status;
-    };
-    /**
-     * Add merged cells.
-     *
-     * @param {string} mergeType merge type
-     * @param {CellObject} cellObj cell object instance
-     */
-
-
-    this.addToMergedCells = function (mergeType, cellObj) {
-      _this.mergedCells[mergeType].push(cellObj);
-    };
-    /**
-     * Determine if current cell is a reference to a main cell.
-     * @return {boolean} a reference or not
-     */
-
-
-    this.isReference = function () {
-      return _this.referenceObject !== null;
-    };
-
-    if (this.isReference()) {
-      this.element = cellElement.cloneNode(true);
-    } // modifications object
-    // this object will keep track of the modifications that has done to the cell to make sure we can roll them back to their original values
-
-
-    this.modifications = {}; // spans object for cell's original merge values
-
-    this.spans = {
-      row: 1,
-      col: 1
-    };
-    this.remainingSpans = {
-      row: 0,
-      col: 0
-    };
-    /**
-     * Cache cell element's original span values.
-     * @private
-     */
-
-    this.cacheSpanValues = function () {
-      // eslint-disable-next-line array-callback-return
-      Object.keys(_this.spans).map(function (k) {
-        if (Object.prototype.hasOwnProperty.call(_this.spans, k)) {
-          var defaultVal = _this.spans[k];
-          _this.spans[k] = _this.element.getAttribute("".concat(k, "Span")) || defaultVal;
-        }
-      });
-    };
-
-    this.cacheSpanValues();
-    /**
-     * Get original span value of cell object.
-     *
-     * @param {string} spanType span type, available values are row-column
-     * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
-     * @throws An error will be given for invalid span type
-     */
-
-    this.getSpan = function (spanType) {
-      var fromElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var spanVal = fromElement ? _this.getElement().getAttribute("".concat(spanType, "Span")) : _this.spans[spanType];
-
-      if (spanVal) {
-        return spanVal;
-      }
-
-      throw new Error("no span value found with the given type of [".concat(spanType, "]"));
-    };
-
-    this.getRemainingSpans = function (spanType) {
-      return _this.remainingSpans[spanType];
-    };
-
-    this.setRemainingSpans = function (spanType, value) {
-      _this.remainingSpans[spanType] = value;
-    };
-    /**
-     * Get cell element.
-     *
-     * @return {HTMLElement} cell element
-     */
-
-
-    this.getElement = function () {
-      return _this.element;
-    };
-    /**
-     * Create a cell element.
-     * @private
-     * @return {HTMLTableDataCellElement}
-     */
-
-
-    this.createCellElement = function () {
-      return document.createElement('td');
-    }; // create a new cell element if no cellElement argument is given with constructor function
-
-
-    if (!cellElement) {
-      this.element = this.createCellElement();
-    }
-    /**
-     * Add attribute to cell element.
-     *
-     * This function have the ability to add/remove attributes from cell element.
-     * All attributes modified with this function will be cached with their before value for an easy reset on demand.
-     *
-     * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
-     * @param {any} attributeValue attribute value
-     * @param {boolean} [append=false] append the value or replace it
-     * @param {string} [glue=,] glue to join attribute value if append option is enabled
-     */
-
-
-    this.setAttribute = function (attributeKey, attributeValue) {
-      var append = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var glue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ',';
-
-      var defaultVal = _this.getElement()[attributeKey]; // if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
-
-
-      if (typeof defaultVal === 'function' || _typeof(defaultVal) === 'object') {
-        defaultVal = _this.getElement().getAttribute(attributeKey);
-      } // if there is already a default value defined, use that instead
-
-
-      if (_this.modifications[attributeKey]) {
-        defaultVal = _this.modifications[attributeKey].default;
-      }
-
-      var currentVal = defaultVal; // join attributes
-
-      if (append) {
-        currentVal += "".concat(currentVal).concat(glue).concat(attributeValue);
-      } else {
-        currentVal = attributeValue;
-      }
-
-      _this.modifications[attributeKey] = {
-        value: currentVal,
-        default: defaultVal
-      };
-      _this.getElement()[attributeKey] = currentVal;
-    };
-    /**
-     * Set row/colspan for cell.
-     *
-     * @param {string} spanType span type
-     * @param {number} value value to assign to span
-     * @return {boolean} if any space left to render the element
-     */
-
-
-    this.setSpan = function (spanType, value) {
-      // working on main cell
-      if (!_this.isReference()) {
-        var _valueToApply = _this.getSpan(spanType) - value < 0 ? _this.getSpan(spanType) : value;
-
-        _this.setAttribute("".concat(spanType, "Span"), _valueToApply); // calculate remaining cells amount to merge in this span type
-
-
-        _this.setRemainingSpans(spanType, _this.getSpan(spanType) - _valueToApply); // set visibility of connected merge group cells to false to not render them since we added necessary span values to main cell which will leak into their position
-
-
-        for (var mc = 0; mc < _valueToApply - 1; mc += 1) {
-          if (_this.mergedCells[spanType] && _this.mergedCells[spanType][mc]) {
-            _this.mergedCells[spanType][mc].setMergedRenderStatus(false);
-          }
-        }
-
-        return true;
-      } // working on reference
-
-
-      if (!_this.getMergedRenderStatus()) {
-        return false;
-      }
-
-      var remainingVal = _this.referenceObject.getRemainingSpans(spanType); // no space left to put cell
-
-
-      if (remainingVal === 0) {
-        return false;
-      }
-
-      var valueToApply = remainingVal - value < 0 ? remainingVal : value;
-      var remainingParentSpans = remainingVal - valueToApply;
-
-      _this.referenceObject.setRemainingSpans(spanType, remainingParentSpans);
-
-      _this.setAttribute("".concat(spanType, "Span"), valueToApply); // change render status of remaining connected merge cells
-
-
-      if (remainingParentSpans !== 0) {
-        var totalConnectedCells = _this.referenceObject.mergedCells[spanType].length;
-        var startIndex = totalConnectedCells - remainingVal + 1;
-        var endIndex = startIndex + valueToApply - 1;
-
-        for (var _mc = startIndex; _mc < endIndex; _mc += 1) {
-          _this.mergedCells[spanType][_mc].setMergedRenderStatus(false);
-        }
-      }
-
-      return true;
-    };
-    /**
-     * Reset a modified attribute to its default value
-     *
-     * @param {string} attributeKey attribute name
-     */
-
-
-    this.resetAttribute = function (attributeKey) {
-      if (_this.modifications[attributeKey]) {
-        _this.getElement()[attributeKey] = _this.modifications[attributeKey].default;
-        _this.modifications[attributeKey] = undefined;
-      }
-    };
-    /**
-     * Reset all modified attributes of cell element to their default values.
-     */
-
-
-    this.resetAllAttributes = function () {
-      // eslint-disable-next-line array-callback-return
-      Object.keys(_this.modifications).map(function (k) {
-        if (Object.prototype.hasOwnProperty.call(_this.modifications, k)) {
-          _this.resetAttribute(k);
-        }
-      });
-    };
-
-    return {
-      getElement: this.getElement,
-      el: this.element,
-      setAttribute: this.setAttribute,
-      resetAllAttributes: this.resetAllAttributes,
-      getSpan: this.getSpan,
-      setSpan: this.setSpan,
-      getRemainingSpans: this.getRemainingSpans,
-      setRemainingSpans: this.setRemainingSpans,
-      isReference: this.isReference,
-      addToMergedCells: this.addToMergedCells,
-      mergedCells: this.mergedCells,
-      setMergedRenderStatus: this.setMergedRenderStatus,
-      getMergedRenderStatus: this.getMergedRenderStatus
-    };
-  }
-
-  CellObject.spanTypes = {
-    row: 'row',
-    column: 'col'
-  };
-  /**
-   * Object implementation for table element operations.
-   *
-   * @param {HTMLElement} tableEl table element
-   * @return {object} instance
-   * @constructor
-   */
-
-  function TableObject(tableEl) {
-    var _this2 = this;
-
-    /**
-     * Table element.
-     * @private
-     * @type {HTMLElement}
-     */
-    this.tableElement = tableEl;
-    /**
-     * Parsed table object.
-     *
-     * @private
-     * @type {array}
-     */
-
-    this.parsedTable = [];
-    /**
-     * An array of created table rows elements that are id'd according to their index in array.
-     * @type {[HTMLElement]}
-     */
-
-    this.rowCache = [];
-    /**
-     * Original table elements minus the cells.
-     * @type {{rows: []}}
-     * @private
-     */
-
-    this.originals = {
-      rows: []
-    };
-    /**
-     * Row colors of original table.
-     * @type {{even: string, header: string, odd: string}}
-     */
-
-    this.rowColors = {
-      header: null,
-      even: null,
-      odd: null
-    };
-    /**
-     * Add cell to parsed array.
-     *
-     * @private
-     * @param {number} r row id
-     * @param {number} c column id
-     * @param {CellObject} cellObject cell object to add to parsed array
-     */
-
-    this.addToParsed = function (r, c, cellObject) {
-      if (!_this2.parsedTable[r]) {
-        _this2.parsedTable[r] = [];
-      }
-
-      _this2.parsedTable[r][c] = cellObject;
-    };
-    /**
-     * Assign table cells into row and column numbers.
-     * @private
-     */
-
-
-    this.parseTable = function () {
-      var rows = Array.from(_this2.tableElement.querySelectorAll('tr')); // eslint-disable-next-line array-callback-return
-
-      rows.map(function (r, ri) {
-        // cache original rows for future use
-        _this2.originals.rows.push(r);
-
-        var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
-
-        cells.map(function (c, ci) {
-          var currentCellObject = new CellObject(c);
-
-          _this2.addToParsed(ri, ci, currentCellObject);
-
-          var spanRow = currentCellObject.getSpan(CellObject.spanTypes.row);
-          var spanCol = currentCellObject.getSpan(CellObject.spanTypes.column);
-
-          if (spanRow > 1) {
-            for (var sr = 1; sr < spanRow; sr += 1) {
-              var referenceCell = new CellObject(c, currentCellObject);
-              currentCellObject.addToMergedCells('row', referenceCell);
-
-              _this2.addToParsed(ri + sr, ci, referenceCell);
-            }
-          }
-
-          if (spanCol > 1) {
-            for (var sc = 1; sc < spanCol; sc += 1) {
-              var _referenceCell = new CellObject(c, currentCellObject);
-
-              currentCellObject.addToMergedCells('column', _referenceCell);
-
-              _this2.addToParsed(ri, ci + sc, _referenceCell);
-            }
-          }
-        });
-      });
-
-      _this2.parseRowColors(rows);
-    };
-    /**
-     * Parse row colors of original table for futures uses.
-     * @param {[HTMLElement]} rows html row elements
-     * @private
-     */
-
-
-    this.parseRowColors = function (rows) {
-      if (!rows || rows.length <= 0) {
-        logToConsole('no rows are found to parse their colors', 'error');
-      } // get row colors if they are defined as datasets on table element
-
-
-      var headerDatasetColor = _this2.tableElement.dataset.wptbHeaderBackgroundColor;
-      var evenRowDatasetColor = _this2.tableElement.dataset.wptbEvenRowBackgroundColor;
-      var oddRowDatasetColor = _this2.tableElement.dataset.wptbOddRowBackgroundColor; // header row color
-
-      _this2.rowColors.header = // eslint-disable-next-line no-nested-ternary
-      headerDatasetColor !== undefined ? headerDatasetColor : rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor; // calculate needed number of rows to get even and odd row background colors
-      // eslint-disable-next-line no-nested-ternary
-
-      var rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2; // create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
-
-      for (var rn = 0; rn < rowsNeeded; rn += 1) {
-        var tempRow = document.createElement('tr');
-
-        _this2.tableElement.querySelector('tbody').appendChild(tempRow);
-
-        rows.push(tempRow);
-      } // even & odd row colors
-      // dataset colors have priority over colors gathered from computed row styles
-
-
-      _this2.rowColors.even = evenRowDatasetColor || getComputedStyle(rows[1]).backgroundColor;
-      _this2.rowColors.odd = evenRowDatasetColor ? oddRowDatasetColor : getComputedStyle(rows[2]).backgroundColor; // remove created rows from DOM
-
-      for (var r = 0; r < rowsNeeded; r += 1) {
-        rows[rows.length - (r + 1)].remove();
-      }
-    };
-    /**
-     * Add a row to the table.
-     * @param {array} classList an array of class names to be added to row
-     * @param {boolean} fromOriginals use rows from original table instead of creating a new one
-     * @param {number} originalIndex original row index
-     */
-
-
-    this.addRow = function (classList) {
-      var fromOriginals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var originalIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-      if (!Array.isArray(classList)) {
-        // eslint-disable-next-line no-param-reassign
-        classList = [classList];
-      }
-
-      var tableBody = _this2.tableElement.querySelector('tbody');
-
-      var tempRow;
-
-      if (!fromOriginals) {
-        var range = document.createRange();
-        range.setStart(tableBody, 0); // eslint-disable-next-line prefer-destructuring
-
-        tempRow = range.createContextualFragment("<tr class=\"".concat(classList.join(' '), "\"></tr>")).childNodes[0];
-      } else {
-        tempRow = _this2.originals.rows[originalIndex];
-      } // add row to table body
-
-
-      tableBody.appendChild(tempRow); // cache row for future use
-
-      _this2.rowCache.push(tempRow);
-
-      return {
-        el: tempRow,
-        id: _this2.rowCache.length - 1
-      };
-    };
-    /**
-     * Clear the contents of table element.
-     */
-
-
-    this.clearTable = function () {
-      // clear row cache
-      _this2.rowCache = []; // clear children of `tbody` element
-
-      _this2.tableElement.querySelector('tbody').innerHTML = '';
-    };
-    /**
-     * Get row element from cache.
-     *
-     * @param {number} id row id
-     * @return {null|HTMLElement} row element if present or null if not
-     */
-
-
-    this.getRow = function (id) {
-      if (_this2.rowCache[id]) {
-        return _this2.rowCache[id];
-      } // eslint-disable-next-line no-console
-
-
-      logToConsole("no row with id [".concat(id, "] found in the cache."), 'warn');
-      return null;
-    };
-    /**
-     * Get maximum number of rows available at table.
-     *
-     * @return {number} maximum amount of rows
-     */
-
-
-    this.maxRows = function () {
-      return _this2.parsedTable.length;
-    };
-    /**
-     * Get the number of maximum available column count in the table.
-     *
-     * @return {number} maximum available column count
-     */
-
-
-    this.maxColumns = function () {
-      return _this2.parsedTable.reduce(function (p, c) {
-        if (c.length > p) {
-          // eslint-disable-next-line no-param-reassign
-          p = c.length;
-        }
-
-        return p;
-      }, 0);
-    };
-    /**
-     * Get the table cell at specified row-column location.
-     *
-     * As in arrays, row and column numbering starts from number 0.
-     *
-     * @param {number} r row number
-     * @param {number} c column number
-     * @param {boolean} returnObject return object instead of HTMLElement
-     * @return {HTMLElement | null | CellObject} element if address is possible, null if not
-     */
-
-
-    this.getCell = function (r, c) {
-      var returnObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-      try {
-        if (_this2.parsedTable[r][c]) {
-          if (returnObject) {
-            return _this2.parsedTable[r][c];
-          }
-
-          return _this2.parsedTable[r][c].el;
-        }
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        logToConsole("no cell found at the given address of [".concat(r, "-").concat(c, "]"), 'warn');
-        return null;
-      } // eslint-disable-next-line no-console
-
-
-      logToConsole("no cell found at the given address of [".concat(r, "-").concat(c, "]"), 'warn');
-      return null;
-    };
-    /**
-     * Get cells at a given row.
-     *
-     * @param {number} rowId row id
-     * @param {boolean} returnObj return an array of CellObject instead
-     * @return {array} cells in row
-     */
-
-
-    this.getCellsAtRow = function (rowId) {
-      var returnObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var cells = [];
-
-      for (var c = 0; c < _this2.maxColumns(); c += 1) {
-        var tempCell = _this2.getCell(rowId, c, returnObj);
-
-        if (tempCell) {
-          cells.push(tempCell);
-        }
-      }
-
-      return cells;
-    };
-    /**
-     * Append the cell with given ids to a cached row
-     *
-     * @param {number} cellRowId cell row id
-     * @param {number} cellColumnId cell column id
-     * @param {number} rowId id of row in row cache
-     */
-
-
-    this.appendToRow = function (cellRowId, cellColumnId, rowId) {
-      var cachedRow = _this2.getRow(rowId);
-
-      var cell = _this2.getCell(cellRowId, cellColumnId, true);
-
-      if (cell && cachedRow) {
-        cachedRow.appendChild(cell.getElement());
-      }
-
-      return cell;
-    };
-    /**
-     * Append html element to a cached row.
-     *
-     * @param {HTMLElement} el element
-     * @param {number} rowId if of row in row cache
-     */
-
-
-    this.appendElementToRow = function (el, rowId) {
-      var cachedRow = _this2.getRow(rowId);
-
-      if (el && cachedRow) {
-        cachedRow.appendChild(el);
-      }
-    };
-    /**
-     * Add cell object to a cached row.
-     *
-     * @param {CellObject} cellObj cell object
-     * @param {number} rowId row id
-     */
-
-
-    this.appendObjectToRow = function (cellObj, rowId) {
-      var cachedRow = _this2.getRow(rowId);
-
-      if (cellObj && cachedRow) {
-        cachedRow.appendChild(cellObj.getElement());
-      }
-    };
-
-    this.parseTable();
-    return {
-      maxRows: this.maxRows,
-      maxColumns: this.maxColumns,
-      addRow: this.addRow,
-      clearTable: this.clearTable,
-      getCell: this.getCell,
-      appendToRow: this.appendToRow,
-      appendElementToRow: this.appendElementToRow,
-      appendObjectToRow: this.appendObjectToRow,
-      getCellsAtRow: this.getCellsAtRow,
-      el: this.tableElement,
-      rowColors: this.rowColors
-    };
-  } // default options for responsive class
-
-
-  var responsiveClassDefaultOptions = {
-    query: '.wptb-preview-table',
-    defaultClasses: ['wptb-plugin-responsive-base'],
-    bindToResize: false
-  };
-  /**
-   * Class for handling operations related to responsive functionalities of tables.
-   *
-   * @constructor
-   * @param {object} options options object
-   */
-
-  function ResponsiveFront() {
-    var _this3 = this;
-
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    // merge default options with user sent options
-    this.options = _objectSpread({}, responsiveClassDefaultOptions, {}, options);
-    this.elements = Array.from(document.querySelectorAll(this.options.query));
-    this.elementObjects = this.elements.map(function (e) {
-      return {
-        el: e,
-        tableObject: new TableObject(e)
-      };
-    });
-    /**
-     * Bind rebuilding of tables to window resize event.
-     */
-
-    this.bindRebuildToResize = function () {
-      window.addEventListener('resize', function () {
-        _this3.rebuildTables();
-      });
-    };
-    /**
-     * Get responsive directives of table element.
-     *
-     * @private
-     * @param {HTMLElement} el table element
-     * @return {object|null} JSON representation of the directive element, if not available, null will be returned
-     */
-
-
-    this.getDirective = function (el) {
-      var directiveString = el.dataset.wptbResponsiveDirectives;
-
-      if (!directiveString) {
-        return null;
-      }
-
-      return JSON.parse(atob(directiveString));
-    };
-    /**
-     * Add default classes to rebuilt tables.
-     *
-     * This classes are added to lay out a base style for the responsive table.
-     *
-     * @param {HTMLElement} el table element
-     */
-
-
-    this.addDefaultClasses = function (el) {
-      el.classList.add(_this3.options.defaultClasses);
-    };
-    /**
-     * Remove default classes from target table.
-     * @param {HTMLElement} el table element
-     */
-
-
-    this.removeDefaultClasses = function (el) {
-      el.classList.remove(_this3.options.defaultClasses);
-    };
-    /**
-     * Rebuild table in auto mode.
-     *
-     * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
-     *
-     * @param {HTMLElement} tableEl table element
-     * @param {string} sizeRange range id for current screen size
-     * @param {object} autoOption mode options
-     * @param {TableObject} tableObj table object
-     */
-
-
-    this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
-      // base options
-      var direction = autoOption.cellStackDirection[sizeRange]; // eslint-disable-next-line prefer-destructuring
-
-      var topRowAsHeader = autoOption.topRowAsHeader[sizeRange];
-      var cellsPerRow = autoOption.cellsPerRow[sizeRange]; // new options
-
-      var staticTopRow = autoOption.staticTopRow ? autoOption.staticTopRow[sizeRange] : false;
-      tableObj.clearTable();
-
-      if (sizeRange === 'desktop') {
-        _this3.buildDefault(tableObj);
-
-        _this3.removeDefaultClasses(tableEl);
-      } else {
-        _this3.autoDirectionBuild(tableObj, direction, topRowAsHeader, staticTopRow, cellsPerRow);
-
-        _this3.addDefaultClasses(tableEl);
-      }
-    };
-    /**
-     * Rebuild table with a direction to read cells.
-     *
-     * Direction in question in here is either by row or column:
-     * * row: cells will be read row by row, in each row starting from the first column
-     * * column: cells will be read column by column, in each column starting from the first row of the table
-     *
-     * @param {TableObject} tableObj table object
-     * @param {string} direction direction to read cells, possible options [row, column]
-     * @param {boolean} topRowAsHeader use top row as header
-     * @param {boolean} staticTopRow use top row as static
-     * @param {number} cellsPerRow cells per row
-     */
-
-
-    this.autoDirectionBuild = function (tableObj, direction) {
-      var topRowAsHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var staticTopRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var cellsPerRow = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-      var rows = tableObj.maxRows();
-      var columns = tableObj.maxColumns();
-      var isRowStacked = direction === 'row'; // build table with top row as header
-
-      if (topRowAsHeader) {
-        _this3.headerBuild(tableObj, direction, cellsPerRow);
-      } else {
-        // cell stack direction is selected as row
-        // for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
-        // eslint-disable-next-line no-lonely-if
-        if (isRowStacked) {
-          (function () {
-            var allCellsByRow = [];
-            var rowStartIndex = 0; // static top row option is enabled
-
-            if (staticTopRow) {
-              var topCells = tableObj.getCellsAtRow(0, true);
-              var baseCells = topCells.filter(function (c) {
-                return !c.isReference();
-              }); // eslint-disable-next-line array-callback-return
-
-              baseCells.map(function (b) {
-                rowStartIndex += 1;
-                var rowObj = tableObj.addRow('wptb-row');
-                rowObj.el.style.backgroundColor = tableObj.rowColors.header;
-                tableObj.appendObjectToRow(b, rowObj.id);
-                b.setAttribute('colSpan', cellsPerRow);
-              });
-            } // get cells by reading row by row
-
-
-            for (var r = rowStartIndex; r < rows; r += 1) {
-              // eslint-disable-next-line no-loop-func
-              tableObj.getCellsAtRow(r, true).forEach(function (c) {
-                return allCellsByRow.push(c);
-              });
-            }
-
-            var cellCount = allCellsByRow.length;
-
-            for (var c = 0, _r = 0; c < cellCount; c += cellsPerRow, _r += 1) {
-              // const rowId = tableObj.addRow('wptb-row').id;
-              var rowObj = tableObj.addRow('wptb-row'); // preserve original row colors for even and odd rows
-
-              rowObj.el.style.backgroundColor = tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even']; // place cells by 'cells by row' option value
-
-              for (var pR = 0; pR < cellsPerRow; pR += 1) {
-                var tempCell = allCellsByRow[c + pR];
-
-                if (tempCell) {
-                  tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
-                  tempCell.resetAllAttributes();
-                  tempCell.setAttribute('style', 'width: 100% !important', true, ';');
-                  tempCell.setAttribute('colSpan', 1);
-                  tempCell.setAttribute('rowSpan', 1);
-                }
-              }
-            }
-          })();
-        } // cell stack direction is selected as column
-        else {
-            var allCellsByCol = [];
-            var rowStartIndex = 0; // static top row option is enabled
-
-            if (staticTopRow) {
-              var topCells = tableObj.getCellsAtRow(0, true);
-              var baseCells = topCells.filter(function (t) {
-                return !t.isReference();
-              }); // eslint-disable-next-line array-callback-return
-
-              baseCells.map(function (b) {
-                rowStartIndex += 1;
-                var rowObj = tableObj.addRow('wptb-row');
-                rowObj.el.style.backgroundColor = tableObj.rowColors.header;
-                tableObj.appendObjectToRow(b, rowObj.id);
-                b.setAttribute('colSpan', cellsPerRow);
-              });
-            } // read all cells column by column
-
-
-            for (var c = 0; c < columns; c += 1) {
-              for (var r = rowStartIndex; r < rows; r += 1) {
-                var tCell = tableObj.getCell(r, c, true);
-
-                if (tCell) {
-                  allCellsByCol.push(tCell);
-                }
-              }
-            }
-
-            var cellCount = allCellsByCol.length;
-
-            for (var _c = 0, _r2 = 0; _c < cellCount; _c += cellsPerRow, _r2 += 1) {
-              var rowObj = tableObj.addRow('wptb-row'); // preserve original row colors for even and odd rows
-
-              rowObj.el.style.backgroundColor = tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
-
-              for (var cR = 0; cR < cellsPerRow; cR += 1) {
-                var tempCell = allCellsByCol[_c + cR];
-
-                if (tempCell) {
-                  tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
-                  tempCell.resetAllAttributes();
-                  tempCell.setAttribute('style', 'width: 100% !important', true, ';');
-                  tempCell.setAttribute('colSpan', 1);
-                  tempCell.setAttribute('rowSpan', 1);
-                }
-              }
-            }
-          }
-      }
-    };
-    /**
-     * Build table with top row assigned as header.
-     *
-     * @param {TableObject} tableObj table object
-     * @param {string} direction cell stack direction, possible options are [row, column]
-     * @param {number} itemsPerHeader items bound to each header element
-     */
-
-
-    this.headerBuild = function (tableObj, direction) {
-      var itemsPerHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-      // cells at header
-      // applying header row color to cells
-      var headerCells = tableObj.getCellsAtRow(0, true).map(function (h) {
-        h.setAttribute('style', "background-color: ".concat(tableObj.rowColors.header), true, ';');
-        return h;
-      });
-      var stackedAsColumn = direction === 'column'; // row count
-
-      var rows = tableObj.maxRows(); // column count
-
-      var columns = tableObj.maxColumns();
-      var rowBorderStyle = '3px solid gray'; // stack direction is column
-
-      if (stackedAsColumn) {
-        /**
-         * Add header cells as new row to table.
-         * @param {boolean} addBorder add top border to header row
-         */
-        // eslint-disable-next-line no-inner-declarations
-        var addHeaderCells = function addHeaderCells() {
-          var addBorder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-          var rowObj = tableObj.addRow('wptb-row');
-
-          if (addBorder) {
-            rowObj.el.style.borderTop = rowBorderStyle;
-          } // eslint-disable-next-line array-callback-return
-
-
-          headerCells.map(function (h) {
-            // clone header cell to reuse it for multiple rows
-            tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
-          });
-        }; // count of header rows that will be created
-
-
-        var headerCount = Math.ceil((rows - 1) / itemsPerHeader); // row index on original table
-
-        var currentOriginalRow = 1;
-
-        for (var r = 0; r < headerCount; r += 1) {
-          // create header row and add to table
-          addHeaderCells(r > 0);
-
-          for (var c = 0; c < itemsPerHeader; c += 1) {
-            // break iteration when current row surpasses original row amount
-            if (currentOriginalRow >= rows) {
-              break;
-            }
-
-            var rowObj = tableObj.addRow('wptb-row'); // apply row color relative to current header row
-
-            rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
-
-            for (var cc = 0; cc < columns; cc += 1) {
-              var currentCell = tableObj.getCell(currentOriginalRow, cc, true);
-
-              if (currentCell) {
-                currentCell.resetAllAttributes(); // status to decide whether render cell or not
-
-                var cellAddStatus = true;
-                var rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
-                var colSpan = currentCell.getSpan(CellObject.spanTypes.column);
-
-                if (rowSpan > 1) {
-                  // items remaining in current header
-                  var remainingItems = itemsPerHeader - c; // calculate whether to apply full rowspan value or remaining item value depending on the current position of the cell
-
-                  var currentRowSpan = Math.min(rowSpan, remainingItems);
-                  cellAddStatus = currentCell.setSpan(CellObject.spanTypes.row, currentRowSpan); // reset render status of cell to visible for future use
-
-                  currentCell.setMergedRenderStatus(true);
-                }
-
-                if (cellAddStatus) {
-                  tableObj.appendObjectToRow(currentCell, rowObj.id);
-                }
-              }
-            }
-
-            currentOriginalRow += 1;
-          }
-        }
-      } else {
-        // stack direction is row
-        // number of headers that will be created
-        var _headerCount = Math.ceil((rows - 1) / itemsPerHeader);
-
-        var _currentOriginalRow = 1;
-
-        for (var hc = 0; hc < _headerCount; hc += 1) {
-          for (var _c2 = 0; _c2 < columns; _c2 += 1) {
-            var _rowObj = tableObj.addRow('wptb-row'); // clear out row color to override row color with cell colors
-
-
-            _rowObj.el.style.backgroundColor = 'none';
-
-            if (hc > 0 && _c2 === 0) {
-              _rowObj.el.style.borderTop = rowBorderStyle;
-            }
-
-            var clonedHeaderCell = headerCells[_c2].el.cloneNode(true); // apply header row color to header cell
-
-
-            clonedHeaderCell.style.backgroundColor = "".concat(tableObj.rowColors.header, " !important");
-            tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
-
-            for (var _r3 = 0; _r3 < itemsPerHeader; _r3 += 1) {
-              if (_currentOriginalRow + _r3 >= rows) {
-                break;
-              } // const currentCell = tableObj.appendToRow(currentOriginalRow + r, c, rowObj.id);
-
-
-              var _currentCell = tableObj.getCell(_currentOriginalRow + _r3, _c2, true);
-
-              if (_currentCell) {
-                _currentCell.resetAllAttributes();
-
-                var _cellAddStatus = true;
-
-                var _rowSpan = _currentCell.getSpan(CellObject.spanTypes.row);
-
-                var _colSpan = _currentCell.getSpan(CellObject.spanTypes.column);
-
-                if (_rowSpan > 1) {
-                  var _remainingItems = itemsPerHeader - _r3;
-
-                  var _currentRowSpan = Math.min(_rowSpan, _remainingItems);
-
-                  _cellAddStatus = _currentCell.setSpan(CellObject.spanTypes.row, _currentRowSpan);
-
-                  var rS = _currentCell.el.getAttribute('rowSpan');
-
-                  var cS = _currentCell.el.getAttribute('colSpan'); // switch span values
-
-
-                  _currentCell.setAttribute('rowSpan', cS);
-
-                  _currentCell.setAttribute('colSpan', rS);
-
-                  _currentCell.setMergedRenderStatus(true);
-                }
-
-                if (_cellAddStatus) {
-                  // color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
-                  var colorIndex = (_currentOriginalRow + _r3 + hc) % 2 === 0 ? 'even' : 'odd'; // for better visuals and distinction for tables with 1 item per header, using this calculation for color index
-
-                  if (itemsPerHeader === 1) {
-                    colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
-                  }
-
-                  _currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
-
-                  tableObj.appendObjectToRow(_currentCell, _rowObj.id);
-                }
-              }
-            }
-          }
-
-          _currentOriginalRow += itemsPerHeader;
-        }
-      }
-    };
-    /**
-     * Build table in its default form.
-     *
-     * Default form of table is the layout it has in desktop breakpoint.
-     *
-     * @param {TableObject} tableObj table object
-     */
-
-
-    this.buildDefault = function (tableObj) {
-      var rows = tableObj.maxRows();
-      var columns = tableObj.maxColumns();
-
-      for (var r = 0; r < rows; r += 1) {
-        var rowId = tableObj.addRow('', true, r).id;
-
-        for (var c = 0; c < columns; c += 1) {
-          var tempCell = tableObj.getCell(r, c, true); // only render cell if a valid cell is found and it is not a reference
-
-          if (tempCell && !tempCell.isReference()) {
-            // reset all modified attributes of cell to their default values
-            tempCell.resetAllAttributes();
-            tableObj.appendElementToRow(tempCell.getElement(), rowId);
-          }
-        }
-      }
-    };
-    /**
-     * Calculate range id for given size value.
-     *
-     * @param {number} val value
-     * @param {object} stops an object containing stop ids as keys and respective sizes as values
-     * @return {string} range id
-     */
-
-
-    this.calculateRangeId = function (val, stops) {
-      // eslint-disable-next-line prefer-destructuring
-      var sortedStops = Object.keys(stops).sort(function (a, b) {
-        return stops[a].width - stops[b].width;
-      });
-      var rangeId = sortedStops[0]; // eslint-disable-next-line array-callback-return
-
-      sortedStops.map(function (s) {
-        if (val >= stops[s].width) {
-          rangeId = s;
-        }
-      });
-      return rangeId;
-    };
-    /**
-     * Rebuild table according to its responsive directives.
-     *
-     * @private
-     * @param {HTMLElement} el table element
-     * @param {number} size size in pixels
-     * @param {TableObject} tableObj table object instance
-     * @throws An error will be given for invalid mode name
-     */
-
-
-    this.rebuildTable = function (el, size, tableObj) {
-      var directive = _this3.getDirective(el);
-
-      if (directive) {
-        if (!directive.responsiveEnabled) {
-          // this.buildDefault(tableObj);
-          return;
-        }
-
-        var mode = directive.responsiveMode; // main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
-
-        var buildCallable = _this3["".concat(mode, "Build")];
-
-        if (!size) {
-          // eslint-disable-next-line no-param-reassign
-          size = el.getBoundingClientRect().width;
-        }
-
-        var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
-
-        if (buildCallable) {
-          var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
-        } else {
-          throw new Error("No build mode named as [".concat(mode, "] found."));
-        }
-      }
-    };
-    /**
-     * Rebuild tables with the given screen size.
-     *
-     * @param {number} size screen size
-     */
-
-
-    this.rebuildTables = function (size) {
-      // eslint-disable-next-line array-callback-return
-      _this3.elementObjects.map(function (o) {
-        var innerSize = size;
-
-        if (!size) {
-          // eslint-disable-next-line no-param-reassign
-          innerSize = window.innerWidth;
-
-          var directives = _this3.getDirective(o.el); // calculate size according to relative width directive
-
-
-          if (directives && directives.relativeWidth) {
-            switch (directives.relativeWidth) {
-              case 'window':
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-
-              case 'container':
-                // get the size of the container table is in
-                // eslint-disable-next-line no-param-reassign
-                innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
-                break;
-
-              default:
-                // eslint-disable-next-line no-param-reassign
-                innerSize = window.innerWidth;
-                break;
-            }
-          }
-        }
-
-        _this3.rebuildTable(o.el, innerSize, o.tableObject);
-      });
-    };
-
-    if (this.options.bindToResize) {
-      this.bindRebuildToResize();
-    }
-
-    return {
-      rebuildTables: this.rebuildTables
-    };
-  }
-
-  return ResponsiveFront;
-});
-},{"process":"../../../../../node_modules/process/browser.js"}],"components/MaterialButton.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-var _default = {
-  props: {
-    click: {
-      type: Function,
-      default: function _default() {
-        // eslint-disable-next-line no-console
-        console.log('Material button clicked');
-      }
-    },
-    size: {
-      type: String,
-      default: 'fit-content'
-    }
-  },
-  computed: {
-    buttonClass: function buttonClass() {
-      return ["wptb-plugin-button-material-".concat(this.size)];
-    }
-  }
-};
-exports.default = _default;
-        var $48fd91 = exports.default || module.exports;
-      
-      if (typeof $48fd91 === 'function') {
-        $48fd91 = $48fd91.options;
-      }
-    
-        /* template */
-        Object.assign($48fd91, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-plugin-button-material",
-      class: _vm.buttonClass,
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.click($event)
-        }
-      }
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/ModalWindow.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    message: {
-      type: String,
-      default: 'This is a default message for modal window.'
-    },
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    relativeRef: {
-      type: HTMLElement,
-      required: true
-    },
-    callback: {
-      type: Function,
-      default: function _default() {
-        // eslint-disable-next-line no-console
-        console.log('modal button clicked');
-      }
-    }
-  },
-  components: {
-    MaterialButton: _MaterialButton.default
-  },
-  mounted: function mounted() {
-    this.relativeRef.appendChild(this.$refs.mainWrapper);
-  },
-  beforeDestroy: function beforeDestroy() {
-    this.$refs.mainWrapper.remove();
-  }
-};
-exports.default = _default;
-        var $6a3b9d = exports.default || module.exports;
-      
-      if (typeof $6a3b9d === 'function') {
-        $6a3b9d = $6a3b9d.options;
-      }
-    
-        /* template */
-        Object.assign($6a3b9d, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      directives: [
-        {
-          name: "show",
-          rawName: "v-show",
-          value: _vm.visible,
-          expression: "visible"
-        }
-      ],
-      ref: "mainWrapper",
-      staticClass: "wptb-plugin-modal-window"
-    },
-    [
-      _c("div", { staticClass: "wptb-plugin-modal-inner-window" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "wptb-plugin-modal-message" }, [
-          _vm._v(_vm._s(_vm.message))
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-plugin-modal-button-container" },
-          [
-            _c(
-              "material-button",
-              { attrs: { size: "full-size", click: _vm.callback } },
-              [_vm._v(_vm._s(_vm.strings.okay))]
-            )
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "wptb-plugin-modal-icon" }, [
-      _c("span", { staticClass: "dashicons dashicons-warning" })
-    ])
-  }
-]
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./MaterialButton":"components/MaterialButton.vue"}],"containers/ResponsiveApp.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _TableClone = _interopRequireDefault(require("../components/TableClone"));
-
-var _ScreenSizeSlider = _interopRequireDefault(require("../components/ScreenSizeSlider"));
-
-var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("../../../WPTB_ResponsiveFrontend"));
-
-var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
-
-var _ModalWindow = _interopRequireDefault(require("../components/ModalWindow"));
-
-var _MaterialButton = _interopRequireDefault(require("../components/MaterialButton"));
-
-var _NumberPostfixInput = _interopRequireDefault(require("../components/NumberPostfixInput"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-var _default = {
-  props: {
-    cloneQuery: {
-      type: String,
-      required: true
-    },
-    screenSizes: Object,
-    compareSizes: Object
-  },
-  components: {
-    TableClone: _TableClone.default,
-    ScreenSizeSlider: _ScreenSizeSlider.default,
-    ModalWindow: _ModalWindow.default,
-    MaterialButton: _MaterialButton.default,
-    NumberPostfixInput: _NumberPostfixInput.default
-  },
-  data: function data() {
-    return {
-      isVisible: true,
-      currentSize: 0,
-      currentDirectives: null,
-      currentSizeRangeName: 'desktop',
-      sliderPadding: 20,
-      sizeStops: {},
-      responsiveFrontend: null,
-      rebuilding: false,
-      debounceTime: 1000,
-      sizeLimitMin: 100,
-      sizeLimitMax: 0
-    };
-  },
-  watch: {
-    currentSizeRangeName: function currentSizeRangeName(n) {
-      this.appOptions.currentBreakpoint = n;
-    },
-    directives: {
-      handler: function handler() {
-        this.currentDirectives = this.encodeResponsiveDirectives();
-      },
-      deep: true
-    },
-    'appOptions.currentSize': {
-      handler: function handler(n) {
-        var _this = this;
-
-        var previousRangeName = this.currentSizeRangeName;
-        this.currentSizeRangeName = this.calculateSizeRangeName(n);
-
-        if (previousRangeName !== this.currentSizeRangeName && this.directives.responsiveEnabled) {
-          this.rebuilding = true;
-          (0, _DeBouncer.default)('currentSize', function () {
-            // rebuilt table according to its responsive directives
-            _this.responsiveFrontend.rebuildTables(_this.appOptions.currentSize);
-
-            _this.rebuilding = false;
-          }, this.debounceTime);
-        }
-      }
-    }
-  },
-  beforeMount: function beforeMount() {// calculate slider size stops before mounting the component
-    // this.sizeStops = this.sliderSizeStops();
-  },
-  mounted: function mounted() {
-    var _this2 = this;
-
-    // add a listener to section change event to hide/show component
-    document.addEventListener('wptbSectionChanged', function (e) {
-      _this2.isVisible = e.detail === 'table_responsive_menu';
-    });
-    this.sizeLimitMax = this.$refs.builderResponsive.getBoundingClientRect().width;
-  },
-  computed: {
-    /**
-     * Calculate certain properties of responsive table element's style
-     */
-    tableStyle: function tableStyle() {
-      if (!this.directives.responsiveEnabled) {
-        return {};
-      } // don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
-      // if (this.currentSizeRangeName === 'desktop') {
-      // 	return {};
-      // }
-
-
-      var width = this.limitToRange(this.appOptions.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
-      return {
-        width: "".concat(width, "px")
-      };
-    },
-    modalRelative: function modalRelative() {
-      return document.querySelector('.wptb-builder-panel');
-    }
-  },
-  methods: {
-    /**
-     * Limit a number between a min/max range.
-     *
-     * @param {number} val value to be limited
-     * @param {number} min minimum value of range
-     * @param {number} max maximum value of range
-     * @return {number} limited value
-     */
-    limitToRange: function limitToRange(val, min, max) {
-      if (val > max) {
-        return max;
-      }
-
-      if (val < min) {
-        return min;
-      }
-
-      return val;
-    },
-    // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
-    tableCloned: function tableCloned(mainDirectives) {
-      this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
-        query: '.wptb-builder-responsive table'
-      }); // there is already a directive at main table, decode and assign it to current ones
-
-      if (mainDirectives) {
-        var decodedMainDirectives = this.decodeResponsiveDirectives(mainDirectives);
-
-        try {
-          var mainDirectiveObj = JSON.parse(decodedMainDirectives);
-          this.deepMergeObject(this.directives, mainDirectiveObj);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.warn('[WPTB]: invalid directive found at main table');
-        }
-      }
-    },
-
-    /**
-     * Deep merge two objects.
-     *
-     * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way, object reference link will not be broken and reactive abilities of the store will continue to function.
-     *
-     * @param {object} baseObj base object
-     * @param {object} targetObj target object
-     */
-    deepMergeObject: function deepMergeObject(baseObj, targetObj) {
-      var _this3 = this;
-
-      // eslint-disable-next-line array-callback-return
-      Object.keys(targetObj).map(function (key) {
-        if (Object.prototype.hasOwnProperty.call(targetObj, key)) {
-          if (baseObj[key] !== undefined) {
-            if (_typeof(baseObj[key]) === 'object') {
-              // eslint-disable-next-line no-param-reassign
-              _this3.deepMergeObject(baseObj[key], targetObj[key]);
-            } else {
-              // eslint-disable-next-line no-param-reassign
-              baseObj[key] = targetObj[key];
-            }
-          }
-        }
-      });
-    },
-    // handler for event that signals end of directive copy operation to table on DOM
-    directivesCopied: function directivesCopied(mainTableHaveDirectives) {
-      // rebuilt table according to its responsive directives
-      this.responsiveFrontend.rebuildTables(this.appOptions.currentSize); // if main table have directives, it means that we are using them, so it is unnecessary to fire up save event for the table
-
-      if (!mainTableHaveDirectives) {
-        new WPTB_TableStateSaveManager().tableStateSet();
-      }
-
-      this.rebuilding = false;
-    },
-
-    /**
-     * @deprecated
-     * Recreate an object compatible with screen-size-slider component.
-     *
-     * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
-     *
-     * @returns {object} reformatted slider size object
-     */
-    sliderSizeStops: function sliderSizeStops() {
-      var _this4 = this;
-
-      var normalizedStops = Object.keys(this.screenSizes).reduce(function (p, c) {
-        if (Object.prototype.hasOwnProperty.call(_this4.screenSizes, c)) {
-          // eslint-disable-next-line no-param-reassign
-          p[_this4.screenSizes[c].name] = _this4.screenSizes[c].width;
-        }
-
-        return p;
-      }, {}); // add stops to directives
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-
-      this.directives.stops = normalizedStops;
-      return normalizedStops;
-    },
-
-    /**
-     * Find out the range key name for the size value.
-     *
-     * @param {number} val size value
-     * @return {string} range key name
-     */
-    calculateSizeRangeName: function calculateSizeRangeName(val) {
-      var mainObject = this.directives.breakpoints;
-      var ranges = Object.keys(mainObject).filter(function (s) {
-        if (Object.prototype.hasOwnProperty.call(mainObject, s)) {
-          return mainObject[s].width <= val;
-        }
-
-        return false;
-      }).sort(function (a, b) {
-        return mainObject[a].width - mainObject[b].width;
-      });
-
-      if (ranges.length === 0) {
-        return 'mobile';
-      }
-
-      return ranges[ranges.length - 1];
-    },
-    handleSizeSlideChange: function handleSizeSlideChange(e) {
-      this.appOptions.currentSize = e;
-    },
-
-    /**
-     * Encode responsive directives.
-     *
-     * @returns {String} base64 string representation of directives
-     */
-    encodeResponsiveDirectives: function encodeResponsiveDirectives() {
-      var stringifiedDirectives = JSON.stringify(this.directives);
-      return btoa(stringifiedDirectives);
-    },
-
-    /**
-     * Decode responsive directives.
-     *
-     * @param {String} val
-     * @returns {String} decoded value
-     */
-    decodeResponsiveDirectives: function decodeResponsiveDirectives(val) {
-      return atob(val);
-    },
-    showCellIdentifications: function showCellIdentifications() {
-      this.appOptions.identifyCells = true;
-    }
-  }
-};
-exports.default = _default;
-        var $26cd08 = exports.default || module.exports;
-      
-      if (typeof $26cd08 === 'function') {
-        $26cd08 = $26cd08.options;
-      }
-    
-        /* template */
-        Object.assign($26cd08, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("transition", { attrs: { name: "wptb-fade" } }, [
-    _vm.isVisible
-      ? _c(
-          "div",
-          { ref: "builderResponsive", staticClass: "wptb-builder-responsive" },
-          [
-            _c(
-              "div",
-              { staticClass: "wptb-responsive-menu-tools" },
-              [
-                _c("screen-size-slider", {
-                  attrs: {
-                    "end-padding": _vm.sliderPadding,
-                    stops: _vm.directives.breakpoints,
-                    "model-val": _vm.appOptions.currentSize,
-                    "enable-breakpoint-customization": false
-                  },
-                  on: { slide: _vm.handleSizeSlideChange }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass:
-                  "wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md"
-              },
-              [
-                _c(
-                  "div",
-                  { staticClass: "wptb-responsive-builder-toolbox-float" },
-                  [
-                    _c("number-postfix-input", {
-                      staticClass: "wptb-size-input wptb-plugin-box-shadow-xl",
-                      attrs: { "post-fix": "px", "only-enter": true },
-                      model: {
-                        value: _vm.appOptions.currentSize,
-                        callback: function($$v) {
-                          _vm.$set(_vm.appOptions, "currentSize", $$v)
-                        },
-                        expression: "appOptions.currentSize"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "material-button",
-                      {
-                        staticClass: "wptb-plugin-box-shadow-xl",
-                        attrs: {
-                          size: "fit-content",
-                          click: _vm.showCellIdentifications
-                        }
-                      },
-                      [
-                        _vm._v(
-                          _vm._s(_vm._f("cap")(_vm.strings.identifyCells)) +
-                            "\n\t\t\t\t"
-                        )
-                      ]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("table-clone", {
-                  ref: "tableClone",
-                  attrs: {
-                    clone: _vm.isVisible,
-                    "clone-query": _vm.cloneQuery,
-                    "table-directives": _vm.currentDirectives,
-                    "table-style": _vm.tableStyle
-                  },
-                  on: {
-                    tableCloned: _vm.tableCloned,
-                    directivesCopied: _vm.directivesCopied
-                  }
-                }),
-                _vm._v(" "),
-                _c("transition", { attrs: { name: "wptb-fade" } }, [
-                  !_vm.directives.responsiveEnabled
-                    ? _c("div", {
-                        staticClass: "wptb-responsive-disabled-table-overlay"
-                      })
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("transition", { attrs: { name: "wptb-fade" } }, [
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.rebuilding,
-                          expression: "rebuilding"
-                        }
-                      ],
-                      staticClass: "wptb-responsive-wait-overlay"
-                    },
-                    [_vm._v(_vm._s(_vm.strings.rebuilding))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("modal-window", {
-                  attrs: {
-                    visible: _vm.appOptions.hasLegacyResponsive,
-                    message: _vm.strings.legacyResponsiveWarning,
-                    "relative-ref": _vm.modalRelative,
-                    callback: function() {
-                      _vm.appOptions.hasLegacyResponsive = false
-                    }
-                  }
-                })
-              ],
-              1
-            )
-          ]
-        )
+    ]),
+    _vm._v(" "),
+    !_vm.isPro
+      ? _c("div", { staticClass: "wptb-prebuilt-ad" }, [
+          _vm._v("\n\t\t" + _vm._s(_vm.strings.prebuiltAdPart1) + ",\n\t\t"),
+          _c(
+            "a",
+            {
+              staticClass: "wptb-prebuilt-ad-link",
+              attrs: { href: _vm.adLink }
+            },
+            [_vm._v(_vm._s(_vm.strings.prebuiltAdPart2))]
+          )
+        ])
       : _vm._e()
   ])
 }
@@ -16880,40 +13332,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
-
-        var $d55f26 = exports.default || module.exports;
-      
-      if (typeof $d55f26 === 'function') {
-        $d55f26 = $d55f26.options;
-      }
-    
-        /* template */
-        Object.assign($d55f26, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "wptb-controls-flex-row" },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"plugins/filters.js":[function(require,module,exports) {
+},{"../components/PrebuiltCard":"components/PrebuiltCard.vue"}],"plugins/filters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16976,1147 +13395,57 @@ var _default = {
   install: install
 };
 exports.default = _default;
-},{}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
-
-function _defineProperty(e, n, t) {
-  return n in e ? Object.defineProperty(e, n, {
-    value: t,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : e[n] = t, e;
-}
-
-function _objectSpread(e) {
-  for (var n = 1; n < arguments.length; n++) {
-    var t = null != arguments[n] ? arguments[n] : {},
-        r = Object.keys(t);
-    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
-      return Object.getOwnPropertyDescriptor(t, e).enumerable;
-    }))), r.forEach(function (n) {
-      _defineProperty(e, n, t[n]);
-    });
-  }
-
-  return e;
-}
-
-var freeze = function (e, n, t) {
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    get: function () {
-      return t;
-    },
-    set: function (e) {
-      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
-    }
-  });
-},
-    unfreeze = function (e, n) {
-  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    writable: !0,
-    value: t
-  });
-},
-    component = {
-  abstract: !0,
-  name: "Fragment",
-  props: {
-    name: {
-      type: String,
-      default: function () {
-        return Math.floor(Date.now() * Math.random()).toString(16);
-      }
-    }
-  },
-  mounted: function () {
-    var e = this.$el,
-        n = e.parentNode,
-        t = document.createComment("fragment#".concat(this.name, "#head")),
-        r = document.createComment("fragment#".concat(this.name, "#tail"));
-    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.insertBefore = function (t, r) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.removeChild = function (e) {
-      n.removeChild(e), unfreeze(e, "parentNode");
-    }, Array.from(e.childNodes).forEach(function (n) {
-      return e.appendChild(n);
-    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
-    var o = n.insertBefore;
-
-    n.insertBefore = function (r, i) {
-      o.call(n, r, i !== e ? i : t);
-    };
-
-    var i = n.removeChild;
-
-    n.removeChild = function (a) {
-      if (a === e) {
-        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
-
-        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
-      } else i.call(n, a);
-    };
-  },
-  render: function (e) {
-    var n = this,
-        t = this.$slots.default;
-    return t && t.length && t.forEach(function (e) {
-      return e.data = _objectSpread({}, e.data, {
-        attrs: _objectSpread({
-          fragment: n.name
-        }, (e.data || {}).attrs)
-      });
-    }), e("div", {
-      attrs: {
-        fragment: this.name
-      }
-    }, t);
-  }
-};
-
-function ssr(e, n) {
-  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
-}
-
-var Fragment = component,
-    SSR = ssr,
-    Plugin = {
-  install: function (e) {
-    e.component("fragment", component);
-  }
-},
-    index = {
-  Fragment: component,
-  Plugin: Plugin,
-  SSR: ssr
-};
-exports.Plugin = Plugin;
-exports.SSR = SSR;
-exports.Fragment = Fragment;
-var _default = index;
-exports.default = _default;
-},{}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+},{}],"plugins/genericStore.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**
- * Base for left panel controls that will be hooked directly to Vue instances.
+ * Plugin install method.
+ *
+ * Plugin for adding app wide generic store.
+ *
+ * @param {object} Vue Vue object
+ * @param {options} options app data to be used
+ * @return {{appData: *}}
  */
-var PanelControlBase = {
-  props: {
-    label: String,
-    value: {
-      type: null
+function install(Vue, _ref) {
+  var _ref$data = _ref.data,
+      key = _ref$data.key,
+      _data = _ref$data.data,
+      methods = _ref.methods;
+  Vue.mixin({
+    data: function data() {
+      return _defineProperty({}, key, _data);
     },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    dependsValue: {
-      type: null,
-      default: null
-    },
-    dependsCallback: {
-      type: Function,
-      default: function _default(d, c) {
-        return c;
-      }
-    }
-  },
-  data: function data() {
-    return {
-      innerValue: ''
-    };
-  },
-  model: {
-    prop: 'value',
-    event: 'valueChanged'
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
-    },
-    innerValue: function innerValue(n) {
-      this.$emit('valueChanged', n);
-    },
-    dependsValue: function dependsValue(n) {
-      if (n === null) {
-        return;
-      }
-
-      this.innerValue = this.dependsCallback.call(this, n, this.innerValue);
-    }
-  },
-  mounted: function mounted() {
-    this.innerValue = this.value;
-  }
-};
-var _default = PanelControlBase;
-exports.default = _default;
-},{}],"components/PanelToggleControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  mixins: [_PanelControlBase.default]
-};
-exports.default = _default;
-        var $f6974b = exports.default || module.exports;
-      
-      if (typeof $f6974b === 'function') {
-        $f6974b = $f6974b.options;
-      }
-    
-        /* template */
-        Object.assign($f6974b, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
-    [
-      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c("label", { staticClass: "wptb-toggle" }, [
-          _c("span", { staticStyle: { "font-size": "16px" } }, [
-            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
-          ]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.innerValue,
-                expression: "innerValue"
-              }
-            ],
-            staticClass: "wptb-element-property",
-            attrs: { type: "checkbox", disabled: _vm.disabled },
-            domProps: {
-              checked: Array.isArray(_vm.innerValue)
-                ? _vm._i(_vm.innerValue, null) > -1
-                : _vm.innerValue
-            },
-            on: {
-              change: function($event) {
-                var $$a = _vm.innerValue,
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false
-                if (Array.isArray($$a)) {
-                  var $$v = null,
-                    $$i = _vm._i($$a, $$v)
-                  if ($$el.checked) {
-                    $$i < 0 && (_vm.innerValue = $$a.concat([$$v]))
-                  } else {
-                    $$i > -1 &&
-                      (_vm.innerValue = $$a
-                        .slice(0, $$i)
-                        .concat($$a.slice($$i + 1)))
-                  }
-                } else {
-                  _vm.innerValue = $$c
-                }
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("i")
-        ])
-      ])
-    ]
-  )
+    methods: methods
+  });
 }
-var staticRenderFns = []
-render._withStripped = true
 
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/PanelDropdownControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
-  props: {
-    options: {
-      type: Object,
-      default: function _default() {}
-    }
-  },
-  mixins: [_PanelControlBase.default]
+  install: install
 };
 exports.default = _default;
-        var $5b3d68 = exports.default || module.exports;
-      
-      if (typeof $5b3d68 === 'function') {
-        $5b3d68 = $5b3d68.options;
-      }
-    
-        /* template */
-        Object.assign($5b3d68, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
-    [
-      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c(
-          "label",
-          {
-            staticClass:
-              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
-          },
-          [
-            _c("span", { staticStyle: { "font-size": "16px" } }, [
-              _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
-            ]),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.innerValue,
-                    expression: "innerValue"
-                  }
-                ],
-                attrs: { disabled: _vm.disabled },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.innerValue = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.options, function(name, key) {
-                return _c("option", { key: key, domProps: { value: key } }, [
-                  _vm._v(_vm._s(_vm._f("cap")(name)))
-                ])
-              }),
-              0
-            )
-          ]
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
+},{}],"WPTB_Generate.js":[function(require,module,exports) {
+var global = arguments[3];
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vueFragment = require("vue-fragment");
-
-var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
-
-var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    PanelToggleControl: _PanelToggleControl.default,
-    PanelDropdownControl: _PanelDropdownControl.default,
-    Fragment: _vueFragment.Fragment
-  }
-};
-exports.default = _default;
-        var $1e9780 = exports.default || module.exports;
-      
-      if (typeof $1e9780 === 'function') {
-        $1e9780 = $1e9780.options;
-      }
-    
-        /* template */
-        Object.assign($1e9780, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "fragment",
-    [
-      _c("panel-toggle-control", {
-        attrs: { label: _vm._f("cap")(_vm.strings.enableResponsive) },
-        model: {
-          value: _vm.directives.responsiveEnabled,
-          callback: function($$v) {
-            _vm.$set(_vm.directives, "responsiveEnabled", $$v)
-          },
-          expression: "directives.responsiveEnabled"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-dropdown-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.strings.relative),
-          options: {
-            window: _vm.strings.window,
-            container: _vm.strings.container
-          },
-          disabled: !_vm.directives.responsiveEnabled
-        },
-        model: {
-          value: _vm.directives.relativeWidth,
-          callback: function($$v) {
-            _vm.$set(_vm.directives, "relativeWidth", $$v)
-          },
-          expression: "directives.relativeWidth"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-dropdown-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.strings.mode),
-          options: { auto: "auto" },
-          disabled: !_vm.directives.responsiveEnabled
-        },
-        model: {
-          value: _vm.directives.responsiveMode,
-          callback: function($$v) {
-            _vm.$set(_vm.directives, "responsiveMode", $$v)
-          },
-          expression: "directives.responsiveMode"
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue"}],"components/PanelSectionGroupTabbed.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    header: {
-      type: String,
-      default: 'Tab Header'
-    },
-    // tabs object, keys for tab ids, values for translated tab names
-    tabs: {
-      type: Object,
-      default: function _default() {
-        return {
-          default: 'Default'
-        };
-      }
-    },
-    // id of currentTab
-    currentTab: {
-      type: String,
-      default: 'default'
-    }
-  },
-  methods: {
-    // decide if the tab is active based on current active tab property
-    isActiveTab: function isActiveTab(tabId) {
-      return this.currentTab === tabId;
-    },
-    handleTabClick: function handleTabClick(tabId) {
-      this.$emit('tabClicked', tabId);
-    }
-  }
-};
-exports.default = _default;
-        var $3d2461 = exports.default || module.exports;
-      
-      if (typeof $3d2461 === 'function') {
-        $3d2461 = $3d2461.options;
-      }
-    
-        /* template */
-        Object.assign($3d2461, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-section-group-tabbed wptb-plugin-box-shadow-md wptb-plugin-width-full"
-    },
-    [
-      _c(
-        "div",
-        { staticClass: "wptb-panel-toggle wptb-section-group-tabbed-header" },
-        [_c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.header))])]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-section-group-tabbed-tabs-buttons" },
-        _vm._l(_vm.tabs, function(name, id) {
-          return _c(
-            "div",
-            {
-              key: id,
-              staticClass: "wptb-settings-section-item static-active",
-              class: {
-                active: _vm.isActiveTab(id),
-                disabled: !_vm.isActiveTab(id)
-              },
-              on: {
-                "!click": function($event) {
-                  $event.preventDefault()
-                  return _vm.handleTabClick(id)
-                }
-              }
-            },
-            [_vm._v("\n\t\t\t" + _vm._s(name) + "\n\t\t")]
-          )
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "wptb-section-group-tab-content" },
-        [_vm._t("default")],
-        2
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/PanelInputControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
-
-var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    NumberPostfixInput: _NumberPostfixInput.default
-  },
-  mixins: [_PanelControlBase.default]
-};
-exports.default = _default;
-        var $089a84 = exports.default || module.exports;
-      
-      if (typeof $089a84 === 'function') {
-        $089a84 = $089a84.options;
-      }
-    
-        /* template */
-        Object.assign($089a84, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
-    [
-      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c(
-          "label",
-          {
-            staticClass:
-              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
-          },
-          [
-            _c("span", { staticStyle: { "font-size": "16px" } }, [
-              _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
-            ]),
-            _vm._v(" "),
-            _c("number-postfix-input", {
-              staticClass: "wptb-size-input",
-              attrs: {
-                "enable-dynamic-width": true,
-                min: 1,
-                max: 100,
-                "enable-limit": true,
-                disabled: _vm.disabled
-              },
-              model: {
-                value: _vm.innerValue,
-                callback: function($$v) {
-                  _vm.innerValue = $$v
-                },
-                expression: "innerValue"
-              }
-            })
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/AutoModePanelControls.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vueFragment = require("vue-fragment");
-
-var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
-
-var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
-
-var _PanelInputControl = _interopRequireDefault(require("./PanelInputControl"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    Fragment: _vueFragment.Fragment,
-    PanelToggleControl: _PanelToggleControl.default,
-    PanelDropdownControl: _PanelDropdownControl.default,
-    PanelInputControl: _PanelInputControl.default
-  },
-  methods: {
-    isDisabled: function isDisabled() {
-      return this.appOptions.currentBreakpoint === 'desktop' || !this.directives.responsiveEnabled;
-    }
-  },
-  computed: {
-    perLabelString: function perLabelString() {
-      return this.directives.modeOptions.auto.topRowAsHeader[this.appOptions.currentBreakpoint] ? this.strings.itemsPerHeader : this.strings.cellsPerRow;
-    }
-  }
-};
-exports.default = _default;
-        var $085e64 = exports.default || module.exports;
-      
-      if (typeof $085e64 === 'function') {
-        $085e64 = $085e64.options;
-      }
-    
-        /* template */
-        Object.assign($085e64, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "fragment",
-    [
-      _c("panel-toggle-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.strings.topRowHeader),
-          disabled: _vm.isDisabled(),
-          "depends-value":
-            _vm.directives.modeOptions.auto.staticTopRow[
-              _vm.appOptions.currentBreakpoint
-            ],
-          "depends-callback": function(d, c) {
-            if (d === true) {
-              return false
-            }
-            return c
-          }
-        },
-        model: {
-          value:
-            _vm.directives.modeOptions.auto.topRowAsHeader[
-              _vm.appOptions.currentBreakpoint
-            ],
-          callback: function($$v) {
-            _vm.$set(
-              _vm.directives.modeOptions.auto.topRowAsHeader,
-              _vm.appOptions.currentBreakpoint,
-              $$v
-            )
-          },
-          expression:
-            "directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-toggle-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.strings.staticTopRow),
-          disabled: _vm.isDisabled(),
-          "depends-value":
-            _vm.directives.modeOptions.auto.topRowAsHeader[
-              _vm.appOptions.currentBreakpoint
-            ],
-          "depends-callback": function(d, c) {
-            if (d === true) {
-              return false
-            }
-            return c
-          }
-        },
-        model: {
-          value:
-            _vm.directives.modeOptions.auto.staticTopRow[
-              _vm.appOptions.currentBreakpoint
-            ],
-          callback: function($$v) {
-            _vm.$set(
-              _vm.directives.modeOptions.auto.staticTopRow,
-              _vm.appOptions.currentBreakpoint,
-              $$v
-            )
-          },
-          expression:
-            "directives.modeOptions.auto.staticTopRow[appOptions.currentBreakpoint]"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-dropdown-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.strings.stackDirection),
-          options: { row: _vm.strings.row, column: _vm.strings.column },
-          disabled: _vm.isDisabled()
-        },
-        model: {
-          value:
-            _vm.directives.modeOptions.auto.cellStackDirection[
-              _vm.appOptions.currentBreakpoint
-            ],
-          callback: function($$v) {
-            _vm.$set(
-              _vm.directives.modeOptions.auto.cellStackDirection,
-              _vm.appOptions.currentBreakpoint,
-              $$v
-            )
-          },
-          expression:
-            "directives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint]"
-        }
-      }),
-      _vm._v(" "),
-      _c("panel-input-control", {
-        attrs: {
-          label: _vm._f("cap")(_vm.perLabelString),
-          disabled: _vm.isDisabled()
-        },
-        model: {
-          value:
-            _vm.directives.modeOptions.auto.cellsPerRow[
-              _vm.appOptions.currentBreakpoint
-            ],
-          callback: function($$v) {
-            _vm.$set(
-              _vm.directives.modeOptions.auto.cellsPerRow,
-              _vm.appOptions.currentBreakpoint,
-              $$v
-            )
-          },
-          expression:
-            "directives.modeOptions.auto.cellsPerRow[appOptions.currentBreakpoint]"
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelInputControl":"components/PanelInputControl.vue"}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _PanelSectionGroupTabbed = _interopRequireDefault(require("./PanelSectionGroupTabbed"));
-
-var _AutoModePanelControls = _interopRequireDefault(require("./AutoModePanelControls"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    PanelSectionGroupTabbed: _PanelSectionGroupTabbed.default,
-    AutoModePanelControls: _AutoModePanelControls.default
-  },
-  computed: {
-    breakpointsObject: function breakpointsObject() {
-      var _this = this;
-
-      return Object.keys(this.directives.breakpoints).sort(function (a, b) {
-        // sort breakpoints by their width ascending
-        return _this.directives.breakpoints[a].width - _this.directives.breakpoints[b].width;
-      }).reduce(function (c, k) {
-        if (Object.prototype.hasOwnProperty.call(_this.directives.breakpoints, k)) {
-          // eslint-disable-next-line no-param-reassign
-          c[k] = _this.directives.breakpoints[k].name;
-        }
-
-        return c;
-      }, {});
-    },
-    currentPanelControls: function currentPanelControls() {
-      return "".concat(this.directives.responsiveMode[0].toUpperCase() + this.directives.responsiveMode.slice(1), "ModePanelControls");
-    }
-  },
-  methods: {
-    /**
-     * Handle tab change
-     * @param {string} tabId breakpoint id
-     */
-    handleTabChange: function handleTabChange(tabId) {
-      // assign tabId to breakpoint id property of global store
-      this.appOptions.currentBreakpoint = tabId; // get breakpoint size and assign to size property of global store to force a rebuilding process
-
-      this.appOptions.currentSize = this.directives.breakpoints[tabId].width;
-    }
-  }
-};
-exports.default = _default;
-        var $b7cc79 = exports.default || module.exports;
-      
-      if (typeof $b7cc79 === 'function') {
-        $b7cc79 = $b7cc79.options;
-      }
-    
-        /* template */
-        Object.assign($b7cc79, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "panel-section-group-tabbed",
-    {
-      attrs: {
-        "current-tab": _vm.appOptions.currentBreakpoint,
-        tabs: _vm.breakpointsObject,
-        header: _vm.strings[_vm.directives.responsiveMode]
-      },
-      on: { tabClicked: _vm.handleTabChange }
-    },
-    [_c(_vm.currentPanelControls, { tag: "component" })],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue","./AutoModePanelControls":"components/AutoModePanelControls.vue"}],"mountPoints/WPTB_ResponsiveTable.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _ResponsiveApp = _interopRequireDefault(require("../containers/ResponsiveApp"));
+var _GenerateMain = _interopRequireDefault(require("./containers/GenerateMain"));
 
-var _ResponsiveControlsRow = _interopRequireDefault(require("../components/ResponsiveControlsRow"));
+var _filters = _interopRequireDefault(require("./plugins/filters"));
 
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
+var _strings = _interopRequireDefault(require("./plugins/strings"));
 
-var _filters = _interopRequireDefault(require("../plugins/filters"));
+var _genericStore = _interopRequireDefault(require("./plugins/genericStore"));
 
-var _strings = _interopRequireDefault(require("../plugins/strings"));
-
-var _ResponsivePanelGeneralControls = _interopRequireDefault(require("../components/ResponsivePanelGeneralControls"));
-
-var _ResponsivePanelModeControls = _interopRequireDefault(require("../components/ResponsivePanelModeControls"));
+var _global$wptbGenerateM;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18126,1093 +13455,65 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var _default = {
-  name: 'ResponsiveTable',
-  handler: function responsiveTableJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData('responsiveMenuData');
+_vue.default.config.productionTip = false; // setup filters
 
-    var mainTableQuery = '.wptb-preview-table';
-    /**
-     * Various options that will be used all around the app
-     *
-     * * identifyCells -> show visual unique identification for table cell elements
-     * * hasLegacyResponsive -> indicates current table has legacy responsive functionality enabled
-     * * currentBreakpoint -> id of the current breakpoint
-     * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
-     *
-     */
+_vue.default.use(_filters.default);
 
-    var appOptions = {
-      identifyCells: false,
-      hasLegacyResponsive: false,
-      currentBreakpoint: 'desktop',
-      currentSize: 0
-    }; // directives for responsive features
-    // add default options value at here instead of assigning them at app dynamically. this way, default options can be used for error checking and will prevent bugs/security concerns beforehand
+var proData = (_global$wptbGenerateM = global.wptbGenerateMenuProData) !== null && _global$wptbGenerateM !== void 0 ? _global$wptbGenerateM : {};
 
-    var directives = {
-      responsiveEnabled: false,
-      responsiveMode: 'auto',
-      preserveRowColor: false,
-      relativeWidth: 'window',
-      modeOptions: {
-        auto: {
-          topRowAsHeader: {
-            desktop: false,
-            tablet: false,
-            mobile: false
-          },
-          staticTopRow: {
-            desktop: false,
-            tablet: false,
-            mobile: false
-          },
-          cellStackDirection: {
-            desktop: 'row',
-            tablet: 'row',
-            mobile: 'row'
-          },
-          cellsPerRow: {
-            desktop: 1,
-            tablet: 1,
-            mobile: 1
-          }
-        }
-      },
-      breakpoints: data.screenSizes
-    }; // singleton store object
-    // this object implementation will give us the ability to persist the state of certain data properties across all app
-
-    var optionsStore = {
-      // eslint-disable-next-line no-shadow
-      install: function install(Vue, options) {
-        Vue.mixin({
-          data: function data() {
-            return options.data;
-          }
-        });
-      }
-    }; // app wide components that will be available for every component
-
-    var appWideComponents = {
-      // eslint-disable-next-line no-shadow
-      install: function install(Vue, _ref) {
-        var components = _ref.components;
-        Vue.mixin({
-          components: components
-        });
-      }
-    }; // app wide components setup
-
-    _vue.default.use(appWideComponents, {
-      components: {
-        ResponsiveControlsRow: _ResponsiveControlsRow.default
-      }
-    }); // options store setup
+var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup app store
 
 
-    _vue.default.use(optionsStore, {
-      data: {
-        appOptions: appOptions,
-        directives: directives
-      }
-    }); // filters setup
+var store = {
+  teamTablePrefix: data.teamBuildTablePrefix,
+  icons: data.icons,
+  env: "development"
+}; // store methods
 
-
-    _vue.default.use(_filters.default); // translation strings setup
-
-
-    _vue.default.use(_strings.default, data); // vue builder instance
-
-
-    new _vue.default({
-      components: {
-        ResponsiveApp: _ResponsiveApp.default
-      },
-      data: _objectSpread({
-        mainTableQuery: mainTableQuery
-      }, data),
-      template: '<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>'
-    }).$mount("#".concat(uniqueId)); // left panel general controls instance
-
-    new _vue.default({
-      components: {
-        ResponsivePanelGeneralControls: _ResponsivePanelGeneralControls.default
-      },
-      template: '<responsive-panel-general-controls></responsive-panel-general-controls>'
-    }).$mount('#responsiveBuilderLeftPanelGeneralControls'); // left panel mode controls
-
-    new _vue.default({
-      components: {
-        ResponsivePanelModeControls: _ResponsivePanelModeControls.default
-      },
-      data: _objectSpread({}, data),
-      template: '<responsive-panel-mode-controls></responsive-panel-mode-controls>'
-    }).$mount('#responsiveBuilderLeftPanelModeOptions');
+var storeMethods = {
+  isDevBuild: function isDevBuild() {
+    return "development";
   }
 };
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js","../components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","../components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue"}],"components/SideInput.vue":[function(require,module,exports) {
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    label: {
-      type: String,
-      default: 'top'
-    },
-    value: {
-      type: Number,
-      default: 0
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
+_vue.default.use(_genericStore.default, {
+  data: {
+    key: 'appData',
+    data: store
   },
-  model: {
-    prop: 'value',
-    event: 'valueChanged'
-  },
-  mounted: function mounted() {
-    this.innerValue = this.value;
-  },
-  data: function data() {
-    return {
-      innerValue: 0
-    };
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
-    },
-    innerValue: function innerValue(n) {
-      this.$emit('valueChanged', Number.parseInt(n, 10));
-    }
-  },
-  methods: {
-    inputChange: function inputChange(e) {
-      this.$emit('changedFromFront', this.$vnode.key, e.target.value);
-      this.innerValue = e.target.value;
-    }
-  }
-};
-exports.default = _default;
-        var $d91df7 = exports.default || module.exports;
-      
-      if (typeof $d91df7 === 'function') {
-        $d91df7 = $d91df7.options;
-      }
-    
-        /* template */
-        Object.assign($d91df7, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-side-control-input-wrapper wptb-side-control-number-input"
-    },
-    [
-      _c("div", { staticClass: "wptb-side-control-header" }, [
-        _vm._v("\n\t\t" + _vm._s(_vm._f("cap")(_vm.label)) + "\n\t")
-      ]),
-      _vm._v(" "),
-      _c("div", [
-        _c("input", {
-          staticClass: "wptb-side-control-main-input",
-          attrs: { type: "number", disabled: _vm.disabled },
-          domProps: { value: _vm.innerValue },
-          on: { input: _vm.inputChange }
-        })
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
+  methods: storeMethods
+}); // setup translation strings
 
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/SideDropdown.vue":[function(require,module,exports) {
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    value: {
-      type: String,
-      default: 'px'
-    }
-  },
-  model: {
-    prop: 'value',
-    event: 'valueChanged'
-  },
-  data: function data() {
-    return {
-      options: ['px', '%'],
-      innerValue: ''
-    };
-  },
-  mounted: function mounted() {
-    this.innerValue = this.value;
-  },
-  watch: {
-    value: function value(n) {
-      this.innerValue = n;
-    },
-    innerValue: function innerValue(n) {
-      this.$emit('valueChanged', n);
-    }
-  },
-  methods: {
-    isSelected: function isSelected(k) {
-      return this.innerValue === k;
-    }
-  }
-};
-exports.default = _default;
-        var $d95020 = exports.default || module.exports;
-      
-      if (typeof $d95020 === 'function') {
-        $d95020 = $d95020.options;
-      }
-    
-        /* template */
-        Object.assign($d95020, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-side-control-input-wrapper wptb-side-control-dropdown-wrapper"
-    },
-    [
-      _c(
-        "select",
-        {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.innerValue,
-              expression: "innerValue"
-            }
-          ],
-          staticClass:
-            "wptb-side-control-main-input wptb-side-control-dropdown",
-          on: {
-            change: function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.innerValue = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            }
-          }
-        },
-        _vm._l(_vm.options, function(option) {
-          return _c(
-            "option",
-            {
-              key: option,
-              domProps: { value: option, selected: _vm.isSelected(option) }
-            },
-            [_vm._v(_vm._s(option))]
-          )
-        }),
-        0
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
+_vue.default.use(_strings.default, data);
 
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"containers/SidesControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-var _SideInput = _interopRequireDefault(require("../components/SideInput"));
-
-var _SideDropdown = _interopRequireDefault(require("../components/SideDropdown"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var _default = {
-  props: {
-    linkIcon: {
-      type: String,
-      default: null
-    },
-    unlinkIcon: {
-      type: String,
-      default: null
-    },
-    strings: {
-      type: Object,
-      required: true
-    },
-    defaultValue: {
-      type: String,
-      default: '0 0 0 0'
-    }
-  },
-  mixins: [_ControlBase.default],
+var vm = new _vue.default({
   components: {
-    SideInput: _SideInput.default,
-    SideDropdown: _SideDropdown.default
+    GenerateMain: _GenerateMain.default
   },
-  data: function data() {
-    return {
-      linkValues: false,
-      sideValues: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
-      },
-      lastEdited: 'top',
-      type: 'px',
-      suppressDirty: true
-    };
-  },
-  mounted: function mounted() {
-    this.assignDefaultValue();
-    this.parseElementValue();
-  },
-  updated: function updated() {
-    this.suppressDirty = false;
-  },
-  watch: {
-    sideValues: {
-      handler: function handler() {
-        this.calculateElementValue();
-      },
-      deep: true
-    },
-    elementMainValue: {
-      handler: function handler(n) {
-        this.setAllValues(n);
-        this.generateChangeEvent(n);
+  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+  data: data
+}).$mount("#".concat(data.mountId));
+var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
 
-        if (this.suppressDirty) {
-          this.resetMountedState();
-        }
+tableContainer.style.opacity = 0;
+tableContainer.style.height = '0px';
+document.addEventListener('wptb:table:generated', function () {
+  var generateWrapper = document.querySelector('.wptb-generate-wrapper');
 
-        this.setTableDirty(true);
-      },
-      immediate: true
-    },
-    linkValues: function linkValues() {
-      this.calculateElementValue();
-    },
-    type: function type() {
-      this.calculateElementValue();
-    }
-  },
-  methods: {
-    inputChanged: function inputChanged(key) {
-      this.lastEdited = key;
-    },
-    calculateElementValue: function calculateElementValue() {
-      var _this = this;
+  if (generateWrapper) {
+    generateWrapper.addEventListener('animationend', function (e) {
+      if (e.animationName === 'wptb-basic-disappear') {
+        vm.$destroy();
+        generateWrapper.remove(); // show table container
 
-      this.assignLinkedValues();
-      this.elementMainValue = Object.keys(this.sideValues) // eslint-disable-next-line array-callback-return,consistent-return
-      .map(function (k) {
-        if (Object.prototype.hasOwnProperty.call(_this.sideValues, k)) {
-          return _this.sideValues[k] + _this.type;
-        }
-      }).join(' ');
-    },
-    assignLinkedValues: function assignLinkedValues() {
-      var _this2 = this;
-
-      if (this.linkValues) {
-        Object.keys(this.sideValues).filter(function (f) {
-          return f !== _this2.lastEdited;
-        }) // eslint-disable-next-line array-callback-return
-        .map(function (k) {
-          if (Object.prototype.hasOwnProperty.call(_this2.sideValues, k)) {
-            _this2.sideValues[k] = _this2.sideValues[_this2.lastEdited];
-          }
-        });
+        tableContainer.style.opacity = 1;
+        tableContainer.style.height = 'unset';
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:table:visible', document);
       }
-    },
-    parseElementValue: function parseElementValue() {
-      var parsedType = 'px'; // find out value type from element main value or use the default type
-      // eslint-disable-next-line array-callback-return
-
-      this.elementMainValue.split(' ').map(function (s) {
-        var match = s.match(/([a-z%?]+)/);
-
-        if (match && match[1]) {
-          var _match = _slicedToArray(match, 2);
-
-          parsedType = _match[1];
-        }
-      }); // assign startup value type
-
-      this.type = parsedType; // fetch style syntaxed values and split them into array elements
-
-      var values = _toConsumableArray(this.elementMainValue.matchAll(/[\d]+/g)).flatMap(function (s) {
-        return Number.parseInt(s[0], 10);
-      });
-
-      if (values) {
-        // assign values to their respective properties
-        if (values.length === 1) {
-          var _values = _slicedToArray(values, 1);
-
-          this.sideValues.top = _values[0];
-
-          var _values2 = _slicedToArray(values, 1);
-
-          this.sideValues.bottom = _values2[0];
-
-          var _values3 = _slicedToArray(values, 1);
-
-          this.sideValues.left = _values3[0];
-
-          var _values4 = _slicedToArray(values, 1);
-
-          this.sideValues.right = _values4[0];
-          // link values if all of the parsed values are the same
-          this.linkValues = true;
-        } else if (values.length === 2) {
-          var _values5 = _slicedToArray(values, 2);
-
-          this.sideValues.bottom = _values5[0];
-          this.sideValues.left = _values5[1];
-
-          var _values6 = _slicedToArray(values, 2);
-
-          this.sideValues.top = _values6[0];
-          this.sideValues.right = _values6[1];
-        } else if (values.length === 3) {
-          var _values7 = _slicedToArray(values, 3);
-
-          this.sideValues.top = _values7[0];
-          this.sideValues.right = _values7[1];
-          this.sideValues.bottom = _values7[2];
-          this.sideValues.left = 0;
-        } else {
-          var _values8 = _slicedToArray(values, 4);
-
-          this.sideValues.top = _values8[0];
-          this.sideValues.right = _values8[1];
-          this.sideValues.bottom = _values8[2];
-          this.sideValues.left = _values8[3];
-        }
-      }
-    }
+    });
+    generateWrapper.classList.add('wptb-plugin-basic-disappear');
   }
-};
-exports.default = _default;
-        var $3b6a1a = exports.default || module.exports;
-      
-      if (typeof $3b6a1a === 'function') {
-        $3b6a1a = $3b6a1a.options;
-      }
-    
-        /* template */
-        Object.assign($3b6a1a, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "wptb-settings-item-header-include-right" }, [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("div", [_vm._v(_vm._s(_vm._f("cap")(_vm.label)))]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                _vm.linkValues = !_vm.linkValues
-              }
-            }
-          },
-          [
-            !_vm.linkValues
-              ? _c("div", { staticClass: "wptb-sides-link-icon-wrapper" }, [
-                  _c("img", {
-                    attrs: { src: _vm.linkIcon, title: _vm.strings.link }
-                  })
-                ])
-              : _c("div", { staticClass: "wptb-sides-link-icon-wrapper" }, [
-                  _c("img", {
-                    attrs: { src: _vm.unlinkIcon, title: _vm.strings.unlink }
-                  })
-                ])
-          ]
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass:
-          "wptb-settings-row wptb-settings-middle-xs wptb-sides-controls-wrapper",
-        class: { "wptb-side-values-linked": _vm.linkValues }
-      },
-      [
-        _vm._l(_vm.sideValues, function(v, k) {
-          return _c("side-input", {
-            key: k,
-            attrs: { label: _vm.strings[k] },
-            on: { changedFromFront: _vm.inputChanged },
-            model: {
-              value: _vm.sideValues[k],
-              callback: function($$v) {
-                _vm.$set(_vm.sideValues, k, $$v)
-              },
-              expression: "sideValues[k]"
-            }
-          })
-        }),
-        _vm._v(" "),
-        _c("side-dropdown", {
-          model: {
-            value: _vm.type,
-            callback: function($$v) {
-              _vm.type = $$v
-            },
-            expression: "type"
-          }
-        })
-      ],
-      2
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/SideInput":"components/SideInput.vue","../components/SideDropdown":"components/SideDropdown.vue"}],"mountPoints/WPTB_SidesControl.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
 });
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-var _SidesControl = _interopRequireDefault(require("../containers/SidesControl"));
-
-var _filters = _interopRequireDefault(require("../plugins/filters"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Sides control
- */
-// eslint-disable-next-line camelcase
-var _default = {
-  name: 'ControlSides',
-  handler: function sidesControlJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId); // add filters for vue instance
-
-
-    _vue.default.use(_filters.default);
-
-    new _vue.default({
-      data: data,
-      components: {
-        SidesControl: _SidesControl.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/SidesControl":"containers/SidesControl.vue","../plugins/filters":"plugins/filters.js"}],"components/NamedToggleItem.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    title: {
-      type: String,
-      default: 'item'
-    },
-    id: {
-      type: String,
-      required: true
-    },
-    active: {
-      type: Boolean,
-      default: false
-    }
-  },
-  watch: {
-    active: function active(n) {
-      if (n === true) {
-        this.$emit('activateItem', this.id, this.$refs.itemWrapper);
-      }
-    }
-  },
-  methods: {
-    activateItem: function activateItem(e) {
-      this.$emit('activateItem', this.id, e.target);
-    }
-  }
-};
-exports.default = _default;
-        var $40eb3b = exports.default || module.exports;
-      
-      if (typeof $40eb3b === 'function') {
-        $40eb3b = $40eb3b.options;
-      }
-    
-        /* template */
-        Object.assign($40eb3b, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      ref: "itemWrapper",
-      staticClass: "wptb-named-toggle-item",
-      attrs: { "data-wptb-named-toggle-active": _vm.active },
-      on: {
-        "!click": function($event) {
-          $event.preventDefault()
-          return _vm.activateItem($event)
-        }
-      }
-    },
-    [_vm._v("\n\t" + _vm._s(_vm.title) + "\n")]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/NamedToggleActiveIndicator.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-var _default = {
-  props: {
-    refElement: {
-      type: HTMLElement,
-      default: null
-    }
-  },
-  data: function data() {
-    return {
-      style: {
-        left: 0,
-        top: 0,
-        width: 0
-      }
-    };
-  },
-  watch: {
-    refElement: function refElement(n) {
-      if (n === null || n === undefined) {
-        return;
-      }
-
-      this.calculatePosition();
-    }
-  },
-  methods: {
-    calculatePosition: function calculatePosition() {
-      var mainWrapperPosObj = this.$refs.main.parentNode.getBoundingClientRect();
-      var targetPosObj = this.refElement.getBoundingClientRect();
-      var relativeX = targetPosObj.x - mainWrapperPosObj.x;
-      this.style.left = "".concat(Math.floor(relativeX - 1), "px");
-      this.style.width = "".concat(targetPosObj.width + 1, "px");
-    }
-  }
-};
-exports.default = _default;
-        var $01554d = exports.default || module.exports;
-      
-      if (typeof $01554d === 'function') {
-        $01554d = $01554d.options;
-      }
-    
-        /* template */
-        Object.assign($01554d, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", {
-    ref: "main",
-    staticClass: "wptb-named-toggle-active-indicator",
-    style: _vm.style
-  })
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"containers/NamedToggleControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-var _NamedToggleItem = _interopRequireDefault(require("../components/NamedToggleItem"));
-
-var _NamedToggleActiveIndicator = _interopRequireDefault(require("../components/NamedToggleActiveIndicator"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    NamedToggleActiveIndicator: _NamedToggleActiveIndicator.default,
-    NamedToggleItem: _NamedToggleItem.default
-  },
-  props: {
-    items: {
-      type: Object,
-      default: function _default() {
-        return {
-          item: 'item'
-        };
-      }
-    }
-  },
-  mixins: [_ControlBase.default],
-  data: function data() {
-    return {
-      activeElement: null
-    };
-  },
-  mounted: function mounted() {
-    this.assignDefaultValue();
-  },
-  watch: {
-    elementMainValue: function elementMainValue(n) {
-      this.setAllValues(n);
-      this.generateChangeEvent(n);
-      this.setTableDirty(true);
-    }
-  },
-  methods: {
-    isItemActive: function isItemActive(id) {
-      return this.elementMainValue === id;
-    },
-    activateItem: function activateItem(id, refElement) {
-      this.elementMainValue = id;
-      this.activeElement = refElement;
-    }
-  }
-};
-exports.default = _default;
-        var $8f11fa = exports.default || module.exports;
-      
-      if (typeof $8f11fa === 'function') {
-        $8f11fa = $8f11fa.options;
-      }
-    
-        /* template */
-        Object.assign($8f11fa, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-settings-row wptb-settings-middle-xs wptb-element-property",
-      class: _vm.uniqueId,
-      attrs: { "data-element": _vm.elemContainer }
-    },
-    [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("p", { staticClass: "wptb-settings-item-title" }, [
-          _vm._v(_vm._s(_vm.label))
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "wptb-named-toggle-control-wrapper" },
-          [
-            _c("named-toggle-active-indicator", {
-              attrs: { "ref-element": _vm.activeElement }
-            }),
-            _vm._v(" "),
-            _vm._l(_vm.items, function(v, k) {
-              return _c("named-toggle-item", {
-                key: k,
-                attrs: { title: v, id: k, active: _vm.isItemActive(k) },
-                on: { activateItem: _vm.activateItem }
-              })
-            })
-          ],
-          2
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/NamedToggleItem":"components/NamedToggleItem.vue","../components/NamedToggleActiveIndicator":"components/NamedToggleActiveIndicator.vue"}],"mountPoints/WPTB_NamedToggleControl.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
-
-var _NamedToggleControl = _interopRequireDefault(require("../containers/NamedToggleControl"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Named toggle control.
- */
-// eslint-disable-next-line camelcase
-var _default = {
-  name: 'ControlNamedToggle',
-  handler: function namedToggleControlJS(uniqueId) {
-    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
-
-    new _vue.default({
-      data: data,
-      components: {
-        NamedToggleControl: _NamedToggleControl.default
-      }
-    }).$mount("#".concat(uniqueId));
-  }
-};
-exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NamedToggleControl":"containers/NamedToggleControl.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
-
-"use strict";
-
-var _vue = _interopRequireDefault(require("vue"));
-
-var _WPTB_IconSelectControl = _interopRequireDefault(require("./mountPoints/WPTB_IconSelectControl"));
-
-var _WPTB_RangeControl = _interopRequireDefault(require("./mountPoints/WPTB_RangeControl"));
-
-var _WPTB_Select2Control = _interopRequireDefault(require("./mountPoints/WPTB_Select2Control"));
-
-var _WPTB_MediaSelectControl = _interopRequireDefault(require("./mountPoints/WPTB_MediaSelectControl"));
-
-var _WPTB_ControlsManager = _interopRequireDefault(require("./functions/WPTB_ControlsManager"));
-
-var _WPTB_ResponsiveTable = _interopRequireDefault(require("./mountPoints/WPTB_ResponsiveTable"));
-
-var _WPTB_SidesControl = _interopRequireDefault(require("./mountPoints/WPTB_SidesControl"));
-
-var _WPTB_NamedToggleControl = _interopRequireDefault(require("./mountPoints/WPTB_NamedToggleControl"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* eslint-disable camelcase */
-
-/**
- * Main builder controls register entry point.
- *
- * This file is used to register defined builder controls to specified controls manager and let them be called by individual control elements dynamically. Instead of import/register the components automatically, explicitly specify the components that will be registered to keep track of them more easily.
- */
-// turn off Vue production message at console
-_vue.default.config.productionTip = false; // eslint-disable-next-line no-restricted-globals
-
-var global = self || void 0; // adding controls manager to global space
-
-global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default];
-/**
- * Register control element.
- *
- * @param {object} controlObject control element object
- */
-
-function registerControl(controlObject) {
-  _WPTB_ControlsManager.default.addControlScript(controlObject.name, controlObject.handler);
-}
-
-controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js"}]},{},["WPTB_BuilderControls.js"], null)
-//# sourceMappingURL=/WPTB_BuilderControls.js.map
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./containers/GenerateMain":"containers/GenerateMain.vue","./plugins/filters":"plugins/filters.js","./plugins/strings":"plugins/strings.js","./plugins/genericStore":"plugins/genericStore.js"}]},{},["WPTB_Generate.js"], null)
+//# sourceMappingURL=/WPTB_Generate.js.map
