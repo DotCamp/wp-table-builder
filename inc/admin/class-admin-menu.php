@@ -81,7 +81,7 @@ class Admin_Menu {
 				add_post_meta( $id, '_wptb_content_', $table_content );
 
 				// new table id filter hook
-				$id = apply_filters( 'wp-table-builder/new_table_id', $id , $params );
+				$id = apply_filters( 'wp-table-builder/new_table_id', $id, $params );
 
 				// new table saved action hook
 				do_action( 'wp-table-builder/new_table_saved', $id, $params );
@@ -288,10 +288,12 @@ class Admin_Menu {
 			if ( ! isset( $_GET['table'] ) ) { // enqueue file with the same handler name as pro version and with a low priority to load pro version is it is enabled instead of normal version
 				wp_enqueue_script( static::$generate_menu_script_hook, plugin_dir_url( __FILE__ ) . 'js/WPTB_Generate.js', [], filemtime( $generate_path ), true );
 				$generate_data = [
-					'mountId' => 'wptbGenerate',
-					'version' => 'normal',
-					'adLink'  => 'https://wptablebuilder.com/',
-					'strings' => [
+					'mountId'        => 'wptbGenerate',
+					'version'        => 'normal',
+					'adLink'         => 'https://wptablebuilder.com/',
+					'security'       => null,
+					'prebuiltTables' => null,
+					'strings'        => [
 						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
 						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
 						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
