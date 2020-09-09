@@ -122,7 +122,15 @@ class Table_Setting_Element extends Element_Base_Object {
 					'max'          => 500,
 					'defaultValue' => 100,
 					'dimension'    => 'px'
-				]
+				],
+            'tableSortable' =>
+                [
+                    'label'        => __( 'Sortable Table', 'wp_table_builder' ),
+                    'type'      => Controls_Manager::TOGGLE,
+                    'selectors' => [
+                        '.wptb-table-setup' => [ 'data-wptb-sortable-table', '1', null ]
+                    ]
+                ]
 		];
 
 		$background_section_group_controls = [
@@ -163,7 +171,7 @@ class Table_Setting_Element extends Element_Base_Object {
 		];
 
 		$border_section_group_controls = [
-			
+
 			'tableBorder' =>
 				[
 					'label'        => __( 'Table Border', 'wp_table_builder' ),
