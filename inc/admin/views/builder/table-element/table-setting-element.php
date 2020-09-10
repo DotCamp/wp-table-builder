@@ -123,12 +123,20 @@ class Table_Setting_Element extends Element_Base_Object {
 					'defaultValue' => 100,
 					'dimension'    => 'px'
 				],
-            'tableSortable' =>
+            'tableSortableVertical' =>
                 [
-                    'label'        => __( 'Sortable Table', 'wp_table_builder' ),
+                    'label'        => __( 'Sortable Table Vertically', 'wp_table_builder' ),
                     'type'      => Controls_Manager::TOGGLE,
                     'selectors' => [
-                        '.wptb-table-setup' => [ 'data-wptb-sortable-table', '1', null ]
+                        '.wptb-table-setup' => [ 'data-wptb-sortable-table-vertical', '1', null ]
+                    ]
+                ],
+            'tableSortableHorizontal' =>
+                [
+                    'label'        => __( 'Sortable Table Horizontally', 'wp_table_builder' ),
+                    'type'      => Controls_Manager::TOGGLE,
+                    'selectors' => [
+                        '.wptb-table-setup' => [ 'data-wptb-sortable-table-horizontal', '1', null ]
                     ]
                 ]
 		];

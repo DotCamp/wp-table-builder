@@ -4237,7 +4237,8 @@ wptb_shortcode_container_element {
 /*endregion*/
 
 /*sortable mode*/
-.wptb-table-setup[data-wptb-sortable-table="1"] .wptb-preview-table tr:first-child td::after {
+.wptb-table-setup[data-wptb-sortable-table-vertical="1"] .wptb-preview-table td[data-y-index="0"]::after,
+.wptb-table-setup[data-wptb-sortable-table-horizontal="1"] .wptb-preview-table td[data-x-index="0"]::after{
     content: '';
     display: block;
     position: absolute;

@@ -231,6 +231,14 @@ var WPTB_Helper = {
         if ( ! results[2] ) return '';
         return decodeURIComponent( results[2].replace(/\+/g, ' ') );
     },
+    getTableId() {
+        let tableId = WPTB_Helper.detectMode();
+        if (!tableId) {
+            tableId = 'startedid-0';
+        }
+
+        return tableId;
+    },
     getColumnWidth: function( table, cell ) {
         let xIndex = cell.dataset.xIndex;
         let xIndexes = table.querySelectorAll( '[data-x-index="' + xIndex + '"]' );
@@ -1185,7 +1193,7 @@ var WPTB_Helper = {
         });
 
         // run the scripts of controls
-        
+
         // run appearDependOnControl function
         for ( let i = 0; i < controlappearDependOnControl.length; i++ ) {
             WPTB_Helper.appearDependOnControl( controlappearDependOnControl[i][0], controlappearDependOnControl[i][1] );
