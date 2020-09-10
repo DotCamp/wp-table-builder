@@ -1679,7 +1679,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         wptbTableStateSaveManager.tableStateSet();
     };
 
-    document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+    // @deprecated old generate logic
+    // document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 
     array = fillTableArray();
 

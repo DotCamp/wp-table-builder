@@ -13,41 +13,41 @@ var WPTB_Initializer = function () {
             columnsInput = document.getElementById('wptb-columns-number'),
             rowsInput = document.getElementById('wptb-rows-number');
     
-    columnsDecrementButton.onclick = function () {
-            if (columnsInput.value > MIN_COLUMNS) {
-                    columnsInput.value--;
-            }
-    };
+    // columnsDecrementButton.onclick = function () {
+    //         if (columnsInput.value > MIN_COLUMNS) {
+    //                 columnsInput.value--;
+    //         }
+    // };
+    //
+    // columnsIncrementButton.onclick = function () {
+    //         if (columnsInput.value < MAX_COLUMNS) {
+    //                 columnsInput.value++;
+    //         }
+    // };
+    //
+    // rowsDecrementButton.onclick = function () {
+    //         if (rowsInput.value > MIN_ROWS) {
+    //                 rowsInput.value--;
+    //         }
+    // };
+    //
+    // rowsIncrementButton.onclick = function () {
+    //         if (rowsInput.value < MAX_ROWS) {
+    //                 rowsInput.value++;
+    //         }
+    // };
 
-    columnsIncrementButton.onclick = function () {
-            if (columnsInput.value < MAX_COLUMNS) {
-                    columnsInput.value++;
-            }
-    };
-
-    rowsDecrementButton.onclick = function () {
-            if (rowsInput.value > MIN_ROWS) {
-                    rowsInput.value--;
-            }
-    };
-
-    rowsIncrementButton.onclick = function () {
-            if (rowsInput.value < MAX_ROWS) {
-                    rowsInput.value++;
-            }
-    };
-
-    document.getElementById( 'wptb-generate-table' ).onclick = function (  ) {
-            var columns = document.getElementById('wptb-columns-number').value,
-                rows = document.getElementById('wptb-rows-number').value;
-
-            //wptbTableStateSaveManager.tableStateClear();
-            
-            WPTB_Table(columns, rows);
-
-            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-            wptbTableStateSaveManager.tableStateSet();
-    }
+    // document.getElementById( 'wptb-generate-table' ).onclick = function (  ) {
+    //         var columns = document.getElementById('wptb-columns-number').value,
+    //             rows = document.getElementById('wptb-rows-number').value;
+    //
+    //         //wptbTableStateSaveManager.tableStateClear();
+    //
+    //         WPTB_Table(columns, rows);
+    //
+    //         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+    //         wptbTableStateSaveManager.tableStateSet();
+    // }
 
     // register and setup section buttons
     WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu']);

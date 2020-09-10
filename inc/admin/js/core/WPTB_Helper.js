@@ -993,6 +993,10 @@ var WPTB_Helper = {
                 let cellEditActiveClass = document.querySelector('.wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
                 if( ! cellEditActiveClass ) element.classList.add('wptb-element-table_cell_setting-' + element.dataset.xIndex + '-' + element.dataset.yIndex);
             }else if (element.classList.contains('wptb-responsive')){
+                // if table id parsed from url is starting with 'wptb-team', it means it is team built prebuilt table with a unique id that doesn't fit infArr match regex, in that case, use default id for elements options
+                if(table_id.startsWith('wptb_team')){
+                    table_id = 'startedid-0';
+                }
                 element.classList.add('wptb-element-table_responsive_setting-' + table_id);
             }
 
@@ -1635,6 +1639,10 @@ var WPTB_Helper = {
         if ( postId ) {
             params.id = postId;
         }
+
+        // wptb save before event
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:save:before', document, params);
+
         params = JSON.stringify( params );
 
         http.open('POST', url, true);
@@ -1651,7 +1659,28 @@ var WPTB_Helper = {
                     builderPageUrl = builderPageUrl.replace( regex, '' );
                     window.history.pushState( null, null, builderPageUrl + '&table=' + data[1] );
 
-                    WPTB_Helper.saveTable( event, true );
+                    document.wptbId = data[1];
+                    messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+                    document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-button-disable' );
+                    document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
+                    let wptbPreviewTable = document.querySelector( '.wptb-preview-table' );
+                    let wptbPreviewBtn = document.getElementsByClassName( 'wptb-preview-btn' );
+                    if( wptbPreviewBtn.length > 0 ) {
+                        wptbPreviewBtn = wptbPreviewBtn[0];
+                        wptbPreviewBtn.classList.remove( 'wptb-button-disable' );
+                        let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+                        wptbPreviewBtnHref = wptbPreviewBtnHref.replace( 'empty', data[1] );
+                        wptbPreviewBtn.setAttribute( 'href', wptbPreviewBtnHref );
+                    }
+
+                    event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+                    let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );
+                    if( wptbSaveBtn.length > 0 ) {
+                        wptbSaveBtn = wptbSaveBtn[0];
+                        wptbSaveBtn.classList.add( 'wptb-save-disabled' );
+                        wptbSaveBtn.classList.remove('active');
+                    }
+                    // WPTB_Helper.saveTable( event, true );
                     return;
                 } else if( data[0] == 'edited' && startSaving ) {
                     document.wptbId = data[1];

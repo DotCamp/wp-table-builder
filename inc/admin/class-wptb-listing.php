@@ -3,6 +3,8 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 
+use function apply_filters;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	die('NOT?');
 	require_once( ABSPATH . 'wp-admin\includes\class-wp-list-table.php' );
@@ -46,8 +48,10 @@ class WPTB_Listing  extends \WP_List_Table{
 
 	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
 	  	$params['order'] = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
-	  	
-	  	$loop = new \WP_Query( $params ); 
+
+	  	$params = apply_filters('wp-table-builder/get_tables_args', $params);
+
+	  	$loop = new \WP_Query( $params );
 		$result=[];
 		while ( $loop->have_posts() ) { $loop->the_post(); $result[] = $post; } 
 	  	
@@ -107,6 +111,8 @@ class WPTB_Listing  extends \WP_List_Table{
 
 		$params = array( 'post_type' => 'wptb-tables', 'posts_per_page' => $per_page );
 
+		$params = apply_filters('wp-table-builder/record_count', $params);
+
 		if( $search_text ) $params['s'] = $search_text;
 
 	  	$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
@@ -142,6 +148,9 @@ class WPTB_Listing  extends \WP_List_Table{
 		$table_title = $item->post_title;
 
 		$title = ! empty( $table_title ) ? $table_title : __( 'Table (ID #' . absint( $item->ID ) . ')', 'wp-table-builder' );
+
+		// title listing filter hook
+		$title = apply_filters('wp-table-builder/title_listing', $title, $item->ID);
 		  
 		$title = sprintf(
 			'<a class="row-title" href="%s" title="%s"><strong>%s</strong></a>',
@@ -186,8 +195,10 @@ class WPTB_Listing  extends \WP_List_Table{
 		switch ( $column_name ) { 
 			case 'id': 
 				return $item->ID;
-			case 'shortcode': 
-				return '[wptb id='.$item->ID.']';
+			case 'shortcode':
+			  $shortcode = '[wptb id='.$item->ID.']';
+			  $shortcode = apply_filters('wp-table-builder/shortcode_listing', $shortcode , $item->ID);
+				return $shortcode;
 			case 'created':
 				return get_the_date( '', $item->ID );
 				break;     

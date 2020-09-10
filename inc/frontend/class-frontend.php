@@ -3,6 +3,8 @@
 namespace WP_Table_Builder\Inc\Frontend;
 
 use WP_Table_Builder as NS;
+use function has_shortcode;
+use function is_a;
 
 /**
  * The public-facing functionality of the plugin.
@@ -58,6 +60,27 @@ class Frontend {
 		$this->plugin_name        = $plugin_name;
 		$this->version            = $version;
 		$this->plugin_text_domain = $plugin_text_domain;
+	}
+
+	/**
+	 * Selectively load css and js files.
+	 *
+	 * Load assets if current post has the shortcode or in preview mode.
+	 *
+	 * @return bool load or not
+	 */
+	public function selective_load() {
+		global $post;
+
+		if(is_admin()){
+			return true;
+		}
+
+		if ( get_post_type() === 'wptb-tables' ) {
+			return true;
+		} else {
+			return ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'wptb' ) );
+		}
 
 	}
 
@@ -80,9 +103,11 @@ class Frontend {
 		 * class.
 		 */
 
-		add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
-
+		if ( $this->selective_load() ) {
+			add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
+		}
 	}
+
 
 	public function unqueue_styles_start() {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
@@ -121,12 +146,11 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		$relative_path =  'inc/admin/js/WPTB_ResponsiveFrontend.js';
-		$responsive_script_url = trailingslashit(NS\WP_TABLE_BUILDER_URL) . $relative_path;
-
-		wp_enqueue_script($this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false);
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
-
+		if ( $this->selective_load() ) {
+			$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
+			$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
+			wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+		}
 	}
 }
