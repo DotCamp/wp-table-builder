@@ -17,6 +17,7 @@ const allowedChildrenTags = [
 	'h5',
 	'center',
 	'iframe',
+	'img',
 ];
 
 const innerChildTextArray = Array.from(allowedChildrenTags);

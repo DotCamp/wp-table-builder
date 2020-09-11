@@ -93,6 +93,7 @@ That's it. You're done!
 * FIX: UTF-8 support for export/import operations.
 * FIX: An issue affecting text links to be converted into invalid addresses.
 * IMPROVEMENT: Loading of table related css and js files are limited to posts containing table shortcodes.
+* IMPROVEMENT: Amazon affiliate image support for custom html element.
 
 = 1.2.6 =
 
