@@ -1084,6 +1084,63 @@ var WPTB_ElementOptions = function WPTB_ElementOptions(element, index, kindIndex
         WPTB_Helper.elementOptionsSet(element.kind, this);
     }, { capture: true });
 };
+/**
+ * WPTB_HeaderToolbox
+ *
+ * @param {string} wrapperQuery wrapper query for toolbox items
+ * @return {object} header toolbox object
+ * @constructor
+ */
+// eslint-disable-next-line camelcase,no-unused-vars
+var WPTB_HeaderToolbox = function WPTB_HeaderToolbox(wrapperQuery) {
+	var _this = this;
+
+	this.wrapperQuery = wrapperQuery;
+	this.element = document.querySelector(wrapperQuery);
+	this.topMargin = 2;
+
+	/**
+  * Toggle visibility of toolbox with the given argument.
+  *
+  * @param {boolean} show show toolbox
+  */
+	var toggleToolboxVisibility = function toggleToolboxVisibility() {
+		var show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+		var _element$getBoundingC = _this.element.getBoundingClientRect(),
+		    height = _element$getBoundingC.height;
+
+		if (show) {
+			height = 0;
+		}
+
+		_this.element.style.top = 'calc( 100% - ' + (height + _this.topMargin) + 'px)';
+	};
+
+	/**
+  * Initialize header toolbox.
+  */
+	var init = function init() {
+		// bind toolbox to table generated event
+		document.addEventListener('wptb:table:generated', function () {
+			_this.element.style.display = 'unset';
+
+			var _element$getBoundingC2 = _this.element.getBoundingClientRect(),
+			    width = _element$getBoundingC2.width;
+
+			_this.element.style.left = 'calc( 50% - ' + width / 2 + 'px)';
+
+			// hide toolbox at manage cells and responsive menus
+			document.addEventListener('wptbSectionChanged', function (_ref) {
+				var detail = _ref.detail;
+
+				toggleToolboxVisibility(detail !== 'manage_cells' && detail !== 'table_responsive_menu' && detail !== 'cell_settings');
+			});
+		});
+	};
+
+	return { init: init };
+};
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -3275,7 +3332,7 @@ var WPTB_Initializer = function WPTB_Initializer() {
     // }
 
     // register and setup section buttons
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu']);
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu', 'manage_cells']);
     WPTB_Helper.setupSectionButtons();
 
     // activate elements section for startup
@@ -3299,6 +3356,14 @@ var WPTB_Initializer = function WPTB_Initializer() {
 
     // show elements list menu on left panel on removing elements from table
     WPTB_Helper.showElementsListOnRemove();
+
+    // initialize header toolbox
+    new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
+
+    // redirect active menu to elements after closing manage cells menu
+    document.addEventListener('wp-table-builder/table-edit-mode/closed', function () {
+        WPTB_Helper.activateSection('elements');
+    });
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 
