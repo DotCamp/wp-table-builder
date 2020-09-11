@@ -90,6 +90,7 @@ That's it. You're done!
 
 * NEW: New and improved table generate menu.
 * NEW: Sortable table rows/columns.
+* NEW: Setting for sidebar location.
 * FIX: UTF-8 support for export/import operations.
 * FIX: An issue affecting text links to be converted into invalid addresses.
 * IMPROVEMENT: Loading of table related css and js files are limited to posts containing table shortcodes.

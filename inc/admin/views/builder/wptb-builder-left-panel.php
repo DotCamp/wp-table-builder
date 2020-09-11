@@ -9,10 +9,9 @@
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init as Init;
 
-$plugin_textdomain = NS\PLUGIN_TEXT_DOMAIN;
 ?>
 
-<div class="wptb-left-panel">
+<div class="wptb-left-panel" data-wptb-panel-location="<?php echo esc_attr(apply_filters('wp-table-builder/filter/panel_location', 'left')); ?>">
     <div class="wptb-left-scroll-panel">
         <div class="wptb-panel-left">
             <div class="wptb-panel-brand">

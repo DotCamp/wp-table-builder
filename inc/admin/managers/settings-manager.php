@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder\Inc\Core\Loader;
 use WP_Table_Builder as NS;
+use function add_filter;
 use function add_submenu_page;
 use function get_option;
 use function register_setting;
@@ -47,11 +48,13 @@ class Settings_Manager {
 	 * @var array
 	 */
 	public $defaults = [
-		'allowed_roles' => [ 'administrator' ]
+		'allowed_roles'  => [ 'administrator' ],
+		'panel_location' => 'left',
 	];
 
 	public $sanitization_rules = [
-		'allowed_roles' => 'sanitize_text_field'
+		'allowed_roles'  => 'sanitize_text_field',
+		'panel_location' => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
@@ -80,6 +83,41 @@ class Settings_Manager {
 		$loader->add_filter( 'wptb_manage_cap', $this, 'manage_cap', 99 );
 
 		$loader->add_filter( 'user_has_cap', $this, 'filter_user_caps', 99, 1 );
+
+		add_filter( 'wp-table-builder/filter/panel_location', [ $this, 'panel_location' ], 99, 1 );
+	}
+
+	/**
+	 * Panel location filter hook callback.
+	 *
+	 * @param string $location current location
+	 *
+	 * @return string panel location
+	 */
+	public function panel_location( $location ) {
+		return $this->get_option_value('panel_location');
+	}
+
+	/**
+	 * Get value of a plugin's option.
+	 *
+	 * @param string $option_name name of the option
+	 *
+	 * @return mixed|null option's value
+	 */
+	public function get_option_value( $option_name ) {
+		$current_options = get_option( $this->options_root, $this->defaults );
+		$current_value   = null;
+
+		if ( ! isset( $current_options[ $option_name ] ) ) {
+			if ( isset( $this->defaults[ $option_name ] ) ) {
+				$current_value = $this->defaults[ $option_name ];
+			}
+		} else {
+			$current_value = $current_options[ $option_name ];
+		}
+
+		return $current_value;
 	}
 
 	/**
@@ -181,12 +219,15 @@ class Settings_Manager {
 			];
 
 			$strings = [
-				'logoAlt'       => esc_attr__( 'WPTB plugin logo', $wptb_text_domain ),
-				'homepage'      => esc_attr__( 'Homepage', $wptb_text_domain ),
-				'revert'        => esc_html__( 'Revert', $wptb_text_domain ),
-				'submit'        => esc_html__( 'Submit', $wptb_text_domain ),
-				'revertMessage' => esc_html__( 'Changes Discarded', $wptb_text_domain ),
+				'logoAlt'       => esc_attr__( 'WPTB plugin logo', 'wp-table-builder' ),
+				'homepage'      => esc_attr__( 'Homepage', 'wp-table-builder' ),
+				'revert'        => esc_html__( 'Revert', 'wp-table-builder' ),
+				'submit'        => esc_html__( 'Submit', 'wp-table-builder' ),
+				'revertMessage' => esc_html__( 'Changes Discarded', 'wp-table-builder' ),
 			];
+
+			// merge defaults with applied options to make sure new option groups are reflected to frontend even though they didn't get saved yet
+			$merged_options = array_merge( $this->defaults, get_option( $this->options_root ) );
 
 			$frontend_data = [
 				'data'       => [
@@ -195,13 +236,28 @@ class Settings_Manager {
 					'nonce'   => $nonce,
 					'action'  => $this->options_root
 				],
-				'options'    => get_option( $this->options_root ),
+				'options'    => $merged_options,
 				'fields'     => [
-					'allowed_roles' => [
+					'allowed_roles'  => [
 						'type'    => 'multiCheckbox',
 						'options' => wp_roles()->role_names,
 						'section' => 'general',
-						'label'   => esc_html__( 'Allowed User Roles', $this->text_domain )
+						'label'   => esc_html__( 'Allowed User Roles', 'wp-table-builder' )
+					],
+					'panel_location' => [
+						'type'    => 'dropdown',
+						'options' => [
+							[
+								'label' => esc_html__( 'left', 'wp-table-builder' ),
+								'value' => 'left'
+							],
+							[
+								'label' => esc_html__( 'right', 'wp-table-builder' ),
+								'value' => 'right'
+							]
+						],
+						'section' => 'general',
+						'label'   => esc_html__( 'Sidebar location', 'wp-table-builder' )
 					],
 				],
 				'pluginInfo' => $plugin_info,

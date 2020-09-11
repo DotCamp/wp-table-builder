@@ -1,8 +1,6 @@
 <template>
 	<div class="wptb-settings-controls-wrapper" :class="[center ? 'center' : 'grid']">
-		<transition name="wptb-fade" mode="out-in">
-			<slot></slot>
-		</transition>
+		<slot></slot>
 	</div>
 </template>
 <script>
