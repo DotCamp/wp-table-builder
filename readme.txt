@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.5
-Stable tag: 1.2.6
+Stable tag: 1.2.7
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -85,6 +85,14 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.7 =
+
+* NEW: New and improved table generate menu.
+* NEW: Sortable table rows/columns.
+* FIX: UTF-8 support for export/import operations.
+* FIX: An issue affecting text links to be converted into invalid addresses.
+* IMPROVEMENT: Loading of table related css and js files are limited to posts containing table shortcodes.
 
 = 1.2.6 =
 

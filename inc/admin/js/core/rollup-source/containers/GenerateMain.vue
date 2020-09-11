@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div v-if="!isPro" class="wptb-prebuilt-ad">
-			{{ strings.prebuiltAdPart1 }},
+			{{ strings.prebuiltAdPart1 }}
 			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>
 		</div>
 	</div>

@@ -298,8 +298,10 @@ class Admin_Menu {
 						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
 						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
 						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
-						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
-						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
+//						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+//						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
+						'prebuiltAdPart1'    => '',
+						'prebuiltAdPart2'    => '',
 						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
 					]
 
@@ -489,5 +491,3 @@ class Admin_Menu {
 	}
 
 }
-
-;
