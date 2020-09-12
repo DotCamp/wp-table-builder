@@ -3,7 +3,7 @@
 		<div
 			class="wptb-prebuilt-control-increment-box wptb-unselectable"
 			:disabled="disabled || hitToMin()"
-			@click.prevent="effectValue(-1)"
+			@click.prevent="effectValue(-1 * step)"
 		>
 			-
 		</div>
@@ -16,7 +16,7 @@
 		<div
 			class="wptb-prebuilt-control-increment-box wptb-unselectable"
 			:disabled="disabled || hitToMax()"
-			@click.prevent="effectValue(1)"
+			@click.prevent="effectValue(step)"
 		>
 			+
 		</div>
@@ -44,6 +44,10 @@ export default {
 		max: {
 			type: Number,
 			default: 30,
+		},
+		step: {
+			type: Number,
+			default: 1,
 		},
 	},
 	data() {
