@@ -12040,6 +12040,10 @@ var _default = {
     max: {
       type: Number,
       default: 30
+    },
+    step: {
+      type: Number,
+      default: 1
     }
   },
   data: function data() {
@@ -12118,7 +12122,7 @@ exports.default = _default;
           on: {
             click: function($event) {
               $event.preventDefault()
-              return _vm.effectValue(-1)
+              return _vm.effectValue(-1 * _vm.step)
             }
           }
         },
@@ -12140,7 +12144,7 @@ exports.default = _default;
           on: {
             click: function($event) {
               $event.preventDefault()
-              return _vm.effectValue(1)
+              return _vm.effectValue(_vm.step)
             }
           }
         },
@@ -12294,6 +12298,10 @@ var _default = {
     selected: {
       type: Boolean,
       default: false
+    },
+    controlsEnabled: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -12305,20 +12313,22 @@ var _default = {
     };
   },
   mounted: function mounted() {
-    if (this.row === 0) {
-      this.enabledControls.push('up');
-    }
+    if (this.controlsEnabled) {
+      if (this.row === 0) {
+        this.enabledControls.push('up');
+      }
 
-    if (this.col === 0) {
-      this.enabledControls.push('left');
-    }
+      if (this.col === 0) {
+        this.enabledControls.push('left');
+      }
 
-    if (this.row === this.maxRow - 1) {
-      this.enabledControls.push('down');
-    }
+      if (this.row === this.maxRow - 1) {
+        this.enabledControls.push('down');
+      }
 
-    if (this.col === this.maxCol - 1) {
-      this.enabledControls.push('right');
+      if (this.col === this.maxCol - 1) {
+        this.enabledControls.push('right');
+      }
     }
   },
   methods: {
@@ -12450,6 +12460,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     rows: {
@@ -12462,6 +12473,19 @@ var _default = {
     },
     table: {
       type: HTMLElement
+    },
+    selectedCells: {
+      type: Object,
+      default: function _default() {
+        return {
+          rowOperation: [],
+          colOperation: []
+        };
+      }
+    },
+    enableNewCellIndicator: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -12475,11 +12499,7 @@ var _default = {
         rows: 1,
         cols: 1
       },
-      innerParsedCells: [],
-      selectedCells: {
-        rowOperation: [],
-        colOperation: []
-      }
+      innerParsedCells: []
     };
   },
   mounted: function mounted() {
@@ -12501,13 +12521,16 @@ var _default = {
         Array.from(tr.querySelectorAll('td')).map(function (td) {
           _this.parsedCells[i].push(td);
         });
-      });
-      this.innerParsedCells = this.parsedCells.slice(0);
+      }); // this.innerParsedCells = this.parsedCells.slice(0);
+
       this.prepareTable();
     }
   },
   watch: {
     rows: function rows() {
+      this.prepareTable();
+    },
+    cols: function cols() {
       this.prepareTable();
     },
     selectedCells: {
@@ -12529,8 +12552,18 @@ var _default = {
     prepareTable: function prepareTable() {
       var _this2 = this;
 
-      this.innerParsedCells = this.parsedCells.slice(0);
-      var extraRows = this.rows - this.initial.rows; // eslint-disable-next-line array-callback-return
+      this.innerParsedCells = this.parsedCells.map(function (r) {
+        return r.slice(0);
+      });
+      var extraRows = this.rows - this.initial.rows;
+      var extraCols = this.cols - this.initial.cols; // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(this.innerParsedCells.length)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(extraCols)).map(function () {
+          _this2.innerParsedCells[r].push(a);
+        });
+      }); // eslint-disable-next-line array-callback-return
 
       Array.from(Array(extraRows)).map(function (a, r) {
         // eslint-disable-next-line array-callback-return
@@ -12541,7 +12574,7 @@ var _default = {
             _this2.innerParsedCells[rowIndex] = [];
           }
 
-          _this2.innerParsedCells[rowIndex].push('a');
+          _this2.innerParsedCells[rowIndex].push(a);
         });
       });
     },
@@ -12555,6 +12588,10 @@ var _default = {
       };
     },
     isOriginalCell: function isOriginalCell(r, c) {
+      if (!this.enableNewCellIndicator) {
+        return true;
+      }
+
       return r < this.initial.rows && c < this.initial.cols;
     },
     calculateClass: function calculateClass(r, c) {
@@ -12626,7 +12663,8 @@ exports.default = _default;
                   "max-col": _vm.initial.cols,
                   "max-row": _vm.initial.rows,
                   original: _vm.isOriginalCell(i, k),
-                  selected: _vm.isCellSelected(i, k)
+                  selected: _vm.isCellSelected(i, k),
+                  "controls-enabled": _vm.enableNewCellIndicator
                 },
                 on: { cellControlSelected: _vm.handleCellControlSelect }
               })
@@ -12826,75 +12864,18 @@ var _PrebuiltCardDeleteModule = _interopRequireDefault(require("./PrebuiltCardDe
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var _default = {
   props: {
     name: {
@@ -12956,6 +12937,10 @@ var _default = {
       max: {
         rows: 30,
         cols: 30
+      },
+      selectedCells: {
+        rowOperation: [],
+        colOperation: []
       }
     };
   },
@@ -12977,7 +12962,18 @@ var _default = {
       return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
     },
     previewTableElement: function previewTableElement() {
-      return this.$refs.tablePreview.querySelector('table');
+      var table = this.$refs.tablePreview.querySelector('table'); // if no table is found, send a table with one row and and one cell in it as a default
+
+      if (!table) {
+        var range = document.createRange();
+        range.setStart(document.body, 0);
+
+        var _range$createContextu = _slicedToArray(range.createContextualFragment('<table><tr><td></td></tr></table>').childNodes, 1);
+
+        table = _range$createContextu[0];
+      }
+
+      return table;
     }
   },
   mounted: function mounted() {
@@ -13029,13 +13025,19 @@ var _default = {
             }
           });
           _this.min.cols = minCols;
-          _this.max.cols = minCols;
           _this.columns = minCols;
         }
       }
     });
   },
   methods: {
+    currentStep: function currentStep(type) {
+      if (type === 'row') {
+        return this.selectedCells.colOperation.length > 0 ? this.max.cols : 1;
+      }
+
+      return this.selectedCells.rowOperation.length > 0 ? this.max.cols : 1;
+    },
     setCardActive: function setCardActive() {
       if (!this.isActive) {
         this.$emit('cardActive', this.id);
@@ -13043,7 +13045,7 @@ var _default = {
     },
     cardGenerate: function cardGenerate() {
       if (!this.disabled) {
-        this.$emit('cardGenerate', this.id, this.columns, this.rows);
+        this.$emit('cardGenerate', this.id, this.columns, this.rows, this.selectedCells);
       }
     },
     cardEdit: function cardEdit() {
@@ -13105,8 +13107,10 @@ exports.default = _default;
                 [
                   _c("prebuilt-card-control", {
                     attrs: {
-                      disabled: _vm.disabled || _vm.id !== "blank",
-                      orientation: "row"
+                      disabled: _vm.disabled,
+                      orientation: "row",
+                      min: _vm.min.cols,
+                      max: _vm.max.cols
                     },
                     model: {
                       value: _vm.columns,
@@ -13122,7 +13126,8 @@ exports.default = _default;
                       disabled: _vm.disabled,
                       orientation: "col",
                       min: _vm.min.rows,
-                      max: _vm.max.rows
+                      max: _vm.max.rows,
+                      step: _vm.currentStep("row")
                     },
                     model: {
                       value: _vm.rows,
@@ -13142,7 +13147,9 @@ exports.default = _default;
                 attrs: {
                   rows: _vm.rows,
                   cols: _vm.columns,
-                  table: _vm.previewTableElement
+                  table: _vm.previewTableElement,
+                  "selected-cells": _vm.selectedCells,
+                  "enable-new-cell-indicator": _vm.id !== "blank"
                 }
               })
             : _vm._e(),
@@ -13460,15 +13467,15 @@ var _default = {
       this.activeCard = cardId;
     },
     cardEdit: function cardEdit(cardId) {
-      this.cardGenerate(cardId, 0, 0, true);
+      this.cardGenerate(cardId, 0, 0, {}, true);
       var currentUrl = new URL(window.location.href);
       currentUrl.searchParams.append('table', encodeURIComponent(cardId));
       window.history.pushState(null, null, currentUrl.toString());
     },
-    cardGenerate: function cardGenerate(cardId, cols, rows) {
+    cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
       var _this4 = this;
 
-      var edit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
       this.generating = true;
 
       if (cardId === 'blank') {

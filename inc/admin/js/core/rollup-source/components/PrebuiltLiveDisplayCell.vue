@@ -44,6 +44,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		controlsEnabled: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	components: { PrebuiltDisplayDirectionButton },
 	data() {
@@ -52,17 +56,19 @@ export default {
 		};
 	},
 	mounted() {
-		if (this.row === 0) {
-			this.enabledControls.push('up');
-		}
-		if (this.col === 0) {
-			this.enabledControls.push('left');
-		}
-		if (this.row === this.maxRow - 1) {
-			this.enabledControls.push('down');
-		}
-		if (this.col === this.maxCol - 1) {
-			this.enabledControls.push('right');
+		if (this.controlsEnabled) {
+			if (this.row === 0) {
+				this.enabledControls.push('up');
+			}
+			if (this.col === 0) {
+				this.enabledControls.push('left');
+			}
+			if (this.row === this.maxRow - 1) {
+				this.enabledControls.push('down');
+			}
+			if (this.col === this.maxCol - 1) {
+				this.enabledControls.push('right');
+			}
 		}
 	},
 	methods: {

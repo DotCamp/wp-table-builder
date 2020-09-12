@@ -185,12 +185,12 @@ export default {
 			this.activeCard = cardId;
 		},
 		cardEdit(cardId) {
-			this.cardGenerate(cardId, 0, 0, true);
+			this.cardGenerate(cardId, 0, 0, {}, true);
 			const currentUrl = new URL(window.location.href);
 			currentUrl.searchParams.append('table', encodeURIComponent(cardId));
 			window.history.pushState(null, null, currentUrl.toString());
 		},
-		cardGenerate(cardId, cols, rows, edit = false) {
+		cardGenerate(cardId, cols, rows, selectedCells, edit = false) {
 			this.generating = true;
 			if (cardId === 'blank') {
 				WPTB_Table(cols, rows);

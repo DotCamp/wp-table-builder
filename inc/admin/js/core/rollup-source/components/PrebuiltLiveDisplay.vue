@@ -13,6 +13,7 @@
 					:original="isOriginalCell(i, k)"
 					@cellControlSelected="handleCellControlSelect"
 					:selected="isCellSelected(i, k)"
+					:controls-enabled="enableNewCellIndicator"
 				></prebuilt-live-display-cell>
 			</template>
 		</div>
@@ -34,6 +35,19 @@ export default {
 		table: {
 			type: HTMLElement,
 		},
+		selectedCells: {
+			type: Object,
+			default: () => {
+				return {
+					rowOperation: [],
+					colOperation: [],
+				};
+			},
+		},
+		enableNewCellIndicator: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	components: { PrebuiltLiveDisplayCell },
 	data() {
@@ -45,10 +59,6 @@ export default {
 				cols: 1,
 			},
 			innerParsedCells: [],
-			selectedCells: {
-				rowOperation: [],
-				colOperation: [],
-			},
 		};
 	},
 	mounted() {
@@ -71,13 +81,16 @@ export default {
 				});
 			});
 
-			this.innerParsedCells = this.parsedCells.slice(0);
+			// this.innerParsedCells = this.parsedCells.slice(0);
 
 			this.prepareTable();
 		}
 	},
 	watch: {
 		rows() {
+			this.prepareTable();
+		},
+		cols() {
 			this.prepareTable();
 		},
 		selectedCells: {
@@ -97,9 +110,20 @@ export default {
 	},
 	methods: {
 		prepareTable() {
-			this.innerParsedCells = this.parsedCells.slice(0);
+			this.innerParsedCells = this.parsedCells.map((r) => {
+				return r.slice(0);
+			});
 
 			const extraRows = this.rows - this.initial.rows;
+			const extraCols = this.cols - this.initial.cols;
+
+			// eslint-disable-next-line array-callback-return
+			Array.from(Array(this.innerParsedCells.length)).map((a, r) => {
+				// eslint-disable-next-line array-callback-return
+				Array.from(Array(extraCols)).map(() => {
+					this.innerParsedCells[r].push(a);
+				});
+			});
 
 			// eslint-disable-next-line array-callback-return
 			Array.from(Array(extraRows)).map((a, r) => {
@@ -110,7 +134,7 @@ export default {
 						this.innerParsedCells[rowIndex] = [];
 					}
 
-					this.innerParsedCells[rowIndex].push('a');
+					this.innerParsedCells[rowIndex].push(a);
 				});
 			});
 		},
@@ -122,6 +146,10 @@ export default {
 			return { gridColumn: `span ${spanAmount || 1}` };
 		},
 		isOriginalCell(r, c) {
+			if (!this.enableNewCellIndicator) {
+				return true;
+			}
+
 			return r < this.initial.rows && c < this.initial.cols;
 		},
 		calculateClass(r, c) {

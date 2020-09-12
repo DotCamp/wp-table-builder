@@ -9,9 +9,11 @@
 			></div>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
 				<prebuilt-card-control
-					:disabled="disabled || id !== 'blank'"
+					:disabled="disabled"
 					orientation="row"
 					v-model="columns"
+					:min="min.cols"
+					:max="max.cols"
 				></prebuilt-card-control>
 				<prebuilt-card-control
 					:disabled="disabled"
@@ -19,6 +21,7 @@
 					v-model="rows"
 					:min="min.rows"
 					:max="max.rows"
+					:step="currentStep('row')"
 				></prebuilt-card-control>
 			</div>
 			<prebuilt-live-display
@@ -26,6 +29,8 @@
 				:rows="rows"
 				:cols="columns"
 				:table="previewTableElement"
+				:selected-cells="selectedCells"
+				:enable-new-cell-indicator="id !== 'blank'"
 			></prebuilt-live-display>
 			<div
 				v-if="!isActive"
@@ -130,6 +135,10 @@ export default {
 				rows: 30,
 				cols: 30,
 			},
+			selectedCells: {
+				rowOperation: [],
+				colOperation: [],
+			},
 		};
 	},
 	computed: {
@@ -157,7 +166,16 @@ export default {
 			return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
 		},
 		previewTableElement() {
-			return this.$refs.tablePreview.querySelector('table');
+			let table = this.$refs.tablePreview.querySelector('table');
+
+			// if no table is found, send a table with one row and and one cell in it as a default
+			if (!table) {
+				const range = document.createRange();
+				range.setStart(document.body, 0);
+				[table] = range.createContextualFragment('<table><tr><td></td></tr></table>').childNodes;
+			}
+
+			return table;
 		},
 	},
 	mounted() {
@@ -206,13 +224,18 @@ export default {
 					});
 
 					this.min.cols = minCols;
-					this.max.cols = minCols;
 					this.columns = minCols;
 				}
 			}
 		});
 	},
 	methods: {
+		currentStep(type) {
+			if (type === 'row') {
+				return this.selectedCells.colOperation.length > 0 ? this.max.cols : 1;
+			}
+			return this.selectedCells.rowOperation.length > 0 ? this.max.cols : 1;
+		},
 		setCardActive() {
 			if (!this.isActive) {
 				this.$emit('cardActive', this.id);
@@ -220,7 +243,7 @@ export default {
 		},
 		cardGenerate() {
 			if (!this.disabled) {
-				this.$emit('cardGenerate', this.id, this.columns, this.rows);
+				this.$emit('cardGenerate', this.id, this.columns, this.rows, this.selectedCells);
 			}
 		},
 		cardEdit() {
