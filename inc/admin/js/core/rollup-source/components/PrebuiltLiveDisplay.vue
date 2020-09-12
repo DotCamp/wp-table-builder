@@ -179,6 +179,8 @@ export default {
 			}
 		},
 		toggleSelection(operation, encodedCellPosition) {
+			this.selectedCells[operation === 'colOperation' ? 'rowOperation' : 'colOperation'] = [];
+
 			const index = this.selectedCells[operation].indexOf(encodedCellPosition);
 
 			if (index >= 0) {

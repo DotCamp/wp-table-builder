@@ -12621,6 +12621,7 @@ var _default = {
       }
     },
     toggleSelection: function toggleSelection(operation, encodedCellPosition) {
+      this.selectedCells[operation === 'colOperation' ? 'rowOperation' : 'colOperation'] = [];
       var index = this.selectedCells[operation].indexOf(encodedCellPosition);
 
       if (index >= 0) {
@@ -12941,8 +12942,28 @@ var _default = {
       selectedCells: {
         rowOperation: [],
         colOperation: []
+      },
+      controlStep: {
+        row: 1,
+        col: 1
       }
     };
+  },
+  watch: {
+    selectedCells: {
+      handler: function handler() {
+        this.controlStep.row = Math.max(Math.max(this.selectedCells.colOperation.length > 0 ? this.initial.rows : 1, this.selectedCells.rowOperation.length / this.initial.columns), 1);
+        this.controlStep.col = Math.max(Math.max(this.selectedCells.rowOperation.length > 0 ? this.initial.columns : 1, this.selectedCells.colOperation.length / this.initial.rows), 1);
+
+        if (this.selectedCells.rowOperation.length === 0 && this.selectedCells.colOperation.length === 0) {
+          if (this.id !== 'blank') {
+            this.rows = this.initial.rows;
+            this.columns = this.initial.columns;
+          }
+        }
+      },
+      deep: true
+    }
   },
   computed: {
     transformedName: function transformedName() {
@@ -12974,14 +12995,20 @@ var _default = {
       }
 
       return table;
+    },
+    controlDisabled: function controlDisabled() {
+      if (this.id === 'blank') {
+        return false;
+      }
+
+      return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
     }
   },
   mounted: function mounted() {
     var _this = this;
 
-    this.initial.rows = this.rows;
-    this.initial.columns = this.columns;
     this.$nextTick(function () {
+      _this.initial.rows = _this.rows;
       var tablePreview = _this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
 
       var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
@@ -12999,7 +13026,7 @@ var _default = {
 
         var widthScale = wrapperWidth / (prebuiltWidth + padding);
         var heightScale = 125 / (prebuiltHeight + padding);
-        prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")"); // fix for chrome browsers where table previews are distorted for tables with seperated columns and row
+        prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")"); // fix for chrome browsers where table previews are distorted for tables with separated columns and row
 
         if (window.navigator.vendor.includes('Google')) {
           var borderCollapseType = prebuilt.style.borderCollapse;
@@ -13016,7 +13043,8 @@ var _default = {
           var totalRows = tableRows.length;
           _this.rows = totalRows;
           _this.min.rows = totalRows;
-          var minCols = 1;
+          var minCols = 1; // eslint-disable-next-line array-callback-return
+
           tableRows.map(function (t) {
             var totalCells = t.querySelectorAll('td').length;
 
@@ -13026,18 +13054,13 @@ var _default = {
           });
           _this.min.cols = minCols;
           _this.columns = minCols;
+          _this.initial.columns = _this.columns;
+          _this.initial.rows = _this.rows;
         }
       }
     });
   },
   methods: {
-    currentStep: function currentStep(type) {
-      if (type === 'row') {
-        return this.selectedCells.colOperation.length > 0 ? this.max.cols : 1;
-      }
-
-      return this.selectedCells.rowOperation.length > 0 ? this.max.cols : 1;
-    },
     setCardActive: function setCardActive() {
       if (!this.isActive) {
         this.$emit('cardActive', this.id);
@@ -13045,7 +13068,8 @@ var _default = {
     },
     cardGenerate: function cardGenerate() {
       if (!this.disabled) {
-        this.$emit('cardGenerate', this.id, this.columns, this.rows, this.selectedCells);
+        var operationCells = this.selectedCells.colOperation.length > 0 ? this.selectedCells.colOperation : this.selectedCells.rowOperation;
+        this.$emit('cardGenerate', this.id, this.columns, this.rows, operationCells);
       }
     },
     cardEdit: function cardEdit() {
@@ -13107,10 +13131,11 @@ exports.default = _default;
                 [
                   _c("prebuilt-card-control", {
                     attrs: {
-                      disabled: _vm.disabled,
+                      disabled: _vm.controlDisabled,
                       orientation: "row",
                       min: _vm.min.cols,
-                      max: _vm.max.cols
+                      max: _vm.max.cols,
+                      step: _vm.controlStep.col
                     },
                     model: {
                       value: _vm.columns,
@@ -13123,11 +13148,11 @@ exports.default = _default;
                   _vm._v(" "),
                   _c("prebuilt-card-control", {
                     attrs: {
-                      disabled: _vm.disabled,
+                      disabled: _vm.controlDisabled,
                       orientation: "col",
                       min: _vm.min.rows,
                       max: _vm.max.rows,
-                      step: _vm.currentStep("row")
+                      step: _vm.controlStep.row
                     },
                     model: {
                       value: _vm.rows,
@@ -13305,7 +13330,7 @@ var _default = {
       type: String
     },
     prebuiltTables: {
-      type: Object | Array,
+      type: Object || Array,
       default: function _default() {
         return {};
       }
@@ -13467,14 +13492,12 @@ var _default = {
       this.activeCard = cardId;
     },
     cardEdit: function cardEdit(cardId) {
-      this.cardGenerate(cardId, 0, 0, {}, true);
+      this.cardGenerate(cardId, 0, 0, [], true);
       var currentUrl = new URL(window.location.href);
       currentUrl.searchParams.append('table', encodeURIComponent(cardId));
       window.history.pushState(null, null, currentUrl.toString());
     },
     cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
-      var _this4 = this;
-
       var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
       this.generating = true;
 
@@ -13483,81 +13506,149 @@ var _default = {
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
       } else {
-        (function () {
-          var tableWrapper = document.querySelector('.wptb-table-setup');
-          tableWrapper.appendChild(WPTB_Parser(_this4.fixedTables[cardId].content));
-          var table = tableWrapper.querySelector('table'); // unmark inserted template as prebuilt table
+        var tableWrapper = document.querySelector('.wptb-table-setup');
+        tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+        var table = tableWrapper.querySelector('table');
+
+        if (!edit) {
+          // unmark inserted template as prebuilt table
           // only unmark it if edit mode is not enabled
+          delete table.dataset.wptbPrebuiltTable;
+          var tableRows = Array.from(table.querySelectorAll('tr')); // maximum column length
 
-          if (!edit) {
-            delete table.dataset.wptbPrebuiltTable; // add extra rows to table
+          var maximumCells = tableRows.reduce(function (carry, item) {
+            var cellLength = item.querySelectorAll('td').length;
+            return Math.max(cellLength, carry);
+          }, 0);
+          var extraRows = rows - tableRows.length;
+          var extraCols = cols - maximumCells; // parse table into rows and cols
 
-            var tableRows = table.querySelectorAll('tr');
-            var lastRow = tableRows[tableRows.length - 1];
-            var extraRows = rows - tableRows.length;
+          var parsedTable = tableRows.reduce(function (carry, item, r) {
+            if (!Array.isArray(carry[r])) {
+              // eslint-disable-next-line no-param-reassign
+              carry[r] = [];
+            } // eslint-disable-next-line array-callback-return
 
-            for (var i = 0; i < extraRows; i += 1) {
-              var clonedRow = lastRow.cloneNode(true);
-              table.appendChild(clonedRow); // eslint-disable-next-line array-callback-return
 
-              Array.from(clonedRow.querySelectorAll('div')).map(function (e) {
-                var className = null; // find the divs related to elements with this unique pattern
+            Array.from(item.querySelectorAll('td')).map(function (c) {
+              carry[r].push(c);
+            });
+            return carry;
+          }, []); // sort selected cells by row then by columns
 
-                var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
-                e.classList.forEach(function (c) {
-                  if (c.match(classRegExp)) {
-                    className = c;
-                  }
-                }); // main wrapper div found for an element
+          selectedCells.sort();
+          var rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0; // cells that will be used at clone operations
 
-                if (className) {
-                  e.classList.remove(className); // find out the kind of the element
+          var cellsForClone = selectedCells.reduce(function (carry, item) {
+            var _item$split = item.split('-'),
+                _item$split2 = _slicedToArray(_item$split, 2),
+                row = _item$split2[0],
+                column = _item$split2[1];
 
-                  var _classRegExp$exec = classRegExp.exec(className),
-                      _classRegExp$exec2 = _slicedToArray(_classRegExp$exec, 2),
-                      kind = _classRegExp$exec2[1];
+            var normalizedRowIndex = row - rowNormalizeConstant;
 
-                  var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
-
-                  var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
-                    item.classList.forEach(function (c) {
-                      var match = regExp.exec(c);
-
-                      if (match) {
-                        var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
-
-                        carry = carry > numberId ? carry : numberId;
-                      }
-                    });
-                    return carry;
-                  }, 0); // increment unique class id of the element
-
-                  e.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
-                }
-              });
+            if (!Array.isArray(carry[normalizedRowIndex])) {
+              // eslint-disable-next-line no-param-reassign
+              carry[normalizedRowIndex] = [];
             }
-          }
 
-          if (edit) {
-            // fill in the name of the selected prebuilt table on edit mode
-            document.querySelector('#wptb-setup-name').value = _this4.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+            carry[normalizedRowIndex].push(parsedTable[row][column]);
+            return carry;
+          }, []); // modulo constants for cellsForClone
 
-            table.dataset.wptbPrebuiltTable = 1;
-          }
+          var rowModulo = cellsForClone.length;
+          var cellModulo = cellsForClone.reduce(function (carry, item) {
+            return Math.max(carry, item.length);
+          }, 0);
+          /**
+           * Increment id of plugin element.
+           *
+           * @param HTMLElement divEl div element
+           */
 
-          WPTB_Table();
-          WPTB_Settings();
-          var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-          wptbTableStateSaveManager.tableStateSet();
-          document.counter = new ElementCounters();
-          document.select = new MultipleSelect(); // WPTB_Initializer();
+          var incrementIds = function incrementIds(divEl) {
+            var className = null; // find the divs related to elements with this unique pattern
 
-          WPTB_Settings();
-        })();
+            var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+            divEl.classList.forEach(function (c) {
+              if (c.match(classRegExp)) {
+                className = c;
+              }
+            }); // main wrapper div found for an element
+
+            if (className) {
+              divEl.classList.remove(className); // find out the kind of the element
+
+              var _classRegExp$exec = classRegExp.exec(className),
+                  _classRegExp$exec2 = _slicedToArray(_classRegExp$exec, 2),
+                  kind = _classRegExp$exec2[1];
+
+              var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
+
+              var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
+                item.classList.forEach(function (c) {
+                  var match = regExp.exec(c);
+
+                  if (match) {
+                    var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+
+                    carry = carry > numberId ? carry : numberId;
+                  }
+                });
+                return carry;
+              }, 0); // increment unique class id of the element
+
+              divEl.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
+            }
+          }; // add extra cols to table
+          // eslint-disable-next-line array-callback-return
+
+
+          tableRows.map(function (r, ri) {
+            // eslint-disable-next-line array-callback-return
+            Array.from(Array(extraCols)).map(function (c, ci) {
+              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+              r.appendChild(clonedCell);
+              Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+            });
+          }); // add extra rows to table
+          // eslint-disable-next-line array-callback-return
+
+          Array.from(Array(extraRows)).map(function (r, ri) {
+            var currentRow = document.createElement('tr');
+            table.appendChild(currentRow); // eslint-disable-next-line array-callback-return
+
+            Array.from(Array(cols)).map(function (c, ci) {
+              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+              currentRow.appendChild(clonedCell);
+            });
+            Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
+          });
+        } // edit is enabled
+
+
+        if (edit) {
+          // fill in the name of the selected prebuilt table on edit mode
+          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+
+          table.dataset.wptbPrebuiltTable = 1;
+        }
+
+        WPTB_Table();
+        WPTB_Settings();
+
+        var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+
+        _wptbTableStateSaveManager.tableStateSet();
+
+        document.counter = new ElementCounters();
+        document.select = new MultipleSelect(); // WPTB_Initializer();
+
+        WPTB_Settings();
       }
     },
     deleteAction: function deleteAction(cardId) {
-      var _this5 = this;
+      var _this4 = this;
 
       var _this$security2 = this.security,
           ajaxUrl = _this$security2.ajaxUrl,
@@ -13589,7 +13680,7 @@ var _default = {
         }
 
         if (resp.message === true) {
-          _this5.$delete(_this5.fixedTables, cardId);
+          _this4.$delete(_this4.fixedTables, cardId);
         } else {
           throw new Error('an error occurred while deleting prebuilt table, try again later');
         }

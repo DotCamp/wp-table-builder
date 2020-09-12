@@ -9,19 +9,20 @@
 			></div>
 			<div v-if="isActive" class="wptb-prebuilt-card-controls">
 				<prebuilt-card-control
-					:disabled="disabled"
+					:disabled="controlDisabled"
 					orientation="row"
 					v-model="columns"
 					:min="min.cols"
 					:max="max.cols"
+					:step="controlStep.col"
 				></prebuilt-card-control>
 				<prebuilt-card-control
-					:disabled="disabled"
+					:disabled="controlDisabled"
 					orientation="col"
 					v-model="rows"
 					:min="min.rows"
 					:max="max.rows"
-					:step="currentStep('row')"
+					:step="controlStep.row"
 				></prebuilt-card-control>
 			</div>
 			<prebuilt-live-display
@@ -139,7 +140,40 @@ export default {
 				rowOperation: [],
 				colOperation: [],
 			},
+			controlStep: {
+				row: 1,
+				col: 1,
+			},
 		};
+	},
+	watch: {
+		selectedCells: {
+			handler() {
+				this.controlStep.row = Math.max(
+					Math.max(
+						this.selectedCells.colOperation.length > 0 ? this.initial.rows : 1,
+						this.selectedCells.rowOperation.length / this.initial.columns
+					),
+					1
+				);
+
+				this.controlStep.col = Math.max(
+					Math.max(
+						this.selectedCells.rowOperation.length > 0 ? this.initial.columns : 1,
+						this.selectedCells.colOperation.length / this.initial.rows
+					),
+					1
+				);
+
+				if (this.selectedCells.rowOperation.length === 0 && this.selectedCells.colOperation.length === 0) {
+					if (this.id !== 'blank') {
+						this.rows = this.initial.rows;
+						this.columns = this.initial.columns;
+					}
+				}
+			},
+			deep: true,
+		},
 	},
 	computed: {
 		transformedName() {
@@ -177,12 +211,17 @@ export default {
 
 			return table;
 		},
+		controlDisabled() {
+			if (this.id === 'blank') {
+				return false;
+			}
+			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
+		},
 	},
 	mounted() {
-		this.initial.rows = this.rows;
-		this.initial.columns = this.columns;
-
 		this.$nextTick(() => {
+			this.initial.rows = this.rows;
+
 			const { tablePreview } = this.$refs;
 			// eslint-disable-next-line no-unused-vars
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
@@ -197,7 +236,7 @@ export default {
 
 				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
 
-				// fix for chrome browsers where table previews are distorted for tables with seperated columns and row
+				// fix for chrome browsers where table previews are distorted for tables with separated columns and row
 				if (window.navigator.vendor.includes('Google')) {
 					const borderCollapseType = prebuilt.style.borderCollapse;
 					if (borderCollapseType === 'separate') {
@@ -216,6 +255,7 @@ export default {
 
 					let minCols = 1;
 
+					// eslint-disable-next-line array-callback-return
 					tableRows.map((t) => {
 						const totalCells = t.querySelectorAll('td').length;
 						if (minCols < totalCells) {
@@ -225,17 +265,14 @@ export default {
 
 					this.min.cols = minCols;
 					this.columns = minCols;
+
+					this.initial.columns = this.columns;
+					this.initial.rows = this.rows;
 				}
 			}
 		});
 	},
 	methods: {
-		currentStep(type) {
-			if (type === 'row') {
-				return this.selectedCells.colOperation.length > 0 ? this.max.cols : 1;
-			}
-			return this.selectedCells.rowOperation.length > 0 ? this.max.cols : 1;
-		},
 		setCardActive() {
 			if (!this.isActive) {
 				this.$emit('cardActive', this.id);
@@ -243,7 +280,12 @@ export default {
 		},
 		cardGenerate() {
 			if (!this.disabled) {
-				this.$emit('cardGenerate', this.id, this.columns, this.rows, this.selectedCells);
+				const operationCells =
+					this.selectedCells.colOperation.length > 0
+						? this.selectedCells.colOperation
+						: this.selectedCells.rowOperation;
+
+				this.$emit('cardGenerate', this.id, this.columns, this.rows, operationCells);
 			}
 		},
 		cardEdit() {
