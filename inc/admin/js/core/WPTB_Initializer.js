@@ -76,5 +76,11 @@ var WPTB_Initializer = function () {
 
     // block tinyMCE from activation at manage cells menu
     WPTB_Helper.blockTinyMCEManageCells();
+    // initialize header toolbox
+    new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
 
+    // redirect active menu to elements after closing manage cells menu
+    document.addEventListener('wp-table-builder/table-edit-mode/closed', () => {
+        WPTB_Helper.activateSection('elements');
+    })
 };

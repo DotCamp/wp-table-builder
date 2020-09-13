@@ -1834,7 +1834,6 @@ var WPTB_Helper = {
                     wptbPreviewTable.parentNode.classList.add( 'wptb-preview-table-manage-cells' );
 
                     toggleEditMode = 'opened';
-                    WPTB_Helper.activateSection('manage_cells')
                 }
             }
 

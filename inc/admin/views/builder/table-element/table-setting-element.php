@@ -63,12 +63,13 @@ class Table_Setting_Element extends Element_Base_Object {
         $this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
         $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
 		$general_section_group_controls = [
-			'tableManageCells' =>
-				[
-					'label' => __( 'Manage Cells', 'wp_table_builder' ),
-					'type'  => Controls_Manager::BUTTON,
-				],
-
+			// @deprecated
+//			'tableManageCells' =>
+//				[
+//					'label' => __( 'Manage Cells', 'wp_table_builder' ),
+//					'type'  => Controls_Manager::BUTTON,
+//				],
+//
 			'tableCellPadding'            =>
 				[
 					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
