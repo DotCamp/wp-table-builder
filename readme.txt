@@ -91,6 +91,7 @@ That's it. You're done!
 * NEW: New and improved table generate menu.
 * NEW: Sortable table rows/columns.
 * NEW: Setting for sidebar location.
+* NEW: Accessibility options for table.
 * FIX: UTF-8 support for export/import operations.
 * FIX: An issue affecting text links to be converted into invalid addresses.
 * FIX: Selected elements will not trigger their text modification functionality at manage cells menu.

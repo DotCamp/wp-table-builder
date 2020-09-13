@@ -2,6 +2,12 @@
  * Selector helper functions for element data retrieval.
  *
  * One of the advanced functionality of selector module is, it can get/set values with a defined format so only raw values will be get and formatted values can be set. Format replace string is {$}. This operator will be replaced with the raw value of the control element. For example; a format of '{$}px' will be translated to '15px' in a control with a value of 15. When getting that value, 15 will be returned. While setting it, this value will be formatted into '15px'.
+ *
+ * Supported operation types:
+ *    dataset
+ *    class
+ *    style
+ *    attribute
  */
 
 /**
@@ -22,6 +28,9 @@ function operationSelect(element, type) {
 			break;
 		case 'class':
 			operation = 'class';
+			break;
+		case 'attribute':
+			operation = 'attribute';
 			break;
 		default:
 			operation = element.dataset;
@@ -49,6 +58,8 @@ function getTargetValue(selector) {
 			let value;
 			if (operation === 'class') {
 				value = elements[0].getAttribute('class');
+			} else if (operation === 'attribute') {
+				value = elements[0].getAttribute(key);
 			} else {
 				value = operation[key];
 			}
@@ -130,7 +141,11 @@ function setTargetValue(selector, value) {
 					tempVal = tempVal.replace(new RegExp(/\\/g), '');
 				}
 
-				operation[key] = tempVal;
+				if (operation === 'attribute') {
+					s.setAttribute(key, tempVal);
+				} else {
+					operation[key] = tempVal;
+				}
 			}
 		});
 	}

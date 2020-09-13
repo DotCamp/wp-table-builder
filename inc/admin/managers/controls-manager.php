@@ -158,6 +158,7 @@ class Controls_Manager {
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
 	const STYLE = 'style';
+	const ATTRIBUTE = 'attribute';
 
 	/**
 	 * Controls.

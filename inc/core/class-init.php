@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Core;
 
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
+use WP_Table_Builder\Inc\Admin\Accessibility;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Frontend as Frontend;
@@ -232,6 +233,9 @@ class Init {
 		$tables = new Admin\Tables;
 		$menu   = new Admin\Admin_Menu;
 		//$import = new Admin\Import;
+
+		// accessibility initialization
+		new Accessibility();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
