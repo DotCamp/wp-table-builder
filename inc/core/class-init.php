@@ -5,6 +5,7 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Table_Elements_Manager as Table_Elements_Manager;
@@ -134,6 +135,13 @@ class Init {
 	 */
 	private $icon_manager;
 
+	/**
+	 * Screen options manager instance.
+	 *
+	 * @var Screen_Options_Manager
+	 */
+	public $screen_options_manager;
+
 	private function __construct() {
 
 		$this->plugin_name        = NS\WP_TABLE_BUILDER;
@@ -180,8 +188,13 @@ class Init {
 	 * @access    private
 	 */
 	private function load_dependencies() {
-		$this->loader           = new Loader();
+		$this->loader = new Loader();
+
+		// initialize settings manager
 		$this->settings_manager = new Settings_Manager( 'wp_table_builder_settings', $this->loader );
+
+		// initialize screen options manager
+		$this->screen_options_manager = new Screen_Options_Manager();
 
 		// initialize icon manager instance
 		$icon_dir_path = trailingslashit( NS\WP_TABLE_BUILDER_DIR ) . 'inc/frontend/views/icons';
