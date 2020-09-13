@@ -2633,6 +2633,9 @@ var WPTB_Helper = {
             }
         }
 
+        // before save event trigger
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:save:before', document);
+
         var http = new XMLHttpRequest(),
             url = (wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl) + "?action=save_table",
             t = document.getElementById('wptb-setup-name').value.trim(),
@@ -2904,6 +2907,7 @@ var WPTB_Helper = {
                         }
                     }
                     toggleEditMode = 'closed';
+                    WPTB_Helper.activateSection('elements');
                 } else if (!close) {
                     document.select.activateMultipleSelectMode();
                     bar[i].classList.add('visible');
@@ -2912,6 +2916,7 @@ var WPTB_Helper = {
                     wptbPreviewTable.parentNode.classList.add('wptb-preview-table-manage-cells');
 
                     toggleEditMode = 'opened';
+                    WPTB_Helper.activateSection('manage_cells');
                 }
             }
 
@@ -3226,6 +3231,40 @@ var WPTB_Helper = {
         document.addEventListener('element:removed:dom', function () {
             WPTB_Helper.activateSection('elements');
         });
+    },
+
+    blockTinyMCEManageCells: function blockTinyMCEManageCells() {
+        var addBlocker = function addBlocker(parent) {
+            var blockerElement = document.createElement('div');
+            blockerElement.classList.add('wptb-plugin-blocker-element');
+            parent.appendChild(blockerElement);
+        };
+
+        var removeBlocker = function removeBlocker(parent) {
+            var blockerElement = parent.querySelector('.wptb-plugin-blocker-element');
+            if (blockerElement) {
+                blockerElement.remove();
+            }
+        };
+        document.addEventListener('wptbSectionChanged', function (_ref) {
+            var detail = _ref.detail;
+
+            var table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
+            var cells = Array.from(table.querySelectorAll('td'));
+
+            cells.map(removeBlocker);
+
+            if (detail === 'manage_cells' || detail === 'cell_settings') {
+                cells.map(addBlocker);
+            }
+        });
+
+        document.addEventListener('wptb:save:before', function () {
+            var table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
+            var cells = Array.from(table.querySelectorAll('td'));
+
+            cells.map(removeBlocker);
+        });
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -3275,14 +3314,13 @@ var WPTB_Initializer = function WPTB_Initializer() {
     // }
 
     // register and setup section buttons
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu']);
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group', 'table_responsive_menu', 'manage_cells']);
     WPTB_Helper.setupSectionButtons();
 
     // activate elements section for startup
     WPTB_Helper.activateSection('elements');
 
     // side bar toggle setup
-    // WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
     WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');
 
     // setup panel sections that have the ability to be toggled on/off
@@ -3299,6 +3337,9 @@ var WPTB_Initializer = function WPTB_Initializer() {
 
     // show elements list menu on left panel on removing elements from table
     WPTB_Helper.showElementsListOnRemove();
+
+    // block tinyMCE from activation at manage cells menu
+    WPTB_Helper.blockTinyMCEManageCells();
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 

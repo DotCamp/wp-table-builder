@@ -93,6 +93,7 @@ That's it. You're done!
 * NEW: Setting for sidebar location.
 * FIX: UTF-8 support for export/import operations.
 * FIX: An issue affecting text links to be converted into invalid addresses.
+* FIX: Selected elements will not trigger their text modification functionality at manage cells menu.
 * IMPROVEMENT: Loading of table related css and js files are limited to posts containing table shortcodes.
 * IMPROVEMENT: Amazon affiliate image support for custom html element.
 

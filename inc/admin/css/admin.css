@@ -1344,13 +1344,13 @@ ul.wptb-tabs {
 }
 
 
-.collapsed .wptb-left-panel[data-wptb-panel-location="left"] + .wptb-builder-panel  {
+.collapsed .wptb-left-panel[data-wptb-panel-location="left"] + .wptb-builder-panel {
     left: calc(0px + var(--wptb-plugin-left-panel-constant)) !important;
     width: calc(100% - var(--wptb-plugin-left-panel-constant)) !important;
 }
 
 
-.collapsed .wptb-left-panel[data-wptb-panel-location="right"] + .wptb-builder-panel  {
+.collapsed .wptb-left-panel[data-wptb-panel-location="right"] + .wptb-builder-panel {
     right: calc(0px - var(--wptb-plugin-left-panel-constant)) !important;
     width: calc(100% - var(--wptb-plugin-left-panel-constant)) !important;
 }
@@ -4112,9 +4112,8 @@ wptb_shortcode_container_element {
 
 
 .wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section {
-   justify-content: flex-start !important;
+    justify-content: flex-start !important;
 }
-
 
 
 .wptb-panel-toggle-section .wptb-panel-drawer-icon {
@@ -4122,7 +4121,7 @@ wptb_shortcode_container_element {
     transform: scale(2);
 }
 
-.wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section .wptb-panel-drawer-icon{
+.wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section .wptb-panel-drawer-icon {
     transform: scale(2) rotateZ(180deg);
 }
 
@@ -4467,7 +4466,7 @@ wptb_shortcode_container_element {
     z-index: 10;
 }
 
-.wptb-prebuilt-live-cell-hover{
+.wptb-prebuilt-live-cell-hover {
     opacity: 0.7;
     background-color: var(--wptb-plugin-logo-color);
 }
@@ -4478,7 +4477,7 @@ wptb_shortcode_container_element {
     pointer-events: all;
 }
 
-.wptb-prebuilt-live-control-hide .wptb-prebuilt-live-control{
+.wptb-prebuilt-live-control-hide .wptb-prebuilt-live-control {
     display: none;
 }
 
@@ -4951,6 +4950,25 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-display-calculate {
     width: 700px;
+}
+
+/*endregion*/
+
+/*region tinyMCE blocker*/
+.wptb-preview-table-manage-cells table tr td div {
+    pointer-events: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.wptb-plugin-blocker-element {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /*endregion*/
