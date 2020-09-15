@@ -63,12 +63,13 @@ class Table_Setting_Element extends Element_Base_Object {
         $this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
         $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
 		$general_section_group_controls = [
-			'tableManageCells' =>
-				[
-					'label' => __( 'Manage Cells', 'wp_table_builder' ),
-					'type'  => Controls_Manager::BUTTON,
-				],
-
+			// @deprecated
+//			'tableManageCells' =>
+//				[
+//					'label' => __( 'Manage Cells', 'wp_table_builder' ),
+//					'type'  => Controls_Manager::BUTTON,
+//				],
+//
 			'tableCellPadding'            =>
 				[
 					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
@@ -280,13 +281,6 @@ class Table_Setting_Element extends Element_Base_Object {
 			$this,
 			'add_control'
 		], false );
-
-		// responsive section group
-		//@deprecated
-//		Control_Section_Group_Collapse::add_section( 'table_settings_responsive', esc_html__( 'responsive', NS\PLUGIN_TEXT_DOMAIN ), $responsive_section_group_controls, [
-//			$this,
-//			'add_control'
-//		], false );
 
 		// table settings registered action hook
 		do_action('wp-table-builder/table_settings_registered', $this);

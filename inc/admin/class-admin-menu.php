@@ -211,13 +211,14 @@ class Admin_Menu {
 
 		add_action( 'load-' . $builder_page, [ $this, 'load_assets' ] );
 
-		add_action( 'load-' . $tables_overview, function () {
-			add_screen_option( 'per_page', array(
-				'label'   => 'Number of items per page:',
-				'default' => 15,
-				'option'  => 'tables_per_page', // название опции, будет записано в метаполе юзера
-			) );
-		} );
+		// @deprecated
+//		add_action( 'load-' . $tables_overview, function () {
+//			add_screen_option( 'per_page', array(
+//				'label'   => 'Number of items per page:',
+//				'default' => 15,
+//				'option'  => 'tables_per_page', // название опции, будет записано в метаполе юзера
+//			) );
+//		} );
 
 		do_action( 'wptb_admin_menu', $this );
 

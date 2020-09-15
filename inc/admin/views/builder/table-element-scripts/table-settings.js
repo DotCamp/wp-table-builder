@@ -78,7 +78,8 @@ function controlsChange(inputs, table) {
 				table.tdDefaultWidth();
 			}
 		} else if (inputs.hasOwnProperty('tableManageCells')) {
-			WPTB_Helper.toggleTableEditMode();
+			// @deprecated
+			// WPTB_Helper.toggleTableEditMode();
 			// sortableTable.sortModeSwitcher('vertical', false);
 			// sortableTable.sortModeSwitcher('horizontal', false);
 			// controlTableSortableDisable('vertical');
@@ -150,3 +151,14 @@ WPTB_TableSettingsData.setTableSetting('borderColor', tableBorderColor);
 // table.addEventListener('wp-table-builder/table-changed/after', function () {
 //     WPTB_Helper.elementOptionsSet( 'table_setting', table );
 // }, true);
+
+// handle changing into manage cells menu
+document.addEventListener('wptbSectionChanged', ({ detail }) => {
+	if (detail === 'manage_cells') {
+		WPTB_Helper.toggleTableEditMode();
+		sortableTable.sortModeSwitcher('vertical', false);
+		sortableTable.sortModeSwitcher('horizontal', false);
+		controlTableSortableDisable('vertical');
+		controlTableSortableDisable('horizontal');
+	}
+});

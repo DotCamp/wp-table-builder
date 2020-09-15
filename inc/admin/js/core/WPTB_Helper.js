@@ -1548,6 +1548,9 @@ var WPTB_Helper = {
             }
         }
 
+        // before save event trigger
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:save:before', document);
+
         let http = new XMLHttpRequest(),
             url = ( wptb_admin_object ? wptb_admin_object.ajaxurl : ajaxurl ) + "?action=save_table",
             t = document.getElementById( 'wptb-setup-name' ).value.trim(),
@@ -1821,6 +1824,7 @@ var WPTB_Helper = {
                         }
                     }
                     toggleEditMode = 'closed';
+                    WPTB_Helper.activateSection('elements')
 
                 } else if( ! close ) {
                     document.select.activateMultipleSelectMode();
@@ -2080,6 +2084,37 @@ var WPTB_Helper = {
     showElementsListOnRemove(){
         document.addEventListener('element:removed:dom', function(){
             WPTB_Helper.activateSection('elements');
+        })
+    },
+    blockTinyMCEManageCells: function (){
+        const addBlocker = (parent) => {
+            const blockerElement = document.createElement('div');
+            blockerElement.classList.add('wptb-plugin-blocker-element');
+            parent.appendChild(blockerElement);
+        }
+
+        const removeBlocker = (parent) => {
+            const blockerElement = parent.querySelector('.wptb-plugin-blocker-element');
+            if(blockerElement){
+                blockerElement.remove();
+            }
+        }
+        document.addEventListener('wptbSectionChanged' , ({detail}) => {
+            const table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
+            const cells = Array.from(table.querySelectorAll('td'));
+
+            cells.map(removeBlocker);
+
+            if(detail === 'manage_cells' || detail === 'cell_settings'){
+                cells.map(addBlocker);
+            }
+        })
+
+        document.addEventListener('wptb:save:before' , () => {
+            const table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
+            const cells = Array.from(table.querySelectorAll('td'));
+
+            cells.map(removeBlocker);
         })
     }
 }

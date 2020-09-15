@@ -93,6 +93,8 @@ body > img {
     align-items: center;
     justify-content: center;
     font-size: var(--wptb-plugin-theme-header-font-size-base);
+    position: relative;
+    z-index: 10;
 }
 
 .wptb-left-panel[data-wptb-panel-location="right"] + .wptb-builder-panel .wptb-header {
@@ -1344,13 +1346,13 @@ ul.wptb-tabs {
 }
 
 
-.collapsed .wptb-left-panel[data-wptb-panel-location="left"] + .wptb-builder-panel  {
+.collapsed .wptb-left-panel[data-wptb-panel-location="left"] + .wptb-builder-panel {
     left: calc(0px + var(--wptb-plugin-left-panel-constant)) !important;
     width: calc(100% - var(--wptb-plugin-left-panel-constant)) !important;
 }
 
 
-.collapsed .wptb-left-panel[data-wptb-panel-location="right"] + .wptb-builder-panel  {
+.collapsed .wptb-left-panel[data-wptb-panel-location="right"] + .wptb-builder-panel {
     right: calc(0px - var(--wptb-plugin-left-panel-constant)) !important;
     width: calc(100% - var(--wptb-plugin-left-panel-constant)) !important;
 }
@@ -1885,7 +1887,7 @@ table.wptb-table {
     min-height: 55px;
     text-align: center;
     position: sticky !important;
-    top: 80px;
+    top: 95px;
     z-index: 100;
     display: inline-block;
 }
@@ -4112,9 +4114,8 @@ wptb_shortcode_container_element {
 
 
 .wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section {
-   justify-content: flex-start !important;
+    justify-content: flex-start !important;
 }
-
 
 
 .wptb-panel-toggle-section .wptb-panel-drawer-icon {
@@ -4122,7 +4123,7 @@ wptb_shortcode_container_element {
     transform: scale(2);
 }
 
-.wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section .wptb-panel-drawer-icon{
+.wptb-left-panel[data-wptb-panel-location="right"] .wptb-panel-toggle-section .wptb-panel-drawer-icon {
     transform: scale(2) rotateZ(180deg);
 }
 
@@ -4469,6 +4470,7 @@ wptb_shortcode_container_element {
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 }
 
 .wptb-prebuilt-live-display {
@@ -4483,7 +4485,7 @@ wptb_shortcode_container_element {
     height: 100%;
     background-color: var(--wptb-plugin-theme-color-light);
     border-radius: 5px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     border: 1px solid var(--wptb-plugin-gray-400);
     display: grid;
 }
@@ -4492,6 +4494,50 @@ wptb_shortcode_container_element {
     width: 100%;
     height: 100%;
     border: 0.5px solid var(--wptb-plugin-gray-400);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    z-index: 10;
+}
+
+.wptb-prebuilt-live-cell-hover {
+    opacity: 0.7;
+    background-color: var(--wptb-plugin-logo-color);
+}
+
+
+.wptb-prebuilt-live-cell:hover .wptb-prebuilt-live-control {
+    opacity: unset;
+    pointer-events: all;
+}
+
+.wptb-prebuilt-live-control-hide .wptb-prebuilt-live-control {
+    display: none;
+}
+
+.wptb-prebuilt-live-control-active {
+    background-color: var(--wptb-plugin-logo-color);
+}
+
+.wptb-prebuilt-live-control {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.1s ease-out;
+    font-size: 120%;
+}
+
+.wptb-prebuilt-live-control:active {
+    animation: wptb-push 0.2s ease-out;
+}
+
+.wptb-prebuilt-added-cell {
+    background-color: turquoise;
+    cursor: default;
+    z-index: 1 !important;
 }
 
 .wptb-prebuilt-control {
@@ -4499,6 +4545,7 @@ wptb_shortcode_container_element {
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: all;
 }
 
 .wptb-prebuilt-control[data-orientation="row"] {
@@ -4672,6 +4719,7 @@ wptb_shortcode_container_element {
     align-items: center;
     padding: 20px;
     animation: wptb-basic-disappear 0.2s ease-out alternate-reverse;
+    pointer-events: none;
 }
 
 .wptb-prebuilt-table-wrapper table {
@@ -4939,6 +4987,44 @@ wptb_shortcode_container_element {
 
 .wptb-prebuilt-display-calculate {
     width: 700px;
+}
+
+/*endregion*/
+
+/*region tinyMCE blocker*/
+.wptb-preview-table-manage-cells table tr td div {
+    pointer-events: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.wptb-plugin-blocker-element {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*region header-toolbar*/
+.wptb-plugin-header-toolbar {
+    top: 0;
+    position: absolute;
+    left: 50%;
+    padding: 0 10px;
+    border: 1px solid var(--wptb-plugin-gray-200);
+    z-index: 1;
+    background-color: var(--wptb-plugin-theme-color-light);
+    transition: top 0.2s ease-out;
+}
+
+.wptb-plugin-header-toolbar div {
+    font-size: 95%;
+    width: fit-content;
+    padding: 5px;
+    margin: 0;
 }
 
 /*endregion*/

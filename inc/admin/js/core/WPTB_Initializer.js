@@ -50,14 +50,13 @@ var WPTB_Initializer = function () {
     // }
 
     // register and setup section buttons
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu']);
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells']);
     WPTB_Helper.setupSectionButtons();
 
     // activate elements section for startup
     WPTB_Helper.activateSection('elements');
 
     // side bar toggle setup
-    // WPTB_Helper.setupSidebarToggle('.wptb-panel-drawer-toggle');
     WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');
 
     // setup panel sections that have the ability to be toggled on/off
@@ -75,4 +74,13 @@ var WPTB_Initializer = function () {
     // show elements list menu on left panel on removing elements from table
     WPTB_Helper.showElementsListOnRemove();
 
+    // block tinyMCE from activation at manage cells menu
+    WPTB_Helper.blockTinyMCEManageCells();
+    // initialize header toolbox
+    new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
+
+    // redirect active menu to elements after closing manage cells menu
+    document.addEventListener('wp-table-builder/table-edit-mode/closed', () => {
+        WPTB_Helper.activateSection('elements');
+    })
 };
