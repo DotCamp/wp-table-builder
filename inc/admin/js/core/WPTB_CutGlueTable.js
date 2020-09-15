@@ -12,12 +12,19 @@ let WPTB_CutGlueTable = {
                             tableRowsIChildren[j].dataset.sameCellBeforeDivision = 'r' + i + 'c' + j;
                         }
 
-                        let td = new WPTB_Cell( table.mark ),
-                            tdTopStyle = tableRowsIChildren[j].getAttribute( 'style' );
-                        td.getDOMElement().setAttribute( 'style', tdTopStyle );
-                        td.getDOMElement().colSpan = tableRowsIChildren[j].colSpan;
-                        td.getDOMElement().rowSpan = newTdRowspan;
-                        td.getDOMElement().dataset.sameCellBeforeDivision = tableRowsIChildren[j].dataset.sameCellBeforeDivision;
+                        let td;
+                        if(table.hasOwnProperty('wptbCell')) {
+                            td = new table.wptbCell( table.mark );
+                            td = td.getDOMElement();
+                        } else {
+                            td = document.createElement('td');
+                        }
+
+                        let tdTopStyle = tableRowsIChildren[j].getAttribute( 'style' );
+                        td.setAttribute( 'style', tdTopStyle );
+                        td.colSpan = tableRowsIChildren[j].colSpan;
+                        td.rowSpan = newTdRowspan;
+                        td.dataset.sameCellBeforeDivision = tableRowsIChildren[j].dataset.sameCellBeforeDivision;
 
                         let dataXIndex = tableRowsIChildren[j].dataset.xIndex;
                         let dataXIndexNext = parseInt( dataXIndex ) + parseInt( tableRowsIChildren[j].colSpan );
@@ -26,9 +33,9 @@ let WPTB_CutGlueTable = {
                             beforeTd = table.rows[rowBefore].querySelector( '[data-x-index="' + dataXIndexNext + '"]' );
                             dataXIndexNext++;
                         }
-                        table.rows[rowBefore].insertBefore( td.getDOMElement(), beforeTd );
+                        table.rows[rowBefore].insertBefore( td, beforeTd );
 
-                        table.recalculateIndexes();
+                        WPTB_RecalculateIndexes(table);
                     }
                 }
             }
@@ -65,7 +72,7 @@ let WPTB_CutGlueTable = {
                 }
             }
 
-            table.recalculateIndexes();
+            WPTB_RecalculateIndexes(table);
         }
     },
     cutTableVertically: function (col, table) {
@@ -83,7 +90,13 @@ let WPTB_CutGlueTable = {
                     for( let j = 0; j < rowChildrenLength; j++ ) {
                         if( rowChildren[j].colSpan > 1 && parseInt( rowChildren[j].dataset.xIndex ) < col &&
                             parseInt( rowChildren[j].dataset.xIndex ) + parseInt( rowChildren[j].colSpan ) > col ) {
-                            td = new WPTB_Cell( table.mark );
+                            if(table.hasOwnProperty('wptbCell')) {
+                                td = new table.wptbCell( table.mark );
+                                td = td.getDOMElement();
+                            } else {
+                                td = document.createElement('td');
+                            }
+
                             rowSpanNewTd = rowChildren[j].rowSpan;
                             colSpanOld = rowChildren[j].colSpan;
                             rowChildren[j].colSpan = col - rowChildren[j].dataset.xIndex;
@@ -94,16 +107,16 @@ let WPTB_CutGlueTable = {
                             }
 
                             let tdLeftStyle = rowChildren[j].getAttribute( 'style' );
-                            td.getDOMElement().setAttribute( 'style', tdLeftStyle );
+                            td.setAttribute( 'style', tdLeftStyle );
 
                             let tdAnalogThisX = table.querySelector( '[data-x-index="' + col + '"]' );
                             if( tdAnalogThisX ) {
-                                td.getDOMElement().style.width = tdAnalogThisX.style.width;
+                                td.style.width = tdAnalogThisX.style.width;
                             }
 
                             let tdAnalogThisY = table.querySelector( '[data-y-index="' + i + '"]' );
                             if( tdAnalogThisY ) {
-                                td.getDOMElement().style.height = tdAnalogThisY.style.height;
+                                td.style.height = tdAnalogThisY.style.height;
                             }
                             if( rowChildren[j + 1] ) {
                                 afterTd = rowChildren[j + 1];
@@ -111,17 +124,17 @@ let WPTB_CutGlueTable = {
                                 afterTd = null;
                             }
 
-                            table.rows[i].insertBefore( td.getDOMElement(), afterTd );
-                            td.getDOMElement().colSpan = colSpanNewTd;
-                            td.getDOMElement().rowSpan = rowSpanNewTd;
-                            td.getDOMElement().dataset.sameCellBeforeDivision = rowChildren[j].dataset.sameCellBeforeDivision;
+                            table.rows[i].insertBefore( td, afterTd );
+                            td.colSpan = colSpanNewTd;
+                            td.rowSpan = rowSpanNewTd;
+                            td.dataset.sameCellBeforeDivision = rowChildren[j].dataset.sameCellBeforeDivision;
                             i += rowSpanNewTd - 1;
                             break
                         }
                     }
                 }
             }
-            table.recalculateIndexes();
+            WPTB_RecalculateIndexes(table);
         }
     },
     glueTableVertically: function (table) {
@@ -158,7 +171,7 @@ let WPTB_CutGlueTable = {
                 }
             }
 
-            table.recalculateIndexes();
+            WPTB_RecalculateIndexes(table);
         }
     }
 }

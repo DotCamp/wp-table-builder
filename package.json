@@ -43,6 +43,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.5.2",
+    "gulp-js-import": "^1.0.6",
     "gulp-notify": "^3.0.0",
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.0",

@@ -1,6 +1,6 @@
 const WPTB_SortableTable = function (table) {
-	this.wptbTableSetup = table.parentNode;
-	this.tableId = WPTB_Helper.getTableId();
+	this.table = table;
+	this.topRow = table.rows.length ? table.rows[0] : null;
 
 	/**
 	 * sets the table to sort mode
@@ -9,24 +9,28 @@ const WPTB_SortableTable = function (table) {
 	 */
 	this.sortModeSwitcher = function (type, active) {
 		if (type === 'vertical') {
-			this.wptbTableSetup.removeEventListener('click', this.sortableTableVerticalStart, false);
+			this.table.removeEventListener('click', this.sortableTableVerticalStart, false);
 
 			if (active) {
-				this.wptbTableSetup.addEventListener('click', this.sortableTableVerticalStart, false);
-				this.wptbTableSetup.dataset.wptbSortableTableVertical = '1';
 				this.sortModeSwitcher('horizontal', false);
+				this.sortingCellMouseMoveSwitcher('vertical', true);
+				this.table.addEventListener('click', this.sortableTableVerticalStart, false);
+				this.table.dataset.wptbSortableTableVertical = '1';
 			} else {
-				delete this.wptbTableSetup.dataset.wptbSortableTableVertical;
+				this.sortingCellMouseMoveSwitcher('vertical', false);
+				delete this.table.dataset.wptbSortableTableVertical;
 			}
 		} else if (type === 'horizontal') {
-			this.wptbTableSetup.removeEventListener('click', this.sortableTableHorizontalStart, false);
+			this.table.removeEventListener('click', this.sortableTableHorizontalStart, false);
 
 			if (active) {
-				this.wptbTableSetup.addEventListener('click', this.sortableTableHorizontalStart, false);
-				this.wptbTableSetup.dataset.wptbSortableTableHorizontal = '1';
 				this.sortModeSwitcher('vertical', false);
+				this.sortingCellMouseMoveSwitcher('horizontal', true);
+				this.table.addEventListener('click', this.sortableTableHorizontalStart, false);
+				this.table.dataset.wptbSortableTableHorizontal = '1';
 			} else {
-				delete this.wptbTableSetup.dataset.wptbSortableTableHorizontal;
+				this.sortingCellMouseMoveSwitcher('horizontal', false);
+				delete this.table.dataset.wptbSortableTableHorizontal;
 			}
 		}
 	};
@@ -36,26 +40,85 @@ const WPTB_SortableTable = function (table) {
 	 * and connects the necessary handlers
 	 */
 	this.sortableTableInitialization = function () {
-		if (
-			this.wptbTableSetup.dataset.wptbSortableTableVertical &&
-			this.wptbTableSetup.dataset.wptbSortableTableVertical === '1'
-		) {
+		if (this.table.dataset.wptbSortableTableVertical && this.table.dataset.wptbSortableTableVertical === '1') {
 			this.sortModeSwitcher('vertical', true);
 		} else if (
-			this.wptbTableSetup.dataset.wptbSortableTableHorizontal &&
-			this.wptbTableSetup.dataset.wptbSortableTableHorizontal === '1'
+			this.table.dataset.wptbSortableTableHorizontal &&
+			this.table.dataset.wptbSortableTableHorizontal === '1'
 		) {
 			this.sortModeSwitcher('horizontal', true);
 		}
 	};
 
+	this.sortingCellMouseMoveSwitcher = function (type, active) {
+		if (type === 'vertical') {
+			let tds = this.topRow ? this.topRow.querySelectorAll('td') : null;
+			tds = [...tds];
+			tds.map((td) => {
+				td.removeEventListener('mousemove', sortingCellMouseMoveVertical, false);
+				td.removeEventListener('mouseleave', tdMouseLeave, false);
+				if (active) {
+					td.addEventListener('mousemove', sortingCellMouseMoveVertical, false);
+					td.addEventListener('mouseleave', tdMouseLeave, false);
+				}
+			});
+		} else if (type === 'horizontal') {
+			let tds = this.table.querySelectorAll('[data-x-index="0"]');
+			tds = [...tds];
+			tds.map((td) => {
+				td.removeEventListener('mousemove', sortingCellMouseMoveHorizontal, false);
+				td.removeEventListener('mouseleave', tdMouseLeave, false);
+				if (active) {
+					td.addEventListener('mousemove', sortingCellMouseMoveHorizontal, false);
+					td.addEventListener('mouseleave', tdMouseLeave, false);
+				}
+			});
+		}
+	};
+
+	function sortingCellMouseMov(e, type, element) {
+		if (e.target.tagName === 'TD') {
+			const x = e.offsetX == undefined ? e.layerX : e.offsetX;
+			const y = e.offsetY == undefined ? e.layerY : e.offsetY;
+			let xMatch = false;
+			if ((type === 'vertical' && e.target.clientWidth - x <= 35) || (type === 'horizontal' && x <= 35)) {
+				xMatch = true;
+			}
+			if (xMatch && (e.target.clientHeight - 35) / 2 < y && (e.target.clientHeight + 35) / 2 > y) {
+				element.classList.add('sortable-hover');
+			} else {
+				element.classList.remove('sortable-hover');
+			}
+		} else {
+			element.classList.remove('sortable-hover');
+		}
+	}
+
+	function sortingCellMouseMoveVertical(e) {
+		sortingCellMouseMov(e, 'vertical', this);
+	}
+
+	function sortingCellMouseMoveHorizontal(e) {
+		sortingCellMouseMov(e, 'horizontal', this);
+	}
+
+	function tdMouseLeave() {
+		this.classList.remove('sortable-hover');
+	}
+
 	/**
 	 * function for sorting the table vertically by the numeric content of cells
+	 *
 	 * @param e
 	 * @param table
 	 */
 	function sortableTable(e, table, type) {
-		if (e.target && e.target.tagName === 'TD') {
+		if (
+			e.target &&
+			e.target.tagName === 'TD' &&
+			!table.classList.contains('wptb-plugin-responsive-base') &&
+			!table.parentNode.classList.contains('wptb-preview-table-manage-cells')
+		) {
 			let tableWasSorted = false;
 			if (type === 'vertical' && e.target.dataset.yIndex === '0') {
 				let tds = table.querySelectorAll(`[data-x-index="${e.target.dataset.xIndex}"]`);
@@ -117,10 +180,10 @@ const WPTB_SortableTable = function (table) {
 					}
 				}
 
-				const orderByAsc = setSortedAscDataAttr(e, 'sortedAscVertical');
-				if (orderByAsc === null) return;
+				const orderBy = setSortedAscDataAttr(e, 'sortedVertical');
+				if (!orderBy) return;
 
-				if (rowsValuesArr.length) rowsValuesArr.sort((prev, next) => sortOrder(orderByAsc, prev, next));
+				if (rowsValuesArr.length) rowsValuesArr.sort((prev, next) => sortOrder(orderBy, prev, next));
 
 				rowsValuesArr.unshift({ rowsTd: rowsTdFirst });
 
@@ -133,7 +196,7 @@ const WPTB_SortableTable = function (table) {
 					});
 				});
 
-				table.recalculateIndexes();
+				WPTB_RecalculateIndexes(table);
 
 				WPTB_CutGlueTable.glueTableHorizontally(table);
 
@@ -200,10 +263,10 @@ const WPTB_SortableTable = function (table) {
 					}
 				}
 
-				const orderByAsc = setSortedAscDataAttr(e, 'sortedAscHorizontal');
-				if (orderByAsc === null) return;
+				const orderBy = setSortedAscDataAttr(e, 'sortedHorizontal');
+				if (!orderBy) return;
 
-				if (columnsValuesArr.length) columnsValuesArr.sort((prev, next) => sortOrder(orderByAsc, prev, next));
+				if (columnsValuesArr.length) columnsValuesArr.sort((prev, next) => sortOrder(orderBy, prev, next));
 
 				columnsValuesArr.unshift({ columnsTd: columnsTdFirst });
 
@@ -219,7 +282,7 @@ const WPTB_SortableTable = function (table) {
 					});
 				});
 
-				table.recalculateIndexes();
+				WPTB_RecalculateIndexes(table);
 
 				WPTB_CutGlueTable.glueTableVertically(table);
 
@@ -229,8 +292,10 @@ const WPTB_SortableTable = function (table) {
 			if (tableWasSorted) {
 				removeCellsAttrAfterDivision(table);
 
-				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-				wptbTableStateSaveManager.tableStateSet();
+				if (table.hasOwnProperty('tableSM')) {
+					const tableSM = table.tableSM();
+					new tableSM().tableStateSet();
+				}
 			}
 		}
 	}
@@ -238,40 +303,34 @@ const WPTB_SortableTable = function (table) {
 	/**
 	 * Function that sets the data-attribute with the number of the row or column
 	 * that the table was sorted by. Returns the number of a row or column
+	 *
 	 * @param e
 	 * @param dataAttr
 	 * @returns {null|boolean}
 	 */
 	function setSortedAscDataAttr(e, dataAttr) {
-		let cellIndex = '';
-		if (dataAttr === 'sortedAscVertical') {
-			cellIndex = 'xIndex';
-		} else if (dataAttr === 'sortedAscHorizontal') {
-			cellIndex = 'yIndex';
-		}
-		if (e.currentTarget && e.currentTarget.classList.contains('wptb-table-setup')) {
-			if (
-				e.currentTarget.dataset[dataAttr] &&
-				e.currentTarget.dataset[dataAttr] === e.target.dataset[cellIndex]
-			) {
-				delete e.currentTarget.dataset[dataAttr];
-				return false;
+		if (e.currentTarget && e.currentTarget.classList.contains('wptb-preview-table')) {
+			if (!e.target.dataset[dataAttr] || e.target.dataset[dataAttr] === 'ask') {
+				e.target.dataset[dataAttr] = 'desk';
+			} else {
+				e.target.dataset[dataAttr] = 'ask';
 			}
-			e.currentTarget.dataset[dataAttr] = e.target.dataset[cellIndex];
-			return true;
+
+			return e.target.dataset[dataAttr];
 		}
 
-		return null;
+		return false;
 	}
 
 	/**
 	 * defines the sorting order
-	 * @param orderByAsc
+	 *
+	 * @param orderBy
 	 * @param prev
 	 * @param next
 	 * @returns {number}
 	 */
-	function sortOrder(orderByAsc = true, prev, next) {
+	function sortOrder(orderBy = 'ask', prev, next) {
 		let prevValue = prev.value;
 		let nextValue = next.value;
 		if (parseInt(prevValue) && parseInt(nextValue)) {
@@ -279,7 +338,7 @@ const WPTB_SortableTable = function (table) {
 			nextValue = parseInt(nextValue);
 		}
 
-		if (orderByAsc) {
+		if (orderBy === 'ask') {
 			if (prevValue < nextValue) {
 				return -1;
 			}
@@ -299,6 +358,7 @@ const WPTB_SortableTable = function (table) {
 
 	/**
 	 * return cell text elements values
+	 *
 	 * @param cell {HTMLElement}
 	 * @returns {string}
 	 */
@@ -319,6 +379,7 @@ const WPTB_SortableTable = function (table) {
 	 * adds cells to the collection of cells in the row or column that the table is sorted by.
 	 * These added cells are not originally were added in the collection,
 	 * because they are combined with cells from higher rows or left-side columns
+	 *
 	 * @param table
 	 * @param tds
 	 * @param i
@@ -408,6 +469,7 @@ const WPTB_SortableTable = function (table) {
 
 	/**
 	 * remove cells attributes which were used for division table
+	 *
 	 * @param table
 	 */
 	function removeCellsAttrAfterDivision(table) {
@@ -421,6 +483,7 @@ const WPTB_SortableTable = function (table) {
 
 	/**
 	 * function for run sorting table vertically
+	 *
 	 * @param e
 	 */
 	this.sortableTableVerticalStart = function (e) {
@@ -429,6 +492,7 @@ const WPTB_SortableTable = function (table) {
 
 	/**
 	 * function for run sorting table horizontally
+	 *
 	 * @param e
 	 */
 	this.sortableTableHorizontalStart = function (e) {

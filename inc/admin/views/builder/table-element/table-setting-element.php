@@ -129,7 +129,7 @@ class Table_Setting_Element extends Element_Base_Object {
                     'label'        => __( 'Sortable Table Vertically', 'wp_table_builder' ),
                     'type'      => Controls_Manager::TOGGLE,
                     'selectors' => [
-                        '.wptb-table-setup' => [ 'data-wptb-sortable-table-vertical', '1', null ]
+                        '{{{data.container}}}' => [ 'data-wptb-sortable-table-vertical', '1', null ]
                     ]
                 ],
             'tableSortableHorizontal' =>
@@ -137,7 +137,7 @@ class Table_Setting_Element extends Element_Base_Object {
                     'label'        => __( 'Sortable Table Horizontally', 'wp_table_builder' ),
                     'type'      => Controls_Manager::TOGGLE,
                     'selectors' => [
-                        '.wptb-table-setup' => [ 'data-wptb-sortable-table-horizontal', '1', null ]
+                        '{{{data.container}}}' => [ 'data-wptb-sortable-table-horizontal', '1', null ]
                     ]
                 ]
 		];

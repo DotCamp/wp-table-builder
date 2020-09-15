@@ -27,8 +27,28 @@ gulp.task('minify', function () {
         .pipe(gulp.dest('./inc/admin/js/'))
 });
 
+gulp.task('frontendJs', function () {
+    gulp.
+    src(['./inc/admin/js/core/WPTB_CutGlueTable.js',
+        './inc/admin/js/core/WPTB_SortableTable.js',
+        './inc/admin/js/core/WPTB_RecalculateIndexes.js',
+        './inc/frontend/js/frontend-only/wp-table-builder-frontend.js'])
+        .pipe(sourcemaps.init())
+        .pipe(babel({
+            presets: [['env', { modules: false }]],
+            babelrc: false
+        }))
+        .pipe(concat('./inc/frontend/js/wp-table-builder-frontend.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('.'))
+});
+
 gulp.task('watch', function () {
     gulp.watch(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'], ['adminJs']);
+    gulp.watch(['./inc/admin/js/core/WPTB_CutGlueTable.js',
+        './inc/admin/js/core/WPTB_SortableTable.js',
+        './inc/admin/js/core/WPTB_RecalculateIndexes.js',
+        './inc/frontend/js/frontend-only/wp-table-builder-frontend.js'], ['frontendJs']);
 });
 
 gulp.task('default', ['adminJs', 'minify']);

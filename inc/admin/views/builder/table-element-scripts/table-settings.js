@@ -79,10 +79,10 @@ function controlsChange(inputs, table) {
 			}
 		} else if (inputs.hasOwnProperty('tableManageCells')) {
 			WPTB_Helper.toggleTableEditMode();
-			sortableTable.sortModeSwitcher('vertical', false);
-			sortableTable.sortModeSwitcher('horizontal', false);
-			controlTableSortableDisable('vertical');
-			controlTableSortableDisable('horizontal');
+			// sortableTable.sortModeSwitcher('vertical', false);
+			// sortableTable.sortModeSwitcher('horizontal', false);
+			// controlTableSortableDisable('vertical');
+			// controlTableSortableDisable('horizontal');
 		} else if (inputs.hasOwnProperty('tableAlignmentCheckbox')) {
 			table.tdDefaultWidth();
 		} else if (inputs.hasOwnProperty('tableCellMinAutoWidth')) {
