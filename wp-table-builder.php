@@ -15,7 +15,7 @@
  * Plugin Name:       WP Table Builder
  * Plugin URI:        https://wptablebuilder.com/
  * Description:       Drag and Drop Responsive Table Builder Plugin for WordPress.
- * Version:           1.2.7
+ * Version:           1.2.8
  * Author:            WP Table Builder
  * Author URI:        https://wptablebuilder.com//
  * License:           GPL-3.0+
@@ -32,50 +32,53 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 if ( ! function_exists( 'wptb_fs' ) ) {
-    // Create a helper function for easy SDK access.
-    function wptb_fs() {
-        global $wptb_fs;
+	// Create a helper function for easy SDK access.
+	function wptb_fs() {
+		global $wptb_fs;
 
-        if ( ! isset( $wptb_fs ) ) {
-            // Include Freemius SDK.
-            require_once dirname(__FILE__) . '/inc/core/freemius/start.php';
+		if ( ! isset( $wptb_fs ) ) {
+			// Include Freemius SDK.
+			require_once dirname( __FILE__ ) . '/inc/core/freemius/start.php';
 
-            $wptb_fs = fs_dynamic_init( array(
-                'id'                  => '6602',
-                'slug'                => 'wp-table-builder',
-                'type'                => 'plugin',
-                'public_key'          => 'pk_6bf7fb67d8b8bcce83459fd46432e',
-                'is_premium'          => false,
-                'has_addons'          => false,
-                'has_paid_plans'      => false,
-                'menu'                => array(
-                    'slug'           => 'wptb-overview',
-                    'first-path'     => 'admin.php?page=wp-table-builder-welcome',
-                    'account'        => false,
-                    'contact'        => false,
-                    'support'        => false,
-                ),
-            ) );
-        }
+			$wptb_fs = fs_dynamic_init( array(
+				'id'             => '6602',
+				'slug'           => 'wp-table-builder',
+				'type'           => 'plugin',
+				'public_key'     => 'pk_6bf7fb67d8b8bcce83459fd46432e',
+				'is_premium'     => false,
+				'has_addons'     => false,
+				'has_paid_plans' => false,
+				'menu'           => array(
+					'slug'       => 'wptb-overview',
+					'first-path' => 'admin.php?page=wp-table-builder-welcome',
+					'account'    => false,
+					'contact'    => false,
+					'support'    => false,
+				),
+			) );
+		}
 
-        return $wptb_fs;
-    }
+		return $wptb_fs;
+	}
 
-    // Init Freemius.
-    wptb_fs();
-    // Signal that SDK was initiated.
-    do_action( 'wptb_fs_loaded' );
+	// Init Freemius.
+	wptb_fs();
+	// Signal that SDK was initiated.
+	do_action( 'wptb_fs_loaded' );
 }
 
 /**
  * Define Constants
  */
 
+$current_version = get_plugin_data( __FILE__ )['Version'];
+
+
 define( __NAMESPACE__ . '\NS', __NAMESPACE__ . '\\' );
 
 define( NS . 'WP_TABLE_BUILDER', 'wp-table-builder' );
 
-define( NS . 'PLUGIN_VERSION', '1.2.6' );
+define( NS . 'PLUGIN_VERSION', $current_version );
 
 define( NS . 'WP_TABLE_BUILDER_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -85,7 +88,7 @@ define( NS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 define( NS . 'PLUGIN_TEXT_DOMAIN', 'wp-table-builder' );
 
-define(NS . 'PLUGIN__FILE__', __FILE__);
+define( NS . 'PLUGIN__FILE__', __FILE__ );
 
 
 /**
@@ -95,7 +98,7 @@ define(NS . 'PLUGIN__FILE__', __FILE__);
 require_once( WP_TABLE_BUILDER_DIR . 'inc/libraries/autoloader.php' );
 
 /**
- * Helper Functions 
+ * Helper Functions
  */
 
 /**
@@ -114,28 +117,28 @@ register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deact
 
 if ( ! function_exists( 'wptb_safe_welcome_redirect' ) ) {
 
-    add_action( 'admin_init', 'WP_Table_Builder\wptb_safe_welcome_redirect' );
+	add_action( 'admin_init', 'WP_Table_Builder\wptb_safe_welcome_redirect' );
 
-    function wptb_safe_welcome_redirect() {
+	function wptb_safe_welcome_redirect() {
 
-        if ( ! get_transient( '_welcome_redirect_wptb' ) ) {
-            return;
-        }
+		if ( ! get_transient( '_welcome_redirect_wptb' ) ) {
+			return;
+		}
 
-        delete_transient( '_welcome_redirect_wptb' );
+		delete_transient( '_welcome_redirect_wptb' );
 
-        if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
-            return;
-        }
+		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+			return;
+		}
 
-        wp_safe_redirect( add_query_arg(
-            array(
-                'page' => 'wp-table-builder-welcome'
-            ),
-            admin_url( 'admin.php' )
-        ) );
+		wp_safe_redirect( add_query_arg(
+			array(
+				'page' => 'wp-table-builder-welcome'
+			),
+			admin_url( 'admin.php' )
+		) );
 
-    }
+	}
 
 }
 
@@ -156,11 +159,11 @@ class WP_Table_Builder {
 	 * @var      Init $init Instance of the plugin.
 	 */
 	public static $init;
-    
-    public function __construct() {
-        self::$init = Inc\Core\Init::instance();
-        self::$init->run();
-    }
+
+	public function __construct() {
+		self::$init = Inc\Core\Init::instance();
+		self::$init->run();
+	}
 
 }
 
