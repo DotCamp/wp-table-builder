@@ -12127,14 +12127,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $031589 = exports.default || module.exports;
+        var $7aa961 = exports.default || module.exports;
       
-      if (typeof $031589 === 'function') {
-        $031589 = $031589.options;
+      if (typeof $7aa961 === 'function') {
+        $7aa961 = $7aa961.options;
       }
     
         /* template */
-        Object.assign($031589, (function () {
+        Object.assign($7aa961, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12758,14 +12758,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $a9985c = exports.default || module.exports;
+        var $4a7874 = exports.default || module.exports;
       
-      if (typeof $a9985c === 'function') {
-        $a9985c = $a9985c.options;
+      if (typeof $4a7874 === 'function') {
+        $4a7874 = $4a7874.options;
       }
     
         /* template */
-        Object.assign($a9985c, (function () {
+        Object.assign($4a7874, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13167,14 +13167,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9d7547 = exports.default || module.exports;
+        var $ea3a7f = exports.default || module.exports;
       
-      if (typeof $9d7547 === 'function') {
-        $9d7547 = $9d7547.options;
+      if (typeof $ea3a7f === 'function') {
+        $ea3a7f = $ea3a7f.options;
       }
     
         /* template */
-        Object.assign($9d7547, (function () {
+        Object.assign($ea3a7f, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13361,14 +13361,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $07ef2f = exports.default || module.exports;
+        var $eeeedf = exports.default || module.exports;
       
-      if (typeof $07ef2f === 'function') {
-        $07ef2f = $07ef2f.options;
+      if (typeof $eeeedf === 'function') {
+        $eeeedf = $eeeedf.options;
       }
     
         /* template */
-        Object.assign($07ef2f, (function () {
+        Object.assign($eeeedf, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13536,14 +13536,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $452f0a = exports.default || module.exports;
+        var $72f762 = exports.default || module.exports;
       
-      if (typeof $452f0a === 'function') {
-        $452f0a = $452f0a.options;
+      if (typeof $72f762 === 'function') {
+        $72f762 = $72f762.options;
       }
     
         /* template */
-        Object.assign($452f0a, (function () {
+        Object.assign($72f762, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13738,14 +13738,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b30c41 = exports.default || module.exports;
+        var $d9cab9 = exports.default || module.exports;
       
-      if (typeof $b30c41 === 'function') {
-        $b30c41 = $b30c41.options;
+      if (typeof $d9cab9 === 'function') {
+        $d9cab9 = $d9cab9.options;
       }
     
         /* template */
-        Object.assign($b30c41, (function () {
+        Object.assign($d9cab9, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14060,14 +14060,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $df2733 = exports.default || module.exports;
+        var $e62505 = exports.default || module.exports;
       
-      if (typeof $df2733 === 'function') {
-        $df2733 = $df2733.options;
+      if (typeof $e62505 === 'function') {
+        $e62505 = $e62505.options;
       }
     
         /* template */
-        Object.assign($df2733, (function () {
+        Object.assign($e62505, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14199,14 +14199,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $6118f7 = exports.default || module.exports;
+        var $3c0812 = exports.default || module.exports;
       
-      if (typeof $6118f7 === 'function') {
-        $6118f7 = $6118f7.options;
+      if (typeof $3c0812 === 'function') {
+        $3c0812 = $3c0812.options;
       }
     
         /* template */
-        Object.assign($6118f7, (function () {
+        Object.assign($3c0812, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14308,14 +14308,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ef0608 = exports.default || module.exports;
+        var $1f3acb = exports.default || module.exports;
       
-      if (typeof $ef0608 === 'function') {
-        $ef0608 = $ef0608.options;
+      if (typeof $1f3acb === 'function') {
+        $1f3acb = $1f3acb.options;
       }
     
         /* template */
-        Object.assign($ef0608, (function () {
+        Object.assign($1f3acb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14409,14 +14409,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8462fb = exports.default || module.exports;
+        var $221e87 = exports.default || module.exports;
       
-      if (typeof $8462fb === 'function') {
-        $8462fb = $8462fb.options;
+      if (typeof $221e87 === 'function') {
+        $221e87 = $221e87.options;
       }
     
         /* template */
-        Object.assign($8462fb, (function () {
+        Object.assign($221e87, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14708,14 +14708,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $aa5fa0 = exports.default || module.exports;
+        var $a9eb9a = exports.default || module.exports;
       
-      if (typeof $aa5fa0 === 'function') {
-        $aa5fa0 = $aa5fa0.options;
+      if (typeof $a9eb9a === 'function') {
+        $a9eb9a = $a9eb9a.options;
       }
     
         /* template */
-        Object.assign($aa5fa0, (function () {
+        Object.assign($a9eb9a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -16306,14 +16306,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $9d5ffc = exports.default || module.exports;
+        var $48fd91 = exports.default || module.exports;
       
-      if (typeof $9d5ffc === 'function') {
-        $9d5ffc = $9d5ffc.options;
+      if (typeof $48fd91 === 'function') {
+        $48fd91 = $48fd91.options;
       }
     
         /* template */
-        Object.assign($9d5ffc, (function () {
+        Object.assign($48fd91, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -16402,14 +16402,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e4a18a = exports.default || module.exports;
+        var $6a3b9d = exports.default || module.exports;
       
-      if (typeof $e4a18a === 'function') {
-        $e4a18a = $e4a18a.options;
+      if (typeof $6a3b9d === 'function') {
+        $6a3b9d = $6a3b9d.options;
       }
     
         /* template */
-        Object.assign($e4a18a, (function () {
+        Object.assign($6a3b9d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -16748,14 +16748,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $2c5e35 = exports.default || module.exports;
+        var $26cd08 = exports.default || module.exports;
       
-      if (typeof $2c5e35 === 'function') {
-        $2c5e35 = $2c5e35.options;
+      if (typeof $26cd08 === 'function') {
+        $26cd08 = $26cd08.options;
       }
     
         /* template */
-        Object.assign($2c5e35, (function () {
+        Object.assign($26cd08, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -16898,14 +16898,14 @@ render._withStripped = true
       
 },{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
 
-        var $1afd82 = exports.default || module.exports;
+        var $d55f26 = exports.default || module.exports;
       
-      if (typeof $1afd82 === 'function') {
-        $1afd82 = $1afd82.options;
+      if (typeof $d55f26 === 'function') {
+        $d55f26 = $d55f26.options;
       }
     
         /* template */
-        Object.assign($1afd82, (function () {
+        Object.assign($d55f26, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17212,14 +17212,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $e81eb3 = exports.default || module.exports;
+        var $f6974b = exports.default || module.exports;
       
-      if (typeof $e81eb3 === 'function') {
-        $e81eb3 = $e81eb3.options;
+      if (typeof $f6974b === 'function') {
+        $f6974b = $f6974b.options;
       }
     
         /* template */
-        Object.assign($e81eb3, (function () {
+        Object.assign($f6974b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17332,14 +17332,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $99ea68 = exports.default || module.exports;
+        var $5b3d68 = exports.default || module.exports;
       
-      if (typeof $99ea68 === 'function') {
-        $99ea68 = $99ea68.options;
+      if (typeof $5b3d68 === 'function') {
+        $5b3d68 = $5b3d68.options;
       }
     
         /* template */
-        Object.assign($99ea68, (function () {
+        Object.assign($5b3d68, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17461,14 +17461,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e5c51b = exports.default || module.exports;
+        var $1e9780 = exports.default || module.exports;
       
-      if (typeof $e5c51b === 'function') {
-        $e5c51b = $e5c51b.options;
+      if (typeof $1e9780 === 'function') {
+        $1e9780 = $1e9780.options;
       }
     
         /* template */
-        Object.assign($e5c51b, (function () {
+        Object.assign($1e9780, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17602,14 +17602,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $4d7fa5 = exports.default || module.exports;
+        var $3d2461 = exports.default || module.exports;
       
-      if (typeof $4d7fa5 === 'function') {
-        $4d7fa5 = $4d7fa5.options;
+      if (typeof $3d2461 === 'function') {
+        $3d2461 = $3d2461.options;
       }
     
         /* template */
-        Object.assign($4d7fa5, (function () {
+        Object.assign($3d2461, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17717,14 +17717,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $98215b = exports.default || module.exports;
+        var $089a84 = exports.default || module.exports;
       
-      if (typeof $98215b === 'function') {
-        $98215b = $98215b.options;
+      if (typeof $089a84 === 'function') {
+        $089a84 = $089a84.options;
       }
     
         /* template */
-        Object.assign($98215b, (function () {
+        Object.assign($089a84, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17866,14 +17866,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $645535 = exports.default || module.exports;
+        var $085e64 = exports.default || module.exports;
       
-      if (typeof $645535 === 'function') {
-        $645535 = $645535.options;
+      if (typeof $085e64 === 'function') {
+        $085e64 = $085e64.options;
       }
     
         /* template */
-        Object.assign($645535, (function () {
+        Object.assign($085e64, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18072,14 +18072,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $bffd0d = exports.default || module.exports;
+        var $b7cc79 = exports.default || module.exports;
       
-      if (typeof $bffd0d === 'function') {
-        $bffd0d = $bffd0d.options;
+      if (typeof $b7cc79 === 'function') {
+        $b7cc79 = $b7cc79.options;
       }
     
         /* template */
-        Object.assign($bffd0d, (function () {
+        Object.assign($b7cc79, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18334,14 +18334,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $789391 = exports.default || module.exports;
+        var $d91df7 = exports.default || module.exports;
       
-      if (typeof $789391 === 'function') {
-        $789391 = $789391.options;
+      if (typeof $d91df7 === 'function') {
+        $d91df7 = $d91df7.options;
       }
     
         /* template */
-        Object.assign($789391, (function () {
+        Object.assign($d91df7, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18431,14 +18431,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $71c473 = exports.default || module.exports;
+        var $d95020 = exports.default || module.exports;
       
-      if (typeof $71c473 === 'function') {
-        $71c473 = $71c473.options;
+      if (typeof $d95020 === 'function') {
+        $d95020 = $d95020.options;
       }
     
         /* template */
-        Object.assign($71c473, (function () {
+        Object.assign($d95020, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18713,14 +18713,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b98b69 = exports.default || module.exports;
+        var $3b6a1a = exports.default || module.exports;
       
-      if (typeof $b98b69 === 'function') {
-        $b98b69 = $b98b69.options;
+      if (typeof $3b6a1a === 'function') {
+        $3b6a1a = $3b6a1a.options;
       }
     
         /* template */
-        Object.assign($b98b69, (function () {
+        Object.assign($3b6a1a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18891,14 +18891,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f834e7 = exports.default || module.exports;
+        var $40eb3b = exports.default || module.exports;
       
-      if (typeof $f834e7 === 'function') {
-        $f834e7 = $f834e7.options;
+      if (typeof $40eb3b === 'function') {
+        $40eb3b = $40eb3b.options;
       }
     
         /* template */
-        Object.assign($f834e7, (function () {
+        Object.assign($40eb3b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18977,14 +18977,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $798609 = exports.default || module.exports;
+        var $01554d = exports.default || module.exports;
       
-      if (typeof $798609 === 'function') {
-        $798609 = $798609.options;
+      if (typeof $01554d === 'function') {
+        $01554d = $01554d.options;
       }
     
         /* template */
-        Object.assign($798609, (function () {
+        Object.assign($01554d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19087,14 +19087,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f2c7a2 = exports.default || module.exports;
+        var $8f11fa = exports.default || module.exports;
       
-      if (typeof $f2c7a2 === 'function') {
-        $f2c7a2 = $f2c7a2.options;
+      if (typeof $8f11fa === 'function') {
+        $8f11fa = $8f11fa.options;
       }
     
         /* template */
-        Object.assign($f2c7a2, (function () {
+        Object.assign($8f11fa, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement

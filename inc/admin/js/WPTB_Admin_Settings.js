@@ -12737,14 +12737,14 @@ var _default = {
   props: ['logoSrc', 'logoAlt', 'pluginName']
 };
 exports.default = _default;
-        var $4456da = exports.default || module.exports;
+        var $987f1e = exports.default || module.exports;
       
-      if (typeof $4456da === 'function') {
-        $4456da = $4456da.options;
+      if (typeof $987f1e === 'function') {
+        $987f1e = $987f1e.options;
       }
     
         /* template */
-        Object.assign($4456da, (function () {
+        Object.assign($987f1e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12791,11 +12791,33 @@ exports.default = void 0;
 //
 //
 var _default = {
-  props: ['name', 'current', 'label'],
+  props: {
+    name: {
+      type: String,
+      default: 'section_item'
+    },
+    current: {
+      type: String,
+      default: ''
+    },
+    label: {
+      type: String,
+      default: 'Section Item'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   methods: {
     activePosition: function activePosition() {
       if (this.current === undefined || this.current === this.name) {
         this.$emit('activeSectionElement', this.$refs.sectionItem);
+      }
+    },
+    activateSection: function activateSection(e) {
+      if (!this.disabled) {
+        this.$emit('sectionchange', this.name, e.target);
       }
     }
   },
@@ -12815,14 +12837,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3ce175 = exports.default || module.exports;
+        var $690c6d = exports.default || module.exports;
       
-      if (typeof $3ce175 === 'function') {
-        $3ce175 = $3ce175.options;
+      if (typeof $690c6d === 'function') {
+        $690c6d = $690c6d.options;
       }
     
         /* template */
-        Object.assign($3ce175, (function () {
+        Object.assign($690c6d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12832,10 +12854,10 @@ exports.default = _default;
     {
       ref: "sectionItem",
       staticClass: "wptb-settings-section-item",
-      class: { disabled: !_vm.isActive },
+      class: { disabled: _vm.disabled || !_vm.isActive },
       on: {
         click: function($event) {
-          return _vm.$emit("sectionchange", _vm.name, $event.target)
+          return _vm.activateSection($event)
         }
       }
     },
@@ -12896,14 +12918,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $df4243 = exports.default || module.exports;
+        var $31f6d3 = exports.default || module.exports;
       
-      if (typeof $df4243 === 'function') {
-        $df4243 = $df4243.options;
+      if (typeof $31f6d3 === 'function') {
+        $31f6d3 = $31f6d3.options;
       }
     
         /* template */
-        Object.assign($df4243, (function () {
+        Object.assign($31f6d3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12959,6 +12981,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   model: {
     prop: 'currentSection',
@@ -12970,7 +12993,11 @@ var _default = {
       default: false
     },
     items: null,
-    currentSection: String
+    currentSection: String,
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     SectionItem: _SectionItem.default,
@@ -13013,14 +13040,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $dd2de5 = exports.default || module.exports;
+        var $121c13 = exports.default || module.exports;
       
-      if (typeof $dd2de5 === 'function') {
-        $dd2de5 = $dd2de5.options;
+      if (typeof $121c13 === 'function') {
+        $121c13 = $121c13.options;
       }
     
         /* template */
-        Object.assign($dd2de5, (function () {
+        Object.assign($121c13, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13042,7 +13069,8 @@ exports.default = _default;
               attrs: {
                 name: item,
                 label: label,
-                current: _vm.innerCurrentSection
+                current: _vm.innerCurrentSection,
+                disabled: _vm.disabled
               },
               on: {
                 sectionchange: _vm.handleSectionChange,
@@ -13104,14 +13132,14 @@ var _default = {
   mixins: [_withMessage.default]
 };
 exports.default = _default;
-        var $e4bb48 = exports.default || module.exports;
+        var $a5c956 = exports.default || module.exports;
       
-      if (typeof $e4bb48 === 'function') {
-        $e4bb48 = $e4bb48.options;
+      if (typeof $a5c956 === 'function') {
+        $a5c956 = $a5c956.options;
       }
     
         /* template */
-        Object.assign($e4bb48, (function () {
+        Object.assign($a5c956, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13192,14 +13220,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $233f09 = exports.default || module.exports;
+        var $358d10 = exports.default || module.exports;
       
-      if (typeof $233f09 === 'function') {
-        $233f09 = $233f09.options;
+      if (typeof $358d10 === 'function') {
+        $358d10 = $358d10.options;
       }
     
         /* template */
-        Object.assign($233f09, (function () {
+        Object.assign($358d10, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13259,14 +13287,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $a45baf = exports.default || module.exports;
+        var $89b5d8 = exports.default || module.exports;
       
-      if (typeof $a45baf === 'function') {
-        $a45baf = $a45baf.options;
+      if (typeof $89b5d8 === 'function') {
+        $89b5d8 = $89b5d8.options;
       }
     
         /* template */
-        Object.assign($a45baf, (function () {
+        Object.assign($89b5d8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13458,14 +13486,14 @@ var _default = {
   props: ['title']
 };
 exports.default = _default;
-        var $85e6b2 = exports.default || module.exports;
+        var $a818cd = exports.default || module.exports;
       
-      if (typeof $85e6b2 === 'function') {
-        $85e6b2 = $85e6b2.options;
+      if (typeof $a818cd === 'function') {
+        $a818cd = $a818cd.options;
       }
     
         /* template */
-        Object.assign($85e6b2, (function () {
+        Object.assign($a818cd, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13545,14 +13573,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $75e9bd = exports.default || module.exports;
+        var $4a98c8 = exports.default || module.exports;
       
-      if (typeof $75e9bd === 'function') {
-        $75e9bd = $75e9bd.options;
+      if (typeof $4a98c8 === 'function') {
+        $4a98c8 = $4a98c8.options;
       }
     
         /* template */
-        Object.assign($75e9bd, (function () {
+        Object.assign($4a98c8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13766,14 +13794,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3df909 = exports.default || module.exports;
+        var $9ac5fb = exports.default || module.exports;
       
-      if (typeof $3df909 === 'function') {
-        $3df909 = $3df909.options;
+      if (typeof $9ac5fb === 'function') {
+        $9ac5fb = $9ac5fb.options;
       }
     
         /* template */
-        Object.assign($3df909, (function () {
+        Object.assign($9ac5fb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13867,14 +13895,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $821089 = exports.default || module.exports;
+        var $d51089 = exports.default || module.exports;
       
-      if (typeof $821089 === 'function') {
-        $821089 = $821089.options;
+      if (typeof $d51089 === 'function') {
+        $d51089 = $d51089.options;
       }
     
         /* template */
-        Object.assign($821089, (function () {
+        Object.assign($d51089, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13980,14 +14008,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8a584d = exports.default || module.exports;
+        var $014f53 = exports.default || module.exports;
       
-      if (typeof $8a584d === 'function') {
-        $8a584d = $8a584d.options;
+      if (typeof $014f53 === 'function') {
+        $014f53 = $014f53.options;
       }
     
         /* template */
-        Object.assign($8a584d, (function () {
+        Object.assign($014f53, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14060,14 +14088,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e3cfc1 = exports.default || module.exports;
+        var $4e3c2f = exports.default || module.exports;
       
-      if (typeof $e3cfc1 === 'function') {
-        $e3cfc1 = $e3cfc1.options;
+      if (typeof $4e3c2f === 'function') {
+        $4e3c2f = $4e3c2f.options;
       }
     
         /* template */
-        Object.assign($e3cfc1, (function () {
+        Object.assign($4e3c2f, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14151,14 +14179,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $86984d = exports.default || module.exports;
+        var $c49878 = exports.default || module.exports;
       
-      if (typeof $86984d === 'function') {
-        $86984d = $86984d.options;
+      if (typeof $c49878 === 'function') {
+        $c49878 = $c49878.options;
       }
     
         /* template */
-        Object.assign($86984d, (function () {
+        Object.assign($c49878, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14200,64 +14228,12 @@ var _VersionIndicator = _interopRequireDefault(require("./VersionIndicator"));
 
 var _Changelog = _interopRequireDefault(require("./Changelog"));
 
+var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var _default = {
   props: {
     templateData: {
@@ -14275,19 +14251,26 @@ var _default = {
     VersionIndicator: _VersionIndicator.default,
     Changelog: _Changelog.default
   },
+  mixins: [_withMessage.default],
   data: function data() {
     return {
       selectedVersion: '1.0.0',
       currentVersion: '1.0.0',
       latestVersion: '1.0.0',
-      allVersions: {}
+      allVersions: {},
+      installResult: false,
+      showForm: false,
+      form: '<p>form</p>'
     };
   },
   mounted: function mounted() {
-    this.selectedVersion = this.getVersionControlData().currentVersion;
-    this.currentVersion = this.getVersionControlData().currentVersion;
+    var _this$getVersionContr = this.getVersionControlData(),
+        currentVersion = _this$getVersionContr.currentVersion;
+
+    this.currentVersion = currentVersion;
     this.latestVersion = this.getVersionControlData().latestVersion;
     this.allVersions = this.getVersionControlData().allVersions;
+    this.selectedVersion = this.allVersions[currentVersion] !== undefined ? currentVersion : this.latestVersion;
   },
   computed: {
     showUpdateToLatest: function showUpdateToLatest() {
@@ -14316,50 +14299,90 @@ var _default = {
     },
     updateToLatest: function updateToLatest() {
       this.selectedVersion = this.latestVersion;
+      this.installVersion();
     },
     installVersion: function installVersion() {
-      if (!this.isVersionSelected(this.currentVersion)) {
-        var formData = new FormData();
-        var _this$getVersionContr = this.getVersionControlData().security,
-            action = _this$getVersionContr.action,
-            nonce = _this$getVersionContr.nonce,
-            ajaxUrl = _this$getVersionContr.ajaxUrl;
-        formData.append('action', action);
-        formData.append('nonce', nonce);
-        formData.append('version', this.selectedVersion);
-        fetch(ajaxUrl, {
-          method: 'POST',
-          body: formData
-        }).then(function (r) {
-          if (r.ok) {
-            return r.json();
-          }
+      var _this = this;
 
-          throw new Error('an error occured, try again later');
-        }).then(function (resp) {
-          if (resp.error) {
-            throw new Error(resp.error);
-          } else {
-            // TODO [erdembircan] remove for production
-            console.log(resp);
-          }
-        }).catch(function (err) {
-          // TODO [erdembircan] remove for production
-          console.error(err);
-        });
+      if (!this.isVersionSelected(this.currentVersion) && !this.isBusy()) {
+        if (window.confirm(this.strings.rollbackConfirmation)) {
+          this.setBusy(true);
+          var formData = new FormData();
+          var _this$getVersionContr2 = this.getVersionControlData().security,
+              action = _this$getVersionContr2.action,
+              nonce = _this$getVersionContr2.nonce,
+              ajaxUrl = _this$getVersionContr2.ajaxUrl;
+          formData.append('action', action);
+          formData.append('nonce', nonce);
+          formData.append('version', this.selectedVersion);
+          var formSent = false;
+          fetch(ajaxUrl, {
+            method: 'POST',
+            body: formData
+          }).then(function (r) {
+            if (r.ok) {
+              var contentType = r.headers.get('Content-Type');
+
+              if (contentType.includes('text/plain-text')) {
+                return r.text();
+              }
+
+              if (contentType.includes('text/html')) {
+                formSent = true;
+                return r.text();
+              }
+
+              return r.json();
+            }
+
+            throw new Error('an error occurred, try again later');
+          }).then(function (resp) {
+            if (_typeof(resp) === 'object') {
+              if (resp.error) {
+                throw new Error(resp.error);
+              } else {
+                _this.setMessage({
+                  message: resp.message
+                });
+
+                _this.setInstallResult(true);
+              }
+            } else if (formSent) {
+              _this.showForm = true;
+              _this.form = resp;
+            } else {
+              throw new Error(resp);
+            }
+          }).catch(function (err) {
+            _this.setMessage({
+              type: 'error',
+              message: err
+            });
+
+            _this.setInstallResult(false);
+          }).finally(function () {
+            _this.setBusy(false);
+          });
+        }
       }
+    },
+    setInstallResult: function setInstallResult(result) {
+      this.installResult = result;
+    },
+    reloadPage: function reloadPage() {
+      window.location.reload();
     }
   }
 };
 exports.default = _default;
-        var $8dc2b6 = exports.default || module.exports;
+        var $6515b5 = exports.default || module.exports;
       
-      if (typeof $8dc2b6 === 'function') {
-        $8dc2b6 = $8dc2b6.options;
+      if (typeof $6515b5 === 'function') {
+        $6515b5 = $6515b5.options;
       }
     
         /* template */
-        Object.assign($8dc2b6, (function () {
+        Object.assign($6515b5, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14368,138 +14391,144 @@ exports.default = _default;
     "fragment",
     [
       _c("menu-content", { attrs: { center: true } }, [
-        _c(
-          "div",
-          { staticClass: "wptb-settings-version-control" },
-          [
-            _c("div", { staticClass: "wptb-version-control-main" }, [
-              _c("div", { staticClass: "wptb-version-control-main-row" }, [
-                _vm._v(_vm._s(_vm.strings.versionControlInfo))
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "wptb-version-control-controls" },
-                [
-                  _c(
-                    "version-control-row",
-                    { attrs: { label: _vm.strings.yourVersion } },
-                    [
-                      _c("version-indicator", {
-                        attrs: {
-                          "latest-version": _vm.latestVersion,
-                          version: _vm.currentVersion
-                        }
-                      })
-                    ],
-                    1
-                  ),
+        !_vm.showForm
+          ? _c(
+              "div",
+              { staticClass: "wptb-settings-version-control" },
+              [
+                _c("div", { staticClass: "wptb-version-control-main" }, [
+                  _c("div", { staticClass: "wptb-version-control-main-row" }, [
+                    _vm._v(_vm._s(_vm.strings.versionControlInfo))
+                  ]),
                   _vm._v(" "),
                   _c(
-                    "version-control-row",
-                    { attrs: { label: _vm.strings.latestVersion } },
+                    "div",
+                    { staticClass: "wptb-version-control-controls" },
                     [
-                      _c("version-indicator", {
-                        attrs: {
-                          "latest-version": _vm.latestVersion,
-                          version: _vm.latestVersion
-                        }
-                      }),
+                      _c(
+                        "version-control-row",
+                        { attrs: { label: _vm.strings.yourVersion } },
+                        [
+                          _c("version-indicator", {
+                            attrs: {
+                              "latest-version": _vm.latestVersion,
+                              version: _vm.currentVersion
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _vm.showUpdateToLatest
-                        ? _c(
-                            "a",
+                      _c(
+                        "version-control-row",
+                        { attrs: { label: _vm.strings.latestVersion } },
+                        [
+                          _c("version-indicator", {
+                            attrs: {
+                              "latest-version": _vm.latestVersion,
+                              version: _vm.latestVersion
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.showUpdateToLatest
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "wptb-version-control-anchor",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.updateToLatest($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.strings.updateToLatest))]
+                              )
+                            : _vm._e()
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "version-control-row",
+                        { attrs: { label: _vm.strings.installVersion } },
+                        [
+                          _c(
+                            "select",
                             {
-                              staticClass: "wptb-version-control-anchor",
-                              attrs: { href: "#" },
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.selectedVersion,
+                                  expression: "selectedVersion"
+                                }
+                              ],
+                              attrs: { disabled: _vm.isBusy() },
                               on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.updateToLatest($event)
+                                change: function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.selectedVersion = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
                                 }
                               }
                             },
-                            [_vm._v(_vm._s(_vm.strings.updateToLatest))]
+                            _vm._l(_vm.sortedVersions, function(k) {
+                              return _c(
+                                "option",
+                                {
+                                  key: k,
+                                  attrs: { disabled: k === _vm.currentVersion },
+                                  domProps: {
+                                    selected: _vm.isVersionSelected(k)
+                                  }
+                                },
+                                [_vm._v(_vm._s(k) + "\n\t\t\t\t\t\t\t")]
+                              )
+                            }),
+                            0
                           )
-                        : _vm._e()
+                        ]
+                      )
                     ],
                     1
                   ),
                   _vm._v(" "),
-                  _c(
-                    "version-control-row",
-                    { attrs: { label: _vm.strings.installVersion } },
-                    [
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.selectedVersion,
-                              expression: "selectedVersion"
-                            }
-                          ],
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.selectedVersion = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            }
-                          }
-                        },
-                        _vm._l(_vm.sortedVersions, function(k) {
-                          return _c(
-                            "option",
-                            {
-                              key: k,
-                              attrs: { disabled: k === _vm.currentVersion },
-                              domProps: { selected: _vm.isVersionSelected(k) }
-                            },
-                            [_vm._v(_vm._s(k) + "\n\t\t\t\t\t\t\t")]
-                          )
-                        }),
-                        0
-                      )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "wptb-version-control-main-row" }, [
-                _c(
-                  "div",
-                  { staticClass: "wptb-version-control-warning-span" },
-                  [_vm._v(_vm._s(_vm.strings.warning) + ":")]
-                ),
+                  _c("div", { staticClass: "wptb-version-control-main-row" }, [
+                    _c(
+                      "div",
+                      { staticClass: "wptb-version-control-warning-span" },
+                      [_vm._v(_vm._s(_vm.strings.warning) + ":")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "wptb-version-control-warning-info" },
+                      [_vm._v(_vm._s(_vm.strings.warningInfo))]
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-version-control-warning-info" },
-                  [_vm._v(_vm._s(_vm.strings.warningInfo))]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("changelog", {
-              attrs: {
-                version: _vm.selectedVersion,
-                "raw-changelog": _vm.getVersionControlData().changelog
-              }
-            })
-          ],
-          1
-        )
+                _c("changelog", {
+                  attrs: {
+                    version: _vm.selectedVersion,
+                    "raw-changelog": _vm.getVersionControlData().changelog
+                  }
+                })
+              ],
+              1
+            )
+          : _c("div", { domProps: { innerHTML: _vm._s(_vm.form) } })
       ]),
       _vm._v(" "),
       _c("portal", { attrs: { to: "footerButtons" } }, [
@@ -14507,23 +14536,35 @@ exports.default = _default;
           "div",
           { staticClass: "wptb-settings-button-container" },
           [
-            _c(
-              "menu-button",
-              {
-                attrs: {
-                  disabled: _vm.isVersionSelected(_vm.currentVersion),
-                  type: "primary"
-                },
-                on: { click: _vm.installVersion }
-              },
-              [
-                _vm._v(
-                  _vm._s(
-                    _vm.strings.installVersion + " " + _vm.selectedVersion
-                  ) + "\n\t\t\t"
+            !_vm.installResult
+              ? _c(
+                  "menu-button",
+                  {
+                    attrs: {
+                      disabled:
+                        _vm.isVersionSelected(_vm.currentVersion) ||
+                        _vm.isBusy(),
+                      type: "primary"
+                    },
+                    on: { click: _vm.installVersion }
+                  },
+                  [
+                    _vm._v(
+                      _vm._s(
+                        _vm.strings.installVersion + " " + _vm.selectedVersion
+                      ) + "\n\t\t\t"
+                    )
+                  ]
                 )
-              ]
-            )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.installResult
+              ? _c(
+                  "menu-button",
+                  { attrs: { type: "primary" }, on: { click: _vm.reloadPage } },
+                  [_vm._v(_vm._s(_vm.strings.reload))]
+                )
+              : _vm._e()
           ],
           1
         )
@@ -14544,7 +14585,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","./MenuButton":"components/MenuButton.vue","./VersionControlRow":"components/VersionControlRow.vue","./VersionIndicator":"components/VersionIndicator.vue","./Changelog":"components/Changelog.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","./MenuButton":"components/MenuButton.vue","./VersionControlRow":"components/VersionControlRow.vue","./VersionIndicator":"components/VersionIndicator.vue","./Changelog":"components/Changelog.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14712,14 +14753,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e0054f = exports.default || module.exports;
+        var $503eb8 = exports.default || module.exports;
       
-      if (typeof $e0054f === 'function') {
-        $e0054f = $e0054f.options;
+      if (typeof $503eb8 === 'function') {
+        $503eb8 = $503eb8.options;
       }
     
         /* template */
-        Object.assign($e0054f, (function () {
+        Object.assign($503eb8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14745,7 +14786,7 @@ exports.default = _default;
       ),
       _vm._v(" "),
       _c("sections", {
-        attrs: { items: _vm.sections },
+        attrs: { items: _vm.sections, disabled: _vm.isBusy() },
         model: {
           value: _vm.currentSection,
           callback: function($$v) {

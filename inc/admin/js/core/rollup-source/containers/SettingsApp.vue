@@ -3,7 +3,7 @@
 		<menu-header :logo-src="pluginInfo.logo" :logo-alt="strings.logoAlt" :plugin-name="pluginInfo.pluginName">
 			<a :href="pluginInfo.pluginHomepage">{{ strings.homepage }}</a>
 		</menu-header>
-		<sections :items="sections" v-model="currentSection"></sections>
+		<sections :items="sections" v-model="currentSection" :disabled="isBusy()"></sections>
 		<component
 			:is="currentTemplate"
 			:current-fields="currentFields"

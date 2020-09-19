@@ -2,12 +2,15 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use Plugin_Upgrader;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
+use function activate_plugin;
 use function add_action;
+use function add_filter;
 use function admin_url;
-use function check_admin_referer;
 use function current_user_can;
+use function is_wp_error;
 use function plugins_api;
 use function wp_create_nonce;
 
@@ -19,6 +22,8 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Class Version_Control_Manager
  *
+ * Class responsible for version rollback operations.
+ *
  * Manager for plugin version rollback operations.
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
@@ -29,6 +34,11 @@ class Version_Control_Manager {
 	 * Number of latest versions that will be available for rollback.
 	 */
 	const VERSION_N = 5;
+
+	/**
+	 * Plugin slug
+	 */
+	const PLUGIN_SLUG = 'wp-table-builder';
 
 	/**
 	 * Singleton class instance
@@ -72,9 +82,43 @@ class Version_Control_Manager {
 	 */
 	public static function rollback_ajax() {
 		if ( current_user_can( 'manage_options' ) && check_ajax_referer( static::get_class_name(), 'nonce', false ) && isset( $_POST['version'] ) ) {
-			static::instance()->set_message( 'ok' );
+			$version_to_install = $_POST['version'];
+
+			// require for plugins_api function
+			require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+
+			$versions = ( plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] ) )->versions;
+
+			if ( isset( $versions[ $version_to_install ] ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+				require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+				require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+				require_once( ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php' );
+
+				$download_url   = $versions[ $version_to_install ];
+				$upgrader       = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+
+				add_filter('upgrader_package_options', function($options){
+					$options['abort_if_destination_exists'] = false;
+					return $options;
+				});
+
+				$install_result = $upgrader->install( $download_url, [ 'overwrite_package' => true ] );
+
+				// handle install error
+				if ( is_wp_error( $install_result ) || $install_result === false ) {
+					static::instance()->set_error( esc_html__( 'an error occurred on plugin install, refresh and try again', 'wp-table-builder' ) );
+				} else {
+					activate_plugin( 'ultimate-blocks/ultimate-blocks.php' );
+					static::instance()->set_message( esc_html__( sprintf( 'plugin version %1$s is installed successfully', $version_to_install ), 'wp-table-builder' ) );
+				}
+			} else {
+				// handle no download link error
+				static::instance()->set_error( esc_html__( 'no download url address found for the requested version', 'wp-table-builder' ) );
+			}
 		} else {
-			static::instance()->set_error( esc_html__('You do not have authorization to use this ajax endpoint, refresh and try again') );
+			// handle ajax endpoint requirement error
+			static::instance()->set_error( esc_html__( 'You do not have authorization to use this ajax endpoint, refresh and try again', 'wp-table-builder' ) );
 		}
 
 		static::instance()->send_json( true );
@@ -111,26 +155,27 @@ class Version_Control_Manager {
 			'warningInfo'        => esc_html__( 'Previous versions may be unstable and unsecure, continue with your own risk and take a backup.', 'wp-table-builder' ),
 			'yourVersion'        => esc_html__( 'your version', 'wp-table-builder' ),
 			'latestVersion'      => esc_html__( 'latest stable version', 'wp-table-builder' ),
-			'updateToLatest'     => esc_html__( 'update to latest version', 'wp-table-builder' )
+			'updateToLatest'     => esc_html__( 'update to latest version', 'wp-table-builder' ),
+			'reload'             => esc_html__( 'reload', 'wp-table-builder' ),
+			'rollbackConfirmation'             => esc_html__( 'Rollback to selected version?', 'wp-table-builder' ),
 		] );
 
 		// TODO [erdembircan] uncomment for production
-//		$currentVersion = get_plugin_data( NS\PLUGIN__FILE__ )['Version'];
+		$currentVersion = get_plugin_data( NS\PLUGIN__FILE__ )['Version'];
 
-		// TODO [erdembircan] remove for production
-		$currentVersion = '2.3.6';
+//		// TODO [erdembircan] remove for production
+//		$currentVersion = '2.3.6';
 
 		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
 		// TODO [erdembircan] change with normal version slug for production
-		$plugin_slug        = 'ultimate-blocks';
-		$plugin_remote_data = plugins_api( 'plugin_information', [ 'slug' => $plugin_slug ] );
+		$plugin_remote_data = plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] );
 		$latestVersion      = $plugin_remote_data->version;
 		$allVersions        = array_reverse( $plugin_remote_data->versions, true );
 		$changelog          = $plugin_remote_data->sections['changelog'];
 		$security           = [
-			'action'   => static::get_class_name(),
-			'nonce'    => wp_create_nonce( static::get_class_name() ),
+			'action'  => static::get_class_name(),
+			'nonce'   => wp_create_nonce( static::get_class_name() ),
 			'ajaxUrl' => admin_url( 'admin-ajax.php' )
 		];
 

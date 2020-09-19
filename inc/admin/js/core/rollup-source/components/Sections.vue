@@ -9,6 +9,7 @@
 				@sectionchange="handleSectionChange"
 				@activeSectionElement="handleActiveSectionElement"
 				:current="innerCurrentSection"
+				:disabled="disabled"
 			></section-item>
 			<active-section-indicator
 				:relative-parent="$refs.wrapper"
@@ -34,6 +35,10 @@ export default {
 		},
 		items: null,
 		currentSection: String,
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	components: { SectionItem, ActiveSectionIndicator },
 	data() {
