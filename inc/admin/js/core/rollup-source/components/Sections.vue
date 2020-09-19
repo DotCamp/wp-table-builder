@@ -2,8 +2,9 @@
 	<div>
 		<div ref="wrapper" class="wptb-settings-sections-wrapper" :class="{ child }">
 			<section-item
-				v-for="item in items"
+				v-for="(label, item) in getItems"
 				:name="item"
+				:label="label"
 				:key="item"
 				@sectionchange="handleSectionChange"
 				@activeSectionElement="handleActiveSectionElement"
@@ -31,7 +32,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		items: Array,
+		items: null,
 		currentSection: String,
 	},
 	components: { SectionItem, ActiveSectionIndicator },
@@ -47,6 +48,18 @@ export default {
 	watch: {
 		innerCurrentSection(n) {
 			this.$emit('updateSection', n);
+		},
+	},
+	computed: {
+		getItems() {
+			if (Array.isArray(this.items)) {
+				return this.items.reduce((carry, item) => {
+					// eslint-disable-next-line no-param-reassign
+					carry[item] = item;
+					return carry;
+				}, {});
+			}
+			return this.items;
 		},
 	},
 	methods: {

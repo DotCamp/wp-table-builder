@@ -5,12 +5,12 @@
 		@click="$emit('sectionchange', name, $event.target)"
 		ref="sectionItem"
 	>
-		{{ name }}
+		{{ getLabel }}
 	</div>
 </template>
 <script>
 export default {
-	props: ['name', 'current'],
+	props: ['name', 'current', 'label'],
 	methods: {
 		activePosition() {
 			if (this.current === undefined || this.current === this.name) {
@@ -25,6 +25,9 @@ export default {
 				return this.current === this.name;
 			}
 			return true;
+		},
+		getLabel() {
+			return this.label !== undefined ? this.label : this.name;
 		},
 	},
 };

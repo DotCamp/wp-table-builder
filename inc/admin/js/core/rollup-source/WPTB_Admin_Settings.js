@@ -3,6 +3,7 @@
  */
 
 import Vue from 'vue';
+import PortalVue from 'portal-vue';
 import SettingsApp from './containers/SettingsApp.vue';
 import withStrings from './plugins/strings.js';
 
@@ -18,11 +19,14 @@ Vue.use(withStrings, {
 	strings: frontendData.strings,
 });
 
+// vue-portal initialization
+Vue.use(PortalVue);
+
 // Vue instance
 new Vue({
 	components: { SettingsApp },
 	data: {
-		fieldsData: frontendData.fields,
+		sectionsData: frontendData.sectionsData,
 		settings: frontendData.data,
 		pluginInfo: frontendData.pluginInfo,
 	},

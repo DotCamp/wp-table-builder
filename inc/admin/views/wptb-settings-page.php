@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 ?>
 <div id="wptb-settings-page" class="wptb-menu-page-wrapper">
-    <settings-app :fields-data="fieldsData" :settings="settings"
+    <settings-app :sections-data="sectionsData" :settings="settings"
                   :plugin-info="pluginInfo">
     </settings-app>
 </div>
