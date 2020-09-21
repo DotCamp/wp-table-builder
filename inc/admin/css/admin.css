@@ -3093,7 +3093,8 @@ wptb_shortcode_container_element {
 
 .wptb-menu-active-section-indicator {
     position: absolute;
-    border-bottom: 2px solid #1A202C;
+    /*border-bottom: 2px solid #1A202C;*/
+    border-bottom: 2px solid var(--wptb-plugin-logo-color);
     transition: all 0.3s ease-out;
 }
 
@@ -5148,3 +5149,12 @@ wptb_shortcode_container_element {
 }
 
 /*endregion*/
+
+.wptb-table-tags-menu-wrapper {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
