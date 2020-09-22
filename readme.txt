@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.5
-Stable tag: 1.2.8
+Stable tag: 1.2.9
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -85,6 +85,13 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.2.9 =
+
+* NEW: Version rollback manager to rollback plugin's version if you are having problems. Can be accessed from plugin settings menu.
+* FIX: Fixed an issue affecting multisite, AMP WordPress sites and some themes to not load frontend js/css files.
+* FIX: Fixed an issue where vertical cell alignment is overridden by theme styles.
+* FIX: Empty cells appear correctly at manage cells menu now.
 
 = 1.2.8 =
 

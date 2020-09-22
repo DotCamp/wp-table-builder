@@ -4303,7 +4303,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-cell[data-wptb-cell-vertical-alignment="center"] {
-    vertical-align: center;
+    vertical-align: middle;
 }
 
 .wptb-cell[data-wptb-cell-vertical-alignment="bottom"] {
