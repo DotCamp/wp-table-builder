@@ -289,9 +289,9 @@ STYLE;
 
 		$plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
-		$this->loader->add_action( 'the_post', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 
-		$this->loader->add_action( 'the_post', $plugin_public, 'enqueue_footer_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_footer_scripts' );
 
 //		add_action( 'wp_head', [ $this, 'content_width_header' ] );
 	}

@@ -72,7 +72,7 @@ class Frontend {
 	public function selective_load() {
 		global $post;
 
-		if(is_admin()){
+		if ( is_admin() ) {
 			return true;
 		}
 
@@ -103,9 +103,7 @@ class Frontend {
 		 * class.
 		 */
 
-		if ( $this->selective_load() ) {
-			add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
-		}
+		add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
 	}
 
 
@@ -146,11 +144,9 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		if ( $this->selective_load() ) {
-			$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
-			$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
-			wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
-		}
+		$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
+		$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
+		wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
 	}
 }
