@@ -92,6 +92,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting multisite, AMP WordPress sites and some themes to not load frontend js/css files.
 * FIX: Fixed an issue where vertical cell alignment is overridden by theme styles.
 * FIX: Empty cells appear correctly at manage cells menu now.
+* FIX: Fixed an issue at inserting a row before second row.
 
 = 1.2.8 =
 

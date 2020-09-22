@@ -5528,6 +5528,11 @@ var array = [],
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             cellNew = void 0;
+
+        if (row === 0) {
+            row = -1;
+        }
+
         for (var _i13 = row - 1; _i13 >= 0; _i13--) {
             var rowChildren = table.rows[_i13].children;
             var rowChildrenLength = rowChildren.length;
@@ -5545,7 +5550,7 @@ var array = [],
             }
         }
 
-        if (row === 0) {
+        if (row === -1) {
             table.addRowToTheStart();
         } else {
             table.addRowAfter(row, cellStyle);

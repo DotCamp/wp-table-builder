@@ -1131,6 +1131,11 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             cellNew;
+
+        if(row === 0){
+            row = -1;
+        }
+
         for( let i = row - 1; i >= 0; i-- ) {
             let rowChildren = table.rows[i].children;
             let rowChildrenLength = rowChildren.length;
@@ -1148,7 +1153,8 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             }
         }
 
-        if (row === 0) {
+
+        if (row === -1) {
             table.addRowToTheStart();
         } else {
             table.addRowAfter( row, cellStyle );
