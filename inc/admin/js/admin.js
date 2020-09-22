@@ -3260,7 +3260,14 @@ var WPTB_Helper = {
         var addBlocker = function addBlocker(parent) {
             var blockerElement = document.createElement('div');
             blockerElement.classList.add('wptb-plugin-blocker-element');
+
+            var haveChild = parent.childNodes.length > 0;
             parent.appendChild(blockerElement);
+
+            // if don't have any children, then add before/after css element states to blocker in order to reflect table builder menu visuals
+            if (!haveChild) {
+                parent.classList.add('wptb-plugin-blocker-element-empty');
+            }
         };
 
         var removeBlocker = function removeBlocker(parent) {
@@ -3268,6 +3275,8 @@ var WPTB_Helper = {
             if (blockerElement) {
                 blockerElement.remove();
             }
+
+            parent.classList.remove('wptb-plugin-blocker-element-empty');
         };
         document.addEventListener('wptbSectionChanged', function (_ref) {
             var detail = _ref.detail;

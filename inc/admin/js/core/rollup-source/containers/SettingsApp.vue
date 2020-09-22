@@ -87,18 +87,12 @@ export default {
 			}
 		});
 
-		// TODO [erdembircan] enable first section for production
-		// // eslint-disable-next-line array-callback-return
-		// [this.currentSection] = Object.keys(this.parsedFields).map((key) => {
-		// 	if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
-		// 		return key;
-		// 	}
-		// });
-
-		// TODO [erdembircan]  remove for production
-		this.currentSection = 'versionControl';
-
-		// this.sections = Array.from(new Set(this.sections));
+		// eslint-disable-next-line array-callback-return
+		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
+			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
+				return key;
+			}
+		});
 	},
 	computed: {
 		currentFields() {

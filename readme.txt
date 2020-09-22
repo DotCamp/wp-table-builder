@@ -88,7 +88,6 @@ That's it. You're done!
 
 = 1.2.8 =
 
-* NEW: Version rollback manager.
 * FIX: Fixed an issue affecting browser caches, forcing them to use old version of js files.
 
 = 1.2.7 =

@@ -216,8 +216,7 @@ class Settings_Manager {
 			// script and style enqueue
 			wp_enqueue_script( $handler, $script_url, [], $plugin_version, true );
 
-			// TODO [erdembircan] change to plugin version for production
-			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], filemtime( $script_path ) );
+			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
 
 			$ajax_url = get_admin_url( null, 'admin-ajax.php' );
 			$nonce    = wp_create_nonce( $this->options_root );

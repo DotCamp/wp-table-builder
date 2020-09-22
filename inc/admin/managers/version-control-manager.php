@@ -160,15 +160,10 @@ class Version_Control_Manager {
 			'rollbackConfirmation'             => esc_html__( 'Rollback to selected version?', 'wp-table-builder' ),
 		] );
 
-		// TODO [erdembircan] uncomment for production
 		$currentVersion = get_plugin_data( NS\PLUGIN__FILE__ )['Version'];
-
-//		// TODO [erdembircan] remove for production
-//		$currentVersion = '2.3.6';
 
 		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
-		// TODO [erdembircan] change with normal version slug for production
 		$plugin_remote_data = plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] );
 		$latestVersion      = $plugin_remote_data->version;
 		$allVersions        = array_reverse( $plugin_remote_data->versions, true );

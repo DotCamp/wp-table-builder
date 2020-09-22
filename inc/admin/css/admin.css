@@ -5014,7 +5014,32 @@ wptb_shortcode_container_element {
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.wptb-plugin-blocker-element-empty::before {
+    content: 'Cell';
+    display: block;
+    font-weight: normal;
+    font-size: 80%;
+    text-align: center;
+    color: #969fa6;
+}
+
+.wptb-plugin-blocker-element-empty::after {
+    content: '';
+    display: block;
+    border: 1px dashed #969fa6;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+}
+
+/*endregion*/
 
 /*region header-toolbar*/
 .wptb-plugin-header-toolbar {
