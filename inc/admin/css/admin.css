@@ -5158,3 +5158,98 @@ wptb_shortcode_container_element {
     left: 0;
 }
 
+/*region tagControl*/
+.wptb-tag-control-cloud-wrapper {
+    width: 100%;
+}
+
+.wptb-tag-control-cloud-wrapper:nth-of-type(2) {
+    margin-top: 10px;
+}
+
+.wptb-tag-control-cloud-wrapper .wptb-settings-item-title {
+    text-transform: capitalize;
+    font-size: 90% !important;
+    font-weight: bold;
+}
+
+.wptb-tag-control-cloud {
+    width: 100%;
+    min-height: 90px;
+    max-height: 90px;
+    overflow-y: auto;
+    background-color: var(--wptb-plugin-gray-200);
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px solid var(--wptb-plugin-gray-400);
+    border-radius: 5px;
+}
+
+.wptb-tag-ribbon-wrapper {
+    color: var(--wptb-plugin-theme-color-light);
+    font-size: 90% !important;
+    padding: 3px 5px 3px 10px;
+    background-color: var(--wptb-plugin-logo-color);
+    border-radius: 999px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 5px;
+    cursor: default;
+    animation: wptb-basic-appear 0.2s ease-out;
+}
+
+.wptb-tag-ribbon-name {
+    font-size: inherit !important;
+}
+
+.wptb-tag-ribbon-wrapper:hover .wptb-tag-operation-button {
+    opacity: 1;
+}
+
+.wptb-tag-operation-button {
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    margin-left: 10px;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.wptb-tag-operation-add-button {
+    background-color: var(--wptb-plugin-green-500);
+}
+
+.wptb-tag-operation-remove-button {
+    background-color: var(--wptb-plugin-red-600);
+}
+
+.wptb-tag-control-cloud-empty {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--wptb-plugin-gray-500);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    font-size: 90% !important;
+}
+
+.wptb-tag-control-cloud-empty:before, .wptb-tag-control-cloud-empty:after {
+    content: '==';
+    margin: 0 5px;
+}
+
+/*endregion*/

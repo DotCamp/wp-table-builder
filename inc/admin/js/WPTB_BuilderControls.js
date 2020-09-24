@@ -12055,12 +12055,15 @@ function ControlsManager() {
    * Data objects that are registered for specific control items can be fetched with the  correct id. With this way, components can reach their data with the correct unique keys.
    *
    * @param {string} id control item unique key
+   * @param {boolean} suppress suppress error message upon not founding data
    * @returns {object} data associated with control item
    */
 
 
   function getControlData(id) {
-    if (!controlData[id]) {
+    var suppress = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    if (!controlData[id] && !suppress) {
       throw new Error("Control data for [".concat(id, "] not found."));
     }
 
@@ -19181,7 +19184,372 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NamedToggleControl":"containers/NamedToggleControl.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NamedToggleControl":"containers/NamedToggleControl.vue"}],"mixins/withTranslation.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Mixin for adding easy translated strings sent from WordPress.
+ * @type {{methods: {translation(*): (withTranslation.methods.strings.key|undefined)}, props: {strings: {default: (function(): []), type: ArrayConstructor}}}}
+ */
+var withTranslation = {
+  props: {
+    strings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  methods: {
+    translation: function translation(key) {
+      if (this.strings[key]) {
+        return this.strings[key];
+      }
+
+      throw new Error("no translation found with the given key of [".concat(key, "]"));
+    }
+  }
+};
+/* @module withTranslation mixin */
+
+var _default = withTranslation;
+exports.default = _default;
+},{}],"components/TagRibbon.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    name: {
+      type: String,
+      default: 'tag name'
+    },
+    slug: {
+      type: String,
+      default: 'tagSlug'
+    },
+    addIcon: {
+      type: String,
+      default: '+'
+    },
+    removeIcon: {
+      type: String,
+      default: '-'
+    },
+    buttonOperationType: {
+      type: String,
+      default: 'add'
+    }
+  },
+  computed: {
+    buttonIcon: function buttonIcon() {
+      return this.buttonOperationType === 'add' ? this.addIcon : this.removeIcon;
+    },
+    buttonClass: function buttonClass() {
+      return {
+        'wptb-tag-operation-add-button': this.buttonOperationType === 'add',
+        'wptb-tag-operation-remove-button': this.buttonOperationType !== 'add'
+      };
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('click', this.slug);
+    }
+  }
+};
+exports.default = _default;
+        var $5454bf = exports.default || module.exports;
+      
+      if (typeof $5454bf === 'function') {
+        $5454bf = $5454bf.options;
+      }
+    
+        /* template */
+        Object.assign($5454bf, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-tag-ribbon-wrapper" }, [
+    _c("div", { staticClass: "wptb-tag-ribbon-name" }, [
+      _vm._v(_vm._s(_vm.name))
+    ]),
+    _vm._v(" "),
+    _c("div", {
+      staticClass: "wptb-tag-operation-button",
+      class: _vm.buttonClass,
+      domProps: { innerHTML: _vm._s(_vm.buttonIcon) },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/TagControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+
+var _withTranslation = _interopRequireDefault(require("../mixins/withTranslation"));
+
+var _TagRibbon = _interopRequireDefault(require("../components/TagRibbon"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+var _default = {
+  components: {
+    TagRibbon: _TagRibbon.default
+  },
+  props: {
+    availableTags: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
+  mixins: [_ControlBase.default, _withTranslation.default],
+  data: function data() {
+    return {
+      selectedTags: [],
+      mountedAssign: false
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    document.addEventListener('wptb:save:before', this.beforeSave);
+    this.$nextTick(function () {
+      _this.selectedTags = WPTB_ControlsManager.getControlData('ControlTag');
+    });
+  },
+  watch: {
+    selectedTags: {
+      handler: function handler() {
+        if (!this.mountedAssign) {
+          this.mountedAssign = true;
+        } else {
+          WPTB_ControlsManager.setControlData('ControlTag', this.selectedTags);
+          new WPTB_TableStateSaveManager().tableStateSet();
+        }
+      },
+      deep: true
+    }
+  },
+  computed: {
+    tagsLeft: function tagsLeft() {
+      var _this2 = this;
+
+      return this.availableTags.filter(function (t) {
+        return !_this2.selectedTags.some(function (s) {
+          return s.slug === t.slug;
+        });
+      });
+    }
+  },
+  methods: {
+    handleAdd: function handleAdd(slug) {
+      this.selectedTags.push(this.availableTags.filter(function (t) {
+        return t.slug === slug;
+      })[0]);
+    },
+    handleRemove: function handleRemove(slug) {
+      this.selectedTags = this.selectedTags.filter(function (t) {
+        return t.slug !== slug;
+      });
+    },
+    beforeSave: function beforeSave(_ref) {
+      var detail = _ref.detail;
+
+      if (_typeof(detail) === 'object') {
+        // eslint-disable-next-line no-param-reassign
+        detail.tags = JSON.stringify(this.selectedTags.map(function (t) {
+          return t.term_id;
+        }));
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $d303c1 = exports.default || module.exports;
+      
+      if (typeof $d303c1 === 'function') {
+        $d303c1 = $d303c1.options;
+      }
+    
+        /* template */
+        Object.assign($d303c1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-settings-row wptb-settings-middle-xs wptb-element-property",
+      class: _vm.uniqueId,
+      attrs: { "data-element": _vm.elemContainer }
+    },
+    [
+      _c("div", { staticClass: "wptb-tag-control-cloud-wrapper" }, [
+        _c("p", { staticClass: "wptb-settings-item-title" }, [
+          _vm._v(_vm._s(_vm.translation("currentTags")))
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-tag-control-cloud" },
+          [
+            _vm._l(_vm.selectedTags, function(tag) {
+              return _c("tag-ribbon", {
+                key: tag.slug,
+                attrs: {
+                  name: tag.name,
+                  slug: tag.slug,
+                  "button-operation-type": "remove"
+                },
+                on: { click: _vm.handleRemove }
+              })
+            }),
+            _vm._v(" "),
+            _vm.selectedTags.length === 0
+              ? _c("div", { staticClass: "wptb-tag-control-cloud-empty" }, [
+                  _vm._v(
+                    "\n\t\t\t\t" + _vm._s(_vm.translation("empty")) + "\n\t\t\t"
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-tag-control-cloud-wrapper" }, [
+        _c("p", { staticClass: "wptb-settings-item-title" }, [
+          _vm._v(_vm._s(_vm.translation("availableTags")))
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-tag-control-cloud" },
+          [
+            _vm._l(_vm.tagsLeft, function(tag) {
+              return _c("tag-ribbon", {
+                key: tag.slug,
+                attrs: {
+                  name: tag.name,
+                  slug: tag.slug,
+                  "button-operation-type": "add"
+                },
+                on: { click: _vm.handleAdd }
+              })
+            }),
+            _vm._v(" "),
+            _vm.tagsLeft.length === 0
+              ? _c("div", { staticClass: "wptb-tag-control-cloud-empty" }, [
+                  _vm._v(
+                    "\n\t\t\t\t" + _vm._s(_vm.translation("empty")) + "\n\t\t\t"
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../mixins/withTranslation":"mixins/withTranslation.js","../components/TagRibbon":"components/TagRibbon.vue"}],"mountPoints/WPTB_TagControl.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
+
+var _TagControl = _interopRequireDefault(require("../containers/TagControl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Tag control.
+ */
+// eslint-disable-next-line camelcase
+var _default = {
+  name: 'ControlTag',
+  handler: function tagControlJS(uniqueId) {
+    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
+
+    new _vue.default({
+      data: data,
+      components: {
+        TagControl: _TagControl.default
+      }
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/TagControl":"containers/TagControl.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -19203,6 +19571,8 @@ var _WPTB_SidesControl = _interopRequireDefault(require("./mountPoints/WPTB_Side
 
 var _WPTB_NamedToggleControl = _interopRequireDefault(require("./mountPoints/WPTB_NamedToggleControl"));
 
+var _WPTB_TagControl = _interopRequireDefault(require("./mountPoints/WPTB_TagControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -19218,7 +19588,7 @@ _vue.default.config.productionTip = false; // eslint-disable-next-line no-restri
 var global = self || void 0; // adding controls manager to global space
 
 global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default];
 /**
  * Register control element.
  *
@@ -19230,5 +19600,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map
