@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-tag-ribbon-wrapper">
-		<div class="wptb-tag-ribbon-name">{{ name }}</div>
+		<div class="wptb-tag-ribbon-name" v-html="searchIndicatedName"></div>
 		<div
 			@click.prevent="handleClick"
 			class="wptb-tag-operation-button"
@@ -33,6 +33,10 @@ export default {
 			type: String,
 			default: 'add',
 		},
+		searchTerm: {
+			type: String,
+			default: '',
+		},
 	},
 	computed: {
 		buttonIcon() {
@@ -43,6 +47,10 @@ export default {
 				'wptb-tag-operation-add-button': this.buttonOperationType === 'add',
 				'wptb-tag-operation-remove-button': this.buttonOperationType !== 'add',
 			};
+		},
+		searchIndicatedName() {
+			const regex = new RegExp(`${this.searchTerm}`, 'gi');
+			return this.name.replaceAll(regex, '<span class="wptb-tag-control-search-indicator">$&</span>');
 		},
 	},
 	methods: {

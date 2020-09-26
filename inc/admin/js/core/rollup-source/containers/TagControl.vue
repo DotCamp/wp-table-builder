@@ -30,6 +30,7 @@
 					:slug="tag.slug"
 					:key="tag.slug"
 					button-operation-type="add"
+					:search-term="searchTerm"
 				></tag-ribbon>
 				<div v-if="filteredTagsLeft.length === 0" class="wptb-tag-control-cloud-empty">
 					{{ translation('empty') }}
@@ -37,12 +38,17 @@
 			</div>
 		</div>
 		<div class="wptb-tag-control-search-wrapper">
-			<input
-				class="wptb-tag-control-search"
-				type="text"
-				v-model.trim="searchTerm"
-				:placeholder="translation('searchTags')"
-			/>
+			<div class="wptb-tag-control-search-input">
+				<input
+					class="wptb-tag-control-search"
+					type="text"
+					v-model.trim="searchTerm"
+					:placeholder="translation('searchTags')"
+				/>
+				<div v-if="searchTerm !== ''" class="wptb-tag-control-search-clear" @click.prevent="searchTerm = ''">
+					x
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

@@ -5275,4 +5275,29 @@ wptb_shortcode_container_element {
     box-shadow: none !important;
 }
 
+.wptb-tag-control-search-input {
+    position: relative;
+    width: fit-content;
+    font-size: 90% !important;
+}
+
+.wptb-tag-control-search-clear {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--wptb-plugin-gray-500);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.wptb-tag-control-search-indicator {
+    font-weight: bold;
+    color: var(--wptb-plugin-green-500) !important;
+    font-size: inherit !important;
+}
+
 /*endregion*/

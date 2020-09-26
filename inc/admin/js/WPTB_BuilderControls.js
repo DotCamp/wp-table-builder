@@ -19259,6 +19259,10 @@ var _default = {
     buttonOperationType: {
       type: String,
       default: 'add'
+    },
+    searchTerm: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -19270,6 +19274,10 @@ var _default = {
         'wptb-tag-operation-add-button': this.buttonOperationType === 'add',
         'wptb-tag-operation-remove-button': this.buttonOperationType !== 'add'
       };
+    },
+    searchIndicatedName: function searchIndicatedName() {
+      var regex = new RegExp("".concat(this.searchTerm), 'gi');
+      return this.name.replaceAll(regex, '<span class="wptb-tag-control-search-indicator">$&</span>');
     }
   },
   methods: {
@@ -19292,9 +19300,10 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wptb-tag-ribbon-wrapper" }, [
-    _c("div", { staticClass: "wptb-tag-ribbon-name" }, [
-      _vm._v(_vm._s(_vm.name))
-    ]),
+    _c("div", {
+      staticClass: "wptb-tag-ribbon-name",
+      domProps: { innerHTML: _vm._s(_vm.searchIndicatedName) }
+    }),
     _vm._v(" "),
     _c("div", {
       staticClass: "wptb-tag-operation-button",
@@ -19491,7 +19500,8 @@ exports.default = _default;
                 attrs: {
                   name: tag.name,
                   slug: tag.slug,
-                  "button-operation-type": "add"
+                  "button-operation-type": "add",
+                  "search-term": _vm.searchTerm
                 },
                 on: { click: _vm.handleAdd }
               })
@@ -19510,31 +19520,49 @@ exports.default = _default;
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "wptb-tag-control-search-wrapper" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model.trim",
-              value: _vm.searchTerm,
-              expression: "searchTerm",
-              modifiers: { trim: true }
-            }
-          ],
-          staticClass: "wptb-tag-control-search",
-          attrs: { type: "text", placeholder: _vm.translation("searchTags") },
-          domProps: { value: _vm.searchTerm },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+        _c("div", { staticClass: "wptb-tag-control-search-input" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model.trim",
+                value: _vm.searchTerm,
+                expression: "searchTerm",
+                modifiers: { trim: true }
               }
-              _vm.searchTerm = $event.target.value.trim()
-            },
-            blur: function($event) {
-              return _vm.$forceUpdate()
+            ],
+            staticClass: "wptb-tag-control-search",
+            attrs: { type: "text", placeholder: _vm.translation("searchTags") },
+            domProps: { value: _vm.searchTerm },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.searchTerm = $event.target.value.trim()
+              },
+              blur: function($event) {
+                return _vm.$forceUpdate()
+              }
             }
-          }
-        })
+          }),
+          _vm._v(" "),
+          _vm.searchTerm !== ""
+            ? _c(
+                "div",
+                {
+                  staticClass: "wptb-tag-control-search-clear",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      _vm.searchTerm = ""
+                    }
+                  }
+                },
+                [_vm._v("\n\t\t\t\tx\n\t\t\t")]
+              )
+            : _vm._e()
+        ])
       ])
     ]
   )

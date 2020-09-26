@@ -15,6 +15,7 @@ use function esc_html__;
 use function get_current_screen;
 use function get_terms;
 use function register_taxonomy;
+use function wp_insert_term;
 use function wp_reset_query;
 use function wp_set_post_terms;
 
@@ -308,6 +309,16 @@ class Tag_Manager {
 		];
 
 		register_taxonomy( static::TAX_ID, 'post', $args );
+
+		// add default out of the box terms to taxonomy
+		wp_insert_term( esc_html__( 'Product', 'wp-table-builder' ), static::TAX_ID, [
+			'slug'        => 'product',
+			'description' => esc_html__( 'product table tag', 'wp-table-builder' )
+		] );
+		wp_insert_term( esc_html__( 'Compare', 'wp-table-builder' ), static::TAX_ID, [
+			'slug'        => 'compare',
+			'description' => esc_html__( 'compare table tag', 'wp-table-builder' )
+		] );
 
 		// setup screen options for table tags
 		new Tag_Screen_Options( static::screen_options() );
