@@ -19355,7 +19355,8 @@ var _default = {
   data: function data() {
     return {
       selectedTags: [],
-      mountedAssign: false
+      mountedAssign: false,
+      searchTerm: ''
     };
   },
   mounted: function mounted() {
@@ -19380,17 +19381,24 @@ var _default = {
     }
   },
   computed: {
-    tagsLeft: function tagsLeft() {
+    filteredTagsLeft: function filteredTagsLeft() {
       var _this2 = this;
 
-      return this.availableTags.filter(function (t) {
-        return !_this2.selectedTags.some(function (s) {
-          return s.slug === t.slug;
-        });
+      return this.tagsLeft().filter(function (t) {
+        return t.name.toLowerCase().includes(_this2.searchTerm);
       });
     }
   },
   methods: {
+    tagsLeft: function tagsLeft() {
+      var _this3 = this;
+
+      return this.availableTags.filter(function (t) {
+        return !_this3.selectedTags.some(function (s) {
+          return s.slug === t.slug;
+        });
+      });
+    },
     handleAdd: function handleAdd(slug) {
       this.selectedTags.push(this.availableTags.filter(function (t) {
         return t.slug === slug;
@@ -19477,7 +19485,7 @@ exports.default = _default;
           "div",
           { staticClass: "wptb-tag-control-cloud" },
           [
-            _vm._l(_vm.tagsLeft, function(tag) {
+            _vm._l(_vm.filteredTagsLeft, function(tag) {
               return _c("tag-ribbon", {
                 key: tag.slug,
                 attrs: {
@@ -19489,7 +19497,7 @@ exports.default = _default;
               })
             }),
             _vm._v(" "),
-            _vm.tagsLeft.length === 0
+            _vm.filteredTagsLeft.length === 0
               ? _c("div", { staticClass: "wptb-tag-control-cloud-empty" }, [
                   _vm._v(
                     "\n\t\t\t\t" + _vm._s(_vm.translation("empty")) + "\n\t\t\t"
@@ -19499,6 +19507,34 @@ exports.default = _default;
           ],
           2
         )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-tag-control-search-wrapper" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.searchTerm,
+              expression: "searchTerm",
+              modifiers: { trim: true }
+            }
+          ],
+          staticClass: "wptb-tag-control-search",
+          attrs: { type: "text", placeholder: _vm.translation("searchTags") },
+          domProps: { value: _vm.searchTerm },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchTerm = $event.target.value.trim()
+            },
+            blur: function($event) {
+              return _vm.$forceUpdate()
+            }
+          }
+        })
       ])
     ]
   )

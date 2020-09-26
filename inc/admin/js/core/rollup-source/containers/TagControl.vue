@@ -25,16 +25,24 @@
 			<div class="wptb-tag-control-cloud">
 				<tag-ribbon
 					@click="handleAdd"
-					v-for="tag in tagsLeft"
+					v-for="tag in filteredTagsLeft"
 					:name="tag.name"
 					:slug="tag.slug"
 					:key="tag.slug"
 					button-operation-type="add"
 				></tag-ribbon>
-				<div v-if="tagsLeft.length === 0" class="wptb-tag-control-cloud-empty">
+				<div v-if="filteredTagsLeft.length === 0" class="wptb-tag-control-cloud-empty">
 					{{ translation('empty') }}
 				</div>
 			</div>
+		</div>
+		<div class="wptb-tag-control-search-wrapper">
+			<input
+				class="wptb-tag-control-search"
+				type="text"
+				v-model.trim="searchTerm"
+				:placeholder="translation('searchTags')"
+			/>
 		</div>
 	</div>
 </template>
@@ -59,6 +67,7 @@ export default {
 		return {
 			selectedTags: [],
 			mountedAssign: false,
+			searchTerm: '',
 		};
 	},
 	mounted() {
@@ -82,6 +91,13 @@ export default {
 		},
 	},
 	computed: {
+		filteredTagsLeft() {
+			return this.tagsLeft().filter((t) => {
+				return t.name.toLowerCase().includes(this.searchTerm);
+			});
+		},
+	},
+	methods: {
 		tagsLeft() {
 			return this.availableTags.filter((t) => {
 				return !this.selectedTags.some((s) => {
@@ -89,8 +105,6 @@ export default {
 				});
 			});
 		},
-	},
-	methods: {
 		handleAdd(slug) {
 			this.selectedTags.push(this.availableTags.filter((t) => t.slug === slug)[0]);
 		},

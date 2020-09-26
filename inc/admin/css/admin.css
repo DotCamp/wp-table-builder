@@ -5252,4 +5252,27 @@ wptb_shortcode_container_element {
     margin: 0 5px;
 }
 
+.wptb-tag-control-search-wrapper {
+    margin-top: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-tag-control-search {
+    border: 1px solid var(--wptb-plugin-gray-400) !important;
+    text-align: center;
+    font-size: 90% !important;
+    color: inherit;
+    border-radius: 999px !important;
+    padding: 0 !important;
+}
+
+.wptb-tag-control-search:active, .wptb-tag-control-search:focus {
+    border: 1px solid var(--wptb-plugin-gray-500) !important;
+    inset: 0 !important;
+    box-shadow: none !important;
+}
+
 /*endregion*/

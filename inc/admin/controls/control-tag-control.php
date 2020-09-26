@@ -48,7 +48,8 @@ class Control_Tag_Control extends Base_Control {
 			'currentTags'    => esc_html__( 'current tags', 'wp-table-builder' ),
 			'noCurrentTag'   => esc_html__( 'no tag active', 'wp-table-builder' ),
 			'noAvailableTag' => esc_html__( 'no tag available', 'wp-table-builder' ),
-			'empty'          => __( 'empty', 'wp-table-builder' ),
+			'empty'          => esc_html__( 'empty', 'wp-table-builder' ),
+			'searchTags'     => esc_html__( 'search available tags', 'wp-table-builder' )
 		];
 
 		$strings = json_encode( $translated_strings );
