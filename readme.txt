@@ -93,6 +93,7 @@ That's it. You're done!
 * FIX: Fixed an issue where vertical cell alignment is overridden by theme styles.
 * FIX: Empty cells appear correctly at manage cells menu now.
 * FIX: Fixed an issue at inserting a row before second row.
+* UPDATE: Merged cells will not be repeated if top row as header is not selected at responsive menu.
 
 = 1.2.8 =
 

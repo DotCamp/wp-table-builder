@@ -809,7 +809,12 @@
 					// get cells by reading row by row
 					for (let r = rowStartIndex; r < rows; r += 1) {
 						// eslint-disable-next-line no-loop-func
-						tableObj.getCellsAtRow(r, true).forEach((c) => allCellsByRow.push(c));
+						tableObj.getCellsAtRow(r, true).forEach((c) => {
+							// only use non reference cells to avoid duplication for non top row as header tables
+							if (!c.isReference()) {
+								allCellsByRow.push(c);
+							}
+						});
 					}
 
 					const cellCount = allCellsByRow.length;
@@ -863,7 +868,8 @@
 					for (let c = 0; c < columns; c += 1) {
 						for (let r = rowStartIndex; r < rows; r += 1) {
 							const tCell = tableObj.getCell(r, c, true);
-							if (tCell) {
+							// only use non reference cells to avoid duplication for non top row as header tables
+							if (tCell && !tCell.isReference()) {
 								allCellsByCol.push(tCell);
 							}
 						}
