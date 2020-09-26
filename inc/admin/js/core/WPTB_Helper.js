@@ -2110,12 +2110,14 @@ var WPTB_Helper = {
         }
         document.addEventListener('wptbSectionChanged' , ({detail}) => {
             const table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
-            const cells = Array.from(table.querySelectorAll('td'));
+            if (table) {
+                const cells = Array.from(table.querySelectorAll('td'));
 
-            cells.map(removeBlocker);
+                cells.map(removeBlocker);
 
-            if(detail === 'manage_cells' || detail === 'cell_settings'){
-                cells.map(addBlocker);
+                if (detail === 'manage_cells' || detail === 'cell_settings') {
+                    cells.map(addBlocker);
+                }
             }
         })
 

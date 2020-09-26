@@ -63,7 +63,7 @@ function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 	this.startUp = () => {
 		// event listener for section change events
 		document.addEventListener('wptbSectionChanged', (e) => {
-			const tablePreview = document.querySelector('.wptb-preview-table');
+			const tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
 
 			// check if activated section is related to responsive and there is a main table already in the view
 			if (e.detail === this.sectionName && tablePreview) {

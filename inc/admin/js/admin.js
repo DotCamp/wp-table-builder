@@ -3282,12 +3282,14 @@ var WPTB_Helper = {
             var detail = _ref.detail;
 
             var table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
-            var cells = Array.from(table.querySelectorAll('td'));
+            if (table) {
+                var cells = Array.from(table.querySelectorAll('td'));
 
-            cells.map(removeBlocker);
+                cells.map(removeBlocker);
 
-            if (detail === 'manage_cells' || detail === 'cell_settings') {
-                cells.map(addBlocker);
+                if (detail === 'manage_cells' || detail === 'cell_settings') {
+                    cells.map(addBlocker);
+                }
             }
         });
 
@@ -3675,7 +3677,7 @@ function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 	this.startUp = function () {
 		// event listener for section change events
 		document.addEventListener('wptbSectionChanged', function (e) {
-			var tablePreview = document.querySelector('.wptb-preview-table');
+			var tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
 
 			// check if activated section is related to responsive and there is a main table already in the view
 			if (e.detail === _this.sectionName && tablePreview) {
