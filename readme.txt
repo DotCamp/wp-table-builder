@@ -89,11 +89,12 @@ That's it. You're done!
 = 1.2.9 =
 
 * NEW: Version rollback manager to rollback plugin's version if you are having problems. Can be accessed from plugin settings menu.
+* NEW: Zoom controls for responsive menu for better overall visibility of table at responsive menu.
+* UPDATE: Merged cells will not be repeated if top row as header is not selected at responsive menu.
 * FIX: Fixed an issue affecting multisite, AMP WordPress sites and some themes to not load frontend js/css files.
 * FIX: Fixed an issue where vertical cell alignment is overridden by theme styles.
 * FIX: Empty cells appear correctly at manage cells menu now.
 * FIX: Fixed an issue at inserting a row before second row.
-* UPDATE: Merged cells will not be repeated if top row as header is not selected at responsive menu.
 
 = 1.2.8 =
 

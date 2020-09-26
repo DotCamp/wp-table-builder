@@ -3823,6 +3823,7 @@ wptb_shortcode_container_element {
     border: 1px solid var(--wptb-plugin-gray-400) !important;
     background-color: var(--wptb-plugin-gray-100) !important;
     text-align: center;
+    color: var(--wptb-plugin-theme-text-color-main) !important;
 }
 
 .wptb-responsive-builder-main {
@@ -4101,6 +4102,37 @@ wptb_shortcode_container_element {
     padding: 10px 0;
     display: flex;
     justify-content: space-between;
+}
+
+.wptb-responsive-builder-toolbox-left-float {
+    /*display: inline;*/
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.wptb-number-postfix-buttons-wrapper {
+    margin-left: 10px;
+    display: flex !important;
+    height: 100%;
+}
+
+.wptb-number-postfix-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    border: 1px solid var(--wptb-plugin-gray-400) !important;
+    background-color: var(--wptb-plugin-gray-100) !important;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--wptb-plugin-theme-text-color-main) !important;
+    font-size: 110%;
+}
+
+.wptb-number-postfix-button:active {
+    animation: wptb-push 0.2s ease-out;
 }
 
 .wptb-panel-toggle-section {
