@@ -12,12 +12,23 @@
 			</div>
 			<div class="wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md">
 				<div class="wptb-responsive-builder-toolbox-float">
-					<number-postfix-input
-						class="wptb-size-input wptb-plugin-box-shadow-xl"
-						v-model="appOptions.currentSize"
-						post-fix="px"
-						:only-enter="true"
-					></number-postfix-input>
+					<div class="wptb-responsive-builder-toolbox-left-float">
+						<number-postfix-input
+							class="wptb-size-input wptb-plugin-box-shadow-xl"
+							v-model="appOptions.currentSize"
+							post-fix="px"
+							:only-enter="true"
+						></number-postfix-input>
+						<number-postfix-buttons
+							:input-class="['wptb-size-input', 'wptb-plugin-box-shadow-xl']"
+							v-model="resizePercent"
+							post-fix="%"
+							:only-enter="true"
+							:min="10"
+							:max="100"
+							:enableLimit="true"
+						></number-postfix-buttons>
+					</div>
 					<material-button
 						size="fit-content"
 						class="wptb-plugin-box-shadow-xl"
@@ -63,6 +74,7 @@ import DeBouncer from '../functions/DeBouncer';
 import ModalWindow from '../components/ModalWindow';
 import MaterialButton from '../components/MaterialButton';
 import NumberPostfixInput from '../components/NumberPostfixInput';
+import NumberPostfixButtons from '../components/NumberPostfixButtons';
 
 export default {
 	props: {
@@ -74,6 +86,7 @@ export default {
 		compareSizes: Object,
 	},
 	components: {
+		NumberPostfixButtons,
 		TableClone,
 		ScreenSizeSlider,
 		ModalWindow,
@@ -93,6 +106,7 @@ export default {
 			debounceTime: 1000,
 			sizeLimitMin: 100,
 			sizeLimitMax: 0,
+			resizePercent: 100,
 		};
 	},
 	watch: {
@@ -158,6 +172,9 @@ export default {
 
 			return {
 				width: `${width}px`,
+				transform: `scale(${this.resizePercent / 100})`,
+				transformOrigin: 'center top',
+				transition: 'all 0.2s ease-out',
 			};
 		},
 		modalRelative() {

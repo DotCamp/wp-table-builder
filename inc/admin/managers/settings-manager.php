@@ -6,6 +6,7 @@ use WP_Table_Builder\Inc\Core\Loader;
 use WP_Table_Builder as NS;
 use function add_filter;
 use function add_submenu_page;
+use function apply_filters;
 use function get_option;
 use function register_setting;
 use function wp_enqueue_script;
@@ -70,6 +71,9 @@ class Settings_Manager {
 	public function __construct( $options_root, $loader ) {
 		$this->options_root = $options_root;
 
+		// initialize supplementary classes/managers
+		$this->initialize_additional();
+
 		// register plugin settings
 		$loader->add_action( 'admin_init', $this, 'register_plugin_settings' );
 
@@ -88,6 +92,13 @@ class Settings_Manager {
 	}
 
 	/**
+	 * Initialize additional managers/classes for settings manager.
+	 */
+	protected function initialize_additional() {
+		Version_Control_Manager::init();
+	}
+
+	/**
 	 * Panel location filter hook callback.
 	 *
 	 * @param string $location current location
@@ -95,7 +106,7 @@ class Settings_Manager {
 	 * @return string panel location
 	 */
 	public function panel_location( $location ) {
-		return $this->get_option_value('panel_location');
+		return $this->get_option_value( 'panel_location' );
 	}
 
 	/**
@@ -193,7 +204,8 @@ class Settings_Manager {
 	 */
 	public function admin_scripts( $hook ) {
 		if ( $hook === $this->settings_menu_slug ) {
-			$script_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Admin_Settings.js';
+			$script_url  = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Admin_Settings.js';
+			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Admin_Settings.js';
 
 			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
 
@@ -203,14 +215,14 @@ class Settings_Manager {
 
 			// script and style enqueue
 			wp_enqueue_script( $handler, $script_url, [], $plugin_version, true );
+
 			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
 
 			$ajax_url = get_admin_url( null, 'admin-ajax.php' );
 			$nonce    = wp_create_nonce( $this->options_root );
 
-			$wptb_text_domain = NS\PLUGIN_TEXT_DOMAIN;
-			$plugin_homepage  = get_plugin_data( NS\PLUGIN__FILE__ )['PluginURI'];
-			$plugin_name      = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
+			$plugin_homepage = get_plugin_data( NS\PLUGIN__FILE__ )['PluginURI'];
+			$plugin_name     = get_plugin_data( NS\PLUGIN__FILE__ )['Name'];
 
 			$plugin_info = [
 				'pluginHomepage' => esc_attr( $plugin_homepage ),
@@ -230,39 +242,47 @@ class Settings_Manager {
 			$merged_options = array_merge( $this->defaults, get_option( $this->options_root ) );
 
 			$frontend_data = [
-				'data'       => [
+				'data'         => [
 					'mountId' => '#wptb-settings-page',
 					'ajaxUrl' => $ajax_url,
 					'nonce'   => $nonce,
 					'action'  => $this->options_root
 				],
-				'options'    => $merged_options,
-				'fields'     => [
-					'allowed_roles'  => [
-						'type'    => 'multiCheckbox',
-						'options' => wp_roles()->role_names,
-						'section' => 'general',
-						'label'   => esc_html__( 'Allowed User Roles', 'wp-table-builder' )
-					],
-					'panel_location' => [
-						'type'    => 'dropdown',
-						'options' => [
-							[
-								'label' => esc_html__( 'left', 'wp-table-builder' ),
-								'value' => 'left'
+				'options'      => $merged_options,
+				'sectionsData' => [
+					'general' => [
+						'label'  => esc_html__( 'general', 'wp-table-builder' ),
+						'fields' => [
+							'allowed_roles'  => [
+								'type'    => 'multiCheckbox',
+								'options' => wp_roles()->role_names,
+								'section' => 'general',
+								'label'   => esc_html__( 'Allowed User Roles', 'wp-table-builder' )
 							],
-							[
-								'label' => esc_html__( 'right', 'wp-table-builder' ),
-								'value' => 'right'
-							]
-						],
-						'section' => 'general',
-						'label'   => esc_html__( 'Sidebar location', 'wp-table-builder' )
+							'panel_location' => [
+								'type'    => 'dropdown',
+								'options' => [
+									[
+										'label' => esc_html__( 'left', 'wp-table-builder' ),
+										'value' => 'left'
+									],
+									[
+										'label' => esc_html__( 'right', 'wp-table-builder' ),
+										'value' => 'right'
+									]
+								],
+								'section' => 'general',
+								'label'   => esc_html__( 'Sidebar location', 'wp-table-builder' )
+							],
+						]
 					],
 				],
-				'pluginInfo' => $plugin_info,
-				'strings'    => $strings
+				'pluginInfo'   => $plugin_info,
+				'strings'      => $strings
 			];
+
+			// filter for frontend data
+			$frontend_data = apply_filters( 'wp-table-builder/filter/settings_manager_frontend_data', $frontend_data );
 
 			// front-end data enqueue
 			wp_localize_script( $handler, 'wptbAdminSettingsData', $frontend_data );

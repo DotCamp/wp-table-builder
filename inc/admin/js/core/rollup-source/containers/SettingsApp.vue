@@ -3,17 +3,18 @@
 		<menu-header :logo-src="pluginInfo.logo" :logo-alt="strings.logoAlt" :plugin-name="pluginInfo.pluginName">
 			<a :href="pluginInfo.pluginHomepage">{{ strings.homepage }}</a>
 		</menu-header>
-		<sections :items="sections" v-model="currentSection"> </sections>
-		<menu-content>
-			<setting-card v-for="field in currentFields" :key="field.id" :title="field.label">
-				<control-item :field-data="field" :modelBind="store"></control-item>
-			</setting-card>
-		</menu-content>
+		<sections :items="sections" v-model="currentSection" :disabled="isBusy()"></sections>
+		<component
+			:is="currentTemplate"
+			:current-fields="currentFields"
+			:store="store"
+			:disabled="!canSubmit"
+			@resetStore="resetStore"
+			@submitSettings="submitSettings"
+			:template-data="settings"
+		></component>
 		<menu-footer>
-			<menu-button type="danger" :disabled="!canSubmit" @click="resetStore">{{ strings.revert }}</menu-button>
-			<menu-button type="primary" :disabled="!canSubmit" @click="submitSettings">{{
-				strings.submit
-			}}</menu-button>
+			<portal-target name="footerButtons"></portal-target>
 		</menu-footer>
 	</div>
 </template>
@@ -22,27 +23,25 @@ import withStore from '../mixins/withStore.js';
 import withMessage from '../mixins/withMessage';
 import MenuHeader from '../components/MenuHeader.vue';
 import Sections from '../components/Sections.vue';
-import MenuContent from '../components/MenuContent.vue';
-import SettingCard from '../components/SettingCard.vue';
-import ControlItem from '../components/ControlItem.vue';
 import MenuFooter from '../components/MenuFooter.vue';
 import MenuButton from '../components/MenuButton.vue';
+import GeneralSettings from './GeneralSettings';
+import VersionControlSettings from '../components/VersionControlSettings';
 
 export default {
-	props: ['fieldsData', 'settings', 'pluginInfo'],
+	props: ['sectionsData', 'settings', 'pluginInfo'],
 	components: {
 		MenuButton,
 		MenuHeader,
 		Sections,
-		MenuContent,
-		SettingCard,
-		ControlItem,
 		MenuFooter,
+		GeneralSettings,
+		VersionControlSettings,
 	},
 	mixins: [withStore, withMessage],
 	data() {
 		return {
-			sections: [],
+			sections: {},
 			currentSection: '',
 			parsedFields: {},
 			resetActive: false,
@@ -67,31 +66,40 @@ export default {
 		},
 	},
 	beforeMount() {
-		Object.keys(this.fieldsData).map((key) => {
-			if (Object.prototype.hasOwnProperty.call(this.fieldsData, key)) {
-				const { section } = this.fieldsData[key];
+		// eslint-disable-next-line array-callback-return
+		Object.keys(this.sectionsData).map((section) => {
+			this.sections[section] = this.sectionsData[section].label;
+			if (Object.prototype.hasOwnProperty.call(this.sectionsData, section)) {
 				if (this.parsedFields[section] === undefined) {
 					this.parsedFields[section] = [];
 				}
-				this.parsedFields[section].push({ ...this.fieldsData[key], id: key });
-				this.sections.push(section);
-			}
 
-			return null;
+				if (
+					this.sectionsData[section].fields !== undefined &&
+					typeof this.sectionsData[section].fields === 'object'
+				) {
+					Object.keys(this.sectionsData[section].fields).map((field) => {
+						if (Object.prototype.hasOwnProperty.call(this.sectionsData[section].fields, field)) {
+							this.parsedFields[section].push({ ...this.sectionsData[section].fields[field], id: field });
+						}
+					});
+				}
+			}
 		});
 
-		// eslint-disable-next-line array-callback-return,consistent-return
+		// eslint-disable-next-line array-callback-return
 		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
 			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
 				return key;
 			}
 		});
-
-		this.sections = Array.from(new Set(this.sections));
 	},
 	computed: {
 		currentFields() {
 			return this.parsedFields[this.currentSection];
+		},
+		currentTemplate() {
+			return `${this.currentSection[0].toUpperCase() + this.currentSection.slice(1)}Settings`;
 		},
 	},
 	methods: {

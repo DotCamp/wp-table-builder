@@ -3350,7 +3350,14 @@ var WPTB_Helper = {
         var addBlocker = function addBlocker(parent) {
             var blockerElement = document.createElement('div');
             blockerElement.classList.add('wptb-plugin-blocker-element');
+
+            var haveChild = parent.childNodes.length > 0;
             parent.appendChild(blockerElement);
+
+            // if don't have any children, then add before/after css element states to blocker in order to reflect table builder menu visuals
+            if (!haveChild) {
+                parent.classList.add('wptb-plugin-blocker-element-empty');
+            }
         };
 
         var removeBlocker = function removeBlocker(parent) {
@@ -3358,17 +3365,21 @@ var WPTB_Helper = {
             if (blockerElement) {
                 blockerElement.remove();
             }
+
+            parent.classList.remove('wptb-plugin-blocker-element-empty');
         };
         document.addEventListener('wptbSectionChanged', function (_ref) {
             var detail = _ref.detail;
 
             var table = document.querySelector('.wptb-table-setup table.wptb-preview-table');
-            var cells = Array.from(table.querySelectorAll('td'));
+            if (table) {
+                var cells = Array.from(table.querySelectorAll('td'));
 
-            cells.map(removeBlocker);
+                cells.map(removeBlocker);
 
-            if (detail === 'manage_cells' || detail === 'cell_settings') {
-                cells.map(addBlocker);
+                if (detail === 'manage_cells' || detail === 'cell_settings') {
+                    cells.map(addBlocker);
+                }
             }
         });
 
@@ -3865,7 +3876,7 @@ function WptbResponsive(sectionName, responsiveWrapperId, mainContainerQuery) {
 	this.startUp = function () {
 		// event listener for section change events
 		document.addEventListener('wptbSectionChanged', function (e) {
-			var tablePreview = document.querySelector('.wptb-preview-table');
+			var tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
 
 			// check if activated section is related to responsive and there is a main table already in the view
 			if (e.detail === _this.sectionName && tablePreview) {
@@ -5912,6 +5923,11 @@ var array = [],
             cellStyle = cell.getAttribute('style'),
             row = getCoords(cell)[0],
             cellNew = void 0;
+
+        if (row === 0) {
+            row = -1;
+        }
+
         for (var _i13 = row - 1; _i13 >= 0; _i13--) {
             var rowChildren = table.rows[_i13].children;
             var rowChildrenLength = rowChildren.length;
@@ -5929,7 +5945,7 @@ var array = [],
             }
         }
 
-        if (row === 0) {
+        if (row === -1) {
             table.addRowToTheStart();
         } else {
             table.addRowAfter(row, cellStyle);
@@ -7639,7 +7655,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						for (var r = rowStartIndex; r < rows; r += 1) {
 							// eslint-disable-next-line no-loop-func
 							tableObj.getCellsAtRow(r, true).forEach(function (c) {
-								return allCellsByRow.push(c);
+								// only use non reference cells to avoid duplication for non top row as header tables
+								if (!c.isReference()) {
+									allCellsByRow.push(c);
+								}
 							});
 						}
 
@@ -7697,7 +7716,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						for (var c = 0; c < columns; c += 1) {
 							for (var r = rowStartIndex; r < rows; r += 1) {
 								var tCell = tableObj.getCell(r, c, true);
-								if (tCell) {
+								// only use non reference cells to avoid duplication for non top row as header tables
+								if (tCell && !tCell.isReference()) {
 									allCellsByCol.push(tCell);
 								}
 							}

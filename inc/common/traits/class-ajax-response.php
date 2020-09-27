@@ -42,6 +42,7 @@ trait Ajax_Response {
 	 * @param bool $die close connection after sending data
 	 */
 	public function send_json( $die = true ) {
+		header('Content-Type: application/json');
 		echo json_encode( $this->response_data );
 
 		if ( $die ) {

@@ -89,6 +89,7 @@ table.wptb-preview-table {
     padding: 15px;
     position: relative;
     box-sizing: content-box;
+    vertical-align: middle;
 }
 
 .wptb-table-container-matrix.wptb-matrix-hide .wptb-preview-table td {
@@ -630,7 +631,7 @@ table.wptb-preview-table {
 }
 
 .wptb-cell[data-wptb-cell-vertical-alignment="center"] {
-    vertical-align: center;
+    vertical-align: middle;
 }
 
 .wptb-cell[data-wptb-cell-vertical-alignment="bottom"] {
