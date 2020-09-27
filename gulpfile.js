@@ -8,7 +8,9 @@ const rename = require('gulp-rename');
 
 gulp.task('adminJs', function () {
     gulp.
-        src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
+        src(['./inc/admin/js/core/*.js',
+        './inc/admin/js/core-premium/*.js',
+        './inc/admin/js/WPTB_ResponsiveFrontend.js'])
         .pipe(sourcemaps.init())
         .pipe(babel({
             presets: [['env', { modules: false }]],
@@ -44,7 +46,9 @@ gulp.task('frontendJs', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'], ['adminJs']);
+    gulp.watch(['./inc/admin/js/core/*.js',
+        './inc/admin/js/core-premium/*.js',
+        './inc/admin/js/WPTB_ResponsiveFrontend.js'], ['adminJs']);
     gulp.watch(['./inc/admin/js/core/WPTB_CutGlueTable.js',
         './inc/admin/js/core/WPTB_SortableTable.js',
         './inc/admin/js/core/WPTB_RecalculateIndexes.js',

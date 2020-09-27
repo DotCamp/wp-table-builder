@@ -1,15 +1,21 @@
 const table = element;
 const tableId = WPTB_Helper.getTableId();
 const wptbTableSetup = table.parentNode;
+let responsiveFront;
 
 const sortableTable = new WPTB_SortableTable(table);
-sortableTable.sortableTableInitialization();
+if(typeof WPTB_ResponsiveFrontend === 'function') {
+	responsiveFront = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
+} else {
+	responsiveFront = '';
+}
+sortableTable.sortableTableInitialization(responsiveFront);
 
 /**
  * makes sort checkbox not inactive
  * @param type
  */
-controlTableSortableDisable = (type) => {
+let controlTableSortableDisable = (type) => {
 	let controlName = '';
 	if (type === 'vertical') {
 		controlName = 'tableSortableVertical';

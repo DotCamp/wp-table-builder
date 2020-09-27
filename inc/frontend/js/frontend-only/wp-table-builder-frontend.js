@@ -231,6 +231,8 @@
 
 						// check conditions: if table top row is as "header" - table must have more that two columns,
 						// otherwise table must have more taht one columns
+						let tableReconstructed = false;
+						let wptbPreviewTableMobile;
 						if ((!tablePreviewHeadIndic || tableColumns > 2) && tableColumns > 1) {
 							// if width of wptb-table-container less then width of wptb-preview-table -
 							// continue the way creation new mobile table
@@ -238,7 +240,11 @@
 								tableContainer.style.overflow = 'unset';
 
 								// hide wptb-table-container-matrix
-								if (tableContainerMatrix) tableContainerMatrix.classList.add('wptb-matrix-hide');
+								if (tableContainerMatrix && !tableContainerMatrix.classList.contains('wptb-matrix-hide')) {
+									tableContainerMatrix.classList.add('wptb-matrix-hide');
+									tableReconstructed = true;
+								}
+								previewTable.classList.add('wptb-mobile-view-active');
 
 								if (previewTable.rows && tableColumns) {
 									// we get the estimated cell width
@@ -253,7 +259,7 @@
 									// with our conditions. If it compliance, remain this table
 									// and cancel creating a new table ( createNewTableIndic = false ).
 									if (tableContainer.getElementsByClassName('wptb-preview-table-mobile').length > 0) {
-										const wptbPreviewTableMobile = tableContainer.getElementsByClassName(
+										wptbPreviewTableMobile = tableContainer.getElementsByClassName(
 											'wptb-preview-table-mobile'
 										)[0];
 										wptbPreviewTableMobile.classList.remove('wptb-mobile-hide');
@@ -280,6 +286,8 @@
 									if (createNewTableIndic) {
 										// create new table for mobile devices
 										const newTable = document.createElement('table');
+										const newTableTbody = document.createElement('tbody');
+										newTable.appendChild(newTableTbody);
 
 										// add css class for new mobile table
 										newTable.classList.add('wptb-preview-table-mobile');
@@ -399,7 +407,7 @@
 													}
 													tdLeftHeader.style.width = null;
 													tdLeftHeader.style.height = null;
-													tdLeftHeader.removeAttribute('data-x-index');
+													//tdLeftHeader.removeAttribute('data-x-index');
 													tdLeftHeader.removeAttribute('data-wptb-css-td-auto-width');
 													tdStyles = window.getComputedStyle(
 														previewTable.querySelector('td')
@@ -432,7 +440,7 @@
 
 															td.style.width = null;
 															td.style.height = null;
-															td.removeAttribute('data-x-index');
+															//td.removeAttribute('data-x-index');
 															td.removeAttribute('data-wptb-css-td-auto-width');
 														} else {
 															td = document.createElement('td');
@@ -457,7 +465,7 @@
 														tr.appendChild(td);
 													}
 
-													newTable.appendChild(tr);
+													newTableTbody.appendChild(tr);
 												}
 											}
 										} else {
@@ -538,12 +546,12 @@
 														}
 														newTd.style.width = null;
 														newTd.style.height = null;
-														newTd.removeAttribute('data-x-index');
+														//newTd.removeAttribute('data-x-index');
 														newTd.removeAttribute('data-wptb-css-td-auto-width');
 														tr.appendChild(newTd);
 													}
 
-													newTable.appendChild(tr);
+													newTableTbody.appendChild(tr);
 												}
 											}
 										}
@@ -555,21 +563,36 @@
 												images[i].removeAttribute('srcset');
 											}
 										}
-
+										wptbPreviewTableMobile = newTable;
 										tableContainer.appendChild(newTable);
+										tableReconstructed = true;
 									}
 								}
 							} else {
-								if (tableContainerMatrix) tableContainerMatrix.classList.remove('wptb-matrix-hide');
-								if (tableContainer.getElementsByClassName('wptb-preview-table-mobile').length > 0) {
-									tableContainer
-										.getElementsByClassName('wptb-preview-table-mobile')[0]
-										.classList.add('wptb-mobile-hide');
+								if (tableContainerMatrix && tableContainerMatrix.classList.contains('wptb-matrix-hide')) {
+									tableContainerMatrix.classList.remove('wptb-matrix-hide');
+									tableReconstructed = true;
+									previewTable.classList.remove('wptb-mobile-view-active');
+									wptbPreviewTableMobile = tableContainer.querySelector('.wptb-preview-table-mobile');
+									if (wptbPreviewTableMobile) {
+										tableContainer
+											.getElementsByClassName('wptb-preview-table-mobile')[0]
+											.classList.add('wptb-mobile-hide');
+									}
+									tableContainer.style.overflow = 'auto';
 								}
-								tableContainer.style.overflow = 'auto';
 							}
+
 						} else {
 							previewTable.style.minWidth = 'auto';
+						}
+
+						WPTB_RecalculateIndexes(previewTable);
+
+						if(tableReconstructed) {
+							WPTB_RecalculateIndexes(wptbPreviewTableMobile);
+							const tabEvent = new CustomEvent('table:rebuilt', { detail: true, bubbles: true });
+							previewTable.dispatchEvent(tabEvent);
 						}
 					}
 				}
@@ -719,14 +742,13 @@
 		responsiveFront.rebuildTables();
 
 		//sorting table
-		if(tableContainers.length) {
-			for (let i = 0; i < tableContainers.length; i++) {
-				let table = tableContainers[i].querySelector('.wptb-preview-table');
-				if(table) {
-					let sortableTable = new WPTB_SortableTable(table);
-					sortableTable.sortableTableInitialization();
-				}
+		function sortingTable() {
+			let tables = document.querySelectorAll('.wptb-preview-table');
+			for (let i = 0; i < tables.length; i++) {
+				let sortableTable = new WPTB_SortableTable(tables[i]);
+				sortableTable.sortableTableInitialization(responsiveFront);
 			}
 		}
+		sortingTable();
 	});
 })(jQuery);

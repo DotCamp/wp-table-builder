@@ -3997,14 +3997,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	this.table = table;
+	var thisObject = this;
 	this.topRow = table.rows.length ? table.rows[0] : null;
+	this.itemsPerHeader = 0;
 
 	/**
   * sets the table to sort mode
-  * @param type
-  * @param active
+  * @param {string} type
+  * @param {boolean} active
+  * @param {number} number
   */
-	this.sortModeSwitcher = function (type, active) {
+	this.sortModeSwitcher = function (type, active, number) {
 		if (type === 'vertical') {
 			this.table.removeEventListener('click', this.sortableTableVerticalStart, false);
 
@@ -4035,27 +4038,124 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * checks whether the table should be in the sort state
   * and connects the necessary handlers
+  *
+  * @param {object} responsiveFront
   */
-	this.sortableTableInitialization = function () {
+	this.sortableTableInitialization = function (responsiveFront) {
+		var type = '';
+		var typeFirst = void 0;
+		var typeSecond = void 0;
 		if (this.table.dataset.wptbSortableTableVertical && this.table.dataset.wptbSortableTableVertical === '1') {
-			this.sortModeSwitcher('vertical', true);
+			typeFirst = 'vertical';
+			typeSecond = 'horizontal';
 		} else if (this.table.dataset.wptbSortableTableHorizontal && this.table.dataset.wptbSortableTableHorizontal === '1') {
-			this.sortModeSwitcher('horizontal', true);
+			typeFirst = 'horizontal';
+			typeSecond = 'vertical';
 		}
+
+		var switchMode = void 0;
+		if (responsiveFront && responsiveFront.getDirective(this.table)) {
+			switchMode = function switchMode() {
+				var size = void 0;
+				var directives = responsiveFront.getDirective(this.table);
+				if (directives && directives.relativeWidth) {
+					switch (directives.relativeWidth) {
+						case 'window':
+							// eslint-disable-next-line no-param-reassign
+							size = window.innerWidth;
+							break;
+						case 'container':
+							// get the size of the container table is in
+							// eslint-disable-next-line no-param-reassign
+							size = o.el.parentNode.parentNode.parentNode.clientWidth;
+							break;
+						default:
+							// eslint-disable-next-line no-param-reassign
+							size = window.innerWidth;
+							break;
+					}
+				} else {
+					size = this.table.getBoundingClientRect().width;
+				}
+				var sizeRangeId = responsiveFront.calculateRangeId(size, directives.breakpoints);
+				type = typeFirst;
+				if (sizeRangeId !== 'desktop') {
+					if (directives.hasOwnProperty('modeOptions')) {
+						var mode = directives.responsiveMode;
+						var modeOptions = directives.modeOptions[mode];
+
+						if (modeOptions.hasOwnProperty('topRowAsHeader') && modeOptions.topRowAsHeader.hasOwnProperty(sizeRangeId) && modeOptions.topRowAsHeader[sizeRangeId]) {
+							if (modeOptions.hasOwnProperty('cellStackDirection') && modeOptions.cellStackDirection.hasOwnProperty(sizeRangeId)) {
+								if (modeOptions.cellStackDirection[sizeRangeId] === 'row') {
+									type = typeSecond;
+								} else if (modeOptions.cellStackDirection[sizeRangeId] === 'column') {
+									if (modeOptions.hasOwnProperty('cellsPerRow')) {
+										this.itemsPerHeader = modeOptions.cellsPerRow[sizeRangeId];
+									}
+								}
+							}
+						}
+					}
+				}
+				this.sortModeSwitcher(type, true);
+			};
+		} else {
+			switchMode = function switchMode() {
+				var type = typeFirst;
+				if (this.table.classList.contains('wptb-mobile-view-active')) {
+					if (this.table.classList.contains('wptb-table-preview-head')) {
+						type = typeSecond;
+					}
+					var _table = this.table;
+					this.table = _table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
+					this.sortModeSwitcher(type, true);
+					this.table = _table;
+					return;
+				}
+
+				this.sortModeSwitcher(type, true);
+			};
+		}
+
+		switchMode.call(thisObject);
+		this.table.addEventListener('table:rebuilt', function (e) {
+			switchMode.call(thisObject);
+		}, false);
 	};
 
+	/**
+  * adds and deletes mousemove and mouseleave events handlers when happens switch sorting mode
+  * and also can add necessary attributes
+  *
+  * @param {string} type
+  * @param {boolean} active
+  */
 	this.sortingCellMouseMoveSwitcher = function (type, active) {
 		if (type === 'vertical') {
-			var tds = this.topRow ? this.topRow.querySelectorAll('td') : null;
-			tds = [].concat(_toConsumableArray(tds));
-			tds.map(function (td) {
-				td.removeEventListener('mousemove', sortingCellMouseMoveVertical, false);
-				td.removeEventListener('mouseleave', tdMouseLeave, false);
-				if (active) {
-					td.addEventListener('mousemove', sortingCellMouseMoveVertical, false);
-					td.addEventListener('mouseleave', tdMouseLeave, false);
+			var rowsLength = this.table.rows.length;
+			var dataYIndexStart = 0;
+			while (rowsLength > 0) {
+				var tds = this.table.querySelectorAll('[data-y-index="' + dataYIndexStart + '"]');
+				tds = [].concat(_toConsumableArray(tds));
+				tds.map(function (td) {
+					td.removeEventListener('mousemove', sortingCellMouseMoveVertical, false);
+					td.removeEventListener('mouseleave', tdMouseLeave, false);
+					if (active) {
+						td.addEventListener('mousemove', sortingCellMouseMoveVertical, false);
+						td.addEventListener('mouseleave', tdMouseLeave, false);
+						if (!td.dataset.sortedVertical) {
+							td.dataset.sortedVertical = 'ask';
+						}
+					}
+				});
+
+				if (this.itemsPerHeader) {
+					rowsLength -= this.itemsPerHeader + 1;
+					dataYIndexStart += this.itemsPerHeader + 1;
+				} else {
+					rowsLength = 0;
 				}
-			});
+			}
 		} else if (type === 'horizontal') {
 			var _tds = this.table.querySelectorAll('[data-x-index="0"]');
 			_tds = [].concat(_toConsumableArray(_tds));
@@ -4070,6 +4170,13 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 		}
 	};
 
+	/**
+  * adds a sortable-hover class for a cell when the cursor is over the sort icon (arrow)
+  *
+  * @param {event} e
+  * @param {string} type
+  * @param {HTMLElement} element td
+  */
 	function sortingCellMouseMov(e, type, element) {
 		if (e.target.tagName === 'TD') {
 			var x = e.offsetX == undefined ? e.layerX : e.offsetX;
@@ -4088,14 +4195,27 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 		}
 	}
 
+	/**
+  * calls sortingCellMouseMov with the type parameter set to vertical
+  *
+  * @param {event} e
+  */
 	function sortingCellMouseMoveVertical(e) {
 		sortingCellMouseMov(e, 'vertical', this);
 	}
 
+	/**
+  * calls sortingCellMouseMov with the type parameter set to horizontal
+  *
+  * @param {event} e
+  */
 	function sortingCellMouseMoveHorizontal(e) {
 		sortingCellMouseMov(e, 'horizontal', this);
 	}
 
+	/**
+  * remove sortable-hover class from cell when cursor leave cell
+  */
 	function tdMouseLeave() {
 		this.classList.remove('sortable-hover');
 	}
@@ -4103,17 +4223,43 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * function for sorting the table vertically by the numeric content of cells
   *
-  * @param e
-  * @param table
+  * @param {event} e
+  * @param {HTMLElement} table
+  * @param {string} type
   */
 	function sortableTable(e, table, type) {
-		if (e.target && e.target.tagName === 'TD' && !table.classList.contains('wptb-plugin-responsive-base') && !table.parentNode.classList.contains('wptb-preview-table-manage-cells')) {
+		if (e.target && e.target.tagName === 'TD' && !table.parentNode.classList.contains('wptb-preview-table-manage-cells')) {
 			var tableWasSorted = false;
-			if (type === 'vertical' && e.target.dataset.yIndex === '0') {
+			if (type === 'vertical' && e.target.dataset.hasOwnProperty('sortedVertical')) {
+
+				/**
+     * if table have enabled param topRowAsHeader and sellsStackDirection is column
+     * the top and bottom rows that will not be sorted are temporarily removed from the table
+     */
+				var tableRowsBefore = [];
+				var tableRowsAfter = [];
+				if (this.itemsPerHeader && this.itemsPerHeader < table.rows.length) {
+					WPTB_RecalculateIndexes(table);
+					var tableRowsArr = [].concat(_toConsumableArray(table.rows));
+					var tableLastCont = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					for (var i = 0; i < tableRowsArr.length; i++) {
+						if (i < e.target.dataset.yIndex) {
+							tableRowsBefore.push(tableRowsArr[i]);
+							tableLastCont.removeChild(tableRowsArr[i]);
+						} else if (i > e.target.dataset.yIndex + this.itemsPerHeader) {
+							tableRowsAfter.push(tableRowsArr[i]);
+							tableLastCont.removeChild(tableRowsArr[i]);
+						}
+					}
+					WPTB_RecalculateIndexes(table);
+				}
+
 				var tds = table.querySelectorAll('[data-x-index="' + e.target.dataset.xIndex + '"]');
 				tds = [].concat(_toConsumableArray(tds));
 
-				// preparing table for sorting
+				/**
+     * preparing table for sorting
+     */
 				var rowspan = void 0;
 				var rowNum = void 0;
 				tds.map(function (td) {
@@ -4129,17 +4275,18 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				var rowsValuesArr = [];
 				var rowsTdFirst = void 0;
 				var tdYCoordsRowSpanPrevious = 0;
-				for (var i = 0; i < tds.length; i++) {
-					var tdsChanged = changeSortingTdsCollection(e, table, tds, i, tdYCoordsRowSpanPrevious, 'vertical');
+				var tableRowsPushed = [];
+				for (var _i = 0; _i < tds.length; _i++) {
+					var tdsChanged = changeSortingTdsCollection(e, table, tds, _i, tdYCoordsRowSpanPrevious, 'vertical');
 					if (tdsChanged && tdsChanged.hasOwnProperty('i')) {
 						tds = tdsChanged.tds;
-						i = tdsChanged.i;
+						_i = tdsChanged.i;
 						continue;
 					} else if (tdsChanged) {
 						tds = tdsChanged.tds;
 					}
 
-					var td = tds[i];
+					var td = tds[_i];
 
 					var tdRowspan = parseInt(td.rowSpan, 10);
 					if (!tdRowspan) tdRowspan = 1;
@@ -4151,6 +4298,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 					var rowsTd = [];
 					for (var j = 0; j < tdRowspan; j++) {
 						rowsTd.push(table.rows[parseInt(td.dataset.yIndex, 10) + j]);
+						tableRowsPushed.push(parseInt(td.dataset.yIndex, 10) + j);
 					}
 					if (td.dataset.yIndex > 0) {
 						rowsValuesArr.push({
@@ -4171,6 +4319,18 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 
 				rowsValuesArr.unshift({ rowsTd: rowsTdFirst });
 
+				if (rowsValuesArr.length < table.rows.length) {
+					for (var _i2 = 0; _i2 < table.rows.length; _i2++) {
+						if (tableRowsPushed.indexOf(_i2) > -1) continue;
+						var _rowsTd = [];
+						_rowsTd.push(table.rows[_i2]);
+
+						rowsValuesArr.push({
+							rowsTd: _rowsTd
+						});
+					}
+				}
+
 				var tBody = table.querySelector('tbody');
 				tBody.innerHTML = '';
 
@@ -4179,6 +4339,27 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 						tBody.appendChild(row);
 					});
 				});
+
+				/**
+     * returning previously deleted rows
+     */
+				if (tableRowsBefore.length) {
+					var _tableLastCont = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					if (_tableLastCont) {
+						var trRef = _tableLastCont.querySelector('tr');
+						tableRowsBefore.map(function (tr) {
+							_tableLastCont.insertBefore(tr, trRef);
+						});
+					}
+				}
+				if (tableRowsAfter.length) {
+					var _tableLastCont2 = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					if (tBody) {
+						tableRowsAfter.map(function (tr) {
+							_tableLastCont2.appendChild(tr);
+						});
+					}
+				}
 
 				WPTB_RecalculateIndexes(table);
 
@@ -4206,17 +4387,17 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				var columnsTdFirst = void 0;
 
 				var tdXCoordsColSpanPrevious = 0;
-				for (var _i = 0; _i < _tds2.length; _i++) {
-					var _tdsChanged = changeSortingTdsCollection(e, table, _tds2, _i, tdXCoordsColSpanPrevious, 'horizontal');
+				for (var _i3 = 0; _i3 < _tds2.length; _i3++) {
+					var _tdsChanged = changeSortingTdsCollection(e, table, _tds2, _i3, tdXCoordsColSpanPrevious, 'horizontal');
 					if (_tdsChanged && _tdsChanged.hasOwnProperty('i')) {
 						_tds2 = _tdsChanged.tds;
-						_i = _tdsChanged.i;
+						_i3 = _tdsChanged.i;
 						continue;
 					} else if (_tdsChanged) {
 						_tds2 = _tdsChanged.tds;
 					}
 
-					var _td = _tds2[_i];
+					var _td = _tds2[_i3];
 					var tdColspan = parseInt(_td.colSpan, 10);
 					if (!tdColspan) tdColspan = 1;
 
@@ -4247,8 +4428,19 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 
 				columnsValuesArr.unshift({ columnsTd: columnsTdFirst });
 
-				for (var _i2 = 0; _i2 < table.rows.length; _i2++) {
-					table.rows[_i2].innerHTML = '';
+				if (columnsValuesArr.length < table.maxCols) {
+					var difference = table.maxCols - columnsValuesArr.length;
+					for (var _i4 = 0; _i4 < difference; _i4++) {
+						var _tdsColumn = [].concat(_toConsumableArray(table.querySelectorAll('[data-x-index="' + (parseInt(table.maxCols, 10) - parseInt(difference, 10) + _i4) + '"]')));
+
+						columnsValuesArr.push({
+							columnsTd: [_tdsColumn]
+						});
+					}
+				}
+
+				for (var _i5 = 0; _i5 < table.rows.length; _i5++) {
+					table.rows[_i5].innerHTML = '';
 				}
 
 				columnsValuesArr.map(function (columnsValObj) {
@@ -4281,12 +4473,12 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
   * Function that sets the data-attribute with the number of the row or column
   * that the table was sorted by. Returns the number of a row or column
   *
-  * @param e
-  * @param dataAttr
+  * @param {event} e
+  * @param {string} dataAttr
   * @returns {null|boolean}
   */
 	function setSortedAscDataAttr(e, dataAttr) {
-		if (e.currentTarget && e.currentTarget.classList.contains('wptb-preview-table')) {
+		if (e.currentTarget && (e.currentTarget.classList.contains('wptb-preview-table') || e.currentTarget.classList.contains('wptb-preview-table-mobile'))) {
 			if (!e.target.dataset[dataAttr] || e.target.dataset[dataAttr] === 'ask') {
 				e.target.dataset[dataAttr] = 'desk';
 			} else {
@@ -4302,7 +4494,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * defines the sorting order
   *
-  * @param orderBy
+  * @param {string} orderBy
   * @param prev
   * @param next
   * @returns {number}
@@ -4361,10 +4553,12 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
   * These added cells are not originally were added in the collection,
   * because they are combined with cells from higher rows or left-side columns
   *
-  * @param table
-  * @param tds
-  * @param i
-  * @param tdIndexSpanPrev
+  * @param {event} e
+  * @param {HTMLElement} table
+  * @param {array} tds
+  * @param {number} i
+  * @param {number} tdIndexSpanPrev
+  * @param {string} type
   * @returns {{tds: *}|boolean|{tds: *, i: *}}
   */
 	function changeSortingTdsCollection(e, table, tds, i, tdIndexSpanPrev, type) {
@@ -4403,7 +4597,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				collectionTdsJSpan = collectionTds[j][collectionTdsJSpanProperty];
 				if (!collectionTdsJSpan) collectionTdsJSpan = 1;
 
-				if (collectionTds[j].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[j].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) >= e.target.dataset[indexNamePerpendicularCamelCase]) {
+				if (collectionTds[j].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[j].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) > e.target.dataset[indexNamePerpendicularCamelCase]) {
 					tds.splice(i, 0, collectionTds[j]);
 					tdsCollectionChanged = true;
 					i--;
@@ -4422,7 +4616,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				collectionTdsJSpan = collectionTds[_j2][collectionTdsJSpanProperty];
 				if (!collectionTdsJSpan) collectionTdsJSpan = 1;
 
-				if (collectionTds[_j2].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[_j2].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) >= e.target.dataset[indexNamePerpendicularCamelCase]) {
+				if (collectionTds[_j2].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[_j2].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) > e.target.dataset[indexNamePerpendicularCamelCase]) {
 					tds.push(collectionTds[_j2]);
 					tdsCollectionChanged = true;
 					break;
@@ -4437,7 +4631,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * remove cells attributes which were used for division table
   *
-  * @param table
+  * @param {HTMLElement} table
   */
 	function removeCellsAttrAfterDivision(table) {
 		var tdsAll = [].concat(_toConsumableArray(table.getElementsByTagName('td')));
@@ -4451,19 +4645,19 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * function for run sorting table vertically
   *
-  * @param e
+  * @param {event} e
   */
 	this.sortableTableVerticalStart = function (e) {
-		sortableTable(e, table, 'vertical');
+		sortableTable.call(thisObject, e, table, 'vertical');
 	};
 
 	/**
   * function for run sorting table horizontally
   *
-  * @param e
+  * @param {event} e
   */
 	this.sortableTableHorizontalStart = function (e) {
-		sortableTable(e, table, 'horizontal');
+		sortableTable.call(thisObject, e, table, 'horizontal');
 	};
 };
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -6609,4 +6803,1245 @@ var WPTB_TableStateSaveManager = function WPTB_TableStateSaveManager() {
 		}
 	};
 };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/**
+ * Responsive class assignment for frontend operations.
+ *
+ * This file can be used as an UMD.
+ */
+(function assignToGlobal(key, context, factory) {
+	if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
+		module.exports = factory();
+	} else {
+		// eslint-disable-next-line no-param-reassign
+		context[key] = factory();
+	}
+	// eslint-disable-next-line no-restricted-globals
+})('WPTB_ResponsiveFrontend', self || global, function () {
+	/**
+  * Log a message to console.
+  *
+  * @param {string} message message to be logged
+  * @param {string} type console log type (e.g info, warn, error)
+  * @throws An error will be given for invalid type value
+  */
+	function logToConsole(message) {
+		var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
+
+		if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+			if (console[type]) {
+				console[type]('[WPTB]: ' + message);
+			} else {
+				throw new Error('no logging type found with given type value of [' + type + ']');
+			}
+		}
+	}
+
+	/**
+  * Object implementation for cell element operations.
+  * If an empty cellElement parameter is given, a fresh cell element will be created.
+  *
+  * @param {HTMLElement | null} cellElement cell element
+  * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
+  * @constructor
+  */
+	function CellObject(cellElement) {
+		var _this = this;
+
+		var reference = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+		// cell element
+		this.element = cellElement;
+
+		this.referenceObject = reference;
+
+		// variable for deciding part of merged cells to be visible or not
+		this.mergedRenderStatus = true;
+
+		// connected merged cell references
+		this.mergedCells = {
+			row: [],
+			column: []
+		};
+
+		/**
+   * Get merged render status.
+   * @return {boolean} render status
+   */
+		this.getMergedRenderStatus = function () {
+			return _this.mergedRenderStatus;
+		};
+
+		/**
+   * Set merged render status.
+   * @param {boolean} status render status
+   */
+		this.setMergedRenderStatus = function (status) {
+			_this.mergedRenderStatus = status;
+		};
+
+		/**
+   * Add merged cells.
+   *
+   * @param {string} mergeType merge type
+   * @param {CellObject} cellObj cell object instance
+   */
+		this.addToMergedCells = function (mergeType, cellObj) {
+			_this.mergedCells[mergeType].push(cellObj);
+		};
+
+		/**
+   * Determine if current cell is a reference to a main cell.
+   * @return {boolean} a reference or not
+   */
+		this.isReference = function () {
+			return _this.referenceObject !== null;
+		};
+
+		if (this.isReference()) {
+			this.element = cellElement.cloneNode(true);
+		}
+
+		// modifications object
+		// this object will keep track of the modifications that has done to the cell to make sure we can roll them back to their original values
+		this.modifications = {};
+
+		// spans object for cell's original merge values
+		this.spans = {
+			row: 1,
+			col: 1
+		};
+
+		this.remainingSpans = {
+			row: 0,
+			col: 0
+		};
+
+		/**
+   * Cache cell element's original span values.
+   * @private
+   */
+		this.cacheSpanValues = function () {
+			// eslint-disable-next-line array-callback-return
+			Object.keys(_this.spans).map(function (k) {
+				if (Object.prototype.hasOwnProperty.call(_this.spans, k)) {
+					var defaultVal = _this.spans[k];
+
+					_this.spans[k] = _this.element.getAttribute(k + 'Span') || defaultVal;
+				}
+			});
+		};
+
+		this.cacheSpanValues();
+
+		/**
+   * Get original span value of cell object.
+   *
+   * @param {string} spanType span type, available values are row-column
+   * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
+   * @throws An error will be given for invalid span type
+   */
+		this.getSpan = function (spanType) {
+			var fromElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+			var spanVal = fromElement ? _this.getElement().getAttribute(spanType + 'Span') : _this.spans[spanType];
+			if (spanVal) {
+				return spanVal;
+			}
+			throw new Error('no span value found with the given type of [' + spanType + ']');
+		};
+
+		this.getRemainingSpans = function (spanType) {
+			return _this.remainingSpans[spanType];
+		};
+
+		this.setRemainingSpans = function (spanType, value) {
+			_this.remainingSpans[spanType] = value;
+		};
+
+		/**
+   * Get cell element.
+   *
+   * @return {HTMLElement} cell element
+   */
+		this.getElement = function () {
+			return _this.element;
+		};
+
+		/**
+   * Create a cell element.
+   * @private
+   * @return {HTMLTableDataCellElement}
+   */
+		this.createCellElement = function () {
+			return document.createElement('td');
+		};
+
+		// create a new cell element if no cellElement argument is given with constructor function
+		if (!cellElement) {
+			this.element = this.createCellElement();
+		}
+
+		/**
+   * Add attribute to cell element.
+   *
+   * This function have the ability to add/remove attributes from cell element.
+   * All attributes modified with this function will be cached with their before value for an easy reset on demand.
+   *
+   * @param {string} attributeKey attribute name in camelCase format, for sub-keys, use dot object notation
+   * @param {any} attributeValue attribute value
+   * @param {boolean} [append=false] append the value or replace it
+   * @param {string} [glue=,] glue to join attribute value if append option is enabled
+   */
+		this.setAttribute = function (attributeKey, attributeValue) {
+			var append = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+			var glue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : ',';
+
+			var defaultVal = _this.getElement()[attributeKey];
+
+			// if attribute value is a function or an object, it means we pulled a whole declaration instead of only inline attribute values, in that case, use getAttribute to get only inline values related to that attribute
+			if (typeof defaultVal === 'function' || (typeof defaultVal === 'undefined' ? 'undefined' : _typeof(defaultVal)) === 'object') {
+				defaultVal = _this.getElement().getAttribute(attributeKey);
+			}
+
+			// if there is already a default value defined, use that instead
+			if (_this.modifications[attributeKey]) {
+				defaultVal = _this.modifications[attributeKey].default;
+			}
+
+			var currentVal = defaultVal;
+
+			// join attributes
+			if (append) {
+				currentVal += '' + currentVal + glue + attributeValue;
+			} else {
+				currentVal = attributeValue;
+			}
+
+			_this.modifications[attributeKey] = { value: currentVal, default: defaultVal };
+
+			_this.getElement()[attributeKey] = currentVal;
+		};
+
+		/**
+   * Set row/colspan for cell.
+   *
+   * @param {string} spanType span type
+   * @param {number} value value to assign to span
+   * @return {boolean} if any space left to render the element
+   */
+		this.setSpan = function (spanType, value) {
+			// working on main cell
+			if (!_this.isReference()) {
+				var _valueToApply = _this.getSpan(spanType) - value < 0 ? _this.getSpan(spanType) : value;
+
+				_this.setAttribute(spanType + 'Span', _valueToApply);
+
+				// calculate remaining cells amount to merge in this span type
+				_this.setRemainingSpans(spanType, _this.getSpan(spanType) - _valueToApply);
+
+				// set visibility of connected merge group cells to false to not render them since we added necessary span values to main cell which will leak into their position
+				for (var mc = 0; mc < _valueToApply - 1; mc += 1) {
+					if (_this.mergedCells[spanType] && _this.mergedCells[spanType][mc]) {
+						_this.mergedCells[spanType][mc].setMergedRenderStatus(false);
+					}
+				}
+
+				return true;
+			}
+			// working on reference
+
+			if (!_this.getMergedRenderStatus()) {
+				return false;
+			}
+
+			var remainingVal = _this.referenceObject.getRemainingSpans(spanType);
+
+			// no space left to put cell
+			if (remainingVal === 0) {
+				return false;
+			}
+
+			var valueToApply = remainingVal - value < 0 ? remainingVal : value;
+
+			var remainingParentSpans = remainingVal - valueToApply;
+			_this.referenceObject.setRemainingSpans(spanType, remainingParentSpans);
+
+			_this.setAttribute(spanType + 'Span', valueToApply);
+
+			// change render status of remaining connected merge cells
+			if (remainingParentSpans !== 0) {
+				var totalConnectedCells = _this.referenceObject.mergedCells[spanType].length;
+				var startIndex = totalConnectedCells - remainingVal + 1;
+				var endIndex = startIndex + valueToApply - 1;
+
+				for (var _mc = startIndex; _mc < endIndex; _mc += 1) {
+					_this.mergedCells[spanType][_mc].setMergedRenderStatus(false);
+				}
+			}
+
+			return true;
+		};
+
+		/**
+   * Reset a modified attribute to its default value
+   *
+   * @param {string} attributeKey attribute name
+   */
+		this.resetAttribute = function (attributeKey) {
+			if (_this.modifications[attributeKey]) {
+				_this.getElement()[attributeKey] = _this.modifications[attributeKey].default;
+				_this.modifications[attributeKey] = undefined;
+			}
+		};
+
+		/**
+   * Reset all modified attributes of cell element to their default values.
+   */
+		this.resetAllAttributes = function () {
+			// eslint-disable-next-line array-callback-return
+			Object.keys(_this.modifications).map(function (k) {
+				if (Object.prototype.hasOwnProperty.call(_this.modifications, k)) {
+					_this.resetAttribute(k);
+				}
+			});
+		};
+
+		return {
+			getElement: this.getElement,
+			el: this.element,
+			setAttribute: this.setAttribute,
+			resetAllAttributes: this.resetAllAttributes,
+			getSpan: this.getSpan,
+			setSpan: this.setSpan,
+			getRemainingSpans: this.getRemainingSpans,
+			setRemainingSpans: this.setRemainingSpans,
+			isReference: this.isReference,
+			addToMergedCells: this.addToMergedCells,
+			mergedCells: this.mergedCells,
+			setMergedRenderStatus: this.setMergedRenderStatus,
+			getMergedRenderStatus: this.getMergedRenderStatus
+		};
+	}
+
+	CellObject.spanTypes = { row: 'row', column: 'col' };
+
+	/**
+  * Object implementation for table element operations.
+  *
+  * @param {HTMLElement} tableEl table element
+  * @return {object} instance
+  * @constructor
+  */
+	function TableObject(tableEl) {
+		var _this2 = this;
+
+		/**
+   * Table element.
+   * @private
+   * @type {HTMLElement}
+   */
+		this.tableElement = tableEl;
+
+		/**
+   * Parsed table object.
+   *
+   * @private
+   * @type {array}
+   */
+		this.parsedTable = [];
+
+		/**
+   * An array of created table rows elements that are id'd according to their index in array.
+   * @type {[HTMLElement]}
+   */
+		this.rowCache = [];
+
+		/**
+   * Original table elements minus the cells.
+   * @type {{rows: []}}
+   * @private
+   */
+		this.originals = { rows: [] };
+
+		/**
+   * Row colors of original table.
+   * @type {{even: string, header: string, odd: string}}
+   */
+		this.rowColors = {
+			header: null,
+			even: null,
+			odd: null
+		};
+
+		/**
+   * Add cell to parsed array.
+   *
+   * @private
+   * @param {number} r row id
+   * @param {number} c column id
+   * @param {CellObject} cellObject cell object to add to parsed array
+   */
+		this.addToParsed = function (r, c, cellObject) {
+			if (!_this2.parsedTable[r]) {
+				_this2.parsedTable[r] = [];
+			}
+
+			_this2.parsedTable[r][c] = cellObject;
+		};
+
+		/**
+   * Assign table cells into row and column numbers.
+   * @private
+   */
+		this.parseTable = function () {
+			var rows = Array.from(_this2.tableElement.querySelectorAll('tr'));
+
+			// eslint-disable-next-line array-callback-return
+			rows.map(function (r, ri) {
+				// cache original rows for future use
+				_this2.originals.rows.push(r);
+
+				var cells = Array.from(r.querySelectorAll('td'));
+
+				// eslint-disable-next-line array-callback-return
+				cells.map(function (c, ci) {
+					var currentCellObject = new CellObject(c);
+					_this2.addToParsed(ri, ci, currentCellObject);
+
+					var spanRow = currentCellObject.getSpan(CellObject.spanTypes.row);
+					var spanCol = currentCellObject.getSpan(CellObject.spanTypes.column);
+
+					if (spanRow > 1) {
+						for (var sr = 1; sr < spanRow; sr += 1) {
+							var referenceCell = new CellObject(c, currentCellObject);
+							currentCellObject.addToMergedCells('row', referenceCell);
+							_this2.addToParsed(ri + sr, ci, referenceCell);
+						}
+					}
+					if (spanCol > 1) {
+						for (var sc = 1; sc < spanCol; sc += 1) {
+							var _referenceCell = new CellObject(c, currentCellObject);
+							currentCellObject.addToMergedCells('column', _referenceCell);
+							_this2.addToParsed(ri, ci + sc, _referenceCell);
+						}
+					}
+				});
+			});
+			_this2.parseRowColors(rows);
+		};
+
+		/**
+   * Parse row colors of original table for futures uses.
+   * @param {[HTMLElement]} rows html row elements
+   * @private
+   */
+		this.parseRowColors = function (rows) {
+			if (!rows || rows.length <= 0) {
+				logToConsole('no rows are found to parse their colors', 'error');
+			}
+
+			// get row colors if they are defined as datasets on table element
+			var headerDatasetColor = _this2.tableElement.dataset.wptbHeaderBackgroundColor;
+			var evenRowDatasetColor = _this2.tableElement.dataset.wptbEvenRowBackgroundColor;
+			var oddRowDatasetColor = _this2.tableElement.dataset.wptbOddRowBackgroundColor;
+
+			// header row color
+			_this2.rowColors.header =
+			// eslint-disable-next-line no-nested-ternary
+			headerDatasetColor !== undefined ? headerDatasetColor : rows[0].style.backgroundColor === '' ? null : rows[0].style.backgroundColor;
+
+			// calculate needed number of rows to get even and odd row background colors
+			// eslint-disable-next-line no-nested-ternary
+			var rowsNeeded = rows.length / 3 >= 1 ? 0 : rows.length === 1 ? 2 : (rows.length - 1) % 2;
+
+			// create additional rows and add them to table to get their row background colors since table row count may be lower to get even/odd rows
+			for (var rn = 0; rn < rowsNeeded; rn += 1) {
+				var tempRow = document.createElement('tr');
+
+				_this2.tableElement.querySelector('tbody').appendChild(tempRow);
+				rows.push(tempRow);
+			}
+
+			// even & odd row colors
+			// dataset colors have priority over colors gathered from computed row styles
+			_this2.rowColors.even = evenRowDatasetColor || getComputedStyle(rows[1]).backgroundColor;
+			_this2.rowColors.odd = evenRowDatasetColor ? oddRowDatasetColor : getComputedStyle(rows[2]).backgroundColor;
+
+			// remove created rows from DOM
+			for (var r = 0; r < rowsNeeded; r += 1) {
+				rows[rows.length - (r + 1)].remove();
+			}
+		};
+
+		/**
+   * Add a row to the table.
+   * @param {array} classList an array of class names to be added to row
+   * @param {boolean} fromOriginals use rows from original table instead of creating a new one
+   * @param {number} originalIndex original row index
+   */
+		this.addRow = function (classList) {
+			var fromOriginals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+			var originalIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+			if (!Array.isArray(classList)) {
+				// eslint-disable-next-line no-param-reassign
+				classList = [classList];
+			}
+
+			var tableBody = _this2.tableElement.querySelector('tbody');
+			var tempRow = void 0;
+
+			if (!fromOriginals) {
+				var range = document.createRange();
+				range.setStart(tableBody, 0);
+				// eslint-disable-next-line prefer-destructuring
+				tempRow = range.createContextualFragment('<tr class="' + classList.join(' ') + '"></tr>').childNodes[0];
+			} else {
+				tempRow = _this2.originals.rows[originalIndex];
+			}
+
+			// add row to table body
+			tableBody.appendChild(tempRow);
+
+			// cache row for future use
+			_this2.rowCache.push(tempRow);
+
+			return { el: tempRow, id: _this2.rowCache.length - 1 };
+		};
+
+		/**
+   * Clear the contents of table element.
+   */
+		this.clearTable = function () {
+			// clear row cache
+			_this2.rowCache = [];
+
+			// clear children of `tbody` element
+			_this2.tableElement.querySelector('tbody').innerHTML = '';
+		};
+
+		/**
+   * Get row element from cache.
+   *
+   * @param {number} id row id
+   * @return {null|HTMLElement} row element if present or null if not
+   */
+		this.getRow = function (id) {
+			if (_this2.rowCache[id]) {
+				return _this2.rowCache[id];
+			}
+
+			// eslint-disable-next-line no-console
+			logToConsole('no row with id [' + id + '] found in the cache.', 'warn');
+			return null;
+		};
+
+		/**
+   * Get maximum number of rows available at table.
+   *
+   * @return {number} maximum amount of rows
+   */
+		this.maxRows = function () {
+			return _this2.parsedTable.length;
+		};
+
+		/**
+   * Get the number of maximum available column count in the table.
+   *
+   * @return {number} maximum available column count
+   */
+		this.maxColumns = function () {
+			return _this2.parsedTable.reduce(function (p, c) {
+				if (c.length > p) {
+					// eslint-disable-next-line no-param-reassign
+					p = c.length;
+				}
+
+				return p;
+			}, 0);
+		};
+
+		/**
+   * Get the table cell at specified row-column location.
+   *
+   * As in arrays, row and column numbering starts from number 0.
+   *
+   * @param {number} r row number
+   * @param {number} c column number
+   * @param {boolean} returnObject return object instead of HTMLElement
+   * @return {HTMLElement | null | CellObject} element if address is possible, null if not
+   */
+		this.getCell = function (r, c) {
+			var returnObject = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+			try {
+				if (_this2.parsedTable[r][c]) {
+					if (returnObject) {
+						return _this2.parsedTable[r][c];
+					}
+					return _this2.parsedTable[r][c].el;
+				}
+			} catch (e) {
+				// eslint-disable-next-line no-console
+				logToConsole('no cell found at the given address of [' + r + '-' + c + ']', 'warn');
+				return null;
+			}
+			// eslint-disable-next-line no-console
+			logToConsole('no cell found at the given address of [' + r + '-' + c + ']', 'warn');
+			return null;
+		};
+
+		/**
+   * Get cells at a given row.
+   *
+   * @param {number} rowId row id
+   * @param {boolean} returnObj return an array of CellObject instead
+   * @return {array} cells in row
+   */
+		this.getCellsAtRow = function (rowId) {
+			var returnObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+			var cells = [];
+			for (var c = 0; c < _this2.maxColumns(); c += 1) {
+				var tempCell = _this2.getCell(rowId, c, returnObj);
+				if (tempCell) {
+					cells.push(tempCell);
+				}
+			}
+			return cells;
+		};
+
+		/**
+   * Append the cell with given ids to a cached row
+   *
+   * @param {number} cellRowId cell row id
+   * @param {number} cellColumnId cell column id
+   * @param {number} rowId id of row in row cache
+   */
+		this.appendToRow = function (cellRowId, cellColumnId, rowId) {
+			var cachedRow = _this2.getRow(rowId);
+			var cell = _this2.getCell(cellRowId, cellColumnId, true);
+
+			if (cell && cachedRow) {
+				cachedRow.appendChild(cell.getElement());
+			}
+			return cell;
+		};
+
+		/**
+   * Append html element to a cached row.
+   *
+   * @param {HTMLElement} el element
+   * @param {number} rowId if of row in row cache
+   */
+		this.appendElementToRow = function (el, rowId) {
+			var cachedRow = _this2.getRow(rowId);
+
+			if (el && cachedRow) {
+				cachedRow.appendChild(el);
+			}
+		};
+
+		/**
+   * Add cell object to a cached row.
+   *
+   * @param {CellObject} cellObj cell object
+   * @param {number} rowId row id
+   */
+		this.appendObjectToRow = function (cellObj, rowId) {
+			var cachedRow = _this2.getRow(rowId);
+			if (cellObj && cachedRow) {
+				cachedRow.appendChild(cellObj.getElement());
+			}
+		};
+
+		this.parseTable();
+
+		return {
+			maxRows: this.maxRows,
+			maxColumns: this.maxColumns,
+			addRow: this.addRow,
+			clearTable: this.clearTable,
+			getCell: this.getCell,
+			appendToRow: this.appendToRow,
+			appendElementToRow: this.appendElementToRow,
+			appendObjectToRow: this.appendObjectToRow,
+			getCellsAtRow: this.getCellsAtRow,
+			el: this.tableElement,
+			rowColors: this.rowColors
+		};
+	}
+
+	// default options for responsive class
+	var responsiveClassDefaultOptions = {
+		query: '.wptb-preview-table',
+		defaultClasses: ['wptb-plugin-responsive-base'],
+		bindToResize: false
+	};
+
+	/**
+  * Class for handling operations related to responsive functionalities of tables.
+  *
+  * @constructor
+  * @param {object} options options object
+  */
+	function ResponsiveFront() {
+		var _this3 = this;
+
+		var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+		// merge default options with user sent options
+		//this.options = { ...responsiveClassDefaultOptions, ...options };
+		this.options = Object.assign({}, responsiveClassDefaultOptions, options);
+
+		this.elements = Array.from(document.querySelectorAll(this.options.query));
+
+		this.elementObjects = this.elements.map(function (e) {
+			return {
+				el: e,
+				tableObject: new TableObject(e)
+			};
+		});
+
+		/**
+   * Bind rebuilding of tables to window resize event.
+   */
+		this.bindRebuildToResize = function () {
+			window.addEventListener('resize', function () {
+				_this3.rebuildTables();
+			});
+		};
+
+		/**
+   * Get responsive directives of table element.
+   *
+   * @private
+   * @param {HTMLElement} el table element
+   * @return {object|null} JSON representation of the directive element, if not available, null will be returned
+   */
+		this.getDirective = function (el) {
+			var directiveString = el.dataset.wptbResponsiveDirectives;
+
+			if (!directiveString) {
+				return null;
+			}
+
+			return JSON.parse(atob(directiveString));
+		};
+
+		/**
+   * Add default classes to rebuilt tables.
+   *
+   * This classes are added to lay out a base style for the responsive table.
+   *
+   * @param {HTMLElement} el table element
+   */
+		this.addDefaultClasses = function (el) {
+			el.classList.add(_this3.options.defaultClasses);
+		};
+
+		/**
+   * Remove default classes from target table.
+   * @param {HTMLElement} el table element
+   */
+		this.removeDefaultClasses = function (el) {
+			el.classList.remove(_this3.options.defaultClasses);
+		};
+
+		/**
+   * Rebuild table in auto mode.
+   *
+   * Main characteristic of auto mode is table is rebuilt by stacking rows/columns on top of each other, leaving minimal effort from user to create a responsive table at breakpoints.
+   *
+   * @param {HTMLElement} tableEl table element
+   * @param {string} sizeRange range id for current screen size
+   * @param {object} autoOption mode options
+   * @param {TableObject} tableObj table object
+   */
+		this.autoBuild = function (tableEl, sizeRange, autoOption, tableObj) {
+			// base options
+			var direction = autoOption.cellStackDirection[sizeRange];
+			// eslint-disable-next-line prefer-destructuring
+			var topRowAsHeader = autoOption.topRowAsHeader[sizeRange];
+			var cellsPerRow = autoOption.cellsPerRow[sizeRange];
+
+			// new options
+			var staticTopRow = autoOption.staticTopRow ? autoOption.staticTopRow[sizeRange] : false;
+
+			tableObj.clearTable();
+
+			if (sizeRange === 'desktop') {
+				_this3.buildDefault(tableObj);
+				_this3.removeDefaultClasses(tableEl);
+			} else {
+				_this3.autoDirectionBuild(tableObj, direction, topRowAsHeader, staticTopRow, cellsPerRow);
+				_this3.addDefaultClasses(tableEl);
+			}
+		};
+
+		/**
+   * Rebuild table with a direction to read cells.
+   *
+   * Direction in question in here is either by row or column:
+   * * row: cells will be read row by row, in each row starting from the first column
+   * * column: cells will be read column by column, in each column starting from the first row of the table
+   *
+   * @param {TableObject} tableObj table object
+   * @param {string} direction direction to read cells, possible options [row, column]
+   * @param {boolean} topRowAsHeader use top row as header
+   * @param {boolean} staticTopRow use top row as static
+   * @param {number} cellsPerRow cells per row
+   */
+		this.autoDirectionBuild = function (tableObj, direction) {
+			var topRowAsHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+			var staticTopRow = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+			var cellsPerRow = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+
+			var rows = tableObj.maxRows();
+			var columns = tableObj.maxColumns();
+			var isRowStacked = direction === 'row';
+
+			// build table with top row as header
+			if (topRowAsHeader) {
+				_this3.headerBuild(tableObj, direction, cellsPerRow);
+			} else {
+				// cell stack direction is selected as row
+				// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
+				// eslint-disable-next-line no-lonely-if
+				if (isRowStacked) {
+					(function () {
+						var allCellsByRow = [];
+						var rowStartIndex = 0;
+
+						// static top row option is enabled
+						if (staticTopRow) {
+							var topCells = tableObj.getCellsAtRow(0, true);
+
+							var baseCells = topCells.filter(function (c) {
+								return !c.isReference();
+							});
+
+							// eslint-disable-next-line array-callback-return
+							baseCells.map(function (b) {
+								rowStartIndex += 1;
+								var rowObj = tableObj.addRow('wptb-row');
+								rowObj.el.style.backgroundColor = tableObj.rowColors.header;
+
+								tableObj.appendObjectToRow(b, rowObj.id);
+
+								b.setAttribute('colSpan', cellsPerRow);
+							});
+						}
+
+						// get cells by reading row by row
+						for (var r = rowStartIndex; r < rows; r += 1) {
+							// eslint-disable-next-line no-loop-func
+							tableObj.getCellsAtRow(r, true).forEach(function (c) {
+								return allCellsByRow.push(c);
+							});
+						}
+
+						var cellCount = allCellsByRow.length;
+
+						for (var c = 0, _r = 0; c < cellCount; c += cellsPerRow, _r += 1) {
+							// const rowId = tableObj.addRow('wptb-row').id;
+							var rowObj = tableObj.addRow('wptb-row');
+
+							// preserve original row colors for even and odd rows
+							rowObj.el.style.backgroundColor = tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
+
+							// place cells by 'cells by row' option value
+							for (var pR = 0; pR < cellsPerRow; pR += 1) {
+								var tempCell = allCellsByRow[c + pR];
+
+								if (tempCell) {
+									tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
+
+									tempCell.resetAllAttributes();
+									tempCell.setAttribute('style', 'width: 100% !important', true, ';');
+									tempCell.setAttribute('colSpan', 1);
+									tempCell.setAttribute('rowSpan', 1);
+								}
+							}
+						}
+					})();
+				}
+				// cell stack direction is selected as column
+				else {
+						var allCellsByCol = [];
+						var rowStartIndex = 0;
+
+						// static top row option is enabled
+						if (staticTopRow) {
+							var topCells = tableObj.getCellsAtRow(0, true);
+
+							var baseCells = topCells.filter(function (t) {
+								return !t.isReference();
+							});
+
+							// eslint-disable-next-line array-callback-return
+							baseCells.map(function (b) {
+								rowStartIndex += 1;
+								var rowObj = tableObj.addRow('wptb-row');
+								rowObj.el.style.backgroundColor = tableObj.rowColors.header;
+
+								tableObj.appendObjectToRow(b, rowObj.id);
+
+								b.setAttribute('colSpan', cellsPerRow);
+							});
+						}
+
+						// read all cells column by column
+						for (var c = 0; c < columns; c += 1) {
+							for (var r = rowStartIndex; r < rows; r += 1) {
+								var tCell = tableObj.getCell(r, c, true);
+								if (tCell) {
+									allCellsByCol.push(tCell);
+								}
+							}
+						}
+
+						var cellCount = allCellsByCol.length;
+
+						for (var _c = 0, _r2 = 0; _c < cellCount; _c += cellsPerRow, _r2 += 1) {
+							var rowObj = tableObj.addRow('wptb-row');
+
+							// preserve original row colors for even and odd rows
+							rowObj.el.style.backgroundColor = tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
+
+							for (var cR = 0; cR < cellsPerRow; cR += 1) {
+								var tempCell = allCellsByCol[_c + cR];
+
+								if (tempCell) {
+									tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
+
+									tempCell.resetAllAttributes();
+									tempCell.setAttribute('style', 'width: 100% !important', true, ';');
+									tempCell.setAttribute('colSpan', 1);
+									tempCell.setAttribute('rowSpan', 1);
+								}
+							}
+						}
+					}
+			}
+		};
+
+		/**
+   * Build table with top row assigned as header.
+   *
+   * @param {TableObject} tableObj table object
+   * @param {string} direction cell stack direction, possible options are [row, column]
+   * @param {number} itemsPerHeader items bound to each header element
+   */
+		this.headerBuild = function (tableObj, direction) {
+			var itemsPerHeader = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+			// cells at header
+			// applying header row color to cells
+			var headerCells = tableObj.getCellsAtRow(0, true).map(function (h) {
+				h.setAttribute('style', 'background-color: ' + tableObj.rowColors.header, true, ';');
+				return h;
+			});
+
+			var stackedAsColumn = direction === 'column';
+
+			// row count
+			var rows = tableObj.maxRows();
+			// column count
+			var columns = tableObj.maxColumns();
+
+			var rowBorderStyle = '3px solid gray';
+
+			// stack direction is column
+			if (stackedAsColumn) {
+				/**
+     * Add header cells as new row to table.
+     * @param {boolean} addBorder add top border to header row
+     */
+				// eslint-disable-next-line no-inner-declarations
+				var addHeaderCells = function addHeaderCells() {
+					var addBorder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+					var rowObj = tableObj.addRow('wptb-row');
+
+					if (addBorder) {
+						rowObj.el.style.borderTop = rowBorderStyle;
+					}
+
+					// eslint-disable-next-line array-callback-return
+					headerCells.map(function (h) {
+						// clone header cell to reuse it for multiple rows
+						tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
+					});
+				};
+
+				// count of header rows that will be created
+
+
+				var headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+				// row index on original table
+				var currentOriginalRow = 1;
+				for (var r = 0; r < headerCount; r += 1) {
+					// create header row and add to table
+					addHeaderCells(r > 0);
+					for (var c = 0; c < itemsPerHeader; c += 1) {
+						// break iteration when current row surpasses original row amount
+						if (currentOriginalRow >= rows) {
+							break;
+						}
+						var rowObj = tableObj.addRow('wptb-row');
+
+						// apply row color relative to current header row
+						rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
+						for (var cc = 0; cc < columns; cc += 1) {
+							var currentCell = tableObj.getCell(currentOriginalRow, cc, true);
+
+							if (currentCell) {
+								currentCell.resetAllAttributes();
+
+								// status to decide whether render cell or not
+								var cellAddStatus = true;
+
+								var rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
+								var colSpan = currentCell.getSpan(CellObject.spanTypes.column);
+
+								if (rowSpan > 1) {
+									// items remaining in current header
+									var remainingItems = itemsPerHeader - c;
+
+									// calculate whether to apply full rowspan value or remaining item value depending on the current position of the cell
+									var currentRowSpan = Math.min(rowSpan, remainingItems);
+
+									cellAddStatus = currentCell.setSpan(CellObject.spanTypes.row, currentRowSpan);
+									// reset render status of cell to visible for future use
+									currentCell.setMergedRenderStatus(true);
+								}
+
+								if (cellAddStatus) {
+									tableObj.appendObjectToRow(currentCell, rowObj.id);
+								}
+							}
+						}
+						currentOriginalRow += 1;
+					}
+				}
+			} else {
+				// stack direction is row
+				// number of headers that will be created
+				var _headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+
+				var _currentOriginalRow = 1;
+
+				for (var hc = 0; hc < _headerCount; hc += 1) {
+					for (var _c2 = 0; _c2 < columns; _c2 += 1) {
+						var _rowObj = tableObj.addRow('wptb-row');
+
+						// clear out row color to override row color with cell colors
+						_rowObj.el.style.backgroundColor = 'none';
+
+						if (hc > 0 && _c2 === 0) {
+							_rowObj.el.style.borderTop = rowBorderStyle;
+						}
+
+						var clonedHeaderCell = headerCells[_c2].el.cloneNode(true);
+
+						// apply header row color to header cell
+						clonedHeaderCell.style.backgroundColor = tableObj.rowColors.header + ' !important';
+
+						tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
+
+						for (var _r3 = 0; _r3 < itemsPerHeader; _r3 += 1) {
+							if (_currentOriginalRow + _r3 >= rows) {
+								break;
+							}
+
+							// const currentCell = tableObj.appendToRow(currentOriginalRow + r, c, rowObj.id);
+							var _currentCell = tableObj.getCell(_currentOriginalRow + _r3, _c2, true);
+
+							if (_currentCell) {
+								_currentCell.resetAllAttributes();
+
+								var _cellAddStatus = true;
+
+								var _rowSpan = _currentCell.getSpan(CellObject.spanTypes.row);
+								var _colSpan = _currentCell.getSpan(CellObject.spanTypes.column);
+
+								if (_rowSpan > 1) {
+									var _remainingItems = itemsPerHeader - _r3;
+
+									var _currentRowSpan = Math.min(_rowSpan, _remainingItems);
+
+									_cellAddStatus = _currentCell.setSpan(CellObject.spanTypes.row, _currentRowSpan);
+
+									var rS = _currentCell.el.getAttribute('rowSpan');
+									var cS = _currentCell.el.getAttribute('colSpan');
+
+									// switch span values
+									_currentCell.setAttribute('rowSpan', cS);
+									_currentCell.setAttribute('colSpan', rS);
+
+									_currentCell.setMergedRenderStatus(true);
+								}
+								if (_cellAddStatus) {
+									// color index for the cell, this will be used to reflect table row colors to cells. currently, grouping up the same items with the same color code
+									var colorIndex = (_currentOriginalRow + _r3 + hc) % 2 === 0 ? 'even' : 'odd';
+
+									// for better visuals and distinction for tables with 1 item per header, using this calculation for color index
+									if (itemsPerHeader === 1) {
+										colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
+									}
+
+									_currentCell.setAttribute('style', 'background-color: ' + tableObj.rowColors[colorIndex], true, ';');
+									tableObj.appendObjectToRow(_currentCell, _rowObj.id);
+								}
+							}
+						}
+					}
+					_currentOriginalRow += itemsPerHeader;
+				}
+			}
+		};
+
+		/**
+   * Build table in its default form.
+   *
+   * Default form of table is the layout it has in desktop breakpoint.
+   *
+   * @param {TableObject} tableObj table object
+   */
+		this.buildDefault = function (tableObj) {
+			var rows = tableObj.maxRows();
+			var columns = tableObj.maxColumns();
+
+			for (var r = 0; r < rows; r += 1) {
+				var rowId = tableObj.addRow('', true, r).id;
+				for (var c = 0; c < columns; c += 1) {
+					var tempCell = tableObj.getCell(r, c, true);
+
+					// only render cell if a valid cell is found and it is not a reference
+					if (tempCell && !tempCell.isReference()) {
+						// reset all modified attributes of cell to their default values
+						tempCell.resetAllAttributes();
+						tableObj.appendElementToRow(tempCell.getElement(), rowId);
+					}
+				}
+			}
+		};
+
+		/**
+   * Calculate range id for given size value.
+   *
+   * @param {number} val value
+   * @param {object} stops an object containing stop ids as keys and respective sizes as values
+   * @return {string} range id
+   */
+		this.calculateRangeId = function (val, stops) {
+			// eslint-disable-next-line prefer-destructuring
+			var sortedStops = Object.keys(stops).sort(function (a, b) {
+				return stops[a].width - stops[b].width;
+			});
+
+			var rangeId = sortedStops[0];
+
+			// eslint-disable-next-line array-callback-return
+			sortedStops.map(function (s) {
+				if (val >= stops[s].width) {
+					rangeId = s;
+				}
+			});
+
+			return rangeId;
+		};
+
+		/**
+   * Rebuild table according to its responsive directives.
+   *
+   * @private
+   * @param {HTMLElement} el table element
+   * @param {number} size size in pixels
+   * @param {TableObject} tableObj table object instance
+   * @throws An error will be given for invalid mode name
+   */
+		this.rebuildTable = function (el, size, tableObj) {
+			var directive = _this3.getDirective(el);
+
+			if (directive) {
+				if (!directive.responsiveEnabled) {
+					// this.buildDefault(tableObj);
+					return;
+				}
+
+				var mode = directive.responsiveMode;
+
+				// main build logic for different responsive modes should be named in the format of `{modeName}Build` to automatically call the associated function from here
+				var buildCallable = _this3[mode + 'Build'];
+
+				if (!size) {
+					// eslint-disable-next-line no-param-reassign
+					size = el.getBoundingClientRect().width;
+				}
+
+				var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
+
+				if (buildCallable) {
+					var modeOptions = directive.modeOptions[mode];
+					buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
+
+					WPTB_RecalculateIndexes(el);
+					var tabEvent = new CustomEvent('table:rebuilt', { detail: { sizeRangeId: sizeRangeId, topRowAsHeader: directive.modeOptions[mode]['topRowAsHeader'] } });
+					el.dispatchEvent(tabEvent);
+				} else {
+					throw new Error('No build mode named as [' + mode + '] found.');
+				}
+			}
+		};
+
+		/**
+   * Rebuild tables with the given screen size.
+   *
+   * @param {number} size screen size
+   */
+		this.rebuildTables = function (size) {
+			// eslint-disable-next-line array-callback-return
+			_this3.elementObjects.map(function (o) {
+				var innerSize = size;
+				if (!size) {
+					// eslint-disable-next-line no-param-reassign
+					innerSize = window.innerWidth;
+
+					var directives = _this3.getDirective(o.el);
+					// calculate size according to relative width directive
+					if (directives && directives.relativeWidth) {
+						switch (directives.relativeWidth) {
+							case 'window':
+								// eslint-disable-next-line no-param-reassign
+								innerSize = window.innerWidth;
+								break;
+							case 'container':
+								// get the size of the container table is in
+								// eslint-disable-next-line no-param-reassign
+								innerSize = o.el.parentNode.parentNode.parentNode.clientWidth;
+								break;
+							default:
+								// eslint-disable-next-line no-param-reassign
+								innerSize = window.innerWidth;
+								break;
+						}
+					}
+				}
+				_this3.rebuildTable(o.el, innerSize, o.tableObject);
+			});
+		};
+
+		if (this.options.bindToResize) {
+			this.bindRebuildToResize();
+		}
+
+		return { rebuildTables: this.rebuildTables, getDirective: this.getDirective, calculateRangeId: this.calculateRangeId };
+	}
+
+	return ResponsiveFront;
+});
 //# sourceMappingURL=admin.js.map

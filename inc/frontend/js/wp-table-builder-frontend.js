@@ -174,14 +174,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	this.table = table;
+	var thisObject = this;
 	this.topRow = table.rows.length ? table.rows[0] : null;
+	this.itemsPerHeader = 0;
 
 	/**
   * sets the table to sort mode
-  * @param type
-  * @param active
+  * @param {string} type
+  * @param {boolean} active
+  * @param {number} number
   */
-	this.sortModeSwitcher = function (type, active) {
+	this.sortModeSwitcher = function (type, active, number) {
 		if (type === 'vertical') {
 			this.table.removeEventListener('click', this.sortableTableVerticalStart, false);
 
@@ -212,27 +215,124 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * checks whether the table should be in the sort state
   * and connects the necessary handlers
+  *
+  * @param {object} responsiveFront
   */
-	this.sortableTableInitialization = function () {
+	this.sortableTableInitialization = function (responsiveFront) {
+		var type = '';
+		var typeFirst = void 0;
+		var typeSecond = void 0;
 		if (this.table.dataset.wptbSortableTableVertical && this.table.dataset.wptbSortableTableVertical === '1') {
-			this.sortModeSwitcher('vertical', true);
+			typeFirst = 'vertical';
+			typeSecond = 'horizontal';
 		} else if (this.table.dataset.wptbSortableTableHorizontal && this.table.dataset.wptbSortableTableHorizontal === '1') {
-			this.sortModeSwitcher('horizontal', true);
+			typeFirst = 'horizontal';
+			typeSecond = 'vertical';
 		}
+
+		var switchMode = void 0;
+		if (responsiveFront && responsiveFront.getDirective(this.table)) {
+			switchMode = function switchMode() {
+				var size = void 0;
+				var directives = responsiveFront.getDirective(this.table);
+				if (directives && directives.relativeWidth) {
+					switch (directives.relativeWidth) {
+						case 'window':
+							// eslint-disable-next-line no-param-reassign
+							size = window.innerWidth;
+							break;
+						case 'container':
+							// get the size of the container table is in
+							// eslint-disable-next-line no-param-reassign
+							size = o.el.parentNode.parentNode.parentNode.clientWidth;
+							break;
+						default:
+							// eslint-disable-next-line no-param-reassign
+							size = window.innerWidth;
+							break;
+					}
+				} else {
+					size = this.table.getBoundingClientRect().width;
+				}
+				var sizeRangeId = responsiveFront.calculateRangeId(size, directives.breakpoints);
+				type = typeFirst;
+				if (sizeRangeId !== 'desktop') {
+					if (directives.hasOwnProperty('modeOptions')) {
+						var mode = directives.responsiveMode;
+						var modeOptions = directives.modeOptions[mode];
+
+						if (modeOptions.hasOwnProperty('topRowAsHeader') && modeOptions.topRowAsHeader.hasOwnProperty(sizeRangeId) && modeOptions.topRowAsHeader[sizeRangeId]) {
+							if (modeOptions.hasOwnProperty('cellStackDirection') && modeOptions.cellStackDirection.hasOwnProperty(sizeRangeId)) {
+								if (modeOptions.cellStackDirection[sizeRangeId] === 'row') {
+									type = typeSecond;
+								} else if (modeOptions.cellStackDirection[sizeRangeId] === 'column') {
+									if (modeOptions.hasOwnProperty('cellsPerRow')) {
+										this.itemsPerHeader = modeOptions.cellsPerRow[sizeRangeId];
+									}
+								}
+							}
+						}
+					}
+				}
+				this.sortModeSwitcher(type, true);
+			};
+		} else {
+			switchMode = function switchMode() {
+				var type = typeFirst;
+				if (this.table.classList.contains('wptb-mobile-view-active')) {
+					if (this.table.classList.contains('wptb-table-preview-head')) {
+						type = typeSecond;
+					}
+					var _table = this.table;
+					this.table = _table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
+					this.sortModeSwitcher(type, true);
+					this.table = _table;
+					return;
+				}
+
+				this.sortModeSwitcher(type, true);
+			};
+		}
+
+		switchMode.call(thisObject);
+		this.table.addEventListener('table:rebuilt', function (e) {
+			switchMode.call(thisObject);
+		}, false);
 	};
 
+	/**
+  * adds and deletes mousemove and mouseleave events handlers when happens switch sorting mode
+  * and also can add necessary attributes
+  *
+  * @param {string} type
+  * @param {boolean} active
+  */
 	this.sortingCellMouseMoveSwitcher = function (type, active) {
 		if (type === 'vertical') {
-			var tds = this.topRow ? this.topRow.querySelectorAll('td') : null;
-			tds = [].concat(_toConsumableArray(tds));
-			tds.map(function (td) {
-				td.removeEventListener('mousemove', sortingCellMouseMoveVertical, false);
-				td.removeEventListener('mouseleave', tdMouseLeave, false);
-				if (active) {
-					td.addEventListener('mousemove', sortingCellMouseMoveVertical, false);
-					td.addEventListener('mouseleave', tdMouseLeave, false);
+			var rowsLength = this.table.rows.length;
+			var dataYIndexStart = 0;
+			while (rowsLength > 0) {
+				var tds = this.table.querySelectorAll('[data-y-index="' + dataYIndexStart + '"]');
+				tds = [].concat(_toConsumableArray(tds));
+				tds.map(function (td) {
+					td.removeEventListener('mousemove', sortingCellMouseMoveVertical, false);
+					td.removeEventListener('mouseleave', tdMouseLeave, false);
+					if (active) {
+						td.addEventListener('mousemove', sortingCellMouseMoveVertical, false);
+						td.addEventListener('mouseleave', tdMouseLeave, false);
+						if (!td.dataset.sortedVertical) {
+							td.dataset.sortedVertical = 'ask';
+						}
+					}
+				});
+
+				if (this.itemsPerHeader) {
+					rowsLength -= this.itemsPerHeader + 1;
+					dataYIndexStart += this.itemsPerHeader + 1;
+				} else {
+					rowsLength = 0;
 				}
-			});
+			}
 		} else if (type === 'horizontal') {
 			var _tds = this.table.querySelectorAll('[data-x-index="0"]');
 			_tds = [].concat(_toConsumableArray(_tds));
@@ -247,6 +347,13 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 		}
 	};
 
+	/**
+  * adds a sortable-hover class for a cell when the cursor is over the sort icon (arrow)
+  *
+  * @param {event} e
+  * @param {string} type
+  * @param {HTMLElement} element td
+  */
 	function sortingCellMouseMov(e, type, element) {
 		if (e.target.tagName === 'TD') {
 			var x = e.offsetX == undefined ? e.layerX : e.offsetX;
@@ -265,14 +372,27 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 		}
 	}
 
+	/**
+  * calls sortingCellMouseMov with the type parameter set to vertical
+  *
+  * @param {event} e
+  */
 	function sortingCellMouseMoveVertical(e) {
 		sortingCellMouseMov(e, 'vertical', this);
 	}
 
+	/**
+  * calls sortingCellMouseMov with the type parameter set to horizontal
+  *
+  * @param {event} e
+  */
 	function sortingCellMouseMoveHorizontal(e) {
 		sortingCellMouseMov(e, 'horizontal', this);
 	}
 
+	/**
+  * remove sortable-hover class from cell when cursor leave cell
+  */
 	function tdMouseLeave() {
 		this.classList.remove('sortable-hover');
 	}
@@ -280,17 +400,43 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * function for sorting the table vertically by the numeric content of cells
   *
-  * @param e
-  * @param table
+  * @param {event} e
+  * @param {HTMLElement} table
+  * @param {string} type
   */
 	function sortableTable(e, table, type) {
-		if (e.target && e.target.tagName === 'TD' && !table.classList.contains('wptb-plugin-responsive-base') && !table.parentNode.classList.contains('wptb-preview-table-manage-cells')) {
+		if (e.target && e.target.tagName === 'TD' && !table.parentNode.classList.contains('wptb-preview-table-manage-cells')) {
 			var tableWasSorted = false;
-			if (type === 'vertical' && e.target.dataset.yIndex === '0') {
+			if (type === 'vertical' && e.target.dataset.hasOwnProperty('sortedVertical')) {
+
+				/**
+     * if table have enabled param topRowAsHeader and sellsStackDirection is column
+     * the top and bottom rows that will not be sorted are temporarily removed from the table
+     */
+				var tableRowsBefore = [];
+				var tableRowsAfter = [];
+				if (this.itemsPerHeader && this.itemsPerHeader < table.rows.length) {
+					WPTB_RecalculateIndexes(table);
+					var tableRowsArr = [].concat(_toConsumableArray(table.rows));
+					var tableLastCont = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					for (var i = 0; i < tableRowsArr.length; i++) {
+						if (i < e.target.dataset.yIndex) {
+							tableRowsBefore.push(tableRowsArr[i]);
+							tableLastCont.removeChild(tableRowsArr[i]);
+						} else if (i > e.target.dataset.yIndex + this.itemsPerHeader) {
+							tableRowsAfter.push(tableRowsArr[i]);
+							tableLastCont.removeChild(tableRowsArr[i]);
+						}
+					}
+					WPTB_RecalculateIndexes(table);
+				}
+
 				var tds = table.querySelectorAll('[data-x-index="' + e.target.dataset.xIndex + '"]');
 				tds = [].concat(_toConsumableArray(tds));
 
-				// preparing table for sorting
+				/**
+     * preparing table for sorting
+     */
 				var rowspan = void 0;
 				var rowNum = void 0;
 				tds.map(function (td) {
@@ -306,17 +452,18 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				var rowsValuesArr = [];
 				var rowsTdFirst = void 0;
 				var tdYCoordsRowSpanPrevious = 0;
-				for (var i = 0; i < tds.length; i++) {
-					var tdsChanged = changeSortingTdsCollection(e, table, tds, i, tdYCoordsRowSpanPrevious, 'vertical');
+				var tableRowsPushed = [];
+				for (var _i = 0; _i < tds.length; _i++) {
+					var tdsChanged = changeSortingTdsCollection(e, table, tds, _i, tdYCoordsRowSpanPrevious, 'vertical');
 					if (tdsChanged && tdsChanged.hasOwnProperty('i')) {
 						tds = tdsChanged.tds;
-						i = tdsChanged.i;
+						_i = tdsChanged.i;
 						continue;
 					} else if (tdsChanged) {
 						tds = tdsChanged.tds;
 					}
 
-					var td = tds[i];
+					var td = tds[_i];
 
 					var tdRowspan = parseInt(td.rowSpan, 10);
 					if (!tdRowspan) tdRowspan = 1;
@@ -328,6 +475,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 					var rowsTd = [];
 					for (var j = 0; j < tdRowspan; j++) {
 						rowsTd.push(table.rows[parseInt(td.dataset.yIndex, 10) + j]);
+						tableRowsPushed.push(parseInt(td.dataset.yIndex, 10) + j);
 					}
 					if (td.dataset.yIndex > 0) {
 						rowsValuesArr.push({
@@ -348,6 +496,18 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 
 				rowsValuesArr.unshift({ rowsTd: rowsTdFirst });
 
+				if (rowsValuesArr.length < table.rows.length) {
+					for (var _i2 = 0; _i2 < table.rows.length; _i2++) {
+						if (tableRowsPushed.indexOf(_i2) > -1) continue;
+						var _rowsTd = [];
+						_rowsTd.push(table.rows[_i2]);
+
+						rowsValuesArr.push({
+							rowsTd: _rowsTd
+						});
+					}
+				}
+
 				var tBody = table.querySelector('tbody');
 				tBody.innerHTML = '';
 
@@ -356,6 +516,27 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 						tBody.appendChild(row);
 					});
 				});
+
+				/**
+     * returning previously deleted rows
+     */
+				if (tableRowsBefore.length) {
+					var _tableLastCont = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					if (_tableLastCont) {
+						var trRef = _tableLastCont.querySelector('tr');
+						tableRowsBefore.map(function (tr) {
+							_tableLastCont.insertBefore(tr, trRef);
+						});
+					}
+				}
+				if (tableRowsAfter.length) {
+					var _tableLastCont2 = table.querySelector('tbody') ? table.querySelector('tbody') : table;
+					if (tBody) {
+						tableRowsAfter.map(function (tr) {
+							_tableLastCont2.appendChild(tr);
+						});
+					}
+				}
 
 				WPTB_RecalculateIndexes(table);
 
@@ -383,17 +564,17 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				var columnsTdFirst = void 0;
 
 				var tdXCoordsColSpanPrevious = 0;
-				for (var _i = 0; _i < _tds2.length; _i++) {
-					var _tdsChanged = changeSortingTdsCollection(e, table, _tds2, _i, tdXCoordsColSpanPrevious, 'horizontal');
+				for (var _i3 = 0; _i3 < _tds2.length; _i3++) {
+					var _tdsChanged = changeSortingTdsCollection(e, table, _tds2, _i3, tdXCoordsColSpanPrevious, 'horizontal');
 					if (_tdsChanged && _tdsChanged.hasOwnProperty('i')) {
 						_tds2 = _tdsChanged.tds;
-						_i = _tdsChanged.i;
+						_i3 = _tdsChanged.i;
 						continue;
 					} else if (_tdsChanged) {
 						_tds2 = _tdsChanged.tds;
 					}
 
-					var _td = _tds2[_i];
+					var _td = _tds2[_i3];
 					var tdColspan = parseInt(_td.colSpan, 10);
 					if (!tdColspan) tdColspan = 1;
 
@@ -424,8 +605,19 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 
 				columnsValuesArr.unshift({ columnsTd: columnsTdFirst });
 
-				for (var _i2 = 0; _i2 < table.rows.length; _i2++) {
-					table.rows[_i2].innerHTML = '';
+				if (columnsValuesArr.length < table.maxCols) {
+					var difference = table.maxCols - columnsValuesArr.length;
+					for (var _i4 = 0; _i4 < difference; _i4++) {
+						var _tdsColumn = [].concat(_toConsumableArray(table.querySelectorAll('[data-x-index="' + (parseInt(table.maxCols, 10) - parseInt(difference, 10) + _i4) + '"]')));
+
+						columnsValuesArr.push({
+							columnsTd: [_tdsColumn]
+						});
+					}
+				}
+
+				for (var _i5 = 0; _i5 < table.rows.length; _i5++) {
+					table.rows[_i5].innerHTML = '';
 				}
 
 				columnsValuesArr.map(function (columnsValObj) {
@@ -458,12 +650,12 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
   * Function that sets the data-attribute with the number of the row or column
   * that the table was sorted by. Returns the number of a row or column
   *
-  * @param e
-  * @param dataAttr
+  * @param {event} e
+  * @param {string} dataAttr
   * @returns {null|boolean}
   */
 	function setSortedAscDataAttr(e, dataAttr) {
-		if (e.currentTarget && e.currentTarget.classList.contains('wptb-preview-table')) {
+		if (e.currentTarget && (e.currentTarget.classList.contains('wptb-preview-table') || e.currentTarget.classList.contains('wptb-preview-table-mobile'))) {
 			if (!e.target.dataset[dataAttr] || e.target.dataset[dataAttr] === 'ask') {
 				e.target.dataset[dataAttr] = 'desk';
 			} else {
@@ -479,7 +671,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * defines the sorting order
   *
-  * @param orderBy
+  * @param {string} orderBy
   * @param prev
   * @param next
   * @returns {number}
@@ -538,10 +730,12 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
   * These added cells are not originally were added in the collection,
   * because they are combined with cells from higher rows or left-side columns
   *
-  * @param table
-  * @param tds
-  * @param i
-  * @param tdIndexSpanPrev
+  * @param {event} e
+  * @param {HTMLElement} table
+  * @param {array} tds
+  * @param {number} i
+  * @param {number} tdIndexSpanPrev
+  * @param {string} type
   * @returns {{tds: *}|boolean|{tds: *, i: *}}
   */
 	function changeSortingTdsCollection(e, table, tds, i, tdIndexSpanPrev, type) {
@@ -580,7 +774,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				collectionTdsJSpan = collectionTds[j][collectionTdsJSpanProperty];
 				if (!collectionTdsJSpan) collectionTdsJSpan = 1;
 
-				if (collectionTds[j].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[j].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) >= e.target.dataset[indexNamePerpendicularCamelCase]) {
+				if (collectionTds[j].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[j].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) > e.target.dataset[indexNamePerpendicularCamelCase]) {
 					tds.splice(i, 0, collectionTds[j]);
 					tdsCollectionChanged = true;
 					i--;
@@ -599,7 +793,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 				collectionTdsJSpan = collectionTds[_j2][collectionTdsJSpanProperty];
 				if (!collectionTdsJSpan) collectionTdsJSpan = 1;
 
-				if (collectionTds[_j2].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[_j2].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) >= e.target.dataset[indexNamePerpendicularCamelCase]) {
+				if (collectionTds[_j2].dataset[indexNamePerpendicularCamelCase] < e.target.dataset[indexNamePerpendicularCamelCase] && parseInt(collectionTds[_j2].dataset[indexNamePerpendicularCamelCase], 10) + parseInt(collectionTdsJSpan, 10) > e.target.dataset[indexNamePerpendicularCamelCase]) {
 					tds.push(collectionTds[_j2]);
 					tdsCollectionChanged = true;
 					break;
@@ -614,7 +808,7 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * remove cells attributes which were used for division table
   *
-  * @param table
+  * @param {HTMLElement} table
   */
 	function removeCellsAttrAfterDivision(table) {
 		var tdsAll = [].concat(_toConsumableArray(table.getElementsByTagName('td')));
@@ -628,19 +822,19 @@ var WPTB_SortableTable = function WPTB_SortableTable(table) {
 	/**
   * function for run sorting table vertically
   *
-  * @param e
+  * @param {event} e
   */
 	this.sortableTableVerticalStart = function (e) {
-		sortableTable(e, table, 'vertical');
+		sortableTable.call(thisObject, e, table, 'vertical');
 	};
 
 	/**
   * function for run sorting table horizontally
   *
-  * @param e
+  * @param {event} e
   */
 	this.sortableTableHorizontalStart = function (e) {
-		sortableTable(e, table, 'horizontal');
+		sortableTable.call(thisObject, e, table, 'horizontal');
 	};
 };
 var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
@@ -940,6 +1134,8 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 
 						// check conditions: if table top row is as "header" - table must have more that two columns,
 						// otherwise table must have more taht one columns
+						var tableReconstructed = false;
+						var wptbPreviewTableMobile = void 0;
 						if ((!tablePreviewHeadIndic || tableColumns > 2) && tableColumns > 1) {
 							// if width of wptb-table-container less then width of wptb-preview-table -
 							// continue the way creation new mobile table
@@ -947,7 +1143,11 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 								tableContainer.style.overflow = 'unset';
 
 								// hide wptb-table-container-matrix
-								if (tableContainerMatrix) tableContainerMatrix.classList.add('wptb-matrix-hide');
+								if (tableContainerMatrix && !tableContainerMatrix.classList.contains('wptb-matrix-hide')) {
+									tableContainerMatrix.classList.add('wptb-matrix-hide');
+									tableReconstructed = true;
+								}
+								previewTable.classList.add('wptb-mobile-view-active');
 
 								if (previewTable.rows && tableColumns) {
 									// we get the estimated cell width
@@ -962,7 +1162,7 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 									// with our conditions. If it compliance, remain this table
 									// and cancel creating a new table ( createNewTableIndic = false ).
 									if (tableContainer.getElementsByClassName('wptb-preview-table-mobile').length > 0) {
-										var wptbPreviewTableMobile = tableContainer.getElementsByClassName('wptb-preview-table-mobile')[0];
+										wptbPreviewTableMobile = tableContainer.getElementsByClassName('wptb-preview-table-mobile')[0];
 										wptbPreviewTableMobile.classList.remove('wptb-mobile-hide');
 										var dataWholeColumnInContainer = wptbPreviewTableMobile.dataset.wholeColumnsInContainer;
 
@@ -979,6 +1179,8 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 									if (createNewTableIndic) {
 										// create new table for mobile devices
 										var newTable = document.createElement('table');
+										var newTableTbody = document.createElement('tbody');
+										newTable.appendChild(newTableTbody);
 
 										// add css class for new mobile table
 										newTable.classList.add('wptb-preview-table-mobile');
@@ -1063,7 +1265,7 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 													}
 													tdLeftHeader.style.width = null;
 													tdLeftHeader.style.height = null;
-													tdLeftHeader.removeAttribute('data-x-index');
+													//tdLeftHeader.removeAttribute('data-x-index');
 													tdLeftHeader.removeAttribute('data-wptb-css-td-auto-width');
 													tdStyles = window.getComputedStyle(previewTable.querySelector('td'));
 													if (tdStyles.borderTopColor) {
@@ -1086,7 +1288,7 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 
 															td.style.width = null;
 															td.style.height = null;
-															td.removeAttribute('data-x-index');
+															//td.removeAttribute('data-x-index');
 															td.removeAttribute('data-wptb-css-td-auto-width');
 														} else {
 															td = document.createElement('td');
@@ -1109,7 +1311,7 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 														tr.appendChild(td);
 													}
 
-													newTable.appendChild(tr);
+													newTableTbody.appendChild(tr);
 												}
 											}
 										} else {
@@ -1172,12 +1374,12 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 														}
 														newTd.style.width = null;
 														newTd.style.height = null;
-														newTd.removeAttribute('data-x-index');
+														//newTd.removeAttribute('data-x-index');
 														newTd.removeAttribute('data-wptb-css-td-auto-width');
 														_tr.appendChild(newTd);
 													}
 
-													newTable.appendChild(_tr);
+													newTableTbody.appendChild(_tr);
 												}
 											}
 										}
@@ -1189,19 +1391,33 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 												images[_i7].removeAttribute('srcset');
 											}
 										}
-
+										wptbPreviewTableMobile = newTable;
 										tableContainer.appendChild(newTable);
+										tableReconstructed = true;
 									}
 								}
 							} else {
-								if (tableContainerMatrix) tableContainerMatrix.classList.remove('wptb-matrix-hide');
-								if (tableContainer.getElementsByClassName('wptb-preview-table-mobile').length > 0) {
-									tableContainer.getElementsByClassName('wptb-preview-table-mobile')[0].classList.add('wptb-mobile-hide');
+								if (tableContainerMatrix && tableContainerMatrix.classList.contains('wptb-matrix-hide')) {
+									tableContainerMatrix.classList.remove('wptb-matrix-hide');
+									tableReconstructed = true;
+									previewTable.classList.remove('wptb-mobile-view-active');
+									wptbPreviewTableMobile = tableContainer.querySelector('.wptb-preview-table-mobile');
+									if (wptbPreviewTableMobile) {
+										tableContainer.getElementsByClassName('wptb-preview-table-mobile')[0].classList.add('wptb-mobile-hide');
+									}
+									tableContainer.style.overflow = 'auto';
 								}
-								tableContainer.style.overflow = 'auto';
 							}
 						} else {
 							previewTable.style.minWidth = 'auto';
+						}
+
+						WPTB_RecalculateIndexes(previewTable);
+
+						if (tableReconstructed) {
+							WPTB_RecalculateIndexes(wptbPreviewTableMobile);
+							var tabEvent = new CustomEvent('table:rebuilt', { detail: true, bubbles: true });
+							previewTable.dispatchEvent(tabEvent);
 						}
 					}
 				}
@@ -1353,15 +1569,14 @@ var WPTB_RecalculateIndexes = function WPTB_RecalculateIndexes(table) {
 		responsiveFront.rebuildTables();
 
 		//sorting table
-		if (tableContainers.length) {
-			for (var _i8 = 0; _i8 < tableContainers.length; _i8++) {
-				var table = tableContainers[_i8].querySelector('.wptb-preview-table');
-				if (table) {
-					var sortableTable = new WPTB_SortableTable(table);
-					sortableTable.sortableTableInitialization();
-				}
+		function sortingTable() {
+			var tables = document.querySelectorAll('.wptb-preview-table');
+			for (var _i8 = 0; _i8 < tables.length; _i8++) {
+				var sortableTable = new WPTB_SortableTable(tables[_i8]);
+				sortableTable.sortableTableInitialization(responsiveFront);
 			}
 		}
+		sortingTable();
 	});
 })(jQuery);
 //# sourceMappingURL=wp-table-builder-frontend.js.map

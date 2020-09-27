@@ -666,7 +666,8 @@
 	 */
 	function ResponsiveFront(options = {}) {
 		// merge default options with user sent options
-		this.options = { ...responsiveClassDefaultOptions, ...options };
+		//this.options = { ...responsiveClassDefaultOptions, ...options };
+		this.options = Object.assign({}, responsiveClassDefaultOptions, options);
 
 		this.elements = Array.from(document.querySelectorAll(this.options.query));
 
@@ -1151,6 +1152,10 @@
 				if (buildCallable) {
 					const modeOptions = directive.modeOptions[mode];
 					buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
+
+					WPTB_RecalculateIndexes(el);
+					const tabEvent = new CustomEvent('table:rebuilt', {detail: {sizeRangeId: sizeRangeId, topRowAsHeader: directive.modeOptions[mode]['topRowAsHeader']}});
+					el.dispatchEvent(tabEvent);
 				} else {
 					throw new Error(`No build mode named as [${mode}] found.`);
 				}
@@ -1198,7 +1203,7 @@
 			this.bindRebuildToResize();
 		}
 
-		return { rebuildTables: this.rebuildTables };
+		return { rebuildTables: this.rebuildTables, getDirective: this.getDirective, calculateRangeId: this.calculateRangeId };
 	}
 
 	return ResponsiveFront;

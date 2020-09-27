@@ -4311,8 +4311,8 @@ wptb_shortcode_container_element {
 /*endregion*/
 
 /*sortable mode*/
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"]:not(.wptb-plugin-responsive-base) td[data-y-index="0"]::after,
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"]:not(.wptb-plugin-responsive-base) td[data-x-index="0"]::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-y-index="0"]::after,
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"]::after {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -4324,37 +4324,37 @@ wptb_shortcode_container_element {
     text-align: center;
 }
 
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"]:not(.wptb-plugin-responsive-base) td[data-y-index="0"]::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-y-index="0"]::after {
     content: "\f142";
     right: 0;
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"]:not(.wptb-plugin-responsive-base) td[data-y-index="0"][data-sorted-vertical="desk"].sortable-hover::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-y-index="0"][data-sorted-vertical="desk"].sortable-hover::after {
     content: "\f142";
     cursor: pointer;
     opacity: 0.7;
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"]:not(.wptb-plugin-responsive-base) td[data-y-index="0"][data-sorted-vertical="desk"]::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-y-index="0"][data-sorted-vertical="desk"]::after {
     content: "\f140";
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"]:not(.wptb-plugin-responsive-base) td[data-y-index="0"].sortable-hover::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-y-index="0"].sortable-hover::after {
     content: "\f140";
     cursor: pointer;
     opacity: 0.7;
 }
 
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"]:not(.wptb-plugin-responsive-base) td[data-x-index="0"]::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"]::after {
     content: "\f141";
     left: 0;
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"]:not(.wptb-plugin-responsive-base) td[data-x-index="0"][data-sorted-horizontal="desk"].sortable-hover::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"][data-sorted-horizontal="desk"].sortable-hover::after {
     content: "\f141";
     cursor: pointer;
     opacity: 0.7;
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"]:not(.wptb-plugin-responsive-base) td[data-x-index="0"][data-sorted-horizontal="desk"]::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"][data-sorted-horizontal="desk"]::after {
     content: "\f139";
 }
-.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"]:not(.wptb-plugin-responsive-base) td[data-x-index="0"].sortable-hover::after {
+.wptb-table-setup:not(.wptb-preview-table-manage-cells) .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"].sortable-hover::after {
     content: "\f139";
     cursor: pointer;
     opacity: 0.7;
