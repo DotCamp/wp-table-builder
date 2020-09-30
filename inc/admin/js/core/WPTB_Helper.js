@@ -1649,7 +1649,9 @@ var WPTB_Helper = {
         params = JSON.stringify( params );
 
         http.open('POST', url, true);
-        http.setRequestHeader( 'Content-type', 'application/json; charset=utf-8' );
+
+        // php 5.6 bug fix for application/json content-type
+        http.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded; charset=utf-8' );
 
         http.onreadystatechange = function ( action ) {
             if ( this.readyState == 4 && this.status == 200 ) {

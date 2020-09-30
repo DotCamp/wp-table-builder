@@ -81,44 +81,55 @@ class Version_Control_Manager {
 	 * Rollback ajax endpoint.
 	 */
 	public static function rollback_ajax() {
-		if ( current_user_can( 'manage_options' ) && check_ajax_referer( static::get_class_name(), 'nonce', false ) && isset( $_POST['version'] ) ) {
+		if ( current_user_can( 'manage_options' ) && check_ajax_referer( static::get_class_name(), 'nonce',
+				false ) && isset( $_POST['version'] ) ) {
 			$version_to_install = $_POST['version'];
 
 			// require for plugins_api function
 			require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 
-			$versions = ( plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] ) )->versions;
+			$versions_object = plugins_api( 'plugin_information', [ 'slug' => static::PLUGIN_SLUG ] );
 
-			if ( isset( $versions[ $version_to_install ] ) ) {
+			if ( is_wp_error( $versions_object ) ) {
+				static::instance()->set_error( esc_html__( 'an error occurred on plugin install, refresh and try again',
+					'wp-table-builder' ) );
+			} elseif ( is_object( $versions_object ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 				require_once( ABSPATH . 'wp-admin/includes/misc.php' );
 				require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 				require_once( ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php' );
 
-				$download_url   = $versions[ $version_to_install ];
-				$upgrader       = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+				$versions = $versions_object->versions;
 
-				add_filter('upgrader_package_options', function($options){
+				$download_url = $versions[ $version_to_install ];
+				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+
+				add_filter( 'upgrader_package_options', function ( $options ) {
 					$options['abort_if_destination_exists'] = false;
+
 					return $options;
-				});
+				} );
 
 				$install_result = $upgrader->install( $download_url, [ 'overwrite_package' => true ] );
 
 				// handle install error
 				if ( is_wp_error( $install_result ) || $install_result === false ) {
-					static::instance()->set_error( esc_html__( 'an error occurred on plugin install, refresh and try again', 'wp-table-builder' ) );
+					static::instance()->set_error( esc_html__( 'an error occurred on plugin install, refresh and try again',
+						'wp-table-builder' ) );
 				} else {
 					activate_plugin( 'ultimate-blocks/ultimate-blocks.php' );
-					static::instance()->set_message( esc_html__( sprintf( 'plugin version %1$s is installed successfully', $version_to_install ), 'wp-table-builder' ) );
+					static::instance()->set_message( esc_html__( sprintf( 'plugin version %1$s is installed successfully',
+						$version_to_install ), 'wp-table-builder' ) );
 				}
 			} else {
 				// handle no download link error
-				static::instance()->set_error( esc_html__( 'no download url address found for the requested version', 'wp-table-builder' ) );
+				static::instance()->set_error( esc_html__( 'no download url address found for the requested version',
+					'wp-table-builder' ) );
 			}
 		} else {
 			// handle ajax endpoint requirement error
-			static::instance()->set_error( esc_html__( 'You do not have authorization to use this ajax endpoint, refresh and try again', 'wp-table-builder' ) );
+			static::instance()->set_error( esc_html__( 'You do not have authorization to use this ajax endpoint, refresh and try again',
+				'wp-table-builder' ) );
 		}
 
 		static::instance()->send_json( true );
@@ -149,15 +160,17 @@ class Version_Control_Manager {
 
 		// add translations
 		$frontend_data['strings'] = array_merge( $frontend_data['strings'], [
-			'installVersion'     => esc_html__( 'install', 'wp-table-builder' ),
-			'versionControlInfo' => esc_html__( 'If you are having issues with the current version of the plugin, you can rollback to a previous version.', 'wp-table-builder' ),
-			'warning'            => esc_html__( 'warning', 'wp-table-builder' ),
-			'warningInfo'        => esc_html__( 'Previous versions may be unstable and unsecure, continue with your own risk and take a backup.', 'wp-table-builder' ),
-			'yourVersion'        => esc_html__( 'your version', 'wp-table-builder' ),
-			'latestVersion'      => esc_html__( 'latest stable version', 'wp-table-builder' ),
-			'updateToLatest'     => esc_html__( 'update to latest version', 'wp-table-builder' ),
-			'reload'             => esc_html__( 'reload', 'wp-table-builder' ),
-			'rollbackConfirmation'             => esc_html__( 'Rollback to selected version?', 'wp-table-builder' ),
+			'installVersion'       => esc_html__( 'install', 'wp-table-builder' ),
+			'versionControlInfo'   => esc_html__( 'If you are having issues with the current version of the plugin, you can rollback to a previous version.',
+				'wp-table-builder' ),
+			'warning'              => esc_html__( 'warning', 'wp-table-builder' ),
+			'warningInfo'          => esc_html__( 'Previous versions may be unstable and unsecure, continue with your own risk and take a backup.',
+				'wp-table-builder' ),
+			'yourVersion'          => esc_html__( 'your version', 'wp-table-builder' ),
+			'latestVersion'        => esc_html__( 'latest stable version', 'wp-table-builder' ),
+			'updateToLatest'       => esc_html__( 'update to latest version', 'wp-table-builder' ),
+			'reload'               => esc_html__( 'reload', 'wp-table-builder' ),
+			'rollbackConfirmation' => esc_html__( 'Rollback to selected version?', 'wp-table-builder' ),
 		] );
 
 		$currentVersion = get_plugin_data( NS\PLUGIN__FILE__ )['Version'];
@@ -181,7 +194,8 @@ class Version_Control_Manager {
 		$allVersions = array_slice( $allVersions, 0, static::VERSION_N );
 
 		// add version control related data
-		$frontend_data['data']['versionControl'] = compact( 'currentVersion', 'latestVersion', 'allVersions', 'changelog', 'security' );
+		$frontend_data['data']['versionControl'] = compact( 'currentVersion', 'latestVersion', 'allVersions',
+			'changelog', 'security' );
 
 		return $frontend_data;
 	}
