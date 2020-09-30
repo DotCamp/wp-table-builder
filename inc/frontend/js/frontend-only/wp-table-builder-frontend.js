@@ -739,16 +739,16 @@
 			bindToResize: true,
 		});
 
-		responsiveFront.rebuildTables();
-
 		//sorting table
 		function sortingTable() {
 			let tables = document.querySelectorAll('.wptb-preview-table');
 			for (let i = 0; i < tables.length; i++) {
-				let sortableTable = new WPTB_SortableTable(tables[i]);
+				let sortableTable = new WPTB_SortableTable({table: tables[i]});
 				sortableTable.sortableTableInitialization(responsiveFront);
 			}
 		}
 		sortingTable();
+		responsiveFront.rebuildTables();
+
 	});
 })(jQuery);

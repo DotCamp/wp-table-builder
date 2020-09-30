@@ -70,6 +70,7 @@ import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
 /* eslint-disable camelcase */
 import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
+import WPTB_SortableTable from '../../../core/WPTB_SortableTable';
 import DeBouncer from '../functions/DeBouncer';
 import ModalWindow from '../components/ModalWindow';
 import MaterialButton from '../components/MaterialButton';
@@ -200,8 +201,10 @@ export default {
 			return val;
 		},
 		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
-		tableCloned(mainDirectives) {
+		tableCloned(mainDirectives, clonedTable) {
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
+      let sortableTable = new WPTB_SortableTable({table: clonedTable});
+      sortableTable.sortableTableInitialization(this.responsiveFrontend);
 			// there is already a directive at main table, decode and assign it to current ones
 			if (mainDirectives) {
 				const decodedMainDirectives = this.decodeResponsiveDirectives(mainDirectives);

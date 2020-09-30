@@ -3,7 +3,7 @@ const tableId = WPTB_Helper.getTableId();
 const wptbTableSetup = table.parentNode;
 let responsiveFront;
 
-const sortableTable = new WPTB_SortableTable(table);
+const sortableTable = new WPTB_SortableTable({table});
 if(typeof WPTB_ResponsiveFrontend === 'function') {
 	responsiveFront = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
 } else {

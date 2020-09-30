@@ -120,7 +120,7 @@ export default {
 			this.setupCellIdentification(this.clonedTable);
 
 			// emit an event signalling cloning main table is completed
-			this.$emit('tableCloned', mainTableDirectives);
+			this.$emit('tableCloned', mainTableDirectives, this.clonedTable);
 		},
 		/**
 		 * Add directives to dataset of cloned table and main table.
