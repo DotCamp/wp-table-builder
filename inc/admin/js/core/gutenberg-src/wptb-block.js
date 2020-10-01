@@ -1,7 +1,9 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
 import { withSelect } from '@wordpress/data';
-import TableBlock from './components/TableBlock';
+import { __ } from '@wordpress/i18n';
+import React from 'react';
+import TableBlockApp from './containers/TableBlockApp';
+// eslint-disable-next-line no-unused-vars
 import blockStyle from './style/block-style.sass';
 
 const blockData = { ...wptbBlockData };
@@ -12,24 +14,34 @@ registerBlockType(blockData.blockName, {
 	title: __('WP Table Builder', 'wp-table-builder'),
 	description: __('WP Table Builder editor block', 'wp-table-builder'),
 	category: 'widgets',
-	icon: 'megaphone',
+	icon: 'editor-table',
 	attributes: {
 		id: {
-			type: 'Number',
+			type: 'number',
 			default: '-1',
 		},
-		expanded: {
-			type: 'Boolean',
-			default: 'true',
-		},
 	},
-	edit: withSelect((select) => {
-		return {
-			tables: select('core').getEntityRecords('postType', 'post', { per_page: -1 }),
-		};
-	})(({ tables, attributes, setAttributes }) => {
-		// TODO [erdembircan] remove for production
-		console.log(tables);
-		return <TableBlock setAttributes={setAttributes} expanded={attributes.expanded} id={attributes.id} />;
-	}),
+	transforms: {
+		from: [
+			{
+				type: 'shortcode',
+				tag: 'wptb',
+				attributes: {
+					id: {
+						type: 'number',
+						shortcode: (named) => {
+							return named.id;
+						},
+					},
+				},
+				priority: 1,
+			},
+		],
+	},
+	edit: ({ attributes, setAttributes }) => {
+		return <TableBlockApp attributes={attributes} setAttributes={setAttributes} blockData={blockData} />;
+	},
+	save: ({ attributes }) => {
+		return attributes.id >= 0 ? `[wptb id=${attributes.id}]` : __('No table selected', 'wp-table-builder');
+	},
 });

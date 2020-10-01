@@ -1,10 +1,12 @@
 //colors
 $gray-300: #E2E8F0
+$gray-400: #CBD5E0
 $gray-700: #4A5568
+$green-500: #48BB78
+$red-500: #F56565
 
 //sizes
 $font-size: 80%
-
 
 //theme variables
 $logo-color: #3299D1
@@ -12,6 +14,7 @@ $theme-light: #FFF
 $theme-text-default-color: $gray-700
 
 .wptb-block-wrapper
+  position: relative
   width: 100%
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif
   color: $theme-text-default-color
@@ -25,8 +28,48 @@ $theme-text-default-color: $gray-700
   box-sizing: border-box
   font-size: $font-size
   border: 1px solid $gray-300
-  animation: wptb-basic-appear 0.3s ease-out
   box-shadow: 4px 4px 11px rgba(0, 0, 0, 0.25)
+
+  .wptb-block-fetch-overlay
+    position: absolute
+    top: 0
+    left: 0
+    display: flex
+    width: 100%
+    height: 100%
+    justify-content: center
+    align-items: center
+    background-color: rgba(255, 255, 255, 0.7)
+    color: $logo-color
+    z-index: 100000000
+    .dashicons
+      animation: wptb-rotate 1.0s linear infinite
+
+
+  .wptb-block-button
+    padding: 0 10px
+    width: fit-content
+    border-radius: 5px
+    text-transform: uppercase
+    cursor: pointer
+    transition: all 0.2s ease-out
+    margin: 0 10px
+
+    &:active
+      animation: wptb-push 0.2s ease-out
+
+    &.primary
+      background-color: $logo-color
+      color: $theme-light
+
+    &.negative
+      background-color: $red-500
+      color: $theme-light
+
+    &.wptb-block-button-disabled
+      cursor: default
+      background-color: $gray-400 !important
+      pointer-events: none !important
 
   div
     margin: 0
@@ -41,43 +84,253 @@ $theme-text-default-color: $gray-700
     border-bottom: 1px solid $gray-300
     overflow: hidden
 
-    .wptb-plugin-brand
-      padding: 5px 10px
-      background-color: $logo-color
-      color: white
+    .wptb-plugin-left-toolbox
+      display: flex
+      flex-direction: row
+      align-items: center
+      justify-content: flex-start
+
+      .wptb-plugin-brand
+        padding: 5px 10px
+        background-color: $logo-color
+        color: white
+
+      .wptb-plugin-selected-header-info
+        font-style: italic
+        margin-left: 10px
+        color: $logo-color
+
   .wptb-header-toolbox
     height: 100%
-    .wptb-block-tool
-      height: 100%
-      width: 40px
-      display: flex
-      justify-content: center
-      align-items: center
-      border-left: 1px solid $gray-300
-      cursor: pointer
-      transition: all 0.2s ease-out
-      &:hover
-        background-color: $gray-300
+    display: flex
+    justify-content: flex-end
+    align-items: center
+
 
   .wptb-block-main
     height: 250px
     display: flex
     justify-content: center
     align-items: center
-    padding: 10px
+    padding: 20px
 
+    .wptb-table-selected-view
+      width: 200px
+      height: 100%
+
+    .wptb-table-preview
+      border: 1px solid $gray-300
+      border-radius: 5px
+      background-color: $gray-300
+      width: 100%
+      height: 100%
+      overflow: hidden
+      display: flex
+      justify-content: center
+      align-items: center
+      pointer-events: none
+
+      .no-table-selected-preview
+        display: flex
+        justify-content: center
+        align-items: center
+        width: fit-content
+        color: $gray-400
+        font-size: 400%
+
+    .wptb-table-select
+      width: 100%
+      height: 100%
+      display: grid
+      grid-gap: 60px
+      grid-template-columns: 1fr 200px
+      grid-template-rows: 1fr
+
+      .wptb-table-list-wrapper
+        width: 100%
+        height: 100%
+        overflow: hidden
+        display: flex
+        justify-content: flex-start
+        align-items: center
+        flex-direction: column
+
+        .wptb-table-search
+          margin-bottom: 10px
+          position: relative
+
+          .wptb-search-clear
+            position: absolute
+            height: 100%
+            display: flex
+            justify-content: center
+            align-items: center
+            top: 0
+            right: 10px
+            color: $gray-400
+            font-weight: bold
+            cursor: pointer
+
+          input
+            border-radius: 999px !important
+            border: 2px solid $gray-300 !important
+            padding: 0 !important
+            text-align: center
+
+            &:active, &:focus
+              box-shadow: none !important
+              border: 2px solid $gray-400 !important
+              outline: 0 !important
+              inset: 0 !important
+
+        .wptb-table-list
+          height: 100%
+          overflow-y: scroll
+          width: 100%
+          font-size: 90%
+          border: 1px solid $gray-300
+          border-radius: 5px
+          padding: 5px
+
+          .wptb-table-list-row
+            display: grid
+            grid-template-columns: repeat(2, 1fr)
+            grid-template-rows: 1fr
+            justify-content: center
+            align-items: center
+            padding: 3px
+            cursor: pointer
+            transition: all 0.3s
+            opacity: 0
+
+            .wptb-table-list-id
+              justify-self: center
+
+            &:nth-of-type(odd)
+              background-color: $gray-300
+
+            &:hover
+              background-color: $gray-400
+
+          .selected
+            background-color: $logo-color !important
+            color: $theme-light
 
   .wptb-block-footer
+    width: 100%
+    height: 100%
     border-top: 1px solid $gray-300
+    padding: 10px
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+    .wptb-block-footer-right
+      display: flex
+      flex-direction: row
+      justify-content: flex-end
+      align-items: center
 
   .wptb-block-toggle
     &:after
       content: "\f347"
+
     &[aria-expanded = true]:after
       content: "\f343"
+
+
+.wptb-basic-appear-anim
+  animation: wptb-basic-appear 0.3s ease-out forwards
+
+.wptb-block-search-indicator
+  font-weight: bold
+  color: $green-500 !important
+
+.wptb-block-tool
+  height: 100%
+  width: 40px
+  display: flex
+  justify-content: center
+  align-items: center
+  border-left: 1px solid $gray-300
+  cursor: pointer
+  transition: all 0.2s ease-out
+
+  &:hover
+    background-color: $gray-300 !important
+
+.wptb-block-full-preview
+  position: relative
+  display: flex
+  justify-content: center
+
+  .wptb-block-minimize-button
+    position: absolute
+    height: 40px
+    top: -20px
+    right: -20px
+    background-color: $theme-light
+
+.wptb-block-shadow
+  box-shadow: 4px 4px 11px rgba(0, 0, 0, 0.25)
+
+.wptb-block-builder-wrapper
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 1000000000
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 1fr
+  grid-template-areas: 'main'
+  justify-content: center
+  align-items: center
+  transition: all 0.3s ease-out
+
+  &.hide
+    top: -100%
+    transform: scale(0.5)
+
+  .wptb-block-builder
+    margin: 0
+    grid-area: main
+    width: 100%
+    height: 100%
+    border: 3px solid $gray-400
+    z-index: 20
+
+  .wptb-block-builder-load-indicator
+    grid-area: main
+    width: 100%
+    height: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    color: $logo-color
+    background-color: $theme-light
+    z-index: 10
+
+    .dashicons
+      animation: wptb-rotate 1s linear infinite
 
 @keyframes wptb-basic-appear
   0%
     opacity: 0
   100%
     opacity: 1
+
+@keyframes wptb-push
+  0%
+    transform: scale(1)
+  50%
+    transform: scale(0.8)
+  100%
+    transform: scale(1)
+
+@keyframes wptb-rotate
+  0%
+    transform: rotateZ(0deg)
+  100%
+    transform: rotateZ(360deg)

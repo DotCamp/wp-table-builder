@@ -2,8 +2,13 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Query;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
+use function get_current_screen;
+use function get_post_meta;
+use function is_gutenberg_page;
 use function register_block_type;
 use function wp_register_script;
 use function wp_register_style;
@@ -39,8 +44,31 @@ class Gutenberg_Block_Manager {
 	public function __construct( $block_name ) {
 		$this->block_name = $block_name;
 		$this->assets     = require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/gutenberg-build/wptb-block.asset.php';
+
 		add_action( 'init', [ $this, 'register_block' ] );
 	}
+
+	/**
+	 * Check current WP version for gutenberg compatibility.
+	 * @return bool wp version ok or not
+	 */
+	protected function check_wp_compatibility() {
+		if ( function_exists( 'is_gutenberg_page' ) && is_gutenberg_page() ) {
+			return true;
+		}
+
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/screen.php' );
+		}
+
+		$current_screen = get_current_screen();
+		if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) {
+			return true;
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * Register editor block.
@@ -51,18 +79,53 @@ class Gutenberg_Block_Manager {
 			wp_register_script( 'wptb_block_editor_script', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.js', $this->assets['dependencies'], $this->assets['version'] );
 
 			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', [], $this->assets['version'] );
+			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
 
-			$block_data = [
-				'blockName' => $this->block_name,
-				'icon'      => NS\Inc\Core\Init::instance()->get_icon_manager()->get_icon( 'table' )
-			];
+			$block_data = $this->prepare_block_data();
 
 			wp_localize_script( 'wptb_block_editor_script', 'wptbBlockData', $block_data );
 
 			register_block_type( $this->block_name, [
 				'editor_script' => 'wptb_block_editor_script',
-				'editor_style' => 'wptb_block_editor_style',
+				'editor_style'  => [ 'wptb_block_editor_style', 'wptb_block_editor_admin_style' ]
 			] );
 		}
+	}
+
+	/**
+	 * Prepare data to be used at frontend block.
+	 * @return array block data
+	 */
+	protected function prepare_block_data() {
+		$table_query = new WP_Query( [
+			'post_type' => 'wptb-tables'
+		] );
+
+		$tables = array_reduce( $table_query->posts, function ( $carry, $table ) {
+			$current_table = [
+				'id'      => $table->ID,
+				'title'   => empty( $table->post_title ) ? esc_html__( 'Table', 'wp-table-builder' ) . ' #' . $table->ID : $table->post_title,
+				'content' => get_post_meta( $table->ID, '_wptb_content_', true )
+			];
+
+			$carry[] = $current_table;
+
+			return $carry;
+		}, [] );
+
+		wp_reset_query();
+
+		$admin_page  = admin_url( 'admin.php' );
+		$builder_url = add_query_arg( [ 'page' => 'wptb-builder' ], $admin_page );
+		$table_css   = add_query_arg( [ 'ver' => NS\PLUGIN_VERSION ], NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css' );
+
+
+		return [
+			'blockName'   => $this->block_name,
+			'icon'        => Init::instance()->get_icon_manager()->get_icon( 'table' ),
+			'tables'      => $tables,
+			'builderUrl'  => $builder_url,
+			'tableCssUrl' => $table_css
+		];
 	}
 }

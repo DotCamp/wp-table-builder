@@ -83,4 +83,7 @@ var WPTB_Initializer = function () {
     document.addEventListener('wp-table-builder/table-edit-mode/closed', () => {
         WPTB_Helper.activateSection('elements');
     })
+
+
+    WPTB_Helper.calledByBlock();
 };

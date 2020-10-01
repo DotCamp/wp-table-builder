@@ -3299,6 +3299,22 @@ var WPTB_Helper = {
 
             cells.map(removeBlocker);
         });
+    },
+    calledByBlock: function calledByBlock() {
+        var parsedUrl = new URL(window.location.href);
+        var isCalledByBlock = parsedUrl.searchParams.get('gutenberg');
+        if (isCalledByBlock) {
+            var closeButton = document.querySelector('.wptb-plugin-header-close a');
+
+            closeButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var tableId = new URL(window.location.href).searchParams.get('table');
+
+                WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document, tableId);
+            }, { capture: true });
+        }
     }
 };
 var WPTB_Initializer = function WPTB_Initializer() {
@@ -3381,6 +3397,8 @@ var WPTB_Initializer = function WPTB_Initializer() {
     document.addEventListener('wp-table-builder/table-edit-mode/closed', function () {
         WPTB_Helper.activateSection('elements');
     });
+
+    WPTB_Helper.calledByBlock();
 };
 var WPTB_LeftPanel = function WPTB_LeftPanel() {
 

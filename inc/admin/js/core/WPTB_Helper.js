@@ -2127,5 +2127,23 @@ var WPTB_Helper = {
 
             cells.map(removeBlocker);
         })
+    },
+    calledByBlock(){
+        const parsedUrl = new URL(window.location.href);
+        const isCalledByBlock = parsedUrl.searchParams.get('gutenberg');
+        if(isCalledByBlock){
+            const closeButton = document.querySelector('.wptb-plugin-header-close a');
+
+            closeButton.addEventListener('click', (e)=> {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const tableId = new URL(window.location.href).searchParams.get('table');
+
+                WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
+
+            },{capture: true});
+        }
+
     }
 }
