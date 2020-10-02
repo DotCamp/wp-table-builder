@@ -89,6 +89,7 @@ That's it. You're done!
 = 1.3.0 =
 
 * FIX: Fixed an issue affecting some PHP versions to not parse version control manager files.
+* IMPROVEMENT: Sorting functionality.
 
 = 1.2.9 =
 
