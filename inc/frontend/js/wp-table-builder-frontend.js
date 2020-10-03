@@ -322,6 +322,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
    * @param {boolean} active
    */
 		this.sortingCellMouseMoveSwitcher = function (type, active) {
+			var _this = this;
+
 			/**
     * removes and adds mousemove and mouseleave events handlers
     *
@@ -397,8 +399,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					var _tds2 = this.table.querySelectorAll('[data-x-index="0"]');
 					_tds2 = [].concat(_toConsumableArray(_tds2));
 					_tds2.map(function (td) {
-						s(td, sortingCellMouseMoveHorizontal, active);
-						dataAttrSortChange(td, 'sortedHorizontal', active);
+						var tdsPerAfter = _this.table.querySelectorAll('[data-y-index="' + td.dataset.yIndex + '"]');
+						if (tdsPerAfter.length > 2) {
+							s(td, sortingCellMouseMoveHorizontal, active);
+							dataAttrSortChange(td, 'sortedHorizontal', active);
+						}
 					});
 				}
 			}

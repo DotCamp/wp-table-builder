@@ -232,8 +232,11 @@
 					let tds = this.table.querySelectorAll('[data-x-index="0"]');
 					tds = [...tds];
 					tds.map((td) => {
-						s(td, sortingCellMouseMoveHorizontal, active);
-						dataAttrSortChange(td, 'sortedHorizontal', active);
+						let tdsPerAfter = this.table.querySelectorAll(`[data-y-index="${td.dataset.yIndex}"]`);
+						if(tdsPerAfter.length > 2) {
+							s(td, sortingCellMouseMoveHorizontal, active);
+							dataAttrSortChange(td, 'sortedHorizontal', active);
+						}
 					});
 				}
 			}
