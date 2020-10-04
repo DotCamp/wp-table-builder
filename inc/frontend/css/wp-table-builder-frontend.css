@@ -641,9 +641,9 @@ table.wptb-preview-table {
 
 /*sortable mode*/
 .wptb-preview-table[data-wptb-sortable-table-vertical="1"] td[data-sorted-vertical]::after,
-.wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"]::after,
+.wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal]::after,
 .wptb-preview-table-mobile[data-wptb-sortable-table-vertical="1"] td[data-sorted-vertical]::after,
-.wptb-preview-table-mobile[data-wptb-sortable-table-horizontal="1"] td[data-x-index="0"]::after{
+.wptb-preview-table-mobile[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal]::after{
     position: absolute;
     top: 0;
     bottom: 0;
@@ -692,6 +692,7 @@ table.wptb-preview-table {
 .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal="desk"]::after,
 .wptb-preview-table-mobile[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal="desk"]::after {
     content: "\f139";
+    left: 0;
 }
 .wptb-preview-table[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal="ask"].sortable-hover::after,
 .wptb-preview-table-mobile[data-wptb-sortable-table-horizontal="1"] td[data-sorted-horizontal="ask"].sortable-hover::after {

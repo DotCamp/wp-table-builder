@@ -18,6 +18,8 @@
 		const thisObject = this;
 		this.itemsPerHeader = 0;
 		this.tableMaxCols = table.maxCols;
+		this.cellsStylesScheme = {};
+		this.rowsStylesScheme = {};
 
 		/**
 		 * sets the table to sort mode
@@ -39,6 +41,8 @@
 					this.sortingCellMouseMoveSwitcher('vertical', true);
 					this.table.addEventListener('click', this.sortableTableVerticalStart, false);
 					this.table.dataset.wptbSortableTableVertical = '1';
+					this.createTableElementsStylesScheme('td');
+					this.createTableElementsStylesScheme('tr');
 				} else {
 					this.sortingCellMouseMoveSwitcher('vertical', false);
 					delete this.table.dataset.wptbSortableTableVertical;
@@ -50,12 +54,91 @@
 					this.sortingCellMouseMoveSwitcher('horizontal', true);
 					this.table.addEventListener('click', this.sortableTableHorizontalStart, false);
 					this.table.dataset.wptbSortableTableHorizontal = '1';
+					this.createTableElementsStylesScheme('td');
+					this.createTableElementsStylesScheme('tr');
 				} else {
 					this.sortingCellMouseMoveSwitcher('horizontal', false);
 					delete this.table.dataset.wptbSortableTableHorizontal;
 				}
 			}
 		};
+
+		/**
+		 * changes table object for old reconstruction table type
+		 *
+		 * @param {boolean}start
+		 * @returns {*}
+		 */
+		this.tableObjectChange = function (start = true) {
+			if(this.table.classList.contains('wptb-mobile-view-active') && start) {
+				this.table = table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
+			} else if(this.table.classList.contains('wptb-preview-table-mobile') && !start) {
+				this.table = table.parentNode.querySelector('.wptb-preview-table');
+			}
+			return this.table;
+		}
+
+		/**
+		 * fills the object with data about cell styles for all locations (create scheme)
+		 *
+		 * @param elemSelector
+		 */
+		this.createTableElementsStylesScheme = function (elemSelector) {
+			this.tableObjectChange();
+			let elements = this.table.querySelectorAll(elemSelector);
+			if(elements.length) {
+				for(let i = 0; i < elements.length; i++) {
+					let elem = elements[i];
+					let cellFullStyleObj = window.getComputedStyle(elem, null);
+					let backgroundColor = cellFullStyleObj.getPropertyValue( 'background-color' );
+					let objectKey = '';
+					if(elemSelector === 'td') {
+						objectKey = elem.dataset.xIndex + '-' + elem.dataset.yIndex;
+						this.cellsStylesScheme[objectKey] = {backgroundColor};
+					} else if(elemSelector === 'tr') {
+						objectKey = String(i);
+						this.rowsStylesScheme[objectKey] = {backgroundColor};
+					}
+
+				}
+			}
+
+			this.tableObjectChange(false);
+		}
+
+		/**
+		 * applies saved cell styles data to all cells
+		 *
+		 * @param elemSelector
+		 */
+		this.reassignElementsStyles = function (elemSelector) {
+			this.tableObjectChange();
+			let elements = this.table.querySelectorAll(elemSelector);
+			let elementsStylesScheme;
+			if(elemSelector === 'td') {
+				elementsStylesScheme = this.cellsStylesScheme;
+			} else if(elemSelector === 'tr') {
+				elementsStylesScheme = this.rowsStylesScheme;
+			}
+			if(elements.length) {
+				for(let i = 0; i < elements.length; i++) {
+					let elem = elements[i];
+					let objectKey = '';
+					if(elemSelector === 'td') {
+						objectKey = elem.dataset.xIndex + '-' + elem.dataset.yIndex;
+					} else if(elemSelector === 'tr') {
+						objectKey = i;
+					}
+					if(elementsStylesScheme.hasOwnProperty(objectKey)) {
+						let elemStyles = elementsStylesScheme[objectKey];
+						for(let key in elemStyles) {
+							elem.style[key] = elemStyles[key];
+						}
+					}
+				}
+			}
+			this.tableObjectChange(false);
+		}
 
 		/**
 		 * checks whether the table should be in the sort state
@@ -111,6 +194,8 @@
 										}
 									}
 								}
+							} else {
+								this.itemsPerHeader = 0;
 							}
 						}
 					} else {
@@ -557,6 +642,9 @@
 						const tableSM = table.tableSM();
 						new tableSM().tableStateSet();
 					}
+
+					this.reassignElementsStyles('td');
+					this.reassignElementsStyles('tr');
 				}
 			}
 		}

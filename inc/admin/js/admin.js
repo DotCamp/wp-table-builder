@@ -4032,6 +4032,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		var thisObject = this;
 		this.itemsPerHeader = 0;
 		this.tableMaxCols = table.maxCols;
+		this.cellsStylesScheme = {};
+		this.rowsStylesScheme = {};
 
 		/**
    * sets the table to sort mode
@@ -4053,6 +4055,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					this.sortingCellMouseMoveSwitcher('vertical', true);
 					this.table.addEventListener('click', this.sortableTableVerticalStart, false);
 					this.table.dataset.wptbSortableTableVertical = '1';
+					this.createTableElementsStylesScheme('td');
+					this.createTableElementsStylesScheme('tr');
 				} else {
 					this.sortingCellMouseMoveSwitcher('vertical', false);
 					delete this.table.dataset.wptbSortableTableVertical;
@@ -4064,11 +4068,91 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					this.sortingCellMouseMoveSwitcher('horizontal', true);
 					this.table.addEventListener('click', this.sortableTableHorizontalStart, false);
 					this.table.dataset.wptbSortableTableHorizontal = '1';
+					this.createTableElementsStylesScheme('td');
+					this.createTableElementsStylesScheme('tr');
 				} else {
 					this.sortingCellMouseMoveSwitcher('horizontal', false);
 					delete this.table.dataset.wptbSortableTableHorizontal;
 				}
 			}
+		};
+
+		/**
+   * changes table object for old reconstruction table type
+   *
+   * @param {boolean}start
+   * @returns {*}
+   */
+		this.tableObjectChange = function () {
+			var start = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+			if (this.table.classList.contains('wptb-mobile-view-active') && start) {
+				this.table = table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
+			} else if (this.table.classList.contains('wptb-preview-table-mobile') && !start) {
+				this.table = table.parentNode.querySelector('.wptb-preview-table');
+			}
+			return this.table;
+		};
+
+		/**
+   * fills the object with data about cell styles for all locations (create scheme)
+   *
+   * @param elemSelector
+   */
+		this.createTableElementsStylesScheme = function (elemSelector) {
+			this.tableObjectChange();
+			var elements = this.table.querySelectorAll(elemSelector);
+			if (elements.length) {
+				for (var i = 0; i < elements.length; i++) {
+					var elem = elements[i];
+					var cellFullStyleObj = window.getComputedStyle(elem, null);
+					var backgroundColor = cellFullStyleObj.getPropertyValue('background-color');
+					var objectKey = '';
+					if (elemSelector === 'td') {
+						objectKey = elem.dataset.xIndex + '-' + elem.dataset.yIndex;
+						this.cellsStylesScheme[objectKey] = { backgroundColor: backgroundColor };
+					} else if (elemSelector === 'tr') {
+						objectKey = String(i);
+						this.rowsStylesScheme[objectKey] = { backgroundColor: backgroundColor };
+					}
+				}
+			}
+
+			this.tableObjectChange(false);
+		};
+
+		/**
+   * applies saved cell styles data to all cells
+   *
+   * @param elemSelector
+   */
+		this.reassignElementsStyles = function (elemSelector) {
+			this.tableObjectChange();
+			var elements = this.table.querySelectorAll(elemSelector);
+			var elementsStylesScheme = void 0;
+			if (elemSelector === 'td') {
+				elementsStylesScheme = this.cellsStylesScheme;
+			} else if (elemSelector === 'tr') {
+				elementsStylesScheme = this.rowsStylesScheme;
+			}
+			if (elements.length) {
+				for (var i = 0; i < elements.length; i++) {
+					var elem = elements[i];
+					var objectKey = '';
+					if (elemSelector === 'td') {
+						objectKey = elem.dataset.xIndex + '-' + elem.dataset.yIndex;
+					} else if (elemSelector === 'tr') {
+						objectKey = i;
+					}
+					if (elementsStylesScheme.hasOwnProperty(objectKey)) {
+						var elemStyles = elementsStylesScheme[objectKey];
+						for (var key in elemStyles) {
+							elem.style[key] = elemStyles[key];
+						}
+					}
+				}
+			}
+			this.tableObjectChange(false);
 		};
 
 		/**
@@ -4115,6 +4199,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 										}
 									}
 								}
+							} else {
+								this.itemsPerHeader = 0;
 							}
 						}
 					} else {
@@ -4540,6 +4626,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						var tableSM = _table2.tableSM();
 						new tableSM().tableStateSet();
 					}
+
+					this.reassignElementsStyles('td');
+					this.reassignElementsStyles('tr');
 				}
 			}
 		}
