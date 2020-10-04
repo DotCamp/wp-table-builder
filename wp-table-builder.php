@@ -51,7 +51,7 @@ if ( ! function_exists( 'wptb_fs' ) ) {
 				'menu'           => array(
 					'slug'       => 'wptb-overview',
 					'first-path' => 'admin.php?page=wp-table-builder-welcome',
-					'account'    => false,
+					'account'    => true,
 					'contact'    => false,
 					'support'    => false,
 				),
