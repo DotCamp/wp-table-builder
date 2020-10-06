@@ -23,7 +23,6 @@ class TableBlock extends React.Component {
 			fullPreview: false,
 			showBuilder: false,
 			builderUrl: props.builderUrl,
-			fetching: false,
 		};
 
 		this.state.selectScreen = this.state.savedId === -1;
@@ -41,7 +40,6 @@ class TableBlock extends React.Component {
 		this.openNewTableBuilder = this.openNewTableBuilder.bind(this);
 		this.openTableEditBuilder = this.openTableEditBuilder.bind(this);
 		this.setBuilderVisibility = this.setBuilderVisibility.bind(this);
-		this.isFetching = this.isFetching.bind(this);
 		this.updateSelection = this.updateSelection.bind(this);
 
 		this.mainRef = React.createRef();
@@ -56,13 +54,12 @@ class TableBlock extends React.Component {
 		this.setState({ footerRightPortal: this.footerRightPortal });
 	}
 
-	/**
-	 * Return block fetch status.
-	 *
-	 * @return {boolean} fetching or not
-	 */
-	isFetching() {
-		return this.state.fetching;
+	// Update selection depending on builder sent id.
+	updateSelection(id) {
+		return this.props.getTables().then(() => {
+			this.setState({ selectedId: Number.parseInt(id, 10) });
+			this.saveTable();
+		});
 	}
 
 	/**
@@ -92,10 +89,10 @@ class TableBlock extends React.Component {
 	 */
 	filteredTables() {
 		if (this.state.searchTerm === '') {
-			return this.props.blockData.tables;
+			return this.props.tables;
 		}
 
-		return this.props.blockData.tables.filter((t) => {
+		return this.props.tables.filter((t) => {
 			const regexp = new RegExp(`(${this.state.searchTerm})`, 'gi');
 
 			return regexp.test(t.title) || regexp.test(`${t.id}`);
@@ -129,7 +126,7 @@ class TableBlock extends React.Component {
 	 * @return {Object} selected table object
 	 */
 	selectedTable() {
-		return this.props.blockData.tables.filter((t) => {
+		return this.props.tables.filter((t) => {
 			return this.state.selectedId === t.id;
 		})[0];
 	}
@@ -205,13 +202,6 @@ class TableBlock extends React.Component {
 	}
 
 	/**
-	 * Update selection list and selected table
-	 *
-	 * @param {number} tableId table id
-	 */
-	updateSelection(tableId) {}
-
-	/**
 	 * Render component to DOM.
 	 *
 	 * @return {JSX.Element} rendered component
@@ -223,7 +213,7 @@ class TableBlock extends React.Component {
 					style={{ display: this.state.fullPreview ? 'none' : 'grid' }}
 					className={'wptb-block-wrapper wptb-basic-appear-anim'}
 				>
-					<BusyOverlay show={this.isFetching()} />
+					<BusyOverlay show={this.props.isFetching()} />
 					<div className={'wptb-block-header'}>
 						<div className={'wptb-plugin-left-toolbox'}>
 							<div className={'wptb-plugin-brand'}>WP Table Builder</div>

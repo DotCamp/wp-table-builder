@@ -1,5 +1,4 @@
 import { registerBlockType } from '@wordpress/blocks';
-import { withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 import TableBlockApp from './containers/TableBlockApp';
@@ -42,6 +41,6 @@ registerBlockType(blockData.blockName, {
 		return <TableBlockApp attributes={attributes} setAttributes={setAttributes} blockData={blockData} />;
 	},
 	save: ({ attributes }) => {
-		return attributes.id >= 0 ? `[wptb id=${attributes.id}]` : __('No table selected', 'wp-table-builder');
+		return attributes.id >= 0 ? `[wptb id=${attributes.id}]` : '';
 	},
 });

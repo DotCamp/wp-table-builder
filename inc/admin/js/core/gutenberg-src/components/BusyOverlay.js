@@ -1,9 +1,10 @@
 import React from 'react';
+import WptbOverlay from './WptbOverlay';
 
 export default function BusyOverlay({ show }) {
 	return (
-		<div style={{ display: show ? 'flex' : 'none' }} className={'wptb-block-fetch-overlay wptb-basic-appear-anim'}>
-			<div className={'dashicons dashicons-update-alt'} />
-		</div>
+		<WptbOverlay show={show}>
+			<div className={'wptb-busy-overlay dashicons dashicons-update-alt'} />
+		</WptbOverlay>
 	);
 }

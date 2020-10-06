@@ -1,4 +1,6 @@
 import React from 'react';
+import { __ } from '@wordpress/i18n';
+import WptbOverlay from './WptbOverlay';
 
 export default function TableList({ tables, rowSelected, selectedId, searchTerm }) {
 	const indicateFoundTerm = (value) => {
@@ -30,6 +32,7 @@ export default function TableList({ tables, rowSelected, selectedId, searchTerm 
 					</div>
 				);
 			})}
+			<WptbOverlay show={tables.length <= 0}>{__('no tables found', 'wp-table-builder')}</WptbOverlay>
 		</div>
 	);
 }

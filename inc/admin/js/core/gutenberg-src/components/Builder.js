@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
+import BusyOverlay from './BusyOverlay';
 
 export default function Builder({ builderUrl, show, builderVisibility, updateSelection }) {
 	const [gutenbergUrl, setUrl] = useState(builderUrl);
@@ -41,7 +42,7 @@ export default function Builder({ builderUrl, show, builderVisibility, updateSel
 						style={{ display: frameLoaded ? 'none' : 'flex' }}
 						className={'wptb-block-builder-load-indicator'}
 					>
-						<div className="dashicons dashicons-update-alt" />
+						<BusyOverlay show={true} />
 					</div>
 					<iframe ref={ref} className={'wptb-block-builder'} src={gutenbergUrl} />
 				</Fragment>
