@@ -86,9 +86,21 @@ class Tag_Screen_Options {
 	 * @param Screen_Options_Manager $screen_options_manager screen options manager instance
 	 */
 	protected function prepare_options( $screen_options_manager ) {
-		foreach ( $this->settings as $option => $values ) {
-			$this->render_option( $option, $values['title'], $screen_options_manager );
+		if ( count( $this->settings ) === 0 ) {
+			$this->no_terms_render();
+		} else {
+			foreach ( $this->settings as $option => $values ) {
+				$this->render_option( $option, $values['title'], $screen_options_manager );
+			}
 		}
+
+	}
+
+	/**
+	 * Render when no terms are found.
+	 */
+	protected function no_terms_render() {
+	  printf('<i>%s</i>', esc_html__('no terms found', 'wp-table-builder'));
 	}
 
 	/**
@@ -104,9 +116,9 @@ class Tag_Screen_Options {
 
 		$checked = $checked !== null && $checked === 'on';
 
-	  $sprint_base = '<label for="%s"><input type="checkbox" id="%s" name="%s[%s][%s]" ' . checked( $checked, true, false ) . '>%s</label>';
+		$sprint_base = '<label for="%s"><input type="checkbox" id="%s" name="%s[%s][%s]" ' . checked( $checked, true, false ) . '>%s</label>';
 
-	  printf( $sprint_base, esc_attr( $id ), esc_attr( $id ), esc_attr( $screen_options_manager->options_id ), esc_textarea( $this->options_name ), esc_textarea( $option ), $title );
+		printf( $sprint_base, esc_attr( $id ), esc_attr( $id ), esc_attr( $screen_options_manager->options_id ), esc_textarea( $this->options_name ), esc_textarea( $option ), $title );
 	}
 
 	/**
