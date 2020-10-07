@@ -33,6 +33,8 @@ We have a cell management mode which comes with options like Add New Row, Add Ne
 
 ## How to Use 
 
+https://www.youtube.com/watch?v=VAU-i6RvXSI
+
 After you install the plugin, you will see a Table Builder menu. Go to Table Builder > Add New. 
 
 You will be able select column number and row number. Once you select that, click on Generate. The table will be generated. 

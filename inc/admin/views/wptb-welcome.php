@@ -22,7 +22,7 @@ use WP_Table_Builder as NS;
 			<p><?php esc_html_e( 'We recommend you to watch this short getting started video, and then start dragging and dropping elements to create your first table.', 'wp-table-builder' ); ?></p>
 		</div>
 		<div class="wptb-gettingStartedViedo">
-            <iframe width="716" height="415" src="https://www.youtube-nocookie.com/embed/j3FWRdGlpTA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="716" height="415" src="https://www.youtube-nocookie.com/embed/VAU-i6RvXSI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 		</div>
 		<div class="wptb-gettingStartedButton">
 			<a class="wptb-buttonPrimary" href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>">
