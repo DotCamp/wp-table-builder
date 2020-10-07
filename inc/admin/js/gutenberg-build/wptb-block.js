@@ -661,8 +661,7 @@ var TableBlock = /*#__PURE__*/function (_React$Component) {
       }) : Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(_SelectedTableView__WEBPACK_IMPORTED_MODULE_10__["default"], {
         footerRightPortal: this.state.footerRightPortal,
         selectedTable: this.props.savedTable,
-        changeToSelect: this.changeToSelect,
-        tableCssUrl: this.props.tableCssUrl
+        changeToSelect: this.changeToSelect
       })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("div", {
         className: 'wptb-block-footer'
       }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("div", {
@@ -785,18 +784,28 @@ function TablePreview(_ref) {
       tableCssUrl = _ref.blockData.tableCssUrl;
   var ref = react__WEBPACK_IMPORTED_MODULE_1___default.a.createRef();
   var previewPadding = 40;
+
+  function prepareStylesheet(handler, url, root) {
+    var styleSheet = document.createElement('link');
+    styleSheet.setAttribute('rel', 'stylesheet');
+    styleSheet.setAttribute('href', url);
+    styleSheet.setAttribute('media', 'all');
+    styleSheet.setAttribute('id', handler);
+    root.appendChild(styleSheet);
+  }
+
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     if (content !== null && tableCssUrl !== undefined) {
       var elem = document.createElement('div');
       elem.attachShadow({
         mode: 'open'
-      }); // add table related stylesheet to shadowroot
+      }); // eslint-disable-next-line array-callback-return
 
-      var styleSheet = document.createElement('link');
-      styleSheet.setAttribute('rel', 'stylesheet');
-      styleSheet.setAttribute('href', tableCssUrl);
-      styleSheet.setAttribute('media', 'all');
-      elem.shadowRoot.appendChild(styleSheet); // add table content to shadowroot
+      Object.keys(tableCssUrl).map(function (handler) {
+        if (Object.prototype.hasOwnProperty.call(tableCssUrl, handler)) {
+          prepareStylesheet(handler, tableCssUrl[handler], elem.shadowRoot);
+        }
+      }); // add table content to shadowroot
 
       var range = document.createRange();
       range.setStart(document, 0);
@@ -821,7 +830,15 @@ function TablePreview(_ref) {
         var widthScale = wrapperWidth / (previewWidth + previewPadding);
         var heightScale = wrapperHeight / (previewHeight + previewPadding);
         var scaleVal = Math.min(widthScale, heightScale);
-        previewTable.style.transform = "scale(".concat(scaleVal, ")");
+        previewTable.style.transform = "scale(".concat(scaleVal, ")"); // fix for chrome browsers where table previews are distorted for tables with separated columns and row
+
+        if (window.navigator.vendor.includes('Google')) {
+          if (previewTable.style.borderCollapse === 'separate') {
+            var borderHorizontalSpacing = parseInt(previewTable.dataset.borderSpacingColumns, 10);
+            var cellCount = parseInt(previewTable.dataset.wptbCellsWidthAutoCount, 10);
+            previewTable.style.marginLeft = "".concat((cellCount + 1) * borderHorizontalSpacing * -1, "px");
+          }
+        }
       }
     }
   });

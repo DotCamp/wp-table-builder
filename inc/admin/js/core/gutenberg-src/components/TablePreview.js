@@ -5,17 +5,27 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 	const ref = React.createRef();
 	const previewPadding = 40;
 
+	function prepareStylesheet(handler, url, root) {
+		const styleSheet = document.createElement('link');
+		styleSheet.setAttribute('rel', 'stylesheet');
+		styleSheet.setAttribute('href', url);
+		styleSheet.setAttribute('media', 'all');
+		styleSheet.setAttribute('id', handler);
+		root.appendChild(styleSheet);
+	}
+
 	useEffect(() => {
 		if (content !== null && tableCssUrl !== undefined) {
 			const elem = document.createElement('div');
+
 			elem.attachShadow({ mode: 'open' });
 
-			// add table related stylesheet to shadowroot
-			const styleSheet = document.createElement('link');
-			styleSheet.setAttribute('rel', 'stylesheet');
-			styleSheet.setAttribute('href', tableCssUrl);
-			styleSheet.setAttribute('media', 'all');
-			elem.shadowRoot.appendChild(styleSheet);
+			// eslint-disable-next-line array-callback-return
+			Object.keys(tableCssUrl).map((handler) => {
+				if (Object.prototype.hasOwnProperty.call(tableCssUrl, handler)) {
+					prepareStylesheet(handler, tableCssUrl[handler], elem.shadowRoot);
+				}
+			});
 
 			// add table content to shadowroot
 			const range = document.createRange();
@@ -40,13 +50,23 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 
 				const scaleVal = Math.min(widthScale, heightScale);
 				previewTable.style.transform = `scale(${scaleVal})`;
+
+				// fix for chrome browsers where table previews are distorted for tables with separated columns and row
+				if (window.navigator.vendor.includes('Google')) {
+					if (previewTable.style.borderCollapse === 'separate') {
+						const borderHorizontalSpacing = parseInt(previewTable.dataset.borderSpacingColumns, 10);
+						const cellCount = parseInt(previewTable.dataset.wptbCellsWidthAutoCount, 10);
+
+						previewTable.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+					}
+				}
 			}
 		}
 	});
 
 	return (
 		<div ref={ref} className={'wptb-table-preview wptb-unselectable'}>
-			<span className="dashicons dashicons-grid-view no-table-selected-preview"></span>
+			<span className="dashicons dashicons-grid-view no-table-selected-preview" />
 		</div>
 	);
 }

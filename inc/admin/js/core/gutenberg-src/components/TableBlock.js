@@ -272,7 +272,6 @@ class TableBlock extends React.Component {
 									footerRightPortal={this.state.footerRightPortal}
 									selectedTable={this.props.savedTable}
 									changeToSelect={this.changeToSelect}
-									tableCssUrl={this.props.tableCssUrl}
 								/>
 							)}
 						</div>

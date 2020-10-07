@@ -13027,16 +13027,15 @@ var _default = {
         var widthScale = wrapperWidth / (prebuiltWidth + padding);
         var heightScale = 125 / (prebuiltHeight + padding);
         prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")"); // fix for chrome browsers where table previews are distorted for tables with separated columns and row
-
-        if (window.navigator.vendor.includes('Google')) {
-          var borderCollapseType = prebuilt.style.borderCollapse;
-
-          if (borderCollapseType === 'separate') {
-            var borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
-            var cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
-            prebuilt.style.marginLeft = "".concat((cellCount + 1) * borderHorizontalSpacing * -1, "px");
-          }
-        }
+        // if (window.navigator.vendor.includes('Google')) {
+        // 	const borderCollapseType = prebuilt.style.borderCollapse;
+        // 	if (borderCollapseType === 'separate') {
+        // 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+        // 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+        //
+        // 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+        // 	}
+        // }
 
         if (_this.id !== 'blank') {
           var tableRows = Array.from(prebuilt.querySelectorAll('tr'));
@@ -13240,9 +13239,9 @@ exports.default = _default;
                   },
                   [
                     _vm._v(
-                      "\n\t\t\t\t" +
+                      "\n        " +
                         _vm._s(_vm._f("cap")(_vm.strings.generate)) +
-                        "\n\t\t\t"
+                        "\n      "
                     )
                   ]
                 ),
@@ -13262,9 +13261,9 @@ exports.default = _default;
                       },
                       [
                         _vm._v(
-                          "\n\t\t\t\t" +
+                          "\n        " +
                             _vm._s(_vm._f("cap")(_vm.strings.edit)) +
-                            "\n\t\t\t"
+                            "\n      "
                         )
                       ]
                     )

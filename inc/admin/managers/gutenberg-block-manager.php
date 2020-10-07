@@ -6,6 +6,7 @@ use WP_Query;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
+use function apply_filters;
 use function get_current_screen;
 use function get_post_meta;
 use function is_gutenberg_page;
@@ -115,17 +116,22 @@ class Gutenberg_Block_Manager {
 
 		wp_reset_query();
 
-		$admin_page  = admin_url( 'admin.php' );
-		$builder_url = add_query_arg( [ 'page' => 'wptb-builder' ], $admin_page );
-		$table_css   = add_query_arg( [ 'ver' => NS\PLUGIN_VERSION ], NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css' );
+		$admin_page       = admin_url( 'admin.php' );
+		$builder_url      = add_query_arg( [ 'page' => 'wptb-builder' ], $admin_page );
+		$normal_table_css = add_query_arg( [ 'ver' => NS\PLUGIN_VERSION ], NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css' );
 
+		$table_css_url = [
+			'normal' => $normal_table_css
+		];
+
+		$table_css_url = apply_filters( 'wp-table-builder/filter/wptb_gutenberg_preview_css_url', $table_css_url );
 
 		return [
 			'blockName'   => $this->block_name,
 			'icon'        => Init::instance()->get_icon_manager()->get_icon( 'table' ),
 			'tables'      => $tables,
 			'builderUrl'  => $builder_url,
-			'tableCssUrl' => $table_css
+			'tableCssUrl' => $table_css_url
 		];
 	}
 }
