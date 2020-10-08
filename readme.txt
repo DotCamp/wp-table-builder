@@ -91,6 +91,7 @@ That's it. You're done!
 = 1.3.1 =
 
 * FIX: Fixed an issue where editing text links not marking table as dirty.
+* FIX: Fixed an issue where saving table is being blocked by firewall plugins.
 
 = 1.3.0 =
 
