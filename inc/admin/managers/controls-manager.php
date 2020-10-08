@@ -94,10 +94,10 @@ class Controls_Manager {
 	 */
 	const BUTTON = 'button';
 
-    /**
-     *  Adding button2 control
-     */
-    const BUTTON2 = 'button2';
+	/**
+	 *  Adding button2 control
+	 */
+	const BUTTON2 = 'button2';
 
 	/**
 	 * Adding start of collapsible section group control.
@@ -154,6 +154,11 @@ class Controls_Manager {
 	 */
 	const NAMED_TOGGLE = 'named_toggle';
 
+	/**
+	 * Adding tag control.
+	 */
+	const TAG_CONTROL = 'tag_control';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -201,7 +206,7 @@ class Controls_Manager {
 			self::CHECKBOX,
 			self::TEXTAREA,
 			self::BUTTON,
-            self::BUTTON2,
+			self::BUTTON2,
 			self::SECTION_GROUP_COLLAPSE_START,
 			self::SECTION_GROUP_COLLAPSE_END,
 			self::SECTION_GROUP_TABBED_START,
@@ -212,24 +217,26 @@ class Controls_Manager {
 			self::MEDIA,
 			self::HTML_OUTPUT,
 			self::SIDES,
-      self::NAMED_TOGGLE
-	];
+			self::NAMED_TOGGLE,
+			self::TAG_CONTROL,
+		];
 	}
 
-    /**
-     * Add control to stack.
-     *
-     * This method adds a new control to the stack.
-     *
-     * @param Controls_Stack $element
-     * @param string $control_id Control ID.
-     * @param array $control_data Control data.
-     *
-     * @param int $control_pos
-     * @return bool True if control added, False otherwise.
-     * @since 1.1.2
-     * @access public
-     */
+	/**
+	 * Add control to stack.
+	 *
+	 * This method adds a new control to the stack.
+	 *
+	 * @param Controls_Stack $element
+	 * @param string $control_id Control ID.
+	 * @param array $control_data Control data.
+	 *
+	 * @param int $control_pos
+	 *
+	 * @return bool True if control added, False otherwise.
+	 * @since 1.1.2
+	 * @access public
+	 */
 	public function add_control_to_stack( Controls_Stack $element, $control_id, $control_data, $control_pos ) {
 
 		$control_data['name'] = $control_id;
@@ -250,42 +257,42 @@ class Controls_Manager {
 			return false;
 		}
 
-		if( $control_pos && ( int )$control_pos && abs( ( int )$control_pos ) > 0 ) {
-            $control_pos = ( int )$control_pos;
-            if( $control_pos > 0 ) {
-                if( is_array( $this->stacks[ $stack_id ] ) && count( $this->stacks[ $stack_id ] ) > $control_pos ) {
-                    $a = array();
-                    $arr_keys = array_keys( $this->stacks[ $stack_id ] );
+		if ( $control_pos && ( int ) $control_pos && abs( ( int ) $control_pos ) > 0 ) {
+			$control_pos = ( int ) $control_pos;
+			if ( $control_pos > 0 ) {
+				if ( is_array( $this->stacks[ $stack_id ] ) && count( $this->stacks[ $stack_id ] ) > $control_pos ) {
+					$a        = array();
+					$arr_keys = array_keys( $this->stacks[ $stack_id ] );
 
-                    for( $i = 0; $i < $control_pos; $i++ ) {
-                        $first_key = array_shift( $arr_keys );
-                        $first_elem = $this->stacks[ $stack_id ][ $first_key ];
-                        unset( $this->stacks[ $stack_id ][ $first_key ] );
-                        $a[ $first_key ] = $first_elem;
-                    }
-                    $b = array( $control_id => $control_data );
-                    $ab = array_merge( $a, $b );
-                    $this->stacks[ $stack_id ] = array_merge( $ab, $this->stacks[ $stack_id ] );
-                }
-            } else if( $control_pos < 0 ) {
-                $control_pos = abs( $control_pos );
-                if( is_array( $this->stacks[ $stack_id ] ) && count( $this->stacks[ $stack_id ] ) > $control_pos ) {
-                    $a = array();
-                    $arr_keys = array_keys( $this->stacks[ $stack_id ] );
-                    for( $i = 0; $i < $control_pos; $i++ ) {
-                        $last_key = array_pop( $arr_keys );
-                        $last_elem = $this->stacks[ $stack_id ][ $last_key ];
-                        unset( $this->stacks[ $stack_id ][ $last_key ] );
-                        $a[ $last_key ] = $last_elem;
-                    }
-                    $a = array_reverse( $a );
-                    $this->stacks[ $stack_id ][ $control_id ] = $control_data;
-                    $this->stacks[ $stack_id ] = array_merge( $this->stacks[ $stack_id ], $a );
-                }
-            }
-        } else {
-            $this->stacks[ $stack_id ][ $control_id ] = $control_data;
-        }
+					for ( $i = 0; $i < $control_pos; $i ++ ) {
+						$first_key  = array_shift( $arr_keys );
+						$first_elem = $this->stacks[ $stack_id ][ $first_key ];
+						unset( $this->stacks[ $stack_id ][ $first_key ] );
+						$a[ $first_key ] = $first_elem;
+					}
+					$b                         = array( $control_id => $control_data );
+					$ab                        = array_merge( $a, $b );
+					$this->stacks[ $stack_id ] = array_merge( $ab, $this->stacks[ $stack_id ] );
+				}
+			} else if ( $control_pos < 0 ) {
+				$control_pos = abs( $control_pos );
+				if ( is_array( $this->stacks[ $stack_id ] ) && count( $this->stacks[ $stack_id ] ) > $control_pos ) {
+					$a        = array();
+					$arr_keys = array_keys( $this->stacks[ $stack_id ] );
+					for ( $i = 0; $i < $control_pos; $i ++ ) {
+						$last_key  = array_pop( $arr_keys );
+						$last_elem = $this->stacks[ $stack_id ][ $last_key ];
+						unset( $this->stacks[ $stack_id ][ $last_key ] );
+						$a[ $last_key ] = $last_elem;
+					}
+					$a                                        = array_reverse( $a );
+					$this->stacks[ $stack_id ][ $control_id ] = $control_data;
+					$this->stacks[ $stack_id ]                = array_merge( $this->stacks[ $stack_id ], $a );
+				}
+			}
+		} else {
+			$this->stacks[ $stack_id ][ $control_id ] = $control_data;
+		}
 
 		return true;
 	}
@@ -392,9 +399,9 @@ class Controls_Manager {
 		if ( ! is_null( $this->stacks ) && is_array( $this->stacks ) ) {
 			foreach ( $this->stacks as $key => $value ):
 				?>
-                <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
-					<?php echo json_encode( $value ); ?>
-                </script>
+              <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
+				  <?php echo json_encode( $value ); ?>
+              </script>
 			<?php
 			endforeach;
 		}

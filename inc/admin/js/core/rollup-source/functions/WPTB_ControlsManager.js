@@ -55,10 +55,11 @@ function ControlsManager() {
 	 * Data objects that are registered for specific control items can be fetched with the  correct id. With this way, components can reach their data with the correct unique keys.
 	 *
 	 * @param {string} id control item unique key
+	 * @param {boolean} suppress suppress error message upon not founding data
 	 * @returns {object} data associated with control item
 	 */
-	function getControlData(id) {
-		if (!controlData[id]) {
+	function getControlData(id, suppress = false) {
+		if (!controlData[id] && !suppress) {
 			throw new Error(`Control data for [${id}] not found.`);
 		}
 		return controlData[id];

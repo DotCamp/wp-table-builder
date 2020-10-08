@@ -24,6 +24,12 @@ if ( ! defined( 'WPINC' ) ) {
  *
  * Manager for adding screen options to table listing menu.
  *
+ *  actions:
+ *    wp-table-builder/action/render_screen_settings: render screen settings to screen options section.
+ *
+ *  filters:
+ *    wp-table-builder/filter/screen_options: filter screen options that will be saved to screen object.
+ *
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
 class Screen_Options_Manager {
@@ -100,10 +106,6 @@ class Screen_Options_Manager {
 				$value = isset( $_POST[ $this->options_id ] ) && is_array( $_POST[ $this->options_id ] ) ? $_POST[ $this->options_id ] : [];
 			}
 		}
-
-		add_action('admin_notices', function () {
-		  echo 'test';
-    });
 
 		return $value;
 	}
@@ -249,6 +251,44 @@ class Screen_Options_Manager {
 
 		if ( is_object( $current_screen ) && $current_screen->id === $tables_overview ) {
 			return $current_screen->get_option( implode( '_', [ $this->options_id, $parent_id, $key ] ), 'value' );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get all related options with the supplied parent id.
+	 *
+	 * @param string $parent_id parent id
+	 *
+	 * @return mixed|null screen options related to parent id.
+	 */
+	public function get_all_options( $parent_id ) {
+		$user_meta = get_user_meta( get_current_user_id(), $this->user_meta_id );
+
+		// search user meta for option
+		if ( $user_meta && is_array( $user_meta ) && isset( $user_meta[0][ $parent_id ] ) ) {
+			return $user_meta[0][ $parent_id ];
+		}
+
+		global $tables_overview;
+		$current_screen = get_current_screen();
+
+		// search screen object for option
+		if ( is_object( $current_screen ) && $current_screen->id === $tables_overview ) {
+			$screen_options = $current_screen->get_options();
+
+			// prepare prefix of screen option
+			$needle = implode( '_', [ $this->options_id, $parent_id ] );
+
+			return array_reduce( array_keys( $screen_options ), function ( $carry, $key ) use ( $needle, $screen_options ) {
+				$matched = [];;
+				if ( filter_var( preg_match( "/^{$needle}_(.+)$/", $key, $matched ), FILTER_VALIDATE_BOOLEAN ) ) {
+					$carry[ $matched[1] ] = $screen_options[ $key ]['value'];
+				}
+
+				return $carry;
+			}, [] );
 		}
 
 		return null;

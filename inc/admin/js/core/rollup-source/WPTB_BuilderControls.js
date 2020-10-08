@@ -13,6 +13,7 @@ import WPTB_ControlsManager from './functions/WPTB_ControlsManager';
 import WPTB_ResponsiveTable from './mountPoints/WPTB_ResponsiveTable';
 import WPTB_SidesControl from './mountPoints/WPTB_SidesControl';
 import WPTB_NamedToggleControl from './mountPoints/WPTB_NamedToggleControl';
+import WPTB_TagControl from './mountPoints/WPTB_TagControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -32,6 +33,7 @@ const controls = [
 	WPTB_ResponsiveTable,
 	WPTB_SidesControl,
 	WPTB_NamedToggleControl,
+	WPTB_TagControl,
 ];
 
 /**
