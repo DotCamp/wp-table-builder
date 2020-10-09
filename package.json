@@ -8,6 +8,8 @@
     "dev:build:watch": "cross-env NODE_ENV=development parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-hmr",
     "prod:build": "cross-env NODE_ENV=production parcel build ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
     "prod:build:watch": "cross-env NODE_ENV=production parcel watch ./inc/admin/js/core/rollup-source/*.js -d ./inc/admin/js --no-cache --no-source-maps",
+    "gutenberg:dev": "wp-scripts start",
+    "gutenberg:build": "wp-scripts build",
     "lint": "eslint ./inc/admin/js/core/rollup-source --ignore-pattern '/inc/admin/js/core/rollup-source/functions/importOperations.js' --ext .js,.vue",
     "preinstall": "npx npm-force-resolutions"
   },
@@ -32,6 +34,8 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
     "@babel/preset-env": "^7.9.5",
     "@vue/component-compiler-utils": "^3.1.2",
+    "@wordpress/eslint-plugin": "^7.2.1",
+    "@wordpress/scripts": "^12.2.1",
     "babel-eslint": "^10.1.0",
     "babel-preset-env": "^1.4.0",
     "cross-env": "^7.0.2",
@@ -56,9 +60,14 @@
     "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {
+    "@wordpress/api-fetch": "^3.20.0",
+    "@wordpress/block-editor": "^4.5.0",
+    "@wordpress/blocks": "^6.22.0",
     "@wordpress/i18n": "^3.11.0",
     "gulp-rename": "^1.4.0",
     "portal-vue": "^2.1.7",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "vue": "^2.6.11",
     "vue-fragment": "^1.5.1",
     "vue-hot-reload-api": "^2.3.4"
