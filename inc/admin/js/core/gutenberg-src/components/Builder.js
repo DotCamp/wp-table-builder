@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
+import { select, dispatch } from '@wordpress/data';
 import BusyOverlay from './BusyOverlay';
 
 export default function Builder({ builderUrl, show, builderVisibility, updateSelection }) {
@@ -18,6 +19,10 @@ export default function Builder({ builderUrl, show, builderVisibility, updateSel
 		prepareUrl(builderUrl);
 
 		if (show) {
+			const togglePreferenceValue = select('core/edit-post').getPreference('features').fullscreenMode;
+			if (!togglePreferenceValue) {
+				dispatch('core/edit-post').toggleFeature('fullscreenMode');
+			}
 			setFrameLoaded(false);
 			ref.current.addEventListener('load', () => {
 				setFrameLoaded(true);

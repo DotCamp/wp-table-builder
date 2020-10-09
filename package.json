@@ -34,6 +34,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
     "@babel/preset-env": "^7.9.5",
     "@vue/component-compiler-utils": "^3.1.2",
+    "@wordpress/data": "^4.24.0",
     "@wordpress/eslint-plugin": "^7.2.1",
     "@wordpress/scripts": "^12.2.1",
     "babel-eslint": "^10.1.0",
