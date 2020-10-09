@@ -4,67 +4,52 @@
 		:class="uniqueId"
 		:data-element="elemContainer"
 	>
-		<div class="wptb-tag-control-cloud-wrapper">
-			<p class="wptb-settings-item-title">{{ translation('currentTags') }}</p>
-			<div class="wptb-tag-control-cloud">
-				<tag-ribbon
-					@click="handleRemove"
-					v-for="tag in selectedTags"
-					:name="tag.name"
-					:slug="tag.slug"
-					:key="tag.slug"
-					button-operation-type="remove"
-				></tag-ribbon>
-				<div v-if="selectedTags.length === 0" class="wptb-tag-control-cloud-empty">
-					{{ translation('empty') }}
-				</div>
-			</div>
-		</div>
-		<div class="wptb-tag-control-cloud-wrapper">
-			<p class="wptb-settings-item-title">{{ translation('availableTags') }}</p>
-			<div class="wptb-tag-control-cloud">
-				<tag-ribbon
-					@click="handleAdd"
-					v-for="tag in filteredTagsLeft"
-					:name="tag.name"
-					:slug="tag.slug"
-					:key="tag.slug"
-					button-operation-type="add"
-					:search-term="searchTerm"
-				></tag-ribbon>
-				<div v-if="filteredTagsLeft.length === 0" class="wptb-tag-control-cloud-empty">
-					{{ translation('empty') }}
-				</div>
-			</div>
-		</div>
-		<div class="wptb-tag-control-search-wrapper">
-			<div class="wptb-tag-control-search-input">
-				<input
-					class="wptb-tag-control-search"
-					type="text"
-					v-model.trim="searchTerm"
-					:placeholder="translation('searchTags')"
-				/>
-				<div v-if="searchTerm !== ''" class="wptb-tag-control-search-clear" @click.prevent="searchTerm = ''">
-					x
-				</div>
-			</div>
-		</div>
+		<tag-cloud
+			:label="translation('currentTags')"
+			ribbon-operation-type="remove"
+			:tags="selectedTags"
+			@ribbonClick="handleRemove"
+			:search-term="searchTerm"
+		></tag-cloud>
+		<tag-cloud
+			:label="translation('availableTags')"
+			ribbon-operation-type="add"
+			:tags="filteredTagsLeft"
+			@ribbonClick="handleAdd"
+			:search-term="searchTerm"
+		></tag-cloud>
+		<tag-search :placeholder="translation('searchTags')" v-model="searchTerm"></tag-search>
+		<tag-create
+			:label="translation('createNewTag')"
+			:name-string="translation('tagName')"
+			:desc-string="translation('tagDesc')"
+			:slug-string="translation('tagSlug')"
+			@createTerm="createTerm"
+			:all-tag-names="justTheNames"
+		></tag-create>
 	</div>
 </template>
 
 <script>
 import ControlBase from '../mixins/ControlBase';
 import withTranslation from '../mixins/withTranslation';
-import TagRibbon from '../components/TagRibbon';
+import TagCloud from '../components/TagCloud';
+import TagSearch from '../components/TagSearch';
+import TagCreate from '../components/TagCreate';
 
 export default {
-	components: { TagRibbon },
+	components: { TagCreate, TagSearch, TagCloud },
 	props: {
 		availableTags: {
 			type: Array,
 			default: () => {
 				return [];
+			},
+		},
+		security: {
+			type: Object,
+			default: () => {
+				return {};
 			},
 		},
 	},
@@ -74,6 +59,7 @@ export default {
 			selectedTags: [],
 			mountedAssign: false,
 			searchTerm: '',
+			innerTags: [],
 		};
 	},
 	mounted() {
@@ -82,6 +68,7 @@ export default {
 		this.$nextTick(() => {
 			this.selectedTags = WPTB_ControlsManager.getControlData('ControlTag');
 		});
+		this.innerTags = Array.from(this.availableTags);
 	},
 	watch: {
 		selectedTags: {
@@ -102,17 +89,23 @@ export default {
 				return t.name.toLowerCase().includes(this.searchTerm);
 			});
 		},
+		justTheNames() {
+			return this.innerTags.reduce((carry, tag) => {
+				carry.push(tag.name);
+				return carry;
+			}, []);
+		},
 	},
 	methods: {
 		tagsLeft() {
-			return this.availableTags.filter((t) => {
+			return this.innerTags.filter((t) => {
 				return !this.selectedTags.some((s) => {
 					return s.slug === t.slug;
 				});
 			});
 		},
 		handleAdd(slug) {
-			this.selectedTags.push(this.availableTags.filter((t) => t.slug === slug)[0]);
+			this.selectedTags.push(this.innerTags.filter((t) => t.slug === slug)[0]);
 		},
 		handleRemove(slug) {
 			this.selectedTags = this.selectedTags.filter((t) => {
@@ -128,6 +121,42 @@ export default {
 					})
 				);
 			}
+		},
+		createTerm(termData, clearFormSignal, updateBusy) {
+			const { nonce, action, ajaxUrl } = this.security.create;
+
+			const formData = new FormData();
+			formData.append('nonce', nonce);
+			formData.append('action', action);
+			formData.append('termData', JSON.stringify(termData));
+
+			// set busy status to true for create component
+			updateBusy(true);
+
+			fetch(ajaxUrl, {
+				method: 'POST',
+				body: formData,
+			})
+				.then((r) => {
+					if (r.ok) {
+						return r.json();
+					}
+					throw new Error('an error occurred creating table term, refresh and try again');
+				})
+				.then((resp) => {
+					if (resp.error) {
+						throw new Error(resp.error);
+					}
+
+					this.$set(this, 'innerTags', resp.data.tags);
+					clearFormSignal();
+					updateBusy(false, true);
+				})
+				.catch((err) => {
+					// eslint-disable-next-line no-console
+					console.error(err);
+					updateBusy(false, false);
+				});
 		},
 	},
 };

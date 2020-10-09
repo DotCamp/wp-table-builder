@@ -42,7 +42,7 @@ trait Ajax_Response {
 	 * @param bool $die close connection after sending data
 	 */
 	public function send_json( $die = true ) {
-		header('Content-Type: application/json');
+		header( 'Content-Type: application/json' );
 		echo json_encode( $this->response_data );
 
 		if ( $die ) {
@@ -56,6 +56,5 @@ trait Ajax_Response {
 		}
 
 		$this->response_data['data'] = [ $key => $data ];
-
 	}
 }

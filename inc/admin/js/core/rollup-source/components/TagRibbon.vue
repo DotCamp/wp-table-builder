@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-tag-ribbon-wrapper">
+	<div class="wptb-tag-ribbon-wrapper" :title="description">
 		<div class="wptb-tag-ribbon-name" v-html="searchIndicatedName"></div>
 		<div
 			@click.prevent="handleClick"
@@ -20,6 +20,10 @@ export default {
 		slug: {
 			type: String,
 			default: 'tagSlug',
+		},
+		description: {
+			type: String,
+			default: '',
 		},
 		addIcon: {
 			type: String,

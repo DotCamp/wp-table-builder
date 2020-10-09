@@ -7,14 +7,21 @@ use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element\Table_Setting_Element;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
+use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use WP_Table_Builder\Inc\Core\Init;
 use function absint;
 use function add_action;
 use function add_submenu_page;
+use function current_user_can;
 use function esc_html__;
 use function get_current_screen;
 use function get_terms;
+use function is_wp_error;
 use function register_taxonomy;
+use function sanitize_text_field;
+use function wp_create_nonce;
+use function wp_insert_term;
 use function wp_reset_query;
 use function wp_set_post_terms;
 
@@ -30,6 +37,8 @@ if ( ! defined( 'WPINC' ) ) {
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
 class Tag_Manager {
+	use Singleton_Trait;
+	use Ajax_Response;
 
 	/**
 	 * Constant for custom taxonomy id.
@@ -41,6 +50,12 @@ class Tag_Manager {
 	 * @var string
 	 */
 	protected static $menu_slug = '';
+
+	/**
+	 * Ajax action for creating a new table term.
+	 * @var string
+	 */
+	const CREATE_TERM_ACTION = 'wptb_create_term';
 
 	/**
 	 * Initialize tag manager.
@@ -65,7 +80,49 @@ class Tag_Manager {
 		add_filter( 'wp-table-builder/record_count', [ __CLASS__, 'table_listing' ] );
 
 		add_filter( 'get_terms', [ __CLASS__, 'table_tags_count' ], 1, 2 );
+
+		add_action( 'wp_ajax_' . self::CREATE_TERM_ACTION, [ __CLASS__, 'create_new_term' ] );
 	}
+
+	/**
+	 * Ajax endpoint for creating new table term.
+	 */
+	public static function create_new_term() {
+		$manager_instance = static::get_instance();
+
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && isset( $_POST['nonce'] ) && isset( $_POST['termData'] ) && wp_verify_nonce( $_POST['nonce'], self::CREATE_TERM_ACTION ) ) {
+			$manager_instance->set_message( 'ok' );
+			$term_data = (array) json_decode( sanitize_text_field( stripslashes( $_POST['termData'] ) ) );
+
+
+			if ( isset( $term_data['name'] ) && ! empty( $term_data['name'] ) ) {
+				$name             = sanitize_text_field( $term_data['name'] );
+				$operation_result = wp_insert_term( $name, static::TAX_ID, [
+					'slug'        => ( isset( $term_data['slug'] ) && ! empty( $term_data['slug'] ) ) ? sanitize_text_field( $term_data['slug'] ) : $name,
+					'description' => isset( $term_data['description'] ) ? sanitize_text_field( $term_data['description'] ) : ''
+				] );
+
+				if ( is_wp_error( $operation_result ) ) {
+					$manager_instance->set_error( esc_html__( 'an error while creating term, please refresh and try again', 'wp-table-builder' ) );
+				} else {
+					$all_table_tags = get_terms( [
+						'taxonomy'   => static::TAX_ID,
+						'hide_empty' => false
+					] );
+
+					$manager_instance->set_message( 'ok' );
+					$manager_instance->append_response_data( $all_table_tags, 'tags' );
+				}
+			} else {
+				$manager_instance->set_error( esc_html__( 'you need to give your term a valid name', 'wp-table-builder' ) );
+			}
+		} else {
+			$manager_instance->set_error( esc_html__( 'you are not authorized to use this ajax endpoint, refresh and try again', 'wp-table-builder' ) );
+		}
+
+		$manager_instance->send_json( true );
+	}
+
 
 	/**
 	 * Update count values of table tags with correct values.
@@ -247,14 +304,21 @@ class Tag_Manager {
 				'label'    => esc_html__( 'table tags', 'wp-table-builder' ),
 				'type'     => Controls_Manager::TAG_CONTROL,
 				'tags'     => $all_table_tags,
-				'postTags' => $requested_table_tags
+				'postTags' => $requested_table_tags,
+				'security' => [
+					'create' => [
+						'nonce'   => wp_create_nonce( self::CREATE_TERM_ACTION ),
+						'action'  => static::CREATE_TERM_ACTION,
+						'ajaxUrl' => admin_url( 'admin-ajax.php' )
+					]
+				]
 			]
 		];
 
 		Control_Section_Group_Collapse::add_section( 'table_settings_tags', esc_html__( 'Table Tags', 'wp-table-builder' ), $tag_group, [
 			$context,
 			'add_control'
-		], true );
+		], false );
 	}
 
 	/**

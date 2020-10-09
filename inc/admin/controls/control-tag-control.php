@@ -17,6 +17,7 @@ if ( ! defined( 'WPINC' ) ) {
  *  selectors => selector array to get/set certain values to html elements
  *  tags => available table tags array
  *  postTags => tags added to requested post
+ *  security => and array containing nonce,action and ajaxUrl for creating new terms
  *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
@@ -49,7 +50,11 @@ class Control_Tag_Control extends Base_Control {
 			'noCurrentTag'   => esc_html__( 'no tag active', 'wp-table-builder' ),
 			'noAvailableTag' => esc_html__( 'no tag available', 'wp-table-builder' ),
 			'empty'          => esc_html__( 'empty', 'wp-table-builder' ),
-			'searchTags'     => esc_html__( 'search available tags', 'wp-table-builder' )
+			'searchTags'     => esc_html__( 'search available tags', 'wp-table-builder' ),
+			'createNewTag'   => esc_html__( 'create new tag', 'wp-table-builder' ),
+			'tagName'        => esc_html__( 'name', 'wp-table-builder' ),
+			'tagSlug'        => esc_html__( 'slug', 'wp-table-builder' ),
+			'tagDesc'        => esc_html__( 'description', 'wp-table-builder' )
 		];
 
 		$strings = json_encode( $translated_strings );
@@ -65,7 +70,8 @@ class Control_Tag_Control extends Base_Control {
       #>
       <div id="{{{uniqueItemClass}}}">
         <tag-control keep-alive :label="label" elem-container="{{{elemContainer}}}"
-                     unique-id="{{{uniqueItemClass}}}" :strings="strings" :available-tags="tags"></tag-control>
+                     unique-id="{{{uniqueItemClass}}}" :strings="strings" :available-tags="tags"
+                     :security="security"></tag-control>
       </div>
       <wptb-template-script>
         WPTB_ControlsManager.callControlScript('ControlTag', '{{{uniqueItemClass}}}');
