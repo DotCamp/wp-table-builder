@@ -118,7 +118,8 @@ register_deactivation_hook( __FILE__, array( NS . 'Inc\Core\Deactivator', 'deact
 
 if ( ! function_exists( 'wptb_safe_welcome_redirect' ) ) {
 
-	add_action( 'admin_init', 'WP_Table_Builder\wptb_safe_welcome_redirect' );
+	// call welcome screen after freemius initialization
+	add_action( 'wptb_fs_loaded', 'WP_Table_Builder\wptb_safe_welcome_redirect' );
 
 	function wptb_safe_welcome_redirect() {
 
