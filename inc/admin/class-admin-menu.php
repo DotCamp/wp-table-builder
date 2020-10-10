@@ -5,11 +5,13 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
+use function add_query_arg;
 use function admin_url;
 use function get_plugins;
 use function current_user_can;
 use function wp_create_nonce;
 use function wp_localize_script;
+use function WP_Table_Builder\wptb_fs;
 
 /**
  * Register menu elements and do other global tasks.
@@ -291,7 +293,10 @@ class Admin_Menu {
 				$generate_data = [
 					'mountId'        => 'wptbGenerate',
 					'version'        => 'normal',
-					'adLink'         => 'https://wptablebuilder.com/',
+					'adLink'         => add_query_arg( [
+						'slug' => 'wp-table-builder-pro',
+						'page' => 'wptb-overview-addons'
+					], admin_url( 'admin.php' ) ),
 					'security'       => null,
 					'prebuiltTables' => null,
 					'strings'        => [
@@ -299,10 +304,8 @@ class Admin_Menu {
 						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
 						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
 						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
-//						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
-//						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
-						'prebuiltAdPart1'    => '',
-						'prebuiltAdPart2'    => '',
+						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
+						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
 						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
 					]
 

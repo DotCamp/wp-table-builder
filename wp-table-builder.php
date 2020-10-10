@@ -41,14 +41,15 @@ if ( ! function_exists( 'wptb_fs' ) ) {
 			require_once dirname( __FILE__ ) . '/inc/core/freemius/start.php';
 
 			$wptb_fs = fs_dynamic_init( array(
-				'id'             => '6602',
-				'slug'           => 'wp-table-builder',
-				'type'           => 'plugin',
-				'public_key'     => 'pk_6bf7fb67d8b8bcce83459fd46432e',
-				'is_premium'     => false,
-				'has_addons'     => false,
-				'has_paid_plans' => false,
-				'menu'           => array(
+				'id'               => '6602',
+				'slug'             => 'wp-table-builder',
+				'type'             => 'plugin',
+				'public_key'       => 'pk_6bf7fb67d8b8bcce83459fd46432e',
+				'is_premium'       => false,
+				'has_addons'       => true,
+				'has_paid_plans'   => false,
+				'is_org_compliant' => false,
+				'menu'             => array(
 					'slug'       => 'wptb-overview',
 					'first-path' => 'admin.php?page=wp-table-builder-welcome',
 					'account'    => true,
