@@ -6,6 +6,7 @@ import TablePreview from './TablePreview';
 import Builder from './Builder';
 import { withContext } from '../functions/withContext';
 import BusyOverlay from './BusyOverlay';
+import TableBlockInspector from './TableInspectorControls';
 
 /**
  * TableBlock component.
@@ -209,6 +210,10 @@ class TableBlock extends React.Component {
 	render() {
 		return (
 			<Fragment>
+				<TableBlockInspector
+					header={__('Info', 'wp-table-builder')}
+					table={this.state.selectScreen ? this.selectedTable() : this.props.savedTable}
+				/>
 				<div
 					style={{ display: this.state.fullPreview ? 'none' : 'grid' }}
 					className={'wptb-block-wrapper wptb-basic-appear-anim'}

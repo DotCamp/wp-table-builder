@@ -16,6 +16,7 @@ $theme-text-default-color: $gray-700
 .wptb-block-wrapper
   position: relative
   width: 100%
+  max-width: 700px
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif
   color: $theme-text-default-color
   border-radius: 5px
@@ -313,6 +314,14 @@ $theme-text-default-color: $gray-700
 
   .wptb-busy-overlay
     animation: wptb-rotate 1.0s linear infinite
+
+.wptb-block-info-label
+  //font-weight: bold
+  text-transform: capitalize
+
+.wptb-block-info-value
+  font-style: italic
+
 
 @keyframes wptb-basic-appear
   0%

@@ -28,11 +28,12 @@ export default class TableBlockApp extends React.Component {
 			},
 			getTables: () => {
 				this.state.setFetch(true);
-				return apiFetch({ path: '/wp/v2/wptb-tables?status=draft&per_page=-1&_fields=id,title,meta' }).then(
-					(tables) => {
-						this.setState({
-							tables: tables.map((t) => {
-								return {
+				return apiFetch({ path: '/wp/v2/wptb-tables?status=draft&per_page=-1' }).then((tables) => {
+					this.setState({
+						tables: tables.map((t) => {
+							return {
+								...t,
+								...{
 									id: t.id,
 									// eslint-disable-next-line no-underscore-dangle
 									content: t.meta._wptb_content_,
@@ -40,13 +41,13 @@ export default class TableBlockApp extends React.Component {
 										t.title.rendered === ''
 											? `${__('Table', 'wp-table-builder')} #${t.id}`
 											: t.title.rendered,
-								};
-							}),
-						});
+								},
+							};
+						}),
+					});
 
-						this.state.setFetch(false);
-					}
-				);
+					this.state.setFetch(false);
+				});
 			},
 		};
 	}

@@ -18,6 +18,7 @@ use function esc_html__;
 use function get_current_screen;
 use function get_terms;
 use function is_wp_error;
+use function register_rest_field;
 use function register_taxonomy;
 use function sanitize_text_field;
 use function wp_create_nonce;
@@ -82,7 +83,21 @@ class Tag_Manager {
 		add_filter( 'get_terms', [ __CLASS__, 'table_tags_count' ], 1, 2 );
 
 		add_action( 'wp_ajax_' . self::CREATE_TERM_ACTION, [ __CLASS__, 'create_new_term' ] );
+
+		add_action( 'rest_api_init', [ __CLASS__, 'add_rest_field' ] );
 	}
+
+	/**
+	 * Add table tags to REST api.
+	 */
+	public static function add_rest_field() {
+		register_rest_field( 'wptb-tables', 'wptb_table_tags', [
+			'get_callback' => function ( $table ) {
+				return wp_get_post_terms( $table['id'], static::TAX_ID );
+			}
+		] );
+	}
+
 
 	/**
 	 * Ajax endpoint for creating new table term.
@@ -369,6 +384,8 @@ class Tag_Manager {
 			],
 			'description'  => 'tags for wp table builder tables',
 			'show_in_menu' => false,
+			'show_in_ui'   => false,
+			'show_in_rest' => true
 		];
 
 		register_taxonomy( static::TAX_ID, 'post', $args );
