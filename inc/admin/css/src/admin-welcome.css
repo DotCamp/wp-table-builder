@@ -1,0 +1,110 @@
+.wptb-container {
+    max-width: 900px;
+    min-width: 255px;
+    margin: auto;
+    border: 1px solid #d4d4d4;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background-color: #fff;
+}
+
+.wptb-headerPart {
+    box-shadow: 0 0 8px rgba(0, 0, 0, .1);
+}
+
+.wptb-skipToPrevious {
+    float: right;
+    padding: 14px 20px 14px 20px;
+    border-left: 1px solid #d4d4d4;
+}
+
+.wptb-skipToPrevious a {
+    color: #9b9b9b;
+}
+
+.wptb-skipToPrevious a:hover {
+    color: #000;
+}
+
+.wptb-logoAndText img {
+    margin-right: 5px;
+}
+
+.wptb-logoAndText {
+    display: inline-block;
+    padding: 1%;
+}
+
+.wptb-gettingStarted {
+    position: relative;
+    text-transform: uppercase;
+    font-weight: 600;
+    top: -5px;
+}
+
+.wptb-gettingStartedContent {
+    width: auto;
+    padding: 50px;
+}
+
+.wptb-gettingStartedText {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+}
+
+.wptb-gettingStartedText h2 {
+    margin-top: 0;
+    margin-bottom: 26px;
+}
+
+.wptb-gettingStartedText p {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.wptb-gettingStartedViedo {
+    margin: 40px 0 60px;
+    text-align: center;
+}
+
+.wptb-gettingStartedViedo iframe {
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, .15);
+}
+
+.wptb-gettingStartedButton {
+    max-width: 500px;
+    margin: auto;
+}
+
+.wptb-buttonPrimary {
+    font-size: 14px;
+    min-height: 46px;
+    line-height: 3.14285714;
+    padding: 0 36px;
+    margin-right: 20px;
+    margin-left: 36px;
+    background: #007cba;
+    border-color: #007cba;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+    vertical-align: top;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.wptb-buttonSecondary {
+    font-size: 14px;
+    min-height: 46px;
+    line-height: 3.14285714;
+    padding: 0 36px;
+    background: #fff;
+    border: 1px solid #007cba;
+    color: #007cba;
+    text-decoration: none;
+    text-shadow: none;
+    vertical-align: top;
+    display: inline-block;
+    border-radius: 3px;
+}

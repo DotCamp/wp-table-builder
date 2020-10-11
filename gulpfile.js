@@ -1,5 +1,7 @@
 const gulp = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
+const autoprefixer = require('gulp-autoprefixer');
+const csso = require('gulp-csso');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
@@ -30,18 +32,18 @@ gulp.task('frontendJs', function () {
 		'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
 		'./inc/admin/js/WPTB_ResponsiveFrontend.js',
 		'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
-	])
-		.pipe(sourcemaps.init())
-		.pipe(
-			babel({
-				presets: [['env', { modules: false }]],
-				babelrc: false,
-			})
-		)
-		.pipe(concat('./inc/frontend/js/wp-table-builder-frontend.js'))
-		.pipe(uglify())
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('.'));
+	]);
+});
+
+gulp.task('cssAdmin', () => {
+	gulp.src(['./inc/admin/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/admin/css'));
+});
+
+gulp.task('cssFrontend', () => {
+	gulp.src(['./inc/frontend/css/src/*.css'])
+		.pipe(autoprefixer())
+		.pipe(csso())
+		.pipe(gulp.dest('./inc/frontend/css'));
 });
 
 gulp.task('watch', function () {
@@ -59,6 +61,9 @@ gulp.task('watch', function () {
 		],
 		['frontendJs']
 	);
+
+	gulp.watch(['./inc/admin/css/src/*.css'], ['cssAdmin']);
+	gulp.watch(['./inc/frontend/css/src/*.css'], ['cssFrontend']);
 });
 
-gulp.task('default', ['adminJs', 'frontendJs']);
+gulp.task('default', ['adminJs', 'frontendJs', 'cssAdmin', 'cssFrontend']);
