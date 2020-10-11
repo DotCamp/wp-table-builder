@@ -36,12 +36,26 @@ const ControlBase = {
 	mounted() {
 		// find and retrieve selector elements
 		if (this.selectors.length > 0) {
-			const operationObj = selectorOperations.getAllValues(this.selectors);
-			this.targetElements = operationObj.elements;
+			// const operationObj = selectorOperations.getAllValues(this.selectors);
+			// this.targetElements = operationObj.elements;
+			const operationObj = this.getTargetElements();
 			this.startupValue = operationObj.startupValue;
 		}
 	},
 	methods: {
+		/**
+		 * Get target elements of the selector.
+		 *
+		 * @return {null|Object}} null if no selector is defined or operation object
+		 */
+		getTargetElements() {
+			if (this.selectors.length > 0) {
+				const operationObj = selectorOperations.getAllValues(this.selectors);
+				this.targetElements = operationObj.elements;
+				return operationObj;
+			}
+			return null;
+		},
 		/**
 		 * Generate a control value changed event.
 		 *
@@ -75,7 +89,7 @@ const ControlBase = {
 		/**
 		 * Sets the value of the selector object.
 		 *
-		 * @param {object} selectorObj selector object
+		 * @param {Object} selectorObj selector object
 		 * @param {any} value value to be set
 		 */
 		setTargetValue(selectorObj, value) {
@@ -94,7 +108,7 @@ const ControlBase = {
 		/**
 		 * Sets the current table as modified.
 		 *
-		 * @param checkMountedState whether to check if value is updated at mounted hook. This check can be done to make sure assigning default value or saved value that has been fetched from the target selector element will not set the table as dirty at mount.
+		 * @param {boolean} checkMountedState whether to check if value is updated at mounted hook. This check can be done to make sure assigning default value or saved value that has been fetched from the target selector element will not set the table as dirty at mount.
 		 */
 		setTableDirty(checkMountedState = false) {
 			if (checkMountedState) {

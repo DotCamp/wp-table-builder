@@ -96,6 +96,9 @@ export default {
 		},
 		selectedIcon: {
 			handler() {
+				// refresh list of targetElements
+				this.getTargetElements();
+
 				const targetObjs = this.targetElements[0].elements;
 				if (targetObjs && Array.isArray(targetObjs)) {
 					if (this.selectedIcon.url) {
