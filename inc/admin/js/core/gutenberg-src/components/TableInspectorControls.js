@@ -11,7 +11,7 @@ export default function TableBlockInspector({ header, table }) {
 				<PanelBody title={header} initialOpen={true}>
 					{table ? (
 						<Fragment>
-							<TableBlockInfoItem label={__('id', 'wp-table-builder')} value={table.id} />
+							<TableBlockInfoItem label={__('ID', 'wp-table-builder')} value={table.id} />
 							<TableBlockInfoItem label={__('title', 'wp-table-builder')} value={table.title} />
 							<TableBlockInfoItem
 								label={__('shortcode', 'wp-table-builder')}
@@ -22,7 +22,7 @@ export default function TableBlockInspector({ header, table }) {
 								value={
 									table.wptb_table_tags.length > 0
 										? table.wptb_table_tags.map((t) => t.name).join(',')
-										: __('no tags', 'wp-table-builder')
+										: __('No Tags', 'wp-table-builder')
 								}
 							/>
 							<TableBlockInfoItem

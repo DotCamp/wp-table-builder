@@ -197,7 +197,7 @@ class TableBlock extends React.Component {
 	 */
 	openTableEditBuilder() {
 		const url = new URL(this.props.blockData.builderUrl);
-		url.searchParams.append('table', this.state.savedId);
+		url.searchParams.append('table', this.state.selectScreen ? this.state.selectedId : this.state.savedId);
 
 		this.setState({ builderUrl: url.toString(), showBuilder: true });
 	}
@@ -234,13 +234,17 @@ class TableBlock extends React.Component {
 								title={__('new table', 'wp-table-builder')}
 								onClick={this.openNewTableBuilder}
 							/>
+							{this.filteredTables().length > 0 ? (
+								<div
+									className={'wptb-block-tool dashicons dashicons-edit-large'}
+									title={__('edit table', 'wp-table-builder')}
+									onClick={this.openTableEditBuilder}
+								/>
+							) : (
+								''
+							)}
 							{this.state.savedId >= 0 ? (
 								<Fragment>
-									<div
-										className={'wptb-block-tool dashicons dashicons-edit-large'}
-										title={__('edit table', 'wp-table-builder')}
-										onClick={this.openTableEditBuilder}
-									/>
 									<div
 										className={'wptb-block-tool dashicons dashicons-fullscreen-alt'}
 										onClick={() => this.setState({ fullPreview: true })}
