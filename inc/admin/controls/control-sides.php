@@ -69,7 +69,8 @@ class Control_Sides extends Base_Control {
       #>
       <div id="{{{uniqueItemClass}}}">
         <sides-control :label="label" :link-icon="icons.link" :unlink-icon="icons.unlink" :strings="strings"
-                       :default-value="defaultValue" :selectors="selectors"></sides-control>
+                       :default-value="defaultValue" :selectors="selectors"
+                       :allow-negative="allowNegative"></sides-control>
       </div>
       <wptb-template-script>
         WPTB_ControlsManager.callControlScript('ControlSides', '{{{uniqueItemClass}}}');

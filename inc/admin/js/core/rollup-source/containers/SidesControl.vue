@@ -51,6 +51,10 @@ export default {
 			type: String,
 			default: '0 0 0 0',
 		},
+		allowNegative: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	mixins: [ControlBase],
 	components: { SideInput, SideDropdown },
@@ -66,6 +70,7 @@ export default {
 			lastEdited: 'top',
 			type: 'px',
 			suppressDirty: true,
+			forceUpdate: 1,
 		};
 	},
 	mounted() {
@@ -78,6 +83,7 @@ export default {
 	watch: {
 		sideValues: {
 			handler() {
+				this.forceUpdate += 1;
 				this.calculateElementValue();
 			},
 			deep: true,
@@ -118,11 +124,16 @@ export default {
 		assignLinkedValues() {
 			if (this.linkValues) {
 				Object.keys(this.sideValues)
-					.filter((f) => f !== this.lastEdited)
 					// eslint-disable-next-line array-callback-return
 					.map((k) => {
 						if (Object.prototype.hasOwnProperty.call(this.sideValues, k)) {
-							this.sideValues[k] = this.sideValues[this.lastEdited];
+							let val = this.sideValues[this.lastEdited];
+							if (!this.allowNegative) {
+								// eslint-disable-next-line operator-assignment
+								val = Math.sign(val) * val;
+							}
+							this.$set(this.sideValues, k, val);
+							// this.sideValues[k] = val;
 						}
 					});
 			}
@@ -143,7 +154,7 @@ export default {
 			this.type = parsedType;
 
 			// fetch style syntaxed values and split them into array elements
-			const values = [...this.elementMainValue.matchAll(/[\d]+/g)].flatMap((s) => {
+			const values = [...this.elementMainValue.matchAll(/[-?\d]+/g)].flatMap((s) => {
 				return Number.parseInt(s[0], 10);
 			});
 
