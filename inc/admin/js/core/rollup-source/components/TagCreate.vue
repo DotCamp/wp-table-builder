@@ -4,10 +4,11 @@
 		<div class="wptb-tag-control-create-controls-wrapper">
 			<label for="new_tag_name" class="wptb-tag-control-create-control-label">{{ nameString }}</label>
 			<input id="new_tag_name" class="wptb-tag-control-search" type="text" v-model.trim="formData.name" />
-			<label for="new_tag_slug" class="wptb-tag-control-create-control-label">{{ slugString }}</label>
-			<input id="new_tag_slug" class="wptb-tag-control-search" type="text" v-model.trim="formData.slug" />
-			<label for="new_tag_desc" class="wptb-tag-control-create-control-label">{{ descString }}</label>
-			<input id="new_tag_desc" class="wptb-tag-control-search" type="text" v-model.trim="formData.description" />
+			<!--      @deprecated-->
+			<!--			<label for="new_tag_slug" class="wptb-tag-control-create-control-label">{{ slugString }}</label>-->
+			<!--			<input id="new_tag_slug" class="wptb-tag-control-search" type="text" v-model.trim="formData.slug" />-->
+			<!--			<label for="new_tag_desc" class="wptb-tag-control-create-control-label">{{ descString }}</label>-->
+			<!--			<input id="new_tag_desc" class="wptb-tag-control-search" type="text" v-model.trim="formData.description" />-->
 			<div v-if="busy" class="wptb-tag-control-busy dashicons dashicons-update-alt"></div>
 			<div v-if="status" data-status="positive" class="wptb-tag-control-status dashicons dashicons-yes"></div>
 			<div
