@@ -144,9 +144,11 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
-		$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
-		wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
+		//@deprecated
+//		$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
+//		$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
+//		wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
+
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
 	}
 }

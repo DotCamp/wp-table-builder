@@ -93,6 +93,7 @@ That's it. You're done!
 * NEW: Gutenberg block for table builder. You can select/edit/create tables without leaving editor.
 * NEW: Table tags. You can now create table tags for your tables for better organization and filter them from screen options at table listing. You can add your tags to tables from Settings > TableTags right from table builder menu.
 * UPDATE: Freemius account section for plugin.
+* IMPROVE: Better frontend JS file sizes.
 * FIX: Fixed an issue where editing text links not marking table as dirty.
 * FIX: Fixed an issue where saving table is being blocked by firewall plugins.
 
