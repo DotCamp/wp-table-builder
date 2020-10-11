@@ -2070,6 +2070,11 @@ br[data-mce-bogus="1"] {
     /*width: 100%;*/
 }
 
+.wptb-cell .wptb-ph-element.edit-active {
+    outline: 3px solid #1ea5e5 !important;
+    position: relative;
+}
+
 .wptb-droppable.wptb-cell .wptb-list-container.wptb-directlyhovered {
     display: block;
 }
@@ -2128,6 +2133,7 @@ br[data-mce-bogus="1"] {
     margin: 0em 0.05em 0 0.1em;
     width: 16px;
     height: 16px;
+    cursor: pointer;
 }
 
 .wptb-actions .dashicons.wptb-prebuilt-mark-action {
@@ -2144,6 +2150,7 @@ br[data-mce-bogus="1"] {
     width: 16px;
     height: 16px;
     order: 2;
+    cursor: pointer;
 }
 
 .wptb-cell-management .wptb-button {

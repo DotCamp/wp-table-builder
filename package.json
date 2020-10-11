@@ -11,8 +11,8 @@
     "gutenberg:dev": "wp-scripts start",
     "gutenberg:build": "wp-scripts build",
     "lint": "eslint ./inc/admin/js/core/rollup-source --ignore-pattern '/inc/admin/js/core/rollup-source/functions/importOperations.js' --ext .js,.vue",
-    "gulp:build" : "gulp default",
-    "gulp:watch" : "gulp watch",
+    "gulp:build": "gulp default",
+    "gulp:watch": "gulp watch",
     "preinstall": "npx npm-force-resolutions"
   },
   "alias": {

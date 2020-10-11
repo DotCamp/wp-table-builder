@@ -1001,6 +1001,9 @@ var WPTB_Helper = {
             }
 
             infArr = element.className.match( /wptb-element-((.+-)\d+)/i );
+        } else {
+            WPTB_Helper.editActionClassRemove();
+            element.classList.add('edit-active');
         }
 
         data = {
@@ -1212,6 +1215,16 @@ var WPTB_Helper = {
     },
 
     /**
+     * remove edit-action classes from wptb-ph-element elements
+     */
+    editActionClassRemove: function () {
+        let editActiveElems = document.querySelectorAll('.edit-active');
+        for (let i = 0; i < editActiveElems.length; i++) {
+            editActiveElems[i].classList.remove('edit-active');
+        }
+    },
+
+    /**
      *
      * @param unicClass
      * @param controlKey
@@ -1400,6 +1413,7 @@ var WPTB_Helper = {
             s.addEventListener('click', function() {
                 const displayType = s.dataset.wptbSectionDisplayType;
                 vm.activateSection(sectionName, displayType);
+                WPTB_Helper.editActionClassRemove();
             })
 
             document.addEventListener('wptbSectionChanged', (e)=> {
@@ -1733,6 +1747,7 @@ var WPTB_Helper = {
     },
     //
     clickOnFreeSpace: function() {
+        WPTB_Helper.editActionClassRemove();
         // if current active section is responsive menu, ignore this functionality
         if(this.getCurrentSection() === 'table_responsive_menu'){
             return;

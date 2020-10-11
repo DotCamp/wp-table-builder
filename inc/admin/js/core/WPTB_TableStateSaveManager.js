@@ -196,11 +196,11 @@ const WPTB_TableStateSaveManager = function () {
 
 					const wptbTableSetupNew = document.querySelector('.wptb-table-setup');
 					if (wptbTableSetupNew && wptbTableSetupNew.children.length == 0) {
-						document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
+						// document.getElementsByClassName('wptb-table-generator')[0].style.display = 'table';
 						wptbSaveBtn.classList.add('wptb-save-disabled');
 						wptbSaveBtn.classList.remove('active');
 					} else {
-						document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
+						//document.getElementsByClassName('wptb-table-generator')[0].style.display = 'none';
 					}
 
 					// add or change or delete style element in the head for table cells who have auto width
