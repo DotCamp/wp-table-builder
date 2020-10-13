@@ -202,6 +202,13 @@ export default {
 				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
 				const table = tableWrapper.querySelector('table');
 
+				const maxWidth = table.dataset.wptbTableContainerMaxWidth;
+
+				// add defined max width to table wrapper element
+				if(maxWidth){
+				  tableWrapper.style.maxWidth = `${maxWidth}px`;
+        }
+
 				if (!edit) {
 					// unmark inserted template as prebuilt table
 					// only unmark it if edit mode is not enabled

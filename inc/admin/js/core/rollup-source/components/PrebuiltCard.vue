@@ -229,6 +229,13 @@ export default {
       const prebuilt = tablePreview.querySelector('table');
 
       if (prebuilt) {
+        const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;
+        if (maxWidth) {
+          prebuilt.style.width = `${maxWidth}px`;
+        } else {
+          prebuilt.style.width = `${700}px`;
+        }
+
         const padding = 40;
         const {width: prebuiltWidth, height: prebuiltHeight} = prebuilt.getBoundingClientRect();
         const widthScale = wrapperWidth / (prebuiltWidth + padding);
@@ -236,17 +243,17 @@ export default {
 
         prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
 
-				// @deprecated seems like google fixed this issue with latest version
-				// fix for chrome browsers where table previews are distorted for tables with separated columns and row
-				// if (window.navigator.vendor.includes('Google')) {
-				// 	const borderCollapseType = prebuilt.style.borderCollapse;
-				// 	if (borderCollapseType === 'separate') {
-				// 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
-				// 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
-				//
-				// 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
-				// 	}
-				// }
+        // @deprecated seems like google fixed this issue with latest version
+        // fix for chrome browsers where table previews are distorted for tables with separated columns and row
+        // if (window.navigator.vendor.includes('Google')) {
+        // 	const borderCollapseType = prebuilt.style.borderCollapse;
+        // 	if (borderCollapseType === 'separate') {
+        // 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+        // 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+        //
+        // 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+        // 	}
+        // }
 
         if (this.id !== 'blank') {
           const tableRows = Array.from(prebuilt.querySelectorAll('tr'));

@@ -4783,7 +4783,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-prebuilt-table-wrapper table {
-    width: 700px;
+    /*width: 700px;*/
 }
 
 .wptb-prebuilt-card-search-indicator-main {
