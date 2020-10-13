@@ -23,7 +23,7 @@ const store = {
 // store methods
 const storeMethods = {
 	isDevBuild() {
-		return process.env.NODE_ENV;
+		return process.env.NODE_ENV !== 'production';
 	},
 };
 
