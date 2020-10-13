@@ -11,7 +11,7 @@ gulp.task('adminJs', function () {
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
-				presets: [['env', { modules: false }]],
+				presets: [['@babel/env', { modules: false }]],
 				babelrc: false,
 			})
 		)
@@ -32,7 +32,19 @@ gulp.task('frontendJs', function () {
 		'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
 		'./inc/admin/js/WPTB_ResponsiveFrontend.js',
 		'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
-	]);
+	])
+		.pipe(sourcemaps.init())
+		.pipe(
+			babel({
+				presets: [['@babel/env', { modules: false }]],
+				plugins: ['@babel/plugin-proposal-object-rest-spread'],
+				babelrc: false,
+			})
+		)
+		.pipe(concat('./inc/frontend/js/wp-table-builder-frontend.js'))
+		.pipe(uglify())
+		.pipe(sourcemaps.write('.'))
+		.pipe(gulp.dest('.'));
 });
 
 gulp.task('cssAdmin', () => {
@@ -40,10 +52,7 @@ gulp.task('cssAdmin', () => {
 });
 
 gulp.task('cssFrontend', () => {
-	gulp.src(['./inc/frontend/css/src/*.css'])
-		.pipe(autoprefixer())
-		.pipe(csso())
-		.pipe(gulp.dest('./inc/frontend/css'));
+	gulp.src(['./inc/frontend/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/frontend/css'));
 });
 
 gulp.task('watch', function () {

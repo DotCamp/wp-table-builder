@@ -35,7 +35,8 @@
 	 *
 	 * @param {HTMLElement | null} cellElement cell element
 	 * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
-	 * @constructor
+	 * @param reference
+	 * @class
 	 */
 	function CellObject(cellElement, reference = null) {
 		// cell element
@@ -54,6 +55,7 @@
 
 		/**
 		 * Get merged render status.
+		 *
 		 * @return {boolean} render status
 		 */
 		this.getMergedRenderStatus = () => {
@@ -62,6 +64,7 @@
 
 		/**
 		 * Set merged render status.
+		 *
 		 * @param {boolean} status render status
 		 */
 		this.setMergedRenderStatus = (status) => {
@@ -80,6 +83,7 @@
 
 		/**
 		 * Determine if current cell is a reference to a main cell.
+		 *
 		 * @return {boolean} a reference or not
 		 */
 		this.isReference = () => {
@@ -107,6 +111,7 @@
 
 		/**
 		 * Cache cell element's original span values.
+		 *
 		 * @private
 		 */
 		this.cacheSpanValues = () => {
@@ -127,6 +132,7 @@
 		 *
 		 * @param {string} spanType span type, available values are row-column
 		 * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
+		 * @param fromElement
 		 * @throws An error will be given for invalid span type
 		 */
 		this.getSpan = (spanType, fromElement = false) => {
@@ -156,6 +162,7 @@
 
 		/**
 		 * Create a cell element.
+		 *
 		 * @private
 		 * @return {HTMLTableDataCellElement}
 		 */
@@ -313,12 +320,13 @@
 	 * Object implementation for table element operations.
 	 *
 	 * @param {HTMLElement} tableEl table element
-	 * @return {object} instance
-	 * @constructor
+	 * @return {Object} instance
+	 * @class
 	 */
 	function TableObject(tableEl) {
 		/**
 		 * Table element.
+		 *
 		 * @private
 		 * @type {HTMLElement}
 		 */
@@ -328,18 +336,20 @@
 		 * Parsed table object.
 		 *
 		 * @private
-		 * @type {array}
+		 * @type {Array}
 		 */
 		this.parsedTable = [];
 
 		/**
 		 * An array of created table rows elements that are id'd according to their index in array.
+		 *
 		 * @type {[HTMLElement]}
 		 */
 		this.rowCache = [];
 
 		/**
 		 * Original table elements minus the cells.
+		 *
 		 * @type {{rows: []}}
 		 * @private
 		 */
@@ -347,6 +357,7 @@
 
 		/**
 		 * Row colors of original table.
+		 *
 		 * @type {{even: string, header: string, odd: string}}
 		 */
 		this.rowColors = {
@@ -373,6 +384,7 @@
 
 		/**
 		 * Assign table cells into row and column numbers.
+		 *
 		 * @private
 		 */
 		this.parseTable = () => {
@@ -414,6 +426,7 @@
 
 		/**
 		 * Parse row colors of original table for futures uses.
+		 *
 		 * @param {[HTMLElement]} rows html row elements
 		 * @private
 		 */
@@ -461,7 +474,8 @@
 
 		/**
 		 * Add a row to the table.
-		 * @param {array} classList an array of class names to be added to row
+		 *
+		 * @param {Array} classList an array of class names to be added to row
 		 * @param {boolean} fromOriginals use rows from original table instead of creating a new one
 		 * @param {number} originalIndex original row index
 		 */
@@ -577,7 +591,7 @@
 		 *
 		 * @param {number} rowId row id
 		 * @param {boolean} returnObj return an array of CellObject instead
-		 * @return {array} cells in row
+		 * @return {Array} cells in row
 		 */
 		this.getCellsAtRow = (rowId, returnObj = false) => {
 			const cells = [];
@@ -661,13 +675,13 @@
 	/**
 	 * Class for handling operations related to responsive functionalities of tables.
 	 *
-	 * @constructor
-	 * @param {object} options options object
+	 * @class
+	 * @param {Object} options options object
 	 */
 	function ResponsiveFront(options = {}) {
 		// merge default options with user sent options
-		//this.options = { ...responsiveClassDefaultOptions, ...options };
-		this.options = Object.assign({}, responsiveClassDefaultOptions, options);
+		// this.options = { ...responsiveClassDefaultOptions, ...options };
+		this.options = { ...responsiveClassDefaultOptions, ...options };
 
 		this.elements = Array.from(document.querySelectorAll(this.options.query));
 
@@ -692,7 +706,7 @@
 		 *
 		 * @private
 		 * @param {HTMLElement} el table element
-		 * @return {object|null} JSON representation of the directive element, if not available, null will be returned
+		 * @return {Object | null} JSON representation of the directive element, if not available, null will be returned
 		 */
 		this.getDirective = (el) => {
 			const directiveString = el.dataset.wptbResponsiveDirectives;
@@ -717,6 +731,7 @@
 
 		/**
 		 * Remove default classes from target table.
+		 *
 		 * @param {HTMLElement} el table element
 		 */
 		this.removeDefaultClasses = (el) => {
@@ -730,7 +745,7 @@
 		 *
 		 * @param {HTMLElement} tableEl table element
 		 * @param {string} sizeRange range id for current screen size
-		 * @param {object} autoOption mode options
+		 * @param {Object} autoOption mode options
 		 * @param {TableObject} tableObj table object
 		 */
 		this.autoBuild = (tableEl, sizeRange, autoOption, tableObj) => {
@@ -929,6 +944,7 @@
 			if (stackedAsColumn) {
 				/**
 				 * Add header cells as new row to table.
+				 *
 				 * @param {boolean} addBorder add top border to header row
 				 */
 				// eslint-disable-next-line no-inner-declarations
@@ -1106,7 +1122,7 @@
 		 * Calculate range id for given size value.
 		 *
 		 * @param {number} val value
-		 * @param {object} stops an object containing stop ids as keys and respective sizes as values
+		 * @param {Object} stops an object containing stop ids as keys and respective sizes as values
 		 * @return {string} range id
 		 */
 		this.calculateRangeId = (val, stops) => {
@@ -1160,7 +1176,12 @@
 					buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
 
 					WPTB_RecalculateIndexes(el);
-					const tabEvent = new CustomEvent('table:rebuilt', {detail: {sizeRangeId: sizeRangeId, topRowAsHeader: directive.modeOptions[mode]['topRowAsHeader']}});
+					const tabEvent = new CustomEvent('table:rebuilt', {
+						detail: {
+							sizeRangeId,
+							topRowAsHeader: directive.modeOptions[mode].topRowAsHeader,
+						},
+					});
 					el.dispatchEvent(tabEvent);
 				} else {
 					throw new Error(`No build mode named as [${mode}] found.`);
@@ -1209,7 +1230,11 @@
 			this.bindRebuildToResize();
 		}
 
-		return { rebuildTables: this.rebuildTables, getDirective: this.getDirective, calculateRangeId: this.calculateRangeId };
+		return {
+			rebuildTables: this.rebuildTables,
+			getDirective: this.getDirective,
+			calculateRangeId: this.calculateRangeId,
+		};
 	}
 
 	return ResponsiveFront;
