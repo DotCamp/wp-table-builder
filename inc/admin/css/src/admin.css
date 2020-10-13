@@ -2071,7 +2071,7 @@ br[data-mce-bogus="1"] {
 }
 
 .wptb-cell .wptb-ph-element.edit-active {
-    outline: 3px solid #1ea5e5 !important;
+    outline: 2px solid #1ea5e5 !important;
     position: relative;
 }
 

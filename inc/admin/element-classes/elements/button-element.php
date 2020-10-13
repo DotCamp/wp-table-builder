@@ -105,6 +105,18 @@ class Button_Element extends Element_Base {
 					'buttonDataNames'             => [ 's', 'm', 'l', 'xl' ],
 					'buttonViews'                 => [ 'S', 'M', 'L', 'XL' ]
 				],
+        'buttonBorderRadius'   =>
+	        [
+		        'label'        => __( 'Button Border Radius', 'wp_table_builder' ),
+		        'type'         => Controls_Manager::SIZE,
+		        'selectors'    => [
+			        '{{{data.container}}} .wptb-button-wrapper .wptb-button' => 'border-radius',
+		        ],
+		        'min'          => 0,
+		        'max'          => 30,
+		        'defaultValue' => 5,
+		        'dimension'    => 'px'
+	        ],
 			'buttonColor'             =>
 				[
 					'label'                => __( 'Button Color', 'wp_table_builder' ),
