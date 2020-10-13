@@ -79,7 +79,7 @@ class Gutenberg_Block_Manager {
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
 			wp_register_script( 'wptb_block_editor_script', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.js', $this->assets['dependencies'], $this->assets['version'] );
 
-			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', $this->assets['dependencies'], $this->assets['version'] );
+			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', [], $this->assets['version'] );
 			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
 
 			$block_data = $this->prepare_block_data();
