@@ -91,7 +91,10 @@ That's it. You're done!
 = 1.3.1 =
 
 * NEW: Gutenberg block for table builder. You can select/edit/create tables without leaving editor.
-* NEW: Table tags. You can now create table tags for your tables for better organization and filter them from screen options at table listing. You can add your tags to tables from Settings > TableTags right from table builder menu.
+* NEW: Table tags. You can now create table tags for your tables for better organization and filter them from screen options at table listing. You can add your tags to tables from Settings > Table Tags right from table builder menu.
+* NEW: Full width button option.
+* NEW: Button radius setting.
+* NEW: Border highlight when element Options is active.
 * UPDATE: Freemius account section for plugin.
 * IMPROVE: Better frontend JS file sizes.
 * FIX: Fixed an issue where editing text links not marking table as dirty.
