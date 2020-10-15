@@ -25,6 +25,8 @@ const global = self || this;
 // adding controls manager to global space
 global.WPTB_ControlsManager = WPTB_ControlsManager;
 
+WPTB_ControlsManager.init();
+
 const controls = [
 	WPTB_IconSelectControl,
 	WPTB_RangeControl,

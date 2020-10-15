@@ -11996,25 +11996,67 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Controls manager for builder element's control options
  *
  * It is a singleton class that will always be sending the referenced object to all callers.
  *
- * @returns {{setControlData: setControlData, getControlData: (function(*): *), addControlScript: addControlScript, callControlScript: callControlScript}}
- * @constructor
+ * @return {{setControlData: setControlData, getControlData: (function(*): *), addControlScript: addControlScript, callControlScript: callControlScript}}
+ * @class
  */
 function ControlsManager() {
   var controlScripts = {};
   var controlData = {};
+  var tableSettings = {
+    settings: {}
+  };
+  /**
+   * Settings changed callback.
+   *
+   * @param {Object} input
+   */
+
+  function updateTableSettings(input) {
+    if (input) {
+      tableSettings.settings = _objectSpread({}, tableSettings.settings, {}, input);
+    }
+  }
+
+  function attachToSettingChanges() {
+    document.addEventListener('wptb:table:generated', function () {
+      var table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
+      WPTB_Helper.controlsInclude(table, function (input) {
+        return updateTableSettings(input);
+      });
+    }, true);
+  }
+  /**
+   * Controls manager init.
+   */
+
+
+  function init() {
+    attachToSettingChanges();
+  }
+
+  function getTableSettings() {
+    return tableSettings;
+  }
   /**
    * Add a control element script to ControlsManager
    *
    * This is the register function for control items. Without registering the control items, you can not mount them from their inline underscore.js template. Keep the underscore.js template as clean as possible since all the work should be handled by the view element and not the business logic of the backend.
    *
    * @param {string} key control type key
-   * @param {function} script function to mount the control to view
+   * @param {Function} script function to mount the control to view
    */
+
 
   function addControlScript(key, script) {
     controlScripts[key] = script;
@@ -12042,7 +12084,7 @@ function ControlsManager() {
    * Currently, when control items are defined in background, a data object with a needed data items are mounted with this function.
    *
    * @param {string} id control item unique id
-   * @param {object} data control item data
+   * @param {Object} data control item data
    */
 
 
@@ -12056,7 +12098,7 @@ function ControlsManager() {
    *
    * @param {string} id control item unique key
    * @param {boolean} suppress suppress error message upon not founding data
-   * @returns {object} data associated with control item
+   * @return {Object} data associated with control item
    */
 
 
@@ -12071,6 +12113,8 @@ function ControlsManager() {
   }
 
   return {
+    getTableSettings: getTableSettings,
+    init: init,
     addControlScript: addControlScript,
     callControlScript: callControlScript,
     setControlData: setControlData,
@@ -12467,6 +12511,13 @@ var ControlBase = {
       type: String,
       required: false,
       default: ''
+    },
+    appearDependOnControl: {
+      type: Object,
+      required: false,
+      default: function _default() {
+        return {};
+      }
     }
   },
   data: function data() {
@@ -12474,10 +12525,31 @@ var ControlBase = {
       startupValue: null,
       targetElements: [],
       elementMainValue: '',
-      mountedDataUpdate: false
+      mountedDataUpdate: false,
+      tableSettings: {
+        settings: {}
+      },
+      componentVisibility: true,
+      cachedDependedValues: {}
     };
   },
+  watch: {
+    'tableSettings.settings': {
+      handler: function handler() {
+        this.updateComponentVisibility();
+      },
+      deep: true
+    },
+    cachedDependedValues: {
+      handler: function handler() {
+        this.calculateComponentVisibility();
+      },
+      deep: true
+    }
+  },
   mounted: function mounted() {
+    var _this = this;
+
     // find and retrieve selector elements
     if (this.selectors.length > 0) {
       // const operationObj = selectorOperations.getAllValues(this.selectors);
@@ -12485,8 +12557,64 @@ var ControlBase = {
       var operationObj = this.getTargetElements();
       this.startupValue = operationObj.startupValue;
     }
+
+    this.$nextTick(function () {
+      _this.tableSettings = WPTB_ControlsManager.getTableSettings();
+
+      _this.getInputLoadedValues();
+    });
   },
   methods: {
+    calculateComponentVisibility: function calculateComponentVisibility() {
+      var _this2 = this;
+
+      this.componentVisibility = Object.keys(this.appearDependOnControl).every(function (controlName) {
+        if (Object.prototype.hasOwnProperty.call(_this2.appearDependOnControl, controlName)) {
+          if (Object.keys(_this2.cachedDependedValues).includes(controlName)) {
+            return _this2.cachedDependedValues[controlName] === _this2.appearDependOnControl[controlName];
+          }
+
+          return false;
+        }
+      });
+    },
+    getInputLoadedValues: function getInputLoadedValues() {
+      var _this3 = this;
+
+      var leftPanel = document.querySelector('.wptb-panel-left');
+      var allInputs = Array.from(leftPanel.querySelectorAll('input')); // eslint-disable-next-line array-callback-return
+
+      allInputs.map(function (input) {
+        var classList = input.getAttribute('class'); // eslint-disable-next-line array-callback-return
+
+        Object.keys(_this3.appearDependOnControl).map(function (d) {
+          if (classList.includes(d)) {
+            var val = input.value;
+
+            if (input.type === 'checkbox') {
+              val = input.checked ? 'checked' : 'unchecked';
+            }
+
+            _this3.$set(_this3.cachedDependedValues, d, val);
+          }
+        });
+      });
+    },
+    updateComponentVisibility: function updateComponentVisibility() {
+      var _this4 = this;
+
+      if (this.tableSettings.settings) {
+        // eslint-disable-next-line array-callback-return
+        Object.keys(this.tableSettings.settings).map(function (s) {
+          if (Object.prototype.hasOwnProperty.call(_this4.tableSettings.settings, s)) {
+            if (Object.keys(_this4.appearDependOnControl).includes(s)) {
+              _this4.$set(_this4.cachedDependedValues, s, _this4.tableSettings.settings[s]);
+            }
+          }
+        });
+      }
+    },
+
     /**
      * Get target elements of the selector.
      *
@@ -12509,13 +12637,13 @@ var ControlBase = {
      * @param {any} value value to be emitted
      */
     generateChangeEvent: function generateChangeEvent(value) {
-      var _this = this;
+      var _this5 = this;
 
       // eslint-disable-next-line array-callback-return
       this.targetElements.map(function (t) {
         // eslint-disable-next-line array-callback-return
         t.elements.map(function (el) {
-          WPTB_Helper.wptbDocumentEventGenerate("wptb-control:".concat(_this.uniqueId), el, {
+          WPTB_Helper.wptbDocumentEventGenerate("wptb-control:".concat(_this5.uniqueId), el, {
             value: value
           });
         });
@@ -22010,6 +22138,12 @@ var _default = {
         var regExp = new RegExp(/rgb\(\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/);
 
         if (regExp) {
+          /**
+           * Transform a decimal into its hexadecimal equal.
+           *
+           * @param {string} val value
+           * @return {string} changed hex value
+           */
           var hexConvertor = function hexConvertor(val) {
             var hex = Number.parseInt(val, 10).toString(16);
             return hex.length === 1 ? "0".concat(hex) : hex;
@@ -22053,66 +22187,76 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-settings-row wptb-settings-middle-xs wptb-different-border-control-wrapper"
-    },
-    [
-      _c("table-cell-select", {
-        attrs: {
-          table: _vm.table,
-          "cell-extra-styling": _vm.cellStyling,
-          repaint: _vm.repaintId
-        },
-        model: {
-          value: _vm.selectedCell,
-          callback: function($$v) {
-            _vm.selectedCell = $$v
+  return _c("transition", { attrs: { name: "wptb-fade" } }, [
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.componentVisibility,
+            expression: "componentVisibility"
+          }
+        ],
+        staticClass:
+          "wptb-settings-row wptb-settings-middle-xs wptb-different-border-control-wrapper"
+      },
+      [
+        _c("table-cell-select", {
+          attrs: {
+            table: _vm.table,
+            "cell-extra-styling": _vm.cellStyling,
+            repaint: _vm.repaintId
           },
-          expression: "selectedCell"
-        }
-      }),
-      _vm._v(" "),
-      _c("range-input", {
-        staticClass: "wptb-different-border-range-input",
-        attrs: {
-          "post-fix": "px",
-          label: _vm.translation("borderWidth"),
-          min: _vm.min,
-          max: _vm.max,
-          disabled: !_vm.controlsActive
-        },
-        model: {
-          value: _vm.borderProps.currentBorderSize,
-          callback: function($$v) {
-            _vm.$set(_vm.borderProps, "currentBorderSize", $$v)
+          model: {
+            value: _vm.selectedCell,
+            callback: function($$v) {
+              _vm.selectedCell = $$v
+            },
+            expression: "selectedCell"
+          }
+        }),
+        _vm._v(" "),
+        _c("range-input", {
+          staticClass: "wptb-different-border-range-input",
+          attrs: {
+            "post-fix": "px",
+            label: _vm.translation("borderWidth"),
+            min: _vm.min,
+            max: _vm.max,
+            disabled: !_vm.controlsActive
           },
-          expression: "borderProps.currentBorderSize"
-        }
-      }),
-      _vm._v(" "),
-      _c("cell-indicator", {
-        attrs: { repaint: _vm.repaintId, cell: _vm.selectedCell }
-      }),
-      _vm._v(" "),
-      _c("color-picker", {
-        attrs: {
-          label: _vm.translation("borderColor"),
-          disabled: !_vm.controlsActive
-        },
-        model: {
-          value: _vm.borderProps.currentBorderColor,
-          callback: function($$v) {
-            _vm.$set(_vm.borderProps, "currentBorderColor", $$v)
+          model: {
+            value: _vm.borderProps.currentBorderSize,
+            callback: function($$v) {
+              _vm.$set(_vm.borderProps, "currentBorderSize", $$v)
+            },
+            expression: "borderProps.currentBorderSize"
+          }
+        }),
+        _vm._v(" "),
+        _c("cell-indicator", {
+          attrs: { repaint: _vm.repaintId, cell: _vm.selectedCell }
+        }),
+        _vm._v(" "),
+        _c("color-picker", {
+          attrs: {
+            label: _vm.translation("borderColor"),
+            disabled: !_vm.controlsActive
           },
-          expression: "borderProps.currentBorderColor"
-        }
-      })
-    ],
-    1
-  )
+          model: {
+            value: _vm.borderProps.currentBorderColor,
+            callback: function($$v) {
+              _vm.$set(_vm.borderProps, "currentBorderColor", $$v)
+            },
+            expression: "borderProps.currentBorderColor"
+          }
+        })
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -22201,6 +22345,9 @@ _vue.default.config.productionTip = false; // eslint-disable-next-line no-restri
 var global = self || void 0; // adding controls manager to global space
 
 global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
+
+_WPTB_ControlsManager.default.init();
+
 var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default];
 /**
  * Register control element.

@@ -11,6 +11,13 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Class Control_Different_Border.
+ *
+ * Control for different border color functionality
+ *
+ * Accepted options
+ *  label => label for control element
+ *  dependOnControl => change visibility of control depending on other control's values
+ *
  * @package WP_Table_Builder\Inc\Admin\Controls
  */
 class Control_Different_Border extends Base_Control {
@@ -49,7 +56,7 @@ class Control_Different_Border extends Base_Control {
       data.strings = JSON.parse('<?php echo $json_strings; ?>');
       #>
       <div id="{{{uniqueItemClass}}}">
-        <different-border-control :strings="strings"></different-border-control>
+        <different-border-control :appear-depend-on-control="appearDependOnControl" :strings="strings"></different-border-control>
       </div>
       <wptb-template-script>
         WPTB_ControlsManager.callControlScript('ControlDifferentBorder', '{{{uniqueItemClass}}}');

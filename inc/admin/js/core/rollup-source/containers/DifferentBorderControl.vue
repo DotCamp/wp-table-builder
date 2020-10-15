@@ -1,27 +1,32 @@
 <template>
-	<div class="wptb-settings-row wptb-settings-middle-xs wptb-different-border-control-wrapper">
-		<table-cell-select
-			:table="table"
-			v-model="selectedCell"
-			:cell-extra-styling="cellStyling"
-			:repaint="repaintId"
-		></table-cell-select>
-		<range-input
-			class="wptb-different-border-range-input"
-			v-model="borderProps.currentBorderSize"
-			post-fix="px"
-			:label="translation('borderWidth')"
-			:min="min"
-			:max="max"
-			:disabled="!controlsActive"
-		></range-input>
-		<cell-indicator :repaint="repaintId" :cell="selectedCell"></cell-indicator>
-		<color-picker
-			:label="translation('borderColor')"
-			v-model="borderProps.currentBorderColor"
-			:disabled="!controlsActive"
-		></color-picker>
-	</div>
+	<transition name="wptb-fade">
+		<div
+			v-show="componentVisibility"
+			class="wptb-settings-row wptb-settings-middle-xs wptb-different-border-control-wrapper"
+		>
+			<table-cell-select
+				:table="table"
+				v-model="selectedCell"
+				:cell-extra-styling="cellStyling"
+				:repaint="repaintId"
+			></table-cell-select>
+			<range-input
+				class="wptb-different-border-range-input"
+				v-model="borderProps.currentBorderSize"
+				post-fix="px"
+				:label="translation('borderWidth')"
+				:min="min"
+				:max="max"
+				:disabled="!controlsActive"
+			></range-input>
+			<cell-indicator :repaint="repaintId" :cell="selectedCell"></cell-indicator>
+			<color-picker
+				:label="translation('borderColor')"
+				v-model="borderProps.currentBorderColor"
+				:disabled="!controlsActive"
+			></color-picker>
+		</div>
+	</transition>
 </template>
 
 <script>
@@ -91,6 +96,12 @@ export default {
 				if (regExp) {
 					const [, red, green, blue] = regExp.exec(rgbVal);
 
+					/**
+					 * Transform a decimal into its hexadecimal equal.
+					 *
+					 * @param {string} val value
+					 * @return {string} changed hex value
+					 */
 					function hexConvertor(val) {
 						const hex = Number.parseInt(val, 10).toString(16);
 						return hex.length === 1 ? `0${hex}` : hex;
