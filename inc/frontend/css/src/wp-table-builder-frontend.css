@@ -227,8 +227,7 @@ table.wptb-preview-table {
     background: #329d3f;
     color: #ffffff;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     transition: all 0.2s ease-out;
 }

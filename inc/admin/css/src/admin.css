@@ -1776,8 +1776,7 @@ table.wptb-table {
     box-shadow: none;
     transition: all 0.2s ease-out;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
