@@ -51,11 +51,17 @@ class Settings_Manager {
 	public $defaults = [
 		'allowed_roles'  => [ 'administrator' ],
 		'panel_location' => 'left',
+		'allow_edit_link_frontend' => false,
 	];
 
+	/**
+	 * Sanitization rules for options.
+	 * @var string[]
+	 */
 	public $sanitization_rules = [
 		'allowed_roles'  => 'sanitize_text_field',
 		'panel_location' => 'sanitize_text_field',
+		'allow_edit_link_frontend' => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
@@ -274,6 +280,11 @@ class Settings_Manager {
 								],
 								'section' => 'general',
 								'label'   => esc_html__( 'Sidebar location', 'wp-table-builder' )
+							],
+							'allow_edit_link_frontend'  => [
+								'type'    => 'checkbox',
+								'section' => 'general',
+								'label'   => esc_html__( 'Allow edit table link at frontend', 'wp-table-builder' )
 							],
 						]
 					],

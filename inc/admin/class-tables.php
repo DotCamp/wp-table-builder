@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Core\Init;
 
 /**
  * All the table stuffs.
@@ -144,8 +145,9 @@ class Tables {
 			}
 		}
 
-		$post_edit_link = '';
-		if ( current_user_can( 'manage_options' ) ) {
+		$post_edit_link   = '';
+		$settings_manager = Init::instance()->settings_manager;
+		if ( current_user_can( 'manage_options' ) && $settings_manager->get_option_value( 'allow_edit_link_frontend' ) ) {
 			$post_edit_link = '<div class="wptb-frontend-table-edit-link">'
 			                  . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
 		}

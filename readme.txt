@@ -95,6 +95,7 @@ That's it. You're done!
 * NEW: Full width button option.
 * NEW: Button radius setting.
 * NEW: Border highlight when element Options is active.
+* NEW: Setting for edit table link at frontend display.
 * UPDATE: Freemius account section for plugin.
 * IMPROVE: Better frontend JS file sizes.
 * FIX: Fixed an issue where editing text links not marking table as dirty.
