@@ -2,8 +2,8 @@
   "extends": [
     "airbnb-base",
     "prettier",
-    "plugin:vue/essential",
-    "plugin:@wordpress/eslint-plugin/recommended"
+    "plugin:@wordpress/eslint-plugin/recommended",
+    "plugin:vue/essential"
   ],
   "plugins": [
     "import",

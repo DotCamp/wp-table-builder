@@ -14,6 +14,7 @@ import WPTB_ResponsiveTable from './mountPoints/WPTB_ResponsiveTable';
 import WPTB_SidesControl from './mountPoints/WPTB_SidesControl';
 import WPTB_NamedToggleControl from './mountPoints/WPTB_NamedToggleControl';
 import WPTB_TagControl from './mountPoints/WPTB_TagControl';
+import WPTB_DifferentBorderControl from './mountPoints/WPTB_DifferentBorderControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -23,6 +24,8 @@ const global = self || this;
 
 // adding controls manager to global space
 global.WPTB_ControlsManager = WPTB_ControlsManager;
+
+WPTB_ControlsManager.init();
 
 const controls = [
 	WPTB_IconSelectControl,
@@ -34,12 +37,13 @@ const controls = [
 	WPTB_SidesControl,
 	WPTB_NamedToggleControl,
 	WPTB_TagControl,
+	WPTB_DifferentBorderControl,
 ];
 
 /**
  * Register control element.
  *
- * @param {object} controlObject control element object
+ * @param {Object} controlObject control element object
  */
 function registerControl(controlObject) {
 	WPTB_ControlsManager.addControlScript(controlObject.name, controlObject.handler);

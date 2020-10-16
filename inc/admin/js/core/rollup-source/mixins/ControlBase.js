@@ -24,6 +24,13 @@ const ControlBase = {
 			required: false,
 			default: '',
 		},
+		appearDependOnControl: {
+			type: Object,
+			required: false,
+			default: () => {
+				return {};
+			},
+		},
 	},
 	data() {
 		return {
@@ -31,7 +38,24 @@ const ControlBase = {
 			targetElements: [],
 			elementMainValue: '',
 			mountedDataUpdate: false,
+			tableSettings: { settings: {} },
+			componentVisibility: true,
+			cachedDependedValues: {},
 		};
+	},
+	watch: {
+		'tableSettings.settings': {
+			handler() {
+				this.updateComponentVisibility();
+			},
+			deep: true,
+		},
+		cachedDependedValues: {
+			handler() {
+				this.calculateComponentVisibility();
+			},
+			deep: true,
+		},
 	},
 	mounted() {
 		// find and retrieve selector elements
@@ -41,8 +65,54 @@ const ControlBase = {
 			const operationObj = this.getTargetElements();
 			this.startupValue = operationObj.startupValue;
 		}
+
+		this.$nextTick(() => {
+			this.tableSettings = WPTB_ControlsManager.getTableSettings();
+			this.getInputLoadedValues();
+		});
 	},
 	methods: {
+		calculateComponentVisibility() {
+			this.componentVisibility = Object.keys(this.appearDependOnControl).every((controlName) => {
+				if (Object.prototype.hasOwnProperty.call(this.appearDependOnControl, controlName)) {
+					if (Object.keys(this.cachedDependedValues).includes(controlName)) {
+						return this.cachedDependedValues[controlName] === this.appearDependOnControl[controlName];
+					}
+					return false;
+				}
+			});
+		},
+		getInputLoadedValues() {
+			const leftPanel = document.querySelector('.wptb-panel-left');
+			const allInputs = Array.from(leftPanel.querySelectorAll('input'));
+
+			// eslint-disable-next-line array-callback-return
+			allInputs.map((input) => {
+				const classList = input.getAttribute('class');
+				// eslint-disable-next-line array-callback-return
+				Object.keys(this.appearDependOnControl).map((d) => {
+					if (classList.includes(d)) {
+						let val = input.value;
+						if (input.type === 'checkbox') {
+							val = input.checked ? 'checked' : 'unchecked';
+						}
+						this.$set(this.cachedDependedValues, d, val);
+					}
+				});
+			});
+		},
+		updateComponentVisibility() {
+			if (this.tableSettings.settings) {
+				// eslint-disable-next-line array-callback-return
+				Object.keys(this.tableSettings.settings).map((s) => {
+					if (Object.prototype.hasOwnProperty.call(this.tableSettings.settings, s)) {
+						if (Object.keys(this.appearDependOnControl).includes(s)) {
+							this.$set(this.cachedDependedValues, s, this.tableSettings.settings[s]);
+						}
+					}
+				});
+			}
+		},
 		/**
 		 * Get target elements of the selector.
 		 *
