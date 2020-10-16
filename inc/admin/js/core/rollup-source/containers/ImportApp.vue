@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<portal to="childSections">
-			<sections :child="true" :items="['csv', strings.plugins]" v-model="currentSection"> </sections>
+			<sections :child="true" :items="[strings.file, strings.plugins]" v-model="currentSection"> </sections>
 		</portal>
 		<menu-content :center="true">
 			<component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">
@@ -21,7 +21,7 @@ export default {
 	components: { Sections, SectionItem, MenuContent },
 	data() {
 		return {
-			currentSection: 'csv',
+			currentSection: 'file',
 		};
 	},
 	methods: {
@@ -34,7 +34,7 @@ export default {
 	},
 	computed: {
 		currentTemplate() {
-			return this.currentSection === 'csv' ? CSVImportMenu : PluginsImportMenu;
+			return this.currentSection === 'file' ? CSVImportMenu : PluginsImportMenu;
 		},
 	},
 };

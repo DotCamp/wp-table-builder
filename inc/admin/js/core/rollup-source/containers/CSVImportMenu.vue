@@ -68,14 +68,15 @@ export default {
 						label: '\\t (tabular)',
 					},
 				],
-			},
-			{
-				type: 'checkbox',
-				id: 'responsiveTables',
-				modelBind: this.settings,
-				label: this.strings.tableResponsive,
-			},
-			{ type: 'checkbox', id: 'topRowAsHeader', modelBind: this.settings, label: this.strings.topRowHeader }
+			}
+			// @deprecated
+			// {
+			// 	type: 'checkbox',
+			// 	id: 'responsiveTables',
+			// 	modelBind: this.settings,
+			// 	label: this.strings.tableResponsive,
+			// },
+			// { type: 'checkbox', id: 'topRowAsHeader', modelBind: this.settings, label: this.strings.topRowHeader }
 		);
 	},
 	computed: {
