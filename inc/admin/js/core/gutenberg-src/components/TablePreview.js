@@ -35,7 +35,16 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 
 			const previewWrapper = ref.current;
 			const previewTable = elem.shadowRoot.querySelector('table');
-			previewTable.style.width = scale ? '700px' : '100%';
+			const maxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
+
+			let tableWidth = '700px';
+			let fullPreviewWidth = '100%';
+
+			if (maxWidth) {
+				tableWidth = `${maxWidth}px`;
+				fullPreviewWidth = `${maxWidth}px`;
+			}
+			previewTable.style.width = scale ? tableWidth : fullPreviewWidth;
 
 			// clear content of preview wrapper
 			previewWrapper.innerHTML = '';

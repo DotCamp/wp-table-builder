@@ -243,7 +243,8 @@ export default {
 
 				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
 
-				// @deprecated seems like google fixed this issue with latest version
+				// @deprecated
+				// seems like google fixed this issue with latest version
 				// fix for chrome browsers where table previews are distorted for tables with separated columns and row
 				// if (window.navigator.vendor.includes('Google')) {
 				// 	const borderCollapseType = prebuilt.style.borderCollapse;
