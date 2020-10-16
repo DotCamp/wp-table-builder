@@ -91,12 +91,14 @@ const ControlBase = {
 				const classList = input.getAttribute('class');
 				// eslint-disable-next-line array-callback-return
 				Object.keys(this.appearDependOnControl).map((d) => {
-					if (classList.includes(d)) {
-						let val = input.value;
-						if (input.type === 'checkbox') {
-							val = input.checked ? 'checked' : 'unchecked';
+					if (classList) {
+						if (classList.includes(d)) {
+							let val = input.value;
+							if (input.type === 'checkbox') {
+								val = input.checked ? 'checked' : 'unchecked';
+							}
+							this.$set(this.cachedDependedValues, d, val);
 						}
-						this.$set(this.cachedDependedValues, d, val);
 					}
 				});
 			});
