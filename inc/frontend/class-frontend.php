@@ -149,6 +149,12 @@ class Frontend {
 //		$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
 //		wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+		$dev_test_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-table-builder-frontend.js' );
+
+		// TODO [erdembircan] uncomment for production
+//		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
+
+		// TODO [erdembircan] remove for production
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $dev_test_version, false );
 	}
 }
