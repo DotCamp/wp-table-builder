@@ -55,7 +55,7 @@ gulp.task('cssFrontend', () => {
 	gulp.src(['./inc/frontend/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/frontend/css'));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', () => {
 	gulp.watch(
 		['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js', './inc/admin/js/WPTB_ResponsiveFrontend.js'],
 		['adminJs']

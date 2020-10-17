@@ -100,6 +100,7 @@ That's it. You're done!
 * IMPROVE: Better frontend JS file sizes.
 * FIX: Fixed an issue where editing text links not marking table as dirty.
 * FIX: Fixed an issue where saving table is being blocked by firewall plugins.
+* FIX: List elements now have matching styling on frontend and builder.
 
 = 1.3.0 =
 

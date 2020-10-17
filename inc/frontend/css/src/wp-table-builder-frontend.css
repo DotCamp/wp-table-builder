@@ -100,13 +100,14 @@ table.wptb-preview-table {
     word-wrap: break-word;
     overflow-wrap: break-word;
     margin: 0 !important;
-    word-wrap: break-word;
     word-break: break-word;
 }
 
 .wptb-table-container table tr td ul {
     margin: 0px !important;
-    padding: 0px !important;
+    /*padding: 0px !important;*/
+    /*margin issue fix for spacing control*/
+    padding: 1em .2em .4em;
 }
 
 .wptb-table-container table tr td ul li p {
