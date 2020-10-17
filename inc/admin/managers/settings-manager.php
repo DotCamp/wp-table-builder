@@ -284,7 +284,7 @@ class Settings_Manager {
 							'allow_edit_link_frontend'  => [
 								'type'    => 'checkbox',
 								'section' => 'general',
-								'label'   => esc_html__( 'Allow edit table link at frontend', 'wp-table-builder' )
+								'label'   => esc_html__( 'Show edit table link on frontend', 'wp-table-builder' )
 							],
 						]
 					],
