@@ -2,6 +2,7 @@
  * Attach style pass component to global space.
  */
 (function attachToGlobal(globalKey, context, factory) {
+	// eslint-disable-next-line no-param-reassign
 	context[globalKey] = factory();
 })('WPTB_StylePass', self || global, function () {
 	/**
@@ -11,6 +12,8 @@
 	 * @class
 	 */
 	function StylePass() {
+		this.options = {};
+
 		/**
 		 * Maintain the same position of table container and insert shadow root container to exact same index.
 		 *
@@ -37,6 +40,7 @@
 			};
 
 			this.prepareAllStylesheets(stylesheets, shadowRootContainer.shadowRoot);
+			this.borrowFromTheme(tableContainer);
 
 			shadowRootContainer.shadowRoot.appendChild(tableContainer);
 
@@ -50,9 +54,23 @@
 		};
 
 		/**
-		 * Initialize and start style pass.
+		 * Borrow some theme styles and reflect them to table.
+		 *
+		 * @param {HTMLElement} tableContainer table container element
 		 */
-		this.init = () => {
+		this.borrowFromTheme = (tableContainer) => {
+			const table = tableContainer.querySelector('table');
+			const { fontFamily } = getComputedStyle(table);
+			table.style.fontFamily = fontFamily;
+		};
+
+		/**
+		 * Initialize and start style pass.
+		 *
+		 * @param {Object} options style pass options
+		 */
+		this.init = (options) => {
+			this.options = { ...this.options, ...options };
 			const tableContainers = Array.from(document.querySelectorAll('div .wptb-table-container'));
 
 			if (tableContainers.length > 0) {
@@ -90,6 +108,7 @@
 			linkElement.setAttribute('id', handler);
 			linkElement.setAttribute('href', url);
 			linkElement.setAttribute('rel', 'stylesheet');
+			linkElement.setAttribute('media', 'all');
 
 			root.appendChild(linkElement);
 		};

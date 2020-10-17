@@ -3,8 +3,10 @@
 namespace WP_Table_Builder\Inc\Frontend;
 
 use WP_Table_Builder as NS;
+use function apply_filters;
 use function has_shortcode;
 use function is_a;
+use function wp_localize_script;
 
 /**
  * The public-facing functionality of the plugin.
@@ -156,5 +158,11 @@ class Frontend {
 
 		// TODO [erdembircan] remove for production
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $dev_test_version, false );
+
+		// prepare data for frontend script
+		$frontend_data = [];
+
+		$frontend_data = apply_filters('wp-table-builder/filter/wptb_frontend_data', $frontend_data);
+		wp_localize_script($this->plugin_name, 'wptbFrontendData',$frontend_data);
 	}
 }
