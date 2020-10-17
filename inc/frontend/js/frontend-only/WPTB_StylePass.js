@@ -12,7 +12,7 @@
 	 * @class
 	 */
 	function StylePass() {
-		this.options = {};
+		this.options = { stylesheets: {} };
 
 		/**
 		 * Maintain the same position of table container and insert shadow root container to exact same index.
@@ -28,18 +28,7 @@
 			const upSibling = tableIndex - 1 > 0 ? null : parentChildren[tableIndex - 1];
 			const downSibling = tableIndex + 1 >= parentChildren.length ? null : parentChildren[tableIndex + 1];
 
-			const stylesheets = {
-				'wptb-builder-css':
-					'//mysite.localhost:3000/wp-content/plugins/wp-table-builder/inc/admin/css/admin.css?ver=1.3.1',
-				'wp-table-builder-css':
-					'//mysite.localhost:3000/wp-content/plugins/wp-table-builder/inc/frontend/css/wp-table-builder-frontend.css?ver=1.3.1',
-				'wp-table-builder-pro-css':
-					'//mysite.localhost:3000/wp-content/plugins/wp-table-builder-pro/inc/frontend/css/wp-table-builder-pro-frontend.css?ver=1.1.5',
-				'wp-table-builder-procommon-css':
-					'//mysite.localhost:3000/wp-content/plugins/wp-table-builder-pro/inc/common/css/wp-table-builder-pro.css?ver=1.1.5',
-			};
-
-			this.prepareAllStylesheets(stylesheets, shadowRootContainer.shadowRoot);
+			this.prepareAllStylesheets(this.options.stylesheets, shadowRootContainer.shadowRoot);
 			this.borrowFromTheme(tableContainer);
 
 			shadowRootContainer.shadowRoot.appendChild(tableContainer);
@@ -79,11 +68,26 @@
 		};
 
 		/**
+		 * Check if style pass is enabled for current table.
+		 *
+		 * @param {HTMLElement} tableContainer table container
+		 * @return {string} status null for disabled, true for enabled
+		 */
+		this.checkTableEligibility = (tableContainer) => {
+			const table = tableContainer.querySelector('table');
+			return table.dataset.disableThemeStyles;
+		};
+
+		/**
 		 * Prepare containers for necessary style pass operations.
 		 *
 		 * @param {HTMLElement} tableContainer table container
 		 */
 		this.setupStylePass = (tableContainer) => {
+			// abort if style pass is not enabled for table
+			if (!this.checkTableEligibility(tableContainer)) {
+				return;
+			}
 			const container = document.createElement('div');
 			const maxWidth = tableContainer.querySelector('table').dataset.wptbTableContainerMaxWidth;
 			if (maxWidth) {

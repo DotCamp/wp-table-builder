@@ -30,7 +30,6 @@
 	 */
 
 	jQuery(document).ready(function ($) {
-
 		const tableContainers = document.getElementsByClassName('wptb-table-container');
 		/**
 		 * Adds hover color change support for supported button elements.
@@ -758,6 +757,6 @@
 		sortingTable();
 		responsiveFront.rebuildTables();
 
-		WPTB_StylePass.init();
+		WPTB_StylePass.init(WptbFrontendData.stylePass);
 	});
 })(jQuery);

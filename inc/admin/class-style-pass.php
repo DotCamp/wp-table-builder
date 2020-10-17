@@ -5,9 +5,10 @@ namespace WP_Table_Builder\Inc\Admin;
 // if called directly, abort
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
+use WP_Table_Builder as NS;
 use function add_filter;
+use function trailingslashit;
 use const add_action;
-use const WP_Table_Builder\NS;
 
 if ( ! defined( 'WPINC' ) ) {
 	die();
@@ -33,11 +34,40 @@ class Style_Pass {
 	 * Add style pass related data to frontend scripts.
 	 *
 	 * @param array $data frontend data array
+	 *
+	 * @return array frontend data
 	 */
 	public static function frontend_data( $data ) {
 		$version = NS\PLUGIN_VERSION;
 
+		$style_pass_data = [
+			'stylesheets' => [
+				'wp-table-builder-css' => static::prepare_stylesheet_url( 'inc/frontend/css/wp-table-builder-frontend.css', $version ),
 
+			]
+		];
+
+		// style pass frontend data filter
+		$style_pass_data   = apply_filters( 'wp-table-builder/filter/style-pass-frontend-data', $style_pass_data );
+		$data['stylePass'] = $style_pass_data;
+
+		return $data;
+	}
+
+	/**
+	 * Prepare url for the given stylesheet
+	 *
+	 * @param string $relative_url path to css file relative to plugin base
+	 * @param int $version file version
+	 *
+	 * @param null $plugin_root root url for plugin, if no value is supplied normal version root url will be used
+	 *
+	 * @return string formed stylesheet url
+	 */
+	public static function prepare_stylesheet_url( $relative_url, $version, $plugin_root = null ) {
+		$base_url = trailingslashit( $plugin_root === null ? NS\WP_TABLE_BUILDER_URL : $plugin_root ) . $relative_url;
+
+		return add_query_arg( [ 'version' => $version ], $base_url );
 	}
 
 	/**

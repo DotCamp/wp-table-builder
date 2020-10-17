@@ -146,11 +146,6 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		//@deprecated
-//		$relative_path         = 'inc/admin/js/WPTB_ResponsiveFrontend.js';
-//		$responsive_script_url = trailingslashit( NS\WP_TABLE_BUILDER_URL ) . $relative_path;
-//		wp_enqueue_script( $this->plugin_name . '_responsive-frontend', $responsive_script_url, [], NS\PLUGIN_VERSION, false );
-
 		$dev_test_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-table-builder-frontend.js' );
 
 		// TODO [erdembircan] uncomment for production
@@ -162,7 +157,8 @@ class Frontend {
 		// prepare data for frontend script
 		$frontend_data = [];
 
-		$frontend_data = apply_filters('wp-table-builder/filter/wptb_frontend_data', $frontend_data);
-		wp_localize_script($this->plugin_name, 'wptbFrontendData',$frontend_data);
+		// frontend data filter
+		$frontend_data = apply_filters( 'wp-table-builder/filter/wptb_frontend_data', $frontend_data );
+		wp_localize_script( $this->plugin_name, 'WptbFrontendData', $frontend_data );
 	}
 }
