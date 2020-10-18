@@ -172,8 +172,12 @@ class Control_Size extends Base_Control {
                                         this.value = parseInt ( '{{{max}}}' );
                                     }
 
-                                    this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].value = this.value;
-                                    this.parentNode.parentNode.getElementsByClassName('wptb-size-slider')[0].oninput( event );
+                                    let sizeSliderInput = this.parentNode.parentNode.querySelector('.wptb-size-slider');
+                                    if(sizeSliderInput) {
+                                        sizeSliderInput.value = this.value;
+                                        sizeSliderInput.oninput( event );
+                                        WPTB_Helper.wptbDocumentEventGenerate( 'change', sizeSliderInput );
+                                    }
                                 }
                             }
                         }

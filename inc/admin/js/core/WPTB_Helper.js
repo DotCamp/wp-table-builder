@@ -760,17 +760,49 @@ var WPTB_Helper = {
             function dependOnControlElementValue(dependOnControlElements, dependOn) {
                 let targetControlValue = WPTB_Helper.targetControlValueGet(dependOnControlElements);
 
-                if(dependOn[1] && Array.isArray(dependOn[1]) &&
-                    (dependOn[1].indexOf(targetControlValue) !== -1 )) {
-                    return true;
-                    // let childCheck = controlContainerElem.querySelector('input[type="checkbox"]')
-                    // if (childCheck) {
-                    //     childCheck.checked = true;
-                    // }
-                } else if(dependOn[2] && Array.isArray(dependOn[2]) &&
-                    (dependOn[2].indexOf(targetControlValue) !== -1)) {
-                    return false;
+                let returnBool = false;
+                for(let i = 1; i <= 2; i++) {
+                    if(dependOn[i] && Array.isArray(dependOn[i])) {
+                        let coincided;
+                        let hasNumberAnyParams = false;
+                        for(let j = 0; j < dependOn[i].length; j++) {
+                            if(typeof dependOn[i][j] === 'string' && dependOn[i][j].indexOf('numberAny >') !== -1) {
+                                hasNumberAnyParams = true;
+                                let xNum = parseInt(dependOn[i][j].match(/\d+/));
+                                if(targetControlValue > xNum) {
+                                    coincided = true;
+                                } else {
+                                    coincided = false;
+                                    break;
+                                }
+                            } else if(typeof dependOn[i][j] === 'string' && dependOn[i][j].indexOf('numberAny <') !== -1) {
+                                hasNumberAnyParams = true;
+                                let xNum = parseInt(dependOn[i][j].match(/\d+/));
+                                if(targetControlValue < xNum) {
+                                    coincided = true;
+                                } else {
+                                    coincided = false;
+                                    break;
+                                }
+                            } else if(dependOn[i][j] === targetControlValue) {
+                                coincided = true;
+                                if(!hasNumberAnyParams) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(coincided && i === 1) {
+                            returnBool = true;
+                            break;
+                        } else if(coincided && i === 2) {
+                            returnBool = false;
+                            break;
+                        }
+                    }
                 }
+
+                return returnBool;
             }
         }
     },
