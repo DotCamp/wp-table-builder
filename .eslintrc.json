@@ -43,6 +43,7 @@
     "wptbGenerateMenuData": true,
     "wptbGenerateMenuProData": true,
     "WPTB_Table": true,
-    "wptbBlockData": true
+    "wptbBlockData": true,
+    "WPTB_HeaderToolboxActions": true
   }
 }

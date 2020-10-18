@@ -5,6 +5,7 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
+use WP_Table_Builder\Inc\Admin\Header_Toolbox;
 use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
@@ -205,7 +206,7 @@ class Init {
 		$this->icon_manager = new Icon_Manager( $icon_dir_path, $icon_dir_url );
 
 		// initialize gutenberg block manager
-		new Gutenberg_Block_Manager('wptb/table-block');
+		new Gutenberg_Block_Manager( 'wptb/table-block' );
 	}
 
 	/**
@@ -240,6 +241,9 @@ class Init {
 
 		// accessibility initialization
 		new Accessibility();
+
+		// initialize header toolbox
+		Header_Toolbox::init();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

@@ -1,28 +1,63 @@
 /**
- * WPTB_HeaderToolbox
+ * Header toolbox button.
+ *
+ * @param {string} id button id
+ * @param {string} label button label
+ * @return {HTMLElement} button element
+ */
+// eslint-disable-next-line camelcase
+const WPTB_HeaderButton = (id, label) => {
+	const stringElement = `<div class="wptb-settings-section-item static-active wptb-header-toolbox-button">${label}</div>`;
+
+	const range = document.createRange();
+	const buttonElement = range.createContextualFragment(stringElement).children[0];
+
+	// setup button action from header actions
+	buttonElement.addEventListener('click', () => {
+		WPTB_HeaderToolboxActions.callAction(id);
+	});
+
+	return buttonElement;
+};
+
+/**
+ * WPTB_HeaderToolbox.
  *
  * @param {string} wrapperQuery wrapper query for toolbox items
- * @return {object} header toolbox object
- * @constructor
+ * @param {Object} data data for header toolbox
+ * @return {Object} header toolbox object
+ * @class
  */
 // eslint-disable-next-line camelcase,no-unused-vars
-const WPTB_HeaderToolbox = function (wrapperQuery) {
+const WPTB_HeaderToolbox = (wrapperQuery, data) => {
 	this.wrapperQuery = wrapperQuery;
 	this.element = document.querySelector(wrapperQuery);
+	this.elementWrapper = this.element.parentNode;
 	this.topMargin = 2;
+	this.data = data;
 
 	/**
-	 * Assign events to toolbox buttons
+	 * Add button to header toolbox.
 	 */
 	const assignButtons = () => {
-		const manageCellsButton = this.element.querySelector('[data-button-type="table_settings_menu"]');
-
-		if (manageCellsButton) {
-			manageCellsButton.addEventListener('click', () => {
-				WPTB_Helper.activateSection('manage_cells');
-			});
-		}
+		// eslint-disable-next-line array-callback-return
+		this.data.buttons.map((b) => {
+			this.element.appendChild(new WPTB_HeaderButton(b.id, b.label));
+		});
 	};
+
+	/**
+	 * Clear button of toolbox.
+	 */
+	const clearToolbox = () => {
+		this.element.innerHTML = '';
+	};
+
+	// subscribe to set action of header toolbox actions
+	WPTB_HeaderToolboxActions.subscribe('set', () => {
+		clearToolbox();
+		assignButtons();
+	});
 
 	/**
 	 * Toggle visibility of toolbox with the given argument.
@@ -43,19 +78,22 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 	 * Initialize header toolbox.
 	 */
 	const init = () => {
+		// clear contents of toolbox before adding buttons
+		clearToolbox();
+
+		// create and assign buttons
 		assignButtons();
+
 		// bind toolbox to table generated event
 		document.addEventListener('wptb:table:generated', () => {
-			this.element.style.display = 'unset';
-			const { width } = this.element.getBoundingClientRect();
-			this.element.style.left = `calc( 50% - ${width / 2}px)`;
+			toggleToolboxVisibility(true);
 
-			// hide toolbox at manage cells and responsive menus
-			document.addEventListener('wptbSectionChanged', ({ detail }) => {
-				toggleToolboxVisibility(
-					detail !== 'manage_cells' && detail !== 'table_responsive_menu' && detail !== 'cell_settings'
-				);
-			});
+			// main header part of the builder
+			const mainHeader = document.querySelector('.wptb-header');
+
+			// use main header height to position toolbox
+			const headerHeight = mainHeader.getBoundingClientRect().height;
+			this.elementWrapper.style.top = `${headerHeight}px`;
 		});
 	};
 

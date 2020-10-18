@@ -12,7 +12,7 @@ var WPTB_Initializer = function () {
             rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1],
             columnsInput = document.getElementById('wptb-columns-number'),
             rowsInput = document.getElementById('wptb-rows-number');
-    
+
     // columnsDecrementButton.onclick = function () {
     //         if (columnsInput.value > MIN_COLUMNS) {
     //                 columnsInput.value--;
@@ -76,8 +76,12 @@ var WPTB_Initializer = function () {
 
     // block tinyMCE from activation at manage cells menu
     WPTB_Helper.blockTinyMCEManageCells();
+
     // initialize header toolbox
-    new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
+    new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar', wptb_admin_object.headerToolbox).init();
+
+   // TODO [erdembircan] remove for production
+    WPTB_HeaderToolboxActions.addAction('borders', () => console.log('clicked'));
 
     // redirect active menu to elements after closing manage cells menu
     document.addEventListener('wp-table-builder/table-edit-mode/closed', () => {

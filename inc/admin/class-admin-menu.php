@@ -7,6 +7,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use function add_query_arg;
 use function admin_url;
+use function apply_filters;
 use function get_plugins;
 use function current_user_can;
 use function wp_create_nonce;
@@ -329,13 +330,17 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 
+			$admin_data = [
+				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+			];
+
+			$admin_data = apply_filters( 'wp-table-builder/filter/wptb_admin_data', $admin_data );
+
 			wp_localize_script(
 				'wptb-admin-builder-js',
 				'wptb_admin_object',
-				[
-					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-					'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-				]
+				$admin_data
 			);
 
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
@@ -383,7 +388,7 @@ class Admin_Menu {
 				'browse'             => esc_html__( 'Browse', $wptb_text_domain ),
 				'clear'              => esc_html__( 'Clear', $wptb_text_domain ),
 				'tableImported'      => esc_html__( 'Table Imported', $wptb_text_domain ),
-				'errorOccurred'       => esc_html__( 'An Error Occurred', $wptb_text_domain ),
+				'errorOccurred'      => esc_html__( 'An Error Occurred', $wptb_text_domain ),
 				'operationSuccess'   => esc_html__( 'Tables Imported', $wptb_text_domain ),
 				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', $wptb_text_domain ),
 				'file'               => esc_html__( 'file', $wptb_text_domain ),
