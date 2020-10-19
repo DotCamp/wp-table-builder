@@ -50,6 +50,10 @@ class Header_Toolbox {
 				[
 					'id'    => 'borders',
 					'label' => esc_html__( 'borders', 'wp-table-builder' ),
+				],
+				[
+					'id'    => 'tags',
+					'label' => esc_html__( 'table tags', 'wp-table-builder' ),
 				]
 			]
 		];

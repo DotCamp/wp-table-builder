@@ -80,8 +80,13 @@ var WPTB_Initializer = function () {
     // initialize header toolbox
     new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar', wptb_admin_object.headerToolbox).init();
 
-   // TODO [erdembircan] remove for production
-    WPTB_HeaderToolboxActions.addAction('borders', () => console.log('clicked'));
+   // // TODO [erdembircan] remove for production
+    WPTB_HeaderToolboxActions.addAction('borders', () => {
+        WPTB_ControlShortcutManager.showControlSection('table_settings_border');
+    });
+    WPTB_HeaderToolboxActions.addAction('tags', () => {
+        WPTB_ControlShortcutManager.showControlSection('table_settings_tags');
+    });
 
     // redirect active menu to elements after closing manage cells menu
     document.addEventListener('wp-table-builder/table-edit-mode/closed', () => {

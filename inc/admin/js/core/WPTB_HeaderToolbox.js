@@ -13,7 +13,9 @@ const WPTB_HeaderButton = (id, label) => {
 	const buttonElement = range.createContextualFragment(stringElement).children[0];
 
 	// setup button action from header actions
-	buttonElement.addEventListener('click', () => {
+	buttonElement.addEventListener('click', (e) => {
+		e.preventDefault();
+		e.stopPropagation();
 		WPTB_HeaderToolboxActions.callAction(id);
 	});
 
@@ -71,7 +73,7 @@ const WPTB_HeaderToolbox = (wrapperQuery, data) => {
 			height = 0;
 		}
 
-		this.element.style.top = `calc( 100% - ${height + this.topMargin}px)`;
+		this.elementWrapper.style.top = `calc( 100% - ${height + this.topMargin}px)`;
 	};
 
 	/**
@@ -87,6 +89,10 @@ const WPTB_HeaderToolbox = (wrapperQuery, data) => {
 		// bind toolbox to table generated event
 		document.addEventListener('wptb:table:generated', () => {
 			toggleToolboxVisibility(true);
+
+			document.addEventListener('wptbSectionChanged', ({ detail }) => {
+				toggleToolboxVisibility(detail !== 'manage_cells' && detail !== 'table_responsive_menu');
+			});
 
 			// main header part of the builder
 			const mainHeader = document.querySelector('.wptb-header');

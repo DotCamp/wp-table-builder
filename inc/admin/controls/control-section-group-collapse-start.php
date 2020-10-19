@@ -41,7 +41,8 @@ class Control_Section_Group_Collapse_Start extends Base_Control {
         const sectionId = data.sectionId;
         const openState = data.openState;
 
-
+        const regExp = new RegExp(/(.+)(?:_.+)/g);
+        const parsedId = regExp.exec(sectionId)[1];
         #>
         <div class="wptb-panel-toggle-group" id="{{{sectionId}}}">
             <div class="wptb-panel-toggle">
@@ -69,7 +70,9 @@ class Control_Section_Group_Collapse_Start extends Base_Control {
             }
 
             togglePanelWrapper.toggleClass('wptb-panel-toggle-content');
-            toggleTarget.slideToggle();
+            toggleTarget.slideToggle(400, function() {
+            WPTB_Helper.wptbDocumentEventGenerate('{{{parsedId}}}:section:toggle', document);
+            });
             }
 
             if({{{openState}}} === false){

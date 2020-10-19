@@ -1,11 +1,4 @@
-/**
- * Assign header toolbox actions to global space.
- */
-(function assignToGlobal(context, key, factory) {
-	// eslint-disable-next-line no-param-reassign
-	context[key] = factory();
-	// eslint-disable-next-line no-restricted-globals
-})(self || global, 'WPTB_HeaderToolboxActions', () => {
+assignToGlobal('WPTB_HeaderToolboxActions', () => {
 	/**
 	 * Header toolbox actions.
 	 *

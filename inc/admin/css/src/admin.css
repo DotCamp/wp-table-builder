@@ -5108,6 +5108,7 @@ wptb_shortcode_container_element {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: top 0.2s ease-out;
 }
 
 

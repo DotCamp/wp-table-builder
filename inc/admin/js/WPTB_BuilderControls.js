@@ -16303,7 +16303,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
          * @param {boolean} addBorder add top border to header row
          */
         // eslint-disable-next-line no-inner-declarations
-        var addHeaderCells = function addHeaderCells() {
+        function addHeaderCells() {
           var addBorder = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
           var rowObj = tableObj.addRow('wptb-row');
 
@@ -16316,7 +16316,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             // clone header cell to reuse it for multiple rows
             tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
           });
-        }; // count of header rows that will be created
+        } // count of header rows that will be created
 
 
         var headerCount = Math.ceil((rows - 1) / itemsPerHeader); // row index on original table
@@ -22140,22 +22140,23 @@ var _default = {
         var regExp = new RegExp(/rgb\(\s?(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})\)/);
 
         if (regExp) {
+          var _regExp$exec = regExp.exec(rgbVal),
+              _regExp$exec2 = _slicedToArray(_regExp$exec, 4),
+              red = _regExp$exec2[1],
+              green = _regExp$exec2[2],
+              blue = _regExp$exec2[3];
           /**
            * Transform a decimal into its hexadecimal equal.
            *
            * @param {string} val value
            * @return {string} changed hex value
            */
-          var hexConvertor = function hexConvertor(val) {
+
+
+          function hexConvertor(val) {
             var hex = Number.parseInt(val, 10).toString(16);
             return hex.length === 1 ? "0".concat(hex) : hex;
-          };
-
-          var _regExp$exec = regExp.exec(rgbVal),
-              _regExp$exec2 = _slicedToArray(_regExp$exec, 4),
-              red = _regExp$exec2[1],
-              green = _regExp$exec2[2],
-              blue = _regExp$exec2[3];
+          }
 
           return "#".concat(hexConvertor(red)).concat(hexConvertor(green)).concat(hexConvertor(blue));
         }

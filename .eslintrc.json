@@ -44,6 +44,7 @@
     "wptbGenerateMenuProData": true,
     "WPTB_Table": true,
     "wptbBlockData": true,
-    "WPTB_HeaderToolboxActions": true
+    "WPTB_HeaderToolboxActions": true,
+    "assignToGlobal": true
   }
 }
