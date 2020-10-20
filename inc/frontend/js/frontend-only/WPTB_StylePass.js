@@ -36,7 +36,7 @@
 			if (upSibling) {
 				upSibling.insertAdjacentElement('afterend', shadowRootContainer);
 			} else if (downSibling) {
-				upSibling.insertAdjacentElement('beforebegin', shadowRootContainer);
+				downSibling.insertAdjacentElement('beforebegin', shadowRootContainer);
 			} else {
 				mainParent.appendChild(shadowRootContainer);
 			}
