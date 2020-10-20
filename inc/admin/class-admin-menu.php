@@ -329,12 +329,17 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 
+			$strings = [
+				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
+			];
+
 			wp_localize_script(
 				'wptb-admin-builder-js',
 				'wptb_admin_object',
 				[
 					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 					'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+					'strings'       => $strings
 				]
 			);
 
@@ -383,7 +388,7 @@ class Admin_Menu {
 				'browse'             => esc_html__( 'Browse', $wptb_text_domain ),
 				'clear'              => esc_html__( 'Clear', $wptb_text_domain ),
 				'tableImported'      => esc_html__( 'Table Imported', $wptb_text_domain ),
-				'errorOccurred'       => esc_html__( 'An Error Occurred', $wptb_text_domain ),
+				'errorOccurred'      => esc_html__( 'An Error Occurred', $wptb_text_domain ),
 				'operationSuccess'   => esc_html__( 'Tables Imported', $wptb_text_domain ),
 				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', $wptb_text_domain ),
 				'file'               => esc_html__( 'file', $wptb_text_domain ),
