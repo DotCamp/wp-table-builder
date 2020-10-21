@@ -2189,15 +2189,17 @@ var WPTB_Helper = {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const isTableDirty = document.querySelector('.wptb-save-disabled') !== undefined;
-                if(isTableDirty){
+                const isTableClean = document.querySelector('.wptb-save-disabled');
+
+                const tableId = new URL(window.location.href).searchParams.get('table');
+
+                if(!isTableClean){
                     const confirmResult = window.confirm(wptb_admin_object.strings.dirtyConfirmation);
                     if(confirmResult){
-
-                        const tableId = new URL(window.location.href).searchParams.get('table');
-
                         WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
                     }
+                }else {
+                    WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
                 }
 
             },{capture: true});
