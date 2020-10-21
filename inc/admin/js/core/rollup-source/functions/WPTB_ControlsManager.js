@@ -10,6 +10,45 @@ function ControlsManager() {
 	const controlScripts = {};
 	const controlData = {};
 	const tableSettings = { settings: {} };
+	const subscribers = {};
+
+	/**
+	 * Get current table settings.
+	 *
+	 * @return {Object} current table settings
+	 */
+	function getTableSettings() {
+		return tableSettings.settings;
+	}
+
+	/**
+	 * Subscribe to table settings changes
+	 *
+	 * @param {string} id unique id for subscription
+	 * @param {Function} callback callback when an update happens
+	 */
+	function subscribe(id, callback) {
+		subscribers[id] = callback;
+
+		if (typeof callback === 'function') {
+			callback(getTableSettings());
+		}
+	}
+
+	/**
+	 * Call subscribers on update.
+	 */
+	function callSubscribers() {
+		// eslint-disable-next-line array-callback-return
+		Object.keys(subscribers).map((s) => {
+			if (Object.prototype.hasOwnProperty.call(subscribers, s)) {
+				const callback = subscribers[s];
+				if (typeof callback === 'function') {
+					callback(getTableSettings());
+				}
+			}
+		});
+	}
 
 	/**
 	 * Settings changed callback.
@@ -19,9 +58,13 @@ function ControlsManager() {
 	function updateTableSettings(input) {
 		if (input) {
 			tableSettings.settings = { ...tableSettings.settings, ...input };
+			callSubscribers();
 		}
 	}
 
+	/**
+	 * Attach to table settings changes.
+	 */
 	function attachToSettingChanges() {
 		document.addEventListener(
 			'wptb:table:generated',
@@ -39,10 +82,6 @@ function ControlsManager() {
 	 */
 	function init() {
 		attachToSettingChanges();
-	}
-
-	function getTableSettings() {
-		return tableSettings;
 	}
 
 	/**
@@ -99,7 +138,7 @@ function ControlsManager() {
 		}
 		return controlData[id];
 	}
-	return { getTableSettings, init, addControlScript, callControlScript, setControlData, getControlData };
+	return { getTableSettings, init, addControlScript, callControlScript, setControlData, getControlData, subscribe };
 }
 
 /**
