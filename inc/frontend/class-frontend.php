@@ -151,7 +151,7 @@ class Frontend {
 		// TODO [erdembircan] uncomment for production
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
 
-		// TODO [erdembircan] remove for production
+		// TODO [erdembircan] comment for production
 //		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $dev_test_version, false );
 
 		// prepare data for frontend script

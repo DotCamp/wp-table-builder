@@ -32,10 +32,11 @@
 				></prebuilt-card>
 			</div>
 		</div>
-		<div v-if="!isPro" class="wptb-prebuilt-ad">
-			{{ strings.prebuiltAdPart1 }}
-			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>
-		</div>
+		<!--    @deprecated-->
+		<!--		<div v-if="!isPro" class="wptb-prebuilt-ad">-->
+		<!--			{{ strings.prebuiltAdPart1 }}-->
+		<!--			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>-->
+		<!--		</div>-->
 	</div>
 </template>
 <script>
@@ -205,9 +206,9 @@ export default {
 				const maxWidth = table.dataset.wptbTableContainerMaxWidth;
 
 				// add defined max width to table wrapper element
-				if(maxWidth){
-				  tableWrapper.style.maxWidth = `${maxWidth}px`;
-        }
+				if (maxWidth) {
+					tableWrapper.style.maxWidth = `${maxWidth}px`;
+				}
 
 				if (!edit) {
 					// unmark inserted template as prebuilt table
@@ -271,6 +272,7 @@ export default {
 					 * Increment id of plugin element.
 					 *
 					 * @param HTMLElement divEl div element
+					 * @param divEl
 					 */
 					const incrementIds = (divEl) => {
 						let className = null;
