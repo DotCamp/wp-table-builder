@@ -719,9 +719,9 @@ var WPTB_Helper = {
                 }
             }
 
-            let targetControlElement = document.getElementsByClassName( targetControlElementClass );
-            if( targetControlElement.length > 0 ) {
-                targetControlElement = targetControlElement[0];
+            let targetControlElements = document.getElementsByClassName( targetControlElementClass );
+            if( targetControlElements.length > 0 ) {
+                let targetControlElement = targetControlElements[0];
                 let controlContainerElem = WPTB_Helper.findAncestor( targetControlElement, 'wptb-element-option' );
 
                 if( controlContainerElem ) {
@@ -731,30 +731,44 @@ var WPTB_Helper = {
                         if (Object.prototype.hasOwnProperty.call(dependOnControlElementsValue, k)) {
                             let dependOnControlElements = dependOnControlElementsValue[k][1];
                             let dependOnControlElement = dependOnControlElements[0];
-                            dependOnControlElement.addEventListener( 'change', dependOnControlElementChangeHandler.bind(null, controlContainerElem, dependOnControlElementsValue, k), false );
+                            dependOnControlElement.addEventListener( 'change', dependOnControlElementChangeHandler, false );
+                        }
+
+                        function dependOnControlElementChangeHandler(event) {
+                            let dependOn = dependOnControlElementsValue[k][2];
+                            let dependOnControlElements = dependOnControlElementsValue[k][1];
+                            dependOnControlElementsValue[dependOn[0]] = [dependOnControlElementValue(dependOnControlElements, dependOn), dependOnControlElements, dependOn];
+                            showHideTargetControlElement(controlContainerElem, dependOnControlElementsValue)
                         }
                     });
                 }
-            }
 
-            function dependOnControlElementChangeHandler(controlContainerElem, dependOnControlElementsValue, k) {
-                let dependOn = dependOnControlElementsValue[k][2];
-                let dependOnControlElements = dependOnControlElementsValue[k][1];
-                dependOnControlElementsValue[dependOn[0]] = [dependOnControlElementValue(dependOnControlElements, dependOn), dependOnControlElements, dependOn];
-                showHideTargetControlElement(controlContainerElem, dependOnControlElementsValue)
             }
 
             function showHideTargetControlElement(controlContainerElem, dependOnControlElementsValue) {
                 let display = 'block';
+                let targetControlInactiveVal;
                 Object.keys(dependOnControlElementsValue).map(k => {
                     if (Object.prototype.hasOwnProperty.call(dependOnControlElementsValue, k)) {
                         if(dependOnControlElementsValue[k][0] === false){
                             display = 'none';
+                            if(dependOnControlElementsValue[k][2][3]) {
+                                targetControlInactiveVal = dependOnControlElementsValue[k][2][3];
+                            }
                         }
                     }
                 })
 
-                controlContainerElem.style.display = display;
+                if(controlContainerElem.style.display !== display) {
+                    controlContainerElem.style.display = display;
+
+                    if(display === 'none' && targetControlInactiveVal) {
+                        targetControlElements[0].dataset.controlActiveVal = WPTB_Helper.targetControlValueGet(targetControlElements);
+                        WPTB_Helper.targetControlValueGet(targetControlElements, targetControlInactiveVal);
+                    } else if(display === 'block' && targetControlElements[0].dataset.controlActiveVal) {
+                        WPTB_Helper.targetControlValueGet(targetControlElements, targetControlElements[0].dataset.controlActiveVal);
+                    }
+                }
             }
 
             function dependOnControlElementValue(dependOnControlElements, dependOn) {
@@ -803,6 +817,64 @@ var WPTB_Helper = {
                 }
 
                 return returnBool;
+            }
+        }
+    },
+    //
+
+    /**
+     * Switch toggle
+     */
+    toggleSwitch: function (dataToggleSwitch, targetControlElementClass) {
+        if( Array.isArray( dataToggleSwitch ) ) {
+            if(dataToggleSwitch[1] && typeof dataToggleSwitch[1] === "object") {
+                let dependOnParams = dataToggleSwitch[1];
+                let toggleSwitchExec = false;
+                Object.keys(dependOnParams).map(k => {
+                    let dependOnValue = dependOnParams[k];
+
+                    let infArr = targetControlElementClass.match(/wptb-el-((.+-)\d+)-(.+)/i);
+
+                    if (infArr && Array.isArray(infArr)) {
+                        let controlName = infArr[3];
+
+                        let dependOnControlElementClass = targetControlElementClass.replace(controlName, k);
+                        if(dependOnControlElementClass) {
+                            let dependOnControlElements = document.getElementsByClassName(dependOnControlElementClass);
+                            if(dependOnControlElements.length > 0) {
+                                let dependOnControlElement = dependOnControlElements[0];
+                                dependOnControlElement.addEventListener('change', toggleSwitchExecuteCheckRun.bind(null, dependOnControlElementClass, dependOnValue), false);
+                            }
+                        }
+                    }
+                });
+
+                if(toggleSwitchExec) {
+                    toggleSwitchExecute();
+                }
+                function toggleSwitchExecuteCheckRun(dependOnControlElementClass, dependOnValue) {
+                    if(dependOnControlElementClass) {
+                        let dependOnControlElements = document.getElementsByClassName(dependOnControlElementClass);
+                        if(dependOnControlElements.length > 0) {
+                            let targetControlValue = WPTB_Helper.targetControlValueGet(dependOnControlElements);
+
+                            if(targetControlValue === dependOnValue) {
+                                toggleSwitchExecute();
+                            }
+                        }
+                    }
+                }
+                function toggleSwitchExecute() {
+                    let elems = document.getElementsByClassName(targetControlElementClass);
+                    if(elems.length && WPTB_Helper.targetControlValueGet(elems) !== dataToggleSwitch[0]) {
+                        if(dataToggleSwitch[0] === 'unchecked') {
+                            elems[0].checked = false;
+                        } else if(dataToggleSwitch[0] === 'checked') {
+                            elems[0].checked = true;
+                        }
+                        WPTB_Helper.wptbDocumentEventGenerate( 'change', elems[0], {eventType: 'toggleSwitch'} );
+                    }
+                }
             }
         }
     },
@@ -901,26 +973,50 @@ var WPTB_Helper = {
         }
     },
     //
-    targetControlValueGet: function( targetControls ) {
+    targetControlValueGet: function( targetControls, val ) {
         let targetControlValue;
         for( let i = 0; i < targetControls.length; i++ ) {
             if( targetControls[i].type == 'checkbox' && targetControls[i].name ) {
-                if( ! targetControlValue ) targetControlValue = {};
-                if( targetControls[i].checked == true ) {
-                    targetControlValue[targetControls[i].name] = 'checked';
+                if(val) {
+                    if(val === 'checked') {
+                        targetControls[i].checked = true;
+                    } else if(val === 'unchecked') {
+                        targetControls[i].checked = false;
+                    }
                 } else {
-                    targetControlValue[targetControls[i].name] = 'unchecked';
+                    if( ! targetControlValue ) targetControlValue = {};
+                    if( targetControls[i].checked == true ) {
+                        targetControlValue[targetControls[i].name] = 'checked';
+                    } else {
+                        targetControlValue[targetControls[i].name] = 'unchecked';
+                    }
                 }
             } else if( targetControls[i].type == 'checkbox' ) {
+                if(val) {
+                    if(val === 'checked') {
+                        targetControls[i].checked = true;
+                    } else if(val === 'unchecked') {
+                        targetControls[i].checked = false;
+                    }
+                } else {
                     if( targetControls[i].checked == true ) {
                         targetControlValue = 'checked';
                     } else {
                         targetControlValue = 'unchecked';
                     }
+                }
             } else if( targetControls[i].type ) {
-                targetControlValue = targetControls[i].value;
+                if(val) {
+                    targetControls[i].value = val;
+                } else {
+                    targetControlValue = targetControls[i].value;
+                }
             } else if( targetControls[i].dataset.alignmentValue && targetControls[i].classList.contains( 'selected' ) ){
-                targetControlValue = targetControls[i].dataset.alignmentValue;
+                if(val){
+                    targetControls[i].dataset.alignmentValue = val;
+                } else {
+                    targetControlValue = targetControls[i].dataset.alignmentValue;
+                }
             }
         }
         return targetControlValue;
@@ -1089,6 +1185,9 @@ var WPTB_Helper = {
         // array for keep "appear depend on" params
         let controlappearDependOnControl = [];
 
+        // array for keep "toggle switch" params
+        let controltoggleSwitch = [];
+
         // array for keep "value depend on" params
         let controlValueDependOnControl = [];
 
@@ -1118,6 +1217,12 @@ var WPTB_Helper = {
             if( 'appearDependOnControl' in data ) {
                 if( Array.isArray( data.appearDependOnControl ) ) {
                     controlappearDependOnControl.push( [data.appearDependOnControl, data.elementControlTargetUnicClass] );
+                }
+            }
+
+            if( 'toggleSwitch' in data ) {
+                if( Array.isArray( data.toggleSwitch ) ) {
+                    controltoggleSwitch.push( [data.toggleSwitch, data.elementControlTargetUnicClass] );
                 }
             }
 
@@ -1208,6 +1313,7 @@ var WPTB_Helper = {
 
         element.optionsGroupIds = elementOptionsGroupIdsInvolved;
 
+        // run the scripts of controls
         Object.keys( controlScriptsObj ).forEach( function( elementOptionsGroupId ) {
             if(!targetControlElementClass) {
                 elementOptionsScriptsContainer = document.createElement( 'div' );
@@ -1231,7 +1337,10 @@ var WPTB_Helper = {
             }
         });
 
-        // run the scripts of controls
+        // run toggleSwitch function
+        for ( let i = 0; i < controltoggleSwitch.length; i++ ) {
+            WPTB_Helper.toggleSwitch( controltoggleSwitch[i][0], controltoggleSwitch[i][1] );
+        }
 
         // run appearDependOnControl function
         for ( let i = 0; i < controlappearDependOnControl.length; i++ ) {
