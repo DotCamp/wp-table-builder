@@ -38,11 +38,13 @@
     "WPTB_ControlsManager": true,
     "WPTB_Helper": true,
     "WPTB_ResponsiveFrontend": true,
+    "WPTB_StylePass": true,
     "jQuery": true,
     "wp": true,
     "wptbGenerateMenuData": true,
     "wptbGenerateMenuProData": true,
     "WPTB_Table": true,
-    "wptbBlockData": true
+    "wptbBlockData": true,
+    "WptbFrontendData": true
   }
 }

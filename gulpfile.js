@@ -6,6 +6,20 @@ const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 
+const gulpConfig = {
+	frontEndJs: {
+		src: [
+			'./inc/admin/js/core/WPTB_CutGlueTable.js',
+			'./inc/admin/js/core/WPTB_SortableTable.js',
+			'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
+			'./inc/admin/js/WPTB_ResponsiveFrontend.js',
+			'./inc/frontend/js/frontend-only/WPTB_StylePass.js',
+			'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
+		],
+		dest: './inc/frontend/js/wp-table-builder-frontend.js',
+	},
+};
+
 gulp.task('adminJs', function () {
 	gulp.src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
 		.pipe(sourcemaps.init())
@@ -26,13 +40,7 @@ gulp.task('minify', function () {
 });
 
 gulp.task('frontendJs', function () {
-	gulp.src([
-		'./inc/admin/js/core/WPTB_CutGlueTable.js',
-		'./inc/admin/js/core/WPTB_SortableTable.js',
-		'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
-		'./inc/admin/js/WPTB_ResponsiveFrontend.js',
-		'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
-	])
+	gulp.src(gulpConfig.frontEndJs.src)
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
@@ -41,7 +49,7 @@ gulp.task('frontendJs', function () {
 				babelrc: false,
 			})
 		)
-		.pipe(concat('./inc/frontend/js/wp-table-builder-frontend.js'))
+		.pipe(concat(gulpConfig.frontEndJs.dest))
 		.pipe(uglify())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('.'));
@@ -60,16 +68,7 @@ gulp.task('watch', () => {
 		['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js', './inc/admin/js/WPTB_ResponsiveFrontend.js'],
 		['adminJs']
 	);
-	gulp.watch(
-		[
-			'./inc/admin/js/core/WPTB_CutGlueTable.js',
-			'./inc/admin/js/core/WPTB_SortableTable.js',
-			'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
-			'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
-			'./inc/admin/js/WPTB_ResponsiveFrontend.js',
-		],
-		['frontendJs']
-	);
+	gulp.watch(gulpConfig.frontEndJs.src, ['frontendJs']);
 
 	gulp.watch(['./inc/admin/css/src/*.css'], ['cssAdmin']);
 	gulp.watch(['./inc/frontend/css/src/*.css'], ['cssFrontend']);

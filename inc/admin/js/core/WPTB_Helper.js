@@ -2285,6 +2285,9 @@ var WPTB_Helper = {
             cells.map(removeBlocker);
         })
     },
+    /**
+     * Setup for builder if called by gutenberg block.
+     */
     calledByBlock(){
         const parsedUrl = new URL(window.location.href);
         const isCalledByBlock = parsedUrl.searchParams.get('gutenberg');
@@ -2295,9 +2298,18 @@ var WPTB_Helper = {
                 e.preventDefault();
                 e.stopPropagation();
 
+                const isTableClean = document.querySelector('.wptb-save-disabled');
+
                 const tableId = new URL(window.location.href).searchParams.get('table');
 
-                WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
+                if(!isTableClean){
+                    const confirmResult = window.confirm(wptb_admin_object.strings.dirtyConfirmation);
+                    if(confirmResult){
+                        WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
+                    }
+                }else {
+                    WPTB_Helper.wptbDocumentEventGenerate('gutenbergClose', document , tableId);
+                }
 
             },{capture: true});
         }

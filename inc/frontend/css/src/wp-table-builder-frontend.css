@@ -231,6 +231,7 @@ table.wptb-preview-table {
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-out;
+    cursor: pointer;
 }
 
 .wptb-button .wptb-button-icon {
