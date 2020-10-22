@@ -164,6 +164,11 @@ class Controls_Manager {
 	 */
 	const DIFFERENT_BORDER = 'different_border';
 
+	/**
+	 * Adding different border control.
+	 */
+	const LOCAL_DEV = 'local_dev_file';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -225,6 +230,7 @@ class Controls_Manager {
 			self::NAMED_TOGGLE,
 			self::TAG_CONTROL,
 			self::DIFFERENT_BORDER,
+			self::LOCAL_DEV,
 		];
 	}
 

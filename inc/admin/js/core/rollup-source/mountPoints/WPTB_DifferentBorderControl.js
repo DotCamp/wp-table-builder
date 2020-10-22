@@ -1,5 +1,5 @@
 /**
- * Sides control
+ * Sides control.
  */
 import Vue from 'vue';
 // eslint-disable-next-line camelcase

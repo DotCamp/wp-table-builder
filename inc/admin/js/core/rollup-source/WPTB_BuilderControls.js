@@ -15,6 +15,7 @@ import WPTB_SidesControl from './mountPoints/WPTB_SidesControl';
 import WPTB_NamedToggleControl from './mountPoints/WPTB_NamedToggleControl';
 import WPTB_TagControl from './mountPoints/WPTB_TagControl';
 import WPTB_DifferentBorderControl from './mountPoints/WPTB_DifferentBorderControl';
+import WPTB_LocalDevFileControl from './mountPoints/WPTB_LocalDevFileControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -38,6 +39,7 @@ const controls = [
 	WPTB_NamedToggleControl,
 	WPTB_TagControl,
 	WPTB_DifferentBorderControl,
+	WPTB_LocalDevFileControl,
 ];
 
 /**
