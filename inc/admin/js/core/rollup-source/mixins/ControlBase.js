@@ -41,6 +41,8 @@ const ControlBase = {
 			tableSettings: { settings: {} },
 			componentVisibility: true,
 			cachedDependedValues: {},
+			// change this value to true on expanded component to automatically assign default values at component mounted state
+			assignDefaultValueAtMount: false,
 		};
 	},
 	watch: {
@@ -69,6 +71,9 @@ const ControlBase = {
 		this.$nextTick(() => {
 			this.tableSettings = WPTB_ControlsManager.getTableSettings();
 			this.getInputLoadedValues();
+			if (this.assignDefaultValueAtMount) {
+				this.assignDefaultValue();
+			}
 		});
 	},
 	methods: {
@@ -198,6 +203,18 @@ const ControlBase = {
 		 */
 		resetMountedState() {
 			this.mountedDataUpdate = true;
+		},
+
+		/**
+		 * Basic value update that will handle setting selector values, generating change event and setting table dirty.
+		 *
+		 * @param {*} val value
+		 * @param {boolean} checkMountedState check for mounted state of component
+		 */
+		basicValueUpdate(val, checkMountedState = false) {
+			this.setAllValues(val);
+			this.generateChangeEvent(val);
+			this.setTableDirty(checkMountedState);
 		},
 	},
 };

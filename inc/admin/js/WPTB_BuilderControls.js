@@ -12575,7 +12575,9 @@ var ControlBase = {
         settings: {}
       },
       componentVisibility: true,
-      cachedDependedValues: {}
+      cachedDependedValues: {},
+      // change this value to true on expanded component to automatically assign default values at component mounted state
+      assignDefaultValueAtMount: false
     };
   },
   watch: {
@@ -12607,6 +12609,10 @@ var ControlBase = {
       _this.tableSettings = WPTB_ControlsManager.getTableSettings();
 
       _this.getInputLoadedValues();
+
+      if (_this.assignDefaultValueAtMount) {
+        _this.assignDefaultValue();
+      }
     });
   },
   methods: {
@@ -12755,6 +12761,19 @@ var ControlBase = {
      */
     resetMountedState: function resetMountedState() {
       this.mountedDataUpdate = true;
+    },
+
+    /**
+     * Basic value update that will handle setting selector values, generating change event and setting table dirty.
+     *
+     * @param {*} val value
+     * @param {boolean} checkMountedState check for mounted state of component
+     */
+    basicValueUpdate: function basicValueUpdate(val) {
+      var checkMountedState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      this.setAllValues(val);
+      this.generateChangeEvent(val);
+      this.setTableDirty(checkMountedState);
     }
   }
 };
@@ -20596,9 +20615,7 @@ var _default = {
   },
   watch: {
     elementMainValue: function elementMainValue(n) {
-      this.setAllValues(n);
-      this.generateChangeEvent(n);
-      this.setTableDirty(true);
+      this.basicValueUpdate(n);
     }
   },
   methods: {
@@ -22352,7 +22369,172 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/DifferentBorderControl":"containers/DifferentBorderControl.vue"}],"containers/LocalDevFileControl.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/DifferentBorderControl":"containers/DifferentBorderControl.vue"}],"components/MenuButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    disabled: Boolean,
+    type: {
+      type: String,
+      default: 'primary'
+    },
+    size: {
+      type: String,
+      default: 'normal'
+    }
+  },
+  methods: {
+    /**
+     * Click event callback
+     */
+    handleClick: function handleClick() {
+      if (!this.disabled) {
+        this.$emit('click');
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $358d10 = exports.default || module.exports;
+      
+      if (typeof $358d10 === 'function') {
+        $358d10 = $358d10.options;
+      }
+    
+        /* template */
+        Object.assign($358d10, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-settings-button",
+      class: [{ disabled: _vm.disabled }, _vm.type, _vm.size],
+      on: { click: _vm.handleClick }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/LocalImageCard.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    name: {
+      type: String,
+      default: 'image name'
+    },
+    url: {
+      type: String,
+      default: ''
+    },
+    activeCard: {
+      type: String,
+      default: null
+    }
+  },
+  computed: {
+    isSelectedCard: function isSelectedCard() {
+      return this.name === this.activeCard;
+    }
+  },
+  methods: {
+    handleCardClick: function handleCardClick() {
+      this.$emit('cardSelected', this.name, this.url);
+    }
+  }
+};
+exports.default = _default;
+        var $1e0810 = exports.default || module.exports;
+      
+      if (typeof $1e0810 === 'function') {
+        $1e0810 = $1e0810.options;
+      }
+    
+        /* template */
+        Object.assign($1e0810, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-local-dev-image-card",
+      attrs: { "data-active": _vm.isSelectedCard },
+      on: {
+        "!click": function($event) {
+          $event.preventDefault()
+          $event.stopPropagation()
+          return _vm.handleCardClick($event)
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "wptb-local-dev-image-holder" }, [
+        _c("img", { attrs: { src: _vm.url } })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-local-dev-image-name" }, [
+        _vm._v("\n\t\t" + _vm._s(_vm.name) + "\n\t")
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/LocalDevFileControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22362,6 +22544,10 @@ exports.default = void 0;
 
 var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
 
+var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
+
+var _LocalImageCard = _interopRequireDefault(require("../components/LocalImageCard"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -22369,8 +22555,146 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  mixins: [_ControlBase.default]
+  components: {
+    LocalImageCard: _LocalImageCard.default,
+    MenuButton: _MenuButton.default
+  },
+  mixins: [_ControlBase.default],
+  props: {
+    images: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  data: function data() {
+    return {
+      frameOpenStatus: false,
+      innerImages: [],
+      selectedCard: {
+        name: null,
+        url: null
+      },
+      cardLimbo: {
+        name: null,
+        url: null
+      },
+      assignDefaultValueAtMount: true
+    };
+  },
+  watch: {
+    elementMainValue: function elementMainValue(n) {
+      this.basicValueUpdate(n, true);
+      this.selectedCard.name = n;
+      this.selectedCard.url = this.getImageUrl(n);
+    },
+    selectedCard: {
+      handler: function handler(n) {
+        this.elementMainValue = n.name;
+        this.cardLimbo.name = n.name;
+        this.cardLimbo.url = this.getImageUrl(n.name);
+        this.selectedCard.url = this.getImageUrl(n.name);
+        this.setTargetImage(this.selectedCard.url);
+      },
+      deep: true
+    },
+    frameOpenStatus: function frameOpenStatus(n) {
+      var _this = this;
+
+      if (n) {
+        document.addEventListener('keydown', function (e) {
+          if (e.code === 'Escape') {
+            _this.setFrameOpenStatus(false);
+          }
+        });
+      }
+    }
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    this.$nextTick(function () {
+      _this2.innerImages = _this2.images;
+    });
+  },
+  methods: {
+    setFrameOpenStatus: function setFrameOpenStatus(val) {
+      this.frameOpenStatus = val;
+    },
+    handleCardSelect: function handleCardSelect(name, url) {
+      this.cardLimbo.name = name;
+      this.cardLimbo.url = url;
+    },
+    handleSelectButton: function handleSelectButton() {
+      this.selectedCard.name = this.cardLimbo.name;
+      this.selectedCard.url = this.cardLimbo.url;
+      this.setFrameOpenStatus(false);
+    },
+    getImageUrl: function getImageUrl(name) {
+      var url = null;
+
+      if (this.innerImages[name]) {
+        url = this.innerImages[name];
+      }
+
+      return url;
+    },
+    setTargetImage: function setTargetImage(url) {
+      if (url) {
+        // eslint-disable-next-line array-callback-return
+        this.targetElements.map(function (elObject) {
+          // eslint-disable-next-line array-callback-return
+          elObject.elements.map(function (el) {
+            var img = el.querySelector('img');
+
+            if (!img) {
+              img = document.createElement('img');
+              var imageWrapper = el.querySelector('.wptb-image-wrapper a');
+              imageWrapper.innerHTML = '';
+              imageWrapper.appendChild(img);
+            }
+
+            img.setAttribute('src', url);
+            img.setAttribute('width', 'auto');
+            img.setAttribute('height', 'auto');
+          });
+        });
+      }
+    }
+  }
 };
 exports.default = _default;
         var $2d8a80 = exports.default || module.exports;
@@ -22385,10 +22709,90 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", {
-    staticClass:
-      "wptb-settings-row wptb-settings-middle-xs wptb-different-border-control-wrapper"
-  })
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-settings-row wptb-settings-middle-xs wptb-plugin-width-full wptb-flex wptb-justify-content-center"
+    },
+    [
+      _c(
+        "menu-button",
+        {
+          on: {
+            click: function($event) {
+              return _vm.setFrameOpenStatus(true)
+            }
+          }
+        },
+        [_vm._v("\n\t\tPlugin Local Images\n\t")]
+      ),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.frameOpenStatus
+          ? _c("div", { staticClass: "wptb-local-dev-file-chooser" }, [
+              _c("div", { staticClass: "wptb-local-dev-modal" }, [
+                _c("div", { staticClass: "wptb-local-dev-modal-header" }, [
+                  _c("div", { staticClass: "wptb-local-dev-modal-title" }, [
+                    _vm._v("\n\t\t\t\t\t\tPlugin Images\n\t\t\t\t\t")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "wptb-local-dev-modal-close",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.setFrameOpenStatus(false)
+                        }
+                      }
+                    },
+                    [_vm._v("\n\t\t\t\t\t\tX\n\t\t\t\t\t")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-local-dev-modal-files" },
+                  _vm._l(_vm.innerImages, function(url, name) {
+                    return _c("local-image-card", {
+                      key: url,
+                      attrs: {
+                        name: name,
+                        url: url,
+                        "active-card": _vm.cardLimbo.name
+                      },
+                      on: { cardSelected: _vm.handleCardSelect }
+                    })
+                  }),
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-local-dev-modal-footer" },
+                  [
+                    _c("menu-button", [_vm._v("refresh")]),
+                    _vm._v(" "),
+                    _c(
+                      "menu-button",
+                      {
+                        attrs: { disabled: !_vm.cardLimbo.name },
+                        on: { click: _vm.handleSelectButton }
+                      },
+                      [_vm._v("select")]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          : _vm._e()
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -22402,7 +22806,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_LocalDevFileControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/MenuButton":"components/MenuButton.vue","../components/LocalImageCard":"components/LocalImageCard.vue"}],"mountPoints/WPTB_LocalDevFileControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22421,6 +22825,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Local files for development
  */
+// eslint-disable-next-line camelcase
 var _default = {
   name: 'ControlLocalDevFile',
   handler: function localDevFileControlJS(uniqueId) {
