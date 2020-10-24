@@ -50,6 +50,12 @@ trait Ajax_Response {
 		}
 	}
 
+	/**
+	 * Append data to given key.
+	 *
+	 * @param  $data data value
+	 * @param string $key data key
+	 */
 	public function append_response_data( $data, $key ) {
 		if ( ! isset( $this->response_data['data'] ) ) {
 			$this->response_data['data'] = [];

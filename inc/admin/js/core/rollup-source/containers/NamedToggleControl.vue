@@ -48,9 +48,7 @@ export default {
 	},
 	watch: {
 		elementMainValue(n) {
-			this.setAllValues(n);
-			this.generateChangeEvent(n);
-			this.setTableDirty(true);
+			this.basicValueUpdate(n);
 		},
 	},
 	methods: {
