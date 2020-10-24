@@ -22534,6 +22534,39 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/EmptyCover.vue":[function(require,module,exports) {
+
+        var $9b2461 = exports.default || module.exports;
+      
+      if (typeof $9b2461 === 'function') {
+        $9b2461 = $9b2461.options;
+      }
+    
+        /* template */
+        Object.assign($9b2461, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-menu-empty-cover" },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"containers/LocalDevFileControl.vue":[function(require,module,exports) {
 "use strict";
 
@@ -22547,6 +22580,8 @@ var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
 var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
 
 var _LocalImageCard = _interopRequireDefault(require("../components/LocalImageCard"));
+
+var _EmptyCover = _interopRequireDefault(require("../components/EmptyCover"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22586,14 +22621,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
+    EmptyCover: _EmptyCover.default,
     LocalImageCard: _LocalImageCard.default,
     MenuButton: _MenuButton.default
   },
   mixins: [_ControlBase.default],
   props: {
     images: {
+      type: null,
+      default: function _default() {
+        return {};
+      }
+    },
+    security: {
       type: Object,
       default: function _default() {
         return {};
@@ -22612,7 +22662,9 @@ var _default = {
         name: null,
         url: null
       },
-      assignDefaultValueAtMount: true
+      assignDefaultValueAtMount: true,
+      mutationObserver: null,
+      fetching: false
     };
   },
   watch: {
@@ -22648,9 +22700,74 @@ var _default = {
 
     this.$nextTick(function () {
       _this2.innerImages = _this2.images;
+      var imageElement = document.querySelector(".".concat(_this2.elemContainer)); // observe image element src changes since button control don't fire necessary global events to track with WPTB_Helper.controlsInclude
+
+      _this2.mutationObserver = new MutationObserver(_this2.mutationCallback);
+
+      _this2.mutationObserver.observe(imageElement, {
+        attributes: true,
+        childList: true,
+        subtree: true
+      });
     });
   },
+  beforeDestroy: function beforeDestroy() {
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+    }
+  },
+  computed: {
+    isImagesEmpty: function isImagesEmpty() {
+      var _this3 = this;
+
+      return !Object.keys(this.innerImages).filter(function (e) {
+        return Object.prototype.hasOwnProperty.call(_this3.innerImages, e);
+      }).length > 0;
+    }
+  },
   methods: {
+    getLocalImages: function getLocalImages() {
+      var _this4 = this;
+
+      var ajaxUrl = new URL(this.security.ajaxUrl);
+      ajaxUrl.searchParams.append('nonce', this.security.nonce);
+      ajaxUrl.searchParams.append('action', this.security.action);
+      this.fetching = true;
+      fetch(ajaxUrl.toString()) // eslint-disable-next-line consistent-return
+      .then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error('an error occured');
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        _this4.innerImages = resp.data.images;
+      }).catch(function (err) {
+        console.error(err);
+      }).finally(function () {
+        _this4.fetching = false;
+      });
+    },
+    mutationCallback: function mutationCallback(mutations) {
+      var _this5 = this;
+
+      // eslint-disable-next-line array-callback-return
+      Array.from(mutations).map(function (m) {
+        if (m.target && m.target.nodeName === 'IMG' && m.attributeName === 'src') {
+          if (m.target.getAttribute('src') !== _this5.selectedCard.url) {
+            _this5.resetSelectedLocalFile();
+          }
+        }
+      });
+    },
+    resetSelectedLocalFile: function resetSelectedLocalFile() {
+      this.selectedCard.name = '';
+      this.selectedCard.url = '';
+    },
     setFrameOpenStatus: function setFrameOpenStatus(val) {
       this.frameOpenStatus = val;
     },
@@ -22673,11 +22790,13 @@ var _default = {
       return url;
     },
     setTargetImage: function setTargetImage(url) {
-      if (url) {
+      if (url !== null && url !== '') {
         // eslint-disable-next-line array-callback-return
         this.targetElements.map(function (elObject) {
           // eslint-disable-next-line array-callback-return
           elObject.elements.map(function (el) {
+            // remove placeholder class else img will not be visible at frontend
+            el.classList.remove('wptb-elem-placeholder');
             var img = el.querySelector('img');
 
             if (!img) {
@@ -22755,30 +22874,64 @@ exports.default = _default;
                 _c(
                   "div",
                   { staticClass: "wptb-local-dev-modal-files" },
-                  _vm._l(_vm.innerImages, function(url, name) {
-                    return _c("local-image-card", {
-                      key: url,
-                      attrs: {
-                        name: name,
-                        url: url,
-                        "active-card": _vm.cardLimbo.name
-                      },
-                      on: { cardSelected: _vm.handleCardSelect }
-                    })
-                  }),
-                  1
+                  [
+                    _vm._l(_vm.innerImages, function(url, name) {
+                      return _c("local-image-card", {
+                        key: url,
+                        attrs: {
+                          name: name,
+                          url: url,
+                          "active-card": _vm.cardLimbo.name
+                        },
+                        on: { cardSelected: _vm.handleCardSelect }
+                      })
+                    }),
+                    _vm._v(" "),
+                    _vm.isImagesEmpty
+                      ? _c("empty-cover", [
+                          _vm._v(
+                            "\n\t\t\t\t\t\tno plugin images found...\n\t\t\t\t\t"
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.fetching
+                      ? _c(
+                          "empty-cover",
+                          {
+                            staticStyle: {
+                              color: "red",
+                              "background-color": "rgba(0, 0, 0, 0.4)"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n\t\t\t\t\t\tfetching images...\n\t\t\t\t\t"
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ],
+                  2
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "wptb-local-dev-modal-footer" },
                   [
-                    _c("menu-button", [_vm._v("refresh")]),
+                    _c(
+                      "menu-button",
+                      {
+                        attrs: { disabled: _vm.fetching },
+                        on: { click: _vm.getLocalImages }
+                      },
+                      [_vm._v("refresh")]
+                    ),
                     _vm._v(" "),
                     _c(
                       "menu-button",
                       {
-                        attrs: { disabled: !_vm.cardLimbo.name },
+                        attrs: { disabled: _vm.fetching },
                         on: { click: _vm.handleSelectButton }
                       },
                       [_vm._v("select")]
@@ -22806,7 +22959,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/MenuButton":"components/MenuButton.vue","../components/LocalImageCard":"components/LocalImageCard.vue"}],"mountPoints/WPTB_LocalDevFileControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/MenuButton":"components/MenuButton.vue","../components/LocalImageCard":"components/LocalImageCard.vue","../components/EmptyCover":"components/EmptyCover.vue"}],"mountPoints/WPTB_LocalDevFileControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

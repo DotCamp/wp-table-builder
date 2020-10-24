@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 use WP_table_Builder_Pro as WPTBNS;
+use WP_Table_Builder_Pro\Inc\Admin\Managers\Dev_Local_Files_Manager;
 use function path_join;
 use function request_filesystem_credentials;
 use function trailingslashit;
@@ -40,18 +41,27 @@ class Control_Local_Dev_File extends Base_Control {
 	 * @access public
 	 */
 	public function content_template() {
-		$images = $this->get_plugin_images( trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_DIR ) . self::RELATIVE_IMAGE_LOCATION, trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_URL ) . self::RELATIVE_IMAGE_LOCATION, self::SUPPORTED_EXTENSIONS );
-
+		$images      = static::get_plugin_images();
 		$images_json = json_encode( $images );
+
+		$security      = [
+			'nonce'   => wp_create_nonce( Dev_Local_Files_Manager::AJAX_ACTION ),
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'action'  => Dev_Local_Files_Manager::AJAX_ACTION
+		];
+		$security_json = json_encode( $security );
 		?>
       <#
       const uniqueItemClass = data.elementControlTargetUnicClass;
       data.images = JSON.parse('<?php echo $images_json; ?>');
+      data.security = JSON.parse('<?php echo $security_json; ?>');
       WPTB_ControlsManager.setControlData(uniqueItemClass, data);
       const elemContainer = data.elemContainer;
       #>
       <div id="{{{uniqueItemClass}}}">
-        <local-dev-file-control :label="label" :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}" :selectors="selectors"
+        <local-dev-file-control :label="label" :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
+                                :security="security"
+                                :selectors="selectors"
                                 :images="images"
                                 elem-container="{{{elemContainer}}}"></local-dev-file-control>
       </div>
@@ -64,14 +74,13 @@ class Control_Local_Dev_File extends Base_Control {
 	/**
 	 * Get images at defined plugin directory.
 	 *
-	 * @param string $path path to images dir
-	 * @param string $url url to images dir
-	 * @param array $allowed_extensions an array of supported extensions
-	 *
 	 * @return array images
 	 */
-	protected function get_plugin_images( $path, $url, $allowed_extensions ) {
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+	public final static function get_plugin_images() {
+		$path               = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_DIR ) . self::RELATIVE_IMAGE_LOCATION;
+		$url                = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_URL ) . self::RELATIVE_IMAGE_LOCATION;
+		$allowed_extensions = self::SUPPORTED_EXTENSIONS;
+		$creds              = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
 
 		$images = [];
 		if ( ! WP_Filesystem( $creds ) ) {
@@ -93,6 +102,7 @@ class Control_Local_Dev_File extends Base_Control {
 				}
 			}
 		}
+
 		return $images;
 	}
 }
