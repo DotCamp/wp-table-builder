@@ -21,14 +21,14 @@ use WP_Table_Builder as NS;
 		<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-header-toolbox.php'; ?>
             </div>
             <div class="wptb-builder-content"><?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-setup.php'; ?></div>
-
+          <?php do_action('wp-table-builder/action/wptb-builder-view'); ?>
         </div>
 
     </div>
 
     <!-- after html -->
     <?php echo do_action( 'wp_table_builder:html_code_after' ); ?>
-    
+
 </div>
 
 <style type="text/css" id="custom-cursor">

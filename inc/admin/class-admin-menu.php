@@ -7,6 +7,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
 use function add_query_arg;
 use function admin_url;
+use function apply_filters;
 use function get_plugins;
 use function current_user_can;
 use function wp_create_nonce;
@@ -333,15 +334,16 @@ class Admin_Menu {
 				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
 			];
 
-			wp_localize_script(
-				'wptb-admin-builder-js',
-				'wptb_admin_object',
-				[
-					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-					'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-					'strings'       => $strings
-				]
-			);
+			$admin_object = [
+				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+				'strings'       => $strings
+			];
+
+			// filter for builder script data
+			$admin_object = apply_filters( 'wp-table-builder/filter/builder_script_data', $admin_object );
+
+			wp_localize_script( 'wptb-admin-builder-js', 'wptb_admin_object', $admin_object );
 
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {
 

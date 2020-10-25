@@ -33,6 +33,8 @@
 
     --wptb-prebuilt-card-border-size: 2px;
     --wptb-prebuilt-card-control-size: 30px;
+
+    --wptb-notification-root-width: 150px;
 }
 
 html {
@@ -5639,3 +5641,4 @@ wptb_shortcode_container_element {
 }
 
 /*endregion*/
+
