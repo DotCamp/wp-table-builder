@@ -5,5 +5,6 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 ?>
+<!--this id will be used from context-->
 <div id="<?php echo esc_attr( static::FRONTEND_ELEMENT_ID ); ?>">
 </div>

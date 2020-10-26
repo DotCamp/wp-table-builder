@@ -17,6 +17,7 @@ import WPTB_TagControl from './mountPoints/WPTB_TagControl';
 import WPTB_DifferentBorderControl from './mountPoints/WPTB_DifferentBorderControl';
 import WPTB_LocalDevFileControl from './mountPoints/WPTB_LocalDevFileControl';
 import WPTB_NotificationManagerView from './mountPoints/WPTB_NotificationManagerView';
+import WPTB_NotificationManagerDevTool from './mountPoints/WPTB_NotificationManagerDevTool';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -42,6 +43,7 @@ const controls = [
 	WPTB_DifferentBorderControl,
 	WPTB_LocalDevFileControl,
 	WPTB_NotificationManagerView,
+	WPTB_NotificationManagerDevTool,
 ];
 
 /**

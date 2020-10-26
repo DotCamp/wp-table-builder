@@ -24355,7 +24355,7 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{}],"containers/NotificationManagerApp.vue":[function(require,module,exports) {
+},{}],"components/Notification.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24365,12 +24365,187 @@ exports.default = void 0;
 
 var _vuex = require("vuex");
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    id: {
+      type: Number,
+      default: 0
+    },
+    message: {
+      type: String,
+      default: 'Default notification message'
+    },
+    type: {
+      type: String,
+      default: 'normal'
+    },
+    queue: {
+      type: String,
+      default: 'wait'
+    },
+    reveal: {
+      type: String,
+      default: 'full'
+    }
+  },
+  data: function data() {
+    return {
+      colors: {
+        ok: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-green-500'),
+        info: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-yellow-500'),
+        error: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-red-600'),
+        pro: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-logo-color')
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.slideFull(true);
+    });
+  },
+  computed: _objectSpread({
+    style: function style() {
+      var colorToUse = this.colors[this.type] || this.colors.ok;
+      return {
+        wrapper: {
+          border: "1px solid ".concat(colorToUse)
+        },
+        icon: {
+          backgroundColor: colorToUse,
+          outline: "5px solid ".concat(colorToUse),
+          color: '#FFFFFF'
+        }
+      };
+    }
+  }, (0, _vuex.mapState)(['icons'])),
+  methods: {
+    slideFull: function slideFull(direction) {
+      var _this2 = this;
+
+      setTimeout(function () {
+        _this2.$refs.wrapper.style.transition = 'all 0.5s ease-out';
+        _this2.$refs.wrapper.style.transform = "translateX(".concat((direction ? -1 : 1) * 100, "%)");
+
+        _this2.$refs.wrapper.addEventListener('transitionend', function (_ref) {
+          var propertyName = _ref.propertyName;
+
+          if (propertyName === 'transform') {
+            _this2.$refs.wrapper.style.transition = 'unset';
+          }
+        });
+      }, 100);
+    }
+  }
+};
+exports.default = _default;
+        var $474c2d = exports.default || module.exports;
+      
+      if (typeof $474c2d === 'function') {
+        $474c2d = $474c2d.options;
+      }
+    
+        /* template */
+        Object.assign($474c2d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      ref: "wrapper",
+      staticClass: "wptb-notification-wrapper",
+      style: _vm.style.wrapper,
+      attrs: { id: "notification#" + _vm.id }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-notification-icon", style: _vm.style.icon },
+        [
+          _c("div", {
+            ref: "svgWrap",
+            staticClass: "wptb-notification-svg-wrapper",
+            domProps: { innerHTML: _vm._s(_vm.icons[_vm.type]) }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "wptb-notification-message",
+        domProps: { innerHTML: _vm._s(_vm.message) }
+      })
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"containers/NotificationManagerApp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _Notification = _interopRequireDefault(require("../components/Notification"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 var _default = {
-  computed: (0, _vuex.mapState)(['count'])
+  components: {
+    Notification: _Notification.default
+  },
+  watch: {
+    notificationsOnDisplay: function notificationsOnDisplay() {
+      this.calculatePosition();
+    }
+  },
+  computed: (0, _vuex.mapState)(['notificationsOnDisplay']),
+  methods: {
+    calculatePosition: function calculatePosition() {
+      var mainWrapper = this.$refs.mainWrapper;
+
+      var _mainWrapper$getBound = mainWrapper.getBoundingClientRect(),
+          height = _mainWrapper$getBound.height;
+
+      mainWrapper.style.top = "calc( 50% - ".concat(height / 2, "px )");
+    }
+  }
 };
 exports.default = _default;
         var $336d23 = exports.default || module.exports;
@@ -24385,7 +24560,28 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("i", [_vm._v(_vm._s(_vm.count))])
+  return _c(
+    "div",
+    { ref: "mainWrapper", staticClass: "wptb-notification-manager" },
+    _vm._l(_vm.notificationsOnDisplay, function(ref) {
+      var id = ref.id
+      var message = ref.message
+      var type = ref.type
+      var queue = ref.queue
+      var reveal = ref.reveal
+      return _c("notification", {
+        key: id,
+        attrs: {
+          id: id,
+          message: message,
+          type: type,
+          queue: queue,
+          reveal: reveal
+        }
+      })
+    }),
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -24399,7 +24595,226 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"stores/notificationManager/index.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/Notification":"components/Notification.vue"}],"stores/notificationManager/state.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ *Default state for notification manager
+ *
+ * @type {Object} default state
+ */
+var defaultState = {
+  notificationQueue: [],
+  notificationsOnDisplay: [],
+  notificationTypes: {
+    normal: 'ok',
+    info: 'info',
+    error: 'error',
+    pro: 'pro'
+  },
+  queueTypes: {
+    wait: 'wait',
+    instant: 'instant'
+  },
+  revealTypes: {
+    icon: 'icon',
+    full: 'full'
+  },
+  dismissType: {
+    no: 'no',
+    timed: 'timed',
+    click: 'click'
+  },
+  autoDismissTime: 3000,
+  currentId: 0
+};
+/**
+ * Merge default state with extra ones and create new one.
+ *
+ * @param {Object} extraState extra state values to add
+ */
+
+var createState = function createState(extraState) {
+  return _objectSpread({}, defaultState, {}, extraState);
+};
+
+var _default = createState;
+exports.default = _default;
+},{}],"stores/notificationManager/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/* eslint-disable jsdoc/check-param-names */
+
+/**
+ * Actions for notification manager store.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Add a notification to manager .
+   *
+   * @param {Function} commit store commit function
+   * @param {Object} getters store getters
+   * @param {Object} dispatch store dispatch function
+   * @param {Object} notificationObj notification object to be added
+   * @return {Promise<void>}
+   */
+  addNotification: function addNotification(_ref, notificationObj) {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var commit, getters, dispatch, wait;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              commit = _ref.commit, getters = _ref.getters, dispatch = _ref.dispatch;
+              wait = notificationObj.wait; // add an id to notification object
+              // eslint-disable-next-line no-param-reassign
+
+              _context.next = 4;
+              return dispatch('generateId');
+
+            case 4:
+              notificationObj.id = _context.sent;
+
+              // check for wait type of object
+              // if it is set to wait add it to queue
+              if (wait === 'wait') {
+                commit('addNotificationToQueue', notificationObj); // if queue is empty, immediately move current notification to display and show
+
+                if (getters.queue === 0) {
+                  dispatch('moveQueToDisplay');
+                } // else add it to display immediately
+
+              } else {
+                commit('addNotificationToDisplay', notificationObj);
+              }
+
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+
+  /**
+   * Move first notification waiting on queue to display.
+   *
+   * @param {Function} commit store commit function
+   * @param {Object} state store state
+   */
+  moveQueToDisplay: function moveQueToDisplay(_ref2) {
+    var commit = _ref2.commit,
+        state = _ref2.state;
+    // remove and get first notification waiting at queue
+    var notification = state.notificationQueue.shift();
+    commit('addNotificationToDisplay', notification);
+  },
+
+  /**
+   * Generate a unique id.
+   *
+   * @param {Function} commit store commit function
+   * @param {Object} getters store getters
+   * @return {string} generated id
+   */
+  generateId: function generateId(_ref3) {
+    var commit = _ref3.commit,
+        getters = _ref3.getters;
+    commit('incrementId');
+    return getters.getId;
+  }
+};
+var _default = actions;
+exports.default = _default;
+},{}],"stores/notificationManager/mutations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Mutations for notification manager store.
+ *
+ * @type {Object}
+ */
+var mutations = {
+  addNotificationToQueue: function addNotificationToQueue(state, notificationObj) {
+    state.notificationQueue.push(notificationObj);
+  },
+  addNotificationToDisplay: function addNotificationToDisplay(state, notificationObj) {
+    state.notificationsOnDisplay.push(notificationObj);
+  },
+  incrementId: function incrementId(state) {
+    // eslint-disable-next-line no-param-reassign
+    state.currentId += 1;
+  }
+};
+var _default = mutations;
+exports.default = _default;
+},{}],"stores/notificationManager/getters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Getters for notification manager store
+ *
+ * @type {Object}
+ */
+var getters = {
+  notificationTypes: function notificationTypes(state) {
+    return _objectSpread({}, state.notificationTypes);
+  },
+  queueTypes: function queueTypes(state) {
+    return _objectSpread({}, state.queueTypes);
+  },
+  revealTypes: function revealTypes(state) {
+    return _objectSpread({}, state.revealTypes);
+  },
+  queueLength: function queueLength(state) {
+    return state.notificationQueue.length;
+  },
+  getId: function getId(state) {
+    return state.currentId;
+  }
+};
+var _default = getters;
+exports.default = _default;
+},{}],"stores/notificationManager/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24411,20 +24826,40 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
+var _state = _interopRequireDefault(require("./state"));
+
+var _actions = _interopRequireDefault(require("./actions"));
+
+var _mutations = _interopRequireDefault(require("./mutations"));
+
+var _getters = _interopRequireDefault(require("./getters"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _vue.default.use(_vuex.default);
+/**
+ * Create new Vuex store for notification manager.
+ *
+ * @param {Object} root0 store object
+ * @param {Object} root0.state store state
+ */
+// eslint-disable-next-line no-empty-pattern
 
-var state = {
-  count: 0
+
+var createStore = function createStore(_ref) {
+  var state = _ref.state;
+  return new _vuex.default.Store({
+    state: (0, _state.default)(state || {}),
+    actions: _actions.default,
+    mutations: _mutations.default,
+    getters: _getters.default,
+    strict: true
+  });
 };
 
-var _default = new _vuex.default.Store({
-  state: state
-});
-
+var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"mountPoints/WPTB_NotificationManagerView.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/notificationManager/state.js","./actions":"stores/notificationManager/actions.js","./mutations":"stores/notificationManager/mutations.js","./getters":"stores/notificationManager/getters.js"}],"mountPoints/WPTB_NotificationManagerView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24442,18 +24877,25 @@ var _notificationManager = _interopRequireDefault(require("../stores/notificatio
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Notification manager view.
- */
-// eslint-disable-next-line camelcase
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   name: 'NotificationManager',
   handler: function notificationManagerJS(uniqueId) {
+    // server send data for notification manager
     var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
 
+    var store = (0, _notificationManager.default)({
+      state: _objectSpread({}, data)
+    });
+    WPTB_NotificationManager.store = store;
     new _vue.default({
       data: data,
-      store: _notificationManager.default,
+      store: store,
       components: {
         NotificationManagerApp: _NotificationManagerApp.default
       },
@@ -24462,7 +24904,317 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerApp":"containers/NotificationManagerApp.vue","../stores/notificationManager":"stores/notificationManager/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerApp":"containers/NotificationManagerApp.vue","../stores/notificationManager":"stores/notificationManager/index.js"}],"containers/NotificationManagerDevTool.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    MenuButton: _MenuButton.default
+  },
+  props: {
+    queue: Object,
+    types: Object,
+    reveal: Object,
+    sendNotification: Function
+  },
+  data: function data() {
+    return {
+      currentType: 'ok',
+      currentQueue: 'wait',
+      message: 'sample message',
+      currentReveal: 'full'
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var wrapper = _this.$refs.mainWrapper;
+
+      var _wrapper$getBoundingC = wrapper.getBoundingClientRect(),
+          height = _wrapper$getBoundingC.height;
+
+      wrapper.style.top = "calc( 50% - ".concat(height / 2, "px)");
+    });
+  },
+  methods: {
+    notify: function notify() {
+      this.sendNotification(this.message, this.currentType, this.currentQueue);
+    }
+  }
+};
+exports.default = _default;
+        var $99e19e = exports.default || module.exports;
+      
+      if (typeof $99e19e === 'function') {
+        $99e19e = $99e19e.options;
+      }
+    
+        /* template */
+        Object.assign($99e19e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      ref: "mainWrapper",
+      staticClass: "wptb-notification-manager-dev-tool-wrapper"
+    },
+    [
+      _c("div", { staticClass: "wptb-nm-devtool-header" }, [
+        _vm._v("\n\t\tNotification Manager Dev Tool\n\t")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-nm-devtool-selection" }, [
+        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
+          _c("div", [_vm._v("Type")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.currentType,
+                  expression: "currentType"
+                }
+              ],
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.currentType = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.types, function(v, k) {
+              return _c("option", { key: k, domProps: { value: v } }, [
+                _vm._v(_vm._s(v))
+              ])
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
+          _c("div", [_vm._v("Queue")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.currentQueue,
+                  expression: "currentQueue"
+                }
+              ],
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.currentQueue = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.queue, function(v, k) {
+              return _c("option", { key: k, domProps: { value: v } }, [
+                _vm._v(_vm._s(v))
+              ])
+            }),
+            0
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
+          _c("div", [_vm._v("Reveal")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.currentReveal,
+                  expression: "currentReveal"
+                }
+              ],
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.currentReveal = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.reveal, function(v, k) {
+              return _c("option", { key: k, domProps: { value: v } }, [
+                _vm._v(_vm._s(v))
+              ])
+            }),
+            0
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-nm-devtool-message" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.message,
+              expression: "message"
+            }
+          ],
+          attrs: { type: "text", placeholder: "notification message" },
+          domProps: { value: _vm.message },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.message = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-nm-devtool-submit" },
+        [
+          _c(
+            "menu-button",
+            { attrs: { size: "small" }, on: { click: _vm.notify } },
+            [_vm._v("Notify")]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-99e19e",
+            functional: undefined
+          };
+        })());
+      
+},{"../components/MenuButton":"components/MenuButton.vue"}],"mountPoints/WPTB_NotificationManagerDevTool.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_ControlsManager"));
+
+var _NotificationManagerDevTool = _interopRequireDefault(require("../containers/NotificationManagerDevTool"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Notification manager dev tools.
+ */
+// eslint-disable-next-line camelcase
+var _default = {
+  name: 'NotificationManagerDevTool',
+  handler: function notificationManagerJS(uniqueId) {
+    var data = _WPTB_ControlsManager.default.getControlData(uniqueId);
+
+    new _vue.default({
+      data: data,
+      components: {
+        NotificationManagerDevTool: _NotificationManagerDevTool.default
+      },
+      template: '<notification-manager-dev-tool :reveal="reveal" :queue="queue" :types="types" :send-notification="sendNotification"></notification-manager-dev-tool>'
+    }).$mount("#".concat(data.mountId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerDevTool":"containers/NotificationManagerDevTool.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -24492,6 +25244,8 @@ var _WPTB_LocalDevFileControl = _interopRequireDefault(require("./mountPoints/WP
 
 var _WPTB_NotificationManagerView = _interopRequireDefault(require("./mountPoints/WPTB_NotificationManagerView"));
 
+var _WPTB_NotificationManagerDevTool = _interopRequireDefault(require("./mountPoints/WPTB_NotificationManagerDevTool"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -24510,7 +25264,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default];
 /**
  * Register control element.
  *
@@ -24522,5 +25276,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

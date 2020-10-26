@@ -20,6 +20,9 @@ if ( ! defined( 'WPINC' ) ) {
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
 class Notification_Manager {
+	// use icon manager trait
+	use NS\Inc\Common\Traits\Icon_Manager_Trait;
+
 	/**
 	 * Manager id;
 	 */
@@ -42,7 +45,12 @@ class Notification_Manager {
 	 */
 	public static function add_manager_data( $data ) {
 		$manager_data                = [
-			'id' => static::FRONTEND_ELEMENT_ID
+			'id'    => static::FRONTEND_ELEMENT_ID,
+			'icons' => [
+				'ok'    => static::icon_manager_instance()->get_icon( 'check', false ),
+				'error' => static::icon_manager_instance()->get_icon( 'times', false ),
+				'info'  => static::icon_manager_instance()->get_icon( 'info', false )
+			]
 		];
 		$data['notificationManager'] = $manager_data;
 
