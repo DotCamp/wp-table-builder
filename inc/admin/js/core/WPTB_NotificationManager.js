@@ -37,24 +37,24 @@
 		/**
 		 * Create single notification object.
 		 *
-		 * @param {string} message notification message
-		 * @param {string} type notification type valid with types defined in notification manager  instance
-		 * @param {string} queue queue type for notification
-		 * @return {{message: string, type: (string)}} notification object
+		 * @param {Object} options notification options
+		 * @return {Object} notification object
 		 */
-		const createNotificationObject = (
-			message,
-			type = this.notificationTypes.normal,
-			queue = this.queueTypes.wait
-		) => {
-			const checkedType = this.notificationTypes[type] || this.notificationTypes.normal;
-			const checkedQueueType = this.queueTypes[queue] || this.queueTypes.wait;
+		const createNotificationObject = (options) => {
+			const { defaults } = this.store.getters;
 
-			return {
-				message,
-				type: checkedType,
-				queue: checkedQueueType,
-			};
+			// merge only keys that is available in defaults to prevent non notification related properties to be sent to component
+			const parsedOptions = Object.keys(options).reduce((carry, key) => {
+				if (Object.prototype.hasOwnProperty.call(options, key)) {
+					if (defaults[key]) {
+						// eslint-disable-next-line no-param-reassign
+						carry[key] = options[key];
+					}
+				}
+				return carry;
+			}, {});
+
+			return { ...defaults, ...parsedOptions };
 		};
 
 		/**
@@ -62,13 +62,12 @@
 		 *
 		 * Use a valid type that is defined inside types property of notification manager.
 		 *
-		 * @param {string} message notification message
-		 * @param {string} type notification type compatible with types defined in notification manager instance
-		 * @param {string} queue queue type for notification
+		 * @param {Object} notificationOptions notification options, available properties are message, type, queue, reveal,dismiss
+		 *
 		 */
-		this.sendNotification = (message, type = this.notificationTypes.normal, queue = this.queueTypes.wait) => {
+		this.sendNotification = (notificationOptions) => {
 			// send action to store
-			this.store.dispatch('addNotification', createNotificationObject(message, type, queue));
+			this.store.dispatch('addNotification', createNotificationObject(notificationOptions));
 		};
 
 		// prepare mount point for dev tool
@@ -99,6 +98,10 @@
 				this.queueTypes = this.store.getters.queueTypes;
 				// assign reveal types from store
 				this.revealTypes = this.store.getters.revealTypes;
+				// assign reveal types from store
+				this.revealTypes = this.store.getters.revealTypes;
+				// assign dismiss types from store
+				this.dismissTypes = this.store.getters.dismissTypes;
 
 				// add dev tool mount point to DOM
 				addDevToolsToDOM();
@@ -108,6 +111,7 @@
 					types: this.notificationTypes,
 					queue: this.queueTypes,
 					reveal: this.revealTypes,
+					dismiss: this.dismissTypes,
 					sendNotification: this.sendNotification.bind(this),
 					mountId: devToolMountId,
 				};

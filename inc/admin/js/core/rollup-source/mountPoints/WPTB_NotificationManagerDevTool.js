@@ -15,7 +15,7 @@ export default {
 			data,
 			components: { NotificationManagerDevTool },
 			template:
-				'<notification-manager-dev-tool :reveal="reveal" :queue="queue" :types="types" :send-notification="sendNotification"></notification-manager-dev-tool>',
+				'<notification-manager-dev-tool :reveal="reveal" :queue="queue" :types="types" :send-notification="sendNotification" :dismiss="dismiss"></notification-manager-dev-tool>',
 		}).$mount(`#${data.mountId}`);
 	},
 };

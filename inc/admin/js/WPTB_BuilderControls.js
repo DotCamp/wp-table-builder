@@ -24392,6 +24392,10 @@ var _default = {
     reveal: {
       type: String,
       default: 'full'
+    },
+    dismiss: {
+      type: String,
+      default: 'timed'
     }
   },
   data: function data() {
@@ -24401,49 +24405,116 @@ var _default = {
         info: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-yellow-500'),
         error: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-red-600'),
         pro: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-logo-color')
-      }
+      },
+      fullyRevealed: false,
+      lengthRepaint: 0
     };
   },
+  watch: {
+    fullyRevealed: function fullyRevealed(n) {
+      var _this = this;
+
+      if (n && this.dismiss === 'timed') {
+        setTimeout(function () {
+          _this.slideBack();
+        }, this.autoDismissTime);
+      }
+    },
+    queueLength: function queueLength() {
+      this.lengthRepaint += 1;
+    }
+  },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
 
     this.$nextTick(function () {
-      _this.slideFull(true);
+      // eslint-disable-next-line no-unused-expressions
+      _this2.reveal === 'full' ? _this2.slideFull(true) : _this2.slideIcon(true);
     });
   },
   computed: _objectSpread({
     style: function style() {
       var colorToUse = this.colors[this.type] || this.colors.ok;
       return {
-        wrapper: {
-          border: "1px solid ".concat(colorToUse)
+        filler: {
+          borderColor: colorToUse
         },
         icon: {
           backgroundColor: colorToUse,
-          outline: "5px solid ".concat(colorToUse),
           color: '#FFFFFF'
+        },
+        message: {
+          borderColor: colorToUse
+        },
+        length: {
+          backgroundColor: colorToUse
         }
       };
+    },
+    queueLengthVisibility: function queueLengthVisibility() {
+      return this.queue === 'wait' && this.queueLength > 0;
     }
-  }, (0, _vuex.mapState)(['icons'])),
-  methods: {
-    slideFull: function slideFull(direction) {
-      var _this2 = this;
+  }, (0, _vuex.mapState)(['icons', 'autoDismissTime']), {}, (0, _vuex.mapGetters)(['queueLength'])),
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['removeNotification']), {
+    slideBase: function slideBase(amount) {
+      var _this3 = this;
 
-      setTimeout(function () {
-        _this2.$refs.wrapper.style.transition = 'all 0.5s ease-out';
-        _this2.$refs.wrapper.style.transform = "translateX(".concat((direction ? -1 : 1) * 100, "%)");
+      var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          _this3.$refs.wrapper.style.transition = 'all 0.3s ease-out';
+          _this3.$refs.wrapper.style.transform = "translateX(calc( ".concat(direction ? -1 : 1, " * ").concat(amount, " ))");
 
-        _this2.$refs.wrapper.addEventListener('transitionend', function (_ref) {
-          var propertyName = _ref.propertyName;
+          _this3.$refs.wrapper.addEventListener('transitionend', function (_ref) {
+            var propertyName = _ref.propertyName;
 
-          if (propertyName === 'transform') {
-            _this2.$refs.wrapper.style.transition = 'unset';
-          }
-        });
-      }, 100);
+            if (propertyName === 'transform') {
+              _this3.$refs.wrapper.style.transition = 'unset';
+              resolve();
+            }
+          });
+        }, 100);
+      });
+    },
+    slideBack: function slideBack() {
+      var _this4 = this;
+
+      this.slideBase('0px', 1).then(function () {
+        // remove notification from store after hidden
+        _this4.removeNotification(_this4.id);
+      });
+    },
+    slideFull: function slideFull() {
+      var _this5 = this;
+
+      this.slideBase('100%').then(function () {
+        _this5.fullyRevealed = true;
+      });
+    },
+    slideIcon: function slideIcon() {
+      var iconWrapper = this.$refs.icon;
+      var messageWrapper = this.$refs.message;
+      var filler = this.$refs.filler;
+
+      var _iconWrapper$getBound = iconWrapper.getBoundingClientRect(),
+          width = _iconWrapper$getBound.width;
+
+      var _getComputedStyle = getComputedStyle(messageWrapper),
+          borderLeftWidth = _getComputedStyle.borderLeftWidth;
+
+      var _filler$getBoundingCl = filler.getBoundingClientRect(),
+          fillerWidth = _filler$getBoundingCl.width;
+
+      this.slideBase("".concat(width + Number.parseInt(fillerWidth, 10) + Number.parseInt(borderLeftWidth, 10), "px"));
+    },
+    handleNotificationClick: function handleNotificationClick() {
+      if (this.fullyRevealed) {
+        this.slideBack();
+      } else if (this.reveal === 'icon') {
+        this.slideFull();
+      }
     }
-  }
+  })
 };
 exports.default = _default;
         var $474c2d = exports.default || module.exports;
@@ -24464,23 +24535,52 @@ exports.default = _default;
       ref: "wrapper",
       staticClass: "wptb-notification-wrapper",
       style: _vm.style.wrapper,
-      attrs: { id: "notification#" + _vm.id }
+      attrs: { id: "notification#" + _vm.id },
+      on: { click: _vm.handleNotificationClick }
     },
     [
       _c(
         "div",
-        { staticClass: "wptb-notification-icon", style: _vm.style.icon },
+        {
+          ref: "icon",
+          staticClass: "wptb-notification-icon",
+          style: _vm.style.icon
+        },
         [
-          _c("div", {
-            ref: "svgWrap",
-            staticClass: "wptb-notification-svg-wrapper",
-            domProps: { innerHTML: _vm._s(_vm.icons[_vm.type]) }
-          })
+          _vm.queueLengthVisibility
+            ? _c(
+                "div",
+                {
+                  key: _vm.lengthRepaint,
+                  staticClass: "wptb-notification-queue-length",
+                  style: _vm.style.length
+                },
+                [_vm._v("\n\t\t\t" + _vm._s(_vm.queueLength) + "\n\t\t")]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.type !== "pro"
+            ? _c("div", {
+                staticClass: "wptb-notification-svg-wrapper",
+                domProps: { innerHTML: _vm._s(_vm.icons[_vm.type]) }
+              })
+            : _c("img", {
+                staticClass: "wptb-notification-svg-wrapper",
+                attrs: { src: _vm.icons.pro }
+              })
         ]
       ),
       _vm._v(" "),
       _c("div", {
+        ref: "filler",
+        staticClass: "wptb-notification-filler",
+        style: _vm.style.filler
+      }),
+      _vm._v(" "),
+      _c("div", {
+        ref: "message",
         staticClass: "wptb-notification-message",
+        style: _vm.style.message,
         domProps: { innerHTML: _vm._s(_vm.message) }
       })
     ]
@@ -24526,16 +24626,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
   components: {
     Notification: _Notification.default
   },
   watch: {
-    notificationsOnDisplay: function notificationsOnDisplay() {
-      this.calculatePosition();
+    notificationsOnDisplay: {
+      handler: function handler() {
+        this.calculatePosition();
+      },
+      deep: true
     }
   },
-  computed: (0, _vuex.mapState)(['notificationsOnDisplay']),
+  computed: (0, _vuex.mapState)(['notificationsOnDisplay', 'sounds']),
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$store.subscribeAction(function (action) {
+      if (action.type === 'addNotification') {
+        setTimeout(function () {
+          _this.$refs.audio.play();
+        }, 100);
+      }
+    });
+  },
   methods: {
     calculatePosition: function calculatePosition() {
       var mainWrapper = this.$refs.mainWrapper;
@@ -24563,24 +24679,30 @@ exports.default = _default;
   return _c(
     "div",
     { ref: "mainWrapper", staticClass: "wptb-notification-manager" },
-    _vm._l(_vm.notificationsOnDisplay, function(ref) {
-      var id = ref.id
-      var message = ref.message
-      var type = ref.type
-      var queue = ref.queue
-      var reveal = ref.reveal
-      return _c("notification", {
-        key: id,
-        attrs: {
-          id: id,
-          message: message,
-          type: type,
-          queue: queue,
-          reveal: reveal
-        }
-      })
-    }),
-    1
+    [
+      _vm._l(_vm.notificationsOnDisplay, function(ref) {
+        var id = ref.id
+        var message = ref.message
+        var type = ref.type
+        var queue = ref.queue
+        var reveal = ref.reveal
+        var dismiss = ref.dismiss
+        return _c("notification", {
+          key: id,
+          attrs: {
+            id: id,
+            message: message,
+            type: type,
+            queue: queue,
+            reveal: reveal,
+            dismiss: dismiss
+          }
+        })
+      }),
+      _vm._v(" "),
+      _c("audio", { ref: "audio", attrs: { src: _vm.sounds.ding } })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -24610,7 +24732,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**
- *Default state for notification manager
+ *Default state for notification manager.
  *
  * @type {Object} default state
  */
@@ -24631,13 +24753,19 @@ var defaultState = {
     icon: 'icon',
     full: 'full'
   },
-  dismissType: {
-    no: 'no',
+  dismissTypes: {
     timed: 'timed',
     click: 'click'
   },
   autoDismissTime: 3000,
-  currentId: 0
+  currentId: 0,
+  defaults: {
+    type: 'ok',
+    queue: 'wait',
+    reveal: 'full',
+    dismiss: 'timed',
+    message: 'default message'
+  }
 };
 /**
  * Merge default state with extra ones and create new one.
@@ -24676,19 +24804,19 @@ var actions = {
    *
    * @param {Function} commit store commit function
    * @param {Object} getters store getters
-   * @param {Object} dispatch store dispatch function
+   * @param {Function} dispatch store dispatch function
    * @param {Object} notificationObj notification object to be added
    * @return {Promise<void>}
    */
   addNotification: function addNotification(_ref, notificationObj) {
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-      var commit, getters, dispatch, wait;
+      var commit, getters, dispatch, queue;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               commit = _ref.commit, getters = _ref.getters, dispatch = _ref.dispatch;
-              wait = notificationObj.wait; // add an id to notification object
+              queue = notificationObj.queue; // add an id to notification object
               // eslint-disable-next-line no-param-reassign
 
               _context.next = 4;
@@ -24699,10 +24827,10 @@ var actions = {
 
               // check for wait type of object
               // if it is set to wait add it to queue
-              if (wait === 'wait') {
-                commit('addNotificationToQueue', notificationObj); // if queue is empty, immediately move current notification to display and show
+              if (queue === 'wait') {
+                commit('addNotificationToQueue', notificationObj); // if there is no notification with wait queue type is active on current display
 
-                if (getters.queue === 0) {
+                if (!getters.isAnyQueuedNotificationOnDisplay) {
                   dispatch('moveQueToDisplay');
                 } // else add it to display immediately
 
@@ -24727,10 +24855,14 @@ var actions = {
    */
   moveQueToDisplay: function moveQueToDisplay(_ref2) {
     var commit = _ref2.commit,
-        state = _ref2.state;
+        getters = _ref2.getters;
     // remove and get first notification waiting at queue
-    var notification = state.notificationQueue.shift();
-    commit('addNotificationToDisplay', notification);
+    var notification = getters.firstInQueue;
+
+    if (notification) {
+      commit('shiftQueue');
+      commit('addToQueuedDisplay', notification);
+    }
   },
 
   /**
@@ -24745,6 +24877,26 @@ var actions = {
         getters = _ref3.getters;
     commit('incrementId');
     return getters.getId;
+  },
+
+  /**
+   * Remove notification from displayed notifications.
+   *
+   * @param {Function} commit store commit function
+   * @param {Object} getters store getters
+   * @param {Function} dispatch store dispatch function
+   * @param {number} id notification id
+   */
+  removeNotification: function removeNotification(_ref4, id) {
+    var commit = _ref4.commit,
+        getters = _ref4.getters,
+        dispatch = _ref4.dispatch;
+    var notificationToBeRemoved = getters.getNotificationOnDisplayById(id);
+    commit('removeNotification', id);
+
+    if (notificationToBeRemoved && notificationToBeRemoved.queue === 'wait') {
+      dispatch('moveQueToDisplay');
+    }
   }
 };
 var _default = actions;
@@ -24763,8 +24915,14 @@ exports.default = void 0;
  * @type {Object}
  */
 var mutations = {
+  shiftQueue: function shiftQueue(state) {
+    state.notificationQueue.shift();
+  },
   addNotificationToQueue: function addNotificationToQueue(state, notificationObj) {
     state.notificationQueue.push(notificationObj);
+  },
+  addToQueuedDisplay: function addToQueuedDisplay(state, notification) {
+    state.notificationsOnDisplay.unshift(notification);
   },
   addNotificationToDisplay: function addNotificationToDisplay(state, notificationObj) {
     state.notificationsOnDisplay.push(notificationObj);
@@ -24772,6 +24930,19 @@ var mutations = {
   incrementId: function incrementId(state) {
     // eslint-disable-next-line no-param-reassign
     state.currentId += 1;
+  },
+  removeNotification: function removeNotification(state, id) {
+    var foundIndex = null;
+    state.notificationsOnDisplay.find(function (val, index) {
+      if (val.id === id) {
+        foundIndex = index;
+      }
+    });
+
+    if (foundIndex !== null && foundIndex !== undefined) {
+      // state.notificationsOnDisplay = state.notificationsOnDisplay.slice(foundIndex, 1);
+      state.notificationsOnDisplay.splice(foundIndex, 1);
+    }
   }
 };
 var _default = mutations;
@@ -24805,11 +24976,39 @@ var getters = {
   revealTypes: function revealTypes(state) {
     return _objectSpread({}, state.revealTypes);
   },
+  dismissTypes: function dismissTypes(state) {
+    return _objectSpread({}, state.dismissTypes);
+  },
   queueLength: function queueLength(state) {
     return state.notificationQueue.length;
   },
   getId: function getId(state) {
     return state.currentId;
+  },
+  defaults: function defaults(state) {
+    return state.defaults;
+  },
+  autoDismissTime: function autoDismissTime(state) {
+    return state.autoDismissTime;
+  },
+  firstInQueue: function firstInQueue(state) {
+    return state.notificationQueue[0];
+  },
+  isAnyQueuedNotificationOnDisplay: function isAnyQueuedNotificationOnDisplay(state) {
+    return state.notificationsOnDisplay.some(function (n) {
+      return n.queue === 'wait';
+    });
+  },
+  getNotificationOnDisplayById: function getNotificationOnDisplayById(state) {
+    return function (id) {
+      if (state.notificationsOnDisplay.length > 0) {
+        return state.notificationsOnDisplay.find(function (n) {
+          return n.id === id;
+        });
+      }
+
+      return null;
+    };
   }
 };
 var _default = getters;
@@ -24904,7 +25103,129 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerApp":"containers/NotificationManagerApp.vue","../stores/notificationManager":"stores/notificationManager/index.js"}],"containers/NotificationManagerDevTool.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerApp":"containers/NotificationManagerApp.vue","../stores/notificationManager":"stores/notificationManager/index.js"}],"components/NotificationManagerDevSelect.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    label: {
+      type: String,
+      default: 'label'
+    },
+    value: {
+      type: String,
+      default: 'value'
+    },
+    options: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      innerValue: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.innerValue = _this.value;
+    });
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('valueChanged', n);
+    }
+  }
+};
+exports.default = _default;
+        var $f8ee72 = exports.default || module.exports;
+      
+      if (typeof $f8ee72 === 'function') {
+        $f8ee72 = $f8ee72.options;
+      }
+    
+        /* template */
+        Object.assign($f8ee72, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-nm-devtool-input" }, [
+    _c("div", [_vm._v(_vm._s(_vm.label))]),
+    _vm._v(" "),
+    _c(
+      "select",
+      {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.innerValue,
+            expression: "innerValue"
+          }
+        ],
+        on: {
+          change: function($event) {
+            var $$selectedVal = Array.prototype.filter
+              .call($event.target.options, function(o) {
+                return o.selected
+              })
+              .map(function(o) {
+                var val = "_value" in o ? o._value : o.value
+                return val
+              })
+            _vm.innerValue = $event.target.multiple
+              ? $$selectedVal
+              : $$selectedVal[0]
+          }
+        }
+      },
+      _vm._l(_vm.options, function(v, k) {
+        return _c("option", { key: k, domProps: { value: v } }, [
+          _vm._v(_vm._s(v))
+        ])
+      }),
+      0
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/NotificationManagerDevTool.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24914,8 +25235,12 @@ exports.default = void 0;
 
 var _MenuButton = _interopRequireDefault(require("../components/MenuButton"));
 
+var _NotificationManagerDevSelect = _interopRequireDefault(require("../components/NotificationManagerDevSelect"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -24952,20 +25277,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   components: {
+    NotificationManagerDevSelect: _NotificationManagerDevSelect.default,
     MenuButton: _MenuButton.default
   },
   props: {
     queue: Object,
     types: Object,
     reveal: Object,
+    dismiss: Object,
     sendNotification: Function
   },
   data: function data() {
     return {
-      currentType: 'ok',
-      currentQueue: 'wait',
-      message: 'sample message',
-      currentReveal: 'full'
+      notificationObject: {
+        type: 'pro',
+        queue: 'wait',
+        message: 'sample message',
+        reveal: 'full',
+        dismiss: 'click'
+      }
     };
   },
   mounted: function mounted() {
@@ -24982,7 +25312,7 @@ var _default = {
   },
   methods: {
     notify: function notify() {
-      this.sendNotification(this.message, this.currentType, this.currentQueue);
+      this.sendNotification(this.notificationObject);
     }
   }
 };
@@ -25010,124 +25340,56 @@ exports.default = _default;
         _vm._v("\n\t\tNotification Manager Dev Tool\n\t")
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "wptb-nm-devtool-selection" }, [
-        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
-          _c("div", [_vm._v("Type")]),
+      _c(
+        "div",
+        { staticClass: "wptb-nm-devtool-selection" },
+        [
+          _c("notification-manager-dev-select", {
+            attrs: { label: "Type", options: _vm.types },
+            model: {
+              value: _vm.notificationObject.type,
+              callback: function($$v) {
+                _vm.$set(_vm.notificationObject, "type", $$v)
+              },
+              expression: "notificationObject.type"
+            }
+          }),
           _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.currentType,
-                  expression: "currentType"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.currentType = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.types, function(v, k) {
-              return _c("option", { key: k, domProps: { value: v } }, [
-                _vm._v(_vm._s(v))
-              ])
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
-          _c("div", [_vm._v("Queue")]),
+          _c("notification-manager-dev-select", {
+            attrs: { label: "Queue", options: _vm.queue },
+            model: {
+              value: _vm.notificationObject.queue,
+              callback: function($$v) {
+                _vm.$set(_vm.notificationObject, "queue", $$v)
+              },
+              expression: "notificationObject.queue"
+            }
+          }),
           _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.currentQueue,
-                  expression: "currentQueue"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.currentQueue = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.queue, function(v, k) {
-              return _c("option", { key: k, domProps: { value: v } }, [
-                _vm._v(_vm._s(v))
-              ])
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "wptb-nm-devtool-input" }, [
-          _c("div", [_vm._v("Reveal")]),
+          _c("notification-manager-dev-select", {
+            attrs: { label: "Reveal", options: _vm.reveal },
+            model: {
+              value: _vm.notificationObject.reveal,
+              callback: function($$v) {
+                _vm.$set(_vm.notificationObject, "reveal", $$v)
+              },
+              expression: "notificationObject.reveal"
+            }
+          }),
           _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.currentReveal,
-                  expression: "currentReveal"
-                }
-              ],
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.currentReveal = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
-              }
-            },
-            _vm._l(_vm.reveal, function(v, k) {
-              return _c("option", { key: k, domProps: { value: v } }, [
-                _vm._v(_vm._s(v))
-              ])
-            }),
-            0
-          )
-        ])
-      ]),
+          _c("notification-manager-dev-select", {
+            attrs: { label: "Dismiss", options: _vm.dismiss },
+            model: {
+              value: _vm.notificationObject.dismiss,
+              callback: function($$v) {
+                _vm.$set(_vm.notificationObject, "dismiss", $$v)
+              },
+              expression: "notificationObject.dismiss"
+            }
+          })
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "wptb-nm-devtool-message" }, [
         _c("input", {
@@ -25135,18 +25397,18 @@ exports.default = _default;
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.message,
-              expression: "message"
+              value: _vm.notificationObject.message,
+              expression: "notificationObject.message"
             }
           ],
           attrs: { type: "text", placeholder: "notification message" },
-          domProps: { value: _vm.message },
+          domProps: { value: _vm.notificationObject.message },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.message = $event.target.value
+              _vm.$set(_vm.notificationObject, "message", $event.target.value)
             }
           }
         })
@@ -25179,7 +25441,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/MenuButton":"components/MenuButton.vue"}],"mountPoints/WPTB_NotificationManagerDevTool.js":[function(require,module,exports) {
+},{"../components/MenuButton":"components/MenuButton.vue","../components/NotificationManagerDevSelect":"components/NotificationManagerDevSelect.vue"}],"mountPoints/WPTB_NotificationManagerDevTool.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25209,7 +25471,7 @@ var _default = {
       components: {
         NotificationManagerDevTool: _NotificationManagerDevTool.default
       },
-      template: '<notification-manager-dev-tool :reveal="reveal" :queue="queue" :types="types" :send-notification="sendNotification"></notification-manager-dev-tool>'
+      template: '<notification-manager-dev-tool :reveal="reveal" :queue="queue" :types="types" :send-notification="sendNotification" :dismiss="dismiss"></notification-manager-dev-tool>'
     }).$mount("#".concat(data.mountId));
   }
 };

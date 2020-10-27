@@ -4,27 +4,29 @@
 			Notification Manager Dev Tool
 		</div>
 		<div class="wptb-nm-devtool-selection">
-			<div class="wptb-nm-devtool-input">
-				<div>Type</div>
-				<select v-model="currentType">
-					<option v-for="(v, k) in types" :key="k" :value="v">{{ v }}</option>
-				</select>
-			</div>
-			<div class="wptb-nm-devtool-input">
-				<div>Queue</div>
-				<select v-model="currentQueue">
-					<option v-for="(v, k) in queue" :key="k" :value="v">{{ v }}</option>
-				</select>
-			</div>
-			<div class="wptb-nm-devtool-input">
-				<div>Reveal</div>
-				<select v-model="currentReveal">
-					<option v-for="(v, k) in reveal" :key="k" :value="v">{{ v }}</option>
-				</select>
-			</div>
+			<notification-manager-dev-select
+				label="Type"
+				v-model="notificationObject.type"
+				:options="types"
+			></notification-manager-dev-select>
+			<notification-manager-dev-select
+				label="Queue"
+				v-model="notificationObject.queue"
+				:options="queue"
+			></notification-manager-dev-select>
+			<notification-manager-dev-select
+				label="Reveal"
+				v-model="notificationObject.reveal"
+				:options="reveal"
+			></notification-manager-dev-select>
+			<notification-manager-dev-select
+				label="Dismiss"
+				v-model="notificationObject.dismiss"
+				:options="dismiss"
+			></notification-manager-dev-select>
 		</div>
 		<div class="wptb-nm-devtool-message">
-			<input type="text" placeholder="notification message" v-model="message" />
+			<input type="text" placeholder="notification message" v-model="notificationObject.message" />
 		</div>
 		<div class="wptb-nm-devtool-submit">
 			<menu-button @click="notify" size="small">Notify</menu-button>
@@ -34,21 +36,26 @@
 
 <script>
 import MenuButton from '../components/MenuButton';
+import NotificationManagerDevSelect from '../components/NotificationManagerDevSelect';
 
 export default {
-	components: { MenuButton },
+	components: { NotificationManagerDevSelect, MenuButton },
 	props: {
 		queue: Object,
 		types: Object,
 		reveal: Object,
+		dismiss: Object,
 		sendNotification: Function,
 	},
 	data() {
 		return {
-			currentType: 'ok',
-			currentQueue: 'wait',
-			message: 'sample message',
-			currentReveal: 'full',
+			notificationObject: {
+				type: 'pro',
+				queue: 'wait',
+				message: 'sample message',
+				reveal: 'full',
+				dismiss: 'click',
+			},
 		};
 	},
 	mounted() {
@@ -60,7 +67,7 @@ export default {
 	},
 	methods: {
 		notify() {
-			this.sendNotification(this.message, this.currentType, this.currentQueue);
+			this.sendNotification(this.notificationObject);
 		},
 	},
 };

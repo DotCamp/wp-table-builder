@@ -1,5 +1,5 @@
 /**
- *Default state for notification manager
+ *Default state for notification manager.
  *
  * @type {Object} default state
  */
@@ -20,13 +20,19 @@ const defaultState = {
 		icon: 'icon',
 		full: 'full',
 	},
-	dismissType: {
-		no: 'no',
+	dismissTypes: {
 		timed: 'timed',
 		click: 'click',
 	},
 	autoDismissTime: 3000,
 	currentId: 0,
+	defaults: {
+		type: 'ok',
+		queue: 'wait',
+		reveal: 'full',
+		dismiss: 'timed',
+		message: 'default message',
+	},
 };
 
 /**

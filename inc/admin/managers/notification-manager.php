@@ -3,11 +3,11 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder as NS;
-
-// if called directly, abort
+use WP_Table_Builder\Inc\Common\Traits\Icon_Manager_Trait;
 use function add_action;
 use function trailingslashit;
 
+// if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
 	die();
 }
@@ -21,7 +21,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 class Notification_Manager {
 	// use icon manager trait
-	use NS\Inc\Common\Traits\Icon_Manager_Trait;
+	use Icon_Manager_Trait;
 
 	/**
 	 * Manager id;
@@ -49,7 +49,11 @@ class Notification_Manager {
 			'icons' => [
 				'ok'    => static::icon_manager_instance()->get_icon( 'check', false ),
 				'error' => static::icon_manager_instance()->get_icon( 'times', false ),
-				'info'  => static::icon_manager_instance()->get_icon( 'info', false )
+				'info'  => static::icon_manager_instance()->get_icon( 'info', false ),
+				'pro'   => NS\WP_TABLE_BUILDER_URL . 'assets/images/wptb-logo.png'
+			],
+			'sounds' => [
+				'ding'   => NS\WP_TABLE_BUILDER_URL . 'assets/sounds/ding.mp3'
 			]
 		];
 		$data['notificationManager'] = $manager_data;

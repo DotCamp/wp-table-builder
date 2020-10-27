@@ -4500,6 +4500,18 @@ wptb_shortcode_container_element {
     }
 }
 
+@keyframes wptb-more-pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    0% {
+        transform: scale(1);
+    }
+}
+
 .wptb-prebuilt-card:hover {
     box-shadow: 3px 3px 2px 0.5px rgba(0, 0, 0, 0.2);
 }
@@ -5645,6 +5657,10 @@ wptb_shortcode_container_element {
 /*region notification manager*/
 .wptb-notification-manager {
     position: fixed;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    height: max-content;
     top: 50%;
     right: calc(-1 * var(--wptb-notification-manager-width));
     width: var(--wptb-notification-manager-width);
@@ -5654,28 +5670,34 @@ wptb_shortcode_container_element {
 
 .wptb-notification-wrapper {
     width: 100%;
-    height: 40px;
     display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 40px 3px 1fr;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     color: var(--wptb-plugin-gray-700);
     border-radius: 3px 0 0 3px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     border-right: 0 !important;
     margin: 0 0 5px 0;
     transition: all 0.3s ease-out;
-    background-color: var(--wptb-plugin-gray-200);
+    cursor: pointer;
 }
 
 .wptb-notification-icon {
-    width: 100%;
-    height: 100%;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    outline-offset: 3px;
+    position: relative;
+}
+
+.wptb-notification-filler {
+    width: 3px;
+    height: 40px;
+    background-color: var(--wptb-plugin-gray-200);
+    border-width: 1px 0 1px 0;
+    border-style: solid;
 }
 
 .wptb-notification-message {
@@ -5686,6 +5708,9 @@ wptb_shortcode_container_element {
     align-items: center;
     padding: 0 15px;
     text-transform: capitalize;
+    border-width: 1px 0 1px 5px;
+    border-style: solid;
+    background-color: var(--wptb-plugin-gray-200);
 }
 
 .wptb-notification-svg-wrapper {
@@ -5751,6 +5776,21 @@ wptb_shortcode_container_element {
 .wptb-nm-devtool-message {
     grid-area: message;
     justify-self: center;
+}
+
+.wptb-notification-queue-length {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: -10px;
+    top: -10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    color: var(--wptb-plugin-theme-color-light);
+    font-weight: bold;
+    animation: wptb-more-pop 0.2s ease-out;
 }
 
 
