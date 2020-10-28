@@ -7,6 +7,7 @@ use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
 use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Style_Pass;
 use WP_Table_Builder\Inc\Frontend as Frontend;
@@ -207,6 +208,9 @@ class Init {
 
 		// initialize gutenberg block manager
 		new Gutenberg_Block_Manager( 'wptb/table-block' );
+
+		//initialize notification manager
+		Notification_Manager::init();
 	}
 
 	/**

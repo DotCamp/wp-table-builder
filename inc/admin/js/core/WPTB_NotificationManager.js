@@ -86,6 +86,8 @@
 		 */
 		this.init = () => {
 			if (!initialized) {
+			   // TODO [erdembircan] remove for production
+				console.log(managerData);
 				// assign server sent notification data to control manager so that our compiled vue code can read it
 				WPTB_ControlsManager.setControlData('NotificationManager', managerData);
 
