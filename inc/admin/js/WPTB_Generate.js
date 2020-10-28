@@ -13335,7 +13335,7 @@ var _default = {
       type: String,
       default: 'normal'
     },
-    adLink: {
+    upsell: {
       type: String
     },
     prebuiltTables: {
@@ -13784,7 +13784,11 @@ exports.default = _default;
         }),
         1
       )
-    ])
+    ]),
+    _vm._v(" "),
+    !_vm.isPro
+      ? _c("div", { domProps: { innerHTML: _vm._s(_vm.upsell) } })
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -13958,7 +13962,7 @@ var vm = new _vue.default({
   components: {
     GenerateMain: _GenerateMain.default
   },
-  template: '<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+  template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
   data: data
 }).$mount("#".concat(data.mountId));
 var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
