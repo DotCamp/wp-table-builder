@@ -326,7 +326,7 @@ class Controls_Manager {
 		foreach ( self::get_controls_names() as $control_id ) {
 			$control_class_id = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $control_id ) ) );
 			$class_name       = '\WP_Table_Builder\Inc\Admin\Controls\Control_' . $control_class_id;
-			if ( class_exists( $class_name ) ) {
+			if ( class_exists( $class_name )  && $class_name::register_evaluation()) {
 				$this->register_control_object( $control_id, new $class_name() );
 			}
 		}
