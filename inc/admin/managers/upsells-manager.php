@@ -33,10 +33,10 @@ class Upsells_Manager {
 	public static function init() {
 		if ( ! static::check_pro_status() ) {
 			static::$upsell_messages = [
-				'after_elements'  => esc_html__( 'For more advanced elements', 'wp-table-builder' ),
-				'generate_menu'   => esc_html__( 'For Prebuilt tables and using your own table as prebuilt', 'wp-table-builder' ),
-				'cell_management' => esc_html__( 'For more advanced options in cell management mode', 'wp-table-builder' ),
-				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "get the pro addon" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'addon', 'wp-table-builder' ) )
+				'after_elements'  => esc_html__( 'For More Advanced Elements', 'wp-table-builder' ),
+				'generate_menu'   => esc_html__( 'For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables', 'wp-table-builder' ),
+				'cell_management' => esc_html__( 'For More Advanced Options in Cell Management Mode', 'wp-table-builder' ),
+				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
 			add_action( 'wp-table-builder/action/after_elements', [ __CLASS__, 'after_elements_upsell' ], 1 );
 			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
@@ -84,7 +84,7 @@ class Upsells_Manager {
 	protected static function prepare_upsell_element( $message ) {
 		?>
       <div class="wptb-upsells-wrapper">
-        <a class="wptb-upsells-anchor" href="https://wptablebuilder.com" target="_blank">
+        <a class="wptb-upsells-anchor" href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview-addons' ) ); ?>" target="_blank">
           <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
 				  "<div>$message</div>",
 				  static::$upsell_messages['generic_end']

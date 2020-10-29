@@ -21,7 +21,9 @@
     --wptb-plugin-red-600: #E53E3E;
     --wptb-plugin-blue-300: #90CDF4;
     --wptb-plugin-white: #FFF;
+    --wptb-plugin-black: #000;
     --wptb-plugin-gold: #D4AF37;
+    --wptb-plugin-cta-button: #F7C948; 
 
     /*theme*/
     --wptb-plugin-theme-text-color-main: var(--wptb-plugin-gray-700);
@@ -5683,15 +5685,15 @@ wptb_shortcode_container_element {
 
 .wptb-generate-wrapper .wptb-upsells-message-holder {
     background-color: var(--wptb-plugin-gray-200) !important;
+    padding: 15px;
 }
 
 .wptb-upsells-pro-label {
-    background-color: var(--wptb-plugin-gold) !important;
-    color: var(--wptb-plugin-theme-color-light);
-    border-radius: 5px;
-    padding: 3px;
+    background-color: var(--wptb-plugin-cta-button) !important;
+    color: var(--wptb-plugin-black);
+    border-radius: 3px;
+    padding: 5px;
     font-weight: bold;
-    font-size: 120% !important;
     border: 1px solid var(--wptb-plugin-gray-400) !important;
 }
 
@@ -5705,7 +5707,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-upsells-wrapper:active {
-    animation: wptb-push 0.3s ease-out;
+    animation: wptb-push 0.1s ease-out;
 }
 
 @keyframes wptb-unfold-up {
