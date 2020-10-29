@@ -83,14 +83,15 @@ class Upsells_Manager {
 	 */
 	protected static function prepare_upsell_element( $message ) {
 		?>
-      <div class="wptb-upsells-wrapper">
-        <a class="wptb-upsells-anchor" href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview-addons' ) ); ?>" target="_blank">
+      <a class="wptb-upsells-anchor" href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-overview-addons' ) ); ?>"
+         target="_blank">
+        <div class="wptb-upsells-wrapper">
           <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
 				  "<div>$message</div>",
 				  static::$upsell_messages['generic_end']
 			  ] ); ?></div>
-        </a>
-      </div>
+        </div>
+      </a>
 		<?php
 	}
 
