@@ -70,13 +70,13 @@ class Gutenberg_Block_Manager {
 		return false;
 	}
 
-
 	/**
 	 * Register editor block.
 	 */
 	public function register_block() {
 		// check user cap before registering block
-		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
+		// extra Gutenberg check for WordPress versions <= 4.9
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && function_exists( 'register_block_type' ) ) {
 			wp_register_script( 'wptb_block_editor_script', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.js', $this->assets['dependencies'], $this->assets['version'] );
 
 			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', [], $this->assets['version'] );

@@ -90,8 +90,7 @@ That's it. You're done!
 
 = 1.3.2 =
 
-
-
+* FIX: Fixed an issue affecting WordPress versions <= 4.9 where Gutenberg editor is not present.
 
 = 1.3.1 =
 
