@@ -90,11 +90,12 @@ That's it. You're done!
 
 = 1.3.2 =
 
+* IMPROVE: Responsive builder will show table's layout at breakpoints even though it is not enabled.
+* IMPROVE: Better cell selected indicator at manage cells menu.
 * FIX: Fixed an issue affecting WordPress versions <= 4.9 where Gutenberg editor is not present.
 * FIX: Fixed an issue where embedding a table to a post is not triggering correct display of gutenberg block.
 * FIX: Fixed an issue where sometimes hover border got stuck and visible in saved table.
-* IMPROVE: Responsive builder will show table's layout at breakpoints even though it is not enabled.
-* IMPROVE: Better cell selected indicator at manage cells menu.
+* FIX: A style issue affecting users of Classic Editor and Advanced Editor Tools where floating windows can not be interacted with.
 
 = 1.3.1 =
 

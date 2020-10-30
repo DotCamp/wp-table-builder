@@ -80,7 +80,9 @@ class Gutenberg_Block_Manager {
 			wp_register_script( 'wptb_block_editor_script', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.js', $this->assets['dependencies'], $this->assets['version'] );
 
 			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', [], $this->assets['version'] );
-			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
+
+			//@deprecated
+//			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
 
 			$block_data = $this->prepare_block_data();
 
@@ -88,7 +90,7 @@ class Gutenberg_Block_Manager {
 
 			register_block_type( $this->block_name, [
 				'editor_script' => 'wptb_block_editor_script',
-				'editor_style'  => [ 'wptb_block_editor_style', 'wptb_block_editor_admin_style' ]
+				'editor_style'  => [ 'wptb_block_editor_style' ]
 			] );
 		}
 	}
