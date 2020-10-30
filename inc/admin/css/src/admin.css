@@ -1631,7 +1631,7 @@ table.wptb-table {
 
 .wptb-preview-table .wptb-row td.wptb-highlighted,
 .wptb-state-dragging td:hover {
-    outline: 1px solid lightgreen;
+    outline: 1px solid #acc1e2;
 }
 
 .wptb-preview-table .wptb-row.wptb-highlighted-row {
@@ -5079,6 +5079,13 @@ wptb_shortcode_container_element {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.wptb-highlighted .wptb-plugin-blocker-element {
+    background: repeating-linear-gradient(45deg, white, white 5px, var(--wptb-plugin-logo-color) 5px, var(--wptb-plugin-logo-color) 10px);
+    background-size: 400% 400%;
+    animation: linear-gradient-move 40s linear infinite reverse;
+    opacity: 0.2;
 }
 
 .wptb-plugin-blocker-element-empty::before {
