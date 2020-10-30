@@ -17974,7 +17974,7 @@ var _ScreenSizeSlider = _interopRequireDefault(require("../components/ScreenSize
 
 var _WPTB_ResponsiveFrontend = _interopRequireDefault(require("../../../WPTB_ResponsiveFrontend"));
 
-var _WPTB_SortableTable = _interopRequireDefault(require("../../../core/WPTB_SortableTable"));
+var _WPTB_SortableTable = _interopRequireDefault(require("../../WPTB_SortableTable"));
 
 var _DeBouncer = _interopRequireDefault(require("../functions/DeBouncer"));
 
@@ -18069,14 +18069,14 @@ var _default = {
      * Calculate certain properties of responsive table element's style
      */
     tableStyle: function tableStyle() {
-      if (!this.directives.responsiveEnabled) {
-        return {};
-      } // don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
+      // @deprecated
+      // if (!this.directives.responsiveEnabled) {
+      // 	return {};
+      // }
+      // don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
       // if (this.currentSizeRangeName === 'desktop') {
       // 	return {};
       // }
-
-
       var width = this.limitToRange(this.appOptions.currentSize, Math.min(this.sizeLimitMin, this.sizeLimitMax), Math.max(this.sizeLimitMin, this.sizeLimitMax));
       return {
         width: "".concat(width, "px"),
@@ -18137,8 +18137,8 @@ var _default = {
      *
      * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way, object reference link will not be broken and reactive abilities of the store will continue to function.
      *
-     * @param {object} baseObj base object
-     * @param {object} targetObj target object
+     * @param {Object} baseObj base object
+     * @param {Object} targetObj target object
      */
     deepMergeObject: function deepMergeObject(baseObj, targetObj) {
       var _this3 = this;
@@ -18176,7 +18176,7 @@ var _default = {
      *
      * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
      *
-     * @returns {object} reformatted slider size object
+     * @return {Object} reformatted slider size object
      */
     sliderSizeStops: function sliderSizeStops() {
       var _this4 = this;
@@ -18226,7 +18226,7 @@ var _default = {
     /**
      * Encode responsive directives.
      *
-     * @returns {String} base64 string representation of directives
+     * @return {string} base64 string representation of directives
      */
     encodeResponsiveDirectives: function encodeResponsiveDirectives() {
       var stringifiedDirectives = JSON.stringify(this.directives);
@@ -18236,8 +18236,8 @@ var _default = {
     /**
      * Decode responsive directives.
      *
-     * @param {String} val
-     * @returns {String} decoded value
+     * @param {string} val
+     * @return {string} decoded value
      */
     decodeResponsiveDirectives: function decodeResponsiveDirectives(val) {
       return atob(val);
@@ -18428,7 +18428,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../../../core/WPTB_SortableTable":"../WPTB_SortableTable.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue","../components/NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
+},{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../../WPTB_SortableTable":"../WPTB_SortableTable.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue","../components/NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
 
         var $d55f26 = exports.default || module.exports;
       

@@ -93,6 +93,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting WordPress versions <= 4.9 where Gutenberg editor is not present.
 * FIX: Fixed an issue where embedding a table to a post is not triggering correct display of gutenberg block.
 * FIX: Fixed an issue where sometimes hover border got stuck and visible in saved table.
+* IMPROVE: Responsive builder will show table's layout at breakpoints even though it is not enabled.
 
 = 1.3.1 =
 

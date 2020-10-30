@@ -70,7 +70,7 @@ import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
 /* eslint-disable camelcase */
 import WPTB_ResponsiveFrontend from '../../../WPTB_ResponsiveFrontend';
-import WPTB_SortableTable from '../../../core/WPTB_SortableTable';
+import WPTB_SortableTable from '../../WPTB_SortableTable';
 import DeBouncer from '../functions/DeBouncer';
 import ModalWindow from '../components/ModalWindow';
 import MaterialButton from '../components/MaterialButton';
@@ -157,9 +157,11 @@ export default {
 		 * Calculate certain properties of responsive table element's style
 		 */
 		tableStyle() {
-			if (!this.directives.responsiveEnabled) {
-				return {};
-			}
+			// @deprecated
+			// if (!this.directives.responsiveEnabled) {
+			// 	return {};
+			// }
+
 			// don't make any style changes to table in desktop breakpoint to reflect the table builder styles intact since currently the breakpoint users are creating their table, by default, is desktop
 			// if (this.currentSizeRangeName === 'desktop') {
 			// 	return {};
@@ -203,8 +205,8 @@ export default {
 		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
 		tableCloned(mainDirectives, clonedTable) {
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
-      let sortableTable = new WPTB_SortableTable({table: clonedTable});
-      sortableTable.sortableTableInitialization(this.responsiveFrontend);
+			const sortableTable = new WPTB_SortableTable({ table: clonedTable });
+			sortableTable.sortableTableInitialization(this.responsiveFrontend);
 			// there is already a directive at main table, decode and assign it to current ones
 			if (mainDirectives) {
 				const decodedMainDirectives = this.decodeResponsiveDirectives(mainDirectives);
@@ -224,8 +226,8 @@ export default {
 		 *
 		 * In order to not break the object reference between store patterned objects, this function will be used to add every key of target object to base object, so instead of equalizing the store object to a new value, key values of the store will be updated, this way, object reference link will not be broken and reactive abilities of the store will continue to function.
 		 *
-		 * @param {object} baseObj base object
-		 * @param {object} targetObj target object
+		 * @param {Object} baseObj base object
+		 * @param {Object} targetObj target object
 		 */
 		deepMergeObject(baseObj, targetObj) {
 			// eslint-disable-next-line array-callback-return
@@ -261,7 +263,7 @@ export default {
 		 *
 		 * This function will reduce the screen sizes object sent from backend to be compatible with screen-size-slider component.
 		 *
-		 * @returns {object} reformatted slider size object
+		 * @return {Object} reformatted slider size object
 		 */
 		sliderSizeStops() {
 			const normalizedStops = Object.keys(this.screenSizes).reduce((p, c) => {
@@ -310,7 +312,7 @@ export default {
 		/**
 		 * Encode responsive directives.
 		 *
-		 * @returns {String} base64 string representation of directives
+		 * @return {string} base64 string representation of directives
 		 */
 		encodeResponsiveDirectives() {
 			const stringifiedDirectives = JSON.stringify(this.directives);
@@ -320,8 +322,8 @@ export default {
 		/**
 		 * Decode responsive directives.
 		 *
-		 * @param {String} val
-		 * @returns {String} decoded value
+		 * @param {string} val
+		 * @return {string} decoded value
 		 */
 		decodeResponsiveDirectives(val) {
 			return atob(val);
