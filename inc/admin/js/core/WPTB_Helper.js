@@ -1682,7 +1682,7 @@ var WPTB_Helper = {
 	 * Set up related buttons and links to trigger certain elements
 	 */
 	setupSectionButtons() {
-		const sectionButtons = Array.from(document.querySelectorAll('[data-wptb-section-button'));
+		const sectionButtons = Array.from(document.querySelectorAll('[data-wptb-section-button]'));
 		const vm = this;
 
 		sectionButtons.map((s) => {
