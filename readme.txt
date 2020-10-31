@@ -97,6 +97,7 @@ That's it. You're done!
 * FIX: Fixed an issue where embedding a table to a post is not triggering correct display of gutenberg block.
 * FIX: Fixed an issue where sometimes hover border got stuck and visible in saved table.
 * FIX: A style issue affecting users of Classic Editor and Advanced Editor Tools where floating windows can not be interacted with.
+* FIX: A type error with tag manager.
 
 = 1.3.1 =
 
