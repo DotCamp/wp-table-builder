@@ -197,6 +197,20 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
         let details = {countMarkedCells:markedCells};
         WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', thisElem, details);
+
+
+        // split button disabled state calculation
+        const splitButton = document.querySelector('#wptb-split-cell');
+        if(splitButton){
+            const splitAvailable = markedCells === 1 && (rs !== 1 || cs !== 1);
+            if(splitAvailable){
+                splitButton.classList.add('visible');
+                splitButton.removeAttribute('disabled');
+            }else {
+                splitButton.classList.remove('visible');
+                splitButton.setAttribute('disabled', 'disabled');
+            }
+        }
     };
 
     /*
