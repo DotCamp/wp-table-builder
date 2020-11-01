@@ -18020,7 +18020,8 @@ var _default = {
       debounceTime: 1000,
       sizeLimitMin: 100,
       sizeLimitMax: 0,
-      resizePercent: 100
+      resizePercent: 100,
+      firstMountStyle: true
     };
   },
   watch: {
@@ -18061,8 +18062,17 @@ var _default = {
     // add a listener to section change event to hide/show component
     document.addEventListener('wptbSectionChanged', function (e) {
       _this2.isVisible = e.detail === 'table_responsive_menu';
-    });
-    this.sizeLimitMax = this.$refs.builderResponsive.getBoundingClientRect().width;
+    }); // @deprecated
+    // const maxWidth = Number.parseInt(
+    // 	document.querySelector(this.cloneQuery).dataset.wptbTableContainerMaxWidth,
+    // 	10
+    // );
+    // const builderWidth = this.$refs.builderResponsive.getBoundingClientRect().width;
+    //
+    // // take maximum width of table to consideration while calculating size limit max
+    // this.sizeLimitMax = Math.min(maxWidth, builderWidth);
+
+    this.calculateSizeLimitMax();
   },
   computed: {
     /**
@@ -18111,6 +18121,8 @@ var _default = {
     },
     // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
     tableCloned: function tableCloned(mainDirectives, clonedTable) {
+      // calculate new max size limit at every table clone to reflect changes if there is any
+      this.calculateSizeLimitMax();
       this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
         query: '.wptb-builder-responsive table'
       });
@@ -18244,6 +18256,12 @@ var _default = {
     },
     showCellIdentifications: function showCellIdentifications() {
       this.appOptions.identifyCells = true;
+    },
+    calculateSizeLimitMax: function calculateSizeLimitMax() {
+      var maxWidth = Number.parseInt(document.querySelector(this.cloneQuery).dataset.wptbTableContainerMaxWidth, 10);
+      var builderWidth = this.$refs.builderResponsive.getBoundingClientRect().width; // take maximum width of table to consideration while calculating size limit max
+
+      this.sizeLimitMax = Math.min(maxWidth, builderWidth);
     }
   }
 };
