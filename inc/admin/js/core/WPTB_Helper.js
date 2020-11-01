@@ -1830,6 +1830,9 @@ var WPTB_Helper = {
 	},
 	// function for table saving
 	saveTable(event, startSaving, previewSaving) {
+		// show save indicator
+		WPTB_Helper.tableSaveIndicator(true);
+
 		if (!previewSaving && !startSaving) {
 			if (
 				(!event.target.dataset.wptbTableStateNumberSave && window.wptbTableStateNumberShow == 0) ||
@@ -1963,83 +1966,92 @@ var WPTB_Helper = {
 		http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
 		http.onreadystatechange = function (action) {
-			if (this.readyState == 4 && this.status == 200) {
-				const data = JSON.parse(http.responseText);
-				messagingArea = document.getElementById('wptb-messaging-area');
+			if (this.readyState == 4) {
+				// TODO [erdembircan] remove timeout for production, use only for testing purposes
+				setTimeout(() => {
+					// hide save indicator
+					WPTB_Helper.tableSaveIndicator(false);
+				}, 3000);
 
-				if (data[0] == 'saved') {
-					let builderPageUrl = document.location.href.replace('#', '');
-					const regex = new RegExp('&table=(.+)', 'i');
-					builderPageUrl = builderPageUrl.replace(regex, '');
-					window.history.pushState(null, null, `${builderPageUrl}&table=${data[1]}`);
+				if (this.status == 200) {
+					const data = JSON.parse(http.responseText);
+					messagingArea = document.getElementById('wptb-messaging-area');
 
-					document.wptbId = data[1];
-					messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
-					document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
-					document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
-					const wptbPreviewTable = document.querySelector('.wptb-preview-table');
-					let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
-					if (wptbPreviewBtn.length > 0) {
-						wptbPreviewBtn = wptbPreviewBtn[0];
-						wptbPreviewBtn.classList.remove('wptb-button-disable');
-						let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
-						wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
-						wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
+					if (data[0] == 'saved') {
+						let builderPageUrl = document.location.href.replace('#', '');
+						const regex = new RegExp('&table=(.+)', 'i');
+						builderPageUrl = builderPageUrl.replace(regex, '');
+						window.history.pushState(null, null, `${builderPageUrl}&table=${data[1]}`);
+
+						document.wptbId = data[1];
+						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
+						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
+						document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
+						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
+						let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
+						if (wptbPreviewBtn.length > 0) {
+							wptbPreviewBtn = wptbPreviewBtn[0];
+							wptbPreviewBtn.classList.remove('wptb-button-disable');
+							let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+							wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
+							wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
+						}
+
+						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+						let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+						if (wptbSaveBtn.length > 0) {
+							wptbSaveBtn = wptbSaveBtn[0];
+							wptbSaveBtn.classList.add('wptb-save-disabled');
+							wptbSaveBtn.classList.remove('active');
+						}
+						// WPTB_Helper.saveTable( event, true );
+						return;
 					}
+					if (data[0] == 'edited' && startSaving) {
+						document.wptbId = data[1];
+						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
+						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
+						document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
+						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
+						let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
+						if (wptbPreviewBtn.length > 0) {
+							wptbPreviewBtn = wptbPreviewBtn[0];
+							wptbPreviewBtn.classList.remove('wptb-button-disable');
+							let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
+							wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
+							wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
+						}
 
-					event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
-					let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-					if (wptbSaveBtn.length > 0) {
-						wptbSaveBtn = wptbSaveBtn[0];
-						wptbSaveBtn.classList.add('wptb-save-disabled');
-						wptbSaveBtn.classList.remove('active');
+						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+						let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+						if (wptbSaveBtn.length > 0) {
+							wptbSaveBtn = wptbSaveBtn[0];
+							wptbSaveBtn.classList.add('wptb-save-disabled');
+							wptbSaveBtn.classList.remove('active');
+						}
+					} else if (data[0] == 'edited') {
+						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully updated.</div>`;
+						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
+
+						let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
+						if (wptbSaveBtn.length > 0) {
+							wptbSaveBtn = wptbSaveBtn[0];
+							wptbSaveBtn.classList.add('wptb-save-disabled');
+							wptbSaveBtn.classList.remove('active');
+						}
+					} else if (data[0] == 'preview_edited') {
+						return;
+					} else {
+						messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
 					}
-					// WPTB_Helper.saveTable( event, true );
-					return;
+					messagingArea.classList.add('wptb-success');
+					setTimeout(function () {
+						messagingArea.removeChild(messagingArea.firstChild);
+					}, 4000);
 				}
-				if (data[0] == 'edited' && startSaving) {
-					document.wptbId = data[1];
-					messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
-					document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
-					document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
-					const wptbPreviewTable = document.querySelector('.wptb-preview-table');
-					let wptbPreviewBtn = document.getElementsByClassName('wptb-preview-btn');
-					if (wptbPreviewBtn.length > 0) {
-						wptbPreviewBtn = wptbPreviewBtn[0];
-						wptbPreviewBtn.classList.remove('wptb-button-disable');
-						let wptbPreviewBtnHref = wptbPreviewBtn.dataset.previewHref;
-						wptbPreviewBtnHref = wptbPreviewBtnHref.replace('empty', data[1]);
-						wptbPreviewBtn.setAttribute('href', wptbPreviewBtnHref);
-					}
-
-					event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
-					let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-					if (wptbSaveBtn.length > 0) {
-						wptbSaveBtn = wptbSaveBtn[0];
-						wptbSaveBtn.classList.add('wptb-save-disabled');
-						wptbSaveBtn.classList.remove('active');
-					}
-				} else if (data[0] == 'edited') {
-					messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully updated.</div>`;
-					event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
-
-					let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
-					if (wptbSaveBtn.length > 0) {
-						wptbSaveBtn = wptbSaveBtn[0];
-						wptbSaveBtn.classList.add('wptb-save-disabled');
-						wptbSaveBtn.classList.remove('active');
-					}
-				} else if (data[0] == 'preview_edited') {
-					return;
-				} else {
-					messagingArea.innerHTML = '<div class="wptb-error wptb-message">Safety problems</div>';
-				}
-				messagingArea.classList.add('wptb-success');
-				setTimeout(function () {
-					messagingArea.removeChild(messagingArea.firstChild);
-				}, 4000);
 			}
 		};
+
 		http.send(params);
 	},
 	//
@@ -2484,5 +2496,20 @@ var WPTB_Helper = {
 		Array.from(document.querySelectorAll('.wptb-directlyhovered')).map((el) => {
 			el.classList.remove('wptb-directlyhovered');
 		});
+	},
+	/**
+	 * Setup table save related visual styles and elements.
+	 *
+	 * @param {boolean} saveStatus whether saving or not
+	 */
+	tableSaveIndicator(saveStatus) {
+		const builder = document.querySelector('#wptb_builder');
+		if (builder) {
+			if (saveStatus) {
+				builder.dataset.wptbSaving = true;
+			} else {
+				delete builder.dataset.wptbSaving;
+			}
+		}
 	},
 };

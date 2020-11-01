@@ -95,6 +95,11 @@ do_action( 'wptb_before_header' );
                                class="wptb-save-btn wptb-save-disabled wptb-settings-section-item static-active">
 				                <?php esc_html_e( 'Save Table', 'wp-table-builder' ); ?>
                             </a>
+                          <div class="wptb-busy">
+                            <div class="wptb-busy-circle"></div>
+                            <div class="wptb-busy-circle"></div>
+                            <div class="wptb-busy-circle"></div>
+                          </div>
                         </div>
                     </div>
                 </div>
