@@ -24407,7 +24407,8 @@ var _default = {
         pro: getComputedStyle(document.documentElement).getPropertyValue('--wptb-plugin-logo-color')
       },
       fullyRevealed: false,
-      lengthRepaint: 0
+      lengthRepaint: 0,
+      timeoutId: null
     };
   },
   watch: {
@@ -24461,18 +24462,20 @@ var _default = {
 
       var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       return new Promise(function (resolve) {
-        setTimeout(function () {
-          _this3.$refs.wrapper.style.transition = 'all 0.3s ease-out';
-          _this3.$refs.wrapper.style.transform = "translateX(calc( ".concat(direction ? -1 : 1, " * ").concat(amount, " ))");
+        _this3.timeoutId = setTimeout(function () {
+          if (_this3.$refs.wrapper) {
+            _this3.$refs.wrapper.style.transition = 'all 0.3s ease-out';
+            _this3.$refs.wrapper.style.transform = "translateX(calc( ".concat(direction ? -1 : 1, " * ").concat(amount, " ))");
 
-          _this3.$refs.wrapper.addEventListener('transitionend', function (_ref) {
-            var propertyName = _ref.propertyName;
+            _this3.$refs.wrapper.addEventListener('transitionend', function (_ref) {
+              var propertyName = _ref.propertyName;
 
-            if (propertyName === 'transform') {
-              _this3.$refs.wrapper.style.transition = 'unset';
-              resolve();
-            }
-          });
+              if (propertyName === 'transform') {
+                _this3.$refs.wrapper.style.transition = 'unset';
+                resolve();
+              }
+            });
+          }
         }, 100);
       });
     },

@@ -63,6 +63,7 @@ export default {
 			},
 			fullyRevealed: false,
 			lengthRepaint: 0,
+			timeoutId: null,
 		};
 	},
 	watch: {
@@ -113,16 +114,18 @@ export default {
 		...mapActions(['removeNotification']),
 		slideBase(amount, direction = true) {
 			return new Promise((resolve) => {
-				setTimeout(() => {
-					this.$refs.wrapper.style.transition = 'all 0.3s ease-out';
-					this.$refs.wrapper.style.transform = `translateX(calc( ${direction ? -1 : 1} * ${amount} ))`;
+				this.timeoutId = setTimeout(() => {
+					if (this.$refs.wrapper) {
+						this.$refs.wrapper.style.transition = 'all 0.3s ease-out';
+						this.$refs.wrapper.style.transform = `translateX(calc( ${direction ? -1 : 1} * ${amount} ))`;
 
-					this.$refs.wrapper.addEventListener('transitionend', ({ propertyName }) => {
-						if (propertyName === 'transform') {
-							this.$refs.wrapper.style.transition = 'unset';
-							resolve();
-						}
-					});
+						this.$refs.wrapper.addEventListener('transitionend', ({ propertyName }) => {
+							if (propertyName === 'transform') {
+								this.$refs.wrapper.style.transition = 'unset';
+								resolve();
+							}
+						});
+					}
 				}, 100);
 			});
 		},
