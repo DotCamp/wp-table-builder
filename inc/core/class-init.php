@@ -209,8 +209,11 @@ class Init {
 		// initialize gutenberg block manager
 		new Gutenberg_Block_Manager( 'wptb/table-block' );
 
-		// initialize upsells manager
-		Upsells_Manager::init();
+		// wait plugins loaded action hook to check availability of pro version
+		add_action( 'plugins_loaded', function () {
+			// initialize upsells manager
+			Upsells_Manager::init();
+		}, 99 );
 	}
 
 	/**
