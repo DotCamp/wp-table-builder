@@ -11,7 +11,7 @@ Vue.use(filters);
 
 const proData = global.wptbGenerateMenuProData ?? {};
 
-const data = { ...wptbGenerateMenuData, ...proData };
+const data = { upsell: '', ...wptbGenerateMenuData, ...proData };
 
 // setup app store
 const store = {

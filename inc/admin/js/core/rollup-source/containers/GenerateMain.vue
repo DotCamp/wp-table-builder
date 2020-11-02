@@ -42,6 +42,7 @@
 </template>
 <script>
 import PrebuiltCard from '../components/PrebuiltCard';
+import 'regenerator-runtime/runtime';
 
 export default {
 	components: { PrebuiltCard },

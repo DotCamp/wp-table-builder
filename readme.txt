@@ -95,6 +95,7 @@ That's it. You're done!
 * IMPROVE: Better cell select logic with shift key for multi cell selection at manage cells menu.
 * IMPROVE: Split cell button will only be activated for cells that can be split.
 * IMPROVE: Saving operation indicator.
+* PRO:FIX: Fixed an issue where empty cells are removing styles from other cells.
 * FIX: Fixed an issue affecting WordPress versions <= 4.9 where Gutenberg editor is not present.
 * FIX: Fixed an issue where embedding a table to a post is not triggering correct display of gutenberg block.
 * FIX: Fixed an issue where sometimes hover border got stuck and visible in saved table.

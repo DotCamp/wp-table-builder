@@ -1967,11 +1967,9 @@ var WPTB_Helper = {
 
 		http.onreadystatechange = function (action) {
 			if (this.readyState == 4) {
-				// TODO [erdembircan] remove timeout for production, use only for testing purposes
-				setTimeout(() => {
-					// hide save indicator
-					WPTB_Helper.tableSaveIndicator(false);
-				}, 3000);
+
+				// hide save indicator
+				WPTB_Helper.tableSaveIndicator(false);
 
 				if (this.status == 200) {
 					const data = JSON.parse(http.responseText);

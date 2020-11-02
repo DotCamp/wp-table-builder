@@ -5777,7 +5777,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-upsells-wrapper:active {
-    animation: wptb-push 0.1s ease-out;
+    /*animation: wptb-push 0.1s ease-out;*/
 }
 
 @keyframes wptb-unfold-up {
