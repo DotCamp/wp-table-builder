@@ -24,58 +24,70 @@ msgstr ""
 msgid "Accessibility"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:161, ../inc/admin/class-admin-menu.php:183, ../inc/admin/class-admin-menu.php:193
+#: ../inc/admin/class-admin-menu.php:163, ../inc/admin/class-admin-menu.php:185, ../inc/admin/class-admin-menu.php:195, ../inc/admin/views/builder/wptb-builder-left-panel.php:19
 msgid "WP Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:162, ../inc/admin/class-admin-menu.php:173, ../inc/admin/class-admin-menu.php:205
+#: ../inc/admin/class-admin-menu.php:164, ../inc/admin/class-admin-menu.php:175, ../inc/admin/class-admin-menu.php:207
 msgid "Table Builder"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:174
+#: ../inc/admin/class-admin-menu.php:176
 msgid "Welcome Page"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:184, ../inc/admin/class-admin-menu.php:444
+#: ../inc/admin/class-admin-menu.php:186, ../inc/admin/class-admin-menu.php:457
 msgid "All Tables"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:194, ../inc/admin/class-admin-menu.php:449
+#: ../inc/admin/class-admin-menu.php:196, ../inc/admin/class-admin-menu.php:462
 msgid "Add New"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:206
+#: ../inc/admin/class-admin-menu.php:208
 msgid "Import/Export"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:298
+#: ../inc/admin/class-admin-menu.php:303
 msgid "blank"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:299
+#: ../inc/admin/class-admin-menu.php:304
 msgid "generate"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:300
+#: ../inc/admin/class-admin-menu.php:305
 msgid "edit"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:301
+#: ../inc/admin/class-admin-menu.php:306
 msgid "Search (/ to focus)"
 msgstr ""
 
-#: ../inc/admin/class-admin-menu.php:306
+#: ../inc/admin/class-admin-menu.php:307
+msgid "For prebuilt tables and much more"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:308
+msgid "Go PRO"
+msgstr ""
+
+#: ../inc/admin/class-admin-menu.php:309
 msgid "Delete prebuilt table?"
 msgstr ""
 
-#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:150, ../inc/admin/managers/version-control-manager.php:121
+#: ../inc/admin/class-admin-menu.php:337
+msgid "You have unsaved changes, leave?"
+msgstr ""
+
+#: ../inc/admin/class-admin.php:118, ../inc/admin/class-wptb-listing.php:161, ../inc/admin/managers/version-control-manager.php:121
 msgstr ""
 
 #: ../inc/admin/class-import.php:407, ../inc/admin/class-preview.php:208
 msgid "%s Preview"
 msgstr ""
 
-#: ../inc/admin/class-import.php:408, ../inc/admin/class-preview.php:209
+#: ../inc/admin/class-import.php:408, ../inc/admin/class-preview.php:209, ../inc/admin/managers/gutenberg-block-manager.php:110
 msgid "Table"
 msgstr ""
 
@@ -87,68 +99,84 @@ msgstr ""
 msgid "This is a preview of your table. This page is not publicly accessible."
 msgstr ""
 
-#: ../inc/admin/class-tables.php:36
+#: ../inc/admin/class-style-pass.php:81
+msgid "Disable Theme Styles For Table"
+msgstr ""
+
+#: ../inc/admin/class-style-pass.php:89
+msgid "styles"
+msgstr ""
+
+#: ../inc/admin/class-tables.php:38
 msgid "Edit"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:44, ../inc/admin/class-tables.php:49, ../inc/admin/class-wptb-listing.php:222, ../inc/admin/element-classes/elements/shortcode-element.php:40
+#: ../inc/admin/class-tables.php:46, ../inc/admin/class-tables.php:51, ../inc/admin/class-wptb-listing.php:235, ../inc/admin/element-classes/elements/shortcode-element.php:40
 msgid "Shortcode"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:48, ../inc/admin/class-wptb-listing.php:221
+#: ../inc/admin/class-tables.php:50, ../inc/admin/class-wptb-listing.php:234
 msgid "Title"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:50
+#: ../inc/admin/class-tables.php:52
 msgid "Date"
 msgstr ""
 
-#: ../inc/admin/class-tables.php:143
+#: ../inc/admin/class-tables.php:152
 msgid "Edit Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:25
+#: ../inc/admin/class-wptb-listing.php:26
 msgid "WPTB Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:26
+#: ../inc/admin/class-wptb-listing.php:27
 msgid "WPTB Tables"
 msgstr ""
 
 #. translators: %s - admin area page builder page URL.
-#: ../inc/admin/class-wptb-listing.php:131
+#: ../inc/admin/class-wptb-listing.php:142
 msgid "Whoops, you haven't created a table yet. Want to <a href=\"%s\">give it a go</a>?"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:163
+#: ../inc/admin/class-wptb-listing.php:174
 msgid "Edit This Table"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:223
+#: ../inc/admin/class-wptb-listing.php:236
 msgid "Created"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:224
+#: ../inc/admin/class-wptb-listing.php:237
 msgid "ID"
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:298
+#: ../inc/admin/class-wptb-listing.php:311
 msgid "Table duplicate successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:312
+#: ../inc/admin/class-wptb-listing.php:325
 msgid "Table deleted successfully."
 msgstr ""
 
-#: ../inc/admin/class-wptb-listing.php:335
+#: ../inc/admin/class-wptb-listing.php:348
 msgid "Bulk Delete Performed Successfully."
+msgstr ""
+
+#: ../inc/admin/controls/control-different-border.php:47
+msgid "border width"
+msgstr ""
+
+#: ../inc/admin/controls/control-different-border.php:48
+msgid "border color"
 msgstr ""
 
 #: ../inc/admin/controls/control-sides.php:48
 msgid "top"
 msgstr ""
 
-#: ../inc/admin/controls/control-sides.php:49, ../inc/admin/managers/settings-manager.php:270, ../inc/admin/element-classes/elements/button-element.php:245
+#: ../inc/admin/controls/control-sides.php:49, ../inc/admin/managers/settings-manager.php:277, ../inc/admin/element-classes/elements/button-element.php:272
 msgid "right"
 msgstr ""
 
@@ -156,7 +184,7 @@ msgstr ""
 msgid "bottom"
 msgstr ""
 
-#: ../inc/admin/controls/control-sides.php:51, ../inc/admin/managers/settings-manager.php:266, ../inc/admin/element-classes/elements/button-element.php:244
+#: ../inc/admin/controls/control-sides.php:51, ../inc/admin/managers/settings-manager.php:273, ../inc/admin/element-classes/elements/button-element.php:271
 msgid "left"
 msgstr ""
 
@@ -168,52 +196,167 @@ msgstr ""
 msgid "unlink values"
 msgstr ""
 
-#: ../inc/admin/managers/screen-options-manager.php:56
+#: ../inc/admin/controls/control-tag-control.php:48
+msgid "available tags"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:49
+msgid "current tags"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:50
+msgid "no tag active"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:51
+msgid "no tag available"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:52
+msgid "empty"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:53
+msgid "search available tags"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:54
+msgid "create new tag"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:55
+msgid "name"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:56
+msgid "slug"
+msgstr ""
+
+#: ../inc/admin/controls/control-tag-control.php:57
+msgid "description"
+msgstr ""
+
+#: ../inc/admin/managers/screen-options-manager.php:62
 msgid "Pagination"
 msgstr ""
 
-#: ../inc/admin/managers/screen-options-manager.php:59
+#: ../inc/admin/managers/screen-options-manager.php:65
 msgid "Number of items per page"
 msgstr ""
 
-#: ../inc/admin/managers/screen-options-manager.php:154
+#: ../inc/admin/managers/screen-options-manager.php:156
 msgid "Apply"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:234
+#: ../inc/admin/managers/settings-manager.php:241
 msgid "WPTB plugin logo"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:235
+#: ../inc/admin/managers/settings-manager.php:242
 msgid "Homepage"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:236
+#: ../inc/admin/managers/settings-manager.php:243
 msgid "Revert"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:237
+#: ../inc/admin/managers/settings-manager.php:244
 msgid "Submit"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:238
+#: ../inc/admin/managers/settings-manager.php:245
 msgid "Changes Discarded"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:254, ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:69
+#: ../inc/admin/managers/settings-manager.php:261, ../inc/admin/views/builder/table-element/table-responsive-menu-element.php:69
 msgid "general"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:260
+#: ../inc/admin/managers/settings-manager.php:267
 msgid "Allowed User Roles"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:275
+#: ../inc/admin/managers/settings-manager.php:282
 msgid "Sidebar location"
 msgstr ""
 
-#: ../inc/admin/managers/settings-manager.php:296, ../inc/admin/managers/settings-manager.php:296
+#: ../inc/admin/managers/settings-manager.php:287
+msgid "Show edit table link on frontend"
+msgstr ""
+
+#: ../inc/admin/managers/settings-manager.php:308, ../inc/admin/managers/settings-manager.php:308
 msgid "Settings"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:121
+msgid "an error while creating term, please refresh and try again"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:132
+msgid "you need to give your term a valid name"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:135
+msgid "you are not authorized to use this ajax endpoint, refresh and try again"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:240
+msgid "Filter Table Tags"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:279, ../inc/admin/managers/tag-manager.php:333, ../inc/admin/managers/tag-manager.php:356, ../inc/admin/managers/tag-manager.php:356
+msgid "Table Tags"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:319
+msgid "table tags"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:379
+msgctxt "table tag name"
+msgid "Table Tags"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:380
+msgctxt "singular table tag taxonomy name"
+msgid "Table Tag"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:381
+msgid "All Table Tags"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:382
+msgid "Edit Table Tag"
+msgstr ""
+
+#: ../inc/admin/managers/tag-manager.php:383
+msgid "Add New Table Tag"
+msgstr ""
+
+#: ../inc/admin/managers/tag-screen-options.php:103
+msgid "no terms found"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:37
+msgid "For More Advanced Elements"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:41
+msgid "For Prebuilt Tables and Using Your Own Tables as Prebuilt Tables"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:45
+msgid "For More Advanced Options in Cell Management Mode"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:48
+msgctxt "start of the \"Get the Pro Add-On\" sentence"
+msgid "Get the"
+msgstr ""
+
+#: ../inc/admin/managers/upsells-manager.php:48
+msgid "Add-On."
 msgstr ""
 
 #: ../inc/admin/managers/version-control-manager.php:94, ../inc/admin/managers/version-control-manager.php:117
@@ -288,19 +431,19 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:43, ../inc/admin/views/builder/additional-element.php:3
+#: ../inc/admin/element-classes/elements/button-element.php:46, ../inc/admin/views/builder/additional-element.php:3
 msgid "Button"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:207
+#: ../inc/admin/element-classes/elements/button-element.php:234
 msgid " times"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:241
+#: ../inc/admin/element-classes/elements/button-element.php:268
 msgid "Icon Position"
 msgstr ""
 
-#: ../inc/admin/element-classes/elements/button-element.php:276
+#: ../inc/admin/element-classes/elements/button-element.php:303
 msgid "button options"
 msgstr ""
 
@@ -352,7 +495,7 @@ msgstr ""
 msgid "Save Table"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-header.php:106
+#: ../inc/admin/views/builder/wptb-builder-header.php:111
 msgid "To embed this table on your site, please paste the following shortcode inside a post or page."
 msgstr ""
 
@@ -368,19 +511,23 @@ msgstr ""
 msgid "responsive"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:128
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:129
 msgid "You are currently editing the table cells. Click \"Close\" to go back to editing the table."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:129
-msgid "Click on cells to select them or deselect them. Selected cells will be shown in a green outline."
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:130
+msgid "Click on cells to select them or deselect them. Selected cells will be highlighted."
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:132, ../inc/admin/views/builder/wptb-builder-table-setup.php:83, ../inc/admin/views/builder/wptb-builder-table-setup.php:109, ../inc/admin/views/builder/table-element/table-setting-element.php:392, ../inc/admin/views/builder/table-element/table-setting-element.php:448
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:131
+msgid "Hold \"SHIFT\" and click on cells to select multiple cells."
+msgstr ""
+
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:134, ../inc/admin/views/builder/wptb-builder-table-setup.php:83, ../inc/admin/views/builder/wptb-builder-table-setup.php:109, ../inc/admin/views/builder/table-element/table-setting-element.php:392, ../inc/admin/views/builder/table-element/table-setting-element.php:448
 msgid "Close Manage Cells Mode"
 msgstr ""
 
-#: ../inc/admin/views/builder/wptb-builder-left-panel.php:132, ../inc/admin/views/builder/wptb-builder-table-setup.php:84, ../inc/admin/views/builder/wptb-builder-table-setup.php:110
+#: ../inc/admin/views/builder/wptb-builder-left-panel.php:134, ../inc/admin/views/builder/wptb-builder-table-setup.php:84, ../inc/admin/views/builder/wptb-builder-table-setup.php:110
 msgid "Close"
 msgstr ""
 
