@@ -31,6 +31,10 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_responsive_menu">
 					<?php esc_html_e( 'responsive', 'wp-table-builder' ); ?>
                 </div>
+              <div class="wptb-settings-section-item static-active " data-wptb-section-button="table_data_menu">
+                <span class="dashicons dashicons-database"></span>
+	              <?php esc_html_e( 'datatable', 'wp-table-builder' ); ?>
+              </div>
             </div>
             <!--            available elements list-->
             <div class="wptb-elements-section wptb-left-panel-sidebar-content">

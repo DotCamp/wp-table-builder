@@ -674,8 +674,26 @@ body > img {
 .wptb-panel-tabs {
     grid-area: sidebar-tabs;
     text-align: center;
-    justify-content: stretch;
+    /*justify-content: stretch;*/
     transition: all 0.2s ease-out;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+
+[data-wptb-section-button='table_data_menu'] {
+    border-top: 1px solid var(--wptb-plugin-gray-300);
+    grid-column: -1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+[data-wptb-section-button='table_data_menu'] .dashicons {
+    color : var(--wptb-plugin-logo-color) !important;
+
 }
 
 .wptb-panel-tabs div {
@@ -3102,8 +3120,8 @@ wptb_shortcode_container_element {
 
 .wptb-settings-sections-wrapper {
     position: relative;
-    display: flex;
-    flex-direction: row;
+    /*display: flex;*/
+    /*flex-direction: row;*/
     margin-bottom: 10px;
     background-color: #ffffff;
     border-bottom: 1px solid #cbd5e0;
