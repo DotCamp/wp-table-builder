@@ -102,7 +102,13 @@ class Tables {
 		// Register the post type
 		register_post_type( 'wptb-tables', $args );
 
+		// register content meta
 		register_post_meta( 'wptb-tables', '_wptb_content_', [
+			'show_in_rest' => true
+		] );
+
+		// register prebuilt meta
+		register_post_meta( 'wptb-tables', '_wptb_prebuilt_', [
 			'show_in_rest' => true
 		] );
 

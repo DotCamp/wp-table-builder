@@ -6,6 +6,8 @@ use WP_Query;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
+use function add_query_arg;
+use function admin_url;
 use function apply_filters;
 use function get_current_screen;
 use function get_post_meta;
@@ -13,6 +15,7 @@ use function is_gutenberg_page;
 use function register_block_type;
 use function wp_register_script;
 use function wp_register_style;
+use function wp_reset_query;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -101,7 +104,11 @@ class Gutenberg_Block_Manager {
 	 */
 	protected function prepare_block_data() {
 		$table_query = new WP_Query( [
-			'post_type' => 'wptb-tables'
+			'post_type'  => 'wptb-tables',
+			'meta_query' => [
+				'key'     => '_wptb_prebuilt_',
+				'compare' => 'NOT EXISTS'
+			]
 		] );
 
 		$tables = array_reduce( $table_query->posts, function ( $carry, $table ) {
