@@ -90,6 +90,7 @@ That's it. You're done!
 
 = 1.3.3 =
 
+* NEW: 'noreferrer' option for text links.
 * FIX: An issue with footer buttons not visible in gutenberg block for Firefox browsers.
 * FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.
 
