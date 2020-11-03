@@ -31,7 +31,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                 <div class="wptb-settings-section-item static-active" data-wptb-section-button="table_responsive_menu">
 					<?php esc_html_e( 'responsive', 'wp-table-builder' ); ?>
                 </div>
-              <div class="wptb-settings-section-item static-active " data-wptb-section-button="table_data_menu">
+              <div class="wptb-settings-section-item static-active " data-wptb-section-button="data_table_menu">
                 <span class="dashicons dashicons-database"></span>
 	              <?php esc_html_e( 'datatable', 'wp-table-builder' ); ?>
               </div>
@@ -117,7 +117,12 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                  data-wptb-section="table_responsive_menu" style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-responsive-panel.php'; ?>
             </div>
-            <!--            element controls-->
+          <!--            datatable menu-->
+          <div class="wptb-datatable-section wptb-left-panel-sidebar-content"
+               data-wptb-section="data_table_menu" style="display: none">
+	          <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-datatable-panel.php'; ?>
+          </div>
+          <!--            element controls-->
             <div id="element-options-group" class="wptb-tab-content wptb-left-panel-sidebar-content"
                  data-wptb-section="options_group"
                  style="display: none;">

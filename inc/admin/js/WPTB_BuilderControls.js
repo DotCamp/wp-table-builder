@@ -23011,7 +23011,122 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/LocalDevFileControl":"containers/LocalDevFileControl.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/LocalDevFileControl":"containers/LocalDevFileControl.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    sectionName: {
+      type: String,
+      required: true
+    },
+    headerHeight: {
+      type: Number,
+      default: 0
+    }
+  },
+  data: function data() {
+    return {
+      isVisible: false,
+      extraPadding: 10
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    document.addEventListener('wptbSectionChanged', function (_ref) {
+      var detail = _ref.detail;
+      _this.isVisible = detail === _this.sectionName;
+    });
+    this.isVisible = WPTB_Helper.getCurrentSection() === this.sectionName;
+  },
+  computed: {
+    mainStyle: function mainStyle() {
+      return {
+        paddingTop: "".concat(this.headerHeight + this.extraPadding, "px")
+      };
+    }
+  }
+};
+exports.default = _default;
+        var $d6e744 = exports.default || module.exports;
+      
+      if (typeof $d6e744 === 'function') {
+        $d6e744 = $d6e744.options;
+      }
+    
+        /* template */
+        Object.assign($d6e744, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.isVisible
+    ? _c(
+        "div",
+        {
+          ref: "dataTableMain",
+          staticClass: "wptb-data-table-main",
+          style: _vm.mainStyle
+        },
+        [_c("i", [_vm._v("data table main")])]
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _DataTableApp = _interopRequireDefault(require("../containers/DataTableApp"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Data table menu.
+ */
+var _default = {
+  name: 'DataTable',
+  handler: function dataTableJS(uniqueId) {
+    var data = WPTB_ControlsManager.getControlData('dataTableData');
+    new _vue.default({
+      components: {
+        DataTableApp: _DataTableApp.default
+      },
+      data: data,
+      template: '<data-table-app section-name="data_table_menu" :header-height="headerHeight"></data-table-app>'
+    }).$mount("#".concat(uniqueId));
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/DataTableApp":"containers/DataTableApp.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -23039,6 +23154,8 @@ var _WPTB_DifferentBorderControl = _interopRequireDefault(require("./mountPoints
 
 var _WPTB_LocalDevFileControl = _interopRequireDefault(require("./mountPoints/WPTB_LocalDevFileControl"));
 
+var _WPTB_DataTable = _interopRequireDefault(require("./mountPoints/WPTB_DataTable"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -23057,7 +23174,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_DataTable.default];
 /**
  * Register control element.
  *
@@ -23069,5 +23186,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_DataTable":"mountPoints/WPTB_DataTable.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

@@ -2,8 +2,8 @@
  * WPTB_HeaderToolbox
  *
  * @param {string} wrapperQuery wrapper query for toolbox items
- * @return {object} header toolbox object
- * @constructor
+ * @return {Object} header toolbox object
+ * @class
  */
 // eslint-disable-next-line camelcase,no-unused-vars
 const WPTB_HeaderToolbox = function (wrapperQuery) {
@@ -53,7 +53,10 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 			// hide toolbox at manage cells and responsive menus
 			document.addEventListener('wptbSectionChanged', ({ detail }) => {
 				toggleToolboxVisibility(
-					detail !== 'manage_cells' && detail !== 'table_responsive_menu' && detail !== 'cell_settings'
+					detail !== 'manage_cells' &&
+						detail !== 'table_responsive_menu' &&
+						detail !== 'cell_settings' &&
+						detail !== 'data_table_menu'
 				);
 			});
 		});

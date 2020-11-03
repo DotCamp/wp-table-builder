@@ -1967,7 +1967,6 @@ var WPTB_Helper = {
 
 		http.onreadystatechange = function (action) {
 			if (this.readyState == 4) {
-
 				// hide save indicator
 				WPTB_Helper.tableSaveIndicator(false);
 
@@ -2055,8 +2054,10 @@ var WPTB_Helper = {
 	//
 	clickOnFreeSpace() {
 		WPTB_Helper.editActionClassRemove();
+
+		const currentSection = this.getCurrentSection();
 		// if current active section is responsive menu, ignore this functionality
-		if (this.getCurrentSection() === 'table_responsive_menu') {
+		if (currentSection === 'table_responsive_menu' || currentSection === 'data_table_menu') {
 			return;
 		}
 
