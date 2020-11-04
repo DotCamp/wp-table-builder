@@ -1244,6 +1244,8 @@ var WPTB_Helper = {
 					table_id = 'startedid-0';
 				}
 				element.classList.add(`wptb-element-table_responsive_setting-${table_id}`);
+			} else if (element.classList.contains('wptb-datatable')) {
+				element.classList.add(`wptb-element-table_datatable_setting-${table_id}`);
 			}
 
 			infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
@@ -1279,7 +1281,11 @@ var WPTB_Helper = {
 		} else if (element.classList.contains('wptb-responsive')) {
 			elementOptionsGroupId = 'table-responsive-group';
 			wptbelementOptionClass = 'wptb-element-option';
-		} else {
+		} else if (element.classList.contains('wptb-datatable')) {
+			elementOptionsGroupId = 'table-datatable-group';
+			wptbelementOptionClass = 'wptb-element-option';
+		}
+		else {
 			const children = document.getElementById('element-options-group').childNodes;
 			for (let i = 0; i < children.length; i++) {
 				if (children[i].style) children[i].style.display = 'none';

@@ -5817,9 +5817,73 @@ wptb_shortcode_container_element {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    background-color: var(--wptb-plugin-gray-200);
+    background-color: var(--wptb-plugin-theme-color-light);
     z-index: 9;
     padding: 10px;
-    pointer-events: none;
+    font-size: 18px !important;
 }
+
+.wptb-data-table-data-source-selection {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.wptb-data-table-data-source-cards-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 50px 0;
+}
+
+.wptb-data-table-data-source-header {
+    font-size: 80%;
+    font-weight: bold;
+    color: var(--wptb-plugin-gray-600);
+}
+
+.wptb-data-source-card {
+    width: 450px;
+    height: 80px;
+    border: 1px solid var(--wptb-plugin-gray-300);
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.wptb-data-source-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.wptb-data-source-card-message {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2,1fr);
+    justify-items: start;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.wptb-data-source-card-header {
+    color: var(--wptb-plugin-gray-700);
+    font-weight: bold;
+    font-size: 90%;
+}
+
+.wptb-data-source-card-info {
+    color: var(--wptb-plugin-gray-600);
+    font-size: 80%;
+}
+
+.wptb-data-source-card-icon {
+    background-color: var(--wptb-plugin-gray-300);
+}
+
 /*endregion*/

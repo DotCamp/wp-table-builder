@@ -9,11 +9,14 @@
  * @class
  */
 
+// eslint-disable-next-line no-unused-vars
 function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
 	this.sectionName = sectionName;
 	this.wrapperId = wrapperId;
 	this.parentContainerQuery = parentContainerQuery;
 	this.loaded = false;
+
+	this.dataTableElement = null;
 
 	/**
 	 * Add necessary HTML elements to builder.
@@ -26,12 +29,13 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
 			const range = document.createRange();
 			range.setStart(parentContainer, 0);
 
-			const stringifiedWrapperContainer = `<div id="${wrapperId}">data table</div>`;
+			const stringifiedWrapperContainer = `<div class="wptb-datatable" id="${wrapperId}">data table</div>`;
 
 			[wrapperContainer] = range.createContextualFragment(stringifiedWrapperContainer).children;
 		}
 
-		parentContainer.appendChild(wrapperContainer);
+		this.dataTableElement = wrapperContainer;
+		parentContainer.appendChild(this.dataTableElement);
 	};
 
 	/**
@@ -49,6 +53,8 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
 				headerHeight,
 			});
 
+			WPTB_Helper.elementStartScript(this.dataTableElement, 'table_data_menu');
+			WPTB_Helper.elementOptionsSet('table_data_menu', this.dataTableElement);
 			WPTB_ControlsManager.callControlScript('DataTable', this.wrapperId);
 			this.loaded = true;
 		}
@@ -57,7 +63,8 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
 	// initialize and start up manager.
 	this.init = () => {
 		document.addEventListener('wptbSectionChanged', (e) => {
-			if (e.detail === this.sectionName) {
+			const tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
+			if (e.detail === this.sectionName && tablePreview) {
 				this.load();
 			}
 		});

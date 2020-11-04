@@ -6,12 +6,22 @@
  */
 const mutations = {
 	/**
+	 * Set app visibility.
 	 *
 	 * @param {Object} state data table state
 	 * @param {boolean} visible visibility value
 	 */
 	appVisibility(state, visible) {
-		state.visiblity = visible;
+		state.visibility = visible;
+	},
+	/**
+	 * Set screen.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} screenName screen name
+	 */
+	setScreen(state, screenName) {
+		state.screen = screenName;
 	},
 };
 
