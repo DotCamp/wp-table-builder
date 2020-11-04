@@ -1,5 +1,5 @@
 <template>
-	<div :style="mainStyle" ref="dataTableMain" v-if="isVisible" class="wptb-data-table-main">
+	<div :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
 		<i>data table main</i>
 	</div>
 </template>
@@ -18,16 +18,10 @@ export default {
 	},
 	data() {
 		return {
-			isVisible: false,
 			extraPadding: 10,
 		};
 	},
-	mounted() {
-		document.addEventListener('wptbSectionChanged', ({ detail }) => {
-			this.isVisible = detail === this.sectionName;
-		});
-		this.isVisible = WPTB_Helper.getCurrentSection() === this.sectionName;
-	},
+	mounted() {},
 	computed: {
 		mainStyle() {
 			return {
