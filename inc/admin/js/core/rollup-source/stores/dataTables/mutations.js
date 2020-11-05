@@ -23,6 +23,24 @@ const mutations = {
 	setScreen(state, screenName) {
 		state.screen = screenName;
 	},
+	/**
+	 * Set soft selected source card id.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} sourceId source card id
+	 */
+	setSoftSelected(state, sourceId) {
+		state.dataSource.card.softSelectedId = sourceId;
+	},
+	/**
+	 * Set  selected source id for source that will be initialized.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} sourceId source card id
+	 */
+	setSetupSourceId(state, sourceId) {
+		state.dataSource.setup.sourceId = sourceId;
+	},
 };
 
 export default mutations;

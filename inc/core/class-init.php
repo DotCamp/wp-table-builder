@@ -5,6 +5,7 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
+use WP_Table_Builder\Inc\Admin\Managers\Data_Table_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
@@ -251,6 +252,9 @@ class Init {
 
 		// style pass initialization
 		Style_Pass::init();
+
+		// data table initialization
+		Data_Table_Manager::init();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

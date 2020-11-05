@@ -1,7 +1,9 @@
 <template>
-	<div v-if="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
-		<data-screen-handler></data-screen-handler>
-	</div>
+	<transition name="wptb-fade">
+		<div v-if="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
+			<data-screen-handler></data-screen-handler>
+		</div>
+	</transition>
 </template>
 
 <script>
@@ -22,7 +24,7 @@ export default {
 	components: { DataScreenHandler },
 	data() {
 		return {
-			extraPadding: 100,
+			extraPadding: 0,
 		};
 	},
 	mounted() {
@@ -48,7 +50,8 @@ export default {
 		 */
 		mainStyle() {
 			return {
-				paddingTop: `${this.headerHeight + this.extraPadding}px`,
+				marginTop: `${this.headerHeight + this.extraPadding}px`,
+				height: `calc( 100% - ${this.headerHeight + this.extraPadding}px)`,
 			};
 		},
 		...mapGetters(['isVisible']),

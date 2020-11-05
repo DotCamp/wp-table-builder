@@ -45,6 +45,9 @@
     "wptbGenerateMenuProData": true,
     "WPTB_Table": true,
     "wptbBlockData": true,
-    "WptbFrontendData": true
+    "WptbFrontendData": true,
+    "DataTableManager": true,
+    "WptbResponsive": true,
+    "wptb_admin_object": true
   }
 }

@@ -343,18 +343,19 @@ class Admin_Menu {
 			wp_enqueue_script( 'wptb-admin-builder-tinymce-jquery-js' );
 			wp_enqueue_script( 'wptb-admin-builder-js' );
 
-			$strings = [
-				'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' )
+			$admin_data = [
+				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
+				'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
+				'strings'       => [ 'dirtyConfirmation' => esc_html__( 'You have unsaved changes, leave?', 'wp-table-builder' ) ]
 			];
+
+			// apply admin data filter
+			$admin_data = apply_filters( 'wp-table-builder/filter/admin_data', $admin_data );
 
 			wp_localize_script(
 				'wptb-admin-builder-js',
 				'wptb_admin_object',
-				[
-					'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-					'security_code' => wp_create_nonce( 'wptb-security-nonce' ),
-					'strings'       => $strings
-				]
+				$admin_data
 			);
 
 		} elseif ( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'wptb-overview' ) {

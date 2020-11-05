@@ -1,4 +1,3 @@
-import { __ } from '@wordpress/i18n';
 /**
  * Data table getter methods.
  *
@@ -24,15 +23,16 @@ const getters = {
 		return state.screen;
 	},
 	/**
-	 * Get translated text from store.
+	 * Get soft selected source card id.
 	 *
 	 * @param {Object} state store state
-	 * @return {Function} function to get translation
+	 * @return {string} soft selected card id
 	 */
-	translation(state) {
-		return (key) => {
-			return state.strings[key];
-		};
+	getSoftSelectedSourceCardId(state) {
+		return state.dataSource.card.softSelectedId;
+	},
+	getProStatus(state) {
+		return state.proEnabled;
 	},
 };
 

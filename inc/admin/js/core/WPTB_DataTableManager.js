@@ -6,11 +6,12 @@
  * @param {string} sectionName builder data table related section name
  * @param {string} wrapperId id for mounting our Vue component
  * @param {string} parentContainerQuery query for main container that our component wrapper will be hosted by
+ * @param {Object} componentData component related data
  * @class
  */
 
 // eslint-disable-next-line no-unused-vars
-function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
+function DataTableManager(sectionName, wrapperId, parentContainerQuery, componentData) {
 	this.sectionName = sectionName;
 	this.wrapperId = wrapperId;
 	this.parentContainerQuery = parentContainerQuery;
@@ -49,12 +50,12 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery) {
 			const header = document.querySelector('.wptb-builder-header');
 			const headerHeight = header.getBoundingClientRect().height;
 
+			// merge component data with prepared data and set it to controls manager for component instance to use
 			WPTB_ControlsManager.setControlData('dataTableData', {
 				headerHeight,
+				...componentData,
 			});
 
-			WPTB_Helper.elementStartScript(this.dataTableElement, 'table_data_menu');
-			WPTB_Helper.elementOptionsSet('table_data_menu', this.dataTableElement);
 			WPTB_ControlsManager.callControlScript('DataTable', this.wrapperId);
 			this.loaded = true;
 		}
