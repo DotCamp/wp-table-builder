@@ -5,7 +5,7 @@
  * @param {string} title title
  * @param {string} info information for source
  * @param {string} icon icon
- * @param {string} isPro is data source related to pro version
+ * @param {boolean} isPro is data source related to pro version
  * @class
  */
 function DataSourceObject(id, title, info, icon, isPro = false) {

@@ -1,13 +1,16 @@
 <template>
 	<transition name="wptb-fade">
-		<div v-if="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
+		<div v-show="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
 			<data-screen-handler></data-screen-handler>
+			<mounting-portal :mount-to="leftPanelId">
+				<portal-target name="leftPanel"></portal-target>
+			</mounting-portal>
 		</div>
 	</transition>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 import DataScreenHandler from '../components/DataScreenHandler';
 
 export default {
@@ -37,7 +40,12 @@ export default {
 		this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName);
 
 		// set startup screen
-		this.setCurrentScreen('DataSourceSelection');
+		// TODO [erdembircan] uncomment for production
+		// this.setCurrentScreen('DataSourceSelection');
+
+		// TODO [erdembircan] comment for production
+		// TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
+		this.setCurrentScreen(this.devStartupScreen);
 	},
 	methods: {
 		...mapActions(['setComponentVisibility', 'setCurrentScreen']),
@@ -55,6 +63,7 @@ export default {
 			};
 		},
 		...mapGetters(['isVisible']),
+		...mapState(['leftPanelId', 'devStartupScreen']),
 	},
 };
 </script>

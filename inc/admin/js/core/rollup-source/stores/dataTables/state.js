@@ -16,6 +16,8 @@ const state = {
 			sourceId: null,
 		},
 	},
+	leftPanelId: '#dataTableLeftPanel',
+	devStartupScreen: 'DataSourceSelection',
 };
 
 export default state;

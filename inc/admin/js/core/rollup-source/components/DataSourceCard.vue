@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import DataSourceObject from '../functions/DataSourceObject';
 
 export default {

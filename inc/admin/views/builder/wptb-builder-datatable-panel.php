@@ -11,7 +11,7 @@ if ( ! defined( 'WPINC' ) ) {
 ?>
 <div class="wptb-settings-items">
     <div id="table-datatable-group">
-        <div class="wptb-panel-table-empty-message">
+        <div id="dataTableLeftPanel" class="wptb-panel-table-empty-message">
 			<?php esc_html_e( 'Data table options will be available when a new table is generated.', 'wp-table-builder' ); ?>
         </div>
     </div>

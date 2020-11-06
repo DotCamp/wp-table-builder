@@ -1,9 +1,9 @@
-import { __ } from '@wordpress/i18n';
-
 /**
  * Data table menu.
  */
 import Vue from 'vue';
+import { __ } from '@wordpress/i18n';
+import VuePortal from 'portal-vue';
 import DataTableApp from '../containers/DataTableApp';
 import createStore from '../stores/dataTables';
 
@@ -29,6 +29,14 @@ export default {
 					),
 					remoteTitle: __('remote', 'wp-table-builder'),
 					remoteInfo: __('Select a remote database for your data', 'wp-table-builder'),
+					sourceSelectLeftPanelInfo: __(
+						'Select your data source that will populate your table.',
+						'wp-table-builder'
+					),
+					csvSetupLeftPanelInfo: __(
+						'Setup your CSV source, either from a file or start creating your own data with data editor.',
+						'wp-table-builder'
+					),
 				},
 				proUrl: data.proUrl,
 			},
@@ -55,6 +63,9 @@ export default {
 				},
 			},
 		};
+
+		// portal initialization for vue instance
+		Vue.use(VuePortal);
 
 		new Vue({
 			components: { DataTableApp },

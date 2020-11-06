@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-data-table-data-source-selection">
+	<div class="wptb-data-table-data-source-selection" @click.prevent.capture="deselectSelection">
 		<div class="wptb-data-table-data-source-header">{{ translation('dataSourceHeader') }}</div>
 		<div class="wptb-data-table-data-source-cards-wrapper">
 			<data-source-card
@@ -9,6 +9,9 @@
 				@sourceCardConfirm="handleSourceSelection"
 			></data-source-card>
 		</div>
+		<data-table-left-panel>
+			<left-panel-info-message>{{ translation('sourceSelectLeftPanelInfo') }}</left-panel-info-message>
+		</data-table-left-panel>
 	</div>
 </template>
 
@@ -17,9 +20,11 @@ import { mapActions } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import DataSourceObject from '../functions/DataSourceObject';
 import DataSourceCard from './DataSourceCard';
+import DataTableLeftPanel from './DataTableLeftPanel';
+import LeftPanelInfoMessage from './LeftPanelInfoMessage';
 
 export default {
-	components: { DataSourceCard },
+	components: { DataSourceCard, DataTableLeftPanel, LeftPanelInfoMessage },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -58,7 +63,10 @@ export default {
 		handleSourceSelection(id) {
 			this.startSourceSetup(id);
 		},
-		...mapActions(['startSourceSetup']),
+		deselectSelection() {
+			this.softSelectCard(null);
+		},
+		...mapActions(['startSourceSetup', 'softSelectCard']),
 	},
 };
 </script>
