@@ -9,10 +9,10 @@
 				:click="setScreenToSourceSelect"
 				type="danger"
 				size="full-size"
-				>{{ translationM('back') }}</material-button
+				>{{ translationM('back') | cap }}</material-button
 			>
 			<material-button class="wptb-plugin-box-shadow-md" type="confirm" size="full-size">{{
-				translationM('continue')
+				translationM('continue') | cap
 			}}</material-button>
 		</div>
 	</portal>

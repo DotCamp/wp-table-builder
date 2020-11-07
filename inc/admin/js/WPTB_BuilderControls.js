@@ -26734,7 +26734,7 @@ exports.default = _default;
                     size: "full-size"
                   }
                 },
-                [_vm._v(_vm._s(_vm.translationM("back")))]
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("back"))))]
               ),
               _vm._v(" "),
               _c(
@@ -26743,7 +26743,7 @@ exports.default = _default;
                   staticClass: "wptb-plugin-box-shadow-md",
                   attrs: { type: "confirm", size: "full-size" }
                 },
-                [_vm._v(_vm._s(_vm.translationM("continue")))]
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
               )
             ],
             1
@@ -27314,7 +27314,286 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/CsvSetup.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/DragDrop.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: ['texts', 'file', 'allowedFormats'],
+  model: {
+    prop: 'file',
+    event: 'fileChanged'
+  },
+  data: function data() {
+    return {
+      dragActive: false,
+      currentFile: null
+    };
+  },
+  mounted: function mounted() {
+    this.currentFile = this.file;
+  },
+  watch: {
+    currentFile: function currentFile(n) {
+      this.$emit('fileChanged', n);
+    },
+    file: function file(n) {
+      this.currentFile = n;
+    }
+  },
+  computed: {
+    eventClass: function eventClass() {
+      return this.dragActive ? 'dragenter' : '';
+    }
+  },
+  methods: {
+    handleDrop: function handleDrop(event) {
+      this.dragActive = true;
+      var dt = event.dataTransfer;
+
+      if (dt.files[0]) {
+        if (this.isTypeAllowed(dt.files[0])) {
+          var _dt$files = _slicedToArray(dt.files, 1);
+
+          this.currentFile = _dt$files[0];
+        }
+      }
+
+      this.dragActive = false;
+    },
+    isTypeAllowed: function isTypeAllowed(fileName) {
+      var extension = fileName.name.split('.').pop();
+      return this.allowedFormats.includes(extension);
+    },
+    openFileSelect: function openFileSelect() {
+      this.$refs.fileSelect.click();
+    },
+    handleFileSelect: function handleFileSelect(e) {
+      if (e.target.files.length > 0 && this.isTypeAllowed(e.target.files[0])) {
+        var _e$target$files = _slicedToArray(e.target.files, 1);
+
+        this.currentFile = _e$target$files[0];
+      }
+    },
+    clearCurrentFile: function clearCurrentFile() {
+      this.currentFile = null;
+    }
+  }
+};
+exports.default = _default;
+        var $74ec03 = exports.default || module.exports;
+      
+      if (typeof $74ec03 === 'function') {
+        $74ec03 = $74ec03.options;
+      }
+    
+        /* template */
+        Object.assign($74ec03, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-menu-file-drop",
+      class: _vm.eventClass,
+      on: {
+        dragenter: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = true
+        },
+        dragleave: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = false
+        },
+        drop: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          return _vm.handleDrop($event)
+        },
+        dragover: function($event) {
+          $event.stopPropagation()
+          $event.preventDefault()
+          _vm.dragActive = true
+        }
+      }
+    },
+    [
+      _c("transition", { attrs: { name: "wptb-fade", mode: "out-in" } }, [
+        _vm.dragActive
+          ? _c("div", { key: "fileLogo", staticClass: "file-icon" }, [
+              _c("span", {
+                staticClass: "dashicons dashicons-media-spreadsheet"
+              })
+            ])
+          : _c(
+              "div",
+              { key: "controls" },
+              [
+                _c(
+                  "transition",
+                  { attrs: { name: "wptb-fade", mode: "out-in" } },
+                  [
+                    _vm.currentFile === null
+                      ? _c(
+                          "div",
+                          {
+                            key: "selection",
+                            staticClass:
+                              "wptb-flex wptb-flex-col wptb-flex-align-center"
+                          },
+                          [
+                            _c("div", { staticClass: "hint" }, [
+                              _vm._v(_vm._s(_vm.texts.hint))
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "supported wptb-text-transform-none"
+                              },
+                              [
+                                _vm._v(
+                                  "(" +
+                                    _vm._s(_vm.allowedFormats.join(", ")) +
+                                    ")"
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", [
+                              _c(
+                                "a",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.openFileSelect($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.texts.browse))]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                ref: "fileSelect",
+                                staticStyle: { display: "none" },
+                                attrs: { type: "file" },
+                                on: { change: _vm.handleFileSelect }
+                              })
+                            ])
+                          ]
+                        )
+                      : _c(
+                          "div",
+                          {
+                            key: "selected",
+                            staticClass:
+                              "wptb-flex wptb-flex-col wptb-flex-align-center"
+                          },
+                          [
+                            _c("div", { staticClass: "file" }, [
+                              _vm._v(_vm._s(_vm.currentFile.name))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", [
+                              _c(
+                                "a",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.clearCurrentFile($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v(_vm._s(_vm.texts.clear))]
+                              )
+                            ])
+                          ]
+                        )
+                  ]
+                )
+              ],
+              1
+            )
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/CsvSetup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27334,6 +27613,10 @@ var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectio
 
 var _CsvSetupCsvPanelControls = _interopRequireDefault(require("./CsvSetupCsvPanelControls"));
 
+var _DragDrop = _interopRequireDefault(require("./DragDrop"));
+
+var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -27344,10 +27627,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    MaterialButton: _MaterialButton.default,
     DataTableLeftPanel: _DataTableLeftPanel.default,
     PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
-    CsvSetupCsvPanelControls: _CsvSetupCsvPanelControls.default
+    CsvSetupCsvPanelControls: _CsvSetupCsvPanelControls.default,
+    DragDrop: _DragDrop.default
   },
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
@@ -27355,7 +27640,8 @@ var _default = {
       panelTabs: {
         csv: this.translationM('csvTitle'),
         dataManager: this.translationM('dataManager')
-      }
+      },
+      currentFile: null
     };
   },
   computed: _objectSpread({
@@ -27389,7 +27675,57 @@ exports.default = _default;
   return _c(
     "div",
     [
-      _c("i", [_vm._v("csv setup")]),
+      _c(
+        "div",
+        {
+          staticClass:
+            "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
+        },
+        [
+          _c("drag-drop", {
+            staticStyle: { "font-size": "80%" },
+            attrs: {
+              texts: {
+                hint: _vm.translationM("dragDropHint"),
+                browse: _vm.translationM("browse"),
+                clear: _vm.translationM("clear")
+              },
+              "allowed-formats": ["csv"]
+            },
+            model: {
+              value: _vm.currentFile,
+              callback: function($$v) {
+                _vm.currentFile = $$v
+              },
+              expression: "currentFile"
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "transition",
+            { attrs: { name: "wptb-fade" } },
+            [
+              _c(
+                "material-button",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.currentFile !== null,
+                      expression: "currentFile !== null"
+                    }
+                  ],
+                  staticStyle: { "font-size": "80%", padding: "10px" }
+                },
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("import"))))]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _c(
         "data-table-left-panel",
@@ -27448,7 +27784,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue","./DragDrop":"components/DragDrop.vue","./MaterialButton":"components/MaterialButton.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27575,7 +27911,7 @@ var _default = {
      */
     mainStyle: function mainStyle() {
       return {
-        marginTop: "".concat(this.headerHeight + this.extraPadding, "px"),
+        // marginTop: `${this.headerHeight + this.extraPadding}px`,
         height: "calc( 100% - ".concat(this.headerHeight + this.extraPadding, "px)")
       };
     }
@@ -28071,7 +28407,11 @@ var _default = {
           commaDelimiter: (0, _i18n.__)(', (comma)', 'wp-table-builder'),
           createYourData: (0, _i18n.__)('create your own data', 'wp-table-builder'),
           back: (0, _i18n.__)('Back', 'wp-table-builder'),
-          continue: (0, _i18n.__)('Continue', 'wp-table-builder')
+          continue: (0, _i18n.__)('Continue', 'wp-table-builder'),
+          dragDropHint: (0, _i18n.__)('Drag and drop file', 'wp-table-builder'),
+          browse: (0, _i18n.__)('browse', 'wp-table-builder'),
+          clear: (0, _i18n.__)('clear', 'wp-table-builder'),
+          import: (0, _i18n.__)('import', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },

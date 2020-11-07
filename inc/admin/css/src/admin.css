@@ -18,6 +18,7 @@
     --wptb-plugin-gray-700: #4A5568;
     --wptb-plugin-green-500: #48BB78;
     --wptb-plugin-yellow-500: #ECC94B;
+    --wptb-plugin-red-500: #F56565;
     --wptb-plugin-red-600: #E53E3E;
     --wptb-plugin-blue-300: #90CDF4;
     --wptb-plugin-white: #FFF;
@@ -4154,11 +4155,11 @@ wptb_shortcode_container_element {
     transform: scale(0.95);
 }
 
-.wptb-plugin-button-material[data-type='danger']{
-    background-color: var(--wptb-plugin-red-600) !important;
+.wptb-plugin-button-material[data-type='danger'] {
+    background-color: var(--wptb-plugin-red-500) !important;
 }
 
-.wptb-plugin-button-material[data-type='confirm']{
+.wptb-plugin-button-material[data-type='confirm'] {
     background-color: var(--wptb-plugin-green-500) !important;
 }
 
@@ -5858,7 +5859,7 @@ wptb_shortcode_container_element {
     font-size: 80%;
     font-weight: bold;
     color: var(--wptb-plugin-gray-600);
-    padding:10px;
+    padding: 10px;
     text-transform: uppercase;
 }
 
