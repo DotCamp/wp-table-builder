@@ -1,6 +1,12 @@
 /**
  * Data table state.
  *
+ *
+ *    - For source setup data
+ *        Default source setup object should include these object properties to be in sync with the rest of the application
+ *            - controls: left panel control values
+ *            - controlGroupTab: active tabbed group id
+ *
  * @type {Object}
  */
 const state = {
@@ -14,10 +20,17 @@ const state = {
 		},
 		setup: {
 			sourceId: null,
+			csv: {
+				controls: {
+					csvImported: false,
+					delimiter: 'comma',
+				},
+				controlGroupTab: 'csv',
+			},
 		},
 	},
 	leftPanelId: '#dataTableLeftPanel',
-	devStartupScreen: 'DataSourceSelection',
+	devStartupScreen: 'CsvSetup',
 };
 
 export default state;

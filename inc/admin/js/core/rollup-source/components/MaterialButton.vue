@@ -1,5 +1,7 @@
 <template>
-	<div @click.prevent="click" class="wptb-plugin-button-material" :class="buttonClass"><slot></slot></div>
+	<div @click.prevent="handleClick" class="wptb-plugin-button-material" :data-type="type" :class="buttonClass">
+		<slot></slot>
+	</div>
 </template>
 <script>
 export default {
@@ -15,10 +17,20 @@ export default {
 			type: String,
 			default: 'fit-content',
 		},
+		type: {
+			type: String,
+			default: 'default',
+		},
 	},
 	computed: {
 		buttonClass() {
 			return [`wptb-plugin-button-material-${this.size}`];
+		},
+	},
+	methods: {
+		handleClick() {
+			this.$emit('buttonClicked');
+			this.click();
 		},
 	},
 };

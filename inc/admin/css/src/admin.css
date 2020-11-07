@@ -4154,6 +4154,14 @@ wptb_shortcode_container_element {
     transform: scale(0.95);
 }
 
+.wptb-plugin-button-material[data-type='danger']{
+    background-color: var(--wptb-plugin-red-600) !important;
+}
+
+.wptb-plugin-button-material[data-type='confirm']{
+    background-color: var(--wptb-plugin-green-500) !important;
+}
+
 .wptb-plugin-button-material-fit-content {
     width: fit-content !important;
 }
@@ -5997,5 +6005,19 @@ wptb_shortcode_container_element {
     border-left: 0 !important;
 }
 
+.wptb-data-table-left-panel-source-setup-general-button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 50px;
+    font-size: 90%;
+}
+
+.wptb-data-table-left-panel-source-setup-general-button-wrapper .wptb-plugin-button-material {
+    padding: 10px;
+    margin: 0 30px;
+    text-align: center;
+}
 
 /*endregion*/

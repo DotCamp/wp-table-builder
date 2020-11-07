@@ -2,10 +2,12 @@
  * Data table menu.
  */
 import Vue from 'vue';
+import Fragment from 'vue-fragment';
 import { __ } from '@wordpress/i18n';
 import VuePortal from 'portal-vue';
 import DataTableApp from '../containers/DataTableApp';
 import createStore from '../stores/dataTables';
+import filters from '../plugins/filters';
 
 export default {
 	name: 'DataTable',
@@ -37,6 +39,13 @@ export default {
 						'Setup your CSV source, either from a file or start creating your own data with data editor.',
 						'wp-table-builder'
 					),
+					dataManager: __('data manager', 'wp-table-builder'),
+					csvControlHeader: __('csv source', 'wp-table-builder'),
+					csvDelimiter: __('csv delimiter', 'wp-table-builder'),
+					commaDelimiter: __(', (comma)', 'wp-table-builder'),
+					createYourData: __('create your own data', 'wp-table-builder'),
+					back: __('Back', 'wp-table-builder'),
+					continue: __('Continue', 'wp-table-builder'),
 				},
 				proUrl: data.proUrl,
 			},
@@ -66,6 +75,12 @@ export default {
 
 		// portal initialization for vue instance
 		Vue.use(VuePortal);
+
+		// fragment initialization
+		Vue.use(Fragment.Plugin);
+
+		// use default filters
+		Vue.use(filters);
 
 		new Vue({
 			components: { DataTableApp },

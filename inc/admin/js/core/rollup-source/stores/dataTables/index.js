@@ -18,7 +18,7 @@ const storeOptions = {
 	mutations,
 	actions,
 	getters,
-	strict: true,
+	strict: false,
 };
 
 /**

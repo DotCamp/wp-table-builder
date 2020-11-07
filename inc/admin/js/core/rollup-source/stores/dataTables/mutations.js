@@ -41,6 +41,34 @@ const mutations = {
 	setSetupSourceId(state, sourceId) {
 		state.dataSource.setup.sourceId = sourceId;
 	},
+	/**
+	 * Set csv delimiter.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} delimiter csv delimiter
+	 */
+	updateCsvDelimiter(state, delimiter) {
+		state.dataSource.setup.csv.controls.delimiter = delimiter;
+	},
+	/**
+	 * Switch to data manaager tab and screen at any source setup.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} sourceId active source setup id
+	 */
+	showDataManagerTabGroup(state, sourceId) {
+		state.dataSource.setup[sourceId].controlGroupTab = 'dataManager';
+	},
+	/**
+	 * Set active tab group for source setup.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} sourceId active source setup id
+	 * @param {string} tabId tab to be activated
+	 */
+	setActiveControlTabGroup(state, { sourceId, tabId }) {
+		state.dataSource.setup[sourceId].controlGroupTab = tabId;
+	},
 };
 
 export default mutations;

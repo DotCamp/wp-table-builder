@@ -1,5 +1,5 @@
 <template>
-	<transition name="wptb-fade">
+	<transition name="wptb-fade" mode="out-in">
 		<component :is="currentScreen"> </component>
 	</transition>
 </template>
@@ -16,5 +16,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped></style>
