@@ -1,5 +1,11 @@
 <template>
-	<div @click.prevent="handleClick" class="wptb-plugin-button-material" :data-type="type" :class="buttonClass">
+	<div
+		@click.prevent="handleClick"
+		class="wptb-plugin-button-material"
+		:data-type="type"
+		:class="buttonClass"
+		:data-disabled="disabled"
+	>
 		<slot></slot>
 	</div>
 </template>
@@ -20,6 +26,10 @@ export default {
 		type: {
 			type: String,
 			default: 'default',
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	computed: {

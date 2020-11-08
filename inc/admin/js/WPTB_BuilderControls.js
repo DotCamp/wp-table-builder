@@ -17587,6 +17587,12 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     click: {
@@ -17603,6 +17609,10 @@ var _default = {
     type: {
       type: String,
       default: 'default'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -17635,7 +17645,7 @@ exports.default = _default;
     {
       staticClass: "wptb-plugin-button-material",
       class: _vm.buttonClass,
-      attrs: { "data-type": _vm.type },
+      attrs: { "data-type": _vm.type, "data-disabled": _vm.disabled },
       on: {
         click: function($event) {
           $event.preventDefault()
@@ -26727,7 +26737,8 @@ exports.default = _default;
               _c(
                 "material-button",
                 {
-                  staticClass: "wptb-plugin-box-shadow-md",
+                  staticClass:
+                    "wptb-plugin-box-shadow-md wptb-panel-button-material",
                   attrs: {
                     click: _vm.setScreenToSourceSelect,
                     type: "danger",
@@ -26740,7 +26751,8 @@ exports.default = _default;
               _c(
                 "material-button",
                 {
-                  staticClass: "wptb-plugin-box-shadow-md",
+                  staticClass:
+                    "wptb-plugin-box-shadow-md wptb-panel-button-material",
                   attrs: { type: "confirm", size: "full-size" }
                 },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
@@ -26926,7 +26938,199 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../functions/DataSourceObject":"functions/DataSourceObject.js","./DataSourceCard":"components/DataSourceCard.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./LeftPanelInfoMessage":"components/LeftPanelInfoMessage.vue"}],"components/PanelSectionGroupTabbedImproved.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../functions/DataSourceObject":"functions/DataSourceObject.js","./DataSourceCard":"components/DataSourceCard.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./LeftPanelInfoMessage":"components/LeftPanelInfoMessage.vue"}],"components/PanelButtonControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    MaterialButton: _MaterialButton.default
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('buttonClick');
+    }
+  }
+};
+exports.default = _default;
+        var $e86179 = exports.default || module.exports;
+      
+      if (typeof $e86179 === 'function') {
+        $e86179 = $e86179.options;
+      }
+    
+        /* template */
+        Object.assign($e86179, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "wptb-settings-row wptb-settings-middle-xs wptb-justify-content-center"
+        },
+        [
+          _c(
+            "material-button",
+            {
+              staticClass: "wptb-panel-button-material",
+              attrs: { click: _vm.handleClick }
+            },
+            [_vm._t("default")],
+            2
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./MaterialButton":"components/MaterialButton.vue"}],"components/CsvSetupCsvPanelControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+
+var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    PanelDropdownControl: _PanelDropdownControl.default,
+    PanelButtonControl: _PanelButtonControl.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      deLimiterOptions: {
+        comma: this.translationM('commaDelimiter')
+      }
+    };
+  },
+  computed: _objectSpread({
+    delimiter: {
+      get: function get() {
+        return this.$store.state.dataSource.setup.csv.controls.delimiter;
+      },
+      set: function set(n) {
+        this.$store.commit('updateCsvDelimiter', n);
+      }
+    }
+  }, (0, _vuex.mapGetters)(['isSetupDataImported'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['showDataManagerTabGroup']))
+};
+exports.default = _default;
+        var $e98bc9 = exports.default || module.exports;
+      
+      if (typeof $e98bc9 === 'function') {
+        $e98bc9 = $e98bc9.options;
+      }
+    
+        /* template */
+        Object.assign($e98bc9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "fragment",
+    [
+      _c("panel-dropdown-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.translationM("csvDelimiter")),
+          options: _vm.deLimiterOptions
+        },
+        model: {
+          value: _vm.delimiter,
+          callback: function($$v) {
+            _vm.delimiter = $$v
+          },
+          expression: "delimiter"
+        }
+      }),
+      _vm._v(" "),
+      !_vm.isSetupDataImported
+        ? _c(
+            "panel-button-control",
+            {
+              on: {
+                buttonClick: function($event) {
+                  return _vm.showDataManagerTabGroup("csv")
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("createYourData"))))]
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/PanelSectionGroupTabbedImproved.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27125,88 +27329,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PanelButtonControl.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  components: {
-    MaterialButton: _MaterialButton.default
-  },
-  methods: {
-    handleClick: function handleClick() {
-      this.$emit('buttonClick');
-    }
-  }
-};
-exports.default = _default;
-        var $e86179 = exports.default || module.exports;
-      
-      if (typeof $e86179 === 'function') {
-        $e86179 = $e86179.options;
-      }
-    
-        /* template */
-        Object.assign($e86179, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
-    [
-      _c(
-        "div",
-        {
-          staticClass:
-            "wptb-settings-row wptb-settings-middle-xs wptb-justify-content-center"
-        },
-        [
-          _c(
-            "material-button",
-            { style: { padding: "10px" }, attrs: { click: _vm.handleClick } },
-            [_vm._t("default")],
-            2
-          )
-        ],
-        1
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: "data-v-e86179",
-            functional: undefined
-          };
-        })());
-      
-},{"./MaterialButton":"components/MaterialButton.vue"}],"components/CsvSetupCsvPanelControls.vue":[function(require,module,exports) {
+},{}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27216,9 +27339,13 @@ exports.default = void 0;
 
 var _vuex = require("vuex");
 
-var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+var _CsvSetupCsvPanelControls = _interopRequireDefault(require("./CsvSetupCsvPanelControls"));
 
-var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
+var _DataTableLeftPanel = _interopRequireDefault(require("./DataTableLeftPanel"));
+
+var _PanelSectionGroupTabbedImproved = _interopRequireDefault(require("./PanelSectionGroupTabbedImproved"));
+
+var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
@@ -27231,73 +27358,90 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  components: {
-    PanelDropdownControl: _PanelDropdownControl.default,
-    PanelButtonControl: _PanelButtonControl.default
-  },
-  mixins: [_withNativeTranslationStore.default],
-  data: function data() {
-    return {
-      deLimiterOptions: {
-        comma: this.translationM('commaDelimiter')
-      }
-    };
-  },
-  computed: _objectSpread({
-    delimiter: {
-      get: function get() {
-        return this.$store.state.dataSource.setup.csv.controls.delimiter;
-      },
-      set: function set(n) {
-        this.$store.commit('updateCsvDelimiter', n);
+  name: 'CsvSetupLeftPanel',
+  props: {
+    panelTabs: {
+      type: Object,
+      default: function _default() {
+        return {
+          default: 'default'
+        };
       }
     }
-  }, (0, _vuex.mapGetters)(['isCsvImported'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['showDataManagerTabGroup']))
+  },
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    CsvSetupCsvPanelControls: _CsvSetupCsvPanelControls.default,
+    DataTableLeftPanel: _DataTableLeftPanel.default,
+    PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
+    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
+  },
+  computed: _objectSpread({
+    activeControlTab: {
+      get: function get() {
+        return this.currentSetupGroupTab('csv');
+      },
+      set: function set(n) {
+        this.setActiveControlTabGroup({
+          sourceId: 'csv',
+          tabId: n
+        });
+      }
+    }
+  }, (0, _vuex.mapGetters)(['currentSetupGroupTab'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setActiveControlTabGroup']))
 };
 exports.default = _default;
-        var $e98bc9 = exports.default || module.exports;
+        var $ea5707 = exports.default || module.exports;
       
-      if (typeof $e98bc9 === 'function') {
-        $e98bc9 = $e98bc9.options;
+      if (typeof $ea5707 === 'function') {
+        $ea5707 = $ea5707.options;
       }
     
         /* template */
-        Object.assign($e98bc9, (function () {
+        Object.assign($ea5707, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "fragment",
+    "data-table-left-panel",
     [
-      _c("panel-dropdown-control", {
+      _c("panel-section-group-tabbed-improved", {
         attrs: {
-          label: _vm._f("cap")(_vm.translationM("csvDelimiter")),
-          options: _vm.deLimiterOptions
+          header: _vm.translationM("csvControlHeader"),
+          tabs: _vm.panelTabs
         },
+        scopedSlots: _vm._u([
+          {
+            key: "default",
+            fn: function(ref) {
+              var currentTab = ref.currentTab
+              return [
+                _c(
+                  "PanelSectionGroupTabbedItem",
+                  { attrs: { "active-id": currentTab, id: "csv" } },
+                  [_c("csv-setup-csv-panel-controls")],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "PanelSectionGroupTabbedItem",
+                  { attrs: { "active-id": currentTab, id: "dataManager" } },
+                  [_vm._v("data manager\n\t\t\t")]
+                )
+              ]
+            }
+          }
+        ]),
         model: {
-          value: _vm.delimiter,
+          value: _vm.activeControlTab,
           callback: function($$v) {
-            _vm.delimiter = $$v
+            _vm.activeControlTab = $$v
           },
-          expression: "delimiter"
+          expression: "activeControlTab"
         }
-      }),
-      _vm._v(" "),
-      !_vm.isCsvImported
-        ? _c(
-            "panel-button-control",
-            {
-              on: {
-                buttonClick: function($event) {
-                  return _vm.showDataManagerTabGroup("csv")
-                }
-              }
-            },
-            [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("createYourData"))))]
-          )
-        : _vm._e()
+      })
     ],
     1
   )
@@ -27314,7 +27458,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/DragDrop.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/DragDrop.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27593,7 +27737,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/CsvSetup.vue":[function(require,module,exports) {
+},{}],"components/StoreMaterialButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27602,18 +27746,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _vuex = require("vuex");
-
-var _DataTableLeftPanel = _interopRequireDefault(require("./DataTableLeftPanel"));
-
-var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
-
-var _PanelSectionGroupTabbedImproved = _interopRequireDefault(require("./PanelSectionGroupTabbedImproved"));
-
-var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
-
-var _CsvSetupCsvPanelControls = _interopRequireDefault(require("./CsvSetupCsvPanelControls"));
-
-var _DragDrop = _interopRequireDefault(require("./DragDrop"));
 
 var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
 
@@ -27627,144 +27759,252 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
-    MaterialButton: _MaterialButton.default,
-    DataTableLeftPanel: _DataTableLeftPanel.default,
-    PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
-    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
-    CsvSetupCsvPanelControls: _CsvSetupCsvPanelControls.default,
-    DragDrop: _DragDrop.default
+    MaterialButton: _MaterialButton.default
+  },
+  methods: {
+    buttonClicked: function buttonClicked() {
+      this.$emit('buttonClicked');
+    }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']))
+};
+exports.default = _default;
+        var $b90273 = exports.default || module.exports;
+      
+      if (typeof $b90273 === 'function') {
+        $b90273 = $b90273.options;
+      }
+    
+        /* template */
+        Object.assign($b90273, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "material-button",
+    _vm._b(
+      {
+        staticClass: "wptb-panel-button-material",
+        attrs: { disabled: _vm.busyStatus, click: function() {} },
+        on: { buttonClicked: _vm.buttonClicked }
+      },
+      "material-button",
+      _vm.$attrs,
+      false
+    ),
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue"}],"components/DataManager.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {};
+exports.default = _default;
+        var $6edceb = exports.default || module.exports;
+      
+      if (typeof $6edceb === 'function') {
+        $6edceb = $6edceb.options;
+      }
+    
+        /* template */
+        Object.assign($6edceb, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
+      },
+      [_c("i", [_vm._v("data manager")])]
+    )
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _DragDrop = _interopRequireDefault(require("./DragDrop"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _StoreMaterialButton = _interopRequireDefault(require("./StoreMaterialButton"));
+
+var _DataManager = _interopRequireDefault(require("./DataManager"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  name: 'CsvSetupBuilderView',
+  props: {
+    currentFile: {}
+  },
+  model: {
+    prop: 'currentFile',
+    event: 'fileSelected'
+  },
+  components: {
+    StoreMaterialButton: _StoreMaterialButton.default,
+    DragDrop: _DragDrop.default,
+    DataManager: _DataManager.default
   },
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
     return {
-      panelTabs: {
-        csv: this.translationM('csvTitle'),
-        dataManager: this.translationM('dataManager')
-      },
-      currentFile: null
+      innerFile: this.currentFile
     };
   },
-  computed: _objectSpread({
-    activeControlTab: {
-      get: function get() {
-        return this.currentSetupGroupTab('csv');
-      },
-      set: function set(n) {
-        this.setActiveControlTabGroup({
-          sourceId: 'csv',
-          tabId: n
-        });
-      }
+  watch: {
+    innerFile: function innerFile(n) {
+      this.$emit('fileSelected', n);
     }
-  }, (0, _vuex.mapGetters)(['currentSetupGroupTab'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setActiveControlTabGroup']))
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentSetupGroupTab'])),
+  methods: {
+    handleCsvImport: function handleCsvImport() {
+      this.$emit('csvImport');
+    }
+  }
 };
 exports.default = _default;
-        var $69ad22 = exports.default || module.exports;
+        var $db31ef = exports.default || module.exports;
       
-      if (typeof $69ad22 === 'function') {
-        $69ad22 = $69ad22.options;
+      if (typeof $db31ef === 'function') {
+        $db31ef = $db31ef.options;
       }
     
         /* template */
-        Object.assign($69ad22, (function () {
+        Object.assign($db31ef, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wptb-data-table-csv-setup" },
     [
       _c(
-        "div",
-        {
-          staticClass:
-            "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
-        },
+        "transition",
+        { attrs: { name: "wptb-fade", mode: "out-in" } },
         [
-          _c("drag-drop", {
-            attrs: {
-              texts: {
-                hint: _vm.translationM("dragDropHint"),
-                browse: _vm.translationM("browse"),
-                clear: _vm.translationM("clear")
-              },
-              "allowed-formats": ["csv"]
-            },
-            model: {
-              value: _vm.currentFile,
-              callback: function($$v) {
-                _vm.currentFile = $$v
-              },
-              expression: "currentFile"
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "transition",
-            { attrs: { name: "wptb-fade" } },
-            [
-              _c(
-                "material-button",
+          _vm.currentSetupGroupTab("csv") === "csv"
+            ? _c(
+                "div",
                 {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.currentFile !== null,
-                      expression: "currentFile !== null"
-                    }
-                  ],
-                  staticStyle: { "font-size": "80%", padding: "10px" }
+                  staticClass:
+                    "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
                 },
-                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("import"))))]
+                [
+                  _c("drag-drop", {
+                    attrs: {
+                      texts: {
+                        hint: _vm.translationM("dragDropHint"),
+                        browse: _vm.translationM("browse"),
+                        clear: _vm.translationM("clear")
+                      },
+                      "allowed-formats": ["csv"]
+                    },
+                    model: {
+                      value: _vm.innerFile,
+                      callback: function($$v) {
+                        _vm.innerFile = $$v
+                      },
+                      expression: "innerFile"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "transition",
+                    { attrs: { name: "wptb-fade" } },
+                    [
+                      _c(
+                        "store-material-button",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.currentFile !== null,
+                              expression: "currentFile !== null"
+                            }
+                          ],
+                          on: { buttonClicked: _vm.handleCsvImport }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(_vm._f("cap")(_vm.translationM("import"))) +
+                              "\n\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
               )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "data-table-left-panel",
-        [
-          _c("panel-section-group-tabbed-improved", {
-            attrs: {
-              header: _vm.translationM("csvControlHeader"),
-              tabs: _vm.panelTabs
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "default",
-                fn: function(ref) {
-                  var currentTab = ref.currentTab
-                  return [
-                    _c(
-                      "PanelSectionGroupTabbedItem",
-                      { attrs: { "active-id": currentTab, id: "csv" } },
-                      [_c("csv-setup-csv-panel-controls")],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "PanelSectionGroupTabbedItem",
-                      { attrs: { "active-id": currentTab, id: "dataManager" } },
-                      [_vm._v("data manager")]
-                    )
-                  ]
-                }
-              }
-            ]),
-            model: {
-              value: _vm.activeControlTab,
-              callback: function($$v) {
-                _vm.activeControlTab = $$v
-              },
-              expression: "activeControlTab"
-            }
-          })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.currentSetupGroupTab("csv") === "dataManager"
+            ? _c("data-manager")
+            : _vm._e()
         ],
         1
       )
@@ -27784,7 +28024,152 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue","./DragDrop":"components/DragDrop.vue","./MaterialButton":"components/MaterialButton.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue"}],"components/CsvSetup.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _CsvSetupLeftPanel = _interopRequireDefault(require("./CsvSetupLeftPanel"));
+
+var _CsvSetupBuilderView = _interopRequireDefault(require("./CsvSetupBuilderView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    CsvSetupBuilderView: _CsvSetupBuilderView.default,
+    CsvSetupLeftPanel: _CsvSetupLeftPanel.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      panelTabs: {
+        csv: this.translationM('csvTitle'),
+        dataManager: this.translationM('dataManager')
+      },
+      currentFile: null
+    };
+  },
+  mounted: function mounted() {
+    // TODO [erdembircan] remove for production
+    this.setSetupSourceId('csv');
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getSetupControls'])),
+  methods: _objectSpread({
+    readCsvFile: function readCsvFile() {
+      var _this = this;
+
+      if (FileReader && this.currentFile) {
+        var csvReader = new FileReader(); // csv reader load event listener
+
+        csvReader.addEventListener('load', function (e) {
+          var fileContent = e.target.result; // read contents of file line by line
+
+          var lines = fileContent.split(/[\r\n]+/g); // decide delimiter value
+
+          var _this$getSetupControl = _this.getSetupControls('csv'),
+              delimiterId = _this$getSetupControl.delimiter;
+
+          var delimiter = ',';
+
+          switch (delimiterId) {
+            case 'comma':
+              {
+                delimiter = ',';
+                break;
+              }
+
+            default:
+              {
+                delimiter = ',';
+                break;
+              }
+          }
+
+          var csvData = lines.reduce(function (carry, item) {
+            // split individual cell data with defined delimiter
+            var splitData = item.split(delimiter);
+            carry.push(splitData);
+            return carry;
+          }, []); // set csv data to temp data manager
+
+          _this.addTempDataManagerData(csvData); // show data manager setup
+
+
+          _this.setActiveTabGroupForCurrentSource('dataManager');
+
+          _this.setBusy(false);
+        }); // csv reader error event listener
+
+        csvReader.addEventListener('error', function (e) {
+          _this.setBusy(false);
+        }); // start reading file
+
+        this.setBusy(true);
+        csvReader.readAsText(this.currentFile);
+      }
+    }
+  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId']), {}, (0, _vuex.mapActions)(['addTempDataManagerData', 'setActiveTabGroupForCurrentSource']))
+};
+exports.default = _default;
+        var $69ad22 = exports.default || module.exports;
+      
+      if (typeof $69ad22 === 'function') {
+        $69ad22 = $69ad22.options;
+      }
+    
+        /* template */
+        Object.assign($69ad22, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-data-table-csv-setup" },
+    [
+      _c("CsvSetupLeftPanel", { attrs: { "panel-tabs": _vm.panelTabs } }),
+      _vm._v(" "),
+      _c("CsvSetupBuilderView", {
+        on: { csvImport: _vm.readCsvFile },
+        model: {
+          value: _vm.currentFile,
+          callback: function($$v) {
+            _vm.currentFile = $$v
+          },
+          expression: "currentFile"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./CsvSetupLeftPanel":"components/CsvSetupLeftPanel.vue","./CsvSetupBuilderView":"components/CsvSetupBuilderView.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27993,6 +28378,7 @@ exports.default = void 0;
  */
 var state = {
   visibility: false,
+  busy: false,
   screen: null,
   proEnabled: false,
   dataSource: {
@@ -28004,10 +28390,13 @@ var state = {
       sourceId: null,
       csv: {
         controls: {
-          csvImported: false,
           delimiter: 'comma'
         },
         controlGroupTab: 'csv'
+      },
+      // data manager property that will be used within setup, this is not the final dataManager
+      tempDataManager: {
+        data: []
       }
     }
   },
@@ -28096,13 +28485,41 @@ var mutations = {
    * Set active tab group for source setup.
    *
    * @param {Object} state data table state
-   * @param {string} sourceId active source setup id
-   * @param {string} tabId tab to be activated
+   * @param {{sourceId, tabId}} payload
    */
   setActiveControlTabGroup: function setActiveControlTabGroup(state, _ref) {
     var sourceId = _ref.sourceId,
         tabId = _ref.tabId;
     state.dataSource.setup[sourceId].controlGroupTab = tabId;
+  },
+
+  /**
+   * Set busy state of the app.
+   *
+   * @param {Object} state data table state
+   * @param {boolean} busyStatus busy status
+   */
+  setBusy: function setBusy(state, busyStatus) {
+    state.busy = busyStatus;
+  },
+
+  /**
+   * Clear contents of temp data manager.
+   *
+   * @param {Object} state data table state
+   */
+  clearTempDataManager: function clearTempDataManager(state) {
+    state.dataSource.setup.tempDataManager.data = [];
+  },
+
+  /**
+   * Replace current data in temp data manager with new one.
+   *
+   * @param {Object} state data table state
+   * @param {Array} data data array
+   */
+  setTempDataManagerData: function setTempDataManagerData(state, data) {
+    state.dataSource.setup.tempDataManager.data = data;
   }
 };
 var _default = mutations;
@@ -28167,9 +28584,39 @@ var actions = {
   startSourceSetup: function startSourceSetup(_ref4, sourceId) {
     var commit = _ref4.commit,
         dispatch = _ref4.dispatch;
-    commit('setSetupSourceId', sourceId);
+    // set source id
+    commit('setSetupSourceId', sourceId); // clear temp data manager
+
+    commit('clearTempDataManager'); // set screen
+
     var screenName = "".concat(sourceId[0].toUpperCase() + sourceId.slice(1), "Setup");
     dispatch('setCurrentScreen', screenName);
+  },
+
+  /**
+   * Add data to temp data manager.
+   *
+   * @param {commit} vuex store object
+   * @param {Array} data data array
+   */
+  addTempDataManagerData: function addTempDataManagerData(_ref5, data) {
+    var commit = _ref5.commit;
+    commit('setTempDataManagerData', Array.isArray(data) ? data : []);
+  },
+
+  /**
+   * Set tab of current active source setup.
+   *
+   * @param {state,commit} vuex store object
+   * @param {string} tabId tab id to change to
+   */
+  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref6, tabId) {
+    var state = _ref6.state,
+        commit = _ref6.commit;
+    commit('setActiveControlTabGroup', {
+      sourceId: state.dataSource.setup.sourceId,
+      tabId: tabId
+    });
   }
 };
 var _default = actions;
@@ -28231,16 +28678,6 @@ var getters = {
   },
 
   /**
-   * Is any csv file imported at csv source setup.
-   *
-   * @param {Object} state store state
-   * @return {boolean} any csv file imported or not
-   */
-  isCsvImported: function isCsvImported(state) {
-    return state.dataSource.setup.csv.csvImported;
-  },
-
-  /**
    * Get active tab group id for source setup
    *
    * @param {Object} state store state
@@ -28264,6 +28701,37 @@ var getters = {
   isActiveScreenSourceSetup: function isActiveScreenSourceSetup(state, getters) {
     var currentScreen = getters.currentScreen;
     return currentScreen.match(/^(.+)Setup$/g);
+  },
+
+  /**
+   * Get active tab group id for source setup.
+   *
+   * @param {Object} state store state
+   * @return {boolean} app busy status
+   */
+  busyStatus: function busyStatus(state) {
+    return state.busy;
+  },
+
+  /**
+   * Whether any data source is imported on setup.
+   *
+   * @param {Object} state store state
+   * @return {boolean} imported or not
+   */
+  isSetupDataImported: function isSetupDataImported(state) {
+    return state.dataSource.setup.tempDataManager.data.length > 0;
+  },
+
+  /**
+   * Get current control values for given source
+   *
+   * @param {Object} state store state
+   */
+  getSetupControls: function getSetupControls(state) {
+    return function (sourceId) {
+      return state.dataSource.setup[sourceId].controls;
+    };
   }
 };
 var _default = getters;

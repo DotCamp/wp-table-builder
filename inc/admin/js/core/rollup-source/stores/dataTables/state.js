@@ -11,6 +11,7 @@
  */
 const state = {
 	visibility: false,
+	busy: false,
 	screen: null,
 	proEnabled: false,
 	dataSource: {
@@ -22,10 +23,13 @@ const state = {
 			sourceId: null,
 			csv: {
 				controls: {
-					csvImported: false,
 					delimiter: 'comma',
 				},
 				controlGroupTab: 'csv',
+			},
+			// data manager property that will be used within setup, this is not the final dataManager
+			tempDataManager: {
+				data: [],
 			},
 		},
 	},

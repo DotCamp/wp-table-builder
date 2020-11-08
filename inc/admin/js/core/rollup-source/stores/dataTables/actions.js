@@ -42,10 +42,33 @@ const actions = {
 	 * @param {string} sourceId selected source id
 	 */
 	startSourceSetup({ commit, dispatch }, sourceId) {
+		// set source id
 		commit('setSetupSourceId', sourceId);
 
+		// clear temp data manager
+		commit('clearTempDataManager');
+
+		// set screen
 		const screenName = `${sourceId[0].toUpperCase() + sourceId.slice(1)}Setup`;
 		dispatch('setCurrentScreen', screenName);
+	},
+	/**
+	 * Add data to temp data manager.
+	 *
+	 * @param {commit} vuex store object
+	 * @param {Array} data data array
+	 */
+	addTempDataManagerData({ commit }, data) {
+		commit('setTempDataManagerData', Array.isArray(data) ? data : []);
+	},
+	/**
+	 * Set tab of current active source setup.
+	 *
+	 * @param {state,commit} vuex store object
+	 * @param {string} tabId tab id to change to
+	 */
+	setActiveTabGroupForCurrentSource({ state, commit }, tabId) {
+		commit('setActiveControlTabGroup', { sourceId: state.dataSource.setup.sourceId, tabId });
 	},
 };
 

@@ -5,7 +5,7 @@
 			:options="deLimiterOptions"
 			v-model="delimiter"
 		></panel-dropdown-control>
-		<panel-button-control @buttonClick="showDataManagerTabGroup('csv')" v-if="!isCsvImported">{{
+		<panel-button-control @buttonClick="showDataManagerTabGroup('csv')" v-if="!isSetupDataImported">{{
 			translationM('createYourData') | cap
 		}}</panel-button-control>
 	</fragment>
@@ -36,7 +36,7 @@ export default {
 				this.$store.commit('updateCsvDelimiter', n);
 			},
 		},
-		...mapGetters(['isCsvImported']),
+		...mapGetters(['isSetupDataImported']),
 	},
 	methods: {
 		...mapMutations(['showDataManagerTabGroup']),

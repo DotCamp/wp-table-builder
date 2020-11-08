@@ -4163,6 +4163,12 @@ wptb_shortcode_container_element {
     background-color: var(--wptb-plugin-green-500) !important;
 }
 
+.wptb-plugin-button-material[data-disabled='true'] {
+    background-color: var(--wptb-plugin-gray-500) !important;
+    pointer-events: none;
+    cursor: default !important;
+}
+
 .wptb-plugin-button-material-fit-content {
     width: fit-content !important;
 }
@@ -6013,20 +6019,23 @@ wptb_shortcode_container_element {
     align-items: center;
     margin-top: 50px;
     font-size: 90%;
-}
-
-.wptb-data-table-left-panel-source-setup-general-button-wrapper .wptb-plugin-button-material {
-    padding: 10px;
-    margin: 0 30px;
     text-align: center;
 }
 
-.wptb-data-table-csv-setup .wptb-menu-file-drop {
+.wptb-data-table-left-panel-source-setup-general-button-wrapper .wptb-plugin-button-material {
+    margin: 0 30px;
+}
+
+.wptb-data-table-csv-setup {
     font-size: 80%;
 }
 
 .wptb-data-table-csv-setup .hint, .wptb-data-table-csv-setup .supported {
     color: var(--wptb-plugin-gray-600);
+}
+
+.wptb-panel-button-material {
+    padding: 10px;
 }
 
 /*endregion*/

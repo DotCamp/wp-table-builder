@@ -43,15 +43,6 @@ const getters = {
 		return state.proEnabled;
 	},
 	/**
-	 * Is any csv file imported at csv source setup.
-	 *
-	 * @param {Object} state store state
-	 * @return {boolean} any csv file imported or not
-	 */
-	isCsvImported(state) {
-		return state.dataSource.setup.csv.csvImported;
-	},
-	/**
 	 * Get active tab group id for source setup
 	 *
 	 * @param {Object} state store state
@@ -73,6 +64,32 @@ const getters = {
 		const { currentScreen } = getters;
 
 		return currentScreen.match(/^(.+)Setup$/g);
+	},
+	/**
+	 * Get active tab group id for source setup.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} app busy status
+	 */
+	busyStatus(state) {
+		return state.busy;
+	},
+	/**
+	 * Whether any data source is imported on setup.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} imported or not
+	 */
+	isSetupDataImported(state) {
+		return state.dataSource.setup.tempDataManager.data.length > 0;
+	},
+	/**
+	 * Get current control values for given source
+	 *
+	 * @param {Object} state store state
+	 */
+	getSetupControls: (state) => (sourceId) => {
+		return state.dataSource.setup[sourceId].controls;
 	},
 };
 

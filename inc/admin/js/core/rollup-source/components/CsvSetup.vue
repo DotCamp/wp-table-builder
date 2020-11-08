@@ -1,59 +1,21 @@
 <template>
 	<div class="wptb-data-table-csv-setup">
-		<div
-			class="wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
-		>
-			<drag-drop
-				:texts="{
-					hint: translationM('dragDropHint'),
-					browse: translationM('browse'),
-					clear: translationM('clear'),
-				}"
-				:allowed-formats="['csv']"
-				v-model="currentFile"
-			></drag-drop>
-			<transition name="wptb-fade">
-				<material-button v-show="currentFile !== null" style="font-size: 80%; padding: 10px;">{{
-					translationM('import') | cap
-				}}</material-button>
-			</transition>
-		</div>
-		<data-table-left-panel>
-			<panel-section-group-tabbed-improved
-				:header="translationM('csvControlHeader')"
-				:tabs="panelTabs"
-				v-model="activeControlTab"
-			>
-				<template v-slot:default="{ currentTab }">
-					<PanelSectionGroupTabbedItem :active-id="currentTab" id="csv">
-						<csv-setup-csv-panel-controls></csv-setup-csv-panel-controls>
-					</PanelSectionGroupTabbedItem>
-					<PanelSectionGroupTabbedItem :active-id="currentTab" id="dataManager"
-						>data manager</PanelSectionGroupTabbedItem
-					>
-				</template>
-			</panel-section-group-tabbed-improved>
-		</data-table-left-panel>
+		<!--    left panel controls-->
+		<CsvSetupLeftPanel :panel-tabs="panelTabs"></CsvSetupLeftPanel>
+		<!--    builder view-->
+		<CsvSetupBuilderView @csvImport="readCsvFile" v-model="currentFile"></CsvSetupBuilderView>
 	</div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-import DataTableLeftPanel from './DataTableLeftPanel';
+import { mapMutations, mapGetters, mapActions } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
-import PanelSectionGroupTabbedImproved from './PanelSectionGroupTabbedImproved';
-import PanelSectionGroupTabbedItem from './PanelSectionGroupTabbedItem';
-import CsvSetupCsvPanelControls from './CsvSetupCsvPanelControls';
-import DragDrop from './DragDrop';
-import MaterialButton from './MaterialButton';
+import CsvSetupLeftPanel from './CsvSetupLeftPanel';
+import CsvSetupBuilderView from './CsvSetupBuilderView';
 
 export default {
 	components: {
-		MaterialButton,
-		DataTableLeftPanel,
-		PanelSectionGroupTabbedImproved,
-		PanelSectionGroupTabbedItem,
-		CsvSetupCsvPanelControls,
-		DragDrop,
+		CsvSetupBuilderView,
+		CsvSetupLeftPanel,
 	},
 	mixins: [withNativeTranslationStore],
 	data() {
@@ -65,19 +27,68 @@ export default {
 			currentFile: null,
 		};
 	},
+	mounted() {
+		// TODO [erdembircan] remove for production
+		this.setSetupSourceId('csv');
+	},
 	computed: {
-		activeControlTab: {
-			get() {
-				return this.currentSetupGroupTab('csv');
-			},
-			set(n) {
-				this.setActiveControlTabGroup({ sourceId: 'csv', tabId: n });
-			},
-		},
-		...mapGetters(['currentSetupGroupTab']),
+		...mapGetters(['getSetupControls']),
 	},
 	methods: {
-		...mapMutations(['setActiveControlTabGroup']),
+		readCsvFile() {
+			if (FileReader && this.currentFile) {
+				const csvReader = new FileReader();
+
+				// csv reader load event listener
+				csvReader.addEventListener('load', (e) => {
+					const fileContent = e.target.result;
+
+					// read contents of file line by line
+					const lines = fileContent.split(/[\r\n]+/g);
+
+					// decide delimiter value
+					const { delimiter: delimiterId } = this.getSetupControls('csv');
+					let delimiter = ',';
+					switch (delimiterId) {
+						case 'comma': {
+							delimiter = ',';
+							break;
+						}
+						default: {
+							delimiter = ',';
+							break;
+						}
+					}
+
+					const csvData = lines.reduce((carry, item) => {
+						// split individual cell data with defined delimiter
+						const splitData = item.split(delimiter);
+						carry.push(splitData);
+
+						return carry;
+					}, []);
+
+					// set csv data to temp data manager
+					this.addTempDataManagerData(csvData);
+
+					// show data manager setup
+					this.setActiveTabGroupForCurrentSource('dataManager');
+
+					this.setBusy(false);
+				});
+
+				// csv reader error event listener
+				csvReader.addEventListener('error', (e) => {
+					this.setBusy(false);
+				});
+
+				// start reading file
+				this.setBusy(true);
+				csvReader.readAsText(this.currentFile);
+			}
+		},
+		...mapMutations(['setBusy', 'setSetupSourceId']),
+		...mapActions(['addTempDataManagerData', 'setActiveTabGroupForCurrentSource']),
 	},
 };
 </script>

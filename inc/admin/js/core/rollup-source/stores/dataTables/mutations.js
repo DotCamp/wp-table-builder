@@ -63,11 +63,36 @@ const mutations = {
 	 * Set active tab group for source setup.
 	 *
 	 * @param {Object} state data table state
-	 * @param {string} sourceId active source setup id
-	 * @param {string} tabId tab to be activated
+	 * @param {{sourceId, tabId}} payload
 	 */
 	setActiveControlTabGroup(state, { sourceId, tabId }) {
 		state.dataSource.setup[sourceId].controlGroupTab = tabId;
+	},
+	/**
+	 * Set busy state of the app.
+	 *
+	 * @param {Object} state data table state
+	 * @param {boolean} busyStatus busy status
+	 */
+	setBusy(state, busyStatus) {
+		state.busy = busyStatus;
+	},
+	/**
+	 * Clear contents of temp data manager.
+	 *
+	 * @param {Object} state data table state
+	 */
+	clearTempDataManager(state) {
+		state.dataSource.setup.tempDataManager.data = [];
+	},
+	/**
+	 * Replace current data in temp data manager with new one.
+	 *
+	 * @param {Object} state data table state
+	 * @param {Array} data data array
+	 */
+	setTempDataManagerData(state, data) {
+		state.dataSource.setup.tempDataManager.data = data;
 	},
 };
 

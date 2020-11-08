@@ -1,7 +1,7 @@
 <template>
 	<div class="wptb-element-option wptb-settings-items wptb-plugin-width-full">
 		<div class="wptb-settings-row wptb-settings-middle-xs wptb-justify-content-center">
-			<material-button :click="handleClick" :style="{ padding: '10px' }"><slot></slot></material-button>
+			<material-button :click="handleClick" class="wptb-panel-button-material"><slot></slot></material-button>
 		</div>
 	</div>
 </template>
@@ -18,5 +18,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped></style>
