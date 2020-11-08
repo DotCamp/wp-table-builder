@@ -6021,4 +6021,12 @@ wptb_shortcode_container_element {
     text-align: center;
 }
 
+.wptb-data-table-csv-setup .wptb-menu-file-drop {
+    font-size: 80%;
+}
+
+.wptb-data-table-csv-setup .hint, .wptb-data-table-csv-setup .supported {
+    color: var(--wptb-plugin-gray-600);
+}
+
 /*endregion*/

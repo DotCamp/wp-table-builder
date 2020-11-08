@@ -27674,6 +27674,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "wptb-data-table-csv-setup" },
     [
       _c(
         "div",
@@ -27683,7 +27684,6 @@ exports.default = _default;
         },
         [
           _c("drag-drop", {
-            staticStyle: { "font-size": "80%" },
             attrs: {
               texts: {
                 hint: _vm.translationM("dragDropHint"),

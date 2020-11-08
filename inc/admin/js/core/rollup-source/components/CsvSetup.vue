@@ -1,10 +1,9 @@
 <template>
-	<div>
+	<div class="wptb-data-table-csv-setup">
 		<div
 			class="wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
 		>
 			<drag-drop
-				style="font-size: 80%;"
 				:texts="{
 					hint: translationM('dragDropHint'),
 					browse: translationM('browse'),
