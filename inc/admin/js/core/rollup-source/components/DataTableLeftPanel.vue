@@ -15,6 +15,7 @@
 				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
 				type="confirm"
 				size="full-size"
+				:disabled="!isSetupDataImported"
 				>{{ translationM('continue') | cap }}</material-button
 			>
 		</div>
@@ -30,7 +31,7 @@ export default {
 	components: { MaterialButton },
 	mixins: [withNativeTranslationStore],
 	computed: {
-		...mapGetters(['isActiveScreenSourceSetup']),
+		...mapGetters(['isActiveScreenSourceSetup', 'isSetupDataImported']),
 	},
 	methods: {
 		setScreenToSourceSelect() {

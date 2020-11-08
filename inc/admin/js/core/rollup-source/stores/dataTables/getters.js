@@ -91,6 +91,15 @@ const getters = {
 	getSetupControls: (state) => (sourceId) => {
 		return state.dataSource.setup[sourceId].controls;
 	},
+	/**
+	 * Get current control values of temp data manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} control values
+	 */
+	getTempDataManagerControls(state) {
+		return state.dataSource.setup.tempDataManager.controls;
+	},
 };
 
 export default getters;

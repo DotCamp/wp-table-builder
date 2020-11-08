@@ -6,12 +6,10 @@
 			v-model="activeControlTab"
 		>
 			<template v-slot:default="{ currentTab }">
-				<PanelSectionGroupTabbedItem :active-id="currentTab" id="csv">
+				<panel-section-group-tabbed-item :active-id="currentTab" id="csv">
 					<csv-setup-csv-panel-controls></csv-setup-csv-panel-controls>
-				</PanelSectionGroupTabbedItem>
-				<PanelSectionGroupTabbedItem :active-id="currentTab" id="dataManager"
-					>data manager
-				</PanelSectionGroupTabbedItem>
+				</panel-section-group-tabbed-item>
+				<data-manager-left-panel :current-tab="currentTab" />
 			</template>
 		</panel-section-group-tabbed-improved>
 	</data-table-left-panel>
@@ -23,6 +21,7 @@ import DataTableLeftPanel from './DataTableLeftPanel';
 import PanelSectionGroupTabbedImproved from './PanelSectionGroupTabbedImproved';
 import PanelSectionGroupTabbedItem from './PanelSectionGroupTabbedItem';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
+import DataManagerLeftPanel from './DataManagerLeftPanel';
 
 export default {
 	name: 'CsvSetupLeftPanel',
@@ -38,6 +37,7 @@ export default {
 	},
 	mixins: [withNativeTranslationStore],
 	components: {
+		DataManagerLeftPanel,
 		CsvSetupCsvPanelControls,
 		DataTableLeftPanel,
 		PanelSectionGroupTabbedImproved,

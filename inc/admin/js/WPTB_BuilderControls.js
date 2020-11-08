@@ -26698,7 +26698,7 @@ var _default = {
     MaterialButton: _MaterialButton.default
   },
   mixins: [_withNativeTranslationStore.default],
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup'])),
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSetupDataImported'])),
   methods: _objectSpread({
     setScreenToSourceSelect: function setScreenToSourceSelect() {
       this.setCurrentScreen('DataSourceSelection');
@@ -26753,7 +26753,11 @@ exports.default = _default;
                 {
                   staticClass:
                     "wptb-plugin-box-shadow-md wptb-panel-button-material",
-                  attrs: { type: "confirm", size: "full-size" }
+                  attrs: {
+                    type: "confirm",
+                    size: "full-size",
+                    disabled: !_vm.isSetupDataImported
+                  }
                 },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
               )
@@ -27329,7 +27333,107 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
+},{}],"components/DataManagerLeftPanel.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
+
+var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    PanelToggleControl: _PanelToggleControl.default,
+    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  props: {
+    currentTab: {
+      type: String,
+      default: 'default'
+    }
+  },
+  computed: _objectSpread({
+    firstRowAsColumnName: {
+      get: function get() {
+        return this.getTempDataManagerControls.firstRowAsColumnName;
+      },
+      set: function set(n) {
+        this.setTempDataManagerControl({
+          key: 'firstRowAsColumnName',
+          value: n
+        });
+      }
+    }
+  }, (0, _vuex.mapGetters)(['getTempDataManagerControls'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setTempDataManagerControl']))
+};
+exports.default = _default;
+        var $b4a27f = exports.default || module.exports;
+      
+      if (typeof $b4a27f === 'function') {
+        $b4a27f = $b4a27f.options;
+      }
+    
+        /* template */
+        Object.assign($b4a27f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "PanelSectionGroupTabbedItem",
+    { attrs: { "active-id": _vm.currentTab, id: "dataManager" } },
+    [
+      _c(
+        "fragment",
+        [
+          _c("panel-toggle-control", {
+            attrs: { label: _vm._f("cap")(_vm.translationM("firstRowHeader")) },
+            model: {
+              value: _vm.firstRowAsColumnName,
+              callback: function($$v) {
+                _vm.firstRowAsColumnName = $$v
+              },
+              expression: "firstRowAsColumnName"
+            }
+          })
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27348,6 +27452,8 @@ var _PanelSectionGroupTabbedImproved = _interopRequireDefault(require("./PanelSe
 var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _DataManagerLeftPanel = _interopRequireDefault(require("./DataManagerLeftPanel"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27371,6 +27477,7 @@ var _default = {
   },
   mixins: [_withNativeTranslationStore.default],
   components: {
+    DataManagerLeftPanel: _DataManagerLeftPanel.default,
     CsvSetupCsvPanelControls: _CsvSetupCsvPanelControls.default,
     DataTableLeftPanel: _DataTableLeftPanel.default,
     PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
@@ -27419,17 +27526,15 @@ exports.default = _default;
               var currentTab = ref.currentTab
               return [
                 _c(
-                  "PanelSectionGroupTabbedItem",
+                  "panel-section-group-tabbed-item",
                   { attrs: { "active-id": currentTab, id: "csv" } },
                   [_c("csv-setup-csv-panel-controls")],
                   1
                 ),
                 _vm._v(" "),
-                _c(
-                  "PanelSectionGroupTabbedItem",
-                  { attrs: { "active-id": currentTab, id: "dataManager" } },
-                  [_vm._v("data manager\n\t\t\t")]
-                )
+                _c("data-manager-left-panel", {
+                  attrs: { "current-tab": currentTab }
+                })
               ]
             }
           }
@@ -27458,7 +27563,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/DragDrop.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./CsvSetupCsvPanelControls":"components/CsvSetupCsvPanelControls.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerLeftPanel":"components/DataManagerLeftPanel.vue"}],"components/DragDrop.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28392,11 +28497,14 @@ var state = {
         controls: {
           delimiter: 'comma'
         },
-        controlGroupTab: 'csv'
+        controlGroupTab: 'dataManager'
       },
       // data manager property that will be used within setup, this is not the final dataManager
       tempDataManager: {
-        data: []
+        data: [],
+        controls: {
+          firstRowAsColumnName: true
+        }
       }
     }
   },
@@ -28520,6 +28628,18 @@ var mutations = {
    */
   setTempDataManagerData: function setTempDataManagerData(state, data) {
     state.dataSource.setup.tempDataManager.data = data;
+  },
+
+  /**
+   * Set control value for temp data manager.
+   *
+   * @param {Object} state data table state
+   * @param {key, value} mutation payload
+   */
+  setTempDataManagerControl: function setTempDataManagerControl(state, _ref2) {
+    var key = _ref2.key,
+        value = _ref2.value;
+    state.dataSource.setup.tempDataManager.controls[key] = value;
   }
 };
 var _default = mutations;
@@ -28732,6 +28852,16 @@ var getters = {
     return function (sourceId) {
       return state.dataSource.setup[sourceId].controls;
     };
+  },
+
+  /**
+   * Get current control values of temp data manager.
+   *
+   * @param {Object} state store state
+   * @return {Object} control values
+   */
+  getTempDataManagerControls: function getTempDataManagerControls(state) {
+    return state.dataSource.setup.tempDataManager.controls;
   }
 };
 var _default = getters;
@@ -28879,7 +29009,8 @@ var _default = {
           dragDropHint: (0, _i18n.__)('Drag and drop file', 'wp-table-builder'),
           browse: (0, _i18n.__)('browse', 'wp-table-builder'),
           clear: (0, _i18n.__)('clear', 'wp-table-builder'),
-          import: (0, _i18n.__)('import', 'wp-table-builder')
+          import: (0, _i18n.__)('import', 'wp-table-builder'),
+          firstRowHeader: (0, _i18n.__)('first row as column name', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },

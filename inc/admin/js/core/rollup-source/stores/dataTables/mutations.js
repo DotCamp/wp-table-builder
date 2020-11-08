@@ -94,6 +94,15 @@ const mutations = {
 	setTempDataManagerData(state, data) {
 		state.dataSource.setup.tempDataManager.data = data;
 	},
+	/**
+	 * Set control value for temp data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {key, value} mutation payload
+	 */
+	setTempDataManagerControl(state, { key, value }) {
+		state.dataSource.setup.tempDataManager.controls[key] = value;
+	},
 };
 
 export default mutations;

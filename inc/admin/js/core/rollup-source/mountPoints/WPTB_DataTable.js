@@ -50,6 +50,7 @@ export default {
 					browse: __('browse', 'wp-table-builder'),
 					clear: __('clear', 'wp-table-builder'),
 					import: __('import', 'wp-table-builder'),
+					firstRowHeader: __('first row as column name', 'wp-table-builder'),
 				},
 				proUrl: data.proUrl,
 			},

@@ -25,11 +25,14 @@ const state = {
 				controls: {
 					delimiter: 'comma',
 				},
-				controlGroupTab: 'csv',
+				controlGroupTab: 'dataManager',
 			},
 			// data manager property that will be used within setup, this is not the final dataManager
 			tempDataManager: {
 				data: [],
+				controls: {
+					firstRowAsColumnName: true,
+				},
 			},
 		},
 	},
