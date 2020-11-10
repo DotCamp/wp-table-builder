@@ -27349,6 +27349,8 @@ var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl")
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
+var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -27359,6 +27361,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    PanelButtonControl: _PanelButtonControl.default,
     PanelToggleControl: _PanelToggleControl.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
   },
@@ -27372,17 +27375,17 @@ var _default = {
   computed: _objectSpread({
     firstRowAsColumnName: {
       get: function get() {
-        return this.getTempDataManagerControls.firstRowAsColumnName;
+        return this.getDataManagerControls.firstRowAsColumnName;
       },
       set: function set(n) {
-        this.setTempDataManagerControl({
+        this.setDataManagerControl({
           key: 'firstRowAsColumnName',
           value: n
         });
       }
     }
-  }, (0, _vuex.mapGetters)(['getTempDataManagerControls'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setTempDataManagerControl']))
+  }, (0, _vuex.mapGetters)(['getDataManagerControls'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']))
 };
 exports.default = _default;
         var $b4a27f = exports.default || module.exports;
@@ -27413,7 +27416,15 @@ exports.default = _default;
               },
               expression: "firstRowAsColumnName"
             }
-          })
+          }),
+          _vm._v(" "),
+          _c("panel-button-control", [
+            _vm._v(
+              "\n\t\t\t" +
+                _vm._s(_vm._f("cap")(_vm.translationM("selectRowForNames"))) +
+                "\n\t\t"
+            )
+          ])
         ],
         1
       )
@@ -27433,7 +27444,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./PanelButtonControl":"components/PanelButtonControl.vue"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27914,7 +27925,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue"}],"components/DataManager.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue"}],"components/DataManagerCell.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27927,9 +27938,164 @@ exports.default = void 0;
 //
 //
 //
-//
-//
-var _default = {};
+var _default = {
+  props: {
+    value: {
+      type: null,
+      default: 0
+    },
+    placeHolder: {
+      type: String,
+      default: 'enter data'
+    },
+    row: {
+      type: Number,
+      default: 0
+    },
+    column: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    handleHover: function handleHover() {
+      this.$emit('cellHover', this.row, this.column);
+    },
+    handleClick: function handleClick() {
+      this.$emit('cellClick', this.row, this.column);
+    }
+  }
+};
+exports.default = _default;
+        var $8ae122 = exports.default || module.exports;
+      
+      if (typeof $8ae122 === 'function') {
+        $8ae122 = $8ae122.options;
+      }
+    
+        /* template */
+        Object.assign($8ae122, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      on: {
+        mouseenter: _vm.handleHover,
+        "!click": function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [
+      _c("input", {
+        staticClass: "wptb-data-manager-cell-input",
+        attrs: { placeholder: _vm.placeHolder, type: "text" },
+        domProps: { value: _vm.value }
+      })
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/DataManager.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _DataManagerCell = _interopRequireDefault(require("./DataManagerCell"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    useTemp: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    DataManagerCell: _DataManagerCell.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      table: {
+        header: [],
+        values: []
+      },
+      columnNameRowIndex: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.addDataManagerTempData([['', '', ''], ['', '', '']]);
+
+      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
+    });
+  },
+  watch: {
+    getDataManagerTempData: {
+      handler: function handler(n) {
+        this.prepareTableValues(n);
+      },
+      deep: true
+    },
+    'getDataManagerControls.firstRowAsColumnName': {
+      handler: function handler(n) {
+        this.calculateColumnNameRowIndex(n);
+      }
+    },
+    getDataManagerControls: {
+      handler: function handler() {
+        this.prepareTableValues(this.getDataManagerTempData);
+      },
+      deep: true
+    }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId']), {
+    infoRowSpan: function infoRowSpan() {
+      return this.table.header.length;
+    }
+  }),
+  methods: _objectSpread({
+    calculateColumnNameRowIndex: function calculateColumnNameRowIndex(n) {
+      this.columnNameRowIndex = n ? this.getDataManagerRowId(0) : null;
+    },
+    prepareTableValues: function prepareTableValues(tableValue) {
+      // TODO [erdembircan] remove for production
+      console.log('called');
+    }
+  }, (0, _vuex.mapActions)(['addDataManagerTempData']))
+};
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
       
@@ -27943,23 +28109,91 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "wptb-plugin-width-full wptb-plugin-height-full" },
+    [
+      _c("div", { staticClass: "wptb-data-manager-table" }, [
+        _c("table", [
+          _c("thead", [
+            _c(
+              "tr",
+              { staticClass: "wptb-data-manager-table-column-name-info" },
+              [
+                _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                  _vm._v(_vm._s(_vm.translationM("columnNames")))
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "tr",
+              _vm._l(_vm.table.header, function(headerCell) {
+                return _c(
+                  "th",
+                  {
+                    key: _vm.columnNameRowIndex,
+                    staticClass: "wptb-data-manager-table-data-value"
+                  },
+                  [
+                    _c("data-manager-cell", {
+                      attrs: {
+                        "place-holder": _vm.translationM("columnName"),
+                        value: headerCell
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c(
+              "tr",
+              { staticClass: "wptb-data-manager-table-column-name-info" },
+              [
+                _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                  _vm._v(_vm._s(_vm.translationM("values")))
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.table.values, function(ref) {
+              var key = ref.key
+              var values = ref.values
+              return _c(
+                "tr",
+                { key: key },
+                _vm._l(values, function(cell) {
+                  return _c(
+                    "td",
+                    { staticClass: "wptb-data-manager-table-data-value" },
+                    [
+                      _c("data-manager-cell", {
+                        attrs: {
+                          "place-holder": _vm.translationM("value"),
+                          value: cell
+                        }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
+            }),
+            0
+          )
+        ])
+      ])
+    ]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass:
-          "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
-      },
-      [_c("i", [_vm._v("data manager")])]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -27971,7 +28205,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28044,75 +28278,83 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "wptb-plugin-height-full wptb-plugin-width-full" },
     [
       _c(
-        "transition",
-        { attrs: { name: "wptb-fade", mode: "out-in" } },
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.currentSetupGroupTab("csv") === "csv",
+              expression: "currentSetupGroupTab('csv') === 'csv'"
+            }
+          ],
+          staticClass:
+            "wptb-plugin-height-full wptb-plugin-width-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
+        },
         [
-          _vm.currentSetupGroupTab("csv") === "csv"
-            ? _c(
-                "div",
+          _c("drag-drop", {
+            attrs: {
+              texts: {
+                hint: _vm.translationM("dragDropHint"),
+                browse: _vm.translationM("browse"),
+                clear: _vm.translationM("clear")
+              },
+              "allowed-formats": ["csv"]
+            },
+            model: {
+              value: _vm.innerFile,
+              callback: function($$v) {
+                _vm.innerFile = $$v
+              },
+              expression: "innerFile"
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "transition",
+            { attrs: { name: "wptb-fade" } },
+            [
+              _c(
+                "store-material-button",
                 {
-                  staticClass:
-                    "wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.currentFile !== null,
+                      expression: "currentFile !== null"
+                    }
+                  ],
+                  on: { buttonClicked: _vm.handleCsvImport }
                 },
                 [
-                  _c("drag-drop", {
-                    attrs: {
-                      texts: {
-                        hint: _vm.translationM("dragDropHint"),
-                        browse: _vm.translationM("browse"),
-                        clear: _vm.translationM("clear")
-                      },
-                      "allowed-formats": ["csv"]
-                    },
-                    model: {
-                      value: _vm.innerFile,
-                      callback: function($$v) {
-                        _vm.innerFile = $$v
-                      },
-                      expression: "innerFile"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "transition",
-                    { attrs: { name: "wptb-fade" } },
-                    [
-                      _c(
-                        "store-material-button",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.currentFile !== null,
-                              expression: "currentFile !== null"
-                            }
-                          ],
-                          on: { buttonClicked: _vm.handleCsvImport }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(_vm._f("cap")(_vm.translationM("import"))) +
-                              "\n\t\t\t\t"
-                          )
-                        ]
-                      )
-                    ],
-                    1
+                  _vm._v(
+                    _vm._s(_vm._f("cap")(_vm.translationM("import"))) +
+                      "\n\t\t\t"
                   )
-                ],
-                1
+                ]
               )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.currentSetupGroupTab("csv") === "dataManager"
-            ? _c("data-manager")
-            : _vm._e()
+            ],
+            1
+          )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("data-manager", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.currentSetupGroupTab("csv") === "dataManager",
+            expression: "currentSetupGroupTab('csv') === 'dataManager'"
+          }
+        ],
+        key: "dataManager"
+      })
     ],
     1
   )
@@ -28211,7 +28453,7 @@ var _default = {
             return carry;
           }, []); // set csv data to temp data manager
 
-          _this.addTempDataManagerData(csvData); // show data manager setup
+          _this.addDataManagerTempData(csvData); // show data manager setup
 
 
           _this.setActiveTabGroupForCurrentSource('dataManager');
@@ -28227,7 +28469,7 @@ var _default = {
         csvReader.readAsText(this.currentFile);
       }
     }
-  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId']), {}, (0, _vuex.mapActions)(['addTempDataManagerData', 'setActiveTabGroupForCurrentSource']))
+  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']))
 };
 exports.default = _default;
         var $69ad22 = exports.default || module.exports;
@@ -28244,7 +28486,10 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wptb-data-table-csv-setup" },
+    {
+      staticClass:
+        "wptb-data-table-csv-setup wptb-plugin-width-full wptb-plugin-height-full"
+    },
     [
       _c("CsvSetupLeftPanel", { attrs: { "panel-tabs": _vm.panelTabs } }),
       _vm._v(" "),
@@ -28401,7 +28646,7 @@ var _default = {
      */
     mainStyle: function mainStyle() {
       return {
-        // marginTop: `${this.headerHeight + this.extraPadding}px`,
+        marginTop: "".concat(this.headerHeight + this.extraPadding, "px"),
         height: "calc( 100% - ".concat(this.headerHeight + this.extraPadding, "px)")
       };
     }
@@ -28498,14 +28743,23 @@ var state = {
           delimiter: 'comma'
         },
         controlGroupTab: 'dataManager'
-      },
-      // data manager property that will be used within setup, this is not the final dataManager
-      tempDataManager: {
-        data: [],
-        controls: {
-          firstRowAsColumnName: true
-        }
       }
+    }
+  },
+  dataManager: {
+    tempData: {
+      rowIds: [],
+      colIds: [],
+      values: []
+    },
+    controls: {
+      firstRowAsColumnName: true
+    },
+    select: {
+      active: false,
+      type: 'row',
+      row: 0,
+      column: 0
     }
   },
   leftPanelId: '#dataTableLeftPanel',
@@ -28617,7 +28871,9 @@ var mutations = {
    * @param {Object} state data table state
    */
   clearTempDataManager: function clearTempDataManager(state) {
-    state.dataSource.setup.tempDataManager.data = [];
+    state.dataManager.tempData.values = [];
+    state.dataManager.tempData.rowIds = [];
+    state.dataManager.tempData.colIds = [];
   },
 
   /**
@@ -28626,20 +28882,40 @@ var mutations = {
    * @param {Object} state data table state
    * @param {Array} data data array
    */
-  setTempDataManagerData: function setTempDataManagerData(state, data) {
-    state.dataSource.setup.tempDataManager.data = data;
+  setDataManagerTempData: function setDataManagerTempData(state, data) {
+    state.dataManager.tempData.values = data;
   },
 
   /**
-   * Set control value for temp data manager.
+   * Set control value for data manager.
    *
    * @param {Object} state data table state
    * @param {key, value} mutation payload
    */
-  setTempDataManagerControl: function setTempDataManagerControl(state, _ref2) {
+  setDataManagerControl: function setDataManagerControl(state, _ref2) {
     var key = _ref2.key,
         value = _ref2.value;
-    state.dataSource.setup.tempDataManager.controls[key] = value;
+    state.dataManager.controls[key] = value;
+  },
+
+  /**
+   * Push a row id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerRowId: function pushDataManagerRowId(state, id) {
+    state.dataManager.tempData.rowIds.push(id);
+  },
+
+  /**
+   * Push a column id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerColId: function pushDataManagerColId(state, id) {
+    state.dataManager.tempData.colIds.push(id);
   }
 };
 var _default = mutations;
@@ -28714,14 +28990,48 @@ var actions = {
   },
 
   /**
-   * Add data to temp data manager.
+   * Add temp data to data manager.
    *
    * @param {commit} vuex store object
    * @param {Array} data data array
    */
-  addTempDataManagerData: function addTempDataManagerData(_ref5, data) {
-    var commit = _ref5.commit;
-    commit('setTempDataManagerData', Array.isArray(data) ? data : []);
+  addDataManagerTempData: function addDataManagerTempData(_ref5, data) {
+    var commit = _ref5.commit,
+        getters = _ref5.getters;
+    var confirmedData = Array.isArray(data) ? data : [];
+    commit('clearTempDataManager'); // generate ids for rows
+    // eslint-disable-next-line array-callback-return,no-unused-vars
+
+    confirmedData.map(function (_) {
+      commit('pushDataManagerRowId', getters.generateUniqueId());
+    }); // find maximum amount of column numbers
+
+    var maxCol = confirmedData.reduce(function (carry, current) {
+      var currentLength = current.length;
+      return Math.max(currentLength, carry);
+    }, 0); // generate ids for columns
+
+    for (var i = 0; i < maxCol; i += 1) {
+      commit('pushDataManagerColId', getters.generateUniqueId());
+    } // form data object
+
+
+    var formedData = confirmedData.reduce(function (carry, item, index) {
+      var rowObj = {
+        rowId: getters.getDataManagerRowId(index),
+        values: []
+      }; // eslint-disable-next-line array-callback-return
+
+      item.map(function (c, i) {
+        rowObj.values.push({
+          colId: getters.getDataManagerColId(i),
+          value: c
+        });
+      });
+      carry.push(rowObj);
+      return carry;
+    }, []);
+    commit('setDataManagerTempData', formedData);
   },
 
   /**
@@ -28840,7 +29150,7 @@ var getters = {
    * @return {boolean} imported or not
    */
   isSetupDataImported: function isSetupDataImported(state) {
-    return state.dataSource.setup.tempDataManager.data.length > 0;
+    return Array.isArray(state.dataManager.tempData) ? state.dataManager.tempData.values.length > 0 : false;
   },
 
   /**
@@ -28860,8 +29170,79 @@ var getters = {
    * @param {Object} state store state
    * @return {Object} control values
    */
-  getTempDataManagerControls: function getTempDataManagerControls(state) {
-    return state.dataSource.setup.tempDataManager.controls;
+  getDataManagerControls: function getDataManagerControls(state) {
+    return state.dataManager.controls;
+  },
+
+  /**
+   * Get data values of temp data manager.
+   *
+   * @param {Object} state store state
+   * @return {Array} temp data manager data
+   */
+  getDataManagerData: function getDataManagerData(state) {
+    return state.dataManager.data;
+  },
+
+  /**
+   * Get temp data values of data manager.
+   *
+   * @param {Object} state store state
+   * @return {Array} temp data
+   */
+  getDataManagerTempData: function getDataManagerTempData(state) {
+    return state.dataManager.tempData.values;
+  },
+
+  /**
+   * Generate unique id.
+   *
+   * @return {Function} generate function
+   */
+  generateUniqueId: function generateUniqueId() {
+    return function () {
+      var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+      var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+      var key = '';
+
+      for (var i = 0; i < length; i += 1) {
+        key += variables[Math.floor(Math.random() * variables.length)];
+      }
+
+      return key;
+    };
+  },
+
+  /**
+   * Get data manager row id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerRowId: function getDataManagerRowId(state) {
+    return function (index) {
+      if (state.dataManager.tempData.rowIds[index]) {
+        return state.dataManager.tempData.rowIds[index];
+      }
+
+      return 0;
+    };
+  },
+
+  /**
+   * Get data manager column id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerColId: function getDataManagerColId(state) {
+    return function (index) {
+      if (state.dataManager.tempData.colIds[index]) {
+        return state.dataManager.tempData.colIds[index];
+      }
+
+      return 0;
+    };
   }
 };
 var _default = getters;
@@ -29010,7 +29391,12 @@ var _default = {
           browse: (0, _i18n.__)('browse', 'wp-table-builder'),
           clear: (0, _i18n.__)('clear', 'wp-table-builder'),
           import: (0, _i18n.__)('import', 'wp-table-builder'),
-          firstRowHeader: (0, _i18n.__)('first row as column name', 'wp-table-builder')
+          firstRowHeader: (0, _i18n.__)('first row as column names', 'wp-table-builder'),
+          columnNames: (0, _i18n.__)('column names', 'wp-table-builder'),
+          columnName: (0, _i18n.__)('column name', 'wp-table-builder'),
+          values: (0, _i18n.__)('values', 'wp-table-builder'),
+          value: (0, _i18n.__)('value', 'wp-table-builder'),
+          selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },

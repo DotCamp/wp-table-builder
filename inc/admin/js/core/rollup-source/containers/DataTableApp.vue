@@ -58,7 +58,7 @@ export default {
 		 */
 		mainStyle() {
 			return {
-				// marginTop: `${this.headerHeight + this.extraPadding}px`,
+				marginTop: `${this.headerHeight + this.extraPadding}px`,
 				height: `calc( 100% - ${this.headerHeight + this.extraPadding}px)`,
 			};
 		},

@@ -81,7 +81,7 @@ const getters = {
 	 * @return {boolean} imported or not
 	 */
 	isSetupDataImported(state) {
-		return state.dataSource.setup.tempDataManager.data.length > 0;
+		return Array.isArray(state.dataManager.tempData) ? state.dataManager.tempData.values.length > 0 : false;
 	},
 	/**
 	 * Get current control values for given source
@@ -97,8 +97,65 @@ const getters = {
 	 * @param {Object} state store state
 	 * @return {Object} control values
 	 */
-	getTempDataManagerControls(state) {
-		return state.dataSource.setup.tempDataManager.controls;
+	getDataManagerControls(state) {
+		return state.dataManager.controls;
+	},
+	/**
+	 * Get data values of temp data manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {Array} temp data manager data
+	 */
+	getDataManagerData(state) {
+		return state.dataManager.data;
+	},
+	/**
+	 * Get temp data values of data manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {Array} temp data
+	 */
+	getDataManagerTempData(state) {
+		return state.dataManager.tempData.values;
+	},
+	/**
+	 * Generate unique id.
+	 *
+	 * @return {Function} generate function
+	 */
+	generateUniqueId: () => (length = 5) => {
+		const variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+		let key = '';
+
+		for (let i = 0; i < length; i += 1) {
+			key += variables[Math.floor(Math.random() * variables.length)];
+		}
+
+		return key;
+	},
+	/**
+	 * Get data manager row id of a given index.
+	 *
+	 * @param {Object} state store state
+	 * @return {function(*): (*|0)} function that can be used with an argument
+	 */
+	getDataManagerRowId: (state) => (index) => {
+		if (state.dataManager.tempData.rowIds[index]) {
+			return state.dataManager.tempData.rowIds[index];
+		}
+		return 0;
+	},
+	/**
+	 * Get data manager column id of a given index.
+	 *
+	 * @param {Object} state store state
+	 * @return {function(*): (*|0)} function that can be used with an argument
+	 */
+	getDataManagerColId: (state) => (index) => {
+		if (state.dataManager.tempData.colIds[index]) {
+			return state.dataManager.tempData.colIds[index];
+		}
+		return 0;
 	},
 };
 

@@ -6038,4 +6038,43 @@ wptb_shortcode_container_element {
     padding: 10px;
 }
 
+.wptb-data-manager-table-column-name-info{
+    text-transform: uppercase;
+}
+
+.wptb-data-manager-table-column-name-info th{
+    font-weight:  normal !important;
+    padding: 5px;
+}
+
+.wptb-data-manager-table {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.wptb-data-manager-table table {
+    border-collapse: collapse;
+    background-color: var(--wptb-plugin-gray-200);
+}
+
+.wptb-data-manager-table tr {
+    border: 1px solid var(--wptb-plugin-gray-400);
+}
+
+.wptb-data-manager-table-data-value {
+    border: 1px solid var(--wptb-plugin-gray-400);
+    min-width: 100px;
+    padding: 10px;
+}
+
+.wptb-data-manager-cell-input{
+    max-width: 100px !important;
+    border: 0 !important;
+    border-radius: 3px;
+    text-align: center !important;
+    word-break: break-all !important;
+    padding: 10px !important;
+}
 /*endregion*/

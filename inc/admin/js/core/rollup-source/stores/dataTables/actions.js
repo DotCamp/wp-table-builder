@@ -53,13 +53,47 @@ const actions = {
 		dispatch('setCurrentScreen', screenName);
 	},
 	/**
-	 * Add data to temp data manager.
+	 * Add temp data to data manager.
 	 *
 	 * @param {commit} vuex store object
 	 * @param {Array} data data array
 	 */
-	addTempDataManagerData({ commit }, data) {
-		commit('setTempDataManagerData', Array.isArray(data) ? data : []);
+	addDataManagerTempData({ commit, getters }, data) {
+		const confirmedData = Array.isArray(data) ? data : [];
+		commit('clearTempDataManager');
+
+		// generate ids for rows
+		// eslint-disable-next-line array-callback-return,no-unused-vars
+		confirmedData.map((_) => {
+			commit('pushDataManagerRowId', getters.generateUniqueId());
+		});
+
+		// find maximum amount of column numbers
+		const maxCol = confirmedData.reduce((carry, current) => {
+			const currentLength = current.length;
+			return Math.max(currentLength, carry);
+		}, 0);
+
+		// generate ids for columns
+		for (let i = 0; i < maxCol; i += 1) {
+			commit('pushDataManagerColId', getters.generateUniqueId());
+		}
+
+		// form data object
+		const formedData = confirmedData.reduce((carry, item, index) => {
+			const rowObj = { rowId: getters.getDataManagerRowId(index), values: [] };
+
+			// eslint-disable-next-line array-callback-return
+			item.map((c, i) => {
+				rowObj.values.push({ colId: getters.getDataManagerColId(i), value: c });
+			});
+
+			carry.push(rowObj);
+
+			return carry;
+		}, []);
+
+		commit('setDataManagerTempData', formedData);
 	},
 	/**
 	 * Set tab of current active source setup.

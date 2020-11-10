@@ -27,13 +27,22 @@ const state = {
 				},
 				controlGroupTab: 'dataManager',
 			},
-			// data manager property that will be used within setup, this is not the final dataManager
-			tempDataManager: {
-				data: [],
-				controls: {
-					firstRowAsColumnName: true,
-				},
-			},
+		},
+	},
+	dataManager: {
+		tempData: {
+			rowIds: [],
+			colIds: [],
+			values: [],
+		},
+		controls: {
+			firstRowAsColumnName: true,
+		},
+		select: {
+			active: false,
+			type: 'row',
+			row: 0,
+			column: 0,
 		},
 	},
 	leftPanelId: '#dataTableLeftPanel',

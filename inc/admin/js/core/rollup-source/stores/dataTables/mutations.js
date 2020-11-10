@@ -83,7 +83,9 @@ const mutations = {
 	 * @param {Object} state data table state
 	 */
 	clearTempDataManager(state) {
-		state.dataSource.setup.tempDataManager.data = [];
+		state.dataManager.tempData.values = [];
+		state.dataManager.tempData.rowIds = [];
+		state.dataManager.tempData.colIds = [];
 	},
 	/**
 	 * Replace current data in temp data manager with new one.
@@ -91,17 +93,35 @@ const mutations = {
 	 * @param {Object} state data table state
 	 * @param {Array} data data array
 	 */
-	setTempDataManagerData(state, data) {
-		state.dataSource.setup.tempDataManager.data = data;
+	setDataManagerTempData(state, data) {
+		state.dataManager.tempData.values = data;
 	},
 	/**
-	 * Set control value for temp data manager.
+	 * Set control value for data manager.
 	 *
 	 * @param {Object} state data table state
 	 * @param {key, value} mutation payload
 	 */
-	setTempDataManagerControl(state, { key, value }) {
-		state.dataSource.setup.tempDataManager.controls[key] = value;
+	setDataManagerControl(state, { key, value }) {
+		state.dataManager.controls[key] = value;
+	},
+	/**
+	 * Push a row id to data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} id id to be pushed
+	 */
+	pushDataManagerRowId(state, id) {
+		state.dataManager.tempData.rowIds.push(id);
+	},
+	/**
+	 * Push a column id to data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} id id to be pushed
+	 */
+	pushDataManagerColId(state, id) {
+		state.dataManager.tempData.colIds.push(id);
 	},
 };
 

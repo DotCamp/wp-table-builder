@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-data-table-csv-setup">
+	<div class="wptb-data-table-csv-setup wptb-plugin-width-full wptb-plugin-height-full">
 		<!--    left panel controls-->
 		<CsvSetupLeftPanel :panel-tabs="panelTabs"></CsvSetupLeftPanel>
 		<!--    builder view-->
@@ -69,11 +69,10 @@ export default {
 					}, []);
 
 					// set csv data to temp data manager
-					this.addTempDataManagerData(csvData);
+					this.addDataManagerTempData(csvData);
 
 					// show data manager setup
 					this.setActiveTabGroupForCurrentSource('dataManager');
-
 					this.setBusy(false);
 				});
 
@@ -88,7 +87,7 @@ export default {
 			}
 		},
 		...mapMutations(['setBusy', 'setSetupSourceId']),
-		...mapActions(['addTempDataManagerData', 'setActiveTabGroupForCurrentSource']),
+		...mapActions(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']),
 	},
 };
 </script>

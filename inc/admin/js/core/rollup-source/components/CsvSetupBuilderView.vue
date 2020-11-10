@@ -1,27 +1,25 @@
 <template>
-	<div>
-		<transition name="wptb-fade" mode="out-in">
-			<div
-				class="wptb-plugin-width-full wptb-plugin-height-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
-				v-if="currentSetupGroupTab('csv') === 'csv'"
-			>
-				<drag-drop
-					:texts="{
-						hint: translationM('dragDropHint'),
-						browse: translationM('browse'),
-						clear: translationM('clear'),
-					}"
-					:allowed-formats="['csv']"
-					v-model="innerFile"
-				></drag-drop>
-				<transition name="wptb-fade">
-					<store-material-button v-show="currentFile !== null" @buttonClicked="handleCsvImport"
-						>{{ translationM('import') | cap }}
-					</store-material-button>
-				</transition>
-			</div>
-			<data-manager v-if="currentSetupGroupTab('csv') === 'dataManager'"></data-manager>
-		</transition>
+	<div class="wptb-plugin-height-full wptb-plugin-width-full">
+		<div
+			class="wptb-plugin-height-full wptb-plugin-width-full wptb-flex wptb-flex-justify-center wptb-flex-align-center wptb-flex-col"
+			v-show="currentSetupGroupTab('csv') === 'csv'"
+		>
+			<drag-drop
+				:texts="{
+					hint: translationM('dragDropHint'),
+					browse: translationM('browse'),
+					clear: translationM('clear'),
+				}"
+				:allowed-formats="['csv']"
+				v-model="innerFile"
+			></drag-drop>
+			<transition name="wptb-fade">
+				<store-material-button v-show="currentFile !== null" @buttonClicked="handleCsvImport"
+					>{{ translationM('import') | cap }}
+				</store-material-button>
+			</transition>
+		</div>
+		<data-manager key="dataManager" v-show="currentSetupGroupTab('csv') === 'dataManager'"></data-manager>
 	</div>
 </template>
 <script>

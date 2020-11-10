@@ -5,6 +5,9 @@
 				v-model="firstRowAsColumnName"
 				:label="translationM('firstRowHeader') | cap"
 			></panel-toggle-control>
+			<panel-button-control>
+				{{ translationM('selectRowForNames') | cap }}
+			</panel-button-control>
 		</fragment>
 	</PanelSectionGroupTabbedItem>
 </template>
@@ -13,9 +16,10 @@ import { mapGetters, mapMutations } from 'vuex';
 import PanelSectionGroupTabbedItem from './PanelSectionGroupTabbedItem';
 import PanelToggleControl from './PanelToggleControl';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
+import PanelButtonControl from './PanelButtonControl';
 
 export default {
-	components: { PanelToggleControl, PanelSectionGroupTabbedItem },
+	components: { PanelButtonControl, PanelToggleControl, PanelSectionGroupTabbedItem },
 	mixins: [withNativeTranslationStore],
 	props: {
 		currentTab: {
@@ -26,16 +30,16 @@ export default {
 	computed: {
 		firstRowAsColumnName: {
 			get() {
-				return this.getTempDataManagerControls.firstRowAsColumnName;
+				return this.getDataManagerControls.firstRowAsColumnName;
 			},
 			set(n) {
-				this.setTempDataManagerControl({ key: 'firstRowAsColumnName', value: n });
+				this.setDataManagerControl({ key: 'firstRowAsColumnName', value: n });
 			},
 		},
-		...mapGetters(['getTempDataManagerControls']),
+		...mapGetters(['getDataManagerControls']),
 	},
 	methods: {
-		...mapMutations(['setTempDataManagerControl']),
+		...mapMutations(['setDataManagerControl']),
 	},
 };
 </script>
