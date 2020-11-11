@@ -154,9 +154,6 @@ WPTB_Helper.controlsInclude(table, controlsChange);
 
 const tableBorderColor = WPTB_Helper.getElementColorStylesHex(table, 'borderColor');
 WPTB_TableSettingsData.setTableSetting('borderColor', tableBorderColor);
-// table.addEventListener('wp-table-builder/table-changed/after', function () {
-//     WPTB_Helper.elementOptionsSet( 'table_setting', table );
-// }, true);
 
 // handle changing into manage cells menu
 document.addEventListener('wptbSectionChanged', ({ detail }) => {

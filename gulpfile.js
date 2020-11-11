@@ -10,6 +10,7 @@ const gulpConfig = {
 	frontEndJs: {
 		src: [
 			'./inc/admin/js/core/WPTB_CutGlueTable.js',
+			'./inc/admin/js/core/WPTB_GetDirectionAfterReconstruction.js',
 			'./inc/admin/js/core/WPTB_SortableTable.js',
 			'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
 			'./inc/admin/js/WPTB_ResponsiveFrontend.js',

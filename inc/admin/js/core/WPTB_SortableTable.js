@@ -147,7 +147,6 @@
 		 * @param {object} responsiveFront
 		 */
 		this.sortableTableInitialization = function (responsiveFront) {
-			let type = '';
 			let typeFirst;
 			let typeSecond;
 			if (this.table.dataset.wptbSortableTableVertical && this.table.dataset.wptbSortableTableVertical === '1') {
@@ -161,77 +160,34 @@
 				typeSecond = 'vertical';
 			}
 
-			const switchMode = {};
-			if (responsiveFront && responsiveFront.getDirective(this.table)) {
-				switchMode.switch = function (e) {
-					const directives = responsiveFront.getDirective(this.table)
+			if(!typeFirst || typeof typeFirst !== 'string' || !typeSecond || typeof typeSecond !== 'string') return;
 
-					let sizeRangeId = 'desktop';
-					if (e && e.detail) {
-						sizeRangeId = e.detail.sizeRangeId;
-					}
-					type = typeFirst;
-					if (sizeRangeId !== 'desktop') {
-						if (directives.hasOwnProperty('modeOptions')) {
-							const mode = directives.responsiveMode;
-							const modeOptions = directives.modeOptions[mode];
+			let switchMode = WPTB_GetDirectionAfterReconstruction(this.table, typeFirst, typeSecond, 'vertical', responsiveFront);
 
-							if (
-								modeOptions.hasOwnProperty('topRowAsHeader') &&
-								modeOptions.topRowAsHeader.hasOwnProperty(sizeRangeId) &&
-								modeOptions.topRowAsHeader[sizeRangeId]
-							) {
-								if (
-									modeOptions.hasOwnProperty('cellStackDirection') &&
-									modeOptions.cellStackDirection.hasOwnProperty(sizeRangeId)
-								) {
-									if (modeOptions.cellStackDirection[sizeRangeId] === 'row') {
-										type = typeSecond;
-										this.itemsPerHeader = this.tableMaxCols - 1;
-									} else if (modeOptions.cellStackDirection[sizeRangeId] === 'column') {
-										if (modeOptions.hasOwnProperty('cellsPerRow')) {
-											this.itemsPerHeader = modeOptions.cellsPerRow[sizeRangeId];
-										}
-									}
-								}
-							} else {
-								this.itemsPerHeader = 0;
-							}
+			if(typeof switchMode === 'object' && switchMode.hasOwnProperty('switch')) {
+				function sortModeSwitcherRun (e) {
+					let switchModeObj = switchMode.switch(e);
+					if(typeof switchModeObj === 'object') {
+						this.itemsPerHeader = switchModeObj.itemsPerHeader;
+						if(switchModeObj.hasOwnProperty('newTable')) {
+							let tableOld = this.table;
+							this.table = switchModeObj.newTable;
+							this.sortModeSwitcher(switchModeObj.type[0], true);
+							this.table = tableOld;
+						} else {
+							this.sortModeSwitcher(switchModeObj.type[0], true);
 						}
-					} else {
-						this.itemsPerHeader = 0;
 					}
-					this.sortModeSwitcher(type, true);
-				};
-			} else {
-				switchMode.switch = function (e) {
-					let type = typeFirst;
-					if (this.table.classList.contains('wptb-mobile-view-active')) {
-						if (this.table.classList.contains('wptb-table-preview-head')) {
-							type = typeSecond;
-							if(type === 'vertical') {
-								this.itemsPerHeader = this.tableMaxCols - 1;
-							}
-						}
-						const { table } = this;
-						this.table = table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
-						this.sortModeSwitcher(type, true);
-						this.table = table;
-						return;
-					}
-
-					this.sortModeSwitcher(type, true);
-				};
+				}
+				sortModeSwitcherRun.call(thisObject);
+				this.table.addEventListener(
+					'table:rebuilt',
+					function (e) {
+						sortModeSwitcherRun.call(thisObject, e);
+					},
+					false
+				);
 			}
-
-			switchMode.switch.call(thisObject);
-			this.table.addEventListener(
-				'table:rebuilt',
-				function (e) {
-					switchMode.switch.call(thisObject, e);
-				},
-				false
-			);
 		};
 
 		/**

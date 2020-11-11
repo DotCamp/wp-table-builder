@@ -755,6 +755,12 @@
 			}
 		}
 		sortingTable();
+		var responsiveFrontReady = new CustomEvent('responsive:front', {
+			detail: {
+				responsiveFront
+			}
+		});
+		document.dispatchEvent(responsiveFrontReady);
 		responsiveFront.rebuildTables();
 
 		WPTB_StylePass.init(WptbFrontendData.stylePass);

@@ -10,10 +10,10 @@ var WPTB_Helper = {
             let rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?((?:[0-9]*[.])?[0-9]+)[\s+]?\)/i);
             if ( rgbm && rgbm.length === 5) {
                 return "#" +
-                    ('0' + Math.round(parseFloat(rgbm[4], 10) * 255).toString(16).toUpperCase()).slice(-2) +
                     ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) +
                     ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) +
-                    ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
+                    ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2) +
+                    ('0' + Math.round(parseFloat(rgbm[4], 10) * 255).toString(16).toUpperCase()).slice(-2);
             } else {
                 rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
                 if (rgbm && rgbm.length === 4) {
@@ -31,7 +31,7 @@ var WPTB_Helper = {
 
     },
     isHex: function( hex ) {
-        let regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}$');
+        let regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}(?:[0-9]?){1,2}$');
         return regex.test( hex );
     },
     getElementIcon: function ( icon_directory ) {
@@ -872,7 +872,9 @@ var WPTB_Helper = {
                         } else if(dataToggleSwitch[0] === 'checked') {
                             elems[0].checked = true;
                         }
-                        WPTB_Helper.wptbDocumentEventGenerate( 'change', elems[0], {eventType: 'toggleSwitch'} );
+                        if(dataToggleSwitch[2] === undefined || dataToggleSwitch[2] === true) {
+                            WPTB_Helper.wptbDocumentEventGenerate( 'change', elems[0], {eventType: 'toggleSwitch'} );
+                        }
                     }
                 }
             }
@@ -2158,31 +2160,33 @@ var WPTB_Helper = {
      * Table Rows colors reinstall
      */
     tableRowsColorsReinstall: function ( table ) {
-        let infArr = table.className.match( /wptb-element-main(.+)-(\d+)/i );
-        if( infArr && Array.isArray( infArr ) ) {
-            let tableIndex = '';
-            if( infArr[infArr.length -1] == '0' ) {
-                tableIndex = 'startedid-0';
-            } else {
-                tableIndex = infArr[infArr.length -1];
-            }
+        if(table.rows.length) {
+            let infArr = table.className.match( /wptb-element-main(.+)-(\d+)/i );
+            if( infArr && Array.isArray( infArr ) ) {
+                let tableIndex = '';
+                if( infArr[infArr.length -1] == '0' ) {
+                    tableIndex = 'startedid-0';
+                } else {
+                    tableIndex = infArr[infArr.length -1];
+                }
 
-            let tableHeaderBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableHeaderBackground' );
-            if(  tableHeaderBackground ) {
-                let details = {value: tableHeaderBackground.value};
-                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableHeaderBackground, details );
-            }
+                let tableHeaderBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableHeaderBackground' );
+                if( tableHeaderBackground ) {
+                    let details = {value: tableHeaderBackground.value};
+                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableHeaderBackground, details );
+                }
 
-            let tableEvenRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableEvenRowBackground' );
-            if(  tableEvenRowBackground ) {
-                let details = {value: tableEvenRowBackground.value};
-                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableEvenRowBackground, details );
-            }
+                let tableEvenRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableEvenRowBackground' );
+                if( tableEvenRowBackground ) {
+                    let details = {value: tableEvenRowBackground.value};
+                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableEvenRowBackground, details );
+                }
 
-            let tableOddRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableOddRowBackground' );
-            if(  tableOddRowBackground ) {
-                let details = {value: tableOddRowBackground.value};
-                WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
+                let tableOddRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableOddRowBackground' );
+                if( tableOddRowBackground ) {
+                    let details = {value: tableOddRowBackground.value};
+                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
+                }
             }
         }
     },

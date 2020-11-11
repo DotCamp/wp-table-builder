@@ -201,7 +201,7 @@ export default {
 			return val;
 		},
 		// handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
-		tableCloned(mainDirectives, clonedTable) {
+		tableCloned(mainDirectives, mainTable, clonedTable) {
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
       let sortableTable = new WPTB_SortableTable({table: clonedTable});
       sortableTable.sortableTableInitialization(this.responsiveFrontend);
@@ -218,6 +218,14 @@ export default {
 					console.warn('[WPTB]: invalid directive found at main table');
 				}
 			}
+      const tabEvent = new CustomEvent('table:cloned', {
+        detail: {
+          WPTB_ResponsiveFrontend,
+          mainTable,
+          clonedTable
+        },
+      });
+      mainTable.dispatchEvent(tabEvent);
 		},
 		/**
 		 * Deep merge two objects.

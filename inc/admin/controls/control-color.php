@@ -9,7 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * WP Table Builder color control.
  *
- * A Control class for creating color control. Displays a color picker field. 
+ * A Control class for creating color control. Displays a color picker field.
  * When this control adds to element there is opportunity to point css type (color, backgroundColor ...)
  *
  * @since 1.1.2
@@ -37,7 +37,7 @@ class Control_Color extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-            
+
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Control_Color extends Base_Control {
                 targetInputAddClass,
                 dataSets,
                 startupValueSelector;
-             
+
             if( data.label ) {
                 label = data.label;
             }
@@ -81,7 +81,7 @@ class Control_Color extends Base_Control {
             if( data.name ) {
                 name = data.name;
             }
-            
+
             let i = 0;
             for ( let prop in data.selectors ) {
                 selectors[i] = [];
@@ -89,11 +89,11 @@ class Control_Color extends Base_Control {
                 selectors[i][1] = data.selectors[prop];
                 i++;
             }
-            
+
             if( data.elemContainer ) {
                 elemContainer = data.elemContainer;
             }
-            
+
             targetInputAddClass = data.elementControlTargetUnicClass;
             if(!window[targetInputAddClass]) window[targetInputAddClass] = [];
             if(!window[targetInputAddClass]['control-color']) window[targetInputAddClass]['control-color'] = [];
@@ -110,15 +110,15 @@ class Control_Color extends Base_Control {
                 </div>
             </div>
         </div>
-        
+
         <wptb-template-script>
             ( function() {
                 let targetInput = document.querySelector( '.{{{targetInputAddClass}}}' );
                 let dataSelectorElement = targetInput.dataset.element;
                 let selectorElement = document.querySelector( '.' + dataSelectorElement );
-                
+
                 function wpColorPickerCheckChangeForTableStateSaving( event ) {
-                    if( event.originalEvent.type == 'external' || 
+                    if( event.originalEvent.type == 'external' ||
                         ( event.originalEvent.type == 'click' && event.target.value == 'Clear' ) ) {
                         let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                         wptbTableStateSaveManager.tableStateSet();
@@ -133,11 +133,11 @@ class Control_Color extends Base_Control {
                         }
                     }
                 }
-                
+
                 if( targetInput && selectorElement ) {
                     if( window['{{{targetInputAddClass}}}']['control-color']['selectors'] ) {
                         let selectors = window['{{{targetInputAddClass}}}']['control-color']['selectors'];
-                        
+
                         let thisColorCss, thisColorCssHex;
                         for( let i = 0; i < selectors.length; i++ ) {
                             if( selectors[i] && Array.isArray( selectors[i] ) && selectors[i][0] && selectors[i][1] ) {
@@ -149,22 +149,12 @@ class Control_Color extends Base_Control {
                                             thisColorCss = '';
                                             if( Array.isArray( selectors[i][1] ) ) {
                                                 for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                    if( selectorElements[j].style[selectors[i][1][k]] ) {
+                                                    if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
+                                                        thisColorCss = selectorElements[j].getAttribute(selectors[i][1][k]);
+                                                    } else {
                                                         thisColorCss = selectorElements[j].style[selectors[i][1][k]];
-                                                        thisColorCssHex = WPTB_Helper.rgbToHex( thisColorCss );
-                                                        if( thisColorCssHex ) {
-                                                            thisColorCss = thisColorCssHex;
-                                                        }
-                                                        if( ! WPTB_Helper.isHex( thisColorCss ) ) {
-                                                            thisColorCss = '';
-                                                        }
-
-                                                        selectorElements[j].style[selectors[i][1][k]] = thisColorCss;
                                                     }
-                                                }
-                                            } else {
-                                                if( selectorElements[j].style[selectors[i][1]] ) {
-                                                    thisColorCss = selectorElements[j].style[selectors[i][1]];
+
                                                     thisColorCssHex = WPTB_Helper.rgbToHex( thisColorCss );
                                                     if( thisColorCssHex ) {
                                                         thisColorCss = thisColorCssHex;
@@ -172,6 +162,31 @@ class Control_Color extends Base_Control {
                                                     if( ! WPTB_Helper.isHex( thisColorCss ) ) {
                                                         thisColorCss = '';
                                                     }
+
+                                                    if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
+                                                        selectorElements[j].setAttribute(selectors[i][1][k], thisColorCss);
+                                                    } else {
+                                                        selectorElements[j].style[selectors[i][1][k]] = thisColorCss;
+                                                    }
+                                                }
+                                            } else {
+                                                if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
+                                                    thisColorCss = selectorElements[j].getAttribute(selectors[i][1]);
+                                                } else {
+                                                    thisColorCss = selectorElements[j].style[selectors[i][1]];
+                                                }
+
+                                                thisColorCssHex = WPTB_Helper.rgbToHex( thisColorCss );
+                                                if( thisColorCssHex ) {
+                                                    thisColorCss = thisColorCssHex;
+                                                }
+                                                if( ! WPTB_Helper.isHex( thisColorCss ) ) {
+                                                    thisColorCss = '';
+                                                }
+
+                                                if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
+                                                    selectorElements[j].setAttribute(selectors[i][1], thisColorCss);
+                                                } else {
                                                     selectorElements[j].style[selectors[i][1]] = thisColorCss;
                                                 }
                                             }
@@ -206,10 +221,18 @@ class Control_Color extends Base_Control {
                                             if( selectors[i][1] ) {
                                                 if( Array.isArray( selectors[i][1] ) ) {
                                                     for( let k = 0; k < selectors[i][1].length; k++ ) {
-                                                        selectorElements[j].style[selectors[i][1][k]] = color;
+                                                        if( typeof selectorElements[j].style[selectors[i][1][k]] == 'undefined' ) {
+                                                            selectorElements[j].setAttribute(selectors[i][1][k], color);
+                                                        } else {
+                                                            selectorElements[j].style[selectors[i][1][k]] = color;
+                                                        }
                                                     }
                                                 } else {
-                                                    selectorElements[j].style[selectors[i][1]] = color;
+                                                    if( typeof selectorElements[j].style[selectors[i][1]] == 'undefined' ) {
+                                                        selectorElements[j].setAttribute(selectors[i][1], color);
+                                                    } else {
+                                                        selectorElements[j].style[selectors[i][1]] = color;
+                                                    }
                                                 }
                                             }
                                         }
@@ -217,7 +240,6 @@ class Control_Color extends Base_Control {
                                 }
                             }
                         }
-
 
                         function addToDataSetSelectors(val) {
                             const selectorsObj = JSON.parse('{{{dataSetsJson}}}');

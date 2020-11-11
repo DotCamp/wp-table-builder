@@ -12095,14 +12095,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $43bbee = exports.default || module.exports;
+        var $d845fa = exports.default || module.exports;
       
-      if (typeof $43bbee === 'function') {
-        $43bbee = $43bbee.options;
+      if (typeof $d845fa === 'function') {
+        $d845fa = $d845fa.options;
       }
     
         /* template */
-        Object.assign($43bbee, (function () {
+        Object.assign($d845fa, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12204,14 +12204,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8bc701 = exports.default || module.exports;
+        var $cad2cf = exports.default || module.exports;
       
-      if (typeof $8bc701 === 'function') {
-        $8bc701 = $8bc701.options;
+      if (typeof $cad2cf === 'function') {
+        $cad2cf = $cad2cf.options;
       }
     
         /* template */
-        Object.assign($8bc701, (function () {
+        Object.assign($cad2cf, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12384,14 +12384,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b60284 = exports.default || module.exports;
+        var $52ebf8 = exports.default || module.exports;
       
-      if (typeof $b60284 === 'function') {
-        $b60284 = $b60284.options;
+      if (typeof $52ebf8 === 'function') {
+        $52ebf8 = $52ebf8.options;
       }
     
         /* template */
-        Object.assign($b60284, (function () {
+        Object.assign($52ebf8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12633,14 +12633,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $78d93d = exports.default || module.exports;
+        var $b7b3ed = exports.default || module.exports;
       
-      if (typeof $78d93d === 'function') {
-        $78d93d = $78d93d.options;
+      if (typeof $b7b3ed === 'function') {
+        $b7b3ed = $b7b3ed.options;
       }
     
         /* template */
-        Object.assign($78d93d, (function () {
+        Object.assign($b7b3ed, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12760,14 +12760,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $61edfa = exports.default || module.exports;
+        var $992b32 = exports.default || module.exports;
       
-      if (typeof $61edfa === 'function') {
-        $61edfa = $61edfa.options;
+      if (typeof $992b32 === 'function') {
+        $992b32 = $992b32.options;
       }
     
         /* template */
-        Object.assign($61edfa, (function () {
+        Object.assign($992b32, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12869,7 +12869,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -13095,14 +13095,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $a4e562 = exports.default || module.exports;
+        var $11ac6f = exports.default || module.exports;
       
-      if (typeof $a4e562 === 'function') {
-        $a4e562 = $a4e562.options;
+      if (typeof $11ac6f === 'function') {
+        $11ac6f = $11ac6f.options;
       }
     
         /* template */
-        Object.assign($a4e562, (function () {
+        Object.assign($11ac6f, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13312,7 +13312,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -13367,7 +13367,7 @@ var _default = {
     window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
     this.fixedTables.blank.title = this.strings.blank;
-    this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
+    this.fixedTables = _objectSpread(_objectSpread({}, this.fixedTables), this.prebuiltTables);
   },
   computed: {
     isPro: function isPro() {
@@ -13709,14 +13709,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $94e6ae = exports.default || module.exports;
+        var $1d1b7b = exports.default || module.exports;
       
-      if (typeof $94e6ae === 'function') {
-        $94e6ae = $94e6ae.options;
+      if (typeof $1d1b7b === 'function') {
+        $1d1b7b = $1d1b7b.options;
       }
     
         /* template */
-        Object.assign($94e6ae, (function () {
+        Object.assign($1d1b7b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13928,7 +13928,7 @@ _vue.default.use(_filters.default);
 
 var proData = (_global$wptbGenerateM = global.wptbGenerateMenuProData) !== null && _global$wptbGenerateM !== void 0 ? _global$wptbGenerateM : {};
 
-var data = _objectSpread({}, wptbGenerateMenuData, {}, proData); // setup app store
+var data = _objectSpread(_objectSpread({}, wptbGenerateMenuData), proData); // setup app store
 
 
 var store = {

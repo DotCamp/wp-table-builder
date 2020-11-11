@@ -12067,7 +12067,7 @@ function ControlsManager() {
 
   function updateTableSettings(input) {
     if (input) {
-      tableSettings.settings = _objectSpread({}, tableSettings.settings, {}, input);
+      tableSettings.settings = _objectSpread(_objectSpread({}, tableSettings.settings), input);
       callSubscribers();
     }
   }
@@ -12219,14 +12219,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $7aa961 = exports.default || module.exports;
+        var $b5e884 = exports.default || module.exports;
       
-      if (typeof $7aa961 === 'function') {
-        $7aa961 = $7aa961.options;
+      if (typeof $b5e884 === 'function') {
+        $b5e884 = $b5e884.options;
       }
     
         /* template */
-        Object.assign($7aa961, (function () {
+        Object.assign($b5e884, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12261,13 +12261,13 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -12973,14 +12973,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $4a7874 = exports.default || module.exports;
+        var $9691bd = exports.default || module.exports;
       
-      if (typeof $4a7874 === 'function') {
-        $4a7874 = $4a7874.options;
+      if (typeof $9691bd === 'function') {
+        $9691bd = $9691bd.options;
       }
     
         /* template */
-        Object.assign($4a7874, (function () {
+        Object.assign($9691bd, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13382,14 +13382,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ea3a7f = exports.default || module.exports;
+        var $f1bb94 = exports.default || module.exports;
       
-      if (typeof $ea3a7f === 'function') {
-        $ea3a7f = $ea3a7f.options;
+      if (typeof $f1bb94 === 'function') {
+        $f1bb94 = $f1bb94.options;
       }
     
         /* template */
-        Object.assign($ea3a7f, (function () {
+        Object.assign($f1bb94, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13597,14 +13597,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $515a53 = exports.default || module.exports;
+        var $780848 = exports.default || module.exports;
       
-      if (typeof $515a53 === 'function') {
-        $515a53 = $515a53.options;
+      if (typeof $780848 === 'function') {
+        $780848 = $780848.options;
       }
     
         /* template */
-        Object.assign($515a53, (function () {
+        Object.assign($780848, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13768,14 +13768,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $eeeedf = exports.default || module.exports;
+        var $e4f75e = exports.default || module.exports;
       
-      if (typeof $eeeedf === 'function') {
-        $eeeedf = $eeeedf.options;
+      if (typeof $e4f75e === 'function') {
+        $e4f75e = $e4f75e.options;
       }
     
         /* template */
-        Object.assign($eeeedf, (function () {
+        Object.assign($e4f75e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13895,14 +13895,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $72f762 = exports.default || module.exports;
+        var $67fbdb = exports.default || module.exports;
       
-      if (typeof $72f762 === 'function') {
-        $72f762 = $72f762.options;
+      if (typeof $67fbdb === 'function') {
+        $67fbdb = $67fbdb.options;
       }
     
         /* template */
-        Object.assign($72f762, (function () {
+        Object.assign($67fbdb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14097,14 +14097,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d9cab9 = exports.default || module.exports;
+        var $0fe05b = exports.default || module.exports;
       
-      if (typeof $d9cab9 === 'function') {
-        $d9cab9 = $d9cab9.options;
+      if (typeof $0fe05b === 'function') {
+        $0fe05b = $0fe05b.options;
       }
     
         /* template */
-        Object.assign($d9cab9, (function () {
+        Object.assign($0fe05b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14360,7 +14360,7 @@ var _default = {
       this.tableHaveDirectives = mainTableDirectives !== undefined;
       this.setupCellIdentification(this.clonedTable); // emit an event signalling cloning main table is completed
 
-      this.$emit('tableCloned', mainTableDirectives, this.clonedTable);
+      this.$emit('tableCloned', mainTableDirectives, this.mainTable, this.clonedTable);
     },
 
     /**
@@ -14419,14 +14419,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e62505 = exports.default || module.exports;
+        var $f93384 = exports.default || module.exports;
       
-      if (typeof $e62505 === 'function') {
-        $e62505 = $e62505.options;
+      if (typeof $f93384 === 'function') {
+        $f93384 = $f93384.options;
       }
     
         /* template */
-        Object.assign($e62505, (function () {
+        Object.assign($f93384, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14558,14 +14558,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3c0812 = exports.default || module.exports;
+        var $0b619f = exports.default || module.exports;
       
-      if (typeof $3c0812 === 'function') {
-        $3c0812 = $3c0812.options;
+      if (typeof $0b619f === 'function') {
+        $0b619f = $0b619f.options;
       }
     
         /* template */
-        Object.assign($3c0812, (function () {
+        Object.assign($0b619f, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14667,14 +14667,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1f3acb = exports.default || module.exports;
+        var $fac9ec = exports.default || module.exports;
       
-      if (typeof $1f3acb === 'function') {
-        $1f3acb = $1f3acb.options;
+      if (typeof $fac9ec === 'function') {
+        $fac9ec = $fac9ec.options;
       }
     
         /* template */
-        Object.assign($1f3acb, (function () {
+        Object.assign($fac9ec, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14768,14 +14768,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $221e87 = exports.default || module.exports;
+        var $20294b = exports.default || module.exports;
       
-      if (typeof $221e87 === 'function') {
-        $221e87 = $221e87.options;
+      if (typeof $20294b === 'function') {
+        $20294b = $20294b.options;
       }
     
         /* template */
-        Object.assign($221e87, (function () {
+        Object.assign($20294b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -15067,14 +15067,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $a9eb9a = exports.default || module.exports;
+        var $5f3f51 = exports.default || module.exports;
       
-      if (typeof $a9eb9a === 'function') {
-        $a9eb9a = $a9eb9a.options;
+      if (typeof $5f3f51 === 'function') {
+        $5f3f51 = $5f3f51.options;
       }
     
         /* template */
-        Object.assign($a9eb9a, (function () {
+        Object.assign($5f3f51, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -16113,7 +16113,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     // merge default options with user sent options
     // this.options = { ...responsiveClassDefaultOptions, ...options };
-    this.options = _objectSpread({}, responsiveClassDefaultOptions, {}, options);
+    this.options = _objectSpread(_objectSpread({}, responsiveClassDefaultOptions), options);
     this.elements = Array.from(document.querySelectorAll(this.options.query));
     this.elementObjects = this.elements.map(function (e) {
       return {
@@ -16670,7 +16670,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -16848,7 +16848,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.sortableTableInitialization = function (responsiveFront) {
-      var type = '';
       var typeFirst;
       var typeSecond;
 
@@ -16860,73 +16859,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         typeSecond = 'vertical';
       }
 
-      var switchMode = {};
+      if (!typeFirst || typeof typeFirst !== 'string' || !typeSecond || typeof typeSecond !== 'string') return;
+      var switchMode = WPTB_GetDirectionAfterReconstruction(this.table, typeFirst, typeSecond, 'vertical', responsiveFront);
 
-      if (responsiveFront && responsiveFront.getDirective(this.table)) {
-        switchMode.switch = function (e) {
-          var directives = responsiveFront.getDirective(this.table);
-          var sizeRangeId = 'desktop';
+      if (_typeof(switchMode) === 'object' && switchMode.hasOwnProperty('switch')) {
+        function sortModeSwitcherRun(e) {
+          var switchModeObj = switchMode.switch(e);
 
-          if (e && e.detail) {
-            sizeRangeId = e.detail.sizeRangeId;
-          }
+          if (_typeof(switchModeObj) === 'object') {
+            this.itemsPerHeader = switchModeObj.itemsPerHeader;
 
-          type = typeFirst;
-
-          if (sizeRangeId !== 'desktop') {
-            if (directives.hasOwnProperty('modeOptions')) {
-              var mode = directives.responsiveMode;
-              var modeOptions = directives.modeOptions[mode];
-
-              if (modeOptions.hasOwnProperty('topRowAsHeader') && modeOptions.topRowAsHeader.hasOwnProperty(sizeRangeId) && modeOptions.topRowAsHeader[sizeRangeId]) {
-                if (modeOptions.hasOwnProperty('cellStackDirection') && modeOptions.cellStackDirection.hasOwnProperty(sizeRangeId)) {
-                  if (modeOptions.cellStackDirection[sizeRangeId] === 'row') {
-                    type = typeSecond;
-                    this.itemsPerHeader = this.tableMaxCols - 1;
-                  } else if (modeOptions.cellStackDirection[sizeRangeId] === 'column') {
-                    if (modeOptions.hasOwnProperty('cellsPerRow')) {
-                      this.itemsPerHeader = modeOptions.cellsPerRow[sizeRangeId];
-                    }
-                  }
-                }
-              } else {
-                this.itemsPerHeader = 0;
-              }
+            if (switchModeObj.hasOwnProperty('newTable')) {
+              var tableOld = this.table;
+              this.table = switchModeObj.newTable;
+              this.sortModeSwitcher(switchModeObj.type[0], true);
+              this.table = tableOld;
+            } else {
+              this.sortModeSwitcher(switchModeObj.type[0], true);
             }
-          } else {
-            this.itemsPerHeader = 0;
           }
+        }
 
-          this.sortModeSwitcher(type, true);
-        };
-      } else {
-        switchMode.switch = function (e) {
-          var type = typeFirst;
-
-          if (this.table.classList.contains('wptb-mobile-view-active')) {
-            if (this.table.classList.contains('wptb-table-preview-head')) {
-              type = typeSecond;
-
-              if (type === 'vertical') {
-                this.itemsPerHeader = this.tableMaxCols - 1;
-              }
-            }
-
-            var _table = this.table;
-            this.table = _table.parentNode.parentNode.querySelector('.wptb-preview-table-mobile');
-            this.sortModeSwitcher(type, true);
-            this.table = _table;
-            return;
-          }
-
-          this.sortModeSwitcher(type, true);
-        };
+        sortModeSwitcherRun.call(thisObject);
+        this.table.addEventListener('table:rebuilt', function (e) {
+          sortModeSwitcherRun.call(thisObject, e);
+        }, false);
       }
-
-      switchMode.switch.call(thisObject);
-      this.table.addEventListener('table:rebuilt', function (e) {
-        switchMode.switch.call(thisObject, e);
-      }, false);
     };
     /**
      * adds and deletes mousemove and mouseleave events handlers when happens switch sorting mode
@@ -17100,7 +17058,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     function sortableTable(e, type) {
       if (e.target && e.target.tagName === 'TD' && !table.parentNode.classList.contains('wptb-preview-table-manage-cells')) {
-        var _table2 = e.currentTarget;
+        var _table = e.currentTarget;
         var tableWasSorted = false;
 
         if (type === 'vertical' && e.target.dataset.hasOwnProperty('sortedVertical')) {
@@ -17111,12 +17069,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           var tableRowsBefore = [];
           var tableRowsAfter = [];
 
-          if (this.itemsPerHeader && this.itemsPerHeader < _table2.rows.length) {
-            WPTB_RecalculateIndexes(_table2);
+          if (this.itemsPerHeader && this.itemsPerHeader < _table.rows.length) {
+            WPTB_RecalculateIndexes(_table);
 
-            var tableRowsArr = _toConsumableArray(_table2.rows);
+            var tableRowsArr = _toConsumableArray(_table.rows);
 
-            var tableLastCont = _table2.querySelector('tbody') ? _table2.querySelector('tbody') : _table2;
+            var tableLastCont = _table.querySelector('tbody') ? _table.querySelector('tbody') : _table;
 
             for (var i = 0; i < tableRowsArr.length; i++) {
               if (i < e.target.dataset.yIndex) {
@@ -17128,10 +17086,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }
 
-            WPTB_RecalculateIndexes(_table2);
+            WPTB_RecalculateIndexes(_table);
           }
 
-          var tds = _table2.querySelectorAll("[data-x-index=\"".concat(e.target.dataset.xIndex, "\"]"));
+          var tds = _table.querySelectorAll("[data-x-index=\"".concat(e.target.dataset.xIndex, "\"]"));
 
           tds = _toConsumableArray(tds);
           /**
@@ -17146,9 +17104,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
 
             rowNum = td.dataset.yIndex;
-            WPTB_CutGlueTable.cutTableHorizontally(rowNum, _table2);
+            WPTB_CutGlueTable.cutTableHorizontally(rowNum, _table);
             rowNum += rowspan;
-            WPTB_CutGlueTable.cutTableHorizontally(rowNum, _table2);
+            WPTB_CutGlueTable.cutTableHorizontally(rowNum, _table);
           });
           var rowsValuesArr = [];
           var rowsTdFirst;
@@ -17156,7 +17114,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           var tableRowsPushed = [];
 
           for (var _i = 0; _i < tds.length; _i++) {
-            var tdsChanged = changeSortingTdsCollection(e, _table2, tds, _i, tdYCoordsRowSpanPrevious, 'vertical');
+            var tdsChanged = changeSortingTdsCollection(e, _table, tds, _i, tdYCoordsRowSpanPrevious, 'vertical');
 
             if (tdsChanged && tdsChanged.hasOwnProperty('i')) {
               tds = tdsChanged.tds;
@@ -17174,7 +17132,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var rowsTd = [];
 
             for (var j = 0; j < tdRowspan; j++) {
-              rowsTd.push(_table2.rows[parseInt(td.dataset.yIndex, 10) + j]);
+              rowsTd.push(_table.rows[parseInt(td.dataset.yIndex, 10) + j]);
               tableRowsPushed.push(parseInt(td.dataset.yIndex, 10) + j);
             }
 
@@ -17197,12 +17155,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             rowsTd: rowsTdFirst
           });
 
-          if (rowsValuesArr.length < _table2.rows.length) {
-            for (var _i2 = 0; _i2 < _table2.rows.length; _i2++) {
+          if (rowsValuesArr.length < _table.rows.length) {
+            for (var _i2 = 0; _i2 < _table.rows.length; _i2++) {
               if (tableRowsPushed.indexOf(_i2) > -1) continue;
               var _rowsTd = [];
 
-              _rowsTd.push(_table2.rows[_i2]);
+              _rowsTd.push(_table.rows[_i2]);
 
               rowsValuesArr.push({
                 rowsTd: _rowsTd
@@ -17210,7 +17168,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
           }
 
-          var tBody = _table2.querySelector('tbody');
+          var tBody = _table.querySelector('tbody');
 
           tBody.innerHTML = '';
           rowsValuesArr.map(function (rowsValObj) {
@@ -17223,7 +17181,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
            */
 
           if (tableRowsBefore.length) {
-            var _tableLastCont = _table2.querySelector('tbody') ? _table2.querySelector('tbody') : _table2;
+            var _tableLastCont = _table.querySelector('tbody') ? _table.querySelector('tbody') : _table;
 
             if (_tableLastCont) {
               var trRef = _tableLastCont.querySelector('tr');
@@ -17235,7 +17193,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
 
           if (tableRowsAfter.length) {
-            var _tableLastCont2 = _table2.querySelector('tbody') ? _table2.querySelector('tbody') : _table2;
+            var _tableLastCont2 = _table.querySelector('tbody') ? _table.querySelector('tbody') : _table;
 
             if (tBody) {
               tableRowsAfter.map(function (tr) {
@@ -17244,11 +17202,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
           }
 
-          WPTB_RecalculateIndexes(_table2);
-          WPTB_CutGlueTable.glueTableHorizontally(_table2);
+          WPTB_RecalculateIndexes(_table);
+          WPTB_CutGlueTable.glueTableHorizontally(_table);
           tableWasSorted = true;
         } else if (type === 'horizontal' && e.target.dataset.xIndex === '0') {
-          var _tds3 = _table2.querySelectorAll("[data-y-index=\"".concat(e.target.dataset.yIndex, "\"]"));
+          var _tds3 = _table.querySelectorAll("[data-y-index=\"".concat(e.target.dataset.yIndex, "\"]"));
 
           _tds3 = _toConsumableArray(_tds3); // preparing table for sorting
 
@@ -17261,9 +17219,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
 
             colNum = td.dataset.xIndex;
-            WPTB_CutGlueTable.cutTableVertically(colNum, _table2);
+            WPTB_CutGlueTable.cutTableVertically(colNum, _table);
             colNum += colspan;
-            WPTB_CutGlueTable.cutTableVertically(colNum, _table2);
+            WPTB_CutGlueTable.cutTableVertically(colNum, _table);
           });
 
           var columnsValuesArr = [];
@@ -17271,7 +17229,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           var tdXCoordsColSpanPrevious = 0;
 
           for (var _i3 = 0; _i3 < _tds3.length; _i3++) {
-            var _tdsChanged = changeSortingTdsCollection(e, _table2, _tds3, _i3, tdXCoordsColSpanPrevious, 'horizontal');
+            var _tdsChanged = changeSortingTdsCollection(e, _table, _tds3, _i3, tdXCoordsColSpanPrevious, 'horizontal');
 
             if (_tdsChanged && _tdsChanged.hasOwnProperty('i')) {
               _tds3 = _tdsChanged.tds;
@@ -17291,7 +17249,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var columnsTd = [];
 
             for (var _j = 0; _j < tdColspan; _j++) {
-              var tdsColumn = _toConsumableArray(_table2.querySelectorAll("[data-x-index=\"".concat(parseInt(_td.dataset.xIndex, 10) + _j, "\"]")));
+              var tdsColumn = _toConsumableArray(_table.querySelectorAll("[data-x-index=\"".concat(parseInt(_td.dataset.xIndex, 10) + _j, "\"]")));
 
               columnsTd.push(tdsColumn);
             }
@@ -17316,11 +17274,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             columnsTd: columnsTdFirst
           });
 
-          if (columnsValuesArr.length < _table2.maxCols) {
-            var difference = _table2.maxCols - columnsValuesArr.length;
+          if (columnsValuesArr.length < _table.maxCols) {
+            var difference = _table.maxCols - columnsValuesArr.length;
 
             for (var _i4 = 0; _i4 < difference; _i4++) {
-              var _tdsColumn = _toConsumableArray(_table2.querySelectorAll("[data-x-index=\"".concat(parseInt(_table2.maxCols, 10) - parseInt(difference, 10) + _i4, "\"]")));
+              var _tdsColumn = _toConsumableArray(_table.querySelectorAll("[data-x-index=\"".concat(parseInt(_table.maxCols, 10) - parseInt(difference, 10) + _i4, "\"]")));
 
               columnsValuesArr.push({
                 columnsTd: [_tdsColumn]
@@ -17328,27 +17286,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             }
           }
 
-          for (var _i5 = 0; _i5 < _table2.rows.length; _i5++) {
-            _table2.rows[_i5].innerHTML = '';
+          for (var _i5 = 0; _i5 < _table.rows.length; _i5++) {
+            _table.rows[_i5].innerHTML = '';
           }
 
           columnsValuesArr.map(function (columnsValObj) {
             columnsValObj.columnsTd.map(function (tdsColumn) {
               tdsColumn.map(function (td) {
-                _table2.rows[td.dataset.yIndex].appendChild(td);
+                _table.rows[td.dataset.yIndex].appendChild(td);
               });
             });
           });
-          WPTB_RecalculateIndexes(_table2);
-          WPTB_CutGlueTable.glueTableVertically(_table2);
+          WPTB_RecalculateIndexes(_table);
+          WPTB_CutGlueTable.glueTableVertically(_table);
           tableWasSorted = true;
         }
 
         if (tableWasSorted) {
-          removeCellsAttrAfterDivision(_table2);
+          removeCellsAttrAfterDivision(_table);
 
-          if (_table2.hasOwnProperty('tableSM')) {
-            var tableSM = _table2.tableSM();
+          if (_table.hasOwnProperty('tableSM')) {
+            var tableSM = _table.tableSM();
 
             new tableSM().tableStateSet();
           }
@@ -17606,14 +17564,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $48fd91 = exports.default || module.exports;
+        var $56eef3 = exports.default || module.exports;
       
-      if (typeof $48fd91 === 'function') {
-        $48fd91 = $48fd91.options;
+      if (typeof $56eef3 === 'function') {
+        $56eef3 = $56eef3.options;
       }
     
         /* template */
-        Object.assign($48fd91, (function () {
+        Object.assign($56eef3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17702,14 +17660,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $6a3b9d = exports.default || module.exports;
+        var $3d3366 = exports.default || module.exports;
       
-      if (typeof $6a3b9d === 'function') {
-        $6a3b9d = $6a3b9d.options;
+      if (typeof $3d3366 === 'function') {
+        $3d3366 = $3d3366.options;
       }
     
         /* template */
-        Object.assign($6a3b9d, (function () {
+        Object.assign($3d3366, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17789,7 +17747,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -17877,14 +17835,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $420dbf = exports.default || module.exports;
+        var $bd1d2b = exports.default || module.exports;
       
-      if (typeof $420dbf === 'function') {
-        $420dbf = $420dbf.options;
+      if (typeof $bd1d2b === 'function') {
+        $bd1d2b = $bd1d2b.options;
       }
     
         /* template */
-        Object.assign($420dbf, (function () {
+        Object.assign($bd1d2b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18110,7 +18068,7 @@ var _default = {
       return val;
     },
     // handler for `tableCloned` event of `TableClone` component. Mainly will be used to set up `WPTB_ResponsiveFrontend` class and update directives with the ones found on main table
-    tableCloned: function tableCloned(mainDirectives, clonedTable) {
+    tableCloned: function tableCloned(mainDirectives, mainTable, clonedTable) {
       this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
         query: '.wptb-builder-responsive table'
       });
@@ -18130,6 +18088,15 @@ var _default = {
           console.warn('[WPTB]: invalid directive found at main table');
         }
       }
+
+      var tabEvent = new CustomEvent('table:cloned', {
+        detail: {
+          WPTB_ResponsiveFrontend: _WPTB_ResponsiveFrontend.default,
+          mainTable: mainTable,
+          clonedTable: clonedTable
+        }
+      });
+      mainTable.dispatchEvent(tabEvent);
     },
 
     /**
@@ -18248,14 +18215,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $26cd08 = exports.default || module.exports;
+        var $4bc76e = exports.default || module.exports;
       
-      if (typeof $26cd08 === 'function') {
-        $26cd08 = $26cd08.options;
+      if (typeof $4bc76e === 'function') {
+        $4bc76e = $4bc76e.options;
       }
     
         /* template */
-        Object.assign($26cd08, (function () {
+        Object.assign($4bc76e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18430,14 +18397,14 @@ render._withStripped = true
       
 },{"../components/TableClone":"components/TableClone.vue","../components/ScreenSizeSlider":"components/ScreenSizeSlider.vue","../../../WPTB_ResponsiveFrontend":"../../WPTB_ResponsiveFrontend.js","../../../core/WPTB_SortableTable":"../WPTB_SortableTable.js","../functions/DeBouncer":"functions/DeBouncer.js","../components/ModalWindow":"components/ModalWindow.vue","../components/MaterialButton":"components/MaterialButton.vue","../components/NumberPostfixInput":"components/NumberPostfixInput.vue","../components/NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"components/ResponsiveControlsRow.vue":[function(require,module,exports) {
 
-        var $d55f26 = exports.default || module.exports;
+        var $63bc72 = exports.default || module.exports;
       
-      if (typeof $d55f26 === 'function') {
-        $d55f26 = $d55f26.options;
+      if (typeof $63bc72 === 'function') {
+        $63bc72 = $63bc72.options;
       }
     
         /* template */
-        Object.assign($d55f26, (function () {
+        Object.assign($63bc72, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18744,14 +18711,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $f6974b = exports.default || module.exports;
+        var $7e4992 = exports.default || module.exports;
       
-      if (typeof $f6974b === 'function') {
-        $f6974b = $f6974b.options;
+      if (typeof $7e4992 === 'function') {
+        $7e4992 = $7e4992.options;
       }
     
         /* template */
-        Object.assign($f6974b, (function () {
+        Object.assign($7e4992, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18864,14 +18831,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $5b3d68 = exports.default || module.exports;
+        var $ed1125 = exports.default || module.exports;
       
-      if (typeof $5b3d68 === 'function') {
-        $5b3d68 = $5b3d68.options;
+      if (typeof $ed1125 === 'function') {
+        $ed1125 = $ed1125.options;
       }
     
         /* template */
-        Object.assign($5b3d68, (function () {
+        Object.assign($ed1125, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18993,14 +18960,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1e9780 = exports.default || module.exports;
+        var $412844 = exports.default || module.exports;
       
-      if (typeof $1e9780 === 'function') {
-        $1e9780 = $1e9780.options;
+      if (typeof $412844 === 'function') {
+        $412844 = $412844.options;
       }
     
         /* template */
-        Object.assign($1e9780, (function () {
+        Object.assign($412844, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19134,14 +19101,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3d2461 = exports.default || module.exports;
+        var $480f41 = exports.default || module.exports;
       
-      if (typeof $3d2461 === 'function') {
-        $3d2461 = $3d2461.options;
+      if (typeof $480f41 === 'function') {
+        $480f41 = $480f41.options;
       }
     
         /* template */
-        Object.assign($3d2461, (function () {
+        Object.assign($480f41, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19249,14 +19216,14 @@ var _default = {
   mixins: [_PanelControlBase.default]
 };
 exports.default = _default;
-        var $089a84 = exports.default || module.exports;
+        var $aa2c63 = exports.default || module.exports;
       
-      if (typeof $089a84 === 'function') {
-        $089a84 = $089a84.options;
+      if (typeof $aa2c63 === 'function') {
+        $aa2c63 = $aa2c63.options;
       }
     
         /* template */
-        Object.assign($089a84, (function () {
+        Object.assign($aa2c63, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19398,14 +19365,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $085e64 = exports.default || module.exports;
+        var $a40c8a = exports.default || module.exports;
       
-      if (typeof $085e64 === 'function') {
-        $085e64 = $085e64.options;
+      if (typeof $a40c8a === 'function') {
+        $a40c8a = $a40c8a.options;
       }
     
         /* template */
-        Object.assign($085e64, (function () {
+        Object.assign($a40c8a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19604,14 +19571,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b7cc79 = exports.default || module.exports;
+        var $8f1cbb = exports.default || module.exports;
       
-      if (typeof $b7cc79 === 'function') {
-        $b7cc79 = $b7cc79.options;
+      if (typeof $8f1cbb === 'function') {
+        $8f1cbb = $8f1cbb.options;
       }
     
         /* template */
-        Object.assign($b7cc79, (function () {
+        Object.assign($8f1cbb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19866,14 +19833,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d91df7 = exports.default || module.exports;
+        var $b9b7a6 = exports.default || module.exports;
       
-      if (typeof $d91df7 === 'function') {
-        $d91df7 = $d91df7.options;
+      if (typeof $b9b7a6 === 'function') {
+        $b9b7a6 = $b9b7a6.options;
       }
     
         /* template */
-        Object.assign($d91df7, (function () {
+        Object.assign($b9b7a6, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -19963,14 +19930,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d95020 = exports.default || module.exports;
+        var $271f65 = exports.default || module.exports;
       
-      if (typeof $d95020 === 'function') {
-        $d95020 = $d95020.options;
+      if (typeof $271f65 === 'function') {
+        $271f65 = $271f65.options;
       }
     
         /* template */
-        Object.assign($d95020, (function () {
+        Object.assign($271f65, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20066,7 +20033,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -20257,14 +20224,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3b6a1a = exports.default || module.exports;
+        var $950c3c = exports.default || module.exports;
       
-      if (typeof $3b6a1a === 'function') {
-        $3b6a1a = $3b6a1a.options;
+      if (typeof $950c3c === 'function') {
+        $950c3c = $950c3c.options;
       }
     
         /* template */
-        Object.assign($3b6a1a, (function () {
+        Object.assign($950c3c, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20435,14 +20402,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $40eb3b = exports.default || module.exports;
+        var $45ce8e = exports.default || module.exports;
       
-      if (typeof $40eb3b === 'function') {
-        $40eb3b = $40eb3b.options;
+      if (typeof $45ce8e === 'function') {
+        $45ce8e = $45ce8e.options;
       }
     
         /* template */
-        Object.assign($40eb3b, (function () {
+        Object.assign($45ce8e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20521,14 +20488,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $01554d = exports.default || module.exports;
+        var $950fff = exports.default || module.exports;
       
-      if (typeof $01554d === 'function') {
-        $01554d = $01554d.options;
+      if (typeof $950fff === 'function') {
+        $950fff = $950fff.options;
       }
     
         /* template */
-        Object.assign($01554d, (function () {
+        Object.assign($950fff, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20629,14 +20596,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8f11fa = exports.default || module.exports;
+        var $51c159 = exports.default || module.exports;
       
-      if (typeof $8f11fa === 'function') {
-        $8f11fa = $8f11fa.options;
+      if (typeof $51c159 === 'function') {
+        $51c159 = $51c159.options;
       }
     
         /* template */
-        Object.assign($8f11fa, (function () {
+        Object.assign($51c159, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20830,14 +20797,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $5454bf = exports.default || module.exports;
+        var $7ea0b2 = exports.default || module.exports;
       
-      if (typeof $5454bf === 'function') {
-        $5454bf = $5454bf.options;
+      if (typeof $7ea0b2 === 'function') {
+        $7ea0b2 = $7ea0b2.options;
       }
     
         /* template */
-        Object.assign($5454bf, (function () {
+        Object.assign($7ea0b2, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -20951,14 +20918,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e2de97 = exports.default || module.exports;
+        var $686368 = exports.default || module.exports;
       
-      if (typeof $e2de97 === 'function') {
-        $e2de97 = $e2de97.options;
+      if (typeof $686368 === 'function') {
+        $686368 = $686368.options;
       }
     
         /* template */
-        Object.assign($e2de97, (function () {
+        Object.assign($686368, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21067,14 +21034,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $7a0752 = exports.default || module.exports;
+        var $4fb4ed = exports.default || module.exports;
       
-      if (typeof $7a0752 === 'function') {
-        $7a0752 = $7a0752.options;
+      if (typeof $4fb4ed === 'function') {
+        $4fb4ed = $4fb4ed.options;
       }
     
         /* template */
-        Object.assign($7a0752, (function () {
+        Object.assign($4fb4ed, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21261,14 +21228,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $43e382 = exports.default || module.exports;
+        var $2794fa = exports.default || module.exports;
       
-      if (typeof $43e382 === 'function') {
-        $43e382 = $43e382.options;
+      if (typeof $2794fa === 'function') {
+        $2794fa = $2794fa.options;
       }
     
         /* template */
-        Object.assign($43e382, (function () {
+        Object.assign($2794fa, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21530,14 +21497,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d303c1 = exports.default || module.exports;
+        var $bbfae3 = exports.default || module.exports;
       
-      if (typeof $d303c1 === 'function') {
-        $d303c1 = $d303c1.options;
+      if (typeof $bbfae3 === 'function') {
+        $bbfae3 = $bbfae3.options;
       }
     
         /* template */
-        Object.assign($d303c1, (function () {
+        Object.assign($bbfae3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21690,14 +21657,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $07112c = exports.default || module.exports;
+        var $049b29 = exports.default || module.exports;
       
-      if (typeof $07112c === 'function') {
-        $07112c = $07112c.options;
+      if (typeof $049b29 === 'function') {
+        $049b29 = $049b29.options;
       }
     
         /* template */
-        Object.assign($07112c, (function () {
+        Object.assign($049b29, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21741,7 +21708,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -21843,14 +21810,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $019087 = exports.default || module.exports;
+        var $22d4bd = exports.default || module.exports;
       
-      if (typeof $019087 === 'function') {
-        $019087 = $019087.options;
+      if (typeof $22d4bd === 'function') {
+        $22d4bd = $22d4bd.options;
       }
     
         /* template */
-        Object.assign($019087, (function () {
+        Object.assign($22d4bd, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -21943,14 +21910,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $6cbad5 = exports.default || module.exports;
+        var $3e52a7 = exports.default || module.exports;
       
-      if (typeof $6cbad5 === 'function') {
-        $6cbad5 = $6cbad5.options;
+      if (typeof $3e52a7 === 'function') {
+        $3e52a7 = $3e52a7.options;
       }
     
         /* template */
-        Object.assign($6cbad5, (function () {
+        Object.assign($3e52a7, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22035,14 +22002,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $91dcc2 = exports.default || module.exports;
+        var $dba7a9 = exports.default || module.exports;
       
-      if (typeof $91dcc2 === 'function') {
-        $91dcc2 = $91dcc2.options;
+      if (typeof $dba7a9 === 'function') {
+        $dba7a9 = $dba7a9.options;
       }
     
         /* template */
-        Object.assign($91dcc2, (function () {
+        Object.assign($dba7a9, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22129,7 +22096,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -22240,14 +22207,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $b2736f = exports.default || module.exports;
+        var $298355 = exports.default || module.exports;
       
-      if (typeof $b2736f === 'function') {
-        $b2736f = $b2736f.options;
+      if (typeof $298355 === 'function') {
+        $298355 = $298355.options;
       }
     
         /* template */
-        Object.assign($b2736f, (function () {
+        Object.assign($298355, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22406,14 +22373,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $358d10 = exports.default || module.exports;
+        var $201995 = exports.default || module.exports;
       
-      if (typeof $358d10 === 'function') {
-        $358d10 = $358d10.options;
+      if (typeof $201995 === 'function') {
+        $201995 = $201995.options;
       }
     
         /* template */
-        Object.assign($358d10, (function () {
+        Object.assign($201995, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22486,14 +22453,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1e0810 = exports.default || module.exports;
+        var $7af157 = exports.default || module.exports;
       
-      if (typeof $1e0810 === 'function') {
-        $1e0810 = $1e0810.options;
+      if (typeof $7af157 === 'function') {
+        $7af157 = $7af157.options;
       }
     
         /* template */
-        Object.assign($1e0810, (function () {
+        Object.assign($7af157, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22536,14 +22503,14 @@ render._withStripped = true
       
 },{}],"components/EmptyCover.vue":[function(require,module,exports) {
 
-        var $9b2461 = exports.default || module.exports;
+        var $12b0af = exports.default || module.exports;
       
-      if (typeof $9b2461 === 'function') {
-        $9b2461 = $9b2461.options;
+      if (typeof $12b0af === 'function') {
+        $12b0af = $12b0af.options;
       }
     
         /* template */
-        Object.assign($9b2461, (function () {
+        Object.assign($12b0af, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -22816,14 +22783,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $2d8a80 = exports.default || module.exports;
+        var $75bf62 = exports.default || module.exports;
       
-      if (typeof $2d8a80 === 'function') {
-        $2d8a80 = $2d8a80.options;
+      if (typeof $75bf62 === 'function') {
+        $75bf62 = $75bf62.options;
       }
     
         /* template */
-        Object.assign($2d8a80, (function () {
+        Object.assign($75bf62, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement

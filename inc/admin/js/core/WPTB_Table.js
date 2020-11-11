@@ -1064,7 +1064,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             array.push(aux);
             drawTable(array);
             table.recalculateIndexes();
-            WPTB_Helper.tableRowsColorsReinstall( table );
+            WPTB_Helper.tableRowsColorsReinstall(table);
             table.addColumnWidth();
             WPTB_Helper.dataTitleColumnSet( table );
             undoSelect();
