@@ -52,6 +52,7 @@ class Settings_Manager {
 		'allowed_roles'  => [ 'administrator' ],
 		'panel_location' => 'left',
 		'allow_edit_link_frontend' => false,
+		'give_credits_to_wp_table_builder' => false,
 	];
 
 	/**
@@ -62,6 +63,7 @@ class Settings_Manager {
 		'allowed_roles'  => 'sanitize_text_field',
 		'panel_location' => 'sanitize_text_field',
 		'allow_edit_link_frontend' => 'sanitize_text_field',
+		'give_credits_to_wp_table_builder' => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
@@ -285,6 +287,11 @@ class Settings_Manager {
 								'type'    => 'checkbox',
 								'section' => 'general',
 								'label'   => esc_html__( 'Show edit table link on frontend', 'wp-table-builder' )
+							],
+							'give_credits_to_wp_table_builder'  => [
+								'type'    => 'checkbox',
+								'section' => 'general',
+								'label'   => esc_html__( 'Give Credits to WP Table Builder', 'wp-table-builder' )
 							],
 						]
 					],
