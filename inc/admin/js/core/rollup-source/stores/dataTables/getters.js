@@ -46,7 +46,6 @@ const getters = {
 	 * Get active tab group id for source setup
 	 *
 	 * @param {Object} state store state
-	 * @param {string} sourceId source id
 	 * @return {Function} function to get active setup group tab
 	 */
 	currentSetupGroupTab: (state) => (sourceId) => {
@@ -143,7 +142,7 @@ const getters = {
 		if (state.dataManager.tempData.rowIds[index]) {
 			return state.dataManager.tempData.rowIds[index];
 		}
-		return 0;
+		return null;
 	},
 	/**
 	 * Get data manager column id of a given index.
@@ -156,6 +155,35 @@ const getters = {
 			return state.dataManager.tempData.colIds[index];
 		}
 		return 0;
+	},
+	/**
+	 * Get current column count.
+	 *
+	 * @param {Object} state data table state
+	 * @return {number} column count
+	 */
+	getColCount(state) {
+		return state.dataManager.tempData.colCount;
+	},
+	/**
+	 * Get data related to select operation.
+	 *
+	 * @param {Object} state store state
+	 * @return {{hoverId: null, active: boolean, clickId: null, type: string}} select operation related data
+	 */
+	getSelectOperationData(state) {
+		return state.dataManager.select;
+	},
+	/**
+	 * Get row and column ids of a cell from a formed id.
+	 *
+	 * @param {Object} state data table state
+	 * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
+	 */
+	parseCellId: (state) => (formedId) => {
+		const [rowId, colId] = formedId.split('-');
+
+		return { rowId, colId };
 	},
 };
 

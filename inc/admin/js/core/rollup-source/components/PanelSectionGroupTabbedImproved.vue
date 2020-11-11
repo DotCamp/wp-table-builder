@@ -15,7 +15,7 @@ This is the improved version of the normal version where showing tab related com
 				v-for="(name, id) in tabs"
 				class="wptb-settings-section-item static-active"
 				:key="id"
-				:class="{ active: isActiveTab(id), disabled: !isActiveTab(id) }"
+				:class="{ active: isActiveTab(id), disabled: !isActiveTab(id), broken: isBusy }"
 				@click.prevent.capture="handleTabClick(id)"
 			>
 				{{ name }}
@@ -27,6 +27,8 @@ This is the improved version of the normal version where showing tab related com
 	</div>
 </template>
 <script>
+import withStoreBusy from '../mixins/withStoreBusy';
+
 export default {
 	props: {
 		header: {
@@ -51,6 +53,7 @@ export default {
 		prop: 'currentTab',
 		event: 'tabClicked',
 	},
+	mixins: [withStoreBusy],
 	methods: {
 		// decide if the tab is active based on current active tab property
 		isActiveTab(tabId) {

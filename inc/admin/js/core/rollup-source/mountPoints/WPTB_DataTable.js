@@ -56,6 +56,7 @@ export default {
 					values: __('values', 'wp-table-builder'),
 					value: __('value', 'wp-table-builder'),
 					selectRowForNames: __('select a row for column names', 'wp-table-builder'),
+					cancel: __('cancel', 'wp-table-builder'),
 				},
 				proUrl: data.proUrl,
 			},

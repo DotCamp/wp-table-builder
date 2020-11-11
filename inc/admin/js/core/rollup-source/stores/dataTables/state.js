@@ -9,6 +9,33 @@
  *
  * @type {Object}
  */
+
+const selectId = {
+	id: null,
+	resolve: null,
+};
+
+const clickIdHandler = {
+	set(obj, prop, val) {
+		if (prop === 'resolve') {
+			// eslint-disable-next-line no-param-reassign
+			obj[prop] = val;
+		} else {
+			// eslint-disable-next-line no-param-reassign
+			obj[prop] = val;
+			// if resolve property is defined, call it with assigned value
+			if (obj.resolve) {
+				obj.resolve(val);
+			}
+		}
+
+		return true;
+	},
+};
+
+// proxy for clicked cell id of select operation
+const clickIdProxy = new Proxy(selectId, clickIdHandler);
+
 const state = {
 	visibility: false,
 	busy: false,
@@ -34,15 +61,18 @@ const state = {
 			rowIds: [],
 			colIds: [],
 			values: [],
+			colCount: 0,
+			rowCount: 0,
 		},
 		controls: {
 			firstRowAsColumnName: true,
 		},
 		select: {
+			callerId: null,
 			active: false,
+			hoverId: null,
+			clickId: clickIdProxy,
 			type: 'row',
-			row: 0,
-			column: 0,
 		},
 	},
 	leftPanelId: '#dataTableLeftPanel',

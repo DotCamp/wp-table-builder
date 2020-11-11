@@ -25,7 +25,7 @@ const actions = {
 	/**
 	 * Soft select a source card.
 	 *
-	 * @param {Function} commit mutation commit function
+	 * @param {{commit}} mutation commit function
 	 * @param {string} sourceId selected source id
 	 */
 	softSelectCard({ commit }, sourceId) {
@@ -37,8 +37,7 @@ const actions = {
 	 * For source setup to work, name your setup components as `SourceName`Setup where
 	 *`SourceName` being the id for that source.
 	 *
-	 * @param {Function} commit mutation commit function
-	 * @param {Function} dispatch action dispatch function
+	 * @param {{commit, dispatch}} mutation commit function
 	 * @param {string} sourceId selected source id
 	 */
 	startSourceSetup({ commit, dispatch }, sourceId) {
@@ -55,7 +54,7 @@ const actions = {
 	/**
 	 * Add temp data to data manager.
 	 *
-	 * @param {commit} vuex store object
+	 * @param {{commit, getters}} vuex store object
 	 * @param {Array} data data array
 	 */
 	addDataManagerTempData({ commit, getters }, data) {
@@ -79,6 +78,12 @@ const actions = {
 			commit('pushDataManagerColId', getters.generateUniqueId());
 		}
 
+		// set maximum column amount
+		commit('setColCount', maxCol);
+
+		// set maximum row amount
+		commit('setRowCount', confirmedData.length);
+
 		// form data object
 		const formedData = confirmedData.reduce((carry, item, index) => {
 			const rowObj = { rowId: getters.getDataManagerRowId(index), values: [] };
@@ -98,11 +103,54 @@ const actions = {
 	/**
 	 * Set tab of current active source setup.
 	 *
-	 * @param {state,commit} vuex store object
+	 * @param {{state,commit}} vuex store object
 	 * @param {string} tabId tab id to change to
 	 */
 	setActiveTabGroupForCurrentSource({ state, commit }, tabId) {
 		commit('setActiveControlTabGroup', { sourceId: state.dataSource.setup.sourceId, tabId });
+	},
+	/**
+	 * Start select operation.
+	 *
+	 * @async
+	 * @param {{commit}} vuex store object
+	 * @param {string} callerId id of the component that started the operation
+	 * @return {Promise} Promise object
+	 */
+	startRowSelectOperation({ commit }, callerId) {
+		// set app to busy
+		commit('setBusy', true);
+
+		// reset selection data
+		commit('resetSelectData');
+
+		// enable row selection
+		commit('setSelectionType', 'row');
+
+		// enable select operation
+		commit('setSelectStatus', true);
+
+		// set operation caller id
+		commit('setSelectCallerId', callerId);
+
+		// send back a promise object which will be resolved when click operation occurs
+		return new Promise((res) => {
+			commit('setSelectIdResolve', (val) => {
+				// end selection operation
+				commit('setSelectStatus', false);
+				commit('resetSelectData');
+
+				// set app to idle
+				commit('setBusy', false);
+
+				res(val);
+			});
+		});
+	},
+	cancelRowSelectOperation({ state, commit }) {
+		commit('setSelectStatus', false);
+		state.dataManager.select.clickId.resolve(null);
+		commit('resetSelectData');
 	},
 };
 

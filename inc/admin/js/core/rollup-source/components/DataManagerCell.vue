@@ -1,10 +1,20 @@
 <template>
-	<div @mouseenter="handleHover" @click.prevent.capture="handleClick">
-		<input class="wptb-data-manager-cell-input" :placeholder="placeHolder" type="text" :value="value" />
-	</div>
+	<td class="wptb-data-manager-table-data-value" :id="id">
+		<div @mouseenter="handleHover" @click.prevent.capture="handleClick">
+			<input
+				:disabled="isBusy"
+				class="wptb-data-manager-cell-input"
+				:placeholder="placeHolder"
+				type="text"
+				:value="value"
+			/>
+		</div>
+	</td>
 </template>
 
 <script>
+import withStoreBusy from '../mixins/withStoreBusy';
+
 export default {
 	props: {
 		value: {
@@ -15,21 +25,35 @@ export default {
 			type: String,
 			default: 'enter data',
 		},
-		row: {
-			type: Number,
-			default: 0,
+		selectionEnabled: {
+			type: Boolean,
+			default: false,
 		},
-		column: {
-			type: Number,
-			default: 0,
+		rowId: {
+			type: String,
+			default: '',
+		},
+		colId: {
+			type: String,
+			default: '',
+		},
+	},
+	mixins: [withStoreBusy],
+	computed: {
+		id() {
+			return `${this.rowId}-${this.colId}`;
 		},
 	},
 	methods: {
 		handleHover() {
-			this.$emit('cellHover', this.row, this.column);
+			if (this.selectionEnabled) {
+				this.$emit('cellHover', this.rowId, this.colId);
+			}
 		},
 		handleClick() {
-			this.$emit('cellClick', this.row, this.column);
+			if (this.selectionEnabled) {
+				this.$emit('cellClick', this.id);
+			}
 		},
 	},
 };

@@ -9,13 +9,14 @@
 				:click="setScreenToSourceSelect"
 				type="danger"
 				size="full-size"
+				:disabled="isBusy"
 				>{{ translationM('back') | cap }}</material-button
 			>
 			<material-button
 				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
 				type="confirm"
 				size="full-size"
-				:disabled="!isSetupDataImported"
+				:disabled="isBusy"
 				>{{ translationM('continue') | cap }}</material-button
 			>
 		</div>
@@ -26,10 +27,11 @@
 import { mapGetters, mapActions } from 'vuex';
 import MaterialButton from './MaterialButton';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
+import withStoreBusy from '../mixins/withStoreBusy';
 
 export default {
 	components: { MaterialButton },
-	mixins: [withNativeTranslationStore],
+	mixins: [withNativeTranslationStore, withStoreBusy],
 	computed: {
 		...mapGetters(['isActiveScreenSourceSetup', 'isSetupDataImported']),
 	},

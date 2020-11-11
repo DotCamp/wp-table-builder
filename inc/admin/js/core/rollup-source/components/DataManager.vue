@@ -6,27 +6,32 @@
 					<tr class="wptb-data-manager-table-column-name-info">
 						<th :colspan="infoRowSpan">{{ translationM('columnNames') }}</th>
 					</tr>
-					<tr>
-						<th
-							class="wptb-data-manager-table-data-value"
-							v-for="headerCell in table.header"
-							:key="columnNameRowIndex"
-						>
-							<data-manager-cell
-								:place-holder="translationM('columnName')"
-								:value="headerCell"
-							></data-manager-cell>
-						</th>
+					<tr v-for="headerRow in table.header" :key="headerRow.rowId" :id="headerRow.rowId">
+						<data-manager-cell
+							:key="cellKey(headerRow.rowId, headerCell.colId)"
+							v-for="headerCell in headerRow.values"
+							:place-holder="translationM('columnName')"
+							:value="headerCell.value"
+							:row-id="headerRow.rowId"
+							:col-id="headerCell.colId"
+						></data-manager-cell>
 					</tr>
 					<tr class="wptb-data-manager-table-column-name-info">
 						<th :colspan="infoRowSpan">{{ translationM('values') }}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="{ key, values } in table.values" :key="key">
-						<td class="wptb-data-manager-table-data-value" v-for="cell in values">
-							<data-manager-cell :place-holder="translationM('value')" :value="cell"></data-manager-cell>
-						</td>
+					<tr v-for="valueRows in table.values" :key="valueRows.rowId" :id="valueRows.rowId">
+						<data-manager-cell
+							v-for="cell in valueRows.values"
+							:key="cellKey(valueRows.rowId, cell.colId)"
+							:place-holder="translationM('value')"
+							:value="cell.value"
+							:row-id="valueRows.rowId"
+							:col-id="cell.colId"
+							:selection-enabled="true"
+							@cellClick="handleCellClick"
+						></data-manager-cell>
 					</tr>
 				</tbody>
 			</table>
@@ -35,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import DataManagerCell from './DataManagerCell';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 
@@ -57,12 +62,14 @@ export default {
 			columnNameRowIndex: null,
 		};
 	},
+	created() {
+		this.addDataManagerTempData([
+			['', '', ''],
+			['', '', ''],
+		]);
+	},
 	mounted() {
 		this.$nextTick(() => {
-			this.addDataManagerTempData([
-				['', '', ''],
-				['', '', ''],
-			]);
 			this.calculateColumnNameRowIndex(this.getDataManagerControls.firstRowAsColumnName);
 		});
 	},
@@ -86,20 +93,57 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId']),
+		...mapGetters(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount']),
 		infoRowSpan() {
-			return this.table.header.length;
+			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;
 		},
 	},
 	methods: {
+		handleCellClick(id) {
+			this.setSelectId(id);
+		},
 		calculateColumnNameRowIndex(n) {
 			this.columnNameRowIndex = n ? this.getDataManagerRowId(0) : null;
 		},
-		prepareTableValues(tableValue) {
-			// TODO [erdembircan] remove for production
-			console.log('called');
+		generateEmptyRow(colCount) {
+			const rowId = this.generateUniqueId()();
+
+			const rowObject = { rowId, values: [] };
+
+			for (let i = 0; i < colCount; i += 1) {
+				rowObject.values.push({ colId: this.generateUniqueId()(), value: '' });
+			}
+
+			return rowObject;
 		},
+		prepareTableValues(tableValue) {
+			if (tableValue.length > 0) {
+				const { firstRowAsColumnName } = this.getDataManagerControls;
+				this.calculateColumnNameRowIndex(firstRowAsColumnName);
+
+				let header = tableValue.find((row) => {
+					return row.rowId === this.columnNameRowIndex;
+				});
+
+				if (!header) {
+					header = this.generateEmptyRow(this.getColCount);
+				}
+
+				// find column index row
+				this.table.header = [header];
+
+				// filter out column index row
+				this.table.values = tableValue.filter((t) => {
+					return t.rowId !== this.columnNameRowIndex;
+				});
+			}
+		},
+		cellKey(rowId, colId) {
+			return `${rowId}-${colId}`;
+		},
+		...mapGetters(['generateUniqueId']),
 		...mapActions(['addDataManagerTempData']),
+		...mapMutations(['setSelectId']),
 	},
 };
 </script>

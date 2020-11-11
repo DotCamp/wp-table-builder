@@ -26671,7 +26671,37 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../functions/DataSourceObject":"functions/DataSourceObject.js"}],"components/DataTableLeftPanel.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../functions/DataSourceObject":"functions/DataSourceObject.js"}],"mixins/withStoreBusy.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Mixin for using store connected busy state to component.
+ *
+ * @type {Object}
+ */
+var withStoreBusy = {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
+    isBusy: function isBusy() {
+      return this.busyStatus;
+    }
+  })
+};
+var _default = withStoreBusy;
+exports.default = _default;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataTableLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26685,6 +26715,8 @@ var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -26697,7 +26729,7 @@ var _default = {
   components: {
     MaterialButton: _MaterialButton.default
   },
-  mixins: [_withNativeTranslationStore.default],
+  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSetupDataImported'])),
   methods: _objectSpread({
     setScreenToSourceSelect: function setScreenToSourceSelect() {
@@ -26742,7 +26774,8 @@ exports.default = _default;
                   attrs: {
                     click: _vm.setScreenToSourceSelect,
                     type: "danger",
-                    size: "full-size"
+                    size: "full-size",
+                    disabled: _vm.isBusy
                   }
                 },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("back"))))]
@@ -26756,7 +26789,7 @@ exports.default = _default;
                   attrs: {
                     type: "confirm",
                     size: "full-size",
-                    disabled: !_vm.isSetupDataImported
+                    disabled: _vm.isBusy
                   }
                 },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
@@ -26781,7 +26814,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/LeftPanelInfoMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js"}],"components/LeftPanelInfoMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26962,10 +26995,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
   components: {
     MaterialButton: _MaterialButton.default
   },
+  inheritAttrs: false,
   methods: {
     handleClick: function handleClick() {
       this.$emit('buttonClick');
@@ -27001,10 +27037,15 @@ exports.default = _default;
         [
           _c(
             "material-button",
-            {
-              staticClass: "wptb-panel-button-material",
-              attrs: { click: _vm.handleClick }
-            },
+            _vm._b(
+              {
+                staticClass: "wptb-panel-button-material",
+                attrs: { click: _vm.handleClick }
+              },
+              "material-button",
+              _vm.$attrs,
+              false
+            ),
             [_vm._t("default")],
             2
           )
@@ -27141,6 +27182,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -27193,6 +27239,7 @@ var _default = {
     prop: 'currentTab',
     event: 'tabClicked'
   },
+  mixins: [_withStoreBusy.default],
   methods: {
     // decide if the tab is active based on current active tab property
     isActiveTab: function isActiveTab(tabId) {
@@ -27240,7 +27287,8 @@ exports.default = _default;
               staticClass: "wptb-settings-section-item static-active",
               class: {
                 active: _vm.isActiveTab(id),
-                disabled: !_vm.isActiveTab(id)
+                disabled: !_vm.isActiveTab(id),
+                broken: _vm.isBusy
               },
               on: {
                 "!click": function($event) {
@@ -27276,7 +27324,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/PanelSectionGroupTabbedItem.vue":[function(require,module,exports) {
+},{"../mixins/withStoreBusy":"mixins/withStoreBusy.js"}],"components/PanelSectionGroupTabbedItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27349,6 +27397,8 @@ var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl")
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
 var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27365,7 +27415,7 @@ var _default = {
     PanelToggleControl: _PanelToggleControl.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
   },
-  mixins: [_withNativeTranslationStore.default],
+  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
   props: {
     currentTab: {
       type: String,
@@ -27383,9 +27433,26 @@ var _default = {
           value: n
         });
       }
+    },
+    rowForNamesVisibility: function rowForNamesVisibility() {
+      var _this$getSelectOperat = this.getSelectOperationData,
+          active = _this$getSelectOperat.active,
+          callerId = _this$getSelectOperat.callerId;
+      return !active && callerId !== 'selectRowForNames';
     }
-  }, (0, _vuex.mapGetters)(['getDataManagerControls'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']))
+  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'parseCellId', 'getSelectOperationData'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']), {
+    selectRowForNames: function selectRowForNames() {
+      var _this = this;
+
+      this.startRowSelectOperation('selectRowForNames').then(function (formedId) {
+        if (formedId) {
+          var _this$parseCellId = _this.parseCellId(formedId),
+              rowId = _this$parseCellId.rowId;
+        }
+      });
+    }
+  })
 };
 exports.default = _default;
         var $b4a27f = exports.default || module.exports;
@@ -27408,7 +27475,10 @@ exports.default = _default;
         "fragment",
         [
           _c("panel-toggle-control", {
-            attrs: { label: _vm._f("cap")(_vm.translationM("firstRowHeader")) },
+            attrs: {
+              disabled: _vm.isBusy,
+              label: _vm._f("cap")(_vm.translationM("firstRowHeader"))
+            },
             model: {
               value: _vm.firstRowAsColumnName,
               callback: function($$v) {
@@ -27418,13 +27488,41 @@ exports.default = _default;
             }
           }),
           _vm._v(" "),
-          _c("panel-button-control", [
-            _vm._v(
-              "\n\t\t\t" +
-                _vm._s(_vm._f("cap")(_vm.translationM("selectRowForNames"))) +
-                "\n\t\t"
-            )
-          ])
+          _vm.rowForNamesVisibility
+            ? _c(
+                "panel-button-control",
+                {
+                  attrs: { disabled: _vm.isBusy },
+                  on: { buttonClick: _vm.selectRowForNames }
+                },
+                [
+                  _vm._v(
+                    "\n\t\t\t" +
+                      _vm._s(
+                        _vm._f("cap")(_vm.translationM("selectRowForNames"))
+                      ) +
+                      "\n\t\t"
+                  )
+                ]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.rowForNamesVisibility
+            ? _c(
+                "panel-button-control",
+                {
+                  attrs: { type: "danger" },
+                  on: { buttonClick: _vm.cancelRowSelectOperation }
+                },
+                [
+                  _vm._v(
+                    "\n\t\t\t" +
+                      _vm._s(_vm._f("cap")(_vm.translationM("cancel"))) +
+                      "\n\t\t"
+                  )
+                ]
+              )
+            : _vm._e()
         ],
         1
       )
@@ -27444,7 +27542,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./PanelButtonControl":"components/PanelButtonControl.vue"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js","./PanelButtonControl":"components/PanelButtonControl.vue"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27932,6 +28030,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -27948,21 +28059,35 @@ var _default = {
       type: String,
       default: 'enter data'
     },
-    row: {
-      type: Number,
-      default: 0
+    selectionEnabled: {
+      type: Boolean,
+      default: false
     },
-    column: {
-      type: Number,
-      default: 0
+    rowId: {
+      type: String,
+      default: ''
+    },
+    colId: {
+      type: String,
+      default: ''
+    }
+  },
+  mixins: [_withStoreBusy.default],
+  computed: {
+    id: function id() {
+      return "".concat(this.rowId, "-").concat(this.colId);
     }
   },
   methods: {
     handleHover: function handleHover() {
-      this.$emit('cellHover', this.row, this.column);
+      if (this.selectionEnabled) {
+        this.$emit('cellHover', this.rowId, this.colId);
+      }
     },
     handleClick: function handleClick() {
-      this.$emit('cellClick', this.row, this.column);
+      if (this.selectionEnabled) {
+        this.$emit('cellClick', this.id);
+      }
     }
   }
 };
@@ -27980,22 +28105,35 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "td",
     {
-      on: {
-        mouseenter: _vm.handleHover,
-        "!click": function($event) {
-          $event.preventDefault()
-          return _vm.handleClick($event)
-        }
-      }
+      staticClass: "wptb-data-manager-table-data-value",
+      attrs: { id: _vm.id }
     },
     [
-      _c("input", {
-        staticClass: "wptb-data-manager-cell-input",
-        attrs: { placeholder: _vm.placeHolder, type: "text" },
-        domProps: { value: _vm.value }
-      })
+      _c(
+        "div",
+        {
+          on: {
+            mouseenter: _vm.handleHover,
+            "!click": function($event) {
+              $event.preventDefault()
+              return _vm.handleClick($event)
+            }
+          }
+        },
+        [
+          _c("input", {
+            staticClass: "wptb-data-manager-cell-input",
+            attrs: {
+              disabled: _vm.isBusy,
+              placeholder: _vm.placeHolder,
+              type: "text"
+            },
+            domProps: { value: _vm.value }
+          })
+        ]
+      )
     ]
   )
 }
@@ -28011,7 +28149,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/DataManager.vue":[function(require,module,exports) {
+},{"../mixins/withStoreBusy":"mixins/withStoreBusy.js"}],"components/DataManager.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28053,12 +28191,13 @@ var _default = {
       columnNameRowIndex: null
     };
   },
+  created: function created() {
+    this.addDataManagerTempData([['', '', ''], ['', '', '']]);
+  },
   mounted: function mounted() {
     var _this = this;
 
     this.$nextTick(function () {
-      _this.addDataManagerTempData([['', '', ''], ['', '', '']]);
-
       _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
     });
   },
@@ -28081,20 +28220,62 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount']), {
     infoRowSpan: function infoRowSpan() {
-      return this.table.header.length;
+      var _this$table$header$, _this$table$header$$v;
+
+      return this.getColCount === 0 ? (_this$table$header$ = this.table.header[0]) === null || _this$table$header$ === void 0 ? void 0 : (_this$table$header$$v = _this$table$header$.values) === null || _this$table$header$$v === void 0 ? void 0 : _this$table$header$$v.length : this.getColCount;
     }
   }),
   methods: _objectSpread({
+    handleCellClick: function handleCellClick(id) {
+      this.setSelectId(id);
+    },
     calculateColumnNameRowIndex: function calculateColumnNameRowIndex(n) {
       this.columnNameRowIndex = n ? this.getDataManagerRowId(0) : null;
     },
+    generateEmptyRow: function generateEmptyRow(colCount) {
+      var rowId = this.generateUniqueId()();
+      var rowObject = {
+        rowId: rowId,
+        values: []
+      };
+
+      for (var i = 0; i < colCount; i += 1) {
+        rowObject.values.push({
+          colId: this.generateUniqueId()(),
+          value: ''
+        });
+      }
+
+      return rowObject;
+    },
     prepareTableValues: function prepareTableValues(tableValue) {
-      // TODO [erdembircan] remove for production
-      console.log('called');
+      var _this2 = this;
+
+      if (tableValue.length > 0) {
+        var firstRowAsColumnName = this.getDataManagerControls.firstRowAsColumnName;
+        this.calculateColumnNameRowIndex(firstRowAsColumnName);
+        var header = tableValue.find(function (row) {
+          return row.rowId === _this2.columnNameRowIndex;
+        });
+
+        if (!header) {
+          header = this.generateEmptyRow(this.getColCount);
+        } // find column index row
+
+
+        this.table.header = [header]; // filter out column index row
+
+        this.table.values = tableValue.filter(function (t) {
+          return t.rowId !== _this2.columnNameRowIndex;
+        });
+      }
+    },
+    cellKey: function cellKey(rowId, colId) {
+      return "".concat(rowId, "-").concat(colId);
     }
-  }, (0, _vuex.mapActions)(['addDataManagerTempData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData']), {}, (0, _vuex.mapMutations)(['setSelectId']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -28115,75 +28296,71 @@ exports.default = _default;
     [
       _c("div", { staticClass: "wptb-data-manager-table" }, [
         _c("table", [
-          _c("thead", [
-            _c(
-              "tr",
-              { staticClass: "wptb-data-manager-table-column-name-info" },
-              [
-                _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                  _vm._v(_vm._s(_vm.translationM("columnNames")))
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "tr",
-              _vm._l(_vm.table.header, function(headerCell) {
+          _c(
+            "thead",
+            [
+              _c(
+                "tr",
+                { staticClass: "wptb-data-manager-table-column-name-info" },
+                [
+                  _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                    _vm._v(_vm._s(_vm.translationM("columnNames")))
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.table.header, function(headerRow) {
                 return _c(
-                  "th",
-                  {
-                    key: _vm.columnNameRowIndex,
-                    staticClass: "wptb-data-manager-table-data-value"
-                  },
-                  [
-                    _c("data-manager-cell", {
+                  "tr",
+                  { key: headerRow.rowId, attrs: { id: headerRow.rowId } },
+                  _vm._l(headerRow.values, function(headerCell) {
+                    return _c("data-manager-cell", {
+                      key: _vm.cellKey(headerRow.rowId, headerCell.colId),
                       attrs: {
                         "place-holder": _vm.translationM("columnName"),
-                        value: headerCell
+                        value: headerCell.value,
+                        "row-id": headerRow.rowId,
+                        "col-id": headerCell.colId
                       }
                     })
-                  ],
+                  }),
                   1
                 )
               }),
-              0
-            ),
-            _vm._v(" "),
-            _c(
-              "tr",
-              { staticClass: "wptb-data-manager-table-column-name-info" },
-              [
-                _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                  _vm._v(_vm._s(_vm.translationM("values")))
-                ])
-              ]
-            )
-          ]),
+              _vm._v(" "),
+              _c(
+                "tr",
+                { staticClass: "wptb-data-manager-table-column-name-info" },
+                [
+                  _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                    _vm._v(_vm._s(_vm.translationM("values")))
+                  ])
+                ]
+              )
+            ],
+            2
+          ),
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.table.values, function(ref) {
-              var key = ref.key
-              var values = ref.values
+            _vm._l(_vm.table.values, function(valueRows) {
               return _c(
                 "tr",
-                { key: key },
-                _vm._l(values, function(cell) {
-                  return _c(
-                    "td",
-                    { staticClass: "wptb-data-manager-table-data-value" },
-                    [
-                      _c("data-manager-cell", {
-                        attrs: {
-                          "place-holder": _vm.translationM("value"),
-                          value: cell
-                        }
-                      })
-                    ],
-                    1
-                  )
+                { key: valueRows.rowId, attrs: { id: valueRows.rowId } },
+                _vm._l(valueRows.values, function(cell) {
+                  return _c("data-manager-cell", {
+                    key: _vm.cellKey(valueRows.rowId, cell.colId),
+                    attrs: {
+                      "place-holder": _vm.translationM("value"),
+                      value: cell.value,
+                      "row-id": valueRows.rowId,
+                      "col-id": cell.colId,
+                      "selection-enabled": true
+                    },
+                    on: { cellClick: _vm.handleCellClick }
+                  })
                 }),
-                0
+                1
               )
             }),
             0
@@ -28371,7 +28548,64 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue"}],"components/CsvSetup.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue"}],"components/DataManagerSelect.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  computed: _objectSpread({
+    visibility: function visibility() {
+      var _this$getSelectOperat = this.getSelectOperationData,
+          active = _this$getSelectOperat.active,
+          hoverId = _this$getSelectOperat.hoverId;
+      return active && hoverId !== null;
+    }
+  }, (0, _vuex.mapGetters)(['getSelectOperationData']))
+};
+exports.default = _default;
+        var $52f7f9 = exports.default || module.exports;
+      
+      if (typeof $52f7f9 === 'function') {
+        $52f7f9 = $52f7f9.options;
+      }
+    
+        /* template */
+        Object.assign($52f7f9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.visibility
+    ? _c("div", {
+        staticClass: "wptb-data-manager-select wptb-repeating-linear-gradient"
+      })
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/CsvSetup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28387,6 +28621,8 @@ var _CsvSetupLeftPanel = _interopRequireDefault(require("./CsvSetupLeftPanel"));
 
 var _CsvSetupBuilderView = _interopRequireDefault(require("./CsvSetupBuilderView"));
 
+var _DataManagerSelect = _interopRequireDefault(require("./DataManagerSelect"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -28398,7 +28634,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   components: {
     CsvSetupBuilderView: _CsvSetupBuilderView.default,
-    CsvSetupLeftPanel: _CsvSetupLeftPanel.default
+    CsvSetupLeftPanel: _CsvSetupLeftPanel.default,
+    DataManagerSelect: _DataManagerSelect.default
   },
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
@@ -28502,7 +28739,9 @@ exports.default = _default;
           },
           expression: "currentFile"
         }
-      })
+      }),
+      _vm._v(" "),
+      _c("data-manager-select")
     ],
     1
   )
@@ -28519,7 +28758,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./CsvSetupLeftPanel":"components/CsvSetupLeftPanel.vue","./CsvSetupBuilderView":"components/CsvSetupBuilderView.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./CsvSetupLeftPanel":"components/CsvSetupLeftPanel.vue","./CsvSetupBuilderView":"components/CsvSetupBuilderView.vue","./DataManagerSelect":"components/DataManagerSelect.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28726,6 +28965,29 @@ exports.default = void 0;
  *
  * @type {Object}
  */
+var selectId = {
+  id: null,
+  resolve: null
+};
+var clickIdHandler = {
+  set: function set(obj, prop, val) {
+    if (prop === 'resolve') {
+      // eslint-disable-next-line no-param-reassign
+      obj[prop] = val;
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      obj[prop] = val; // if resolve property is defined, call it with assigned value
+
+      if (obj.resolve) {
+        obj.resolve(val);
+      }
+    }
+
+    return true;
+  }
+}; // proxy for clicked cell id of select operation
+
+var clickIdProxy = new Proxy(selectId, clickIdHandler);
 var state = {
   visibility: false,
   busy: false,
@@ -28750,16 +29012,19 @@ var state = {
     tempData: {
       rowIds: [],
       colIds: [],
-      values: []
+      values: [],
+      colCount: 0,
+      rowCount: 0
     },
     controls: {
       firstRowAsColumnName: true
     },
     select: {
+      callerId: null,
       active: false,
-      type: 'row',
-      row: 0,
-      column: 0
+      hoverId: null,
+      clickId: clickIdProxy,
+      type: 'row'
     }
   },
   leftPanelId: '#dataTableLeftPanel',
@@ -28890,7 +29155,7 @@ var mutations = {
    * Set control value for data manager.
    *
    * @param {Object} state data table state
-   * @param {key, value} mutation payload
+   * @param {{key, value}} mutation payload
    */
   setDataManagerControl: function setDataManagerControl(state, _ref2) {
     var key = _ref2.key,
@@ -28916,6 +29181,89 @@ var mutations = {
    */
   pushDataManagerColId: function pushDataManagerColId(state, id) {
     state.dataManager.tempData.colIds.push(id);
+  },
+
+  /**
+   * Set current row count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setRowCount: function setRowCount(state, count) {
+    state.dataManager.tempData.rowCount = count;
+  },
+
+  /**
+   * Set current column count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setColCount: function setColCount(state, count) {
+    state.dataManager.tempData.colCount = count;
+  },
+
+  /**
+   * Set status  for select operation.
+   *
+   * @param {Object} state data table state
+   * @param {boolean} status status
+   */
+  setSelectStatus: function setSelectStatus(state, status) {
+    state.dataManager.select.active = status;
+  },
+
+  /**
+   * Reset select operation data.
+   *
+   * @param {Object} state data table state
+   */
+  resetSelectData: function resetSelectData(state) {
+    state.dataManager.select.hoverId = null;
+    state.dataManager.select.clickId.resolve = null;
+    state.dataManager.select.clickId.id = null;
+    state.dataManager.select.callerId = null;
+  },
+
+  /**
+   * Set select operation type.
+   * Available types are 'row' and 'col'.
+   *
+   * @param {Object} state data table state
+   * @param {string} type type
+   */
+  setSelectionType: function setSelectionType(state, type) {
+    state.dataManager.select.type = type;
+  },
+
+  /**
+   * Set a resolve function to signal end for click operation.
+   *
+   * @param {Object} state data table state
+   * @param {Function} resolve resolve function
+   */
+  setSelectIdResolve: function setSelectIdResolve(state, resolve) {
+    state.dataManager.select.clickId.resolve = resolve;
+  },
+
+  /**
+   * Set a unique id for the current select operation.
+   *
+   * @param {Object} state data table state
+   * @param {string} callerId caller id
+   */
+  setSelectCallerId: function setSelectCallerId(state, callerId) {
+    state.dataManager.select.callerId = callerId;
+  },
+
+  /**
+   * Set store if of selected cell.
+   *
+   * @param {Object} state data table state
+   * @param {string} id set id for selected cell
+   */
+  setSelectId: function setSelectId(state, id) {
+    state.dataManager.select.clickId.id = id;
   }
 };
 var _default = mutations;
@@ -28959,7 +29307,7 @@ var actions = {
   /**
    * Soft select a source card.
    *
-   * @param {Function} commit mutation commit function
+   * @param {{commit}} mutation commit function
    * @param {string} sourceId selected source id
    */
   softSelectCard: function softSelectCard(_ref3, sourceId) {
@@ -28973,8 +29321,7 @@ var actions = {
    * For source setup to work, name your setup components as `SourceName`Setup where
    *`SourceName` being the id for that source.
    *
-   * @param {Function} commit mutation commit function
-   * @param {Function} dispatch action dispatch function
+   * @param {{commit, dispatch}} mutation commit function
    * @param {string} sourceId selected source id
    */
   startSourceSetup: function startSourceSetup(_ref4, sourceId) {
@@ -28992,7 +29339,7 @@ var actions = {
   /**
    * Add temp data to data manager.
    *
-   * @param {commit} vuex store object
+   * @param {{commit, getters}} vuex store object
    * @param {Array} data data array
    */
   addDataManagerTempData: function addDataManagerTempData(_ref5, data) {
@@ -29013,8 +29360,12 @@ var actions = {
 
     for (var i = 0; i < maxCol; i += 1) {
       commit('pushDataManagerColId', getters.generateUniqueId());
-    } // form data object
+    } // set maximum column amount
 
+
+    commit('setColCount', maxCol); // set maximum row amount
+
+    commit('setRowCount', confirmedData.length); // form data object
 
     var formedData = confirmedData.reduce(function (carry, item, index) {
       var rowObj = {
@@ -29037,7 +29388,7 @@ var actions = {
   /**
    * Set tab of current active source setup.
    *
-   * @param {state,commit} vuex store object
+   * @param {{state,commit}} vuex store object
    * @param {string} tabId tab id to change to
    */
   setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref6, tabId) {
@@ -29047,6 +29398,46 @@ var actions = {
       sourceId: state.dataSource.setup.sourceId,
       tabId: tabId
     });
+  },
+
+  /**
+   * Start select operation.
+   *
+   * @async
+   * @param {{commit}} vuex store object
+   * @param {string} callerId id of the component that started the operation
+   * @return {Promise} Promise object
+   */
+  startRowSelectOperation: function startRowSelectOperation(_ref7, callerId) {
+    var commit = _ref7.commit;
+    // set app to busy
+    commit('setBusy', true); // reset selection data
+
+    commit('resetSelectData'); // enable row selection
+
+    commit('setSelectionType', 'row'); // enable select operation
+
+    commit('setSelectStatus', true); // set operation caller id
+
+    commit('setSelectCallerId', callerId); // send back a promise object which will be resolved when click operation occurs
+
+    return new Promise(function (res) {
+      commit('setSelectIdResolve', function (val) {
+        // end selection operation
+        commit('setSelectStatus', false);
+        commit('resetSelectData'); // set app to idle
+
+        commit('setBusy', false);
+        res(val);
+      });
+    });
+  },
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref8) {
+    var state = _ref8.state,
+        commit = _ref8.commit;
+    commit('setSelectStatus', false);
+    state.dataManager.select.clickId.resolve(null);
+    commit('resetSelectData');
   }
 };
 var _default = actions;
@@ -29058,6 +29449,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * Data table getter methods.
@@ -29111,7 +29514,6 @@ var getters = {
    * Get active tab group id for source setup
    *
    * @param {Object} state store state
-   * @param {string} sourceId source id
    * @return {Function} function to get active setup group tab
    */
   currentSetupGroupTab: function currentSetupGroupTab(state) {
@@ -29225,7 +29627,7 @@ var getters = {
         return state.dataManager.tempData.rowIds[index];
       }
 
-      return 0;
+      return null;
     };
   },
 
@@ -29242,6 +29644,46 @@ var getters = {
       }
 
       return 0;
+    };
+  },
+
+  /**
+   * Get current column count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getColCount: function getColCount(state) {
+    return state.dataManager.tempData.colCount;
+  },
+
+  /**
+   * Get data related to select operation.
+   *
+   * @param {Object} state store state
+   * @return {{hoverId: null, active: boolean, clickId: null, type: string}} select operation related data
+   */
+  getSelectOperationData: function getSelectOperationData(state) {
+    return state.dataManager.select;
+  },
+
+  /**
+   * Get row and column ids of a cell from a formed id.
+   *
+   * @param {Object} state data table state
+   * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
+   */
+  parseCellId: function parseCellId(state) {
+    return function (formedId) {
+      var _formedId$split = formedId.split('-'),
+          _formedId$split2 = _slicedToArray(_formedId$split, 2),
+          rowId = _formedId$split2[0],
+          colId = _formedId$split2[1];
+
+      return {
+        rowId: rowId,
+        colId: colId
+      };
     };
   }
 };
@@ -29396,7 +29838,8 @@ var _default = {
           columnName: (0, _i18n.__)('column name', 'wp-table-builder'),
           values: (0, _i18n.__)('values', 'wp-table-builder'),
           value: (0, _i18n.__)('value', 'wp-table-builder'),
-          selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder')
+          selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder'),
+          cancel: (0, _i18n.__)('cancel', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },
