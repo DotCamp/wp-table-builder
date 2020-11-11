@@ -17,6 +17,15 @@
     margin: auto;
 }
 
+.wptb-frontend-table-after .wptb-frontend-table-edit-link,
+.wptb-frontend-table-after .wptb-frontend-table-powered-by {
+    display: inline-block;
+}
+
+.wptb-frontend-table-powered-by{
+    float: right;
+}
+
 .wptb-frontend-table-edit-link {
     clear: both;
 }

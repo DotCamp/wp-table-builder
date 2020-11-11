@@ -151,29 +151,26 @@ class Tables {
 			}
 		}
 
+		$post_edit_link   = '';
+		$post_give_credit = '';
 		$after_table = '';
 		$settings_manager = Init::instance()->settings_manager;
-		if ( current_user_can( 'manage_options' ) ) {
-			$post_edit_link   = '';
-			$post_give_credit = '';
 
-			if ( $settings_manager->get_option_value( 'allow_edit_link_frontend' ) ) {
-				$post_edit_link = '<div class="wptb-frontend-table-edit-link">'
-				. '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
-			}
-			
-			if ( $settings_manager->get_option_value( 'give_credits_to_wp_table_builder' ) ) {
-				$post_give_credit .= '<div class="wptb-frontend-table-powered-by">'
-				. '<small><i>Powered By </i></small>'
-				. '<a href="https://wptablebuilder.com/" target="_blank">' . __( "WP Table Builder", 'wp-table-builder' ) 
-				. '</a></div>';
-			}
-
-			if ( $post_edit_link != '' || $post_give_credit != '' ) {
-				$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
-			}
+		if ( current_user_can( 'manage_options' ) && $settings_manager->get_option_value( 'allow_edit_link_frontend' ) ) {
+			$post_edit_link = '<div class="wptb-frontend-table-edit-link">'
+			. '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
 		}
-
+		
+		if ( $settings_manager->get_option_value( 'give_credits_to_wp_table_builder' ) ) {
+			$post_give_credit .= '<div class="wptb-frontend-table-powered-by">'
+			. '<small><i>Powered By </i></small>'
+			. '<a href="https://wptablebuilder.com/" target="_blank">' . __( "WP Table Builder", 'wp-table-builder' ) 
+			. '</a></div>';
+		}
+		
+		if ( $post_edit_link != '' || $post_give_credit != '' ) {
+			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
+		}
 		
 		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>' . $after_table;
 
