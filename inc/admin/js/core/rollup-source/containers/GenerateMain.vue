@@ -32,6 +32,7 @@
 				></prebuilt-card>
 			</div>
 		</div>
+		<div v-if="!isPro" v-html="upsell"></div>
 		<!--    @deprecated-->
 		<!--		<div v-if="!isPro" class="wptb-prebuilt-ad">-->
 		<!--			{{ strings.prebuiltAdPart1 }}-->
@@ -41,6 +42,7 @@
 </template>
 <script>
 import PrebuiltCard from '../components/PrebuiltCard';
+import 'regenerator-runtime/runtime';
 
 export default {
 	components: { PrebuiltCard },
@@ -49,7 +51,7 @@ export default {
 			type: String,
 			default: 'normal',
 		},
-		adLink: {
+		upsell: {
 			type: String,
 		},
 		prebuiltTables: {

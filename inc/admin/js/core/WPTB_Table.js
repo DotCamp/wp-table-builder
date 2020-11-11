@@ -27,23 +27,59 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             position = getCoords(thisElem),
             row = position[0],
             column = position[1];
+
+        /**
+         * Cell select/deselect operation
+         *
+         * @param {HTMLElement} cellElement cell element
+         * @param {Boolean} select select/deselect cell
+         *
+         */
+        function cellSelectOperation(cellElement, select = false){
+           const classListOperation = select? 'add'  : 'remove';
+           cellElement.classList[classListOperation]('wptb-highlighted');
+
+            const [row, column] = getCoords(cellElement);
+            const {rowSpan, colSpan} = cellElement;
+
+            for (var i = 0; i < rowSpan; i++) {
+                for (var j = 0; j < colSpan; j++) {
+                    array[row + i][column + j] = select? 1 : 0;
+                }
+            }
+        }
         if ( ! document.select.isActivated() ) {
             return;
         }
+
+        const isShiftActive = event.shiftKey;
         if (thisElem.className.match(/wptb-highlighted/)) {
-            thisElem.classList.remove('wptb-highlighted');
-            for (var i = 0; i < rs; i++) {
-                for (var j = 0; j < cs; j++) {
-                    array[row + i][column + j] = 0;
+            const selectedCells = Array.from(document.querySelectorAll('.wptb-highlighted'));
+
+            if(selectedCells.length > 1){
+                if(isShiftActive){
+                    cellSelectOperation(thisElem, false);
+                }else {
+                    cellSelectOperation(thisElem, true);
+                    // eslint-disable-next-line array-callback-return
+                    selectedCells.map(el => {
+                        if(el !== thisElem){
+                            cellSelectOperation(el, false);
+                        }
+                    })
                 }
+            }else{
+                cellSelectOperation(thisElem, false);
             }
         } else {
-            thisElem.classList.add('wptb-highlighted');
-            for (var i = 0; i < rs; i++) {
-                for (var j = 0; j < cs; j++) {
-                    array[row + i][column + j] = 1;
-                }
+            if(!isShiftActive){
+                Array.from(document.querySelectorAll('.wptb-highlighted')).map(ele => {
+                    if(ele !== thisElem){
+                        cellSelectOperation(ele, false);
+                    }
+                });
             }
+            cellSelectOperation(thisElem,true );
         }
 
         let cellHighlighted = document.getElementsByClassName('wptb-highlighted'),
@@ -161,6 +197,20 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
 
         let details = {countMarkedCells:markedCells};
         WPTB_Helper.wptbDocumentEventGenerate('wp-table-builder/cell/mark', thisElem, details);
+
+
+        // split button disabled state calculation
+        const splitButton = document.querySelector('#wptb-split-cell');
+        if(splitButton){
+            const splitAvailable = markedCells === 1 && (rs !== 1 || cs !== 1);
+            if(splitAvailable){
+                splitButton.classList.add('visible');
+                splitButton.removeAttribute('disabled');
+            }else {
+                splitButton.classList.remove('visible');
+                splitButton.setAttribute('disabled', 'disabled');
+            }
+        }
     };
 
     /*

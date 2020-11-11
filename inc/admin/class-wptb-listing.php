@@ -40,7 +40,7 @@ class WPTB_Listing extends \WP_List_Table {
 		return $status_links;
 	}
 
-	public static function get_tables( $per_page = 5, $page_number = 1, $search_text ) {
+	public static function get_tables( $per_page = 5, $page_number = 1, $search_text, $current_user = false ) {
 
 		global $wpdb, $post;
 
@@ -52,6 +52,10 @@ class WPTB_Listing extends \WP_List_Table {
 
 		$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
 		$params['order']   = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
+
+		if ( $current_user ) {
+			$params['author'] = get_current_user_id();
+		}
 
 		$params = apply_filters( 'wp-table-builder/get_tables_args', $params );
 
@@ -113,7 +117,7 @@ class WPTB_Listing extends \WP_List_Table {
 		);
 	}
 
-	public static function record_count( $per_page, $search_text ) {
+	public static function record_count( $per_page, $search_text, $current_user = false ) {
 
 		global $wpdb, $post;
 
@@ -123,6 +127,10 @@ class WPTB_Listing extends \WP_List_Table {
 
 		if ( $search_text ) {
 			$params['s'] = $search_text;
+		}
+
+		if ( $current_user ) {
+			$params['author'] = get_current_user_id();
 		}
 
 		$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
@@ -273,18 +281,22 @@ class WPTB_Listing extends \WP_List_Table {
 
 		$per_page     = $this->get_items_per_page( 'tables_per_page', 10 );
 		$current_page = $this->get_pagenum();
-
+		
+		// checking if Restrict Users Access to Their Tables Only
+		$builder_settings = get_option( 'wp_table_builder_settings' );
+		$current_user = $builder_settings['restrict_users_to_their_tables'] ? true : false;
+		
 		$search_text = '';
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$search_text = sanitize_text_field( $_REQUEST['s'] );
 		}
-		$total_items = self::record_count( $per_page, $search_text );
+		$total_items = self::record_count( $per_page, $search_text, $current_user );
 
 		$this->set_pagination_args( [
 			'total_items' => $total_items, //WE have to calculate the total number of items
 			'per_page'    => $per_page //WE have to determine how many items to show on a page
 		] );
-		$this->items = $this->get_tables( $per_page, $current_page, $search_text );
+		$this->items = $this->get_tables( $per_page, $current_page, $search_text, $current_user );
 	}
 
 	public function request_url_clear() {

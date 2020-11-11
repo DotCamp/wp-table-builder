@@ -11,7 +11,7 @@ Vue.use(filters);
 
 const proData = global.wptbGenerateMenuProData ?? {};
 
-const data = { ...wptbGenerateMenuData, ...proData };
+const data = { upsell: '', ...wptbGenerateMenuData, ...proData };
 
 // setup app store
 const store = {
@@ -35,7 +35,7 @@ Vue.use(strings, data);
 const vm = new Vue({
 	components: { GenerateMain },
 	template:
-		'<generate-main :version="version" :ad-link="adLink" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+		'<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 	data,
 }).$mount(`#${data.mountId}`);
 

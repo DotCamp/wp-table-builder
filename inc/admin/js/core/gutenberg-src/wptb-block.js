@@ -28,8 +28,8 @@ registerBlockType(blockData.blockName, {
 				attributes: {
 					id: {
 						type: 'number',
-						shortcode: (named) => {
-							return named.id;
+						shortcode: ({ named }) => {
+							return Number.parseInt(named.id, 10);
 						},
 					},
 				},

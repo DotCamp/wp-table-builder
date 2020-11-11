@@ -105,4 +105,14 @@ class Control_Local_Dev_File extends Base_Control {
 
 		return $images;
 	}
+
+	/**
+	 * Final evaluation to make before adding control to registered controls list.
+	 * @return bool register or not
+	 */
+	public static function register_evaluation() {
+	  return class_exists('WP_Table_Builder_Pro\WP_Table_Builder_Pro');
+	}
+
+
 }

@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.5
-Stable tag: 1.3.1
+Stable tag: 1.3.3
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -87,6 +87,26 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.3.3 =
+
+* NEW: 'noreferrer' option for text links.
+* FIX: An issue with footer buttons not visible in gutenberg block for Firefox browsers.
+* FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.
+
+= 1.3.2 =
+
+* IMPROVE: Responsive builder will show table's layout at breakpoints even though it is not enabled.
+* IMPROVE: Better cell selected indicator at manage cells menu.
+* IMPROVE: Better cell select logic with shift key for multi cell selection at manage cells menu.
+* IMPROVE: Split cell button will only be activated for cells that can be split.
+* IMPROVE: Saving operation indicator.
+* PRO:FIX: Fixed an issue where empty cells are removing styles from other cells.
+* FIX: Fixed an issue affecting WordPress versions <= 4.9 where Gutenberg editor is not present.
+* FIX: Fixed an issue where embedding a table to a post is not triggering correct display of gutenberg block.
+* FIX: Fixed an issue where sometimes hover border got stuck and visible in saved table.
+* FIX: A style issue affecting users of Classic Editor and Advanced Editor Tools where floating windows can not be interacted with.
+* FIX: A type error with tag manager.
 
 = 1.3.1 =
 

@@ -148,7 +148,7 @@ class Tag_Manager {
 	 * @return array terms
 	 */
 	public static function table_tags_count( $terms, $tax ) {
-		if ( in_array( static::TAX_ID, $tax ) ) {
+		if ( is_array($tax) && in_array( static::TAX_ID, $tax ) ) {
 			array_walk( $terms, function ( $term ) {
 				if ( $term->taxonomy === static::TAX_ID ) {
 					$count = ( new WP_Query( [

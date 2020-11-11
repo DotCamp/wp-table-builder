@@ -1,4 +1,5 @@
 <?php
+
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 // If this file is called directly, abort.
@@ -19,7 +20,7 @@ abstract class Base_Control {
 	 * Base_Control constructor.
 	 */
 	public function __construct() {
-	    $this->enqueue();
+		$this->enqueue();
 	}
 
 
@@ -33,8 +34,8 @@ abstract class Base_Control {
 	 * @abstract
 	 */
 	abstract public function get_type();
-    
-    /**
+
+	/**
 	 * Enqueue control scripts and styles.
 	 *
 	 * Used to register and enqueue custom scripts and styles used by the control.
@@ -42,9 +43,10 @@ abstract class Base_Control {
 	 * @since 1.1.2
 	 * @access public
 	 */
-	public function enqueue() {}
-    
-    /**
+	public function enqueue() {
+	}
+
+	/**
 	 * Control content template.
 	 *
 	 * Used to generate the control HTML in the editor using wp js template
@@ -54,8 +56,8 @@ abstract class Base_Control {
 	 * @abstract
 	 */
 	abstract public function content_template();
-    
-    /**
+
+	/**
 	 * Output element template.
 	 *
 	 * Used to generate the element template on the editor.
@@ -73,11 +75,21 @@ abstract class Base_Control {
 		if ( empty( $template_content ) ) {
 			return;
 		}
-        
+
 		?>
-		<script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_type() ); ?>-control">
-			<?php echo $template_content; ?>
-		</script>
+      <script type="text/html" id="tmpl-wptb-<?php echo esc_attr( $this->get_type() ); ?>-control">
+		  <?php echo $template_content; ?>
+      </script>
 		<?php
+	}
+
+	/**
+	 * Final evaluation to make before adding control to registered controls list.
+   *
+	 * @return bool register or not
+	 */
+	public static function register_evaluation() {
+		return true;
+
 	}
 }

@@ -6,6 +6,8 @@ use WP_Query;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
+use function add_query_arg;
+use function admin_url;
 use function apply_filters;
 use function get_current_screen;
 use function get_post_meta;
@@ -13,6 +15,7 @@ use function is_gutenberg_page;
 use function register_block_type;
 use function wp_register_script;
 use function wp_register_style;
+use function wp_reset_query;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -70,17 +73,19 @@ class Gutenberg_Block_Manager {
 		return false;
 	}
 
-
 	/**
 	 * Register editor block.
 	 */
 	public function register_block() {
 		// check user cap before registering block
-		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
+		// extra Gutenberg check for WordPress versions <= 4.9
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && function_exists( 'register_block_type' ) ) {
 			wp_register_script( 'wptb_block_editor_script', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.js', $this->assets['dependencies'], $this->assets['version'] );
 
 			wp_register_style( 'wptb_block_editor_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/gutenberg-build/wptb-block.css', [], $this->assets['version'] );
-			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
+
+			//@deprecated
+//			wp_register_style( 'wptb_block_editor_admin_style', NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css', [], NS\PLUGIN_VERSION );
 
 			$block_data = $this->prepare_block_data();
 
@@ -88,7 +93,7 @@ class Gutenberg_Block_Manager {
 
 			register_block_type( $this->block_name, [
 				'editor_script' => 'wptb_block_editor_script',
-				'editor_style'  => [ 'wptb_block_editor_style', 'wptb_block_editor_admin_style' ]
+				'editor_style'  => [ 'wptb_block_editor_style' ]
 			] );
 		}
 	}
@@ -99,7 +104,11 @@ class Gutenberg_Block_Manager {
 	 */
 	protected function prepare_block_data() {
 		$table_query = new WP_Query( [
-			'post_type' => 'wptb-tables'
+			'post_type'  => 'wptb-tables',
+			'meta_query' => [
+				'key'     => '_wptb_prebuilt_',
+				'compare' => 'NOT EXISTS'
+			]
 		] );
 
 		$tables = array_reduce( $table_query->posts, function ( $carry, $table ) {

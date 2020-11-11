@@ -310,6 +310,10 @@ class Admin_Menu {
 					]
 
 				];
+
+				// generate data filter
+				$generate_data = apply_filters('wp-table-builder/filter/generate_data', $generate_data);
+
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
 

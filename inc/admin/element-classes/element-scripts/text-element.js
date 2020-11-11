@@ -15,6 +15,7 @@ const tinyMceInitStart = function () {
 		rel_list: [
 			{ title: 'None', value: '' },
 			{ title: 'nofollow', value: 'nofollow' },
+			{ title: 'noreferrer', value: 'noreferrer' },
 		],
 		convert_urls: false,
 		setup(ed) {

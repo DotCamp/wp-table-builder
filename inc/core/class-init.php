@@ -8,6 +8,7 @@ use WP_Table_Builder\Inc\Admin\Accessibility;
 use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
 use WP_Table_Builder\Inc\Admin\Style_Pass;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
@@ -207,6 +208,12 @@ class Init {
 
 		// initialize gutenberg block manager
 		new Gutenberg_Block_Manager( 'wptb/table-block' );
+
+		// wait plugins loaded action hook to check availability of pro version
+		add_action( 'plugins_loaded', function () {
+			// initialize upsells manager
+			Upsells_Manager::init();
+		}, 99 );
 	}
 
 	/**

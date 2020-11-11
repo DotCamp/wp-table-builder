@@ -16,7 +16,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
         <div class="wptb-panel-left">
             <div class="wptb-panel-brand">
                 <span class="wptb-brand-name">
-                    WP Table Builder
+                    <?php esc_html_e( 'WP Table Builder', 'wp-table-builder' ); ?>
                 </span>
             </div>
             <!--            main left panel section selectors-->
@@ -97,6 +97,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                                 </div>
                             </div>
 						<?php endforeach ?>
+                      <?php do_action('wp-table-builder/action/after_elements'); ?>
                     </div>
                 </div>
             </div>
@@ -126,16 +127,19 @@ use WP_Table_Builder\Inc\Core\Init as Init;
     </div>
     <div id="wptb-left-scroll-panel-curtain">
         <p><?php esc_html_e( 'You are currently editing the table cells. Click "Close" to go back to editing the table.', 'wp-table-builder' ); ?></p>
-        <p><?php esc_html_e( 'Click on cells to select them or deselect them. Selected cells will be shown in a green outline.', 'wp-table-builder' ); ?></p>
+        <p><?php esc_html_e( 'Click on cells to select them or deselect them. Selected cells will be highlighted.', 'wp-table-builder' ); ?></p>
+        <p><?php esc_html_e( 'Hold "SHIFT" and click on cells to select multiple cells.', 'wp-table-builder' ); ?></p>
         <div>
             <button class="wptb-table_change_button wptb-table-edit-mode-close"
                     title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' ); ?>"><?php esc_html_e( 'Close', 'wp-table-builder' ); ?></button>
         </div>
+	    <?php do_action('wp-table-builder/action/after_cell_notselected_left_panel'); ?>
     </div>
-    <div id="wptb-left-scroll-panel-cell-settings">
+  <div id="wptb-left-scroll-panel-cell-settings">
         <div id="element-cell-options-group" class="wptb-tab-content" data-wptb-section="cell_settings"
              style="display: none;">
             <!-- here will be cell controls -->
         </div>
-    </div>
+	  <?php do_action('wp-table-builder/action/cell_option'); ?>
+  </div>
 </div>
