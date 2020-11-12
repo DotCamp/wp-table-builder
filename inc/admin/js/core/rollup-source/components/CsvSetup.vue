@@ -4,7 +4,6 @@
 		<CsvSetupLeftPanel :panel-tabs="panelTabs"></CsvSetupLeftPanel>
 		<!--    builder view-->
 		<CsvSetupBuilderView @csvImport="readCsvFile" v-model="currentFile"></CsvSetupBuilderView>
-		<data-manager-select></data-manager-select>
 	</div>
 </template>
 <script>
@@ -12,13 +11,11 @@ import { mapMutations, mapGetters, mapActions } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import CsvSetupLeftPanel from './CsvSetupLeftPanel';
 import CsvSetupBuilderView from './CsvSetupBuilderView';
-import DataManagerSelect from './DataManagerSelect';
 
 export default {
 	components: {
 		CsvSetupBuilderView,
 		CsvSetupLeftPanel,
-		DataManagerSelect,
 	},
 	mixins: [withNativeTranslationStore],
 	data() {

@@ -6048,12 +6048,12 @@ wptb_shortcode_container_element {
     padding: 10px;
 }
 
-.wptb-data-manager-table-column-name-info{
+.wptb-data-manager-table-column-name-info {
     text-transform: uppercase;
 }
 
-.wptb-data-manager-table-column-name-info th{
-    font-weight:  normal !important;
+.wptb-data-manager-table-column-name-info th {
+    font-weight: normal !important;
     padding: 5px;
 }
 
@@ -6083,7 +6083,7 @@ thead .wptb-data-manager-table-data-value {
     font-weight: bold !important;
 }
 
-.wptb-data-manager-cell-input{
+.wptb-data-manager-cell-input {
     max-width: 100px !important;
     border: 0 !important;
     border-radius: 3px;
@@ -6093,11 +6093,14 @@ thead .wptb-data-manager-table-data-value {
 }
 
 .wptb-data-manager-select {
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    top: 0;
-    left: 0;
-    opacity: 0.5;
+    position: fixed;
+    opacity: 0.2;
+    pointer-events: none;
+    cursor: pointer;
 }
+
+.wptb-data-manager-table[data-select="true"] .wptb-data-manager-cell-input {
+    cursor: pointer;
+}
+
 /*endregion*/

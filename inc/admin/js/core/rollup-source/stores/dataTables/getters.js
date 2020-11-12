@@ -169,18 +169,26 @@ const getters = {
 	 * Get data related to select operation.
 	 *
 	 * @param {Object} state store state
-	 * @return {{hoverId: null, active: boolean, clickId: null, type: string}} select operation related data
+	 * @return {Object} select operation related data
 	 */
 	getSelectOperationData(state) {
 		return state.dataManager.select;
 	},
 	/**
+	 * Is data selection active on data table manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} active or not
+	 */
+	isDataSelectionActive(state) {
+		return state.dataManager.select.active;
+	},
+	/**
 	 * Get row and column ids of a cell from a formed id.
 	 *
-	 * @param {Object} state data table state
 	 * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
 	 */
-	parseCellId: (state) => (formedId) => {
+	parseCellId: () => (formedId) => {
 		const [rowId, colId] = formedId.split('-');
 
 		return { rowId, colId };

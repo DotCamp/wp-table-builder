@@ -54,6 +54,12 @@ export default {
 			this.startRowSelectOperation('selectRowForNames').then((formedId) => {
 				if (formedId) {
 					const { rowId } = this.parseCellId(formedId);
+					this.setDataManagerControl({ key: 'indexRow', value: rowId });
+
+					// turn of first row as column name control if a row is selected as index
+					if (rowId !== null) {
+						this.setDataManagerControl({ key: 'firstRowAsColumnName', value: false });
+					}
 				}
 			});
 		},

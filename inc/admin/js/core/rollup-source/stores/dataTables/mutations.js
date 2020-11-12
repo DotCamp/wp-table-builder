@@ -190,13 +190,22 @@ const mutations = {
 		state.dataManager.select.callerId = callerId;
 	},
 	/**
-	 * Set store if of selected cell.
+	 * Set store id of selected cell.
 	 *
 	 * @param {Object} state data table state
 	 * @param {string} id set id for selected cell
 	 */
 	setSelectId(state, id) {
 		state.dataManager.select.clickId.id = id;
+	},
+	/**
+	 * Set store id of hovered cell.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} id set id for hovered cell
+	 */
+	setHoverId(state, id) {
+		state.dataManager.select.hoverId = id;
 	},
 };
 

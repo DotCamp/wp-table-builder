@@ -66,6 +66,7 @@ const state = {
 		},
 		controls: {
 			firstRowAsColumnName: true,
+			indexRow: null,
 		},
 		select: {
 			callerId: null,

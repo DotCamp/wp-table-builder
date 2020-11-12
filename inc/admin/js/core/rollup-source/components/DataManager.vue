@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-plugin-width-full wptb-plugin-height-full">
-		<div class="wptb-data-manager-table">
+		<div class="wptb-data-manager-table" :data-select="isDataSelectionActive">
 			<table>
 				<thead>
 					<tr class="wptb-data-manager-table-column-name-info">
@@ -31,10 +31,13 @@
 							:col-id="cell.colId"
 							:selection-enabled="true"
 							@cellClick="handleCellClick"
+							@cellHover="handleCellHover"
 						></data-manager-cell>
 					</tr>
 				</tbody>
 			</table>
+			<data-manager-select></data-manager-select>
+			<div class="wptb-repeating-linear-gradient"></div>
 		</div>
 	</div>
 </template>
@@ -42,6 +45,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import DataManagerCell from './DataManagerCell';
+import DataManagerSelect from './DataManagerSelect';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 
 export default {
@@ -51,7 +55,7 @@ export default {
 			default: true,
 		},
 	},
-	components: { DataManagerCell },
+	components: { DataManagerCell, DataManagerSelect },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -93,18 +97,34 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount']),
+		...mapGetters([
+			'getDataManagerTempData',
+			'getDataManagerControls',
+			'getDataManagerRowId',
+			'getColCount',
+			'isDataSelectionActive',
+			'getSelectOperationData',
+		]),
 		infoRowSpan() {
 			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;
 		},
 	},
 	methods: {
 		handleCellClick(id) {
-			this.setSelectId(id);
+			if (this.getSelectOperationData.active) {
+				this.setSelectId(id);
+			}
+		},
+		handleCellHover(id) {
+			if (this.getSelectOperationData.active) {
+				this.setHoverId(id);
+			}
 		},
 		calculateColumnNameRowIndex(n) {
-			this.columnNameRowIndex = n ? this.getDataManagerRowId(0) : null;
-		},
+			if (n) {
+				this.setDataManagerControl({ key: 'indexRow', value: this.getDataManagerRowId(0) });
+			}
+	},
 		generateEmptyRow(colCount) {
 			const rowId = this.generateUniqueId()();
 
@@ -118,11 +138,13 @@ export default {
 		},
 		prepareTableValues(tableValue) {
 			if (tableValue.length > 0) {
-				const { firstRowAsColumnName } = this.getDataManagerControls;
+				const { firstRowAsColumnName, indexRow } = this.getDataManagerControls;
+
+				// recalculate first row index for column names
 				this.calculateColumnNameRowIndex(firstRowAsColumnName);
 
 				let header = tableValue.find((row) => {
-					return row.rowId === this.columnNameRowIndex;
+					return row.rowId === indexRow;
 				});
 
 				if (!header) {
@@ -134,7 +156,7 @@ export default {
 
 				// filter out column index row
 				this.table.values = tableValue.filter((t) => {
-					return t.rowId !== this.columnNameRowIndex;
+					return t.rowId !== indexRow;
 				});
 			}
 		},
@@ -143,7 +165,7 @@ export default {
 		},
 		...mapGetters(['generateUniqueId']),
 		...mapActions(['addDataManagerTempData']),
-		...mapMutations(['setSelectId']),
+		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl']),
 	},
 };
 </script>
