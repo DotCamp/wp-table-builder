@@ -70,6 +70,14 @@ class Table_Setting_Element extends Element_Base_Object {
 //					'type'  => Controls_Manager::BUTTON,
 //				],
 //
+			'applyStickyTopRow' =>
+			[
+				'label'     => __( 'Make Header Sticky', 'wp_table_builder' ),
+				'type'      => Controls_Manager::TOGGLE,
+				'selectors' => [
+					'{{{data.container}}}' => [ 'data-wptb-apply-sticky-top-row', '1', null ]
+				],
+			],
 			'tableCellPadding'            =>
 				[
 					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
