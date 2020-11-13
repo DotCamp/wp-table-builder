@@ -15,6 +15,7 @@
 					:min="min.cols"
 					:max="max.cols"
 					:step="controlStep.col"
+					:visible="tableControlsVisible"
 				></prebuilt-card-control>
 				<prebuilt-card-control
 					:disabled="controlDisabled"
@@ -23,6 +24,7 @@
 					:min="min.rows"
 					:max="max.rows"
 					:step="controlStep.row"
+					:visible="tableControlsVisible"
 				></prebuilt-card-control>
 			</div>
 			<prebuilt-live-display
@@ -31,17 +33,17 @@
 				:cols="columns"
 				:table="previewTableElement"
 				:selected-cells="selectedCells"
-				:enable-new-cell-indicator="id !== 'blank'"
+				:enable-new-cell-indicator="!featureCard"
 			></prebuilt-live-display>
 			<div
-				v-if="!isActive"
+				v-if="!isActive && !featureCard"
 				class="wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close"
 				:class="{ 'is-fav': fav }"
 				v-html="favIcon"
 				@click.capture.prevent.stop="favAction"
 			></div>
 			<prebuilt-card-delete-module
-				v-if="isActive && deleteIcon !== ''"
+				v-if="isActive && !featureCard"
 				:delete-icon="deleteIcon"
 				:message="strings.deleteConfirmation"
 				:yes-icon="appData.icons.checkIcon"
@@ -60,7 +62,7 @@
 					class="wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable"
 					@click.prevent="cardGenerate"
 				>
-					{{ strings.generate | cap }}
+					{{ generateString ? generateString : strings.generate | cap }}
 				</div>
 				<div
 					v-if="editEnabled"
@@ -89,7 +91,7 @@ export default {
 		},
 		table: {
 			type: String,
-			default: '<p class="wptb-prebuilt-blank">+</p>',
+			default: '',
 		},
 		isActive: {
 			type: Boolean,
@@ -117,6 +119,18 @@ export default {
 		deleteIcon: {
 			type: String,
 			default: '',
+		},
+		featureCard: {
+			type: Boolean,
+			default: false,
+		},
+		tableControlsVisible: {
+			type: Boolean,
+			default: true,
+		},
+		generateString: {
+			type: String,
+			default: null,
 		},
 	},
 	components: { PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
@@ -166,7 +180,7 @@ export default {
 				);
 
 				if (this.selectedCells.rowOperation.length === 0 && this.selectedCells.colOperation.length === 0) {
-					if (this.id !== 'blank') {
+					if (!this.featureCard) {
 						this.rows = this.initial.rows;
 						this.columns = this.initial.columns;
 					}
@@ -191,13 +205,13 @@ export default {
 		editEnabled() {
 			if (this.isDevBuild()) {
 				return (
-					this.id !== 'blank' &&
+					!this.featureCard &&
 					(this.id.startsWith(this.appData.teamTablePrefix) ||
 						!this.id.startsWith(this.appData.teamTablePrefix))
 				);
 			}
 
-			return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
+			return !this.featureCard && !this.id.startsWith(this.appData.teamTablePrefix);
 		},
 		previewTableElement() {
 			let table = this.$refs.tablePreview.querySelector('table');
@@ -212,7 +226,7 @@ export default {
 			return table;
 		},
 		controlDisabled() {
-			if (this.id === 'blank') {
+			if (this.featureCard) {
 				return false;
 			}
 			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
@@ -256,7 +270,7 @@ export default {
 				// 	}
 				// }
 
-				if (this.id !== 'blank') {
+				if (!this.featureCard) {
 					const tableRows = Array.from(prebuilt.querySelectorAll('tr'));
 					const totalRows = tableRows.length;
 					this.rows = totalRows;

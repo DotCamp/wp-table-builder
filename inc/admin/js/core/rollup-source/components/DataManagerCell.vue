@@ -6,13 +6,14 @@
 				class="wptb-data-manager-cell-input"
 				:placeholder="placeHolder"
 				type="text"
-				:value="value"
+				v-model="innerValue"
 			/>
 		</div>
 	</td>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import withStoreBusy from '../mixins/withStoreBusy';
 
 export default {
@@ -43,6 +44,15 @@ export default {
 		id() {
 			return `${this.rowId}-${this.colId}`;
 		},
+		innerValue: {
+			get() {
+				return this.getDataCellObject(this.rowId, this.colId)?.value;
+			},
+			set(n) {
+				this.setDataCellValue({ cellId: this.id, value: n });
+			},
+		},
+		...mapGetters(['getDataCellObject']),
 	},
 	methods: {
 		handleHover() {
@@ -55,6 +65,7 @@ export default {
 				this.$emit('cellClick', this.id);
 			}
 		},
+		...mapActions(['setDataCellValue']),
 	},
 };
 </script>

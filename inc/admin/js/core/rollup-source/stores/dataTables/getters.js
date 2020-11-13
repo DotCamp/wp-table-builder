@@ -74,6 +74,7 @@ const getters = {
 		return state.busy;
 	},
 	/**
+	 * @deprecated
 	 * Whether any data source is imported on setup.
 	 *
 	 * @param {Object} state store state
@@ -89,6 +90,15 @@ const getters = {
 	 */
 	getSetupControls: (state) => (sourceId) => {
 		return state.dataSource.setup[sourceId].controls;
+	},
+	/**
+	 * Get status of source data created property.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} created or not
+	 */
+	isSourceDataCreated(state) {
+		return state.dataSource.setup.sourceDataCreated;
 	},
 	/**
 	 * Get current control values of temp data manager.
@@ -192,6 +202,27 @@ const getters = {
 		const [rowId, colId] = formedId.split('-');
 
 		return { rowId, colId };
+	},
+	/**
+	 * Get data cell object
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} getters store getters
+	 */
+	// eslint-disable-next-line no-shadow
+	getDataCellObject: (state, getters) => (rowId, colId) => {
+		const dataValues = getters.getDataManagerTempData;
+
+		const row = dataValues.find((r) => {
+			return r.rowId === rowId;
+		});
+
+		if (row) {
+			const cellObjects = row.values;
+			return cellObjects.find((c) => c.colId === colId);
+		}
+
+		return null;
 	},
 };
 

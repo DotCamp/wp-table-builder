@@ -12044,6 +12044,10 @@ var _default = {
     step: {
       type: Number,
       default: 1
+    },
+    visible: {
+      type: Boolean,
+      default: true
     }
   },
   data: function data() {
@@ -12107,51 +12111,55 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-prebuilt-control",
-      attrs: { "data-orientation": _vm.orientation }
-    },
-    [
-      _c(
+  return _vm.visible
+    ? _c(
         "div",
         {
-          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled || _vm.hitToMin() },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.effectValue(-1 * _vm.step)
-            }
-          }
+          staticClass: "wptb-prebuilt-control",
+          attrs: { "data-orientation": _vm.orientation }
         },
-        [_vm._v("\n\t\t-\n\t")]
-      ),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "wptb-prebuilt-control-input",
-        attrs: { disabled: _vm.disabled === true },
-        domProps: { value: _vm.innerValue },
-        on: { input: _vm.valueChanged }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "wptb-prebuilt-control-increment-box wptb-unselectable",
-          attrs: { disabled: _vm.disabled || _vm.hitToMax() },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.effectValue(_vm.step)
-            }
-          }
-        },
-        [_vm._v("\n\t\t+\n\t")]
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-prebuilt-control-increment-box wptb-unselectable",
+              attrs: { disabled: _vm.disabled || _vm.hitToMin() },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.effectValue(-1 * _vm.step)
+                }
+              }
+            },
+            [_vm._v("\n\t\t-\n\t")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "wptb-prebuilt-control-input",
+            attrs: { disabled: _vm.disabled === true },
+            domProps: { value: _vm.innerValue },
+            on: { input: _vm.valueChanged }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-prebuilt-control-increment-box wptb-unselectable",
+              attrs: { disabled: _vm.disabled || _vm.hitToMax() },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.effectValue(_vm.step)
+                }
+              }
+            },
+            [_vm._v("\n\t\t+\n\t")]
+          )
+        ]
       )
-    ]
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -12888,7 +12896,7 @@ var _default = {
     },
     table: {
       type: String,
-      default: '<p class="wptb-prebuilt-blank">+</p>'
+      default: ''
     },
     isActive: {
       type: Boolean,
@@ -12916,6 +12924,18 @@ var _default = {
     deleteIcon: {
       type: String,
       default: ''
+    },
+    featureCard: {
+      type: Boolean,
+      default: false
+    },
+    tableControlsVisible: {
+      type: Boolean,
+      default: true
+    },
+    generateString: {
+      type: String,
+      default: null
     }
   },
   components: {
@@ -12956,7 +12976,7 @@ var _default = {
         this.controlStep.col = Math.max(Math.max(this.selectedCells.rowOperation.length > 0 ? this.initial.columns : 1, this.selectedCells.colOperation.length / this.initial.rows), 1);
 
         if (this.selectedCells.rowOperation.length === 0 && this.selectedCells.colOperation.length === 0) {
-          if (this.id !== 'blank') {
+          if (!this.featureCard) {
             this.rows = this.initial.rows;
             this.columns = this.initial.columns;
           }
@@ -12977,10 +12997,10 @@ var _default = {
     },
     editEnabled: function editEnabled() {
       if (this.isDevBuild()) {
-        return this.id !== 'blank' && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
+        return !this.featureCard && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
       }
 
-      return this.id !== 'blank' && !this.id.startsWith(this.appData.teamTablePrefix);
+      return !this.featureCard && !this.id.startsWith(this.appData.teamTablePrefix);
     },
     previewTableElement: function previewTableElement() {
       var table = this.$refs.tablePreview.querySelector('table'); // if no table is found, send a table with one row and and one cell in it as a default
@@ -12997,7 +13017,7 @@ var _default = {
       return table;
     },
     controlDisabled: function controlDisabled() {
-      if (this.id === 'blank') {
+      if (this.featureCard) {
         return false;
       }
 
@@ -13047,7 +13067,7 @@ var _default = {
         // 	}
         // }
 
-        if (_this.id !== 'blank') {
+        if (!_this.featureCard) {
           var tableRows = Array.from(prebuilt.querySelectorAll('tr'));
           var totalRows = tableRows.length;
           _this.rows = totalRows;
@@ -13144,7 +13164,8 @@ exports.default = _default;
                       orientation: "row",
                       min: _vm.min.cols,
                       max: _vm.max.cols,
-                      step: _vm.controlStep.col
+                      step: _vm.controlStep.col,
+                      visible: _vm.tableControlsVisible
                     },
                     model: {
                       value: _vm.columns,
@@ -13161,7 +13182,8 @@ exports.default = _default;
                       orientation: "col",
                       min: _vm.min.rows,
                       max: _vm.max.rows,
-                      step: _vm.controlStep.row
+                      step: _vm.controlStep.row,
+                      visible: _vm.tableControlsVisible
                     },
                     model: {
                       value: _vm.rows,
@@ -13183,12 +13205,12 @@ exports.default = _default;
                   cols: _vm.columns,
                   table: _vm.previewTableElement,
                   "selected-cells": _vm.selectedCells,
-                  "enable-new-cell-indicator": _vm.id !== "blank"
+                  "enable-new-cell-indicator": !_vm.featureCard
                 }
               })
             : _vm._e(),
           _vm._v(" "),
-          !_vm.isActive
+          !_vm.isActive && !_vm.featureCard
             ? _c("div", {
                 staticClass:
                   "wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
@@ -13204,7 +13226,7 @@ exports.default = _default;
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.isActive && _vm.deleteIcon !== ""
+          _vm.isActive && !_vm.featureCard
             ? _c("prebuilt-card-delete-module", {
                 attrs: {
                   "delete-icon": _vm.deleteIcon,
@@ -13250,7 +13272,13 @@ exports.default = _default;
                   [
                     _vm._v(
                       "\n\t\t\t\t" +
-                        _vm._s(_vm._f("cap")(_vm.strings.generate)) +
+                        _vm._s(
+                          _vm._f("cap")(
+                            _vm.generateString
+                              ? _vm.generateString
+                              : _vm.strings.generate
+                          )
+                        ) +
                         "\n\t\t\t"
                     )
                   ]
@@ -14088,7 +14116,16 @@ var _default = {
       searchString: '',
       fixedTables: {
         blank: {
-          title: 'blank'
+          title: 'Blank',
+          content: '<p class="wptb-prebuilt-blank">+</p>',
+          featureCard: true
+        },
+        dataTable: {
+          title: 'Data Table',
+          content: '<div class="wptb-prebuilt-blank dashicons dashicons-database wptb-plugin-height-full wptb-plugin-width-full wptb-flex wptb-flex-justify-center wptb-flex-align-center"><div>',
+          featureCard: true,
+          tableControlVisible: false,
+          generateString: null
         }
       },
       activeCard: '',
@@ -14098,7 +14135,9 @@ var _default = {
   mounted: function mounted() {
     window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
 
-    this.fixedTables.blank.title = this.strings.blank;
+    this.fixedTables.blank.title = this.strings.blank; // add correct translation of data table generated string at mounted
+
+    this.fixedTables.dataTable.generateString = this.strings.start;
     this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
   },
   computed: {
@@ -14140,15 +14179,15 @@ var _default = {
         console.error('an error occurred with fav operation request: ', e);
       });
     },
-    cardFavIcon: function cardFavIcon(cardId) {
-      return cardId === 'blank' ? '' : this.appData.icons.favIcon;
+    cardFavIcon: function cardFavIcon() {
+      return this.appData.icons.favIcon;
     },
     cardDeleteIcon: function cardDeleteIcon(cardId) {
       if (this.isDevBuild()) {
-        return cardId === 'blank' ? '' : this.appData.icons.deleteIcon;
+        return this.appData.icons.deleteIcon;
       }
 
-      return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
+      return cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
     },
     filteredTables: function filteredTables() {
       var _this2 = this;
@@ -14165,18 +14204,31 @@ var _default = {
     sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
       var _this3 = this;
 
-      var ids, i, currentTable;
+      var ids, featureIds, i, currentTable;
       return regeneratorRuntime.wrap(function sortedTables$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               ids = Object.keys(this.filteredTables());
+              featureIds = Object.keys(this.fixedTables).filter(function (t) {
+                if (Object.prototype.hasOwnProperty.call(_this3.fixedTables, t)) {
+                  return _this3.fixedTables[t].featureCard;
+                }
+              });
               ids.sort(function (a, b) {
                 if (a === 'blank') {
                   return -1;
                 }
 
                 if (b === 'blank') {
+                  return 1;
+                }
+
+                if (featureIds.includes(a)) {
+                  return -1;
+                }
+
+                if (featureIds.includes(b)) {
                   return 1;
                 }
 
@@ -14188,29 +14240,29 @@ var _default = {
                   return 1;
                 }
 
-                var aTitle = _this3.fixedTables[a].name;
-                var bTitle = _this3.fixedTables[b].name;
+                var aTitle = _this3.fixedTables[a].title;
+                var bTitle = _this3.fixedTables[b].title;
                 return aTitle - bTitle;
               });
               i = 0;
 
-            case 3:
+            case 4:
               if (!(i < ids.length)) {
-                _context.next = 11;
+                _context.next = 12;
                 break;
               }
 
               currentTable = this.fixedTables[ids[i]];
               currentTable.id = ids[i];
-              _context.next = 8;
+              _context.next = 9;
               return currentTable;
 
-            case 8:
+            case 9:
               i += 1;
-              _context.next = 3;
+              _context.next = 4;
               break;
 
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
@@ -14309,8 +14361,7 @@ var _default = {
           /**
            * Increment id of plugin element.
            *
-           * @param HTMLElement divEl div element
-           * @param divEl
+           * @param {HTMLElement} divEl div element
            */
 
           var incrementIds = function incrementIds(divEl) {
@@ -14503,7 +14554,10 @@ exports.default = _default;
               table: v.content,
               "search-string": _vm.searchString,
               "fav-icon": _vm.cardFavIcon(v.id),
-              "delete-icon": _vm.cardDeleteIcon(v.id)
+              "delete-icon": _vm.cardDeleteIcon(v.id),
+              "feature-card": v.featureCard,
+              "table-controls-visible": v.tableControlVisible,
+              "generate-string": v.generateString
             },
             on: {
               cardActive: _vm.cardActive,

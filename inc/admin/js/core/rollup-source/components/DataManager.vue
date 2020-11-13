@@ -67,10 +67,13 @@ export default {
 		};
 	},
 	created() {
-		this.addDataManagerTempData([
-			['', '', ''],
-			['', '', ''],
-		]);
+		this.addDataManagerTempData({
+			data: [
+				['', '', ''],
+				['', '', ''],
+			],
+			markAsImported: false,
+		});
 	},
 	mounted() {
 		this.$nextTick(() => {
@@ -124,7 +127,7 @@ export default {
 			if (n) {
 				this.setDataManagerControl({ key: 'indexRow', value: this.getDataManagerRowId(0) });
 			}
-	},
+		},
 		generateEmptyRow(colCount) {
 			const rowId = this.generateUniqueId()();
 

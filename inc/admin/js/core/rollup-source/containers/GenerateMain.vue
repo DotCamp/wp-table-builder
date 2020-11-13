@@ -29,15 +29,13 @@
 					:search-string="searchString"
 					:fav-icon="cardFavIcon(v.id)"
 					:delete-icon="cardDeleteIcon(v.id)"
+					:feature-card="v.featureCard"
+					:table-controls-visible="v.tableControlVisible"
+					:generate-string="v.generateString"
 				></prebuilt-card>
 			</div>
 		</div>
 		<div v-if="!isPro" v-html="upsell"></div>
-		<!--    @deprecated-->
-		<!--		<div v-if="!isPro" class="wptb-prebuilt-ad">-->
-		<!--			{{ strings.prebuiltAdPart1 }}-->
-		<!--			<a :href="adLink" class="wptb-prebuilt-ad-link">{{ strings.prebuiltAdPart2 }}</a>-->
-		<!--		</div>-->
 	</div>
 </template>
 <script>
@@ -72,7 +70,17 @@ export default {
 			searchString: '',
 			fixedTables: {
 				blank: {
-					title: 'blank',
+					title: 'Blank',
+					content: '<p class="wptb-prebuilt-blank">+</p>',
+					featureCard: true,
+				},
+				dataTable: {
+					title: 'Data Table',
+					content:
+						'<div class="wptb-prebuilt-blank dashicons dashicons-database wptb-plugin-height-full wptb-plugin-width-full wptb-flex wptb-flex-justify-center wptb-flex-align-center"><div>',
+					featureCard: true,
+					tableControlVisible: false,
+					generateString: null,
 				},
 			},
 			activeCard: '',
@@ -84,6 +92,9 @@ export default {
 
 		// add correct translation of blank at mounted
 		this.fixedTables.blank.title = this.strings.blank;
+
+		// add correct translation of data table generated string at mounted
+		this.fixedTables.dataTable.generateString = this.strings.start;
 
 		this.fixedTables = { ...this.fixedTables, ...this.prebuiltTables };
 	},
@@ -125,16 +136,14 @@ export default {
 					console.error('an error occurred with fav operation request: ', e);
 				});
 		},
-		cardFavIcon(cardId) {
-			return cardId === 'blank' ? '' : this.appData.icons.favIcon;
+		cardFavIcon() {
+			return this.appData.icons.favIcon;
 		},
 		cardDeleteIcon(cardId) {
 			if (this.isDevBuild()) {
-				return cardId === 'blank' ? '' : this.appData.icons.deleteIcon;
+				return this.appData.icons.deleteIcon;
 			}
-			return cardId === 'blank' || cardId.startsWith(this.appData.teamTablePrefix)
-				? ''
-				: this.appData.icons.deleteIcon;
+			return cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
 		},
 		filteredTables() {
 			return Object.keys(this.fixedTables).reduce((carry, id) => {
@@ -148,11 +157,23 @@ export default {
 		sortedTables: function* sortedTables() {
 			const ids = Object.keys(this.filteredTables());
 
+			const featureIds = Object.keys(this.fixedTables).filter((t) => {
+				if (Object.prototype.hasOwnProperty.call(this.fixedTables, t)) {
+					return this.fixedTables[t].featureCard;
+				}
+			});
+
 			ids.sort((a, b) => {
 				if (a === 'blank') {
 					return -1;
 				}
 				if (b === 'blank') {
+					return 1;
+				}
+				if (featureIds.includes(a)) {
+					return -1;
+				}
+				if (featureIds.includes(b)) {
 					return 1;
 				}
 				if (a.startsWith('wptb_team')) {
@@ -161,8 +182,8 @@ export default {
 				if (b.startsWith('wptb_team')) {
 					return 1;
 				}
-				const aTitle = this.fixedTables[a].name;
-				const bTitle = this.fixedTables[b].name;
+				const aTitle = this.fixedTables[a].title;
+				const bTitle = this.fixedTables[b].title;
 
 				return aTitle - bTitle;
 			});
@@ -273,8 +294,7 @@ export default {
 					/**
 					 * Increment id of plugin element.
 					 *
-					 * @param HTMLElement divEl div element
-					 * @param divEl
+					 * @param {HTMLElement} divEl div element
 					 */
 					const incrementIds = (divEl) => {
 						let className = null;

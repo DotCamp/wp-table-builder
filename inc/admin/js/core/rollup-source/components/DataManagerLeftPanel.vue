@@ -12,6 +12,9 @@
 			<panel-button-control type="danger" v-if="!rowForNamesVisibility" @buttonClick="cancelRowSelectOperation">
 				{{ translationM('cancel') | cap }}
 			</panel-button-control>
+			<panel-button-control v-if="getDataManagerControls.indexRow !== null" @buttonClick="resetIndexRow">
+				{{ translationM('resetIndexRow') | cap }}
+			</panel-button-control>
 		</fragment>
 	</PanelSectionGroupTabbedItem>
 </template>
@@ -62,6 +65,10 @@ export default {
 					}
 				}
 			});
+		},
+		resetIndexRow() {
+			this.setDataManagerControl({ key: 'firstRowAsColumnName', value: false });
+			this.setDataManagerControl({ key: 'indexRow', value: null });
 		},
 	},
 };

@@ -48,6 +48,7 @@ const state = {
 		},
 		setup: {
 			sourceId: null,
+			sourceDataCreated: false,
 			csv: {
 				controls: {
 					delimiter: 'comma',
@@ -65,7 +66,7 @@ const state = {
 			rowCount: 0,
 		},
 		controls: {
-			firstRowAsColumnName: true,
+			firstRowAsColumnName: false,
 			indexRow: null,
 		},
 		select: {
@@ -78,6 +79,7 @@ const state = {
 	},
 	leftPanelId: '#dataTableLeftPanel',
 	devStartupScreen: 'CsvSetup',
+	defaults: {},
 };
 
 export default state;

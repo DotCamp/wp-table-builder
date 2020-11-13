@@ -69,7 +69,7 @@ export default {
 					}, []);
 
 					// set csv data to temp data manager
-					this.addDataManagerTempData(csvData);
+					this.addDataManagerTempData({ data: csvData });
 
 					// show data manager setup
 					this.setActiveTabGroupForCurrentSource('dataManager');

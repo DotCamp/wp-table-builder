@@ -300,13 +300,14 @@ class Admin_Menu {
 					'security'       => null,
 					'prebuiltTables' => null,
 					'strings'        => [
-						'blank'              => esc_html__( 'blank', 'wp-table-builder' ),
+						'blank'              => esc_html__( 'Blank', 'wp-table-builder' ),
 						'generate'           => esc_html__( 'generate', 'wp-table-builder' ),
 						'edit'               => esc_html__( 'edit', 'wp-table-builder' ),
 						'searchPlaceholder'  => esc_html__( 'Search (/ to focus)', 'wp-table-builder' ),
 						'prebuiltAdPart1'    => esc_html__( 'For prebuilt tables and much more', 'wp-table-builder' ),
 						'prebuiltAdPart2'    => esc_html__( 'Go PRO', 'wp-table-builder' ),
 						'deleteConfirmation' => esc_html__( 'Delete prebuilt table?', 'wp-table-builder' ),
+						'start'              => esc_html__( 'start', 'wp-table-builder' ),
 					]
 
 				];

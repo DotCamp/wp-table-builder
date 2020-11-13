@@ -23,6 +23,15 @@ const actions = {
 		commit('setScreen', screenName);
 	},
 	/**
+	 * Change current screen.
+	 *
+	 * @param {Function} commit mutation commit function
+	 */
+	setCurrentScreenToDataSourceSelection({ commit }) {
+		commit('setScreen', `DataSourceSelection`);
+		commit('resetToDefaults', 'dataSource.setup');
+	},
+	/**
 	 * Soft select a source card.
 	 *
 	 * @param {{commit}} mutation commit function
@@ -49,15 +58,21 @@ const actions = {
 
 		// set screen
 		const screenName = `${sourceId[0].toUpperCase() + sourceId.slice(1)}Setup`;
+
 		dispatch('setCurrentScreen', screenName);
 	},
 	/**
 	 * Add temp data to data manager.
 	 *
 	 * @param {{commit, getters}} vuex store object
-	 * @param {Array} data data array
+	 * @param {{data, markAsImported}} data data array
 	 */
-	addDataManagerTempData({ commit, getters }, data) {
+	addDataManagerTempData({ commit, getters }, { data, markAsImported }) {
+		if (markAsImported === undefined) {
+			// eslint-disable-next-line no-param-reassign
+			markAsImported = true;
+		}
+
 		const confirmedData = Array.isArray(data) ? data : [];
 		commit('clearTempDataManager');
 
@@ -99,6 +114,11 @@ const actions = {
 		}, []);
 
 		commit('setDataManagerTempData', formedData);
+
+		if (markAsImported) {
+			// mark data created status
+			commit('setSetupSourceDataCreatedStatus', true);
+		}
 	},
 	/**
 	 * Set tab of current active source setup.
@@ -147,10 +167,28 @@ const actions = {
 			});
 		});
 	},
+	/**
+	 * Cancel active select operation.
+	 *
+	 * @param {{state, commit}} vuex store object
+	 */
 	cancelRowSelectOperation({ state, commit }) {
 		commit('setSelectStatus', false);
 		state.dataManager.select.clickId.resolve(null);
 		commit('resetSelectData');
+	},
+	/**
+	 * Set value of data cell.
+	 *
+	 * @param {{getters}} vuex store object
+	 * @param {{cellId, value}} payload
+	 *
+	 */
+	setDataCellValue({ getters, commit }, { cellId, value }) {
+		const { rowId, colId } = getters.parseCellId(cellId);
+
+		commit('setDataCellObjectValue', { rowId, colId, value });
+		commit('setSetupSourceDataCreatedStatus', true);
 	},
 };
 

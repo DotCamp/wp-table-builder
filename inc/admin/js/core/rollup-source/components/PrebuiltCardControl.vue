@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-prebuilt-control" :data-orientation="orientation">
+	<div v-if="visible" class="wptb-prebuilt-control" :data-orientation="orientation">
 		<div
 			class="wptb-prebuilt-control-increment-box wptb-unselectable"
 			:disabled="disabled || hitToMin()"
@@ -48,6 +48,10 @@ export default {
 		step: {
 			type: Number,
 			default: 1,
+		},
+		visible: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	data() {

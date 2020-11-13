@@ -6,7 +6,7 @@
 		<div class="wptb-data-table-left-panel-source-setup-general-button-wrapper" v-if="isActiveScreenSourceSetup">
 			<material-button
 				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
-				:click="setScreenToSourceSelect"
+				:click="setCurrentScreenToDataSourceSelection"
 				type="danger"
 				size="full-size"
 				:disabled="isBusy"
@@ -16,7 +16,7 @@
 				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
 				type="confirm"
 				size="full-size"
-				:disabled="isBusy"
+				:disabled="isContinueAvailable"
 				>{{ translationM('continue') | cap }}</material-button
 			>
 		</div>
@@ -33,13 +33,13 @@ export default {
 	components: { MaterialButton },
 	mixins: [withNativeTranslationStore, withStoreBusy],
 	computed: {
-		...mapGetters(['isActiveScreenSourceSetup', 'isSetupDataImported']),
+		...mapGetters(['isActiveScreenSourceSetup', 'isSourceDataCreated']),
+		isContinueAvailable() {
+			return this.isBusy || !this.isSourceDataCreated;
+		},
 	},
 	methods: {
-		setScreenToSourceSelect() {
-			this.setCurrentScreen('DataSourceSelection');
-		},
-		...mapActions(['setCurrentScreen']),
+		...mapActions(['setCurrentScreenToDataSourceSelection']),
 	},
 };
 </script>

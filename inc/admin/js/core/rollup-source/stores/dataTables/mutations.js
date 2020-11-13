@@ -1,3 +1,5 @@
+import { setObjectPropertyFromString } from '../../functions';
+
 /* eslint-disable no-param-reassign */
 /**
  * Data table mutations.
@@ -31,6 +33,17 @@ const mutations = {
 	 */
 	setSoftSelected(state, sourceId) {
 		state.dataSource.card.softSelectedId = sourceId;
+	},
+	/**
+	 * Set status of data created from source.
+	 *
+	 * This will mark whether some sort of data is ready on data manager or not.
+	 *
+	 * @param {Object} state data table state
+	 * @param {boolean} status status
+	 */
+	setSetupSourceDataCreatedStatus(state, status) {
+		state.dataSource.setup.sourceDataCreated = status;
 	},
 	/**
 	 * Set  selected source id for source that will be initialized.
@@ -206,6 +219,35 @@ const mutations = {
 	 */
 	setHoverId(state, id) {
 		state.dataManager.select.hoverId = id;
+	},
+	/**
+	 * Set value to a data cell object
+	 *
+	 * @param {Object} state data table state
+	 * @param {{rowId, colId, value}} mutation payload
+	 */
+	setDataCellObjectValue(state, { rowId, colId, value }) {
+		const rowObject = state.dataManager.tempData.values.find((r) => r.rowId === rowId);
+
+		if (rowObject) {
+			const cell = rowObject.values.find((c) => c.colId === colId);
+			if (cell) {
+				cell.value = value;
+			}
+		}
+	},
+	/**
+	 * Reset a property to its default values if defined.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} target target property nam
+	 */
+	resetToDefaults(state, target) {
+		const defaultValue = state.defaults[target];
+
+		if (defaultValue) {
+			setObjectPropertyFromString(target, state, defaultValue);
+		}
 	},
 };
 

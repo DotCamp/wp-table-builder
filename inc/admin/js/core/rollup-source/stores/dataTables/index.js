@@ -4,6 +4,7 @@ import state from './state';
 import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
+import { objectPropertyFromString } from '../../functions';
 
 // setup vuex for current vue instance
 Vue.use(Vuex);
@@ -48,12 +49,36 @@ function objectDeepMerge(source, target) {
 }
 
 /**
+ * Prepare a default state for given property.
+ *
+ * @param {Object} state state object
+ * @param {*} target target value
+ * @param {string} defaultKey key that will be used to store default
+ */
+// eslint-disable-next-line no-shadow
+const prepareDefaults = (state, target) => {
+	const targetValue = objectPropertyFromString(target, state);
+
+	let value = targetValue;
+	if (typeof value === 'object') {
+		value = { ...targetValue };
+	} else if (Array.isArray(targetValue)) {
+		value = Array.from(targetValue);
+	}
+	// eslint-disable-next-line no-param-reassign
+	state.defaults[target] = value;
+};
+
+/**
  * Create data table store.
  *
  * @param {Object} extraStoreOptions extra store options to be used
  * @return {Object} data table store
  */
 const createStore = (extraStoreOptions = {}) => {
+	// create defaults for datasource setup
+	prepareDefaults(storeOptions.state, 'dataSource.setup');
+
 	return new Vuex.Store(objectDeepMerge(storeOptions, extraStoreOptions));
 };
 
