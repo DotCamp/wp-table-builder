@@ -12115,12 +12115,16 @@ function ControlsManager() {
    */
 
 
-  function callControlScript(key, args) {
+  function callControlScript(key) {
     if (!controlScripts[key]) {
       throw new Error("Called control element not found: [".concat(key, "]"));
     }
 
-    controlScripts[key](args);
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    controlScripts[key].apply(controlScripts, args);
   }
   /**
    * Register data for a control item
@@ -28316,6 +28320,116 @@ render._withStripped = true
           };
         })());
       
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManagerTableAddControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  data: function data() {
+    return {
+      colStyleValues: {
+        top: 0
+      }
+    };
+  },
+  watch: {
+    getDataManagerTempData: {
+      handler: function handler() {
+        this.calculateColControlValues();
+      },
+      deep: true
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.calculateColControlValues();
+    });
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData']), {
+    colControlStyle: function colControlStyle() {
+      return {
+        top: this.colStyleValues.top
+      };
+    }
+  }),
+  methods: {
+    calculateColControlValues: function calculateColControlValues() {
+      var valuesInfoRow = document.querySelector('.wptb-data-manager-table-wrapper .wptb-data-manager-info-values');
+      var dataTable = document.querySelector('.wptb-data-manager-table-wrapper table');
+
+      if (valuesInfoRow && dataTable) {
+        var _valuesInfoRow$getBou = valuesInfoRow.getBoundingClientRect(),
+            top = _valuesInfoRow$getBou.top,
+            height = _valuesInfoRow$getBou.height;
+
+        var _dataTable$getBoundin = dataTable.getBoundingClientRect(),
+            tableTop = _dataTable$getBoundin.top;
+
+        this.colStyleValues.top = "".concat(top - tableTop + height, "px");
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $87272c = exports.default || module.exports;
+      
+      if (typeof $87272c === 'function') {
+        $87272c = $87272c.options;
+      }
+    
+        /* template */
+        Object.assign($87272c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("fragment", [
+    _c(
+      "div",
+      {
+        staticClass: "wptb-data-manager-default-add",
+        attrs: { "data-type": "row" }
+      },
+      [_vm._v("+")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "wptb-data-manager-default-add",
+        style: _vm.colControlStyle,
+        attrs: { "data-type": "col" }
+      },
+      [_vm._v("+")]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManager.vue":[function(require,module,exports) {
 "use strict";
 
@@ -28331,6 +28445,8 @@ var _DataManagerCell = _interopRequireDefault(require("./DataManagerCell"));
 var _DataManagerSelect = _interopRequireDefault(require("./DataManagerSelect"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _DataManagerTableAddControls = _interopRequireDefault(require("./DataManagerTableAddControls"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28348,6 +28464,7 @@ var _default = {
     }
   },
   components: {
+    DataManagerTableAddControls: _DataManagerTableAddControls.default,
     DataManagerCell: _DataManagerCell.default,
     DataManagerSelect: _DataManagerSelect.default
   },
@@ -28487,86 +28604,100 @@ exports.default = _default;
           attrs: { "data-select": _vm.isDataSelectionActive }
         },
         [
-          _c("table", [
-            _c(
-              "thead",
-              [
+          _c(
+            "div",
+            { staticClass: "wptb-data-manager-table-wrapper" },
+            [
+              _c("table", [
                 _c(
-                  "tr",
-                  { staticClass: "wptb-data-manager-table-column-name-info" },
+                  "thead",
                   [
-                    _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                      _vm._v(_vm._s(_vm.translationM("columnNames")))
-                    ])
-                  ]
+                    _c(
+                      "tr",
+                      {
+                        staticClass: "wptb-data-manager-table-column-name-info"
+                      },
+                      [
+                        _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                          _vm._v(_vm._s(_vm.translationM("columnNames")))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.table.header, function(headerRow) {
+                      return _c(
+                        "tr",
+                        {
+                          key: headerRow.rowId,
+                          attrs: { id: headerRow.rowId }
+                        },
+                        _vm._l(headerRow.values, function(headerCell) {
+                          return _c("data-manager-cell", {
+                            key: _vm.cellKey(headerRow.rowId, headerCell.colId),
+                            attrs: {
+                              "place-holder": _vm.translationM("columnName"),
+                              value: headerCell.value,
+                              "row-id": headerRow.rowId,
+                              "col-id": headerCell.colId
+                            }
+                          })
+                        }),
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "tr",
+                      {
+                        staticClass:
+                          "wptb-data-manager-table-column-name-info wptb-data-manager-info-values"
+                      },
+                      [
+                        _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                          _vm._v(_vm._s(_vm.translationM("values")))
+                        ])
+                      ]
+                    )
+                  ],
+                  2
                 ),
                 _vm._v(" "),
-                _vm._l(_vm.table.header, function(headerRow) {
-                  return _c(
-                    "tr",
-                    { key: headerRow.rowId, attrs: { id: headerRow.rowId } },
-                    _vm._l(headerRow.values, function(headerCell) {
-                      return _c("data-manager-cell", {
-                        key: _vm.cellKey(headerRow.rowId, headerCell.colId),
-                        attrs: {
-                          "place-holder": _vm.translationM("columnName"),
-                          value: headerCell.value,
-                          "row-id": headerRow.rowId,
-                          "col-id": headerCell.colId
-                        }
-                      })
-                    }),
-                    1
-                  )
-                }),
-                _vm._v(" "),
                 _c(
-                  "tr",
-                  { staticClass: "wptb-data-manager-table-column-name-info" },
-                  [
-                    _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                      _vm._v(_vm._s(_vm.translationM("values")))
-                    ])
-                  ]
-                )
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(_vm.table.values, function(valueRows) {
-                return _c(
-                  "tr",
-                  { key: valueRows.rowId, attrs: { id: valueRows.rowId } },
-                  _vm._l(valueRows.values, function(cell) {
-                    return _c("data-manager-cell", {
-                      key: _vm.cellKey(valueRows.rowId, cell.colId),
-                      attrs: {
-                        "place-holder": _vm.translationM("value"),
-                        value: cell.value,
-                        "row-id": valueRows.rowId,
-                        "col-id": cell.colId,
-                        "selection-enabled": true
-                      },
-                      on: {
-                        cellClick: _vm.handleCellClick,
-                        cellHover: _vm.handleCellHover
-                      }
-                    })
+                  "tbody",
+                  _vm._l(_vm.table.values, function(valueRows) {
+                    return _c(
+                      "tr",
+                      { key: valueRows.rowId, attrs: { id: valueRows.rowId } },
+                      _vm._l(valueRows.values, function(cell) {
+                        return _c("data-manager-cell", {
+                          key: _vm.cellKey(valueRows.rowId, cell.colId),
+                          attrs: {
+                            "place-holder": _vm.translationM("value"),
+                            value: cell.value,
+                            "row-id": valueRows.rowId,
+                            "col-id": cell.colId,
+                            "selection-enabled": true
+                          },
+                          on: {
+                            cellClick: _vm.handleCellClick,
+                            cellHover: _vm.handleCellHover
+                          }
+                        })
+                      }),
+                      1
+                    )
                   }),
-                  1
+                  0
                 )
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c("data-manager-select"),
-          _vm._v(" "),
-          _c("div", { staticClass: "wptb-repeating-linear-gradient" })
-        ],
-        1
+              ]),
+              _vm._v(" "),
+              _c("data-manager-select"),
+              _vm._v(" "),
+              _c("data-manager-table-add-controls")
+            ],
+            1
+          )
+        ]
       )
     ]
   )
@@ -28583,7 +28714,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30287,7 +30418,2761 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"plugins/genericStore.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Plugin install method.
+ *
+ * Plugin for adding app wide generic store.
+ *
+ * @param {object} Vue Vue object
+ * @param {options} options app data to be used
+ * @return {{appData: *}}
+ */
+function install(Vue, _ref) {
+  var _ref$data = _ref.data,
+      key = _ref$data.key,
+      _data = _ref$data.data,
+      methods = _ref.methods;
+  Vue.mixin({
+    data: function data() {
+      return _defineProperty({}, key, _data);
+    },
+    methods: methods
+  });
+}
+
+var _default = {
+  install: install
+};
+exports.default = _default;
+},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    orientation: {
+      type: String,
+      default: 'row'
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: Number,
+      default: 1
+    },
+    max: {
+      type: Number,
+      default: 30
+    },
+    step: {
+      type: Number,
+      default: 1
+    },
+    visible: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.toNumber(this.value);
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('input', this.limitVal(n));
+      this.innerValue = this.limitVal(n);
+    }
+  },
+  methods: {
+    valueChanged: function valueChanged(e) {
+      this.innerValue = this.toNumber(e.target.value);
+    },
+    toNumber: function toNumber(n) {
+      return Number.parseInt(n, 10);
+    },
+    limitVal: function limitVal(n) {
+      if (n > this.max) {
+        return this.max;
+      }
+
+      if (n < this.min) {
+        return this.min;
+      }
+
+      return n;
+    },
+    hitToMax: function hitToMax() {
+      return this.innerValue === this.max;
+    },
+    hitToMin: function hitToMin() {
+      return this.innerValue === this.min;
+    },
+    effectValue: function effectValue(effect) {
+      if (!this.disabled) {
+        this.innerValue += effect;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $43bbee = exports.default || module.exports;
+      
+      if (typeof $43bbee === 'function') {
+        $43bbee = $43bbee.options;
+      }
+    
+        /* template */
+        Object.assign($43bbee, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.visible
+    ? _c(
+        "div",
+        {
+          staticClass: "wptb-prebuilt-control",
+          attrs: { "data-orientation": _vm.orientation }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-prebuilt-control-increment-box wptb-unselectable",
+              attrs: { disabled: _vm.disabled || _vm.hitToMin() },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.effectValue(-1 * _vm.step)
+                }
+              }
+            },
+            [_vm._v("\n\t\t-\n\t")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "wptb-prebuilt-control-input",
+            attrs: { disabled: _vm.disabled === true },
+            domProps: { value: _vm.innerValue },
+            on: { input: _vm.valueChanged }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-prebuilt-control-increment-box wptb-unselectable",
+              attrs: { disabled: _vm.disabled || _vm.hitToMax() },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.effectValue(_vm.step)
+                }
+              }
+            },
+            [_vm._v("\n\t\t+\n\t")]
+          )
+        ]
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltDisplayDirectionButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    side: {
+      type: String,
+      default: 'up'
+    }
+  },
+  computed: {
+    calculateTransform: function calculateTransform() {
+      var transformDegrees = {
+        up: 0,
+        right: 90,
+        down: 180,
+        left: 270
+      };
+      return {
+        transform: "rotateZ(".concat(transformDegrees[this.side], "deg)")
+      };
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('click', this.side);
+    }
+  }
+};
+exports.default = _default;
+        var $8bc701 = exports.default || module.exports;
+      
+      if (typeof $8bc701 === 'function') {
+        $8bc701 = $8bc701.options;
+      }
+    
+        /* template */
+        Object.assign($8bc701, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-control",
+      style: _vm.calculateTransform,
+      attrs: { "data-type": _vm.side },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._v("\n\t⬇️\n")]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltLiveDisplayCell.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltDisplayDirectionButton = _interopRequireDefault(require("./PrebuiltDisplayDirectionButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* eslint-disable no-param-reassign */
+var _default = {
+  props: {
+    row: {
+      type: Number,
+      default: 1
+    },
+    col: {
+      type: Number,
+      default: 1
+    },
+    maxCol: {
+      type: Number,
+      default: 1
+    },
+    maxRow: {
+      type: Number,
+      default: 1
+    },
+    original: {
+      type: Boolean,
+      default: true
+    },
+    selected: {
+      type: Boolean,
+      default: false
+    },
+    controlsEnabled: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    PrebuiltDisplayDirectionButton: _PrebuiltDisplayDirectionButton.default
+  },
+  data: function data() {
+    return {
+      enabledControls: []
+    };
+  },
+  mounted: function mounted() {
+    if (this.controlsEnabled) {
+      if (this.row === 0) {
+        this.enabledControls.push('up');
+      }
+
+      if (this.col === 0) {
+        this.enabledControls.push('left');
+      }
+
+      if (this.row === this.maxRow - 1) {
+        this.enabledControls.push('down');
+      }
+
+      if (this.col === this.maxCol - 1) {
+        this.enabledControls.push('right');
+      }
+    }
+  },
+  methods: {
+    getIndex: function getIndex() {
+      return {
+        row: this.row,
+        col: this.col
+      };
+    },
+    handleLeave: function handleLeave(e) {
+      e.target.classList.remove('wptb-prebuilt-live-cell-hover');
+    },
+    handleHover: function handleHover(e) {
+      var controls = Array.from(e.target.querySelectorAll('[data-type]'));
+
+      if (controls.length > 0) {
+        e.target.classList.add('wptb-prebuilt-live-cell-hover');
+      } // eslint-disable-next-line array-callback-return
+
+
+      controls.map(function (c) {
+        var _c$getBoundingClientR = c.getBoundingClientRect(),
+            width = _c$getBoundingClientR.width,
+            height = _c$getBoundingClientR.height;
+
+        var type = c.dataset.type;
+
+        switch (type) {
+          case 'up':
+            c.style.top = "".concat(-height, "px");
+            break;
+
+          case 'left':
+            c.style.left = "".concat(-width, "px");
+            break;
+
+          case 'down':
+            c.style.bottom = "".concat(-height, "px");
+            break;
+
+          case 'right':
+            c.style.right = "".concat(-width, "px");
+            break;
+
+          default:
+            c.style.top = "".concat(-height, "px");
+        }
+      });
+    },
+    handleControlClick: function handleControlClick(side) {
+      this.$emit('cellControlSelected', side, this.row, this.col);
+    }
+  }
+};
+exports.default = _default;
+        var $b60284 = exports.default || module.exports;
+      
+      if (typeof $b60284 === 'function') {
+        $b60284 = $b60284.options;
+      }
+    
+        /* template */
+        Object.assign($b60284, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-live-cell",
+      class: {
+        "wptb-prebuilt-live-control-hide": !_vm.original,
+        "wptb-prebuilt-live-control-active": _vm.selected
+      },
+      on: { mouseover: _vm.handleHover, mouseleave: _vm.handleLeave }
+    },
+    _vm._l(_vm.enabledControls, function(side) {
+      return _c("prebuilt-display-direction-button", {
+        key: side,
+        attrs: { side: side },
+        on: { click: _vm.handleControlClick }
+      })
+    }),
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltDisplayDirectionButton":"components/PrebuiltDisplayDirectionButton.vue"}],"components/PrebuiltLiveDisplay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltLiveDisplayCell = _interopRequireDefault(require("./PrebuiltLiveDisplayCell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    rows: {
+      type: Number,
+      default: 1
+    },
+    cols: {
+      type: Number,
+      default: 1
+    },
+    table: {
+      type: HTMLElement
+    },
+    selectedCells: {
+      type: Object,
+      default: function _default() {
+        return {
+          rowOperation: [],
+          colOperation: []
+        };
+      }
+    },
+    enableNewCellIndicator: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    PrebuiltLiveDisplayCell: _PrebuiltLiveDisplayCell.default
+  },
+  data: function data() {
+    return {
+      parsedCells: [],
+      parsedMergeDirectives: [],
+      initial: {
+        rows: 1,
+        cols: 1
+      },
+      innerParsedCells: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.table) {
+      this.initial.rows = this.table.querySelectorAll('tr').length;
+      this.initial.cols = Array.from(this.table.querySelectorAll('tr')).reduce(function (carry, current) {
+        var cellLength = current.querySelectorAll('td').length;
+        return cellLength > carry ? cellLength : carry;
+      }, 1); // eslint-disable-next-line array-callback-return
+
+      Array.from(this.table.querySelectorAll('tr')).map(function (tr, i) {
+        if (!Array.isArray(_this.parsedCells[i])) {
+          _this.parsedCells[i] = [];
+        } // eslint-disable-next-line array-callback-return
+
+
+        Array.from(tr.querySelectorAll('td')).map(function (td) {
+          _this.parsedCells[i].push(td);
+        });
+      }); // this.innerParsedCells = this.parsedCells.slice(0);
+
+      this.prepareTable();
+    }
+  },
+  watch: {
+    rows: function rows() {
+      this.prepareTable();
+    },
+    cols: function cols() {
+      this.prepareTable();
+    },
+    selectedCells: {
+      handler: function handler() {
+        this.$emit('cellsSelected', this.selectedCells);
+      },
+      deep: true
+    }
+  },
+  computed: {
+    calculateStyle: function calculateStyle() {
+      return {
+        gridTemplateColumns: "repeat(".concat(this.cols, ", 1fr)"),
+        gridTemplateRows: "repeat(".concat(this.rows, ", 1fr)")
+      };
+    }
+  },
+  methods: {
+    prepareTable: function prepareTable() {
+      var _this2 = this;
+
+      this.innerParsedCells = this.parsedCells.map(function (r) {
+        return r.slice(0);
+      });
+      var extraRows = this.rows - this.initial.rows;
+      var extraCols = this.cols - this.initial.cols; // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(this.innerParsedCells.length)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(extraCols)).map(function () {
+          _this2.innerParsedCells[r].push(a);
+        });
+      }); // eslint-disable-next-line array-callback-return
+
+      Array.from(Array(extraRows)).map(function (a, r) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(Array(_this2.cols)).map(function () {
+          var rowIndex = _this2.initial.rows + r;
+
+          if (!Array.isArray(_this2.innerParsedCells[rowIndex])) {
+            _this2.innerParsedCells[rowIndex] = [];
+          }
+
+          _this2.innerParsedCells[rowIndex].push(a);
+        });
+      });
+    },
+    getParsedCellElement: function getParsedCellElement(r, c) {
+      return this.parsedCells[r][c];
+    },
+    cellSpan: function cellSpan(index) {
+      var spanAmount = this.mergeDirectives[index];
+      return {
+        gridColumn: "span ".concat(spanAmount || 1)
+      };
+    },
+    isOriginalCell: function isOriginalCell(r, c) {
+      if (!this.enableNewCellIndicator) {
+        return true;
+      }
+
+      return r < this.initial.rows && c < this.initial.cols;
+    },
+    calculateClass: function calculateClass(r, c) {
+      return {
+        'wptb-prebuilt-added-cell': !this.isOriginalCell(r, c)
+      };
+    },
+    isCellSelected: function isCellSelected(row, col) {
+      return this.selectedCells.colOperation.includes(this.encodeSelectedCell(row, col)) || this.selectedCells.rowOperation.includes(this.encodeSelectedCell(row, col));
+    },
+    encodeSelectedCell: function encodeSelectedCell(row, col) {
+      return "".concat(row, "-").concat(col);
+    },
+    handleCellControlSelect: function handleCellControlSelect(side, row, col) {
+      if (side === 'up' || side === 'down') {
+        var direction = side === 'up' ? 1 : -1;
+
+        for (var i = 0; i < this.initial.rows; i += 1) {
+          this.toggleSelection('colOperation', this.encodeSelectedCell(row + i * direction, col));
+        }
+      } else {
+        for (var _i = 0; _i < this.initial.cols; _i += 1) {
+          var _direction = side === 'left' ? 1 : -1;
+
+          this.toggleSelection('rowOperation', this.encodeSelectedCell(row, col + _i * _direction));
+        }
+      }
+    },
+    toggleSelection: function toggleSelection(operation, encodedCellPosition) {
+      this.selectedCells[operation === 'colOperation' ? 'rowOperation' : 'colOperation'] = [];
+      var index = this.selectedCells[operation].indexOf(encodedCellPosition);
+
+      if (index >= 0) {
+        this.selectedCells[operation].splice(index, 1);
+      } else {
+        this.selectedCells[operation].push(encodedCellPosition);
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $78d93d = exports.default || module.exports;
+      
+      if (typeof $78d93d === 'function') {
+        $78d93d = $78d93d.options;
+      }
+    
+        /* template */
+        Object.assign($78d93d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-live-display wptb-unselectable" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-live-table", style: _vm.calculateStyle },
+        [
+          _vm._l(_vm.innerParsedCells, function(r, i) {
+            return _vm._l(r, function(c, k) {
+              return _c("prebuilt-live-display-cell", {
+                key: i + "-" + k,
+                class: _vm.calculateClass(i, k),
+                attrs: {
+                  row: i,
+                  col: k,
+                  "max-col": _vm.initial.cols,
+                  "max-row": _vm.initial.rows,
+                  original: _vm.isOriginalCell(i, k),
+                  selected: _vm.isCellSelected(i, k),
+                  "controls-enabled": _vm.enableNewCellIndicator
+                },
+                on: { cellControlSelected: _vm.handleCellControlSelect }
+              })
+            })
+          })
+        ],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltLiveDisplayCell":"components/PrebuiltLiveDisplayCell.vue"}],"components/PrebuiltCardDeleteModule.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    deleteIcon: {
+      type: String,
+      default: ''
+    },
+    message: {
+      type: String,
+      default: 'Delete?'
+    },
+    yesIcon: {
+      type: String,
+      default: 'Y'
+    },
+    noIcon: {
+      type: String,
+      default: 'N'
+    }
+  },
+  data: function data() {
+    return {
+      confirmActive: false
+    };
+  },
+  methods: {
+    toggleConfirmOverlay: function toggleConfirmOverlay() {
+      this.confirmActive = !this.confirmActive;
+    },
+    confirm: function confirm() {
+      this.$emit('confirm');
+    }
+  }
+};
+exports.default = _default;
+        var $61edfa = exports.default || module.exports;
+      
+      if (typeof $61edfa === 'function') {
+        $61edfa = $61edfa.options;
+      }
+    
+        /* template */
+        Object.assign($61edfa, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-prebuilt-card-delete-module" },
+    [
+      _c("div", {
+        staticClass:
+          "wptb-prebuilt-card-icon wptb-prebuilt-card-delete-icon wptb-plugin-filter-box-shadow-md-close",
+        domProps: { innerHTML: _vm._s(_vm.deleteIcon) },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            return _vm.toggleConfirmOverlay($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.confirmActive
+          ? _c(
+              "div",
+              {
+                staticClass: "wptb-prebuilt-delete-module-confirmation-overlay"
+              },
+              [
+                _c("div", [
+                  _vm._v("\n\t\t\t\t" + _vm._s(_vm.message) + "\n\t\t\t")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-prebuilt-delete-button-container" },
+                  [
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "positive" },
+                      domProps: { innerHTML: _vm._s(_vm.yesIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.confirm($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "wptb-prebuilt-card-circle-icon-button",
+                      attrs: { "data-wptb-button-type": "negative" },
+                      domProps: { innerHTML: _vm._s(_vm.noIcon) },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.toggleConfirmOverlay($event)
+                        }
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
+          : _vm._e()
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PrebuiltCard.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl"));
+
+var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
+
+var _PrebuiltCardDeleteModule = _interopRequireDefault(require("./PrebuiltCardDeleteModule"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var _default = {
+  props: {
+    name: {
+      required: true
+    },
+    id: {
+      type: String,
+      required: true
+    },
+    table: {
+      type: String,
+      default: ''
+    },
+    isActive: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      default: false
+    },
+    liveDisplayEnabled: {
+      type: Boolean,
+      default: true
+    },
+    searchString: {
+      type: String,
+      default: ''
+    },
+    fav: {
+      type: Boolean,
+      default: false
+    },
+    favIcon: {
+      type: String,
+      default: ''
+    },
+    deleteIcon: {
+      type: String,
+      default: ''
+    },
+    featureCard: {
+      type: Boolean,
+      default: false
+    },
+    tableControlsVisible: {
+      type: Boolean,
+      default: true
+    },
+    generateString: {
+      type: String,
+      default: null
+    }
+  },
+  components: {
+    PrebuiltCardControl: _PrebuiltCardControl.default,
+    PrebuiltLiveDisplay: _PrebuiltLiveDisplay.default,
+    PrebuiltCardDeleteModule: _PrebuiltCardDeleteModule.default
+  },
+  data: function data() {
+    return {
+      rows: 1,
+      columns: 1,
+      initial: {
+        rows: 1,
+        columns: 1
+      },
+      min: {
+        rows: 1,
+        cols: 1
+      },
+      max: {
+        rows: 30,
+        cols: 30
+      },
+      selectedCells: {
+        rowOperation: [],
+        colOperation: []
+      },
+      controlStep: {
+        row: 1,
+        col: 1
+      }
+    };
+  },
+  watch: {
+    selectedCells: {
+      handler: function handler() {
+        this.controlStep.row = Math.max(Math.max(this.selectedCells.colOperation.length > 0 ? this.initial.rows : 1, this.selectedCells.rowOperation.length / this.initial.columns), 1);
+        this.controlStep.col = Math.max(Math.max(this.selectedCells.rowOperation.length > 0 ? this.initial.columns : 1, this.selectedCells.colOperation.length / this.initial.rows), 1);
+
+        if (this.selectedCells.rowOperation.length === 0 && this.selectedCells.colOperation.length === 0) {
+          if (!this.featureCard) {
+            this.rows = this.initial.rows;
+            this.columns = this.initial.columns;
+          }
+        }
+      },
+      deep: true
+    }
+  },
+  computed: {
+    transformedName: function transformedName() {
+      if (this.searchString !== '') {
+        var regexp = new RegExp("(".concat(this.searchString, ")"), 'ig');
+        var transform = this.name.replace(regexp, '<span class="wptb-prebuilt-card-search-indicator">$&</span>');
+        return "<span class=\"wptb-prebuilt-card-search-indicator-main\">".concat(transform, "</span>");
+      }
+
+      return this.name;
+    },
+    editEnabled: function editEnabled() {
+      if (this.isDevBuild()) {
+        return !this.featureCard && (this.id.startsWith(this.appData.teamTablePrefix) || !this.id.startsWith(this.appData.teamTablePrefix));
+      }
+
+      return !this.featureCard && !this.id.startsWith(this.appData.teamTablePrefix);
+    },
+    previewTableElement: function previewTableElement() {
+      var table = this.$refs.tablePreview.querySelector('table'); // if no table is found, send a table with one row and and one cell in it as a default
+
+      if (!table) {
+        var range = document.createRange();
+        range.setStart(document.body, 0);
+
+        var _range$createContextu = _slicedToArray(range.createContextualFragment('<table><tr><td></td></tr></table>').childNodes, 1);
+
+        table = _range$createContextu[0];
+      }
+
+      return table;
+    },
+    controlDisabled: function controlDisabled() {
+      if (this.featureCard) {
+        return false;
+      }
+
+      return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.initial.rows = _this.rows;
+      var tablePreview = _this.$refs.tablePreview; // eslint-disable-next-line no-unused-vars
+
+      var _tablePreview$getBoun = tablePreview.getBoundingClientRect(),
+          wrapperWidth = _tablePreview$getBoun.width,
+          wrapperHeight = _tablePreview$getBoun.height;
+
+      var prebuilt = tablePreview.querySelector('table');
+
+      if (prebuilt) {
+        var maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;
+
+        if (maxWidth) {
+          prebuilt.style.width = "".concat(maxWidth, "px");
+        } else {
+          prebuilt.style.width = "".concat(700, "px");
+        }
+
+        var padding = 40;
+
+        var _prebuilt$getBounding = prebuilt.getBoundingClientRect(),
+            prebuiltWidth = _prebuilt$getBounding.width,
+            prebuiltHeight = _prebuilt$getBounding.height;
+
+        var widthScale = wrapperWidth / (prebuiltWidth + padding);
+        var heightScale = 125 / (prebuiltHeight + padding);
+        prebuilt.style.transform = "scale(".concat(Math.min(widthScale, heightScale), ")"); // @deprecated
+        // seems like google fixed this issue with latest version
+        // fix for chrome browsers where table previews are distorted for tables with separated columns and row
+        // if (window.navigator.vendor.includes('Google')) {
+        // 	const borderCollapseType = prebuilt.style.borderCollapse;
+        // 	if (borderCollapseType === 'separate') {
+        // 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+        // 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+        //
+        // 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+        // 	}
+        // }
+
+        if (!_this.featureCard) {
+          var tableRows = Array.from(prebuilt.querySelectorAll('tr'));
+          var totalRows = tableRows.length;
+          _this.rows = totalRows;
+          _this.min.rows = totalRows;
+          var minCols = 1; // eslint-disable-next-line array-callback-return
+
+          tableRows.map(function (t) {
+            var totalCells = t.querySelectorAll('td').length;
+
+            if (minCols < totalCells) {
+              minCols = totalCells;
+            }
+          });
+          _this.min.cols = minCols;
+          _this.columns = minCols;
+          _this.initial.columns = _this.columns;
+          _this.initial.rows = _this.rows;
+        }
+      }
+    });
+  },
+  methods: {
+    setCardActive: function setCardActive() {
+      if (!this.isActive) {
+        this.$emit('cardActive', this.id);
+      }
+    },
+    cardGenerate: function cardGenerate() {
+      if (!this.disabled) {
+        var operationCells = this.selectedCells.colOperation.length > 0 ? this.selectedCells.colOperation : this.selectedCells.rowOperation;
+        this.$emit('cardGenerate', this.id, this.columns, this.rows, operationCells);
+      }
+    },
+    cardEdit: function cardEdit() {
+      if (!this.disabled) {
+        this.$emit('cardEdit', this.id);
+      }
+    },
+    favAction: function favAction() {
+      this.$emit('favAction', this.id);
+    },
+    deleteAction: function deleteAction() {
+      this.$emit('deleteAction', this.id);
+    }
+  }
+};
+exports.default = _default;
+        var $a4e562 = exports.default || module.exports;
+      
+      if (typeof $a4e562 === 'function') {
+        $a4e562 = $a4e562.options;
+      }
+    
+        /* template */
+        Object.assign($a4e562, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-prebuilt-card",
+      class: { "wptb-prebuilt-card-active": _vm.isActive },
+      on: { click: _vm.setCardActive }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-prebuilt-card-preview" },
+        [
+          _c("div", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.liveDisplayEnabled || !_vm.isActive,
+                expression: "!liveDisplayEnabled || !isActive"
+              }
+            ],
+            ref: "tablePreview",
+            staticClass: "wptb-prebuilt-table-wrapper wptb-unselectable",
+            domProps: { innerHTML: _vm._s(_vm.table) }
+          }),
+          _vm._v(" "),
+          _vm.isActive
+            ? _c(
+                "div",
+                { staticClass: "wptb-prebuilt-card-controls" },
+                [
+                  _c("prebuilt-card-control", {
+                    attrs: {
+                      disabled: _vm.controlDisabled,
+                      orientation: "row",
+                      min: _vm.min.cols,
+                      max: _vm.max.cols,
+                      step: _vm.controlStep.col,
+                      visible: _vm.tableControlsVisible
+                    },
+                    model: {
+                      value: _vm.columns,
+                      callback: function($$v) {
+                        _vm.columns = $$v
+                      },
+                      expression: "columns"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("prebuilt-card-control", {
+                    attrs: {
+                      disabled: _vm.controlDisabled,
+                      orientation: "col",
+                      min: _vm.min.rows,
+                      max: _vm.max.rows,
+                      step: _vm.controlStep.row,
+                      visible: _vm.tableControlsVisible
+                    },
+                    model: {
+                      value: _vm.rows,
+                      callback: function($$v) {
+                        _vm.rows = $$v
+                      },
+                      expression: "rows"
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive && _vm.liveDisplayEnabled
+            ? _c("prebuilt-live-display", {
+                attrs: {
+                  rows: _vm.rows,
+                  cols: _vm.columns,
+                  table: _vm.previewTableElement,
+                  "selected-cells": _vm.selectedCells,
+                  "enable-new-cell-indicator": !_vm.featureCard
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.isActive && !_vm.featureCard
+            ? _c("div", {
+                staticClass:
+                  "wptb-prebuilt-card-icon wptb-prebuilt-card-fav-icon wptb-plugin-filter-box-shadow-md-close",
+                class: { "is-fav": _vm.fav },
+                domProps: { innerHTML: _vm._s(_vm.favIcon) },
+                on: {
+                  "!click": function($event) {
+                    $event.preventDefault()
+                    $event.stopPropagation()
+                    return _vm.favAction($event)
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isActive && !_vm.featureCard
+            ? _c("prebuilt-card-delete-module", {
+                attrs: {
+                  "delete-icon": _vm.deleteIcon,
+                  message: _vm.strings.deleteConfirmation,
+                  "yes-icon": _vm.appData.icons.checkIcon,
+                  "no-icon": _vm.appData.icons.crossIcon
+                },
+                on: { confirm: _vm.deleteAction }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-prebuilt-card-footer" }, [
+        !_vm.isActive
+          ? _c("div", {
+              staticClass: "wptb-prebuilt-card-footer-element",
+              domProps: { innerHTML: _vm._s(_vm.transformedName) }
+            })
+          : _c(
+              "div",
+              {
+                staticClass:
+                  "wptb-prebuilt-card-footer-element wptb-prebuilt-card-footer-button-holder",
+                class: {
+                  "wptb-prebuilt-card-footer-button-holder-single": !_vm.editEnabled
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "wptb-prebuilt-footer-button wptb-prebuilt-footer-generate wptb-unselectable",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.cardGenerate($event)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n\t\t\t\t" +
+                        _vm._s(
+                          _vm._f("cap")(
+                            _vm.generateString
+                              ? _vm.generateString
+                              : _vm.strings.generate
+                          )
+                        ) +
+                        "\n\t\t\t"
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm.editEnabled
+                  ? _c(
+                      "div",
+                      {
+                        staticClass:
+                          "wptb-prebuilt-footer-button wptb-prebuilt-footer-edit wptb-unselectable",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.cardEdit($event)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t" +
+                            _vm._s(_vm._f("cap")(_vm.strings.edit)) +
+                            "\n\t\t\t"
+                        )
+                      ]
+                    )
+                  : _vm._e()
+              ]
+            )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"../../../../../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+!(function(global) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
+  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  runtime.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      prototype[method] = function(arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  runtime.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  runtime.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  runtime.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return Promise.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return Promise.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration. If the Promise is rejected, however, the
+          // result for this iteration will be rejected with the same
+          // reason. Note that rejections of yielded Promises are not
+          // thrown back into the generator function, as is the case
+          // when an awaited Promise is rejected. This difference in
+          // behavior between yield and await is important, because it
+          // allows the consumer to decide what to do with the yielded
+          // rejection (swallow it and continue, manually .throw it back
+          // into the generator, abandon iteration, whatever). With
+          // await, by contrast, there is no opportunity to examine the
+          // rejection reason outside the generator function, so the
+          // only option is to throw it from the await expression, and
+          // let the generator function handle the exception.
+          result.value = unwrapped;
+          resolve(result);
+        }, reject);
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new Promise(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    return this;
+  };
+  runtime.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList)
+    );
+
+    return runtime.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        if (delegate.iterator.return) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  Gp[iteratorSymbol] = function() {
+    return this;
+  };
+
+  Gp.toString = function() {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  runtime.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  runtime.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+})(
+  // In sloppy mode, unbound `this` refers to the global object, fallback to
+  // Function constructor if we're in global strict mode. That is sadly a form
+  // of indirect eval which violates Content Security Policy.
+  (function() { return this })() || Function("return this")()
+);
+
+},{}],"containers/GenerateMain.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
+
+require("regenerator-runtime/runtime");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    PrebuiltCard: _PrebuiltCard.default
+  },
+  props: {
+    version: {
+      type: String,
+      default: 'normal'
+    },
+    upsell: {
+      type: String
+    },
+    prebuiltTables: {
+      type: Object || Array,
+      default: function _default() {
+        return {};
+      }
+    },
+    security: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  data: function data() {
+    return {
+      searchString: '',
+      fixedTables: {
+        blank: {
+          title: 'Blank',
+          content: '<p class="wptb-prebuilt-blank">+</p>',
+          featureCard: true
+        },
+        dataTable: {
+          title: 'Data Table',
+          content: '<div class="wptb-prebuilt-blank dashicons dashicons-database wptb-plugin-height-full wptb-plugin-width-full wptb-flex wptb-flex-justify-center wptb-flex-align-center"><div>',
+          featureCard: true,
+          tableControlVisible: false,
+          generateString: null
+        }
+      },
+      activeCard: '',
+      generating: false
+    };
+  },
+  mounted: function mounted() {
+    window.addEventListener('keyup', this.focusToSearch); // add correct translation of blank at mounted
+
+    this.fixedTables.blank.title = this.strings.blank; // add correct translation of data table generated string at mounted
+
+    this.fixedTables.dataTable.generateString = this.strings.start;
+    this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
+  },
+  computed: {
+    isPro: function isPro() {
+      return this.version === 'pro';
+    }
+  },
+  methods: {
+    deselect: function deselect() {
+      this.activeCard = '';
+    },
+    favAction: function favAction(cardId) {
+      var _this = this;
+
+      var _this$security = this.security,
+          favAction = _this$security.favAction,
+          favNonce = _this$security.favNonce,
+          ajaxUrl = _this$security.ajaxUrl;
+      var formData = new FormData();
+      formData.append('action', favAction);
+      formData.append('nonce', favNonce);
+      formData.append('id', cardId);
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error(r.status);
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        } else {
+          _this.fixedTables[cardId].fav = resp.message;
+        }
+      }).catch(function (e) {
+        console.error('an error occurred with fav operation request: ', e);
+      });
+    },
+    cardFavIcon: function cardFavIcon() {
+      return this.appData.icons.favIcon;
+    },
+    cardDeleteIcon: function cardDeleteIcon(cardId) {
+      if (this.isDevBuild()) {
+        return this.appData.icons.deleteIcon;
+      }
+
+      return cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
+    },
+    filteredTables: function filteredTables() {
+      var _this2 = this;
+
+      return Object.keys(this.fixedTables).reduce(function (carry, id) {
+        if (_this2.fixedTables[id].title.toLowerCase().includes(_this2.searchString)) {
+          // eslint-disable-next-line no-param-reassign
+          carry[id] = _this2.fixedTables[id];
+        }
+
+        return carry;
+      }, {});
+    },
+    sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
+      var _this3 = this;
+
+      var ids, featureIds, i, currentTable;
+      return regeneratorRuntime.wrap(function sortedTables$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              ids = Object.keys(this.filteredTables());
+              featureIds = Object.keys(this.fixedTables).filter(function (t) {
+                if (Object.prototype.hasOwnProperty.call(_this3.fixedTables, t)) {
+                  return _this3.fixedTables[t].featureCard;
+                }
+              });
+              ids.sort(function (a, b) {
+                if (a === 'blank') {
+                  return -1;
+                }
+
+                if (b === 'blank') {
+                  return 1;
+                }
+
+                if (featureIds.includes(a)) {
+                  return -1;
+                }
+
+                if (featureIds.includes(b)) {
+                  return 1;
+                }
+
+                if (a.startsWith('wptb_team')) {
+                  return -1;
+                }
+
+                if (b.startsWith('wptb_team')) {
+                  return 1;
+                }
+
+                var aTitle = _this3.fixedTables[a].title;
+                var bTitle = _this3.fixedTables[b].title;
+                return aTitle - bTitle;
+              });
+              i = 0;
+
+            case 4:
+              if (!(i < ids.length)) {
+                _context.next = 12;
+                break;
+              }
+
+              currentTable = this.fixedTables[ids[i]];
+              currentTable.id = ids[i];
+              _context.next = 9;
+              return currentTable;
+
+            case 9:
+              i += 1;
+              _context.next = 4;
+              break;
+
+            case 12:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, sortedTables, this);
+    }),
+    focusToSearch: function focusToSearch(e) {
+      var vm = this;
+
+      if (e.key !== undefined && e.key === '/') {
+        vm.$refs.search.focus();
+      } else if (e.keyCode !== undefined && e.keyCode === 191) {
+        vm.$refs.search.focus();
+      }
+    },
+    isCardActive: function isCardActive(id) {
+      return this.activeCard === id;
+    },
+    cardActive: function cardActive(cardId) {
+      this.activeCard = cardId;
+    },
+    cardEdit: function cardEdit(cardId) {
+      this.cardGenerate(cardId, 0, 0, [], true);
+      var currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.append('table', encodeURIComponent(cardId));
+      window.history.pushState(null, null, currentUrl.toString());
+    },
+    cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
+      var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+      this.generating = true;
+
+      if (cardId === 'blank') {
+        WPTB_Table(cols, rows);
+        var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+        wptbTableStateSaveManager.tableStateSet();
+      } else if (cardId === 'dataTable') {
+        WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
+      } else {
+        var tableWrapper = document.querySelector('.wptb-table-setup');
+        tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
+        var table = tableWrapper.querySelector('table');
+        var maxWidth = table.dataset.wptbTableContainerMaxWidth; // add defined max width to table wrapper element
+
+        if (maxWidth) {
+          tableWrapper.style.maxWidth = "".concat(maxWidth, "px");
+        }
+
+        if (!edit) {
+          // unmark inserted template as prebuilt table
+          // only unmark it if edit mode is not enabled
+          delete table.dataset.wptbPrebuiltTable;
+          var tableRows = Array.from(table.querySelectorAll('tr')); // maximum column length
+
+          var maximumCells = tableRows.reduce(function (carry, item) {
+            var cellLength = item.querySelectorAll('td').length;
+            return Math.max(cellLength, carry);
+          }, 0);
+          var extraRows = rows - tableRows.length;
+          var extraCols = cols - maximumCells; // parse table into rows and cols
+
+          var parsedTable = tableRows.reduce(function (carry, item, r) {
+            if (!Array.isArray(carry[r])) {
+              // eslint-disable-next-line no-param-reassign
+              carry[r] = [];
+            } // eslint-disable-next-line array-callback-return
+
+
+            Array.from(item.querySelectorAll('td')).map(function (c) {
+              carry[r].push(c);
+            });
+            return carry;
+          }, []); // sort selected cells by row then by columns
+
+          selectedCells.sort();
+          var rowNormalizeConstant = selectedCells.length > 0 ? selectedCells[0].split('-')[0] : 0; // cells that will be used at clone operations
+
+          var cellsForClone = selectedCells.reduce(function (carry, item) {
+            var _item$split = item.split('-'),
+                _item$split2 = _slicedToArray(_item$split, 2),
+                row = _item$split2[0],
+                column = _item$split2[1];
+
+            var normalizedRowIndex = row - rowNormalizeConstant;
+
+            if (!Array.isArray(carry[normalizedRowIndex])) {
+              // eslint-disable-next-line no-param-reassign
+              carry[normalizedRowIndex] = [];
+            }
+
+            carry[normalizedRowIndex].push(parsedTable[row][column]);
+            return carry;
+          }, []); // modulo constants for cellsForClone
+
+          var rowModulo = cellsForClone.length;
+          var cellModulo = cellsForClone.reduce(function (carry, item) {
+            return Math.max(carry, item.length);
+          }, 0);
+          /**
+           * Increment id of plugin element.
+           *
+           * @param {HTMLElement} divEl div element
+           */
+
+          var incrementIds = function incrementIds(divEl) {
+            var className = null; // find the divs related to elements with this unique pattern
+
+            var classRegExp = new RegExp(/wptb-element-(.+)-([0-9]+)/, 'g');
+            divEl.classList.forEach(function (c) {
+              if (c.match(classRegExp)) {
+                className = c;
+              }
+            }); // main wrapper div found for an element
+
+            if (className) {
+              divEl.classList.remove(className); // find out the kind of the element
+
+              var _classRegExp$exec = classRegExp.exec(className),
+                  _classRegExp$exec2 = _slicedToArray(_classRegExp$exec, 2),
+                  kind = _classRegExp$exec2[1];
+
+              var regExp = new RegExp("^wptb-element-".concat(kind, "-([0-9]+)$"), 'g'); // find out the same kind of element with the biggest number id
+
+              var highestId = Array.from(table.querySelectorAll('div')).reduce(function (carry, item) {
+                item.classList.forEach(function (c) {
+                  var match = regExp.exec(c);
+
+                  if (match) {
+                    var numberId = Number.parseInt(match[1], 10); // eslint-disable-next-line no-param-reassign
+
+                    carry = carry > numberId ? carry : numberId;
+                  }
+                });
+                return carry;
+              }, 0); // increment unique class id of the element
+
+              divEl.classList.add("wptb-element-".concat(kind, "-").concat(highestId + 1));
+            }
+          }; // add extra cols to table
+          // eslint-disable-next-line array-callback-return
+
+
+          tableRows.map(function (r, ri) {
+            // eslint-disable-next-line array-callback-return
+            Array.from(Array(extraCols)).map(function (c, ci) {
+              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+              r.appendChild(clonedCell);
+              Array.from(clonedCell.querySelectorAll('div')).map(incrementIds);
+            });
+          }); // add extra rows to table
+          // eslint-disable-next-line array-callback-return
+
+          Array.from(Array(extraRows)).map(function (r, ri) {
+            var currentRow = document.createElement('tr');
+            table.appendChild(currentRow); // eslint-disable-next-line array-callback-return
+
+            Array.from(Array(cols)).map(function (c, ci) {
+              var clonedCell = cellsForClone[ri % rowModulo][ci % cellModulo].cloneNode(true);
+              currentRow.appendChild(clonedCell);
+            });
+            Array.from(currentRow.querySelectorAll('div')).map(incrementIds);
+          });
+        } // edit is enabled
+
+
+        if (edit) {
+          // fill in the name of the selected prebuilt table on edit mode
+          document.querySelector('#wptb-setup-name').value = this.fixedTables[cardId].title; // force enable prebuilt functionality on edit mode
+
+          table.dataset.wptbPrebuiltTable = 1;
+        }
+
+        WPTB_Table();
+        WPTB_Settings();
+
+        var _wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
+
+        _wptbTableStateSaveManager.tableStateSet();
+
+        document.counter = new ElementCounters();
+        document.select = new MultipleSelect(); // WPTB_Initializer();
+
+        WPTB_Settings();
+      }
+    },
+    deleteAction: function deleteAction(cardId) {
+      var _this4 = this;
+
+      var _this$security2 = this.security,
+          ajaxUrl = _this$security2.ajaxUrl,
+          deleteAction = _this$security2.deleteAction,
+          deleteNonce = _this$security2.deleteNonce,
+          devModeNonce = _this$security2.devModeNonce;
+      var form = new FormData();
+      form.append('action', deleteAction);
+      form.append('nonce', deleteNonce);
+      form.append('id', cardId);
+
+      if (cardId.startsWith(this.appData.teamTablePrefix)) {
+        form.append('deleteCSV', true);
+        form.append('devModeNonce', devModeNonce);
+      }
+
+      fetch(ajaxUrl, {
+        method: 'POST',
+        body: form
+      }).then(function (r) {
+        if (r.ok) {
+          return r.json();
+        }
+
+        throw new Error('an error occurred while deleting prebuilt table, try again later');
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        if (resp.message === true) {
+          _this4.$delete(_this4.fixedTables, cardId);
+        } else {
+          throw new Error('an error occurred while deleting prebuilt table, try again later');
+        }
+      }).catch(function (e) {
+        console.error(e.message);
+      });
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    window.removeEventListener('keyup', this.focusToSearch);
+  }
+};
+exports.default = _default;
+        var $94e6ae = exports.default || module.exports;
+      
+      if (typeof $94e6ae === 'function') {
+        $94e6ae = $94e6ae.options;
+      }
+    
+        /* template */
+        Object.assign($94e6ae, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-generate-wrapper" }, [
+    _c("div", { staticClass: "wptb-generate-menu" }, [
+      _c("div", { staticClass: "wptb-generate-menu-header" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model.trim",
+              value: _vm.searchString,
+              expression: "searchString",
+              modifiers: { trim: true }
+            }
+          ],
+          ref: "search",
+          staticClass: "wptb-generate-search",
+          attrs: {
+            type: "text",
+            placeholder: _vm.strings.searchPlaceholder,
+            disabled: !_vm.isPro
+          },
+          domProps: { value: _vm.searchString },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.searchString = $event.target.value.trim()
+            },
+            blur: function($event) {
+              return _vm.$forceUpdate()
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-generate-menu-listing" },
+        _vm._l(_vm.sortedTables(), function(v) {
+          return _c("prebuilt-card", {
+            key: v.id,
+            attrs: {
+              id: v.id,
+              name: v.title,
+              fav: v.fav,
+              "is-active": _vm.isCardActive(v.id),
+              disabled: _vm.generating,
+              table: v.content,
+              "search-string": _vm.searchString,
+              "fav-icon": _vm.cardFavIcon(v.id),
+              "delete-icon": _vm.cardDeleteIcon(v.id),
+              "feature-card": v.featureCard,
+              "table-controls-visible": v.tableControlVisible,
+              "generate-string": v.generateString
+            },
+            on: {
+              cardActive: _vm.cardActive,
+              cardGenerate: _vm.cardGenerate,
+              cardEdit: _vm.cardEdit,
+              favAction: _vm.favAction,
+              deleteAction: _vm.deleteAction
+            }
+          })
+        }),
+        1
+      )
+    ]),
+    _vm._v(" "),
+    !_vm.isPro
+      ? _c("div", { domProps: { innerHTML: _vm._s(_vm.upsell) } })
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"mountPoints/WPTB_GenerateControl.js":[function(require,module,exports) {
+var global = arguments[3];
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _filters = _interopRequireDefault(require("../plugins/filters"));
+
+var _genericStore = _interopRequireDefault(require("../plugins/genericStore"));
+
+var _strings = _interopRequireDefault(require("../plugins/strings"));
+
+var _GenerateMain = _interopRequireDefault(require("../containers/GenerateMain"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  name: 'Generate',
+  handler: function dataTableJS() {
+    var _global$wptbGenerateM;
+
+    var dataTableEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    _vue.default.config.productionTip = false; // setup filters
+
+    _vue.default.use(_filters.default);
+
+    var proData = (_global$wptbGenerateM = global.wptbGenerateMenuProData) !== null && _global$wptbGenerateM !== void 0 ? _global$wptbGenerateM : {};
+
+    var data = _objectSpread({
+      upsell: ''
+    }, wptbGenerateMenuData, {}, proData); // setup app store
+
+
+    var store = {
+      teamTablePrefix: data.teamBuildTablePrefix,
+      icons: data.icons,
+      env: "development",
+      dataTableCardEnabled: dataTableEnabled
+    }; // store methods
+
+    var storeMethods = {
+      isDevBuild: function isDevBuild() {
+        return "development" !== 'production';
+      }
+    };
+
+    _vue.default.use(_genericStore.default, {
+      data: {
+        key: 'appData',
+        data: store
+      },
+      methods: storeMethods
+    }); // setup translation strings
+
+
+    _vue.default.use(_strings.default, data);
+
+    var vm = new _vue.default({
+      components: {
+        GenerateMain: _GenerateMain.default
+      },
+      template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
+      data: data
+    }).$mount("#".concat(data.mountId));
+    var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
+
+    tableContainer.style.opacity = 0;
+    tableContainer.style.height = '0px'; // destroy generate menu and activate a section from event detail
+
+    document.addEventListener('wptb:generate:destroy', function (_ref) {
+      var detail = _ref.detail;
+      var generateWrapper = document.querySelector('.wptb-generate-wrapper');
+
+      if (generateWrapper) {
+        generateWrapper.addEventListener('animationend', function (e) {
+          if (e.animationName === 'wptb-basic-disappear') {
+            vm.$destroy();
+            generateWrapper.remove();
+            WPTB_Helper.activateSection(detail);
+          }
+        });
+        generateWrapper.classList.add('wptb-plugin-basic-disappear');
+      }
+    });
+    document.addEventListener('wptb:table:generated', function () {
+      var generateWrapper = document.querySelector('.wptb-generate-wrapper');
+
+      if (generateWrapper) {
+        generateWrapper.addEventListener('animationend', function (e) {
+          if (e.animationName === 'wptb-basic-disappear') {
+            vm.$destroy();
+            generateWrapper.remove(); // show table container
+
+            tableContainer.style.opacity = 1;
+            tableContainer.style.height = 'unset';
+            WPTB_Helper.wptbDocumentEventGenerate('wptb:table:visible', document);
+          }
+        });
+        generateWrapper.classList.add('wptb-plugin-basic-disappear');
+      }
+    });
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../plugins/filters":"plugins/filters.js","../plugins/genericStore":"plugins/genericStore.js","../plugins/strings":"plugins/strings.js","../containers/GenerateMain":"containers/GenerateMain.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -30317,6 +33202,8 @@ var _WPTB_LocalDevFileControl = _interopRequireDefault(require("./mountPoints/WP
 
 var _WPTB_DataTable = _interopRequireDefault(require("./mountPoints/WPTB_DataTable"));
 
+var _WPTB_GenerateControl = _interopRequireDefault(require("./mountPoints/WPTB_GenerateControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -30335,7 +33222,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_DataTable.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_DataTable.default, _WPTB_GenerateControl.default];
 /**
  * Register control element.
  *
@@ -30347,5 +33234,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_DataTable":"mountPoints/WPTB_DataTable.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_DataTable":"mountPoints/WPTB_DataTable.js","./mountPoints/WPTB_GenerateControl":"mountPoints/WPTB_GenerateControl.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

@@ -1,52 +1,55 @@
 <template>
 	<div class="wptb-plugin-width-full wptb-plugin-height-full">
 		<div class="wptb-data-manager-table" :data-select="isDataSelectionActive">
-			<table>
-				<thead>
-					<tr class="wptb-data-manager-table-column-name-info">
-						<th :colspan="infoRowSpan">{{ translationM('columnNames') }}</th>
-					</tr>
-					<tr v-for="headerRow in table.header" :key="headerRow.rowId" :id="headerRow.rowId">
-						<data-manager-cell
-							:key="cellKey(headerRow.rowId, headerCell.colId)"
-							v-for="headerCell in headerRow.values"
-							:place-holder="translationM('columnName')"
-							:value="headerCell.value"
-							:row-id="headerRow.rowId"
-							:col-id="headerCell.colId"
-						></data-manager-cell>
-					</tr>
-					<tr class="wptb-data-manager-table-column-name-info">
-						<th :colspan="infoRowSpan">{{ translationM('values') }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="valueRows in table.values" :key="valueRows.rowId" :id="valueRows.rowId">
-						<data-manager-cell
-							v-for="cell in valueRows.values"
-							:key="cellKey(valueRows.rowId, cell.colId)"
-							:place-holder="translationM('value')"
-							:value="cell.value"
-							:row-id="valueRows.rowId"
-							:col-id="cell.colId"
-							:selection-enabled="true"
-							@cellClick="handleCellClick"
-							@cellHover="handleCellHover"
-						></data-manager-cell>
-					</tr>
-				</tbody>
-			</table>
-			<data-manager-select></data-manager-select>
-			<div class="wptb-repeating-linear-gradient"></div>
+			<div class="wptb-data-manager-table-wrapper">
+				<table>
+					<thead>
+						<tr class="wptb-data-manager-table-column-name-info">
+							<th :colspan="infoRowSpan">{{ translationM('columnNames') }}</th>
+						</tr>
+						<tr v-for="headerRow in table.header" :key="headerRow.rowId" :id="headerRow.rowId">
+							<data-manager-cell
+								:key="cellKey(headerRow.rowId, headerCell.colId)"
+								v-for="headerCell in headerRow.values"
+								:place-holder="translationM('columnName')"
+								:value="headerCell.value"
+								:row-id="headerRow.rowId"
+								:col-id="headerCell.colId"
+							></data-manager-cell>
+						</tr>
+						<tr class="wptb-data-manager-table-column-name-info wptb-data-manager-info-values">
+							<th :colspan="infoRowSpan">{{ translationM('values') }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="valueRows in table.values" :key="valueRows.rowId" :id="valueRows.rowId">
+							<data-manager-cell
+								v-for="cell in valueRows.values"
+								:key="cellKey(valueRows.rowId, cell.colId)"
+								:place-holder="translationM('value')"
+								:value="cell.value"
+								:row-id="valueRows.rowId"
+								:col-id="cell.colId"
+								:selection-enabled="true"
+								@cellClick="handleCellClick"
+								@cellHover="handleCellHover"
+							></data-manager-cell>
+						</tr>
+					</tbody>
+				</table>
+				<data-manager-select></data-manager-select>
+				<data-manager-table-add-controls></data-manager-table-add-controls>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import DataManagerCell from './DataManagerCell';
 import DataManagerSelect from './DataManagerSelect';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
+import DataManagerTableAddControls from './DataManagerTableAddControls';
 
 export default {
 	props: {
@@ -55,7 +58,7 @@ export default {
 			default: true,
 		},
 	},
-	components: { DataManagerCell, DataManagerSelect },
+	components: { DataManagerTableAddControls, DataManagerCell, DataManagerSelect },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {

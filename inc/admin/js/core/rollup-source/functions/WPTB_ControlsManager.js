@@ -104,11 +104,11 @@ function ControlsManager() {
 	 * @param {string} key control type key that was registered with addControlScript
 	 * @param {any} args  arguments to call the script with
 	 */
-	function callControlScript(key, args) {
+	function callControlScript(key, ...args) {
 		if (!controlScripts[key]) {
 			throw new Error(`Called control element not found: [${key}]`);
 		}
-		controlScripts[key](args);
+		controlScripts[key](...args);
 	}
 
 	/**

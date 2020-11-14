@@ -19,6 +19,8 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery, componen
 
 	this.dataTableElement = null;
 
+	const leftPanelSectionButton = document.querySelector('div[data-wptb-section-button="data_table_menu"]');
+
 	/**
 	 * Add necessary HTML elements to builder.
 	 */
@@ -46,6 +48,9 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery, componen
 		if (!this.loaded) {
 			this.addMountPointToDom();
 
+			// show data table left panel section button
+			leftPanelSectionButton.style.display = 'unset';
+
 			// calculate header height and add it to component as margin
 			const header = document.querySelector('.wptb-builder-header');
 			const headerHeight = header.getBoundingClientRect().height;
@@ -64,8 +69,9 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery, componen
 	// initialize and start up manager.
 	this.init = () => {
 		document.addEventListener('wptbSectionChanged', (e) => {
-			const tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
-			if (e.detail === this.sectionName && tablePreview) {
+			// @deprecated
+			// const tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
+			if (e.detail === this.sectionName) {
 				this.load();
 			}
 		});

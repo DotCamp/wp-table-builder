@@ -6103,4 +6103,38 @@ thead .wptb-data-manager-table-data-value {
     cursor: pointer;
 }
 
+[data-wptb-section-button='data_table_menu'] {
+    display: none
+}
+
+.wptb-data-manager-table-wrapper {
+    position: relative;
+    margin: 0 30px;
+}
+
+.wptb-data-manager-default-add {
+    position: absolute;
+    background-color: var(--wptb-plugin-green-500);
+    color: white;
+    font-weight: bold;
+    font-size: 120% !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-data-manager-default-add[data-type='row'] {
+    width: 100%;
+    height: 30px;
+    left: 0;
+    bottom: -30px;
+}
+
+.wptb-data-manager-default-add[data-type='col'] {
+    width: 30px;
+    right: -30px;
+    bottom: 0;
+}
+
 /*endregion*/

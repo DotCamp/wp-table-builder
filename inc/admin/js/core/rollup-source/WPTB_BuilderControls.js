@@ -17,6 +17,7 @@ import WPTB_TagControl from './mountPoints/WPTB_TagControl';
 import WPTB_DifferentBorderControl from './mountPoints/WPTB_DifferentBorderControl';
 import WPTB_LocalDevFileControl from './mountPoints/WPTB_LocalDevFileControl';
 import WPTB_DataTable from './mountPoints/WPTB_DataTable';
+import WPTB_GenerateControl from './mountPoints/WPTB_GenerateControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -42,6 +43,7 @@ const controls = [
 	WPTB_DifferentBorderControl,
 	WPTB_LocalDevFileControl,
 	WPTB_DataTable,
+	WPTB_GenerateControl,
 ];
 
 /**
