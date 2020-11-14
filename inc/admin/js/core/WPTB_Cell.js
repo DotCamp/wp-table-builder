@@ -54,7 +54,6 @@ var WPTB_Cell = function ( callback, DOMElement ) {
         // Add Auto text field in each block
         let element = WPTB_Helper.newElementProxy( 'text' )
         element = element.getDOMElement();
-        console.log("this will call");
         // console.log(element);
 
         DOMElement.appendChild( element )

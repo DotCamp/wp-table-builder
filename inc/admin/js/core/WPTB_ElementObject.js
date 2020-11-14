@@ -10,9 +10,9 @@ var WPTB_ElementObject = function ( data ) {
         let template = wp.template( wpTemplateId );
         data.node = DOMElement;
         let itemHtml = template( data );
-        let itemHtml = '<div><p data-placeholder="Add Content"><br></p></div>';
+        let itemHtml = '<div><p data-placeholder="Add Content"></p></div>';
         itemHtml = itemHtml.replace(/\r|\n|\t/g, '').trim();
-        console.log(itemHtml);
+        // console.log(itemHtml);
 
         DOMElement.innerHTML = itemHtml;
     } else {

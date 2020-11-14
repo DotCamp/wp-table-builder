@@ -2057,6 +2057,10 @@ br[data-mce-bogus="1"] {
     color: rgb(30, 115, 190);
 }
 
+.wptb-text-container p:empty:not(:focus)::before {
+    content: attr(data-placeholder);
+}
+
 .wptb-droppable.wptb-cell ul,
 .wptb-droppable.wptb-cell ol {
     border: 1px solid transparent;
