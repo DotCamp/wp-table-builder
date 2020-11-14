@@ -11,8 +11,9 @@ var WPTB_ElementObject = function ( data ) {
         data.node = DOMElement;
         let itemHtml = template( data );
         let itemHtml = '<div><p data-placeholder="Add Content"><br></p></div>';
+        itemHtml = itemHtml.replace(/\r|\n|\t/g, '').trim();
+        console.log(itemHtml);
 
-        // itemHtml = itemHtml.replace(/\r|\n|\t/g, '').trim();
         DOMElement.innerHTML = itemHtml;
     } else {
         DOMElement = data.elemProt.cloneNode( true );
