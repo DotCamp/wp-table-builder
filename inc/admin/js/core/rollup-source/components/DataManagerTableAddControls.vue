@@ -1,11 +1,18 @@
 <template>
 	<fragment>
-		<div class="wptb-data-manager-default-add" data-type="row">+</div>
-		<div class="wptb-data-manager-default-add" :style="colControlStyle" data-type="col">+</div>
+		<div class="wptb-data-manager-default-add" data-type="row" @click.prevent.capture.stop="addRow">+</div>
+		<div
+			class="wptb-data-manager-default-add"
+			:style="colControlStyle"
+			data-type="col"
+			@click.prevent.capture.stop="addCol"
+		>
+			+
+		</div>
 	</fragment>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 	data() {
@@ -50,6 +57,13 @@ export default {
 				this.colStyleValues.top = `${top - tableTop + height}px`;
 			}
 		},
+		addRow() {
+			this.addRowToDataManager();
+		},
+		addCol() {
+			this.addColumnToDataManager();
+		},
+		...mapActions(['addRowToDataManager', 'addColumnToDataManager']),
 	},
 };
 </script>

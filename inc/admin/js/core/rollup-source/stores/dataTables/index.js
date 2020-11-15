@@ -4,6 +4,7 @@ import state from './state';
 import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
+import subscriptions from './plugin';
 import { objectPropertyFromString } from '../../functions';
 
 // setup vuex for current vue instance
@@ -19,6 +20,7 @@ const storeOptions = {
 	mutations,
 	actions,
 	getters,
+	plugins: [subscriptions],
 	strict: false,
 };
 

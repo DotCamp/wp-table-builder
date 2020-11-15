@@ -28366,7 +28366,7 @@ var _default = {
       };
     }
   }),
-  methods: {
+  methods: _objectSpread({
     calculateColControlValues: function calculateColControlValues() {
       var valuesInfoRow = document.querySelector('.wptb-data-manager-table-wrapper .wptb-data-manager-info-values');
       var dataTable = document.querySelector('.wptb-data-manager-table-wrapper table');
@@ -28381,8 +28381,14 @@ var _default = {
 
         this.colStyleValues.top = "".concat(top - tableTop + height, "px");
       }
+    },
+    addRow: function addRow() {
+      this.addRowToDataManager();
+    },
+    addCol: function addCol() {
+      this.addColumnToDataManager();
     }
-  }
+  }, (0, _vuex.mapActions)(['addRowToDataManager', 'addColumnToDataManager']))
 };
 exports.default = _default;
         var $87272c = exports.default || module.exports;
@@ -28402,7 +28408,14 @@ exports.default = _default;
       "div",
       {
         staticClass: "wptb-data-manager-default-add",
-        attrs: { "data-type": "row" }
+        attrs: { "data-type": "row" },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            $event.stopPropagation()
+            return _vm.addRow($event)
+          }
+        }
       },
       [_vm._v("+")]
     ),
@@ -28412,9 +28425,16 @@ exports.default = _default;
       {
         staticClass: "wptb-data-manager-default-add",
         style: _vm.colControlStyle,
-        attrs: { "data-type": "col" }
+        attrs: { "data-type": "col" },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            $event.stopPropagation()
+            return _vm.addCol($event)
+          }
+        }
       },
-      [_vm._v("+")]
+      [_vm._v("\n\t\t+\n\t")]
     )
   ])
 }
@@ -28430,7 +28450,94 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManager.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManagerDataRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _DataManagerCell = _interopRequireDefault(require("./DataManagerCell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    rowObject: {
+      type: Object,
+      required: true
+    }
+  },
+  components: {
+    DataManagerCell: _DataManagerCell.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['formCellId'])),
+  methods: {
+    handleCellClick: function handleCellClick(id) {
+      this.$emit('cellClick', id);
+    },
+    handleCellHover: function handleCellHover(id) {
+      this.$emit('cellHover', id);
+    }
+  }
+};
+exports.default = _default;
+        var $73e988 = exports.default || module.exports;
+      
+      if (typeof $73e988 === 'function') {
+        $73e988 = $73e988.options;
+      }
+    
+        /* template */
+        Object.assign($73e988, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    { attrs: { id: _vm.rowObject.rowId } },
+    _vm._l(_vm.rowObject.values, function(cell) {
+      return _c("data-manager-cell", {
+        key: _vm.formCellId(_vm.rowObject.rowId, cell.colId),
+        attrs: {
+          "place-holder": _vm.translationM("value"),
+          value: cell.value,
+          "row-id": _vm.rowObject.rowId,
+          "col-id": cell.colId,
+          "selection-enabled": true
+        },
+        on: { cellClick: _vm.handleCellClick, cellHover: _vm.handleCellHover }
+      })
+    }),
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerCell":"components/DataManagerCell.vue"}],"components/DataManager.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28448,6 +28555,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/with
 
 var _DataManagerTableAddControls = _interopRequireDefault(require("./DataManagerTableAddControls"));
 
+var _DataManagerDataRow = _interopRequireDefault(require("./DataManagerDataRow"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -28464,6 +28573,7 @@ var _default = {
     }
   },
   components: {
+    DataManagerDataRow: _DataManagerDataRow.default,
     DataManagerTableAddControls: _DataManagerTableAddControls.default,
     DataManagerCell: _DataManagerCell.default,
     DataManagerSelect: _DataManagerSelect.default
@@ -28480,7 +28590,7 @@ var _default = {
   },
   created: function created() {
     this.addDataManagerTempData({
-      data: [['', '', ''], ['', '', '']],
+      data: [['', '', ''], ['', '']],
       markAsImported: false
     });
   },
@@ -28510,7 +28620,7 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId']), {
     infoRowSpan: function infoRowSpan() {
       var _this$table$header$, _this$table$header$$v;
 
@@ -28519,14 +28629,10 @@ var _default = {
   }),
   methods: _objectSpread({
     handleCellClick: function handleCellClick(id) {
-      if (this.getSelectOperationData.active) {
-        this.setSelectId(id);
-      }
+      this.setSelectId(id);
     },
     handleCellHover: function handleCellHover(id) {
-      if (this.getSelectOperationData.active) {
-        this.setHoverId(id);
-      }
+      this.setHoverId(id);
     },
     calculateColumnNameRowIndex: function calculateColumnNameRowIndex(n) {
       if (n) {
@@ -28574,9 +28680,6 @@ var _default = {
           return t.rowId !== indexRow;
         });
       }
-    },
-    cellKey: function cellKey(rowId, colId) {
-      return "".concat(rowId, "-").concat(colId);
     }
   }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl']))
 };
@@ -28633,7 +28736,10 @@ exports.default = _default;
                         },
                         _vm._l(headerRow.values, function(headerCell) {
                           return _c("data-manager-cell", {
-                            key: _vm.cellKey(headerRow.rowId, headerCell.colId),
+                            key: _vm.formCellId(
+                              headerRow.rowId,
+                              headerCell.colId
+                            ),
                             attrs: {
                               "place-holder": _vm.translationM("columnName"),
                               value: headerCell.value,
@@ -28664,30 +28770,17 @@ exports.default = _default;
                 _vm._v(" "),
                 _c(
                   "tbody",
-                  _vm._l(_vm.table.values, function(valueRows) {
-                    return _c(
-                      "tr",
-                      { key: valueRows.rowId, attrs: { id: valueRows.rowId } },
-                      _vm._l(valueRows.values, function(cell) {
-                        return _c("data-manager-cell", {
-                          key: _vm.cellKey(valueRows.rowId, cell.colId),
-                          attrs: {
-                            "place-holder": _vm.translationM("value"),
-                            value: cell.value,
-                            "row-id": valueRows.rowId,
-                            "col-id": cell.colId,
-                            "selection-enabled": true
-                          },
-                          on: {
-                            cellClick: _vm.handleCellClick,
-                            cellHover: _vm.handleCellHover
-                          }
-                        })
-                      }),
-                      1
-                    )
+                  _vm._l(_vm.table.values, function(row) {
+                    return _c("data-manager-data-row", {
+                      key: row.rowId,
+                      attrs: { "row-object": row },
+                      on: {
+                        cellClick: _vm.handleCellClick,
+                        cellHover: _vm.handleCellHover
+                      }
+                    })
                   }),
-                  0
+                  1
                 )
               ]),
               _vm._v(" "),
@@ -28714,7 +28807,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29491,6 +29584,8 @@ var mutations = {
     state.dataManager.tempData.values = [];
     state.dataManager.tempData.rowIds = [];
     state.dataManager.tempData.colIds = [];
+    state.dataManager.tempData.colCount = 0;
+    state.dataManager.tempData.rowCount = 0;
   },
 
   /**
@@ -29665,6 +29760,33 @@ var mutations = {
     if (defaultValue) {
       (0, _functions.setObjectPropertyFromString)(target, state, defaultValue);
     }
+  },
+
+  /**
+   * Add a row data to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {Object} rowData row data object
+   */
+  addRowToDataTable: function addRowToDataTable(state, rowData) {
+    state.dataManager.tempData.values.push(rowData);
+  },
+
+  /**
+   * Add a cell to a table data row.
+   *
+   * Since because of the logic of the tables, when used, this mutation should be applied to all rows of the data manager table.
+   *
+   * @param {Object} state data table state
+   * @param {{rowIndex, cellObject}} mutation payload object
+   */
+  addCellToDataTableRow: function addCellToDataTableRow(state, _ref4) {
+    var rowIndex = _ref4.rowIndex,
+        cellObject = _ref4.cellObject;
+
+    if (rowIndex < state.dataManager.tempData.rowCount) {
+      state.dataManager.tempData.values[rowIndex].values.push(cellObject);
+    }
   }
 };
 var _default = mutations;
@@ -29676,6 +29798,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 /**
  * Data table store actions.
@@ -29749,16 +29875,91 @@ var actions = {
   },
 
   /**
+   * Generate a new cell object.
+   *
+   * @param {{getters, commit}} vuex store object
+   * @param {{value,index}} payload
+   * @return {Object} cell object
+   */
+  generateCell: function generateCell(_ref6, _ref7) {
+    var getters = _ref6.getters,
+        commit = _ref6.commit;
+    var value = _ref7.value,
+        index = _ref7.index;
+    var colId = getters.getDataManagerColId(index);
+
+    if (!colId) {
+      colId = getters.generateUniqueId();
+      commit('pushDataManagerColId', colId);
+    }
+
+    return {
+      colId: colId,
+      value: value
+    };
+  },
+
+  /**
+   * Generate a new row for data table manager.
+   *
+   * @param {{commit, getters, dispatch}} vuex store object
+   * @param {Array} colValues column values
+   * @return {Function} generated new row object
+   */
+  generateRow: function generateRow(_ref8, colValues) {
+    var commit = _ref8.commit,
+        getters = _ref8.getters,
+        dispatch = _ref8.dispatch;
+    var rowId = getters.generateUniqueId();
+    commit('pushDataManagerRowId', rowId);
+    var rowObj = {
+      rowId: rowId,
+      values: []
+    }; // eslint-disable-next-line array-callback-return
+
+    colValues.map( /*#__PURE__*/function () {
+      var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(value, i) {
+        var cellObject;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return dispatch('generateCell', {
+                  value: value,
+                  index: i
+                });
+
+              case 2:
+                cellObject = _context.sent;
+                rowObj.values.push(cellObject);
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function (_x, _x2) {
+        return _ref9.apply(this, arguments);
+      };
+    }());
+    return rowObj;
+  },
+
+  /**
    * Add temp data to data manager.
    *
    * @param {{commit, getters}} vuex store object
    * @param {{data, markAsImported}} data data array
    */
-  addDataManagerTempData: function addDataManagerTempData(_ref6, _ref7) {
-    var commit = _ref6.commit,
-        getters = _ref6.getters;
-    var data = _ref7.data,
-        markAsImported = _ref7.markAsImported;
+  addDataManagerTempData: function addDataManagerTempData(_ref10, _ref11) {
+    var commit = _ref10.commit,
+        dispatch = _ref10.dispatch;
+    var data = _ref11.data,
+        markAsImported = _ref11.markAsImported;
 
     if (markAsImported === undefined) {
       // eslint-disable-next-line no-param-reassign
@@ -29766,43 +29967,42 @@ var actions = {
     }
 
     var confirmedData = Array.isArray(data) ? data : [];
-    commit('clearTempDataManager'); // generate ids for rows
-    // eslint-disable-next-line array-callback-return,no-unused-vars
+    var maxCellsPerRow = confirmedData.reduce(function (carry, item) {
+      return Math.max(item.length, carry);
+    }, 0); // fill missing cells per rows to maximum column count
+    // eslint-disable-next-line array-callback-return
 
-    confirmedData.map(function (_) {
-      commit('pushDataManagerRowId', getters.generateUniqueId());
-    }); // find maximum amount of column numbers
+    confirmedData.map(function (r) {
+      if (r.length < maxCellsPerRow) {
+        var difference = maxCellsPerRow - r.length;
 
-    var maxCol = confirmedData.reduce(function (carry, current) {
-      var currentLength = current.length;
-      return Math.max(currentLength, carry);
-    }, 0); // generate ids for columns
+        for (var i = 0; i < difference; i += 1) {
+          r.push('');
+        }
+      }
+    });
+    commit('clearTempDataManager');
+    confirmedData.map( /*#__PURE__*/function () {
+      var _ref12 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(r) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return dispatch('addRowToDataManager', r);
 
-    for (var i = 0; i < maxCol; i += 1) {
-      commit('pushDataManagerColId', getters.generateUniqueId());
-    } // set maximum column amount
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
 
-
-    commit('setColCount', maxCol); // set maximum row amount
-
-    commit('setRowCount', confirmedData.length); // form data object
-
-    var formedData = confirmedData.reduce(function (carry, item, index) {
-      var rowObj = {
-        rowId: getters.getDataManagerRowId(index),
-        values: []
-      }; // eslint-disable-next-line array-callback-return
-
-      item.map(function (c, i) {
-        rowObj.values.push({
-          colId: getters.getDataManagerColId(i),
-          value: c
-        });
-      });
-      carry.push(rowObj);
-      return carry;
-    }, []);
-    commit('setDataManagerTempData', formedData);
+      return function (_x3) {
+        return _ref12.apply(this, arguments);
+      };
+    }());
 
     if (markAsImported) {
       // mark data created status
@@ -29816,9 +30016,9 @@ var actions = {
    * @param {{state,commit}} vuex store object
    * @param {string} tabId tab id to change to
    */
-  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref8, tabId) {
-    var state = _ref8.state,
-        commit = _ref8.commit;
+  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref13, tabId) {
+    var state = _ref13.state,
+        commit = _ref13.commit;
     commit('setActiveControlTabGroup', {
       sourceId: state.dataSource.setup.sourceId,
       tabId: tabId
@@ -29833,8 +30033,8 @@ var actions = {
    * @param {string} callerId id of the component that started the operation
    * @return {Promise} Promise object
    */
-  startRowSelectOperation: function startRowSelectOperation(_ref9, callerId) {
-    var commit = _ref9.commit;
+  startRowSelectOperation: function startRowSelectOperation(_ref14, callerId) {
+    var commit = _ref14.commit;
     // set app to busy
     commit('setBusy', true); // reset selection data
 
@@ -29863,9 +30063,9 @@ var actions = {
    *
    * @param {{state, commit}} vuex store object
    */
-  cancelRowSelectOperation: function cancelRowSelectOperation(_ref10) {
-    var state = _ref10.state,
-        commit = _ref10.commit;
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref15) {
+    var state = _ref15.state,
+        commit = _ref15.commit;
     commit('setSelectStatus', false);
     state.dataManager.select.clickId.resolve(null);
     commit('resetSelectData');
@@ -29878,11 +30078,11 @@ var actions = {
    * @param {{cellId, value}} payload
    *
    */
-  setDataCellValue: function setDataCellValue(_ref11, _ref12) {
-    var getters = _ref11.getters,
-        commit = _ref11.commit;
-    var cellId = _ref12.cellId,
-        value = _ref12.value;
+  setDataCellValue: function setDataCellValue(_ref16, _ref17) {
+    var getters = _ref16.getters,
+        commit = _ref16.commit;
+    var cellId = _ref17.cellId,
+        value = _ref17.value;
 
     var _getters$parseCellId = getters.parseCellId(cellId),
         rowId = _getters$parseCellId.rowId,
@@ -29894,6 +30094,109 @@ var actions = {
       value: value
     });
     commit('setSetupSourceDataCreatedStatus', true);
+  },
+
+  /**
+   * Add a new row to data manager.
+   *
+   * @async
+   * @param {{getters,dispatch,commit}} vuex store object
+   * @param {Array} colValues values for columns
+   */
+  addRowToDataManager: function addRowToDataManager(_ref18) {
+    var _arguments = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var getters, dispatch, commit, colValues, innerColValues, rowObject;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              getters = _ref18.getters, dispatch = _ref18.dispatch, commit = _ref18.commit;
+              colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
+              innerColValues = colValues;
+
+              if (colValues.length === 0) {
+                innerColValues = Array.from(new Array(getters.getColCount)).map(function () {
+                  return '';
+                });
+              }
+
+              _context3.next = 6;
+              return dispatch('generateRow', innerColValues);
+
+            case 6:
+              rowObject = _context3.sent;
+              commit('addRowToDataTable', rowObject);
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+
+  /**
+   * Add a column to data manager.
+   *
+   * @param {{commit, getters, dispatch}} vuex store object
+   * @param {string} value value of the newly added cells
+   */
+  addColumnToDataManager: function addColumnToDataManager(_ref19) {
+    var _arguments2 = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+      var commit, getters, dispatch, value, colCount, rowCount;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              commit = _ref19.commit, getters = _ref19.getters, dispatch = _ref19.dispatch;
+              value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
+              colCount = getters.getColCount;
+              rowCount = getters.getRowCount;
+              Array.from(new Array(rowCount)).map(function () {
+                return '';
+              }).map( /*#__PURE__*/function () {
+                var _ref20 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
+                  var cellObject;
+                  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                      switch (_context4.prev = _context4.next) {
+                        case 0:
+                          _context4.next = 2;
+                          return dispatch('generateCell', {
+                            value: value,
+                            colCount: colCount
+                          });
+
+                        case 2:
+                          cellObject = _context4.sent;
+                          commit('addCellToDataTableRow', {
+                            rowIndex: rowIndex,
+                            cellObject: cellObject
+                          });
+
+                        case 4:
+                        case "end":
+                          return _context4.stop();
+                      }
+                    }
+                  }, _callee4);
+                }));
+
+                return function (_x4, _x5) {
+                  return _ref20.apply(this, arguments);
+                };
+              }());
+
+            case 5:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }))();
   }
 };
 var _default = actions;
@@ -30110,7 +30413,7 @@ var getters = {
         return state.dataManager.tempData.colIds[index];
       }
 
-      return 0;
+      return null;
     };
   },
 
@@ -30122,6 +30425,16 @@ var getters = {
    */
   getColCount: function getColCount(state) {
     return state.dataManager.tempData.colCount;
+  },
+
+  /**
+   * Get current row count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getRowCount: function getRowCount(state) {
+    return state.dataManager.tempData.rowCount;
   },
 
   /**
@@ -30164,6 +30477,17 @@ var getters = {
   },
 
   /**
+   * Form a cell id from row and col ids.
+   *
+   * @return {function(*, *): string} cell id form function
+   */
+  formCellId: function formCellId() {
+    return function (rowId, colId) {
+      return "".concat(rowId, "-").concat(colId);
+    };
+  },
+
+  /**
    * Get data cell object
    *
    * @param {Object} state store state
@@ -30190,6 +30514,83 @@ var getters = {
 };
 var _default = getters;
 exports.default = _default;
+},{}],"stores/dataTables/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Mutation watch list.
+ *
+ * Keys for mutation types, and values for function to be called when specified mutation type is applied.
+ *
+ * @type {Object}
+ */
+var mutationWatchList = {
+  addRowToDataTable: function addRowToDataTable(_ref, state, store) {
+    var payload = _ref.payload;
+    // set row count from table data
+    store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+    var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
+
+    store.commit('setColCount', colCount);
+  }
+};
+/**
+ * Action watch list.
+ *
+ * Keys for action types, and values for function to be called when specified action type is applied.
+ *
+ * @type {Object}
+ */
+
+var actionWatchList = {
+  addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
+    var colCount = store.getters.getColCount + 1; // set col count from table data
+
+    store.commit('setColCount', colCount);
+  }
+};
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
+var watchFunction = function watchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+/**
+ * Store subscriptions to watch various store events.
+ *
+ * @param {Object} store flux store
+ */
+
+
+var subscriptions = function subscriptions(store) {
+  store.subscribe(watchFunction(mutationWatchList, store));
+  store.subscribeAction(watchFunction(actionWatchList, store));
+};
+/* @module subscriptions */
+
+
+var _default = subscriptions;
+exports.default = _default;
 },{}],"stores/dataTables/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -30209,6 +30610,8 @@ var _mutations = _interopRequireDefault(require("./mutations"));
 var _actions = _interopRequireDefault(require("./actions"));
 
 var _getters = _interopRequireDefault(require("./getters"));
+
+var _plugin = _interopRequireDefault(require("./plugin"));
 
 var _functions = require("../../functions");
 
@@ -30236,6 +30639,7 @@ var storeOptions = {
   mutations: _mutations.default,
   actions: _actions.default,
   getters: _getters.default,
+  plugins: [_plugin.default],
   strict: false
 };
 /**
@@ -30303,7 +30707,7 @@ var createStore = function createStore() {
 
 var _default = createStore;
 exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","../../functions":"functions/index.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

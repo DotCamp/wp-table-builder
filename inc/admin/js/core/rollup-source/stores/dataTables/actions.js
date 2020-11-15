@@ -62,58 +62,76 @@ const actions = {
 		dispatch('setCurrentScreen', screenName);
 	},
 	/**
+	 * Generate a new cell object.
+	 *
+	 * @param {{getters, commit}} vuex store object
+	 * @param {{value,index}} payload
+	 * @return {Object} cell object
+	 */
+	generateCell({ getters, commit }, { value, index }) {
+		let colId = getters.getDataManagerColId(index);
+		if (!colId) {
+			colId = getters.generateUniqueId();
+			commit('pushDataManagerColId', colId);
+		}
+		return { colId, value };
+	},
+	/**
+	 * Generate a new row for data table manager.
+	 *
+	 * @param {{commit, getters, dispatch}} vuex store object
+	 * @param {Array} colValues column values
+	 * @return {Function} generated new row object
+	 */
+	generateRow({ commit, getters, dispatch }, colValues) {
+		const rowId = getters.generateUniqueId();
+		commit('pushDataManagerRowId', rowId);
+
+		const rowObj = { rowId, values: [] };
+
+		// eslint-disable-next-line array-callback-return
+		colValues.map(async (value, i) => {
+			const cellObject = await dispatch('generateCell', { value, index: i });
+			rowObj.values.push(cellObject);
+		});
+
+		return rowObj;
+	},
+	/**
 	 * Add temp data to data manager.
 	 *
 	 * @param {{commit, getters}} vuex store object
 	 * @param {{data, markAsImported}} data data array
 	 */
-	addDataManagerTempData({ commit, getters }, { data, markAsImported }) {
+	addDataManagerTempData({ commit, dispatch }, { data, markAsImported }) {
 		if (markAsImported === undefined) {
 			// eslint-disable-next-line no-param-reassign
 			markAsImported = true;
 		}
 
 		const confirmedData = Array.isArray(data) ? data : [];
-		commit('clearTempDataManager');
 
-		// generate ids for rows
-		// eslint-disable-next-line array-callback-return,no-unused-vars
-		confirmedData.map((_) => {
-			commit('pushDataManagerRowId', getters.generateUniqueId());
-		});
-
-		// find maximum amount of column numbers
-		const maxCol = confirmedData.reduce((carry, current) => {
-			const currentLength = current.length;
-			return Math.max(currentLength, carry);
+		const maxCellsPerRow = confirmedData.reduce((carry, item) => {
+			return Math.max(item.length, carry);
 		}, 0);
 
-		// generate ids for columns
-		for (let i = 0; i < maxCol; i += 1) {
-			commit('pushDataManagerColId', getters.generateUniqueId());
-		}
+		// fill missing cells per rows to maximum column count
+		// eslint-disable-next-line array-callback-return
+		confirmedData.map((r) => {
+			if (r.length < maxCellsPerRow) {
+				const difference = maxCellsPerRow - r.length;
 
-		// set maximum column amount
-		commit('setColCount', maxCol);
+				for (let i = 0; i < difference; i += 1) {
+					r.push('');
+				}
+			}
+		});
 
-		// set maximum row amount
-		commit('setRowCount', confirmedData.length);
+		commit('clearTempDataManager');
 
-		// form data object
-		const formedData = confirmedData.reduce((carry, item, index) => {
-			const rowObj = { rowId: getters.getDataManagerRowId(index), values: [] };
-
-			// eslint-disable-next-line array-callback-return
-			item.map((c, i) => {
-				rowObj.values.push({ colId: getters.getDataManagerColId(i), value: c });
-			});
-
-			carry.push(rowObj);
-
-			return carry;
-		}, []);
-
-		commit('setDataManagerTempData', formedData);
+		confirmedData.map(async (r) => {
+			await dispatch('addRowToDataManager', r);
+		});
 
 		if (markAsImported) {
 			// mark data created status
@@ -189,6 +207,40 @@ const actions = {
 
 		commit('setDataCellObjectValue', { rowId, colId, value });
 		commit('setSetupSourceDataCreatedStatus', true);
+	},
+	/**
+	 * Add a new row to data manager.
+	 *
+	 * @async
+	 * @param {{getters,dispatch,commit}} vuex store object
+	 * @param {Array} colValues values for columns
+	 */
+	async addRowToDataManager({ getters, dispatch, commit }, colValues = []) {
+		let innerColValues = colValues;
+
+		if (colValues.length === 0) {
+			innerColValues = Array.from(new Array(getters.getColCount)).map(() => '');
+		}
+
+		const rowObject = await dispatch('generateRow', innerColValues);
+		commit('addRowToDataTable', rowObject);
+	},
+	/**
+	 * Add a column to data manager.
+	 *
+	 * @param {{commit, getters, dispatch}} vuex store object
+	 * @param {string} value value of the newly added cells
+	 */
+	async addColumnToDataManager({ commit, getters, dispatch }, value = '') {
+		const colCount = getters.getColCount;
+		const rowCount = getters.getRowCount;
+
+		Array.from(new Array(rowCount))
+			.map(() => '')
+			.map(async (r, rowIndex) => {
+				const cellObject = await dispatch('generateCell', { value, colCount });
+				commit('addCellToDataTableRow', { rowIndex, cellObject });
+			});
 	},
 };
 

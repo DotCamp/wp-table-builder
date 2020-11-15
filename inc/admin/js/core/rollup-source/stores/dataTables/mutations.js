@@ -99,6 +99,8 @@ const mutations = {
 		state.dataManager.tempData.values = [];
 		state.dataManager.tempData.rowIds = [];
 		state.dataManager.tempData.colIds = [];
+		state.dataManager.tempData.colCount = 0;
+		state.dataManager.tempData.rowCount = 0;
 	},
 	/**
 	 * Replace current data in temp data manager with new one.
@@ -247,6 +249,28 @@ const mutations = {
 
 		if (defaultValue) {
 			setObjectPropertyFromString(target, state, defaultValue);
+		}
+	},
+	/**
+	 * Add a row data to data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {Object} rowData row data object
+	 */
+	addRowToDataTable(state, rowData) {
+		state.dataManager.tempData.values.push(rowData);
+	},
+	/**
+	 * Add a cell to a table data row.
+	 *
+	 * Since because of the logic of the tables, when used, this mutation should be applied to all rows of the data manager table.
+	 *
+	 * @param {Object} state data table state
+	 * @param {{rowIndex, cellObject}} mutation payload object
+	 */
+	addCellToDataTableRow(state, { rowIndex, cellObject }) {
+		if (rowIndex < state.dataManager.tempData.rowCount) {
+			state.dataManager.tempData.values[rowIndex].values.push(cellObject);
 		}
 	},
 };

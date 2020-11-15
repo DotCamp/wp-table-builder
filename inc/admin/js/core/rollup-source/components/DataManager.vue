@@ -9,7 +9,7 @@
 						</tr>
 						<tr v-for="headerRow in table.header" :key="headerRow.rowId" :id="headerRow.rowId">
 							<data-manager-cell
-								:key="cellKey(headerRow.rowId, headerCell.colId)"
+								:key="formCellId(headerRow.rowId, headerCell.colId)"
 								v-for="headerCell in headerRow.values"
 								:place-holder="translationM('columnName')"
 								:value="headerCell.value"
@@ -22,19 +22,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="valueRows in table.values" :key="valueRows.rowId" :id="valueRows.rowId">
-							<data-manager-cell
-								v-for="cell in valueRows.values"
-								:key="cellKey(valueRows.rowId, cell.colId)"
-								:place-holder="translationM('value')"
-								:value="cell.value"
-								:row-id="valueRows.rowId"
-								:col-id="cell.colId"
-								:selection-enabled="true"
-								@cellClick="handleCellClick"
-								@cellHover="handleCellHover"
-							></data-manager-cell>
-						</tr>
+						<data-manager-data-row
+							v-for="row in table.values"
+							:key="row.rowId"
+							:row-object="row"
+							@cellClick="handleCellClick"
+							@cellHover="handleCellHover"
+						></data-manager-data-row>
 					</tbody>
 				</table>
 				<data-manager-select></data-manager-select>
@@ -50,6 +44,7 @@ import DataManagerCell from './DataManagerCell';
 import DataManagerSelect from './DataManagerSelect';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import DataManagerTableAddControls from './DataManagerTableAddControls';
+import DataManagerDataRow from './DataManagerDataRow';
 
 export default {
 	props: {
@@ -58,7 +53,7 @@ export default {
 			default: true,
 		},
 	},
-	components: { DataManagerTableAddControls, DataManagerCell, DataManagerSelect },
+	components: { DataManagerDataRow, DataManagerTableAddControls, DataManagerCell, DataManagerSelect },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -73,7 +68,7 @@ export default {
 		this.addDataManagerTempData({
 			data: [
 				['', '', ''],
-				['', '', ''],
+				['', ''],
 			],
 			markAsImported: false,
 		});
@@ -110,6 +105,7 @@ export default {
 			'getColCount',
 			'isDataSelectionActive',
 			'getSelectOperationData',
+			'formCellId',
 		]),
 		infoRowSpan() {
 			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;
@@ -117,14 +113,10 @@ export default {
 	},
 	methods: {
 		handleCellClick(id) {
-			if (this.getSelectOperationData.active) {
-				this.setSelectId(id);
-			}
+			this.setSelectId(id);
 		},
 		handleCellHover(id) {
-			if (this.getSelectOperationData.active) {
-				this.setHoverId(id);
-			}
+			this.setHoverId(id);
 		},
 		calculateColumnNameRowIndex(n) {
 			if (n) {
@@ -165,9 +157,6 @@ export default {
 					return t.rowId !== indexRow;
 				});
 			}
-		},
-		cellKey(rowId, colId) {
-			return `${rowId}-${colId}`;
 		},
 		...mapGetters(['generateUniqueId']),
 		...mapActions(['addDataManagerTempData']),

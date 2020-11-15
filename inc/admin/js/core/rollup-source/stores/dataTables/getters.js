@@ -164,7 +164,7 @@ const getters = {
 		if (state.dataManager.tempData.colIds[index]) {
 			return state.dataManager.tempData.colIds[index];
 		}
-		return 0;
+		return null;
 	},
 	/**
 	 * Get current column count.
@@ -174,6 +174,15 @@ const getters = {
 	 */
 	getColCount(state) {
 		return state.dataManager.tempData.colCount;
+	},
+	/**
+	 * Get current row count.
+	 *
+	 * @param {Object} state data table state
+	 * @return {number} column count
+	 */
+	getRowCount(state) {
+		return state.dataManager.tempData.rowCount;
 	},
 	/**
 	 * Get data related to select operation.
@@ -202,6 +211,14 @@ const getters = {
 		const [rowId, colId] = formedId.split('-');
 
 		return { rowId, colId };
+	},
+	/**
+	 * Form a cell id from row and col ids.
+	 *
+	 * @return {function(*, *): string} cell id form function
+	 */
+	formCellId: () => (rowId, colId) => {
+		return `${rowId}-${colId}`;
 	},
 	/**
 	 * Get data cell object
