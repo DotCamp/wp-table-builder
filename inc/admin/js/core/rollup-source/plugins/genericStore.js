@@ -3,7 +3,7 @@
  *
  * Plugin for adding app wide generic store.
  *
- * @param {object} Vue Vue object
+ * @param {Object} Vue Vue object
  * @param {options} options app data to be used
  * @return {{appData: *}}
  */

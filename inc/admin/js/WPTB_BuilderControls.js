@@ -26739,7 +26739,12 @@ var _default = {
       return this.isBusy || !this.isSourceDataCreated;
     }
   }),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection']))
+  methods: _objectSpread({
+    continueToGenerate: function continueToGenerate() {
+      WPTB_ControlsManager.callControlScript('Generate', false);
+      WPTB_Helper.activateSection('elements');
+    }
+  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection']))
 };
 exports.default = _default;
         var $a2c9cd = exports.default || module.exports;
@@ -26793,7 +26798,8 @@ exports.default = _default;
                   attrs: {
                     type: "confirm",
                     size: "full-size",
-                    disabled: _vm.isContinueAvailable
+                    disabled: _vm.isContinueAvailable,
+                    click: _vm.continueToGenerate
                   }
                 },
                 [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
@@ -31007,7 +31013,7 @@ var storeOptions = {
   actions: _actions.default,
   getters: _getters.default,
   plugins: [_plugin.default],
-  strict: false
+  strict: true
 };
 /**
  * Deep merge object.
@@ -31189,43 +31195,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"plugins/genericStore.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-/**
- * Plugin install method.
- *
- * Plugin for adding app wide generic store.
- *
- * @param {object} Vue Vue object
- * @param {options} options app data to be used
- * @return {{appData: *}}
- */
-function install(Vue, _ref) {
-  var _ref$data = _ref.data,
-      key = _ref$data.key,
-      _data = _ref$data.data,
-      methods = _ref.methods;
-  Vue.mixin({
-    data: function data() {
-      return _defineProperty({}, key, _data);
-    },
-    methods: methods
-  });
-}
-
-var _default = {
-  install: install
-};
-exports.default = _default;
-},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32102,6 +32072,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vuex = require("vuex");
+
 var _PrebuiltCardControl = _interopRequireDefault(require("./PrebuiltCardControl"));
 
 var _PrebuiltLiveDisplay = _interopRequireDefault(require("./PrebuiltLiveDisplay"));
@@ -32121,6 +32093,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
   props: {
@@ -32222,7 +32200,7 @@ var _default = {
       deep: true
     }
   },
-  computed: {
+  computed: _objectSpread({
     transformedName: function transformedName() {
       if (this.searchString !== '') {
         var regexp = new RegExp("(".concat(this.searchString, ")"), 'ig');
@@ -32260,7 +32238,7 @@ var _default = {
 
       return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
     }
-  },
+  }, (0, _vuex.mapGetters)(['appData', 'isDevBuild'])),
   mounted: function mounted() {
     var _this = this;
 
@@ -32561,7 +32539,7 @@ render._withStripped = true
           };
         })());
       
-},{"./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"../../../../../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"../../../../../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
@@ -33299,6 +33277,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vuex = require("vuex");
+
 var _PrebuiltCard = _interopRequireDefault(require("../components/PrebuiltCard"));
 
 require("regenerator-runtime/runtime");
@@ -33376,12 +33356,16 @@ var _default = {
 
     this.fixedTables.dataTable.generateString = this.strings.start;
     this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
+
+    if (!this.appData.dataTableCardEnabled) {
+      delete this.fixedTables.dataTable;
+    }
   },
-  computed: {
+  computed: _objectSpread({
     isPro: function isPro() {
       return this.version === 'pro';
     }
-  },
+  }, (0, _vuex.mapGetters)(['appData', 'isDevBuild'])),
   methods: {
     deselect: function deselect() {
       this.activeCard = '';
@@ -33536,6 +33520,7 @@ var _default = {
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
       } else if (cardId === 'dataTable') {
+        // destroy generate instance and activate data table menu section
         WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
       } else {
         var tableWrapper = document.querySelector('.wptb-table-setup');
@@ -33828,7 +33813,39 @@ render._withStripped = true
           };
         })());
       
-},{"../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"mountPoints/WPTB_GenerateControl.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/PrebuiltCard":"components/PrebuiltCard.vue","regenerator-runtime/runtime":"../../../../../node_modules/regenerator-runtime/runtime.js"}],"stores/generate/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// setup vuex
+_vue.default.use(_vuex.default);
+/**
+ * Create generate related store
+ *
+ * @param {Object} storeOptions store options object
+ * @return {Object} generate store object
+ */
+
+
+var createStore = function createStore(storeOptions) {
+  return new _vuex.default.Store(storeOptions);
+};
+/** @module createStore */
+
+
+var _default = createStore;
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"mountPoints/WPTB_GenerateControl.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -33841,11 +33858,11 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _filters = _interopRequireDefault(require("../plugins/filters"));
 
-var _genericStore = _interopRequireDefault(require("../plugins/genericStore"));
-
 var _strings = _interopRequireDefault(require("../plugins/strings"));
 
 var _GenerateMain = _interopRequireDefault(require("../containers/GenerateMain"));
+
+var _generate = _interopRequireDefault(require("../stores/generate"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33861,7 +33878,9 @@ var _default = {
     var _global$wptbGenerateM;
 
     var dataTableEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    _vue.default.config.productionTip = false; // setup filters
+    _vue.default.config.productionTip = false; // TODO [erdembircan] remove for production
+
+    console.log(dataTableEnabled); // setup filters
 
     _vue.default.use(_filters.default);
 
@@ -33872,36 +33891,50 @@ var _default = {
     }, wptbGenerateMenuData, {}, proData); // setup app store
 
 
-    var store = {
+    var state = {
       teamTablePrefix: data.teamBuildTablePrefix,
       icons: data.icons,
       env: "development",
       dataTableCardEnabled: dataTableEnabled
     }; // store methods
 
-    var storeMethods = {
-      isDevBuild: function isDevBuild() {
-        return "development" !== 'production';
+    var getters = {
+      // eslint-disable-next-line no-shadow
+      appData: function appData(state) {
+        return state;
+      },
+      // eslint-disable-next-line no-shadow
+      isDevBuild: function isDevBuild(state) {
+        return function () {
+          return state.env !== 'production';
+        };
       }
     };
-
-    _vue.default.use(_genericStore.default, {
-      data: {
-        key: 'appData',
-        data: store
-      },
-      methods: storeMethods
-    }); // setup translation strings
-
+    var store = (0, _generate.default)({
+      state: state,
+      getters: getters
+    }); // @deprecated
+    // Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
+    // setup translation strings
 
     _vue.default.use(_strings.default, data);
+
+    var vueMountPoint = document.querySelector("#".concat(data.mountId));
+
+    if (!vueMountPoint) {
+      var mainWrapper = document.querySelector('#generateMainWrapper');
+      var mountPoint = document.createElement('div');
+      mountPoint.setAttribute('id', data.mountId);
+      mainWrapper.appendChild(mountPoint);
+    }
 
     var vm = new _vue.default({
       components: {
         GenerateMain: _GenerateMain.default
       },
       template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
-      data: data
+      data: data,
+      store: store
     }).$mount("#".concat(data.mountId));
     var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
 
@@ -33943,7 +33976,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../plugins/filters":"plugins/filters.js","../plugins/genericStore":"plugins/genericStore.js","../plugins/strings":"plugins/strings.js","../containers/GenerateMain":"containers/GenerateMain.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js","../containers/GenerateMain":"containers/GenerateMain.vue","../stores/generate":"stores/generate/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 

@@ -39,6 +39,7 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import PrebuiltCard from '../components/PrebuiltCard';
 import 'regenerator-runtime/runtime';
 
@@ -97,11 +98,16 @@ export default {
 		this.fixedTables.dataTable.generateString = this.strings.start;
 
 		this.fixedTables = { ...this.fixedTables, ...this.prebuiltTables };
+
+		if (!this.appData.dataTableCardEnabled) {
+			delete this.fixedTables.dataTable;
+		}
 	},
 	computed: {
 		isPro() {
 			return this.version === 'pro';
 		},
+		...mapGetters(['appData', 'isDevBuild']),
 	},
 	methods: {
 		deselect() {
@@ -222,6 +228,7 @@ export default {
 				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 				wptbTableStateSaveManager.tableStateSet();
 			} else if (cardId === 'dataTable') {
+				// destroy generate instance and activate data table menu section
 				WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
 			} else {
 				const tableWrapper = document.querySelector('.wptb-table-setup');

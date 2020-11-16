@@ -17,6 +17,7 @@
 				type="confirm"
 				size="full-size"
 				:disabled="isContinueAvailable"
+				:click="continueToGenerate"
 				>{{ translationM('continue') | cap }}</material-button
 			>
 		</div>
@@ -39,6 +40,10 @@ export default {
 		},
 	},
 	methods: {
+		continueToGenerate() {
+			WPTB_ControlsManager.callControlScript('Generate', false);
+			WPTB_Helper.activateSection('elements');
+		},
 		...mapActions(['setCurrentScreenToDataSourceSelection']),
 	},
 };

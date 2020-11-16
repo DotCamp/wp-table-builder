@@ -76,6 +76,7 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import PrebuiltCardControl from './PrebuiltCardControl';
 import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
 import PrebuiltCardDeleteModule from './PrebuiltCardDeleteModule';
@@ -231,6 +232,7 @@ export default {
 			}
 			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
 		},
+		...mapGetters(['appData', 'isDevBuild']),
 	},
 	mounted() {
 		this.$nextTick(() => {

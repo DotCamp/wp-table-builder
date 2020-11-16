@@ -4,14 +4,17 @@
 
 import Vue from 'vue';
 import filters from '../plugins/filters';
-import genericStore from '../plugins/genericStore';
 import strings from '../plugins/strings';
 import GenerateMain from '../containers/GenerateMain';
+import createStore from '../stores/generate';
 
 export default {
 	name: 'Generate',
 	handler: function dataTableJS(dataTableEnabled = true) {
 		Vue.config.productionTip = false;
+
+		// TODO [erdembircan] remove for production
+		console.log(dataTableEnabled);
 
 		// setup filters
 		Vue.use(filters);
@@ -21,7 +24,7 @@ export default {
 		const data = { upsell: '', ...wptbGenerateMenuData, ...proData };
 
 		// setup app store
-		const store = {
+		const state = {
 			teamTablePrefix: data.teamBuildTablePrefix,
 			icons: data.icons,
 			env: process.env.NODE_ENV,
@@ -29,22 +32,40 @@ export default {
 		};
 
 		// store methods
-		const storeMethods = {
-			isDevBuild() {
-				return process.env.NODE_ENV !== 'production';
+		const getters = {
+			// eslint-disable-next-line no-shadow
+			appData: (state) => {
+				return state;
+			},
+			// eslint-disable-next-line no-shadow
+			isDevBuild: (state) => () => {
+				return state.env !== 'production';
 			},
 		};
 
-		Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
+		const store = createStore({ state, getters });
+
+		// @deprecated
+		// Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
 
 		// setup translation strings
 		Vue.use(strings, data);
+
+		const vueMountPoint = document.querySelector(`#${data.mountId}`);
+
+		if (!vueMountPoint) {
+			const mainWrapper = document.querySelector('#generateMainWrapper');
+			const mountPoint = document.createElement('div');
+			mountPoint.setAttribute('id', data.mountId);
+			mainWrapper.appendChild(mountPoint);
+		}
 
 		const vm = new Vue({
 			components: { GenerateMain },
 			template:
 				'<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 			data,
+			store,
 		}).$mount(`#${data.mountId}`);
 
 		const tableContainer = document.querySelector('.wptb-management_table_container');

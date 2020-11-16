@@ -69,8 +69,6 @@ function DataTableManager(sectionName, wrapperId, parentContainerQuery, componen
 	// initialize and start up manager.
 	this.init = () => {
 		document.addEventListener('wptbSectionChanged', (e) => {
-			// @deprecated
-			// const tablePreview = document.querySelector('.wptb-table-setup .wptb-preview-table');
 			if (e.detail === this.sectionName) {
 				this.load();
 			}

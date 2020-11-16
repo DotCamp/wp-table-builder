@@ -21,7 +21,7 @@ const storeOptions = {
 	actions,
 	getters,
 	plugins: [subscriptions],
-	strict: false,
+	strict: true,
 };
 
 /**
