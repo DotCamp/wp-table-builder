@@ -273,6 +273,44 @@ const mutations = {
 			state.dataManager.tempData.values[rowIndex].values.push(cellObject);
 		}
 	},
+	/**
+	 * Delete a row from data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} rowId row id
+	 */
+	deleteRowFromDataTable(state, rowId) {
+		const rowIndex = state.dataManager.tempData.rowIds.indexOf(rowId);
+
+		if (rowIndex > -1) {
+			state.dataManager.tempData.values.splice(rowIndex, 1);
+
+			// also delete row id from indexes
+			state.dataManager.tempData.rowIds.splice(rowIndex, 1);
+		}
+	},
+	/**
+	 * Delete a column from data manager.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} colId column id
+	 */
+	deleteColFromDataTable(state, colId) {
+		const colIndex = state.dataManager.tempData.colIds.indexOf(colId);
+
+		if (colIndex >= 0) {
+			// eslint-disable-next-line array-callback-return
+			state.dataManager.tempData.values.map((r) => {
+				r.values.splice(colIndex, 1);
+			});
+
+			// also delete col id from indexes
+			state.dataManager.tempData.colIds.splice(colIndex, 1);
+
+			// update column count
+			state.dataManager.tempData.colCount -= 1;
+		}
+	},
 };
 
 export default mutations;

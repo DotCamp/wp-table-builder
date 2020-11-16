@@ -10,6 +10,7 @@
 			:selection-enabled="true"
 			@cellClick="handleCellClick"
 			@cellHover="handleCellHover"
+			@cellHoverEnd="handleCellHoverEnd"
 		></data-manager-cell>
 	</tr>
 </template>
@@ -32,11 +33,17 @@ export default {
 		...mapGetters(['formCellId']),
 	},
 	methods: {
+		handleCellHoverEnd(id) {
+			this.$emit('cellHoverEnd', id);
+		},
 		handleCellClick(id) {
 			this.$emit('cellClick', id);
 		},
 		handleCellHover(id) {
 			this.$emit('cellHover', id);
+		},
+		rowOver() {
+			console.log('over');
 		},
 	},
 };

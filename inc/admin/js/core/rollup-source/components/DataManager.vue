@@ -28,9 +28,12 @@
 							:row-object="row"
 							@cellClick="handleCellClick"
 							@cellHover="handleCellHover"
+							@cellHoverEnd="handleCellHoverEnd"
 						></data-manager-data-row>
 					</tbody>
 				</table>
+				<data-manager-index-actions @indexDelete="handleRowDelete" type="row"></data-manager-index-actions>
+				<data-manager-index-actions type="col" @indexDelete="handleColDelete"></data-manager-index-actions>
 				<data-manager-select></data-manager-select>
 				<data-manager-table-add-controls></data-manager-table-add-controls>
 			</div>
@@ -45,6 +48,7 @@ import DataManagerSelect from './DataManagerSelect';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import DataManagerTableAddControls from './DataManagerTableAddControls';
 import DataManagerDataRow from './DataManagerDataRow';
+import DataManagerIndexActions from './DataManagerIndexActions';
 
 export default {
 	props: {
@@ -53,7 +57,13 @@ export default {
 			default: true,
 		},
 	},
-	components: { DataManagerDataRow, DataManagerTableAddControls, DataManagerCell, DataManagerSelect },
+	components: {
+		DataManagerDataRow,
+		DataManagerTableAddControls,
+		DataManagerCell,
+		DataManagerSelect,
+		DataManagerIndexActions,
+	},
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -67,8 +77,8 @@ export default {
 	created() {
 		this.addDataManagerTempData({
 			data: [
-				['', '', ''],
-				['', ''],
+				['1', '2', '3'],
+				['4', '5', '6'],
 			],
 			markAsImported: false,
 		});
@@ -106,17 +116,29 @@ export default {
 			'isDataSelectionActive',
 			'getSelectOperationData',
 			'formCellId',
+			'parseCellId',
 		]),
 		infoRowSpan() {
 			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;
 		},
 	},
 	methods: {
+		handleRowDelete(id) {
+			const { rowId } = this.parseCellId(id);
+			this.deleteDataTableRow(rowId);
+		},
+		handleColDelete(id) {
+			const { colId } = this.parseCellId(id);
+			this.deleteDataTableCol(colId);
+		},
 		handleCellClick(id) {
 			this.setSelectId(id);
 		},
 		handleCellHover(id) {
 			this.setHoverId(id);
+		},
+		handleCellHoverEnd() {
+			// this.setHoverId(null);
 		},
 		calculateColumnNameRowIndex(n) {
 			if (n) {
@@ -159,7 +181,7 @@ export default {
 			}
 		},
 		...mapGetters(['generateUniqueId']),
-		...mapActions(['addDataManagerTempData']),
+		...mapActions(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']),
 		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl']),
 	},
 };

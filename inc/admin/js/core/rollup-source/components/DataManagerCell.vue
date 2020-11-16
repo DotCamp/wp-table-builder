@@ -1,6 +1,6 @@
 <template>
-	<td class="wptb-data-manager-table-data-value" :id="id">
-		<div @mouseenter="handleHover" @click.prevent.capture="handleClick">
+	<td class="wptb-data-manager-table-data-value" @mouseenter="handleHover" @mouseleave="handleHoverEnd" :id="id">
+		<div @click.prevent.capture="handleClick">
 			<input
 				:disabled="isBusy"
 				class="wptb-data-manager-cell-input"
@@ -55,9 +55,14 @@ export default {
 		...mapGetters(['getDataCellObject']),
 	},
 	methods: {
+		handleHoverEnd() {
+			if (this.selectionEnabled) {
+				this.$emit('cellHoverEnd', this.rowId, this.colId);
+			}
+		},
 		handleHover() {
 			if (this.selectionEnabled) {
-				this.$emit('cellHover', this.rowId, this.colId);
+				this.$emit('cellHover', this.id);
 			}
 		},
 		handleClick() {

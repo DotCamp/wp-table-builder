@@ -53,7 +53,7 @@ const state = {
 				controls: {
 					delimiter: 'comma',
 				},
-				controlGroupTab: 'dataManager',
+				controlGroupTab: 'csv',
 			},
 		},
 	},
@@ -78,7 +78,7 @@ const state = {
 		},
 	},
 	leftPanelId: '#dataTableLeftPanel',
-	devStartupScreen: 'CsvSetup',
+	devStartupScreen: 'DataSourceSelection',
 	defaults: {},
 };
 

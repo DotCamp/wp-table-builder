@@ -103,7 +103,7 @@ const actions = {
 	 * @param {{commit, getters}} vuex store object
 	 * @param {{data, markAsImported}} data data array
 	 */
-	addDataManagerTempData({ commit, dispatch }, { data, markAsImported }) {
+	addDataManagerTempData({ commit, dispatch, getters }, { data, markAsImported }) {
 		if (markAsImported === undefined) {
 			// eslint-disable-next-line no-param-reassign
 			markAsImported = true;
@@ -137,6 +137,8 @@ const actions = {
 			// mark data created status
 			commit('setSetupSourceDataCreatedStatus', true);
 		}
+
+		commit('setHoverId', null);
 	},
 	/**
 	 * Set tab of current active source setup.
@@ -241,6 +243,40 @@ const actions = {
 				const cellObject = await dispatch('generateCell', { value, colCount });
 				commit('addCellToDataTableRow', { rowIndex, cellObject });
 			});
+	},
+	/**
+	 * Delete a row object from data manager table.
+	 *
+	 * @param {{commit, getters}} vuex store object
+	 * @param {string} rowId row id
+	 */
+	deleteDataTableRow({ commit, getters }, rowId) {
+		const index = getters.getDataManagerIndexFromId(rowId);
+		commit('deleteRowFromDataTable', rowId);
+
+		// calculate hover id that will be focused on after delete operation
+		const hoverRowIndex = index - 1 >= 0 ? index - 1 : index;
+		const hoverRowId = getters.getDataManagerRowId(hoverRowIndex);
+		const { colId } = getters.parseCellId(getters.getHoverId);
+		commit('setHoverId', getters.formCellId(hoverRowId, colId));
+	},
+	/**
+	 * Delete a column object from data manager table.
+	 *
+	 * @param {{commit}} vuex store object
+	 * @param {string} colId column id
+	 */
+	deleteDataTableCol({ commit, getters }, colId) {
+		const index = getters.getDataManagerIndexFromId(colId, 'col');
+		commit('deleteColFromDataTable', colId);
+
+		// calculate hover id that will be focused on after delete operation
+		const hoverColIndex = index - 1 >= 0 ? index - 1 : index;
+		const hoverColId = getters.getDataManagerColId(hoverColIndex);
+		const { rowId } = getters.parseCellId(getters.getHoverId);
+		// commit('setHoverId', getters.formCellId(rowId, hoverColId));
+
+		commit('setHoverId', null);
 	},
 };
 

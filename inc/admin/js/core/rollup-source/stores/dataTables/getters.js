@@ -208,9 +208,14 @@ const getters = {
 	 * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
 	 */
 	parseCellId: () => (formedId) => {
-		const [rowId, colId] = formedId.split('-');
+		const idObject = { rowId: null, colId: null };
+		if (formedId !== null) {
+			const [rowId, colId] = formedId.split('-');
+			idObject.rowId = rowId;
+			idObject.colId = colId;
+		}
 
-		return { rowId, colId };
+		return idObject;
 	},
 	/**
 	 * Form a cell id from row and col ids.
@@ -240,6 +245,24 @@ const getters = {
 		}
 
 		return null;
+	},
+	/**
+	 * Get hover id of current hovered cell.
+	 *
+	 * @param {Object} state store state
+	 * @return {null|string} hover id of the hovered data table cell
+	 */
+	getHoverId: (state) => {
+		return state.dataManager.select.hoverId;
+	},
+	/**
+	 * Get index of given type and id from data manager ids.
+	 *
+	 * @param {Object} state store state
+	 * @return {Function} function to be used to determine index from id.
+	 */
+	getDataManagerIndexFromId: (state) => (id, type = 'row') => {
+		return state.dataManager.tempData[`${type}Ids`].indexOf(id);
 	},
 };
 

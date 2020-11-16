@@ -26,12 +26,15 @@ export default {
 					const { rowId, colId } = this.parseCellId(n);
 
 					const targetRow = document.getElementById(`${rowId}`);
+					const tableWrapper = document.querySelector('.wptb-data-manager-table-wrapper');
+
 					if (targetRow) {
 						const { width, height, x, y } = targetRow.getBoundingClientRect();
+						const { y: wrapperY } = tableWrapper.getBoundingClientRect();
 						this.width = width;
 						this.height = height;
-						this.left = x;
-						this.top = y;
+						this.left = 0;
+						this.top = y - wrapperY;
 					}
 				}
 			},

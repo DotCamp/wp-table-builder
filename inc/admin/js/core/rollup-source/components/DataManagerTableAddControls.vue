@@ -50,11 +50,12 @@ export default {
 			);
 			const dataTable = document.querySelector('.wptb-data-manager-table-wrapper table');
 
+			// calculate column add button position
 			if (valuesInfoRow && dataTable) {
-				const { top, height } = valuesInfoRow.getBoundingClientRect();
+				const { top } = valuesInfoRow.getBoundingClientRect();
 				const { top: tableTop } = dataTable.getBoundingClientRect();
 
-				this.colStyleValues.top = `${top - tableTop + height}px`;
+				this.colStyleValues.top = `${top - tableTop}px`;
 			}
 		},
 		addRow() {

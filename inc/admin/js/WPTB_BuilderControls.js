@@ -28127,9 +28127,14 @@ var _default = {
     }
   }, (0, _vuex.mapGetters)(['getDataCellObject'])),
   methods: _objectSpread({
+    handleHoverEnd: function handleHoverEnd() {
+      if (this.selectionEnabled) {
+        this.$emit('cellHoverEnd', this.rowId, this.colId);
+      }
+    },
     handleHover: function handleHover() {
       if (this.selectionEnabled) {
-        this.$emit('cellHover', this.rowId, this.colId);
+        this.$emit('cellHover', this.id);
       }
     },
     handleClick: function handleClick() {
@@ -28156,14 +28161,14 @@ exports.default = _default;
     "td",
     {
       staticClass: "wptb-data-manager-table-data-value",
-      attrs: { id: _vm.id }
+      attrs: { id: _vm.id },
+      on: { mouseenter: _vm.handleHover, mouseleave: _vm.handleHoverEnd }
     },
     [
       _c(
         "div",
         {
           on: {
-            mouseenter: _vm.handleHover,
             "!click": function($event) {
               $event.preventDefault()
               return _vm.handleClick($event)
@@ -28247,6 +28252,7 @@ var _default = {
               colId = _this$parseCellId.colId;
 
           var targetRow = document.getElementById("".concat(rowId));
+          var tableWrapper = document.querySelector('.wptb-data-manager-table-wrapper');
 
           if (targetRow) {
             var _targetRow$getBoundin = targetRow.getBoundingClientRect(),
@@ -28255,10 +28261,13 @@ var _default = {
                 x = _targetRow$getBoundin.x,
                 y = _targetRow$getBoundin.y;
 
+            var _tableWrapper$getBoun = tableWrapper.getBoundingClientRect(),
+                wrapperY = _tableWrapper$getBoun.y;
+
             this.width = width;
             this.height = height;
-            this.left = x;
-            this.top = y;
+            this.left = 0;
+            this.top = y - wrapperY;
           }
         }
       }
@@ -28369,17 +28378,16 @@ var _default = {
   methods: _objectSpread({
     calculateColControlValues: function calculateColControlValues() {
       var valuesInfoRow = document.querySelector('.wptb-data-manager-table-wrapper .wptb-data-manager-info-values');
-      var dataTable = document.querySelector('.wptb-data-manager-table-wrapper table');
+      var dataTable = document.querySelector('.wptb-data-manager-table-wrapper table'); // calculate column add button position
 
       if (valuesInfoRow && dataTable) {
         var _valuesInfoRow$getBou = valuesInfoRow.getBoundingClientRect(),
-            top = _valuesInfoRow$getBou.top,
-            height = _valuesInfoRow$getBou.height;
+            top = _valuesInfoRow$getBou.top;
 
         var _dataTable$getBoundin = dataTable.getBoundingClientRect(),
             tableTop = _dataTable$getBoundin.top;
 
-        this.colStyleValues.top = "".concat(top - tableTop + height, "px");
+        this.colStyleValues.top = "".concat(top - tableTop, "px");
       }
     },
     addRow: function addRow() {
@@ -28485,11 +28493,17 @@ var _default = {
   mixins: [_withNativeTranslationStore.default],
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['formCellId'])),
   methods: {
+    handleCellHoverEnd: function handleCellHoverEnd(id) {
+      this.$emit('cellHoverEnd', id);
+    },
     handleCellClick: function handleCellClick(id) {
       this.$emit('cellClick', id);
     },
     handleCellHover: function handleCellHover(id) {
       this.$emit('cellHover', id);
+    },
+    rowOver: function rowOver() {
+      console.log('over');
     }
   }
 };
@@ -28519,7 +28533,11 @@ exports.default = _default;
           "col-id": cell.colId,
           "selection-enabled": true
         },
-        on: { cellClick: _vm.handleCellClick, cellHover: _vm.handleCellHover }
+        on: {
+          cellClick: _vm.handleCellClick,
+          cellHover: _vm.handleCellHover,
+          cellHoverEnd: _vm.handleCellHoverEnd
+        }
       })
     }),
     1
@@ -28537,7 +28555,174 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerCell":"components/DataManagerCell.vue"}],"components/DataManager.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerCell":"components/DataManagerCell.vue"}],"components/DataManagerIndexActions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    type: {
+      type: String,
+      default: 'row'
+    }
+  },
+  data: function data() {
+    return {
+      showIndicator: false,
+      indicatorStyle: {}
+    };
+  },
+  computed: _objectSpread({
+    calculatePosition: function calculatePosition() {
+      var _this$parseCellId = this.parseCellId(this.getHoverId),
+          rowId = _this$parseCellId.rowId;
+
+      var tableWrapper = document.querySelector('.wptb-data-manager-table-wrapper');
+
+      if (this.type === 'row') {
+        var hoveredRow = document.getElementById(rowId);
+
+        if (hoveredRow && tableWrapper) {
+          var _this$$refs$container = this.$refs.container.getBoundingClientRect(),
+              width = _this$$refs$container.width;
+
+          var _hoveredRow$getBoundi = hoveredRow.getBoundingClientRect(),
+              y = _hoveredRow$getBoundi.y,
+              height = _hoveredRow$getBoundi.height;
+
+          var _tableWrapper$getBoun = tableWrapper.getBoundingClientRect(),
+              tableWrapperY = _tableWrapper$getBoun.y; // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+
+
+          this.indicatorStyle = {
+            left: 0,
+            top: "".concat(y - tableWrapperY, "px"),
+            width: '100%',
+            height: "".concat(height, "px")
+          };
+          return {
+            left: "-".concat(width, "px"),
+            top: "".concat(y - tableWrapperY, "px"),
+            height: "".concat(height, "px")
+          };
+        }
+      } else {
+        var hoveredCell = document.getElementById(this.getHoverId);
+
+        if (hoveredCell && tableWrapper) {
+          var _this$$refs$container2 = this.$refs.container.getBoundingClientRect(),
+              _height = _this$$refs$container2.height;
+
+          var _hoveredCell$getBound = hoveredCell.getBoundingClientRect(),
+              x = _hoveredCell$getBound.x,
+              _width = _hoveredCell$getBound.width;
+
+          var _tableWrapper$getBoun2 = tableWrapper.getBoundingClientRect(),
+              tableWrapperX = _tableWrapper$getBoun2.x; // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+
+
+          this.indicatorStyle = {
+            left: "".concat(x - tableWrapperX, "px"),
+            top: 0,
+            width: "".concat(_width, "px"),
+            bottom: 0
+          };
+          return {
+            top: "-".concat(_height, "px"),
+            left: "".concat(x - tableWrapperX, "px"),
+            width: "".concat(_width, "px")
+          };
+        }
+      }
+
+      return {};
+    },
+    indexId: function indexId() {
+      return this.getHoverId;
+    }
+  }, (0, _vuex.mapGetters)(['getHoverId', 'parseCellId'])),
+  methods: {
+    indexDelete: function indexDelete() {
+      this.$emit('indexDelete', this.getHoverId);
+    }
+  }
+};
+exports.default = _default;
+        var $2f62e2 = exports.default || module.exports;
+      
+      if (typeof $2f62e2 === 'function') {
+        $2f62e2 = $2f62e2.options;
+      }
+    
+        /* template */
+        Object.assign($2f62e2, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("fragment", [
+    _c(
+      "div",
+      {
+        ref: "container",
+        staticClass: "wptb-data-manager-index-actions",
+        style: _vm.calculatePosition,
+        attrs: { type: _vm.type },
+        on: {
+          mouseenter: function($event) {
+            _vm.showIndicator = true
+          },
+          mouseleave: function($event) {
+            _vm.showIndicator = false
+          }
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "wptb-data-manager-index-delete",
+            on: { click: _vm.indexDelete }
+          },
+          [_c("span", { staticClass: "dashicons dashicons-trash" })]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _vm.showIndicator
+      ? _c("div", {
+          staticClass:
+            "wptb-data-manager-index-indicator wptb-repeating-linear-gradient-red",
+          style: _vm.indicatorStyle
+        })
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManager.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28556,6 +28741,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/with
 var _DataManagerTableAddControls = _interopRequireDefault(require("./DataManagerTableAddControls"));
 
 var _DataManagerDataRow = _interopRequireDefault(require("./DataManagerDataRow"));
+
+var _DataManagerIndexActions = _interopRequireDefault(require("./DataManagerIndexActions"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28576,7 +28763,8 @@ var _default = {
     DataManagerDataRow: _DataManagerDataRow.default,
     DataManagerTableAddControls: _DataManagerTableAddControls.default,
     DataManagerCell: _DataManagerCell.default,
-    DataManagerSelect: _DataManagerSelect.default
+    DataManagerSelect: _DataManagerSelect.default,
+    DataManagerIndexActions: _DataManagerIndexActions.default
   },
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
@@ -28590,7 +28778,7 @@ var _default = {
   },
   created: function created() {
     this.addDataManagerTempData({
-      data: [['', '', ''], ['', '']],
+      data: [['1', '2', '3'], ['4', '5', '6']],
       markAsImported: false
     });
   },
@@ -28620,7 +28808,7 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId']), {
     infoRowSpan: function infoRowSpan() {
       var _this$table$header$, _this$table$header$$v;
 
@@ -28628,11 +28816,25 @@ var _default = {
     }
   }),
   methods: _objectSpread({
+    handleRowDelete: function handleRowDelete(id) {
+      var _this$parseCellId = this.parseCellId(id),
+          rowId = _this$parseCellId.rowId;
+
+      this.deleteDataTableRow(rowId);
+    },
+    handleColDelete: function handleColDelete(id) {
+      var _this$parseCellId2 = this.parseCellId(id),
+          colId = _this$parseCellId2.colId;
+
+      this.deleteDataTableCol(colId);
+    },
     handleCellClick: function handleCellClick(id) {
       this.setSelectId(id);
     },
     handleCellHover: function handleCellHover(id) {
       this.setHoverId(id);
+    },
+    handleCellHoverEnd: function handleCellHoverEnd() {// this.setHoverId(null);
     },
     calculateColumnNameRowIndex: function calculateColumnNameRowIndex(n) {
       if (n) {
@@ -28681,7 +28883,7 @@ var _default = {
         });
       }
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -28776,13 +28978,24 @@ exports.default = _default;
                       attrs: { "row-object": row },
                       on: {
                         cellClick: _vm.handleCellClick,
-                        cellHover: _vm.handleCellHover
+                        cellHover: _vm.handleCellHover,
+                        cellHoverEnd: _vm.handleCellHoverEnd
                       }
                     })
                   }),
                   1
                 )
               ]),
+              _vm._v(" "),
+              _c("data-manager-index-actions", {
+                attrs: { type: "row" },
+                on: { indexDelete: _vm.handleRowDelete }
+              }),
+              _vm._v(" "),
+              _c("data-manager-index-actions", {
+                attrs: { type: "col" },
+                on: { indexDelete: _vm.handleColDelete }
+              }),
               _vm._v(" "),
               _c("data-manager-select"),
               _vm._v(" "),
@@ -28807,7 +29020,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29370,7 +29583,7 @@ var state = {
         controls: {
           delimiter: 'comma'
         },
-        controlGroupTab: 'dataManager'
+        controlGroupTab: 'csv'
       }
     }
   },
@@ -29395,7 +29608,7 @@ var state = {
     }
   },
   leftPanelId: '#dataTableLeftPanel',
-  devStartupScreen: 'CsvSetup',
+  devStartupScreen: 'DataSourceSelection',
   defaults: {}
 };
 var _default = state;
@@ -29787,6 +30000,43 @@ var mutations = {
     if (rowIndex < state.dataManager.tempData.rowCount) {
       state.dataManager.tempData.values[rowIndex].values.push(cellObject);
     }
+  },
+
+  /**
+   * Delete a row from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} rowId row id
+   */
+  deleteRowFromDataTable: function deleteRowFromDataTable(state, rowId) {
+    var rowIndex = state.dataManager.tempData.rowIds.indexOf(rowId);
+
+    if (rowIndex > -1) {
+      state.dataManager.tempData.values.splice(rowIndex, 1); // also delete row id from indexes
+
+      state.dataManager.tempData.rowIds.splice(rowIndex, 1);
+    }
+  },
+
+  /**
+   * Delete a column from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} colId column id
+   */
+  deleteColFromDataTable: function deleteColFromDataTable(state, colId) {
+    var colIndex = state.dataManager.tempData.colIds.indexOf(colId);
+
+    if (colIndex >= 0) {
+      // eslint-disable-next-line array-callback-return
+      state.dataManager.tempData.values.map(function (r) {
+        r.values.splice(colIndex, 1);
+      }); // also delete col id from indexes
+
+      state.dataManager.tempData.colIds.splice(colIndex, 1); // update column count
+
+      state.dataManager.tempData.colCount -= 1;
+    }
   }
 };
 var _default = mutations;
@@ -29957,7 +30207,8 @@ var actions = {
    */
   addDataManagerTempData: function addDataManagerTempData(_ref10, _ref11) {
     var commit = _ref10.commit,
-        dispatch = _ref10.dispatch;
+        dispatch = _ref10.dispatch,
+        getters = _ref10.getters;
     var data = _ref11.data,
         markAsImported = _ref11.markAsImported;
 
@@ -30008,6 +30259,8 @@ var actions = {
       // mark data created status
       commit('setSetupSourceDataCreatedStatus', true);
     }
+
+    commit('setHoverId', null);
   },
 
   /**
@@ -30197,6 +30450,49 @@ var actions = {
         }
       }, _callee5);
     }))();
+  },
+
+  /**
+   * Delete a row object from data manager table.
+   *
+   * @param {{commit, getters}} vuex store object
+   * @param {string} rowId row id
+   */
+  deleteDataTableRow: function deleteDataTableRow(_ref21, rowId) {
+    var commit = _ref21.commit,
+        getters = _ref21.getters;
+    var index = getters.getDataManagerIndexFromId(rowId);
+    commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
+
+    var hoverRowIndex = index - 1 >= 0 ? index - 1 : index;
+    var hoverRowId = getters.getDataManagerRowId(hoverRowIndex);
+
+    var _getters$parseCellId2 = getters.parseCellId(getters.getHoverId),
+        colId = _getters$parseCellId2.colId;
+
+    commit('setHoverId', getters.formCellId(hoverRowId, colId));
+  },
+
+  /**
+   * Delete a column object from data manager table.
+   *
+   * @param {{commit}} vuex store object
+   * @param {string} colId column id
+   */
+  deleteDataTableCol: function deleteDataTableCol(_ref22, colId) {
+    var commit = _ref22.commit,
+        getters = _ref22.getters;
+    var index = getters.getDataManagerIndexFromId(colId, 'col');
+    commit('deleteColFromDataTable', colId); // calculate hover id that will be focused on after delete operation
+
+    var hoverColIndex = index - 1 >= 0 ? index - 1 : index;
+    var hoverColId = getters.getDataManagerColId(hoverColIndex);
+
+    var _getters$parseCellId3 = getters.parseCellId(getters.getHoverId),
+        rowId = _getters$parseCellId3.rowId; // commit('setHoverId', getters.formCellId(rowId, hoverColId));
+
+
+    commit('setHoverId', null);
   }
 };
 var _default = actions;
@@ -30464,15 +30760,22 @@ var getters = {
    */
   parseCellId: function parseCellId() {
     return function (formedId) {
-      var _formedId$split = formedId.split('-'),
-          _formedId$split2 = _slicedToArray(_formedId$split, 2),
-          rowId = _formedId$split2[0],
-          colId = _formedId$split2[1];
-
-      return {
-        rowId: rowId,
-        colId: colId
+      var idObject = {
+        rowId: null,
+        colId: null
       };
+
+      if (formedId !== null) {
+        var _formedId$split = formedId.split('-'),
+            _formedId$split2 = _slicedToArray(_formedId$split, 2),
+            rowId = _formedId$split2[0],
+            colId = _formedId$split2[1];
+
+        idObject.rowId = rowId;
+        idObject.colId = colId;
+      }
+
+      return idObject;
     };
   },
 
@@ -30510,6 +30813,29 @@ var getters = {
 
       return null;
     };
+  },
+
+  /**
+   * Get hover id of current hovered cell.
+   *
+   * @param {Object} state store state
+   * @return {null|string} hover id of the hovered data table cell
+   */
+  getHoverId: function getHoverId(state) {
+    return state.dataManager.select.hoverId;
+  },
+
+  /**
+   * Get index of given type and id from data manager ids.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to be used to determine index from id.
+   */
+  getDataManagerIndexFromId: function getDataManagerIndexFromId(state) {
+    return function (id) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'row';
+      return state.dataManager.tempData["".concat(type, "Ids")].indexOf(id);
+    };
   }
 };
 var _default = getters;
@@ -30532,8 +30858,6 @@ exports.default = void 0;
 var mutationWatchList = {
   addRowToDataTable: function addRowToDataTable(_ref, state, store) {
     var payload = _ref.payload;
-    // set row count from table data
-    store.commit('setRowCount', store.getters.getDataManagerTempData.length);
     var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
 
     store.commit('setColCount', colCount);
@@ -30576,6 +30900,48 @@ var watchFunction = function watchFunction(watchList, store) {
   };
 };
 /**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+
+
+var stateWatchList = {
+  tempData: {
+    watch: function watch(store) {
+      return function () {
+        return store.getters.getDataManagerTempData;
+      };
+    },
+    callBack: function callBack(store) {
+      return function () {
+        // set row count from table data
+        store.commit('setRowCount', store.getters.getDataManagerTempData.length); // @deprecated
+        // reset hover id in case of deleting currently hovered row/column
+        // store.commit('setHoverId', null);
+      };
+    }
+  }
+};
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list
+ */
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack;
+      store.watch(watch(store), callBack(store));
+    }
+  });
+};
+/**
  * Store subscriptions to watch various store events.
  *
  * @param {Object} store flux store
@@ -30583,6 +30949,7 @@ var watchFunction = function watchFunction(watchList, store) {
 
 
 var subscriptions = function subscriptions(store) {
+  stateWatchFunction(store, stateWatchList);
   store.subscribe(watchFunction(mutationWatchList, store));
   store.subscribeAction(watchFunction(actionWatchList, store));
 };

@@ -7,9 +7,6 @@
  */
 const mutationWatchList = {
 	addRowToDataTable: ({ payload }, state, store) => {
-		// set row count from table data
-		store.commit('setRowCount', store.getters.getDataManagerTempData.length);
-
 		const colCount = Math.max(payload.values.length, store.getters.getColCount);
 
 		// set col count from table data
@@ -48,11 +45,51 @@ const watchFunction = (watchList, store) => (...args) => {
 };
 
 /**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+const stateWatchList = {
+	tempData: {
+		watch: (store) => () => {
+			return store.getters.getDataManagerTempData;
+		},
+		callBack: (store) => () => {
+			// set row count from table data
+			store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+
+			// @deprecated
+			// reset hover id in case of deleting currently hovered row/column
+			// store.commit('setHoverId', null);
+		},
+	},
+};
+
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list
+ */
+const stateWatchFunction = (store, watchList) => {
+	// eslint-disable-next-line array-callback-return
+	Object.keys(watchList).map((k) => {
+		if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+			const { watch, callBack } = watchList[k];
+
+			store.watch(watch(store), callBack(store));
+		}
+	});
+};
+
+/**
  * Store subscriptions to watch various store events.
  *
  * @param {Object} store flux store
  */
 const subscriptions = (store) => {
+	stateWatchFunction(store, stateWatchList);
+
 	store.subscribe(watchFunction(mutationWatchList, store));
 	store.subscribeAction(watchFunction(actionWatchList, store));
 };
