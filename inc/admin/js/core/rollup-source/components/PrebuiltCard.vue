@@ -232,7 +232,7 @@ export default {
 			}
 			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
 		},
-		...mapGetters(['appData', 'isDevBuild']),
+		...mapGetters(['appData', 'isDevBuild', 'strings']),
 	},
 	mounted() {
 		this.$nextTick(() => {

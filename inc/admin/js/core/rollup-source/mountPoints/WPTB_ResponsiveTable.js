@@ -10,6 +10,7 @@ import filters from '../plugins/filters';
 import strings from '../plugins/strings';
 import ResponsivePanelGeneralControls from '../components/ResponsivePanelGeneralControls';
 import ResponsivePanelModeControls from '../components/ResponsivePanelModeControls';
+import createStore from '../stores/responsive';
 
 export default {
 	name: 'ResponsiveTable',
@@ -99,13 +100,17 @@ export default {
 		// filters setup
 		Vue.use(filters);
 
-		// translation strings setup
-		Vue.use(strings, data);
+		// @deprecated moved to vuex store
+		// // translation strings setup
+		// Vue.use(strings, data);
+
+		const store = createStore({ state: { strings: data.strings } });
 
 		// vue builder instance
 		new Vue({
 			components: { ResponsiveApp },
 			data: { mainTableQuery, ...data },
+			store,
 			template:
 				'<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>',
 		}).$mount(`#${uniqueId}`);
@@ -113,6 +118,7 @@ export default {
 		// left panel general controls instance
 		new Vue({
 			components: { ResponsivePanelGeneralControls },
+			store,
 			template: '<responsive-panel-general-controls></responsive-panel-general-controls>',
 		}).$mount('#responsiveBuilderLeftPanelGeneralControls');
 
@@ -120,6 +126,7 @@ export default {
 		new Vue({
 			components: { ResponsivePanelModeControls },
 			data: { ...data },
+			store,
 			template: '<responsive-panel-mode-controls></responsive-panel-mode-controls>',
 		}).$mount('#responsiveBuilderLeftPanelModeOptions');
 	},

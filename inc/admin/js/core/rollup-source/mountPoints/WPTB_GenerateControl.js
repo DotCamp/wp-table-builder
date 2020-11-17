@@ -13,9 +13,6 @@ export default {
 	handler: function dataTableJS(dataTableEnabled = true) {
 		Vue.config.productionTip = false;
 
-		// TODO [erdembircan] remove for production
-		console.log(dataTableEnabled);
-
 		// setup filters
 		Vue.use(filters);
 
@@ -29,27 +26,18 @@ export default {
 			icons: data.icons,
 			env: process.env.NODE_ENV,
 			dataTableCardEnabled: dataTableEnabled,
+			strings: data.strings,
 		};
 
-		// store methods
-		const getters = {
-			// eslint-disable-next-line no-shadow
-			appData: (state) => {
-				return state;
-			},
-			// eslint-disable-next-line no-shadow
-			isDevBuild: (state) => () => {
-				return state.env !== 'production';
-			},
-		};
+		// create generate app store
+		const store = createStore({ state });
 
-		const store = createStore({ state, getters });
-
-		// @deprecated
+		// @deprecated moved to flux store implementation
 		// Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
 
+		// @deprecated moved to flux store implementation
 		// setup translation strings
-		Vue.use(strings, data);
+		// Vue.use(strings, data);
 
 		const vueMountPoint = document.querySelector(`#${data.mountId}`);
 

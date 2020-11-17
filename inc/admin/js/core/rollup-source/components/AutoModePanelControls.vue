@@ -44,6 +44,7 @@
 	</fragment>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import { Fragment } from 'vue-fragment';
 import PanelToggleControl from './PanelToggleControl';
 import PanelDropdownControl from './PanelDropdownControl';
@@ -62,6 +63,7 @@ export default {
 				? this.strings.itemsPerHeader
 				: this.strings.cellsPerRow;
 		},
+		...mapGetters(['strings']),
 	},
 };
 </script>

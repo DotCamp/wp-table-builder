@@ -4,7 +4,7 @@
 			<div class="wptb-plugin-modal-icon"><span class="dashicons dashicons-warning"></span></div>
 			<div class="wptb-plugin-modal-message">{{ message }}</div>
 			<div class="wptb-plugin-modal-button-container">
-				<material-button size="full-size" :click="callback">{{ strings.okay }}</material-button>
+				<material-button size="full-size" :click="callback">{{ okayString }}</material-button>
 			</div>
 		</div>
 	</div>
@@ -32,6 +32,10 @@ export default {
 				// eslint-disable-next-line no-console
 				console.log('modal button clicked');
 			},
+		},
+		okayString: {
+			type: String,
+			default: 'ok',
 		},
 	},
 	components: { MaterialButton },

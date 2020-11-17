@@ -20,11 +20,15 @@
 	</fragment>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import { Fragment } from 'vue-fragment';
 import PanelToggleControl from './PanelToggleControl';
 import PanelDropdownControl from './PanelDropdownControl';
 
 export default {
 	components: { PanelToggleControl, PanelDropdownControl, Fragment },
+	computed: {
+		...mapGetters(['strings']),
+	},
 };
 </script>

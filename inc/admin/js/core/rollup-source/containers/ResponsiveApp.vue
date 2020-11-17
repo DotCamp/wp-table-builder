@@ -60,12 +60,14 @@
 							appOptions.hasLegacyResponsive = false;
 						}
 					"
+					:okay-string="strings.okay"
 				></modal-window>
 			</div>
 		</div>
 	</transition>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import TableClone from '../components/TableClone';
 import ScreenSizeSlider from '../components/ScreenSizeSlider';
 /* eslint-disable camelcase */
@@ -194,6 +196,7 @@ export default {
 		modalRelative() {
 			return document.querySelector('.wptb-builder-panel');
 		},
+		...mapGetters(['strings']),
 	},
 	methods: {
 		/**

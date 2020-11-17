@@ -107,7 +107,7 @@ export default {
 		isPro() {
 			return this.version === 'pro';
 		},
-		...mapGetters(['appData', 'isDevBuild']),
+		...mapGetters(['appData', 'isDevBuild', 'strings']),
 	},
 	methods: {
 		deselect() {
@@ -143,13 +143,13 @@ export default {
 				});
 		},
 		cardFavIcon() {
-			return this.appData.icons.favIcon;
+			return this.appData.icons?.favIcon;
 		},
 		cardDeleteIcon(cardId) {
 			if (this.isDevBuild()) {
-				return this.appData.icons.deleteIcon;
+				return this.appData.icons?.deleteIcon;
 			}
-			return cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons.deleteIcon;
+			return cardId.startsWith(this.appData.teamTablePrefix) ? '' : this.appData.icons?.deleteIcon;
 		},
 		filteredTables() {
 			return Object.keys(this.fixedTables).reduce((carry, id) => {

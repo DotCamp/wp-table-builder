@@ -1,11 +1,10 @@
 /**
- * plugin install method
+ * Plugin install method.
  *
- * plugin for adding strings data field to all components to use
+ * Plugin for adding strings data field to all components to use
  *
- * @param {object} Vue Vue object
- * @param {object} options options to be used at plugin
- * @returns {{strings: boolean}}
+ * @param {Object} Vue Vue object
+ * @param {Object} options options to be used at plugin
  */
 function install(Vue, options) {
 	Vue.mixin({

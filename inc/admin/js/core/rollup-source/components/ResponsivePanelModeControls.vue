@@ -13,6 +13,7 @@ Left panel mode options controls component.
 	</panel-section-group-tabbed>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import PanelSectionGroupTabbed from './PanelSectionGroupTabbed';
 import AutoModePanelControls from './AutoModePanelControls';
 
@@ -38,10 +39,12 @@ export default {
 				this.directives.responsiveMode[0].toUpperCase() + this.directives.responsiveMode.slice(1)
 			}ModePanelControls`;
 		},
+		...mapGetters(['strings']),
 	},
 	methods: {
 		/**
 		 * Handle tab change
+		 *
 		 * @param {string} tabId breakpoint id
 		 */
 		handleTabChange(tabId) {
