@@ -11,7 +11,7 @@ var WPTB_ElementObject = function ( data ) {
         data.node = DOMElement;
 
         let itemHtml = template( data );
-        itemHtml = '<div><p data-placeholder=\"Add Content\"></p></div>';
+        itemHtml = '<div data-placeholder=\"Add Content\"></div>';
         
         itemHtml = itemHtml.replace(/\r|\n|\t/g, '').trim();
         DOMElement.innerHTML = itemHtml;

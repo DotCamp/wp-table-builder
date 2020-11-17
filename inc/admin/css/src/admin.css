@@ -2057,7 +2057,7 @@ br[data-mce-bogus="1"] {
     color: rgb(30, 115, 190);
 }
 
-.wptb-text-container p:empty:not(:focus)::before {
+.wptb-text-container div:empty:not(:focus)::before {
     content: attr(data-placeholder);
 }
 
