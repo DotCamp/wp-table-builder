@@ -64,6 +64,17 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     }
     
     node.onmouseenter = function ( event ) {
+        
+        if (node.children.length === 1) {
+            let elemChild = node.children[0].lastChild;
+            
+            if (elemChild.children.length === 1) {
+                if (elemChild.innerHTML === '<br>') {
+                    elemChild.innerHTML = '';
+                }
+            }
+        }
+        
         if( event.target.classList.contains( 'wptb-moving-mode' ) ) {
             return;
         }
