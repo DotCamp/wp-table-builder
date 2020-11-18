@@ -51,12 +51,15 @@ class Icon_Manager {
 	 * @return array an associated array of icon list with keys as icon name and values as icon url
 	 */
 	public function get_icon_list( $extension = 'svg' ) {
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+		// @deprecated
+//		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+//
+//		// return an empty array if filesystem credential check fails
+//		if ( ! WP_Filesystem( $creds ) ) {
+//			return [];
+//		}
 
-		// return an empty array if filesystem credential check fails
-		if ( ! WP_Filesystem( $creds ) ) {
-			return [];
-		}
+		WP_Filesystem( true );
 
 		// continue filesystem read operations from here if credential check passes
 		global $wp_filesystem;
@@ -91,14 +94,17 @@ class Icon_Manager {
 	 * @return string|void return a string representation of the icon or void depending on to chose to output to buffer
 	 */
 	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg' ) {
+		// @deprecated
 		require_once ABSPATH . 'wp-admin/includes/file.php';
+//
+//		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+//
+//		// check for filesystem credentials
+//		if ( ! WP_Filesystem( $creds ) ) {
+//			return;
+//		}
 
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
-
-		// check for filesystem credentials
-		if ( ! WP_Filesystem( $creds ) ) {
-			return;
-		}
+		WP_Filesystem( true );
 
 		global $wp_filesystem;
 
