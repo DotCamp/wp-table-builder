@@ -63,6 +63,19 @@ const stateWatchList = {
 			// store.commit('setHoverId', null);
 		},
 	},
+	selectedSource: {
+		watch: (store) => () => {
+			return store.getters.getSelectedDataSource;
+		},
+		callBack: () => (n) => {
+			// show hide a message to the user on builder panel where it indicates they have to finish up data table setup before working on table layout
+			if (n === null) {
+				DataTableManagerStatic.getInstance().addMessageToElementsSection();
+			} else {
+				DataTableManagerStatic.getInstance().cleanUp();
+			}
+		},
+	},
 };
 
 /**
@@ -76,6 +89,9 @@ const stateWatchFunction = (store, watchList) => {
 	Object.keys(watchList).map((k) => {
 		if (Object.prototype.hasOwnProperty.call(watchList, k)) {
 			const { watch, callBack } = watchList[k];
+
+			// call calback functions before any mutation happened on store
+			callBack(store)(watch(store)());
 
 			store.watch(watch(store), callBack(store));
 		}

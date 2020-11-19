@@ -1,30 +1,42 @@
 <template>
-	<div class="wptb-data-table-data-source-selection" @click.prevent.capture="deselectSelection">
-		<div class="wptb-data-table-data-source-header">{{ translation('dataSourceHeader') }}</div>
-		<div class="wptb-data-table-data-source-cards-wrapper">
-			<data-source-card
-				v-for="source in sources"
-				:data-source-object="source"
-				:key="source.id"
-				@sourceCardConfirm="handleSourceSelection"
-			></data-source-card>
+	<fragment>
+		<!--builder-->
+		<div class="wptb-data-table-data-source-selection" @click.prevent.capture="deselectSelection">
+			<div class="wptb-data-table-data-source-header">{{ translation('dataSourceHeader') }}</div>
+			<div class="wptb-data-table-data-source-cards-wrapper">
+				<data-source-card
+					v-for="source in sources"
+					:data-source-object="source"
+					:key="source.id"
+					@sourceCardConfirm="handleSourceSelection"
+				></data-source-card>
+			</div>
 		</div>
-		<data-table-left-panel>
+		<!--left-panel-->
+		<portal to="leftPanel">
 			<left-panel-info-message>{{ translation('sourceSelectLeftPanelInfo') }}</left-panel-info-message>
-		</data-table-left-panel>
-	</div>
+			<div
+				class="wptb-data-table-left-panel-source-setup-general-button-wrapper"
+				v-if="getSelectedDataSource !== null"
+			>
+				<left-panel-material-button :click="backToSelected" type="danger">{{
+					translation('cancelNew') | cap
+				}}</left-panel-material-button>
+			</div>
+		</portal>
+	</fragment>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import DataSourceObject from '../functions/DataSourceObject';
 import DataSourceCard from './DataSourceCard';
-import DataTableLeftPanel from './DataTableLeftPanel';
 import LeftPanelInfoMessage from './LeftPanelInfoMessage';
+import LeftPanelMaterialButton from './leftPanel/LeftPanelMaterialButton';
 
 export default {
-	components: { DataSourceCard, DataTableLeftPanel, LeftPanelInfoMessage },
+	components: { LeftPanelMaterialButton, DataSourceCard, LeftPanelInfoMessage },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -59,6 +71,9 @@ export default {
 			],
 		};
 	},
+	computed: {
+		...mapGetters(['translation', 'getSelectedDataSource']),
+	},
 	methods: {
 		handleSourceSelection(id) {
 			this.startSourceSetup(id);
@@ -66,7 +81,12 @@ export default {
 		deselectSelection() {
 			this.softSelectCard(null);
 		},
-		...mapActions(['startSourceSetup', 'softSelectCard']),
+		backToSelected() {
+			const selectedId = this.getSelectedDataSource;
+
+			this.setCurrentScreenFromId(selectedId);
+		},
+		...mapActions(['startSourceSetup', 'softSelectCard', 'setCurrentScreenFromId']),
 	},
 };
 </script>

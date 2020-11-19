@@ -75,16 +75,23 @@ export default {
 		};
 	},
 	created() {
-		this.addDataManagerTempData({
-			data: [
-				['1', '2', '3'],
-				['4', '5', '6'],
-			],
-			markAsImported: false,
-		});
+		// only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+		if (!this.getSelectedDataSource) {
+			this.addDataManagerTempData({
+				data: [
+					['1', '2', '3'],
+					['4', '5', '6'],
+				],
+				markAsImported: false,
+			});
+		}
 	},
 	mounted() {
 		this.$nextTick(() => {
+			// if there is already a data source is selected, it means there is already a data on data manager, so prepare our header and values at mount.
+			if (this.getSelectedDataSource) {
+				this.prepareTableValues(this.getDataManagerTempData);
+			}
 			this.calculateColumnNameRowIndex(this.getDataManagerControls.firstRowAsColumnName);
 		});
 	},
@@ -117,6 +124,7 @@ export default {
 			'getSelectOperationData',
 			'formCellId',
 			'parseCellId',
+			'getSelectedDataSource',
 		]),
 		infoRowSpan() {
 			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;

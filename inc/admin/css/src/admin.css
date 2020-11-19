@@ -6181,5 +6181,12 @@ thead .wptb-data-manager-table-data-value {
     animation: linear-gradient-move 20s linear infinite reverse;
 }
 
+.wptb-data-table-elements-message {
+    position: absolute;
+    background-color: var(--wptb-plugin-theme-color-light);
+    left: 0;
+    top: 0;
+}
+
 
 /*endregion*/

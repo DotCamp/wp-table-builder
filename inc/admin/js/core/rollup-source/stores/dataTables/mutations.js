@@ -311,6 +311,15 @@ const mutations = {
 			state.dataManager.tempData.colCount -= 1;
 		}
 	},
+	/**
+	 * Set data source id as selected source.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} sourceId source id
+	 */
+	setSelectedDataSource: (state, sourceId) => {
+		state.dataSource.selected = sourceId;
+	},
 };
 
 export default mutations;

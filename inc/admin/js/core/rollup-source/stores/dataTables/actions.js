@@ -29,7 +29,7 @@ const actions = {
 	 */
 	setCurrentScreenToDataSourceSelection({ commit }) {
 		commit('setScreen', `DataSourceSelection`);
-		commit('resetToDefaults', 'dataSource.setup');
+		// commit('resetToDefaults', 'dataSource.setup');
 	},
 	/**
 	 * Soft select a source card.
@@ -53,10 +53,22 @@ const actions = {
 		// set source id
 		commit('setSetupSourceId', sourceId);
 
+		// reset selected data source
+		commit('setSelectedDataSource', null);
+
 		// clear temp data manager
 		commit('clearTempDataManager');
 
 		// set screen
+		dispatch('setCurrentScreenFromId', sourceId);
+	},
+	/**
+	 * Set current setup screen from id.
+	 *
+	 * @param {{dispatch}} vuex store object
+	 * @param {string} sourceId source id
+	 */
+	setCurrentScreenFromId({ dispatch }, sourceId) {
 		const screenName = `${sourceId[0].toUpperCase() + sourceId.slice(1)}Setup`;
 
 		dispatch('setCurrentScreen', screenName);
@@ -277,6 +289,11 @@ const actions = {
 		// commit('setHoverId', getters.formCellId(rowId, hoverColId));
 
 		commit('setHoverId', null);
+	},
+	setCurrentSourceAsSelected({ commit, getters }) {
+		const currentSourceInSetup = getters.getCurrentSourceSetupId;
+
+		commit('setSelectedDataSource', currentSourceInSetup);
 	},
 };
 

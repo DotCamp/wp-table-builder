@@ -264,6 +264,24 @@ const getters = {
 	getDataManagerIndexFromId: (state) => (id, type = 'row') => {
 		return state.dataManager.tempData[`${type}Ids`].indexOf(id);
 	},
+	/**
+	 * Get selected and generated data source id.
+	 *
+	 * @param {Object} state store state
+	 * @return {*} generated data source id
+	 */
+	getSelectedDataSource: (state) => {
+		return state.dataSource.selected;
+	},
+	/**
+	 * Get id of the current source in setup.
+	 *
+	 * @param {Object} state store state
+	 * @return {*} source id
+	 */
+	getCurrentSourceSetupId: (state) => {
+		return state.dataSource.setup.sourceId;
+	},
 };
 
 export default getters;

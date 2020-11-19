@@ -4,21 +4,18 @@
 		<portal-target name="leftPanelAfter"></portal-target>
 
 		<div class="wptb-data-table-left-panel-source-setup-general-button-wrapper" v-if="isActiveScreenSourceSetup">
-			<material-button
-				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
+			<left-panel-material-button
 				:click="setCurrentScreenToDataSourceSelection"
 				type="danger"
-				size="full-size"
 				:disabled="isBusy"
-				>{{ translationM('back') | cap }}</material-button
+				>{{ translationM('back') | cap }}</left-panel-material-button
 			>
-			<material-button
-				class="wptb-plugin-box-shadow-md wptb-panel-button-material"
+			<left-panel-material-button
+				v-if="getSelectedDataSource === null"
 				type="confirm"
-				size="full-size"
 				:disabled="isContinueAvailable"
 				:click="continueToGenerate"
-				>{{ translationM('continue') | cap }}</material-button
+				>{{ translationM('continue') | cap }}</left-panel-material-button
 			>
 		</div>
 	</portal>
@@ -26,25 +23,30 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import MaterialButton from './MaterialButton';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import withStoreBusy from '../mixins/withStoreBusy';
+import LeftPanelMaterialButton from './leftPanel/LeftPanelMaterialButton';
 
 export default {
-	components: { MaterialButton },
+	components: { LeftPanelMaterialButton },
 	mixins: [withNativeTranslationStore, withStoreBusy],
 	computed: {
-		...mapGetters(['isActiveScreenSourceSetup', 'isSourceDataCreated']),
+		...mapGetters(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']),
 		isContinueAvailable() {
 			return this.isBusy || !this.isSourceDataCreated;
 		},
 	},
 	methods: {
 		continueToGenerate() {
+			DataTableManagerStatic.getInstance().cleanUp();
+
 			WPTB_ControlsManager.callControlScript('Generate', false);
 			WPTB_Helper.activateSection('elements');
+
+			// set current source in setup as selected
+			this.setCurrentSourceAsSelected();
 		},
-		...mapActions(['setCurrentScreenToDataSourceSelection']),
+		...mapActions(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected']),
 	},
 };
 </script>

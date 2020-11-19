@@ -46,7 +46,8 @@ class Data_Table_Manager extends Static_Singleton_Base {
 				'server' => $icon_manager->get_icon( 'server' ),
 				'chevronRight' => $icon_manager->get_icon( 'chevron-right' ),
 			],
-			'proUrl' => 'https://wptablebuilder.com/'
+			'proUrl' => 'https://wptablebuilder.com/',
+			'elementsMessage' => esc_html__('Finish your data source setup first to start working on table layout.')
 		];
 
 		$admin_data['dataTable'] = $data_table;

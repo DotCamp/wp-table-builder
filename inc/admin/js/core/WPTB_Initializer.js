@@ -73,7 +73,13 @@ const WPTB_Initializer = function () {
 	new WptbResponsive('table_responsive_menu', 'wptbResponsiveApp', '.wptb-builder-content');
 
 	// setup data table manager
-	new DataTableManager('data_table_menu', 'wptbDataTableApp', '.wptb-builder-panel', wptb_admin_object.dataTable);
+	DataTableManagerStatic.getInstance(
+		'data_table_menu',
+		'wptbDataTableApp',
+		'.wptb-builder-panel',
+		wptb_admin_object.dataTable
+	);
+
 	// get builder section from url parameter for easy switch at page load
 	WPTB_Helper.getSectionFromUrl();
 

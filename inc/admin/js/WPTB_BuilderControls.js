@@ -26768,156 +26768,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../functions/DataSourceObject":"functions/DataSourceObject.js"}],"mixins/withStoreBusy.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vuex = require("vuex");
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-/**
- * Mixin for using store connected busy state to component.
- *
- * @type {Object}
- */
-var withStoreBusy = {
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
-    isBusy: function isBusy() {
-      return this.busyStatus;
-    }
-  })
-};
-var _default = withStoreBusy;
-exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataTableLeftPanel.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vuex = require("vuex");
-
-var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
-
-var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
-
-var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var _default = {
-  components: {
-    MaterialButton: _MaterialButton.default
-  },
-  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated']), {
-    isContinueAvailable: function isContinueAvailable() {
-      return this.isBusy || !this.isSourceDataCreated;
-    }
-  }),
-  methods: _objectSpread({
-    continueToGenerate: function continueToGenerate() {
-      WPTB_ControlsManager.callControlScript('Generate', false);
-      WPTB_Helper.activateSection('elements');
-    }
-  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection']))
-};
-exports.default = _default;
-        var $a2c9cd = exports.default || module.exports;
-      
-      if (typeof $a2c9cd === 'function') {
-        $a2c9cd = $a2c9cd.options;
-      }
-    
-        /* template */
-        Object.assign($a2c9cd, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "portal",
-    { attrs: { to: "leftPanel" } },
-    [
-      _vm._t("default"),
-      _vm._v(" "),
-      _c("portal-target", { attrs: { name: "leftPanelAfter" } }),
-      _vm._v(" "),
-      _vm.isActiveScreenSourceSetup
-        ? _c(
-            "div",
-            {
-              staticClass:
-                "wptb-data-table-left-panel-source-setup-general-button-wrapper"
-            },
-            [
-              _c(
-                "material-button",
-                {
-                  staticClass:
-                    "wptb-plugin-box-shadow-md wptb-panel-button-material",
-                  attrs: {
-                    click: _vm.setCurrentScreenToDataSourceSelection,
-                    type: "danger",
-                    size: "full-size",
-                    disabled: _vm.isBusy
-                  }
-                },
-                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("back"))))]
-              ),
-              _vm._v(" "),
-              _c(
-                "material-button",
-                {
-                  staticClass:
-                    "wptb-plugin-box-shadow-md wptb-panel-button-material",
-                  attrs: {
-                    type: "confirm",
-                    size: "full-size",
-                    disabled: _vm.isContinueAvailable,
-                    click: _vm.continueToGenerate
-                  }
-                },
-                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("continue"))))]
-              )
-            ],
-            1
-          )
-        : _vm._e()
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./MaterialButton":"components/MaterialButton.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js"}],"components/LeftPanelInfoMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../functions/DataSourceObject":"functions/DataSourceObject.js"}],"components/LeftPanelInfoMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26962,7 +26813,74 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/DataSourceSelection.vue":[function(require,module,exports) {
+},{}],"components/leftPanel/LeftPanelMaterialButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MaterialButton = _interopRequireDefault(require("../MaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+var _default = {
+  name: 'left-panel-material-button',
+  components: {
+    MaterialButton: _MaterialButton.default
+  },
+  inheritAttrs: false,
+  props: {
+    label: {
+      type: String,
+      default: 'button'
+    }
+  }
+};
+exports.default = _default;
+        var $e5cce9 = exports.default || module.exports;
+      
+      if (typeof $e5cce9 === 'function') {
+        $e5cce9 = $e5cce9.options;
+      }
+    
+        /* template */
+        Object.assign($e5cce9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "material-button",
+    _vm._b(
+      { staticClass: "wptb-plugin-box-shadow-md wptb-panel-button-material" },
+      "material-button",
+      _vm.$attrs,
+      false
+    ),
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../MaterialButton":"components/MaterialButton.vue"}],"components/DataSourceSelection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26978,9 +26896,9 @@ var _DataSourceObject = _interopRequireDefault(require("../functions/DataSourceO
 
 var _DataSourceCard = _interopRequireDefault(require("./DataSourceCard"));
 
-var _DataTableLeftPanel = _interopRequireDefault(require("./DataTableLeftPanel"));
-
 var _LeftPanelInfoMessage = _interopRequireDefault(require("./LeftPanelInfoMessage"));
+
+var _LeftPanelMaterialButton = _interopRequireDefault(require("./leftPanel/LeftPanelMaterialButton"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26992,8 +26910,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    LeftPanelMaterialButton: _LeftPanelMaterialButton.default,
     DataSourceCard: _DataSourceCard.default,
-    DataTableLeftPanel: _DataTableLeftPanel.default,
     LeftPanelInfoMessage: _LeftPanelInfoMessage.default
   },
   mixins: [_withNativeTranslationStore.default],
@@ -27002,14 +26920,19 @@ var _default = {
       sources: [new _DataSourceObject.default('csv', this.translationM('csvTitle'), this.translationM('csvInfo'), this.$store.getters.getIcon('csv')), new _DataSourceObject.default('wordpressPost', this.translationM('wordpressPostTitle'), this.translationM('wordpressPostInfo'), this.$store.getters.getIcon('wordpressPost'), true), new _DataSourceObject.default('database', this.translationM('databaseTitle'), this.translationM('databaseInfo'), this.$store.getters.getIcon('database'), true), new _DataSourceObject.default('remote', this.translationM('remoteTitle'), this.translationM('remoteInfo'), this.$store.getters.getIcon('server'), true)]
     };
   },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation', 'getSelectedDataSource'])),
   methods: _objectSpread({
     handleSourceSelection: function handleSourceSelection(id) {
       this.startSourceSetup(id);
     },
     deselectSelection: function deselectSelection() {
       this.softSelectCard(null);
+    },
+    backToSelected: function backToSelected() {
+      var selectedId = this.getSelectedDataSource;
+      this.setCurrentScreenFromId(selectedId);
     }
-  }, (0, _vuex.mapActions)(['startSourceSetup', 'softSelectCard']))
+  }, (0, _vuex.mapActions)(['startSourceSetup', 'softSelectCard', 'setCurrentScreenFromId']))
 };
 exports.default = _default;
         var $a6eb32 = exports.default || module.exports;
@@ -27025,40 +26948,68 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    {
-      staticClass: "wptb-data-table-data-source-selection",
-      on: {
-        "!click": function($event) {
-          $event.preventDefault()
-          return _vm.deselectSelection($event)
-        }
-      }
-    },
+    "fragment",
     [
-      _c("div", { staticClass: "wptb-data-table-data-source-header" }, [
-        _vm._v(_vm._s(_vm.translation("dataSourceHeader")))
-      ]),
-      _vm._v(" "),
       _c(
         "div",
-        { staticClass: "wptb-data-table-data-source-cards-wrapper" },
-        _vm._l(_vm.sources, function(source) {
-          return _c("data-source-card", {
-            key: source.id,
-            attrs: { "data-source-object": source },
-            on: { sourceCardConfirm: _vm.handleSourceSelection }
-          })
-        }),
-        1
+        {
+          staticClass: "wptb-data-table-data-source-selection",
+          on: {
+            "!click": function($event) {
+              $event.preventDefault()
+              return _vm.deselectSelection($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "wptb-data-table-data-source-header" }, [
+            _vm._v(_vm._s(_vm.translation("dataSourceHeader")))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-data-table-data-source-cards-wrapper" },
+            _vm._l(_vm.sources, function(source) {
+              return _c("data-source-card", {
+                key: source.id,
+                attrs: { "data-source-object": source },
+                on: { sourceCardConfirm: _vm.handleSourceSelection }
+              })
+            }),
+            1
+          )
+        ]
       ),
       _vm._v(" "),
       _c(
-        "data-table-left-panel",
+        "portal",
+        { attrs: { to: "leftPanel" } },
         [
           _c("left-panel-info-message", [
             _vm._v(_vm._s(_vm.translation("sourceSelectLeftPanelInfo")))
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.getSelectedDataSource !== null
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "wptb-data-table-left-panel-source-setup-general-button-wrapper"
+                },
+                [
+                  _c(
+                    "left-panel-material-button",
+                    { attrs: { click: _vm.backToSelected, type: "danger" } },
+                    [
+                      _vm._v(
+                        _vm._s(_vm._f("cap")(_vm.translation("cancelNew")))
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
+            : _vm._e()
         ],
         1
       )
@@ -27078,7 +27029,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../functions/DataSourceObject":"functions/DataSourceObject.js","./DataSourceCard":"components/DataSourceCard.vue","./DataTableLeftPanel":"components/DataTableLeftPanel.vue","./LeftPanelInfoMessage":"components/LeftPanelInfoMessage.vue"}],"components/PanelButtonControl.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../functions/DataSourceObject":"functions/DataSourceObject.js","./DataSourceCard":"components/DataSourceCard.vue","./LeftPanelInfoMessage":"components/LeftPanelInfoMessage.vue","./leftPanel/LeftPanelMaterialButton":"components/leftPanel/LeftPanelMaterialButton.vue"}],"components/PanelButtonControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27278,7 +27229,159 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/PanelSectionGroupTabbedImproved.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"mixins/withStoreBusy.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Mixin for using store connected busy state to component.
+ *
+ * @type {Object}
+ */
+var withStoreBusy = {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
+    isBusy: function isBusy() {
+      return this.busyStatus;
+    }
+  })
+};
+var _default = withStoreBusy;
+exports.default = _default;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataTableLeftPanel.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
+var _LeftPanelMaterialButton = _interopRequireDefault(require("./leftPanel/LeftPanelMaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    LeftPanelMaterialButton: _LeftPanelMaterialButton.default
+  },
+  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']), {
+    isContinueAvailable: function isContinueAvailable() {
+      return this.isBusy || !this.isSourceDataCreated;
+    }
+  }),
+  methods: _objectSpread({
+    continueToGenerate: function continueToGenerate() {
+      DataTableManagerStatic.getInstance().cleanUp();
+      WPTB_ControlsManager.callControlScript('Generate', false);
+      WPTB_Helper.activateSection('elements'); // set current source in setup as selected
+
+      this.setCurrentSourceAsSelected();
+    }
+  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected']))
+};
+exports.default = _default;
+        var $a2c9cd = exports.default || module.exports;
+      
+      if (typeof $a2c9cd === 'function') {
+        $a2c9cd = $a2c9cd.options;
+      }
+    
+        /* template */
+        Object.assign($a2c9cd, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "portal",
+    { attrs: { to: "leftPanel" } },
+    [
+      _vm._t("default"),
+      _vm._v(" "),
+      _c("portal-target", { attrs: { name: "leftPanelAfter" } }),
+      _vm._v(" "),
+      _vm.isActiveScreenSourceSetup
+        ? _c(
+            "div",
+            {
+              staticClass:
+                "wptb-data-table-left-panel-source-setup-general-button-wrapper"
+            },
+            [
+              _c(
+                "left-panel-material-button",
+                {
+                  attrs: {
+                    click: _vm.setCurrentScreenToDataSourceSelection,
+                    type: "danger",
+                    disabled: _vm.isBusy
+                  }
+                },
+                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("back"))))]
+              ),
+              _vm._v(" "),
+              _vm.getSelectedDataSource === null
+                ? _c(
+                    "left-panel-material-button",
+                    {
+                      attrs: {
+                        type: "confirm",
+                        disabled: _vm.isContinueAvailable,
+                        click: _vm.continueToGenerate
+                      }
+                    },
+                    [
+                      _vm._v(
+                        _vm._s(_vm._f("cap")(_vm.translationM("continue")))
+                      )
+                    ]
+                  )
+                : _vm._e()
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js","./leftPanel/LeftPanelMaterialButton":"components/leftPanel/LeftPanelMaterialButton.vue"}],"components/PanelSectionGroupTabbedImproved.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28876,15 +28979,23 @@ var _default = {
     };
   },
   created: function created() {
-    this.addDataManagerTempData({
-      data: [['1', '2', '3'], ['4', '5', '6']],
-      markAsImported: false
-    });
+    // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+    if (!this.getSelectedDataSource) {
+      this.addDataManagerTempData({
+        data: [['1', '2', '3'], ['4', '5', '6']],
+        markAsImported: false
+      });
+    }
   },
   mounted: function mounted() {
     var _this = this;
 
     this.$nextTick(function () {
+      // if there is already a data source is selected, it means there is already a data on data manager, so prepare our header and values at mount.
+      if (_this.getSelectedDataSource) {
+        _this.prepareTableValues(_this.getDataManagerTempData);
+      }
+
       _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
     });
   },
@@ -28907,7 +29018,7 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource']), {
     infoRowSpan: function infoRowSpan() {
       var _this$table$header$, _this$table$header$$v;
 
@@ -30136,6 +30247,16 @@ var mutations = {
 
       state.dataManager.tempData.colCount -= 1;
     }
+  },
+
+  /**
+   * Set data source id as selected source.
+   *
+   * @param {Object} state data table state
+   * @param {string} sourceId source id
+   */
+  setSelectedDataSource: function setSelectedDataSource(state, sourceId) {
+    state.dataSource.selected = sourceId;
   }
 };
 var _default = mutations;
@@ -30187,8 +30308,7 @@ var actions = {
    */
   setCurrentScreenToDataSourceSelection: function setCurrentScreenToDataSourceSelection(_ref3) {
     var commit = _ref3.commit;
-    commit('setScreen', "DataSourceSelection");
-    commit('resetToDefaults', 'dataSource.setup');
+    commit('setScreen', "DataSourceSelection"); // commit('resetToDefaults', 'dataSource.setup');
   },
 
   /**
@@ -30215,10 +30335,23 @@ var actions = {
     var commit = _ref5.commit,
         dispatch = _ref5.dispatch;
     // set source id
-    commit('setSetupSourceId', sourceId); // clear temp data manager
+    commit('setSetupSourceId', sourceId); // reset selected data source
+
+    commit('setSelectedDataSource', null); // clear temp data manager
 
     commit('clearTempDataManager'); // set screen
 
+    dispatch('setCurrentScreenFromId', sourceId);
+  },
+
+  /**
+   * Set current setup screen from id.
+   *
+   * @param {{dispatch}} vuex store object
+   * @param {string} sourceId source id
+   */
+  setCurrentScreenFromId: function setCurrentScreenFromId(_ref6, sourceId) {
+    var dispatch = _ref6.dispatch;
     var screenName = "".concat(sourceId[0].toUpperCase() + sourceId.slice(1), "Setup");
     dispatch('setCurrentScreen', screenName);
   },
@@ -30230,11 +30363,11 @@ var actions = {
    * @param {{value,index}} payload
    * @return {Object} cell object
    */
-  generateCell: function generateCell(_ref6, _ref7) {
-    var getters = _ref6.getters,
-        commit = _ref6.commit;
-    var value = _ref7.value,
-        index = _ref7.index;
+  generateCell: function generateCell(_ref7, _ref8) {
+    var getters = _ref7.getters,
+        commit = _ref7.commit;
+    var value = _ref8.value,
+        index = _ref8.index;
     var colId = getters.getDataManagerColId(index);
 
     if (!colId) {
@@ -30255,10 +30388,10 @@ var actions = {
    * @param {Array} colValues column values
    * @return {Function} generated new row object
    */
-  generateRow: function generateRow(_ref8, colValues) {
-    var commit = _ref8.commit,
-        getters = _ref8.getters,
-        dispatch = _ref8.dispatch;
+  generateRow: function generateRow(_ref9, colValues) {
+    var commit = _ref9.commit,
+        getters = _ref9.getters,
+        dispatch = _ref9.dispatch;
     var rowId = getters.generateUniqueId();
     commit('pushDataManagerRowId', rowId);
     var rowObj = {
@@ -30267,7 +30400,7 @@ var actions = {
     }; // eslint-disable-next-line array-callback-return
 
     colValues.map( /*#__PURE__*/function () {
-      var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(value, i) {
+      var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(value, i) {
         var cellObject;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -30292,7 +30425,7 @@ var actions = {
       }));
 
       return function (_x, _x2) {
-        return _ref9.apply(this, arguments);
+        return _ref10.apply(this, arguments);
       };
     }());
     return rowObj;
@@ -30304,12 +30437,12 @@ var actions = {
    * @param {{commit, getters}} vuex store object
    * @param {{data, markAsImported}} data data array
    */
-  addDataManagerTempData: function addDataManagerTempData(_ref10, _ref11) {
-    var commit = _ref10.commit,
-        dispatch = _ref10.dispatch,
-        getters = _ref10.getters;
-    var data = _ref11.data,
-        markAsImported = _ref11.markAsImported;
+  addDataManagerTempData: function addDataManagerTempData(_ref11, _ref12) {
+    var commit = _ref11.commit,
+        dispatch = _ref11.dispatch,
+        getters = _ref11.getters;
+    var data = _ref12.data,
+        markAsImported = _ref12.markAsImported;
 
     if (markAsImported === undefined) {
       // eslint-disable-next-line no-param-reassign
@@ -30333,7 +30466,7 @@ var actions = {
     });
     commit('clearTempDataManager');
     confirmedData.map( /*#__PURE__*/function () {
-      var _ref12 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(r) {
+      var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(r) {
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -30350,7 +30483,7 @@ var actions = {
       }));
 
       return function (_x3) {
-        return _ref12.apply(this, arguments);
+        return _ref13.apply(this, arguments);
       };
     }());
 
@@ -30368,9 +30501,9 @@ var actions = {
    * @param {{state,commit}} vuex store object
    * @param {string} tabId tab id to change to
    */
-  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref13, tabId) {
-    var state = _ref13.state,
-        commit = _ref13.commit;
+  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref14, tabId) {
+    var state = _ref14.state,
+        commit = _ref14.commit;
     commit('setActiveControlTabGroup', {
       sourceId: state.dataSource.setup.sourceId,
       tabId: tabId
@@ -30385,8 +30518,8 @@ var actions = {
    * @param {string} callerId id of the component that started the operation
    * @return {Promise} Promise object
    */
-  startRowSelectOperation: function startRowSelectOperation(_ref14, callerId) {
-    var commit = _ref14.commit;
+  startRowSelectOperation: function startRowSelectOperation(_ref15, callerId) {
+    var commit = _ref15.commit;
     // set app to busy
     commit('setBusy', true); // reset selection data
 
@@ -30415,9 +30548,9 @@ var actions = {
    *
    * @param {{state, commit}} vuex store object
    */
-  cancelRowSelectOperation: function cancelRowSelectOperation(_ref15) {
-    var state = _ref15.state,
-        commit = _ref15.commit;
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref16) {
+    var state = _ref16.state,
+        commit = _ref16.commit;
     commit('setSelectStatus', false);
     state.dataManager.select.clickId.resolve(null);
     commit('resetSelectData');
@@ -30430,11 +30563,11 @@ var actions = {
    * @param {{cellId, value}} payload
    *
    */
-  setDataCellValue: function setDataCellValue(_ref16, _ref17) {
-    var getters = _ref16.getters,
-        commit = _ref16.commit;
-    var cellId = _ref17.cellId,
-        value = _ref17.value;
+  setDataCellValue: function setDataCellValue(_ref17, _ref18) {
+    var getters = _ref17.getters,
+        commit = _ref17.commit;
+    var cellId = _ref18.cellId,
+        value = _ref18.value;
 
     var _getters$parseCellId = getters.parseCellId(cellId),
         rowId = _getters$parseCellId.rowId,
@@ -30455,7 +30588,7 @@ var actions = {
    * @param {{getters,dispatch,commit}} vuex store object
    * @param {Array} colValues values for columns
    */
-  addRowToDataManager: function addRowToDataManager(_ref18) {
+  addRowToDataManager: function addRowToDataManager(_ref19) {
     var _arguments = arguments;
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       var getters, dispatch, commit, colValues, innerColValues, rowObject;
@@ -30463,7 +30596,7 @@ var actions = {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              getters = _ref18.getters, dispatch = _ref18.dispatch, commit = _ref18.commit;
+              getters = _ref19.getters, dispatch = _ref19.dispatch, commit = _ref19.commit;
               colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
               innerColValues = colValues;
 
@@ -30495,7 +30628,7 @@ var actions = {
    * @param {{commit, getters, dispatch}} vuex store object
    * @param {string} value value of the newly added cells
    */
-  addColumnToDataManager: function addColumnToDataManager(_ref19) {
+  addColumnToDataManager: function addColumnToDataManager(_ref20) {
     var _arguments2 = arguments;
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
       var commit, getters, dispatch, value, colCount, rowCount;
@@ -30503,14 +30636,14 @@ var actions = {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              commit = _ref19.commit, getters = _ref19.getters, dispatch = _ref19.dispatch;
+              commit = _ref20.commit, getters = _ref20.getters, dispatch = _ref20.dispatch;
               value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
               colCount = getters.getColCount;
               rowCount = getters.getRowCount;
               Array.from(new Array(rowCount)).map(function () {
                 return '';
               }).map( /*#__PURE__*/function () {
-                var _ref20 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
+                var _ref21 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
                   var cellObject;
                   return regeneratorRuntime.wrap(function _callee4$(_context4) {
                     while (1) {
@@ -30538,7 +30671,7 @@ var actions = {
                 }));
 
                 return function (_x4, _x5) {
-                  return _ref20.apply(this, arguments);
+                  return _ref21.apply(this, arguments);
                 };
               }());
 
@@ -30557,9 +30690,9 @@ var actions = {
    * @param {{commit, getters}} vuex store object
    * @param {string} rowId row id
    */
-  deleteDataTableRow: function deleteDataTableRow(_ref21, rowId) {
-    var commit = _ref21.commit,
-        getters = _ref21.getters;
+  deleteDataTableRow: function deleteDataTableRow(_ref22, rowId) {
+    var commit = _ref22.commit,
+        getters = _ref22.getters;
     var index = getters.getDataManagerIndexFromId(rowId);
     commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
 
@@ -30578,9 +30711,9 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {string} colId column id
    */
-  deleteDataTableCol: function deleteDataTableCol(_ref22, colId) {
-    var commit = _ref22.commit,
-        getters = _ref22.getters;
+  deleteDataTableCol: function deleteDataTableCol(_ref23, colId) {
+    var commit = _ref23.commit,
+        getters = _ref23.getters;
     var index = getters.getDataManagerIndexFromId(colId, 'col');
     commit('deleteColFromDataTable', colId); // calculate hover id that will be focused on after delete operation
 
@@ -30592,6 +30725,12 @@ var actions = {
 
 
     commit('setHoverId', null);
+  },
+  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref24) {
+    var commit = _ref24.commit,
+        getters = _ref24.getters;
+    var currentSourceInSetup = getters.getCurrentSourceSetupId;
+    commit('setSelectedDataSource', currentSourceInSetup);
   }
 };
 var _default = actions;
@@ -30935,6 +31074,26 @@ var getters = {
       var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'row';
       return state.dataManager.tempData["".concat(type, "Ids")].indexOf(id);
     };
+  },
+
+  /**
+   * Get selected and generated data source id.
+   *
+   * @param {Object} state store state
+   * @return {*} generated data source id
+   */
+  getSelectedDataSource: function getSelectedDataSource(state) {
+    return state.dataSource.selected;
+  },
+
+  /**
+   * Get id of the current source in setup.
+   *
+   * @param {Object} state store state
+   * @return {*} source id
+   */
+  getCurrentSourceSetupId: function getCurrentSourceSetupId(state) {
+    return state.dataSource.setup.sourceId;
   }
 };
 var _default = getters;
@@ -31020,6 +31179,23 @@ var stateWatchList = {
         // store.commit('setHoverId', null);
       };
     }
+  },
+  selectedSource: {
+    watch: function watch(store) {
+      return function () {
+        return store.getters.getSelectedDataSource;
+      };
+    },
+    callBack: function callBack() {
+      return function (n) {
+        // show hide a message to the user on builder panel where it indicates they have to finish up data table setup before working on table layout
+        if (n === null) {
+          DataTableManagerStatic.getInstance().addMessageToElementsSection();
+        } else {
+          DataTableManagerStatic.getInstance().cleanUp();
+        }
+      };
+    }
   }
 };
 /**
@@ -31035,7 +31211,9 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
     if (Object.prototype.hasOwnProperty.call(watchList, k)) {
       var _watchList$k = watchList[k],
           watch = _watchList$k.watch,
-          callBack = _watchList$k.callBack;
+          callBack = _watchList$k.callBack; // call calback functions before any mutation happened on store
+
+      callBack(store)(watch(store)());
       store.watch(watch(store), callBack(store));
     }
   });
@@ -31241,7 +31419,8 @@ var _default = {
           value: (0, _i18n.__)('value', 'wp-table-builder'),
           selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder'),
           cancel: (0, _i18n.__)('cancel', 'wp-table-builder'),
-          resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder')
+          resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
+          cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },
@@ -34045,10 +34224,8 @@ var _default = {
       dataTableCardEnabled: dataTableEnabled,
       strings: data.strings
     }; // create generate app store
-
-    var store = (0, _generate.default)({
-      state: state
-    }); // @deprecated moved to flux store implementation
+    // const store = createStore({ state });
+    // @deprecated moved to flux store implementation
     // Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
     // @deprecated moved to flux store implementation
     // setup translation strings
@@ -34068,8 +34245,8 @@ var _default = {
         GenerateMain: _GenerateMain.default
       },
       template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
-      data: data,
-      store: store
+      data: data // store,
+
     }).$mount("#".concat(data.mountId));
     var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
 

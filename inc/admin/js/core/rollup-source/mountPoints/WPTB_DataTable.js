@@ -58,6 +58,7 @@ export default {
 					selectRowForNames: __('select a row for column names', 'wp-table-builder'),
 					cancel: __('cancel', 'wp-table-builder'),
 					resetIndexRow: __('new column names row', 'wp-table-builder'),
+					cancelNew: __('cancel new selection', 'wp-table-builder'),
 				},
 				proUrl: data.proUrl,
 			},
