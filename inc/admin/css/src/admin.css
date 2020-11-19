@@ -2059,6 +2059,7 @@ br[data-mce-bogus="1"] {
 
 .wptb-text-container p:empty:not(:focus)::before {
     content: attr(data-placeholder);
+    opacity: 0.4;
 }
 
 .wptb-droppable.wptb-cell ul,
