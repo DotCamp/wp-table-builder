@@ -30,7 +30,7 @@ export default {
 		};
 
 		// create generate app store
-		// const store = createStore({ state });
+		const store = createStore({ state });
 
 		// @deprecated moved to flux store implementation
 		// Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
@@ -53,7 +53,7 @@ export default {
 			template:
 				'<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
 			data,
-			// store,
+			store,
 		}).$mount(`#${data.mountId}`);
 
 		const tableContainer = document.querySelector('.wptb-management_table_container');

@@ -1284,11 +1284,12 @@ var WPTB_Helper = {
 		} else if (element.classList.contains('wptb-datatable')) {
 			elementOptionsGroupId = 'table-datatable-group';
 			wptbelementOptionClass = 'wptb-element-option';
-		}
-		else {
+		} else {
 			const children = document.getElementById('element-options-group').childNodes;
 			for (let i = 0; i < children.length; i++) {
-				if (children[i].style) children[i].style.display = 'none';
+				if (children[i].style && children[i].getAttribute('id') !== 'beforeElementOptions') {
+					children[i].style.display = 'none';
+				}
 			}
 			this.activateSection('options_group');
 		}
@@ -1375,7 +1376,10 @@ var WPTB_Helper = {
 				elementOptionsGroup = document.getElementById(data.elementOptionsGroupId);
 				const elementOptionsGroupChildren = [...elementOptionsGroup.children];
 				for (let i = 0; i < elementOptionsGroupChildren.length; i++) {
-					elementOptionsGroup.removeChild(elementOptionsGroupChildren[i]);
+					// don't remove data table related element options
+					if (elementOptionsGroupChildren[i].getAttribute('id') !== 'beforeElementOptions') {
+						elementOptionsGroup.removeChild(elementOptionsGroupChildren[i]);
+					}
 				}
 				elementOptionsGroupInvolved[data.elementOptionsGroupId] = elementOptionsGroup;
 			}
@@ -1484,6 +1488,8 @@ var WPTB_Helper = {
 		}
 
 		WPTB_Helper.wptbDocumentEventGenerate('element:controls:active', element);
+
+		WPTB_Helper.wptbDocumentEventGenerate('element:controls:active:global', document, element);
 		// run valueDependOnControl function
 		for (let i = 0; i < controlValueDependOnControl.length; i++) {
 			WPTB_Helper.valueDependOnControl(

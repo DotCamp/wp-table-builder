@@ -5,6 +5,9 @@
 			<mounting-portal :mount-to="leftPanelId">
 				<portal-target name="leftPanel"></portal-target>
 			</mounting-portal>
+			<mounting-portal mount-to="#beforeElementOptions" append>
+				<data-table-element-option></data-table-element-option>
+			</mounting-portal>
 		</div>
 	</transition>
 </template>
@@ -12,6 +15,7 @@
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex';
 import DataScreenHandler from '../components/DataScreenHandler';
+import DataTableElementOption from '../components/dataTable/DataTableElementOption';
 
 export default {
 	props: {
@@ -24,7 +28,7 @@ export default {
 			default: 0,
 		},
 	},
-	components: { DataScreenHandler },
+	components: { DataTableElementOption, DataScreenHandler },
 	data() {
 		return {
 			extraPadding: 0,

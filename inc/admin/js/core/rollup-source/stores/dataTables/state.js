@@ -59,6 +59,10 @@ const state = {
 	},
 	dataManager: {
 		tempData: {
+			parsedData: {
+				header: [],
+				values: [],
+			},
 			rowIds: [],
 			colIds: [],
 			values: [],

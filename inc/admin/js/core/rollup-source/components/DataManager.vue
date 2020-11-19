@@ -7,7 +7,7 @@
 						<tr class="wptb-data-manager-table-column-name-info">
 							<th :colspan="infoRowSpan">{{ translationM('columnNames') }}</th>
 						</tr>
-						<tr v-for="headerRow in table.header" :key="headerRow.rowId" :id="headerRow.rowId">
+						<tr v-for="headerRow in parsedData.header" :key="headerRow.rowId" :id="headerRow.rowId">
 							<data-manager-cell
 								:key="formCellId(headerRow.rowId, headerCell.colId)"
 								v-for="headerCell in headerRow.values"
@@ -23,7 +23,7 @@
 					</thead>
 					<tbody>
 						<data-manager-data-row
-							v-for="row in table.values"
+							v-for="row in parsedData.values"
 							:key="row.rowId"
 							:row-object="row"
 							@cellClick="handleCellClick"
@@ -67,10 +67,6 @@ export default {
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
-			table: {
-				header: [],
-				values: [],
-			},
 			columnNameRowIndex: null,
 		};
 	},
@@ -125,9 +121,10 @@ export default {
 			'formCellId',
 			'parseCellId',
 			'getSelectedDataSource',
+			'parsedData',
 		]),
 		infoRowSpan() {
-			return this.getColCount === 0 ? this.table.header[0]?.values?.length : this.getColCount;
+			return this.getColCount === 0 ? this.parsedData.header[0]?.values?.length : this.getColCount;
 		},
 	},
 	methods: {
@@ -180,17 +177,20 @@ export default {
 				}
 
 				// find column index row
-				this.table.header = [header];
+				this.setParsedData({ key: 'header', value: [header] });
 
 				// filter out column index row
-				this.table.values = tableValue.filter((t) => {
-					return t.rowId !== indexRow;
+				this.setParsedData({
+					key: 'values',
+					value: tableValue.filter((t) => {
+						return t.rowId !== indexRow;
+					}),
 				});
 			}
 		},
 		...mapGetters(['generateUniqueId']),
 		...mapActions(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']),
-		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl']),
+		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']),
 	},
 };
 </script>

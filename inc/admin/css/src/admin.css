@@ -6186,6 +6186,7 @@ thead .wptb-data-manager-table-data-value {
     background-color: var(--wptb-plugin-theme-color-light);
     left: 0;
     top: 0;
+    z-index: 1;
 }
 
 

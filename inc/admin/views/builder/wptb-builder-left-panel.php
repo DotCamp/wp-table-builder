@@ -126,6 +126,9 @@ use WP_Table_Builder\Inc\Core\Init as Init;
             <div id="element-options-group" class="wptb-tab-content wptb-left-panel-sidebar-content"
                  data-wptb-section="options_group"
                  style="display: none;">
+              <div id="beforeElementOptions">
+
+              </div>
                 <!-- here will be elements controls -->
             </div>
             <!--            left panel toggle element-->

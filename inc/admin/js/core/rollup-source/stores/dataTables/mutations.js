@@ -320,6 +320,15 @@ const mutations = {
 	setSelectedDataSource: (state, sourceId) => {
 		state.dataSource.selected = sourceId;
 	},
+	/**
+	 * Set parsed data object property values.
+	 *
+	 * @param {Object} state data table state
+	 * @param {{key, value}} mutation payload
+	 */
+	setParsedData: (state, { key, value }) => {
+		state.dataManager.tempData.parsedData[key] = value;
+	},
 };
 
 export default mutations;

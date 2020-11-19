@@ -28971,10 +28971,6 @@ var _default = {
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
     return {
-      table: {
-        header: [],
-        values: []
-      },
       columnNameRowIndex: null
     };
   },
@@ -29018,11 +29014,11 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData']), {
     infoRowSpan: function infoRowSpan() {
-      var _this$table$header$, _this$table$header$$v;
+      var _this$parsedData$head, _this$parsedData$head2;
 
-      return this.getColCount === 0 ? (_this$table$header$ = this.table.header[0]) === null || _this$table$header$ === void 0 ? void 0 : (_this$table$header$$v = _this$table$header$.values) === null || _this$table$header$$v === void 0 ? void 0 : _this$table$header$$v.length : this.getColCount;
+      return this.getColCount === 0 ? (_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : (_this$parsedData$head2 = _this$parsedData$head.values) === null || _this$parsedData$head2 === void 0 ? void 0 : _this$parsedData$head2.length : this.getColCount;
     }
   }),
   methods: _objectSpread({
@@ -29086,14 +29082,20 @@ var _default = {
         } // find column index row
 
 
-        this.table.header = [header]; // filter out column index row
+        this.setParsedData({
+          key: 'header',
+          value: [header]
+        }); // filter out column index row
 
-        this.table.values = tableValue.filter(function (t) {
-          return t.rowId !== indexRow;
+        this.setParsedData({
+          key: 'values',
+          value: tableValue.filter(function (t) {
+            return t.rowId !== indexRow;
+          })
         });
       }
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -29139,7 +29141,7 @@ exports.default = _default;
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._l(_vm.table.header, function(headerRow) {
+                    _vm._l(_vm.parsedData.header, function(headerRow) {
                       return _c(
                         "tr",
                         {
@@ -29182,7 +29184,7 @@ exports.default = _default;
                 _vm._v(" "),
                 _c(
                   "tbody",
-                  _vm._l(_vm.table.values, function(row) {
+                  _vm._l(_vm.parsedData.values, function(row) {
                     return _c("data-manager-data-row", {
                       key: row.rowId,
                       attrs: { "row-object": row },
@@ -29607,7 +29609,74 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'DataTableElementOption',
+  data: function data() {
+    return {
+      currentElement: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    document.addEventListener('element:controls:active:global', function (_ref) {
+      var element = _ref.detail;
+
+      if (element.getAttribute('class').includes('wptb-ph-element')) {
+        _this.currentElement = element;
+        console.log(element);
+      }
+    });
+  }
+};
+exports.default = _default;
+        var $619075 = exports.default || module.exports;
+      
+      if (typeof $619075 === 'function') {
+        $619075 = $619075.options;
+      }
+    
+        /* template */
+        Object.assign($619075, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [_c("i", [_vm._v("element data option")])])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29618,6 +29687,8 @@ exports.default = void 0;
 var _vuex = require("vuex");
 
 var _DataScreenHandler = _interopRequireDefault(require("../components/DataScreenHandler"));
+
+var _DataTableElementOption = _interopRequireDefault(require("../components/dataTable/DataTableElementOption"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29639,6 +29710,7 @@ var _default = {
     }
   },
   components: {
+    DataTableElementOption: _DataTableElementOption.default,
     DataScreenHandler: _DataScreenHandler.default
   },
   data: function data() {
@@ -29716,6 +29788,13 @@ exports.default = _default;
           { attrs: { "mount-to": _vm.leftPanelId } },
           [_c("portal-target", { attrs: { name: "leftPanel" } })],
           1
+        ),
+        _vm._v(" "),
+        _c(
+          "mounting-portal",
+          { attrs: { "mount-to": "#beforeElementOptions", append: "" } },
+          [_c("data-table-element-option")],
+          1
         )
       ],
       1
@@ -29734,7 +29813,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue","../components/dataTable/DataTableElementOption":"components/dataTable/DataTableElementOption.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29799,6 +29878,10 @@ var state = {
   },
   dataManager: {
     tempData: {
+      parsedData: {
+        header: [],
+        values: []
+      },
       rowIds: [],
       colIds: [],
       values: [],
@@ -30257,6 +30340,18 @@ var mutations = {
    */
   setSelectedDataSource: function setSelectedDataSource(state, sourceId) {
     state.dataSource.selected = sourceId;
+  },
+
+  /**
+   * Set parsed data object property values.
+   *
+   * @param {Object} state data table state
+   * @param {{key, value}} mutation payload
+   */
+  setParsedData: function setParsedData(state, _ref5) {
+    var key = _ref5.key,
+        value = _ref5.value;
+    state.dataManager.tempData.parsedData[key] = value;
   }
 };
 var _default = mutations;
@@ -31094,6 +31189,18 @@ var getters = {
    */
   getCurrentSourceSetupId: function getCurrentSourceSetupId(state) {
     return state.dataSource.setup.sourceId;
+  },
+
+  /**
+   * Get parsed values of data table.
+   *
+   * This object will contain separated values of header and body values of data table.
+   *
+   * @param {Object} state store state
+   * @return {Object} parsed data object
+   */
+  parsedData: function parsedData(state) {
+    return state.dataManager.tempData.parsedData;
   }
 };
 var _default = getters;
@@ -34224,8 +34331,10 @@ var _default = {
       dataTableCardEnabled: dataTableEnabled,
       strings: data.strings
     }; // create generate app store
-    // const store = createStore({ state });
-    // @deprecated moved to flux store implementation
+
+    var store = (0, _generate.default)({
+      state: state
+    }); // @deprecated moved to flux store implementation
     // Vue.use(genericStore, { data: { key: 'appData', data: store }, methods: storeMethods });
     // @deprecated moved to flux store implementation
     // setup translation strings
@@ -34245,8 +34354,8 @@ var _default = {
         GenerateMain: _GenerateMain.default
       },
       template: '<generate-main :version="version" :upsell="upsell" :prebuilt-tables="prebuiltTables"  :security="security"></generate-main>',
-      data: data // store,
-
+      data: data,
+      store: store
     }).$mount("#".concat(data.mountId));
     var tableContainer = document.querySelector('.wptb-management_table_container'); // hide table container
 

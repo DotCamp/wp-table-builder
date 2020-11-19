@@ -282,6 +282,17 @@ const getters = {
 	getCurrentSourceSetupId: (state) => {
 		return state.dataSource.setup.sourceId;
 	},
+	/**
+	 * Get parsed values of data table.
+	 *
+	 * This object will contain separated values of header and body values of data table.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} parsed data object
+	 */
+	parsedData: (state) => {
+		return state.dataManager.tempData.parsedData;
+	},
 };
 
 export default getters;
