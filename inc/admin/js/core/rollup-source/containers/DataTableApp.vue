@@ -8,6 +8,9 @@
 			<mounting-portal mount-to="#beforeElementOptions" append>
 				<data-table-element-option></data-table-element-option>
 			</mounting-portal>
+			<mounting-portal mount-to="#wptbDataTableElementsTarget" append>
+				<data-table-elements-message v-if="getSelectedDataSource === null"></data-table-elements-message>
+			</mounting-portal>
 		</div>
 	</transition>
 </template>
@@ -16,6 +19,7 @@
 import { mapGetters, mapActions, mapState } from 'vuex';
 import DataScreenHandler from '../components/DataScreenHandler';
 import DataTableElementOption from '../components/dataTable/DataTableElementOption';
+import DataTableElementsMessage from '../components/dataTable/DataTableElementsMessage';
 
 export default {
 	props: {
@@ -28,7 +32,7 @@ export default {
 			default: 0,
 		},
 	},
-	components: { DataTableElementOption, DataScreenHandler },
+	components: { DataTableElementsMessage, DataTableElementOption, DataScreenHandler },
 	data() {
 		return {
 			extraPadding: 0,
@@ -43,10 +47,13 @@ export default {
 		// change component visibility based on current active section
 		this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName);
 
+		// @deprecated moved to DataScreenHandler
 		// set startup screen
 		// TODO [erdembircan] uncomment for production
-		this.setCurrentScreen('DataSourceSelection');
+		// this.setCurrentScreen('DataSourceSelection');
 
+		// @deprecated moved to DataScreenHandler
+		// set startup screen
 		// TODO [erdembircan] comment for production
 		// TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
 		// this.setCurrentScreen(this.devStartupScreen);
@@ -66,7 +73,7 @@ export default {
 				height: `calc( 100% - ${this.headerHeight + this.extraPadding}px)`,
 			};
 		},
-		...mapGetters(['isVisible']),
+		...mapGetters(['isVisible', 'getSelectedDataSource']),
 		...mapState(['leftPanelId', 'devStartupScreen']),
 	},
 };

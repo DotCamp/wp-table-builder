@@ -104,9 +104,9 @@ class Data_Table_Manager extends Static_Singleton_Base {
 				'wordpressPost' => $icon_manager->get_icon( 'wordpress-simple' ),
 				'server'        => $icon_manager->get_icon( 'server' ),
 				'chevronRight'  => $icon_manager->get_icon( 'chevron-right' ),
+				'exclamationTriangle'  => $icon_manager->get_icon( 'exclamation-triangle' ),
 			],
 			'proUrl'          => 'https://wptablebuilder.com/',
-			'elementsMessage' => esc_html__( 'Finish your data source setup first to start working on table layout.' )
 		];
 
 		$admin_data['dataTable'] = $data_table;

@@ -27288,7 +27288,7 @@ var _default = {
     LeftPanelMaterialButton: _LeftPanelMaterialButton.default
   },
   mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']), {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['tableIsActive']), {
     isContinueAvailable: function isContinueAvailable() {
       return this.isBusy || !this.isSourceDataCreated;
     }
@@ -27297,13 +27297,22 @@ var _default = {
     continueToGenerate: function continueToGenerate() {
       DataTableManagerStatic.getInstance().cleanUp();
       DataTableManagerStatic.getInstance().markTableAsDataTable();
-      this.addOptionsAndDataToSave();
-      WPTB_ControlsManager.callControlScript('Generate', false);
+      this.addOptionsAndDataToSave(); // only call generate component if there is no active table in builder
+
+      if (!this.tableIsActive) {
+        WPTB_ControlsManager.callControlScript('Generate', false);
+      }
+
+      if (this.tableIsActive) {
+        // if there is a table set table dirty
+        this.setTableDirty();
+      }
+
       WPTB_Helper.activateSection('elements'); // set current source in setup as selected
 
       this.setCurrentSourceAsSelected();
     }
-  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected', 'addOptionsAndDataToSave']))
+  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected', 'addOptionsAndDataToSave']), {}, (0, _vuex.mapMutations)(['setTableDirty']))
 };
 exports.default = _default;
         var $a2c9cd = exports.default || module.exports;
@@ -29577,7 +29586,21 @@ var _default = {
     DataSourceSelection: _DataSourceSelection.default,
     CsvSetup: _CsvSetup.default
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentScreen']))
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      // if no data source is selected on start, load up source selection screen
+      if (_this.getSelectedDataSource === null) {
+        _this.setCurrentScreen('DataSourceSelection');
+      } else {
+        // if current table have a saved data source, load its screen instead at start
+        _this.setCurrentScreenFromId(_this.getSelectedDataSource);
+      }
+    });
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentScreen', 'getSelectedDataSource'])),
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreen', 'setCurrentScreenFromId']))
 };
 exports.default = _default;
         var $544610 = exports.default || module.exports;
@@ -29802,7 +29825,100 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _LeftPanelMaterialButton = _interopRequireDefault(require("../leftPanel/LeftPanelMaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    LeftPanelMaterialButton: _LeftPanelMaterialButton.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getIcon'])),
+  methods: {
+    toDataSetup: function toDataSetup() {
+      WPTB_Helper.activateSection('data_table_menu');
+    }
+  }
+};
+exports.default = _default;
+        var $e22190 = exports.default || module.exports;
+      
+      if (typeof $e22190 === 'function') {
+        $e22190 = $e22190.options;
+      }
+    
+        /* template */
+        Object.assign($e22190, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-flex wptb-plugin-height-full wptb-plugin-width-full wptb-justify-content-center wptb-flex-align-center wptb-data-table-elements-message"
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "wptb-data-table-message-wrapper wptb-plugin-box-shadow-md wptb-flex wptb-justify-content-center wptb-flex-align-center wptb-flex-col"
+        },
+        [
+          _c("div", {
+            staticClass: "wptb-data-table-message-icon",
+            domProps: { innerHTML: _vm._s(_vm.getIcon("exclamationTriangle")) }
+          }),
+          _vm._v(" "),
+          _c("div", [
+            _c("i", [_vm._v(_vm._s(_vm.translationM("elementsMessage")))])
+          ]),
+          _vm._v(" "),
+          _c(
+            "left-panel-material-button",
+            { attrs: { click: _vm.toDataSetup } },
+            [_vm._v(_vm._s(_vm._f("cap")("Back to data table setup")))]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../leftPanel/LeftPanelMaterialButton":"components/leftPanel/LeftPanelMaterialButton.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29815,6 +29931,8 @@ var _vuex = require("vuex");
 var _DataScreenHandler = _interopRequireDefault(require("../components/DataScreenHandler"));
 
 var _DataTableElementOption = _interopRequireDefault(require("../components/dataTable/DataTableElementOption"));
+
+var _DataTableElementsMessage = _interopRequireDefault(require("../components/dataTable/DataTableElementsMessage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29836,6 +29954,7 @@ var _default = {
     }
   },
   components: {
+    DataTableElementsMessage: _DataTableElementsMessage.default,
     DataTableElementOption: _DataTableElementOption.default,
     DataScreenHandler: _DataScreenHandler.default
   },
@@ -29854,10 +29973,13 @@ var _default = {
       _this.setComponentVisibility(detail === _this.sectionName);
     }); // change component visibility based on current active section
 
-    this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // set startup screen
+    this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // @deprecated moved to DataScreenHandler
+    // set startup screen
     // TODO [erdembircan] uncomment for production
-
-    this.setCurrentScreen('DataSourceSelection'); // TODO [erdembircan] comment for production
+    // this.setCurrentScreen('DataSourceSelection');
+    // @deprecated moved to DataScreenHandler
+    // set startup screen
+    // TODO [erdembircan] comment for production
     // TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
     // this.setCurrentScreen(this.devStartupScreen);
   },
@@ -29874,7 +29996,7 @@ var _default = {
         height: "calc( 100% - ".concat(this.headerHeight + this.extraPadding, "px)")
       };
     }
-  }, (0, _vuex.mapGetters)(['isVisible']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen']))
+  }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -29920,6 +30042,17 @@ exports.default = _default;
           { attrs: { "mount-to": "#beforeElementOptions", append: "" } },
           [_c("data-table-element-option")],
           1
+        ),
+        _vm._v(" "),
+        _c(
+          "mounting-portal",
+          { attrs: { "mount-to": "#wptbDataTableElementsTarget", append: "" } },
+          [
+            _vm.getSelectedDataSource === null
+              ? _c("data-table-elements-message")
+              : _vm._e()
+          ],
+          1
         )
       ],
       1
@@ -29938,7 +30071,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue","../components/dataTable/DataTableElementOption":"components/dataTable/DataTableElementOption.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue","../components/dataTable/DataTableElementOption":"components/dataTable/DataTableElementOption.vue","../components/dataTable/DataTableElementsMessage":"components/dataTable/DataTableElementsMessage.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29981,6 +30114,8 @@ var clickIdHandler = {
 
 var clickIdProxy = new Proxy(selectId, clickIdHandler);
 var state = {
+  // whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
+  tableIsActive: true,
   visibility: false,
   busy: false,
   screen: null,
@@ -30477,6 +30612,13 @@ var mutations = {
     var key = _ref5.key,
         value = _ref5.value;
     state.dataManager.tempData.parsedData[key] = value;
+  },
+
+  /**
+   * Set table as dirty
+   */
+  setTableDirty: function setTableDirty() {
+    new WPTB_TableStateSaveManager().tableStateSet();
   }
 };
 var _default = mutations;
@@ -30559,7 +30701,9 @@ var actions = {
 
     commit('setSelectedDataSource', null); // clear temp data manager
 
-    commit('clearTempDataManager'); // set screen
+    commit('clearTempDataManager'); // clear setup
+
+    commit('resetToDefaults', 'dataSource.setup'); // set screen
 
     dispatch('setCurrentScreenFromId', sourceId);
   },
@@ -31432,23 +31576,6 @@ var stateWatchList = {
         // store.commit('setHoverId', null);
       };
     }
-  },
-  selectedSource: {
-    watch: function watch(store) {
-      return function () {
-        return store.getters.getSelectedDataSource;
-      };
-    },
-    callBack: function callBack() {
-      return function (n) {
-        // show hide a message to the user on builder panel where it indicates they have to finish up data table setup before working on table layout
-        if (n === null) {
-          DataTableManagerStatic.getInstance().addMessageToElementsSection();
-        } else {
-          DataTableManagerStatic.getInstance().cleanUp();
-        }
-      };
-    }
   }
 };
 /**
@@ -31464,7 +31591,7 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
     if (Object.prototype.hasOwnProperty.call(watchList, k)) {
       var _watchList$k = watchList[k],
           watch = _watchList$k.watch,
-          callBack = _watchList$k.callBack; // call calback functions before any mutation happened on store
+          callBack = _watchList$k.callBack; // call callback functions before any mutation happened on store
 
       callBack(store)(watch(store)());
       store.watch(watch(store), callBack(store));
@@ -31631,9 +31758,12 @@ var _filters = _interopRequireDefault(require("../plugins/filters"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Data table menu.
- */
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   name: 'DataTable',
   handler: function dataTableJS(uniqueId) {
@@ -31674,9 +31804,11 @@ var _default = {
           cancel: (0, _i18n.__)('cancel', 'wp-table-builder'),
           resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
           cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
-          collapseSectionHeader: (0, _i18n.__)('element data option', 'wp-table-builder')
+          collapseSectionHeader: (0, _i18n.__)('element data option', 'wp-table-builder'),
+          elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder')
         },
-        proUrl: data.proUrl
+        proUrl: data.proUrl,
+        tableIsActive: false
       },
       getters: {
         /**
@@ -31711,7 +31843,21 @@ var _default = {
     _vue.default.use(_vueFragment.default.Plugin); // use default filters
 
 
-    _vue.default.use(_filters.default);
+    _vue.default.use(_filters.default); // load saved data table options from table, if there is any
+
+
+    var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
+
+    if (table && table.dataset.wptbDataTable === 'true') {
+      var savedDataTableOptions = table.dataset.wptbDataTableOptions;
+
+      if (savedDataTableOptions) {
+        var decodedOptions = JSON.parse(atob(savedDataTableOptions));
+        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptions, {
+          tableIsActive: true
+        });
+      }
+    }
 
     new _vue.default({
       components: {

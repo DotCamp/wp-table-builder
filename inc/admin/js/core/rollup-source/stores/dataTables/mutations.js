@@ -329,6 +329,12 @@ const mutations = {
 	setParsedData: (state, { key, value }) => {
 		state.dataManager.tempData.parsedData[key] = value;
 	},
+	/**
+	 * Set table as dirty
+	 */
+	setTableDirty: () => {
+		new WPTB_TableStateSaveManager().tableStateSet();
+	},
 };
 
 export default mutations;

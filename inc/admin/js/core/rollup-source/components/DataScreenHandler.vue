@@ -5,14 +5,28 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import DataSourceSelection from './DataSourceSelection';
 import CsvSetup from './CsvSetup';
 
 export default {
 	components: { DataSourceSelection, CsvSetup },
+	mounted() {
+		this.$nextTick(() => {
+			// if no data source is selected on start, load up source selection screen
+			if (this.getSelectedDataSource === null) {
+				this.setCurrentScreen('DataSourceSelection');
+			} else {
+				// if current table have a saved data source, load its screen instead at start
+				this.setCurrentScreenFromId(this.getSelectedDataSource);
+			}
+		});
+	},
 	computed: {
-		...mapGetters(['currentScreen']),
+		...mapGetters(['currentScreen', 'getSelectedDataSource']),
+	},
+	methods: {
+		...mapActions(['setCurrentScreen', 'setCurrentScreenFromId']),
 	},
 };
 </script>

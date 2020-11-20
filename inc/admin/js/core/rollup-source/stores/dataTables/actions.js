@@ -59,6 +59,9 @@ const actions = {
 		// clear temp data manager
 		commit('clearTempDataManager');
 
+		// clear setup
+		commit('resetToDefaults', 'dataSource.setup');
+
 		// set screen
 		dispatch('setCurrentScreenFromId', sourceId);
 	},

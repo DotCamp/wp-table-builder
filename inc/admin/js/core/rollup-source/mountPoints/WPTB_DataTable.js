@@ -60,8 +60,13 @@ export default {
 					resetIndexRow: __('new column names row', 'wp-table-builder'),
 					cancelNew: __('cancel new selection', 'wp-table-builder'),
 					collapseSectionHeader: __('element data option', 'wp-table-builder'),
+					elementsMessage: __(
+						'Finish your data source setup first to start working on table layout.',
+						'wptb-table-builder'
+					),
 				},
 				proUrl: data.proUrl,
+				tableIsActive: false,
 			},
 			getters: {
 				/**
@@ -95,6 +100,17 @@ export default {
 
 		// use default filters
 		Vue.use(filters);
+
+		// load saved data table options from table, if there is any
+		const table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
+		if (table && table.dataset.wptbDataTable === 'true') {
+			const savedDataTableOptions = table.dataset.wptbDataTableOptions;
+
+			if (savedDataTableOptions) {
+				const decodedOptions = JSON.parse(atob(savedDataTableOptions));
+				extraStoreOptions.state = { ...extraStoreOptions.state, ...decodedOptions, tableIsActive: true };
+			}
+		}
 
 		new Vue({
 			components: { DataTableApp },

@@ -6189,5 +6189,28 @@ thead .wptb-data-manager-table-data-value {
     z-index: 1;
 }
 
+.wptb-data-table-message-wrapper {
+    border: 1px solid var(--wptb-plugin-gray-300);
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.wptb-data-table-message-wrapper div {
+    margin: 10px 0;
+}
+
+.wptb-data-table-message-wrapper div:last-of-type {
+    margin-bottom: 5px !important;
+}
+
+.wptb-data-table-message-icon {
+    width: 40px;
+    height: auto;
+    color: var(--wptb-plugin-yellow-500);
+}
+
+.wptb-data-table-message-icon svg{
+    fill: currentColor;
+}
 
 /*endregion*/

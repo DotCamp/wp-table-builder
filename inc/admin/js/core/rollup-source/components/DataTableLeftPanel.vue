@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState, mapMutations } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import withStoreBusy from '../mixins/withStoreBusy';
 import LeftPanelMaterialButton from './leftPanel/LeftPanelMaterialButton';
@@ -32,6 +32,7 @@ export default {
 	mixins: [withNativeTranslationStore, withStoreBusy],
 	computed: {
 		...mapGetters(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']),
+		...mapState(['tableIsActive']),
 		isContinueAvailable() {
 			return this.isBusy || !this.isSourceDataCreated;
 		},
@@ -43,7 +44,16 @@ export default {
 
 			this.addOptionsAndDataToSave();
 
-			WPTB_ControlsManager.callControlScript('Generate', false);
+			// only call generate component if there is no active table in builder
+			if (!this.tableIsActive) {
+				WPTB_ControlsManager.callControlScript('Generate', false);
+			}
+
+			if (this.tableIsActive) {
+				// if there is a table set table dirty
+				this.setTableDirty();
+			}
+
 			WPTB_Helper.activateSection('elements');
 
 			// set current source in setup as selected
@@ -54,6 +64,7 @@ export default {
 			'setCurrentSourceAsSelected',
 			'addOptionsAndDataToSave',
 		]),
+		...mapMutations(['setTableDirty']),
 	},
 };
 </script>

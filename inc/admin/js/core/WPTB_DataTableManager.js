@@ -54,24 +54,26 @@ const DataTableManagerStatic = (() => {
 		 * Clean up certain aspects of the data table manager.
 		 */
 		this.cleanUp = () => {
-			this.elementsMessageComtainer.remove();
+			if (this.elementsMessageComtainer) {
+				this.elementsMessageComtainer.remove();
+			}
 		};
 
 		/**
 		 * Add an informative message to main section indicating data setup hasn't finished yet.
 		 */
-		this.addMessageToElementsSection = () => {
+		this.addMessageWrapperToElementsSection = () => {
 			const wrapper = document.querySelector('.wptb-builder-panel');
 
 			if (wrapper) {
 				const range = document.createRange();
 				range.setStart(document, 0);
-				const elementSectionMessageString = `<div class="wptb-flex wptb-plugin-height-full wptb-plugin-width-full wptb-justify-content-center wptb-flex-align-center wptb-data-table-elements-message"><i>${componentData.elementsMessage}</i></div>`;
-				[this.elementsMessageComtainer] = range.createContextualFragment(
+				const elementSectionMessageString = `<div id="wptbDataTableElementsTarget" ></div>`;
+				[this.elementsMessageContainer] = range.createContextualFragment(
 					elementSectionMessageString
 				).childNodes;
 
-				wrapper.appendChild(this.elementsMessageComtainer);
+				wrapper.appendChild(this.elementsMessageContainer);
 			}
 		};
 
@@ -103,14 +105,20 @@ const DataTableManagerStatic = (() => {
 		};
 
 		/**
+		 * Activate left panel section button for tables activated the data table functionality.
+		 */
+		const activateLeftPanelSectionButton = () => {
+			leftPanelSectionButton.style.display = 'unset';
+		};
+
+		/**
 		 * Load data table manager.
 		 */
 		this.load = () => {
 			if (!this.loaded) {
 				this.addMountPointToDom();
-
-				// show data table left panel section button
-				leftPanelSectionButton.style.display = 'unset';
+				activateLeftPanelSectionButton();
+				this.addMessageWrapperToElementsSection();
 
 				// calculate header height and add it to component as margin
 				const header = document.querySelector('.wptb-builder-header');
