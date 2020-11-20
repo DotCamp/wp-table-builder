@@ -16279,16 +16279,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                 if (tempCell) {
                   tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
-
-                  if (!tempCell.el.style.backgroundColor) {
-                    var bgColor = tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
-                    tempCell.setAttribute('style', "background-color: ".concat(bgColor), true, ';');
-                  }
-
                   tempCell.resetAllAttributes();
                   tempCell.setAttribute('style', 'width: 100% !important', true, ';');
                   tempCell.setAttribute('colSpan', 1);
                   tempCell.setAttribute('rowSpan', 1);
+
+                  if (!tempCell.el.style.backgroundColor) {
+                    var bgColor = _r === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = bgColor;
+                  }
                 }
               } // preserve original row colors for even and odd rows
 
@@ -16314,7 +16313,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                 if (!b.el.style.backgroundColor) {
                   var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
-                  b.setAttribute('style', "background-color: ".concat(bgColor), true, ';');
+                  b.el.style.backgroundColor = bgColor;
                 }
 
                 rowObj.el.style.backgroundColor = '#ffffff00';
@@ -16343,16 +16342,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                 if (tempCell) {
                   tableObj.appendElementToRow(tempCell.getElement(), rowObj.id);
-
-                  if (!tempCell.el.style.backgroundColor) {
-                    var bgColor = tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
-                    tempCell.setAttribute('style', "background-color: ".concat(bgColor), true, ';');
-                  }
-
                   tempCell.resetAllAttributes();
                   tempCell.setAttribute('style', 'width: 100% !important', true, ';');
                   tempCell.setAttribute('colSpan', 1);
                   tempCell.setAttribute('rowSpan', 1);
+
+                  if (!tempCell.el.style.backgroundColor) {
+                    var bgColor = _r2 === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = bgColor;
+                  }
                 }
               } // preserve original row colors for even and odd rows
 
