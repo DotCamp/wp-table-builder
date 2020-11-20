@@ -93,6 +93,8 @@ That's it. You're done!
 * NEW: 'noreferrer' option for text links.
 * FIX: An issue with footer buttons not visible in gutenberg block for Firefox browsers.
 * FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.
+* FIX: Fixed an issue affecting some WordPress servers where even though users have read access, still see credential form and can not use various functionality of plugin.
+
 
 = 1.3.2 =
 

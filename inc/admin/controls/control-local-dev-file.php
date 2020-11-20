@@ -80,12 +80,16 @@ class Control_Local_Dev_File extends Base_Control {
 		$path               = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_DIR ) . self::RELATIVE_IMAGE_LOCATION;
 		$url                = trailingslashit( WPTBNS\WP_TABLE_BUILDER_PRO_URL ) . self::RELATIVE_IMAGE_LOCATION;
 		$allowed_extensions = self::SUPPORTED_EXTENSIONS;
-		$creds              = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
 
 		$images = [];
-		if ( ! WP_Filesystem( $creds ) ) {
-			return $images;
-		}
+
+		// @deprecated
+//	  $creds              = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
+//		if ( ! WP_Filesystem( $creds ) ) {
+//			return $images;
+//		}
+
+		WP_Filesystem( true );
 
 		global $wp_filesystem;
 
@@ -111,7 +115,7 @@ class Control_Local_Dev_File extends Base_Control {
 	 * @return bool register or not
 	 */
 	public static function register_evaluation() {
-	  return class_exists('WP_Table_Builder_Pro\WP_Table_Builder_Pro');
+		return class_exists( 'WP_Table_Builder_Pro\WP_Table_Builder_Pro' );
 	}
 
 

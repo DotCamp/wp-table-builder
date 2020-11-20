@@ -185,14 +185,17 @@ class Export {
 	 */
 	protected function zip_archive_creation( $table_ids, $export_type ) {
 
+		// @deprecated
 		// get WordPress filesystem credentials
 		// using WordPress related filesystem methods to minimize the bugs I/O operations can cause on various server/hosting setups
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
-		if ( ! WP_Filesystem( $creds ) ) {
-			$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
+//		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, null );
+//		if ( ! WP_Filesystem( $creds ) ) {
+//			$this->set_error( esc_html__( 'you do not have write access to filesystem', $this->text_domain ) );
+//
+//			return;
+//		}
 
-			return;
-		}
+		WP_Filesystem( true );
 
 		global $wp_filesystem;
 
