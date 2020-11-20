@@ -39,6 +39,9 @@ export default {
 	methods: {
 		continueToGenerate() {
 			DataTableManagerStatic.getInstance().cleanUp();
+			DataTableManagerStatic.getInstance().markTableAsDataTable();
+
+			this.addOptionsAndDataToSave();
 
 			WPTB_ControlsManager.callControlScript('Generate', false);
 			WPTB_Helper.activateSection('elements');
@@ -46,7 +49,11 @@ export default {
 			// set current source in setup as selected
 			this.setCurrentSourceAsSelected();
 		},
-		...mapActions(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected']),
+		...mapActions([
+			'setCurrentScreenToDataSourceSelection',
+			'setCurrentSourceAsSelected',
+			'addOptionsAndDataToSave',
+		]),
 	},
 };
 </script>

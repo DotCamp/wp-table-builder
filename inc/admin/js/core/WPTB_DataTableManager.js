@@ -76,6 +76,33 @@ const DataTableManagerStatic = (() => {
 		};
 
 		/**
+		 * Get table element.
+		 *
+		 * @return {Element|null} table element
+		 */
+		const getTable = () => {
+			return document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
+		};
+
+		/**
+		 * Get any saved data table options from main table element.
+		 *
+		 * @return {null|Object} data table options
+		 */
+		const savedDataTableOptions = () => {
+			const table = getTable();
+
+			let options = null;
+			if (table) {
+				options = table.dataset.wptbDataTableOptions;
+				if (options) {
+					options = JSON.parse(atob(options));
+				}
+			}
+			return options;
+		};
+
+		/**
 		 * Load data table manager.
 		 */
 		this.load = () => {
@@ -93,6 +120,7 @@ const DataTableManagerStatic = (() => {
 				WPTB_ControlsManager.setControlData('dataTableData', {
 					headerHeight,
 					...componentData,
+					dataTableOptions: savedDataTableOptions(),
 				});
 
 				WPTB_ControlsManager.callControlScript('DataTable', this.wrapperId);
@@ -100,18 +128,62 @@ const DataTableManagerStatic = (() => {
 			}
 		};
 
-		// initialize and start up manager.
+		/**
+		 * Check whether current table enabled data tables.
+		 */
+		const isDataTableEnabled = () => {
+			const table = getTable();
+			if (table) {
+				return table.dataset.wptbDataTable;
+			}
+
+			return false;
+		};
+
+		/**
+		 * Initialize and start up manager.
+		 */
 		this.init = () => {
-			document.addEventListener('wptbSectionChanged', (e) => {
-				if (e.detail === this.sectionName) {
+			document.addEventListener('wptb:table:generated', () => {
+				if (isDataTableEnabled()) {
 					this.load();
+
+					// @deprecated
+					// document.addEventListener('wptbSectionChanged', (e) => {
+					// 	if (e.detail === this.sectionName) {
+					// 		this.load();
+					// 	}
+					// });
+				}
+			});
+		};
+
+		/**
+		 * Force load data table manager.
+		 *
+		 * This function will mainly be used for data table card to start the process of data setup.
+		 */
+		this.forceLoad = () => {
+			this.load();
+		};
+
+		/**
+		 * Mark to be generated table as data table.
+		 */
+		this.markTableAsDataTable = () => {
+			// add data table specific data set to indicate that table implemented data table functionality
+			document.addEventListener('wptb:table:generated', () => {
+				const table = document.querySelector(
+					'.wptb-management_table_container .wptb-table-setup .wptb-preview-table'
+				);
+				if (table) {
+					table.dataset.wptbDataTable = true;
 				}
 			});
 
-			document.addEventListener('wptb:table:generated', () => {
-				if (WPTB_Helper.getCurrentSection() === this.sectionName) {
-					this.load();
-				}
+			document.addEventListener('wptb:save:before', ({ detail }) => {
+				// eslint-disable-next-line no-param-reassign
+				detail.dataTable = true;
 			});
 		};
 

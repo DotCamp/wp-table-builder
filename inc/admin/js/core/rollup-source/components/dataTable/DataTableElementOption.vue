@@ -1,12 +1,17 @@
 <template>
-	<div>
-		<i>element data option</i>
-	</div>
+	<section-group-collapse section-id="dataTableElementOption" :label="translation('collapseSectionHeader')">
+		<i>
+			test control
+		</i>
+	</section-group-collapse>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import SectionGroupCollapse from '../leftPanel/SectionGroupCollapse';
+
 export default {
-	name: 'DataTableElementOption',
+	components: { SectionGroupCollapse },
 	data() {
 		return {
 			currentElement: null,
@@ -19,6 +24,9 @@ export default {
 				console.log(element);
 			}
 		});
+	},
+	computed: {
+		...mapGetters(['translation']),
 	},
 };
 </script>

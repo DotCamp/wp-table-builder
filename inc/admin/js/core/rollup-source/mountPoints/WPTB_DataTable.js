@@ -59,6 +59,7 @@ export default {
 					cancel: __('cancel', 'wp-table-builder'),
 					resetIndexRow: __('new column names row', 'wp-table-builder'),
 					cancelNew: __('cancel new selection', 'wp-table-builder'),
+					collapseSectionHeader: __('element data option', 'wp-table-builder'),
 				},
 				proUrl: data.proUrl,
 			},

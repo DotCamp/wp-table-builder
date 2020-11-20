@@ -115,7 +115,7 @@ const actions = {
 	 * @param {{commit, getters}} vuex store object
 	 * @param {{data, markAsImported}} data data array
 	 */
-	addDataManagerTempData({ commit, dispatch, getters }, { data, markAsImported }) {
+	addDataManagerTempData({ commit, dispatch }, { data, markAsImported }) {
 		if (markAsImported === undefined) {
 			// eslint-disable-next-line no-param-reassign
 			markAsImported = true;
@@ -278,22 +278,46 @@ const actions = {
 	 * @param {{commit}} vuex store object
 	 * @param {string} colId column id
 	 */
-	deleteDataTableCol({ commit, getters }, colId) {
-		const index = getters.getDataManagerIndexFromId(colId, 'col');
+	deleteDataTableCol({ commit }, colId) {
+		// @deprecated
+		// const index = getters.getDataManagerIndexFromId(colId, 'col');
+
 		commit('deleteColFromDataTable', colId);
 
-		// calculate hover id that will be focused on after delete operation
-		const hoverColIndex = index - 1 >= 0 ? index - 1 : index;
-		const hoverColId = getters.getDataManagerColId(hoverColIndex);
-		const { rowId } = getters.parseCellId(getters.getHoverId);
+		// @deprecated
+		// // calculate hover id that will be focused on after delete operation
+		// const hoverColIndex = index - 1 >= 0 ? index - 1 : index;
+		// const hoverColId = getters.getDataManagerColId(hoverColIndex);
+		// const { rowId } = getters.parseCellId(getters.getHoverId);
 		// commit('setHoverId', getters.formCellId(rowId, hoverColId));
 
 		commit('setHoverId', null);
 	},
+	/**
+	 * Set current source in setup as selected.
+	 *
+	 * @param {{commit, getters}} vuex store object
+	 */
 	setCurrentSourceAsSelected({ commit, getters }) {
 		const currentSourceInSetup = getters.getCurrentSourceSetupId;
 
 		commit('setSelectedDataSource', currentSourceInSetup);
+	},
+	addOptionsAndDataToSave({ state }) {
+		document.addEventListener('wptb:save:before', () => {
+			const { dataSource, dataManager } = state;
+
+			const dataToSave = { dataSource, dataManager };
+			const stringified = JSON.stringify(dataToSave);
+			const encoded = btoa(stringified);
+
+			const table = document.querySelector(
+				'.wptb-management_table_container .wptb-table-setup .wptb-preview-table'
+			);
+			if (table) {
+				table.dataset.wptbDataTableOptions = encoded;
+			}
+		});
 	},
 };
 

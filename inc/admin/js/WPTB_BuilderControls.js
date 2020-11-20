@@ -27296,12 +27296,14 @@ var _default = {
   methods: _objectSpread({
     continueToGenerate: function continueToGenerate() {
       DataTableManagerStatic.getInstance().cleanUp();
+      DataTableManagerStatic.getInstance().markTableAsDataTable();
+      this.addOptionsAndDataToSave();
       WPTB_ControlsManager.callControlScript('Generate', false);
       WPTB_Helper.activateSection('elements'); // set current source in setup as selected
 
       this.setCurrentSourceAsSelected();
     }
-  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected']))
+  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected', 'addOptionsAndDataToSave']))
 };
 exports.default = _default;
         var $a2c9cd = exports.default || module.exports;
@@ -29609,7 +29611,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29622,8 +29624,129 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default = {
-  name: 'DataTableElementOption',
+  name: 'SectionGroupCollapse',
+  props: {
+    sectionId: {
+      type: String,
+      default: 'sectionGroupCollapse'
+    },
+    label: {
+      type: String,
+      default: 'Section group collapse'
+    },
+    startCollapsed: {
+      types: Boolean,
+      default: true
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      if (_this.startCollapsed) {
+        _this.handleToggle();
+      }
+    });
+  },
+  methods: {
+    handleToggle: function handleToggle() {
+      var $ = jQuery;
+      this.$refs.toggleWrapper.classList.toggle('wptb-panel-toggle-content');
+      $(this.$refs.toggleTarget).slideToggle();
+    }
+  }
+};
+exports.default = _default;
+        var $d4406e = exports.default || module.exports;
+      
+      if (typeof $d4406e === 'function') {
+        $d4406e = $d4406e.options;
+      }
+    
+        /* template */
+        Object.assign($d4406e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      ref: "toggleWrapper",
+      staticClass: "wptb-panel-toggle-group",
+      attrs: { id: _vm.sectionId }
+    },
+    [
+      _c("div", { staticClass: "wptb-panel-toggle" }, [
+        _c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.label))]),
+        _vm._v(" "),
+        _c("span", {
+          staticClass: "dashicons toggle-icon",
+          on: {
+            "!click": function($event) {
+              $event.preventDefault()
+              $event.stopPropagation()
+              return _vm.handleToggle($event)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "toggleTarget",
+          staticClass: "wptb-panel-section-toggle-target"
+        },
+        [_vm._t("default")],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _SectionGroupCollapse = _interopRequireDefault(require("../leftPanel/SectionGroupCollapse"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    SectionGroupCollapse: _SectionGroupCollapse.default
+  },
   data: function data() {
     return {
       currentElement: null
@@ -29640,7 +29763,8 @@ var _default = {
         console.log(element);
       }
     });
-  }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation']))
 };
 exports.default = _default;
         var $619075 = exports.default || module.exports;
@@ -29655,16 +29779,18 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "section-group-collapse",
+    {
+      attrs: {
+        "section-id": "dataTableElementOption",
+        label: _vm.translation("collapseSectionHeader")
+      }
+    },
+    [_c("i", [_vm._v("\n\t\ttest control\n\t")])]
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("i", [_vm._v("element data option")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
           return {
@@ -29676,7 +29802,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29730,11 +29856,10 @@ var _default = {
 
     this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // set startup screen
     // TODO [erdembircan] uncomment for production
-    // this.setCurrentScreen('DataSourceSelection');
-    // TODO [erdembircan] comment for production
-    // TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
 
-    this.setCurrentScreen(this.devStartupScreen);
+    this.setCurrentScreen('DataSourceSelection'); // TODO [erdembircan] comment for production
+    // TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
+    // this.setCurrentScreen(this.devStartupScreen);
   },
   methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen'])),
   computed: _objectSpread({
@@ -30534,8 +30659,7 @@ var actions = {
    */
   addDataManagerTempData: function addDataManagerTempData(_ref11, _ref12) {
     var commit = _ref11.commit,
-        dispatch = _ref11.dispatch,
-        getters = _ref11.getters;
+        dispatch = _ref11.dispatch;
     var data = _ref12.data,
         markAsImported = _ref12.markAsImported;
 
@@ -30807,25 +30931,47 @@ var actions = {
    * @param {string} colId column id
    */
   deleteDataTableCol: function deleteDataTableCol(_ref23, colId) {
-    var commit = _ref23.commit,
-        getters = _ref23.getters;
-    var index = getters.getDataManagerIndexFromId(colId, 'col');
-    commit('deleteColFromDataTable', colId); // calculate hover id that will be focused on after delete operation
-
-    var hoverColIndex = index - 1 >= 0 ? index - 1 : index;
-    var hoverColId = getters.getDataManagerColId(hoverColIndex);
-
-    var _getters$parseCellId3 = getters.parseCellId(getters.getHoverId),
-        rowId = _getters$parseCellId3.rowId; // commit('setHoverId', getters.formCellId(rowId, hoverColId));
-
+    var commit = _ref23.commit;
+    // @deprecated
+    // const index = getters.getDataManagerIndexFromId(colId, 'col');
+    commit('deleteColFromDataTable', colId); // @deprecated
+    // // calculate hover id that will be focused on after delete operation
+    // const hoverColIndex = index - 1 >= 0 ? index - 1 : index;
+    // const hoverColId = getters.getDataManagerColId(hoverColIndex);
+    // const { rowId } = getters.parseCellId(getters.getHoverId);
+    // commit('setHoverId', getters.formCellId(rowId, hoverColId));
 
     commit('setHoverId', null);
   },
+
+  /**
+   * Set current source in setup as selected.
+   *
+   * @param {{commit, getters}} vuex store object
+   */
   setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref24) {
     var commit = _ref24.commit,
         getters = _ref24.getters;
     var currentSourceInSetup = getters.getCurrentSourceSetupId;
     commit('setSelectedDataSource', currentSourceInSetup);
+  },
+  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref25) {
+    var state = _ref25.state;
+    document.addEventListener('wptb:save:before', function () {
+      var dataSource = state.dataSource,
+          dataManager = state.dataManager;
+      var dataToSave = {
+        dataSource: dataSource,
+        dataManager: dataManager
+      };
+      var stringified = JSON.stringify(dataToSave);
+      var encoded = btoa(stringified);
+      var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
+
+      if (table) {
+        table.dataset.wptbDataTableOptions = encoded;
+      }
+    });
   }
 };
 var _default = actions;
@@ -31527,7 +31673,8 @@ var _default = {
           selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder'),
           cancel: (0, _i18n.__)('cancel', 'wp-table-builder'),
           resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
-          cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder')
+          cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
+          collapseSectionHeader: (0, _i18n.__)('element data option', 'wp-table-builder')
         },
         proUrl: data.proUrl
       },
@@ -33908,7 +34055,9 @@ var _default = {
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
       } else if (cardId === 'dataTable') {
-        // destroy generate instance and activate data table menu section
+        // load data manager component
+        DataTableManagerStatic.getInstance().forceLoad(); // destroy generate instance and activate data table menu section
+
         WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
       } else {
         var tableWrapper = document.querySelector('.wptb-table-setup');

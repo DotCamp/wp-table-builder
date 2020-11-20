@@ -228,6 +228,9 @@ export default {
 				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 				wptbTableStateSaveManager.tableStateSet();
 			} else if (cardId === 'dataTable') {
+				// load data manager component
+				DataTableManagerStatic.getInstance().forceLoad();
+
 				// destroy generate instance and activate data table menu section
 				WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
 			} else {

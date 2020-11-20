@@ -45,11 +45,11 @@ export default {
 
 		// set startup screen
 		// TODO [erdembircan] uncomment for production
-		// this.setCurrentScreen('DataSourceSelection');
+		this.setCurrentScreen('DataSourceSelection');
 
 		// TODO [erdembircan] comment for production
 		// TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
-		this.setCurrentScreen(this.devStartupScreen);
+		// this.setCurrentScreen(this.devStartupScreen);
 	},
 	methods: {
 		...mapActions(['setComponentVisibility', 'setCurrentScreen']),
