@@ -462,7 +462,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
         //Create a HTML Table element.
         table = document.createElement( 'table' );
         table.classList.add( 'wptb-preview-table', 'wptb-element-main-table_setting-startedid-0' );
-        table.style.border = '0px solid';
+        table.style.border = '1px solid #d1d1d1';
         table.dataset.reconstraction = 1;
         //table.dataset.wptbAdaptiveTable = 1;
         //Add the data rows.
@@ -474,7 +474,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
             for (var j = 0; j < columns; j++) {
                 cell = new WPTB_Cell(mark);
                 cell.setCoords(i, j);
-                cell.getDOMElement().style.borderWidth = '1px';
+                cell.getDOMElement().style.border = '1px solid #d1d1d1';
                 row.appendChild(cell.getDOMElement());
             }
         }

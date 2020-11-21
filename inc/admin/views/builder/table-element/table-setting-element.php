@@ -64,12 +64,12 @@ class Table_Setting_Element extends Element_Base_Object {
         $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
 		$general_section_group_controls = [
 			// @deprecated
-//			'tableManageCells' =>
-//				[
-//					'label' => __( 'Manage Cells', 'wp_table_builder' ),
-//					'type'  => Controls_Manager::BUTTON,
-//				],
-//
+			// 'tableManageCells' =>
+			// 	[
+			// 		'label' => __( 'Manage Cells', 'wp_table_builder' ),
+			// 		'type'  => Controls_Manager::BUTTON,
+			// 	],
+
 			'tableCellPadding'            =>
 				[
 					'label'        => __( 'Cell Padding', 'wp_table_builder' ),
@@ -189,9 +189,9 @@ class Table_Setting_Element extends Element_Base_Object {
 					'selectors'    => [
 						'{{{data.container}}}' => 'border-width',
 					],
-					'min'          => '0',
-					'max'          => '50',
-					'defaultValue' => '0',
+					'min'          => 0,
+					'max'          => 50,
+					'defaultValue' => 1,
 					'dimension'    => 'px',
 				],
 
@@ -211,6 +211,7 @@ class Table_Setting_Element extends Element_Base_Object {
 					'selectors' => [
 						'{{{data.container}}} td' => [ 'border-style', 'solid', 'none' ],
 					],
+					'checked' => true
 				],
 			'headerInnerBorder'     =>
 				[
