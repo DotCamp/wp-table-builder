@@ -2493,6 +2493,11 @@ var WPTB_Helper = {
 		Array.from(document.querySelectorAll('.wptb-directlyhovered')).map((el) => {
 			el.classList.remove('wptb-directlyhovered');
 		});
+
+		// remobe all data-placeholder from table
+		Array.from(document.querySelectorAll('.wptb-text-container p')).map((el) => {
+			el.removeAttribute('data-placeholder');
+		});
 	},
 	/**
 	 * Setup table save related visual styles and elements.
