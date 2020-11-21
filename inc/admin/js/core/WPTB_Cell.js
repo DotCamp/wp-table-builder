@@ -50,6 +50,12 @@ var WPTB_Cell = function ( callback, DOMElement ) {
         }
 
         DOMElement.classList.add('wptb-droppable', 'wptb-cell');
+
+        // Add Auto text field in each block
+        let element = WPTB_Helper.newElementProxy( 'text' )
+        element = element.getDOMElement();
+
+        DOMElement.appendChild( element )
     }
 
     DOMElement.draggable = false;

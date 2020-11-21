@@ -145,7 +145,7 @@ class Text_Element extends Element_Base {
 	 */
 	protected function _content_template() {
 		?>
-        <div><p>Text</p></div>
+        <div><p data-placeholder="Add Content"></p></div>
 		<?php
 	}
 }

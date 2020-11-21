@@ -9,8 +9,9 @@ var WPTB_ElementObject = function ( data ) {
         let wpTemplateId = 'wptb-' + data.kind + '-content';
         let template = wp.template( wpTemplateId );
         data.node = DOMElement;
-        let itemHtml = template( data );
 
+        let itemHtml = template( data );
+        
         itemHtml = itemHtml.replace(/\r|\n|\t/g, '').trim();
         DOMElement.innerHTML = itemHtml;
     } else {
@@ -52,5 +53,3 @@ var WPTB_ElementObject = function ( data ) {
     applyGenericItemSettings( this, kindIndexProt, copy );
     return this;
 }
-
-

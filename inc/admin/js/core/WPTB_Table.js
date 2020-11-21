@@ -451,6 +451,7 @@ var array = [], WPTB_Table = function ( columns, rows, wptb_preview_table ) {
     jQuery('#wptb-table-border-color').val('');
     jQuery('#wptb-table-padding-number,#wptb-table-padding-slider').val('15');
 
+    // Todo your code here
     if ( columns || rows ) {
         //END OF PRIVATE FUNCTIONS
         for (var i = 0; i < settings.length; i++) {
