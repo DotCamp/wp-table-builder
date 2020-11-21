@@ -16245,8 +16245,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               baseCells.map(function (b) {
                 rowStartIndex += 1;
                 var rowObj = tableObj.addRow('wptb-row');
-                rowObj.el.style.backgroundColor = tableObj.rowColors.header;
                 tableObj.appendObjectToRow(b, rowObj.id);
+
+                if (!b.el.style.backgroundColor) {
+                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
+                  b.setAttribute('style', "background-color: ".concat(bgColor), true, ';');
+                }
+
+                rowObj.el.style.backgroundColor = '#ffffff00';
                 b.setAttribute('colSpan', cellsPerRow);
               });
             } // get cells by reading row by row
@@ -16266,9 +16272,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
             for (var c = 0, _r = 0; c < cellCount; c += cellsPerRow, _r += 1) {
               // const rowId = tableObj.addRow('wptb-row').id;
-              var rowObj = tableObj.addRow('wptb-row'); // preserve original row colors for even and odd rows
-
-              rowObj.el.style.backgroundColor = tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even']; // place cells by 'cells by row' option value
+              var rowObj = tableObj.addRow('wptb-row'); // place cells by 'cells by row' option value
 
               for (var pR = 0; pR < cellsPerRow; pR += 1) {
                 var tempCell = allCellsByRow[c + pR];
@@ -16279,8 +16283,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   tempCell.setAttribute('style', 'width: 100% !important', true, ';');
                   tempCell.setAttribute('colSpan', 1);
                   tempCell.setAttribute('rowSpan', 1);
+
+                  if (!tempCell.el.style.backgroundColor) {
+                    var bgColor = _r === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = bgColor;
+                  }
                 }
-              }
+              } // preserve original row colors for even and odd rows
+
+
+              rowObj.el.style.backgroundColor = '#ffffff00';
             }
           })();
         } // cell stack direction is selected as column
@@ -16297,8 +16309,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               baseCells.map(function (b) {
                 rowStartIndex += 1;
                 var rowObj = tableObj.addRow('wptb-row');
-                rowObj.el.style.backgroundColor = tableObj.rowColors.header;
                 tableObj.appendObjectToRow(b, rowObj.id);
+
+                if (!b.el.style.backgroundColor) {
+                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
+                  b.el.style.backgroundColor = bgColor;
+                }
+
+                rowObj.el.style.backgroundColor = '#ffffff00';
                 b.setAttribute('colSpan', cellsPerRow);
               });
             } // read all cells column by column
@@ -16317,9 +16335,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var cellCount = allCellsByCol.length;
 
             for (var _c = 0, _r2 = 0; _c < cellCount; _c += cellsPerRow, _r2 += 1) {
-              var rowObj = tableObj.addRow('wptb-row'); // preserve original row colors for even and odd rows
-
-              rowObj.el.style.backgroundColor = tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
+              var rowObj = tableObj.addRow('wptb-row');
 
               for (var cR = 0; cR < cellsPerRow; cR += 1) {
                 var tempCell = allCellsByCol[_c + cR];
@@ -16330,8 +16346,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   tempCell.setAttribute('style', 'width: 100% !important', true, ';');
                   tempCell.setAttribute('colSpan', 1);
                   tempCell.setAttribute('rowSpan', 1);
+
+                  if (!tempCell.el.style.backgroundColor) {
+                    var bgColor = _r2 === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r2 % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = bgColor;
+                  }
                 }
-              }
+              } // preserve original row colors for even and odd rows
+
+
+              rowObj.el.style.backgroundColor = '#ffffff00';
             }
           }
       }
@@ -16350,7 +16374,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // cells at header
       // applying header row color to cells
       var headerCells = tableObj.getCellsAtRow(0, true).map(function (h) {
-        h.setAttribute('style', "background-color: ".concat(tableObj.rowColors.header), true, ';');
+        if (!h.el.style.backgroundColor) {
+          h.setAttribute('style', "background-color: ".concat(tableObj.rowColors.header), true, ';');
+        }
+
         return h;
       });
       var stackedAsColumn = direction === 'column'; // row count
@@ -16378,8 +16405,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           headerCells.map(function (h) {
             // clone header cell to reuse it for multiple rows
-            tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
+            var cellClone = h.el.cloneNode(true);
+            tableObj.appendElementToRow(cellClone, rowObj.id);
+
+            if (!cellClone.style.backgroundColor) {
+              cellClone.style.backgroundColor = "".concat(getComputedStyle(rowObj.el).backgroundColor);
+              if (cellClone.style.backgroundColor) cellClone.style.backgroundColor += ' !important';
+            }
           });
+          rowObj.el.style.backgroundColor = '#ffffff00';
         } // count of header rows that will be created
 
 
@@ -16399,7 +16433,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
             var rowObj = tableObj.addRow('wptb-row'); // apply row color relative to current header row
 
-            rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
+            rowObj.el.style.backgroundColor = '#ffffff00';
 
             for (var cc = 0; cc < columns; cc += 1) {
               var currentCell = tableObj.getCell(currentOriginalRow, cc, true);
@@ -16422,6 +16456,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 }
 
                 if (cellAddStatus) {
+                  if (!currentCell.el.style.backgroundColor) {
+                    currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd']), true, ';');
+                  }
+
                   tableObj.appendObjectToRow(currentCell, rowObj.id);
                 }
               }
@@ -16439,10 +16477,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         for (var hc = 0; hc < _headerCount; hc += 1) {
           for (var _c2 = 0; _c2 < columns; _c2 += 1) {
-            var _rowObj = tableObj.addRow('wptb-row'); // clear out row color to override row color with cell colors
-
-
-            _rowObj.el.style.backgroundColor = 'none';
+            var _rowObj = tableObj.addRow('wptb-row');
 
             if (hc > 0 && _c2 === 0) {
               _rowObj.el.style.borderTop = rowBorderStyle;
@@ -16453,6 +16488,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
             clonedHeaderCell.style.backgroundColor = "".concat(tableObj.rowColors.header, " !important");
             tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
+
+            if (!clonedHeaderCell.style.backgroundColor) {
+              clonedHeaderCell.style.backgroundColor = "".concat(getComputedStyle(_rowObj.el).backgroundColor);
+              if (clonedHeaderCell.style.backgroundColor) clonedHeaderCell.style.backgroundColor += ' !important';
+            } // clear out row color to override row color with cell colors
+
+
+            _rowObj.el.style.backgroundColor = '#ffffff00';
 
             for (var _r3 = 0; _r3 < itemsPerHeader; _r3 += 1) {
               if (_currentOriginalRow + _r3 >= rows) {
@@ -16498,7 +16541,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                     colorIndex = _currentOriginalRow % 2 === 0 ? 'even' : 'odd';
                   }
 
-                  _currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
+                  if (!_currentCell.el.style.backgroundColor) {
+                    _currentCell.setAttribute('style', "background-color: ".concat(tableObj.rowColors[colorIndex]), true, ';');
+                  }
 
                   tableObj.appendObjectToRow(_currentCell, _rowObj.id);
                 }

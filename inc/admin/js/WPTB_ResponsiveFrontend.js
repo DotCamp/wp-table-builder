@@ -814,9 +814,16 @@
 						baseCells.map((b) => {
 							rowStartIndex += 1;
 							const rowObj = tableObj.addRow('wptb-row');
-							rowObj.el.style.backgroundColor = tableObj.rowColors.header;
 
 							tableObj.appendObjectToRow(b, rowObj.id);
+
+							if (!b.el.style.backgroundColor) {
+								const bgColor = tableObj.rowColors.header
+									? tableObj.rowColors.header
+									: getComputedStyle(rowObj.el).backgroundColor;
+								b.setAttribute('style', `background-color: ${bgColor}`, true, ';');
+							}
+							rowObj.el.style.backgroundColor = '#ffffff00';
 
 							b.setAttribute('colSpan', cellsPerRow);
 						});
@@ -839,9 +846,6 @@
 						// const rowId = tableObj.addRow('wptb-row').id;
 						const rowObj = tableObj.addRow('wptb-row');
 
-						// preserve original row colors for even and odd rows
-						rowObj.el.style.backgroundColor = tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-
 						// place cells by 'cells by row' option value
 						for (let pR = 0; pR < cellsPerRow; pR += 1) {
 							const tempCell = allCellsByRow[c + pR];
@@ -853,8 +857,21 @@
 								tempCell.setAttribute('style', 'width: 100% !important', true, ';');
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
+
+								if (!tempCell.el.style.backgroundColor) {
+									const bgColor =
+										r === 0
+											? tableObj.rowColors.header
+												? tableObj.rowColors.header
+												: getComputedStyle(rowObj.el).backgroundColor
+											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+									tempCell.el.style.backgroundColor = bgColor;
+								}
 							}
 						}
+
+						// preserve original row colors for even and odd rows
+						rowObj.el.style.backgroundColor = '#ffffff00';
 					}
 				}
 				// cell stack direction is selected as column
@@ -872,9 +889,16 @@
 						baseCells.map((b) => {
 							rowStartIndex += 1;
 							const rowObj = tableObj.addRow('wptb-row');
-							rowObj.el.style.backgroundColor = tableObj.rowColors.header;
 
 							tableObj.appendObjectToRow(b, rowObj.id);
+
+							if (!b.el.style.backgroundColor) {
+								const bgColor = tableObj.rowColors.header
+									? tableObj.rowColors.header
+									: getComputedStyle(rowObj.el).backgroundColor;
+								b.el.style.backgroundColor = bgColor;
+							}
+							rowObj.el.style.backgroundColor = '#ffffff00';
 
 							b.setAttribute('colSpan', cellsPerRow);
 						});
@@ -896,9 +920,6 @@
 					for (let c = 0, r = 0; c < cellCount; c += cellsPerRow, r += 1) {
 						const rowObj = tableObj.addRow('wptb-row');
 
-						// preserve original row colors for even and odd rows
-						rowObj.el.style.backgroundColor = tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-
 						for (let cR = 0; cR < cellsPerRow; cR += 1) {
 							const tempCell = allCellsByCol[c + cR];
 
@@ -909,8 +930,21 @@
 								tempCell.setAttribute('style', 'width: 100% !important', true, ';');
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
+
+								if (!tempCell.el.style.backgroundColor) {
+									const bgColor =
+										r === 0
+											? tableObj.rowColors.header
+											? tableObj.rowColors.header
+											: getComputedStyle(rowObj.el).backgroundColor
+											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+									tempCell.el.style.backgroundColor = bgColor;
+								}
 							}
 						}
+
+						// preserve original row colors for even and odd rows
+						rowObj.el.style.backgroundColor = '#ffffff00';
 					}
 				}
 			}
@@ -927,7 +961,9 @@
 			// cells at header
 			// applying header row color to cells
 			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
-				h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
+				if (!h.el.style.backgroundColor) {
+					h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
+				}
 				return h;
 			});
 
@@ -958,8 +994,14 @@
 					// eslint-disable-next-line array-callback-return
 					headerCells.map((h) => {
 						// clone header cell to reuse it for multiple rows
-						tableObj.appendElementToRow(h.el.cloneNode(true), rowObj.id);
+						const cellClone = h.el.cloneNode(true);
+						tableObj.appendElementToRow(cellClone, rowObj.id);
+						if (!cellClone.style.backgroundColor) {
+							cellClone.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor}`;
+							if (cellClone.style.backgroundColor) cellClone.style.backgroundColor += ' !important';
+						}
 					});
+					rowObj.el.style.backgroundColor = '#ffffff00';
 				}
 
 				// count of header rows that will be created
@@ -977,7 +1019,7 @@
 						const rowObj = tableObj.addRow('wptb-row');
 
 						// apply row color relative to current header row
-						rowObj.el.style.backgroundColor = tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd'];
+						rowObj.el.style.backgroundColor = '#ffffff00';
 						for (let cc = 0; cc < columns; cc += 1) {
 							const currentCell = tableObj.getCell(currentOriginalRow, cc, true);
 
@@ -1003,6 +1045,14 @@
 								}
 
 								if (cellAddStatus) {
+									if (!currentCell.el.style.backgroundColor) {
+										currentCell.setAttribute(
+											'style',
+											`background-color: ${tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd']}`,
+											true,
+											';'
+										);
+									}
 									tableObj.appendObjectToRow(currentCell, rowObj.id);
 								}
 							}
@@ -1021,9 +1071,6 @@
 					for (let c = 0; c < columns; c += 1) {
 						const rowObj = tableObj.addRow('wptb-row');
 
-						// clear out row color to override row color with cell colors
-						rowObj.el.style.backgroundColor = 'none';
-
 						if (hc > 0 && c === 0) {
 							rowObj.el.style.borderTop = rowBorderStyle;
 						}
@@ -1034,6 +1081,15 @@
 						clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
 
 						tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
+
+						if (!clonedHeaderCell.style.backgroundColor) {
+							clonedHeaderCell.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor}`;
+							if (clonedHeaderCell.style.backgroundColor)
+								clonedHeaderCell.style.backgroundColor += ' !important';
+						}
+
+						// clear out row color to override row color with cell colors
+						rowObj.el.style.backgroundColor = '#ffffff00';
 
 						for (let r = 0; r < itemsPerHeader; r += 1) {
 							if (currentOriginalRow + r >= rows) {
@@ -1076,12 +1132,14 @@
 										colorIndex = currentOriginalRow % 2 === 0 ? 'even' : 'odd';
 									}
 
-									currentCell.setAttribute(
-										'style',
-										`background-color: ${tableObj.rowColors[colorIndex]}`,
-										true,
-										';'
-									);
+									if (!currentCell.el.style.backgroundColor) {
+										currentCell.setAttribute(
+											'style',
+											`background-color: ${tableObj.rowColors[colorIndex]}`,
+											true,
+											';'
+										);
+									}
 									tableObj.appendObjectToRow(currentCell, rowObj.id);
 								}
 							}
