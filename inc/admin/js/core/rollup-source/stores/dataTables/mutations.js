@@ -303,10 +303,19 @@ const mutations = {
 		const colIndex = state.dataManager.tempData.colIds.indexOf(colId);
 
 		if (colIndex >= 0) {
+			// generate new values to trigger reactivity
+			const newValues = state.dataManager.tempData.values.reduce((carry, val) => {
+				const nVal = { ...val };
+				carry.push(nVal);
+				return carry;
+			}, []);
+
 			// eslint-disable-next-line array-callback-return
-			state.dataManager.tempData.values.map((r) => {
-				r.values.splice(colIndex, 1);
+			newValues.map((v) => {
+				v.values.splice(colIndex, 1);
 			});
+
+			state.dataManager.tempData.values = newValues;
 
 			// also delete col id from indexes
 			state.dataManager.tempData.colIds.splice(colIndex, 1);

@@ -29009,8 +29009,6 @@ var _default = {
   watch: {
     getDataManagerTempData: {
       handler: function handler(n) {
-        // TODO [erdembircan] remove for production
-        console.log(n);
         this.prepareTableValues(n);
       },
       deep: true
@@ -30593,10 +30591,18 @@ var mutations = {
     var colIndex = state.dataManager.tempData.colIds.indexOf(colId);
 
     if (colIndex >= 0) {
-      // eslint-disable-next-line array-callback-return
-      state.dataManager.tempData.values.map(function (r) {
-        r.values.splice(colIndex, 1);
-      }); // also delete col id from indexes
+      // generate new values to trigger reactivity
+      var newValues = state.dataManager.tempData.values.reduce(function (carry, val) {
+        var nVal = _objectSpread({}, val);
+
+        carry.push(nVal);
+        return carry;
+      }, []); // eslint-disable-next-line array-callback-return
+
+      newValues.map(function (v) {
+        v.values.splice(colIndex, 1);
+      });
+      state.dataManager.tempData.values = newValues; // also delete col id from indexes
 
       state.dataManager.tempData.colIds.splice(colIndex, 1); // update column count
 
