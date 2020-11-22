@@ -344,9 +344,13 @@ const mutations = {
 	},
 	/**
 	 * Set table as dirty
+	 *
+	 * @param {Object} state data table state
 	 */
-	setTableDirty: () => {
-		new WPTB_TableStateSaveManager().tableStateSet();
+	setTableDirty: (state) => {
+		if (state.tableIsActive) {
+			new WPTB_TableStateSaveManager().tableStateSet();
+		}
 	},
 };
 

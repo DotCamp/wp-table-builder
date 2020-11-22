@@ -57,9 +57,12 @@ export default {
 		// TODO [erdembircan] comment for production
 		// TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
 		// this.setCurrentScreen(this.devStartupScreen);
+
+		// enable saving data table options to table on table save operation
+		this.addOptionsAndDataToSave();
 	},
 	methods: {
-		...mapActions(['setComponentVisibility', 'setCurrentScreen']),
+		...mapActions(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave']),
 	},
 	computed: {
 		/**

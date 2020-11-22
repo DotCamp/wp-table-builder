@@ -27296,18 +27296,14 @@ var _default = {
   methods: _objectSpread({
     continueToGenerate: function continueToGenerate() {
       DataTableManagerStatic.getInstance().cleanUp();
-      DataTableManagerStatic.getInstance().markTableAsDataTable();
-      this.addOptionsAndDataToSave(); // only call generate component if there is no active table in builder
+      DataTableManagerStatic.getInstance().markTableAsDataTable(); // only call generate component if there is no active table in builder
 
       if (!this.tableIsActive) {
         WPTB_ControlsManager.callControlScript('Generate', false);
-      }
+      } // set table dirty
 
-      if (this.tableIsActive) {
-        // if there is a table set table dirty
-        this.setTableDirty();
-      }
 
+      this.setTableDirty();
       WPTB_Helper.activateSection('elements'); // set current source in setup as selected
 
       this.setCurrentSourceAsSelected();
@@ -29982,8 +29978,11 @@ var _default = {
     // TODO [erdembircan] comment for production
     // TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
     // this.setCurrentScreen(this.devStartupScreen);
+    // enable saving data table options to table on table save operation
+
+    this.addOptionsAndDataToSave();
   },
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen'])),
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave'])),
   computed: _objectSpread({
     /**
      * Style for main app component.
@@ -30634,9 +30633,13 @@ var mutations = {
 
   /**
    * Set table as dirty
+   *
+   * @param {Object} state data table state
    */
-  setTableDirty: function setTableDirty() {
-    new WPTB_TableStateSaveManager().tableStateSet();
+  setTableDirty: function setTableDirty(state) {
+    if (state.tableIsActive) {
+      new WPTB_TableStateSaveManager().tableStateSet();
+    }
   }
 };
 var _default = mutations;
@@ -31880,7 +31883,8 @@ var _default = {
       var savedDataTableOptions = table.dataset.wptbDataTableOptions;
 
       if (savedDataTableOptions) {
-        var decodedOptions = JSON.parse(atob(savedDataTableOptions));
+        var decodedOptions = JSON.parse(atob(savedDataTableOptions)); // update tableIsActive store state
+
         extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptions, {
           tableIsActive: true
         });

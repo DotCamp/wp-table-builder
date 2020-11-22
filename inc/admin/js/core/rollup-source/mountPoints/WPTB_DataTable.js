@@ -108,6 +108,8 @@ export default {
 
 			if (savedDataTableOptions) {
 				const decodedOptions = JSON.parse(atob(savedDataTableOptions));
+
+				// update tableIsActive store state
 				extraStoreOptions.state = { ...extraStoreOptions.state, ...decodedOptions, tableIsActive: true };
 			}
 		}

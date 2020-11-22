@@ -42,17 +42,13 @@ export default {
 			DataTableManagerStatic.getInstance().cleanUp();
 			DataTableManagerStatic.getInstance().markTableAsDataTable();
 
-			this.addOptionsAndDataToSave();
-
 			// only call generate component if there is no active table in builder
 			if (!this.tableIsActive) {
 				WPTB_ControlsManager.callControlScript('Generate', false);
 			}
 
-			if (this.tableIsActive) {
-				// if there is a table set table dirty
-				this.setTableDirty();
-			}
+			// set table dirty
+			this.setTableDirty();
 
 			WPTB_Helper.activateSection('elements');
 
