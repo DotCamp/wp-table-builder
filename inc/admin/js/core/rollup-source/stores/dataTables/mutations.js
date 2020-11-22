@@ -270,7 +270,11 @@ const mutations = {
 	 */
 	addCellToDataTableRow(state, { rowIndex, cellObject }) {
 		if (rowIndex < state.dataManager.tempData.rowCount) {
-			state.dataManager.tempData.values[rowIndex].values.push(cellObject);
+			// create a new rowObject to trigger reactivity
+			const rowObject = { ...state.dataManager.tempData.values[rowIndex] };
+			rowObject.values.push(cellObject);
+
+			state.dataManager.tempData.values.splice(rowIndex, 1, rowObject);
 		}
 	},
 	/**
