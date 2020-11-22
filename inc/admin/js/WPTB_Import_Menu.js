@@ -12630,14 +12630,14 @@ var _default = {
   props: ['logoSrc', 'logoAlt', 'pluginName']
 };
 exports.default = _default;
-        var $b57d2a = exports.default || module.exports;
+        var $987f1e = exports.default || module.exports;
       
-      if (typeof $b57d2a === 'function') {
-        $b57d2a = $b57d2a.options;
+      if (typeof $987f1e === 'function') {
+        $987f1e = $987f1e.options;
       }
     
         /* template */
-        Object.assign($b57d2a, (function () {
+        Object.assign($987f1e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12730,14 +12730,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $354c7f = exports.default || module.exports;
+        var $690c6d = exports.default || module.exports;
       
-      if (typeof $354c7f === 'function') {
-        $354c7f = $354c7f.options;
+      if (typeof $690c6d === 'function') {
+        $690c6d = $690c6d.options;
       }
     
         /* template */
-        Object.assign($354c7f, (function () {
+        Object.assign($690c6d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12811,14 +12811,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d41ec1 = exports.default || module.exports;
+        var $31f6d3 = exports.default || module.exports;
       
-      if (typeof $d41ec1 === 'function') {
-        $d41ec1 = $d41ec1.options;
+      if (typeof $31f6d3 === 'function') {
+        $31f6d3 = $31f6d3.options;
       }
     
         /* template */
-        Object.assign($d41ec1, (function () {
+        Object.assign($31f6d3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12933,14 +12933,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $07c866 = exports.default || module.exports;
+        var $121c13 = exports.default || module.exports;
       
-      if (typeof $07c866 === 'function') {
-        $07c866 = $07c866.options;
+      if (typeof $121c13 === 'function') {
+        $121c13 = $121c13.options;
       }
     
         /* template */
-        Object.assign($07c866, (function () {
+        Object.assign($121c13, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13037,7 +13037,7 @@ var withMessage = {
     setMessage: function setMessage(options) {
       var _this = this;
 
-      var mergedOptions = _objectSpread(_objectSpread({}, defaults), options);
+      var mergedOptions = _objectSpread({}, defaults, {}, options);
 
       this.withMessageData.message = mergedOptions.message;
       this.withMessageData.type = mergedOptions.type;
@@ -13081,14 +13081,14 @@ var _default = {
   mixins: [_withMessage.default]
 };
 exports.default = _default;
-        var $08e206 = exports.default || module.exports;
+        var $a5c956 = exports.default || module.exports;
       
-      if (typeof $08e206 === 'function') {
-        $08e206 = $08e206.options;
+      if (typeof $a5c956 === 'function') {
+        $a5c956 = $a5c956.options;
       }
     
         /* template */
-        Object.assign($08e206, (function () {
+        Object.assign($a5c956, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13169,14 +13169,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $201995 = exports.default || module.exports;
+        var $358d10 = exports.default || module.exports;
       
-      if (typeof $201995 === 'function') {
-        $201995 = $201995.options;
+      if (typeof $358d10 === 'function') {
+        $358d10 = $358d10.options;
       }
     
         /* template */
-        Object.assign($201995, (function () {
+        Object.assign($358d10, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13236,14 +13236,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3ebe93 = exports.default || module.exports;
+        var $89b5d8 = exports.default || module.exports;
       
-      if (typeof $3ebe93 === 'function') {
-        $3ebe93 = $3ebe93.options;
+      if (typeof $89b5d8 === 'function') {
+        $89b5d8 = $89b5d8.options;
       }
     
         /* template */
-        Object.assign($3ebe93, (function () {
+        Object.assign($89b5d8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13310,14 +13310,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ef5f07 = exports.default || module.exports;
+        var $9ac5fb = exports.default || module.exports;
       
-      if (typeof $ef5f07 === 'function') {
-        $ef5f07 = $ef5f07.options;
+      if (typeof $9ac5fb === 'function') {
+        $9ac5fb = $9ac5fb.options;
       }
     
         /* template */
-        Object.assign($ef5f07, (function () {
+        Object.assign($9ac5fb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13356,7 +13356,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -13466,14 +13466,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3fa9c3 = exports.default || module.exports;
+        var $74ec03 = exports.default || module.exports;
       
-      if (typeof $3fa9c3 === 'function') {
-        $3fa9c3 = $3fa9c3.options;
+      if (typeof $74ec03 === 'function') {
+        $74ec03 = $74ec03.options;
       }
     
         /* template */
-        Object.assign($3fa9c3, (function () {
+        Object.assign($74ec03, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13673,14 +13673,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $d317c2 = exports.default || module.exports;
+        var $4a98c8 = exports.default || module.exports;
       
-      if (typeof $d317c2 === 'function') {
-        $d317c2 = $d317c2.options;
+      if (typeof $4a98c8 === 'function') {
+        $4a98c8 = $4a98c8.options;
       }
     
         /* template */
-        Object.assign($d317c2, (function () {
+        Object.assign($4a98c8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13887,7 +13887,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -15331,14 +15331,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ff89a6 = exports.default || module.exports;
+        var $55b699 = exports.default || module.exports;
       
-      if (typeof $ff89a6 === 'function') {
-        $ff89a6 = $ff89a6.options;
+      if (typeof $55b699 === 'function') {
+        $55b699 = $55b699.options;
       }
     
         /* template */
-        Object.assign($ff89a6, (function () {
+        Object.assign($55b699, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17094,7 +17094,7 @@ var _default = {
       return typeof val === 'boolean';
     },
     handleImportFromPlugin: function handleImportFromPlugin(type) {
-      var importOperations = (0, _importOperations.default)(_objectSpread(_objectSpread({}, this.options), {}, {
+      var importOperations = (0, _importOperations.default)(_objectSpread({}, this.options, {
         type: type
       }));
       this.setBusy();
@@ -17148,14 +17148,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $67df01 = exports.default || module.exports;
+        var $b28d8a = exports.default || module.exports;
       
-      if (typeof $67df01 === 'function') {
-        $67df01 = $67df01.options;
+      if (typeof $b28d8a === 'function') {
+        $b28d8a = $b28d8a.options;
       }
     
         /* template */
-        Object.assign($67df01, (function () {
+        Object.assign($b28d8a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17451,14 +17451,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $613c2d = exports.default || module.exports;
+        var $0106dc = exports.default || module.exports;
       
-      if (typeof $613c2d === 'function') {
-        $613c2d = $613c2d.options;
+      if (typeof $0106dc === 'function') {
+        $0106dc = $0106dc.options;
       }
     
         /* template */
-        Object.assign($613c2d, (function () {
+        Object.assign($0106dc, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17517,14 +17517,14 @@ render._withStripped = true
       
 },{"../components/Sections.vue":"components/Sections.vue","../components/SectionItem.vue":"components/SectionItem.vue","../components/MenuContent.vue":"components/MenuContent.vue","./CSVImportMenu.vue":"containers/CSVImportMenu.vue","./PluginsImportMenu.vue":"containers/PluginsImportMenu.vue"}],"components/EmptyCover.vue":[function(require,module,exports) {
 
-        var $12b0af = exports.default || module.exports;
+        var $9b2461 = exports.default || module.exports;
       
-      if (typeof $12b0af === 'function') {
-        $12b0af = $12b0af.options;
+      if (typeof $9b2461 === 'function') {
+        $9b2461 = $9b2461.options;
       }
     
         /* template */
-        Object.assign($12b0af, (function () {
+        Object.assign($9b2461, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17593,14 +17593,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $73a01e = exports.default || module.exports;
+        var $6acbad = exports.default || module.exports;
       
-      if (typeof $73a01e === 'function') {
-        $73a01e = $73a01e.options;
+      if (typeof $6acbad === 'function') {
+        $6acbad = $6acbad.options;
       }
     
         /* template */
-        Object.assign($73a01e, (function () {
+        Object.assign($6acbad, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17677,14 +17677,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3860eb = exports.default || module.exports;
+        var $12ac5d = exports.default || module.exports;
       
-      if (typeof $3860eb === 'function') {
-        $3860eb = $3860eb.options;
+      if (typeof $12ac5d === 'function') {
+        $12ac5d = $12ac5d.options;
       }
     
         /* template */
-        Object.assign($3860eb, (function () {
+        Object.assign($12ac5d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -17849,14 +17849,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e91867 = exports.default || module.exports;
+        var $758d0b = exports.default || module.exports;
       
-      if (typeof $e91867 === 'function') {
-        $e91867 = $e91867.options;
+      if (typeof $758d0b === 'function') {
+        $758d0b = $758d0b.options;
       }
     
         /* template */
-        Object.assign($e91867, (function () {
+        Object.assign($758d0b, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18059,7 +18059,7 @@ var _default = {
       this.userTables.map(function (t) {
         allSelectedObject[t.ID] = true;
       });
-      this.selectedTables = _objectSpread(_objectSpread({}, this.selectedTables), allSelectedObject);
+      this.selectedTables = _objectSpread({}, this.selectedTables, {}, allSelectedObject);
     },
     deselectAll: function deselectAll() {
       this.selectedTables = {};
@@ -18221,14 +18221,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $fa882b = exports.default || module.exports;
+        var $e90ac9 = exports.default || module.exports;
       
-      if (typeof $fa882b === 'function') {
-        $fa882b = $fa882b.options;
+      if (typeof $e90ac9 === 'function') {
+        $e90ac9 = $e90ac9.options;
       }
     
         /* template */
-        Object.assign($fa882b, (function () {
+        Object.assign($e90ac9, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -18514,14 +18514,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $8e2ae3 = exports.default || module.exports;
+        var $3f287c = exports.default || module.exports;
       
-      if (typeof $8e2ae3 === 'function') {
-        $8e2ae3 = $8e2ae3.options;
+      if (typeof $3f287c === 'function') {
+        $3f287c = $3f287c.options;
       }
     
         /* template */
-        Object.assign($8e2ae3, (function () {
+        Object.assign($3f287c, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
