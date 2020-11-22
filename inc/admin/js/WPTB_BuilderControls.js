@@ -31627,6 +31627,14 @@ var stateWatchList = {
         // store.commit('setHoverId', null);
       };
     }
+  },
+  dirtyTable: {
+    watch: ['dataManager.tempData.values', 'dataManager.controls'],
+    callBack: function callBack(store) {
+      return function () {
+        store.commit('setTableDirty');
+      };
+    }
   }
 };
 /**
@@ -31660,7 +31668,9 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
           callBack(store)(stateGetter(w, store)());
         }
 
-        store.watch(stateGetter(w, store), callBack(store));
+        store.watch(stateGetter(w, store), callBack(store), {
+          deep: true
+        });
       }); // @deprecated
       // // call callback functions before any mutation happened on store
       // callBack(store)(watch(store)());

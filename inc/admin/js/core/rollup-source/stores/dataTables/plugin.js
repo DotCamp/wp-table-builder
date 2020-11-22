@@ -93,6 +93,12 @@ const stateWatchList = {
 			// store.commit('setHoverId', null);
 		},
 	},
+	dirtyTable: {
+		watch: ['dataManager.tempData.values', 'dataManager.controls'],
+		callBack: (store) => () => {
+			store.commit('setTableDirty');
+		},
+	},
 };
 
 /**
@@ -119,7 +125,7 @@ const stateWatchFunction = (store, watchList) => {
 				if (callAtStart) {
 					callBack(store)(stateGetter(w, store)());
 				}
-				store.watch(stateGetter(w, store), callBack(store));
+				store.watch(stateGetter(w, store), callBack(store), { deep: true });
 			});
 
 			// @deprecated
