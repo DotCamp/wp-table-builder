@@ -352,6 +352,15 @@ const mutations = {
 			new WPTB_TableStateSaveManager().tableStateSet();
 		}
 	},
+	/**
+	 * Set proxy for selection click id.
+	 *
+	 * @param {Object} state data table state
+	 * @param {Proxy} proxy proxy object
+	 */
+	setClickIdProxy: (state, proxy) => {
+		state.dataManager.select.clickId = proxy;
+	},
 };
 
 export default mutations;

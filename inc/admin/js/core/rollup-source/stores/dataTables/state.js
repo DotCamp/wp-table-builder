@@ -10,31 +10,32 @@
  * @type {Object}
  */
 
-const selectId = {
-	id: null,
-	resolve: null,
-};
-
-const clickIdHandler = {
-	set(obj, prop, val) {
-		if (prop === 'resolve') {
-			// eslint-disable-next-line no-param-reassign
-			obj[prop] = val;
-		} else {
-			// eslint-disable-next-line no-param-reassign
-			obj[prop] = val;
-			// if resolve property is defined, call it with assigned value
-			if (obj.resolve) {
-				obj.resolve(val);
-			}
-		}
-
-		return true;
-	},
-};
-
-// proxy for clicked cell id of select operation
-const clickIdProxy = new Proxy(selectId, clickIdHandler);
+// @deprecated this setup is moved to an action
+// const selectId = {
+// 	id: null,
+// 	resolve: null,
+// };
+//
+// const clickIdHandler = {
+// 	set(obj, prop, val) {
+// 		if (prop === 'resolve') {
+// 			// eslint-disable-next-line no-param-reassign
+// 			obj[prop] = val;
+// 		} else {
+// 			// eslint-disable-next-line no-param-reassign
+// 			obj[prop] = val;
+// 			// if resolve property is defined, call it with assigned value
+// 			if (obj.resolve) {
+// 				obj.resolve(val);
+// 			}
+// 		}
+//
+// 		return true;
+// 	},
+// };
+//
+// // proxy for clicked cell id of select operation
+// const clickIdProxy = new Proxy(selectId, clickIdHandler);
 
 const state = {
 	// whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
@@ -79,7 +80,7 @@ const state = {
 			callerId: null,
 			active: false,
 			hoverId: null,
-			clickId: clickIdProxy,
+			clickId: null,
 			type: 'row',
 		},
 	},

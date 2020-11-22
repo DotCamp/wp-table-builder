@@ -47,22 +47,11 @@ export default {
 		// change component visibility based on current active section
 		this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName);
 
-		// @deprecated moved to DataScreenHandler
-		// set startup screen
-		// TODO [erdembircan] uncomment for production
-		// this.setCurrentScreen('DataSourceSelection');
-
-		// @deprecated moved to DataScreenHandler
-		// set startup screen
-		// TODO [erdembircan] comment for production
-		// TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
-		// this.setCurrentScreen(this.devStartupScreen);
-
 		// enable saving data table options to table on table save operation
 		this.addOptionsAndDataToSave();
-	},
-	methods: {
-		...mapActions(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave']),
+
+		// set up proxy for select click id
+		this.setUpSelectionIdProxy();
 	},
 	computed: {
 		/**
@@ -78,6 +67,14 @@ export default {
 		},
 		...mapGetters(['isVisible', 'getSelectedDataSource']),
 		...mapState(['leftPanelId', 'devStartupScreen']),
+	},
+	methods: {
+		...mapActions([
+			'setComponentVisibility',
+			'setCurrentScreen',
+			'addOptionsAndDataToSave',
+			'setUpSelectionIdProxy',
+		]),
 	},
 };
 </script>

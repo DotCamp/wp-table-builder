@@ -29969,20 +29969,12 @@ var _default = {
       _this.setComponentVisibility(detail === _this.sectionName);
     }); // change component visibility based on current active section
 
-    this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // @deprecated moved to DataScreenHandler
-    // set startup screen
-    // TODO [erdembircan] uncomment for production
-    // this.setCurrentScreen('DataSourceSelection');
-    // @deprecated moved to DataScreenHandler
-    // set startup screen
-    // TODO [erdembircan] comment for production
-    // TODO [erdembircan] dev tool for setting startup screen to work on specific modules on browser reloads
-    // this.setCurrentScreen(this.devStartupScreen);
-    // enable saving data table options to table on table save operation
+    this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // enable saving data table options to table on table save operation
 
-    this.addOptionsAndDataToSave();
+    this.addOptionsAndDataToSave(); // set up proxy for select click id
+
+    this.setUpSelectionIdProxy();
   },
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave'])),
   computed: _objectSpread({
     /**
      * Style for main app component.
@@ -29995,7 +29987,8 @@ var _default = {
         height: "calc( 100% - ".concat(this.headerHeight + this.extraPadding, "px)")
       };
     }
-  }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen']))
+  }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -30089,29 +30082,32 @@ exports.default = void 0;
  *
  * @type {Object}
  */
-var selectId = {
-  id: null,
-  resolve: null
-};
-var clickIdHandler = {
-  set: function set(obj, prop, val) {
-    if (prop === 'resolve') {
-      // eslint-disable-next-line no-param-reassign
-      obj[prop] = val;
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      obj[prop] = val; // if resolve property is defined, call it with assigned value
-
-      if (obj.resolve) {
-        obj.resolve(val);
-      }
-    }
-
-    return true;
-  }
-}; // proxy for clicked cell id of select operation
-
-var clickIdProxy = new Proxy(selectId, clickIdHandler);
+// @deprecated this setup is moved to an action
+// const selectId = {
+// 	id: null,
+// 	resolve: null,
+// };
+//
+// const clickIdHandler = {
+// 	set(obj, prop, val) {
+// 		if (prop === 'resolve') {
+// 			// eslint-disable-next-line no-param-reassign
+// 			obj[prop] = val;
+// 		} else {
+// 			// eslint-disable-next-line no-param-reassign
+// 			obj[prop] = val;
+// 			// if resolve property is defined, call it with assigned value
+// 			if (obj.resolve) {
+// 				obj.resolve(val);
+// 			}
+// 		}
+//
+// 		return true;
+// 	},
+// };
+//
+// // proxy for clicked cell id of select operation
+// const clickIdProxy = new Proxy(selectId, clickIdHandler);
 var state = {
   // whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
   tableIsActive: true,
@@ -30155,7 +30151,7 @@ var state = {
       callerId: null,
       active: false,
       hoverId: null,
-      clickId: clickIdProxy,
+      clickId: null,
       type: 'row'
     }
   },
@@ -30640,6 +30636,16 @@ var mutations = {
     if (state.tableIsActive) {
       new WPTB_TableStateSaveManager().tableStateSet();
     }
+  },
+
+  /**
+   * Set proxy for selection click id.
+   *
+   * @param {Object} state data table state
+   * @param {Proxy} proxy proxy object
+   */
+  setClickIdProxy: function setClickIdProxy(state, proxy) {
+    state.dataManager.select.clickId = proxy;
   }
 };
 var _default = mutations;
@@ -31121,6 +31127,12 @@ var actions = {
     var currentSourceInSetup = getters.getCurrentSourceSetupId;
     commit('setSelectedDataSource', currentSourceInSetup);
   },
+
+  /**
+   * Mark certain properties of data table for save process.
+   *
+   * @param {{state}} vuex store object
+   */
   addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref25) {
     var state = _ref25.state;
     document.addEventListener('wptb:save:before', function () {
@@ -31138,6 +31150,38 @@ var actions = {
         table.dataset.wptbDataTableOptions = encoded;
       }
     });
+  },
+
+  /**
+   * Set up a proxy for selection click id.
+   *
+   * @param {{commit}} vuex store object
+   */
+  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref26) {
+    var commit = _ref26.commit;
+    var selectId = {
+      id: null,
+      resolve: null
+    };
+    var clickIdHandler = {
+      set: function set(obj, prop, val) {
+        if (prop === 'resolve') {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val;
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val; // if resolve property is defined, call it with assigned value
+
+          if (obj.resolve) {
+            obj.resolve(val);
+          }
+        }
+
+        return true;
+      }
+    }; // set proxy for clicked cell id of select operation
+
+    commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
   }
 };
 var _default = actions;

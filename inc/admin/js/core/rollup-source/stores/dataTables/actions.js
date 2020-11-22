@@ -306,6 +306,11 @@ const actions = {
 
 		commit('setSelectedDataSource', currentSourceInSetup);
 	},
+	/**
+	 * Mark certain properties of data table for save process.
+	 *
+	 * @param {{state}} vuex store object
+	 */
 	addOptionsAndDataToSave({ state }) {
 		document.addEventListener('wptb:save:before', () => {
 			const { dataSource, dataManager } = state;
@@ -321,6 +326,38 @@ const actions = {
 				table.dataset.wptbDataTableOptions = encoded;
 			}
 		});
+	},
+	/**
+	 * Set up a proxy for selection click id.
+	 *
+	 * @param {{commit}} vuex store object
+	 */
+	setUpSelectionIdProxy({ commit }) {
+		const selectId = {
+			id: null,
+			resolve: null,
+		};
+
+		const clickIdHandler = {
+			set(obj, prop, val) {
+				if (prop === 'resolve') {
+					// eslint-disable-next-line no-param-reassign
+					obj[prop] = val;
+				} else {
+					// eslint-disable-next-line no-param-reassign
+					obj[prop] = val;
+					// if resolve property is defined, call it with assigned value
+					if (obj.resolve) {
+						obj.resolve(val);
+					}
+				}
+
+				return true;
+			},
+		};
+
+		// set proxy for clicked cell id of select operation
+		commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
 	},
 };
 
