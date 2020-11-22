@@ -161,7 +161,7 @@ class Admin_Menu {
 		// Default Tables top level menu item.
 		$tables_overview = add_menu_page(
 			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
-			esc_html__( 'Table Builder', 'wp-table-builder' ),
+			esc_html__( 'WP Table Builder', 'wp-table-builder' ),
 			$menu_cap,
 			'wptb-overview',
 			array( $this, 'tables_list' ),
