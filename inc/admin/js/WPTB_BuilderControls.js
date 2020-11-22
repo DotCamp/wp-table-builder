@@ -31549,11 +31549,36 @@ var mutationWatchList = {
  */
 
 var actionWatchList = {
-  addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
-    var colCount = store.getters.getColCount + 1; // set col count from table data
+  before: {},
+  after: {
+    addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
+      var colCount = store.getters.getColCount + 1; // set col count from table data
 
-    store.commit('setColCount', colCount);
+      store.commit('setColCount', colCount);
+    }
   }
+};
+/**
+ * Watch a list of actions from a list.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Object} action subscribe object
+ */
+
+var actionWatchFunction = function actionWatchFunction(watchList, store) {
+  return {
+    before: function before(action, state) {
+      if (watchList.before[action.type]) {
+        watchList.before[action.type](action, state, store);
+      }
+    },
+    after: function after(action, state) {
+      if (watchList.after[action.type]) {
+        watchList.after[action.type](action, state, store);
+      }
+    }
+  };
 };
 /**
  * Watch function to be used at store event subscriptions.
@@ -31563,7 +31588,8 @@ var actionWatchList = {
  * @return {Function} function to be called at action dispatch
  */
 
-var watchFunction = function watchFunction(watchList, store) {
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
   return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -31629,17 +31655,17 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
 
 var subscriptions = function subscriptions(store) {
   stateWatchFunction(store, stateWatchList);
-  store.subscribe(watchFunction(mutationWatchList, store)); // store.subscribeAction(watchFunction(actionWatchList, store));
-
-  store.subscribeAction({
-    after: function after(action, state) {
-      if (action.type === 'addColumnToDataManager') {
-        var colCount = store.getters.getColCount + 1; // set col count from table data
-
-        store.commit('setColCount', colCount);
-      }
-    }
-  });
+  store.subscribe(mutationWatchFunction(mutationWatchList, store));
+  store.subscribeAction(actionWatchFunction(actionWatchList, store)); // store.subscribeAction({
+  // 	after: (action, state) => {
+  // 		if (action.type === 'addColumnToDataManager') {
+  // 			const colCount = store.getters.getColCount + 1;
+  //
+  // 			// set col count from table data
+  // 			store.commit('setColCount', colCount);
+  // 		}
+  // 	},
+  // });
 };
 /* @module subscriptions */
 

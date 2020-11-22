@@ -22,12 +22,37 @@ const mutationWatchList = {
  * @type {Object}
  */
 const actionWatchList = {
-	addColumnToDataManager: (payload, state, store) => {
-		const colCount = store.getters.getColCount + 1;
+	before: {},
+	after: {
+		addColumnToDataManager: (payload, state, store) => {
+			const colCount = store.getters.getColCount + 1;
 
-		// set col count from table data
-		store.commit('setColCount', colCount);
+			// set col count from table data
+			store.commit('setColCount', colCount);
+		},
 	},
+};
+
+/**
+ * Watch a list of actions from a list.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Object} action subscribe object
+ */
+const actionWatchFunction = (watchList, store) => {
+	return {
+		before: (action, state) => {
+			if (watchList.before[action.type]) {
+				watchList.before[action.type](action, state, store);
+			}
+		},
+		after: (action, state) => {
+			if (watchList.after[action.type]) {
+				watchList.after[action.type](action, state, store);
+			}
+		},
+	};
 };
 
 /**
@@ -37,7 +62,7 @@ const actionWatchList = {
  * @param {Object} store store object
  * @return {Function} function to be called at action dispatch
  */
-const watchFunction = (watchList, store) => (...args) => {
+const mutationWatchFunction = (watchList, store) => (...args) => {
 	const [payload] = args;
 	if (watchList[payload.type]) {
 		watchList[payload.type](...args, store);
@@ -93,18 +118,18 @@ const stateWatchFunction = (store, watchList) => {
 const subscriptions = (store) => {
 	stateWatchFunction(store, stateWatchList);
 
-	store.subscribe(watchFunction(mutationWatchList, store));
-	// store.subscribeAction(watchFunction(actionWatchList, store));
-	store.subscribeAction({
-		after: (action, state) => {
-			if (action.type === 'addColumnToDataManager') {
-				const colCount = store.getters.getColCount + 1;
-
-				// set col count from table data
-				store.commit('setColCount', colCount);
-			}
-		},
-	});
+	store.subscribe(mutationWatchFunction(mutationWatchList, store));
+	store.subscribeAction(actionWatchFunction(actionWatchList, store));
+	// store.subscribeAction({
+	// 	after: (action, state) => {
+	// 		if (action.type === 'addColumnToDataManager') {
+	// 			const colCount = store.getters.getColCount + 1;
+	//
+	// 			// set col count from table data
+	// 			store.commit('setColCount', colCount);
+	// 		}
+	// 	},
+	// });
 };
 
 /* @module subscriptions */
