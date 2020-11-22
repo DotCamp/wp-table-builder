@@ -13,7 +13,7 @@ import ResponsivePanelModeControls from '../components/ResponsivePanelModeContro
 import createStore from '../stores/responsive';
 
 export default {
-	name: 'ResponsiveTable',
+	name: 'ResponsiveTable_bak',
 	handler: function responsiveTableJS(uniqueId) {
 		const data = WPTB_ControlsManager.getControlData('responsiveMenuData');
 		const mainTableQuery = '.wptb-preview-table';

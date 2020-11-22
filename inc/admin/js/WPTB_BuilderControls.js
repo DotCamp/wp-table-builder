@@ -21166,7 +21166,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  name: 'ResponsiveTable',
+  name: 'ResponsiveTable_bak',
   handler: function responsiveTableJS(uniqueId) {
     var data = _WPTB_ControlsManager.default.getControlData('responsiveMenuData');
 
@@ -29009,6 +29009,8 @@ var _default = {
   watch: {
     getDataManagerTempData: {
       handler: function handler(n) {
+        // TODO [erdembircan] remove for production
+        console.log(n);
         this.prepareTableValues(n);
       },
       deep: true
@@ -31003,7 +31005,8 @@ var actions = {
               value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
               colCount = getters.getColCount;
               rowCount = getters.getRowCount;
-              Array.from(new Array(rowCount)).map(function () {
+              _context5.next = 6;
+              return Array.from(new Array(rowCount)).map(function () {
                 return '';
               }).map( /*#__PURE__*/function () {
                 var _ref21 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
@@ -31015,7 +31018,7 @@ var actions = {
                           _context4.next = 2;
                           return dispatch('generateCell', {
                             value: value,
-                            colCount: colCount
+                            index: colCount
                           });
 
                         case 2:
@@ -31038,7 +31041,7 @@ var actions = {
                 };
               }());
 
-            case 5:
+            case 6:
             case "end":
               return _context5.stop();
           }
@@ -31607,8 +31610,17 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
 
 var subscriptions = function subscriptions(store) {
   stateWatchFunction(store, stateWatchList);
-  store.subscribe(watchFunction(mutationWatchList, store));
-  store.subscribeAction(watchFunction(actionWatchList, store));
+  store.subscribe(watchFunction(mutationWatchList, store)); // store.subscribeAction(watchFunction(actionWatchList, store));
+
+  store.subscribeAction({
+    after: function after(action, state) {
+      if (action.type === 'addColumnToDataManager') {
+        var colCount = store.getters.getColCount + 1; // set col count from table data
+
+        store.commit('setColCount', colCount);
+      }
+    }
+  });
 };
 /* @module subscriptions */
 

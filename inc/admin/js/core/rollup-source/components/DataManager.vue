@@ -94,6 +94,8 @@ export default {
 	watch: {
 		getDataManagerTempData: {
 			handler(n) {
+				// TODO [erdembircan] remove for production
+				console.log(n);
 				this.prepareTableValues(n);
 			},
 			deep: true,

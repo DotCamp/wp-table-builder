@@ -252,10 +252,10 @@ const actions = {
 		const colCount = getters.getColCount;
 		const rowCount = getters.getRowCount;
 
-		Array.from(new Array(rowCount))
+		await Array.from(new Array(rowCount))
 			.map(() => '')
 			.map(async (r, rowIndex) => {
-				const cellObject = await dispatch('generateCell', { value, colCount });
+				const cellObject = await dispatch('generateCell', { value, index: colCount });
 				commit('addCellToDataTableRow', { rowIndex, cellObject });
 			});
 	},

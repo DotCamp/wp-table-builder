@@ -94,7 +94,17 @@ const subscriptions = (store) => {
 	stateWatchFunction(store, stateWatchList);
 
 	store.subscribe(watchFunction(mutationWatchList, store));
-	store.subscribeAction(watchFunction(actionWatchList, store));
+	// store.subscribeAction(watchFunction(actionWatchList, store));
+	store.subscribeAction({
+		after: (action, state) => {
+			if (action.type === 'addColumnToDataManager') {
+				const colCount = store.getters.getColCount + 1;
+
+				// set col count from table data
+				store.commit('setColCount', colCount);
+			}
+		},
+	});
 };
 
 /* @module subscriptions */
