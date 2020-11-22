@@ -161,7 +161,7 @@ export default {
 
 			return rowObject;
 		},
-		prepareTableValues(tableValue) {
+		async prepareTableValues(tableValue) {
 			if (tableValue.length > 0) {
 				const { firstRowAsColumnName, indexRow } = this.getDataManagerControls;
 
@@ -173,7 +173,8 @@ export default {
 				});
 
 				if (!header) {
-					header = this.generateEmptyRow(this.getColCount);
+					header = await this.generateRow(Array.from(new Array(this.getColCount)).map(() => ''));
+					this.addRowObjectAsHeader(header);
 				}
 
 				// find column index row
@@ -189,7 +190,13 @@ export default {
 			}
 		},
 		...mapGetters(['generateUniqueId']),
-		...mapActions(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']),
+		...mapActions([
+			'addDataManagerTempData',
+			'deleteDataTableRow',
+			'deleteDataTableCol',
+			'addRowObjectAsHeader',
+			'generateRow',
+		]),
 		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']),
 	},
 };

@@ -28955,6 +28955,10 @@ var _DataManagerIndexActions = _interopRequireDefault(require("./DataManagerInde
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -29074,35 +29078,67 @@ var _default = {
       return rowObject;
     },
     prepareTableValues: function prepareTableValues(tableValue) {
-      if (tableValue.length > 0) {
-        var _this$getDataManagerC = this.getDataManagerControls,
-            firstRowAsColumnName = _this$getDataManagerC.firstRowAsColumnName,
-            indexRow = _this$getDataManagerC.indexRow; // recalculate first row index for column names
+      var _this2 = this;
 
-        this.calculateColumnNameRowIndex(firstRowAsColumnName);
-        var header = tableValue.find(function (row) {
-          return row.rowId === indexRow;
-        });
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var _this2$getDataManager, firstRowAsColumnName, indexRow, header;
 
-        if (!header) {
-          header = this.generateEmptyRow(this.getColCount);
-        } // find column index row
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!(tableValue.length > 0)) {
+                  _context.next = 11;
+                  break;
+                }
+
+                _this2$getDataManager = _this2.getDataManagerControls, firstRowAsColumnName = _this2$getDataManager.firstRowAsColumnName, indexRow = _this2$getDataManager.indexRow; // recalculate first row index for column names
+
+                _this2.calculateColumnNameRowIndex(firstRowAsColumnName);
+
+                header = tableValue.find(function (row) {
+                  return row.rowId === indexRow;
+                });
+
+                if (header) {
+                  _context.next = 9;
+                  break;
+                }
+
+                _context.next = 7;
+                return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function () {
+                  return '';
+                }));
+
+              case 7:
+                header = _context.sent;
+
+                _this2.addRowObjectAsHeader(header);
+
+              case 9:
+                // find column index row
+                _this2.setParsedData({
+                  key: 'header',
+                  value: [header]
+                }); // filter out column index row
 
 
-        this.setParsedData({
-          key: 'header',
-          value: [header]
-        }); // filter out column index row
+                _this2.setParsedData({
+                  key: 'values',
+                  value: tableValue.filter(function (t) {
+                    return t.rowId !== indexRow;
+                  })
+                });
 
-        this.setParsedData({
-          key: 'values',
-          value: tableValue.filter(function (t) {
-            return t.rowId !== indexRow;
-          })
-        });
-      }
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -31182,6 +31218,24 @@ var actions = {
     }; // set proxy for clicked cell id of select operation
 
     commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
+  },
+
+  /**
+   * Add a row object as a header to data values
+   *
+   * @param {{commit}} vuex store object
+   * @param {Object} rowObject row object
+   */
+  addRowObjectAsHeader: function addRowObjectAsHeader(_ref27, rowObject) {
+    var commit = _ref27.commit;
+    // add property that will mark this row object as created for only column name purposes
+    // eslint-disable-next-line no-param-reassign
+    rowObject.generatedForHeader = true;
+    commit('setDataManagerControl', {
+      key: 'indexRow',
+      value: rowObject.rowId
+    });
+    commit('addRowToDataTable', rowObject);
   }
 };
 var _default = actions;
@@ -31659,16 +31713,10 @@ var stateWatchList = {
   tempData: {
     callAtStart: true,
     watch: 'dataManager.tempData.values',
-    // @deprecated
-    // watch: (store) => () => {
-    // 	return store.getters.getDataManagerTempData;
-    // },
     callBack: function callBack(store) {
       return function () {
         // set row count from table data
-        store.commit('setRowCount', store.getters.getDataManagerTempData.length); // @deprecated
-        // reset hover id in case of deleting currently hovered row/column
-        // store.commit('setHoverId', null);
+        store.commit('setRowCount', store.getters.getDataManagerTempData.length);
       };
     }
   },
@@ -31677,6 +31725,26 @@ var stateWatchList = {
     callBack: function callBack(store) {
       return function () {
         store.commit('setTableDirty');
+      };
+    }
+  },
+  headerRow: {
+    watch: ['dataManager.controls.indexRow'],
+    callBack: function callBack(store) {
+      return function () {
+        var indexRow = store.state.dataManager.controls.indexRow;
+        var deleteIds = []; // delete all rows that are generated for header that are not current index row
+        // eslint-disable-next-line array-callback-return
+
+        store.state.dataManager.tempData.values.map(function (r) {
+          if (r.rowId !== indexRow && r.generatedForHeader) {
+            deleteIds.push(r.rowId);
+          }
+        }); // eslint-disable-next-line array-callback-return
+
+        deleteIds.map(function (id) {
+          store.commit('deleteRowFromDataTable', id);
+        });
       };
     }
   }
@@ -31715,11 +31783,7 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
         store.watch(stateGetter(w, store), callBack(store), {
           deep: true
         });
-      }); // @deprecated
-      // // call callback functions before any mutation happened on store
-      // callBack(store)(watch(store)());
-      //
-      // store.watch(watch(store), callBack(store));
+      });
     }
   });
 };
@@ -31792,33 +31856,7 @@ var storeOptions = {
   getters: _getters.default,
   plugins: [_plugin.default],
   strict: true
-}; // @deprecated moved to a generic function that can be used for all store implementations
-// /**
-//  * Deep merge object.
-//  *
-//  * @param {Object} source source object
-//  * @param {Object} target target object
-//  * @return {Object} merged object
-//  */
-// function objectDeepMerge(source, target) {
-// 	// eslint-disable-next-line array-callback-return
-// 	Object.keys(target).map((k) => {
-// 		if (Object.prototype.hasOwnProperty.call(target, k)) {
-// 			if (Object.prototype.hasOwnProperty.call(source, k)) {
-// 				if (typeof source[k] === 'object') {
-// 					// eslint-disable-next-line no-param-reassign
-// 					source[k] = { ...source[k], ...target[k] };
-// 				} else {
-// 					// eslint-disable-next-line no-param-reassign
-// 					source[k] = target[k];
-// 				}
-// 			}
-// 		}
-// 	});
-//
-// 	return source;
-// }
-
+};
 /**
  * Prepare a default state for given property.
  *

@@ -25,33 +25,6 @@ const storeOptions = {
 	strict: true,
 };
 
-// @deprecated moved to a generic function that can be used for all store implementations
-// /**
-//  * Deep merge object.
-//  *
-//  * @param {Object} source source object
-//  * @param {Object} target target object
-//  * @return {Object} merged object
-//  */
-// function objectDeepMerge(source, target) {
-// 	// eslint-disable-next-line array-callback-return
-// 	Object.keys(target).map((k) => {
-// 		if (Object.prototype.hasOwnProperty.call(target, k)) {
-// 			if (Object.prototype.hasOwnProperty.call(source, k)) {
-// 				if (typeof source[k] === 'object') {
-// 					// eslint-disable-next-line no-param-reassign
-// 					source[k] = { ...source[k], ...target[k] };
-// 				} else {
-// 					// eslint-disable-next-line no-param-reassign
-// 					source[k] = target[k];
-// 				}
-// 			}
-// 		}
-// 	});
-//
-// 	return source;
-// }
-
 /**
  * Prepare a default state for given property.
  *

@@ -359,6 +359,20 @@ const actions = {
 		// set proxy for clicked cell id of select operation
 		commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
 	},
+	/**
+	 * Add a row object as a header to data values
+	 *
+	 * @param {{commit}} vuex store object
+	 * @param {Object} rowObject row object
+	 */
+	addRowObjectAsHeader({ commit }, rowObject) {
+		// add property that will mark this row object as created for only column name purposes
+		// eslint-disable-next-line no-param-reassign
+		rowObject.generatedForHeader = true;
+
+		commit('setDataManagerControl', { key: 'indexRow', value: rowObject.rowId });
+		commit('addRowToDataTable', rowObject);
+	},
 };
 
 export default actions;

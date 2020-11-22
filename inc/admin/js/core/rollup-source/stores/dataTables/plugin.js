@@ -80,23 +80,35 @@ const stateWatchList = {
 	tempData: {
 		callAtStart: true,
 		watch: 'dataManager.tempData.values',
-		// @deprecated
-		// watch: (store) => () => {
-		// 	return store.getters.getDataManagerTempData;
-		// },
 		callBack: (store) => () => {
 			// set row count from table data
 			store.commit('setRowCount', store.getters.getDataManagerTempData.length);
-
-			// @deprecated
-			// reset hover id in case of deleting currently hovered row/column
-			// store.commit('setHoverId', null);
 		},
 	},
 	dirtyTable: {
 		watch: ['dataManager.tempData.values', 'dataManager.controls'],
 		callBack: (store) => () => {
 			store.commit('setTableDirty');
+		},
+	},
+	headerRow: {
+		watch: ['dataManager.controls.indexRow'],
+		callBack: (store) => () => {
+			const { indexRow } = store.state.dataManager.controls;
+
+			const deleteIds = [];
+			// delete all rows that are generated for header that are not current index row
+			// eslint-disable-next-line array-callback-return
+			store.state.dataManager.tempData.values.map((r) => {
+				if (r.rowId !== indexRow && r.generatedForHeader) {
+					deleteIds.push(r.rowId);
+				}
+			});
+
+			// eslint-disable-next-line array-callback-return
+			deleteIds.map((id) => {
+				store.commit('deleteRowFromDataTable', id);
+			});
 		},
 	},
 };
@@ -127,12 +139,6 @@ const stateWatchFunction = (store, watchList) => {
 				}
 				store.watch(stateGetter(w, store), callBack(store), { deep: true });
 			});
-
-			// @deprecated
-			// // call callback functions before any mutation happened on store
-			// callBack(store)(watch(store)());
-			//
-			// store.watch(watch(store), callBack(store));
 		}
 	});
 };
