@@ -31525,6 +31525,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _functions = require("../../functions");
+
 /**
  * Mutation watch list.
  *
@@ -31611,11 +31613,12 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
 
 var stateWatchList = {
   tempData: {
-    watch: function watch(store) {
-      return function () {
-        return store.getters.getDataManagerTempData;
-      };
-    },
+    callAtStart: true,
+    watch: 'dataManager.tempData.values',
+    // @deprecated
+    // watch: (store) => () => {
+    // 	return store.getters.getDataManagerTempData;
+    // },
     callBack: function callBack(store) {
       return function () {
         // set row count from table data
@@ -31630,8 +31633,7 @@ var stateWatchList = {
  * State watch function.
  *
  * @param {Object} store vuex store object
- * @param {Object} watchList watch list
- */
+ * @param {Object} watchList watch list */
 
 var stateWatchFunction = function stateWatchFunction(store, watchList) {
   // eslint-disable-next-line array-callback-return
@@ -31639,10 +31641,31 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
     if (Object.prototype.hasOwnProperty.call(watchList, k)) {
       var _watchList$k = watchList[k],
           watch = _watchList$k.watch,
-          callBack = _watchList$k.callBack; // call callback functions before any mutation happened on store
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
 
-      callBack(store)(watch(store)());
-      store.watch(watch(store), callBack(store));
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _functions.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), callBack(store));
+      }); // @deprecated
+      // // call callback functions before any mutation happened on store
+      // callBack(store)(watch(store)());
+      //
+      // store.watch(watch(store), callBack(store));
     }
   });
 };
@@ -31656,23 +31679,14 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
 var subscriptions = function subscriptions(store) {
   stateWatchFunction(store, stateWatchList);
   store.subscribe(mutationWatchFunction(mutationWatchList, store));
-  store.subscribeAction(actionWatchFunction(actionWatchList, store)); // store.subscribeAction({
-  // 	after: (action, state) => {
-  // 		if (action.type === 'addColumnToDataManager') {
-  // 			const colCount = store.getters.getColCount + 1;
-  //
-  // 			// set col count from table data
-  // 			store.commit('setColCount', colCount);
-  // 		}
-  // 	},
-  // });
+  store.subscribeAction(actionWatchFunction(actionWatchList, store));
 };
 /* @module subscriptions */
 
 
 var _default = subscriptions;
 exports.default = _default;
-},{}],"stores/dataTables/index.js":[function(require,module,exports) {
+},{"../../functions":"functions/index.js"}],"stores/dataTables/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -1,3 +1,5 @@
+import { objectPropertyFromString } from '../../functions';
+
 /**
  * Mutation watch list.
  *
@@ -76,9 +78,12 @@ const mutationWatchFunction = (watchList, store) => (...args) => {
  */
 const stateWatchList = {
 	tempData: {
-		watch: (store) => () => {
-			return store.getters.getDataManagerTempData;
-		},
+		callAtStart: true,
+		watch: 'dataManager.tempData.values',
+		// @deprecated
+		// watch: (store) => () => {
+		// 	return store.getters.getDataManagerTempData;
+		// },
 		callBack: (store) => () => {
 			// set row count from table data
 			store.commit('setRowCount', store.getters.getDataManagerTempData.length);
@@ -94,18 +99,34 @@ const stateWatchList = {
  * State watch function.
  *
  * @param {Object} store vuex store object
- * @param {Object} watchList watch list
- */
+ * @param {Object} watchList watch list */
 const stateWatchFunction = (store, watchList) => {
 	// eslint-disable-next-line array-callback-return
 	Object.keys(watchList).map((k) => {
 		if (Object.prototype.hasOwnProperty.call(watchList, k)) {
-			const { watch, callBack } = watchList[k];
+			let { watch, callBack, callAtStart } = watchList[k];
 
-			// call callback functions before any mutation happened on store
-			callBack(store)(watch(store)());
+			if (!Array.isArray(watch)) {
+				watch = [watch];
+			}
 
-			store.watch(watch(store), callBack(store));
+			const stateGetter = (keyString, storeObject) => () => {
+				return objectPropertyFromString(keyString, storeObject.state);
+			};
+
+			// eslint-disable-next-line array-callback-return
+			watch.map((w) => {
+				if (callAtStart) {
+					callBack(store)(stateGetter(w, store)());
+				}
+				store.watch(stateGetter(w, store), callBack(store));
+			});
+
+			// @deprecated
+			// // call callback functions before any mutation happened on store
+			// callBack(store)(watch(store)());
+			//
+			// store.watch(watch(store), callBack(store));
 		}
 	});
 };
@@ -120,16 +141,6 @@ const subscriptions = (store) => {
 
 	store.subscribe(mutationWatchFunction(mutationWatchList, store));
 	store.subscribeAction(actionWatchFunction(actionWatchList, store));
-	// store.subscribeAction({
-	// 	after: (action, state) => {
-	// 		if (action.type === 'addColumnToDataManager') {
-	// 			const colCount = store.getters.getColCount + 1;
-	//
-	// 			// set col count from table data
-	// 			store.commit('setColCount', colCount);
-	// 		}
-	// 	},
-	// });
 };
 
 /* @module subscriptions */
