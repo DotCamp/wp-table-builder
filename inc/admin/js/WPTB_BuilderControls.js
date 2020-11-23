@@ -29814,8 +29814,9 @@ var _default = {
       var element = _ref.detail;
 
       if (element.getAttribute('class').includes('wptb-ph-element')) {
-        _this.currentElement = element;
-        console.log(element);
+        _this.currentElement = element; // TODO [erdembircan] remove for production
+
+        console.log(_this.currentElement);
       }
     });
   },
@@ -29838,6 +29839,7 @@ exports.default = _default;
     "section-group-collapse",
     {
       attrs: {
+        "start-collapsed": false,
         "section-id": "dataTableElementOption",
         label: _vm.translation("collapseSectionHeader")
       }
@@ -29950,7 +29952,296 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../leftPanel/LeftPanelMaterialButton":"components/leftPanel/LeftPanelMaterialButton.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../leftPanel/LeftPanelMaterialButton":"components/leftPanel/LeftPanelMaterialButton.vue"}],"components/dataTable/DataTableDragHandle.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  data: function data() {
+    return {
+      dragActive: false,
+      startScreenY: 0
+    };
+  },
+  methods: {
+    handleHover: function handleHover(status) {
+      this.$emit('handleHover', status);
+    },
+    handleDragStart: function handleDragStart(event) {
+      this.dragActive = true; // hide element feedback image on drag operation
+
+      var emptyElement = document.createElement('div');
+      event.dataTransfer.setDragImage(emptyElement, 0, 0);
+      this.startScreenY = event.clientY;
+      this.$emit('draggingStart');
+    },
+    handleDrag: function handleDrag(event) {
+      if (this.dragActive && event.clientY !== 0) {
+        this.$emit('dragging', this.startScreenY - event.clientY);
+      }
+    },
+    handleDragEnd: function handleDragEnd() {
+      this.dragActive = false;
+      this.$emit('draggingEnd');
+    }
+  }
+};
+exports.default = _default;
+        var $3fa20f = exports.default || module.exports;
+      
+      if (typeof $3fa20f === 'function') {
+        $3fa20f = $3fa20f.options;
+      }
+    
+        /* template */
+        Object.assign($3fa20f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {
+    staticClass: "wptb-data-table-generated-preview-height-handle",
+    attrs: { draggable: "true" },
+    on: {
+      "!mouseenter": function($event) {
+        $event.preventDefault()
+        return _vm.handleHover(true)
+      },
+      "!mouseleave": function($event) {
+        $event.preventDefault()
+        return _vm.handleHover(false)
+      },
+      dragstart: _vm.handleDragStart,
+      "!drag": function($event) {
+        $event.preventDefault()
+        return _vm.handleDrag($event)
+      },
+      dragend: _vm.handleDragEnd
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-3fa20f",
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _DataTableDragHandle = _interopRequireDefault(require("./DataTableDragHandle"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'DataTableGeneratedPreview',
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    DataTableDragHandle: _DataTableDragHandle.default
+  },
+  data: function data() {
+    return {
+      visibility: false,
+      style: {
+        height: 200
+      },
+      visibleHeight: 10,
+      toggleStatus: false,
+      builderPanel: null,
+      heightHandleHover: false,
+      savedHeight: 200
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      document.addEventListener('wptbSectionChanged', function (_ref) {
+        var detail = _ref.detail;
+        _this.visibility = _this.calculateVisibility(detail);
+      });
+      _this.visibility = _this.calculateVisibility(WPTB_Helper.currentSection);
+      _this.builderPanel = document.querySelector('.wptb-builder-panel');
+    });
+  },
+  computed: {
+    wrapperStyle: function wrapperStyle() {
+      this.builderPanelCalculations();
+      return {
+        height: "".concat(this.style.height, "px"),
+        bottom: "-".concat(this.toggleStatus ? 0 : this.style.height - this.visibleHeight, "px")
+      };
+    }
+  },
+  methods: {
+    calculateVisibility: function calculateVisibility(section) {
+      var status = section === 'elements' || section === 'table_settings';
+
+      if (!status) {
+        this.builderPanel.style.height = 0;
+      } else {
+        this.builderPanelCalculations();
+      }
+
+      return status;
+    },
+    builderPanelCalculations: function builderPanelCalculations() {
+      if (this.builderPanel) {
+        this.builderPanel.style.height = this.toggleStatus ? "calc( 100% + ".concat(this.style.height, "px)") : 0;
+      }
+    },
+    handleHeightResize: function handleHeightResize(offset) {
+      if (this.toggleStatus) {
+        this.style.height = this.savedHeight + offset;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $600dd7 = exports.default || module.exports;
+      
+      if (typeof $600dd7 === 'function') {
+        $600dd7 = $600dd7.options;
+      }
+    
+        /* template */
+        Object.assign($600dd7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.visibility,
+          expression: "visibility"
+        }
+      ],
+      staticClass: "wptb-data-table-generated-preview",
+      class: {
+        "wptb-data-table-generated-preview-bold":
+          _vm.toggleStatus && _vm.heightHandleHover,
+        "wptb-data-table-generated-preview-faster-transition":
+          _vm.style.height !== _vm.savedHeight
+      },
+      style: _vm.wrapperStyle
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-data-table-generated-inner-wrapper" },
+        [
+          _c("data-table-drag-handle", {
+            on: {
+              draggingStart: function($event) {
+                _vm.savedHeight = _vm.style.height
+              },
+              dragging: _vm.handleHeightResize,
+              handleHover: function($event) {
+                _vm.heightHandleHover = arguments[0]
+              },
+              draggingEnd: function($event) {
+                _vm.savedHeight = _vm.style.height
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              ref: "toggleButton",
+              staticClass: "wptb-data-table-generated-preview-toggle",
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  _vm.toggleStatus = !_vm.toggleStatus
+                }
+              }
+            },
+            [_c("div", [_vm._v(_vm._s(_vm.translationM("dataTablePreview")))])]
+          ),
+          _vm._v(" "),
+          _c("i", [_vm._v("data table generated preview")])
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29965,6 +30256,8 @@ var _DataScreenHandler = _interopRequireDefault(require("../components/DataScree
 var _DataTableElementOption = _interopRequireDefault(require("../components/dataTable/DataTableElementOption"));
 
 var _DataTableElementsMessage = _interopRequireDefault(require("../components/dataTable/DataTableElementsMessage"));
+
+var _DataTableGeneratedPreview = _interopRequireDefault(require("../components/dataTable/DataTableGeneratedPreview"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29986,6 +30279,7 @@ var _default = {
     }
   },
   components: {
+    DataTableGeneratedPreview: _DataTableGeneratedPreview.default,
     DataTableElementsMessage: _DataTableElementsMessage.default,
     DataTableElementOption: _DataTableElementOption.default,
     DataScreenHandler: _DataScreenHandler.default
@@ -30039,53 +30333,66 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("transition", { attrs: { name: "wptb-fade" } }, [
-    _c(
-      "div",
-      {
-        directives: [
+  return _c(
+    "fragment",
+    [
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _c(
+          "div",
           {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.isVisible,
-            expression: "isVisible"
-          }
-        ],
-        ref: "dataTableMain",
-        staticClass: "wptb-data-table-main",
-        style: _vm.mainStyle
-      },
-      [
-        _c("data-screen-handler"),
-        _vm._v(" "),
-        _c(
-          "mounting-portal",
-          { attrs: { "mount-to": _vm.leftPanelId } },
-          [_c("portal-target", { attrs: { name: "leftPanel" } })],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "mounting-portal",
-          { attrs: { "mount-to": "#beforeElementOptions", append: "" } },
-          [_c("data-table-element-option")],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "mounting-portal",
-          { attrs: { "mount-to": "#wptbDataTableElementsTarget", append: "" } },
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.isVisible,
+                expression: "isVisible"
+              }
+            ],
+            ref: "dataTableMain",
+            staticClass: "wptb-data-table-main",
+            style: _vm.mainStyle
+          },
           [
-            _vm.getSelectedDataSource === null
-              ? _c("data-table-elements-message")
-              : _vm._e()
+            _c("data-screen-handler"),
+            _vm._v(" "),
+            _c(
+              "mounting-portal",
+              { attrs: { "mount-to": _vm.leftPanelId } },
+              [_c("portal-target", { attrs: { name: "leftPanel" } })],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "mounting-portal",
+              { attrs: { "mount-to": "#beforeElementOptions", append: "" } },
+              [_c("data-table-element-option")],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "mounting-portal",
+              {
+                attrs: {
+                  "mount-to": "#wptbDataTableElementsTarget",
+                  append: ""
+                }
+              },
+              [
+                _vm.getSelectedDataSource === null
+                  ? _c("data-table-elements-message")
+                  : _vm._e()
+              ],
+              1
+            )
           ],
           1
         )
-      ],
-      1
-    )
-  ])
+      ]),
+      _vm._v(" "),
+      _c("data-table-generated-preview")
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -30099,7 +30406,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue","../components/dataTable/DataTableElementOption":"components/dataTable/DataTableElementOption.vue","../components/dataTable/DataTableElementsMessage":"components/dataTable/DataTableElementsMessage.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/DataScreenHandler":"components/DataScreenHandler.vue","../components/dataTable/DataTableElementOption":"components/dataTable/DataTableElementOption.vue","../components/dataTable/DataTableElementsMessage":"components/dataTable/DataTableElementsMessage.vue","../components/dataTable/DataTableGeneratedPreview":"components/dataTable/DataTableGeneratedPreview.vue"}],"stores/dataTables/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30118,32 +30425,6 @@ exports.default = void 0;
  *
  * @type {Object}
  */
-// @deprecated this setup is moved to an action
-// const selectId = {
-// 	id: null,
-// 	resolve: null,
-// };
-//
-// const clickIdHandler = {
-// 	set(obj, prop, val) {
-// 		if (prop === 'resolve') {
-// 			// eslint-disable-next-line no-param-reassign
-// 			obj[prop] = val;
-// 		} else {
-// 			// eslint-disable-next-line no-param-reassign
-// 			obj[prop] = val;
-// 			// if resolve property is defined, call it with assigned value
-// 			if (obj.resolve) {
-// 				obj.resolve(val);
-// 			}
-// 		}
-//
-// 		return true;
-// 	},
-// };
-//
-// // proxy for clicked cell id of select operation
-// const clickIdProxy = new Proxy(selectId, clickIdHandler);
 var state = {
   // whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
   tableIsActive: true,
@@ -31968,7 +32249,8 @@ var _default = {
           resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
           cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
           collapseSectionHeader: (0, _i18n.__)('element data option', 'wp-table-builder'),
-          elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder')
+          elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
+          dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder')
         },
         proUrl: data.proUrl,
         tableIsActive: false

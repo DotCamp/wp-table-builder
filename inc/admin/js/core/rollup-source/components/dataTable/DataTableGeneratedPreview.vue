@@ -1,0 +1,94 @@
+<template>
+	<div
+		v-show="visibility"
+		:style="wrapperStyle"
+		:class="{
+			'wptb-data-table-generated-preview-bold': toggleStatus && heightHandleHover,
+			'wptb-data-table-generated-preview-faster-transition': style.height !== savedHeight,
+		}"
+		class="wptb-data-table-generated-preview"
+	>
+		<div class="wptb-data-table-generated-inner-wrapper">
+			<data-table-drag-handle
+				@draggingStart="savedHeight = style.height"
+				@dragging="handleHeightResize"
+				@handleHover="heightHandleHover = arguments[0]"
+				@draggingEnd="savedHeight = style.height"
+			></data-table-drag-handle>
+			<div
+				ref="toggleButton"
+				class="wptb-data-table-generated-preview-toggle"
+				@click.prevent.capture="toggleStatus = !toggleStatus"
+			>
+				<div>{{ translationM('dataTablePreview') }}</div>
+			</div>
+			<i>data table generated preview</i>
+		</div>
+	</div>
+</template>
+
+<script>
+import DataTableDragHandle from './DataTableDragHandle';
+import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
+
+export default {
+	name: 'DataTableGeneratedPreview',
+	mixins: [withNativeTranslationStore],
+	components: { DataTableDragHandle },
+	data() {
+		return {
+			visibility: false,
+			style: {
+				height: 200,
+			},
+			visibleHeight: 10,
+			toggleStatus: false,
+			builderPanel: null,
+			heightHandleHover: false,
+			savedHeight: 200,
+		};
+	},
+	mounted() {
+		this.$nextTick(() => {
+			document.addEventListener('wptbSectionChanged', ({ detail }) => {
+				this.visibility = this.calculateVisibility(detail);
+			});
+			this.visibility = this.calculateVisibility(WPTB_Helper.currentSection);
+
+			this.builderPanel = document.querySelector('.wptb-builder-panel');
+		});
+	},
+	computed: {
+		wrapperStyle() {
+			this.builderPanelCalculations();
+			return {
+				height: `${this.style.height}px`,
+				bottom: `-${this.toggleStatus ? 0 : this.style.height - this.visibleHeight}px`,
+			};
+		},
+	},
+	methods: {
+		calculateVisibility(section) {
+			const status = section === 'elements' || section === 'table_settings';
+
+			if (!status) {
+				this.builderPanel.style.height = 0;
+			} else {
+				this.builderPanelCalculations();
+			}
+
+			return status;
+		},
+		builderPanelCalculations() {
+			if (this.builderPanel) {
+				this.builderPanel.style.height = this.toggleStatus ? `calc( 100% + ${this.style.height}px)` : 0;
+			}
+		},
+		handleHeightResize(offset) {
+			if (this.toggleStatus) {
+				this.style.height = this.savedHeight + offset;
+			}
+		},
+	},
+};
+</script>

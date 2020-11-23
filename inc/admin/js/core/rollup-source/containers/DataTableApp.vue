@@ -1,18 +1,21 @@
 <template>
-	<transition name="wptb-fade">
-		<div v-show="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
-			<data-screen-handler></data-screen-handler>
-			<mounting-portal :mount-to="leftPanelId">
-				<portal-target name="leftPanel"></portal-target>
-			</mounting-portal>
-			<mounting-portal mount-to="#beforeElementOptions" append>
-				<data-table-element-option></data-table-element-option>
-			</mounting-portal>
-			<mounting-portal mount-to="#wptbDataTableElementsTarget" append>
-				<data-table-elements-message v-if="getSelectedDataSource === null"></data-table-elements-message>
-			</mounting-portal>
-		</div>
-	</transition>
+	<fragment>
+		<transition name="wptb-fade">
+			<div v-show="isVisible" :style="mainStyle" ref="dataTableMain" class="wptb-data-table-main">
+				<data-screen-handler></data-screen-handler>
+				<mounting-portal :mount-to="leftPanelId">
+					<portal-target name="leftPanel"></portal-target>
+				</mounting-portal>
+				<mounting-portal mount-to="#beforeElementOptions" append>
+					<data-table-element-option></data-table-element-option>
+				</mounting-portal>
+				<mounting-portal mount-to="#wptbDataTableElementsTarget" append>
+					<data-table-elements-message v-if="getSelectedDataSource === null"></data-table-elements-message>
+				</mounting-portal>
+			</div>
+		</transition>
+		<data-table-generated-preview></data-table-generated-preview>
+	</fragment>
 </template>
 
 <script>
@@ -20,6 +23,7 @@ import { mapGetters, mapActions, mapState } from 'vuex';
 import DataScreenHandler from '../components/DataScreenHandler';
 import DataTableElementOption from '../components/dataTable/DataTableElementOption';
 import DataTableElementsMessage from '../components/dataTable/DataTableElementsMessage';
+import DataTableGeneratedPreview from '../components/dataTable/DataTableGeneratedPreview';
 
 export default {
 	props: {
@@ -32,7 +36,7 @@ export default {
 			default: 0,
 		},
 	},
-	components: { DataTableElementsMessage, DataTableElementOption, DataScreenHandler },
+	components: { DataTableGeneratedPreview, DataTableElementsMessage, DataTableElementOption, DataScreenHandler },
 	data() {
 		return {
 			extraPadding: 0,

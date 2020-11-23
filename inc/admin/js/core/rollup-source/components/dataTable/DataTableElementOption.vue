@@ -1,5 +1,9 @@
 <template>
-	<section-group-collapse section-id="dataTableElementOption" :label="translation('collapseSectionHeader')">
+	<section-group-collapse
+		:start-collapsed="false"
+		section-id="dataTableElementOption"
+		:label="translation('collapseSectionHeader')"
+	>
 		<i>
 			test control
 		</i>
@@ -21,7 +25,9 @@ export default {
 		document.addEventListener('element:controls:active:global', ({ detail: element }) => {
 			if (element.getAttribute('class').includes('wptb-ph-element')) {
 				this.currentElement = element;
-				console.log(element);
+
+				// TODO [erdembircan] remove for production
+				console.log(this.currentElement);
 			}
 		});
 	},

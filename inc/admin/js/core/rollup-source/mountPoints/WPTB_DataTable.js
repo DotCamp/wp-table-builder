@@ -64,6 +64,7 @@ export default {
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'
 					),
+					dataTablePreview: __('Data table preview', 'wptb-table-builder'),
 				},
 				proUrl: data.proUrl,
 				tableIsActive: false,
