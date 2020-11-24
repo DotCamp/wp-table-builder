@@ -7,6 +7,7 @@
 			'wptb-data-table-generated-preview-faster-transition': style.height !== savedHeight,
 		}"
 		class="wptb-data-table-generated-preview"
+		:data-toggle="toggleStatus"
 	>
 		<div class="wptb-data-table-generated-inner-wrapper">
 			<data-table-drag-handle
@@ -21,6 +22,10 @@
 				@click.prevent.capture="toggleStatus = !toggleStatus"
 			>
 				<div>{{ translationM('dataTablePreview') }}</div>
+				<div
+					v-html="getIcon('chevronRight')"
+					class="wptb-data-table-preview-toggle-icon wptb-flex wptb-justify-content-center wptb-flex-align-center"
+				></div>
 			</div>
 			<i>data table generated preview</i>
 		</div>
@@ -28,6 +33,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import DataTableDragHandle from './DataTableDragHandle';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 
@@ -66,6 +72,7 @@ export default {
 				bottom: `-${this.toggleStatus ? 0 : this.style.height - this.visibleHeight}px`,
 			};
 		},
+		...mapGetters(['getIcon']),
 	},
 	methods: {
 		calculateVisibility(section) {

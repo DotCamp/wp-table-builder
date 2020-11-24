@@ -30055,41 +30055,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vuex = require("vuex");
+
 var _DataTableDragHandle = _interopRequireDefault(require("./DataTableDragHandle"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   name: 'DataTableGeneratedPreview',
   mixins: [_withNativeTranslationStore.default],
@@ -30121,7 +30100,7 @@ var _default = {
       _this.builderPanel = document.querySelector('.wptb-builder-panel');
     });
   },
-  computed: {
+  computed: _objectSpread({
     wrapperStyle: function wrapperStyle() {
       this.builderPanelCalculations();
       return {
@@ -30129,7 +30108,7 @@ var _default = {
         bottom: "-".concat(this.toggleStatus ? 0 : this.style.height - this.visibleHeight, "px")
       };
     }
-  },
+  }, (0, _vuex.mapGetters)(['getIcon'])),
   methods: {
     calculateVisibility: function calculateVisibility(section) {
       var status = section === 'elements' || section === 'table_settings';
@@ -30185,7 +30164,8 @@ exports.default = _default;
         "wptb-data-table-generated-preview-faster-transition":
           _vm.style.height !== _vm.savedHeight
       },
-      style: _vm.wrapperStyle
+      style: _vm.wrapperStyle,
+      attrs: { "data-toggle": _vm.toggleStatus }
     },
     [
       _c(
@@ -30219,7 +30199,15 @@ exports.default = _default;
                 }
               }
             },
-            [_c("div", [_vm._v(_vm._s(_vm.translationM("dataTablePreview")))])]
+            [
+              _c("div", [_vm._v(_vm._s(_vm.translationM("dataTablePreview")))]),
+              _vm._v(" "),
+              _c("div", {
+                staticClass:
+                  "wptb-data-table-preview-toggle-icon wptb-flex wptb-justify-content-center wptb-flex-align-center",
+                domProps: { innerHTML: _vm._s(_vm.getIcon("chevronRight")) }
+              })
+            ]
           ),
           _vm._v(" "),
           _c("i", [_vm._v("data table generated preview")])
@@ -30241,7 +30229,7 @@ render._withStripped = true
           };
         })());
       
-},{"./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

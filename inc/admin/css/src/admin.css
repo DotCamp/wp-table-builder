@@ -6221,6 +6221,7 @@ thead .wptb-data-manager-table-data-value {
     width: calc(100% - var(--wptb-plugin-sidebar-size-full));
     transition: all 0.2s ease-out;
     border-top: 1px solid var(--wptb-plugin-gray-400);
+    z-index: 10;
 }
 
 .wptb-data-table-generated-preview-bold {
@@ -6260,9 +6261,18 @@ thead .wptb-data-manager-table-data-value {
     align-items: center;
     cursor: pointer;
     border-radius: 3px 3px 0 0;
-    color: var(--wptb-plugin-gray-700)
+    color: var(--wptb-plugin-gray-700);
+    transition: all 0.2s ease-out;
 }
 
+.wptb-data-table-generated-preview-bold .wptb-data-table-generated-preview-toggle {
+    border: 2px solid var(--wptb-plugin-gray-500);
+    border-bottom: 0;
+}
+
+.wptb-data-table-generated-preview-toggle div {
+    margin: 0 5px;
+}
 
 .wptb-data-table-generated-preview-height-handle {
     position: absolute;
@@ -6271,6 +6281,16 @@ thead .wptb-data-manager-table-data-value {
     width: 100%;
     height: 10px;
     cursor: n-resize;
+}
+
+.wptb-data-table-preview-toggle-icon svg {
+    width: 9px;
+    fill: var(--wptb-plugin-logo-color);
+    transform: rotateZ(90deg);
+}
+
+[data-toggle='true'] .wptb-data-table-preview-toggle-icon svg {
+    transform: rotateZ(-90deg);
 }
 
 /*endregion*/
