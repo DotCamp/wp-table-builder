@@ -293,6 +293,15 @@ const getters = {
 	parsedData: (state) => {
 		return state.dataManager.tempData.parsedData;
 	},
+	/**
+	 * Get column binding of a given element.
+	 *
+	 * @param {Object} state store state
+	 * @return {Function} a function to retrieve column binding
+	 */
+	getColumnBindingForElement: (state) => (elementId) => {
+		return state.dataManager.bindings[elementId];
+	},
 };
 
 export default getters;

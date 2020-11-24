@@ -7,7 +7,7 @@
 					<portal-target name="leftPanel"></portal-target>
 				</mounting-portal>
 				<mounting-portal mount-to="#beforeElementOptions" append>
-					<data-table-element-option></data-table-element-option>
+					<data-table-element-option v-if="getSelectedDataSource"></data-table-element-option>
 				</mounting-portal>
 				<mounting-portal mount-to="#wptbDataTableElementsTarget" append>
 					<data-table-elements-message v-if="getSelectedDataSource === null"></data-table-elements-message>

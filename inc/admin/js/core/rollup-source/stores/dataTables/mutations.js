@@ -361,6 +361,17 @@ const mutations = {
 	setClickIdProxy: (state, proxy) => {
 		state.dataManager.select.clickId = proxy;
 	},
+	/**
+	 * Set column binding of an element with given id.
+	 *
+	 * @param {Object} state data table state
+	 * @param {{id, value}} mutation payload
+	 */
+	setColumnBindingForElement: (state, { id, value }) => {
+		const bindings = { ...state.dataManager.bindings };
+		bindings[id] = value;
+		state.dataManager.bindings = bindings;
+	},
 };
 
 export default mutations;

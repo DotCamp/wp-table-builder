@@ -29790,6 +29790,14 @@ var _vuex = require("vuex");
 
 var _SectionGroupCollapse = _interopRequireDefault(require("../leftPanel/SectionGroupCollapse"));
 
+var _PanelSectionGroupTabbedImproved = _interopRequireDefault(require("../PanelSectionGroupTabbedImproved"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("../PanelSectionGroupTabbedItem"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -29799,12 +29807,22 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
+  mixins: [_withNativeTranslationStore.default],
   components: {
+    PanelDropdownControl: _PanelDropdownControl.default,
+    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
+    PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
     SectionGroupCollapse: _SectionGroupCollapse.default
   },
   data: function data() {
     return {
-      currentElement: null
+      currentElement: null,
+      currentElementId: null,
+      panelTabs: {
+        element: this.translationM('element'),
+        row: this.translationM('row')
+      },
+      currentActiveTab: 'element'
     };
   },
   mounted: function mounted() {
@@ -29814,13 +29832,63 @@ var _default = {
       var element = _ref.detail;
 
       if (element.getAttribute('class').includes('wptb-ph-element')) {
-        _this.currentElement = element; // TODO [erdembircan] remove for production
-
-        console.log(_this.currentElement);
+        _this.currentElement = element;
+        _this.currentTab = 'element';
       }
     });
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation']))
+  computed: _objectSpread({
+    elementColumnBinding: {
+      get: function get() {
+        if (this.currentElement) {
+          var elementId = this.parseElementId();
+          var binding = this.getColumnBindingForElement(elementId);
+          return binding || 'auto';
+        }
+
+        return 'auto';
+      },
+      set: function set(val) {
+        if (this.currentElement) {
+          var elementId = this.parseElementId();
+          this.setColumnBindingForElement({
+            id: elementId,
+            value: val
+          });
+        }
+      }
+    },
+    getColumnNames: function getColumnNames() {
+      var _this2 = this;
+
+      var rowId = this.parsedData.header[0].rowId;
+      return this.parsedData.header[0].values.reduce(function (carry, item) {
+        var cellId = _this2.formCellId(rowId, item.colId); // eslint-disable-next-line no-param-reassign
+
+
+        carry[cellId] = item.value;
+        return carry;
+      }, {
+        auto: this.translationM('auto')
+      });
+    }
+  }, (0, _vuex.mapGetters)(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement'])),
+  methods: _objectSpread({
+    parseElementId: function parseElementId() {
+      if (this.currentElement) {
+        var activeElementIdArray = this.currentElement.getAttribute('class').split(' ').filter(function (c) {
+          var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+          return regExp.test(c);
+        })[0];
+
+        if (activeElementIdArray) {
+          return activeElementIdArray.replace('wptb-element-', '');
+        }
+      }
+
+      return null;
+    }
+  }, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
 };
 exports.default = _default;
         var $619075 = exports.default || module.exports;
@@ -29844,7 +29912,55 @@ exports.default = _default;
         label: _vm.translation("collapseSectionHeader")
       }
     },
-    [_c("i", [_vm._v("\n\t\ttest control\n\t")])]
+    [
+      _c("panel-section-group-tabbed-improved", {
+        attrs: { header: _vm.translationM("bindings"), tabs: _vm.panelTabs },
+        scopedSlots: _vm._u([
+          {
+            key: "default",
+            fn: function(ref) {
+              var currentTab = ref.currentTab
+              return [
+                _c(
+                  "panel-section-group-tabbed-item",
+                  { attrs: { "active-id": currentTab, id: "element" } },
+                  [
+                    _c("panel-dropdown-control", {
+                      attrs: {
+                        label: _vm.translationM("column"),
+                        options: _vm.getColumnNames
+                      },
+                      model: {
+                        value: _vm.elementColumnBinding,
+                        callback: function($$v) {
+                          _vm.elementColumnBinding = $$v
+                        },
+                        expression: "elementColumnBinding"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "panel-section-group-tabbed-item",
+                  { attrs: { "active-id": currentTab, id: "row" } },
+                  [_vm._v("row")]
+                )
+              ]
+            }
+          }
+        ]),
+        model: {
+          value: _vm.currentActiveTab,
+          callback: function($$v) {
+            _vm.currentActiveTab = $$v
+          },
+          expression: "currentActiveTab"
+        }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -29859,7 +29975,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30353,7 +30469,11 @@ exports.default = _default;
             _c(
               "mounting-portal",
               { attrs: { "mount-to": "#beforeElementOptions", append: "" } },
-              [_c("data-table-element-option")],
+              [
+                _vm.getSelectedDataSource
+                  ? _c("data-table-element-option")
+                  : _vm._e()
+              ],
               1
             ),
             _vm._v(" "),
@@ -30458,7 +30578,8 @@ var state = {
       hoverId: null,
       clickId: null,
       type: 'row'
-    }
+    },
+    bindings: {}
   },
   leftPanelId: '#dataTableLeftPanel',
   devStartupScreen: 'DataSourceSelection',
@@ -30951,6 +31072,22 @@ var mutations = {
    */
   setClickIdProxy: function setClickIdProxy(state, proxy) {
     state.dataManager.select.clickId = proxy;
+  },
+
+  /**
+   * Set column binding of an element with given id.
+   *
+   * @param {Object} state data table state
+   * @param {{id, value}} mutation payload
+   */
+  setColumnBindingForElement: function setColumnBindingForElement(state, _ref6) {
+    var id = _ref6.id,
+        value = _ref6.value;
+
+    var bindings = _objectSpread({}, state.dataManager.bindings);
+
+    bindings[id] = value;
+    state.dataManager.bindings = bindings;
   }
 };
 var _default = mutations;
@@ -31880,6 +32017,18 @@ var getters = {
    */
   parsedData: function parsedData(state) {
     return state.dataManager.tempData.parsedData;
+  },
+
+  /**
+   * Get column binding of a given element.
+   *
+   * @param {Object} state store state
+   * @return {Function} a function to retrieve column binding
+   */
+  getColumnBindingForElement: function getColumnBindingForElement(state) {
+    return function (elementId) {
+      return state.dataManager.bindings[elementId];
+    };
   }
 };
 var _default = getters;
@@ -32230,15 +32379,20 @@ var _default = {
           firstRowHeader: (0, _i18n.__)('first row as column names', 'wp-table-builder'),
           columnNames: (0, _i18n.__)('column names', 'wp-table-builder'),
           columnName: (0, _i18n.__)('column name', 'wp-table-builder'),
+          column: (0, _i18n.__)('Column', 'wp-table-builder'),
           values: (0, _i18n.__)('values', 'wp-table-builder'),
           value: (0, _i18n.__)('value', 'wp-table-builder'),
           selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder'),
           cancel: (0, _i18n.__)('cancel', 'wp-table-builder'),
           resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
           cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
-          collapseSectionHeader: (0, _i18n.__)('element data option', 'wp-table-builder'),
+          collapseSectionHeader: (0, _i18n.__)('element data options', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
-          dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder')
+          dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
+          bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),
+          element: (0, _i18n.__)('element', 'wptb-table-builder'),
+          row: (0, _i18n.__)('row', 'wptb-table-builder'),
+          auto: (0, _i18n.__)('auto', 'wptb-table-builder')
         },
         proUrl: data.proUrl,
         tableIsActive: false
