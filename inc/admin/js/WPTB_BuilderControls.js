@@ -19892,8 +19892,8 @@ exports.default = void 0;
 /**
  * Plugin for reusable.
  *
- * @param {object} Vue Vue instance
- * @param {object} options filter options
+ * @param {Object} Vue Vue instance
+ * @param {Object} options filter options
  */
 // eslint-disable-next-line no-unused-vars
 function install(Vue, options) {
@@ -29106,8 +29106,8 @@ var _default = {
                 }
 
                 _context.next = 7;
-                return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function () {
-                  return '';
+                return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function (_, i) {
+                  return "".concat(_this2.translationM('column'), " ").concat(i + 1);
                 }));
 
               case 7:
@@ -30163,6 +30163,26 @@ render._withStripped = true
           };
         })());
       
+},{}],"functions/DataTableGenerator.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Data table generator for frontend usage.
+ *
+ * @class
+ */
+function DataTableGenerator() {}
+/** @module DataTableGenerator */
+
+
+var _default = new DataTableGenerator();
+
+exports.default = _default;
 },{}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
 "use strict";
 
@@ -30176,6 +30196,8 @@ var _vuex = require("vuex");
 var _DataTableDragHandle = _interopRequireDefault(require("./DataTableDragHandle"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _DataTableGenerator = _interopRequireDefault(require("../../functions/DataTableGenerator"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30201,7 +30223,8 @@ var _default = {
       toggleStatus: false,
       builderPanel: null,
       heightHandleHover: false,
-      savedHeight: 200
+      savedHeight: 200,
+      previewHtml: null
     };
   },
   mounted: function mounted() {
@@ -30227,7 +30250,9 @@ var _default = {
   }, (0, _vuex.mapGetters)(['getIcon'])),
   methods: {
     calculateVisibility: function calculateVisibility(section) {
-      var status = section === 'elements' || section === 'table_settings';
+      // sections where generated preview will be available and visible
+      var allowedSections = ['elements', 'table_settings', 'options_group'];
+      var status = allowedSections.includes(section);
 
       if (!status) {
         this.builderPanel.style.height = 0;
@@ -30326,7 +30351,48 @@ exports.default = _default;
             ]
           ),
           _vm._v(" "),
-          _c("i", [_vm._v("data table generated preview")])
+          _c(
+            "transition-group",
+            { attrs: { name: "wptb-fade", mode: "out-in" } },
+            [
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: !_vm.previewHtml,
+                      expression: "!previewHtml"
+                    }
+                  ],
+                  key: "previewEmpty",
+                  staticClass: "wptb-data-table-empty-preview"
+                },
+                [
+                  _vm._v(
+                    "\n\t\t\t\t" +
+                      _vm._s(_vm.translationM("emptyDataTablePreview")) +
+                      "\n\t\t\t"
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.previewHtml,
+                    expression: "previewHtml"
+                  }
+                ],
+                key: "preview",
+                staticClass: "wptb-data-table-preview-main",
+                domProps: { innerHTML: _vm._s(_vm.previewHtml) }
+              })
+            ]
+          )
         ],
         1
       )
@@ -30345,7 +30411,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions/DataTableGenerator":"functions/DataTableGenerator.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30401,7 +30467,8 @@ var _default = {
       var detail = _ref.detail;
 
       _this.setComponentVisibility(detail === _this.sectionName);
-    }); // change component visibility based on current active section
+    });
+    this.handleMainTableDiscoveryProcess('.wptb-management_table_container .wptb-table-setup .wptb-preview-table'); // change component visibility based on current active section
 
     this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // enable saving data table options to table on table save operation
 
@@ -30422,7 +30489,7 @@ var _default = {
       };
     }
   }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -30536,6 +30603,7 @@ exports.default = void 0;
 var state = {
   // whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
   tableIsActive: true,
+  targetTable: null,
   visibility: false,
   busy: false,
   screen: null,
@@ -31088,8 +31156,30 @@ var mutations = {
 
     bindings[id] = value;
     state.dataManager.bindings = bindings;
+  },
+
+  /**
+   * Set a target table.
+   *
+   * @param {Object} state data table state
+   * @param {HTMLElement | null} tableElement table element to set
+   */
+  setTargetTable: function setTargetTable(state, tableElement) {
+    state.targetTable = tableElement;
+  },
+
+  /**
+   * Set whether there is an active table on builder
+   *
+   * @param {Object} state data table state
+   * @param {boolean} status status
+   */
+  setTableActiveStatus: function setTableActiveStatus(state, status) {
+    state.tableIsActive = status;
   }
 };
+/** @module mutations */
+
 var _default = mutations;
 exports.default = _default;
 },{"../../functions":"functions/index.js"}],"stores/dataTables/actions.js":[function(require,module,exports) {
@@ -31642,8 +31732,54 @@ var actions = {
       value: rowObject.rowId
     });
     commit('addRowToDataTable', rowObject);
+  },
+
+  /**
+   * Find main table of the builder.
+   *
+   * @param {{commit}} vuex store object
+   * @param {string} query element query
+   * @return {HTMLElement|null} found table
+   */
+  findMainTable: function findMainTable(_ref28, query) {
+    var commit = _ref28.commit;
+    var mainTable = document.querySelector(query);
+    commit('setTargetTable', mainTable);
+    commit('setTableActiveStatus', mainTable !== null);
+    return mainTable;
+  },
+  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref29, query) {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+      var dispatch, mainTable;
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              dispatch = _ref29.dispatch;
+              _context6.next = 3;
+              return dispatch('findMainTable', query);
+
+            case 3:
+              mainTable = _context6.sent;
+
+              // if main table is not available at the time this action is called, add an event listener to table generated event to find it again
+              if (!mainTable) {
+                document.addEventListener('wptb:table:generated', function () {
+                  dispatch('findMainTable', query);
+                });
+              }
+
+            case 5:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }))();
   }
 };
+/** @module actions */
+
 var _default = actions;
 exports.default = _default;
 },{}],"stores/dataTables/getters.js":[function(require,module,exports) {
@@ -32392,7 +32528,8 @@ var _default = {
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),
           element: (0, _i18n.__)('element', 'wptb-table-builder'),
           row: (0, _i18n.__)('row', 'wptb-table-builder'),
-          auto: (0, _i18n.__)('auto', 'wptb-table-builder')
+          auto: (0, _i18n.__)('auto', 'wptb-table-builder'),
+          emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
         },
         proUrl: data.proUrl,
         tableIsActive: false

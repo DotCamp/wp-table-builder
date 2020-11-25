@@ -13,6 +13,7 @@
 const state = {
 	// whether a table is present on builder or not, starting as true so that builder screen will not be polluted with some messages bind to this value if there is a table present on startup
 	tableIsActive: true,
+	targetTable: null,
 	visibility: false,
 	busy: false,
 	screen: null,

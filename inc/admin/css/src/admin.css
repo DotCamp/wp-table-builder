@@ -6293,4 +6293,10 @@ thead .wptb-data-manager-table-data-value {
     transform: rotateZ(-90deg);
 }
 
+.wptb-data-table-empty-preview {
+    color : var(--wptb-plugin-gray-500) !important;
+    font-size: 110%;
+    font-style: italic;
+}
+
 /*endregion*/

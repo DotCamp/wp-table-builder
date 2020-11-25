@@ -48,6 +48,8 @@ export default {
 			this.setComponentVisibility(detail === this.sectionName);
 		});
 
+		this.handleMainTableDiscoveryProcess('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
+
 		// change component visibility based on current active section
 		this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName);
 
@@ -78,6 +80,7 @@ export default {
 			'setCurrentScreen',
 			'addOptionsAndDataToSave',
 			'setUpSelectionIdProxy',
+			'handleMainTableDiscoveryProcess',
 		]),
 	},
 };

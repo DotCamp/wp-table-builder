@@ -1,8 +1,8 @@
 /**
  * Plugin for reusable.
  *
- * @param {object} Vue Vue instance
- * @param {object} options filter options
+ * @param {Object} Vue Vue instance
+ * @param {Object} options filter options
  */
 // eslint-disable-next-line no-unused-vars
 function install(Vue, options) {

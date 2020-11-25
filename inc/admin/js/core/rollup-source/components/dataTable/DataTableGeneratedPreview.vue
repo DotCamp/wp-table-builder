@@ -27,7 +27,12 @@
 					class="wptb-data-table-preview-toggle-icon wptb-flex wptb-justify-content-center wptb-flex-align-center"
 				></div>
 			</div>
-			<i>data table generated preview</i>
+			<transition-group name="wptb-fade" mode="out-in">
+				<div key="previewEmpty" class="wptb-data-table-empty-preview" v-show="!previewHtml">
+					{{ translationM('emptyDataTablePreview') }}
+				</div>
+				<div key="preview" v-show="previewHtml" class="wptb-data-table-preview-main" v-html="previewHtml"></div>
+			</transition-group>
 		</div>
 	</div>
 </template>
@@ -36,6 +41,7 @@
 import { mapGetters } from 'vuex';
 import DataTableDragHandle from './DataTableDragHandle';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
+import DataTableGenerator from '../../functions/DataTableGenerator';
 
 export default {
 	name: 'DataTableGeneratedPreview',
@@ -52,6 +58,7 @@ export default {
 			builderPanel: null,
 			heightHandleHover: false,
 			savedHeight: 200,
+			previewHtml: null,
 		};
 	},
 	mounted() {
@@ -76,7 +83,10 @@ export default {
 	},
 	methods: {
 		calculateVisibility(section) {
-			const status = section === 'elements' || section === 'table_settings';
+			// sections where generated preview will be available and visible
+			const allowedSections = ['elements', 'table_settings', 'options_group'];
+
+			const status = allowedSections.includes(section);
 
 			if (!status) {
 				this.builderPanel.style.height = 0;

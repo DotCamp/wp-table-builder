@@ -70,6 +70,10 @@ export default {
 					element: __('element', 'wptb-table-builder'),
 					row: __('row', 'wptb-table-builder'),
 					auto: __('auto', 'wptb-table-builder'),
+					emptyDataTablePreview: __(
+						'No table found, generate one to preview data table',
+						'wptb-table-builder'
+					),
 				},
 				proUrl: data.proUrl,
 				tableIsActive: false,

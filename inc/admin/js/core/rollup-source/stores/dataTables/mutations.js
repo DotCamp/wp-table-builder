@@ -372,6 +372,25 @@ const mutations = {
 		bindings[id] = value;
 		state.dataManager.bindings = bindings;
 	},
+	/**
+	 * Set a target table.
+	 *
+	 * @param {Object} state data table state
+	 * @param {HTMLElement | null} tableElement table element to set
+	 */
+	setTargetTable: (state, tableElement) => {
+		state.targetTable = tableElement;
+	},
+	/**
+	 * Set whether there is an active table on builder
+	 *
+	 * @param {Object} state data table state
+	 * @param {boolean} status status
+	 */
+	setTableActiveStatus: (state, status) => {
+		state.tableIsActive = status;
+	},
 };
 
+/** @module mutations */
 export default mutations;

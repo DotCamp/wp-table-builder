@@ -373,6 +373,31 @@ const actions = {
 		commit('setDataManagerControl', { key: 'indexRow', value: rowObject.rowId });
 		commit('addRowToDataTable', rowObject);
 	},
+	/**
+	 * Find main table of the builder.
+	 *
+	 * @param {{commit}} vuex store object
+	 * @param {string} query element query
+	 * @return {HTMLElement|null} found table
+	 */
+	findMainTable({ commit }, query) {
+		const mainTable = document.querySelector(query);
+		commit('setTargetTable', mainTable);
+		commit('setTableActiveStatus', mainTable !== null);
+
+		return mainTable;
+	},
+	async handleMainTableDiscoveryProcess({ dispatch }, query) {
+		const mainTable = await dispatch('findMainTable', query);
+
+		// if main table is not available at the time this action is called, add an event listener to table generated event to find it again
+		if (!mainTable) {
+			document.addEventListener('wptb:table:generated', () => {
+				dispatch('findMainTable', query);
+			});
+		}
+	},
 };
 
+/** @module actions */
 export default actions;
