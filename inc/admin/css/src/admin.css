@@ -6241,7 +6241,7 @@ thead .wptb-data-manager-table-data-value {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
 }
@@ -6297,6 +6297,12 @@ thead .wptb-data-manager-table-data-value {
     color : var(--wptb-plugin-gray-500) !important;
     font-size: 110%;
     font-style: italic;
+}
+
+.wptb-data-table-preview-main {
+    width: 100%;
+    height: 100%;
+    margin: 10px 0;
 }
 
 /*endregion*/

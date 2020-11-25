@@ -174,7 +174,7 @@ export default {
 
 				if (!header) {
 					header = await this.generateRow(
-						Array.from(new Array(this.getColCount)).map((_, i) => `${this.translationM('column')} ${i +1 }`)
+						Array.from(new Array(this.getColCount)).map((_, i) => `${this.translationM('column')} ${i + 1}`)
 					);
 					this.addRowObjectAsHeader(header);
 				}

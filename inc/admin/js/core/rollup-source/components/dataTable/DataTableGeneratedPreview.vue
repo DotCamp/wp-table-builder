@@ -27,18 +27,16 @@
 					class="wptb-data-table-preview-toggle-icon wptb-flex wptb-justify-content-center wptb-flex-align-center"
 				></div>
 			</div>
-			<transition-group name="wptb-fade" mode="out-in">
-				<div key="previewEmpty" class="wptb-data-table-empty-preview" v-show="!previewHtml">
-					{{ translationM('emptyDataTablePreview') }}
-				</div>
-				<div key="preview" v-show="previewHtml" class="wptb-data-table-preview-main" v-html="previewHtml"></div>
-			</transition-group>
+			<div class="wptb-data-table-empty-preview" v-if="!targetTable">
+				{{ translationM('emptyDataTablePreview') }}
+			</div>
+			<div v-else class="wptb-data-table-preview-main" :style="previewStyle" v-html="previewHtml"></div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import DataTableDragHandle from './DataTableDragHandle';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import DataTableGenerator from '../../functions/DataTableGenerator';
@@ -54,12 +52,21 @@ export default {
 				height: 200,
 			},
 			visibleHeight: 10,
-			toggleStatus: false,
+			toggleStatus: true,
 			builderPanel: null,
 			heightHandleHover: false,
 			savedHeight: 200,
-			previewHtml: null,
+			busy: false,
+			previewHtml: 'test',
 		};
+	},
+	watch: {
+		targetTable: {
+			handler(n) {
+				this.generateDataTable(n);
+			},
+			deep: true,
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {
@@ -79,9 +86,30 @@ export default {
 				bottom: `-${this.toggleStatus ? 0 : this.style.height - this.visibleHeight}px`,
 			};
 		},
-		...mapGetters(['getIcon']),
+		previewStyle() {
+			return {
+				width: `${this.targetTable.getBoundingClientRect().width}px`,
+			};
+		},
+		...mapGetters(['getIcon', 'getBindings', 'parsedData']),
+		...mapState(['targetTable']),
 	},
 	methods: {
+		setComponentBusyState(state) {
+			this.busy = state;
+		},
+		async generateDataTable(mainTable) {
+			this.setComponentBusyState(true);
+			const previewTable = await DataTableGenerator.generateDataTable(
+				mainTable,
+				this.getBindings,
+				this.parsedData.values
+			);
+
+			this.previewHtml = previewTable.outerHTML;
+
+			this.setComponentBusyState(false);
+		},
 		calculateVisibility(section) {
 			// sections where generated preview will be available and visible
 			const allowedSections = ['elements', 'table_settings', 'options_group'];

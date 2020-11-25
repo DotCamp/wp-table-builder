@@ -297,10 +297,21 @@ const getters = {
 	 * Get column binding of a given element.
 	 *
 	 * @param {Object} state store state
+	 * @param {Object} getters store getters
 	 * @return {Function} a function to retrieve column binding
 	 */
-	getColumnBindingForElement: (state) => (elementId) => {
-		return state.dataManager.bindings[elementId];
+	// eslint-disable-next-line no-shadow
+	getColumnBindingForElement: (state, getters) => (elementId) => {
+		return getters.getBindings.element[elementId];
+	},
+	/**
+	 * Get all data bindings.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} data bindings object
+	 */
+	getBindings: (state) => {
+		return state.dataManager.bindings;
 	},
 };
 

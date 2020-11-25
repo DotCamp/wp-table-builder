@@ -66,7 +66,7 @@ export default {
 				if (this.currentElement) {
 					const elementId = this.parseElementId();
 					const binding = this.getColumnBindingForElement(elementId);
-					return binding || 'auto';
+					return binding || 'none';
 				}
 				return 'auto';
 			},
@@ -87,7 +87,7 @@ export default {
 
 					return carry;
 				},
-				{ auto: this.translationM('auto') }
+				{ none: this.translationM('none'), auto: this.translationM('auto') }
 			);
 		},
 		...mapGetters(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement']),

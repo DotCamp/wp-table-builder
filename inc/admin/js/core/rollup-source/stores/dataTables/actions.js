@@ -392,10 +392,37 @@ const actions = {
 
 		// if main table is not available at the time this action is called, add an event listener to table generated event to find it again
 		if (!mainTable) {
-			document.addEventListener('wptb:table:generated', () => {
-				dispatch('findMainTable', query);
+			document.addEventListener('wptb:table:generated', async () => {
+				const foundMainTable = await dispatch('findMainTable', query);
+
+				// set up a mutation observer for main table
+				dispatch('setUpTableMutationObserver', foundMainTable);
 			});
+		} else {
+			// set up a mutation observer for main table
+			dispatch('setUpTableMutationObserver', mainTable);
 		}
+	},
+	/**
+	 * Set up a mutation observer for the main table element.
+	 * This observer will watch changes on main table and trigger reactivity for components that are dependant on main table.
+	 *
+	 * @param {{commit}} vuex store object
+	 * @param {HTMLElement} tableElement main table element
+	 */
+	setUpTableMutationObserver({ commit }, tableElement) {
+		// observer config object
+		const config = { attributes: true, childList: true, subtree: true };
+
+		// observer callback function
+		const callback = () => {
+			commit('setTargetTable', null);
+			commit('setTargetTable', tableElement);
+		};
+
+		const observer = new MutationObserver(callback);
+
+		observer.observe(tableElement, config);
 	},
 };
 

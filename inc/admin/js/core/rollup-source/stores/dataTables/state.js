@@ -57,7 +57,10 @@ const state = {
 			clickId: null,
 			type: 'row',
 		},
-		bindings: {},
+		bindings: {
+			row: {},
+			element: {},
+		},
 	},
 	leftPanelId: '#dataTableLeftPanel',
 	devStartupScreen: 'DataSourceSelection',

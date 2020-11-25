@@ -12,7 +12,7 @@
 			<panel-button-control type="danger" v-if="!rowForNamesVisibility" @buttonClick="cancelRowSelectOperation">
 				{{ translationM('cancel') | cap }}
 			</panel-button-control>
-			<panel-button-control v-if="getDataManagerControls.indexRow !== null" @buttonClick="resetIndexRow">
+			<panel-button-control v-if="newNamesRowButtonVisibility" @buttonClick="resetIndexRow">
 				{{ translationM('resetIndexRow') | cap }}
 			</panel-button-control>
 		</fragment>
@@ -36,6 +36,9 @@ export default {
 		},
 	},
 	computed: {
+		newNamesRowButtonVisibility() {
+			return !this.parsedData.header[0]?.generatedForHeader && this.getDataManagerControls.indexRow !== null;
+		},
 		firstRowAsColumnName: {
 			get() {
 				return this.getDataManagerControls.firstRowAsColumnName;
@@ -48,7 +51,7 @@ export default {
 			const { active, callerId } = this.getSelectOperationData;
 			return !active && callerId !== 'selectRowForNames';
 		},
-		...mapGetters(['getDataManagerControls', 'parseCellId', 'getSelectOperationData']),
+		...mapGetters(['getDataManagerControls', 'parseCellId', 'getSelectOperationData', 'parsedData']),
 	},
 	methods: {
 		...mapMutations(['setDataManagerControl']),

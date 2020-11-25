@@ -27636,6 +27636,11 @@ var _default = {
     }
   },
   computed: _objectSpread({
+    newNamesRowButtonVisibility: function newNamesRowButtonVisibility() {
+      var _this$parsedData$head;
+
+      return !((_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : _this$parsedData$head.generatedForHeader) && this.getDataManagerControls.indexRow !== null;
+    },
     firstRowAsColumnName: {
       get: function get() {
         return this.getDataManagerControls.firstRowAsColumnName;
@@ -27653,7 +27658,7 @@ var _default = {
           callerId = _this$getSelectOperat.callerId;
       return !active && callerId !== 'selectRowForNames';
     }
-  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'parseCellId', 'getSelectOperationData'])),
+  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'parseCellId', 'getSelectOperationData', 'parsedData'])),
   methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']), {
     selectRowForNames: function selectRowForNames() {
       var _this = this;
@@ -27760,7 +27765,7 @@ exports.default = _default;
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.getDataManagerControls.indexRow !== null
+          _vm.newNamesRowButtonVisibility
             ? _c(
                 "panel-button-control",
                 { on: { buttonClick: _vm.resetIndexRow } },
@@ -29843,7 +29848,7 @@ var _default = {
         if (this.currentElement) {
           var elementId = this.parseElementId();
           var binding = this.getColumnBindingForElement(elementId);
-          return binding || 'auto';
+          return binding || 'none';
         }
 
         return 'auto';
@@ -29869,6 +29874,7 @@ var _default = {
         carry[cellId] = item.value;
         return carry;
       }, {
+        none: this.translationM('none'),
         auto: this.translationM('auto')
       });
     }
@@ -30171,12 +30177,85 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Data table generator for frontend usage.
  *
  * @class
  */
-function DataTableGenerator() {}
+function DataTableGenerator() {
+  /**
+   * Parse target element into its cells and rows.
+   *
+   * @param {HTMLElement} table table element to be parsed
+   */
+  var parseTable = function parseTable(table) {
+    return Array.from(table.querySelectorAll('tr'));
+  };
+  /**
+   * Clear table body contents of a table.
+   *
+   * @param {HTMLElement} table table to be cleared
+   */
+
+
+  var clearTable = function clearTable(table) {
+    // eslint-disable-next-line no-param-reassign
+    table.querySelector('tbody').innerHTML = '';
+  };
+  /**
+   * Populate a blueprint row.
+   *
+   * @param {HTMLElement} row blueprint row
+   * @param {Object} bindings bindings
+   * @param {Object} values values
+   * @return {Array} populated blueprint rows
+   */
+
+
+  var populateBlueprint = function populateBlueprint(row, bindings, values) {
+    return [row];
+  };
+  /**
+   * Generate a data table
+   *
+   * @param {HTMLElement} sourceTable source table to be generated with data
+   * @param {Object} bindings data bindings
+   * @param {Object} values data cell values
+   * @return {HTMLElement} generated data table
+   */
+
+
+  this.generateDataTable = function (sourceTable, bindings, values) {
+    return new Promise(function (res) {
+      var clonedTable = sourceTable.cloneNode(true);
+      var tableBody = clonedTable.querySelector('tbody');
+      var parsedRows = parseTable(clonedTable);
+      clearTable(clonedTable);
+      var populatedRows = parsedRows.reduce(function (carry, blueprintRow) {
+        var pR = populateBlueprint(blueprintRow); // eslint-disable-next-line no-param-reassign
+
+        carry = [].concat(_toConsumableArray(carry), _toConsumableArray(pR));
+        return carry;
+      }, []);
+      populatedRows.map(function (r) {
+        return tableBody.appendChild(r);
+      });
+      return res(clonedTable);
+    });
+  };
+}
 /** @module DataTableGenerator */
 
 
@@ -30201,6 +30280,10 @@ var _DataTableGenerator = _interopRequireDefault(require("../../functions/DataTa
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -30220,12 +30303,21 @@ var _default = {
         height: 200
       },
       visibleHeight: 10,
-      toggleStatus: false,
+      toggleStatus: true,
       builderPanel: null,
       heightHandleHover: false,
       savedHeight: 200,
-      previewHtml: null
+      busy: false,
+      previewHtml: 'test'
     };
+  },
+  watch: {
+    targetTable: {
+      handler: function handler(n) {
+        this.generateDataTable(n);
+      },
+      deep: true
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -30246,9 +30338,45 @@ var _default = {
         height: "".concat(this.style.height, "px"),
         bottom: "-".concat(this.toggleStatus ? 0 : this.style.height - this.visibleHeight, "px")
       };
+    },
+    previewStyle: function previewStyle() {
+      return {
+        width: "".concat(this.targetTable.getBoundingClientRect().width, "px")
+      };
     }
-  }, (0, _vuex.mapGetters)(['getIcon'])),
+  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData']), {}, (0, _vuex.mapState)(['targetTable'])),
   methods: {
+    setComponentBusyState: function setComponentBusyState(state) {
+      this.busy = state;
+    },
+    generateDataTable: function generateDataTable(mainTable) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var previewTable;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this2.setComponentBusyState(true);
+
+                _context.next = 3;
+                return _DataTableGenerator.default.generateDataTable(mainTable, _this2.getBindings, _this2.parsedData.values);
+
+              case 3:
+                previewTable = _context.sent;
+                _this2.previewHtml = previewTable.outerHTML;
+
+                _this2.setComponentBusyState(false);
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     calculateVisibility: function calculateVisibility(section) {
       // sections where generated preview will be available and visible
       var allowedSections = ['elements', 'table_settings', 'options_group'];
@@ -30351,48 +30479,19 @@ exports.default = _default;
             ]
           ),
           _vm._v(" "),
-          _c(
-            "transition-group",
-            { attrs: { name: "wptb-fade", mode: "out-in" } },
-            [
-              _c(
-                "div",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !_vm.previewHtml,
-                      expression: "!previewHtml"
-                    }
-                  ],
-                  key: "previewEmpty",
-                  staticClass: "wptb-data-table-empty-preview"
-                },
-                [
-                  _vm._v(
-                    "\n\t\t\t\t" +
-                      _vm._s(_vm.translationM("emptyDataTablePreview")) +
-                      "\n\t\t\t"
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.previewHtml,
-                    expression: "previewHtml"
-                  }
-                ],
-                key: "preview",
+          !_vm.targetTable
+            ? _c("div", { staticClass: "wptb-data-table-empty-preview" }, [
+                _vm._v(
+                  "\n\t\t\t" +
+                    _vm._s(_vm.translationM("emptyDataTablePreview")) +
+                    "\n\t\t"
+                )
+              ])
+            : _c("div", {
                 staticClass: "wptb-data-table-preview-main",
+                style: _vm.previewStyle,
                 domProps: { innerHTML: _vm._s(_vm.previewHtml) }
               })
-            ]
-          )
         ],
         1
       )
@@ -30647,7 +30746,10 @@ var state = {
       clickId: null,
       type: 'row'
     },
-    bindings: {}
+    bindings: {
+      row: {},
+      element: {}
+    }
   },
   leftPanelId: '#dataTableLeftPanel',
   devStartupScreen: 'DataSourceSelection',
@@ -31154,7 +31256,7 @@ var mutations = {
 
     var bindings = _objectSpread({}, state.dataManager.bindings);
 
-    bindings[id] = value;
+    bindings.element[id] = value;
     state.dataManager.bindings = bindings;
   },
 
@@ -31749,33 +31851,79 @@ var actions = {
     return mainTable;
   },
   handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref29, query) {
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
       var dispatch, mainTable;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return regeneratorRuntime.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               dispatch = _ref29.dispatch;
-              _context6.next = 3;
+              _context7.next = 3;
               return dispatch('findMainTable', query);
 
             case 3:
-              mainTable = _context6.sent;
+              mainTable = _context7.sent;
 
               // if main table is not available at the time this action is called, add an event listener to table generated event to find it again
               if (!mainTable) {
-                document.addEventListener('wptb:table:generated', function () {
-                  dispatch('findMainTable', query);
-                });
+                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+                  var foundMainTable;
+                  return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                    while (1) {
+                      switch (_context6.prev = _context6.next) {
+                        case 0:
+                          _context6.next = 2;
+                          return dispatch('findMainTable', query);
+
+                        case 2:
+                          foundMainTable = _context6.sent;
+                          // set up a mutation observer for main table
+                          dispatch('setUpTableMutationObserver', foundMainTable);
+
+                        case 4:
+                        case "end":
+                          return _context6.stop();
+                      }
+                    }
+                  }, _callee6);
+                })));
+              } else {
+                // set up a mutation observer for main table
+                dispatch('setUpTableMutationObserver', mainTable);
               }
 
             case 5:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6);
+      }, _callee7);
     }))();
+  },
+
+  /**
+   * Set up a mutation observer for the main table element.
+   * This observer will watch changes on main table and trigger reactivity for components that are dependant on main table.
+   *
+   * @param {{commit}} vuex store object
+   * @param {HTMLElement} tableElement main table element
+   */
+  setUpTableMutationObserver: function setUpTableMutationObserver(_ref31, tableElement) {
+    var commit = _ref31.commit;
+    // observer config object
+    var config = {
+      attributes: true,
+      childList: true,
+      subtree: true
+    }; // observer callback function
+
+    var callback = function callback() {
+      commit('setTargetTable', null);
+      commit('setTargetTable', tableElement);
+    };
+
+    var observer = new MutationObserver(callback);
+    observer.observe(tableElement, config);
   }
 };
 /** @module actions */
@@ -32159,12 +32307,24 @@ var getters = {
    * Get column binding of a given element.
    *
    * @param {Object} state store state
+   * @param {Object} getters store getters
    * @return {Function} a function to retrieve column binding
    */
-  getColumnBindingForElement: function getColumnBindingForElement(state) {
+  // eslint-disable-next-line no-shadow
+  getColumnBindingForElement: function getColumnBindingForElement(state, getters) {
     return function (elementId) {
-      return state.dataManager.bindings[elementId];
+      return getters.getBindings.element[elementId];
     };
+  },
+
+  /**
+   * Get all data bindings.
+   *
+   * @param {Object} state store state
+   * @return {Object} data bindings object
+   */
+  getBindings: function getBindings(state) {
+    return state.dataManager.bindings;
   }
 };
 var _default = getters;
@@ -32529,6 +32689,7 @@ var _default = {
           element: (0, _i18n.__)('element', 'wptb-table-builder'),
           row: (0, _i18n.__)('row', 'wptb-table-builder'),
           auto: (0, _i18n.__)('auto', 'wptb-table-builder'),
+          none: (0, _i18n.__)('none', 'wptb-table-builder'),
           emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
         },
         proUrl: data.proUrl,

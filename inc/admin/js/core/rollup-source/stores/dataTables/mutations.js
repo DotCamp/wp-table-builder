@@ -369,7 +369,7 @@ const mutations = {
 	 */
 	setColumnBindingForElement: (state, { id, value }) => {
 		const bindings = { ...state.dataManager.bindings };
-		bindings[id] = value;
+		bindings.element[id] = value;
 		state.dataManager.bindings = bindings;
 	},
 	/**
