@@ -60,6 +60,7 @@ const state = {
 		bindings: {
 			row: {},
 			element: {},
+			column: {},
 		},
 	},
 	leftPanelId: '#dataTableLeftPanel',

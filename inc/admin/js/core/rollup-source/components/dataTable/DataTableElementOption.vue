@@ -32,6 +32,7 @@ import PanelSectionGroupTabbedImproved from '../PanelSectionGroupTabbedImproved'
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelSectionGroupTabbedItem from '../PanelSectionGroupTabbedItem';
 import PanelDropdownControl from '../PanelDropdownControl';
+import { parseTableElementId } from '../../functions';
 
 export default {
 	mixins: [withNativeTranslationStore],
@@ -64,7 +65,7 @@ export default {
 		elementColumnBinding: {
 			get() {
 				if (this.currentElement) {
-					const elementId = this.parseElementId();
+					const elementId = parseTableElementId(this.currentElement);
 					const binding = this.getColumnBindingForElement(elementId);
 					return binding || 'none';
 				}
@@ -72,18 +73,21 @@ export default {
 			},
 			set(val) {
 				if (this.currentElement) {
-					const elementId = this.parseElementId();
+					const elementId = parseTableElementId(this.currentElement);
 					this.setColumnBindingForElement({ id: elementId, value: val });
 				}
 			},
 		},
 		getColumnNames() {
-			const { rowId } = this.parsedData.header[0];
+			// @deprecated
+			// const { rowId } = this.parsedData.header[0];
 			return this.parsedData.header[0].values.reduce(
 				(carry, item) => {
-					const cellId = this.formCellId(rowId, item.colId);
+					// @deprecated
+					// const cellId = this.formCellId(rowId, item.colId);
+
 					// eslint-disable-next-line no-param-reassign
-					carry[cellId] = item.value;
+					carry[item.colId] = item.value;
 
 					return carry;
 				},
@@ -93,22 +97,6 @@ export default {
 		...mapGetters(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement']),
 	},
 	methods: {
-		parseElementId() {
-			if (this.currentElement) {
-				const activeElementIdArray = this.currentElement
-					.getAttribute('class')
-					.split(' ')
-					.filter((c) => {
-						const regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
-						return regExp.test(c);
-					})[0];
-
-				if (activeElementIdArray) {
-					return activeElementIdArray.replace('wptb-element-', '');
-				}
-			}
-			return null;
-		},
 		...mapMutations(['setColumnBindingForElement']),
 	},
 };

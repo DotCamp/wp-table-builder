@@ -29787,6 +29787,93 @@ render._withStripped = true
           };
         })());
       
+},{}],"functions/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+
+/**
+ * General functions that can be used through out app.
+ */
+
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+/**
+ * Set object property from string.
+ *
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @param {*} value value
+ */
+
+
+exports.objectPropertyFromString = objectPropertyFromString;
+
+var setObjectPropertyFromString = function setObjectPropertyFromString(stringKey, target, value) {
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  if (splitKey.length === 1) {
+    // eslint-disable-next-line no-param-reassign
+    target[splitKey[0]] = value;
+  } else {
+    var parents = splitKey.slice(0, splitKey.length - 1);
+    var parent = parents.reduce(function (carry, item) {
+      return carry[item];
+    }, target);
+    parent[splitKey[splitKey.length - 1]] = value;
+  }
+};
+/**
+ * Get element id from a table element's class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no id is found
+ */
+
+
+exports.setObjectPropertyFromString = setObjectPropertyFromString;
+
+var parseTableElementId = function parseTableElementId(tableElement) {
+  if (tableElement) {
+    var activeElementIdArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementIdArray) {
+      return activeElementIdArray.replace('wptb-element-', '');
+    }
+  }
+
+  return null;
+};
+
+exports.parseTableElementId = parseTableElementId;
 },{}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
@@ -29806,6 +29893,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/w
 var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("../PanelSectionGroupTabbedItem"));
 
 var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownControl"));
+
+var _functions = require("../../functions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29850,7 +29939,7 @@ var _default = {
     elementColumnBinding: {
       get: function get() {
         if (this.currentElement) {
-          var elementId = this.parseElementId();
+          var elementId = (0, _functions.parseTableElementId)(this.currentElement);
           var binding = this.getColumnBindingForElement(elementId);
           return binding || 'none';
         }
@@ -29859,7 +29948,7 @@ var _default = {
       },
       set: function set(val) {
         if (this.currentElement) {
-          var elementId = this.parseElementId();
+          var elementId = (0, _functions.parseTableElementId)(this.currentElement);
           this.setColumnBindingForElement({
             id: elementId,
             value: val
@@ -29868,14 +29957,13 @@ var _default = {
       }
     },
     getColumnNames: function getColumnNames() {
-      var _this2 = this;
-
-      var rowId = this.parsedData.header[0].rowId;
+      // @deprecated
+      // const { rowId } = this.parsedData.header[0];
       return this.parsedData.header[0].values.reduce(function (carry, item) {
-        var cellId = _this2.formCellId(rowId, item.colId); // eslint-disable-next-line no-param-reassign
-
-
-        carry[cellId] = item.value;
+        // @deprecated
+        // const cellId = this.formCellId(rowId, item.colId);
+        // eslint-disable-next-line no-param-reassign
+        carry[item.colId] = item.value;
         return carry;
       }, {
         none: this.translationM('none'),
@@ -29883,22 +29971,7 @@ var _default = {
       });
     }
   }, (0, _vuex.mapGetters)(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement'])),
-  methods: _objectSpread({
-    parseElementId: function parseElementId() {
-      if (this.currentElement) {
-        var activeElementIdArray = this.currentElement.getAttribute('class').split(' ').filter(function (c) {
-          var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
-          return regExp.test(c);
-        })[0];
-
-        if (activeElementIdArray) {
-          return activeElementIdArray.replace('wptb-element-', '');
-        }
-      }
-
-      return null;
-    }
-  }, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
 };
 exports.default = _default;
         var $619075 = exports.default || module.exports;
@@ -29985,7 +30058,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30181,6 +30254,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _ = require(".");
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -30199,11 +30274,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @class
  */
 function DataTableGenerator() {
+  var _this = this;
+
+  /**
+   * Current bindings to be used for current generate process.
+   *
+   * @type {Object}
+   */
+  this.currentBindings = {};
+  /**
+   * Current values to be used for current generate process.
+   *
+   * @type {Object}
+   */
+
+  this.currentValues = {};
   /**
    * Parse target element into its cells and rows.
    *
    * @param {HTMLElement} table table element to be parsed
    */
+
   var parseTable = function parseTable(table) {
     return Array.from(table.querySelectorAll('tr'));
   };
@@ -30219,17 +30310,137 @@ function DataTableGenerator() {
     table.querySelector('tbody').innerHTML = '';
   };
   /**
+   * Get all values of a column in data table.
+   *
+   * @param {string} columnId data table column id
+   * @return {Array} all values related to that column
+   */
+
+
+  var getColumnValues = function getColumnValues(columnId) {
+    return _this.currentValues.reduce(function (carry, row) {
+      row.values.map(function (cell) {
+        if (cell.colId === columnId) {
+          carry.push(cell.value);
+        }
+      });
+      return carry;
+    }, []);
+  };
+  /**
+   * Get a column value by index.
+   *
+   * @param {number} index index
+   * @param {string} columnId column id
+   * @return {null|string} column value, null if none found on index or column id
+   */
+
+
+  var getColumnValueByIndex = function getColumnValueByIndex(index, columnId) {
+    var columnValues = getColumnValues(columnId);
+    var value = null;
+
+    if (columnValues) {
+      if (columnValues[index]) {
+        value = columnValues[index];
+      }
+    }
+
+    return value;
+  };
+  /**
+   * Get binding with a specific id.
+   *
+   * @param {string} id id for the target binding
+   * @param {string|null} type binding type, null for none
+   */
+
+
+  var getBinding = function getBinding(id, type) {
+    if (_this.currentBindings[type]) {
+      return _this.currentBindings[type][id];
+    }
+
+    return null;
+  };
+  /**
+   * Get binding of a table element.
+   *
+   * @param {HTMLElement} tableElement table element
+   * @param {string} type binding type
+   * @return {null | string} binding
+   */
+
+
+  var getTableElementBinding = function getTableElementBinding(tableElement, type) {
+    var elementId = (0, _.parseTableElementId)(tableElement);
+    var binding = null;
+
+    if (elementId) {
+      binding = getBinding(elementId, type);
+    }
+
+    return binding;
+  };
+  /**
+   * Calculate maximum amount of rows that can be populated from a blueprint row.
+   *
+   * @param {HTMLElement} rowElement row element
+   */
+
+
+  var calculateMaxRows = function calculateMaxRows(rowElement) {
+    var cells = Array.from(rowElement.querySelectorAll('td'));
+    return cells.reduce(function (carry, cell) {
+      var tableElements = Array.from(cell.querySelectorAll('.wptb-ph-element')); // max amount of column values can be applied to this cell
+
+      var maxValue = 0; // eslint-disable-next-line array-callback-return
+
+      tableElements.map(function (element) {
+        var colBinding = getTableElementBinding(element, 'column');
+
+        if (colBinding) {
+          var values = getColumnValues(colBinding);
+          maxValue = values.length;
+        }
+      });
+      return Math.max(maxValue, carry);
+    }, 1);
+  };
+  /**
+   * Populate and generate a row element based on blueprint row.
+   *
+   * @param {number} index current index of row
+   * @param {HTMLElement} blueprintRow blueprint row element
+   * @return {HTMLElement} generated row
+   */
+
+
+  var populateRow = function populateRow(index, blueprintRow) {
+    var clonedRow = blueprintRow.cloneNode(true);
+    var rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element')); // eslint-disable-next-line array-callback-return
+
+    rowElements.map(function (tableElement) {// TODO [erdembircan] apply bind data value to table element if there is any
+    });
+    return clonedRow;
+  };
+  /**
    * Populate a blueprint row.
    *
    * @param {HTMLElement} row blueprint row
-   * @param {Object} bindings bindings
-   * @param {Object} values values
    * @return {Array} populated blueprint rows
    */
 
 
-  var populateBlueprint = function populateBlueprint(row, bindings, values) {
-    return [row];
+  var populateBlueprint = function populateBlueprint(row) {
+    var maxRows = calculateMaxRows(row);
+    var populatedRows = [];
+
+    for (var i = 0; i < maxRows; i += 1) {
+      populatedRows.push(populateRow(i, row));
+    }
+
+    return populatedRows;
   };
   /**
    * Generate a data table
@@ -30242,6 +30453,8 @@ function DataTableGenerator() {
 
 
   this.generateDataTable = function (sourceTable, bindings, values) {
+    _this.currentBindings = bindings;
+    _this.currentValues = values;
     return new Promise(function (res) {
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');
@@ -30266,7 +30479,7 @@ function DataTableGenerator() {
 var _default = new DataTableGenerator();
 
 exports.default = _default;
-},{}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
+},{".":"functions/index.js"}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30790,7 +31003,8 @@ var state = {
     },
     bindings: {
       row: {},
-      element: {}
+      element: {},
+      column: {}
     }
   },
   leftPanelId: '#dataTableLeftPanel',
@@ -30799,69 +31013,6 @@ var state = {
 };
 var _default = state;
 exports.default = _default;
-},{}],"functions/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
-
-/**
- * General functions that can be used through out app.
- */
-
-/**
- * Get a property value from an object with a string key.
- 
- * @param {string} stringKey key
- * @param {Object} target target object
- * @return {*} property value
- */
-// eslint-disable-next-line import/prefer-default-export
-var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
-  // split string key for inner properties
-  var splitKey = stringKey.split('.');
-
-  if (!Array.isArray(splitKey)) {
-    splitKey = [splitKey];
-  }
-
-  return splitKey.reduce(function (carry, item) {
-    return carry[item];
-  }, target);
-};
-/**
- * Set object property from string.
- *
- * @param {string} stringKey key
- * @param {Object} target target object
- * @param {*} value value
- */
-
-
-exports.objectPropertyFromString = objectPropertyFromString;
-
-var setObjectPropertyFromString = function setObjectPropertyFromString(stringKey, target, value) {
-  var splitKey = stringKey.split('.');
-
-  if (!Array.isArray(splitKey)) {
-    splitKey = [splitKey];
-  }
-
-  if (splitKey.length === 1) {
-    // eslint-disable-next-line no-param-reassign
-    target[splitKey[0]] = value;
-  } else {
-    var parents = splitKey.slice(0, splitKey.length - 1);
-    var parent = parents.reduce(function (carry, item) {
-      return carry[item];
-    }, target);
-    parent[splitKey[splitKey.length - 1]] = value;
-  }
-};
-
-exports.setObjectPropertyFromString = setObjectPropertyFromString;
 },{}],"stores/dataTables/mutations.js":[function(require,module,exports) {
 "use strict";
 
@@ -31298,7 +31449,7 @@ var mutations = {
 
     var bindings = _objectSpread({}, state.dataManager.bindings);
 
-    bindings.element[id] = value;
+    bindings.column[id] = value;
     state.dataManager.bindings = bindings;
   },
 
@@ -32355,7 +32506,7 @@ var getters = {
   // eslint-disable-next-line no-shadow
   getColumnBindingForElement: function getColumnBindingForElement(state, getters) {
     return function (elementId) {
-      return getters.getBindings.element[elementId];
+      return getters.getBindings.column[elementId];
     };
   },
 

@@ -50,3 +50,26 @@ export const setObjectPropertyFromString = (stringKey, target, value) => {
 		parent[splitKey[splitKey.length - 1]] = value;
 	}
 };
+
+/**
+ * Get element id from a table element's class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no id is found
+ */
+export const parseTableElementId = (tableElement) => {
+	if (tableElement) {
+		const activeElementIdArray = tableElement
+			.getAttribute('class')
+			.split(' ')
+			.filter((c) => {
+				const regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+				return regExp.test(c);
+			})[0];
+
+		if (activeElementIdArray) {
+			return activeElementIdArray.replace('wptb-element-', '');
+		}
+	}
+	return null;
+};

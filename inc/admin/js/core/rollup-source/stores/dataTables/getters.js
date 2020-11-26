@@ -302,7 +302,7 @@ const getters = {
 	 */
 	// eslint-disable-next-line no-shadow
 	getColumnBindingForElement: (state, getters) => (elementId) => {
-		return getters.getBindings.element[elementId];
+		return getters.getBindings.column[elementId];
 	},
 	/**
 	 * Get all data bindings.
