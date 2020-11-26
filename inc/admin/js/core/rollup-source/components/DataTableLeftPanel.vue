@@ -8,7 +8,7 @@
 				:click="setCurrentScreenToDataSourceSelection"
 				type="danger"
 				:disabled="isBusy"
-				>{{ translationM('back') | cap }}</left-panel-material-button
+				>{{ translationM('backToSelection') | cap }}</left-panel-material-button
 			>
 			<left-panel-material-button
 				v-if="getSelectedDataSource === null"

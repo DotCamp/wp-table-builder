@@ -27348,7 +27348,11 @@ exports.default = _default;
                     disabled: _vm.isBusy
                   }
                 },
-                [_vm._v(_vm._s(_vm._f("cap")(_vm.translationM("back"))))]
+                [
+                  _vm._v(
+                    _vm._s(_vm._f("cap")(_vm.translationM("backToSelection")))
+                  )
+                ]
               ),
               _vm._v(" "),
               _vm.getSelectedDataSource === null
@@ -30278,6 +30282,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/w
 
 var _DataTableGenerator = _interopRequireDefault(require("../../functions/DataTableGenerator"));
 
+var _NumberPostfixButtons = _interopRequireDefault(require("../NumberPostfixButtons"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -30294,7 +30300,8 @@ var _default = {
   name: 'DataTableGeneratedPreview',
   mixins: [_withNativeTranslationStore.default],
   components: {
-    DataTableDragHandle: _DataTableDragHandle.default
+    DataTableDragHandle: _DataTableDragHandle.default,
+    NumberPostfixButtons: _NumberPostfixButtons.default
   },
   data: function data() {
     return {
@@ -30308,7 +30315,8 @@ var _default = {
       heightHandleHover: false,
       savedHeight: 200,
       busy: false,
-      previewHtml: 'test'
+      previewHtml: 'test',
+      resizePercent: 100
     };
   },
   watch: {
@@ -30341,7 +30349,10 @@ var _default = {
     },
     previewStyle: function previewStyle() {
       return {
-        width: "".concat(this.targetTable.getBoundingClientRect().width, "px")
+        width: "".concat(this.targetTable.getBoundingClientRect().width, "px"),
+        transform: "scale(".concat(this.resizePercent / 100, ")"),
+        transformOrigin: 'center top',
+        transition: 'all 0.2s ease-out'
       };
     }
   }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData']), {}, (0, _vuex.mapState)(['targetTable'])),
@@ -30426,12 +30437,14 @@ exports.default = _default;
           expression: "visibility"
         }
       ],
-      staticClass: "wptb-data-table-generated-preview",
+      staticClass:
+        "wptb-data-table-generated-preview wptb-plugin-inset-shadow-md",
       class: {
         "wptb-data-table-generated-preview-bold":
           _vm.toggleStatus && _vm.heightHandleHover,
         "wptb-data-table-generated-preview-faster-transition":
-          _vm.style.height !== _vm.savedHeight
+          _vm.style.height !== _vm.savedHeight,
+        "wptb-checkerboard-pattern": _vm.toggleStatus
       },
       style: _vm.wrapperStyle,
       attrs: { "data-toggle": _vm.toggleStatus }
@@ -30455,6 +30468,34 @@ exports.default = _default;
               }
             }
           }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "wptb-data-table-generated-preview-toolbox" },
+            [
+              _c("number-postfix-buttons", {
+                attrs: {
+                  "input-class": [
+                    "wptb-size-input",
+                    "wptb-plugin-box-shadow-xl"
+                  ],
+                  "post-fix": "%",
+                  "only-enter": true,
+                  min: 10,
+                  max: 100,
+                  enableLimit: true
+                },
+                model: {
+                  value: _vm.resizePercent,
+                  callback: function($$v) {
+                    _vm.resizePercent = $$v
+                  },
+                  expression: "resizePercent"
+                }
+              })
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -30488,7 +30529,8 @@ exports.default = _default;
                 )
               ])
             : _c("div", {
-                staticClass: "wptb-data-table-preview-main",
+                staticClass:
+                  "wptb-data-table-preview-main wptb-plugin-box-shadow-xl",
                 style: _vm.previewStyle,
                 domProps: { innerHTML: _vm._s(_vm.previewHtml) }
               })
@@ -30510,7 +30552,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions/DataTableGenerator":"functions/DataTableGenerator.js"}],"containers/DataTableApp.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions/DataTableGenerator":"functions/DataTableGenerator.js","../NumberPostfixButtons":"components/NumberPostfixButtons.vue"}],"containers/DataTableApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32667,6 +32709,7 @@ var _default = {
           commaDelimiter: (0, _i18n.__)(', (comma)', 'wp-table-builder'),
           createYourData: (0, _i18n.__)('create your own data', 'wp-table-builder'),
           back: (0, _i18n.__)('Back', 'wp-table-builder'),
+          backToSelection: (0, _i18n.__)('Back to source selection', 'wp-table-builder'),
           continue: (0, _i18n.__)('Continue', 'wp-table-builder'),
           dragDropHint: (0, _i18n.__)('Drag and drop file', 'wp-table-builder'),
           browse: (0, _i18n.__)('browse', 'wp-table-builder'),

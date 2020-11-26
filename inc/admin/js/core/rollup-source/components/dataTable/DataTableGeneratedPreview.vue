@@ -5,8 +5,9 @@
 		:class="{
 			'wptb-data-table-generated-preview-bold': toggleStatus && heightHandleHover,
 			'wptb-data-table-generated-preview-faster-transition': style.height !== savedHeight,
+			'wptb-checkerboard-pattern': toggleStatus,
 		}"
-		class="wptb-data-table-generated-preview"
+		class="wptb-data-table-generated-preview wptb-plugin-inset-shadow-md"
 		:data-toggle="toggleStatus"
 	>
 		<div class="wptb-data-table-generated-inner-wrapper">
@@ -16,6 +17,17 @@
 				@handleHover="heightHandleHover = arguments[0]"
 				@draggingEnd="savedHeight = style.height"
 			></data-table-drag-handle>
+			<div class="wptb-data-table-generated-preview-toolbox">
+				<number-postfix-buttons
+					:input-class="['wptb-size-input', 'wptb-plugin-box-shadow-xl']"
+					v-model="resizePercent"
+					post-fix="%"
+					:only-enter="true"
+					:min="10"
+					:max="100"
+					:enableLimit="true"
+				></number-postfix-buttons>
+			</div>
 			<div
 				ref="toggleButton"
 				class="wptb-data-table-generated-preview-toggle"
@@ -30,7 +42,12 @@
 			<div class="wptb-data-table-empty-preview" v-if="!targetTable">
 				{{ translationM('emptyDataTablePreview') }}
 			</div>
-			<div v-else class="wptb-data-table-preview-main" :style="previewStyle" v-html="previewHtml"></div>
+			<div
+				v-else
+				class="wptb-data-table-preview-main wptb-plugin-box-shadow-xl"
+				:style="previewStyle"
+				v-html="previewHtml"
+			></div>
 		</div>
 	</div>
 </template>
@@ -40,11 +57,12 @@ import { mapGetters, mapState } from 'vuex';
 import DataTableDragHandle from './DataTableDragHandle';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import DataTableGenerator from '../../functions/DataTableGenerator';
+import NumberPostfixButtons from '../NumberPostfixButtons';
 
 export default {
 	name: 'DataTableGeneratedPreview',
 	mixins: [withNativeTranslationStore],
-	components: { DataTableDragHandle },
+	components: { DataTableDragHandle, NumberPostfixButtons },
 	data() {
 		return {
 			visibility: false,
@@ -58,6 +76,7 @@ export default {
 			savedHeight: 200,
 			busy: false,
 			previewHtml: 'test',
+			resizePercent: 100,
 		};
 	},
 	watch: {
@@ -89,6 +108,9 @@ export default {
 		previewStyle() {
 			return {
 				width: `${this.targetTable.getBoundingClientRect().width}px`,
+				transform: `scale(${this.resizePercent / 100})`,
+				transformOrigin: 'center top',
+				transition: 'all 0.2s ease-out',
 			};
 		},
 		...mapGetters(['getIcon', 'getBindings', 'parsedData']),

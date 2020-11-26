@@ -45,6 +45,7 @@ export default {
 					commaDelimiter: __(', (comma)', 'wp-table-builder'),
 					createYourData: __('create your own data', 'wp-table-builder'),
 					back: __('Back', 'wp-table-builder'),
+					backToSelection: __('Back to source selection', 'wp-table-builder'),
 					continue: __('Continue', 'wp-table-builder'),
 					dragDropHint: __('Drag and drop file', 'wp-table-builder'),
 					browse: __('browse', 'wp-table-builder'),
