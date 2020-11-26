@@ -86,7 +86,7 @@ const stateWatchList = {
 		},
 	},
 	dirtyTable: {
-		watch: ['dataManager.tempData.values', 'dataManager.controls'],
+		watch: ['dataManager.tempData.values', 'dataManager.controls', 'dataManager.bindings'],
 		callBack: (store) => () => {
 			store.commit('setTableDirty');
 		},

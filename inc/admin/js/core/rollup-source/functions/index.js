@@ -73,3 +73,27 @@ export const parseTableElementId = (tableElement) => {
 	}
 	return null;
 };
+/**
+ * Find table element type from its class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no type is found
+ */
+export const parseElementType = (tableElement) => {
+	if (tableElement) {
+		const activeElementKindArray = tableElement
+			.getAttribute('class')
+			.split(' ')
+			.filter((c) => {
+				const regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+				return regExp.test(c);
+			})[0];
+
+		if (activeElementKindArray) {
+			const regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+			const [, elementType] = regExp.exec(activeElementKindArray);
+			return elementType;
+		}
+	}
+	return null;
+};

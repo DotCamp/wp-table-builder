@@ -67,7 +67,7 @@ export default {
 		return {
 			visibility: false,
 			style: {
-				height: 200,
+				height: 400,
 			},
 			visibleHeight: 10,
 			toggleStatus: true,
@@ -75,7 +75,7 @@ export default {
 			heightHandleHover: false,
 			savedHeight: 200,
 			busy: false,
-			previewHtml: 'test',
+			previewHtml: '',
 			resizePercent: 100,
 		};
 	},
@@ -83,6 +83,12 @@ export default {
 		targetTable: {
 			handler(n) {
 				this.generateDataTable(n);
+			},
+			deep: true,
+		},
+		getDataManager: {
+			handler() {
+				this.generateDataTable(this.targetTable);
 			},
 			deep: true,
 		},
@@ -113,7 +119,7 @@ export default {
 				transition: 'all 0.2s ease-out',
 			};
 		},
-		...mapGetters(['getIcon', 'getBindings', 'parsedData']),
+		...mapGetters(['getIcon', 'getBindings', 'parsedData', 'getDataManager']),
 		...mapState(['targetTable']),
 	},
 	methods: {

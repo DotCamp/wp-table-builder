@@ -1,4 +1,4 @@
-import { parseTableElementId } from '.';
+import { parseTableElementId, parseElementType } from '.';
 /**
  * Data table generator for frontend usage.
  *
@@ -125,13 +125,59 @@ function DataTableGenerator() {
 				const colBinding = getTableElementBinding(element, 'column');
 
 				if (colBinding) {
-					const values = getColumnValues(colBinding);
-					maxValue = values.length;
+					maxValue = Object.keys(colBinding)
+						// eslint-disable-next-line array-callback-return
+						.map((key) => {
+							if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
+								return colBinding[key];
+							}
+						})
+						// eslint-disable-next-line no-shadow
+						.reduce((carry, binding) => {
+							const values = getColumnValues(binding);
+							return Math.max(values.length, carry);
+						}, 0);
 				}
 			});
 
 			return Math.max(maxValue, carry);
 		}, 1);
+	};
+
+	/**
+	 * Value apply list for different table elements.
+	 *
+	 * @type {Object}
+	 */
+	const valueApplyList = {
+		text: (tableElement, value) => {
+			const { text } = value;
+			if (text) {
+				const pElement = tableElement.querySelector('p');
+				// since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+				pElement.childNodes[0].textContent = value.text;
+			}
+		},
+		button: (tableElement, value) => {
+			const { text, link } = value;
+			if (text) {
+				const pElement = tableElement.querySelector('p');
+				// since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+				pElement.childNodes[0].textContent = value.text;
+			}
+		},
+	};
+
+	/**
+	 * Add value to a table element.
+	 *
+	 * @param {HTMLElement} tableElement table element
+	 * @param {string} value value
+	 */
+	const addValueToTableElement = (tableElement, value) => {
+		const tableElementType = parseElementType(tableElement);
+
+		valueApplyList[tableElementType](tableElement, value);
 	};
 
 	/**
@@ -148,7 +194,19 @@ function DataTableGenerator() {
 
 		// eslint-disable-next-line array-callback-return
 		rowElements.map((tableElement) => {
-			// TODO [erdembircan] apply bind data value to table element if there is any
+			const bindingColIdObject = getTableElementBinding(tableElement, 'column');
+			if (bindingColIdObject) {
+				const value = {};
+				Object.keys(bindingColIdObject).map((key) => {
+					if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+						value[key] = getColumnValueByIndex(index, bindingColIdObject[key]);
+					}
+				});
+
+				if (value) {
+					addValueToTableElement(tableElement, value);
+				}
+			}
 		});
 
 		return clonedRow;

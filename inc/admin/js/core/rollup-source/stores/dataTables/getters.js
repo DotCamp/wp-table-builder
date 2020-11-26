@@ -313,6 +313,15 @@ const getters = {
 	getBindings: (state) => {
 		return state.dataManager.bindings;
 	},
+	/**
+	 * Get data manager object.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} data manager object
+	 */
+	getDataManager: (state) => {
+		return state.dataManager;
+	},
 };
 
 export default getters;

@@ -362,14 +362,18 @@ const mutations = {
 		state.dataManager.select.clickId = proxy;
 	},
 	/**
-	 * Set column binding of an element with given id.
+	 * Set column binding of an element with given id and sub index.
 	 *
 	 * @param {Object} state data table state
-	 * @param {{id, value}} mutation payload
+	 * @param {{id, value, subIndex}} mutation payload
 	 */
-	setColumnBindingForElement: (state, { id, value }) => {
+	setColumnBindingForElement: (state, { id, value, subIndex }) => {
 		const bindings = { ...state.dataManager.bindings };
-		bindings.column[id] = value;
+		// create a fresh object for the element binding if there isn't  any
+		if (!bindings.column[id]) {
+			bindings.column[id] = {};
+		}
+		bindings.column[id][subIndex] = value;
 		state.dataManager.bindings = bindings;
 	},
 	/**

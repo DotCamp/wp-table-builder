@@ -29793,7 +29793,19 @@ render._withStripped = true
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * General functions that can be used through out app.
@@ -29872,8 +29884,59 @@ var parseTableElementId = function parseTableElementId(tableElement) {
 
   return null;
 };
+/**
+ * Find table element type from its class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no type is found
+ */
+
 
 exports.parseTableElementId = parseTableElementId;
+
+var parseElementType = function parseElementType(tableElement) {
+  if (tableElement) {
+    var activeElementKindArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementKindArray) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+
+      var _regExp$exec = regExp.exec(activeElementKindArray),
+          _regExp$exec2 = _slicedToArray(_regExp$exec, 2),
+          elementType = _regExp$exec2[1];
+
+      return elementType;
+    }
+  }
+
+  return null;
+};
+
+exports.parseElementType = parseElementType;
+},{}],"components/dataTable/elementOptionTypeList.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Column binding options for different table element types.
+ *
+ * @type {Object}
+ */
+var typeOptionList = {
+  text: 'text',
+  button: ['text', 'link']
+};
+/** @module typeOptionList */
+
+var _default = typeOptionList;
+exports.default = _default;
 },{}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
@@ -29896,6 +29959,8 @@ var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownCont
 
 var _functions = require("../../functions");
 
+var _elementOptionTypeList = _interopRequireDefault(require("./elementOptionTypeList"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -29916,6 +29981,7 @@ var _default = {
     return {
       currentElement: null,
       currentElementId: null,
+      currentElementType: null,
       panelTabs: {
         element: this.translationM('element'),
         row: this.translationM('row')
@@ -29932,10 +29998,24 @@ var _default = {
       if (element.getAttribute('class').includes('wptb-ph-element')) {
         _this.currentElement = element;
         _this.currentTab = 'element';
+        _this.currentElementType = (0, _functions.parseElementType)(_this.currentElement);
       }
     });
   },
   computed: _objectSpread({
+    elementDataOptions: function elementDataOptions() {
+      var options = _elementOptionTypeList.default[this.currentElementType];
+
+      if (options) {
+        if (!Array.isArray(options)) {
+          options = [options];
+        }
+
+        return options;
+      }
+
+      return [];
+    },
     elementColumnBinding: {
       get: function get() {
         if (this.currentElement) {
@@ -29971,7 +30051,36 @@ var _default = {
       });
     }
   }, (0, _vuex.mapGetters)(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
+  methods: _objectSpread({
+    getOptionValue: function getOptionValue(optionType) {
+      if (this.currentElement) {
+        var elementId = (0, _functions.parseTableElementId)(this.currentElement);
+        var bindingObject = this.getColumnBindingForElement(elementId);
+        var bindingValue = 'none';
+
+        if (bindingObject && bindingObject[optionType]) {
+          bindingValue = bindingObject[optionType];
+        }
+
+        return bindingValue;
+      }
+
+      return null;
+    },
+    setOptionValue: function setOptionValue(subIndex) {
+      var vm = this;
+      return function handleValueUpdate(value) {
+        if (vm.currentElement) {
+          var elementId = (0, _functions.parseTableElementId)(vm.currentElement);
+          vm.setColumnBindingForElement({
+            id: elementId,
+            value: value,
+            subIndex: subIndex
+          });
+        }
+      };
+    }
+  }, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
 };
 exports.default = _default;
         var $619075 = exports.default || module.exports;
@@ -30007,21 +30116,21 @@ exports.default = _default;
                 _c(
                   "panel-section-group-tabbed-item",
                   { attrs: { "active-id": currentTab, id: "element" } },
-                  [
-                    _c("panel-dropdown-control", {
+                  _vm._l(_vm.elementDataOptions, function(optionType) {
+                    return _c("panel-dropdown-control", {
+                      key: optionType,
                       attrs: {
-                        label: _vm.translationM("column"),
+                        value: _vm.getOptionValue(optionType),
+                        label: _vm._f("cap")(_vm.translationM(optionType)),
                         options: _vm.getColumnNames
                       },
-                      model: {
-                        value: _vm.elementColumnBinding,
-                        callback: function($$v) {
-                          _vm.elementColumnBinding = $$v
-                        },
-                        expression: "elementColumnBinding"
+                      on: {
+                        valueChanged: function($event) {
+                          _vm.setOptionValue(optionType)($event)
+                        }
                       }
                     })
-                  ],
+                  }),
                   1
                 ),
                 _vm._v(" "),
@@ -30058,7 +30167,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30400,12 +30509,59 @@ function DataTableGenerator() {
         var colBinding = getTableElementBinding(element, 'column');
 
         if (colBinding) {
-          var values = getColumnValues(colBinding);
-          maxValue = values.length;
+          maxValue = Object.keys(colBinding) // eslint-disable-next-line array-callback-return
+          .map(function (key) {
+            if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
+              return colBinding[key];
+            }
+          }) // eslint-disable-next-line no-shadow
+          .reduce(function (carry, binding) {
+            var values = getColumnValues(binding);
+            return Math.max(values.length, carry);
+          }, 0);
         }
       });
       return Math.max(maxValue, carry);
     }, 1);
+  };
+  /**
+   * Value apply list for different table elements.
+   *
+   * @type {Object}
+   */
+
+
+  var valueApplyList = {
+    text: function text(tableElement, value) {
+      var text = value.text;
+
+      if (text) {
+        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+
+        pElement.childNodes[0].textContent = value.text;
+      }
+    },
+    button: function button(tableElement, value) {
+      var text = value.text,
+          link = value.link;
+
+      if (text) {
+        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+
+        pElement.childNodes[0].textContent = value.text;
+      }
+    }
+  };
+  /**
+   * Add value to a table element.
+   *
+   * @param {HTMLElement} tableElement table element
+   * @param {string} value value
+   */
+
+  var addValueToTableElement = function addValueToTableElement(tableElement, value) {
+    var tableElementType = (0, _.parseElementType)(tableElement);
+    valueApplyList[tableElementType](tableElement, value);
   };
   /**
    * Populate and generate a row element based on blueprint row.
@@ -30420,7 +30576,21 @@ function DataTableGenerator() {
     var clonedRow = blueprintRow.cloneNode(true);
     var rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element')); // eslint-disable-next-line array-callback-return
 
-    rowElements.map(function (tableElement) {// TODO [erdembircan] apply bind data value to table element if there is any
+    rowElements.map(function (tableElement) {
+      var bindingColIdObject = getTableElementBinding(tableElement, 'column');
+
+      if (bindingColIdObject) {
+        var value = {};
+        Object.keys(bindingColIdObject).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+            value[key] = getColumnValueByIndex(index, bindingColIdObject[key]);
+          }
+        });
+
+        if (value) {
+          addValueToTableElement(tableElement, value);
+        }
+      }
     });
     return clonedRow;
   };
@@ -30520,7 +30690,7 @@ var _default = {
     return {
       visibility: false,
       style: {
-        height: 200
+        height: 400
       },
       visibleHeight: 10,
       toggleStatus: true,
@@ -30528,7 +30698,7 @@ var _default = {
       heightHandleHover: false,
       savedHeight: 200,
       busy: false,
-      previewHtml: 'test',
+      previewHtml: '',
       resizePercent: 100
     };
   },
@@ -30536,6 +30706,12 @@ var _default = {
     targetTable: {
       handler: function handler(n) {
         this.generateDataTable(n);
+      },
+      deep: true
+    },
+    getDataManager: {
+      handler: function handler() {
+        this.generateDataTable(this.targetTable);
       },
       deep: true
     }
@@ -30568,7 +30744,7 @@ var _default = {
         transition: 'all 0.2s ease-out'
       };
     }
-  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData']), {}, (0, _vuex.mapState)(['targetTable'])),
+  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData', 'getDataManager']), {}, (0, _vuex.mapState)(['targetTable'])),
   methods: {
     setComponentBusyState: function setComponentBusyState(state) {
       this.busy = state;
@@ -31438,18 +31614,24 @@ var mutations = {
   },
 
   /**
-   * Set column binding of an element with given id.
+   * Set column binding of an element with given id and sub index.
    *
    * @param {Object} state data table state
-   * @param {{id, value}} mutation payload
+   * @param {{id, value, subIndex}} mutation payload
    */
   setColumnBindingForElement: function setColumnBindingForElement(state, _ref6) {
     var id = _ref6.id,
-        value = _ref6.value;
+        value = _ref6.value,
+        subIndex = _ref6.subIndex;
 
-    var bindings = _objectSpread({}, state.dataManager.bindings);
+    var bindings = _objectSpread({}, state.dataManager.bindings); // create a fresh object for the element binding if there isn't  any
 
-    bindings.column[id] = value;
+
+    if (!bindings.column[id]) {
+      bindings.column[id] = {};
+    }
+
+    bindings.column[id][subIndex] = value;
     state.dataManager.bindings = bindings;
   },
 
@@ -32518,6 +32700,16 @@ var getters = {
    */
   getBindings: function getBindings(state) {
     return state.dataManager.bindings;
+  },
+
+  /**
+   * Get data manager object.
+   *
+   * @param {Object} state store state
+   * @return {Object} data manager object
+   */
+  getDataManager: function getDataManager(state) {
+    return state.dataManager;
   }
 };
 var _default = getters;
@@ -32628,7 +32820,7 @@ var stateWatchList = {
     }
   },
   dirtyTable: {
-    watch: ['dataManager.tempData.values', 'dataManager.controls'],
+    watch: ['dataManager.tempData.values', 'dataManager.controls', 'dataManager.bindings'],
     callBack: function callBack(store) {
       return function () {
         store.commit('setTableDirty');
@@ -32884,6 +33076,8 @@ var _default = {
           row: (0, _i18n.__)('row', 'wptb-table-builder'),
           auto: (0, _i18n.__)('auto', 'wptb-table-builder'),
           none: (0, _i18n.__)('none', 'wptb-table-builder'),
+          text: (0, _i18n.__)('text', 'wptb-table-builder'),
+          link: (0, _i18n.__)('link', 'wptb-table-builder'),
           emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
         },
         proUrl: data.proUrl,

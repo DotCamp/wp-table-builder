@@ -11,11 +11,14 @@
 		>
 			<template v-slot:default="{ currentTab }">
 				<panel-section-group-tabbed-item :active-id="currentTab" id="element">
-					<!--column select control-->
+					<!--column select controls-->
 					<panel-dropdown-control
-						v-model="elementColumnBinding"
-						:label="translationM('column')"
+						v-for="optionType in elementDataOptions"
+						:value="getOptionValue(optionType)"
+						@valueChanged="setOptionValue(optionType)($event)"
+						:label="translationM(optionType) | cap"
 						:options="getColumnNames"
+						:key="optionType"
 					>
 					</panel-dropdown-control>
 				</panel-section-group-tabbed-item>
@@ -32,7 +35,8 @@ import PanelSectionGroupTabbedImproved from '../PanelSectionGroupTabbedImproved'
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelSectionGroupTabbedItem from '../PanelSectionGroupTabbedItem';
 import PanelDropdownControl from '../PanelDropdownControl';
-import { parseTableElementId } from '../../functions';
+import { parseTableElementId, parseElementType } from '../../functions';
+import typeOptionList from './elementOptionTypeList';
 
 export default {
 	mixins: [withNativeTranslationStore],
@@ -46,6 +50,7 @@ export default {
 		return {
 			currentElement: null,
 			currentElementId: null,
+			currentElementType: null,
 			panelTabs: {
 				element: this.translationM('element'),
 				row: this.translationM('row'),
@@ -58,10 +63,21 @@ export default {
 			if (element.getAttribute('class').includes('wptb-ph-element')) {
 				this.currentElement = element;
 				this.currentTab = 'element';
+				this.currentElementType = parseElementType(this.currentElement);
 			}
 		});
 	},
 	computed: {
+		elementDataOptions() {
+			let options = typeOptionList[this.currentElementType];
+			if (options) {
+				if (!Array.isArray(options)) {
+					options = [options];
+				}
+				return options;
+			}
+			return [];
+		},
 		elementColumnBinding: {
 			get() {
 				if (this.currentElement) {
@@ -97,6 +113,29 @@ export default {
 		...mapGetters(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement']),
 	},
 	methods: {
+		getOptionValue(optionType) {
+			if (this.currentElement) {
+				const elementId = parseTableElementId(this.currentElement);
+				const bindingObject = this.getColumnBindingForElement(elementId);
+
+				let bindingValue = 'none';
+				if (bindingObject && bindingObject[optionType]) {
+					bindingValue = bindingObject[optionType];
+				}
+				return bindingValue;
+			}
+			return null;
+		},
+		setOptionValue(subIndex) {
+			const vm = this;
+
+			return function handleValueUpdate(value) {
+				if (vm.currentElement) {
+					const elementId = parseTableElementId(vm.currentElement);
+					vm.setColumnBindingForElement({ id: elementId, value, subIndex });
+				}
+			};
+		},
 		...mapMutations(['setColumnBindingForElement']),
 	},
 };
