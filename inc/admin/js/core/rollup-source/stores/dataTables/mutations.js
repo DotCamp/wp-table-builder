@@ -377,6 +377,21 @@ const mutations = {
 		state.dataManager.bindings = bindings;
 	},
 	/**
+	 * Set row binding of an of a row with given id and sub index.
+	 *
+	 * @param {Object} state data table state
+	 * @param {{id, value, subIndex}} mutation payload
+	 */
+	setRowBindingForId: (state, { id, value, subIndex }) => {
+		const bindings = { ...state.dataManager.bindings };
+
+		if (!bindings.row[id]) {
+			bindings.row[id] = {};
+		}
+		bindings.row[id][subIndex] = value;
+		state.dataManager.bindings = bindings;
+	},
+	/**
 	 * Set a target table.
 	 *
 	 * @param {Object} state data table state

@@ -97,3 +97,39 @@ export const parseElementType = (tableElement) => {
 	}
 	return null;
 };
+
+/**
+ * Get a parent of an element in a specific node type.
+ *
+ * @param {HTMLElement} element element
+ * @param {string} type node type
+ */
+export const getParentOfType = (element, type) => {
+	function recursiveParent(el) {
+		const parent = el.parentNode;
+		if (parent.nodeName === type.toUpperCase()) {
+			return parent;
+		}
+		return recursiveParent(parent);
+	}
+
+	return recursiveParent(element);
+};
+
+/**
+ * Generate an unique id.
+ *
+ * @param {number} id length
+ * @param length
+ * @return {string} generated id
+ */
+export const generateUniqueId = (length = 5) => {
+	const variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+	let key = '';
+
+	for (let i = 0; i < length; i += 1) {
+		key += variables[Math.floor(Math.random() * variables.length)];
+	}
+
+	return key;
+};

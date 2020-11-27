@@ -14,15 +14,23 @@
 					<!--column select controls-->
 					<panel-dropdown-control
 						v-for="optionType in elementDataOptions"
-						:value="getOptionValue(optionType)"
-						@valueChanged="setOptionValue(optionType)($event)"
+						:value="getColumnBinding(optionType)"
+						@valueChanged="setColumnBinding(optionType)($event)"
 						:label="translationM(optionType) | cap"
 						:options="getColumnNames"
 						:key="optionType"
 					>
 					</panel-dropdown-control>
+					<panel-message-row></panel-message-row>
 				</panel-section-group-tabbed-item>
-				<panel-section-group-tabbed-item :active-id="currentTab" id="row">row</panel-section-group-tabbed-item>
+				<panel-section-group-tabbed-item :active-id="currentTab" id="row">
+					<panel-dropdown-control
+						:label="translationM('mode') | cap"
+						:options="rowModes"
+						:value="getRowBinding('mode')"
+						@valueChanged="setRowBinding('mode')($event)"
+					></panel-dropdown-control>
+				</panel-section-group-tabbed-item>
 			</template>
 		</panel-section-group-tabbed-improved>
 	</section-group-collapse>
@@ -35,8 +43,9 @@ import PanelSectionGroupTabbedImproved from '../PanelSectionGroupTabbedImproved'
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelSectionGroupTabbedItem from '../PanelSectionGroupTabbedItem';
 import PanelDropdownControl from '../PanelDropdownControl';
-import { parseTableElementId, parseElementType } from '../../functions';
+import { parseTableElementId, parseElementType, getParentOfType, generateUniqueId } from '../../functions';
 import typeOptionList from './elementOptionTypeList';
+import PanelMessageRow from '../leftPanel/PanelMessageRow';
 
 export default {
 	mixins: [withNativeTranslationStore],
@@ -45,6 +54,7 @@ export default {
 		PanelSectionGroupTabbedItem,
 		PanelSectionGroupTabbedImproved,
 		SectionGroupCollapse,
+		PanelMessageRow,
 	},
 	data() {
 		return {
@@ -56,13 +66,17 @@ export default {
 				row: this.translationM('row'),
 			},
 			currentActiveTab: 'element',
+			rowModes: {
+				auto: this.translationM('auto'),
+				none: `-- ${this.translationM('none')} --`,
+			},
 		};
 	},
 	mounted() {
 		document.addEventListener('element:controls:active:global', ({ detail: element }) => {
 			if (element.getAttribute('class').includes('wptb-ph-element')) {
 				this.currentElement = element;
-				this.currentTab = 'element';
+				this.currentActiveTab = 'element';
 				this.currentElementType = parseElementType(this.currentElement);
 			}
 		});
@@ -85,7 +99,7 @@ export default {
 					const binding = this.getColumnBindingForElement(elementId);
 					return binding || 'none';
 				}
-				return 'auto';
+				return 'none';
 			},
 			set(val) {
 				if (this.currentElement) {
@@ -107,13 +121,63 @@ export default {
 
 					return carry;
 				},
-				{ none: this.translationM('none'), auto: this.translationM('auto') }
+				{ none: `-- ${this.translationM('none')} --` }
 			);
 		},
-		...mapGetters(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement']),
+		...mapGetters([
+			'translation',
+			'parsedData',
+			'formCellId',
+			'getColumnBindingForElement',
+			'getRowBindingByRowId',
+		]),
 	},
 	methods: {
-		getOptionValue(optionType) {
+		getRowId() {
+			if (this.currentElement) {
+				const row = getParentOfType(this.currentElement, 'tr');
+				if (row) {
+					let rowId = row.dataset.dataTableRowId;
+					if (!rowId) {
+						// generate a new id for the table row if none is present
+						rowId = generateUniqueId();
+						row.dataset.dataTableRowId = rowId;
+					}
+					return rowId;
+				}
+			}
+			return null;
+		},
+		getRowBinding(optionType) {
+			if (this.currentElement) {
+				const rowId = this.getRowId();
+
+				if (rowId) {
+					const bindingObject = this.getRowBindingByRowId(rowId);
+
+					let bindingValue = 'none';
+					if (bindingObject && bindingObject[optionType]) {
+						bindingValue = bindingObject[optionType];
+					}
+					return bindingValue;
+				}
+			}
+			return null;
+		},
+		setRowBinding(subIndex) {
+			const vm = this;
+
+			return function handleBindingUpdate(value) {
+				if (vm.currentElement) {
+					const rowId = vm.getRowId();
+
+					if (rowId) {
+						vm.setRowBindingForId({ id: rowId, value, subIndex });
+					}
+				}
+			};
+		},
+		getColumnBinding(optionType) {
 			if (this.currentElement) {
 				const elementId = parseTableElementId(this.currentElement);
 				const bindingObject = this.getColumnBindingForElement(elementId);
@@ -126,7 +190,7 @@ export default {
 			}
 			return null;
 		},
-		setOptionValue(subIndex) {
+		setColumnBinding(subIndex) {
 			const vm = this;
 
 			return function handleValueUpdate(value) {
@@ -136,7 +200,7 @@ export default {
 				}
 			};
 		},
-		...mapMutations(['setColumnBindingForElement']),
+		...mapMutations(['setColumnBindingForElement', 'setRowBindingForId']),
 	},
 };
 </script>

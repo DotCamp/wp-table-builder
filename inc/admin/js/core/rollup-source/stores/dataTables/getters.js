@@ -305,6 +305,17 @@ const getters = {
 		return getters.getBindings.column[elementId];
 	},
 	/**
+	 * Get row binding of a given row.
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} getters store getters
+	 * @return {Function} a function to retrieve row binding
+	 */
+	// eslint-disable-next-line no-shadow
+	getRowBindingByRowId: (state, getters) => (rowId) => {
+		return getters.getBindings.row[rowId];
+	},
+	/**
 	 * Get all data bindings.
 	 *
 	 * @param {Object} state store state

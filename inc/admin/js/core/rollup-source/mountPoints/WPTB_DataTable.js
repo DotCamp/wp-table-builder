@@ -74,6 +74,7 @@ export default {
 					none: __('none', 'wptb-table-builder'),
 					text: __('text', 'wptb-table-builder'),
 					link: __('link', 'wptb-table-builder'),
+					mode: __('mode', 'wptb-table-builder'),
 					emptyDataTablePreview: __(
 						'No table found, generate one to preview data table',
 						'wptb-table-builder'

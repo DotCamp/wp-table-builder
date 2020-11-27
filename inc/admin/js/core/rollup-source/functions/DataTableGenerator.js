@@ -165,6 +165,12 @@ function DataTableGenerator() {
 				// since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
 				pElement.childNodes[0].textContent = value.text;
 			}
+			if (link) {
+				const anchorElement = tableElement.querySelector('a');
+				if (anchorElement) {
+					anchorElement.href = link;
+				}
+			}
 		},
 	};
 
@@ -189,6 +195,8 @@ function DataTableGenerator() {
 	 */
 	const populateRow = (index, blueprintRow) => {
 		const clonedRow = blueprintRow.cloneNode(true);
+
+		// TODO [erdembircan] add row modes here
 
 		const rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element'));
 

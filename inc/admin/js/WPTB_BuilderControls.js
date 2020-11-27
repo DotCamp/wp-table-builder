@@ -29793,7 +29793,7 @@ render._withStripped = true
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -29914,8 +29914,53 @@ var parseElementType = function parseElementType(tableElement) {
 
   return null;
 };
+/**
+ * Get a parent of an element in a specific node type.
+ *
+ * @param {HTMLElement} element element
+ * @param {string} type node type
+ */
+
 
 exports.parseElementType = parseElementType;
+
+var getParentOfType = function getParentOfType(element, type) {
+  function recursiveParent(el) {
+    var parent = el.parentNode;
+
+    if (parent.nodeName === type.toUpperCase()) {
+      return parent;
+    }
+
+    return recursiveParent(parent);
+  }
+
+  return recursiveParent(element);
+};
+/**
+ * Generate an unique id.
+ *
+ * @param {number} id length
+ * @param length
+ * @return {string} generated id
+ */
+
+
+exports.getParentOfType = getParentOfType;
+
+var generateUniqueId = function generateUniqueId() {
+  var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+  var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+  var key = '';
+
+  for (var i = 0; i < length; i += 1) {
+    key += variables[Math.floor(Math.random() * variables.length)];
+  }
+
+  return key;
+};
+
+exports.generateUniqueId = generateUniqueId;
 },{}],"components/dataTable/elementOptionTypeList.js":[function(require,module,exports) {
 "use strict";
 
@@ -29937,6 +29982,78 @@ var typeOptionList = {
 
 var _default = typeOptionList;
 exports.default = _default;
+},{}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    message: {
+      type: String,
+      default: 'Message'
+    }
+  }
+};
+exports.default = _default;
+        var $9b98d7 = exports.default || module.exports;
+      
+      if (typeof $9b98d7 === 'function') {
+        $9b98d7 = $9b98d7.options;
+      }
+    
+        /* template */
+        Object.assign($9b98d7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between wptb-panel-message"
+          },
+          [_vm._v("\n\t\t\t" + _vm._s(_vm.message) + "\n\t\t")]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-9b98d7",
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
@@ -29961,6 +30078,8 @@ var _functions = require("../../functions");
 
 var _elementOptionTypeList = _interopRequireDefault(require("./elementOptionTypeList"));
 
+var _PanelMessageRow = _interopRequireDefault(require("../leftPanel/PanelMessageRow"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -29975,7 +30094,8 @@ var _default = {
     PanelDropdownControl: _PanelDropdownControl.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
     PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
-    SectionGroupCollapse: _SectionGroupCollapse.default
+    SectionGroupCollapse: _SectionGroupCollapse.default,
+    PanelMessageRow: _PanelMessageRow.default
   },
   data: function data() {
     return {
@@ -29986,7 +30106,11 @@ var _default = {
         element: this.translationM('element'),
         row: this.translationM('row')
       },
-      currentActiveTab: 'element'
+      currentActiveTab: 'element',
+      rowModes: {
+        auto: this.translationM('auto'),
+        none: "-- ".concat(this.translationM('none'), " --")
+      }
     };
   },
   mounted: function mounted() {
@@ -29997,7 +30121,7 @@ var _default = {
 
       if (element.getAttribute('class').includes('wptb-ph-element')) {
         _this.currentElement = element;
-        _this.currentTab = 'element';
+        _this.currentActiveTab = 'element';
         _this.currentElementType = (0, _functions.parseElementType)(_this.currentElement);
       }
     });
@@ -30024,7 +30148,7 @@ var _default = {
           return binding || 'none';
         }
 
-        return 'auto';
+        return 'none';
       },
       set: function set(val) {
         if (this.currentElement) {
@@ -30046,13 +30170,65 @@ var _default = {
         carry[item.colId] = item.value;
         return carry;
       }, {
-        none: this.translationM('none'),
-        auto: this.translationM('auto')
+        none: "-- ".concat(this.translationM('none'), " --")
       });
     }
-  }, (0, _vuex.mapGetters)(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement'])),
+  }, (0, _vuex.mapGetters)(['translation', 'parsedData', 'formCellId', 'getColumnBindingForElement', 'getRowBindingByRowId'])),
   methods: _objectSpread({
-    getOptionValue: function getOptionValue(optionType) {
+    getRowId: function getRowId() {
+      if (this.currentElement) {
+        var row = (0, _functions.getParentOfType)(this.currentElement, 'tr');
+
+        if (row) {
+          var rowId = row.dataset.dataTableRowId;
+
+          if (!rowId) {
+            // generate a new id for the table row if none is present
+            rowId = (0, _functions.generateUniqueId)();
+            row.dataset.dataTableRowId = rowId;
+          }
+
+          return rowId;
+        }
+      }
+
+      return null;
+    },
+    getRowBinding: function getRowBinding(optionType) {
+      if (this.currentElement) {
+        var rowId = this.getRowId();
+
+        if (rowId) {
+          var bindingObject = this.getRowBindingByRowId(rowId);
+          var bindingValue = 'none';
+
+          if (bindingObject && bindingObject[optionType]) {
+            bindingValue = bindingObject[optionType];
+          }
+
+          return bindingValue;
+        }
+      }
+
+      return null;
+    },
+    setRowBinding: function setRowBinding(subIndex) {
+      var vm = this;
+      return function handleBindingUpdate(value) {
+        if (vm.currentElement) {
+          var rowId = vm.getRowId();
+
+          if (rowId) {
+            vm.setRowBindingForId({
+              id: rowId,
+              value: value,
+              subIndex: subIndex
+            });
+          }
+        }
+      };
+    },
+    getColumnBinding: function getColumnBinding(optionType) {
       if (this.currentElement) {
         var elementId = (0, _functions.parseTableElementId)(this.currentElement);
         var bindingObject = this.getColumnBindingForElement(elementId);
@@ -30067,7 +30243,7 @@ var _default = {
 
       return null;
     },
-    setOptionValue: function setOptionValue(subIndex) {
+    setColumnBinding: function setColumnBinding(subIndex) {
       var vm = this;
       return function handleValueUpdate(value) {
         if (vm.currentElement) {
@@ -30080,7 +30256,7 @@ var _default = {
         }
       };
     }
-  }, (0, _vuex.mapMutations)(['setColumnBindingForElement']))
+  }, (0, _vuex.mapMutations)(['setColumnBindingForElement', 'setRowBindingForId']))
 };
 exports.default = _default;
         var $619075 = exports.default || module.exports;
@@ -30116,28 +30292,46 @@ exports.default = _default;
                 _c(
                   "panel-section-group-tabbed-item",
                   { attrs: { "active-id": currentTab, id: "element" } },
-                  _vm._l(_vm.elementDataOptions, function(optionType) {
-                    return _c("panel-dropdown-control", {
-                      key: optionType,
-                      attrs: {
-                        value: _vm.getOptionValue(optionType),
-                        label: _vm._f("cap")(_vm.translationM(optionType)),
-                        options: _vm.getColumnNames
-                      },
-                      on: {
-                        valueChanged: function($event) {
-                          _vm.setOptionValue(optionType)($event)
+                  [
+                    _vm._l(_vm.elementDataOptions, function(optionType) {
+                      return _c("panel-dropdown-control", {
+                        key: optionType,
+                        attrs: {
+                          value: _vm.getColumnBinding(optionType),
+                          label: _vm._f("cap")(_vm.translationM(optionType)),
+                          options: _vm.getColumnNames
+                        },
+                        on: {
+                          valueChanged: function($event) {
+                            _vm.setColumnBinding(optionType)($event)
+                          }
                         }
-                      }
-                    })
-                  }),
-                  1
+                      })
+                    }),
+                    _vm._v(" "),
+                    _c("panel-message-row")
+                  ],
+                  2
                 ),
                 _vm._v(" "),
                 _c(
                   "panel-section-group-tabbed-item",
                   { attrs: { "active-id": currentTab, id: "row" } },
-                  [_vm._v("row")]
+                  [
+                    _c("panel-dropdown-control", {
+                      attrs: {
+                        label: _vm._f("cap")(_vm.translationM("mode")),
+                        options: _vm.rowModes,
+                        value: _vm.getRowBinding("mode")
+                      },
+                      on: {
+                        valueChanged: function($event) {
+                          _vm.setRowBinding("mode")($event)
+                        }
+                      }
+                    })
+                  ],
+                  1
                 )
               ]
             }
@@ -30167,7 +30361,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","../leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30550,6 +30744,14 @@ function DataTableGenerator() {
 
         pElement.childNodes[0].textContent = value.text;
       }
+
+      if (link) {
+        var anchorElement = tableElement.querySelector('a');
+
+        if (anchorElement) {
+          anchorElement.href = link;
+        }
+      }
     }
   };
   /**
@@ -30573,7 +30775,8 @@ function DataTableGenerator() {
 
 
   var populateRow = function populateRow(index, blueprintRow) {
-    var clonedRow = blueprintRow.cloneNode(true);
+    var clonedRow = blueprintRow.cloneNode(true); // TODO [erdembircan] add row modes here
+
     var rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element')); // eslint-disable-next-line array-callback-return
 
     rowElements.map(function (tableElement) {
@@ -31636,6 +31839,27 @@ var mutations = {
   },
 
   /**
+   * Set row binding of an of a row with given id and sub index.
+   *
+   * @param {Object} state data table state
+   * @param {{id, value, subIndex}} mutation payload
+   */
+  setRowBindingForId: function setRowBindingForId(state, _ref7) {
+    var id = _ref7.id,
+        value = _ref7.value,
+        subIndex = _ref7.subIndex;
+
+    var bindings = _objectSpread({}, state.dataManager.bindings);
+
+    if (!bindings.row[id]) {
+      bindings.row[id] = {};
+    }
+
+    bindings.row[id][subIndex] = value;
+    state.dataManager.bindings = bindings;
+  },
+
+  /**
    * Set a target table.
    *
    * @param {Object} state data table state
@@ -32693,6 +32917,20 @@ var getters = {
   },
 
   /**
+   * Get row binding of a given row.
+   *
+   * @param {Object} state store state
+   * @param {Object} getters store getters
+   * @return {Function} a function to retrieve row binding
+   */
+  // eslint-disable-next-line no-shadow
+  getRowBindingByRowId: function getRowBindingByRowId(state, getters) {
+    return function (rowId) {
+      return getters.getBindings.row[rowId];
+    };
+  },
+
+  /**
    * Get all data bindings.
    *
    * @param {Object} state store state
@@ -33078,6 +33316,7 @@ var _default = {
           none: (0, _i18n.__)('none', 'wptb-table-builder'),
           text: (0, _i18n.__)('text', 'wptb-table-builder'),
           link: (0, _i18n.__)('link', 'wptb-table-builder'),
+          mode: (0, _i18n.__)('mode', 'wptb-table-builder'),
           emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
         },
         proUrl: data.proUrl,
