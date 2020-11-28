@@ -30121,7 +30121,11 @@ var _default = {
 
       if (element.getAttribute('class').includes('wptb-ph-element')) {
         _this.currentElement = element;
-        _this.currentActiveTab = 'element';
+
+        var currentRowBinding = _this.getRowBinding('mode'); // show row tab if selected element's row binding is auto
+
+
+        _this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element';
         _this.currentElementType = (0, _functions.parseElementType)(_this.currentElement);
       }
     });
@@ -30613,6 +30617,17 @@ function DataTableGenerator() {
     table.querySelector('tbody').innerHTML = '';
   };
   /**
+   * Get id of a data column from index.
+   *
+   * @param {number} index column index
+   * @return {string} column id
+   */
+
+
+  var getColumnIdFromIndex = function getColumnIdFromIndex(index) {
+    return _this.currentValues[0].values[index].colId;
+  };
+  /**
    * Get all values of a column in data table.
    *
    * @param {string} columnId data table column id
@@ -30622,6 +30637,7 @@ function DataTableGenerator() {
 
   var getColumnValues = function getColumnValues(columnId) {
     return _this.currentValues.reduce(function (carry, row) {
+      // eslint-disable-next-line array-callback-return
       row.values.map(function (cell) {
         if (cell.colId === columnId) {
           carry.push(cell.value);
@@ -30650,6 +30666,17 @@ function DataTableGenerator() {
     }
 
     return value;
+  };
+  /**
+   * Get data table related id of a row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {string|null} row element id, null if no id found
+   */
+
+
+  var getRowId = function getRowId(rowElement) {
+    return rowElement.dataset.dataTableRowId;
   };
   /**
    * Get binding with a specific id.
@@ -30686,6 +30713,24 @@ function DataTableGenerator() {
     return binding;
   };
   /**
+   * Get associated row binding for the given row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {Object|null} binding for supplied row, null if no binding found
+   */
+
+
+  var getRowBinding = function getRowBinding(rowElement) {
+    var rowId = getRowId(rowElement);
+    var binding = null;
+
+    if (rowId) {
+      binding = getBinding(rowId, 'row');
+    }
+
+    return binding;
+  };
+  /**
    * Calculate maximum amount of rows that can be populated from a blueprint row.
    *
    * @param {HTMLElement} rowElement row element
@@ -30703,7 +30748,8 @@ function DataTableGenerator() {
         var colBinding = getTableElementBinding(element, 'column');
 
         if (colBinding) {
-          maxValue = Object.keys(colBinding) // eslint-disable-next-line array-callback-return
+          maxValue = Object.keys(colBinding) // TODO [erdembircan] rewrite this with filter > map
+          // eslint-disable-next-line array-callback-return
           .map(function (key) {
             if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
               return colBinding[key];
@@ -30758,12 +30804,122 @@ function DataTableGenerator() {
    * Add value to a table element.
    *
    * @param {HTMLElement} tableElement table element
-   * @param {string} value value
+   * @param {*} value value
+   * @param {Object} mapper mapper object to map values to certain element properties
    */
 
   var addValueToTableElement = function addValueToTableElement(tableElement, value) {
+    var mapper = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     var tableElementType = (0, _.parseElementType)(tableElement);
-    valueApplyList[tableElementType](tableElement, value);
+    var elementValue = value;
+
+    if (mapper) {
+      var _ref, _mapper$tableElementT;
+
+      // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
+      var mapperIndex = (_ref = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref !== void 0 ? _ref : ['text']; // create a new value object with mapped properties
+
+      elementValue = {}; // eslint-disable-next-line array-callback-return
+
+      mapperIndex.map(function (mapIndex) {
+        elementValue[mapIndex] = value;
+      });
+    }
+
+    valueApplyList[tableElementType](tableElement, elementValue);
+  };
+  /**
+   * Batch populate table elements with their assigned binding values.
+   *
+   * @param {Array} tableElements an array of table elements
+   * @param {number} rowIndex index of current row this table elements belongs to
+   */
+
+
+  var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex) {
+    // eslint-disable-next-line array-callback-return
+    tableElements.map(function (tableElement) {
+      var bindingColIdObject = getTableElementBinding(tableElement, 'column');
+
+      if (bindingColIdObject) {
+        var value = {}; // eslint-disable-next-line array-callback-return
+
+        Object.keys(bindingColIdObject).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+            value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key]);
+          }
+        });
+
+        if (value) {
+          addValueToTableElement(tableElement, value);
+        }
+      }
+    });
+  };
+  /**
+   * Get table elements from a supplied row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {Array} table element array
+   *
+   */
+
+
+  var getTableElementsFromRow = function getTableElementsFromRow(rowElement) {
+    return Array.from(rowElement.querySelectorAll('.wptb-ph-element'));
+  };
+  /**
+   * Get table elements from a supplied table cell.
+   *
+   * @param {HTMLElement} cellElement cell element
+   * @return {Array} table element array
+   *
+   */
+
+
+  var getTableElementsFromCell = function getTableElementsFromCell(cellElement) {
+    return Array.from(cellElement.querySelectorAll('.wptb-ph-element'));
+  };
+  /**
+   * Logic for different row bindings.
+   *
+   * @type {Object}
+   */
+
+
+  var rowBindingLogicList = {
+    auto: function auto(rowElement, rowIndex) {
+      var cells = Array.from(rowElement.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
+
+      cells.map(function (cell, cellIndex) {
+        var cellTableElements = getTableElementsFromCell(cell); // get column value based on the index of the cell
+
+        var currentColumnId = getColumnIdFromIndex(cellIndex);
+        var columnValue = getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
+
+        cellTableElements.map(function (tableElement) {
+          if (columnValue) {
+            addValueToTableElement(tableElement, columnValue, {
+              default: ['text'],
+              button: ['link']
+            });
+          }
+        });
+      });
+    }
+  };
+  /**
+   * Generate necessary data for table elements based on binding row mode
+   *
+   * @param {string} mode row binding mode type
+   * @param {HTMLElement} rowElement row element
+   * @param {number} rowIndex current row index
+   * @param {Object} modeOptions extra mode options if necessary
+   */
+
+  var applyRowBindings = function applyRowBindings(mode, rowElement, rowIndex) {
+    var modeOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    rowBindingLogicList[mode](rowElement, rowIndex, modeOptions);
   };
   /**
    * Populate and generate a row element based on blueprint row.
@@ -30775,26 +30931,16 @@ function DataTableGenerator() {
 
 
   var populateRow = function populateRow(index, blueprintRow) {
-    var clonedRow = blueprintRow.cloneNode(true); // TODO [erdembircan] add row modes here
+    var clonedRow = blueprintRow.cloneNode(true);
+    var rowBinding = getRowBinding(clonedRow); // give priority to row auto mode over element column bindings
 
-    var rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element')); // eslint-disable-next-line array-callback-return
+    if (rowBinding && rowBinding.mode && rowBinding.mode === 'auto') {
+      applyRowBindings('auto', clonedRow, index);
+    } else {
+      var rowElements = getTableElementsFromRow(clonedRow);
+      batchPopulateTableElements(rowElements, index);
+    }
 
-    rowElements.map(function (tableElement) {
-      var bindingColIdObject = getTableElementBinding(tableElement, 'column');
-
-      if (bindingColIdObject) {
-        var value = {};
-        Object.keys(bindingColIdObject).map(function (key) {
-          if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = getColumnValueByIndex(index, bindingColIdObject[key]);
-          }
-        });
-
-        if (value) {
-          addValueToTableElement(tableElement, value);
-        }
-      }
-    });
     return clonedRow;
   };
   /**

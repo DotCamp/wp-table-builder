@@ -76,7 +76,11 @@ export default {
 		document.addEventListener('element:controls:active:global', ({ detail: element }) => {
 			if (element.getAttribute('class').includes('wptb-ph-element')) {
 				this.currentElement = element;
-				this.currentActiveTab = 'element';
+
+				const currentRowBinding = this.getRowBinding('mode');
+
+				// show row tab if selected element's row binding is auto
+				this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element';
 				this.currentElementType = parseElementType(this.currentElement);
 			}
 		});

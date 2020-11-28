@@ -38,6 +38,16 @@ function DataTableGenerator() {
 	};
 
 	/**
+	 * Get id of a data column from index.
+	 *
+	 * @param {number} index column index
+	 * @return {string} column id
+	 */
+	const getColumnIdFromIndex = (index) => {
+		return this.currentValues[0].values[index].colId;
+	};
+
+	/**
 	 * Get all values of a column in data table.
 	 *
 	 * @param {string} columnId data table column id
@@ -45,6 +55,7 @@ function DataTableGenerator() {
 	 */
 	const getColumnValues = (columnId) => {
 		return this.currentValues.reduce((carry, row) => {
+			// eslint-disable-next-line array-callback-return
 			row.values.map((cell) => {
 				if (cell.colId === columnId) {
 					carry.push(cell.value);
@@ -73,6 +84,16 @@ function DataTableGenerator() {
 		}
 
 		return value;
+	};
+
+	/**
+	 * Get data table related id of a row element.
+	 *
+	 * @param {HTMLElement} rowElement row element
+	 * @return {string|null} row element id, null if no id found
+	 */
+	const getRowId = (rowElement) => {
+		return rowElement.dataset.dataTableRowId;
 	};
 
 	/**
@@ -108,6 +129,24 @@ function DataTableGenerator() {
 	};
 
 	/**
+	 * Get associated row binding for the given row element.
+	 *
+	 * @param {HTMLElement} rowElement row element
+	 * @return {Object|null} binding for supplied row, null if no binding found
+	 */
+	const getRowBinding = (rowElement) => {
+		const rowId = getRowId(rowElement);
+
+		let binding = null;
+
+		if (rowId) {
+			binding = getBinding(rowId, 'row');
+		}
+
+		return binding;
+	};
+
+	/**
 	 * Calculate maximum amount of rows that can be populated from a blueprint row.
 	 *
 	 * @param {HTMLElement} rowElement row element
@@ -126,6 +165,7 @@ function DataTableGenerator() {
 
 				if (colBinding) {
 					maxValue = Object.keys(colBinding)
+						// TODO [erdembircan] rewrite this with filter > map
 						// eslint-disable-next-line array-callback-return
 						.map((key) => {
 							if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
@@ -178,12 +218,115 @@ function DataTableGenerator() {
 	 * Add value to a table element.
 	 *
 	 * @param {HTMLElement} tableElement table element
-	 * @param {string} value value
+	 * @param {*} value value
+	 * @param {Object} mapper mapper object to map values to certain element properties
 	 */
-	const addValueToTableElement = (tableElement, value) => {
+	const addValueToTableElement = (tableElement, value, mapper = null) => {
 		const tableElementType = parseElementType(tableElement);
 
-		valueApplyList[tableElementType](tableElement, value);
+		let elementValue = value;
+
+		if (mapper) {
+			// decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
+			const mapperIndex = mapper[tableElementType] ?? mapper.default ?? ['text'];
+
+			// create a new value object with mapped properties
+			elementValue = {};
+			// eslint-disable-next-line array-callback-return
+			mapperIndex.map((mapIndex) => {
+				elementValue[mapIndex] = value;
+			});
+		}
+
+		valueApplyList[tableElementType](tableElement, elementValue);
+	};
+
+	/**
+	 * Batch populate table elements with their assigned binding values.
+	 *
+	 * @param {Array} tableElements an array of table elements
+	 * @param {number} rowIndex index of current row this table elements belongs to
+	 */
+	const batchPopulateTableElements = (tableElements, rowIndex) => {
+		// eslint-disable-next-line array-callback-return
+		tableElements.map((tableElement) => {
+			const bindingColIdObject = getTableElementBinding(tableElement, 'column');
+			if (bindingColIdObject) {
+				const value = {};
+
+				// eslint-disable-next-line array-callback-return
+				Object.keys(bindingColIdObject).map((key) => {
+					if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+						value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key]);
+					}
+				});
+
+				if (value) {
+					addValueToTableElement(tableElement, value);
+				}
+			}
+		});
+	};
+
+	/**
+	 * Get table elements from a supplied row element.
+	 *
+	 * @param {HTMLElement} rowElement row element
+	 * @return {Array} table element array
+	 *
+	 */
+	const getTableElementsFromRow = (rowElement) => {
+		return Array.from(rowElement.querySelectorAll('.wptb-ph-element'));
+	};
+
+	/**
+	 * Get table elements from a supplied table cell.
+	 *
+	 * @param {HTMLElement} cellElement cell element
+	 * @return {Array} table element array
+	 *
+	 */
+	const getTableElementsFromCell = (cellElement) => {
+		return Array.from(cellElement.querySelectorAll('.wptb-ph-element'));
+	};
+
+	/**
+	 * Logic for different row bindings.
+	 *
+	 * @type {Object}
+	 */
+	const rowBindingLogicList = {
+		auto: (rowElement, rowIndex) => {
+			const cells = Array.from(rowElement.querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
+			cells.map((cell, cellIndex) => {
+				const cellTableElements = getTableElementsFromCell(cell);
+
+				// get column value based on the index of the cell
+				const currentColumnId = getColumnIdFromIndex(cellIndex);
+				const columnValue = getColumnValueByIndex(rowIndex, currentColumnId);
+
+				// eslint-disable-next-line array-callback-return
+				cellTableElements.map((tableElement) => {
+					if (columnValue) {
+						addValueToTableElement(tableElement, columnValue, { default: ['text'], button: ['link'] });
+					}
+				});
+			});
+		},
+	};
+
+	/**
+	 * Generate necessary data for table elements based on binding row mode
+	 *
+	 * @param {string} mode row binding mode type
+	 * @param {HTMLElement} rowElement row element
+	 * @param {number} rowIndex current row index
+	 * @param {Object} modeOptions extra mode options if necessary
+	 */
+	const applyRowBindings = (mode, rowElement, rowIndex, modeOptions = {}) => {
+		rowBindingLogicList[mode](rowElement, rowIndex, modeOptions);
 	};
 
 	/**
@@ -196,26 +339,15 @@ function DataTableGenerator() {
 	const populateRow = (index, blueprintRow) => {
 		const clonedRow = blueprintRow.cloneNode(true);
 
-		// TODO [erdembircan] add row modes here
+		const rowBinding = getRowBinding(clonedRow);
 
-		const rowElements = Array.from(clonedRow.querySelectorAll('.wptb-ph-element'));
-
-		// eslint-disable-next-line array-callback-return
-		rowElements.map((tableElement) => {
-			const bindingColIdObject = getTableElementBinding(tableElement, 'column');
-			if (bindingColIdObject) {
-				const value = {};
-				Object.keys(bindingColIdObject).map((key) => {
-					if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-						value[key] = getColumnValueByIndex(index, bindingColIdObject[key]);
-					}
-				});
-
-				if (value) {
-					addValueToTableElement(tableElement, value);
-				}
-			}
-		});
+		// give priority to row auto mode over element column bindings
+		if (rowBinding && rowBinding.mode && rowBinding.mode === 'auto') {
+			applyRowBindings('auto', clonedRow, index);
+		} else {
+			const rowElements = getTableElementsFromRow(clonedRow);
+			batchPopulateTableElements(rowElements, index);
+		}
 
 		return clonedRow;
 	};
