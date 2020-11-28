@@ -44,7 +44,7 @@ function DataTableGenerator() {
 	 * @return {string} column id
 	 */
 	const getColumnIdFromIndex = (index) => {
-		return this.currentValues[0].values[index].colId;
+		return this.currentValues[0].values[index]?.colId;
 	};
 
 	/**
@@ -152,6 +152,13 @@ function DataTableGenerator() {
 	 * @param {HTMLElement} rowElement row element
 	 */
 	const calculateMaxRows = (rowElement) => {
+		const rowBindingMode = getRowBinding(rowElement)?.mode;
+
+		// if row binding mode is not defined for the row element, use auto as default
+		if (rowBindingMode === 'auto' || !rowBindingMode) {
+			return this.currentValues.length;
+		}
+
 		const cells = Array.from(rowElement.querySelectorAll('td'));
 
 		return cells.reduce((carry, cell) => {

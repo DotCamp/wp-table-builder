@@ -120,23 +120,25 @@ export default {
 			};
 		},
 		...mapGetters(['getIcon', 'getBindings', 'parsedData', 'getDataManager']),
-		...mapState(['targetTable']),
+		...mapState(['targetTable', 'tableIsActive']),
 	},
 	methods: {
 		setComponentBusyState(state) {
 			this.busy = state;
 		},
 		async generateDataTable(mainTable) {
-			this.setComponentBusyState(true);
-			const previewTable = await DataTableGenerator.generateDataTable(
-				mainTable,
-				this.getBindings,
-				this.parsedData.values
-			);
+			if (this.tableIsActive) {
+				this.setComponentBusyState(true);
+				const previewTable = await DataTableGenerator.generateDataTable(
+					mainTable,
+					this.getBindings,
+					this.parsedData.values
+				);
 
-			this.previewHtml = previewTable.outerHTML;
+				this.previewHtml = previewTable.outerHTML;
 
-			this.setComponentBusyState(false);
+				this.setComponentBusyState(false);
+			}
 		},
 		calculateVisibility(section) {
 			// sections where generated preview will be available and visible

@@ -159,7 +159,7 @@ export default {
 				if (rowId) {
 					const bindingObject = this.getRowBindingByRowId(rowId);
 
-					let bindingValue = 'none';
+					let bindingValue = 'auto';
 					if (bindingObject && bindingObject[optionType]) {
 						bindingValue = bindingObject[optionType];
 					}

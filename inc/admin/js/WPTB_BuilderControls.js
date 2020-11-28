@@ -30204,7 +30204,7 @@ var _default = {
 
         if (rowId) {
           var bindingObject = this.getRowBindingByRowId(rowId);
-          var bindingValue = 'none';
+          var bindingValue = 'auto';
 
           if (bindingObject && bindingObject[optionType]) {
             bindingValue = bindingObject[optionType];
@@ -30625,7 +30625,9 @@ function DataTableGenerator() {
 
 
   var getColumnIdFromIndex = function getColumnIdFromIndex(index) {
-    return _this.currentValues[0].values[index].colId;
+    var _this$currentValues$;
+
+    return (_this$currentValues$ = _this.currentValues[0].values[index]) === null || _this$currentValues$ === void 0 ? void 0 : _this$currentValues$.colId;
   };
   /**
    * Get all values of a column in data table.
@@ -30738,6 +30740,14 @@ function DataTableGenerator() {
 
 
   var calculateMaxRows = function calculateMaxRows(rowElement) {
+    var _getRowBinding;
+
+    var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
+
+    if (rowBindingMode === 'auto' || !rowBindingMode) {
+      return _this.currentValues.length;
+    }
+
     var cells = Array.from(rowElement.querySelectorAll('td'));
     return cells.reduce(function (carry, cell) {
       var tableElements = Array.from(cell.querySelectorAll('.wptb-ph-element')); // max amount of column values can be applied to this cell
@@ -31093,7 +31103,7 @@ var _default = {
         transition: 'all 0.2s ease-out'
       };
     }
-  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData', 'getDataManager']), {}, (0, _vuex.mapState)(['targetTable'])),
+  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData', 'getDataManager']), {}, (0, _vuex.mapState)(['targetTable', 'tableIsActive'])),
   methods: {
     setComponentBusyState: function setComponentBusyState(state) {
       this.busy = state;
@@ -31107,18 +31117,23 @@ var _default = {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                if (!_this2.tableIsActive) {
+                  _context.next = 7;
+                  break;
+                }
+
                 _this2.setComponentBusyState(true);
 
-                _context.next = 3;
+                _context.next = 4;
                 return _DataTableGenerator.default.generateDataTable(mainTable, _this2.getBindings, _this2.parsedData.values);
 
-              case 3:
+              case 4:
                 previewTable = _context.sent;
                 _this2.previewHtml = previewTable.outerHTML;
 
                 _this2.setComponentBusyState(false);
 
-              case 6:
+              case 7:
               case "end":
                 return _context.stop();
             }
