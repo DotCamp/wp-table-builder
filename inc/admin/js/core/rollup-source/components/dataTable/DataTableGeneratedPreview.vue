@@ -131,8 +131,8 @@ export default {
 				this.setComponentBusyState(true);
 				const previewTable = await DataTableGenerator.generateDataTable(
 					mainTable,
-					this.getBindings,
-					this.parsedData.values
+					{ ...this.getBindings },
+					Array.from(this.parsedData.values)
 				);
 
 				this.previewHtml = previewTable.outerHTML;

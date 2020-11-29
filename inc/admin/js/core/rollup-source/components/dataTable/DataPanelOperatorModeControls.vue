@@ -6,12 +6,14 @@
 				:options="options.rowAmount"
 				v-model="operatorControls.rowAmount"
 				:class="{ 'wptb-left-panel-no-bottom-border': operatorControls.rowAmount === 'custom' }"
+				:disabled="disabledState('rowAmount')"
 			></panel-dropdown-control>
 			<transition name="wptb-fade">
 				<panel-input-control
 					v-show="operatorControls.rowAmount === 'custom'"
 					:label="translationM('rows') | cap"
 					v-model="operatorControls.rowCustomAmount"
+					:disabled="disabledState('rowAmount')"
 				>
 				</panel-input-control>
 			</transition>
@@ -88,11 +90,14 @@ export default {
 					this.operatorControls.compareColumn = firstColumn;
 				}
 			}
+
+			this.controlRelations();
 		});
 	},
 	watch: {
 		operatorControls: {
 			handler() {
+				this.controlRelations();
 				this.$emit('valueChanged', this.operatorControls);
 			},
 			deep: true,
@@ -103,6 +108,32 @@ export default {
 			const { none, ...rest } = this.columnNames;
 
 			return rest;
+		},
+		disabledState() {
+			const vm = this;
+			const stateList = {
+				rowAmount: () => {
+					return ['highest', 'lowest'].includes(vm.getOperatorControl('operatorType'));
+				},
+			};
+
+			return function calculateState(controlId) {
+				return stateList[controlId]();
+			};
+		},
+	},
+	methods: {
+		controlRelations() {
+			if (['highest', 'lowest'].includes(this.operatorControls.operatorType)) {
+				this.setOperatorControl('rowAmount', 'custom');
+				this.setOperatorControl('rowCustomAmount', 1);
+			}
+		},
+		setOperatorControl(key, value) {
+			this.operatorControls[key] = value;
+		},
+		getOperatorControl(key) {
+			return this.operatorControls[key];
 		},
 	},
 };

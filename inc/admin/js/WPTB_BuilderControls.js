@@ -30329,11 +30329,14 @@ var _default = {
           _this.operatorControls.compareColumn = firstColumn;
         }
       }
+
+      _this.controlRelations();
     });
   },
   watch: {
     operatorControls: {
       handler: function handler() {
+        this.controlRelations();
         this.$emit('valueChanged', this.operatorControls);
       },
       deep: true
@@ -30346,6 +30349,31 @@ var _default = {
           rest = _objectWithoutProperties(_this$columnNames, ["none"]);
 
       return rest;
+    },
+    disabledState: function disabledState() {
+      var vm = this;
+      var stateList = {
+        rowAmount: function rowAmount() {
+          return ['highest', 'lowest'].includes(vm.getOperatorControl('operatorType'));
+        }
+      };
+      return function calculateState(controlId) {
+        return stateList[controlId]();
+      };
+    }
+  },
+  methods: {
+    controlRelations: function controlRelations() {
+      if (['highest', 'lowest'].includes(this.operatorControls.operatorType)) {
+        this.setOperatorControl('rowAmount', 'custom');
+        this.setOperatorControl('rowCustomAmount', 1);
+      }
+    },
+    setOperatorControl: function setOperatorControl(key, value) {
+      this.operatorControls[key] = value;
+    },
+    getOperatorControl: function getOperatorControl(key) {
+      return this.operatorControls[key];
     }
   }
 };
@@ -30374,7 +30402,8 @@ exports.default = _default;
           },
           attrs: {
             label: _vm._f("cap")(_vm.translationM("rowAmount")),
-            options: _vm.options.rowAmount
+            options: _vm.options.rowAmount,
+            disabled: _vm.disabledState("rowAmount")
           },
           model: {
             value: _vm.operatorControls.rowAmount,
@@ -30398,7 +30427,10 @@ exports.default = _default;
                   expression: "operatorControls.rowAmount === 'custom'"
                 }
               ],
-              attrs: { label: _vm._f("cap")(_vm.translationM("rows")) },
+              attrs: {
+                label: _vm._f("cap")(_vm.translationM("rows")),
+                disabled: _vm.disabledState("rowAmount")
+              },
               model: {
                 value: _vm.operatorControls.rowCustomAmount,
                 callback: function($$v) {
@@ -31101,12 +31133,15 @@ function DataTableGenerator() {
    * Get all values of a column in data table.
    *
    * @param {string} columnId data table column id
+   * @param {Array} customValues custom values to use
    * @return {Array} all values related to that column
    */
 
 
   var getColumnValues = function getColumnValues(columnId) {
-    return _this.currentValues.reduce(function (carry, row) {
+    var customValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var valuesToUse = customValues || _this.currentValues;
+    return valuesToUse.reduce(function (carry, row) {
       // eslint-disable-next-line array-callback-return
       row.values.map(function (cell) {
         if (cell.colId === columnId) {
@@ -31121,21 +31156,30 @@ function DataTableGenerator() {
    *
    * @param {number} index index
    * @param {string} columnId column id
+   * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
    * @return {null|string} column value, null if none found on index or column id
    */
 
 
   var getColumnValueByIndex = function getColumnValueByIndex(index, columnId) {
-    var columnValues = getColumnValues(columnId);
+    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    var columnValues = getColumnValues(columnId, customValues);
     var value = null;
+    var newIndex = customValues ? 0 : index;
 
     if (columnValues) {
-      if (columnValues[index]) {
-        value = columnValues[index];
+      if (columnValues[newIndex]) {
+        value = columnValues[newIndex];
       }
     }
 
     return value;
+  };
+
+  var getRowById = function getRowById(rowId) {
+    return _this.currentValues.filter(function (row) {
+      return row.rowId === rowId;
+    })[0];
   };
   /**
    * Get data table related id of a row element.
@@ -31214,6 +31258,15 @@ function DataTableGenerator() {
 
     if (rowBindingMode === 'auto' || !rowBindingMode) {
       return _this.currentValues.length;
+    } // max row calculations for operator mode
+
+
+    if (rowBindingMode === 'operator') {
+      var operatorType = getRowBinding(rowElement).operator.operatorType;
+
+      if (['highest', 'lowest'].includes(operatorType)) {
+        return 1;
+      }
     }
 
     var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -31311,10 +31364,12 @@ function DataTableGenerator() {
    *
    * @param {Array} tableElements an array of table elements
    * @param {number} rowIndex index of current row this table elements belongs to
+   * @param {Array} customValues custom values to use for populate operation
    */
 
 
   var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex) {
+    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     // eslint-disable-next-line array-callback-return
     tableElements.map(function (tableElement) {
       var bindingColIdObject = getTableElementBinding(tableElement, 'column');
@@ -31324,7 +31379,7 @@ function DataTableGenerator() {
 
         Object.keys(bindingColIdObject).map(function (key) {
           if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key]);
+            value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
           }
         });
 
@@ -31384,6 +31439,24 @@ function DataTableGenerator() {
           }
         });
       });
+    },
+    operator: function operator(rowElement, rowIndex, count) {
+      var _getRowBinding$operat = getRowBinding(rowElement).operator,
+          compareColumn = _getRowBinding$operat.compareColumn,
+          operatorType = _getRowBinding$operat.operatorType,
+          rowAmount = _getRowBinding$operat.rowAmount,
+          rowCustomAmount = _getRowBinding$operat.rowCustomAmount;
+      var filteredValues = []; // highest/lowest operator logic
+
+      if (['highest', 'lowest'].includes(operatorType)) {
+        var newValuesArray = Array.from(_this.currentValues);
+        newValuesArray.sort(function (a, b) {
+          var aVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [a]));
+          var bVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [b]));
+          return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
+        });
+        batchPopulateTableElements(getTableElementsFromRow(rowElement), 0, [newValuesArray[0]]);
+      }
     }
   };
   /**
@@ -31412,8 +31485,8 @@ function DataTableGenerator() {
     var clonedRow = blueprintRow.cloneNode(true);
     var rowBinding = getRowBinding(clonedRow); // give priority to row auto mode over element column bindings
 
-    if (rowBinding && rowBinding.mode && rowBinding.mode === 'auto') {
-      applyRowBindings('auto', clonedRow, index);
+    if (rowBinding && rowBinding.mode && rowBinding.mode !== 'none') {
+      applyRowBindings(rowBinding.mode, clonedRow, index);
     } else {
       var rowElements = getTableElementsFromRow(clonedRow);
       batchPopulateTableElements(rowElements, index);
@@ -31593,7 +31666,7 @@ var _default = {
                 _this2.setComponentBusyState(true);
 
                 _context.next = 4;
-                return _DataTableGenerator.default.generateDataTable(mainTable, _this2.getBindings, _this2.parsedData.values);
+                return _DataTableGenerator.default.generateDataTable(mainTable, _objectSpread({}, _this2.getBindings), Array.from(_this2.parsedData.values));
 
               case 4:
                 previewTable = _context.sent;

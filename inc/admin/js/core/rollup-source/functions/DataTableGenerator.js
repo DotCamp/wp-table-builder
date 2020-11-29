@@ -1,4 +1,5 @@
-import { parseTableElementId, parseElementType } from '.';
+import { parseElementType, parseTableElementId } from '.';
+
 /**
  * Data table generator for frontend usage.
  *
@@ -51,10 +52,12 @@ function DataTableGenerator() {
 	 * Get all values of a column in data table.
 	 *
 	 * @param {string} columnId data table column id
+	 * @param {Array} customValues custom values to use
 	 * @return {Array} all values related to that column
 	 */
-	const getColumnValues = (columnId) => {
-		return this.currentValues.reduce((carry, row) => {
+	const getColumnValues = (columnId, customValues = null) => {
+		const valuesToUse = customValues || this.currentValues;
+		return valuesToUse.reduce((carry, row) => {
 			// eslint-disable-next-line array-callback-return
 			row.values.map((cell) => {
 				if (cell.colId === columnId) {
@@ -71,19 +74,25 @@ function DataTableGenerator() {
 	 *
 	 * @param {number} index index
 	 * @param {string} columnId column id
+	 * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
 	 * @return {null|string} column value, null if none found on index or column id
 	 */
-	const getColumnValueByIndex = (index, columnId) => {
-		const columnValues = getColumnValues(columnId);
+	const getColumnValueByIndex = (index, columnId, customValues = null) => {
+		const columnValues = getColumnValues(columnId, customValues);
 
 		let value = null;
+		const newIndex = customValues ? 0 : index;
 		if (columnValues) {
-			if (columnValues[index]) {
-				value = columnValues[index];
+			if (columnValues[newIndex]) {
+				value = columnValues[newIndex];
 			}
 		}
 
 		return value;
+	};
+
+	const getRowById = (rowId) => {
+		return this.currentValues.filter((row) => row.rowId === rowId)[0];
 	};
 
 	/**
@@ -157,6 +166,14 @@ function DataTableGenerator() {
 		// if row binding mode is not defined for the row element, use auto as default
 		if (rowBindingMode === 'auto' || !rowBindingMode) {
 			return this.currentValues.length;
+		}
+		// max row calculations for operator mode
+		if (rowBindingMode === 'operator') {
+			const { operatorType } = getRowBinding(rowElement).operator;
+
+			if (['highest', 'lowest'].includes(operatorType)) {
+				return 1;
+			}
 		}
 
 		const cells = Array.from(rowElement.querySelectorAll('td'));
@@ -253,8 +270,9 @@ function DataTableGenerator() {
 	 *
 	 * @param {Array} tableElements an array of table elements
 	 * @param {number} rowIndex index of current row this table elements belongs to
+	 * @param {Array} customValues custom values to use for populate operation
 	 */
-	const batchPopulateTableElements = (tableElements, rowIndex) => {
+	const batchPopulateTableElements = (tableElements, rowIndex, customValues = null) => {
 		// eslint-disable-next-line array-callback-return
 		tableElements.map((tableElement) => {
 			const bindingColIdObject = getTableElementBinding(tableElement, 'column');
@@ -264,7 +282,7 @@ function DataTableGenerator() {
 				// eslint-disable-next-line array-callback-return
 				Object.keys(bindingColIdObject).map((key) => {
 					if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-						value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key]);
+						value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
 					}
 				});
 
@@ -322,6 +340,24 @@ function DataTableGenerator() {
 				});
 			});
 		},
+		operator: (rowElement, rowIndex, count) => {
+			const { compareColumn, operatorType, rowAmount, rowCustomAmount } = getRowBinding(rowElement).operator;
+
+			const filteredValues = [];
+
+			// highest/lowest operator logic
+			if (['highest', 'lowest'].includes(operatorType)) {
+				const newValuesArray = Array.from(this.currentValues);
+				newValuesArray.sort((a, b) => {
+					const aVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [a]));
+					const bVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [b]));
+
+					return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
+				});
+
+				batchPopulateTableElements(getTableElementsFromRow(rowElement), 0, [newValuesArray[0]]);
+			}
+		},
 	};
 
 	/**
@@ -349,8 +385,8 @@ function DataTableGenerator() {
 		const rowBinding = getRowBinding(clonedRow);
 
 		// give priority to row auto mode over element column bindings
-		if (rowBinding && rowBinding.mode && rowBinding.mode === 'auto') {
-			applyRowBindings('auto', clonedRow, index);
+		if (rowBinding && rowBinding.mode && rowBinding.mode !== 'none') {
+			applyRowBindings(rowBinding.mode, clonedRow, index);
 		} else {
 			const rowElements = getTableElementsFromRow(clonedRow);
 			batchPopulateTableElements(rowElements, index);
