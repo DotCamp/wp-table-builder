@@ -34,6 +34,12 @@
 						:value="getRowBinding('mode')"
 						@valueChanged="setRowBinding('mode')($event)"
 					></panel-dropdown-control>
+					<data-panel-operator-mode-controls
+						v-show="getRowBinding('mode') === 'operator'"
+						:column-names="getColumnNames"
+						:row-bindings="getRowBinding('operator')"
+						@valueChanged="setRowBinding('operator')($event)"
+					></data-panel-operator-mode-controls>
 					<data-panel-row-binding-messages
 						:row-binding="getRowBinding()"
 						:element-binding="getColumnBinding()"
@@ -53,20 +59,20 @@ import PanelSectionGroupTabbedItem from '../PanelSectionGroupTabbedItem';
 import PanelDropdownControl from '../PanelDropdownControl';
 import { parseTableElementId, parseElementType, getParentOfType, generateUniqueId } from '../../functions';
 import typeOptionList from './elementOptionTypeList';
-import PanelMessageRow from '../leftPanel/PanelMessageRow';
 import DataPanelElementBindingMessages from './DataPanelElementBindingMessages';
 import DataPanelRowBindingMessages from './DataPanelRowBindingMessages';
+import DataPanelOperatorModeControls from './DataPanelOperatorModeControls';
 
 export default {
 	mixins: [withNativeTranslationStore],
 	components: {
+		DataPanelOperatorModeControls,
 		DataPanelRowBindingMessages,
 		DataPanelElementBindingMessages,
 		PanelDropdownControl,
 		PanelSectionGroupTabbedItem,
 		PanelSectionGroupTabbedImproved,
 		SectionGroupCollapse,
-		PanelMessageRow,
 	},
 	data() {
 		return {
@@ -79,8 +85,9 @@ export default {
 			},
 			currentActiveTab: 'element',
 			rowModes: {
-				auto: this.translationM('auto'),
 				none: `-- ${this.translationM('none')} --`,
+				auto: this.translationM('auto'),
+				operator: this.translationM('operator'),
 			},
 		};
 	},
@@ -93,6 +100,10 @@ export default {
 
 				// show row tab if selected element's row binding is auto
 				this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element';
+
+				// TODO [erdembircan] remove for production
+				this.currentActiveTab = 'row';
+
 				this.currentElementType = parseElementType(this.currentElement);
 			}
 		});
@@ -184,10 +195,12 @@ export default {
 						return bindingObject;
 					}
 
-					let bindingValue = 'auto';
+					// use auto for mode and an empty object for other binding types as default
+					let bindingValue = optionType === 'mode' ? 'auto' : {};
 					if (bindingObject && bindingObject[optionType]) {
 						bindingValue = bindingObject[optionType];
 					}
+
 					return bindingValue;
 				}
 			}

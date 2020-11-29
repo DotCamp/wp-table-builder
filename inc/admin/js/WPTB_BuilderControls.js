@@ -30218,17 +30218,244 @@ var _default = {
       var _this$rowBinding;
 
       var modeRowBinding = (_this$rowBinding = this.rowBinding) === null || _this$rowBinding === void 0 ? void 0 : _this$rowBinding.mode;
+      var message = null;
 
-      if (modeRowBinding === 'auto') {
-        return this.translationM('autoModeMessage');
+      switch (modeRowBinding) {
+        case 'auto':
+          {
+            message = this.translationM('autoModeMessage');
+            break;
+          }
+
+        case 'operator':
+          {
+            message = 'operator message';
+            break;
+          }
+
+        default:
+          {
+            message = null;
+            break;
+          }
       }
 
-      return null;
+      return message;
     }
   }
 };
 exports.default = _default;
-},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/dataTable/DataPanelOperatorModeControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    rowBindings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    columnNames: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    PanelInputControl: _PanelInputControl.default,
+    PanelDropdownControl: _PanelDropdownControl.default
+  },
+  data: function data() {
+    return {
+      operatorControls: {
+        rowAmount: 'all',
+        rowCustomAmount: 1,
+        compareColumn: null,
+        operatorType: 'highest'
+      },
+      options: {
+        rowAmount: {
+          all: this.translationM('all'),
+          custom: this.translationM('custom')
+        },
+        operatorTypes: {
+          highest: this.translationM('highest'),
+          lowest: this.translationM('lowest')
+        }
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      var rowBindingsLength = Object.keys(_this.rowBindings).filter(function (k) {
+        return Object.prototype.hasOwnProperty.call(_this.rowBindings, k);
+      }).length;
+
+      if (rowBindingsLength !== 0) {
+        _this.operatorControls = _objectSpread({}, _this.operatorControls, {}, _this.rowBindings);
+
+        if (!_this.operatorControls.compareColumn) {
+          var firstColumn = Object.keys(_this.columnNamesWithoutNone).filter(function (k) {
+            return Object.prototype.hasOwnProperty.call(_this.columnNamesWithoutNone, k);
+          })[0];
+          _this.operatorControls.compareColumn = firstColumn;
+        }
+      }
+    });
+  },
+  watch: {
+    operatorControls: {
+      handler: function handler() {
+        this.$emit('valueChanged', this.operatorControls);
+      },
+      deep: true
+    }
+  },
+  computed: {
+    columnNamesWithoutNone: function columnNamesWithoutNone() {
+      var _this$columnNames = this.columnNames,
+          none = _this$columnNames.none,
+          rest = _objectWithoutProperties(_this$columnNames, ["none"]);
+
+      return rest;
+    }
+  }
+};
+exports.default = _default;
+        var $b8f06f = exports.default || module.exports;
+      
+      if (typeof $b8f06f === 'function') {
+        $b8f06f = $b8f06f.options;
+      }
+    
+        /* template */
+        Object.assign($b8f06f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("transition", { attrs: { name: "wptb-fade" } }, [
+    _c(
+      "div",
+      { staticClass: "wptb-data-panel-mode-operator-controls" },
+      [
+        _c("panel-dropdown-control", {
+          class: {
+            "wptb-left-panel-no-bottom-border":
+              _vm.operatorControls.rowAmount === "custom"
+          },
+          attrs: {
+            label: _vm._f("cap")(_vm.translationM("rowAmount")),
+            options: _vm.options.rowAmount
+          },
+          model: {
+            value: _vm.operatorControls.rowAmount,
+            callback: function($$v) {
+              _vm.$set(_vm.operatorControls, "rowAmount", $$v)
+            },
+            expression: "operatorControls.rowAmount"
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "transition",
+          { attrs: { name: "wptb-fade" } },
+          [
+            _c("panel-input-control", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.operatorControls.rowAmount === "custom",
+                  expression: "operatorControls.rowAmount === 'custom'"
+                }
+              ],
+              attrs: { label: _vm._f("cap")(_vm.translationM("rows")) },
+              model: {
+                value: _vm.operatorControls.rowCustomAmount,
+                callback: function($$v) {
+                  _vm.$set(_vm.operatorControls, "rowCustomAmount", $$v)
+                },
+                expression: "operatorControls.rowCustomAmount"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("panel-dropdown-control", {
+          attrs: {
+            label: _vm._f("cap")(_vm.translationM("compareColumn")),
+            options: _vm.columnNamesWithoutNone
+          },
+          model: {
+            value: _vm.operatorControls.compareColumn,
+            callback: function($$v) {
+              _vm.$set(_vm.operatorControls, "compareColumn", $$v)
+            },
+            expression: "operatorControls.compareColumn"
+          }
+        }),
+        _vm._v(" "),
+        _c("panel-dropdown-control", {
+          attrs: {
+            label: _vm._f("cap")(_vm.translationM("operator")),
+            options: _vm.options.operatorTypes
+          },
+          model: {
+            value: _vm.operatorControls.operatorType,
+            callback: function($$v) {
+              _vm.$set(_vm.operatorControls, "operatorType", $$v)
+            },
+            expression: "operatorControls.operatorType"
+          }
+        })
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30252,11 +30479,11 @@ var _functions = require("../../functions");
 
 var _elementOptionTypeList = _interopRequireDefault(require("./elementOptionTypeList"));
 
-var _PanelMessageRow = _interopRequireDefault(require("../leftPanel/PanelMessageRow"));
-
 var _DataPanelElementBindingMessages = _interopRequireDefault(require("./DataPanelElementBindingMessages"));
 
 var _DataPanelRowBindingMessages = _interopRequireDefault(require("./DataPanelRowBindingMessages"));
+
+var _DataPanelOperatorModeControls = _interopRequireDefault(require("./DataPanelOperatorModeControls"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30269,13 +30496,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   mixins: [_withNativeTranslationStore.default],
   components: {
+    DataPanelOperatorModeControls: _DataPanelOperatorModeControls.default,
     DataPanelRowBindingMessages: _DataPanelRowBindingMessages.default,
     DataPanelElementBindingMessages: _DataPanelElementBindingMessages.default,
     PanelDropdownControl: _PanelDropdownControl.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
     PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
-    SectionGroupCollapse: _SectionGroupCollapse.default,
-    PanelMessageRow: _PanelMessageRow.default
+    SectionGroupCollapse: _SectionGroupCollapse.default
   },
   data: function data() {
     return {
@@ -30288,8 +30515,9 @@ var _default = {
       },
       currentActiveTab: 'element',
       rowModes: {
+        none: "-- ".concat(this.translationM('none'), " --"),
         auto: this.translationM('auto'),
-        none: "-- ".concat(this.translationM('none'), " --")
+        operator: this.translationM('operator')
       }
     };
   },
@@ -30305,7 +30533,9 @@ var _default = {
         var currentRowBinding = _this.getRowBinding('mode'); // show row tab if selected element's row binding is auto
 
 
-        _this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element';
+        _this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element'; // TODO [erdembircan] remove for production
+
+        _this.currentActiveTab = 'row';
         _this.currentElementType = (0, _functions.parseElementType)(_this.currentElement);
       }
     });
@@ -30399,9 +30629,10 @@ var _default = {
 
           if (!optionType) {
             return bindingObject;
-          }
+          } // use auto for mode and an empty object for other binding types as default
 
-          var bindingValue = 'auto';
+
+          var bindingValue = optionType === 'mode' ? 'auto' : {};
 
           if (bindingObject && bindingObject[optionType]) {
             bindingValue = bindingObject[optionType];
@@ -30545,6 +30776,26 @@ exports.default = _default;
                       }
                     }),
                     _vm._v(" "),
+                    _c("data-panel-operator-mode-controls", {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.getRowBinding("mode") === "operator",
+                          expression: "getRowBinding('mode') === 'operator'"
+                        }
+                      ],
+                      attrs: {
+                        "column-names": _vm.getColumnNames,
+                        "row-bindings": _vm.getRowBinding("operator")
+                      },
+                      on: {
+                        valueChanged: function($event) {
+                          _vm.setRowBinding("operator")($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
                     _c("data-panel-row-binding-messages", {
                       attrs: {
                         "row-binding": _vm.getRowBinding(),
@@ -30582,7 +30833,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","../leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js","./DataPanelOperatorModeControls":"components/dataTable/DataPanelOperatorModeControls.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31780,6 +32031,8 @@ exports.default = void 0;
 
 var _functions = require("../../functions");
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -32233,7 +32486,13 @@ var mutations = {
       bindings.row[id] = {};
     }
 
-    bindings.row[id][subIndex] = value;
+    var finalValue = value;
+
+    if (_typeof(value) === 'object') {
+      finalValue = _objectSpread({}, finalValue);
+    }
+
+    bindings.row[id][subIndex] = finalValue;
     state.dataManager.bindings = bindings;
   },
 
@@ -33696,11 +33955,19 @@ var _default = {
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),
           element: (0, _i18n.__)('element', 'wptb-table-builder'),
           row: (0, _i18n.__)('row', 'wptb-table-builder'),
+          rows: (0, _i18n.__)('rows', 'wptb-table-builder'),
           auto: (0, _i18n.__)('auto', 'wptb-table-builder'),
           none: (0, _i18n.__)('none', 'wptb-table-builder'),
+          operator: (0, _i18n.__)('operator', 'wptb-table-builder'),
           text: (0, _i18n.__)('text', 'wptb-table-builder'),
           link: (0, _i18n.__)('link', 'wptb-table-builder'),
           mode: (0, _i18n.__)('mode', 'wptb-table-builder'),
+          rowAmount: (0, _i18n.__)('row amount', 'wptb-table-builder'),
+          all: (0, _i18n.__)('all', 'wptb-table-builder'),
+          custom: (0, _i18n.__)('custom', 'wptb-table-builder'),
+          compareColumn: (0, _i18n.__)('compare column', 'wptb-table-builder'),
+          highest: (0, _i18n.__)('highest', 'wptb-table-builder'),
+          lowest: (0, _i18n.__)('lowest', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),

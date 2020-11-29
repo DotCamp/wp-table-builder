@@ -7,11 +7,23 @@ export default {
 		overrideBindingTranslation() {
 			const modeRowBinding = this.rowBinding?.mode;
 
-			if (modeRowBinding === 'auto') {
-				return this.translationM('autoModeMessage');
+			let message = null;
+			switch (modeRowBinding) {
+				case 'auto': {
+					message = this.translationM('autoModeMessage');
+					break;
+				}
+				case 'operator': {
+					message = 'operator message';
+					break;
+				}
+				default: {
+					message = null;
+					break;
+				}
 			}
 
-			return null;
+			return message;
 		},
 	},
 };

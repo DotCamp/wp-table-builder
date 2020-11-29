@@ -6325,3 +6325,7 @@ thead .wptb-data-manager-table-data-value {
 }
 
 /*endregion*/
+
+.wptb-left-panel-no-bottom-border .wptb-settings-row {
+    border-bottom: 0 !important;
+}

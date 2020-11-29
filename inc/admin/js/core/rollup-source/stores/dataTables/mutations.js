@@ -388,7 +388,14 @@ const mutations = {
 		if (!bindings.row[id]) {
 			bindings.row[id] = {};
 		}
-		bindings.row[id][subIndex] = value;
+
+		let finalValue = value;
+
+		if (typeof value === 'object') {
+			finalValue = { ...finalValue };
+		}
+
+		bindings.row[id][subIndex] = finalValue;
 		state.dataManager.bindings = bindings;
 	},
 	/**
