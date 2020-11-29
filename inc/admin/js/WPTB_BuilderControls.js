@@ -15568,8 +15568,8 @@ exports.default = void 0;
  *
  * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
  *
- * @return {function} main debounce function
- * @constructor
+ * @return {Function} main debounce function
+ * @class
  */
 function DeBouncer() {
   var actionIds = {};
@@ -15577,7 +15577,7 @@ function DeBouncer() {
    * Main debounce function.
    *
    * @param {number} id unique id for action
-   * @param {function} callable function to be called
+   * @param {Function} callable function to be called
    * @param {number} timeout timeout duration in milliseconds
    */
 
@@ -32269,6 +32269,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -32895,8 +32899,10 @@ var actions = {
     }; // observer callback function
 
     var callback = function callback() {
-      commit('setTargetTable', null);
-      commit('setTargetTable', tableElement);
+      (0, _DeBouncer.default)('tableMutationObserver', function () {
+        commit('setTargetTable', null);
+        commit('setTargetTable', tableElement);
+      }, 500);
     };
 
     var observer = new MutationObserver(callback);
@@ -32907,7 +32913,7 @@ var actions = {
 
 var _default = actions;
 exports.default = _default;
-},{}],"stores/dataTables/getters.js":[function(require,module,exports) {
+},{"../../functions/DeBouncer":"functions/DeBouncer.js"}],"stores/dataTables/getters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

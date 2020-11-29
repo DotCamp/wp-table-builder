@@ -1,3 +1,4 @@
+import DeBouncer from '../../functions/DeBouncer';
 /**
  * Data table store actions.
  *
@@ -416,8 +417,14 @@ const actions = {
 
 		// observer callback function
 		const callback = () => {
-			commit('setTargetTable', null);
-			commit('setTargetTable', tableElement);
+			DeBouncer(
+				'tableMutationObserver',
+				() => {
+					commit('setTargetTable', null);
+					commit('setTargetTable', tableElement);
+				},
+				500
+			);
 		};
 
 		const observer = new MutationObserver(callback);
