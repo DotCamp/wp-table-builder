@@ -27,6 +27,14 @@
 				:options="options.operatorTypes"
 				v-model="operatorControls.operatorType"
 			></panel-dropdown-control>
+			<transition name="wptb-fade">
+				<panel-dropdown-control
+					v-show="getOperatorControl('operatorType') === 'not'"
+					:label="`${translationM('operator')} 2` | cap"
+					:options="options.operatorTypes"
+					v-model="operatorControls.operatorType2"
+				></panel-dropdown-control>
+			</transition>
 		</div>
 	</transition>
 </template>
@@ -35,6 +43,7 @@
 import PanelDropdownControl from '../PanelDropdownControl';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelInputControl from '../PanelInputControl';
+import { objectDeepMerge } from '../../stores/general';
 
 export default {
 	props: {
@@ -60,6 +69,7 @@ export default {
 				rowCustomAmount: 1,
 				compareColumn: null,
 				operatorType: 'highest',
+				operatorType2: 'highest',
 			},
 			options: {
 				rowAmount: {
@@ -69,28 +79,14 @@ export default {
 				operatorTypes: {
 					highest: this.translationM('highest'),
 					lowest: this.translationM('lowest'),
+					not: this.translationM('not'),
 				},
 			},
 		};
 	},
 	mounted() {
 		this.$nextTick(() => {
-			const rowBindingsLength = Object.keys(this.rowBindings).filter((k) => {
-				return Object.prototype.hasOwnProperty.call(this.rowBindings, k);
-			}).length;
-
-			if (rowBindingsLength !== 0) {
-				this.operatorControls = { ...this.operatorControls, ...this.rowBindings };
-
-				if (!this.operatorControls.compareColumn) {
-					const firstColumn = Object.keys(this.columnNamesWithoutNone).filter((k) => {
-						return Object.prototype.hasOwnProperty.call(this.columnNamesWithoutNone, k);
-					})[0];
-
-					this.operatorControls.compareColumn = firstColumn;
-				}
-			}
-
+			this.prepareRowBindings(this.rowBindings);
 			this.controlRelations();
 		});
 	},
@@ -98,7 +94,16 @@ export default {
 		operatorControls: {
 			handler() {
 				this.controlRelations();
+
 				this.$emit('valueChanged', this.operatorControls);
+			},
+			deep: true,
+		},
+		rowBindings: {
+			handler(n) {
+				if (!this.isObjectValuesSame(n, this.operatorControls)) {
+					this.prepareRowBindings(n);
+				}
 			},
 			deep: true,
 		},
@@ -123,6 +128,23 @@ export default {
 		},
 	},
 	methods: {
+		isObjectValuesSame(source, target) {
+			return Object.keys(source).every((k) => {
+				return source[k] === target[k];
+			});
+		},
+		prepareRowBindings(target) {
+			this.operatorControls = { ...this.operatorControls, ...this.rowBindings };
+			this.operatorControls = objectDeepMerge(this.operatorControls, target);
+
+			if (!this.operatorControls.compareColumn) {
+				const firstColumn = Object.keys(this.columnNamesWithoutNone).filter((k) => {
+					return Object.prototype.hasOwnProperty.call(this.columnNamesWithoutNone, k);
+				})[0];
+
+				this.operatorControls.compareColumn = firstColumn;
+			}
+		},
 		controlRelations() {
 			if (['highest', 'lowest'].includes(this.operatorControls.operatorType)) {
 				this.setOperatorControl('rowAmount', 'custom');

@@ -1,11 +1,123 @@
 import { parseElementType, parseTableElementId } from '.';
 
 /**
+ * Operator type.
+ *
+ * @param {Object} options options object
+ * @class
+ */
+function OperatorType(options) {
+	const defaultOptions = {
+		name: 'default',
+		calculateMaxRows: rowElement,
+	};
+
+	this.options = { ...defaultOptions, options };
+}
+
+/**
+ * Singleton operator factory instance.
+ *
+ * @type {Object}
+ */
+const operatorFactory = (function singletonFactory(options) {
+	/**
+	 * Operator factory for easy operator functions.
+	 *
+	 * @param {Array} operatorOptions individual operator options.
+	 * @class
+	 */
+	function OperatorFactory(operatorOptions) {
+		/**
+		 * Operator type instances.
+		 *
+		 * Operator name will be used as key and its instance will be used at its value.
+		 * This object will be populated with instances based on OperatorType object at factory instance generation.
+		 *
+		 * @type {Object}
+		 */
+		let operatorTypeInstances = {};
+
+		/**
+		 * Get operator type instance.
+		 *
+		 * @param {string} operatorName operator name
+		 * @return {Object} operator type instance
+		 */
+		this.getOperator = (operatorName) => {
+			return operatorTypeInstances[operatorName];
+		};
+
+		/**
+		 * Create operator type instances.
+		 */
+		const createOperators = () => {
+			operatorTypeInstances = {};
+
+			// eslint-disable-next-line array-callback-return
+			operatorOptions.map((operatorOption) => {
+				// eslint-disable-next-line no-param-reassign
+				operatorOptions[operatorOption.name] = new OperatorType(operatorOption);
+			});
+		};
+
+		/**
+		 * Operator factory startup hook
+		 */
+		const startUp = () => {
+			createOperators();
+		};
+
+		// start operator factory initialization
+		startUp();
+	}
+
+	return new OperatorFactory(options);
+})([]);
+
+/**
+ * Data manager for various data operations.
+ *
+ * @param {Array} values values array
+ * @param {Object} bindings bindings object
+ * @class
+ */
+function DataManager(values, bindings) {
+	let innerValues = values;
+	let innerBindings = bindings;
+
+	/**
+	 * Update values.
+	 *
+	 * @param {Array} newValues new values array
+	 */
+	this.updateValues = (newValues) => {
+		innerValues = newValues;
+	};
+
+	/**
+	 * Update bindings.
+	 *
+	 * @param {Object} newBindings
+	 */
+	this.updateValues = (newBindings) => {
+		innerBindings = newBindings;
+	};
+}
+
+/**
  * Data table generator for frontend usage.
  *
  * @class
  */
 function DataTableGenerator() {
+	/**
+	 * Operator factory instance.
+	 *
+	 * @type {Object}
+	 */
+	this.operatorFactory = operatorFactory;
+
 	/**
 	 * Current bindings to be used for current generate process.
 	 *
@@ -340,7 +452,7 @@ function DataTableGenerator() {
 				});
 			});
 		},
-		operator: (rowElement, rowIndex, count) => {
+		operator: (rowElement, rowIndex) => {
 			const { compareColumn, operatorType, rowAmount, rowCustomAmount } = getRowBinding(rowElement).operator;
 
 			const filteredValues = [];

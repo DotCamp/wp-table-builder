@@ -30259,17 +30259,19 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/w
 
 var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"));
 
+var _general = require("../../stores/general");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 var _default = {
   props: {
@@ -30297,7 +30299,8 @@ var _default = {
         rowAmount: 'all',
         rowCustomAmount: 1,
         compareColumn: null,
-        operatorType: 'highest'
+        operatorType: 'highest',
+        operatorType2: 'highest'
       },
       options: {
         rowAmount: {
@@ -30306,7 +30309,8 @@ var _default = {
         },
         operatorTypes: {
           highest: this.translationM('highest'),
-          lowest: this.translationM('lowest')
+          lowest: this.translationM('lowest'),
+          not: this.translationM('not')
         }
       }
     };
@@ -30315,20 +30319,7 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      var rowBindingsLength = Object.keys(_this.rowBindings).filter(function (k) {
-        return Object.prototype.hasOwnProperty.call(_this.rowBindings, k);
-      }).length;
-
-      if (rowBindingsLength !== 0) {
-        _this.operatorControls = _objectSpread({}, _this.operatorControls, {}, _this.rowBindings);
-
-        if (!_this.operatorControls.compareColumn) {
-          var firstColumn = Object.keys(_this.columnNamesWithoutNone).filter(function (k) {
-            return Object.prototype.hasOwnProperty.call(_this.columnNamesWithoutNone, k);
-          })[0];
-          _this.operatorControls.compareColumn = firstColumn;
-        }
-      }
+      _this.prepareRowBindings(_this.rowBindings);
 
       _this.controlRelations();
     });
@@ -30338,6 +30329,14 @@ var _default = {
       handler: function handler() {
         this.controlRelations();
         this.$emit('valueChanged', this.operatorControls);
+      },
+      deep: true
+    },
+    rowBindings: {
+      handler: function handler(n) {
+        if (!this.isObjectValuesSame(n, this.operatorControls)) {
+          this.prepareRowBindings(n);
+        }
       },
       deep: true
     }
@@ -30363,6 +30362,24 @@ var _default = {
     }
   },
   methods: {
+    isObjectValuesSame: function isObjectValuesSame(source, target) {
+      return Object.keys(source).every(function (k) {
+        return source[k] === target[k];
+      });
+    },
+    prepareRowBindings: function prepareRowBindings(target) {
+      var _this2 = this;
+
+      this.operatorControls = _objectSpread({}, this.operatorControls, {}, this.rowBindings);
+      this.operatorControls = (0, _general.objectDeepMerge)(this.operatorControls, target);
+
+      if (!this.operatorControls.compareColumn) {
+        var firstColumn = Object.keys(this.columnNamesWithoutNone).filter(function (k) {
+          return Object.prototype.hasOwnProperty.call(_this2.columnNamesWithoutNone, k);
+        })[0];
+        this.operatorControls.compareColumn = firstColumn;
+      }
+    },
     controlRelations: function controlRelations() {
       if (['highest', 'lowest'].includes(this.operatorControls.operatorType)) {
         this.setOperatorControl('rowAmount', 'custom');
@@ -30469,7 +30486,36 @@ exports.default = _default;
             },
             expression: "operatorControls.operatorType"
           }
-        })
+        }),
+        _vm._v(" "),
+        _c(
+          "transition",
+          { attrs: { name: "wptb-fade" } },
+          [
+            _c("panel-dropdown-control", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.getOperatorControl("operatorType") === "not",
+                  expression: "getOperatorControl('operatorType') === 'not'"
+                }
+              ],
+              attrs: {
+                label: _vm._f("cap")(_vm.translationM("operator") + " 2"),
+                options: _vm.options.operatorTypes
+              },
+              model: {
+                value: _vm.operatorControls.operatorType2,
+                callback: function($$v) {
+                  _vm.$set(_vm.operatorControls, "operatorType2", $$v)
+                },
+                expression: "operatorControls.operatorType2"
+              }
+            })
+          ],
+          1
+        )
       ],
       1
     )
@@ -30487,7 +30533,7 @@ render._withStripped = true
           };
         })());
       
-},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31075,19 +31121,143 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Operator type.
+ *
+ * @param {Object} options options object
+ * @class
+ */
+function OperatorType(options) {
+  var defaultOptions = {
+    name: 'default',
+    calculateMaxRows: rowElement
+  };
+  this.options = _objectSpread({}, defaultOptions, {
+    options: options
+  });
+}
+/**
+ * Singleton operator factory instance.
+ *
+ * @type {Object}
+ */
+
+
+var operatorFactory = function singletonFactory(options) {
+  /**
+   * Operator factory for easy operator functions.
+   *
+   * @param {Array} operatorOptions individual operator options.
+   * @class
+   */
+  function OperatorFactory(operatorOptions) {
+    /**
+     * Operator type instances.
+     *
+     * Operator name will be used as key and its instance will be used at its value.
+     * This object will be populated with instances based on OperatorType object at factory instance generation.
+     *
+     * @type {Object}
+     */
+    var operatorTypeInstances = {};
+    /**
+     * Get operator type instance.
+     *
+     * @param {string} operatorName operator name
+     * @return {Object} operator type instance
+     */
+
+    this.getOperator = function (operatorName) {
+      return operatorTypeInstances[operatorName];
+    };
+    /**
+     * Create operator type instances.
+     */
+
+
+    var createOperators = function createOperators() {
+      operatorTypeInstances = {}; // eslint-disable-next-line array-callback-return
+
+      operatorOptions.map(function (operatorOption) {
+        // eslint-disable-next-line no-param-reassign
+        operatorOptions[operatorOption.name] = new OperatorType(operatorOption);
+      });
+    };
+    /**
+     * Operator factory startup hook
+     */
+
+
+    var startUp = function startUp() {
+      createOperators();
+    }; // start operator factory initialization
+
+
+    startUp();
+  }
+
+  return new OperatorFactory(options);
+}([]);
+/**
+ * Data manager for various data operations.
+ *
+ * @param {Array} values values array
+ * @param {Object} bindings bindings object
+ * @class
+ */
+
+
+function DataManager(values, bindings) {
+  var innerValues = values;
+  var innerBindings = bindings;
+  /**
+   * Update values.
+   *
+   * @param {Array} newValues new values array
+   */
+
+  this.updateValues = function (newValues) {
+    innerValues = newValues;
+  };
+  /**
+   * Update bindings.
+   *
+   * @param {Object} newBindings
+   */
+
+
+  this.updateValues = function (newBindings) {
+    innerBindings = newBindings;
+  };
+}
 /**
  * Data table generator for frontend usage.
  *
  * @class
  */
+
+
 function DataTableGenerator() {
   var _this = this;
 
+  /**
+   * Operator factory instance.
+   *
+   * @type {Object}
+   */
+  this.operatorFactory = operatorFactory;
   /**
    * Current bindings to be used for current generate process.
    *
    * @type {Object}
    */
+
   this.currentBindings = {};
   /**
    * Current values to be used for current generate process.
@@ -31440,7 +31610,7 @@ function DataTableGenerator() {
         });
       });
     },
-    operator: function operator(rowElement, rowIndex, count) {
+    operator: function operator(rowElement, rowIndex) {
       var _getRowBinding$operat = getRowBinding(rowElement).operator,
           compareColumn = _getRowBinding$operat.compareColumn,
           operatorType = _getRowBinding$operat.operatorType,
@@ -34041,6 +34211,7 @@ var _default = {
           compareColumn: (0, _i18n.__)('compare column', 'wptb-table-builder'),
           highest: (0, _i18n.__)('highest', 'wptb-table-builder'),
           lowest: (0, _i18n.__)('lowest', 'wptb-table-builder'),
+          not: (0, _i18n.__)('not', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),

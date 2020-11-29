@@ -83,6 +83,7 @@ export default {
 					compareColumn: __('compare column', 'wptb-table-builder'),
 					highest: __('highest', 'wptb-table-builder'),
 					lowest: __('lowest', 'wptb-table-builder'),
+					not: __('not', 'wptb-table-builder'),
 					elementColumnBasicBindingMessage: __(
 						'Selected column data will be applied to table element.',
 						'wptb-table-builder'
