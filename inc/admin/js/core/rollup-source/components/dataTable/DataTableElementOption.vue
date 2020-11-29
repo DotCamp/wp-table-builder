@@ -19,9 +19,13 @@
 						:label="translationM(optionType) | cap"
 						:options="getColumnNames"
 						:key="optionType"
+						:disabled="isColumnBindingDisabled"
 					>
 					</panel-dropdown-control>
-					<panel-message-row></panel-message-row>
+					<data-panel-element-binding-messages
+						:row-binding="getRowBinding()"
+						:element-binding="getColumnBinding()"
+					></data-panel-element-binding-messages>
 				</panel-section-group-tabbed-item>
 				<panel-section-group-tabbed-item :active-id="currentTab" id="row">
 					<panel-dropdown-control
@@ -30,6 +34,10 @@
 						:value="getRowBinding('mode')"
 						@valueChanged="setRowBinding('mode')($event)"
 					></panel-dropdown-control>
+					<data-panel-row-binding-messages
+						:row-binding="getRowBinding()"
+						:element-binding="getColumnBinding()"
+					></data-panel-row-binding-messages>
 				</panel-section-group-tabbed-item>
 			</template>
 		</panel-section-group-tabbed-improved>
@@ -46,10 +54,14 @@ import PanelDropdownControl from '../PanelDropdownControl';
 import { parseTableElementId, parseElementType, getParentOfType, generateUniqueId } from '../../functions';
 import typeOptionList from './elementOptionTypeList';
 import PanelMessageRow from '../leftPanel/PanelMessageRow';
+import DataPanelElementBindingMessages from './DataPanelElementBindingMessages';
+import DataPanelRowBindingMessages from './DataPanelRowBindingMessages';
 
 export default {
 	mixins: [withNativeTranslationStore],
 	components: {
+		DataPanelRowBindingMessages,
+		DataPanelElementBindingMessages,
 		PanelDropdownControl,
 		PanelSectionGroupTabbedItem,
 		PanelSectionGroupTabbedImproved,
@@ -86,6 +98,15 @@ export default {
 		});
 	},
 	computed: {
+		elementBindingTranslation() {
+			if (this.isColumnBindingDisabled) {
+				return this.translationM('autoModeActiveMessage');
+			}
+			return '';
+		},
+		isColumnBindingDisabled() {
+			return this.getRowBinding('mode') === 'auto';
+		},
 		elementDataOptions() {
 			let options = typeOptionList[this.currentElementType];
 			if (options) {
@@ -152,12 +173,16 @@ export default {
 			}
 			return null;
 		},
-		getRowBinding(optionType) {
+		getRowBinding(optionType = null) {
 			if (this.currentElement) {
 				const rowId = this.getRowId();
 
+				// if no optionType argument is supplied, return binding object instead
 				if (rowId) {
 					const bindingObject = this.getRowBindingByRowId(rowId);
+					if (!optionType) {
+						return bindingObject;
+					}
 
 					let bindingValue = 'auto';
 					if (bindingObject && bindingObject[optionType]) {
@@ -181,10 +206,15 @@ export default {
 				}
 			};
 		},
-		getColumnBinding(optionType) {
+		getColumnBinding(optionType = null) {
 			if (this.currentElement) {
 				const elementId = parseTableElementId(this.currentElement);
 				const bindingObject = this.getColumnBindingForElement(elementId);
+
+				// if no optionType argument is supplied, return binding object instead
+				if (!optionType) {
+					return bindingObject;
+				}
 
 				let bindingValue = 'none';
 				if (bindingObject && bindingObject[optionType]) {

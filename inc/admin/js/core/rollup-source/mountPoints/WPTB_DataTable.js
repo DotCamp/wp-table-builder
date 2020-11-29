@@ -75,6 +75,18 @@ export default {
 					text: __('text', 'wptb-table-builder'),
 					link: __('link', 'wptb-table-builder'),
 					mode: __('mode', 'wptb-table-builder'),
+					elementColumnBasicBindingMessage: __(
+						'Selected column data will be applied to table element.',
+						'wptb-table-builder'
+					),
+					autoModeActiveMessage: __(
+						'Auto row mode is active, element bindings are disabled.',
+						'wptb-table-builder'
+					),
+					autoModeMessage: __(
+						'Data will be applied to elements according to their cell order.',
+						'wptb-table-builder'
+					),
 					emptyDataTablePreview: __(
 						'No table found, generate one to preview data table',
 						'wptb-table-builder'

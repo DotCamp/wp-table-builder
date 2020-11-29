@@ -30001,11 +30001,21 @@ exports.default = void 0;
 //
 //
 //
+//
+//
 var _default = {
-  props: {
-    message: {
-      type: String,
-      default: 'Message'
+  data: function data() {
+    return {
+      icons: {
+        info: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/></svg>'
+      }
+    };
+  },
+  methods: {
+    getIcon: function getIcon(type) {
+      var _this$icons$type;
+
+      return (_this$icons$type = this.icons[type]) !== null && _this$icons$type !== void 0 ? _this$icons$type : this.icons.info;
     }
   }
 };
@@ -30034,9 +30044,18 @@ exports.default = _default;
           "div",
           {
             staticClass:
-              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between wptb-panel-message"
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-panel-message"
           },
-          [_vm._v("\n\t\t\t" + _vm._s(_vm.message) + "\n\t\t")]
+          [
+            _c("div", {
+              staticClass:
+                "wptb-panel-message-icon wptb-flex-row wptb-flex-align-center wptb-flex-justify-center",
+              domProps: { innerHTML: _vm._s(_vm.getIcon("info")) }
+            }),
+            _vm._v(" "),
+            _vm._t("default")
+          ],
+          2
         )
       ])
     ]
@@ -30054,7 +30073,162 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{}],"components/dataTable/DataPanelBindingMessageBase.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelMessageRow = _interopRequireDefault(require("../leftPanel/PanelMessageRow"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    PanelMessageRow: _PanelMessageRow.default
+  },
+  props: {
+    rowBinding: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    elementBinding: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  computed: {
+    overrideBindingTranslation: function overrideBindingTranslation() {
+      return '';
+    },
+    bindingTranslation: function bindingTranslation() {
+      return this.overrideBindingTranslation !== '' && this.overrideBindingTranslation ? this.overrideBindingTranslation : '';
+    },
+    visibility: function visibility() {
+      return this.bindingTranslation !== '';
+    }
+  }
+};
+exports.default = _default;
+        var $3e04e7 = exports.default || module.exports;
+      
+      if (typeof $3e04e7 === 'function') {
+        $3e04e7 = $3e04e7.options;
+      }
+    
+        /* template */
+        Object.assign($3e04e7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "transition",
+    { attrs: { name: "wptb-fade" } },
+    [
+      _c(
+        "panel-message-row",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.visibility,
+              expression: "visibility"
+            }
+          ]
+        },
+        [_vm._v(_vm._s(_vm.bindingTranslation))]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-3e04e7",
+            functional: undefined
+          };
+        })());
+      
+},{"../leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"components/dataTable/DataPanelElementBindingMessages.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _DataPanelBindingMessageBase = _interopRequireDefault(require("./DataPanelBindingMessageBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  mixins: [_DataPanelBindingMessageBase.default, _withNativeTranslationStore.default],
+  computed: {
+    overrideBindingTranslation: function overrideBindingTranslation() {
+      var _this$rowBinding;
+
+      if (((_this$rowBinding = this.rowBinding) === null || _this$rowBinding === void 0 ? void 0 : _this$rowBinding.mode) === 'auto') {
+        return this.translationM('autoModeActiveMessage');
+      }
+
+      return this.translationM('elementColumnBasicBindingMessage');
+    }
+  }
+};
+exports.default = _default;
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/dataTable/DataPanelRowBindingMessages.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _DataPanelBindingMessageBase = _interopRequireDefault(require("./DataPanelBindingMessageBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  mixins: [_DataPanelBindingMessageBase.default, _withNativeTranslationStore.default],
+  computed: {
+    overrideBindingTranslation: function overrideBindingTranslation() {
+      var _this$rowBinding;
+
+      var modeRowBinding = (_this$rowBinding = this.rowBinding) === null || _this$rowBinding === void 0 ? void 0 : _this$rowBinding.mode;
+
+      if (modeRowBinding === 'auto') {
+        return this.translationM('autoModeMessage');
+      }
+
+      return null;
+    }
+  }
+};
+exports.default = _default;
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30080,6 +30254,10 @@ var _elementOptionTypeList = _interopRequireDefault(require("./elementOptionType
 
 var _PanelMessageRow = _interopRequireDefault(require("../leftPanel/PanelMessageRow"));
 
+var _DataPanelElementBindingMessages = _interopRequireDefault(require("./DataPanelElementBindingMessages"));
+
+var _DataPanelRowBindingMessages = _interopRequireDefault(require("./DataPanelRowBindingMessages"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -30091,6 +30269,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   mixins: [_withNativeTranslationStore.default],
   components: {
+    DataPanelRowBindingMessages: _DataPanelRowBindingMessages.default,
+    DataPanelElementBindingMessages: _DataPanelElementBindingMessages.default,
     PanelDropdownControl: _PanelDropdownControl.default,
     PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default,
     PanelSectionGroupTabbedImproved: _PanelSectionGroupTabbedImproved.default,
@@ -30131,6 +30311,16 @@ var _default = {
     });
   },
   computed: _objectSpread({
+    elementBindingTranslation: function elementBindingTranslation() {
+      if (this.isColumnBindingDisabled) {
+        return this.translationM('autoModeActiveMessage');
+      }
+
+      return '';
+    },
+    isColumnBindingDisabled: function isColumnBindingDisabled() {
+      return this.getRowBinding('mode') === 'auto';
+    },
     elementDataOptions: function elementDataOptions() {
       var options = _elementOptionTypeList.default[this.currentElementType];
 
@@ -30198,12 +30388,19 @@ var _default = {
 
       return null;
     },
-    getRowBinding: function getRowBinding(optionType) {
+    getRowBinding: function getRowBinding() {
+      var optionType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
       if (this.currentElement) {
-        var rowId = this.getRowId();
+        var rowId = this.getRowId(); // if no optionType argument is supplied, return binding object instead
 
         if (rowId) {
           var bindingObject = this.getRowBindingByRowId(rowId);
+
+          if (!optionType) {
+            return bindingObject;
+          }
+
           var bindingValue = 'auto';
 
           if (bindingObject && bindingObject[optionType]) {
@@ -30232,10 +30429,17 @@ var _default = {
         }
       };
     },
-    getColumnBinding: function getColumnBinding(optionType) {
+    getColumnBinding: function getColumnBinding() {
+      var optionType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
       if (this.currentElement) {
         var elementId = (0, _functions.parseTableElementId)(this.currentElement);
-        var bindingObject = this.getColumnBindingForElement(elementId);
+        var bindingObject = this.getColumnBindingForElement(elementId); // if no optionType argument is supplied, return binding object instead
+
+        if (!optionType) {
+          return bindingObject;
+        }
+
         var bindingValue = 'none';
 
         if (bindingObject && bindingObject[optionType]) {
@@ -30303,7 +30507,8 @@ exports.default = _default;
                         attrs: {
                           value: _vm.getColumnBinding(optionType),
                           label: _vm._f("cap")(_vm.translationM(optionType)),
-                          options: _vm.getColumnNames
+                          options: _vm.getColumnNames,
+                          disabled: _vm.isColumnBindingDisabled
                         },
                         on: {
                           valueChanged: function($event) {
@@ -30313,7 +30518,12 @@ exports.default = _default;
                       })
                     }),
                     _vm._v(" "),
-                    _c("panel-message-row")
+                    _c("data-panel-element-binding-messages", {
+                      attrs: {
+                        "row-binding": _vm.getRowBinding(),
+                        "element-binding": _vm.getColumnBinding()
+                      }
+                    })
                   ],
                   2
                 ),
@@ -30332,6 +30542,13 @@ exports.default = _default;
                         valueChanged: function($event) {
                           _vm.setRowBinding("mode")($event)
                         }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("data-panel-row-binding-messages", {
+                      attrs: {
+                        "row-binding": _vm.getRowBinding(),
+                        "element-binding": _vm.getColumnBinding()
                       }
                     })
                   ],
@@ -30365,7 +30582,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","../leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","../leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31283,7 +31500,7 @@ exports.default = _default;
               ])
             : _c("div", {
                 staticClass:
-                  "wptb-data-table-preview-main wptb-plugin-box-shadow-xl",
+                  "wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events",
                 style: _vm.previewStyle,
                 domProps: { innerHTML: _vm._s(_vm.previewHtml) }
               })
@@ -33478,6 +33695,9 @@ var _default = {
           text: (0, _i18n.__)('text', 'wptb-table-builder'),
           link: (0, _i18n.__)('link', 'wptb-table-builder'),
           mode: (0, _i18n.__)('mode', 'wptb-table-builder'),
+          elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
+          autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
+          autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),
           emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
         },
         proUrl: data.proUrl,

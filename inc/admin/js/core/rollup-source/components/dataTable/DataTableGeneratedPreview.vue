@@ -44,7 +44,7 @@
 			</div>
 			<div
 				v-else
-				class="wptb-data-table-preview-main wptb-plugin-box-shadow-xl"
+				class="wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events"
 				:style="previewStyle"
 				v-html="previewHtml"
 			></div>
