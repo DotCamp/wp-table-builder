@@ -18,6 +18,12 @@ import AutoModePanelControls from './AutoModePanelControls';
 
 export default {
 	components: { PanelSectionGroupTabbed, AutoModePanelControls },
+	mounted() {
+		this.$nextTick(() => {
+			// start responsive builder with provided default breakpoint
+			this.handleTabChange(this.appOptions.currentBreakpoint);
+		});
+	},
 	computed: {
 		breakpointsObject() {
 			return Object.keys(this.directives.breakpoints)
@@ -42,6 +48,7 @@ export default {
 	methods: {
 		/**
 		 * Handle tab change
+		 *
 		 * @param {string} tabId breakpoint id
 		 */
 		handleTabChange(tabId) {

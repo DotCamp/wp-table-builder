@@ -15,6 +15,18 @@
 			"
 		>
 		</panel-toggle-control>
+		<transition name="wptb-fade">
+			<panel-toggle-control
+				v-show="
+					directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint] &&
+					directives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint] === 'row'
+				"
+				v-model="directives.modeOptions.auto.repeatMergedHeader[appOptions.currentBreakpoint]"
+				:label="strings.repeatMergedHeader | cap"
+				:disabled="isDisabled()"
+			>
+			</panel-toggle-control>
+		</transition>
 		<panel-toggle-control
 			v-model="directives.modeOptions.auto.staticTopRow[appOptions.currentBreakpoint]"
 			:label="strings.staticTopRow | cap"

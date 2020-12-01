@@ -757,6 +757,11 @@
 
 			// new options
 			const staticTopRow = autoOption.staticTopRow ? autoOption.staticTopRow[sizeRange] : false;
+			const repeatMergedHeader = autoOption.repeatMergedHeader
+				? topRowAsHeader
+					? autoOption.repeatMergedHeader[sizeRange]
+					: false
+				: false;
 
 			tableObj.clearTable();
 
@@ -764,7 +769,14 @@
 				this.buildDefault(tableObj);
 				this.removeDefaultClasses(tableEl);
 			} else {
-				this.autoDirectionBuild(tableObj, direction, topRowAsHeader, staticTopRow, cellsPerRow);
+				this.autoDirectionBuild(
+					tableObj,
+					direction,
+					topRowAsHeader,
+					staticTopRow,
+					cellsPerRow,
+					repeatMergedHeader
+				);
 				this.addDefaultClasses(tableEl);
 			}
 		};
@@ -781,13 +793,15 @@
 		 * @param {boolean} topRowAsHeader use top row as header
 		 * @param {boolean} staticTopRow use top row as static
 		 * @param {number} cellsPerRow cells per row
+		 * @param {boolean} repeatMergedHeader repeat merged top header if top row as header option is enabled
 		 */
 		this.autoDirectionBuild = (
 			tableObj,
 			direction,
 			topRowAsHeader = false,
 			staticTopRow = false,
-			cellsPerRow = 1
+			cellsPerRow = 1,
+			repeatMergedHeader = true
 		) => {
 			const rows = tableObj.maxRows();
 			const columns = tableObj.maxColumns();
@@ -795,7 +809,7 @@
 
 			// build table with top row as header
 			if (topRowAsHeader) {
-				this.headerBuild(tableObj, direction, cellsPerRow);
+				this.headerBuild(tableObj, direction, cellsPerRow, repeatMergedHeader);
 			} else {
 				// cell stack direction is selected as row
 				// for future new functionality additions, keep different cell stack direction logic separate instead of generalizing the inner logic
@@ -935,8 +949,8 @@
 									const bgColor =
 										r === 0
 											? tableObj.rowColors.header
-											? tableObj.rowColors.header
-											: getComputedStyle(rowObj.el).backgroundColor
+												? tableObj.rowColors.header
+												: getComputedStyle(rowObj.el).backgroundColor
 											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
 									tempCell.el.style.backgroundColor = bgColor;
 								}
@@ -956,8 +970,9 @@
 		 * @param {TableObject} tableObj table object
 		 * @param {string} direction cell stack direction, possible options are [row, column]
 		 * @param {number} itemsPerHeader items bound to each header element
+		 * @param {boolean} repeatMergedHeader repeat merged header
 		 */
-		this.headerBuild = (tableObj, direction, itemsPerHeader = 1) => {
+		this.headerBuild = (tableObj, direction, itemsPerHeader = 1, repeatMergedHeader = true) => {
 			// cells at header
 			// applying header row color to cells
 			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
@@ -1075,17 +1090,25 @@
 							rowObj.el.style.borderTop = rowBorderStyle;
 						}
 
-						const clonedHeaderCell = headerCells[c].el.cloneNode(true);
+						if (repeatMergedHeader || (hc === 0 && c === 0)) {
+							const clonedHeaderCell = headerCells[c].el.cloneNode(true);
 
-						// apply header row color to header cell
-						clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
+							// apply header row color to header cell
+							clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
 
-						tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
+							tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
 
-						if (!clonedHeaderCell.style.backgroundColor) {
-							clonedHeaderCell.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor}`;
-							if (clonedHeaderCell.style.backgroundColor)
-								clonedHeaderCell.style.backgroundColor += ' !important';
+							if (!clonedHeaderCell.style.backgroundColor) {
+								clonedHeaderCell.style.backgroundColor = `${
+									getComputedStyle(rowObj.el).backgroundColor
+								}`;
+								if (clonedHeaderCell.style.backgroundColor)
+									clonedHeaderCell.style.backgroundColor += ' !important';
+							}
+
+							if (!repeatMergedHeader) {
+								clonedHeaderCell.setAttribute('rowSpan', columns * headerCount);
+							}
 						}
 
 						// clear out row color to override row color with cell colors

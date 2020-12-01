@@ -29,7 +29,7 @@ export default {
 		const appOptions = {
 			identifyCells: false,
 			hasLegacyResponsive: false,
-			currentBreakpoint: 'desktop',
+			currentBreakpoint: 'tablet',
 			currentSize: 0,
 		};
 
@@ -46,6 +46,11 @@ export default {
 						desktop: false,
 						tablet: false,
 						mobile: false,
+					},
+					repeatMergedHeader: {
+						desktop: true,
+						tablet: true,
+						mobile: true,
 					},
 					staticTopRow: {
 						desktop: false,
