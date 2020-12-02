@@ -30245,7 +30245,38 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/dataTable/DataPanelOperatorModeControls.vue":[function(require,module,exports) {
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/leftPanel/PanelControlGroup.vue":[function(require,module,exports) {
+
+        var $3ae63e = exports.default || module.exports;
+      
+      if (typeof $3ae63e === 'function') {
+        $3ae63e = $3ae63e.options;
+      }
+    
+        /* template */
+        Object.assign($3ae63e, (function () {
+          var render = function(_h, _vm) {
+  var _c = _vm._c
+  return _c(
+    "div",
+    { staticClass: "wptb-panel-control-group" },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: true
+          };
+        })());
+      
+},{}],"components/dataTable/DataPanelOperatorModeControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30260,6 +30291,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/w
 var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"));
 
 var _general = require("../../stores/general");
+
+var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelControlGroup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30290,6 +30323,7 @@ var _default = {
   },
   mixins: [_withNativeTranslationStore.default],
   components: {
+    PanelControlGroup: _PanelControlGroup.default,
     PanelInputControl: _PanelInputControl.default,
     PanelDropdownControl: _PanelDropdownControl.default
   },
@@ -30416,50 +30450,46 @@ exports.default = _default;
       "div",
       { staticClass: "wptb-data-panel-mode-operator-controls" },
       [
-        _c("panel-dropdown-control", {
-          class: {
-            "wptb-left-panel-no-bottom-border":
-              _vm.operatorControls.rowAmount === "custom"
-          },
-          attrs: {
-            label: _vm._f("cap")(_vm.translationM("rowAmount")),
-            options: _vm.options.rowAmount,
-            disabled: _vm.disabledState("rowAmount")
-          },
-          model: {
-            value: _vm.operatorControls.rowAmount,
-            callback: function($$v) {
-              _vm.$set(_vm.operatorControls, "rowAmount", $$v)
-            },
-            expression: "operatorControls.rowAmount"
-          }
-        }),
-        _vm._v(" "),
         _c(
-          "transition",
-          { attrs: { name: "wptb-fade" } },
+          "panel-control-group",
           [
-            _c("panel-input-control", {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.operatorControls.rowAmount === "custom",
-                  expression: "operatorControls.rowAmount === 'custom'"
-                }
-              ],
+            _c("panel-dropdown-control", {
               attrs: {
-                label: _vm._f("cap")(_vm.translationM("rows")),
+                label: _vm._f("cap")(_vm.translationM("rowAmount")),
+                options: _vm.options.rowAmount,
                 disabled: _vm.disabledState("rowAmount")
               },
               model: {
-                value: _vm.operatorControls.rowCustomAmount,
+                value: _vm.operatorControls.rowAmount,
                 callback: function($$v) {
-                  _vm.$set(_vm.operatorControls, "rowCustomAmount", $$v)
+                  _vm.$set(_vm.operatorControls, "rowAmount", $$v)
                 },
-                expression: "operatorControls.rowCustomAmount"
+                expression: "operatorControls.rowAmount"
               }
-            })
+            }),
+            _vm._v(" "),
+            _c(
+              "transition",
+              { attrs: { name: "wptb-fade" } },
+              [
+                _vm.operatorControls.rowAmount === "custom"
+                  ? _c("panel-input-control", {
+                      attrs: {
+                        label: _vm._f("cap")(_vm.translationM("rows")),
+                        disabled: _vm.disabledState("rowAmount")
+                      },
+                      model: {
+                        value: _vm.operatorControls.rowCustomAmount,
+                        callback: function($$v) {
+                          _vm.$set(_vm.operatorControls, "rowCustomAmount", $$v)
+                        },
+                        expression: "operatorControls.rowCustomAmount"
+                      }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
           ],
           1
         ),
@@ -30537,7 +30567,7 @@ render._withStripped = true
           };
         })());
       
-},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31154,7 +31184,7 @@ function OperatorType(options, dataManager, factoryContext) {
        */
       // eslint-disable-next-line no-unused-vars
       calculateMaxRows: function calculateMaxRows(bindingOptions) {
-        return 0;
+        return this.getOperatorResult(bindingOptions).length;
       },
 
       /**
@@ -31183,9 +31213,38 @@ function OperatorType(options, dataManager, factoryContext) {
     // eslint-disable-next-line array-callback-return
     Object.keys(_this.options.methods).map(function (method) {
       if (Object.prototype.hasOwnProperty.call(_this.options.methods, method)) {
-        _this[method] = _this.options.methods[method].bind(_this);
+        _this[method === 'getOperatorResult' ? 'innerOperatorResult' : method] = _this.options.methods[method].bind(_this);
       }
     });
+  };
+  /**
+   * Slice operator results according to demanded row amounts.
+   *
+   * @param {Array} results operator results
+   * @param {{rowAmount, rowCustomAmount}} options object
+   * @return {Array} sliced results array
+   */
+
+
+  var sliceResult = function sliceResult(results, _ref) {
+    var rowAmount = _ref.rowAmount,
+        rowCustomAmount = _ref.rowCustomAmount;
+    var sliceAmount = // eslint-disable-next-line no-nested-ternary
+    rowAmount === 'all' ? results.length : rowCustomAmount > results.length ? results.length : rowCustomAmount;
+    return results.slice(0, sliceAmount);
+  };
+  /**
+   * Get operator process results.
+   *
+   * @param {Object} options options object
+   * @return {Array} final operator results
+   */
+  // eslint-disable-next-line no-shadow
+
+
+  this.getOperatorResult = function (options) {
+    // eslint-disable-next-line prefer-spread
+    return sliceResult(_this.innerOperatorResult(options), options);
   };
 
   upliftMethodsToInstanceContext();
@@ -31199,21 +31258,18 @@ function OperatorType(options, dataManager, factoryContext) {
 
 var highestLowest = {
   methods: {
-    calculateMaxRows: function calculateMaxRows() {
-      return 1;
-    },
-    getOperatorResult: function getOperatorResult(_ref) {
+    getOperatorResult: function getOperatorResult(_ref2) {
       var _this2 = this;
 
-      var compareColumn = _ref.compareColumn,
-          operatorType = _ref.operatorType;
+      var compareColumn = _ref2.compareColumn,
+          operatorType = _ref2.operatorType;
       var newValuesArray = this.dataManager.getValues();
       newValuesArray.sort(function (a, b) {
         var aVal = Number.parseFloat(_this2.dataManager.getColumnValueByIndex(0, compareColumn, [a]));
         var bVal = Number.parseFloat(_this2.dataManager.getColumnValueByIndex(0, compareColumn, [b]));
         return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
       });
-      return newValuesArray;
+      return [newValuesArray[0]];
     }
   }
 };
@@ -31233,16 +31289,15 @@ var operatorTypeOptions = {
 
         var notOperatorOptions = _objectSpread({}, options, {
           operatorType: notOperator
-        });
+        }); // execute second operator process to find generated rows for that operator
+
 
         var notOperationValues = this.factory.getOperator(notOperator).getOperatorResult(notOperatorOptions)[0];
-        var dataRowId = notOperationValues.rowId;
+        var dataRowId = notOperationValues.rowId; // filter out rows generated by second operator process to perform not operation
+
         return this.dataManager.getValues().filter(function (row) {
           return row.rowId !== dataRowId;
         });
-      },
-      calculateMaxRows: function calculateMaxRows(options) {
-        return this.notOperation(options).length;
       },
       getOperatorResult: function getOperatorResult(options) {
         return this.notOperation(options);
@@ -31676,10 +31731,10 @@ function DataTableGenerator() {
     var elementValue = value;
 
     if (mapper) {
-      var _ref2, _mapper$tableElementT;
+      var _ref3, _mapper$tableElementT;
 
       // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-      var mapperIndex = (_ref2 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref2 !== void 0 ? _ref2 : ['text']; // create a new value object with mapped properties
+      var mapperIndex = (_ref3 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref3 !== void 0 ? _ref3 : ['text']; // create a new value object with mapped properties
 
       elementValue = {}; // eslint-disable-next-line array-callback-return
 

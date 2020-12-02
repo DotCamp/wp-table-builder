@@ -1,22 +1,23 @@
 <template>
 	<transition name="wptb-fade">
 		<div class="wptb-data-panel-mode-operator-controls">
-			<panel-dropdown-control
-				:label="translationM('rowAmount') | cap"
-				:options="options.rowAmount"
-				v-model="operatorControls.rowAmount"
-				:class="{ 'wptb-left-panel-no-bottom-border': operatorControls.rowAmount === 'custom' }"
-				:disabled="disabledState('rowAmount')"
-			></panel-dropdown-control>
-			<transition name="wptb-fade">
-				<panel-input-control
-					v-show="operatorControls.rowAmount === 'custom'"
-					:label="translationM('rows') | cap"
-					v-model="operatorControls.rowCustomAmount"
+			<panel-control-group>
+				<panel-dropdown-control
+					:label="translationM('rowAmount') | cap"
+					:options="options.rowAmount"
+					v-model="operatorControls.rowAmount"
 					:disabled="disabledState('rowAmount')"
-				>
-				</panel-input-control>
-			</transition>
+				></panel-dropdown-control>
+				<transition name="wptb-fade">
+					<panel-input-control
+						v-if="operatorControls.rowAmount === 'custom'"
+						:label="translationM('rows') | cap"
+						v-model="operatorControls.rowCustomAmount"
+						:disabled="disabledState('rowAmount')"
+					>
+					</panel-input-control>
+				</transition>
+			</panel-control-group>
 			<panel-dropdown-control
 				:label="translationM('compareColumn') | cap"
 				:options="columnNamesWithoutNone"
@@ -44,6 +45,7 @@ import PanelDropdownControl from '../PanelDropdownControl';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelInputControl from '../PanelInputControl';
 import { objectDeepMerge } from '../../stores/general';
+import PanelControlGroup from '../leftPanel/PanelControlGroup';
 
 export default {
 	props: {
@@ -61,7 +63,7 @@ export default {
 		},
 	},
 	mixins: [withNativeTranslationStore],
-	components: { PanelInputControl, PanelDropdownControl },
+	components: { PanelControlGroup, PanelInputControl, PanelDropdownControl },
 	data() {
 		return {
 			operatorControls: {

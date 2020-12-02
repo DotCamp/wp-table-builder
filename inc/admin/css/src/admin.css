@@ -6329,3 +6329,12 @@ thead .wptb-data-manager-table-data-value {
 .wptb-left-panel-no-bottom-border .wptb-settings-row {
     border-bottom: 0 !important;
 }
+
+.wptb-panel-control-group .wptb-settings-row {
+    border-bottom: 0 !important;
+}
+
+.wptb-panel-control-group .wptb-element-option:last-child .wptb-settings-row {
+    border-bottom: 1px solid #e5dfdf !important;
+}
+
