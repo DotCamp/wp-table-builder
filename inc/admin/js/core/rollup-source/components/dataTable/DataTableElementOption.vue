@@ -40,6 +40,10 @@
 						:row-bindings="getRowBinding('operator')"
 						@valueChanged="setRowBinding('operator')($event)"
 					></data-panel-operator-mode-controls>
+					<data-panel-sort-controls
+						:column-names="getColumnNames"
+						:row-bindings="getRowBinding('sort')"
+					></data-panel-sort-controls>
 					<data-panel-row-binding-messages
 						:row-binding="getRowBinding()"
 						:element-binding="getColumnBinding()"
@@ -62,10 +66,12 @@ import typeOptionList from './elementOptionTypeList';
 import DataPanelElementBindingMessages from './DataPanelElementBindingMessages';
 import DataPanelRowBindingMessages from './DataPanelRowBindingMessages';
 import DataPanelOperatorModeControls from './DataPanelOperatorModeControls';
+import DataPanelSortControls from './DataPanelSortControls';
 
 export default {
 	mixins: [withNativeTranslationStore],
 	components: {
+		DataPanelSortControls,
 		DataPanelOperatorModeControls,
 		DataPanelRowBindingMessages,
 		DataPanelElementBindingMessages,

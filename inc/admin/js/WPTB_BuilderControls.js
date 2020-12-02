@@ -30567,7 +30567,109 @@ render._withStripped = true
           };
         })());
       
-},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue"}],"components/dataTable/DataPanelSortControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelControlGroup"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    columnNames: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    rowBindings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  components: {
+    PanelDropdownControl: _PanelDropdownControl.default,
+    PanelControlGroup: _PanelControlGroup.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      sortOptions: {
+        sortTarget: 'none',
+        sortType: 'abc',
+        sortDirection: 'desc'
+      }
+    };
+  }
+};
+exports.default = _default;
+        var $8cbe74 = exports.default || module.exports;
+      
+      if (typeof $8cbe74 === 'function') {
+        $8cbe74 = $8cbe74.options;
+      }
+    
+        /* template */
+        Object.assign($8cbe74, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "panel-control-group",
+    [
+      _c("panel-dropdown-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.translationM("sortTarget")),
+          options: _vm.columnNames
+        },
+        model: {
+          value: _vm.sortOptions.sortTarget,
+          callback: function($$v) {
+            _vm.$set(_vm.sortOptions, "sortTarget", $$v)
+          },
+          expression: "sortOptions.sortTarget"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30597,6 +30699,8 @@ var _DataPanelRowBindingMessages = _interopRequireDefault(require("./DataPanelRo
 
 var _DataPanelOperatorModeControls = _interopRequireDefault(require("./DataPanelOperatorModeControls"));
 
+var _DataPanelSortControls = _interopRequireDefault(require("./DataPanelSortControls"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -30608,6 +30712,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   mixins: [_withNativeTranslationStore.default],
   components: {
+    DataPanelSortControls: _DataPanelSortControls.default,
     DataPanelOperatorModeControls: _DataPanelOperatorModeControls.default,
     DataPanelRowBindingMessages: _DataPanelRowBindingMessages.default,
     DataPanelElementBindingMessages: _DataPanelElementBindingMessages.default,
@@ -30908,6 +31013,13 @@ exports.default = _default;
                       }
                     }),
                     _vm._v(" "),
+                    _c("data-panel-sort-controls", {
+                      attrs: {
+                        "column-names": _vm.getColumnNames,
+                        "row-bindings": _vm.getRowBinding("sort")
+                      }
+                    }),
+                    _vm._v(" "),
                     _c("data-panel-row-binding-messages", {
                       attrs: {
                         "row-binding": _vm.getRowBinding(),
@@ -30945,7 +31057,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js","./DataPanelOperatorModeControls":"components/dataTable/DataPanelOperatorModeControls.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js","./DataPanelOperatorModeControls":"components/dataTable/DataPanelOperatorModeControls.vue","./DataPanelSortControls":"components/dataTable/DataPanelSortControls.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34418,6 +34530,7 @@ var _default = {
           highest: (0, _i18n.__)('highest', 'wptb-table-builder'),
           lowest: (0, _i18n.__)('lowest', 'wptb-table-builder'),
           not: (0, _i18n.__)('not', 'wptb-table-builder'),
+          sortTarget: (0, _i18n.__)('sort target', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),

@@ -84,6 +84,7 @@ export default {
 					highest: __('highest', 'wptb-table-builder'),
 					lowest: __('lowest', 'wptb-table-builder'),
 					not: __('not', 'wptb-table-builder'),
+					sortTarget: __('sort target', 'wptb-table-builder'),
 					elementColumnBasicBindingMessage: __(
 						'Selected column data will be applied to table element.',
 						'wptb-table-builder'
