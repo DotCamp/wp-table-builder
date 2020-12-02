@@ -1,79 +1,136 @@
 import { parseElementType, parseTableElementId } from '.';
+import { objectDeepMerge } from '../stores/general';
 
 /**
  * Operator type.
  *
  * @param {Object} options options object
+ * @param {DataManager} dataManager data manager instance
  * @class
  */
-function OperatorType(options) {
+function OperatorType(options, dataManager) {
 	const defaultOptions = {
 		name: 'default',
-		calculateMaxRows: rowElement,
+		methods: {
+			calculateMaxRows() {
+				return null;
+			},
+			getOperatorResult(operatorOptions) {
+				return [];
+			},
+		},
 	};
 
-	this.options = { ...defaultOptions, options };
+	// merge default options with the supplied ones
+	this.options = objectDeepMerge(defaultOptions, options);
+	this.dataManager = dataManager;
+
+	/**
+	 * Raise option methods to instance context to use context related properties.
+	 */
+	const upliftMethodsToInstanceContext = () => {
+		// eslint-disable-next-line array-callback-return
+		Object.keys(this.options.methods).map((method) => {
+			if (Object.prototype.hasOwnProperty.call(this.options.methods, method)) {
+				this[method] = this.options.methods[method].bind(this);
+			}
+		});
+	};
+
+	upliftMethodsToInstanceContext();
 }
 
 /**
- * Singleton operator factory instance.
+ * Highest/lowest operator options.
  *
  * @type {Object}
  */
-const operatorFactory = (function singletonFactory(options) {
-	/**
-	 * Operator factory for easy operator functions.
-	 *
-	 * @param {Array} operatorOptions individual operator options.
-	 * @class
-	 */
-	function OperatorFactory(operatorOptions) {
-		/**
-		 * Operator type instances.
-		 *
-		 * Operator name will be used as key and its instance will be used at its value.
-		 * This object will be populated with instances based on OperatorType object at factory instance generation.
-		 *
-		 * @type {Object}
-		 */
-		let operatorTypeInstances = {};
+const highestLowest = {
+	methods: {
+		calculateMaxRows() {
+			return 1;
+		},
+		getOperatorResult({ compareColumn, operatorType }) {
+			const newValuesArray = this.dataManager.getValues();
+			newValuesArray.sort((a, b) => {
+				const aVal = Number.parseFloat(this.dataManager.getColumnValueByIndex(0, compareColumn, [a]));
+				const bVal = Number.parseFloat(this.dataManager.getColumnValueByIndex(0, compareColumn, [b]));
 
-		/**
-		 * Get operator type instance.
-		 *
-		 * @param {string} operatorName operator name
-		 * @return {Object} operator type instance
-		 */
-		this.getOperator = (operatorName) => {
-			return operatorTypeInstances[operatorName];
-		};
-
-		/**
-		 * Create operator type instances.
-		 */
-		const createOperators = () => {
-			operatorTypeInstances = {};
-
-			// eslint-disable-next-line array-callback-return
-			operatorOptions.map((operatorOption) => {
-				// eslint-disable-next-line no-param-reassign
-				operatorOptions[operatorOption.name] = new OperatorType(operatorOption);
+				return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
 			});
-		};
 
-		/**
-		 * Operator factory startup hook
-		 */
-		const startUp = () => {
-			createOperators();
-		};
+			return newValuesArray;
+		},
+	},
+};
 
-		// start operator factory initialization
-		startUp();
-	}
+/**
+ * Operator type options that will be used to generator operators in operator factory.
+ *
+ * @type {Object}
+ */
+const operatorTypeOptions = {
+	highest: highestLowest,
+	lowest: highestLowest,
+};
 
-	return new OperatorFactory(options);
-})([]);
+/**
+ * Operator factory for easy operator functions.
+ *
+ * @param {Object} operatorOptions individual operator options.
+ * @param {DataManager} dataManager DataManager instance
+ * @class
+ */
+function OperatorFactory(operatorOptions, dataManager) {
+	/**
+	 * Operator type instances.
+	 *
+	 * Operator name will be used as key and its instance will be used at its value.
+	 * This object will be populated with instances based on OperatorType object at factory instance generation.
+	 *
+	 * @type {Object}
+	 */
+	let operatorTypeInstances = {};
+
+	/**
+	 * Get operator type instance.
+	 *
+	 * @param {string} operatorName operator name
+	 * @return {Object} operator type instance
+	 */
+	this.getOperator = (operatorName) => {
+		return operatorTypeInstances[operatorName];
+	};
+
+	/**
+	 * Create operator type instances.
+	 */
+	const createOperators = () => {
+		operatorTypeInstances = {};
+
+		Object.keys(operatorOptions).map((optionName) => {
+			if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
+				operatorTypeInstances[optionName] = new OperatorType(
+					{
+						name: optionName,
+						...operatorOptions[optionName],
+					},
+					dataManager
+				);
+			}
+		});
+	};
+
+	/**
+	 * Operator factory startup hook
+	 */
+	const startUp = () => {
+		createOperators();
+	};
+
+	// start operator factory initialization
+	startUp();
+}
 
 /**
  * Data manager for various data operations.
@@ -82,7 +139,7 @@ const operatorFactory = (function singletonFactory(options) {
  * @param {Object} bindings bindings object
  * @class
  */
-function DataManager(values, bindings) {
+function DataManager(values = [], bindings = {}) {
 	let innerValues = values;
 	let innerBindings = bindings;
 
@@ -100,54 +157,8 @@ function DataManager(values, bindings) {
 	 *
 	 * @param {Object} newBindings
 	 */
-	this.updateValues = (newBindings) => {
+	this.updateBindings = (newBindings) => {
 		innerBindings = newBindings;
-	};
-}
-
-/**
- * Data table generator for frontend usage.
- *
- * @class
- */
-function DataTableGenerator() {
-	/**
-	 * Operator factory instance.
-	 *
-	 * @type {Object}
-	 */
-	this.operatorFactory = operatorFactory;
-
-	/**
-	 * Current bindings to be used for current generate process.
-	 *
-	 * @type {Object}
-	 */
-	this.currentBindings = {};
-
-	/**
-	 * Current values to be used for current generate process.
-	 *
-	 * @type {Object}
-	 */
-	this.currentValues = {};
-	/**
-	 * Parse target element into its cells and rows.
-	 *
-	 * @param {HTMLElement} table table element to be parsed
-	 */
-	const parseTable = (table) => {
-		return Array.from(table.querySelectorAll('tr'));
-	};
-
-	/**
-	 * Clear table body contents of a table.
-	 *
-	 * @param {HTMLElement} table table to be cleared
-	 */
-	const clearTable = (table) => {
-		// eslint-disable-next-line no-param-reassign
-		table.querySelector('tbody').innerHTML = '';
 	};
 
 	/**
@@ -156,8 +167,8 @@ function DataTableGenerator() {
 	 * @param {number} index column index
 	 * @return {string} column id
 	 */
-	const getColumnIdFromIndex = (index) => {
-		return this.currentValues[0].values[index]?.colId;
+	this.getColumnIdFromIndex = (index) => {
+		return innerValues[0].values[index]?.colId;
 	};
 
 	/**
@@ -167,8 +178,8 @@ function DataTableGenerator() {
 	 * @param {Array} customValues custom values to use
 	 * @return {Array} all values related to that column
 	 */
-	const getColumnValues = (columnId, customValues = null) => {
-		const valuesToUse = customValues || this.currentValues;
+	this.getColumnValues = (columnId, customValues = null) => {
+		const valuesToUse = customValues || innerValues;
 		return valuesToUse.reduce((carry, row) => {
 			// eslint-disable-next-line array-callback-return
 			row.values.map((cell) => {
@@ -189,8 +200,8 @@ function DataTableGenerator() {
 	 * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
 	 * @return {null|string} column value, null if none found on index or column id
 	 */
-	const getColumnValueByIndex = (index, columnId, customValues = null) => {
-		const columnValues = getColumnValues(columnId, customValues);
+	this.getColumnValueByIndex = (index, columnId, customValues = null) => {
+		const columnValues = this.getColumnValues(columnId, customValues);
 
 		let value = null;
 		const newIndex = customValues ? 0 : index;
@@ -203,8 +214,114 @@ function DataTableGenerator() {
 		return value;
 	};
 
-	const getRowById = (rowId) => {
-		return this.currentValues.filter((row) => row.rowId === rowId)[0];
+	/**
+	 * Get a row object by its id.
+	 *
+	 * @param {string} rowId row id
+	 * @return {Object} row object
+	 */
+	this.getRowById = (rowId) => {
+		return innerValues.filter((row) => row.rowId === rowId)[0];
+	};
+
+	/**
+	 * Get binding with a specific id.
+	 *
+	 * @param {string} id id for the target binding
+	 * @param {string|null} type binding type, null for none
+	 */
+	this.getBinding = (id, type) => {
+		if (innerBindings[type]) {
+			return innerBindings[type][id];
+		}
+
+		return null;
+	};
+
+	/**
+	 * Get values of data manager.
+	 * This function will return immutable version of values.
+	 *
+	 * @return {Array} values array
+	 */
+	this.getValues = () => {
+		return Array.from(innerValues);
+	};
+}
+
+/**
+ * Data table generator for frontend usage.
+ *
+ * @class
+ */
+function DataTableGenerator() {
+	/**
+	 * Data manager instance
+	 *
+	 * @type {DataManager}
+	 */
+	this.dataManager = {
+		_dataManager: null,
+		get instance() {
+			/* eslint-disable no-underscore-dangle */
+			if (!this._dataManager) {
+				this._dataManager = new DataManager();
+			}
+
+			return this._dataManager;
+			/* eslint-enable no-underscore-dangle */
+		},
+	};
+
+	/**
+	 * Operator factory instance.
+	 *
+	 * @type {OperatorFactory}
+	 */
+	this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
+
+	/**
+	 * Update data manager instance.
+	 *
+	 * @param {Array} values values array
+	 * @param {Object} bindings bindings object
+	 */
+	this.updateDataManager = (values = [], bindings = {}) => {
+		this.dataManager.instance.updateValues(values);
+		this.dataManager.instance.updateBindings(bindings);
+	};
+
+	/**
+	 * Current bindings to be used for current generate process.
+	 *
+	 * @type {Object}
+	 */
+	this.currentBindings = {};
+
+	/**
+	 * Current values to be used for current generate process.
+	 *
+	 * @type {Object}
+	 */
+	this.currentValues = {};
+
+	/**
+	 * Parse target element into its cells and rows.
+	 *
+	 * @param {HTMLElement} table table element to be parsed
+	 */
+	const parseTable = (table) => {
+		return Array.from(table.querySelectorAll('tr'));
+	};
+
+	/**
+	 * Clear table body contents of a table.
+	 *
+	 * @param {HTMLElement} table table to be cleared
+	 */
+	const clearTable = (table) => {
+		// eslint-disable-next-line no-param-reassign
+		table.querySelector('tbody').innerHTML = '';
 	};
 
 	/**
@@ -215,20 +332,6 @@ function DataTableGenerator() {
 	 */
 	const getRowId = (rowElement) => {
 		return rowElement.dataset.dataTableRowId;
-	};
-
-	/**
-	 * Get binding with a specific id.
-	 *
-	 * @param {string} id id for the target binding
-	 * @param {string|null} type binding type, null for none
-	 */
-	const getBinding = (id, type) => {
-		if (this.currentBindings[type]) {
-			return this.currentBindings[type][id];
-		}
-
-		return null;
 	};
 
 	/**
@@ -243,7 +346,7 @@ function DataTableGenerator() {
 		let binding = null;
 
 		if (elementId) {
-			binding = getBinding(elementId, type);
+			binding = this.dataManager.instance.getBinding(elementId, type);
 		}
 
 		return binding;
@@ -261,7 +364,7 @@ function DataTableGenerator() {
 		let binding = null;
 
 		if (rowId) {
-			binding = getBinding(rowId, 'row');
+			binding = this.dataManager.instance.getBinding(rowId, 'row');
 		}
 
 		return binding;
@@ -283,9 +386,7 @@ function DataTableGenerator() {
 		if (rowBindingMode === 'operator') {
 			const { operatorType } = getRowBinding(rowElement).operator;
 
-			if (['highest', 'lowest'].includes(operatorType)) {
-				return 1;
-			}
+			return this.operatorFactory.getOperator(operatorType).calculateMaxRows();
 		}
 
 		const cells = Array.from(rowElement.querySelectorAll('td'));
@@ -310,7 +411,7 @@ function DataTableGenerator() {
 						})
 						// eslint-disable-next-line no-shadow
 						.reduce((carry, binding) => {
-							const values = getColumnValues(binding);
+							const values = this.dataManager.instance.getColumnValues(binding);
 							return Math.max(values.length, carry);
 						}, 0);
 				}
@@ -394,7 +495,11 @@ function DataTableGenerator() {
 				// eslint-disable-next-line array-callback-return
 				Object.keys(bindingColIdObject).map((key) => {
 					if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-						value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
+						value[key] = this.dataManager.instance.getColumnValueByIndex(
+							rowIndex,
+							bindingColIdObject[key],
+							customValues
+						);
 					}
 				});
 
@@ -441,8 +546,8 @@ function DataTableGenerator() {
 				const cellTableElements = getTableElementsFromCell(cell);
 
 				// get column value based on the index of the cell
-				const currentColumnId = getColumnIdFromIndex(cellIndex);
-				const columnValue = getColumnValueByIndex(rowIndex, currentColumnId);
+				const currentColumnId = this.dataManager.instance.getColumnIdFromIndex(cellIndex);
+				const columnValue = this.dataManager.instance.getColumnValueByIndex(rowIndex, currentColumnId);
 
 				// eslint-disable-next-line array-callback-return
 				cellTableElements.map((tableElement) => {
@@ -453,22 +558,13 @@ function DataTableGenerator() {
 			});
 		},
 		operator: (rowElement, rowIndex) => {
-			const { compareColumn, operatorType, rowAmount, rowCustomAmount } = getRowBinding(rowElement).operator;
+			const operatorOptions = getRowBinding(rowElement).operator;
 
-			const filteredValues = [];
-
-			// highest/lowest operator logic
-			if (['highest', 'lowest'].includes(operatorType)) {
-				const newValuesArray = Array.from(this.currentValues);
-				newValuesArray.sort((a, b) => {
-					const aVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [a]));
-					const bVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [b]));
-
-					return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
-				});
-
-				batchPopulateTableElements(getTableElementsFromRow(rowElement), 0, [newValuesArray[0]]);
-			}
+			batchPopulateTableElements(
+				getTableElementsFromRow(rowElement),
+				rowIndex,
+				this.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions)
+			);
 		},
 	};
 
@@ -532,6 +628,7 @@ function DataTableGenerator() {
 	 * @return {HTMLElement} generated data table
 	 */
 	this.generateDataTable = (sourceTable, bindings, values) => {
+		this.updateDataManager(values, bindings);
 		this.currentBindings = bindings;
 		this.currentValues = values;
 		return new Promise((res) => {

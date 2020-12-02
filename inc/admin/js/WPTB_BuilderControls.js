@@ -31109,6 +31109,8 @@ exports.default = void 0;
 
 var _ = require(".");
 
+var _general = require("../stores/general");
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -31131,79 +31133,133 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * Operator type.
  *
  * @param {Object} options options object
+ * @param {DataManager} dataManager data manager instance
  * @class
  */
-function OperatorType(options) {
+function OperatorType(options, dataManager) {
+  var _this = this;
+
   var defaultOptions = {
     name: 'default',
-    calculateMaxRows: rowElement
+    methods: {
+      calculateMaxRows: function calculateMaxRows() {
+        return null;
+      },
+      getOperatorResult: function getOperatorResult(operatorOptions) {
+        return [];
+      }
+    }
+  }; // merge default options with the supplied ones
+
+  this.options = (0, _general.objectDeepMerge)(defaultOptions, options);
+  this.dataManager = dataManager;
+  /**
+   * Raise option methods to instance context to use context related properties.
+   */
+
+  var upliftMethodsToInstanceContext = function upliftMethodsToInstanceContext() {
+    // eslint-disable-next-line array-callback-return
+    Object.keys(_this.options.methods).map(function (method) {
+      if (Object.prototype.hasOwnProperty.call(_this.options.methods, method)) {
+        _this[method] = _this.options.methods[method].bind(_this);
+      }
+    });
   };
-  this.options = _objectSpread({}, defaultOptions, {
-    options: options
-  });
+
+  upliftMethodsToInstanceContext();
 }
 /**
- * Singleton operator factory instance.
+ * Highest/lowest operator options.
  *
  * @type {Object}
  */
 
 
-var operatorFactory = function singletonFactory(options) {
-  /**
-   * Operator factory for easy operator functions.
-   *
-   * @param {Array} operatorOptions individual operator options.
-   * @class
-   */
-  function OperatorFactory(operatorOptions) {
-    /**
-     * Operator type instances.
-     *
-     * Operator name will be used as key and its instance will be used at its value.
-     * This object will be populated with instances based on OperatorType object at factory instance generation.
-     *
-     * @type {Object}
-     */
-    var operatorTypeInstances = {};
-    /**
-     * Get operator type instance.
-     *
-     * @param {string} operatorName operator name
-     * @return {Object} operator type instance
-     */
+var highestLowest = {
+  methods: {
+    calculateMaxRows: function calculateMaxRows() {
+      return 1;
+    },
+    getOperatorResult: function getOperatorResult(_ref) {
+      var _this2 = this;
 
-    this.getOperator = function (operatorName) {
-      return operatorTypeInstances[operatorName];
-    };
-    /**
-     * Create operator type instances.
-     */
-
-
-    var createOperators = function createOperators() {
-      operatorTypeInstances = {}; // eslint-disable-next-line array-callback-return
-
-      operatorOptions.map(function (operatorOption) {
-        // eslint-disable-next-line no-param-reassign
-        operatorOptions[operatorOption.name] = new OperatorType(operatorOption);
+      var compareColumn = _ref.compareColumn,
+          operatorType = _ref.operatorType;
+      var newValuesArray = this.dataManager.getValues();
+      newValuesArray.sort(function (a, b) {
+        var aVal = Number.parseFloat(_this2.dataManager.getColumnValueByIndex(0, compareColumn, [a]));
+        var bVal = Number.parseFloat(_this2.dataManager.getColumnValueByIndex(0, compareColumn, [b]));
+        return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
       });
-    };
-    /**
-     * Operator factory startup hook
-     */
-
-
-    var startUp = function startUp() {
-      createOperators();
-    }; // start operator factory initialization
-
-
-    startUp();
+      return newValuesArray;
+    }
   }
+};
+/**
+ * Operator type options that will be used to generator operators in operator factory.
+ *
+ * @type {Object}
+ */
 
-  return new OperatorFactory(options);
-}([]);
+var operatorTypeOptions = {
+  highest: highestLowest,
+  lowest: highestLowest
+};
+/**
+ * Operator factory for easy operator functions.
+ *
+ * @param {Object} operatorOptions individual operator options.
+ * @param {DataManager} dataManager DataManager instance
+ * @class
+ */
+
+function OperatorFactory(operatorOptions, dataManager) {
+  /**
+   * Operator type instances.
+   *
+   * Operator name will be used as key and its instance will be used at its value.
+   * This object will be populated with instances based on OperatorType object at factory instance generation.
+   *
+   * @type {Object}
+   */
+  var operatorTypeInstances = {};
+  /**
+   * Get operator type instance.
+   *
+   * @param {string} operatorName operator name
+   * @return {Object} operator type instance
+   */
+
+  this.getOperator = function (operatorName) {
+    return operatorTypeInstances[operatorName];
+  };
+  /**
+   * Create operator type instances.
+   */
+
+
+  var createOperators = function createOperators() {
+    operatorTypeInstances = {};
+    Object.keys(operatorOptions).map(function (optionName) {
+      if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
+        operatorTypeInstances[optionName] = new OperatorType(_objectSpread({
+          name: optionName
+        }, operatorOptions[optionName]), dataManager);
+      }
+    });
+  };
+  /**
+   * Operator factory startup hook
+   */
+
+
+  var startUp = function startUp() {
+    createOperators();
+  }; // start operator factory initialization
+
+
+  startUp();
+}
 /**
  * Data manager for various data operations.
  *
@@ -31213,7 +31269,11 @@ var operatorFactory = function singletonFactory(options) {
  */
 
 
-function DataManager(values, bindings) {
+function DataManager() {
+  var _this3 = this;
+
+  var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var innerValues = values;
   var innerBindings = bindings;
   /**
@@ -31232,8 +31292,108 @@ function DataManager(values, bindings) {
    */
 
 
-  this.updateValues = function (newBindings) {
+  this.updateBindings = function (newBindings) {
     innerBindings = newBindings;
+  };
+  /**
+   * Get id of a data column from index.
+   *
+   * @param {number} index column index
+   * @return {string} column id
+   */
+
+
+  this.getColumnIdFromIndex = function (index) {
+    var _innerValues$0$values;
+
+    return (_innerValues$0$values = innerValues[0].values[index]) === null || _innerValues$0$values === void 0 ? void 0 : _innerValues$0$values.colId;
+  };
+  /**
+   * Get all values of a column in data table.
+   *
+   * @param {string} columnId data table column id
+   * @param {Array} customValues custom values to use
+   * @return {Array} all values related to that column
+   */
+
+
+  this.getColumnValues = function (columnId) {
+    var customValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var valuesToUse = customValues || innerValues;
+    return valuesToUse.reduce(function (carry, row) {
+      // eslint-disable-next-line array-callback-return
+      row.values.map(function (cell) {
+        if (cell.colId === columnId) {
+          carry.push(cell.value);
+        }
+      });
+      return carry;
+    }, []);
+  };
+  /**
+   * Get a column value by index.
+   *
+   * @param {number} index index
+   * @param {string} columnId column id
+   * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
+   * @return {null|string} column value, null if none found on index or column id
+   */
+
+
+  this.getColumnValueByIndex = function (index, columnId) {
+    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    var columnValues = _this3.getColumnValues(columnId, customValues);
+
+    var value = null;
+    var newIndex = customValues ? 0 : index;
+
+    if (columnValues) {
+      if (columnValues[newIndex]) {
+        value = columnValues[newIndex];
+      }
+    }
+
+    return value;
+  };
+  /**
+   * Get a row object by its id.
+   *
+   * @param {string} rowId row id
+   * @return {Object} row object
+   */
+
+
+  this.getRowById = function (rowId) {
+    return innerValues.filter(function (row) {
+      return row.rowId === rowId;
+    })[0];
+  };
+  /**
+   * Get binding with a specific id.
+   *
+   * @param {string} id id for the target binding
+   * @param {string|null} type binding type, null for none
+   */
+
+
+  this.getBinding = function (id, type) {
+    if (innerBindings[type]) {
+      return innerBindings[type][id];
+    }
+
+    return null;
+  };
+  /**
+   * Get values of data manager.
+   * This function will return immutable version of values.
+   *
+   * @return {Array} values array
+   */
+
+
+  this.getValues = function () {
+    return Array.from(innerValues);
   };
 }
 /**
@@ -31244,19 +31404,55 @@ function DataManager(values, bindings) {
 
 
 function DataTableGenerator() {
-  var _this = this;
+  var _this4 = this;
 
+  /**
+   * Data manager instance
+   *
+   * @type {DataManager}
+   */
+  this.dataManager = {
+    _dataManager: null,
+
+    get instance() {
+      /* eslint-disable no-underscore-dangle */
+      if (!this._dataManager) {
+        this._dataManager = new DataManager();
+      }
+
+      return this._dataManager;
+      /* eslint-enable no-underscore-dangle */
+    }
+
+  };
   /**
    * Operator factory instance.
    *
-   * @type {Object}
+   * @type {OperatorFactory}
    */
-  this.operatorFactory = operatorFactory;
+
+  this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
+  /**
+   * Update data manager instance.
+   *
+   * @param {Array} values values array
+   * @param {Object} bindings bindings object
+   */
+
+  this.updateDataManager = function () {
+    var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    _this4.dataManager.instance.updateValues(values);
+
+    _this4.dataManager.instance.updateBindings(bindings);
+  };
   /**
    * Current bindings to be used for current generate process.
    *
    * @type {Object}
    */
+
 
   this.currentBindings = {};
   /**
@@ -31287,71 +31483,6 @@ function DataTableGenerator() {
     table.querySelector('tbody').innerHTML = '';
   };
   /**
-   * Get id of a data column from index.
-   *
-   * @param {number} index column index
-   * @return {string} column id
-   */
-
-
-  var getColumnIdFromIndex = function getColumnIdFromIndex(index) {
-    var _this$currentValues$;
-
-    return (_this$currentValues$ = _this.currentValues[0].values[index]) === null || _this$currentValues$ === void 0 ? void 0 : _this$currentValues$.colId;
-  };
-  /**
-   * Get all values of a column in data table.
-   *
-   * @param {string} columnId data table column id
-   * @param {Array} customValues custom values to use
-   * @return {Array} all values related to that column
-   */
-
-
-  var getColumnValues = function getColumnValues(columnId) {
-    var customValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    var valuesToUse = customValues || _this.currentValues;
-    return valuesToUse.reduce(function (carry, row) {
-      // eslint-disable-next-line array-callback-return
-      row.values.map(function (cell) {
-        if (cell.colId === columnId) {
-          carry.push(cell.value);
-        }
-      });
-      return carry;
-    }, []);
-  };
-  /**
-   * Get a column value by index.
-   *
-   * @param {number} index index
-   * @param {string} columnId column id
-   * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
-   * @return {null|string} column value, null if none found on index or column id
-   */
-
-
-  var getColumnValueByIndex = function getColumnValueByIndex(index, columnId) {
-    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    var columnValues = getColumnValues(columnId, customValues);
-    var value = null;
-    var newIndex = customValues ? 0 : index;
-
-    if (columnValues) {
-      if (columnValues[newIndex]) {
-        value = columnValues[newIndex];
-      }
-    }
-
-    return value;
-  };
-
-  var getRowById = function getRowById(rowId) {
-    return _this.currentValues.filter(function (row) {
-      return row.rowId === rowId;
-    })[0];
-  };
-  /**
    * Get data table related id of a row element.
    *
    * @param {HTMLElement} rowElement row element
@@ -31361,21 +31492,6 @@ function DataTableGenerator() {
 
   var getRowId = function getRowId(rowElement) {
     return rowElement.dataset.dataTableRowId;
-  };
-  /**
-   * Get binding with a specific id.
-   *
-   * @param {string} id id for the target binding
-   * @param {string|null} type binding type, null for none
-   */
-
-
-  var getBinding = function getBinding(id, type) {
-    if (_this.currentBindings[type]) {
-      return _this.currentBindings[type][id];
-    }
-
-    return null;
   };
   /**
    * Get binding of a table element.
@@ -31391,7 +31507,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (elementId) {
-      binding = getBinding(elementId, type);
+      binding = _this4.dataManager.instance.getBinding(elementId, type);
     }
 
     return binding;
@@ -31409,7 +31525,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (rowId) {
-      binding = getBinding(rowId, 'row');
+      binding = _this4.dataManager.instance.getBinding(rowId, 'row');
     }
 
     return binding;
@@ -31427,16 +31543,13 @@ function DataTableGenerator() {
     var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
     if (rowBindingMode === 'auto' || !rowBindingMode) {
-      return _this.currentValues.length;
+      return _this4.currentValues.length;
     } // max row calculations for operator mode
 
 
     if (rowBindingMode === 'operator') {
       var operatorType = getRowBinding(rowElement).operator.operatorType;
-
-      if (['highest', 'lowest'].includes(operatorType)) {
-        return 1;
-      }
+      return _this4.operatorFactory.getOperator(operatorType).calculateMaxRows();
     }
 
     var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -31457,7 +31570,8 @@ function DataTableGenerator() {
             }
           }) // eslint-disable-next-line no-shadow
           .reduce(function (carry, binding) {
-            var values = getColumnValues(binding);
+            var values = _this4.dataManager.instance.getColumnValues(binding);
+
             return Math.max(values.length, carry);
           }, 0);
         }
@@ -31515,10 +31629,10 @@ function DataTableGenerator() {
     var elementValue = value;
 
     if (mapper) {
-      var _ref, _mapper$tableElementT;
+      var _ref2, _mapper$tableElementT;
 
       // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-      var mapperIndex = (_ref = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref !== void 0 ? _ref : ['text']; // create a new value object with mapped properties
+      var mapperIndex = (_ref2 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref2 !== void 0 ? _ref2 : ['text']; // create a new value object with mapped properties
 
       elementValue = {}; // eslint-disable-next-line array-callback-return
 
@@ -31549,7 +31663,7 @@ function DataTableGenerator() {
 
         Object.keys(bindingColIdObject).map(function (key) {
           if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
+            value[key] = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
           }
         });
 
@@ -31597,8 +31711,10 @@ function DataTableGenerator() {
       cells.map(function (cell, cellIndex) {
         var cellTableElements = getTableElementsFromCell(cell); // get column value based on the index of the cell
 
-        var currentColumnId = getColumnIdFromIndex(cellIndex);
-        var columnValue = getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
+        var currentColumnId = _this4.dataManager.instance.getColumnIdFromIndex(cellIndex);
+
+        var columnValue = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
+
 
         cellTableElements.map(function (tableElement) {
           if (columnValue) {
@@ -31611,22 +31727,8 @@ function DataTableGenerator() {
       });
     },
     operator: function operator(rowElement, rowIndex) {
-      var _getRowBinding$operat = getRowBinding(rowElement).operator,
-          compareColumn = _getRowBinding$operat.compareColumn,
-          operatorType = _getRowBinding$operat.operatorType,
-          rowAmount = _getRowBinding$operat.rowAmount,
-          rowCustomAmount = _getRowBinding$operat.rowCustomAmount;
-      var filteredValues = []; // highest/lowest operator logic
-
-      if (['highest', 'lowest'].includes(operatorType)) {
-        var newValuesArray = Array.from(_this.currentValues);
-        newValuesArray.sort(function (a, b) {
-          var aVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [a]));
-          var bVal = Number.parseFloat(getColumnValueByIndex(0, compareColumn, [b]));
-          return (aVal - bVal) * (operatorType === 'highest' ? -1 : 1);
-        });
-        batchPopulateTableElements(getTableElementsFromRow(rowElement), 0, [newValuesArray[0]]);
-      }
+      var operatorOptions = getRowBinding(rowElement).operator;
+      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, _this4.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
     }
   };
   /**
@@ -31693,8 +31795,10 @@ function DataTableGenerator() {
 
 
   this.generateDataTable = function (sourceTable, bindings, values) {
-    _this.currentBindings = bindings;
-    _this.currentValues = values;
+    _this4.updateDataManager(values, bindings);
+
+    _this4.currentBindings = bindings;
+    _this4.currentValues = values;
     return new Promise(function (res) {
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');
@@ -31719,7 +31823,7 @@ function DataTableGenerator() {
 var _default = new DataTableGenerator();
 
 exports.default = _default;
-},{".":"functions/index.js"}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
+},{".":"functions/index.js","../stores/general":"stores/general.js"}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
