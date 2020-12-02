@@ -30311,6 +30311,10 @@ var _default = {
           highest: this.translationM('highest'),
           lowest: this.translationM('lowest'),
           not: this.translationM('not')
+        },
+        operator2Types: {
+          highest: this.translationM('highest'),
+          lowest: this.translationM('lowest')
         }
       }
     };
@@ -30503,7 +30507,7 @@ exports.default = _default;
               ],
               attrs: {
                 label: _vm._f("cap")(_vm.translationM("operator") + " 2"),
-                options: _vm.options.operatorTypes
+                options: _vm.options.operator2Types
               },
               model: {
                 value: _vm.operatorControls.operatorType2,
@@ -31134,25 +31138,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  *
  * @param {Object} options options object
  * @param {DataManager} dataManager data manager instance
+ * @param {Object} factoryContext operator factory context
  * @class
  */
-function OperatorType(options, dataManager) {
+function OperatorType(options, dataManager, factoryContext) {
   var _this = this;
 
   var defaultOptions = {
     name: 'default',
     methods: {
-      calculateMaxRows: function calculateMaxRows() {
-        return null;
+      /**
+       *
+       * @param {Object} bindingOptions an object of row binding options
+       * @return {number} maximum amount of rows this operator will generate.
+       */
+      // eslint-disable-next-line no-unused-vars
+      calculateMaxRows: function calculateMaxRows(bindingOptions) {
+        return 0;
       },
+
+      /**
+       * Get operator result values.
+       *
+       * @param {Object} operatorOptions operator options to use
+       * @return {Array} generated values array based on operator
+       */
+      // eslint-disable-next-line no-unused-vars
       getOperatorResult: function getOperatorResult(operatorOptions) {
         return [];
       }
     }
   }; // merge default options with the supplied ones
 
-  this.options = (0, _general.objectDeepMerge)(defaultOptions, options);
-  this.dataManager = dataManager;
+  this.options = (0, _general.objectDeepMerge)(defaultOptions, options); // data manager
+
+  this.dataManager = dataManager; // factory context
+
+  this.factory = factoryContext;
   /**
    * Raise option methods to instance context to use context related properties.
    */
@@ -31203,7 +31225,30 @@ var highestLowest = {
 
 var operatorTypeOptions = {
   highest: highestLowest,
-  lowest: highestLowest
+  lowest: highestLowest,
+  not: {
+    methods: {
+      notOperation: function notOperation(options) {
+        var notOperator = options.operatorType2;
+
+        var notOperatorOptions = _objectSpread({}, options, {
+          operatorType: notOperator
+        });
+
+        var notOperationValues = this.factory.getOperator(notOperator).getOperatorResult(notOperatorOptions)[0];
+        var dataRowId = notOperationValues.rowId;
+        return this.dataManager.getValues().filter(function (row) {
+          return row.rowId !== dataRowId;
+        });
+      },
+      calculateMaxRows: function calculateMaxRows(options) {
+        return this.notOperation(options).length;
+      },
+      getOperatorResult: function getOperatorResult(options) {
+        return this.notOperation(options);
+      }
+    }
+  }
 };
 /**
  * Operator factory for easy operator functions.
@@ -31214,6 +31259,8 @@ var operatorTypeOptions = {
  */
 
 function OperatorFactory(operatorOptions, dataManager) {
+  var _this3 = this;
+
   /**
    * Operator type instances.
    *
@@ -31239,12 +31286,13 @@ function OperatorFactory(operatorOptions, dataManager) {
 
 
   var createOperators = function createOperators() {
-    operatorTypeInstances = {};
+    operatorTypeInstances = {}; // eslint-disable-next-line array-callback-return
+
     Object.keys(operatorOptions).map(function (optionName) {
       if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
         operatorTypeInstances[optionName] = new OperatorType(_objectSpread({
           name: optionName
-        }, operatorOptions[optionName]), dataManager);
+        }, operatorOptions[optionName]), dataManager, _this3);
       }
     });
   };
@@ -31270,7 +31318,7 @@ function OperatorFactory(operatorOptions, dataManager) {
 
 
 function DataManager() {
-  var _this3 = this;
+  var _this4 = this;
 
   var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -31343,14 +31391,13 @@ function DataManager() {
   this.getColumnValueByIndex = function (index, columnId) {
     var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    var columnValues = _this3.getColumnValues(columnId, customValues);
+    var columnValues = _this4.getColumnValues(columnId, customValues);
 
     var value = null;
-    var newIndex = customValues ? 0 : index;
 
     if (columnValues) {
-      if (columnValues[newIndex]) {
-        value = columnValues[newIndex];
+      if (columnValues[index]) {
+        value = columnValues[index];
       }
     }
 
@@ -31404,7 +31451,7 @@ function DataManager() {
 
 
 function DataTableGenerator() {
-  var _this4 = this;
+  var _this5 = this;
 
   /**
    * Data manager instance
@@ -31443,9 +31490,9 @@ function DataTableGenerator() {
     var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    _this4.dataManager.instance.updateValues(values);
+    _this5.dataManager.instance.updateValues(values);
 
-    _this4.dataManager.instance.updateBindings(bindings);
+    _this5.dataManager.instance.updateBindings(bindings);
   };
   /**
    * Current bindings to be used for current generate process.
@@ -31507,7 +31554,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (elementId) {
-      binding = _this4.dataManager.instance.getBinding(elementId, type);
+      binding = _this5.dataManager.instance.getBinding(elementId, type);
     }
 
     return binding;
@@ -31525,7 +31572,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (rowId) {
-      binding = _this4.dataManager.instance.getBinding(rowId, 'row');
+      binding = _this5.dataManager.instance.getBinding(rowId, 'row');
     }
 
     return binding;
@@ -31543,13 +31590,13 @@ function DataTableGenerator() {
     var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
     if (rowBindingMode === 'auto' || !rowBindingMode) {
-      return _this4.currentValues.length;
+      return _this5.currentValues.length;
     } // max row calculations for operator mode
 
 
     if (rowBindingMode === 'operator') {
-      var operatorType = getRowBinding(rowElement).operator.operatorType;
-      return _this4.operatorFactory.getOperator(operatorType).calculateMaxRows();
+      var rowBindingOperatorObject = getRowBinding(rowElement).operator;
+      return _this5.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
     }
 
     var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -31570,7 +31617,7 @@ function DataTableGenerator() {
             }
           }) // eslint-disable-next-line no-shadow
           .reduce(function (carry, binding) {
-            var values = _this4.dataManager.instance.getColumnValues(binding);
+            var values = _this5.dataManager.instance.getColumnValues(binding);
 
             return Math.max(values.length, carry);
           }, 0);
@@ -31663,7 +31710,7 @@ function DataTableGenerator() {
 
         Object.keys(bindingColIdObject).map(function (key) {
           if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
+            value[key] = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
           }
         });
 
@@ -31711,9 +31758,9 @@ function DataTableGenerator() {
       cells.map(function (cell, cellIndex) {
         var cellTableElements = getTableElementsFromCell(cell); // get column value based on the index of the cell
 
-        var currentColumnId = _this4.dataManager.instance.getColumnIdFromIndex(cellIndex);
+        var currentColumnId = _this5.dataManager.instance.getColumnIdFromIndex(cellIndex);
 
-        var columnValue = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
+        var columnValue = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
 
 
         cellTableElements.map(function (tableElement) {
@@ -31728,7 +31775,7 @@ function DataTableGenerator() {
     },
     operator: function operator(rowElement, rowIndex) {
       var operatorOptions = getRowBinding(rowElement).operator;
-      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, _this4.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, _this5.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
     }
   };
   /**
@@ -31795,10 +31842,10 @@ function DataTableGenerator() {
 
 
   this.generateDataTable = function (sourceTable, bindings, values) {
-    _this4.updateDataManager(values, bindings);
+    _this5.updateDataManager(values, bindings);
 
-    _this4.currentBindings = bindings;
-    _this4.currentValues = values;
+    _this5.currentBindings = bindings;
+    _this5.currentValues = values;
     return new Promise(function (res) {
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');

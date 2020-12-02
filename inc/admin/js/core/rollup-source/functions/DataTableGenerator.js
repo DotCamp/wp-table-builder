@@ -6,15 +6,29 @@ import { objectDeepMerge } from '../stores/general';
  *
  * @param {Object} options options object
  * @param {DataManager} dataManager data manager instance
+ * @param {Object} factoryContext operator factory context
  * @class
  */
-function OperatorType(options, dataManager) {
+function OperatorType(options, dataManager, factoryContext) {
 	const defaultOptions = {
 		name: 'default',
 		methods: {
-			calculateMaxRows() {
-				return null;
+			/**
+			 *
+			 * @param {Object} bindingOptions an object of row binding options
+			 * @return {number} maximum amount of rows this operator will generate.
+			 */
+			// eslint-disable-next-line no-unused-vars
+			calculateMaxRows(bindingOptions) {
+				return 0;
 			},
+			/**
+			 * Get operator result values.
+			 *
+			 * @param {Object} operatorOptions operator options to use
+			 * @return {Array} generated values array based on operator
+			 */
+			// eslint-disable-next-line no-unused-vars
 			getOperatorResult(operatorOptions) {
 				return [];
 			},
@@ -23,7 +37,12 @@ function OperatorType(options, dataManager) {
 
 	// merge default options with the supplied ones
 	this.options = objectDeepMerge(defaultOptions, options);
+
+	// data manager
 	this.dataManager = dataManager;
+
+	// factory context
+	this.factory = factoryContext;
 
 	/**
 	 * Raise option methods to instance context to use context related properties.
@@ -72,6 +91,31 @@ const highestLowest = {
 const operatorTypeOptions = {
 	highest: highestLowest,
 	lowest: highestLowest,
+	not: {
+		methods: {
+			notOperation(options) {
+				const notOperator = options.operatorType2;
+
+				const notOperatorOptions = { ...options, operatorType: notOperator };
+
+				const notOperationValues = this.factory
+					.getOperator(notOperator)
+					.getOperatorResult(notOperatorOptions)[0];
+
+				const dataRowId = notOperationValues.rowId;
+
+				return this.dataManager.getValues().filter((row) => {
+					return row.rowId !== dataRowId;
+				});
+			},
+			calculateMaxRows(options) {
+				return this.notOperation(options).length;
+			},
+			getOperatorResult(options) {
+				return this.notOperation(options);
+			},
+		},
+	},
 };
 
 /**
@@ -108,6 +152,7 @@ function OperatorFactory(operatorOptions, dataManager) {
 	const createOperators = () => {
 		operatorTypeInstances = {};
 
+		// eslint-disable-next-line array-callback-return
 		Object.keys(operatorOptions).map((optionName) => {
 			if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
 				operatorTypeInstances[optionName] = new OperatorType(
@@ -115,7 +160,8 @@ function OperatorFactory(operatorOptions, dataManager) {
 						name: optionName,
 						...operatorOptions[optionName],
 					},
-					dataManager
+					dataManager,
+					this
 				);
 			}
 		});
@@ -204,10 +250,9 @@ function DataManager(values = [], bindings = {}) {
 		const columnValues = this.getColumnValues(columnId, customValues);
 
 		let value = null;
-		const newIndex = customValues ? 0 : index;
 		if (columnValues) {
-			if (columnValues[newIndex]) {
-				value = columnValues[newIndex];
+			if (columnValues[index]) {
+				value = columnValues[index];
 			}
 		}
 
@@ -384,9 +429,11 @@ function DataTableGenerator() {
 		}
 		// max row calculations for operator mode
 		if (rowBindingMode === 'operator') {
-			const { operatorType } = getRowBinding(rowElement).operator;
+			const rowBindingOperatorObject = getRowBinding(rowElement).operator;
 
-			return this.operatorFactory.getOperator(operatorType).calculateMaxRows();
+			return this.operatorFactory
+				.getOperator(rowBindingOperatorObject.operatorType)
+				.calculateMaxRows(rowBindingOperatorObject);
 		}
 
 		const cells = Array.from(rowElement.querySelectorAll('td'));

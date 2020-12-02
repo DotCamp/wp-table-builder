@@ -31,7 +31,7 @@
 				<panel-dropdown-control
 					v-show="getOperatorControl('operatorType') === 'not'"
 					:label="`${translationM('operator')} 2` | cap"
-					:options="options.operatorTypes"
+					:options="options.operator2Types"
 					v-model="operatorControls.operatorType2"
 				></panel-dropdown-control>
 			</transition>
@@ -80,6 +80,10 @@ export default {
 					highest: this.translationM('highest'),
 					lowest: this.translationM('lowest'),
 					not: this.translationM('not'),
+				},
+				operator2Types: {
+					highest: this.translationM('highest'),
+					lowest: this.translationM('lowest'),
 				},
 			},
 		};
