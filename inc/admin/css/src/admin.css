@@ -6338,3 +6338,10 @@ thead .wptb-data-manager-table-data-value {
     border-bottom: 1px solid #e5dfdf !important;
 }
 
+.wptb-panel-control-group-title {
+    font-size: 90%;
+    width: 100%;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+

@@ -29793,7 +29793,7 @@ render._withStripped = true
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+exports.isObjectValuesSame = exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -29959,8 +29959,24 @@ var generateUniqueId = function generateUniqueId() {
 
   return key;
 };
+/**
+ * Compare equality of objects on value level.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {boolean} equal or not
+ */
+
 
 exports.generateUniqueId = generateUniqueId;
+
+var isObjectValuesSame = function isObjectValuesSame(source, target) {
+  return Object.keys(source).every(function (k) {
+    return source[k] === target[k];
+  });
+};
+
+exports.isObjectValuesSame = isObjectValuesSame;
 },{}],"components/dataTable/elementOptionTypeList.js":[function(require,module,exports) {
 "use strict";
 
@@ -30246,7 +30262,27 @@ var _default = {
 };
 exports.default = _default;
 },{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataPanelBindingMessageBase":"components/dataTable/DataPanelBindingMessageBase.vue"}],"components/leftPanel/PanelControlGroup.vue":[function(require,module,exports) {
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    title: {
+      type: String,
+      default: 'Control Group'
+    }
+  }
+};
+exports.default = _default;
         var $3ae63e = exports.default || module.exports;
       
       if (typeof $3ae63e === 'function') {
@@ -30255,12 +30291,20 @@ exports.default = _default;
     
         /* template */
         Object.assign($3ae63e, (function () {
-          var render = function(_h, _vm) {
-  var _c = _vm._c
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
   return _c(
     "div",
     { staticClass: "wptb-panel-control-group" },
-    [_vm._t("default")],
+    [
+      _c("div", { staticClass: "wptb-panel-control-group-title" }, [
+        _vm._v(_vm._s(_vm._f("cap")(_vm.title)))
+      ]),
+      _vm._v(" "),
+      _vm._t("default")
+    ],
     2
   )
 }
@@ -30272,7 +30316,7 @@ render._withStripped = true
             staticRenderFns: staticRenderFns,
             _compiled: true,
             _scopeId: null,
-            functional: true
+            functional: undefined
           };
         })());
       
@@ -30293,6 +30337,8 @@ var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"))
 var _general = require("../../stores/general");
 
 var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelControlGroup"));
+
+var _functions = require("../../functions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30372,7 +30418,7 @@ var _default = {
     },
     rowBindings: {
       handler: function handler(n) {
-        if (!this.isObjectValuesSame(n, this.operatorControls)) {
+        if (!(0, _functions.isObjectValuesSame)(n, this.operatorControls)) {
           this.prepareRowBindings(n);
         }
       },
@@ -30400,11 +30446,6 @@ var _default = {
     }
   },
   methods: {
-    isObjectValuesSame: function isObjectValuesSame(source, target) {
-      return Object.keys(source).every(function (k) {
-        return source[k] === target[k];
-      });
-    },
     prepareRowBindings: function prepareRowBindings(target) {
       var _this2 = this;
 
@@ -30452,10 +30493,11 @@ exports.default = _default;
       [
         _c(
           "panel-control-group",
+          { attrs: { title: _vm.translationM("selectGroupControls") } },
           [
             _c("panel-dropdown-control", {
               attrs: {
-                label: _vm._f("cap")(_vm.translationM("rowAmount")),
+                label: _vm._f("cap")(_vm.translationM("type")),
                 options: _vm.options.rowAmount,
                 disabled: _vm.disabledState("rowAmount")
               },
@@ -30475,7 +30517,7 @@ exports.default = _default;
                 _vm.operatorControls.rowAmount === "custom"
                   ? _c("panel-input-control", {
                       attrs: {
-                        label: _vm._f("cap")(_vm.translationM("rows")),
+                        label: _vm._f("cap")(_vm.translationM("amount")),
                         disabled: _vm.disabledState("rowAmount")
                       },
                       model: {
@@ -30567,7 +30609,7 @@ render._withStripped = true
           };
         })());
       
-},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue"}],"components/dataTable/DataPanelSortControls.vue":[function(require,module,exports) {
+},{"../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../../stores/general":"stores/general.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../functions":"functions/index.js"}],"components/dataTable/DataPanelSortControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30581,19 +30623,16 @@ var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownCont
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
 
+var _functions = require("../../functions");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   props: {
     columnNames: {
@@ -30618,10 +30657,46 @@ var _default = {
     return {
       sortOptions: {
         sortTarget: 'none',
-        sortType: 'abc',
+        sortType: '123',
         sortDirection: 'desc'
+      },
+      sortType: {
+        abc: this.translationM('alphabetical'),
+        123: this.translationM('numerical')
+      },
+      sortDirection: {
+        asc: this.translationM('ascending'),
+        desc: this.translationM('descending')
       }
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.prepareSortBindings();
+    });
+  },
+  watch: {
+    rowBindings: {
+      handler: function handler(n) {
+        if (!(0, _functions.isObjectValuesSame)(this.sortOptions, n)) {
+          this.prepareSortBindings();
+        }
+      },
+      deep: true
+    },
+    sortOptions: {
+      handler: function handler() {
+        this.$emit('valueChanged', this.sortOptions);
+      },
+      deep: true
+    }
+  },
+  methods: {
+    prepareSortBindings: function prepareSortBindings() {
+      this.sortOptions = _objectSpread({}, this.sortOptions, {}, this.rowBindings);
+    }
   }
 };
 exports.default = _default;
@@ -30639,10 +30714,11 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "panel-control-group",
+    { attrs: { title: "Sort Controls" } },
     [
       _c("panel-dropdown-control", {
         attrs: {
-          label: _vm._f("cap")(_vm.translationM("sortTarget")),
+          label: _vm._f("cap")(_vm.translationM("target")),
           options: _vm.columnNames
         },
         model: {
@@ -30652,7 +30728,50 @@ exports.default = _default;
           },
           expression: "sortOptions.sortTarget"
         }
-      })
+      }),
+      _vm._v(" "),
+      _c(
+        "transition",
+        { attrs: { name: "wptb-fade" } },
+        [
+          _vm.sortOptions.sortTarget !== "none"
+            ? _c(
+                "fragment",
+                [
+                  _c("panel-dropdown-control", {
+                    attrs: {
+                      label: _vm._f("cap")(_vm.translationM("type")),
+                      options: _vm.sortType
+                    },
+                    model: {
+                      value: _vm.sortOptions.sortType,
+                      callback: function($$v) {
+                        _vm.$set(_vm.sortOptions, "sortType", $$v)
+                      },
+                      expression: "sortOptions.sortType"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("panel-dropdown-control", {
+                    attrs: {
+                      label: _vm._f("cap")(_vm.translationM("direction")),
+                      options: _vm.sortDirection
+                    },
+                    model: {
+                      value: _vm.sortOptions.sortDirection,
+                      callback: function($$v) {
+                        _vm.$set(_vm.sortOptions, "sortDirection", $$v)
+                      },
+                      expression: "sortOptions.sortDirection"
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        ],
+        1
+      )
     ],
     1
   )
@@ -30669,7 +30788,7 @@ render._withStripped = true
           };
         })());
       
-},{"../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions":"functions/index.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31017,6 +31136,11 @@ exports.default = _default;
                       attrs: {
                         "column-names": _vm.getColumnNames,
                         "row-bindings": _vm.getRowBinding("sort")
+                      },
+                      on: {
+                        valueChanged: function($event) {
+                          _vm.setRowBinding("sort")($event)
+                        }
                       }
                     }),
                     _vm._v(" "),
@@ -34523,14 +34647,21 @@ var _default = {
           text: (0, _i18n.__)('text', 'wptb-table-builder'),
           link: (0, _i18n.__)('link', 'wptb-table-builder'),
           mode: (0, _i18n.__)('mode', 'wptb-table-builder'),
-          rowAmount: (0, _i18n.__)('row amount', 'wptb-table-builder'),
+          type: (0, _i18n.__)('type', 'wptb-table-builder'),
+          amount: (0, _i18n.__)('amount', 'wptb-table-builder'),
           all: (0, _i18n.__)('all', 'wptb-table-builder'),
           custom: (0, _i18n.__)('custom', 'wptb-table-builder'),
           compareColumn: (0, _i18n.__)('compare column', 'wptb-table-builder'),
           highest: (0, _i18n.__)('highest', 'wptb-table-builder'),
           lowest: (0, _i18n.__)('lowest', 'wptb-table-builder'),
           not: (0, _i18n.__)('not', 'wptb-table-builder'),
-          sortTarget: (0, _i18n.__)('sort target', 'wptb-table-builder'),
+          target: (0, _i18n.__)('target', 'wptb-table-builder'),
+          direction: (0, _i18n.__)('direction', 'wptb-table-builder'),
+          alphabetical: (0, _i18n.__)('alphabetical', 'wptb-table-builder'),
+          numerical: (0, _i18n.__)('numerical', 'wptb-table-builder'),
+          ascending: (0, _i18n.__)('ascending', 'wptb-table-builder'),
+          descending: (0, _i18n.__)('descending', 'wptb-table-builder'),
+          selectGroupControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),

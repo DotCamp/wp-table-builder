@@ -43,6 +43,7 @@
 					<data-panel-sort-controls
 						:column-names="getColumnNames"
 						:row-bindings="getRowBinding('sort')"
+						@valueChanged="setRowBinding('sort')($event)"
 					></data-panel-sort-controls>
 					<data-panel-row-binding-messages
 						:row-binding="getRowBinding()"

@@ -1,9 +1,9 @@
 <template>
 	<transition name="wptb-fade">
 		<div class="wptb-data-panel-mode-operator-controls">
-			<panel-control-group>
+			<panel-control-group :title="translationM('selectGroupControls')">
 				<panel-dropdown-control
-					:label="translationM('rowAmount') | cap"
+					:label="translationM('type') | cap"
 					:options="options.rowAmount"
 					v-model="operatorControls.rowAmount"
 					:disabled="disabledState('rowAmount')"
@@ -11,7 +11,7 @@
 				<transition name="wptb-fade">
 					<panel-input-control
 						v-if="operatorControls.rowAmount === 'custom'"
-						:label="translationM('rows') | cap"
+						:label="translationM('amount') | cap"
 						v-model="operatorControls.rowCustomAmount"
 						:disabled="disabledState('rowAmount')"
 					>
@@ -46,6 +46,7 @@ import withNativeTranslationStore from '../../mixins/withNativeTranslationStore'
 import PanelInputControl from '../PanelInputControl';
 import { objectDeepMerge } from '../../stores/general';
 import PanelControlGroup from '../leftPanel/PanelControlGroup';
+import { isObjectValuesSame } from '../../functions';
 
 export default {
 	props: {
@@ -107,7 +108,7 @@ export default {
 		},
 		rowBindings: {
 			handler(n) {
-				if (!this.isObjectValuesSame(n, this.operatorControls)) {
+				if (!isObjectValuesSame(n, this.operatorControls)) {
 					this.prepareRowBindings(n);
 				}
 			},
@@ -134,11 +135,6 @@ export default {
 		},
 	},
 	methods: {
-		isObjectValuesSame(source, target) {
-			return Object.keys(source).every((k) => {
-				return source[k] === target[k];
-			});
-		},
 		prepareRowBindings(target) {
 			this.operatorControls = { ...this.operatorControls, ...this.rowBindings };
 			this.operatorControls = objectDeepMerge(this.operatorControls, target);

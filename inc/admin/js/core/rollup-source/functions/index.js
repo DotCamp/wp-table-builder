@@ -133,3 +133,16 @@ export const generateUniqueId = (length = 5) => {
 
 	return key;
 };
+
+/**
+ * Compare equality of objects on value level.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {boolean} equal or not
+ */
+export const isObjectValuesSame = (source, target) => {
+	return Object.keys(source).every((k) => {
+		return source[k] === target[k];
+	});
+};
