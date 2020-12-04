@@ -19900,7 +19900,9 @@ function install(Vue, options) {
   // capitalize filter
   Vue.filter('cap', function (val) {
     return val.split(' ').map(function (v) {
-      return v[0].toUpperCase() + v.slice(1);
+      var _v$;
+
+      return ((_v$ = v[0]) === null || _v$ === void 0 ? void 0 : _v$.toUpperCase()) + v.slice(1);
     }).join(' ');
   });
 }
@@ -31600,141 +31602,6 @@ function OperatorFactory(operatorOptions, dataManager) {
   startUp();
 }
 /**
- * Data manager for various data operations.
- *
- * @param {Array} values values array
- * @param {Object} bindings bindings object
- * @class
- */
-
-
-function DataManager() {
-  var _this4 = this;
-
-  var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var innerValues = values;
-  var innerBindings = bindings;
-  /**
-   * Update values.
-   *
-   * @param {Array} newValues new values array
-   */
-
-  this.updateValues = function (newValues) {
-    innerValues = newValues;
-  };
-  /**
-   * Update bindings.
-   *
-   * @param {Object} newBindings
-   */
-
-
-  this.updateBindings = function (newBindings) {
-    innerBindings = newBindings;
-  };
-  /**
-   * Get id of a data column from index.
-   *
-   * @param {number} index column index
-   * @return {string} column id
-   */
-
-
-  this.getColumnIdFromIndex = function (index) {
-    var _innerValues$0$values;
-
-    return (_innerValues$0$values = innerValues[0].values[index]) === null || _innerValues$0$values === void 0 ? void 0 : _innerValues$0$values.colId;
-  };
-  /**
-   * Get all values of a column in data table.
-   *
-   * @param {string} columnId data table column id
-   * @param {Array} customValues custom values to use
-   * @return {Array} all values related to that column
-   */
-
-
-  this.getColumnValues = function (columnId) {
-    var customValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-    var valuesToUse = customValues || innerValues;
-    return valuesToUse.reduce(function (carry, row) {
-      // eslint-disable-next-line array-callback-return
-      row.values.map(function (cell) {
-        if (cell.colId === columnId) {
-          carry.push(cell.value);
-        }
-      });
-      return carry;
-    }, []);
-  };
-  /**
-   * Get a column value by index.
-   *
-   * @param {number} index index
-   * @param {string} columnId column id
-   * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
-   * @return {null|string} column value, null if none found on index or column id
-   */
-
-
-  this.getColumnValueByIndex = function (index, columnId) {
-    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-    var columnValues = _this4.getColumnValues(columnId, customValues);
-
-    var value = null;
-
-    if (columnValues) {
-      if (columnValues[index]) {
-        value = columnValues[index];
-      }
-    }
-
-    return value;
-  };
-  /**
-   * Get a row object by its id.
-   *
-   * @param {string} rowId row id
-   * @return {Object} row object
-   */
-
-
-  this.getRowById = function (rowId) {
-    return innerValues.filter(function (row) {
-      return row.rowId === rowId;
-    })[0];
-  };
-  /**
-   * Get binding with a specific id.
-   *
-   * @param {string} id id for the target binding
-   * @param {string|null} type binding type, null for none
-   */
-
-
-  this.getBinding = function (id, type) {
-    if (innerBindings[type]) {
-      return innerBindings[type][id];
-    }
-
-    return null;
-  };
-  /**
-   * Get values of data manager.
-   * This function will return immutable version of values.
-   *
-   * @return {Array} values array
-   */
-
-
-  this.getValues = function () {
-    return Array.from(innerValues);
-  };
-}
-/**
  * Data table generator for frontend usage.
  *
  * @class
@@ -31742,7 +31609,7 @@ function DataManager() {
 
 
 function DataTableGenerator() {
-  var _this5 = this;
+  var _this4 = this;
 
   /**
    * Data manager instance
@@ -31781,9 +31648,9 @@ function DataTableGenerator() {
     var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    _this5.dataManager.instance.updateValues(values);
+    _this4.dataManager.instance.updateValues(values);
 
-    _this5.dataManager.instance.updateBindings(bindings);
+    _this4.dataManager.instance.updateBindings(bindings);
   };
   /**
    * Current bindings to be used for current generate process.
@@ -31800,6 +31667,16 @@ function DataTableGenerator() {
    */
 
   this.currentValues = {};
+  /**
+   * Default mappings for element value binds.
+   *
+   * @type {Object}
+   */
+
+  var defaultMappings = {
+    default: ['text'],
+    button: ['link']
+  };
   /**
    * Parse target element into its cells and rows.
    *
@@ -31845,7 +31722,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (elementId) {
-      binding = _this5.dataManager.instance.getBinding(elementId, type);
+      binding = _this4.dataManager.instance.getBinding(elementId, type);
     }
 
     return binding;
@@ -31863,7 +31740,7 @@ function DataTableGenerator() {
     var binding = null;
 
     if (rowId) {
-      binding = _this5.dataManager.instance.getBinding(rowId, 'row');
+      binding = _this4.dataManager.instance.getBinding(rowId, 'row');
     }
 
     return binding;
@@ -31881,13 +31758,13 @@ function DataTableGenerator() {
     var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
     if (rowBindingMode === 'auto' || !rowBindingMode) {
-      return _this5.currentValues.length;
+      return _this4.currentValues.length;
     } // max row calculations for operator mode
 
 
     if (rowBindingMode === 'operator') {
       var rowBindingOperatorObject = getRowBinding(rowElement).operator;
-      return _this5.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
+      return _this4.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
     }
 
     var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -31908,7 +31785,7 @@ function DataTableGenerator() {
             }
           }) // eslint-disable-next-line no-shadow
           .reduce(function (carry, binding) {
-            var values = _this5.dataManager.instance.getColumnValues(binding);
+            var values = _this4.dataManager.instance.getColumnValues(binding);
 
             return Math.max(values.length, carry);
           }, 0);
@@ -31982,26 +31859,80 @@ function DataTableGenerator() {
     valueApplyList[tableElementType](tableElement, elementValue);
   };
   /**
+   * Sort row data values.
+   *
+   * @param {Object} sortOptions options object
+   * @param {Array} rowValues row data values
+   * @return {Array} sorted row data values
+   */
+
+
+  var sortRowDataValues = function sortRowDataValues(sortOptions, rowValues) {
+    // immutable row value array
+    var sortedValues = Array.from(rowValues);
+
+    if (sortOptions) {
+      var sortType = sortOptions.sortType,
+          sortDirection = sortOptions.sortDirection,
+          sortTarget = sortOptions.sortTarget;
+
+      if (sortType && sortDirection && sortType && sortTarget !== 'none') {
+        // eslint-disable-next-line array-callback-return
+        sortedValues.sort(function (a, b) {
+          var aVal = _this4.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
+
+          var bVal = _this4.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
+
+
+          var directionVal = sortDirection === 'asc' ? 1 : -1; // sort by numbers
+
+          if (sortType === '123') {
+            aVal = Number.parseFloat(aVal);
+            bVal = Number.parseFloat(bVal);
+            return (aVal - bVal) * directionVal;
+          } // sort by letters
+
+
+          if (aVal > bVal) {
+            return directionVal;
+          }
+
+          if (bVal < aVal) {
+            return -1 * directionVal;
+          }
+
+          return 0;
+        });
+      }
+    }
+
+    return sortedValues;
+  };
+  /**
    * Batch populate table elements with their assigned binding values.
    *
    * @param {Array} tableElements an array of table elements
    * @param {number} rowIndex index of current row this table elements belongs to
+   * @param {Object} rowBindings row bindings for the parent row of the supplied table elements
    * @param {Array} customValues custom values to use for populate operation
+   * @param {Object} customBindings custom bindings to use instead of element and rows defined ones
    */
 
 
-  var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex) {
-    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    // eslint-disable-next-line array-callback-return
+  var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
+    var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+    var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this4.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
+
     tableElements.map(function (tableElement) {
-      var bindingColIdObject = getTableElementBinding(tableElement, 'column');
+      var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[(0, _.parseTableElementId)(tableElement)]) || getTableElementBinding(tableElement, 'column');
 
       if (bindingColIdObject) {
         var value = {}; // eslint-disable-next-line array-callback-return
 
         Object.keys(bindingColIdObject).map(function (key) {
           if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], customValues);
+            value[key] = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
           }
         });
 
@@ -32044,29 +31975,42 @@ function DataTableGenerator() {
 
   var rowBindingLogicList = {
     auto: function auto(rowElement, rowIndex) {
-      var cells = Array.from(rowElement.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
+      var cells = Array.from(rowElement.querySelectorAll('td'));
+      var rowElements = [];
+      var autoBindings = cells.reduce(function (carry, cell, cellIndex) {
+        var cellTableElements = getTableElementsFromCell(cell); // add cell elements to row elements array
 
-      cells.map(function (cell, cellIndex) {
-        var cellTableElements = getTableElementsFromCell(cell); // get column value based on the index of the cell
+        rowElements.push.apply(rowElements, _toConsumableArray(cellTableElements)); // get column value based on the index of the cell
 
-        var currentColumnId = _this5.dataManager.instance.getColumnIdFromIndex(cellIndex);
-
-        var columnValue = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, currentColumnId); // eslint-disable-next-line array-callback-return
+        var currentColumnId = _this4.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
 
 
         cellTableElements.map(function (tableElement) {
-          if (columnValue) {
-            addValueToTableElement(tableElement, columnValue, {
-              default: ['text'],
-              button: ['link']
-            });
+          if (currentColumnId) {
+            var elementId = (0, _.parseTableElementId)(tableElement);
+            var elementBindings = {};
+            var elementType = (0, _.parseElementType)(tableElement);
+            var availableBindingProperties = defaultMappings[elementType] || defaultMappings.default; // map element bindings to default binding
+            // eslint-disable-next-line array-callback-return
+
+            availableBindingProperties.map(function (prop) {
+              elementBindings[prop] = currentColumnId;
+            }); // assign bindings relative to current cell this element resides in
+            // eslint-disable-next-line no-param-reassign
+
+            carry[elementId] = elementBindings;
           }
         });
+        return carry;
+      }, {});
+      batchPopulateTableElements(rowElements, rowIndex, getRowBinding(rowElement), null, {
+        column: autoBindings
       });
     },
     operator: function operator(rowElement, rowIndex) {
-      var operatorOptions = getRowBinding(rowElement).operator;
-      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, _this5.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+      var rowBindings = getRowBinding(rowElement);
+      var operatorOptions = rowBindings.operator;
+      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this4.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
     }
   };
   /**
@@ -32099,7 +32043,7 @@ function DataTableGenerator() {
       applyRowBindings(rowBinding.mode, clonedRow, index);
     } else {
       var rowElements = getTableElementsFromRow(clonedRow);
-      batchPopulateTableElements(rowElements, index);
+      batchPopulateTableElements(rowElements, index, rowBinding);
     }
 
     return clonedRow;
@@ -32133,10 +32077,10 @@ function DataTableGenerator() {
 
 
   this.generateDataTable = function (sourceTable, bindings, values) {
-    _this5.updateDataManager(values, bindings);
+    _this4.updateDataManager(values, bindings);
 
-    _this5.currentBindings = bindings;
-    _this5.currentValues = values;
+    _this4.currentBindings = bindings;
+    _this4.currentValues = values;
     return new Promise(function (res) {
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');
@@ -32153,6 +32097,152 @@ function DataTableGenerator() {
       });
       return res(clonedTable);
     });
+  };
+}
+/**
+ * Data manager for various data operations.
+ *
+ * @param {Array} values values array
+ * @param {Object} bindings bindings object
+ * @class
+ */
+
+
+function DataManager() {
+  var _this5 = this;
+
+  var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var innerValues = values;
+  var innerBindings = bindings;
+  /**
+   * Update values.
+   *
+   * @param {Array} newValues new values array
+   */
+
+  this.updateValues = function (newValues) {
+    innerValues = newValues;
+  };
+  /**
+   * Update bindings.
+   *
+   * @param {Object} newBindings
+   */
+
+
+  this.updateBindings = function (newBindings) {
+    innerBindings = newBindings;
+  };
+  /**
+   * Get id of a data column from index.
+   *
+   * @param {number} index column index
+   * @return {string} column id
+   */
+
+
+  this.getColumnIdFromIndex = function (index) {
+    var _innerValues$0$values;
+
+    return (_innerValues$0$values = innerValues[0].values[index]) === null || _innerValues$0$values === void 0 ? void 0 : _innerValues$0$values.colId;
+  };
+  /**
+   * Get all values of a column in data table.
+   *
+   * @param {string} columnId data table column id
+   * @param {Array} customValues custom values to use
+   * @return {Array} all values related to that column
+   */
+
+
+  this.getColumnValues = function (columnId) {
+    var customValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var valuesToUse = customValues || innerValues;
+    return valuesToUse.reduce(function (carry, row) {
+      // eslint-disable-next-line array-callback-return
+      row.values.map(function (cell) {
+        if (cell.colId === columnId) {
+          carry.push(cell.value);
+        }
+      });
+      return carry;
+    }, []);
+  };
+  /**
+   * Get a column value by index.
+   *
+   * @param {number} index index
+   * @param {string} columnId column id
+   * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
+   * @return {null|string} column value, null if none found on index or column id
+   */
+
+
+  this.getColumnValueByIndex = function (index, columnId) {
+    var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    var columnValues = _this5.getColumnValues(columnId, customValues);
+
+    var value = null;
+
+    if (columnValues) {
+      if (columnValues[index]) {
+        value = columnValues[index];
+      }
+    }
+
+    return value;
+  };
+  /**
+   * Get a row object by its id.
+   *
+   * @param {string} rowId row id
+   * @return {Object} row object
+   */
+
+
+  this.getRowById = function (rowId) {
+    return innerValues.filter(function (row) {
+      return row.rowId === rowId;
+    })[0];
+  };
+  /**
+   * Get binding with a specific id.
+   *
+   * @param {string} id id for the target binding
+   * @param {string|null} type binding type, null for none
+   */
+
+
+  this.getBinding = function (id, type) {
+    if (innerBindings[type]) {
+      return innerBindings[type][id];
+    }
+
+    return null;
+  };
+  /**
+   * Get values of data manager.
+   * This function will return immutable version of values.
+   *
+   * @return {Array} values array
+   */
+
+
+  this.getValues = function () {
+    return Array.from(innerValues);
+  };
+  /**
+   * Get values of a data row from its index.
+   *
+   * @param {number} rowIndex row index
+   * @return {Array} row values
+   */
+
+
+  this.getRowValuesByIndex = function (rowIndex) {
+    return Array.from(innerValues)[rowIndex];
   };
 }
 /** @module DataTableGenerator */

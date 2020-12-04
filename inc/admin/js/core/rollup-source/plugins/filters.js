@@ -10,7 +10,7 @@ function install(Vue, options) {
 	Vue.filter('cap', (val) => {
 		return val
 			.split(' ')
-			.map((v) => v[0].toUpperCase() + v.slice(1))
+			.map((v) => v[0]?.toUpperCase() + v.slice(1))
 			.join(' ');
 	});
 }
