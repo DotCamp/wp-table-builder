@@ -63,7 +63,7 @@ import withNativeTranslationStore from '../../mixins/withNativeTranslationStore'
 import PanelSectionGroupTabbedItem from '../PanelSectionGroupTabbedItem';
 import PanelDropdownControl from '../PanelDropdownControl';
 import { parseTableElementId, parseElementType, getParentOfType, generateUniqueId } from '../../functions';
-import typeOptionList from './elementOptionTypeList';
+import { typeOptionList } from './elementOptionTypeList';
 import DataPanelElementBindingMessages from './DataPanelElementBindingMessages';
 import DataPanelRowBindingMessages from './DataPanelRowBindingMessages';
 import DataPanelOperatorModeControls from './DataPanelOperatorModeControls';

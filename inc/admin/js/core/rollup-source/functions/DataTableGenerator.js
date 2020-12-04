@@ -1,5 +1,6 @@
 import { parseElementType, parseTableElementId } from '.';
 import { objectDeepMerge } from '../stores/general';
+import { defaultMappings } from '../components/dataTable/elementOptionTypeList';
 
 /**
  * Operator type.
@@ -203,6 +204,132 @@ function OperatorFactory(operatorOptions, dataManager) {
 }
 
 /**
+ * Data manager for various data operations.
+ *
+ * @param {Array} values values array
+ * @param {Object} bindings bindings object
+ * @class
+ */
+function DataManager(values = [], bindings = {}) {
+	let innerValues = values;
+	let innerBindings = bindings;
+
+	/**
+	 * Update values.
+	 *
+	 * @param {Array} newValues new values array
+	 */
+	this.updateValues = (newValues) => {
+		innerValues = newValues;
+	};
+
+	/**
+	 * Update bindings.
+	 *
+	 * @param {Object} newBindings
+	 */
+	this.updateBindings = (newBindings) => {
+		innerBindings = newBindings;
+	};
+
+	/**
+	 * Get id of a data column from index.
+	 *
+	 * @param {number} index column index
+	 * @return {string} column id
+	 */
+	this.getColumnIdFromIndex = (index) => {
+		return innerValues[0].values[index]?.colId;
+	};
+
+	/**
+	 * Get all values of a column in data table.
+	 *
+	 * @param {string} columnId data table column id
+	 * @param {Array} customValues custom values to use
+	 * @return {Array} all values related to that column
+	 */
+	this.getColumnValues = (columnId, customValues = null) => {
+		const valuesToUse = customValues || innerValues;
+		return valuesToUse.reduce((carry, row) => {
+			// eslint-disable-next-line array-callback-return
+			row.values.map((cell) => {
+				if (cell.colId === columnId) {
+					carry.push(cell.value);
+				}
+			});
+
+			return carry;
+		}, []);
+	};
+
+	/**
+	 * Get a column value by index.
+	 *
+	 * @param {number} index index
+	 * @param {string} columnId column id
+	 * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
+	 * @return {null|string} column value, null if none found on index or column id
+	 */
+	this.getColumnValueByIndex = (index, columnId, customValues = null) => {
+		const columnValues = this.getColumnValues(columnId, customValues);
+
+		let value = null;
+		if (columnValues) {
+			if (columnValues[index]) {
+				value = columnValues[index];
+			}
+		}
+
+		return value;
+	};
+
+	/**
+	 * Get a row object by its id.
+	 *
+	 * @param {string} rowId row id
+	 * @return {Object} row object
+	 */
+	this.getRowById = (rowId) => {
+		return innerValues.filter((row) => row.rowId === rowId)[0];
+	};
+
+	/**
+	 * Get binding with a specific id.
+	 *
+	 * @param {string} id id for the target binding
+	 * @param {string|null} type binding type, null for none
+	 */
+	this.getBinding = (id, type) => {
+		if (innerBindings[type]) {
+			return innerBindings[type][id];
+		}
+
+		return null;
+	};
+
+	/**
+	 * Get values of data manager.
+	 * This function will return immutable version of values.
+	 *
+	 * @return {Array} values array
+	 */
+	this.getValues = () => {
+		return Array.from(innerValues);
+	};
+
+	/**
+	 * Get values of a data row from its index.
+	 *
+	 * @param {number} rowIndex row index
+	 * @return {Array} row values
+	 */
+	this.getRowValuesByIndex = (rowIndex) => {
+		return Array.from(innerValues)[rowIndex];
+	};
+}
+
+/**
  * Data table generator for frontend usage.
  *
  * @class
@@ -257,16 +384,6 @@ function DataTableGenerator() {
 	 * @type {Object}
 	 */
 	this.currentValues = {};
-
-	/**
-	 * Default mappings for element value binds.
-	 *
-	 * @type {Object}
-	 */
-	const defaultMappings = {
-		default: ['text'],
-		button: ['link'],
-	};
 
 	/**
 	 * Parse target element into its cells and rows.
@@ -414,6 +531,54 @@ function DataTableGenerator() {
 				}
 			}
 		},
+		star_rating: (tableElement, { rating }) => {
+			if (rating) {
+				const maxStarCount = Number.parseInt(tableElement.dataset.starCount, 10);
+				const parsedValue = Number.parseFloat(rating);
+
+				// limit star rating between maximum stars available on element and current rating
+				const limitedRating = Math.min(maxStarCount, parsedValue);
+				const roundedRating = Math.floor(limitedRating);
+
+				const emptyStars = Array.from(tableElement.querySelectorAll('li.wptb-rating-star'));
+
+				const fullStars = Array.from(tableElement.querySelectorAll('li.wptb-rating-star')).filter(
+					(star, index) => {
+						// clear any star rating on rating element
+						star.classList.remove('wptb-rating-star-selected-full');
+						star.classList.remove('wptb-rating-star-selected-half');
+
+						return index < roundedRating;
+					}
+				);
+
+				// eslint-disable-next-line array-callback-return
+				fullStars.map((star) => {
+					star.classList.add('wptb-rating-star-selected-full');
+				});
+
+				// add any remaining half star
+				if (roundedRating !== limitedRating) {
+					emptyStars[fullStars.length].classList.add('wptb-rating-star-selected-half');
+				}
+			}
+		},
+		image: (tableElement, { link }) => {
+			if (link) {
+				let imageElement = tableElement.querySelector('img');
+				if (!imageElement) {
+					imageElement = document.createElement('img');
+					const imageParentAnchor = tableElement.querySelector('a');
+					imageParentAnchor.innerHTML = '';
+
+					imageParentAnchor.appendChild(imageElement);
+					imageElement.width = 200;
+					imageElement.height = 200;
+				}
+
+				imageElement.src = link;
+			}
+		},
 	};
 
 	/**
@@ -440,7 +605,9 @@ function DataTableGenerator() {
 			});
 		}
 
-		valueApplyList[tableElementType](tableElement, elementValue);
+		if (valueApplyList[tableElementType]) {
+			valueApplyList[tableElementType](tableElement, elementValue);
+		}
 	};
 
 	/**
@@ -704,131 +871,6 @@ function DataTableGenerator() {
 	};
 }
 
-/**
- * Data manager for various data operations.
- *
- * @param {Array} values values array
- * @param {Object} bindings bindings object
- * @class
- */
-function DataManager(values = [], bindings = {}) {
-	let innerValues = values;
-	let innerBindings = bindings;
-
-	/**
-	 * Update values.
-	 *
-	 * @param {Array} newValues new values array
-	 */
-	this.updateValues = (newValues) => {
-		innerValues = newValues;
-	};
-
-	/**
-	 * Update bindings.
-	 *
-	 * @param {Object} newBindings
-	 */
-	this.updateBindings = (newBindings) => {
-		innerBindings = newBindings;
-	};
-
-	/**
-	 * Get id of a data column from index.
-	 *
-	 * @param {number} index column index
-	 * @return {string} column id
-	 */
-	this.getColumnIdFromIndex = (index) => {
-		return innerValues[0].values[index]?.colId;
-	};
-
-	/**
-	 * Get all values of a column in data table.
-	 *
-	 * @param {string} columnId data table column id
-	 * @param {Array} customValues custom values to use
-	 * @return {Array} all values related to that column
-	 */
-	this.getColumnValues = (columnId, customValues = null) => {
-		const valuesToUse = customValues || innerValues;
-		return valuesToUse.reduce((carry, row) => {
-			// eslint-disable-next-line array-callback-return
-			row.values.map((cell) => {
-				if (cell.colId === columnId) {
-					carry.push(cell.value);
-				}
-			});
-
-			return carry;
-		}, []);
-	};
-
-	/**
-	 * Get a column value by index.
-	 *
-	 * @param {number} index index
-	 * @param {string} columnId column id
-	 * @param {Array} customValues custom value array, is supplied values will be selected from here instead of store values
-	 * @return {null|string} column value, null if none found on index or column id
-	 */
-	this.getColumnValueByIndex = (index, columnId, customValues = null) => {
-		const columnValues = this.getColumnValues(columnId, customValues);
-
-		let value = null;
-		if (columnValues) {
-			if (columnValues[index]) {
-				value = columnValues[index];
-			}
-		}
-
-		return value;
-	};
-
-	/**
-	 * Get a row object by its id.
-	 *
-	 * @param {string} rowId row id
-	 * @return {Object} row object
-	 */
-	this.getRowById = (rowId) => {
-		return innerValues.filter((row) => row.rowId === rowId)[0];
-	};
-
-	/**
-	 * Get binding with a specific id.
-	 *
-	 * @param {string} id id for the target binding
-	 * @param {string|null} type binding type, null for none
-	 */
-	this.getBinding = (id, type) => {
-		if (innerBindings[type]) {
-			return innerBindings[type][id];
-		}
-
-		return null;
-	};
-
-	/**
-	 * Get values of data manager.
-	 * This function will return immutable version of values.
-	 *
-	 * @return {Array} values array
-	 */
-	this.getValues = () => {
-		return Array.from(innerValues);
-	};
-
-	/**
-	 * Get values of a data row from its index.
-	 *
-	 * @param {number} rowIndex row index
-	 * @return {Array} row values
-	 */
-	this.getRowValuesByIndex = (rowIndex) => {
-		return Array.from(innerValues)[rowIndex];
-	};
-}
 
 /** @module DataTableGenerator */
 export default new DataTableGenerator();

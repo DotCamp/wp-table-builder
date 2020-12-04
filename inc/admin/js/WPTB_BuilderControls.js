@@ -29985,7 +29985,7 @@ exports.isObjectValuesSame = isObjectValuesSame;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.defaultMappings = exports.typeOptionList = void 0;
 
 /**
  * Column binding options for different table element types.
@@ -29994,12 +29994,24 @@ exports.default = void 0;
  */
 var typeOptionList = {
   text: 'text',
-  button: ['text', 'link']
+  button: ['text', 'link'],
+  star_rating: ['rating'],
+  image: ['link']
 };
-/** @module typeOptionList */
+/**
+ * Default mappings for element value binds.
+ *
+ * @type {Object}
+ */
 
-var _default = typeOptionList;
-exports.default = _default;
+exports.typeOptionList = typeOptionList;
+var defaultMappings = {
+  default: ['text'],
+  button: ['link'],
+  star_rating: ['rating'],
+  image: ['link']
+};
+exports.defaultMappings = defaultMappings;
 },{}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
 "use strict";
 
@@ -30812,7 +30824,7 @@ var _PanelDropdownControl = _interopRequireDefault(require("../PanelDropdownCont
 
 var _functions = require("../../functions");
 
-var _elementOptionTypeList = _interopRequireDefault(require("./elementOptionTypeList"));
+var _elementOptionTypeList = require("./elementOptionTypeList");
 
 var _DataPanelElementBindingMessages = _interopRequireDefault(require("./DataPanelElementBindingMessages"));
 
@@ -30890,7 +30902,7 @@ var _default = {
       return this.getRowBinding('mode') === 'auto';
     },
     elementDataOptions: function elementDataOptions() {
-      var options = _elementOptionTypeList.default[this.currentElementType];
+      var options = _elementOptionTypeList.typeOptionList[this.currentElementType];
 
       if (options) {
         if (!Array.isArray(options)) {
@@ -31383,6 +31395,8 @@ var _ = require(".");
 
 var _general = require("../stores/general");
 
+var _elementOptionTypeList = require("../components/dataTable/elementOptionTypeList");
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -31602,504 +31616,6 @@ function OperatorFactory(operatorOptions, dataManager) {
   startUp();
 }
 /**
- * Data table generator for frontend usage.
- *
- * @class
- */
-
-
-function DataTableGenerator() {
-  var _this4 = this;
-
-  /**
-   * Data manager instance
-   *
-   * @type {DataManager}
-   */
-  this.dataManager = {
-    _dataManager: null,
-
-    get instance() {
-      /* eslint-disable no-underscore-dangle */
-      if (!this._dataManager) {
-        this._dataManager = new DataManager();
-      }
-
-      return this._dataManager;
-      /* eslint-enable no-underscore-dangle */
-    }
-
-  };
-  /**
-   * Operator factory instance.
-   *
-   * @type {OperatorFactory}
-   */
-
-  this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
-  /**
-   * Update data manager instance.
-   *
-   * @param {Array} values values array
-   * @param {Object} bindings bindings object
-   */
-
-  this.updateDataManager = function () {
-    var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    _this4.dataManager.instance.updateValues(values);
-
-    _this4.dataManager.instance.updateBindings(bindings);
-  };
-  /**
-   * Current bindings to be used for current generate process.
-   *
-   * @type {Object}
-   */
-
-
-  this.currentBindings = {};
-  /**
-   * Current values to be used for current generate process.
-   *
-   * @type {Object}
-   */
-
-  this.currentValues = {};
-  /**
-   * Default mappings for element value binds.
-   *
-   * @type {Object}
-   */
-
-  var defaultMappings = {
-    default: ['text'],
-    button: ['link']
-  };
-  /**
-   * Parse target element into its cells and rows.
-   *
-   * @param {HTMLElement} table table element to be parsed
-   */
-
-  var parseTable = function parseTable(table) {
-    return Array.from(table.querySelectorAll('tr'));
-  };
-  /**
-   * Clear table body contents of a table.
-   *
-   * @param {HTMLElement} table table to be cleared
-   */
-
-
-  var clearTable = function clearTable(table) {
-    // eslint-disable-next-line no-param-reassign
-    table.querySelector('tbody').innerHTML = '';
-  };
-  /**
-   * Get data table related id of a row element.
-   *
-   * @param {HTMLElement} rowElement row element
-   * @return {string|null} row element id, null if no id found
-   */
-
-
-  var getRowId = function getRowId(rowElement) {
-    return rowElement.dataset.dataTableRowId;
-  };
-  /**
-   * Get binding of a table element.
-   *
-   * @param {HTMLElement} tableElement table element
-   * @param {string} type binding type
-   * @return {null | string} binding
-   */
-
-
-  var getTableElementBinding = function getTableElementBinding(tableElement, type) {
-    var elementId = (0, _.parseTableElementId)(tableElement);
-    var binding = null;
-
-    if (elementId) {
-      binding = _this4.dataManager.instance.getBinding(elementId, type);
-    }
-
-    return binding;
-  };
-  /**
-   * Get associated row binding for the given row element.
-   *
-   * @param {HTMLElement} rowElement row element
-   * @return {Object|null} binding for supplied row, null if no binding found
-   */
-
-
-  var getRowBinding = function getRowBinding(rowElement) {
-    var rowId = getRowId(rowElement);
-    var binding = null;
-
-    if (rowId) {
-      binding = _this4.dataManager.instance.getBinding(rowId, 'row');
-    }
-
-    return binding;
-  };
-  /**
-   * Calculate maximum amount of rows that can be populated from a blueprint row.
-   *
-   * @param {HTMLElement} rowElement row element
-   */
-
-
-  var calculateMaxRows = function calculateMaxRows(rowElement) {
-    var _getRowBinding;
-
-    var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
-
-    if (rowBindingMode === 'auto' || !rowBindingMode) {
-      return _this4.currentValues.length;
-    } // max row calculations for operator mode
-
-
-    if (rowBindingMode === 'operator') {
-      var rowBindingOperatorObject = getRowBinding(rowElement).operator;
-      return _this4.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
-    }
-
-    var cells = Array.from(rowElement.querySelectorAll('td'));
-    return cells.reduce(function (carry, cell) {
-      var tableElements = Array.from(cell.querySelectorAll('.wptb-ph-element')); // max amount of column values can be applied to this cell
-
-      var maxValue = 0; // eslint-disable-next-line array-callback-return
-
-      tableElements.map(function (element) {
-        var colBinding = getTableElementBinding(element, 'column');
-
-        if (colBinding) {
-          maxValue = Object.keys(colBinding) // TODO [erdembircan] rewrite this with filter > map
-          // eslint-disable-next-line array-callback-return
-          .map(function (key) {
-            if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
-              return colBinding[key];
-            }
-          }) // eslint-disable-next-line no-shadow
-          .reduce(function (carry, binding) {
-            var values = _this4.dataManager.instance.getColumnValues(binding);
-
-            return Math.max(values.length, carry);
-          }, 0);
-        }
-      });
-      return Math.max(maxValue, carry);
-    }, 1);
-  };
-  /**
-   * Value apply list for different table elements.
-   *
-   * @type {Object}
-   */
-
-
-  var valueApplyList = {
-    text: function text(tableElement, value) {
-      var text = value.text;
-
-      if (text) {
-        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
-
-        pElement.childNodes[0].textContent = value.text;
-      }
-    },
-    button: function button(tableElement, value) {
-      var text = value.text,
-          link = value.link;
-
-      if (text) {
-        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
-
-        pElement.childNodes[0].textContent = value.text;
-      }
-
-      if (link) {
-        var anchorElement = tableElement.querySelector('a');
-
-        if (anchorElement) {
-          anchorElement.href = link;
-        }
-      }
-    }
-  };
-  /**
-   * Add value to a table element.
-   *
-   * @param {HTMLElement} tableElement table element
-   * @param {*} value value
-   * @param {Object} mapper mapper object to map values to certain element properties
-   */
-
-  var addValueToTableElement = function addValueToTableElement(tableElement, value) {
-    var mapper = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    var tableElementType = (0, _.parseElementType)(tableElement);
-    var elementValue = value;
-
-    if (mapper) {
-      var _ref3, _mapper$tableElementT;
-
-      // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-      var mapperIndex = (_ref3 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref3 !== void 0 ? _ref3 : ['text']; // create a new value object with mapped properties
-
-      elementValue = {}; // eslint-disable-next-line array-callback-return
-
-      mapperIndex.map(function (mapIndex) {
-        elementValue[mapIndex] = value;
-      });
-    }
-
-    valueApplyList[tableElementType](tableElement, elementValue);
-  };
-  /**
-   * Sort row data values.
-   *
-   * @param {Object} sortOptions options object
-   * @param {Array} rowValues row data values
-   * @return {Array} sorted row data values
-   */
-
-
-  var sortRowDataValues = function sortRowDataValues(sortOptions, rowValues) {
-    // immutable row value array
-    var sortedValues = Array.from(rowValues);
-
-    if (sortOptions) {
-      var sortType = sortOptions.sortType,
-          sortDirection = sortOptions.sortDirection,
-          sortTarget = sortOptions.sortTarget;
-
-      if (sortType && sortDirection && sortType && sortTarget !== 'none') {
-        // eslint-disable-next-line array-callback-return
-        sortedValues.sort(function (a, b) {
-          var aVal = _this4.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
-
-          var bVal = _this4.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
-
-
-          var directionVal = sortDirection === 'asc' ? 1 : -1; // sort by numbers
-
-          if (sortType === '123') {
-            aVal = Number.parseFloat(aVal);
-            bVal = Number.parseFloat(bVal);
-            return (aVal - bVal) * directionVal;
-          } // sort by letters
-
-
-          if (aVal > bVal) {
-            return directionVal;
-          }
-
-          if (bVal < aVal) {
-            return -1 * directionVal;
-          }
-
-          return 0;
-        });
-      }
-    }
-
-    return sortedValues;
-  };
-  /**
-   * Batch populate table elements with their assigned binding values.
-   *
-   * @param {Array} tableElements an array of table elements
-   * @param {number} rowIndex index of current row this table elements belongs to
-   * @param {Object} rowBindings row bindings for the parent row of the supplied table elements
-   * @param {Array} customValues custom values to use for populate operation
-   * @param {Object} customBindings custom bindings to use instead of element and rows defined ones
-   */
-
-
-  var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
-    var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-    var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-    var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this4.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
-
-    tableElements.map(function (tableElement) {
-      var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[(0, _.parseTableElementId)(tableElement)]) || getTableElementBinding(tableElement, 'column');
-
-      if (bindingColIdObject) {
-        var value = {}; // eslint-disable-next-line array-callback-return
-
-        Object.keys(bindingColIdObject).map(function (key) {
-          if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-            value[key] = _this4.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
-          }
-        });
-
-        if (value) {
-          addValueToTableElement(tableElement, value);
-        }
-      }
-    });
-  };
-  /**
-   * Get table elements from a supplied row element.
-   *
-   * @param {HTMLElement} rowElement row element
-   * @return {Array} table element array
-   *
-   */
-
-
-  var getTableElementsFromRow = function getTableElementsFromRow(rowElement) {
-    return Array.from(rowElement.querySelectorAll('.wptb-ph-element'));
-  };
-  /**
-   * Get table elements from a supplied table cell.
-   *
-   * @param {HTMLElement} cellElement cell element
-   * @return {Array} table element array
-   *
-   */
-
-
-  var getTableElementsFromCell = function getTableElementsFromCell(cellElement) {
-    return Array.from(cellElement.querySelectorAll('.wptb-ph-element'));
-  };
-  /**
-   * Logic for different row bindings.
-   *
-   * @type {Object}
-   */
-
-
-  var rowBindingLogicList = {
-    auto: function auto(rowElement, rowIndex) {
-      var cells = Array.from(rowElement.querySelectorAll('td'));
-      var rowElements = [];
-      var autoBindings = cells.reduce(function (carry, cell, cellIndex) {
-        var cellTableElements = getTableElementsFromCell(cell); // add cell elements to row elements array
-
-        rowElements.push.apply(rowElements, _toConsumableArray(cellTableElements)); // get column value based on the index of the cell
-
-        var currentColumnId = _this4.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
-
-
-        cellTableElements.map(function (tableElement) {
-          if (currentColumnId) {
-            var elementId = (0, _.parseTableElementId)(tableElement);
-            var elementBindings = {};
-            var elementType = (0, _.parseElementType)(tableElement);
-            var availableBindingProperties = defaultMappings[elementType] || defaultMappings.default; // map element bindings to default binding
-            // eslint-disable-next-line array-callback-return
-
-            availableBindingProperties.map(function (prop) {
-              elementBindings[prop] = currentColumnId;
-            }); // assign bindings relative to current cell this element resides in
-            // eslint-disable-next-line no-param-reassign
-
-            carry[elementId] = elementBindings;
-          }
-        });
-        return carry;
-      }, {});
-      batchPopulateTableElements(rowElements, rowIndex, getRowBinding(rowElement), null, {
-        column: autoBindings
-      });
-    },
-    operator: function operator(rowElement, rowIndex) {
-      var rowBindings = getRowBinding(rowElement);
-      var operatorOptions = rowBindings.operator;
-      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this4.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
-    }
-  };
-  /**
-   * Generate necessary data for table elements based on binding row mode
-   *
-   * @param {string} mode row binding mode type
-   * @param {HTMLElement} rowElement row element
-   * @param {number} rowIndex current row index
-   * @param {Object} modeOptions extra mode options if necessary
-   */
-
-  var applyRowBindings = function applyRowBindings(mode, rowElement, rowIndex) {
-    var modeOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-    rowBindingLogicList[mode](rowElement, rowIndex, modeOptions);
-  };
-  /**
-   * Populate and generate a row element based on blueprint row.
-   *
-   * @param {number} index current index of row
-   * @param {HTMLElement} blueprintRow blueprint row element
-   * @return {HTMLElement} generated row
-   */
-
-
-  var populateRow = function populateRow(index, blueprintRow) {
-    var clonedRow = blueprintRow.cloneNode(true);
-    var rowBinding = getRowBinding(clonedRow); // give priority to row auto mode over element column bindings
-
-    if (rowBinding && rowBinding.mode && rowBinding.mode !== 'none') {
-      applyRowBindings(rowBinding.mode, clonedRow, index);
-    } else {
-      var rowElements = getTableElementsFromRow(clonedRow);
-      batchPopulateTableElements(rowElements, index, rowBinding);
-    }
-
-    return clonedRow;
-  };
-  /**
-   * Populate a blueprint row.
-   *
-   * @param {HTMLElement} row blueprint row
-   * @return {Array} populated blueprint rows
-   */
-
-
-  var populateBlueprint = function populateBlueprint(row) {
-    var maxRows = calculateMaxRows(row);
-    var populatedRows = [];
-
-    for (var i = 0; i < maxRows; i += 1) {
-      populatedRows.push(populateRow(i, row));
-    }
-
-    return populatedRows;
-  };
-  /**
-   * Generate a data table
-   *
-   * @param {HTMLElement} sourceTable source table to be generated with data
-   * @param {Object} bindings data bindings
-   * @param {Object} values data cell values
-   * @return {HTMLElement} generated data table
-   */
-
-
-  this.generateDataTable = function (sourceTable, bindings, values) {
-    _this4.updateDataManager(values, bindings);
-
-    _this4.currentBindings = bindings;
-    _this4.currentValues = values;
-    return new Promise(function (res) {
-      var clonedTable = sourceTable.cloneNode(true);
-      var tableBody = clonedTable.querySelector('tbody');
-      var parsedRows = parseTable(clonedTable);
-      clearTable(clonedTable);
-      var populatedRows = parsedRows.reduce(function (carry, blueprintRow) {
-        var pR = populateBlueprint(blueprintRow); // eslint-disable-next-line no-param-reassign
-
-        carry = [].concat(_toConsumableArray(carry), _toConsumableArray(pR));
-        return carry;
-      }, []);
-      populatedRows.map(function (r) {
-        return tableBody.appendChild(r);
-      });
-      return res(clonedTable);
-    });
-  };
-}
-/**
  * Data manager for various data operations.
  *
  * @param {Array} values values array
@@ -32109,7 +31625,7 @@ function DataTableGenerator() {
 
 
 function DataManager() {
-  var _this5 = this;
+  var _this4 = this;
 
   var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -32182,7 +31698,7 @@ function DataManager() {
   this.getColumnValueByIndex = function (index, columnId) {
     var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    var columnValues = _this5.getColumnValues(columnId, customValues);
+    var columnValues = _this4.getColumnValues(columnId, customValues);
 
     var value = null;
 
@@ -32245,13 +31761,547 @@ function DataManager() {
     return Array.from(innerValues)[rowIndex];
   };
 }
+/**
+ * Data table generator for frontend usage.
+ *
+ * @class
+ */
+
+
+function DataTableGenerator() {
+  var _this5 = this;
+
+  /**
+   * Data manager instance
+   *
+   * @type {DataManager}
+   */
+  this.dataManager = {
+    _dataManager: null,
+
+    get instance() {
+      /* eslint-disable no-underscore-dangle */
+      if (!this._dataManager) {
+        this._dataManager = new DataManager();
+      }
+
+      return this._dataManager;
+      /* eslint-enable no-underscore-dangle */
+    }
+
+  };
+  /**
+   * Operator factory instance.
+   *
+   * @type {OperatorFactory}
+   */
+
+  this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
+  /**
+   * Update data manager instance.
+   *
+   * @param {Array} values values array
+   * @param {Object} bindings bindings object
+   */
+
+  this.updateDataManager = function () {
+    var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    _this5.dataManager.instance.updateValues(values);
+
+    _this5.dataManager.instance.updateBindings(bindings);
+  };
+  /**
+   * Current bindings to be used for current generate process.
+   *
+   * @type {Object}
+   */
+
+
+  this.currentBindings = {};
+  /**
+   * Current values to be used for current generate process.
+   *
+   * @type {Object}
+   */
+
+  this.currentValues = {};
+  /**
+   * Parse target element into its cells and rows.
+   *
+   * @param {HTMLElement} table table element to be parsed
+   */
+
+  var parseTable = function parseTable(table) {
+    return Array.from(table.querySelectorAll('tr'));
+  };
+  /**
+   * Clear table body contents of a table.
+   *
+   * @param {HTMLElement} table table to be cleared
+   */
+
+
+  var clearTable = function clearTable(table) {
+    // eslint-disable-next-line no-param-reassign
+    table.querySelector('tbody').innerHTML = '';
+  };
+  /**
+   * Get data table related id of a row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {string|null} row element id, null if no id found
+   */
+
+
+  var getRowId = function getRowId(rowElement) {
+    return rowElement.dataset.dataTableRowId;
+  };
+  /**
+   * Get binding of a table element.
+   *
+   * @param {HTMLElement} tableElement table element
+   * @param {string} type binding type
+   * @return {null | string} binding
+   */
+
+
+  var getTableElementBinding = function getTableElementBinding(tableElement, type) {
+    var elementId = (0, _.parseTableElementId)(tableElement);
+    var binding = null;
+
+    if (elementId) {
+      binding = _this5.dataManager.instance.getBinding(elementId, type);
+    }
+
+    return binding;
+  };
+  /**
+   * Get associated row binding for the given row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {Object|null} binding for supplied row, null if no binding found
+   */
+
+
+  var getRowBinding = function getRowBinding(rowElement) {
+    var rowId = getRowId(rowElement);
+    var binding = null;
+
+    if (rowId) {
+      binding = _this5.dataManager.instance.getBinding(rowId, 'row');
+    }
+
+    return binding;
+  };
+  /**
+   * Calculate maximum amount of rows that can be populated from a blueprint row.
+   *
+   * @param {HTMLElement} rowElement row element
+   */
+
+
+  var calculateMaxRows = function calculateMaxRows(rowElement) {
+    var _getRowBinding;
+
+    var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
+
+    if (rowBindingMode === 'auto' || !rowBindingMode) {
+      return _this5.currentValues.length;
+    } // max row calculations for operator mode
+
+
+    if (rowBindingMode === 'operator') {
+      var rowBindingOperatorObject = getRowBinding(rowElement).operator;
+      return _this5.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
+    }
+
+    var cells = Array.from(rowElement.querySelectorAll('td'));
+    return cells.reduce(function (carry, cell) {
+      var tableElements = Array.from(cell.querySelectorAll('.wptb-ph-element')); // max amount of column values can be applied to this cell
+
+      var maxValue = 0; // eslint-disable-next-line array-callback-return
+
+      tableElements.map(function (element) {
+        var colBinding = getTableElementBinding(element, 'column');
+
+        if (colBinding) {
+          maxValue = Object.keys(colBinding) // TODO [erdembircan] rewrite this with filter > map
+          // eslint-disable-next-line array-callback-return
+          .map(function (key) {
+            if (Object.prototype.hasOwnProperty.call(colBinding, key)) {
+              return colBinding[key];
+            }
+          }) // eslint-disable-next-line no-shadow
+          .reduce(function (carry, binding) {
+            var values = _this5.dataManager.instance.getColumnValues(binding);
+
+            return Math.max(values.length, carry);
+          }, 0);
+        }
+      });
+      return Math.max(maxValue, carry);
+    }, 1);
+  };
+  /**
+   * Value apply list for different table elements.
+   *
+   * @type {Object}
+   */
+
+
+  var valueApplyList = {
+    text: function text(tableElement, value) {
+      var text = value.text;
+
+      if (text) {
+        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+
+        pElement.childNodes[0].textContent = value.text;
+      }
+    },
+    button: function button(tableElement, value) {
+      var text = value.text,
+          link = value.link;
+
+      if (text) {
+        var pElement = tableElement.querySelector('p'); // since tinyMCE wraps text content with native font style elements, should be applying text value to first child node of paragraph element
+
+        pElement.childNodes[0].textContent = value.text;
+      }
+
+      if (link) {
+        var anchorElement = tableElement.querySelector('a');
+
+        if (anchorElement) {
+          anchorElement.href = link;
+        }
+      }
+    },
+    star_rating: function star_rating(tableElement, _ref3) {
+      var rating = _ref3.rating;
+
+      if (rating) {
+        var maxStarCount = Number.parseInt(tableElement.dataset.starCount, 10);
+        var parsedValue = Number.parseFloat(rating); // limit star rating between maximum stars available on element and current rating
+
+        var limitedRating = Math.min(maxStarCount, parsedValue);
+        var roundedRating = Math.floor(limitedRating);
+        var emptyStars = Array.from(tableElement.querySelectorAll('li.wptb-rating-star'));
+        var fullStars = Array.from(tableElement.querySelectorAll('li.wptb-rating-star')).filter(function (star, index) {
+          // clear any star rating on rating element
+          star.classList.remove('wptb-rating-star-selected-full');
+          star.classList.remove('wptb-rating-star-selected-half');
+          return index < roundedRating;
+        }); // eslint-disable-next-line array-callback-return
+
+        fullStars.map(function (star) {
+          star.classList.add('wptb-rating-star-selected-full');
+        }); // add any remaining half star
+
+        if (roundedRating !== limitedRating) {
+          emptyStars[fullStars.length].classList.add('wptb-rating-star-selected-half');
+        }
+      }
+    },
+    image: function image(tableElement, _ref4) {
+      var link = _ref4.link;
+
+      if (link) {
+        var imageElement = tableElement.querySelector('img');
+
+        if (!imageElement) {
+          imageElement = document.createElement('img');
+          var imageParentAnchor = tableElement.querySelector('a');
+          imageParentAnchor.innerHTML = '';
+          imageParentAnchor.appendChild(imageElement);
+          imageElement.width = 200;
+          imageElement.height = 200;
+        }
+
+        imageElement.src = link;
+      }
+    }
+  };
+  /**
+   * Add value to a table element.
+   *
+   * @param {HTMLElement} tableElement table element
+   * @param {*} value value
+   * @param {Object} mapper mapper object to map values to certain element properties
+   */
+
+  var addValueToTableElement = function addValueToTableElement(tableElement, value) {
+    var mapper = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+    var tableElementType = (0, _.parseElementType)(tableElement);
+    var elementValue = value;
+
+    if (mapper) {
+      var _ref5, _mapper$tableElementT;
+
+      // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
+      var mapperIndex = (_ref5 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref5 !== void 0 ? _ref5 : ['text']; // create a new value object with mapped properties
+
+      elementValue = {}; // eslint-disable-next-line array-callback-return
+
+      mapperIndex.map(function (mapIndex) {
+        elementValue[mapIndex] = value;
+      });
+    }
+
+    if (valueApplyList[tableElementType]) {
+      valueApplyList[tableElementType](tableElement, elementValue);
+    }
+  };
+  /**
+   * Sort row data values.
+   *
+   * @param {Object} sortOptions options object
+   * @param {Array} rowValues row data values
+   * @return {Array} sorted row data values
+   */
+
+
+  var sortRowDataValues = function sortRowDataValues(sortOptions, rowValues) {
+    // immutable row value array
+    var sortedValues = Array.from(rowValues);
+
+    if (sortOptions) {
+      var sortType = sortOptions.sortType,
+          sortDirection = sortOptions.sortDirection,
+          sortTarget = sortOptions.sortTarget;
+
+      if (sortType && sortDirection && sortType && sortTarget !== 'none') {
+        // eslint-disable-next-line array-callback-return
+        sortedValues.sort(function (a, b) {
+          var aVal = _this5.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
+
+          var bVal = _this5.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
+
+
+          var directionVal = sortDirection === 'asc' ? 1 : -1; // sort by numbers
+
+          if (sortType === '123') {
+            aVal = Number.parseFloat(aVal);
+            bVal = Number.parseFloat(bVal);
+            return (aVal - bVal) * directionVal;
+          } // sort by letters
+
+
+          if (aVal > bVal) {
+            return directionVal;
+          }
+
+          if (bVal < aVal) {
+            return -1 * directionVal;
+          }
+
+          return 0;
+        });
+      }
+    }
+
+    return sortedValues;
+  };
+  /**
+   * Batch populate table elements with their assigned binding values.
+   *
+   * @param {Array} tableElements an array of table elements
+   * @param {number} rowIndex index of current row this table elements belongs to
+   * @param {Object} rowBindings row bindings for the parent row of the supplied table elements
+   * @param {Array} customValues custom values to use for populate operation
+   * @param {Object} customBindings custom bindings to use instead of element and rows defined ones
+   */
+
+
+  var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
+    var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+    var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this5.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
+
+    tableElements.map(function (tableElement) {
+      var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[(0, _.parseTableElementId)(tableElement)]) || getTableElementBinding(tableElement, 'column');
+
+      if (bindingColIdObject) {
+        var value = {}; // eslint-disable-next-line array-callback-return
+
+        Object.keys(bindingColIdObject).map(function (key) {
+          if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+            value[key] = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
+          }
+        });
+
+        if (value) {
+          addValueToTableElement(tableElement, value);
+        }
+      }
+    });
+  };
+  /**
+   * Get table elements from a supplied row element.
+   *
+   * @param {HTMLElement} rowElement row element
+   * @return {Array} table element array
+   *
+   */
+
+
+  var getTableElementsFromRow = function getTableElementsFromRow(rowElement) {
+    return Array.from(rowElement.querySelectorAll('.wptb-ph-element'));
+  };
+  /**
+   * Get table elements from a supplied table cell.
+   *
+   * @param {HTMLElement} cellElement cell element
+   * @return {Array} table element array
+   *
+   */
+
+
+  var getTableElementsFromCell = function getTableElementsFromCell(cellElement) {
+    return Array.from(cellElement.querySelectorAll('.wptb-ph-element'));
+  };
+  /**
+   * Logic for different row bindings.
+   *
+   * @type {Object}
+   */
+
+
+  var rowBindingLogicList = {
+    auto: function auto(rowElement, rowIndex) {
+      var cells = Array.from(rowElement.querySelectorAll('td'));
+      var rowElements = [];
+      var autoBindings = cells.reduce(function (carry, cell, cellIndex) {
+        var cellTableElements = getTableElementsFromCell(cell); // add cell elements to row elements array
+
+        rowElements.push.apply(rowElements, _toConsumableArray(cellTableElements)); // get column value based on the index of the cell
+
+        var currentColumnId = _this5.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
+
+
+        cellTableElements.map(function (tableElement) {
+          if (currentColumnId) {
+            var elementId = (0, _.parseTableElementId)(tableElement);
+            var elementBindings = {};
+            var elementType = (0, _.parseElementType)(tableElement);
+            var availableBindingProperties = _elementOptionTypeList.defaultMappings[elementType] || _elementOptionTypeList.defaultMappings.default; // map element bindings to default binding
+            // eslint-disable-next-line array-callback-return
+
+            availableBindingProperties.map(function (prop) {
+              elementBindings[prop] = currentColumnId;
+            }); // assign bindings relative to current cell this element resides in
+            // eslint-disable-next-line no-param-reassign
+
+            carry[elementId] = elementBindings;
+          }
+        });
+        return carry;
+      }, {});
+      batchPopulateTableElements(rowElements, rowIndex, getRowBinding(rowElement), null, {
+        column: autoBindings
+      });
+    },
+    operator: function operator(rowElement, rowIndex) {
+      var rowBindings = getRowBinding(rowElement);
+      var operatorOptions = rowBindings.operator;
+      batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this5.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+    }
+  };
+  /**
+   * Generate necessary data for table elements based on binding row mode
+   *
+   * @param {string} mode row binding mode type
+   * @param {HTMLElement} rowElement row element
+   * @param {number} rowIndex current row index
+   * @param {Object} modeOptions extra mode options if necessary
+   */
+
+  var applyRowBindings = function applyRowBindings(mode, rowElement, rowIndex) {
+    var modeOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+    rowBindingLogicList[mode](rowElement, rowIndex, modeOptions);
+  };
+  /**
+   * Populate and generate a row element based on blueprint row.
+   *
+   * @param {number} index current index of row
+   * @param {HTMLElement} blueprintRow blueprint row element
+   * @return {HTMLElement} generated row
+   */
+
+
+  var populateRow = function populateRow(index, blueprintRow) {
+    var clonedRow = blueprintRow.cloneNode(true);
+    var rowBinding = getRowBinding(clonedRow); // give priority to row auto mode over element column bindings
+
+    if (rowBinding && rowBinding.mode && rowBinding.mode !== 'none') {
+      applyRowBindings(rowBinding.mode, clonedRow, index);
+    } else {
+      var rowElements = getTableElementsFromRow(clonedRow);
+      batchPopulateTableElements(rowElements, index, rowBinding);
+    }
+
+    return clonedRow;
+  };
+  /**
+   * Populate a blueprint row.
+   *
+   * @param {HTMLElement} row blueprint row
+   * @return {Array} populated blueprint rows
+   */
+
+
+  var populateBlueprint = function populateBlueprint(row) {
+    var maxRows = calculateMaxRows(row);
+    var populatedRows = [];
+
+    for (var i = 0; i < maxRows; i += 1) {
+      populatedRows.push(populateRow(i, row));
+    }
+
+    return populatedRows;
+  };
+  /**
+   * Generate a data table
+   *
+   * @param {HTMLElement} sourceTable source table to be generated with data
+   * @param {Object} bindings data bindings
+   * @param {Object} values data cell values
+   * @return {HTMLElement} generated data table
+   */
+
+
+  this.generateDataTable = function (sourceTable, bindings, values) {
+    _this5.updateDataManager(values, bindings);
+
+    _this5.currentBindings = bindings;
+    _this5.currentValues = values;
+    return new Promise(function (res) {
+      var clonedTable = sourceTable.cloneNode(true);
+      var tableBody = clonedTable.querySelector('tbody');
+      var parsedRows = parseTable(clonedTable);
+      clearTable(clonedTable);
+      var populatedRows = parsedRows.reduce(function (carry, blueprintRow) {
+        var pR = populateBlueprint(blueprintRow); // eslint-disable-next-line no-param-reassign
+
+        carry = [].concat(_toConsumableArray(carry), _toConsumableArray(pR));
+        return carry;
+      }, []);
+      populatedRows.map(function (r) {
+        return tableBody.appendChild(r);
+      });
+      return res(clonedTable);
+    });
+  };
+}
 /** @module DataTableGenerator */
 
 
 var _default = new DataTableGenerator();
 
 exports.default = _default;
-},{".":"functions/index.js","../stores/general":"stores/general.js"}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
+},{".":"functions/index.js","../stores/general":"stores/general.js","../components/dataTable/elementOptionTypeList":"components/dataTable/elementOptionTypeList.js"}],"components/dataTable/DataTableGeneratedPreview.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34727,6 +34777,7 @@ var _default = {
           resetIndexRow: (0, _i18n.__)('new column names row', 'wp-table-builder'),
           cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
           collapseSectionHeader: (0, _i18n.__)('element data options', 'wp-table-builder'),
+          rating: (0, _i18n.__)('rating', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
           dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),

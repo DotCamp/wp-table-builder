@@ -3,10 +3,21 @@
  *
  * @type {Object}
  */
-const typeOptionList = {
+export const typeOptionList = {
 	text: 'text',
 	button: ['text', 'link'],
+	star_rating: ['rating'],
+	image: ['link'],
 };
 
-/** @module typeOptionList */
-export default typeOptionList;
+/**
+ * Default mappings for element value binds.
+ *
+ * @type {Object}
+ */
+export const defaultMappings = {
+	default: ['text'],
+	button: ['link'],
+	star_rating: ['rating'],
+	image: ['link'],
+};

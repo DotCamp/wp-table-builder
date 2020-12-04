@@ -62,6 +62,7 @@ export default {
 					resetIndexRow: __('new column names row', 'wp-table-builder'),
 					cancelNew: __('cancel new selection', 'wp-table-builder'),
 					collapseSectionHeader: __('element data options', 'wp-table-builder'),
+					rating: __('rating', 'wp-table-builder'),
 					elementsMessage: __(
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'
