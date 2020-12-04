@@ -32516,20 +32516,22 @@ exports.default = _default;
             ]
           ),
           _vm._v(" "),
-          !_vm.targetTable
-            ? _c("div", { staticClass: "wptb-data-table-empty-preview" }, [
-                _vm._v(
-                  "\n\t\t\t" +
-                    _vm._s(_vm.translationM("emptyDataTablePreview")) +
-                    "\n\t\t"
-                )
-              ])
-            : _c("div", {
-                staticClass:
-                  "wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events",
-                style: _vm.previewStyle,
-                domProps: { innerHTML: _vm._s(_vm.previewHtml) }
-              })
+          _c("div", { staticClass: "wptb-data-table-preview-content" }, [
+            !_vm.targetTable
+              ? _c("div", { staticClass: "wptb-data-table-empty-preview" }, [
+                  _vm._v(
+                    "\n\t\t\t\t" +
+                      _vm._s(_vm.translationM("emptyDataTablePreview")) +
+                      "\n\t\t\t"
+                  )
+                ])
+              : _c("div", {
+                  staticClass:
+                    "wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events",
+                  style: _vm.previewStyle,
+                  domProps: { innerHTML: _vm._s(_vm.previewHtml) }
+                })
+          ])
         ],
         1
       )

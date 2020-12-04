@@ -6252,6 +6252,15 @@ thead .wptb-data-manager-table-data-value {
     margin-top: 10px;
 }
 
+.wptb-data-table-preview-content {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 .wptb-data-table-generated-preview-toggle {
     position: absolute;
     height: 30px;

@@ -39,15 +39,17 @@
 					class="wptb-data-table-preview-toggle-icon wptb-flex wptb-justify-content-center wptb-flex-align-center"
 				></div>
 			</div>
-			<div class="wptb-data-table-empty-preview" v-if="!targetTable">
-				{{ translationM('emptyDataTablePreview') }}
+			<div class="wptb-data-table-preview-content">
+				<div class="wptb-data-table-empty-preview" v-if="!targetTable">
+					{{ translationM('emptyDataTablePreview') }}
+				</div>
+				<div
+					v-else
+					class="wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events"
+					:style="previewStyle"
+					v-html="previewHtml"
+				></div>
 			</div>
-			<div
-				v-else
-				class="wptb-data-table-preview-main wptb-plugin-box-shadow-xl wptb-unselectable wptb-no-pointer-events"
-				:style="previewStyle"
-				v-html="previewHtml"
-			></div>
 		</div>
 	</div>
 </template>
