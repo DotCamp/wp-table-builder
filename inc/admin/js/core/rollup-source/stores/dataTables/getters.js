@@ -283,6 +283,17 @@ const getters = {
 		return state.dataSource.setup.sourceId;
 	},
 	/**
+	 * Get tab id of the current active source setup.
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} getters store getters
+	 * @return {string} tab id
+	 */
+	// eslint-disable-next-line no-shadow
+	getCurrentSourceSetupTab: (state, getters) => {
+		return getters.currentSetupGroupTab(getters.getCurrentSourceSetupId);
+	},
+	/**
 	 * Get parsed values of data table.
 	 *
 	 * This object will contain separated values of header and body values of data table.

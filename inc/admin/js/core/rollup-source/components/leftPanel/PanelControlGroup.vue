@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-panel-control-group">
-		<div class="wptb-panel-control-group-title">{{ title | cap}}</div>
+		<div class="wptb-panel-control-group-title">{{ title | cap }}</div>
 		<slot></slot>
 	</div>
 </template>

@@ -161,9 +161,9 @@ export default {
 				this.builderPanel.style.height = this.toggleStatus ? `calc( 100% + ${this.style.height}px)` : 0;
 			}
 		},
-		handleHeightResize(offset) {
+		handleHeightResize({ y }) {
 			if (this.toggleStatus) {
-				this.style.height = this.savedHeight + offset;
+				this.style.height = this.savedHeight + y;
 			}
 		},
 	},
