@@ -93,6 +93,7 @@ export default {
 					ascending: __('ascending', 'wptb-table-builder'),
 					descending: __('descending', 'wptb-table-builder'),
 					selectGroupControls: __('select controls', 'wptb-table-builder'),
+					elementNotSupported: __('This element is not supported with data tables.', 'wptb-table-builder'),
 					percentage: __('percentage', 'wptb-table-builder'),
 					elementColumnBasicBindingMessage: __(
 						'Selected column data will be applied to table element.',

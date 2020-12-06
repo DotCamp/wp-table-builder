@@ -30468,7 +30468,18 @@ var _default = {
   mixins: [_DataPanelBindingMessageBase.default, _withNativeTranslationStore.default],
   computed: {
     overrideBindingTranslation: function overrideBindingTranslation() {
-      var _this$rowBinding;
+      var _this = this,
+          _this$rowBinding;
+
+      if (this.elementBinding) {
+        var elementBindingLength = Object.keys(this.elementBinding).filter(function (key) {
+          return Object.prototype.hasOwnProperty.call(_this.elementBinding, key);
+        }).length; // show element not supported message if supplied element binding is an empty object
+
+        if (elementBindingLength === 0) {
+          return this.translationM('elementNotSupported');
+        }
+      }
 
       if (((_this$rowBinding = this.rowBinding) === null || _this$rowBinding === void 0 ? void 0 : _this$rowBinding.mode) === 'auto') {
         return this.translationM('autoModeActiveMessage');
@@ -35004,6 +35015,7 @@ var _default = {
           ascending: (0, _i18n.__)('ascending', 'wptb-table-builder'),
           descending: (0, _i18n.__)('descending', 'wptb-table-builder'),
           selectGroupControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
+          elementNotSupported: (0, _i18n.__)('This element is not supported with data tables.', 'wptb-table-builder'),
           percentage: (0, _i18n.__)('percentage', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
