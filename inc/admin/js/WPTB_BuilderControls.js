@@ -32538,7 +32538,7 @@ var _default = {
     return {
       visibility: false,
       style: {
-        height: 400
+        height: 200
       },
       visibleHeight: 10,
       toggleStatus: true,
