@@ -30,6 +30,8 @@
 	 */
 
 	jQuery(document).ready(function ($) {
+		WPTB_DataTableGenerator.frontendGenerateTables();
+
 		const tableContainers = document.getElementsByClassName('wptb-table-container');
 		/**
 		 * Adds hover color change support for supported button elements.

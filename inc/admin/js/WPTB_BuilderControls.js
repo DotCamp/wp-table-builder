@@ -32660,21 +32660,49 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       _this5.currentBindings = bindings;
       _this5.currentValues = values;
-      return new Promise(function (res) {
-        var clonedTable = sourceTable.cloneNode(true);
-        var tableBody = clonedTable.querySelector('tbody');
-        var parsedRows = parseTable(clonedTable);
-        clearTable(clonedTable);
-        var populatedRows = parsedRows.reduce(function (carry, blueprintRow) {
-          var pR = populateBlueprint(blueprintRow); // eslint-disable-next-line no-param-reassign
+      var clonedTable = sourceTable.cloneNode(true);
+      var tableBody = clonedTable.querySelector('tbody');
+      var parsedRows = parseTable(clonedTable);
+      clearTable(clonedTable);
+      var populatedRows = parsedRows.reduce(function (carry, blueprintRow) {
+        var pR = populateBlueprint(blueprintRow); // eslint-disable-next-line no-param-reassign
 
-          carry = [].concat(_toConsumableArray(carry), _toConsumableArray(pR));
-          return carry;
-        }, []);
-        populatedRows.map(function (r) {
-          return tableBody.appendChild(r);
-        });
-        return res(clonedTable);
+        carry = [].concat(_toConsumableArray(carry), _toConsumableArray(pR));
+        return carry;
+      }, []);
+      populatedRows.map(function (r) {
+        return tableBody.appendChild(r);
+      });
+      return clonedTable;
+    };
+    /**
+     * Prepare data table for frontend.
+     *
+     * @param {HTMLElement} targetTable target table
+     */
+
+
+    var prepareFrontendTable = function prepareFrontendTable(targetTable) {
+      // parse data table options from table dataset
+      var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
+
+      var generatedTable = _this5.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
+
+      var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
+
+      targetTable.remove(); // add generated table as our new table to DOM
+
+      mainWrapper.appendChild(generatedTable);
+    };
+    /**
+     * Generate data tables for frontend.
+     */
+
+
+    this.frontendGenerateTables = function () {
+      var tables = Array.from(document.querySelectorAll('.wptb-preview-table[data-wptb-data-table="true"]'));
+      tables.map(function (table) {
+        return prepareFrontendTable(table);
       });
     };
   }
@@ -32700,10 +32728,6 @@ var _DataTableGenerator = _interopRequireDefault(require("../../functions/DataTa
 var _NumberPostfixButtons = _interopRequireDefault(require("../NumberPostfixButtons"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -32782,37 +32806,14 @@ var _default = {
       this.busy = state;
     },
     generateDataTable: function generateDataTable(mainTable) {
-      var _this2 = this;
+      if (this.tableIsActive) {
+        this.setComponentBusyState(true);
 
-      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var previewTable;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (!_this2.tableIsActive) {
-                  _context.next = 7;
-                  break;
-                }
+        var previewTable = _DataTableGenerator.default.generateDataTable(mainTable, _objectSpread({}, this.getBindings), Array.from(this.parsedData.values));
 
-                _this2.setComponentBusyState(true);
-
-                _context.next = 4;
-                return _DataTableGenerator.default.generateDataTable(mainTable, _objectSpread({}, _this2.getBindings), Array.from(_this2.parsedData.values));
-
-              case 4:
-                previewTable = _context.sent;
-                _this2.previewHtml = previewTable.outerHTML;
-
-                _this2.setComponentBusyState(false);
-
-              case 7:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+        this.previewHtml = previewTable.outerHTML;
+        this.setComponentBusyState(false);
+      }
     },
     calculateVisibility: function calculateVisibility(section) {
       // sections where generated preview will be available and visible

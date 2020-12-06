@@ -983,26 +983,57 @@
 			this.updateDataManager(values, bindings);
 			this.currentBindings = bindings;
 			this.currentValues = values;
-			return new Promise((res) => {
-				const clonedTable = sourceTable.cloneNode(true);
-				const tableBody = clonedTable.querySelector('tbody');
 
-				const parsedRows = parseTable(clonedTable);
-				clearTable(clonedTable);
+			const clonedTable = sourceTable.cloneNode(true);
+			const tableBody = clonedTable.querySelector('tbody');
 
-				const populatedRows = parsedRows.reduce((carry, blueprintRow) => {
-					const pR = populateBlueprint(blueprintRow);
+			const parsedRows = parseTable(clonedTable);
+			clearTable(clonedTable);
 
-					// eslint-disable-next-line no-param-reassign
-					carry = [...carry, ...pR];
+			const populatedRows = parsedRows.reduce((carry, blueprintRow) => {
+				const pR = populateBlueprint(blueprintRow);
 
-					return carry;
-				}, []);
+				// eslint-disable-next-line no-param-reassign
+				carry = [...carry, ...pR];
 
-				populatedRows.map((r) => tableBody.appendChild(r));
+				return carry;
+			}, []);
 
-				return res(clonedTable);
-			});
+			populatedRows.map((r) => tableBody.appendChild(r));
+
+			return clonedTable;
+		};
+
+		/**
+		 * Prepare data table for frontend.
+		 *
+		 * @param {HTMLElement} targetTable target table
+		 */
+		const prepareFrontendTable = (targetTable) => {
+			// parse data table options from table dataset
+			const dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
+
+			const generatedTable = this.generateDataTable(
+				targetTable,
+				dataTableOptions.dataManager.bindings,
+				dataTableOptions.dataManager.tempData.parsedData.values
+			);
+
+			const mainWrapper = targetTable.parentNode;
+
+			// remove blueprint table from DOM
+			targetTable.remove();
+
+			// add generated table as our new table to DOM
+			mainWrapper.appendChild(generatedTable);
+		};
+
+		/**
+		 * Generate data tables for frontend.
+		 */
+		this.frontendGenerateTables = () => {
+			const tables = Array.from(document.querySelectorAll('.wptb-preview-table[data-wptb-data-table="true"]'));
+			tables.map((table) => prepareFrontendTable(table));
 		};
 	}
 

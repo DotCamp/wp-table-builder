@@ -128,10 +128,11 @@ export default {
 		setComponentBusyState(state) {
 			this.busy = state;
 		},
-		async generateDataTable(mainTable) {
+		generateDataTable(mainTable) {
 			if (this.tableIsActive) {
 				this.setComponentBusyState(true);
-				const previewTable = await DataTableGenerator.generateDataTable(
+
+				const previewTable = DataTableGenerator.generateDataTable(
 					mainTable,
 					{ ...this.getBindings },
 					Array.from(this.parsedData.values)
