@@ -11,7 +11,7 @@
 					class="wptb-size-input"
 					:enable-dynamic-width="true"
 					v-model="innerValue"
-					:min="1"
+					:min="$attrs.min || 1"
 					:max="100"
 					:enable-limit="true"
 					:disabled="disabled"

@@ -103,7 +103,7 @@
 	 * Operator type.
 	 *
 	 * @param {Object} options options object
-	 * @param {DataManager} dataManager data manager instance
+	 * @param {Object} dataManager data manager instance
 	 * @param {Object} factoryContext operator factory context
 	 * @class
 	 */
@@ -212,6 +212,28 @@
 	};
 
 	/**
+	 * Common operator object for than operators.
+	 *
+	 * @type {Object}
+	 */
+	const thanOperators = {
+		methods: {
+			getOperatorResult({ compareColumn, operatorType, thanAmount }) {
+				return this.dataManager.getValues().filter((row) => {
+					const comparedColumnVal = Number.parseFloat(
+						this.dataManager.getColumnValueByIndex(0, compareColumn, [row])
+					);
+					const parsedThanAmount = Number.parseFloat(thanAmount);
+
+					return operatorType === 'higher'
+						? comparedColumnVal > parsedThanAmount
+						: comparedColumnVal < parsedThanAmount;
+				});
+			},
+		},
+	};
+
+	/**
 	 * Operator type options that will be used to generator operators in operator factory.
 	 *
 	 * @type {Object}
@@ -242,13 +264,15 @@
 				},
 			},
 		},
+		higher: thanOperators,
+		lower: thanOperators,
 	};
 
 	/**
 	 * Operator factory for easy operator functions.
 	 *
 	 * @param {Object} operatorOptions individual operator options.
-	 * @param {DataManager} dataManager DataManager instance
+	 * @param {Object} dataManager DataManager instance
 	 * @class
 	 */
 	function OperatorFactory(operatorOptions, dataManager) {
@@ -439,7 +463,7 @@
 		/**
 		 * Data manager instance
 		 *
-		 * @type {DataManager}
+		 * @type {Object}
 		 */
 		this.dataManager = {
 			_dataManager: null,
@@ -457,7 +481,7 @@
 		/**
 		 * Operator factory instance.
 		 *
-		 * @type {OperatorFactory}
+		 * @type {Object}
 		 */
 		this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
 
@@ -569,7 +593,7 @@
 
 				return this.operatorFactory
 					.getOperator(rowBindingOperatorObject.operatorType)
-					.calculateMaxRows(rowBindingOperatorObject);
+					?.calculateMaxRows(rowBindingOperatorObject);
 			}
 
 			const cells = Array.from(rowElement.querySelectorAll('td'));

@@ -20693,7 +20693,7 @@ exports.default = _default;
               staticClass: "wptb-size-input",
               attrs: {
                 "enable-dynamic-width": true,
-                min: 1,
+                min: _vm.$attrs.min || 1,
                 max: 100,
                 "enable-limit": true,
                 disabled: _vm.disabled
@@ -30556,10 +30556,11 @@ var _default = {
           operatorType = _this$rowBinding$oper.operatorType,
           operatorType2 = _this$rowBinding$oper.operatorType2,
           rowAmount = _this$rowBinding$oper.rowAmount,
-          rowCustomAmount = _this$rowBinding$oper.rowCustomAmount;
+          rowCustomAmount = _this$rowBinding$oper.rowCustomAmount,
+          thanAmount = _this$rowBinding$oper.thanAmount;
       var amountPart = "".concat(rowAmount === 'all' ? "".concat(this.emphasize('all'), " rows") : "".concat(this.emphasize(rowCustomAmount), " row").concat(rowCustomAmount > 1 ? 's' : ''));
       var selectPart = "Select ".concat(amountPart);
-      var operatorPart = "where ".concat(this.emphasize(this.columnNames[compareColumn]), " is ").concat(this.emphasize(operatorType)).concat(operatorType === 'not' ? " ".concat(this.emphasize(operatorType2)) : '');
+      var operatorPart = "where ".concat(this.emphasize(this.columnNames[compareColumn]), " is ").concat(this.emphasize(operatorType)).concat(operatorType === 'not' ? " ".concat(this.emphasize(operatorType2)) : '').concat(['higher', 'lower'].includes(operatorType) ? " than ".concat(this.emphasize(thanAmount)) : '');
       return "".concat(selectPart, " ").concat(operatorPart, ".");
     }
   }
@@ -30716,7 +30717,8 @@ var _default = {
         rowCustomAmount: 1,
         compareColumn: null,
         operatorType: 'highest',
-        operatorType2: 'highest'
+        operatorType2: 'highest',
+        thanAmount: 1
       },
       options: {
         rowAmount: {
@@ -30726,6 +30728,8 @@ var _default = {
         operatorTypes: {
           highest: this.translationM('highest'),
           lowest: this.translationM('lowest'),
+          higher: this.translationM('higher'),
+          lower: this.translationM('lower'),
           not: this.translationM('not')
         },
         operator2Types: {
@@ -30916,6 +30920,29 @@ exports.default = _default;
                 expression: "operatorControls.operatorType"
               }
             }),
+            _vm._v(" "),
+            _c(
+              "transition",
+              { attrs: { name: "wptb-fade" } },
+              [
+                _vm.getOperatorControl("operatorType") === "higher" ||
+                _vm.getOperatorControl("operatorType") === "lower"
+                  ? _c("panel-input-control", {
+                      attrs: {
+                        label: _vm._f("cap")("" + _vm.translationM("amount"))
+                      },
+                      model: {
+                        value: _vm.operatorControls.thanAmount,
+                        callback: function($$v) {
+                          _vm.$set(_vm.operatorControls, "thanAmount", $$v)
+                        },
+                        expression: "operatorControls.thanAmount"
+                      }
+                    })
+                  : _vm._e()
+              ],
+              1
+            ),
             _vm._v(" "),
             _c(
               "transition",
@@ -31772,7 +31799,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * Operator type.
    *
    * @param {Object} options options object
-   * @param {DataManager} dataManager data manager instance
+   * @param {Object} dataManager data manager instance
    * @param {Object} factoryContext operator factory context
    * @class
    */
@@ -31881,6 +31908,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
   };
   /**
+   * Common operator object for than operators.
+   *
+   * @type {Object}
+   */
+
+  var thanOperators = {
+    methods: {
+      getOperatorResult: function getOperatorResult(_ref3) {
+        var _this3 = this;
+
+        var compareColumn = _ref3.compareColumn,
+            operatorType = _ref3.operatorType,
+            thanAmount = _ref3.thanAmount;
+        return this.dataManager.getValues().filter(function (row) {
+          var comparedColumnVal = Number.parseFloat(_this3.dataManager.getColumnValueByIndex(0, compareColumn, [row]));
+          var parsedThanAmount = Number.parseFloat(thanAmount);
+          return operatorType === 'higher' ? comparedColumnVal > parsedThanAmount : comparedColumnVal < parsedThanAmount;
+        });
+      }
+    }
+  };
+  /**
    * Operator type options that will be used to generator operators in operator factory.
    *
    * @type {Object}
@@ -31910,18 +31959,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           return this.notOperation(options);
         }
       }
-    }
+    },
+    higher: thanOperators,
+    lower: thanOperators
   };
   /**
    * Operator factory for easy operator functions.
    *
    * @param {Object} operatorOptions individual operator options.
-   * @param {DataManager} dataManager DataManager instance
+   * @param {Object} dataManager DataManager instance
    * @class
    */
 
   function OperatorFactory(operatorOptions, dataManager) {
-    var _this3 = this;
+    var _this4 = this;
 
     /**
      * Operator type instances.
@@ -31954,7 +32005,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
           operatorTypeInstances[optionName] = new OperatorType(_objectSpread({
             name: optionName
-          }, operatorOptions[optionName]), dataManager, _this3);
+          }, operatorOptions[optionName]), dataManager, _this4);
         }
       });
     };
@@ -31980,7 +32031,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   function DataManager() {
-    var _this4 = this;
+    var _this5 = this;
 
     var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -32053,7 +32104,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.getColumnValueByIndex = function (index, columnId) {
       var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-      var columnValues = _this4.getColumnValues(columnId, customValues);
+      var columnValues = _this5.getColumnValues(columnId, customValues);
 
       var value = null;
 
@@ -32124,12 +32175,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   function DataTableGenerator() {
-    var _this5 = this;
+    var _this6 = this;
 
     /**
      * Data manager instance
      *
-     * @type {DataManager}
+     * @type {Object}
      */
     this.dataManager = {
       _dataManager: null,
@@ -32148,7 +32199,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Operator factory instance.
      *
-     * @type {OperatorFactory}
+     * @type {Object}
      */
 
     this.operatorFactory = new OperatorFactory(operatorTypeOptions, this.dataManager.instance);
@@ -32163,9 +32214,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      _this5.dataManager.instance.updateValues(values);
+      _this6.dataManager.instance.updateValues(values);
 
-      _this5.dataManager.instance.updateBindings(bindings);
+      _this6.dataManager.instance.updateBindings(bindings);
     };
     /**
      * Current bindings to be used for current generate process.
@@ -32227,7 +32278,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var binding = null;
 
       if (elementId) {
-        binding = _this5.dataManager.instance.getBinding(elementId, type);
+        binding = _this6.dataManager.instance.getBinding(elementId, type);
       }
 
       return binding;
@@ -32245,7 +32296,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var binding = null;
 
       if (rowId) {
-        binding = _this5.dataManager.instance.getBinding(rowId, 'row');
+        binding = _this6.dataManager.instance.getBinding(rowId, 'row');
       }
 
       return binding;
@@ -32263,13 +32314,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
       if (rowBindingMode === 'auto' || !rowBindingMode) {
-        return _this5.currentValues.length;
+        return _this6.currentValues.length;
       } // max row calculations for operator mode
 
 
       if (rowBindingMode === 'operator') {
+        var _this6$operatorFactor;
+
         var rowBindingOperatorObject = getRowBinding(rowElement).operator;
-        return _this5.operatorFactory.getOperator(rowBindingOperatorObject.operatorType).calculateMaxRows(rowBindingOperatorObject);
+        return (_this6$operatorFactor = _this6.operatorFactory.getOperator(rowBindingOperatorObject.operatorType)) === null || _this6$operatorFactor === void 0 ? void 0 : _this6$operatorFactor.calculateMaxRows(rowBindingOperatorObject);
       }
 
       var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -32290,7 +32343,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }) // eslint-disable-next-line no-shadow
             .reduce(function (carry, binding) {
-              var values = _this5.dataManager.instance.getColumnValues(binding);
+              var values = _this6.dataManager.instance.getColumnValues(binding);
 
               return Math.max(values.length, carry);
             }, 0);
@@ -32334,8 +32387,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       },
-      star_rating: function star_rating(tableElement, _ref3) {
-        var rating = _ref3.rating;
+      star_rating: function star_rating(tableElement, _ref4) {
+        var rating = _ref4.rating;
 
         if (rating) {
           var maxStarCount = Number.parseInt(tableElement.dataset.starCount, 10);
@@ -32360,8 +32413,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       },
-      image: function image(tableElement, _ref4) {
-        var link = _ref4.link;
+      image: function image(tableElement, _ref5) {
+        var link = _ref5.link;
 
         if (link) {
           var imageElement = tableElement.querySelector('img');
@@ -32378,8 +32431,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           imageElement.src = link;
         }
       },
-      circle_rating: function circle_rating(tableElement, _ref5) {
-        var percentage = _ref5.percentage;
+      circle_rating: function circle_rating(tableElement, _ref6) {
+        var percentage = _ref6.percentage;
 
         if (percentage) {
           // eslint-disable-next-line no-param-reassign
@@ -32395,8 +32448,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           circleSlice.querySelector('.wptb-rating-circle-fill').style.transform = "rotate(".concat(360 / 100 * limitedPercentage, "deg)");
         }
       },
-      text_icon_element: function text_icon_element(tableElement, _ref6) {
-        var text = _ref6.text;
+      text_icon_element: function text_icon_element(tableElement, _ref7) {
+        var text = _ref7.text;
 
         if (text) {
           var textElement = tableElement.querySelector('#wptbTextIconMainText');
@@ -32421,10 +32474,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var elementValue = value;
 
       if (mapper) {
-        var _ref7, _mapper$tableElementT;
+        var _ref8, _mapper$tableElementT;
 
         // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-        var mapperIndex = (_ref7 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref7 !== void 0 ? _ref7 : ['text']; // create a new value object with mapped properties
+        var mapperIndex = (_ref8 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref8 !== void 0 ? _ref8 : ['text']; // create a new value object with mapped properties
 
         elementValue = {}; // eslint-disable-next-line array-callback-return
 
@@ -32458,9 +32511,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (sortType && sortDirection && sortType && sortTarget !== 'none') {
           // eslint-disable-next-line array-callback-return
           sortedValues.sort(function (a, b) {
-            var aVal = _this5.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
+            var aVal = _this6.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
 
-            var bVal = _this5.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
+            var bVal = _this6.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
 
 
             var directionVal = sortDirection === 'asc' ? 1 : -1; // sort by numbers
@@ -32501,7 +32554,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
       var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this5.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
+      var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this6.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
 
       tableElements.map(function (tableElement) {
         var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[parseTableElementId(tableElement)]) || getTableElementBinding(tableElement, 'column');
@@ -32511,7 +32564,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           Object.keys(bindingColIdObject).map(function (key) {
             if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-              value[key] = _this5.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
+              value[key] = _this6.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
             }
           });
 
@@ -32561,7 +32614,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           rowElements.push.apply(rowElements, _toConsumableArray(cellTableElements)); // get column value based on the index of the cell
 
-          var currentColumnId = _this5.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
+          var currentColumnId = _this6.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
 
 
           cellTableElements.map(function (tableElement) {
@@ -32589,7 +32642,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       operator: function operator(rowElement, rowIndex) {
         var rowBindings = getRowBinding(rowElement);
         var operatorOptions = rowBindings.operator;
-        batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this5.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+        batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this6.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
       }
     };
     /**
@@ -32656,10 +32709,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.generateDataTable = function (sourceTable, bindings, values) {
-      _this5.updateDataManager(values, bindings);
+      _this6.updateDataManager(values, bindings);
 
-      _this5.currentBindings = bindings;
-      _this5.currentValues = values;
+      _this6.currentBindings = bindings;
+      _this6.currentValues = values;
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');
       var parsedRows = parseTable(clonedTable);
@@ -32686,7 +32739,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // parse data table options from table dataset
       var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
 
-      var generatedTable = _this5.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
+      var generatedTable = _this6.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
 
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
@@ -35173,6 +35226,8 @@ var _default = {
           cancelNew: (0, _i18n.__)('cancel new selection', 'wp-table-builder'),
           collapseSectionHeader: (0, _i18n.__)('element data options', 'wp-table-builder'),
           rating: (0, _i18n.__)('rating', 'wp-table-builder'),
+          higher: (0, _i18n.__)('higher than', 'wp-table-builder'),
+          lower: (0, _i18n.__)('lower than', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
           dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),

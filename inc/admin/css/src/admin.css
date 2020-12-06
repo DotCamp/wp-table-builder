@@ -6367,7 +6367,7 @@ thead .wptb-data-manager-table-data-value {
     font-size: 90%;
     width: 100%;
     padding: 10px 15px;
-    font-weight: bold;
+    /*font-weight: bold;*/
     display: flex;
     align-items: center;
 }

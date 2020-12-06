@@ -30,6 +30,16 @@
 					v-model="operatorControls.operatorType"
 				></panel-dropdown-control>
 				<transition name="wptb-fade">
+					<panel-input-control
+						v-if="
+							getOperatorControl('operatorType') === 'higher' ||
+							getOperatorControl('operatorType') === 'lower'
+						"
+						:label="`${translationM('amount')}` | cap"
+						v-model="operatorControls.thanAmount"
+					></panel-input-control>
+				</transition>
+				<transition name="wptb-fade">
 					<panel-dropdown-control
 						v-if="getOperatorControl('operatorType') === 'not'"
 						:label="`${translationM('operator')} 2` | cap"
@@ -76,6 +86,7 @@ export default {
 				compareColumn: null,
 				operatorType: 'highest',
 				operatorType2: 'highest',
+				thanAmount: 1,
 			},
 			options: {
 				rowAmount: {
@@ -85,6 +96,8 @@ export default {
 				operatorTypes: {
 					highest: this.translationM('highest'),
 					lowest: this.translationM('lowest'),
+					higher: this.translationM('higher'),
+					lower: this.translationM('lower'),
 					not: this.translationM('not'),
 				},
 				operator2Types: {

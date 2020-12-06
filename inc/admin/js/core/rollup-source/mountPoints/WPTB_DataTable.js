@@ -63,6 +63,8 @@ export default {
 					cancelNew: __('cancel new selection', 'wp-table-builder'),
 					collapseSectionHeader: __('element data options', 'wp-table-builder'),
 					rating: __('rating', 'wp-table-builder'),
+					higher: __('higher than', 'wp-table-builder'),
+					lower: __('lower than', 'wp-table-builder'),
 					elementsMessage: __(
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'
