@@ -32633,9 +32633,9 @@ var _default = {
     calculateVisibility: function calculateVisibility(section) {
       // sections where generated preview will be available and visible
       var allowedSections = ['elements', 'table_settings', 'options_group'];
-      var status = allowedSections.includes(section);
+      var status = allowedSections.includes(section) && this.targetTable !== null;
 
-      if (!status) {
+      if (!status && this.builderPanel) {
         this.builderPanel.style.height = 0;
       } else {
         this.builderPanelCalculations();

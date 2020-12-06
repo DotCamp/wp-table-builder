@@ -146,9 +146,9 @@ export default {
 			// sections where generated preview will be available and visible
 			const allowedSections = ['elements', 'table_settings', 'options_group'];
 
-			const status = allowedSections.includes(section);
+			const status = allowedSections.includes(section) && this.targetTable !== null;
 
-			if (!status) {
+			if (!status && this.builderPanel) {
 				this.builderPanel.style.height = 0;
 			} else {
 				this.builderPanelCalculations();
