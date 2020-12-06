@@ -6,7 +6,7 @@
 					class="wptb-panel-message-icon wptb-flex-row wptb-flex-align-center wptb-flex-justify-center"
 					v-html="getIcon('info')"
 				></div>
-				<slot></slot>
+				<div v-html="message"></div>
 			</div>
 		</div>
 	</div>
@@ -14,6 +14,12 @@
 
 <script>
 export default {
+	props: {
+		message: {
+			type: String,
+			default: 'default message',
+		},
+	},
 	data() {
 		return {
 			icons: {
@@ -29,5 +35,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped></style>

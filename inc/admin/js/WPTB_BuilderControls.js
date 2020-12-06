@@ -30286,6 +30286,12 @@ exports.default = void 0;
 //
 //
 var _default = {
+  props: {
+    message: {
+      type: String,
+      default: 'default message'
+    }
+  },
   data: function data() {
     return {
       icons: {
@@ -30335,9 +30341,8 @@ exports.default = _default;
               domProps: { innerHTML: _vm._s(_vm.getIcon("info")) }
             }),
             _vm._v(" "),
-            _vm._t("default")
-          ],
-          2
+            _c("div", { domProps: { innerHTML: _vm._s(_vm.message) } })
+          ]
         )
       ])
     ]
@@ -30350,7 +30355,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-9b98d7",
+            _scopeId: null,
             functional: undefined
           };
         })());
@@ -30396,10 +30401,15 @@ var _default = {
       return '';
     },
     bindingTranslation: function bindingTranslation() {
-      return this.overrideBindingTranslation !== '' && this.overrideBindingTranslation ? this.overrideBindingTranslation : '';
+      return this.overrideBindingTranslation;
     },
     visibility: function visibility() {
       return this.bindingTranslation !== '';
+    }
+  },
+  methods: {
+    emphasize: function emphasize(value) {
+      return "<span class=\"wptb-data-panel-message-emphasize\">".concat(value, "</span>");
     }
   }
 };
@@ -30420,20 +30430,17 @@ exports.default = _default;
     "transition",
     { attrs: { name: "wptb-fade" } },
     [
-      _c(
-        "panel-message-row",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.visibility,
-              expression: "visibility"
-            }
-          ]
-        },
-        [_vm._v(_vm._s(_vm.bindingTranslation))]
-      )
+      _c("panel-message-row", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.visibility,
+            expression: "visibility"
+          }
+        ],
+        attrs: { message: _vm.bindingTranslation }
+      })
     ],
     1
   )
@@ -30445,7 +30452,7 @@ render._withStripped = true
             render: render,
             staticRenderFns: staticRenderFns,
             _compiled: true,
-            _scopeId: "data-v-3e04e7",
+            _scopeId: null,
             functional: undefined
           };
         })());
@@ -30505,6 +30512,14 @@ var _DataPanelBindingMessageBase = _interopRequireDefault(require("./DataPanelBi
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = {
+  props: {
+    columnNames: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
   mixins: [_DataPanelBindingMessageBase.default, _withNativeTranslationStore.default],
   computed: {
     overrideBindingTranslation: function overrideBindingTranslation() {
@@ -30522,7 +30537,7 @@ var _default = {
 
         case 'operator':
           {
-            message = 'operator message';
+            message = this.operatorMessage;
             break;
           }
 
@@ -30534,6 +30549,18 @@ var _default = {
       }
 
       return message;
+    },
+    operatorMessage: function operatorMessage() {
+      var _this$rowBinding$oper = this.rowBinding.operator,
+          compareColumn = _this$rowBinding$oper.compareColumn,
+          operatorType = _this$rowBinding$oper.operatorType,
+          operatorType2 = _this$rowBinding$oper.operatorType2,
+          rowAmount = _this$rowBinding$oper.rowAmount,
+          rowCustomAmount = _this$rowBinding$oper.rowCustomAmount;
+      var amountPart = "".concat(rowAmount === 'all' ? "".concat(this.emphasize('all'), " rows") : "".concat(this.emphasize(rowCustomAmount), " row").concat(rowCustomAmount > 1 ? 's' : ''));
+      var selectPart = "Select ".concat(amountPart);
+      var operatorPart = "where ".concat(this.emphasize(this.columnNames[compareColumn]), " is ").concat(this.emphasize(operatorType)).concat(operatorType === 'not' ? " ".concat(this.emphasize(operatorType2)) : '');
+      return "".concat(selectPart, " ").concat(operatorPart, ".");
     }
   }
 };
@@ -31424,7 +31451,8 @@ exports.default = _default;
                     _c("data-panel-row-binding-messages", {
                       attrs: {
                         "row-binding": _vm.getRowBinding(),
-                        "element-binding": _vm.getColumnBinding()
+                        "element-binding": _vm.getColumnBinding(),
+                        "column-names": _vm.getColumnNames
                       }
                     })
                   ],

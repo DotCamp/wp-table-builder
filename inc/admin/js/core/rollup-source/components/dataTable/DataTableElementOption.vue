@@ -48,6 +48,7 @@
 					<data-panel-row-binding-messages
 						:row-binding="getRowBinding()"
 						:element-binding="getColumnBinding()"
+						:column-names="getColumnNames"
 					></data-panel-row-binding-messages>
 				</panel-section-group-tabbed-item>
 			</template>

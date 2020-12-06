@@ -6344,6 +6344,11 @@ thead .wptb-data-manager-table-data-value {
     fill: var(--wptb-plugin-yellow-500);
 }
 
+.wptb-data-panel-message-emphasize {
+    font-weight: bold;
+    color: var(--wptb-plugin-logo-color) !important;
+}
+
 /*endregion*/
 
 .wptb-left-panel-no-bottom-border .wptb-settings-row {

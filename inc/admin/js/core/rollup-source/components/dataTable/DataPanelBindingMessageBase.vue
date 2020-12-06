@@ -1,6 +1,6 @@
 <template>
 	<transition name="wptb-fade">
-		<panel-message-row v-show="visibility">{{ bindingTranslation }}</panel-message-row>
+		<panel-message-row v-show="visibility" :message="bindingTranslation"></panel-message-row>
 	</transition>
 </template>
 
@@ -28,15 +28,16 @@ export default {
 			return '';
 		},
 		bindingTranslation() {
-			return this.overrideBindingTranslation !== '' && this.overrideBindingTranslation
-				? this.overrideBindingTranslation
-				: '';
+			return this.overrideBindingTranslation;
 		},
 		visibility() {
 			return this.bindingTranslation !== '';
-		}
+		},
+	},
+	methods: {
+		emphasize(value) {
+			return `<span class="wptb-data-panel-message-emphasize">${value}</span>`;
+		},
 	},
 };
 </script>
-
-<style scoped></style>
