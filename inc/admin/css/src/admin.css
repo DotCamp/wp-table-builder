@@ -6368,5 +6368,30 @@ thead .wptb-data-manager-table-data-value {
     width: 100%;
     padding: 10px 15px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.wptb-data-panel-control-group-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.wptb-data-panel-control-group-title-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.wptb-data-panel-control-group-icon svg{
+    width: 100%;
+    height: 100%;
+    fill: var(--wptb-plugin-logo-color);
 }
 

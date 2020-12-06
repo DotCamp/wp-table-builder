@@ -1,7 +1,7 @@
 <template>
 	<transition name="wptb-fade">
 		<div class="wptb-data-panel-mode-operator-controls">
-			<panel-control-group :title="translationM('selectGroupControls')">
+			<panel-control-group :title="translationM('selectGroupControls')" :icon="getIcon('handPointer')">
 				<panel-dropdown-control
 					:label="translationM('type') | cap"
 					:options="options.rowAmount"
@@ -18,7 +18,7 @@
 					</panel-input-control>
 				</transition>
 			</panel-control-group>
-			<panel-control-group :title="translationM('logicControls')">
+			<panel-control-group :icon="getIcon('cog')" :title="translationM('logicControls')">
 				<panel-dropdown-control
 					:label="translationM('compareColumn') | cap"
 					:options="columnNamesWithoutNone"
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import PanelDropdownControl from '../PanelDropdownControl';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import PanelInputControl from '../PanelInputControl';
@@ -135,6 +136,7 @@ export default {
 				return stateList[controlId]();
 			};
 		},
+		...mapGetters(['getIcon']),
 	},
 	methods: {
 		prepareRowBindings(target) {
@@ -142,11 +144,9 @@ export default {
 			this.operatorControls = objectDeepMerge(this.operatorControls, target);
 
 			if (!this.operatorControls.compareColumn) {
-				const firstColumn = Object.keys(this.columnNamesWithoutNone).filter((k) => {
+				[this.operatorControls.compareColumn] = Object.keys(this.columnNamesWithoutNone).filter((k) => {
 					return Object.prototype.hasOwnProperty.call(this.columnNamesWithoutNone, k);
-				})[0];
-
-				this.operatorControls.compareColumn = firstColumn;
+				});
 			}
 		},
 		controlRelations() {

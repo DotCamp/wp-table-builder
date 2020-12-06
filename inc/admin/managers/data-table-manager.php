@@ -84,7 +84,7 @@ class Data_Table_Manager extends Static_Singleton_Base {
 		}
 
 		if ( property_exists( $params, 'dataTableOptions' ) ) {
-			add_post_meta( $id, '_wptb_data_table_options_', $params->dataTableOptions);
+			add_post_meta( $id, '_wptb_data_table_options_', $params->dataTableOptions );
 		}
 	}
 
@@ -98,15 +98,18 @@ class Data_Table_Manager extends Static_Singleton_Base {
 	public static function add_admin_data( $admin_data ) {
 		$icon_manager = Init::instance()->get_icon_manager();
 		$data_table   = [
-			'icons'           => [
-				'csv'           => $icon_manager->get_icon( 'file-csv' ),
-				'database'      => $icon_manager->get_icon( 'database' ),
-				'wordpressPost' => $icon_manager->get_icon( 'wordpress-simple' ),
-				'server'        => $icon_manager->get_icon( 'server' ),
-				'chevronRight'  => $icon_manager->get_icon( 'chevron-right' ),
-				'exclamationTriangle'  => $icon_manager->get_icon( 'exclamation-triangle' ),
+			'icons'  => [
+				'csv'                 => $icon_manager->get_icon( 'file-csv' ),
+				'database'            => $icon_manager->get_icon( 'database' ),
+				'wordpressPost'       => $icon_manager->get_icon( 'wordpress-simple' ),
+				'server'              => $icon_manager->get_icon( 'server' ),
+				'chevronRight'        => $icon_manager->get_icon( 'chevron-right' ),
+				'exclamationTriangle' => $icon_manager->get_icon( 'exclamation-triangle' ),
+				'handPointer'         => $icon_manager->get_icon( 'hand-pointer' ),
+				'sortUp'              => $icon_manager->get_icon( 'sort-alpha-up' ),
+				'cog'              => $icon_manager->get_icon( 'cog' ),
 			],
-			'proUrl'          => 'https://wptablebuilder.com/',
+			'proUrl' => 'https://wptablebuilder.com/',
 		];
 
 		$admin_data['dataTable'] = $data_table;

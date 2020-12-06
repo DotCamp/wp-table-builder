@@ -1,5 +1,5 @@
 <template>
-	<panel-control-group :title="translationM('sortControls')">
+	<panel-control-group :icon="getIcon('sortUp')" :title="translationM('sortControls')">
 		<panel-dropdown-control
 			:label="translationM('target') | cap"
 			:options="columnNames"
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import PanelControlGroup from '../leftPanel/PanelControlGroup';
 import PanelDropdownControl from '../PanelDropdownControl';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
@@ -85,6 +86,9 @@ export default {
 			},
 			deep: true,
 		},
+	},
+	computed: {
+		...mapGetters(['getIcon']),
 	},
 	methods: {
 		prepareSortBindings() {
