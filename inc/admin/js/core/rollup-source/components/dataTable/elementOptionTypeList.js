@@ -8,6 +8,8 @@ export const typeOptionList = {
 	button: ['text', 'link'],
 	star_rating: ['rating'],
 	image: ['link'],
+	circle_rating: ['percentage'],
+	text_icon_element: ['text'],
 };
 
 /**
@@ -20,4 +22,5 @@ export const defaultMappings = {
 	button: ['link'],
 	star_rating: ['rating'],
 	image: ['link'],
+	circle_rating: ['percentage'],
 };

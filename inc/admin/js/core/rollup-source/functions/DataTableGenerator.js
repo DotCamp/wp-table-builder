@@ -579,6 +579,40 @@ function DataTableGenerator() {
 				imageElement.src = link;
 			}
 		},
+		circle_rating: (tableElement, { percentage }) => {
+			if (percentage) {
+				// eslint-disable-next-line no-param-reassign
+				tableElement.dataset.percentageCount = percentage;
+
+				// eslint-disable-next-line no-param-reassign
+				tableElement.querySelector('.wptb-rating-circle-wrapper span').textContent = `${percentage}%`;
+
+				const circleSlice = tableElement.querySelector('.wptb-rating-circle-slice');
+
+				circleSlice.style.clip =
+					percentage <= 50 ? 'rect(0em, 1em, 1em, 0.5em)' : 'rect(auto, auto, auto, auto)';
+
+				circleSlice.querySelector('.wptb-rating-circle-bar').style.transform = `rotate(${
+					percentage > 50 ? 180 : 0
+				}deg)`;
+
+				// eslint-disable-next-line eqeqeq
+				const limitedPercentage = Math.max(100, percentage) == percentage ? 100 : percentage;
+
+				// eslint-disable-next-line no-param-reassign
+				circleSlice.querySelector('.wptb-rating-circle-fill').style.transform = `rotate(${
+					(360 / 100) * limitedPercentage
+				}deg)`;
+			}
+		},
+		text_icon_element: (tableElement, { text }) => {
+			if (text) {
+				const textElement = tableElement.querySelector('#wptbTextIconMainText');
+				if (textElement) {
+					textElement.textContent = text;
+				}
+			}
+		},
 	};
 
 	/**
@@ -870,7 +904,6 @@ function DataTableGenerator() {
 		});
 	};
 }
-
 
 /** @module DataTableGenerator */
 export default new DataTableGenerator();

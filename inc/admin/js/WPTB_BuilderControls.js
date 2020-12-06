@@ -30245,7 +30245,9 @@ var typeOptionList = {
   text: 'text',
   button: ['text', 'link'],
   star_rating: ['rating'],
-  image: ['link']
+  image: ['link'],
+  circle_rating: ['percentage'],
+  text_icon_element: ['text']
 };
 /**
  * Default mappings for element value binds.
@@ -30258,7 +30260,8 @@ var defaultMappings = {
   default: ['text'],
   button: ['link'],
   star_rating: ['rating'],
-  image: ['link']
+  image: ['link'],
+  circle_rating: ['percentage']
 };
 exports.defaultMappings = defaultMappings;
 },{}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
@@ -32176,6 +32179,34 @@ function DataTableGenerator() {
 
         imageElement.src = link;
       }
+    },
+    circle_rating: function circle_rating(tableElement, _ref5) {
+      var percentage = _ref5.percentage;
+
+      if (percentage) {
+        // eslint-disable-next-line no-param-reassign
+        tableElement.dataset.percentageCount = percentage; // eslint-disable-next-line no-param-reassign
+
+        tableElement.querySelector('.wptb-rating-circle-wrapper span').textContent = "".concat(percentage, "%");
+        var circleSlice = tableElement.querySelector('.wptb-rating-circle-slice');
+        circleSlice.style.clip = percentage <= 50 ? 'rect(0em, 1em, 1em, 0.5em)' : 'rect(auto, auto, auto, auto)';
+        circleSlice.querySelector('.wptb-rating-circle-bar').style.transform = "rotate(".concat(percentage > 50 ? 180 : 0, "deg)"); // eslint-disable-next-line eqeqeq
+
+        var limitedPercentage = Math.max(100, percentage) == percentage ? 100 : percentage; // eslint-disable-next-line no-param-reassign
+
+        circleSlice.querySelector('.wptb-rating-circle-fill').style.transform = "rotate(".concat(360 / 100 * limitedPercentage, "deg)");
+      }
+    },
+    text_icon_element: function text_icon_element(tableElement, _ref6) {
+      var text = _ref6.text;
+
+      if (text) {
+        var textElement = tableElement.querySelector('#wptbTextIconMainText');
+
+        if (textElement) {
+          textElement.textContent = text;
+        }
+      }
     }
   };
   /**
@@ -32192,10 +32223,10 @@ function DataTableGenerator() {
     var elementValue = value;
 
     if (mapper) {
-      var _ref5, _mapper$tableElementT;
+      var _ref7, _mapper$tableElementT;
 
       // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-      var mapperIndex = (_ref5 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref5 !== void 0 ? _ref5 : ['text']; // create a new value object with mapped properties
+      var mapperIndex = (_ref7 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref7 !== void 0 ? _ref7 : ['text']; // create a new value object with mapped properties
 
       elementValue = {}; // eslint-disable-next-line array-callback-return
 
@@ -34973,6 +35004,7 @@ var _default = {
           ascending: (0, _i18n.__)('ascending', 'wptb-table-builder'),
           descending: (0, _i18n.__)('descending', 'wptb-table-builder'),
           selectGroupControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
+          percentage: (0, _i18n.__)('percentage', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),
