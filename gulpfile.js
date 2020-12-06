@@ -4,7 +4,7 @@ const autoprefixer = require('gulp-autoprefixer');
 const csso = require('gulp-csso');
 const babel = require('gulp-babel');
 const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify-es').default;
 
 const gulpConfig = {
 	frontEndJs: {
@@ -12,6 +12,7 @@ const gulpConfig = {
 			'./inc/admin/js/core/WPTB_CutGlueTable.js',
 			'./inc/admin/js/core/WPTB_SortableTable.js',
 			'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
+			'./inc/admin/js/core/rollup-source/functions/DataTableGenerator.js',
 			'./inc/admin/js/WPTB_ResponsiveFrontend.js',
 			'./inc/frontend/js/frontend-only/WPTB_StylePass.js',
 			'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',

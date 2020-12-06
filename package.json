@@ -60,6 +60,7 @@
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^3.0.1",
+    "gulp-uglify-es": "^2.0.0",
     "gulp-watch": "^4.2.4",
     "gulp-wp-pot": "^2.0.4",
     "parcel-bundler": "^1.12.4",
