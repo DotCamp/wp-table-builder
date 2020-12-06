@@ -1,5 +1,5 @@
 <template>
-	<panel-control-group title="Sort Controls">
+	<panel-control-group :title="translationM('sortControls')">
 		<panel-dropdown-control
 			:label="translationM('target') | cap"
 			:options="columnNames"

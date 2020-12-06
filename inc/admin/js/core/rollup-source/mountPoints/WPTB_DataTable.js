@@ -93,6 +93,9 @@ export default {
 					ascending: __('ascending', 'wptb-table-builder'),
 					descending: __('descending', 'wptb-table-builder'),
 					selectGroupControls: __('select controls', 'wptb-table-builder'),
+					sortControls: __('sort controls', 'wptb-table-builder'),
+					selectControls: __('select controls', 'wptb-table-builder'),
+					logicControls: __('logic controls', 'wptb-table-builder'),
 					elementNotSupported: __('This element is not supported with data tables.', 'wptb-table-builder'),
 					percentage: __('percentage', 'wptb-table-builder'),
 					elementColumnBasicBindingMessage: __(

@@ -18,24 +18,26 @@
 					</panel-input-control>
 				</transition>
 			</panel-control-group>
-			<panel-dropdown-control
-				:label="translationM('compareColumn') | cap"
-				:options="columnNamesWithoutNone"
-				v-model="operatorControls.compareColumn"
-			></panel-dropdown-control>
-			<panel-dropdown-control
-				:label="translationM('operator') | cap"
-				:options="options.operatorTypes"
-				v-model="operatorControls.operatorType"
-			></panel-dropdown-control>
-			<transition name="wptb-fade">
+			<panel-control-group :title="translationM('logicControls')">
 				<panel-dropdown-control
-					v-show="getOperatorControl('operatorType') === 'not'"
-					:label="`${translationM('operator')} 2` | cap"
-					:options="options.operator2Types"
-					v-model="operatorControls.operatorType2"
+					:label="translationM('compareColumn') | cap"
+					:options="columnNamesWithoutNone"
+					v-model="operatorControls.compareColumn"
 				></panel-dropdown-control>
-			</transition>
+				<panel-dropdown-control
+					:label="translationM('operator') | cap"
+					:options="options.operatorTypes"
+					v-model="operatorControls.operatorType"
+				></panel-dropdown-control>
+				<transition name="wptb-fade">
+					<panel-dropdown-control
+						v-if="getOperatorControl('operatorType') === 'not'"
+						:label="`${translationM('operator')} 2` | cap"
+						:options="options.operator2Types"
+						v-model="operatorControls.operatorType2"
+					></panel-dropdown-control>
+				</transition>
+			</panel-control-group>
 		</div>
 	</transition>
 </template>

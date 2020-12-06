@@ -30840,59 +30840,62 @@ exports.default = _default;
           1
         ),
         _vm._v(" "),
-        _c("panel-dropdown-control", {
-          attrs: {
-            label: _vm._f("cap")(_vm.translationM("compareColumn")),
-            options: _vm.columnNamesWithoutNone
-          },
-          model: {
-            value: _vm.operatorControls.compareColumn,
-            callback: function($$v) {
-              _vm.$set(_vm.operatorControls, "compareColumn", $$v)
-            },
-            expression: "operatorControls.compareColumn"
-          }
-        }),
-        _vm._v(" "),
-        _c("panel-dropdown-control", {
-          attrs: {
-            label: _vm._f("cap")(_vm.translationM("operator")),
-            options: _vm.options.operatorTypes
-          },
-          model: {
-            value: _vm.operatorControls.operatorType,
-            callback: function($$v) {
-              _vm.$set(_vm.operatorControls, "operatorType", $$v)
-            },
-            expression: "operatorControls.operatorType"
-          }
-        }),
-        _vm._v(" "),
         _c(
-          "transition",
-          { attrs: { name: "wptb-fade" } },
+          "panel-control-group",
+          { attrs: { title: _vm.translationM("logicControls") } },
           [
             _c("panel-dropdown-control", {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.getOperatorControl("operatorType") === "not",
-                  expression: "getOperatorControl('operatorType') === 'not'"
-                }
-              ],
               attrs: {
-                label: _vm._f("cap")(_vm.translationM("operator") + " 2"),
-                options: _vm.options.operator2Types
+                label: _vm._f("cap")(_vm.translationM("compareColumn")),
+                options: _vm.columnNamesWithoutNone
               },
               model: {
-                value: _vm.operatorControls.operatorType2,
+                value: _vm.operatorControls.compareColumn,
                 callback: function($$v) {
-                  _vm.$set(_vm.operatorControls, "operatorType2", $$v)
+                  _vm.$set(_vm.operatorControls, "compareColumn", $$v)
                 },
-                expression: "operatorControls.operatorType2"
+                expression: "operatorControls.compareColumn"
               }
-            })
+            }),
+            _vm._v(" "),
+            _c("panel-dropdown-control", {
+              attrs: {
+                label: _vm._f("cap")(_vm.translationM("operator")),
+                options: _vm.options.operatorTypes
+              },
+              model: {
+                value: _vm.operatorControls.operatorType,
+                callback: function($$v) {
+                  _vm.$set(_vm.operatorControls, "operatorType", $$v)
+                },
+                expression: "operatorControls.operatorType"
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "transition",
+              { attrs: { name: "wptb-fade" } },
+              [
+                _vm.getOperatorControl("operatorType") === "not"
+                  ? _c("panel-dropdown-control", {
+                      attrs: {
+                        label: _vm._f("cap")(
+                          _vm.translationM("operator") + " 2"
+                        ),
+                        options: _vm.options.operator2Types
+                      },
+                      model: {
+                        value: _vm.operatorControls.operatorType2,
+                        callback: function($$v) {
+                          _vm.$set(_vm.operatorControls, "operatorType2", $$v)
+                        },
+                        expression: "operatorControls.operatorType2"
+                      }
+                    })
+                  : _vm._e()
+              ],
+              1
+            )
           ],
           1
         )
@@ -31018,7 +31021,7 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "panel-control-group",
-    { attrs: { title: "Sort Controls" } },
+    { attrs: { title: _vm.translationM("sortControls") } },
     [
       _c("panel-dropdown-control", {
         attrs: {
@@ -35043,6 +35046,9 @@ var _default = {
           ascending: (0, _i18n.__)('ascending', 'wptb-table-builder'),
           descending: (0, _i18n.__)('descending', 'wptb-table-builder'),
           selectGroupControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
+          sortControls: (0, _i18n.__)('sort controls', 'wptb-table-builder'),
+          selectControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
+          logicControls: (0, _i18n.__)('logic controls', 'wptb-table-builder'),
           elementNotSupported: (0, _i18n.__)('This element is not supported with data tables.', 'wptb-table-builder'),
           percentage: (0, _i18n.__)('percentage', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
