@@ -86,8 +86,6 @@
 		 */
 		this.init = () => {
 			if (!initialized) {
-			   // TODO [erdembircan] remove for production
-				console.log(managerData);
 				// assign server sent notification data to control manager so that our compiled vue code can read it
 				WPTB_ControlsManager.setControlData('NotificationManager', managerData);
 
@@ -105,24 +103,24 @@
 				// assign dismiss types from store
 				this.dismissTypes = this.store.getters.dismissTypes;
 
-				// add dev tool mount point to DOM
-				addDevToolsToDOM();
-
-				// data for dev tool
-				const devToolsData = {
-					types: this.notificationTypes,
-					queue: this.queueTypes,
-					reveal: this.revealTypes,
-					dismiss: this.dismissTypes,
-					sendNotification: this.sendNotification.bind(this),
-					mountId: devToolMountId,
-				};
-
-				// assign dev tool data
-				WPTB_ControlsManager.setControlData('NotificationManagerDevTool', devToolsData);
-
-				// call dev tool related components
-				WPTB_ControlsManager.callControlScript('NotificationManagerDevTool', 'NotificationManagerDevTool');
+				// // add dev tool mount point to DOM
+				// addDevToolsToDOM();
+				//
+				// // data for dev tool
+				// const devToolsData = {
+				// 	types: this.notificationTypes,
+				// 	queue: this.queueTypes,
+				// 	reveal: this.revealTypes,
+				// 	dismiss: this.dismissTypes,
+				// 	sendNotification: this.sendNotification.bind(this),
+				// 	mountId: devToolMountId,
+				// };
+				//
+				// // assign dev tool data
+				// WPTB_ControlsManager.setControlData('NotificationManagerDevTool', devToolsData);
+				//
+				// // call dev tool related components
+				// WPTB_ControlsManager.callControlScript('NotificationManagerDevTool', 'NotificationManagerDevTool');
 
 				// initialization process completed
 				initialized = true;

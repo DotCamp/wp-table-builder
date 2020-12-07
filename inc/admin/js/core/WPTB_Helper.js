@@ -1820,6 +1820,10 @@ var WPTB_Helper = {
 
                     document.wptbId = data[1];
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+
+                    WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully saved.`})
+
+
                     document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-button-disable' );
                     document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
                     let wptbPreviewTable = document.querySelector( '.wptb-preview-table' );
@@ -1844,6 +1848,8 @@ var WPTB_Helper = {
                 } else if( data[0] == 'edited' && startSaving ) {
                     document.wptbId = data[1];
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully saved.</div>';
+
+                    WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully saved.`})
                     document.getElementsByClassName( 'wptb-embed-btn' )[0].classList.remove( 'wptb-button-disable' );
                     document.getElementById( 'wptb-embed-shortcode' ).value = '[wptb id=' + data[1] + ']';
                     let wptbPreviewTable = document.querySelector( '.wptb-preview-table' );
@@ -1865,6 +1871,8 @@ var WPTB_Helper = {
                     }
                 } else if( data[0] == 'edited' ) {
                     messagingArea.innerHTML = '<div class="wptb-success wptb-message">Table "' + t + '" was successfully updated.</div>';
+
+                    WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully updated.`})
                     event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
 
                     let wptbSaveBtn = document.getElementsByClassName( 'wptb-save-btn' );

@@ -115,5 +115,5 @@ use WP_Table_Builder as NS;
 <div id="wptbGenerate">
 </div>
 
-<div id="wptb-messaging-area">
+<div id="wptb-messaging-area" style="display: none">
 </div>
