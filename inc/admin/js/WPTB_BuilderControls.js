@@ -20651,7 +20651,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 var _default = {
+  props: {
+    inputType: {
+      type: String,
+      default: 'number'
+    }
+  },
   components: {
     NumberPostfixInput: _NumberPostfixInput.default
   },
@@ -20689,23 +20697,45 @@ exports.default = _default;
               _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
             ]),
             _vm._v(" "),
-            _c("number-postfix-input", {
-              staticClass: "wptb-size-input",
-              attrs: {
-                "enable-dynamic-width": true,
-                min: _vm.$attrs.min || 1,
-                max: 100,
-                "enable-limit": true,
-                disabled: _vm.disabled
-              },
-              model: {
-                value: _vm.innerValue,
-                callback: function($$v) {
-                  _vm.innerValue = $$v
-                },
-                expression: "innerValue"
-              }
-            })
+            _vm.inputType === "number"
+              ? _c("number-postfix-input", {
+                  staticClass: "wptb-size-input",
+                  attrs: {
+                    "enable-dynamic-width": true,
+                    min: _vm.$attrs.min || 1,
+                    max: 100,
+                    "enable-limit": true,
+                    disabled: _vm.disabled
+                  },
+                  model: {
+                    value: _vm.innerValue,
+                    callback: function($$v) {
+                      _vm.innerValue = $$v
+                    },
+                    expression: "innerValue"
+                  }
+                })
+              : _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.innerValue,
+                      expression: "innerValue"
+                    }
+                  ],
+                  staticClass: "wptb-size-input",
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.innerValue },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.innerValue = $event.target.value
+                    }
+                  }
+                })
           ],
           1
         )
@@ -30554,14 +30584,47 @@ var _default = {
       var _this$rowBinding$oper = this.rowBinding.operator,
           compareColumn = _this$rowBinding$oper.compareColumn,
           operatorType = _this$rowBinding$oper.operatorType,
-          operatorType2 = _this$rowBinding$oper.operatorType2,
           rowAmount = _this$rowBinding$oper.rowAmount,
-          rowCustomAmount = _this$rowBinding$oper.rowCustomAmount,
-          thanAmount = _this$rowBinding$oper.thanAmount;
+          rowCustomAmount = _this$rowBinding$oper.rowCustomAmount;
       var amountPart = "".concat(rowAmount === 'all' ? "".concat(this.emphasize('all'), " rows") : "".concat(this.emphasize(rowCustomAmount), " row").concat(rowCustomAmount > 1 ? 's' : ''));
       var selectPart = "Select ".concat(amountPart);
-      var operatorPart = "where ".concat(this.emphasize(this.columnNames[compareColumn]), " is ").concat(this.emphasize(operatorType)).concat(operatorType === 'not' ? " ".concat(this.emphasize(operatorType2)) : '').concat(['higher', 'lower'].includes(operatorType) ? " than ".concat(this.emphasize(thanAmount)) : '');
-      return "".concat(selectPart, " ").concat(operatorPart, ".");
+      var operatorPart = "where ".concat(this.emphasize(this.columnNames[compareColumn]), " is ").concat(this.emphasize(operatorType));
+      return "".concat(selectPart, " ").concat(operatorPart, " ").concat(this.logicPart(this.rowBinding.operator), ".");
+    }
+  },
+  methods: {
+    logicPart: function logicPart(_ref) {
+      var operatorType = _ref.operatorType,
+          operatorType2 = _ref.operatorType2,
+          thanAmount = _ref.thanAmount,
+          equalAmount = _ref.equalAmount;
+
+      switch (operatorType) {
+        case 'not':
+          {
+            return this.emphasize(operatorType2);
+          }
+
+        case 'higher':
+          {
+            return "than ".concat(this.emphasize(thanAmount));
+          }
+
+        case 'lower':
+          {
+            return "than ".concat(this.emphasize(thanAmount));
+          }
+
+        case 'equal':
+          {
+            return "to ".concat(this.emphasize(equalAmount));
+          }
+
+        default:
+          {
+            return '';
+          }
+      }
     }
   }
 };
@@ -30718,7 +30781,8 @@ var _default = {
         compareColumn: null,
         operatorType: 'highest',
         operatorType2: 'highest',
-        thanAmount: 1
+        thanAmount: 1,
+        equalAmount: 1
       },
       options: {
         rowAmount: {
@@ -30730,6 +30794,7 @@ var _default = {
           lowest: this.translationM('lowest'),
           higher: this.translationM('higher'),
           lower: this.translationM('lower'),
+          equal: this.translationM('equal'),
           not: this.translationM('not')
         },
         operator2Types: {
@@ -30920,6 +30985,29 @@ exports.default = _default;
                 expression: "operatorControls.operatorType"
               }
             }),
+            _vm._v(" "),
+            _c(
+              "transition",
+              { attrs: { name: "wptb-fade" } },
+              [
+                _vm.getOperatorControl("operatorType") === "equal"
+                  ? _c("panel-input-control", {
+                      attrs: {
+                        label: _vm._f("cap")("" + _vm.translationM("amount")),
+                        inputType: "text"
+                      },
+                      model: {
+                        value: _vm.operatorControls.equalAmount,
+                        callback: function($$v) {
+                          _vm.$set(_vm.operatorControls, "equalAmount", $$v)
+                        },
+                        expression: "operatorControls.equalAmount"
+                      }
+                    })
+                  : _vm._e()
+              ],
+              1
+            ),
             _vm._v(" "),
             _c(
               "transition",
@@ -31961,7 +32049,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
     },
     higher: thanOperators,
-    lower: thanOperators
+    lower: thanOperators,
+    equal: {
+      methods: {
+        getOperatorResult: function getOperatorResult(_ref4) {
+          var _this4 = this;
+
+          var compareColumn = _ref4.compareColumn,
+              equalAmount = _ref4.equalAmount;
+          return this.dataManager.getValues().filter(function (row) {
+            return _this4.dataManager.getColumnValueByIndex(0, compareColumn, [row]) === equalAmount;
+          });
+        }
+      }
+    }
   };
   /**
    * Operator factory for easy operator functions.
@@ -31972,7 +32073,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    */
 
   function OperatorFactory(operatorOptions, dataManager) {
-    var _this4 = this;
+    var _this5 = this;
 
     /**
      * Operator type instances.
@@ -32005,7 +32106,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (Object.prototype.hasOwnProperty.call(operatorOptions, optionName)) {
           operatorTypeInstances[optionName] = new OperatorType(_objectSpread({
             name: optionName
-          }, operatorOptions[optionName]), dataManager, _this4);
+          }, operatorOptions[optionName]), dataManager, _this5);
         }
       });
     };
@@ -32031,7 +32132,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   function DataManager() {
-    var _this5 = this;
+    var _this6 = this;
 
     var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -32104,7 +32205,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.getColumnValueByIndex = function (index, columnId) {
       var customValues = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-      var columnValues = _this5.getColumnValues(columnId, customValues);
+      var columnValues = _this6.getColumnValues(columnId, customValues);
 
       var value = null;
 
@@ -32175,7 +32276,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   function DataTableGenerator() {
-    var _this6 = this;
+    var _this7 = this;
 
     /**
      * Data manager instance
@@ -32214,9 +32315,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var bindings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      _this6.dataManager.instance.updateValues(values);
+      _this7.dataManager.instance.updateValues(values);
 
-      _this6.dataManager.instance.updateBindings(bindings);
+      _this7.dataManager.instance.updateBindings(bindings);
     };
     /**
      * Current bindings to be used for current generate process.
@@ -32278,7 +32379,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var binding = null;
 
       if (elementId) {
-        binding = _this6.dataManager.instance.getBinding(elementId, type);
+        binding = _this7.dataManager.instance.getBinding(elementId, type);
       }
 
       return binding;
@@ -32296,7 +32397,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var binding = null;
 
       if (rowId) {
-        binding = _this6.dataManager.instance.getBinding(rowId, 'row');
+        binding = _this7.dataManager.instance.getBinding(rowId, 'row');
       }
 
       return binding;
@@ -32314,15 +32415,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
       if (rowBindingMode === 'auto' || !rowBindingMode) {
-        return _this6.currentValues.length;
+        return _this7.currentValues.length;
       } // max row calculations for operator mode
 
 
       if (rowBindingMode === 'operator') {
-        var _this6$operatorFactor;
+        var _this7$operatorFactor;
 
         var rowBindingOperatorObject = getRowBinding(rowElement).operator;
-        return (_this6$operatorFactor = _this6.operatorFactory.getOperator(rowBindingOperatorObject.operatorType)) === null || _this6$operatorFactor === void 0 ? void 0 : _this6$operatorFactor.calculateMaxRows(rowBindingOperatorObject);
+        return (_this7$operatorFactor = _this7.operatorFactory.getOperator(rowBindingOperatorObject.operatorType)) === null || _this7$operatorFactor === void 0 ? void 0 : _this7$operatorFactor.calculateMaxRows(rowBindingOperatorObject);
       }
 
       var cells = Array.from(rowElement.querySelectorAll('td'));
@@ -32343,7 +32444,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               }
             }) // eslint-disable-next-line no-shadow
             .reduce(function (carry, binding) {
-              var values = _this6.dataManager.instance.getColumnValues(binding);
+              var values = _this7.dataManager.instance.getColumnValues(binding);
 
               return Math.max(values.length, carry);
             }, 0);
@@ -32387,8 +32488,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       },
-      star_rating: function star_rating(tableElement, _ref4) {
-        var rating = _ref4.rating;
+      star_rating: function star_rating(tableElement, _ref5) {
+        var rating = _ref5.rating;
 
         if (rating) {
           var maxStarCount = Number.parseInt(tableElement.dataset.starCount, 10);
@@ -32413,8 +32514,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           }
         }
       },
-      image: function image(tableElement, _ref5) {
-        var link = _ref5.link;
+      image: function image(tableElement, _ref6) {
+        var link = _ref6.link;
 
         if (link) {
           var imageElement = tableElement.querySelector('img');
@@ -32431,8 +32532,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           imageElement.src = link;
         }
       },
-      circle_rating: function circle_rating(tableElement, _ref6) {
-        var percentage = _ref6.percentage;
+      circle_rating: function circle_rating(tableElement, _ref7) {
+        var percentage = _ref7.percentage;
 
         if (percentage) {
           // eslint-disable-next-line no-param-reassign
@@ -32448,8 +32549,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           circleSlice.querySelector('.wptb-rating-circle-fill').style.transform = "rotate(".concat(360 / 100 * limitedPercentage, "deg)");
         }
       },
-      text_icon_element: function text_icon_element(tableElement, _ref7) {
-        var text = _ref7.text;
+      text_icon_element: function text_icon_element(tableElement, _ref8) {
+        var text = _ref8.text;
 
         if (text) {
           var textElement = tableElement.querySelector('#wptbTextIconMainText');
@@ -32474,10 +32575,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var elementValue = value;
 
       if (mapper) {
-        var _ref8, _mapper$tableElementT;
+        var _ref9, _mapper$tableElementT;
 
         // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-        var mapperIndex = (_ref8 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref8 !== void 0 ? _ref8 : ['text']; // create a new value object with mapped properties
+        var mapperIndex = (_ref9 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref9 !== void 0 ? _ref9 : ['text']; // create a new value object with mapped properties
 
         elementValue = {}; // eslint-disable-next-line array-callback-return
 
@@ -32511,9 +32612,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (sortType && sortDirection && sortType && sortTarget !== 'none') {
           // eslint-disable-next-line array-callback-return
           sortedValues.sort(function (a, b) {
-            var aVal = _this6.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
+            var aVal = _this7.dataManager.instance.getColumnValueByIndex(0, sortTarget, [a]);
 
-            var bVal = _this6.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
+            var bVal = _this7.dataManager.instance.getColumnValueByIndex(0, sortTarget, [b]); // sorting direction constant
 
 
             var directionVal = sortDirection === 'asc' ? 1 : -1; // sort by numbers
@@ -32554,7 +32655,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
       var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this6.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
+      var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this7.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
 
       tableElements.map(function (tableElement) {
         var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[parseTableElementId(tableElement)]) || getTableElementBinding(tableElement, 'column');
@@ -32564,7 +32665,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           Object.keys(bindingColIdObject).map(function (key) {
             if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-              value[key] = _this6.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
+              value[key] = _this7.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
             }
           });
 
@@ -32614,7 +32715,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           rowElements.push.apply(rowElements, _toConsumableArray(cellTableElements)); // get column value based on the index of the cell
 
-          var currentColumnId = _this6.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
+          var currentColumnId = _this7.dataManager.instance.getColumnIdFromIndex(cellIndex); // eslint-disable-next-line array-callback-return
 
 
           cellTableElements.map(function (tableElement) {
@@ -32642,7 +32743,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       operator: function operator(rowElement, rowIndex) {
         var rowBindings = getRowBinding(rowElement);
         var operatorOptions = rowBindings.operator;
-        batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this6.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+        batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this7.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
       }
     };
     /**
@@ -32709,10 +32810,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.generateDataTable = function (sourceTable, bindings, values) {
-      _this6.updateDataManager(values, bindings);
+      _this7.updateDataManager(values, bindings);
 
-      _this6.currentBindings = bindings;
-      _this6.currentValues = values;
+      _this7.currentBindings = bindings;
+      _this7.currentValues = values;
       var clonedTable = sourceTable.cloneNode(true);
       var tableBody = clonedTable.querySelector('tbody');
       var parsedRows = parseTable(clonedTable);
@@ -32739,7 +32840,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // parse data table options from table dataset
       var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
 
-      var generatedTable = _this6.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
+      var generatedTable = _this7.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
 
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
@@ -35228,6 +35329,7 @@ var _default = {
           rating: (0, _i18n.__)('rating', 'wp-table-builder'),
           higher: (0, _i18n.__)('higher than', 'wp-table-builder'),
           lower: (0, _i18n.__)('lower than', 'wp-table-builder'),
+          equal: (0, _i18n.__)('equal', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
           dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),

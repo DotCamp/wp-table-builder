@@ -266,6 +266,15 @@
 		},
 		higher: thanOperators,
 		lower: thanOperators,
+		equal: {
+			methods: {
+				getOperatorResult({ compareColumn, equalAmount }) {
+					return this.dataManager.getValues().filter((row) => {
+						return this.dataManager.getColumnValueByIndex(0, compareColumn, [row]) === equalAmount;
+					});
+				},
+			},
+		},
 	};
 
 	/**

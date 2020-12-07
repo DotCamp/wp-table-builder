@@ -15,7 +15,9 @@
 					:max="100"
 					:enable-limit="true"
 					:disabled="disabled"
+					v-if="inputType === 'number'"
 				></number-postfix-input>
+				<input type="text" class="wptb-size-input" v-else v-model="innerValue" />
 			</label>
 		</div>
 	</div>
@@ -25,6 +27,12 @@ import PanelControlBase from '../mixins/PanelControlBase';
 import NumberPostfixInput from './NumberPostfixInput';
 
 export default {
+	props: {
+		inputType: {
+			type: String,
+			default: 'number',
+		},
+	},
 	components: { NumberPostfixInput },
 	mixins: [PanelControlBase],
 };

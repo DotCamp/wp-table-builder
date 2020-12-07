@@ -65,6 +65,7 @@ export default {
 					rating: __('rating', 'wp-table-builder'),
 					higher: __('higher than', 'wp-table-builder'),
 					lower: __('lower than', 'wp-table-builder'),
+					equal: __('equal', 'wp-table-builder'),
 					elementsMessage: __(
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'
