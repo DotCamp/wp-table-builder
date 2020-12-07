@@ -2,8 +2,8 @@
  * WPTB_HeaderToolbox
  *
  * @param {string} wrapperQuery wrapper query for toolbox items
- * @return {object} header toolbox object
- * @constructor
+ * @return {Object} header toolbox object
+ * @class
  */
 // eslint-disable-next-line camelcase,no-unused-vars
 const WPTB_HeaderToolbox = function (wrapperQuery) {
@@ -56,6 +56,14 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 					detail !== 'manage_cells' && detail !== 'table_responsive_menu' && detail !== 'cell_settings'
 				);
 			});
+
+			// toggle visibility on startup
+			const { currentSection } = WPTB_Helper;
+			toggleToolboxVisibility(
+				currentSection !== 'manage_cells' &&
+					currentSection !== 'table_responsive_menu' &&
+					currentSection !== 'cell_settings'
+			);
 		});
 	};
 
