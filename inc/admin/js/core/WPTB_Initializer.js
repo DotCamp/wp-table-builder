@@ -84,6 +84,8 @@ var WPTB_Initializer = function () {
         WPTB_Helper.activateSection('elements');
     })
 
-
     WPTB_Helper.calledByBlock();
+
+    // initialize notification manager
+    WPTB_NotificationManager.init();
 };

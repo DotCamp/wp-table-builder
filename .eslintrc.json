@@ -45,6 +45,7 @@
     "wptbGenerateMenuProData": true,
     "WPTB_Table": true,
     "wptbBlockData": true,
-    "WptbFrontendData": true
+    "WptbFrontendData": true,
+    "WPTB_NotificationManager": true
   }
 }
