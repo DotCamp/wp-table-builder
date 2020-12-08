@@ -19,6 +19,12 @@ import { mapState } from 'vuex';
 import Notification from '../components/Notification';
 
 export default {
+	props: {
+		soundEnabled: {
+			type: Boolean,
+			default: true,
+		},
+	},
 	components: { Notification },
 	watch: {
 		notificationsOnDisplay: {
@@ -33,7 +39,9 @@ export default {
 		this.$store.subscribeAction((action) => {
 			if (action.type === 'addNotification') {
 				setTimeout(() => {
-					this.$refs.audio.play();
+					if (this.soundEnabled) {
+						this.$refs.audio.play();
+					}
 				}, 100);
 			}
 		});

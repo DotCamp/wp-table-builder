@@ -54,7 +54,12 @@ class Notification_Manager {
 			],
 			'sounds' => [
 				'ding'   => NS\WP_TABLE_BUILDER_URL . 'assets/sounds/ding.mp3'
+			],
+			'options' => [
+				// enable/disable sound with notification manager
+				'soundEnabled' => false
 			]
+
 		];
 		$data['notificationManager'] = $manager_data;
 

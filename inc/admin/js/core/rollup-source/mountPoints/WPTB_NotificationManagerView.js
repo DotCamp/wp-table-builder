@@ -21,7 +21,7 @@ export default {
 			data,
 			store,
 			components: { NotificationManagerApp },
-			template: '<notification-manager-app></notification-manager-app>',
+			template: '<notification-manager-app :sound-enabled="options.soundEnabled"></notification-manager-app>',
 		}).$mount(`#${data.id}`);
 	},
 };
