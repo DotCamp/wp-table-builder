@@ -16379,6 +16379,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // cells at header
       // applying header row color to cells
       var headerCells = tableObj.getCellsAtRow(0, true).map(function (h) {
+        h.resetAllAttributes();
+
         if (!h.el.style.backgroundColor) {
           h.setAttribute('style', "background-color: ".concat(tableObj.rowColors.header), true, ';');
         }

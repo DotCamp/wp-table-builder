@@ -976,6 +976,7 @@
 			// cells at header
 			// applying header row color to cells
 			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
+				h.resetAllAttributes();
 				if (!h.el.style.backgroundColor) {
 					h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
 				}
