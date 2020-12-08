@@ -15516,8 +15516,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * Get original span value of cell object.
      *
      * @param {string} spanType span type, available values are row-column
-     * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
-     * @param fromElement
+     * @param {boolean} fromElement instead of original value, get the assigned span value from HTMLElement itself
      * @throws An error will be given for invalid span type
      */
 
@@ -15801,13 +15800,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         // cache original rows for future use
         _this2.originals.rows.push(r);
 
-        var cells = Array.from(r.querySelectorAll('td')); // eslint-disable-next-line array-callback-return
+        var cells = Array.from(r.querySelectorAll('td'));
+        var currentIndex = 0; // eslint-disable-next-line array-callback-return
 
         cells.map(function (c, ci) {
           var currentCellObject = new CellObject(c);
 
-          _this2.addToParsed(ri, ci, currentCellObject);
+          _this2.addToParsed(ri, currentIndex, currentCellObject);
 
+          currentIndex += 1;
           var spanRow = currentCellObject.getSpan(CellObject.spanTypes.row);
           var spanCol = currentCellObject.getSpan(CellObject.spanTypes.column);
 
@@ -15826,7 +15827,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
               currentCellObject.addToMergedCells('column', _referenceCell);
 
-              _this2.addToParsed(ri, ci + sc, _referenceCell);
+              _this2.addToParsed(ri, currentIndex, _referenceCell);
+
+              currentIndex += 1;
             }
           }
         });
@@ -15957,11 +15960,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Get the number of maximum available column count in the table.
      *
+     * @param mergedHeader
      * @return {number} maximum available column count
      */
 
 
-    this.maxColumns = function () {
+    this.maxColumns = function (mergedHeader) {
+      if (mergedHeader) {
+        return _this2.parsedTable[0].length;
+      }
+
       return _this2.parsedTable.reduce(function (p, c) {
         if (c.length > p) {
           // eslint-disable-next-line no-param-reassign
@@ -16078,6 +16086,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
     };
 
+    this.getParsedTable = function () {
+      return _this2.parsedTable;
+    };
+
     this.parseTable();
     return {
       maxRows: this.maxRows,
@@ -16090,7 +16102,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       appendObjectToRow: this.appendObjectToRow,
       getCellsAtRow: this.getCellsAtRow,
       el: this.tableElement,
-      rowColors: this.rowColors
+      rowColors: this.rowColors,
+      getParsedTable: this.getParsedTable
     };
   } // default options for responsive class
 
@@ -16490,20 +16503,27 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               _rowObj.el.style.borderTop = rowBorderStyle;
             }
 
-            if (repeatMergedHeader || hc === 0 && _c2 === 0) {
-              var clonedHeaderCell = headerCells[_c2].el.cloneNode(true); // apply header row color to header cell
+            if (repeatMergedHeader || hc === 0) {
+              var headerCellObject = tableObj.getCell(0, _c2, true); // const clonedHeaderCell = headerCells[c]?.el.cloneNode(true);
 
+              if (!headerCellObject.isReference()) {
+                var clonedHeaderCell = headerCellObject.el.cloneNode(true); // apply header row color to header cell
 
-              clonedHeaderCell.style.backgroundColor = "".concat(tableObj.rowColors.header, " !important");
-              tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
+                clonedHeaderCell.style.backgroundColor = "".concat(tableObj.rowColors.header, " !important");
+                tableObj.appendElementToRow(clonedHeaderCell, _rowObj.id);
 
-              if (!clonedHeaderCell.style.backgroundColor) {
-                clonedHeaderCell.style.backgroundColor = "".concat(getComputedStyle(_rowObj.el).backgroundColor);
-                if (clonedHeaderCell.style.backgroundColor) clonedHeaderCell.style.backgroundColor += ' !important';
-              }
+                if (!clonedHeaderCell.style.backgroundColor) {
+                  clonedHeaderCell.style.backgroundColor = "".concat(getComputedStyle(_rowObj.el).backgroundColor);
+                  if (clonedHeaderCell.style.backgroundColor) clonedHeaderCell.style.backgroundColor += ' !important';
+                }
 
-              if (!repeatMergedHeader) {
-                clonedHeaderCell.setAttribute('rowSpan', columns * _headerCount);
+                if (!repeatMergedHeader) {
+                  clonedHeaderCell.setAttribute('rowSpan', columns * _headerCount);
+                } else {
+                  clonedHeaderCell.setAttribute('rowSpan', clonedHeaderCell.getAttribute('colSpan'));
+                }
+
+                clonedHeaderCell.setAttribute('colSpan', 1);
               }
             } // clear out row color to override row color with cell colors
 
@@ -18116,6 +18136,13 @@ var _default = {
     }
   },
   methods: {
+    headerFullyMerged: function headerFullyMerged(table) {
+      var isHeaderFullyMerged = Array.from(Array.from(table.querySelectorAll('tr'))[0].querySelectorAll('td')).length === 1; // TODO [erdembircan] remove for production
+
+      console.log(isHeaderFullyMerged);
+      this.appOptions.headerFullyMerged = isHeaderFullyMerged;
+    },
+
     /**
      * Limit a number between a min/max range.
      *
@@ -18139,6 +18166,7 @@ var _default = {
     tableCloned: function tableCloned(mainDirectives, mainTable, clonedTable) {
       // calculate new max size limit at every table clone to reflect changes if there is any
       this.calculateSizeLimitMax();
+      this.headerFullyMerged(clonedTable);
       this.responsiveFrontend = new _WPTB_ResponsiveFrontend.default({
         query: '.wptb-builder-responsive table'
       });
@@ -19434,6 +19462,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   components: {
     Fragment: _vueFragment.Fragment,
@@ -19515,9 +19544,10 @@ exports.default = _default;
                   ] &&
                   _vm.directives.modeOptions.auto.cellStackDirection[
                     _vm.appOptions.currentBreakpoint
-                  ] === "row",
+                  ] === "row" &&
+                  _vm.appOptions.headerFullyMerged,
                 expression:
-                  "\n\t\t\t\tdirectives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint] &&\n\t\t\t\tdirectives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint] === 'row'\n\t\t\t"
+                  "\n\t\t\t\tdirectives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint] &&\n\t\t\t\tdirectives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint] === 'row' &&\n\t\t\t\tappOptions.headerFullyMerged\n\t\t\t"
               }
             ],
             attrs: {
@@ -19811,6 +19841,7 @@ var _default = {
       responsiveMode: 'auto',
       preserveRowColor: false,
       relativeWidth: 'window',
+      headerFullyMerged: false,
       modeOptions: {
         auto: {
           topRowAsHeader: {

@@ -19,7 +19,8 @@
 			<panel-toggle-control
 				v-show="
 					directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint] &&
-					directives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint] === 'row'
+					directives.modeOptions.auto.cellStackDirection[appOptions.currentBreakpoint] === 'row' &&
+					appOptions.headerFullyMerged
 				"
 				v-model="directives.modeOptions.auto.repeatMergedHeader[appOptions.currentBreakpoint]"
 				:label="strings.repeatMergedHeader | cap"

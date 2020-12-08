@@ -40,6 +40,7 @@ export default {
 			responsiveMode: 'auto',
 			preserveRowColor: false,
 			relativeWidth: 'window',
+			headerFullyMerged: false,
 			modeOptions: {
 				auto: {
 					topRowAsHeader: {

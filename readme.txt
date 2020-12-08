@@ -91,7 +91,7 @@ That's it. You're done!
 = 1.3.3 =
 
 * NEW: 'noreferrer' option for text links.
-* NEW: 'Repeat merged header' option for merged top row as header in responsive builder to fine tune responsive abilities of tables.
+* NEW: 'Repeat merged header' option for fully merged header cells when top row as header is enabled in responsive builder to fine tune responsive abilities of tables.
 * NEW: New notification system for table builder events.
 * FIX: An issue with footer buttons not visible in gutenberg block for Firefox browsers.
 * FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.

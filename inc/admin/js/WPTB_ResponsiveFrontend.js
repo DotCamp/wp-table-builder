@@ -131,8 +131,7 @@
 		 * Get original span value of cell object.
 		 *
 		 * @param {string} spanType span type, available values are row-column
-		 * @param {boolean} fromElement, instead of original value, get the assigned span value from HTMLElement itself
-		 * @param fromElement
+		 * @param {boolean} fromElement instead of original value, get the assigned span value from HTMLElement itself
 		 * @throws An error will be given for invalid span type
 		 */
 		this.getSpan = (spanType, fromElement = false) => {
@@ -397,10 +396,12 @@
 
 				const cells = Array.from(r.querySelectorAll('td'));
 
+				let currentIndex = 0;
 				// eslint-disable-next-line array-callback-return
 				cells.map((c, ci) => {
 					const currentCellObject = new CellObject(c);
-					this.addToParsed(ri, ci, currentCellObject);
+					this.addToParsed(ri, currentIndex, currentCellObject);
+					currentIndex += 1;
 
 					const spanRow = currentCellObject.getSpan(CellObject.spanTypes.row);
 					const spanCol = currentCellObject.getSpan(CellObject.spanTypes.column);
@@ -416,7 +417,8 @@
 						for (let sc = 1; sc < spanCol; sc += 1) {
 							const referenceCell = new CellObject(c, currentCellObject);
 							currentCellObject.addToMergedCells('column', referenceCell);
-							this.addToParsed(ri, ci + sc, referenceCell);
+							this.addToParsed(ri, currentIndex, referenceCell);
+							currentIndex += 1;
 						}
 					}
 				});
@@ -545,9 +547,14 @@
 		/**
 		 * Get the number of maximum available column count in the table.
 		 *
+		 * @param mergedHeader
 		 * @return {number} maximum available column count
 		 */
-		this.maxColumns = () => {
+		this.maxColumns = (mergedHeader) => {
+			if (mergedHeader) {
+				return this.parsedTable[0].length;
+			}
+
 			return this.parsedTable.reduce((p, c) => {
 				if (c.length > p) {
 					// eslint-disable-next-line no-param-reassign
@@ -648,6 +655,10 @@
 			}
 		};
 
+		this.getParsedTable = () => {
+			return this.parsedTable;
+		};
+
 		this.parseTable();
 
 		return {
@@ -662,6 +673,7 @@
 			getCellsAtRow: this.getCellsAtRow,
 			el: this.tableElement,
 			rowColors: this.rowColors,
+			getParsedTable: this.getParsedTable,
 		};
 	}
 
@@ -1091,24 +1103,32 @@
 							rowObj.el.style.borderTop = rowBorderStyle;
 						}
 
-						if (repeatMergedHeader || (hc === 0 && c === 0)) {
-							const clonedHeaderCell = headerCells[c].el.cloneNode(true);
+						if (repeatMergedHeader || hc === 0) {
+							const headerCellObject = tableObj.getCell(0, c, true);
+							// const clonedHeaderCell = headerCells[c]?.el.cloneNode(true);
 
-							// apply header row color to header cell
-							clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
+							if (!headerCellObject.isReference()) {
+								const clonedHeaderCell = headerCellObject.el.cloneNode(true);
 
-							tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
+								// apply header row color to header cell
+								clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
+								tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
 
-							if (!clonedHeaderCell.style.backgroundColor) {
-								clonedHeaderCell.style.backgroundColor = `${
-									getComputedStyle(rowObj.el).backgroundColor
-								}`;
-								if (clonedHeaderCell.style.backgroundColor)
-									clonedHeaderCell.style.backgroundColor += ' !important';
-							}
+								if (!clonedHeaderCell.style.backgroundColor) {
+									clonedHeaderCell.style.backgroundColor = `${
+										getComputedStyle(rowObj.el).backgroundColor
+									}`;
+									if (clonedHeaderCell.style.backgroundColor)
+										clonedHeaderCell.style.backgroundColor += ' !important';
+								}
 
-							if (!repeatMergedHeader) {
-								clonedHeaderCell.setAttribute('rowSpan', columns * headerCount);
+								if (!repeatMergedHeader) {
+									clonedHeaderCell.setAttribute('rowSpan', columns * headerCount);
+								} else {
+									clonedHeaderCell.setAttribute('rowSpan', clonedHeaderCell.getAttribute('colSpan'));
+								}
+
+								clonedHeaderCell.setAttribute('colSpan', 1);
 							}
 						}
 
