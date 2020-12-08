@@ -196,6 +196,12 @@ export default {
 		},
 	},
 	methods: {
+		headerFullyMerged(table) {
+			const isHeaderFullyMerged =
+				Array.from(Array.from(table.querySelectorAll('tr'))[0].querySelectorAll('td')).length === 1;
+
+			this.appOptions.headerFullyMerged = isHeaderFullyMerged;
+		},
 		/**
 		 * Limit a number between a min/max range.
 		 *
@@ -218,6 +224,8 @@ export default {
 			// calculate new max size limit at every table clone to reflect changes if there is any
 			this.calculateSizeLimitMax();
 
+			this.headerFullyMerged(clonedTable);
+
 			this.responsiveFrontend = new WPTB_ResponsiveFrontend({ query: '.wptb-builder-responsive table' });
 			const sortableTable = new WPTB_SortableTable({ table: clonedTable });
 			sortableTable.sortableTableInitialization(this.responsiveFrontend);
@@ -234,14 +242,14 @@ export default {
 					console.warn('[WPTB]: invalid directive found at main table');
 				}
 			}
-      const tabEvent = new CustomEvent('table:cloned', {
-        detail: {
-          WPTB_ResponsiveFrontend,
-          mainTable,
-          clonedTable
-        },
-      });
-      mainTable.dispatchEvent(tabEvent);
+			const tabEvent = new CustomEvent('table:cloned', {
+				detail: {
+					WPTB_ResponsiveFrontend,
+					mainTable,
+					clonedTable,
+				},
+			});
+			mainTable.dispatchEvent(tabEvent);
 		},
 		/**
 		 * Deep merge two objects.
