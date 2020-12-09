@@ -1221,7 +1221,7 @@ var TableBlockApp = /*#__PURE__*/function (_React$Component) {
                 id: t.id,
                 // eslint-disable-next-line no-underscore-dangle
                 content: t.meta._wptb_content_,
-                title: t.title.rendered === '' ? "".concat(Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Table', 'wp-table-builder'), " #").concat(t.id) : t.title.rendered
+                title: t.title.rendered === '' || t.title.rendered === 'Untitled' ? "".concat(Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_11__["__"])('Table', 'wp-table-builder'), " #").concat(t.id) : t.title.rendered
               });
             })
           });

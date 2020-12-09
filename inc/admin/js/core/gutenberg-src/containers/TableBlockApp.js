@@ -45,7 +45,7 @@ export default class TableBlockApp extends React.Component {
 										// eslint-disable-next-line no-underscore-dangle
 										content: t.meta._wptb_content_,
 										title:
-											t.title.rendered === ''
+											t.title.rendered === '' || t.title.rendered === 'Untitled'
 												? `${__('Table', 'wp-table-builder')} #${t.id}`
 												: t.title.rendered,
 									},
