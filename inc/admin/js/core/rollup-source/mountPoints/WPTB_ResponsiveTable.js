@@ -7,16 +7,24 @@ import ResponsiveControlsRow from '../components/ResponsiveControlsRow';
 // eslint-disable-next-line camelcase
 import WPTB_ControlsManager from '../functions/WPTB_ControlsManager';
 import filters from '../plugins/filters';
-import strings from '../plugins/strings';
 import ResponsivePanelGeneralControls from '../components/ResponsivePanelGeneralControls';
 import ResponsivePanelModeControls from '../components/ResponsivePanelModeControls';
 import createStore from '../stores/responsive';
 
 export default {
-	name: 'ResponsiveTable_bak',
+	name: 'ResponsiveTable',
 	handler: function responsiveTableJS(uniqueId) {
 		const data = WPTB_ControlsManager.getControlData('responsiveMenuData');
-		const mainTableQuery = '.wptb-preview-table';
+		let mainTableQuery = '.wptb-preview-table';
+
+		// query for target table where directives will be saved to
+		const targetTableQuery = '.wptb-preview-table';
+
+		const isDataTableEnabled = document.querySelector(mainTableQuery).dataset.wptbDataTable === 'true';
+
+		if (isDataTableEnabled) {
+			mainTableQuery = '.wptb-data-table-preview-content .wptb-preview-table';
+		}
 
 		/**
 		 * Various options that will be used all around the app
@@ -109,10 +117,10 @@ export default {
 		// vue builder instance
 		new Vue({
 			components: { ResponsiveApp },
-			data: { mainTableQuery, ...data },
+			data: { mainTableQuery, targetTableQuery, ...data },
 			store,
 			template:
-				'<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>',
+				'<responsive-app :target-query="targetTableQuery" :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>',
 		}).$mount(`#${uniqueId}`);
 
 		// left panel general controls instance

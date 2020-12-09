@@ -15631,6 +15631,10 @@ var _default = {
       type: String,
       required: true
     },
+    targetQuery: {
+      type: String,
+      required: true
+    },
     tableDirectives: {
       type: String,
       default: ''
@@ -15650,6 +15654,7 @@ var _default = {
       cloneInner: false,
       clonedTable: null,
       mainTable: null,
+      targetTable: null,
       tableDirectiveDatasetId: 'wptbResponsiveDirectives',
       tableHaveDirectives: false
     };
@@ -15704,19 +15709,20 @@ var _default = {
      */
     startClone: function startClone() {
       this.mainTable = document.querySelector(this.cloneQuery);
+      this.targetTable = document.querySelector(this.targetQuery);
 
       if (!this.mainTable) {
         throw new Error("no clone target is found with a query value of ".concat(this.cloneQuery));
       } // check for legacy responsive functionality on main table
 
 
-      this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
+      this.appOptions.hasLegacyResponsive = this.targetTable.dataset.wptbAdaptiveTable === '1';
       this.clonedTable = this.mainTable.cloneNode(true);
       this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');
       this.$refs.tableClone.appendChild(this.clonedTable); // directives that are already present in the main table
       // this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
 
-      var mainTableDirectives = this.mainTable.dataset[this.tableDirectiveDatasetId]; // since this component will be re-cloning the table at every visibility change of responsive menu, we should add necessary table directives to cloned table without waiting for them to be automatically added on change
+      var mainTableDirectives = this.targetTable.dataset[this.tableDirectiveDatasetId]; // since this component will be re-cloning the table at every visibility change of responsive menu, we should add necessary table directives to cloned table without waiting for them to be automatically added on change
 
       if (this.tableDirectives) {
         this.addDirectivesToTable(this.tableDirectives);
@@ -15735,11 +15741,11 @@ var _default = {
      * @param {string} n new directives
      */
     addDirectivesToTable: function addDirectivesToTable(n) {
-      if (this.clonedTable && this.mainTable) {
+      if (this.clonedTable && this.mainTable && this.targetTable) {
         // add directives to clone
-        this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to main table
+        this.clonedTable.dataset[this.tableDirectiveDatasetId] = n; // add directives to target table
 
-        this.mainTable.dataset[this.tableDirectiveDatasetId] = n; // emit an event signalling end of directive copy operation
+        this.targetTable.dataset[this.tableDirectiveDatasetId] = n; // emit an event signalling end of directive copy operation
 
         this.$emit('directivesCopied', this.tableHaveDirectives);
         this.tableHaveDirectives = false;
@@ -19397,6 +19403,10 @@ var _default = {
       type: String,
       required: true
     },
+    targetQuery: {
+      type: String,
+      required: true
+    },
     screenSizes: Object,
     compareSizes: Object
   },
@@ -19769,7 +19779,7 @@ exports.default = _default;
                       [
                         _vm._v(
                           _vm._s(_vm._f("cap")(_vm.strings.identifyCells)) +
-                            "\n\t\t\t\t"
+                            "\n\t\t\t\t\t"
                         )
                       ]
                     )
@@ -19782,6 +19792,7 @@ exports.default = _default;
                   attrs: {
                     clone: _vm.isVisible,
                     "clone-query": _vm.cloneQuery,
+                    "target-query": _vm.targetQuery,
                     "table-directives": _vm.currentDirectives,
                     "table-style": _vm.tableStyle
                   },
@@ -19906,40 +19917,6 @@ function install(Vue, options) {
     }).join(' ');
   });
 }
-
-var _default = {
-  install: install
-};
-exports.default = _default;
-},{}],"plugins/strings.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Plugin install method.
- *
- * Plugin for adding strings data field to all components to use
- *
- * @param {Object} Vue Vue object
- * @param {Object} options options to be used at plugin
- */
-function install(Vue, options) {
-  Vue.mixin({
-    data: function data() {
-      return {
-        strings: options.strings
-      };
-    }
-  });
-}
-/**
- * @module strings plugin
- */
-
 
 var _default = {
   install: install
@@ -21181,8 +21158,6 @@ var _WPTB_ControlsManager = _interopRequireDefault(require("../functions/WPTB_Co
 
 var _filters = _interopRequireDefault(require("../plugins/filters"));
 
-var _strings = _interopRequireDefault(require("../plugins/strings"));
-
 var _ResponsivePanelGeneralControls = _interopRequireDefault(require("../components/ResponsivePanelGeneralControls"));
 
 var _ResponsivePanelModeControls = _interopRequireDefault(require("../components/ResponsivePanelModeControls"));
@@ -21198,11 +21173,18 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  name: 'ResponsiveTable_bak',
+  name: 'ResponsiveTable',
   handler: function responsiveTableJS(uniqueId) {
     var data = _WPTB_ControlsManager.default.getControlData('responsiveMenuData');
 
-    var mainTableQuery = '.wptb-preview-table';
+    var mainTableQuery = '.wptb-preview-table'; // query for target table where directives will be saved to
+
+    var targetTableQuery = '.wptb-preview-table';
+    var isDataTableEnabled = document.querySelector(mainTableQuery).dataset.wptbDataTable === 'true';
+
+    if (isDataTableEnabled) {
+      mainTableQuery = '.wptb-data-table-preview-content .wptb-preview-table';
+    }
     /**
      * Various options that will be used all around the app
      *
@@ -21212,6 +21194,7 @@ var _default = {
      * * currentSize -> current screen size value that is being used in responsive builder. this is not the actual screen size value of the current window but a mock up value to provide a display of table's layout at different sizes
      *
      */
+
 
     var appOptions = {
       identifyCells: false,
@@ -21306,10 +21289,11 @@ var _default = {
         ResponsiveApp: _ResponsiveApp.default
       },
       data: _objectSpread({
-        mainTableQuery: mainTableQuery
+        mainTableQuery: mainTableQuery,
+        targetTableQuery: targetTableQuery
       }, data),
       store: store,
-      template: '<responsive-app :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>'
+      template: '<responsive-app :target-query="targetTableQuery" :clone-query="mainTableQuery" :screen-sizes="screenSizes" :compare-sizes="compareSizes"></responsive-app>'
     }).$mount("#".concat(uniqueId)); // left panel general controls instance
 
     new _vue.default({
@@ -21331,7 +21315,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../plugins/strings":"plugins/strings.js","../components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","../components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue","../stores/responsive":"stores/responsive/index.js"}],"components/SideInput.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ResponsiveApp":"containers/ResponsiveApp.vue","../components/ResponsiveControlsRow":"components/ResponsiveControlsRow.vue","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../plugins/filters":"plugins/filters.js","../components/ResponsivePanelGeneralControls":"components/ResponsivePanelGeneralControls.vue","../components/ResponsivePanelModeControls":"components/ResponsivePanelModeControls.vue","../stores/responsive":"stores/responsive/index.js"}],"components/SideInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35431,7 +35415,41 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"plugins/strings.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Plugin install method.
+ *
+ * Plugin for adding strings data field to all components to use
+ *
+ * @param {Object} Vue Vue object
+ * @param {Object} options options to be used at plugin
+ */
+function install(Vue, options) {
+  Vue.mixin({
+    data: function data() {
+      return {
+        strings: options.strings
+      };
+    }
+  });
+}
+/**
+ * @module strings plugin
+ */
+
+
+var _default = {
+  install: install
+};
+exports.default = _default;
+},{}],"components/PrebuiltCardControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

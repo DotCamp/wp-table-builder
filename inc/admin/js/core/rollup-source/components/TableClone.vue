@@ -19,6 +19,10 @@ export default {
 			type: String,
 			required: true,
 		},
+		targetQuery: {
+			type: String,
+			required: true,
+		},
 		tableDirectives: {
 			type: String,
 			default: '',
@@ -39,6 +43,7 @@ export default {
 			cloneInner: false,
 			clonedTable: null,
 			mainTable: null,
+			targetTable: null,
 			tableDirectiveDatasetId: 'wptbResponsiveDirectives',
 			tableHaveDirectives: false,
 		};
@@ -93,13 +98,14 @@ export default {
 		 */
 		startClone() {
 			this.mainTable = document.querySelector(this.cloneQuery);
+			this.targetTable = document.querySelector(this.targetQuery);
 
 			if (!this.mainTable) {
 				throw new Error(`no clone target is found with a query value of ${this.cloneQuery}`);
 			}
 
 			// check for legacy responsive functionality on main table
-			this.appOptions.hasLegacyResponsive = this.mainTable.dataset.wptbAdaptiveTable === '1';
+			this.appOptions.hasLegacyResponsive = this.targetTable.dataset.wptbAdaptiveTable === '1';
 
 			this.clonedTable = this.mainTable.cloneNode(true);
 			this.clonedTable.classList.add('wptb-plugin-box-shadow-xl');
@@ -107,7 +113,7 @@ export default {
 
 			// directives that are already present in the main table
 			// this directives may be saved from on another session of table builder or added there in the current session, what matters is, always use the main table directives as the base of source and update the other directives currently available according to them
-			const mainTableDirectives = this.mainTable.dataset[this.tableDirectiveDatasetId];
+			const mainTableDirectives = this.targetTable.dataset[this.tableDirectiveDatasetId];
 
 			// since this component will be re-cloning the table at every visibility change of responsive menu, we should add necessary table directives to cloned table without waiting for them to be automatically added on change
 			if (this.tableDirectives) {
@@ -128,12 +134,12 @@ export default {
 		 * @param {string} n new directives
 		 */
 		addDirectivesToTable(n) {
-			if (this.clonedTable && this.mainTable) {
+			if (this.clonedTable && this.mainTable && this.targetTable) {
 				// add directives to clone
 				this.clonedTable.dataset[this.tableDirectiveDatasetId] = n;
 
-				// add directives to main table
-				this.mainTable.dataset[this.tableDirectiveDatasetId] = n;
+				// add directives to target table
+				this.targetTable.dataset[this.tableDirectiveDatasetId] = n;
 
 				// emit an event signalling end of directive copy operation
 				this.$emit('directivesCopied', this.tableHaveDirectives);

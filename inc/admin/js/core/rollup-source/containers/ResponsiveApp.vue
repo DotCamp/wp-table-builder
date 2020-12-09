@@ -39,6 +39,7 @@
 				<table-clone
 					:clone="isVisible"
 					:clone-query="cloneQuery"
+          :target-query="targetQuery"
 					:table-directives="currentDirectives"
 					@tableCloned="tableCloned"
 					@directivesCopied="directivesCopied"
@@ -82,6 +83,10 @@ import NumberPostfixButtons from '../components/NumberPostfixButtons';
 export default {
 	props: {
 		cloneQuery: {
+			type: String,
+			required: true,
+		},
+		targetQuery: {
 			type: String,
 			required: true,
 		},
