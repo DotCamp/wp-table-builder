@@ -99,7 +99,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting some WordPress servers where even though users have read access, still see credential form and can not use various functionality of plugin.
 * FIX: Fixed an issue affecting xml import operation to be not completed on import/export operations.
 * IMPROVE: Better visibility for manage cells button.
-
+* IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
 
 = 1.3.2 =
 
