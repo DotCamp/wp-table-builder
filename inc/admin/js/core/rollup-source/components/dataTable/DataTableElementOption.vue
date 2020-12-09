@@ -22,6 +22,10 @@
 						:disabled="isColumnBindingDisabled"
 					>
 					</panel-dropdown-control>
+					<data-table-element-extra-options
+						:element-type="currentElementType"
+						:column-bindings="getColumnBinding()"
+					></data-table-element-extra-options>
 					<data-panel-element-binding-messages
 						:row-binding="getRowBinding()"
 						:element-binding="getColumnBinding()"
@@ -69,10 +73,12 @@ import DataPanelElementBindingMessages from './DataPanelElementBindingMessages';
 import DataPanelRowBindingMessages from './DataPanelRowBindingMessages';
 import DataPanelOperatorModeControls from './DataPanelOperatorModeControls';
 import DataPanelSortControls from './DataPanelSortControls';
+import DataTableElementExtraOptions from './DataTableElementExtraOptions';
 
 export default {
 	mixins: [withNativeTranslationStore],
 	components: {
+		DataTableElementExtraOptions,
 		DataPanelSortControls,
 		DataPanelOperatorModeControls,
 		DataPanelRowBindingMessages,

@@ -30261,7 +30261,8 @@ var typeOptionList = {
   star_rating: ['rating'],
   image: ['link'],
   circle_rating: ['percentage'],
-  text_icon_element: ['text']
+  text_icon_element: ['text'],
+  icon: ['valueColumn']
 };
 /**
  * Default mappings for element value binds.
@@ -30275,7 +30276,8 @@ var defaultMappings = {
   button: ['link'],
   star_rating: ['rating'],
   image: ['link'],
-  circle_rating: ['percentage']
+  circle_rating: ['percentage'],
+  icon: ['']
 };
 exports.defaultMappings = defaultMappings;
 },{}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
@@ -30661,10 +30663,12 @@ exports.default = _default;
     { staticClass: "wptb-panel-control-group" },
     [
       _c("div", { staticClass: "wptb-panel-control-group-title" }, [
-        _c("div", {
-          staticClass: "wptb-data-panel-control-group-icon",
-          domProps: { innerHTML: _vm._s(_vm.icon) }
-        }),
+        _vm.icon !== ""
+          ? _c("div", {
+              staticClass: "wptb-data-panel-control-group-icon",
+              domProps: { innerHTML: _vm._s(_vm.icon) }
+            })
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "span",
@@ -31247,7 +31251,245 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions":"functions/index.js"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../../functions":"functions/index.js"}],"components/dataTable/ExtraDataOptionsBase.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    columnBindings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  methods: {
+    getColumnBinding: function getColumnBinding(subIndex) {
+      var defaultBinding = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      var binding = defaultBinding;
+
+      if (this.columnBindings[subIndex]) {
+        binding = this.columnBindings[subIndex];
+      }
+
+      return binding;
+    }
+  }
+};
+exports.default = _default;
+},{}],"components/dataTable/IconExtraDataOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ExtraDataOptionsBase = _interopRequireDefault(require("./ExtraDataOptionsBase"));
+
+var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelControlGroup"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    PanelControlGroup: _PanelControlGroup.default
+  },
+  mixins: [_ExtraDataOptionsBase.default, _withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      iconCount: 1,
+      innerIconOptions: [{
+        bindValue: '',
+        icon: '',
+        color: '#000'
+      }]
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.mergeIconBindings(_this.innerIconOptions);
+    });
+  },
+  watch: {
+    columnBindings: {
+      handler: function handler(n) {
+        this.mergeIconBindings(n);
+      },
+      deep: true
+    },
+    innerIconOptions: {
+      handler: function handler(n) {
+        this.$emit('valueChanged', _objectSpread({}, this.columnBindings, {}, {
+          iconBindings: n
+        }));
+      }
+    }
+  },
+  computed: {
+    groupVisibility: function groupVisibility() {
+      return this.getColumnBinding('valueColumn') !== 'none';
+    }
+  },
+  methods: {
+    mergeIconBindings: function mergeIconBindings(source) {
+      if (source.iconBindings && Array.isArray(source.iconBindings)) {
+        this.innerIconOptions = source.iconBindings;
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $cb381a = exports.default || module.exports;
+      
+      if (typeof $cb381a === 'function') {
+        $cb381a = $cb381a.options;
+      }
+    
+        /* template */
+        Object.assign($cb381a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("transition", { attrs: { name: "wptb-fade" } }, [
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.groupVisibility,
+            expression: "groupVisibility"
+          }
+        ]
+      },
+      [
+        _c("panel-control-group", {
+          attrs: { title: _vm.translationM("icon") + " #" + _vm.iconCount }
+        })
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./ExtraDataOptionsBase":"components/dataTable/ExtraDataOptionsBase.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/dataTable/DataTableElementExtraOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _IconExtraDataOptions = _interopRequireDefault(require("./IconExtraDataOptions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var _default = {
+  components: {
+    IconExtraDataOptions: _IconExtraDataOptions.default
+  },
+  props: {
+    elementType: {
+      type: String,
+      default: ''
+    },
+    columnBindings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    }
+  },
+  computed: {
+    elementExtraOptions: function elementExtraOptions() {
+      var currentComponent = '';
+
+      if (Object.keys(this.$options.components).includes(this.getElementExtraOptionComponentName(this.elementType))) {
+        currentComponent = this.getElementExtraOptionComponentName(this.elementType);
+      }
+
+      return currentComponent;
+    }
+  },
+  methods: {
+    getElementExtraOptionComponentName: function getElementExtraOptionComponentName(elementType) {
+      var componentName = '';
+
+      if (elementType) {
+        var capitalizedElementType = elementType.split('_').map(function (part) {
+          return part[0].toUpperCase() + part.slice(1);
+        }).join(''); // elements with extra data table options should follow name convention of ${elementTypeCapitalizedFirstLetters}ExtraDataOptions
+
+        componentName = "".concat(capitalizedElementType, "ExtraDataOptions");
+      }
+
+      return componentName;
+    }
+  }
+};
+exports.default = _default;
+        var $5aa809 = exports.default || module.exports;
+      
+      if (typeof $5aa809 === 'function') {
+        $5aa809 = $5aa809.options;
+      }
+    
+        /* template */
+        Object.assign($5aa809, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(_vm.elementExtraOptions, {
+    tag: "component",
+    attrs: { "column-bindings": _vm.columnBindings }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./IconExtraDataOptions":"components/dataTable/IconExtraDataOptions.vue"}],"components/dataTable/DataTableElementOption.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31279,6 +31521,8 @@ var _DataPanelOperatorModeControls = _interopRequireDefault(require("./DataPanel
 
 var _DataPanelSortControls = _interopRequireDefault(require("./DataPanelSortControls"));
 
+var _DataTableElementExtraOptions = _interopRequireDefault(require("./DataTableElementExtraOptions"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -31290,6 +31534,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   mixins: [_withNativeTranslationStore.default],
   components: {
+    DataTableElementExtraOptions: _DataTableElementExtraOptions.default,
     DataPanelSortControls: _DataPanelSortControls.default,
     DataPanelOperatorModeControls: _DataPanelOperatorModeControls.default,
     DataPanelRowBindingMessages: _DataPanelRowBindingMessages.default,
@@ -31544,6 +31789,13 @@ exports.default = _default;
                       })
                     }),
                     _vm._v(" "),
+                    _c("data-table-element-extra-options", {
+                      attrs: {
+                        "element-type": _vm.currentElementType,
+                        "column-bindings": _vm.getColumnBinding()
+                      }
+                    }),
+                    _vm._v(" "),
                     _c("data-panel-element-binding-messages", {
                       attrs: {
                         "row-binding": _vm.getRowBinding(),
@@ -31641,7 +31893,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js","./DataPanelOperatorModeControls":"components/dataTable/DataPanelOperatorModeControls.vue","./DataPanelSortControls":"components/dataTable/DataPanelSortControls.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../PanelSectionGroupTabbedImproved":"components/PanelSectionGroupTabbedImproved.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../PanelDropdownControl":"components/PanelDropdownControl.vue","../../functions":"functions/index.js","./elementOptionTypeList":"components/dataTable/elementOptionTypeList.js","./DataPanelElementBindingMessages":"components/dataTable/DataPanelElementBindingMessages.js","./DataPanelRowBindingMessages":"components/dataTable/DataPanelRowBindingMessages.js","./DataPanelOperatorModeControls":"components/dataTable/DataPanelOperatorModeControls.vue","./DataPanelSortControls":"components/dataTable/DataPanelSortControls.vue","./DataTableElementExtraOptions":"components/dataTable/DataTableElementExtraOptions.vue"}],"components/dataTable/DataTableElementsMessage.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31789,7 +32041,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     button: ['link'],
     star_rating: ['rating'],
     image: ['link'],
-    circle_rating: ['percentage']
+    circle_rating: ['percentage'],
+    icon: ['icon']
   };
   /**
    * Deep merge object.
@@ -32543,6 +32796,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             textElement.textContent = text;
           }
         }
+      },
+      icon: function icon(tableElement, _ref9) {
+        var valueColumn = _ref9.valueColumn;
+
+        if (valueColumn) {}
       }
     };
     /**
@@ -32559,10 +32817,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var elementValue = value;
 
       if (mapper) {
-        var _ref9, _mapper$tableElementT;
+        var _ref10, _mapper$tableElementT;
 
         // decide which mapper object to use, if no mapper property is defined for current table element type, use default mapper object
-        var mapperIndex = (_ref9 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref9 !== void 0 ? _ref9 : ['text']; // create a new value object with mapped properties
+        var mapperIndex = (_ref10 = (_mapper$tableElementT = mapper[tableElementType]) !== null && _mapper$tableElementT !== void 0 ? _mapper$tableElementT : mapper.default) !== null && _ref10 !== void 0 ? _ref10 : ['text']; // create a new value object with mapped properties
 
         elementValue = {}; // eslint-disable-next-line array-callback-return
 
@@ -35314,6 +35572,7 @@ var _default = {
           higher: (0, _i18n.__)('higher than', 'wp-table-builder'),
           lower: (0, _i18n.__)('lower than', 'wp-table-builder'),
           equal: (0, _i18n.__)('equal', 'wp-table-builder'),
+          valueColumn: (0, _i18n.__)('value column', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
           dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),
@@ -35325,6 +35584,7 @@ var _default = {
           operator: (0, _i18n.__)('operator', 'wptb-table-builder'),
           text: (0, _i18n.__)('text', 'wptb-table-builder'),
           link: (0, _i18n.__)('link', 'wptb-table-builder'),
+          icon: (0, _i18n.__)('icon', 'wptb-table-builder'),
           mode: (0, _i18n.__)('mode', 'wptb-table-builder'),
           type: (0, _i18n.__)('type', 'wptb-table-builder'),
           amount: (0, _i18n.__)('amount', 'wptb-table-builder'),

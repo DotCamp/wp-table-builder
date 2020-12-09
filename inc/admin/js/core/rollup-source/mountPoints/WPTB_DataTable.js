@@ -66,6 +66,7 @@ export default {
 					higher: __('higher than', 'wp-table-builder'),
 					lower: __('lower than', 'wp-table-builder'),
 					equal: __('equal', 'wp-table-builder'),
+					valueColumn: __('value column', 'wp-table-builder'),
 					elementsMessage: __(
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'
@@ -80,6 +81,7 @@ export default {
 					operator: __('operator', 'wptb-table-builder'),
 					text: __('text', 'wptb-table-builder'),
 					link: __('link', 'wptb-table-builder'),
+					icon: __('icon', 'wptb-table-builder'),
 					mode: __('mode', 'wptb-table-builder'),
 					type: __('type', 'wptb-table-builder'),
 					amount: __('amount', 'wptb-table-builder'),

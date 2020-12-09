@@ -24,6 +24,7 @@
 		star_rating: ['rating'],
 		image: ['link'],
 		circle_rating: ['percentage'],
+		icon: ['icon'],
 	};
 
 	/**
@@ -745,6 +746,10 @@
 					if (textElement) {
 						textElement.textContent = text;
 					}
+				}
+			},
+			icon: (tableElement, { valueColumn }) => {
+				if (valueColumn) {
 				}
 			},
 		};

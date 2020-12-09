@@ -10,6 +10,7 @@ export const typeOptionList = {
 	image: ['link'],
 	circle_rating: ['percentage'],
 	text_icon_element: ['text'],
+	icon: ['valueColumn'],
 };
 
 /**
@@ -23,4 +24,5 @@ export const defaultMappings = {
 	star_rating: ['rating'],
 	image: ['link'],
 	circle_rating: ['percentage'],
+	icon: [''],
 };
