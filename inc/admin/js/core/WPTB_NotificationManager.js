@@ -31,8 +31,11 @@
 		 */
 		this.types = {};
 
+		// eslint-disable-next-line no-restricted-globals
+		const context = self || global;
+
 		// eslint-disable-next-line no-undef
-		const managerData = wptb_admin_object.notificationManager;
+		const managerData = context.wptb_admin_object?.notificationManager;
 
 		/**
 		 * Create single notification object.

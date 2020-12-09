@@ -96,6 +96,7 @@ That's it. You're done!
 * FIX: An issue with footer buttons not visible in gutenberg block for Firefox browsers.
 * FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.
 * FIX: Fixed an issue affecting some WordPress servers where even though users have read access, still see credential form and can not use various functionality of plugin.
+* FIX: Fixed an issue affecting xml import operation to be not completed on import/export operations.
 * IMPROVE: Better visibility for manage cells button.
 
 
