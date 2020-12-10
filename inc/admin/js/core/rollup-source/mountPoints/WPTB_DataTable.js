@@ -67,6 +67,7 @@ export default {
 					lower: __('lower than', 'wp-table-builder'),
 					equal: __('equal', 'wp-table-builder'),
 					valueColumn: __('value column', 'wp-table-builder'),
+					matchValue: __('match value', 'wp-table-builder'),
 					elementsMessage: __(
 						'Finish your data source setup first to start working on table layout.',
 						'wptb-table-builder'

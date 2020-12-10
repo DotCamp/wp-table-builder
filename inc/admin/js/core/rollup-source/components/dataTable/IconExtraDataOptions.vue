@@ -1,7 +1,18 @@
 <template>
 	<transition name="wptb-fade">
 		<div v-show="groupVisibility">
-			<panel-control-group :title="`${translationM('icon')} #${iconCount}`"></panel-control-group>
+			<panel-control-group
+				:key="option.bindValue"
+				v-for="(option, index) in innerIconOptions"
+				:title="`${translationM('icon')} #${iconCount}`"
+			>
+				<panel-input-control
+					class="wptb-data-panel-string-input"
+					:label="translationM('matchValue') | cap"
+					v-model="innerIconOptions[index].bindValue"
+					type="string"
+				></panel-input-control>
+			</panel-control-group>
 		</div>
 	</transition>
 </template>
@@ -10,9 +21,10 @@
 import ExtraDataOptionsBase from './ExtraDataOptionsBase';
 import PanelControlGroup from '../leftPanel/PanelControlGroup';
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
+import PanelInputControl from '../PanelInputControl';
 
 export default {
-	components: { PanelControlGroup },
+	components: { PanelInputControl, PanelControlGroup },
 	mixins: [ExtraDataOptionsBase, withNativeTranslationStore],
 	data() {
 		return {

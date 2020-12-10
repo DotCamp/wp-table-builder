@@ -750,6 +750,7 @@
 			},
 			icon: (tableElement, { valueColumn }) => {
 				if (valueColumn) {
+					// TODO [erdembircan] icon element data generation
 				}
 			},
 		};

@@ -6395,3 +6395,7 @@ thead .wptb-data-manager-table-data-value {
     fill: var(--wptb-plugin-logo-color);
 }
 
+.wptb-data-panel-string-input .wptb-size-input {
+    min-width: 100px;
+}
+

@@ -26,7 +26,7 @@ export default {
 					break;
 				}
 				default: {
-					message = null;
+					message = '';
 					break;
 				}
 			}

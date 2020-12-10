@@ -30559,7 +30559,7 @@ var _default = {
 
         default:
           {
-            message = null;
+            message = '';
             break;
           }
       }
@@ -31295,6 +31295,8 @@ var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelContr
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
 
+var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -31305,6 +31307,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    PanelInputControl: _PanelInputControl.default,
     PanelControlGroup: _PanelControlGroup.default
   },
   mixins: [_ExtraDataOptionsBase.default, _withNativeTranslationStore.default],
@@ -31379,11 +31382,32 @@ exports.default = _default;
           }
         ]
       },
-      [
-        _c("panel-control-group", {
-          attrs: { title: _vm.translationM("icon") + " #" + _vm.iconCount }
-        })
-      ],
+      _vm._l(_vm.innerIconOptions, function(option, index) {
+        return _c(
+          "panel-control-group",
+          {
+            key: option.bindValue,
+            attrs: { title: _vm.translationM("icon") + " #" + _vm.iconCount }
+          },
+          [
+            _c("panel-input-control", {
+              staticClass: "wptb-data-panel-string-input",
+              attrs: {
+                label: _vm._f("cap")(_vm.translationM("matchValue")),
+                type: "string"
+              },
+              model: {
+                value: _vm.innerIconOptions[index].bindValue,
+                callback: function($$v) {
+                  _vm.$set(_vm.innerIconOptions[index], "bindValue", $$v)
+                },
+                expression: "innerIconOptions[index].bindValue"
+              }
+            })
+          ],
+          1
+        )
+      }),
       1
     )
   ])
@@ -31400,7 +31424,7 @@ render._withStripped = true
           };
         })());
       
-},{"./ExtraDataOptionsBase":"components/dataTable/ExtraDataOptionsBase.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/dataTable/DataTableElementExtraOptions.vue":[function(require,module,exports) {
+},{"./ExtraDataOptionsBase":"components/dataTable/ExtraDataOptionsBase.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue"}],"components/dataTable/DataTableElementExtraOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32800,7 +32824,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       icon: function icon(tableElement, _ref9) {
         var valueColumn = _ref9.valueColumn;
 
-        if (valueColumn) {}
+        if (valueColumn) {// TODO [erdembircan] icon element data generation
+        }
       }
     };
     /**
@@ -35573,6 +35598,7 @@ var _default = {
           lower: (0, _i18n.__)('lower than', 'wp-table-builder'),
           equal: (0, _i18n.__)('equal', 'wp-table-builder'),
           valueColumn: (0, _i18n.__)('value column', 'wp-table-builder'),
+          matchValue: (0, _i18n.__)('match value', 'wp-table-builder'),
           elementsMessage: (0, _i18n.__)('Finish your data source setup first to start working on table layout.', 'wptb-table-builder'),
           dataTablePreview: (0, _i18n.__)('Data table preview', 'wptb-table-builder'),
           bindings: (0, _i18n.__)('bindings', 'wptb-table-builder'),
