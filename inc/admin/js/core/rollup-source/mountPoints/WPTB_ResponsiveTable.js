@@ -45,8 +45,8 @@ export default {
 				auto: {
 					topRowAsHeader: {
 						desktop: false,
-						tablet: false,
-						mobile: false,
+						tablet: true,
+						mobile: true,
 					},
 					repeatMergedHeader: {
 						desktop: true,
