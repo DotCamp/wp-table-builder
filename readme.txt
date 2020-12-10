@@ -2,7 +2,7 @@
 Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wpleaders1
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
-Tested up to: 5.5
+Tested up to: 5.6
 Stable tag: 1.3.3
 Requires PHP: 5.6
 License: GPL3+
@@ -100,6 +100,9 @@ That's it. You're done!
 * FIX: Fixed an issue affecting xml import operation to be not completed on import/export operations.
 * IMPROVE: Better visibility for manage cells button.
 * IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
+* PRO: NEW: Option to make top row (header) sticky.
+* PRO: NEW: Option to set individual column/row color.
+* PRO: FIX: Border radius issue.
 
 = 1.3.2 =
 
