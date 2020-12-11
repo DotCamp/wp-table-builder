@@ -769,11 +769,17 @@
 
 			// new options
 			const staticTopRow = autoOption.staticTopRow ? autoOption.staticTopRow[sizeRange] : false;
-			const repeatMergedHeader = autoOption.repeatMergedHeader
-				? topRowAsHeader
-					? autoOption.repeatMergedHeader[sizeRange]
-					: false
-				: false;
+			const repeatMergedHeader =
+				// check for undefined for backward compatibility of older tables
+				/* eslint-disable no-nested-ternary */
+				autoOption.repeatMergedHeader === true || autoOption.repeatMergedHeader === undefined
+					? topRowAsHeader
+						? autoOption.repeatMergedHeader
+							? autoOption.repeatMergedHeader[sizeRange]
+							: true
+						: false
+					: false;
+			/* eslint-enable no-nested-ternary */
 
 			tableObj.clearTable();
 
