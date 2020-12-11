@@ -772,7 +772,7 @@
 			const repeatMergedHeader =
 				// check for undefined for backward compatibility of older tables
 				/* eslint-disable no-nested-ternary */
-				autoOption.repeatMergedHeader === true || autoOption.repeatMergedHeader === undefined
+				autoOption.repeatMergedHeader === undefined || autoOption.repeatMergedHeader[sizeRange] === true
 					? topRowAsHeader
 						? autoOption.repeatMergedHeader
 							? autoOption.repeatMergedHeader[sizeRange]
