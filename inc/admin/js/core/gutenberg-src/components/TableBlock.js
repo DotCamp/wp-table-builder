@@ -53,6 +53,9 @@ class TableBlock extends React.Component {
 	componentDidMount() {
 		this.slideMain();
 		this.setState({ footerRightPortal: this.footerRightPortal });
+
+		// decide whether to show full table preview or not
+		this.setState({ fullPreview: this.state.savedId > 0 });
 	}
 
 	// Update selection depending on builder sent id.
@@ -102,10 +105,18 @@ class TableBlock extends React.Component {
 
 	/**
 	 * Component updated lifecycle hook.
+	 *
+	 * @param {Object} _ previous props
+	 * @param {Object} prevState previous state
 	 */
-	componentDidUpdate() {
+	componentDidUpdate(_, prevState) {
 		this.slideMain();
 		this.props.setAttributes({ id: this.state.savedId });
+
+		// enable full preview saved table is changed
+		if (prevState.savedId !== this.state.savedId) {
+			this.setState({ fullPreview: true });
+		}
 	}
 
 	/**

@@ -101,6 +101,7 @@ That's it. You're done!
 * FIX: Fixed an issue where for some themes, table sort icons are not visible.
 * IMPROVE: Better visibility for manage cells button.
 * IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
+* IMPROVE: When selecting a table or there is already a selected table on gutenberg block, full preview will be shown automatically.
 * IMPROVE: Top row as header option is turned on by default for new tables.
 * PRO: NEW: Option to make top row (header) sticky.
 * PRO: NEW: Option to set individual column/row color.
