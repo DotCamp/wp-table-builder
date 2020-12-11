@@ -98,6 +98,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting gutenberg block where user created prebuilt tables can be listed and selected.
 * FIX: Fixed an issue affecting some WordPress servers where even though users have read access, still see credential form and can not use various functionality of plugin.
 * FIX: Fixed an issue affecting xml import operation to be not completed on import/export operations.
+* FIX: Fixed an issue where for some themes, table sort icons are not visible.
 * IMPROVE: Better visibility for manage cells button.
 * IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
 * IMPROVE: Top row as header option is turned on by default for new tables.

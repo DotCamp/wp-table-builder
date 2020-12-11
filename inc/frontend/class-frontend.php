@@ -110,7 +110,7 @@ class Frontend {
 
 
 	public function unqueue_styles_start() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array('dashicons'), $this->version, 'all' );
 	}
 
 //    /**
