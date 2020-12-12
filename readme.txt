@@ -107,6 +107,7 @@ That's it. You're done!
 * PRO: NEW: Option to make top row (header) sticky.
 * PRO: NEW: Option to set individual column/row color.
 * PRO: FIX: Border radius issue.
+* PRO: FIX: Fixed a console error related to pro element icons.
 
 = 1.3.2 =
 
