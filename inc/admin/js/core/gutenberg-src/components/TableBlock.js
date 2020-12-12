@@ -113,7 +113,7 @@ class TableBlock extends React.Component {
 		this.slideMain();
 		this.props.setAttributes({ id: this.state.savedId });
 
-		// enable full preview saved table is changed
+		// enable full preview if saved table is changed
 		if (prevState.savedId !== this.state.savedId) {
 			this.setState({ fullPreview: true });
 		}

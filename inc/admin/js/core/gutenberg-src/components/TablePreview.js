@@ -36,15 +36,17 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 			const previewWrapper = ref.current;
 			const previewTable = elem.shadowRoot.querySelector('table');
 			const maxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
+			const sumMaxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
 
 			let tableWidth = '700px';
-			let fullPreviewWidth = '100%';
 
-			if (maxWidth) {
+			if (sumMaxWidth) {
+				tableWidth = 'auto';
+				previewTable.style.minWidth = `${maxWidth ? Math.max(maxWidth, sumMaxWidth) : sumMaxWidth}px`;
+			} else if (maxWidth) {
 				tableWidth = `${maxWidth}px`;
-				fullPreviewWidth = `${maxWidth}px`;
 			}
-			previewTable.style.width = scale ? tableWidth : fullPreviewWidth;
+			previewTable.style.width = tableWidth;
 
 			// clear content of preview wrapper
 			previewWrapper.innerHTML = '';
@@ -66,7 +68,7 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 						const borderHorizontalSpacing = parseInt(previewTable.dataset.borderSpacingColumns, 10);
 						const cellCount = parseInt(previewTable.dataset.wptbCellsWidthAutoCount, 10);
 
-						previewTable.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+						previewTable.style.marginLeft = `-${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
 					}
 				}
 			}
