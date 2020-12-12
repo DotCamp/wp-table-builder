@@ -17,6 +17,7 @@ export default {
 		// extra options for store
 		const extraStoreOptions = {
 			state: {
+				iconList: data.iconList,
 				icons: data.icons,
 				strings: {
 					dataSourceHeader: __('Select your data source', 'wp-table-builder'),
@@ -55,6 +56,7 @@ export default {
 					columnNames: __('column names', 'wp-table-builder'),
 					columnName: __('column name', 'wp-table-builder'),
 					column: __('Column', 'wp-table-builder'),
+					color: __('Color', 'wp-table-builder'),
 					values: __('values', 'wp-table-builder'),
 					value: __('value', 'wp-table-builder'),
 					selectRowForNames: __('select a row for column names', 'wp-table-builder'),

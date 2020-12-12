@@ -3931,10 +3931,15 @@ wptb_shortcode_container_element {
     color: var(--wptb-plugin-theme-text-color-main) !important;
 }
 
+.wptb-text-input {
+    border: 1px solid var(--wptb-plugin-gray-400) !important;
+    text-align: center;
+    width: calc(9ch) !important;
+    color: var(--wptb-plugin-theme-text-color-main) !important;
+    margin-right: 0 !important;
+}
+
 .wptb-responsive-builder-main {
-    /*display: grid;*/
-    /*grid-auto-flow: row;*/
-    /*grid-template-areas: "toolbox" "main";*/
     margin-bottom: 20px;
     padding: 0 20px;
     position: relative;

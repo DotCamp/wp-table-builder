@@ -98,6 +98,7 @@ class Data_Table_Manager extends Static_Singleton_Base {
 	public static function add_admin_data( $admin_data ) {
 		$icon_manager = Init::instance()->get_icon_manager();
 		$data_table   = [
+			'iconList' => $icon_manager->get_icon_list(),
 			'icons'  => [
 				'csv'                 => $icon_manager->get_icon( 'file-csv' ),
 				'database'            => $icon_manager->get_icon( 'database' ),

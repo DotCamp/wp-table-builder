@@ -1,5 +1,9 @@
 <template>
-	<component :column-bindings="columnBindings" :is="elementExtraOptions"></component>
+	<component
+		@valueChanged="$emit('valueChanged', $event)"
+		:column-bindings="columnBindings"
+		:is="elementExtraOptions"
+	></component>
 </template>
 
 <script>

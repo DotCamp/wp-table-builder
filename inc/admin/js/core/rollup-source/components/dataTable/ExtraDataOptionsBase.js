@@ -15,5 +15,8 @@ export default {
 			}
 			return binding;
 		},
+		valueChanged(eventObject) {
+			this.$emit('valueChanged', eventObject);
+		},
 	},
 };

@@ -17,7 +17,13 @@
 					:disabled="disabled"
 					v-if="inputType === 'number'"
 				></number-postfix-input>
-				<input type="text" class="wptb-size-input" v-else v-model="innerValue" />
+				<input
+					:placeholder="stringPlaceholder"
+					type="text"
+					class="wptb-text-input"
+					v-else
+					v-model="innerValue"
+				/>
 			</label>
 		</div>
 	</div>
@@ -31,6 +37,10 @@ export default {
 		inputType: {
 			type: String,
 			default: 'number',
+		},
+		stringPlaceholder: {
+			type: String,
+			default: '',
 		},
 	},
 	components: { NumberPostfixInput },

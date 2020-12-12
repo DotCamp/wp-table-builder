@@ -25,6 +25,7 @@
 					<data-table-element-extra-options
 						:element-type="currentElementType"
 						:column-bindings="getColumnBinding()"
+						@valueChanged="setColumnBinding($event.type)($event.value)"
 					></data-table-element-extra-options>
 					<data-panel-element-binding-messages
 						:row-binding="getRowBinding()"
@@ -116,7 +117,7 @@ export default {
 				this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element';
 
 				// TODO [erdembircan] remove for production
-				this.currentActiveTab = 'row';
+				// this.currentActiveTab = 'row';
 
 				this.currentElementType = parseElementType(this.currentElement);
 			}

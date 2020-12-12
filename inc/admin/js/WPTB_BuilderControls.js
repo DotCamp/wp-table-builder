@@ -20630,11 +20630,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     inputType: {
       type: String,
       default: 'number'
+    },
+    stringPlaceholder: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -20701,8 +20711,8 @@ exports.default = _default;
                       expression: "innerValue"
                     }
                   ],
-                  staticClass: "wptb-size-input",
-                  attrs: { type: "text" },
+                  staticClass: "wptb-text-input",
+                  attrs: { placeholder: _vm.stringPlaceholder, type: "text" },
                   domProps: { value: _vm.innerValue },
                   on: {
                     input: function($event) {
@@ -31277,17 +31287,363 @@ var _default = {
       }
 
       return binding;
+    },
+    valueChanged: function valueChanged(eventObject) {
+      this.$emit('valueChanged', eventObject);
     }
   }
 };
 exports.default = _default;
-},{}],"components/dataTable/IconExtraDataOptions.vue":[function(require,module,exports) {
+},{}],"components/leftPanel/PanelIconSelect.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _IntersectionObserver = _interopRequireDefault(require("../../components/IntersectionObserver"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    label: {
+      type: String,
+      default: 'Icon Select'
+    },
+    icons: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    perPage: {
+      type: Number,
+      default: 20
+    },
+    selectedUserIcon: {
+      type: Object,
+      default: function _default() {
+        return {
+          url: null,
+          name: null
+        };
+      }
+    }
+  },
+  model: {
+    prop: 'selectedUserIcon',
+    event: 'iconSelected'
+  },
+  components: {
+    IntersectionObserver: _IntersectionObserver.default
+  },
+  data: function data() {
+    return {
+      selectedIcon: {
+        url: null,
+        name: null
+      },
+      openDrawer: false,
+      innerDrawerRef: null,
+      paginationIndex: 1,
+      observerHide: false,
+      debunkedFilterText: '',
+      debunkId: -1,
+      filterText: '',
+      drawerPosition: {
+        left: 0
+      }
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    document.addEventListener('keyup', function (e) {
+      if (e.code === 'Escape' && _this.openDrawer) {
+        _this.setDrawerState(false);
+      }
+    });
+    this.$nextTick(function () {
+      // @deprecated
+      // const selectedIcon = this.selectedUserIcon;
+      //
+      // this.selectedIcon.name = selectedIcon === '' ? null : selectedIcon;
+      // this.selectedIcon.url = selectedIcon === '' ? null : this.icons[selectedIcon];
+      _this.selectedIcon = _this.selectedUserIcon;
+    });
+  },
+  watch: {
+    debunkedFilterText: function debunkedFilterText(n) {
+      var _this2 = this;
+
+      clearTimeout(this.debunkId);
+      this.debunkId = setTimeout(function () {
+        _this2.filterText = n;
+      }, 500);
+    },
+    selectedIcon: {
+      handler: function handler(n) {
+        this.$emit('iconSelected', n);
+      },
+      deep: true
+    }
+  },
+  methods: {
+    setDrawerState: function setDrawerState(state) {
+      this.openDrawer = state;
+    },
+    fullIconList: function fullIconList() {
+      var _this3 = this;
+
+      return Object.keys(this.icons).filter(function (k) {
+        return k.includes(_this3.filterText);
+      }).slice(0, this.paginationIndex * this.perPage).reduce(function (result, key) {
+        // eslint-disable-next-line no-param-reassign
+        result[key] = _this3.icons[key];
+        return result;
+      }, {});
+    },
+    toggleIconDrawer: function toggleIconDrawer() {
+      this.calculateDrawerPosition();
+      this.openDrawer = !this.openDrawer;
+      this.innerDrawerRef = this.$refs.drawerRefElement;
+    },
+    setIcon: function setIcon(iconName, iconUrl) {
+      this.selectedIcon.url = iconUrl;
+      this.selectedIcon.name = iconName;
+      this.toggleIconDrawer();
+    },
+    observerVisible: function observerVisible() {
+      this.paginationIndex += 1;
+    },
+    calculateDrawerPosition: function calculateDrawerPosition() {
+      var xPadding = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+      var buttonElement = this.$refs.iconSelectButton;
+      var posObject = buttonElement.getBoundingClientRect();
+      var drawerLeft = posObject.x + posObject.width + xPadding;
+      var drawerTop = posObject.y;
+      this.drawerPosition.top = this.toPx(drawerTop);
+      this.drawerPosition.left = this.toPx(drawerLeft);
+    },
+    toPx: function toPx(val) {
+      return "".concat(val, "px");
+    }
+  }
+};
+exports.default = _default;
+        var $963bd9 = exports.default || module.exports;
+      
+      if (typeof $963bd9 === 'function') {
+        $963bd9 = $963bd9.options;
+      }
+    
+        /* template */
+        Object.assign($963bd9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
+    [
+      _c("div", { staticClass: "wptb-settings-space-between" }, [
+        _c("p", { staticClass: "wptb-settings-item-title" }, [
+          _vm._v(_vm._s(_vm.label))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-icon-select-wrapper" }, [
+          _c("div", { staticClass: "wptb-icon-select-display" }, [
+            _c(
+              "div",
+              {
+                ref: "iconSelectButton",
+                staticClass: "wptb-icon-select-preview",
+                on: { click: _vm.toggleIconDrawer }
+              },
+              [_c("img", { attrs: { src: _vm.selectedIcon.url } })]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.openDrawer,
+                    expression: "openDrawer"
+                  }
+                ],
+                staticClass:
+                  "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
+                style: _vm.drawerPosition
+              },
+              [
+                _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.trim",
+                        value: _vm.debunkedFilterText,
+                        expression: "debunkedFilterText",
+                        modifiers: { trim: true }
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "Search for icons..." },
+                    domProps: { value: _vm.debunkedFilterText },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.debunkedFilterText = $event.target.value.trim()
+                      },
+                      blur: function($event) {
+                        return _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    ref: "drawerRefElement",
+                    staticClass: "wptb-icon-previews"
+                  },
+                  [
+                    _c("div", {
+                      staticClass:
+                        "wptb-icon-select-drawer-preview wptb-icon-reset",
+                      on: {
+                        click: function($event) {
+                          return _vm.setIcon("", "")
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._l(_vm.fullIconList(), function(iconUrl, name) {
+                      return _c(
+                        "div",
+                        {
+                          key: name,
+                          staticClass: "wptb-icon-select-drawer-preview",
+                          class: {
+                            "wptb-icon-preview-active":
+                              _vm.selectedIcon.name === name
+                          }
+                        },
+                        [
+                          _c("img", {
+                            attrs: {
+                              src: iconUrl,
+                              title: name,
+                              draggable: false
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.setIcon(name, iconUrl)
+                              }
+                            }
+                          })
+                        ]
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "intersection-observer",
+                      {
+                        attrs: {
+                          "relative-element": _vm.innerDrawerRef,
+                          "force-hide": _vm.observerHide
+                        },
+                        on: { visible: _vm.observerVisible }
+                      },
+                      [
+                        _c("div", {
+                          staticClass: "wptb-icon-select-drawer-end"
+                        })
+                      ]
+                    )
+                  ],
+                  2
+                )
+              ]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"components/dataTable/IconExtraDataOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _functions = require("../../functions");
 
 var _ExtraDataOptionsBase = _interopRequireDefault(require("./ExtraDataOptionsBase"));
 
@@ -31296,6 +31652,10 @@ var _PanelControlGroup = _interopRequireDefault(require("../leftPanel/PanelContr
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
 
 var _PanelInputControl = _interopRequireDefault(require("../PanelInputControl"));
+
+var _PanelIconSelect = _interopRequireDefault(require("../leftPanel/PanelIconSelect"));
+
+var _ColorPicker = _interopRequireDefault(require("../ColorPicker"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31307,17 +31667,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    PanelIconSelect: _PanelIconSelect.default,
     PanelInputControl: _PanelInputControl.default,
-    PanelControlGroup: _PanelControlGroup.default
+    PanelControlGroup: _PanelControlGroup.default,
+    ColorPicker: _ColorPicker.default
   },
   mixins: [_ExtraDataOptionsBase.default, _withNativeTranslationStore.default],
   data: function data() {
     return {
-      iconCount: 1,
       innerIconOptions: [{
         bindValue: '',
-        icon: '',
-        color: '#000'
+        // TODO [erdembircan] redesign icon object
+        icon: {
+          name: null,
+          url: null
+        },
+        color: '#000000'
       }]
     };
   },
@@ -31325,29 +31690,33 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      _this.mergeIconBindings(_this.innerIconOptions);
+      _this.mergeIconBindings(_this.columnBindings);
     });
   },
   watch: {
-    columnBindings: {
-      handler: function handler(n) {
-        this.mergeIconBindings(n);
-      },
-      deep: true
-    },
     innerIconOptions: {
       handler: function handler(n) {
-        this.$emit('valueChanged', _objectSpread({}, this.columnBindings, {}, {
-          iconBindings: n
-        }));
-      }
+        var newArray = n.map(function (binding) {
+          return _objectSpread({}, binding, {
+            icon: _objectSpread({}, binding.icon)
+          });
+        });
+        this.$emit('valueChanged', {
+          type: 'iconBindings',
+          value: newArray
+        });
+      },
+      deep: true
     }
   },
-  computed: {
+  computed: _objectSpread({
     groupVisibility: function groupVisibility() {
       return this.getColumnBinding('valueColumn') !== 'none';
+    },
+    generateId: function generateId() {
+      return (0, _functions.generateUniqueId)();
     }
-  },
+  }, (0, _vuex.mapState)(['iconList'])),
   methods: {
     mergeIconBindings: function mergeIconBindings(source) {
       if (source.iconBindings && Array.isArray(source.iconBindings)) {
@@ -31386,15 +31755,16 @@ exports.default = _default;
         return _c(
           "panel-control-group",
           {
-            key: option.bindValue,
-            attrs: { title: _vm.translationM("icon") + " #" + _vm.iconCount }
+            key: _vm.generateId,
+            attrs: { title: _vm.translationM("icon") + " #" + (index + 1) }
           },
           [
             _c("panel-input-control", {
               staticClass: "wptb-data-panel-string-input",
               attrs: {
                 label: _vm._f("cap")(_vm.translationM("matchValue")),
-                type: "string"
+                "input-type": "text",
+                "string-placeholder": _vm.translationM("value")
               },
               model: {
                 value: _vm.innerIconOptions[index].bindValue,
@@ -31402,6 +31772,31 @@ exports.default = _default;
                   _vm.$set(_vm.innerIconOptions[index], "bindValue", $$v)
                 },
                 expression: "innerIconOptions[index].bindValue"
+              }
+            }),
+            _vm._v(" "),
+            _c("color-picker", {
+              attrs: { label: _vm.translationM("color") },
+              model: {
+                value: _vm.innerIconOptions[index].color,
+                callback: function($$v) {
+                  _vm.$set(_vm.innerIconOptions[index], "color", $$v)
+                },
+                expression: "innerIconOptions[index].color"
+              }
+            }),
+            _vm._v(" "),
+            _c("panel-icon-select", {
+              attrs: {
+                label: _vm._f("cap")(_vm.translationM("icon")),
+                icons: _vm.iconList
+              },
+              model: {
+                value: _vm.innerIconOptions[index].icon,
+                callback: function($$v) {
+                  _vm.$set(_vm.innerIconOptions[index], "icon", $$v)
+                },
+                expression: "innerIconOptions[index].icon"
               }
             })
           ],
@@ -31424,7 +31819,7 @@ render._withStripped = true
           };
         })());
       
-},{"./ExtraDataOptionsBase":"components/dataTable/ExtraDataOptionsBase.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue"}],"components/dataTable/DataTableElementExtraOptions.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../functions":"functions/index.js","./ExtraDataOptionsBase":"components/dataTable/ExtraDataOptionsBase.js","../leftPanel/PanelControlGroup":"components/leftPanel/PanelControlGroup.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../PanelInputControl":"components/PanelInputControl.vue","../leftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","../ColorPicker":"components/ColorPicker.vue"}],"components/dataTable/DataTableElementExtraOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31436,6 +31831,10 @@ var _IconExtraDataOptions = _interopRequireDefault(require("./IconExtraDataOptio
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -31498,7 +31897,12 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(_vm.elementExtraOptions, {
     tag: "component",
-    attrs: { "column-bindings": _vm.columnBindings }
+    attrs: { "column-bindings": _vm.columnBindings },
+    on: {
+      valueChanged: function($event) {
+        return _vm.$emit("valueChanged", $event)
+      }
+    }
   })
 }
 var staticRenderFns = []
@@ -31598,8 +32002,8 @@ var _default = {
 
 
         _this.currentActiveTab = currentRowBinding === 'auto' ? 'row' : 'element'; // TODO [erdembircan] remove for production
+        // this.currentActiveTab = 'row';
 
-        _this.currentActiveTab = 'row';
         _this.currentElementType = (0, _functions.parseElementType)(_this.currentElement);
       }
     });
@@ -31817,6 +32221,11 @@ exports.default = _default;
                       attrs: {
                         "element-type": _vm.currentElementType,
                         "column-bindings": _vm.getColumnBinding()
+                      },
+                      on: {
+                        valueChanged: function($event) {
+                          _vm.setColumnBinding($event.type)($event.value)
+                        }
                       }
                     }),
                     _vm._v(" "),
@@ -35557,6 +35966,7 @@ var _default = {
 
     var extraStoreOptions = {
       state: {
+        iconList: data.iconList,
         icons: data.icons,
         strings: {
           dataSourceHeader: (0, _i18n.__)('Select your data source', 'wp-table-builder'),
@@ -35586,6 +35996,7 @@ var _default = {
           columnNames: (0, _i18n.__)('column names', 'wp-table-builder'),
           columnName: (0, _i18n.__)('column name', 'wp-table-builder'),
           column: (0, _i18n.__)('Column', 'wp-table-builder'),
+          color: (0, _i18n.__)('Color', 'wp-table-builder'),
           values: (0, _i18n.__)('values', 'wp-table-builder'),
           value: (0, _i18n.__)('value', 'wp-table-builder'),
           selectRowForNames: (0, _i18n.__)('select a row for column names', 'wp-table-builder'),
