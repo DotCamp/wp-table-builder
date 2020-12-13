@@ -5209,10 +5209,11 @@ wptb_shortcode_container_element {
     padding: 5px;
     margin: 0;
 }
+
 .wptb-plugin-header-toolbar .dashicons {
     color: var(--wptb-plugin-logo-color) !important;
     font-weight: bold !important;
- }
+}
 
 /*endregion*/
 
@@ -5810,6 +5811,7 @@ wptb_shortcode_container_element {
         transform: perspective(100px) rotateX(0deg);
     }
 }
+
 /*region notification manager*/
 .wptb-notification-manager {
     position: fixed;
@@ -5949,5 +5951,21 @@ wptb_shortcode_container_element {
     animation: wptb-more-pop 0.2s ease-out;
 }
 
+/*endregion*/
+
+/*region easy element change*/
+.wptb-easy-element-change-base {
+    position: absolute;
+    top: 0;
+    z-index: 1000000;
+    /*border: 1px solid var(--wptb-plugin-logo-color);*/
+    /*background-color: var(--wptb-plugin-theme-color-light);*/
+}
+
+.wptb-all-table-element-list {
+    font-size: 90% !important;
+    border: 1px solid var(--wptb-plugin-logo-color) !important;
+    border-radius: 0 0 3px 3px !important;
+}
 
 /*endregion*/

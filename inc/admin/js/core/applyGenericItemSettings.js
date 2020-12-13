@@ -88,11 +88,17 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
         wptbActionsField.setParameters( node );
         
         node.classList.remove( 'wptb-ondragenter' );
+
+        // change active node for easy element change module
+        WPTB_EasyElementChange.changeNode(node);
     };
     
     node.onmouseleave = function ( event ) {
         let wptbActionsField = new WPTB_ActionsField();
         
         wptbActionsField.leaveFromField( event, node );
+
+        // remove active node from easy element change component
+        WPTB_EasyElementChange.changeNode(null, event.relatedTarget);
     };
 };

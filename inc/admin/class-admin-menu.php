@@ -313,17 +313,20 @@ class Admin_Menu {
 				];
 
 				// generate data filter
-				$generate_data = apply_filters('wp-table-builder/filter/generate_data', $generate_data);
+				$generate_data = apply_filters( 'wp-table-builder/filter/generate_data', $generate_data );
 
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
 
+			// TODO [erdembircan] comment for production
+			$dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
+			// TODO [erdembircan] change version to plugin version for production
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), NS\PLUGIN_VERSION, true );
+			), $dev_version, true );
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
