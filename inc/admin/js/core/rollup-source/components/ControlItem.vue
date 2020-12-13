@@ -1,6 +1,6 @@
 <!--Number of html input elements to be used through out the menus-->
 <template>
-	<div>
+	<div v-if="masterVisibility()">
 		<div v-if="isType('multiCheckbox')">
 			<div class="wptb-setting-control-row" v-for="(v, k) in fieldData.options" :key="v">
 				<input :id="fieldData.id" type="checkbox" :value="k" v-model="modelBind[fieldData.id]" />
@@ -28,13 +28,22 @@
 </template>
 <script>
 export default {
-	props: ['fieldData', 'modelBind'],
+	props: {
+		fieldData: Object,
+		modelBind: Object,
+		masterVisibility: {
+			type: Function,
+			default: () => {
+				return true;
+			},
+		},
+	},
 	methods: {
 		/**
 		 * Checks the input elements type to provided object data
 		 *
 		 * @param {string} type type of input to be checked agains
-		 * @returns {boolean} same type
+		 * @return {boolean} same type
 		 */
 		isType(type) {
 			return this.fieldData.type === type;

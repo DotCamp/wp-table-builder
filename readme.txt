@@ -104,6 +104,7 @@ That's it. You're done!
 * IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
 * IMPROVE: When selecting a table or there is already a selected table on gutenberg block, full preview will be shown automatically.
 * IMPROVE: Top row as header option is turned on by default for new tables.
+* IMPROVE: Only file type related options will be visible for import/export operations.
 * PRO: NEW: Option to make top row (header) sticky.
 * PRO: NEW: Option to set individual column/row color.
 * PRO: FIX: Border radius issue.

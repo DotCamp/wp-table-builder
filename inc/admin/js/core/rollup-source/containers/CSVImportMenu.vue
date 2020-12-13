@@ -3,7 +3,7 @@
 		<drag-drop
 			v-model="currentFile"
 			:texts="{ hint: strings.fileDropHint, browse: strings.browse, clear: strings.clear }"
-			:allowed-formats="['csv', 'xml', 'zip']"
+			:allowed-formats="allowedFormats"
 		></drag-drop>
 		<div>
 			<control-item
@@ -11,6 +11,7 @@
 				:key="field.id"
 				:field-data="field"
 				:model-bind="field.modelBind"
+				:master-visibility="field.masterVisibility"
 			></control-item>
 		</div>
 		<portal to="footerButtons">
@@ -38,7 +39,9 @@ export default {
 			},
 			fieldsData: [],
 			currentFile: null,
+			currentExtension: null,
 			fetching: false,
+			allowedFormats: ['csv', 'xml', 'zip'],
 		};
 	},
 	mounted() {
@@ -54,30 +57,23 @@ export default {
 			this.setBusy(false);
 		});
 
-		this.fieldsData.push(
-			{
-				type: 'dropdown',
-				id: 'csvDelimiter',
-				modelBind: this.settings,
-				label: this.strings.csvDelimiter,
-				options: [
-					{ value: ',', label: ', (comma)' },
-					{ value: ';', label: '; (semicolon)' },
-					{
-						value: 'tab',
-						label: '\\t (tabular)',
-					},
-				],
-			}
-			// @deprecated
-			// {
-			// 	type: 'checkbox',
-			// 	id: 'responsiveTables',
-			// 	modelBind: this.settings,
-			// 	label: this.strings.tableResponsive,
-			// },
-			// { type: 'checkbox', id: 'topRowAsHeader', modelBind: this.settings, label: this.strings.topRowHeader }
-		);
+		this.fieldsData.push({
+			type: 'dropdown',
+			id: 'csvDelimiter',
+			modelBind: this.settings,
+			label: this.strings.csvDelimiter,
+			options: [
+				{ value: ',', label: ', (comma)' },
+				{ value: ';', label: '; (semicolon)' },
+				{
+					value: 'tab',
+					label: '\\t (tabular)',
+				},
+			],
+			masterVisibility: () => {
+				return this.isCurrentFileType('csv');
+			},
+		});
 	},
 	computed: {
 		isImportDisabled() {
@@ -88,6 +84,16 @@ export default {
 		},
 	},
 	methods: {
+		isCurrentFileType(typeName) {
+			let status = false;
+
+			if (this.currentFile) {
+				const extension = this.currentFile.name.split('.').pop();
+				status = extension === typeName;
+			}
+
+			return status;
+		},
 		importFromFile() {
 			if (this.currentFile !== null) {
 				const options = {
