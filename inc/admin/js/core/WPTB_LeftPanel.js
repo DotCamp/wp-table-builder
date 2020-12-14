@@ -11,10 +11,21 @@ var WPTB_LeftPanel = function () {
     };
     
     if( table ) {
-        let wptbTablesEditModeCloseButton = document.getElementsByClassName( 'wptb-table-edit-mode-close' );
-        for ( let i = 0; i < wptbTablesEditModeCloseButton.length; i++ ) {
-            wptbTablesEditModeCloseButton[i].onclick = WPTB_Helper.toggleTableEditMode;
-        }
+
+        document.querySelector('#wptb-left-scroll-panel-curtain .wptb-table-edit-mode-close').addEventListener('click', () => {
+            WPTB_Helper.toggleTableEditMode(true);
+        })
+
+        document.addEventListener('wptbSectionChanged', ({detail}) => {
+            if(detail === 'manage_cells'){
+                const wptbTablesEditModeCloseButtons = Array.from(document.querySelectorAll( '.wptb-management_table_container .wptb-table-edit-mode-close' ));
+                wptbTablesEditModeCloseButtons.map(closeButton => {
+                    closeButton.addEventListener('click', () => {
+                        WPTB_Helper.toggleTableEditMode(true);
+                    })
+                })
+            }
+        })
     };
 
     // this code hides the "element parameters" area
@@ -23,8 +34,11 @@ var WPTB_LeftPanel = function () {
     wptbBuilderPanel.onclick = function( e ) {
         if( ! e.target.classList.contains( 'wptb-ph-element' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-ph-element' ) && 
                ! e.target.classList.contains( 'wptb-fixed-toolbar' ) && ! WPTB_Helper.findAncestor( e.target, 'wptb-fixed-toolbar' ) ) {
-            WPTB_Helper.clickOnFreeSpace();
-        } 
+            if(WPTB_Helper.currentSection !== 'manage_cells'){
+
+                WPTB_Helper.clickOnFreeSpace();
+            }
+        }
     };
    
     let wptbHeader = document.getElementsByClassName( 'wptb-header' );

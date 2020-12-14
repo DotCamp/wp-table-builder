@@ -5201,14 +5201,18 @@ wptb_shortcode_container_element {
     z-index: 1;
     background-color: var(--wptb-plugin-gray-100);
     transition: top 0.2s ease-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-.wptb-plugin-header-toolbar div {
+.wptb-plugin-header-toolbar div{
     font-size: 110%;
     width: fit-content;
     padding: 5px;
-    margin: 0;
+    margin: 0 5px;
 }
+
 .wptb-plugin-header-toolbar .dashicons {
     color: var(--wptb-plugin-logo-color) !important;
     font-weight: bold !important;
