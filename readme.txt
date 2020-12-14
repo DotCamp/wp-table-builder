@@ -100,6 +100,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting xml import operation to be not completed on import/export operations.
 * FIX: Fixed an issue where for some themes, table sort icons are not visible.
 * FIX: Fixed an issue where gutenberg preview is not reflecting individual cell widths correctly.
+* FIX: Fixed a manage cells button issue where after undo/redo operations, it becomes unresponsive.
 * IMPROVE: Better visibility for manage cells button.
 * IMPROVE: Responsive builder will start up at tablet breakpoint instead of desktop.
 * IMPROVE: When selecting a table or there is already a selected table on gutenberg block, full preview will be shown automatically.

@@ -12,15 +12,19 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 	this.topMargin = 2;
 
 	/**
-	 * Assign events to toolbox buttons
+	 * Assign events to toolbox buttons.
 	 */
 	const assignButtons = () => {
 		const manageCellsButton = this.element.querySelector('[data-button-type="table_settings_menu"]');
 
 		if (manageCellsButton) {
-			manageCellsButton.addEventListener('click', () => {
-				WPTB_Helper.activateSection('manage_cells');
-			});
+			manageCellsButton.addEventListener(
+				'click',
+				() => {
+					WPTB_Helper.activateSection('manage_cells');
+				},
+				true
+			);
 		}
 	};
 

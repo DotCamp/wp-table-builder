@@ -3,37 +3,36 @@ var WPTB_Helper = {
 		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 		return result ? `rgb(${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)})` : null;
 	},
-    rgbToHex: function ( rgb ) {
-        if( rgb ) {
-            if( WPTB_Helper.isHex( rgb ) ) return rgb;
+	rgbToHex(rgb) {
+		if (rgb) {
+			if (WPTB_Helper.isHex(rgb)) return rgb;
 
-            let rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?((?:[0-9]*[.])?[0-9]+)[\s+]?\)/i);
-            if ( rgbm && rgbm.length === 5) {
-                return "#" +
-                    ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) +
-                    ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) +
-                    ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2) +
-                    ('0' + Math.round(parseFloat(rgbm[4], 10) * 255).toString(16).toUpperCase()).slice(-2);
-            } else {
-                rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-                if (rgbm && rgbm.length === 4) {
-                    return "#" +
-                        ("0" + parseInt(rgbm[1], 10).toString(16).toUpperCase()).slice(-2) +
-                        ("0" + parseInt(rgbm[2], 10).toString(16).toUpperCase()).slice(-2) +
-                        ("0" + parseInt(rgbm[3], 10).toString(16).toUpperCase()).slice(-2);
-                } else {
-                    return '';
-                }
-            }
-        } else {
-            return '';
-        }
-
-    },
-    isHex: function( hex ) {
-        let regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}(?:[0-9]?){1,2}$');
-        return regex.test( hex );
-    },
+			let rgbm = rgb.match(
+				/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?((?:[0-9]*[.])?[0-9]+)[\s+]?\)/i
+			);
+			if (rgbm && rgbm.length === 5) {
+				return `#${`0${parseInt(rgbm[1], 10).toString(16).toUpperCase()}`.slice(-2)}${`0${parseInt(rgbm[2], 10)
+					.toString(16)
+					.toUpperCase()}`.slice(-2)}${`0${parseInt(rgbm[3], 10).toString(16).toUpperCase()}`.slice(
+					-2
+				)}${`0${Math.round(parseFloat(rgbm[4], 10) * 255)
+					.toString(16)
+					.toUpperCase()}`.slice(-2)}`;
+			}
+			rgbm = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+			if (rgbm && rgbm.length === 4) {
+				return `#${`0${parseInt(rgbm[1], 10).toString(16).toUpperCase()}`.slice(-2)}${`0${parseInt(rgbm[2], 10)
+					.toString(16)
+					.toUpperCase()}`.slice(-2)}${`0${parseInt(rgbm[3], 10).toString(16).toUpperCase()}`.slice(-2)}`;
+			}
+			return '';
+		}
+		return '';
+	},
+	isHex(hex) {
+		const regex = new RegExp('^#(?:[A-Fa-f0-9]{3}){1,2}(?:[0-9]?){1,2}$');
+		return regex.test(hex);
+	},
 	getElementIcon(icon_directory) {
 		const hostName = `${location.protocol}//${location.hostname}`;
 		const img = document.createElement('img');
@@ -953,19 +952,19 @@ var WPTB_Helper = {
 						}
 					}
 				}
-                function toggleSwitchExecute() {
-                    let elems = document.getElementsByClassName(targetControlElementClass);
-                    if(elems.length && WPTB_Helper.targetControlValueGet(elems) !== dataToggleSwitch[0]) {
-                        if(dataToggleSwitch[0] === 'unchecked') {
-                            elems[0].checked = false;
-                        } else if(dataToggleSwitch[0] === 'checked') {
-                            elems[0].checked = true;
-                        }
-                        if(dataToggleSwitch[2] === undefined || dataToggleSwitch[2] === true) {
-                            WPTB_Helper.wptbDocumentEventGenerate( 'change', elems[0], {eventType: 'toggleSwitch'} );
-                        }
-                    }
-                }
+				function toggleSwitchExecute() {
+					const elems = document.getElementsByClassName(targetControlElementClass);
+					if (elems.length && WPTB_Helper.targetControlValueGet(elems) !== dataToggleSwitch[0]) {
+						if (dataToggleSwitch[0] === 'unchecked') {
+							elems[0].checked = false;
+						} else if (dataToggleSwitch[0] === 'checked') {
+							elems[0].checked = true;
+						}
+						if (dataToggleSwitch[2] === undefined || dataToggleSwitch[2] === true) {
+							WPTB_Helper.wptbDocumentEventGenerate('change', elems[0], { eventType: 'toggleSwitch' });
+						}
+					}
+				}
 			}
 		}
 	},
@@ -1970,7 +1969,6 @@ var WPTB_Helper = {
 
 		http.onreadystatechange = function (action) {
 			if (this.readyState == 4) {
-
 				// hide save indicator
 				WPTB_Helper.tableSaveIndicator(false);
 
@@ -1987,7 +1985,7 @@ var WPTB_Helper = {
 						document.wptbId = data[1];
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
 
-						WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully saved.`})
+						WPTB_NotificationManager.sendNotification({ message: `Table ${t} was successfully saved.` });
 						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
 						document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
 						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
@@ -2014,7 +2012,7 @@ var WPTB_Helper = {
 						document.wptbId = data[1];
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
 
-						WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully saved.`})
+						WPTB_NotificationManager.sendNotification({ message: `Table ${t} was successfully saved.` });
 						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
 						document.getElementById('wptb-embed-shortcode').value = `[wptb id=${data[1]}]`;
 						const wptbPreviewTable = document.querySelector('.wptb-preview-table');
@@ -2037,7 +2035,7 @@ var WPTB_Helper = {
 					} else if (data[0] == 'edited') {
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully updated.</div>`;
 
-						WPTB_NotificationManager.sendNotification({message: `Table ${t} was successfully updated.`})
+						WPTB_NotificationManager.sendNotification({ message: `Table ${t} was successfully updated.` });
 						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
 
 						let wptbSaveBtn = document.getElementsByClassName('wptb-save-btn');
@@ -2144,7 +2142,7 @@ var WPTB_Helper = {
 		if (bar.length > 0) {
 			let toggleEditMode = '';
 			for (let i = 0; i < bar.length; i++) {
-				if (bar[i].classList.contains('visible')) {
+				if (close) {
 					document.select.deactivateMultipleSelectMode();
 					bar[i].classList.remove('visible');
 					cellModeBackground.classList.remove('visible');
@@ -2158,7 +2156,8 @@ var WPTB_Helper = {
 						}
 					}
 					toggleEditMode = 'closed';
-					WPTB_Helper.activateSection('elements');
+					// @deprecated
+					// WPTB_Helper.activateSection('elements');
 				} else if (!close) {
 					document.select.activateMultipleSelectMode();
 					bar[i].classList.add('visible');
@@ -2329,37 +2328,43 @@ var WPTB_Helper = {
 	 *
 	 * @param table
 	 */
-    tableRowsColorsReinstall: function ( table ) {
-        if(table.rows.length) {
-            let infArr = table.className.match( /wptb-element-main(.+)-(\d+)/i );
-            if( infArr && Array.isArray( infArr ) ) {
-                let tableIndex = '';
-                if( infArr[infArr.length -1] == '0' ) {
-                    tableIndex = 'startedid-0';
-                } else {
-                    tableIndex = infArr[infArr.length -1];
-                }
+	tableRowsColorsReinstall(table) {
+		if (table.rows.length) {
+			const infArr = table.className.match(/wptb-element-main(.+)-(\d+)/i);
+			if (infArr && Array.isArray(infArr)) {
+				let tableIndex = '';
+				if (infArr[infArr.length - 1] == '0') {
+					tableIndex = 'startedid-0';
+				} else {
+					tableIndex = infArr[infArr.length - 1];
+				}
 
-                let tableHeaderBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableHeaderBackground' );
-                if( tableHeaderBackground ) {
-                    let details = {value: tableHeaderBackground.value};
-                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableHeaderBackground, details );
-                }
+				const tableHeaderBackground = document.querySelector(
+					`.wptb-el-main-table_setting-${tableIndex}-tableHeaderBackground`
+				);
+				if (tableHeaderBackground) {
+					const details = { value: tableHeaderBackground.value };
+					WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableHeaderBackground, details);
+				}
 
-                let tableEvenRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableEvenRowBackground' );
-                if( tableEvenRowBackground ) {
-                    let details = {value: tableEvenRowBackground.value};
-                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableEvenRowBackground, details );
-                }
+				const tableEvenRowBackground = document.querySelector(
+					`.wptb-el-main-table_setting-${tableIndex}-tableEvenRowBackground`
+				);
+				if (tableEvenRowBackground) {
+					const details = { value: tableEvenRowBackground.value };
+					WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableEvenRowBackground, details);
+				}
 
-                let tableOddRowBackground = document.querySelector('.wptb-el-main-table_setting-' + tableIndex + '-tableOddRowBackground' );
-                if( tableOddRowBackground ) {
-                    let details = {value: tableOddRowBackground.value};
-                    WPTB_Helper.wptbDocumentEventGenerate( 'controlColor:change', tableOddRowBackground, details );
-                }
-            }
-        }
-    },
+				const tableOddRowBackground = document.querySelector(
+					`.wptb-el-main-table_setting-${tableIndex}-tableOddRowBackground`
+				);
+				if (tableOddRowBackground) {
+					const details = { value: tableOddRowBackground.value };
+					WPTB_Helper.wptbDocumentEventGenerate('controlColor:change', tableOddRowBackground, details);
+				}
+			}
+		}
+	},
 	/**
 	 * Get parent html element of given type
 	 *
