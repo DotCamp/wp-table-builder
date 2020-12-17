@@ -21,8 +21,9 @@ const gulpConfig = {
 	},
 };
 
-gulp.task('adminJs', function () {
-	gulp.src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
+function adminJs() {
+	return gulp
+		.src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
@@ -34,14 +35,15 @@ gulp.task('adminJs', function () {
 		.pipe(uglify())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('.'));
-});
+}
 
-gulp.task('minify', function () {
+function minify() {
 	gulp.src('./inc/admin/js/admin.js').pipe(uglify()).pipe(gulp.dest('./inc/admin/js/'));
-});
+}
 
-gulp.task('frontendJs', function () {
-	gulp.src(gulpConfig.frontEndJs.src)
+function frontendJs() {
+	return gulp
+		.src(gulpConfig.frontEndJs.src)
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
@@ -54,25 +56,40 @@ gulp.task('frontendJs', function () {
 		.pipe(uglify())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('.'));
-});
+}
 
-gulp.task('cssAdmin', () => {
-	gulp.src(['./inc/admin/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/admin/css'));
-});
+function cssAdmin() {
+	return gulp.src(['./inc/admin/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/admin/css'));
+}
 
-gulp.task('cssFrontend', () => {
-	gulp.src(['./inc/frontend/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/frontend/css'));
-});
+function cssFrontend() {
+	return gulp
+		.src(['./inc/frontend/css/src/*.css'])
+		.pipe(autoprefixer())
+		.pipe(csso())
+		.pipe(gulp.dest('./inc/frontend/css'));
+}
 
-gulp.task('watch', () => {
-	gulp.watch(
-		['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js', './inc/admin/js/WPTB_ResponsiveFrontend.js'],
-		['adminJs']
-	);
-	gulp.watch(gulpConfig.frontEndJs.src, ['frontendJs']);
+exports.watch = gulp.parallel(
+	function watchAdminJs() {
+		return gulp.watch(
+			[
+				'./inc/admin/js/core/*.js',
+				'./inc/admin/js/core-premium/*.js',
+				'./inc/admin/js/WPTB_ResponsiveFrontend.js',
+			],
+			adminJs
+		);
+	},
+	function watchFrontendJs() {
+		return gulp.watch(gulpConfig.frontEndJs.src, frontendJs);
+	},
+	function watchAdminStyles() {
+		return gulp.watch(['./inc/admin/css/src/*.css'], cssAdmin);
+	},
+	function watchFrontendStyles() {
+		return gulp.watch(['./inc/frontend/css/src/*.css'], cssFrontend);
+	}
+);
 
-	gulp.watch(['./inc/admin/css/src/*.css'], ['cssAdmin']);
-	gulp.watch(['./inc/frontend/css/src/*.css'], ['cssFrontend']);
-});
-
-gulp.task('default', ['adminJs', 'frontendJs', 'cssAdmin', 'cssFrontend']);
+exports.default = gulp.parallel(adminJs, frontendJs, cssAdmin, cssFrontend);

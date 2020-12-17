@@ -50,7 +50,9 @@ var WPTB_Initializer = function () {
     // }
 
     // register and setup section buttons
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells']);
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells', 'background_menu']);
+
+    // setup section related panel buttons
     WPTB_Helper.setupSectionButtons();
 
     // activate elements section for startup
@@ -76,6 +78,7 @@ var WPTB_Initializer = function () {
 
     // block tinyMCE from activation at manage cells menu
     WPTB_Helper.blockTinyMCEManageCells();
+
     // initialize header toolbox
     new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
 

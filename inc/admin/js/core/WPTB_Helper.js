@@ -1634,9 +1634,11 @@ var WPTB_Helper = {
 		this.sections = {};
 		this.currentSection = '';
 		if (!Array.isArray(sections)) {
+			// eslint-disable-next-line no-param-reassign
 			sections = [sections];
 		}
 
+		// eslint-disable-next-line array-callback-return
 		sections.map((s) => {
 			const sectionElement = document.querySelector(`[data-wptb-section=${s}]`);
 			if (sectionElement) {
@@ -1653,6 +1655,7 @@ var WPTB_Helper = {
 	activateSection(sectionDataId, displayType = 'block') {
 		this.currentSection = sectionDataId;
 		this.triggerSectionEvent(sectionDataId);
+		// eslint-disable-next-line array-callback-return
 		Object.keys(this.sections).map((k) => {
 			if (Object.prototype.hasOwnProperty.call(this.sections, k)) {
 				const visibility = sectionDataId === k ? displayType : 'none';

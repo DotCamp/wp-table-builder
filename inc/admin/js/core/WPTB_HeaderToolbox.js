@@ -15,17 +15,17 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 	 * Assign events to toolbox buttons.
 	 */
 	const assignButtons = () => {
-		const manageCellsButton = this.element.querySelector('[data-button-type="table_settings_menu"]');
+		// use data-button-type dataset property to call related section
+		const headerButtons = Array.from(this.element.querySelectorAll('[data-button-type]'));
 
-		if (manageCellsButton) {
-			manageCellsButton.addEventListener(
-				'click',
-				() => {
-					WPTB_Helper.activateSection('manage_cells');
-				},
-				true
-			);
-		}
+		// eslint-disable-next-line array-callback-return
+		headerButtons.map((button) => {
+			button.addEventListener('click', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				WPTB_Helper.activateSection(e.target.dataset.buttonType);
+			});
+		});
 	};
 
 	/**
@@ -54,20 +54,17 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 			const { width } = this.element.getBoundingClientRect();
 			this.element.style.left = `calc( 50% - ${width / 2}px)`;
 
+			const hideList = ['table_responsive_menu', 'manage_cells'];
+
 			// hide toolbox at manage cells and responsive menus
 			document.addEventListener('wptbSectionChanged', ({ detail }) => {
-				toggleToolboxVisibility(
-					detail !== 'manage_cells' && detail !== 'table_responsive_menu' && detail !== 'cell_settings'
-				);
+				toggleToolboxVisibility(!hideList.includes(detail));
 			});
 
 			// toggle visibility on startup
+			// eslint-disable-next-line camelcase
 			const { currentSection } = WPTB_Helper;
-			toggleToolboxVisibility(
-				currentSection !== 'manage_cells' &&
-					currentSection !== 'table_responsive_menu' &&
-					currentSection !== 'cell_settings'
-			);
+			toggleToolboxVisibility(!hideList.includes(currentSection));
 		});
 	};
 
