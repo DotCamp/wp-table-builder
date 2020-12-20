@@ -30,7 +30,12 @@
 				:style="keepToolInsideWindow"
 			>
 				<transition name="wptb-fade">
-					<sketch class="wptb-color-picker-input" :style="toolVisibility" v-model="innerColor"></sketch>
+					<sketch
+						class="wptb-color-picker-input"
+						:style="toolVisibility"
+						:value="color"
+						@input="handleColorChange"
+					></sketch>
 				</transition>
 			</div>
 		</div>
@@ -62,30 +67,17 @@ export default {
 	components: { Sketch },
 	data() {
 		return {
-			innerColor: {
-				hex8: '#ffffffff',
-			},
 			visibility: false,
 			toolPosition: {},
 		};
 	},
 	mounted() {
 		this.$nextTick(() => {
-			this.innerColor.hex8 = this.color;
-
 			// event listeners to hide opened color picker on certain DOM events
 			document.querySelector('.wptb-container').addEventListener('click', this.handleHide);
 			document.addEventListener('wheel', this.handleHide, { capture: false, passive: true });
 			document.addEventListener('keyup', this.handleHide);
 		});
-	},
-	watch: {
-		innerColor: {
-			handler(n) {
-				this.$emit('colorChanged', n.hex8);
-			},
-			deep: true,
-		},
 	},
 	computed: {
 		toolVisibility() {
@@ -95,7 +87,7 @@ export default {
 		},
 		colorPickerStyle() {
 			return {
-				backgroundColor: this.innerColor.hex8,
+				backgroundColor: this.color,
 			};
 		},
 		keepToolInsideWindow() {
@@ -131,11 +123,14 @@ export default {
 		handleHide(event) {
 			const allowedDefaultEvents = ['wheel', 'click'];
 			// handle keyup event if it is the current type
-			if ((event && event.type && event.type === 'keyup', event.key === 'Escape')) {
+			if (event && event.type && event.type === 'keyup' && event.key === 'Escape') {
 				this.setVisibility(false);
 			} else if (allowedDefaultEvents.includes(event.type)) {
 				this.setVisibility(false);
 			}
+		},
+		handleColorChange(colorObj) {
+			this.$emit('colorChanged', colorObj.hex8);
 		},
 	},
 	beforeDestroy() {
