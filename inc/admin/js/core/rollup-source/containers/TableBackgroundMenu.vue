@@ -2,7 +2,7 @@
 	<transition name="wptb-fade">
 		<div v-if="visibility" class="wptb-background-menu">
 			<section-group-collapse :start-collapsed="false">
-				<color-picker></color-picker>
+				<color-picker label="header color"></color-picker>
 			</section-group-collapse>
 		</div>
 	</transition>
