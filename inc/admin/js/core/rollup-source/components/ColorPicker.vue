@@ -14,6 +14,7 @@
 						class="wptb-color-picker-selected-color wptb-plugin-inner-shadow"
 						:style="colorPickerStyle"
 					></div>
+					<div class="wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"></div>
 				</div>
 				<div class="wptb-color-picker-logo">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

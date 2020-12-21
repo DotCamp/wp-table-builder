@@ -22179,6 +22179,7 @@ var _vueColor = require("vue-color");
 //
 //
 //
+//
 var _default = {
   props: {
     label: {
@@ -22347,6 +22348,11 @@ exports.default = _default;
                 staticClass:
                   "wptb-color-picker-selected-color wptb-plugin-inner-shadow",
                 style: _vm.colorPickerStyle
+              }),
+              _vm._v(" "),
+              _c("div", {
+                staticClass:
+                  "wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"
               })
             ]),
             _vm._v(" "),
