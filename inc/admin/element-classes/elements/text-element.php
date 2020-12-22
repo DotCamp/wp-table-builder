@@ -144,8 +144,9 @@ class Text_Element extends Element_Base {
 	 * @access protected
 	 */
 	protected function _content_template() {
+	  $text_placeholder = esc_html__('Add Text', 'wp-table-builder');
 		?>
-        <div><p data-placeholder="Add Content"></p></div>
+        <div><p data-placeholder="<?php echo $text_placeholder; ?>"></p></div>
 		<?php
 	}
 }
