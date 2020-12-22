@@ -19,6 +19,8 @@ export const objectDeepMerge = (source, target) => {
 					// eslint-disable-next-line no-param-reassign
 					source[k] = target[k];
 				}
+			} else {
+				source[k] = target[k];
 			}
 		}
 	});

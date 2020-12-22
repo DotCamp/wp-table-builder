@@ -1,3 +1,4 @@
+import { generateUniqueId } from '../../functions';
 /**
  * Data table getter methods.
  *
@@ -133,14 +134,7 @@ const getters = {
 	 * @return {Function} generate function
 	 */
 	generateUniqueId: () => (length = 5) => {
-		const variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
-		let key = '';
-
-		for (let i = 0; i < length; i += 1) {
-			key += variables[Math.floor(Math.random() * variables.length)];
-		}
-
-		return key;
+		return generateUniqueId(length);
 	},
 	/**
 	 * Get data manager row id of a given index.

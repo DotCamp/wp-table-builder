@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-color-picker-wrapper wptb-settings-row wptb-settings-middle-xs wptb-element-property">
+	<div :id="id" class="wptb-color-picker-wrapper wptb-settings-row wptb-settings-middle-xs wptb-element-property">
 		<div class="wptb-settings-space-between">
 			<p class="wptb-settings-item-title wptb-text-transform-cap" :data-wptb-text-disabled="disabled">
 				{{ label }}
@@ -45,6 +45,7 @@
 
 <script>
 import { Sketch } from 'vue-color';
+import { generateUniqueId } from '../functions';
 
 export default {
 	props: {
@@ -70,6 +71,7 @@ export default {
 		return {
 			visibility: false,
 			toolPosition: {},
+			id: null,
 		};
 	},
 	mounted() {
@@ -78,6 +80,12 @@ export default {
 			document.querySelector('.wptb-container').addEventListener('click', this.handleHide);
 			document.addEventListener('wheel', this.handleHide, { capture: false, passive: true });
 			document.addEventListener('keyup', this.handleHide);
+
+			this.id = generateUniqueId();
+
+			WPTB_Store.subscribe('setActiveColorPicker', (activeId) => {
+				this.setVisibility(activeId === this.id);
+			});
 		});
 	},
 	computed: {
@@ -119,7 +127,13 @@ export default {
 			return `${val}px`;
 		},
 		setVisibility(state = false) {
-			this.visibility = state;
+			if (this.visibility !== state) {
+				this.visibility = state;
+
+				if (state) {
+					WPTB_Store.commit('setActiveColorPicker', this.id);
+				}
+			}
 		},
 		handleHide(event) {
 			const allowedDefaultEvents = ['wheel', 'click'];
