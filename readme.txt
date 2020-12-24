@@ -91,6 +91,7 @@ That's it. You're done!
 = 1.3.4 =
 
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
+* IMPROVE: Better manage cells menu layout to keep top and bottom row tools always visible.
 
 = 1.3.3 =
 
