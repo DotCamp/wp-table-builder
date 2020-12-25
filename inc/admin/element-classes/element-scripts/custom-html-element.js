@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 const infArr = element.className.match(/wptb-element-((.+-)\d+)/i);
 const controlKey = 'textarea';
 const elementControlTargetUnicClass = `wptb-el-${infArr[1]}-${controlKey}`;
@@ -18,6 +19,7 @@ const allowedChildrenTags = [
 	'center',
 	'iframe',
 	'img',
+	'button',
 ];
 
 const innerChildTextArray = Array.from(allowedChildrenTags);

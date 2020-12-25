@@ -92,6 +92,7 @@ That's it. You're done!
 
 * NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
+* IMPROVE: Button html element support for custom html table element.
 
 = 1.3.3 =
 
