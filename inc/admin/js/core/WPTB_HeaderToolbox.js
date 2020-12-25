@@ -54,7 +54,7 @@ const WPTB_HeaderToolbox = function (wrapperQuery) {
 			const { width } = this.element.getBoundingClientRect();
 			this.element.style.left = `calc( 50% - ${width / 2}px)`;
 
-			const hideList = ['table_responsive_menu', 'manage_cells'];
+			const hideList = ['table_responsive_menu', 'manage_cells', 'cell_settings'];
 
 			// hide toolbox at manage cells and responsive menus
 			document.addEventListener('wptbSectionChanged', ({ detail }) => {

@@ -1,3 +1,6 @@
+import { mutationWatchFunction } from '../general';
+import { getMainBuilderTable } from '../../functions';
+
 /**
  * Save directives on change to table element data sets.
  *
@@ -13,12 +16,30 @@ const saveDirectives = (state) => () => {
 };
 
 /**
+ * Mutation watch list
+ *
+ * @type {Object}
+ */
+const mutationWatchList = {
+	setGeneralOption: ({ payload }) => {
+		const table = getMainBuilderTable();
+
+		if (table) {
+			switch (payload.subKey) {
+				case 'headerBg':
+			}
+		}
+	},
+};
+
+/**
  * Subscriptions for background menu.
  *
  * @param {Object} store store object
  */
 // eslint-disable-next-line import/prefer-default-export
-export const subscriptions = (store) => {
+const subscriptions = (store) => {
+	// watch store state changes
 	store.watch(
 		() => {
 			return store.state;
@@ -26,4 +47,10 @@ export const subscriptions = (store) => {
 		saveDirectives(store.state),
 		{ deep: true }
 	);
+
+	// watch store mutations
+	store.subscribe(mutationWatchFunction(mutationWatchList, store));
 };
+
+/** @module subscriptions */
+export default subscriptions;

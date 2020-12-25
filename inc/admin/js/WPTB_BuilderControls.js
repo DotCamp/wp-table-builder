@@ -22131,7 +22131,7 @@ var global = arguments[3];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateUniqueId = void 0;
+exports.getMainBuilderTable = exports.generateUniqueId = void 0;
 
 /**
  * Generate unique id.
@@ -22151,8 +22151,20 @@ var generateUniqueId = function generateUniqueId() {
 
   return key;
 };
+/**
+ * Get main table inside builder.
+ *
+ * @return {Element | null} main builder table
+ */
+
 
 exports.generateUniqueId = generateUniqueId;
+
+var getMainBuilderTable = function getMainBuilderTable() {
+  return document.querySelector('.wptb-table-setup .wptb-preview-table');
+};
+
+exports.getMainBuilderTable = getMainBuilderTable;
 },{}],"components/ColorPicker.vue":[function(require,module,exports) {
 "use strict";
 
@@ -27620,7 +27632,7 @@ render._withStripped = true
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createBasicStore = exports.objectDeepMerge = void 0;
+exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
@@ -27655,6 +27667,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
           source[k] = target[k];
         }
       } else {
+        // eslint-disable-next-line no-param-reassign
         source[k] = target[k];
       }
     }
@@ -27675,8 +27688,32 @@ exports.objectDeepMerge = objectDeepMerge;
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
   return new _vuex.default.Store(objectDeepMerge(defaultStore, extraStore));
 };
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
 
 exports.createBasicStore = createBasicStore;
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+
+exports.mutationWatchFunction = mutationWatchFunction;
 },{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"stores/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -27816,7 +27853,11 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.subscriptions = void 0;
+exports.default = void 0;
+
+var _general = require("../general");
+
+var _functions = require("../../functions");
 
 /**
  * Save directives on change to table element data sets.
@@ -27832,23 +27873,47 @@ var saveDirectives = function saveDirectives(state) {
   };
 };
 /**
+ * Mutation watch list
+ *
+ * @type {Object}
+ */
+
+
+var mutationWatchList = {
+  setGeneralOption: function setGeneralOption(_ref) {
+    var payload = _ref.payload;
+    var table = (0, _functions.getMainBuilderTable)();
+
+    if (table) {
+      switch (payload.subKey) {
+        case 'headerBg':
+      }
+    }
+  }
+};
+/**
  * Subscriptions for background menu.
  *
  * @param {Object} store store object
  */
 // eslint-disable-next-line import/prefer-default-export
 
-
 var subscriptions = function subscriptions(store) {
+  // watch store state changes
   store.watch(function () {
     return store.state;
   }, saveDirectives(store.state), {
     deep: true
-  });
-};
+  }); // watch store mutations
 
-exports.subscriptions = subscriptions;
-},{}],"stores/backgroundMenu/index.js":[function(require,module,exports) {
+  store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
+};
+/** @module subscriptions */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"../general":"stores/general.js","../../functions":"functions/index.js"}],"stores/backgroundMenu/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27864,7 +27929,7 @@ var _getters = _interopRequireDefault(require("./getters"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
-var _plugin = require("./plugin");
+var _plugin = _interopRequireDefault(require("./plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27877,7 +27942,7 @@ var defaultStore = {
   state: _state.default,
   getters: _getters.default,
   mutations: _mutations.default,
-  plugins: [_plugin.subscriptions],
+  plugins: [_plugin.default],
   strict: true
 };
 /** @module createStore */
@@ -27902,6 +27967,8 @@ var _TableBackgroundMenu = _interopRequireDefault(require("../containers/TableBa
 var _backgroundMenu = _interopRequireDefault(require("../stores/backgroundMenu"));
 
 var _general = require("../stores/general");
+
+var _functions = require("../functions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27936,7 +28003,7 @@ var _default = {
       }
     }
 
-    var table = document.querySelector('.wptb-table-setup .wptb-preview-table');
+    var table = (0, _functions.getMainBuilderTable)();
 
     if (table) {
       decodeBackgroundDirectives(table);
@@ -27958,7 +28025,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../containers/TableBackgroundMenu":"containers/TableBackgroundMenu.vue","../stores/backgroundMenu":"stores/backgroundMenu/index.js","../stores/general":"stores/general.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../containers/TableBackgroundMenu":"containers/TableBackgroundMenu.vue","../stores/backgroundMenu":"stores/backgroundMenu/index.js","../stores/general":"stores/general.js","../functions":"functions/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 

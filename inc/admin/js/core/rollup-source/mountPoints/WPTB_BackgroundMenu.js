@@ -6,6 +6,7 @@ import { __ } from '@wordpress/i18n';
 import TableBackgroundMenu from '../containers/TableBackgroundMenu';
 import createStore from '../stores/backgroundMenu';
 import { objectDeepMerge } from '../stores/general';
+import { getMainBuilderTable } from '../functions';
 
 export default {
 	name: 'BackgroundMenu',
@@ -36,7 +37,7 @@ export default {
 			}
 		}
 
-		const table = document.querySelector('.wptb-table-setup .wptb-preview-table');
+		const table = getMainBuilderTable();
 
 		if (table) {
 			decodeBackgroundDirectives(table);

@@ -20,6 +20,7 @@ export const objectDeepMerge = (source, target) => {
 					source[k] = target[k];
 				}
 			} else {
+				// eslint-disable-next-line no-param-reassign
 				source[k] = target[k];
 			}
 		}
@@ -37,4 +38,18 @@ export const objectDeepMerge = (source, target) => {
  */
 export const createBasicStore = (defaultStore, extraStore) => {
 	return new Vuex.Store(objectDeepMerge(defaultStore, extraStore));
+};
+
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+export const mutationWatchFunction = (watchList, store) => (...args) => {
+	const [payload] = args;
+	if (watchList[payload.type]) {
+		watchList[payload.type](...args, store);
+	}
 };

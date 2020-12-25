@@ -1485,7 +1485,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createBasicStore = exports.objectDeepMerge = void 0;
+exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
@@ -1520,6 +1520,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
           source[k] = target[k];
         }
       } else {
+        // eslint-disable-next-line no-param-reassign
         source[k] = target[k];
       }
     }
@@ -1540,8 +1541,32 @@ exports.objectDeepMerge = objectDeepMerge;
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
   return new _vuex.default.Store(objectDeepMerge(defaultStore, extraStore));
 };
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
 
 exports.createBasicStore = createBasicStore;
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+
+exports.mutationWatchFunction = mutationWatchFunction;
 },{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"WPTB_Store.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";

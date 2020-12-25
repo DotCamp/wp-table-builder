@@ -15,3 +15,12 @@ export const generateUniqueId = (length = 5) => {
 
 	return key;
 };
+
+/**
+ * Get main table inside builder.
+ *
+ * @return {Element | null} main builder table
+ */
+export const getMainBuilderTable = () => {
+	return document.querySelector('.wptb-table-setup .wptb-preview-table');
+};

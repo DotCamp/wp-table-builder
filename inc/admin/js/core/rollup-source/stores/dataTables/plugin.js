@@ -1,4 +1,5 @@
 import { objectPropertyFromString } from '../../functions';
+import {mutationWatchFunction} from '../general';
 
 /**
  * Mutation watch list.
@@ -55,20 +56,6 @@ const actionWatchFunction = (watchList, store) => {
 			}
 		},
 	};
-};
-
-/**
- * Watch function to be used at store event subscriptions.
- *
- * @param {Object} watchList watch list to be used
- * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
- */
-const mutationWatchFunction = (watchList, store) => (...args) => {
-	const [payload] = args;
-	if (watchList[payload.type]) {
-		watchList[payload.type](...args, store);
-	}
 };
 
 /**
