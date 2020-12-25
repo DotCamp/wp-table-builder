@@ -90,6 +90,7 @@ That's it. You're done!
 
 = 1.3.4 =
 
+* NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 
 = 1.3.3 =
