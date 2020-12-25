@@ -27745,7 +27745,7 @@ exports.default = void 0;
 var state = {
   options: {
     general: {
-      headerBg: '#ffffff00',
+      headerBg: '#ffffff',
       evenBg: '#ffffff',
       oddBg: '#ffffff'
     }
@@ -27810,6 +27810,44 @@ var mutations = {
 
 var _default = mutations;
 exports.default = _default;
+},{}],"stores/backgroundMenu/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.subscriptions = void 0;
+
+/**
+ * Save directives on change to table element data sets.
+ *
+ * @param {Object} state store state object
+ * @return {Function} callback function for watch process
+ */
+var saveDirectives = function saveDirectives(state) {
+  return function () {
+    var table = document.querySelector('.wptb-table-setup .wptb-preview-table');
+    table.dataset.wptbBackgroundDirectives = btoa(JSON.stringify(state));
+    new WPTB_TableStateSaveManager().tableStateSet();
+  };
+};
+/**
+ * Subscriptions for background menu.
+ *
+ * @param {Object} store store object
+ */
+// eslint-disable-next-line import/prefer-default-export
+
+
+var subscriptions = function subscriptions(store) {
+  store.watch(function () {
+    return store.state;
+  }, saveDirectives(store.state), {
+    deep: true
+  });
+};
+
+exports.subscriptions = subscriptions;
 },{}],"stores/backgroundMenu/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -27826,6 +27864,8 @@ var _getters = _interopRequireDefault(require("./getters"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
+var _plugin = require("./plugin");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -27837,6 +27877,7 @@ var defaultStore = {
   state: _state.default,
   getters: _getters.default,
   mutations: _mutations.default,
+  plugins: [_plugin.subscriptions],
   strict: true
 };
 /** @module createStore */
@@ -27844,7 +27885,7 @@ var defaultStore = {
 var _default = (0, _index.default)(defaultStore);
 
 exports.default = _default;
-},{"../index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
+},{"../index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js","./plugin":"stores/backgroundMenu/plugin.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27890,7 +27931,7 @@ var _default = {
       var savedTableBackgroundDirectives = tableElement.dataset.wptbBackgroundDirectives;
 
       if (savedTableBackgroundDirectives) {
-        var decodedTableBackgroundDirectives = atob(savedTableBackgroundDirectives);
+        var decodedTableBackgroundDirectives = JSON.parse(atob(savedTableBackgroundDirectives));
         extraStoreOptions.state = (0, _general.objectDeepMerge)(extraStoreOptions.state, decodedTableBackgroundDirectives);
       }
     }

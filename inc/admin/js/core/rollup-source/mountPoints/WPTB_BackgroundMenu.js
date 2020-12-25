@@ -30,7 +30,7 @@ export default {
 			const savedTableBackgroundDirectives = tableElement.dataset.wptbBackgroundDirectives;
 
 			if (savedTableBackgroundDirectives) {
-				const decodedTableBackgroundDirectives = atob(savedTableBackgroundDirectives);
+				const decodedTableBackgroundDirectives = JSON.parse(atob(savedTableBackgroundDirectives));
 
 				extraStoreOptions.state = objectDeepMerge(extraStoreOptions.state, decodedTableBackgroundDirectives);
 			}

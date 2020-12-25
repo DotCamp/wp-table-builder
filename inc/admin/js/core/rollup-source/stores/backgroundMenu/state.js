@@ -6,7 +6,7 @@
 const state = {
 	options: {
 		general: {
-			headerBg: '#ffffff00',
+			headerBg: '#ffffff',
 			evenBg: '#ffffff',
 			oddBg: '#ffffff',
 		},
