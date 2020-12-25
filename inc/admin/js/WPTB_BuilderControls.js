@@ -27325,7 +27325,134 @@ Object.keys(_createI18n).forEach(function (key) {
 });
 
 var _defaultI18n = require("./default-i18n");
-},{"./sprintf":"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js","./default-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
+},{"./sprintf":"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js","./default-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+'use strict';
+
+var isMergeableObject = function isMergeableObject(value) {
+  return isNonNullObject(value) && !isSpecial(value);
+};
+
+function isNonNullObject(value) {
+  return !!value && typeof value === 'object';
+}
+
+function isSpecial(value) {
+  var stringValue = Object.prototype.toString.call(value);
+  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+
+
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+  return value.$$typeof === REACT_ELEMENT_TYPE;
+}
+
+function emptyTarget(val) {
+  return Array.isArray(val) ? [] : {};
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+  return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
+}
+
+function defaultArrayMerge(target, source, options) {
+  return target.concat(source).map(function (element) {
+    return cloneUnlessOtherwiseSpecified(element, options);
+  });
+}
+
+function getMergeFunction(key, options) {
+  if (!options.customMerge) {
+    return deepmerge;
+  }
+
+  var customMerge = options.customMerge(key);
+  return typeof customMerge === 'function' ? customMerge : deepmerge;
+}
+
+function getEnumerableOwnPropertySymbols(target) {
+  return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(target).filter(function (symbol) {
+    return target.propertyIsEnumerable(symbol);
+  }) : [];
+}
+
+function getKeys(target) {
+  return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target));
+}
+
+function propertyIsOnObject(object, property) {
+  try {
+    return property in object;
+  } catch (_) {
+    return false;
+  }
+} // Protects from prototype poisoning and unexpected merging up the prototype chain.
+
+
+function propertyIsUnsafe(target, key) {
+  return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
+  && !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
+  && Object.propertyIsEnumerable.call(target, key)); // and also unsafe if they're nonenumerable.
+}
+
+function mergeObject(target, source, options) {
+  var destination = {};
+
+  if (options.isMergeableObject(target)) {
+    getKeys(target).forEach(function (key) {
+      destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+    });
+  }
+
+  getKeys(source).forEach(function (key) {
+    if (propertyIsUnsafe(target, key)) {
+      return;
+    }
+
+    if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+      destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
+    } else {
+      destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+    }
+  });
+  return destination;
+}
+
+function deepmerge(target, source, options) {
+  options = options || {};
+  options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+  options.isMergeableObject = options.isMergeableObject || isMergeableObject; // cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
+  // implementations can use it. The caller may not replace it.
+
+  options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
+  var sourceIsArray = Array.isArray(source);
+  var targetIsArray = Array.isArray(target);
+  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+  if (!sourceAndTargetTypesMatch) {
+    return cloneUnlessOtherwiseSpecified(source, options);
+  } else if (sourceIsArray) {
+    return options.arrayMerge(target, source, options);
+  } else {
+    return mergeObject(target, source, options);
+  }
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+  if (!Array.isArray(array)) {
+    throw new Error('first argument should be an array');
+  }
+
+  return array.reduce(function (prev, next) {
+    return deepmerge(prev, next, options);
+  }, {});
+};
+
+var deepmerge_1 = deepmerge;
+module.exports = deepmerge_1;
+},{}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27636,6 +27763,8 @@ exports.mutationWatchFunction = exports.createBasicStore = exports.objectDeepMer
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -27686,7 +27815,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
 exports.objectDeepMerge = objectDeepMerge;
 
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
-  return new _vuex.default.Store(objectDeepMerge(defaultStore, extraStore));
+  return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
 };
 /**
  * Watch function to be used at store event subscriptions.
@@ -27714,7 +27843,7 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
 };
 
 exports.mutationWatchFunction = mutationWatchFunction;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"stores/index.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27725,6 +27854,8 @@ exports.default = void 0;
 var _vue = _interopRequireDefault(require("vue"));
 
 var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
 var _general = require("./general");
 
@@ -27757,7 +27888,7 @@ var createStore = function createStore() {
   };
   return function (storeOptions) {
     // merge base store with supplied default store
-    var mergedDefaultStore = (0, _general.objectDeepMerge)(defaultStore, baseStore);
+    var mergedDefaultStore = (0, _deepmerge.default)(defaultStore, baseStore);
     return (0, _general.createBasicStore)(mergedDefaultStore, storeOptions);
   };
 };
@@ -27766,7 +27897,7 @@ var createStore = function createStore() {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./general":"stores/general.js"}],"stores/backgroundMenu/state.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./general":"stores/general.js"}],"stores/backgroundMenu/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27962,11 +28093,11 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _i18n = require("@wordpress/i18n");
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 var _TableBackgroundMenu = _interopRequireDefault(require("../containers/TableBackgroundMenu"));
 
 var _backgroundMenu = _interopRequireDefault(require("../stores/backgroundMenu"));
-
-var _general = require("../stores/general");
 
 var _functions = require("../functions");
 
@@ -27989,32 +28120,24 @@ var _default = {
       }
     };
     /**
-     * Decode background related table directives.
+     * Parse various store state values from table element.
      *
      * @param {HTMLElement} tableElement table element
      */
 
-    function decodeBackgroundDirectives(tableElement) {
-      var savedTableBackgroundDirectives = tableElement.dataset.wptbBackgroundDirectives;
-
-      if (savedTableBackgroundDirectives) {
-        var decodedTableBackgroundDirectives = JSON.parse(atob(savedTableBackgroundDirectives));
-        extraStoreOptions.state = (0, _general.objectDeepMerge)(extraStoreOptions.state, decodedTableBackgroundDirectives);
-      }
+    function parseStateFromTable(tableElement) {
+      // TODO [erdembircan] filter out empty/undefined dataset values
+      var parsedGeneral = {
+        headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
+        evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
+        oddBg: tableElement.dataset.wptbOddRowBackgroundColor
+      };
     }
 
-    var table = (0, _functions.getMainBuilderTable)();
+    extraStoreOptions.state = (0, _deepmerge.default)(extraStoreOptions.state, parseStateFromTable((0, _functions.getMainBuilderTable)()));
+    var store = (0, _backgroundMenu.default)(extraStoreOptions); // TODO [erdembircan] remove for production
 
-    if (table) {
-      decodeBackgroundDirectives(table);
-    } else {
-      // if no table is found, add an event listener to table generated event
-      document.addEventListener('wptb:table:generated', function () {
-        decodeBackgroundDirectives(document.querySelector('.wptb-table-setup .wptb-preview-table'));
-      });
-    }
-
-    var store = (0, _backgroundMenu.default)(extraStoreOptions);
+    console.log(store.state.options.general.headerBg);
     new _vue.default({
       store: store,
       components: {
@@ -28025,7 +28148,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../containers/TableBackgroundMenu":"containers/TableBackgroundMenu.vue","../stores/backgroundMenu":"stores/backgroundMenu/index.js","../stores/general":"stores/general.js","../functions":"functions/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../containers/TableBackgroundMenu":"containers/TableBackgroundMenu.vue","../stores/backgroundMenu":"stores/backgroundMenu/index.js","../functions":"functions/index.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 

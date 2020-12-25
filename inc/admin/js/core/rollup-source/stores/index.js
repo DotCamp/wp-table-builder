@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { createBasicStore, objectDeepMerge } from './general';
+import merge from 'deepmerge';
+import { createBasicStore } from './general';
 
 // setup vuex
 Vue.use(Vuex);
@@ -26,7 +27,7 @@ const createStore = (defaultStore = {}) => {
 
 	return (storeOptions) => {
 		// merge base store with supplied default store
-		const mergedDefaultStore = objectDeepMerge(defaultStore, baseStore);
+		const mergedDefaultStore = merge(defaultStore, baseStore);
 
 		return createBasicStore(mergedDefaultStore, storeOptions);
 	};

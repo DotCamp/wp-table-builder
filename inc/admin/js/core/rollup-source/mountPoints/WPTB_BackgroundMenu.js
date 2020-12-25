@@ -3,9 +3,9 @@
  */
 import Vue from 'vue';
 import { __ } from '@wordpress/i18n';
+import merge from 'deepmerge';
 import TableBackgroundMenu from '../containers/TableBackgroundMenu';
 import createStore from '../stores/backgroundMenu';
-import { objectDeepMerge } from '../stores/general';
 import { getMainBuilderTable } from '../functions';
 
 export default {
@@ -23,32 +23,25 @@ export default {
 		};
 
 		/**
-		 * Decode background related table directives.
+		 * Parse various store state values from table element.
 		 *
 		 * @param {HTMLElement} tableElement table element
 		 */
-		function decodeBackgroundDirectives(tableElement) {
-			const savedTableBackgroundDirectives = tableElement.dataset.wptbBackgroundDirectives;
-
-			if (savedTableBackgroundDirectives) {
-				const decodedTableBackgroundDirectives = JSON.parse(atob(savedTableBackgroundDirectives));
-
-				extraStoreOptions.state = objectDeepMerge(extraStoreOptions.state, decodedTableBackgroundDirectives);
-			}
+		function parseStateFromTable(tableElement) {
+			// TODO [erdembircan] filter out empty/undefined dataset values
+			const parsedGeneral = {
+				headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
+				evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
+				oddBg: tableElement.dataset.wptbOddRowBackgroundColor,
+			};
 		}
 
-		const table = getMainBuilderTable();
-
-		if (table) {
-			decodeBackgroundDirectives(table);
-		} else {
-			// if no table is found, add an event listener to table generated event
-			document.addEventListener('wptb:table:generated', () => {
-				decodeBackgroundDirectives(document.querySelector('.wptb-table-setup .wptb-preview-table'));
-			});
-		}
+		extraStoreOptions.state = merge(extraStoreOptions.state, parseStateFromTable(getMainBuilderTable()));
 
 		const store = createStore(extraStoreOptions);
+
+		// TODO [erdembircan] remove for production
+		console.log(store.state.options.general.headerBg);
 
 		new Vue({
 			store,
