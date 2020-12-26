@@ -28,20 +28,36 @@ export default {
 		 * @param {HTMLElement} tableElement table element
 		 */
 		function parseStateFromTable(tableElement) {
-			// TODO [erdembircan] filter out empty/undefined dataset values
+			const parsedFromTable = {
+				options: {
+					general: {},
+				},
+			};
+
 			const parsedGeneral = {
 				headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
 				evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
 				oddBg: tableElement.dataset.wptbOddRowBackgroundColor,
 			};
+
+			parsedFromTable.options.general = Object.keys(parsedGeneral).reduce((carry, item) => {
+				if (Object.prototype.hasOwnProperty.call(parsedGeneral, item)) {
+					const currentValue = parsedGeneral[item];
+					if (currentValue !== null && currentValue !== '') {
+						// eslint-disable-next-line no-param-reassign
+						carry[item] = currentValue;
+					}
+				}
+
+				return carry;
+			}, {});
+
+			return parsedFromTable;
 		}
 
 		extraStoreOptions.state = merge(extraStoreOptions.state, parseStateFromTable(getMainBuilderTable()));
 
 		const store = createStore(extraStoreOptions);
-
-		// TODO [erdembircan] remove for production
-		console.log(store.state.options.general.headerBg);
 
 		new Vue({
 			store,

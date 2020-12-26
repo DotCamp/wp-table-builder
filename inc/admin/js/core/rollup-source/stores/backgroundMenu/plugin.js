@@ -2,21 +2,7 @@ import { mutationWatchFunction } from '../general';
 import { getMainBuilderTable } from '../../functions';
 
 /**
- * Save directives on change to table element data sets.
- *
- * @param {Object} state store state object
- * @return {Function} callback function for watch process
- */
-const saveDirectives = (state) => () => {
-	const table = document.querySelector('.wptb-table-setup .wptb-preview-table');
-
-	table.dataset.wptbBackgroundDirectives = btoa(JSON.stringify(state));
-
-	new WPTB_TableStateSaveManager().tableStateSet();
-};
-
-/**
- * Mutation watch list
+ * Mutation watch list.
  *
  * @type {Object}
  */
@@ -27,6 +13,16 @@ const mutationWatchList = {
 		if (table) {
 			switch (payload.subKey) {
 				case 'headerBg':
+					table.dataset.wptbHeaderBackgroundColor = payload.value;
+					break;
+				case 'evenBg':
+					table.dataset.wptbEvenRowBackgroundColor = payload.value;
+					break;
+				case 'oddBg':
+					table.dataset.wptbOddRowBackgroundColor = payload.value;
+					break;
+				default:
+					break;
 			}
 		}
 	},
@@ -39,12 +35,14 @@ const mutationWatchList = {
  */
 // eslint-disable-next-line import/prefer-default-export
 const subscriptions = (store) => {
-	// watch store state changes
 	store.watch(
 		() => {
 			return store.state;
 		},
-		saveDirectives(store.state),
+		() => {
+			// make table dirty after each state change in store
+			new WPTB_TableStateSaveManager().tableStateSet();
+		},
 		{ deep: true }
 	);
 

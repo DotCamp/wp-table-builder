@@ -27991,25 +27991,10 @@ var _general = require("../general");
 var _functions = require("../../functions");
 
 /**
- * Save directives on change to table element data sets.
- *
- * @param {Object} state store state object
- * @return {Function} callback function for watch process
- */
-var saveDirectives = function saveDirectives(state) {
-  return function () {
-    var table = document.querySelector('.wptb-table-setup .wptb-preview-table');
-    table.dataset.wptbBackgroundDirectives = btoa(JSON.stringify(state));
-    new WPTB_TableStateSaveManager().tableStateSet();
-  };
-};
-/**
- * Mutation watch list
+ * Mutation watch list.
  *
  * @type {Object}
  */
-
-
 var mutationWatchList = {
   setGeneralOption: function setGeneralOption(_ref) {
     var payload = _ref.payload;
@@ -28018,6 +28003,19 @@ var mutationWatchList = {
     if (table) {
       switch (payload.subKey) {
         case 'headerBg':
+          table.dataset.wptbHeaderBackgroundColor = payload.value;
+          break;
+
+        case 'evenBg':
+          table.dataset.wptbEvenRowBackgroundColor = payload.value;
+          break;
+
+        case 'oddBg':
+          table.dataset.wptbOddRowBackgroundColor = payload.value;
+          break;
+
+        default:
+          break;
       }
     }
   }
@@ -28030,10 +28028,12 @@ var mutationWatchList = {
 // eslint-disable-next-line import/prefer-default-export
 
 var subscriptions = function subscriptions(store) {
-  // watch store state changes
   store.watch(function () {
     return store.state;
-  }, saveDirectives(store.state), {
+  }, function () {
+    // make table dirty after each state change in store
+    new WPTB_TableStateSaveManager().tableStateSet();
+  }, {
     deep: true
   }); // watch store mutations
 
@@ -28126,18 +28126,33 @@ var _default = {
      */
 
     function parseStateFromTable(tableElement) {
-      // TODO [erdembircan] filter out empty/undefined dataset values
+      var parsedFromTable = {
+        options: {
+          general: {}
+        }
+      };
       var parsedGeneral = {
         headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
         evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
         oddBg: tableElement.dataset.wptbOddRowBackgroundColor
       };
+      parsedFromTable.options.general = Object.keys(parsedGeneral).reduce(function (carry, item) {
+        if (Object.prototype.hasOwnProperty.call(parsedGeneral, item)) {
+          var currentValue = parsedGeneral[item];
+
+          if (currentValue !== null && currentValue !== '') {
+            // eslint-disable-next-line no-param-reassign
+            carry[item] = currentValue;
+          }
+        }
+
+        return carry;
+      }, {});
+      return parsedFromTable;
     }
 
     extraStoreOptions.state = (0, _deepmerge.default)(extraStoreOptions.state, parseStateFromTable((0, _functions.getMainBuilderTable)()));
-    var store = (0, _backgroundMenu.default)(extraStoreOptions); // TODO [erdembircan] remove for production
-
-    console.log(store.state.options.general.headerBg);
+    var store = (0, _backgroundMenu.default)(extraStoreOptions);
     new _vue.default({
       store: store,
       components: {
