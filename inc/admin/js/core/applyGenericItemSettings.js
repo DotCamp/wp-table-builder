@@ -5,21 +5,25 @@ var applyGenericItemSettings = function ( element, kindIndexProt, copy = false )
     if( node.classList.contains( 'wptb-ph-element' ) ) {
         if ( kindIndexProt == undefined || copy == true ) {
             //index = document.counter.nextIndex( element.kind );
-            let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
-            let elementIndexesArr = [];
-            for( let i = 0; i < wptbElements.length; i++ ) {
-                var regex = new RegExp( 'wptb-element-' + element.kind + '-(\\d+)', "i" );
-                let infArr = wptbElements[i].className.match( regex );
-                if( infArr ) {
-                    elementIndexesArr.push( infArr[1] );
-                }
-            }
-            if( elementIndexesArr.length > 0 ) {
-                let elementIndexMax = Math.max( ...elementIndexesArr );
-                index = elementIndexMax + 1;
-            } else { 
-                index = 1;
-            }
+            // @deprecated
+            // let wptbElements = document.getElementsByClassName( 'wptb-ph-element' );
+            // let elementIndexesArr = [];
+            // for( let i = 0; i < wptbElements.length; i++ ) {
+            //     var regex = new RegExp( 'wptb-element-' + element.kind + '-(\\d+)', "i" );
+            //     let infArr = wptbElements[i].className.match( regex );
+            //     if( infArr ) {
+            //         elementIndexesArr.push( infArr[1] );
+            //     }
+            // }
+            // if( elementIndexesArr.length > 0 ) {
+            //     let elementIndexMax = Math.max( ...elementIndexesArr );
+            //     index = elementIndexMax + 1;
+            // } else {
+            //     index = 1;
+            // }
+
+            // get an id for table element
+            index = WPTB_ElementIdProvider.getNewId(element.kind);
 
             if( copy ) {
                 // change all data-elements which save parameters for different controls
