@@ -43,6 +43,16 @@
 			};
 		};
 
+		const applyColor = (colorVal, element) => {
+			if (colorVal === '' || colorVal === null) {
+				// eslint-disable-next-line no-param-reassign
+				element.style.removeProperty('background-color');
+			} else {
+				// eslint-disable-next-line no-param-reassign
+				element.style.backgroundColor = colorVal;
+			}
+		};
+
 		/**
 		 * Row specific operations.
 		 *
@@ -57,7 +67,7 @@
 			const [header, ...rest] = Array.from(currentTable.querySelectorAll('tr'));
 
 			// apply header row color
-			header.style.backgroundColor = headerBg;
+			applyColor(headerBg, header);
 
 			// apply even/odd row color
 			// eslint-disable-next-line array-callback-return
