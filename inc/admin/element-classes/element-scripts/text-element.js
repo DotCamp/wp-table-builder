@@ -8,7 +8,7 @@ const tinyMceInitStart = function () {
 		menubar: false,
 		force_br_newlines: false,
 		force_p_newlines: false,
-		forced_root_block: '',
+		forced_root_block: 'p',
 		fixed_toolbar_container: '#wpcd_fixed_toolbar',
 		paste_as_text: true,
 		toolbar: 'bold italic strikethrough link unlink | alignleft aligncenter alignright alignjustify',
