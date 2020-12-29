@@ -1,7 +1,11 @@
 /**
- * IIFE for background menu setup.
+ * UMD for background menu setup.
  */
-(function wptbBackgroundMenuSetup() {
+(function umd(key, context, factory) {
+	// eslint-disable-next-line no-param-reassign
+	context[key] = factory();
+	// eslint-disable-next-line no-restricted-globals
+})('WPTB_BackgroundMenu', self || global, function wptbBackgroundMenuSetup() {
 	/**
 	 * Background menu component.
 	 *
@@ -12,10 +16,19 @@
 		this.initialized = false;
 
 		/**
+		 * Get current active table on builder.
+		 *
+		 * @return {HTMLElement | null} found active table
+		 */
+		const getCurrentTable = () => {
+			return document.querySelector('.wptb-table-setup .wptb-preview-table');
+		};
+
+		/**
 		 * Get background specific options from table attributes
 		 */
 		const parseOptionsFromTable = () => {
-			const currentTable = document.querySelector('.wptb-table-setup .wptb-preview-table');
+			const currentTable = getCurrentTable();
 
 			const headerBg = currentTable.dataset.wptbHeaderBackgroundColor;
 			const evenBg = currentTable.dataset.wptbEvenRowBackgroundColor;
@@ -38,7 +51,21 @@
 		 * @param {string} rowOptions.evenBg even row color
 		 * @param {string} rowOptions.oddBg odd row color
 		 */
-		const rowOperations = ({ headerBg, evenBg, oddBg }) => {};
+		const rowOperations = ({ headerBg, evenBg, oddBg }) => {
+			const currentTable = getCurrentTable();
+
+			const [header, ...rest] = Array.from(currentTable.querySelectorAll('tr'));
+
+			// apply header row color
+			header.style.backgroundColor = headerBg;
+
+			// apply even/odd row color
+			// eslint-disable-next-line array-callback-return
+			rest.map((row, index) => {
+				// eslint-disable-next-line no-param-reassign
+				row.style.backgroundColor = index % 2 === 0 ? evenBg : oddBg;
+			});
+		};
 
 		/**
 		 * Apply background options to table.
@@ -47,9 +74,6 @@
 		 */
 		this.applyOptions = (suppliedOptions = null) => {
 			const { row: rowOptions } = suppliedOptions || parseOptionsFromTable();
-
-			// TODO [erdembircan] remove for production
-			console.log(rowOptions);
 
 			rowOperations(rowOptions);
 		};
@@ -74,6 +98,10 @@
 		};
 	}
 
+	const singletonInstance = new BackgroundMenu();
+
 	// initialize background menu component
-	new BackgroundMenu().init();
-})();
+	singletonInstance.init();
+
+	return singletonInstance;
+});

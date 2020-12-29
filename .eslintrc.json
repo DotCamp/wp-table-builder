@@ -47,6 +47,7 @@
     "wptbBlockData": true,
     "WptbFrontendData": true,
     "WPTB_NotificationManager": true,
-    "WPTB_Store": true
+    "WPTB_Store": true,
+    "WPTB_BackgroundMenu": true
   }
 }

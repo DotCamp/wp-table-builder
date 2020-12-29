@@ -28031,7 +28031,8 @@ var subscriptions = function subscriptions(store) {
   store.watch(function () {
     return store.state;
   }, function () {
-    // make table dirty after each state change in store
+    WPTB_BackgroundMenu.applyOptions(); // make table dirty after each state change in store
+
     new WPTB_TableStateSaveManager().tableStateSet();
   }, {
     deep: true

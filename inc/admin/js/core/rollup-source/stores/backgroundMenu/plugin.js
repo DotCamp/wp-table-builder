@@ -40,6 +40,7 @@ const subscriptions = (store) => {
 			return store.state;
 		},
 		() => {
+			WPTB_BackgroundMenu.applyOptions();
 			// make table dirty after each state change in store
 			new WPTB_TableStateSaveManager().tableStateSet();
 		},
