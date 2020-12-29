@@ -15406,7 +15406,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
 
     if (typeof process !== 'undefined' && "development" === 'development') {
+      // eslint-disable-next-line no-console
       if (console[type]) {
+        // eslint-disable-next-line no-console
         console[type]("[WPTB]: ".concat(message));
       } else {
         throw new Error("no logging type found with given type value of [".concat(type, "]"));
@@ -15418,8 +15420,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
    * @param {HTMLElement | null} cellElement cell element
-   * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
-   * @param reference
+   * @param {null | CellObject} reference main cell object if the current cell is a reference to that cell in cases like merged cells
    * @class
    */
 
@@ -15745,14 +15746,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * An array of created table rows elements that are id'd according to their index in array.
      *
-     * @type {[HTMLElement]}
+     * @type {Array}
      */
 
     this.rowCache = [];
     /**
      * Original table elements minus the cells.
      *
-     * @type {{rows: []}}
+     * @type {Object}
      * @private
      */
 
@@ -16306,8 +16307,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   tempCell.setAttribute('rowSpan', 1);
 
                   if (!tempCell.el.style.backgroundColor) {
-                    var bgColor = _r === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
-                    tempCell.el.style.backgroundColor = bgColor;
+                    // @deprecated
+                    // const bgColor =
+                    // 	r === 0
+                    // 		? tableObj.rowColors.header
+                    // 			? tableObj.rowColors.header
+                    // 			: getComputedStyle(rowObj.el).backgroundColor
+                    // 		: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+                    var currentTableColor = tableObj.rowColors[(rowStartIndex + _r) % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
                   }
                 }
               } // preserve original row colors for even and odd rows
@@ -16333,7 +16341,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 tableObj.appendObjectToRow(b, rowObj.id);
 
                 if (!b.el.style.backgroundColor) {
-                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
+                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor; // eslint-disable-next-line no-param-reassign
+
                   b.el.style.backgroundColor = bgColor;
                 }
 
@@ -16676,7 +16685,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
+          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj); // eslint-disable-next-line no-undef
+
           WPTB_RecalculateIndexes(el);
           var tabEvent = new CustomEvent('table:rebuilt', {
             detail: {

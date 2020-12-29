@@ -21,7 +21,9 @@
 	 */
 	function logToConsole(message, type = 'log') {
 		if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+			// eslint-disable-next-line no-console
 			if (console[type]) {
+				// eslint-disable-next-line no-console
 				console[type](`[WPTB]: ${message}`);
 			} else {
 				throw new Error(`no logging type found with given type value of [${type}]`);
@@ -34,8 +36,7 @@
 	 * If an empty cellElement parameter is given, a fresh cell element will be created.
 	 *
 	 * @param {HTMLElement | null} cellElement cell element
-	 * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
-	 * @param reference
+	 * @param {null | CellObject} reference main cell object if the current cell is a reference to that cell in cases like merged cells
 	 * @class
 	 */
 	function CellObject(cellElement, reference = null) {
@@ -342,14 +343,14 @@
 		/**
 		 * An array of created table rows elements that are id'd according to their index in array.
 		 *
-		 * @type {[HTMLElement]}
+		 * @type {Array}
 		 */
 		this.rowCache = [];
 
 		/**
 		 * Original table elements minus the cells.
 		 *
-		 * @type {{rows: []}}
+		 * @type {Object}
 		 * @private
 		 */
 		this.originals = { rows: [] };
@@ -891,13 +892,18 @@
 								tempCell.setAttribute('rowSpan', 1);
 
 								if (!tempCell.el.style.backgroundColor) {
-									const bgColor =
-										r === 0
-											? tableObj.rowColors.header
-												? tableObj.rowColors.header
-												: getComputedStyle(rowObj.el).backgroundColor
-											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-									tempCell.el.style.backgroundColor = bgColor;
+									// @deprecated
+									// const bgColor =
+									// 	r === 0
+									// 		? tableObj.rowColors.header
+									// 			? tableObj.rowColors.header
+									// 			: getComputedStyle(rowObj.el).backgroundColor
+									// 		: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+
+									const currentTableColor =
+										tableObj.rowColors[(rowStartIndex + r) % 2 === 0 ? 'odd' : 'even'];
+									tempCell.el.style.backgroundColor =
+										currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
 								}
 							}
 						}
@@ -928,6 +934,7 @@
 								const bgColor = tableObj.rowColors.header
 									? tableObj.rowColors.header
 									: getComputedStyle(rowObj.el).backgroundColor;
+								// eslint-disable-next-line no-param-reassign
 								b.el.style.backgroundColor = bgColor;
 							}
 							rowObj.el.style.backgroundColor = '#ffffff00';
@@ -1283,6 +1290,7 @@
 					const modeOptions = directive.modeOptions[mode];
 					buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
 
+					// eslint-disable-next-line no-undef
 					WPTB_RecalculateIndexes(el);
 					const tabEvent = new CustomEvent('table:rebuilt', {
 						detail: {

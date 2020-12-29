@@ -94,6 +94,7 @@ That's it. You're done!
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 * IMPROVE: Button html element support for custom html table element.
 * FIX: Fixed an issue where newly created table text elements share same identification number.
+* FIX: Fixed an issue affecting row colors of static top row enabled responsive tables.
 
 
 = 1.3.3 =
