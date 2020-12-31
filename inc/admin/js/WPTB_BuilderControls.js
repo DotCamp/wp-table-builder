@@ -22330,6 +22330,9 @@ var _default = {
     }
   },
   methods: {
+    toggleVisibility: function toggleVisibility() {
+      this.setVisibility(!this.visibility);
+    },
     toPx: function toPx(val) {
       return "".concat(val, "px");
     },
@@ -22411,7 +22414,7 @@ exports.default = _default;
               "!click": function($event) {
                 $event.stopPropagation()
                 $event.preventDefault()
-                return _vm.setVisibility(true)
+                return _vm.toggleVisibility($event)
               }
             }
           },

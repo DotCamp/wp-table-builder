@@ -7,7 +7,7 @@
 			<div
 				ref="inputWrapper"
 				class="wptb-color-picker-input-wrapper"
-				@click.capture.stop.prevent="setVisibility(true)"
+				@click.capture.stop.prevent="toggleVisibility"
 			>
 				<div class="wptb-color-picker-inner-indicator">
 					<div v-show="color === ''" class="wptb-color-picker-clear-color-indicator">
@@ -137,6 +137,9 @@ export default {
 		},
 	},
 	methods: {
+		toggleVisibility() {
+			this.setVisibility(!this.visibility);
+		},
 		toPx(val) {
 			return `${val}px`;
 		},
