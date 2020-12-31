@@ -88,9 +88,6 @@ export default {
 			id: null,
 		};
 	},
-	watch: {
-		color(n) {},
-	},
 	mounted() {
 		this.$nextTick(() => {
 			// event listeners to hide opened color picker on certain DOM events

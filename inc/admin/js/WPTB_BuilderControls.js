@@ -22265,9 +22265,6 @@ var _default = {
       id: null
     };
   },
-  watch: {
-    color: function color(n) {}
-  },
   mounted: function mounted() {
     var _this = this;
 
