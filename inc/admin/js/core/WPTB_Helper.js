@@ -1632,7 +1632,8 @@ var WPTB_Helper = {
 	 */
 	registerSections(sections) {
 		this.sections = {};
-		this.currentSection = '';
+		this.previousSection = null;
+		this.currentSection = null;
 		if (!Array.isArray(sections)) {
 			// eslint-disable-next-line no-param-reassign
 			sections = [sections];
@@ -1653,6 +1654,7 @@ var WPTB_Helper = {
 	 * @param {string} displayType display type override for section to be used in its display style property
 	 */
 	activateSection(sectionDataId, displayType = 'block') {
+		this.previousSection = this.currentSection;
 		this.currentSection = sectionDataId;
 		this.triggerSectionEvent(sectionDataId);
 		// eslint-disable-next-line array-callback-return
@@ -1664,12 +1666,20 @@ var WPTB_Helper = {
 		});
 	},
 	/**
-	 * Get id of current active section
+	 * Get id of current active section.
 	 *
-	 * @return {string} active section i
+	 * @return {string} active section id
 	 */
 	getCurrentSection() {
 		return this.currentSection;
+	},
+	/**
+	 * Get id of previous section.
+	 *
+	 * @return {string} previous section id
+	 */
+	getPreviousSection() {
+		return this.previousSection;
 	},
 	/**
 	 * Get current section from search parameter 'wptb-builder-section' of window location
@@ -2425,7 +2435,11 @@ var WPTB_Helper = {
 			WPTB_Helper.activateSection('elements');
 		});
 	},
-	blockTinyMCEManageCells() {
+	/**
+	 * Block tiny MCE initialization and element selected activation for data cells for specific active sections.
+	 * Sections: Manage cells, background menu
+	 */
+	blockTinyMCE() {
 		const addBlocker = (parent) => {
 			const blockerElement = document.createElement('div');
 			blockerElement.classList.add('wptb-plugin-blocker-element');
@@ -2454,7 +2468,8 @@ var WPTB_Helper = {
 
 				cells.map(removeBlocker);
 
-				if (detail === 'manage_cells' || detail === 'cell_settings') {
+				const allowedSections = ['manage_cells', 'cell_settings', 'background_menu'];
+				if (allowedSections.includes(detail)) {
 					cells.map(addBlocker);
 				}
 			}
@@ -2508,7 +2523,7 @@ var WPTB_Helper = {
 			el.classList.remove('wptb-directlyhovered');
 		});
 
-		// remobe all data-placeholder from table
+		// remove all data-placeholder from table
 		Array.from(document.querySelectorAll('.wptb-text-container p')).map((el) => {
 			el.removeAttribute('data-placeholder');
 		});

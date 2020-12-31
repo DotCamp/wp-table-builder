@@ -89,6 +89,56 @@
 		};
 
 		/**
+		 * Highlight selected data cell element.
+		 *
+		 * @param {Event} event click event
+		 */
+		const highlightCell = (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+
+			const currentTargetType = event.target.nodeName.toLowerCase();
+
+			let targetElement = event.target;
+
+			// remove any active highlighted cells
+			const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
+			allCells.map((cell) => {
+				cell.classList.remove('wptb-highlighted');
+			});
+
+			// only add highlight style to table cell elements
+			if (currentTargetType !== 'td') {
+				targetElement = event.target.parentNode;
+			}
+			targetElement.classList.toggle('wptb-highlighted');
+		};
+
+		/**
+		 * Assign cell click handlers to data cells.
+		 */
+		const assignCellClickHandlers = () => {
+			const cells = Array.from(getCurrentTable().querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
+			cells.map((cell) => {
+				cell.addEventListener('click', highlightCell);
+			});
+		};
+
+		/**
+		 * Remove cell click handlers from data cells.
+		 */
+		const removeCellClickHandlers = () => {
+			const cells = Array.from(getCurrentTable().querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
+			cells.map((cell) => {
+				cell.removeEventListener('click', highlightCell);
+			});
+		};
+
+		/**
 		 * Initialize hook for component.
 		 */
 		this.init = () => {
@@ -98,6 +148,14 @@
 				if (!this.initialized && detail === 'background_menu') {
 					WPTB_ControlsManager.callControlScript('BackgroundMenu', 'wptb-background-menu');
 					this.initialized = true;
+				}
+
+				if (WPTB_Helper.getPreviousSection() !== 'background_menu' && detail === 'background_menu') {
+					assignCellClickHandlers();
+				}
+
+				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
+					removeCellClickHandlers();
 				}
 			});
 

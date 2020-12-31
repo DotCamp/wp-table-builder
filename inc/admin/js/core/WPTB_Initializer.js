@@ -35,7 +35,7 @@ const WPTB_Initializer = function () {
 	//                 rowsInput.value++;
 	//         }
 	// };
-
+	//
 	// document.getElementById( 'wptb-generate-table' ).onclick = function (  ) {
 	//         var columns = document.getElementById('wptb-columns-number').value,
 	//             rows = document.getElementById('wptb-rows-number').value;
@@ -84,7 +84,7 @@ const WPTB_Initializer = function () {
 	WPTB_Helper.showElementsListOnRemove();
 
 	// block tinyMCE from activation at manage cells menu
-	WPTB_Helper.blockTinyMCEManageCells();
+	WPTB_Helper.blockTinyMCE();
 
 	// initialize header toolbox
 	new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
