@@ -15,6 +15,9 @@
 		// whether setup operation done or not
 		this.initialized = false;
 
+		// flux store that will be used with menu
+		let store = null;
+
 		/**
 		 * Get current active table on builder.
 		 *
@@ -163,6 +166,17 @@
 			document.addEventListener('wp-table-builder/table-changed/after', () => {
 				this.applyOptions();
 			});
+		};
+
+		/**
+		 * Define a flux store for background menu.
+		 *
+		 * @param {Object} storeObject store object
+		 */
+		this.addStore = (storeObject) => {
+			if (!store) {
+				store = storeObject;
+			}
 		};
 	}
 

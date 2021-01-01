@@ -6071,3 +6071,13 @@ wptb_shortcode_container_element {
 .wptb-plugin-inner-shadow {
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.09) 0px 2px 4px 0px inset;
 }
+
+.wptb-panel-plain-message{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 80% !important;
+    color: var(--wptb-plugin-gray-600) !important;
+}

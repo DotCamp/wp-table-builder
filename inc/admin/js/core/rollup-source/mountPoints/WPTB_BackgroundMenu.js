@@ -18,6 +18,11 @@ export default {
 					evenRow: __('even row background', 'wp-table-builder'),
 					oddRow: __('odd row background', 'wp-table-builder'),
 					headerBg: __('header background', 'wp-table-builder'),
+					customSelection: __('custom selection color options', 'wp-table-builder'),
+					emptySelectionMessage: __(
+						'Select a row/column/cell to change their background properties.',
+						'wp-table-builder'
+					),
 				},
 			},
 		};
@@ -58,6 +63,8 @@ export default {
 		extraStoreOptions.state = merge(extraStoreOptions.state, parseStateFromTable(getMainBuilderTable()));
 
 		const store = createStore(extraStoreOptions);
+
+		WPTB_BackgroundMenu.addStore(store);
 
 		new Vue({
 			store,

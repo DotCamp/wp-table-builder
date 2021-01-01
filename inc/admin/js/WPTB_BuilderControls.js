@@ -15406,7 +15406,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
 
     if (typeof process !== 'undefined' && "development" === 'development') {
+      // eslint-disable-next-line no-console
       if (console[type]) {
+        // eslint-disable-next-line no-console
         console[type]("[WPTB]: ".concat(message));
       } else {
         throw new Error("no logging type found with given type value of [".concat(type, "]"));
@@ -15418,8 +15420,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
    * @param {HTMLElement | null} cellElement cell element
-   * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
-   * @param reference
+   * @param {null | CellObject} reference main cell object if the current cell is a reference to that cell in cases like merged cells
    * @class
    */
 
@@ -15745,14 +15746,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * An array of created table rows elements that are id'd according to their index in array.
      *
-     * @type {[HTMLElement]}
+     * @type {Array}
      */
 
     this.rowCache = [];
     /**
      * Original table elements minus the cells.
      *
-     * @type {{rows: []}}
+     * @type {Object}
      * @private
      */
 
@@ -16306,8 +16307,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   tempCell.setAttribute('rowSpan', 1);
 
                   if (!tempCell.el.style.backgroundColor) {
-                    var bgColor = _r === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
-                    tempCell.el.style.backgroundColor = bgColor;
+                    // @deprecated
+                    // const bgColor =
+                    // 	r === 0
+                    // 		? tableObj.rowColors.header
+                    // 			? tableObj.rowColors.header
+                    // 			: getComputedStyle(rowObj.el).backgroundColor
+                    // 		: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+                    var currentTableColor = tableObj.rowColors[(rowStartIndex + _r) % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
                   }
                 }
               } // preserve original row colors for even and odd rows
@@ -16333,7 +16341,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 tableObj.appendObjectToRow(b, rowObj.id);
 
                 if (!b.el.style.backgroundColor) {
-                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
+                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor; // eslint-disable-next-line no-param-reassign
+
                   b.el.style.backgroundColor = bgColor;
                 }
 
@@ -16676,7 +16685,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
+          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj); // eslint-disable-next-line no-undef
+
           WPTB_RecalculateIndexes(el);
           var tabEvent = new CustomEvent('table:rebuilt', {
             detail: {
@@ -27685,7 +27695,38 @@ var withNativeTranslationStore = {
 
 var _default = withNativeTranslationStore;
 exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/leftPanel/PanelPlainMessage.vue":[function(require,module,exports) {
+
+        var $8fcde0 = exports.default || module.exports;
+      
+      if (typeof $8fcde0 === 'function') {
+        $8fcde0 = $8fcde0.options;
+      }
+    
+        /* template */
+        Object.assign($8fcde0, (function () {
+          var render = function(_h, _vm) {
+  var _c = _vm._c
+  return _c(
+    "div",
+    { staticClass: "wptb-panel-plain-message" },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: true
+          };
+        })());
+      
+},{}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27701,6 +27742,8 @@ var _ColorPicker = _interopRequireDefault(require("../components/ColorPicker"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
+var _PanelPlainMessage = _interopRequireDefault(require("../components/leftPanel/PanelPlainMessage"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -27711,13 +27754,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    PanelPlainMessage: _PanelPlainMessage.default,
     ColorPicker: _ColorPicker.default,
     SectionGroupCollapse: _SectionGroupCollapse.default
   },
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
     return {
-      visibility: true
+      visibility: true,
+      currentSelection: null
     };
   },
   mounted: function mounted() {
@@ -27816,6 +27861,37 @@ exports.default = _default;
             })
           ],
           1
+        ),
+        _vm._v(" "),
+        _c(
+          "section-group-collapse",
+          {
+            attrs: {
+              label: _vm.translationM("customSelection"),
+              "start-collapsed": false
+            }
+          },
+          [
+            _c(
+              "panel-plain-message",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.currentSelection === null,
+                    expression: "currentSelection === null"
+                  }
+                ]
+              },
+              [
+                _c("i", [
+                  _vm._v(_vm._s(_vm.translationM("emptySelectionMessage")))
+                ])
+              ]
+            )
+          ],
+          1
         )
       ],
       1
@@ -27834,7 +27910,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../components/ColorPicker":"components/ColorPicker.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"stores/general.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../components/ColorPicker":"components/ColorPicker.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../components/leftPanel/PanelPlainMessage":"components/leftPanel/PanelPlainMessage.vue"}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27992,12 +28068,23 @@ exports.default = void 0;
  * @type {Object}
  */
 var state = {
+  types: {
+    selected: {
+      row: 'row',
+      column: 'column',
+      cell: 'cell'
+    }
+  },
   options: {
     general: {
       headerBg: '',
       evenBg: '',
       oddBg: ''
     }
+  },
+  selected: {
+    type: null,
+    item: null
   }
 };
 /** @module state */
@@ -28028,6 +28115,16 @@ var getters = {
     return function (key) {
       return state.options.general[key];
     };
+  },
+
+  /**
+   * Get various enum types for store.
+   *
+   * @param {Object} state background menu state
+   * @return {Object} state types
+   */
+  types: function types(state) {
+    return state.types;
   }
 };
 /** @module getters */
@@ -28048,11 +28145,37 @@ exports.default = void 0;
  * @type {Object}
  */
 var mutations = {
+  /**
+   * Set a general option value.
+   *
+   * @param {Object} state background menu state object
+   *
+   * @param {Object} root mutation object
+   * @param {string} root.subKey sub key for general option
+   * @param {null|string|Object|Array|number} root.value option value
+   */
   setGeneralOption: function setGeneralOption(state, _ref) {
     var subKey = _ref.subKey,
         value = _ref.value;
     // eslint-disable-next-line no-param-reassign
     state.options.general[subKey] = value;
+  },
+
+  /**
+   * Set a table element as selected.
+   *
+   * @param {Object} state background menu state object
+   * @param {Object} root mutation object
+   * @param {string} root.type element type
+   * @param {HTMLElement} root.item element
+   */
+  setMenuSelectedTableElement: function setMenuSelectedTableElement(state, _ref2) {
+    var type = _ref2.type,
+        item = _ref2.item;
+    // eslint-disable-next-line no-param-reassign
+    state.selected.type = type; // eslint-disable-next-line no-param-reassign
+
+    state.selected.item = item;
   }
 };
 /** @module mutations */
@@ -28197,7 +28320,9 @@ var _default = {
           generalRow: (0, _i18n.__)('general row color options', 'wp-table-builder'),
           evenRow: (0, _i18n.__)('even row background', 'wp-table-builder'),
           oddRow: (0, _i18n.__)('odd row background', 'wp-table-builder'),
-          headerBg: (0, _i18n.__)('header background', 'wp-table-builder')
+          headerBg: (0, _i18n.__)('header background', 'wp-table-builder'),
+          customSelection: (0, _i18n.__)('custom selection color options', 'wp-table-builder'),
+          emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
         }
       }
     };
@@ -28235,6 +28360,7 @@ var _default = {
 
     extraStoreOptions.state = (0, _deepmerge.default)(extraStoreOptions.state, parseStateFromTable((0, _functions.getMainBuilderTable)()));
     var store = (0, _backgroundMenu.default)(extraStoreOptions);
+    WPTB_BackgroundMenu.addStore(store);
     new _vue.default({
       store: store,
       components: {

@@ -4,12 +4,23 @@
  * @type {Object}
  */
 const state = {
+	types: {
+		selected: {
+			row: 'row',
+			column: 'column',
+			cell: 'cell',
+		},
+	},
 	options: {
 		general: {
 			headerBg: '',
 			evenBg: '',
 			oddBg: '',
 		},
+	},
+	selected: {
+		type: null,
+		item: null,
 	},
 };
 

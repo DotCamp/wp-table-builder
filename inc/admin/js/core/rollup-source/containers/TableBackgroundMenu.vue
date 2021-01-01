@@ -18,6 +18,11 @@
 					:label="translationM('oddRow')"
 				></color-picker>
 			</section-group-collapse>
+			<section-group-collapse :label="translationM('customSelection')" :start-collapsed="false">
+				<panel-plain-message v-show="currentSelection === null">
+					<i>{{ translationM('emptySelectionMessage') }}</i>
+				</panel-plain-message>
+			</section-group-collapse>
 		</div>
 	</transition>
 </template>
@@ -27,13 +32,15 @@ import { mapGetters, mapMutations } from 'vuex';
 import SectionGroupCollapse from '../components/leftPanel/SectionGroupCollapse';
 import ColorPicker from '../components/ColorPicker';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
+import PanelPlainMessage from '../components/leftPanel/PanelPlainMessage';
 
 export default {
-	components: { ColorPicker, SectionGroupCollapse },
+	components: { PanelPlainMessage, ColorPicker, SectionGroupCollapse },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
 			visibility: true,
+			currentSelection: null,
 		};
 	},
 	mounted() {
