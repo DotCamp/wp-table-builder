@@ -31,6 +31,12 @@ const mutations = {
 		// eslint-disable-next-line no-param-reassign
 		state.selected.item = item;
 	},
+	/**
+	 * Set table as dirty.
+	 */
+	markTableDirty: () => {
+		new WPTB_TableStateSaveManager().tableStateSet();
+	},
 };
 
 /** @module mutations */

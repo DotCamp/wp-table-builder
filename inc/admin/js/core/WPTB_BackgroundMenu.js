@@ -28,7 +28,7 @@
 		};
 
 		/**
-		 * Get background specific options from table attributes
+		 * Get background specific options from table attributes.
 		 */
 		const parseOptionsFromTable = () => {
 			const currentTable = getCurrentTable();
@@ -106,6 +106,8 @@
 
 			// remove any active highlighted cells
 			const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
 			allCells.map((cell) => {
 				cell.classList.remove('wptb-highlighted');
 			});
@@ -114,7 +116,10 @@
 			if (currentTargetType !== 'td') {
 				targetElement = event.target.parentNode;
 			}
-			targetElement.classList.toggle('wptb-highlighted');
+
+			targetElement.classList.add('wptb-highlighted');
+
+			store.commit('setMenuSelectedTableElement', { type: store.state.types.selected.cell, item: targetElement });
 		};
 
 		/**

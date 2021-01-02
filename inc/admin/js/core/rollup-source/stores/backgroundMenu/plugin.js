@@ -37,7 +37,7 @@ const mutationWatchList = {
 const subscriptions = (store) => {
 	store.watch(
 		() => {
-			return store.state;
+			return store.state.options;
 		},
 		() => {
 			WPTB_BackgroundMenu.applyOptions();

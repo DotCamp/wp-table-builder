@@ -19,6 +19,7 @@ export default {
 					oddRow: __('odd row background', 'wp-table-builder'),
 					headerBg: __('header background', 'wp-table-builder'),
 					customSelection: __('custom selection color options', 'wp-table-builder'),
+					selectedCell: __('selected cell background', 'wp-table-builder'),
 					emptySelectionMessage: __(
 						'Select a row/column/cell to change their background properties.',
 						'wp-table-builder'
@@ -64,6 +65,7 @@ export default {
 
 		const store = createStore(extraStoreOptions);
 
+		// make component store available for other js managers
 		WPTB_BackgroundMenu.addStore(store);
 
 		new Vue({

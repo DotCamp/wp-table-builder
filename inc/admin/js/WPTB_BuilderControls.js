@@ -15406,9 +15406,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'log';
 
     if (typeof process !== 'undefined' && "development" === 'development') {
-      // eslint-disable-next-line no-console
       if (console[type]) {
-        // eslint-disable-next-line no-console
         console[type]("[WPTB]: ".concat(message));
       } else {
         throw new Error("no logging type found with given type value of [".concat(type, "]"));
@@ -15420,7 +15418,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
    * If an empty cellElement parameter is given, a fresh cell element will be created.
    *
    * @param {HTMLElement | null} cellElement cell element
-   * @param {null | CellObject} reference main cell object if the current cell is a reference to that cell in cases like merged cells
+   * @param {null | CellObject} [isReference=null] main cell object if the current cell is a reference to that cell in cases like merged cells
+   * @param reference
    * @class
    */
 
@@ -15746,14 +15745,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * An array of created table rows elements that are id'd according to their index in array.
      *
-     * @type {Array}
+     * @type {[HTMLElement]}
      */
 
     this.rowCache = [];
     /**
      * Original table elements minus the cells.
      *
-     * @type {Object}
+     * @type {{rows: []}}
      * @private
      */
 
@@ -16307,15 +16306,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                   tempCell.setAttribute('rowSpan', 1);
 
                   if (!tempCell.el.style.backgroundColor) {
-                    // @deprecated
-                    // const bgColor =
-                    // 	r === 0
-                    // 		? tableObj.rowColors.header
-                    // 			? tableObj.rowColors.header
-                    // 			: getComputedStyle(rowObj.el).backgroundColor
-                    // 		: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-                    var currentTableColor = tableObj.rowColors[(rowStartIndex + _r) % 2 === 0 ? 'odd' : 'even'];
-                    tempCell.el.style.backgroundColor = currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
+                    var bgColor = _r === 0 ? tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor : tableObj.rowColors[_r % 2 === 0 ? 'odd' : 'even'];
+                    tempCell.el.style.backgroundColor = bgColor;
                   }
                 }
               } // preserve original row colors for even and odd rows
@@ -16341,8 +16333,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 tableObj.appendObjectToRow(b, rowObj.id);
 
                 if (!b.el.style.backgroundColor) {
-                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor; // eslint-disable-next-line no-param-reassign
-
+                  var bgColor = tableObj.rowColors.header ? tableObj.rowColors.header : getComputedStyle(rowObj.el).backgroundColor;
                   b.el.style.backgroundColor = bgColor;
                 }
 
@@ -16685,8 +16676,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (buildCallable) {
           var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj); // eslint-disable-next-line no-undef
-
+          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
           WPTB_RecalculateIndexes(el);
           var tabEvent = new CustomEvent('table:rebuilt', {
             detail: {
@@ -27705,8 +27695,10 @@ exports.default = _default;
     
         /* template */
         Object.assign($8fcde0, (function () {
-          var render = function(_h, _vm) {
-  var _c = _vm._c
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
   return _c(
     "div",
     { staticClass: "wptb-panel-plain-message" },
@@ -27722,7 +27714,7 @@ render._withStripped = true
             staticRenderFns: staticRenderFns,
             _compiled: true,
             _scopeId: null,
-            functional: true
+            functional: undefined
           };
         })());
       
@@ -27762,8 +27754,34 @@ var _default = {
   data: function data() {
     return {
       visibility: true,
-      currentSelection: null
+      backgroundBuffer: {
+        color: ''
+      }
     };
+  },
+  watch: {
+    currentSelection: {
+      handler: function handler(n) {
+        var type = n.type,
+            item = n.item;
+        var colorVal = '';
+
+        if (item !== null) {
+          switch (type) {
+            case this.types.selected.cell:
+              // get color value from cell dataset attribute
+              colorVal = item.dataset.wptbOwnBgColor || '';
+              break;
+
+            default:
+              break;
+          }
+        }
+
+        this.backgroundBuffer.color = colorVal;
+      },
+      deep: true
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -27775,8 +27793,19 @@ var _default = {
       });
     });
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['generalOptions'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setGeneralOption']))
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['generalOptions', 'currentSelection', 'types'])),
+  methods: _objectSpread({
+    setSelectedBackground: function setSelectedBackground(color) {
+      this.backgroundBuffer.color = color;
+      var item = this.currentSelection.item;
+
+      if (item) {
+        item.dataset.wptbOwnBgColor = color;
+        item.style.backgroundColor = color;
+        this.markTableDirty();
+      }
+    }
+  }, (0, _vuex.mapMutations)(['setGeneralOption', 'markTableDirty']))
 };
 exports.default = _default;
         var $48a64f = exports.default || module.exports;
@@ -27872,24 +27901,25 @@ exports.default = _default;
             }
           },
           [
-            _c(
-              "panel-plain-message",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.currentSelection === null,
-                    expression: "currentSelection === null"
-                  }
-                ]
-              },
-              [
-                _c("i", [
-                  _vm._v(_vm._s(_vm.translationM("emptySelectionMessage")))
+            _vm.currentSelection.item === null
+              ? _c("panel-plain-message", [
+                  _c("i", [
+                    _vm._v(_vm._s(_vm.translationM("emptySelectionMessage")))
+                  ])
                 ])
-              ]
-            )
+              : _c(
+                  "div",
+                  [
+                    _c("color-picker", {
+                      attrs: {
+                        color: _vm.backgroundBuffer.color,
+                        label: _vm.translationM("selectedCell")
+                      },
+                      on: { colorChanged: _vm.setSelectedBackground }
+                    })
+                  ],
+                  1
+                )
           ],
           1
         )
@@ -28125,6 +28155,16 @@ var getters = {
    */
   types: function types(state) {
     return state.types;
+  },
+
+  /**
+   * Get currently selected table element.
+   *
+   * @param {Object} state background menu state
+   * @return {Object} selected element object
+   */
+  currentSelection: function currentSelection(state) {
+    return state.selected;
   }
 };
 /** @module getters */
@@ -28176,6 +28216,13 @@ var mutations = {
     state.selected.type = type; // eslint-disable-next-line no-param-reassign
 
     state.selected.item = item;
+  },
+
+  /**
+   * Set table as dirty.
+   */
+  markTableDirty: function markTableDirty() {
+    new WPTB_TableStateSaveManager().tableStateSet();
   }
 };
 /** @module mutations */
@@ -28233,7 +28280,7 @@ var mutationWatchList = {
 
 var subscriptions = function subscriptions(store) {
   store.watch(function () {
-    return store.state;
+    return store.state.options;
   }, function () {
     WPTB_BackgroundMenu.applyOptions(); // make table dirty after each state change in store
 
@@ -28322,6 +28369,7 @@ var _default = {
           oddRow: (0, _i18n.__)('odd row background', 'wp-table-builder'),
           headerBg: (0, _i18n.__)('header background', 'wp-table-builder'),
           customSelection: (0, _i18n.__)('custom selection color options', 'wp-table-builder'),
+          selectedCell: (0, _i18n.__)('selected cell background', 'wp-table-builder'),
           emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
         }
       }
@@ -28359,7 +28407,8 @@ var _default = {
     }
 
     extraStoreOptions.state = (0, _deepmerge.default)(extraStoreOptions.state, parseStateFromTable((0, _functions.getMainBuilderTable)()));
-    var store = (0, _backgroundMenu.default)(extraStoreOptions);
+    var store = (0, _backgroundMenu.default)(extraStoreOptions); // make component store available for other js managers
+
     WPTB_BackgroundMenu.addStore(store);
     new _vue.default({
       store: store,

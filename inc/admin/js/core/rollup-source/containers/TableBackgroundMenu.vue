@@ -19,9 +19,16 @@
 				></color-picker>
 			</section-group-collapse>
 			<section-group-collapse :label="translationM('customSelection')" :start-collapsed="false">
-				<panel-plain-message v-show="currentSelection === null">
+				<panel-plain-message v-if="currentSelection.item === null">
 					<i>{{ translationM('emptySelectionMessage') }}</i>
 				</panel-plain-message>
+				<div v-else>
+					<color-picker
+						@colorChanged="setSelectedBackground"
+						:color="backgroundBuffer.color"
+						:label="translationM('selectedCell')"
+					></color-picker>
+				</div>
 			</section-group-collapse>
 		</div>
 	</transition>
@@ -40,8 +47,32 @@ export default {
 	data() {
 		return {
 			visibility: true,
-			currentSelection: null,
+			backgroundBuffer: {
+				color: '',
+			},
 		};
+	},
+	watch: {
+		currentSelection: {
+			handler(n) {
+				const { type, item } = n;
+
+				let colorVal = '';
+				if (item !== null) {
+					switch (type) {
+						case this.types.selected.cell:
+							// get color value from cell dataset attribute
+							colorVal = item.dataset.wptbOwnBgColor || '';
+							break;
+						default:
+							break;
+					}
+				}
+
+				this.backgroundBuffer.color = colorVal;
+			},
+			deep: true,
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {
@@ -51,10 +82,21 @@ export default {
 		});
 	},
 	computed: {
-		...mapGetters(['generalOptions']),
+		...mapGetters(['generalOptions', 'currentSelection', 'types']),
 	},
 	methods: {
-		...mapMutations(['setGeneralOption']),
+		setSelectedBackground(color) {
+			this.backgroundBuffer.color = color;
+
+			const { item } = this.currentSelection;
+
+			if (item) {
+				item.dataset.wptbOwnBgColor = color;
+				item.style.backgroundColor = color;
+				this.markTableDirty();
+			}
+		},
+		...mapMutations(['setGeneralOption', 'markTableDirty']),
 	},
 };
 </script>

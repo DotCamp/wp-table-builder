@@ -22,6 +22,15 @@ const getters = {
 	types: (state) => {
 		return state.types;
 	},
+	/**
+	 * Get currently selected table element.
+	 *
+	 * @param {Object} state background menu state
+	 * @return {Object} selected element object
+	 */
+	currentSelection: (state) => {
+		return state.selected;
+	},
 };
 
 /** @module getters */
