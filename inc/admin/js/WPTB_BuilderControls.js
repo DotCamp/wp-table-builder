@@ -28115,6 +28115,9 @@ var state = {
   selected: {
     type: null,
     item: null
+  },
+  hoveredRow: {
+    element: null
   }
 };
 /** @module state */
@@ -28223,6 +28226,17 @@ var mutations = {
    */
   markTableDirty: function markTableDirty() {
     new WPTB_TableStateSaveManager().tableStateSet();
+  },
+
+  /**
+   * Update current row element which is hovered.
+   *
+   * @param {Object} state background menu state object
+   * @param {Element} rowElement row element that is hovered
+   */
+  updateHoveredRowElement: function updateHoveredRowElement(state, rowElement) {
+    // eslint-disable-next-line no-param-reassign
+    state.hoveredRow.element = rowElement;
   }
 };
 /** @module mutations */

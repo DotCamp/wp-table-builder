@@ -22,6 +22,9 @@ const state = {
 		type: null,
 		item: null,
 	},
+	hoveredRow: {
+		element: null,
+	},
 };
 
 /** @module state */

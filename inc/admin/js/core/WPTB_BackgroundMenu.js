@@ -46,6 +46,12 @@
 			};
 		};
 
+		/**
+		 * Apply color value to element.
+		 *
+		 * @param {string | null} colorVal color value
+		 * @param {Element} element html element
+		 */
 		const applyColor = (colorVal, element) => {
 			if (colorVal === '' || colorVal === null) {
 				// eslint-disable-next-line no-param-reassign
@@ -123,6 +129,87 @@
 		};
 
 		/**
+		 * Get row selection element.
+		 *
+		 * @return {Element} row selection element
+		 */
+		const getRowSelector = () => {
+			const rowSelectionClass = '.wptb-row-selection';
+			return document.querySelector(rowSelectionClass);
+		};
+
+		/**
+		 * Handle mouse over event for table rows.
+		 *
+		 * @param {Event} event event object
+		 */
+		const rowMouseEnter = (event) => {
+			// update hovered row element on store
+			store.commit('updateHoveredRowElement', event.target);
+		};
+
+		/**
+		 * Calculate row selector position relative to supplied table row element.
+		 *
+		 * @param {Element} targetRow target row element
+		 */
+		const rowSelectorPosition = (targetRow) => {
+			const { x: parentX, y: parentY } = document.querySelector('.wptb-table-setup').getBoundingClientRect();
+			const { height, x, y } = targetRow.getBoundingClientRect();
+
+			const rowSelector = getRowSelector();
+			rowSelector.style.display = 'block';
+			rowSelector.style.height = `${height}px`;
+			rowSelector.style.top = `${y - parentY}px`;
+
+			// since row selector is hidden with 'display: none' css rule, should get its size values after it becomes visible
+			const { width: selectorWidth } = getRowSelector().getBoundingClientRect();
+			rowSelector.style.left = `${x - parentX - selectorWidth}px`;
+		};
+
+		/**
+		 * Assign row select handlers for current table.
+		 */
+		const assignRowClickHandler = () => {
+			const rowSelectionClass = 'wptb-row-selection';
+			let rowSelector = getRowSelector();
+
+			if (!rowSelector) {
+				rowSelector = document.createElement('div');
+				rowSelector.classList.add(rowSelectionClass);
+
+				document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(rowSelector);
+			}
+
+			const rows = Array.from(getCurrentTable().querySelectorAll('tr'));
+
+			// eslint-disable-next-line array-callback-return
+			rows.map((row) => {
+				row.addEventListener('mouseenter', rowMouseEnter);
+			});
+		};
+
+		/**
+		 * Remove row related event listeners and handlers
+		 */
+		const removeRowHandlers = () => {
+			// eslint-disable-next-line array-callback-return
+			Array.from(getCurrentTable().querySelectorAll('tr')).map((row) => {
+				// remove event listener for each row element on table
+				row.removeEventListener('mouseenter', rowMouseEnter);
+			});
+
+			const rowSelector = getRowSelector();
+			if (rowSelector) {
+				// hide row selector element if any found
+				rowSelector.style.display = 'none';
+			}
+
+			// clear up last hovered row element value
+			store.commit('updateHoveredRowElement', null);
+		};
+
+		/**
 		 * Assign cell click handlers to data cells.
 		 */
 		const assignCellClickHandlers = () => {
@@ -160,16 +247,39 @@
 
 				if (WPTB_Helper.getPreviousSection() !== 'background_menu' && detail === 'background_menu') {
 					assignCellClickHandlers();
+					assignRowClickHandler();
 				}
 
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
 					removeCellClickHandlers();
+					removeRowHandlers();
 				}
 			});
 
 			// reapply options after table changed events
 			document.addEventListener('wp-table-builder/table-changed/after', () => {
 				this.applyOptions();
+			});
+		};
+
+		/**
+		 * Watch store mutations.
+		 *
+		 * @param {Object} suppliedStore store object
+		 */
+		// eslint-disable-next-line no-shadow
+		const watchStoreMutations = (suppliedStore) => {
+			suppliedStore.subscribe(({ type, payload }) => {
+				switch (type) {
+					case 'updateHoveredRowElement':
+						if (payload) {
+							// update row selector position on hovered row element changes
+							rowSelectorPosition(payload);
+						}
+						break;
+					default:
+						break;
+				}
 			});
 		};
 
@@ -181,10 +291,12 @@
 		this.addStore = (storeObject) => {
 			if (!store) {
 				store = storeObject;
+				watchStoreMutations(store);
 			}
 		};
 	}
 
+	// create singleton instance for background menu component
 	const singletonInstance = new BackgroundMenu();
 
 	// initialize background menu component
