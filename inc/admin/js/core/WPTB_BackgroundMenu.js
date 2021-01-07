@@ -158,7 +158,8 @@
 			const { height, x, y } = targetRow.getBoundingClientRect();
 
 			const rowSelector = getRowSelector();
-			rowSelector.style.display = 'block';
+			rowSelector.classList.add('wptb-row-selection-visible');
+			// rowSelector.style.display = 'block';
 			rowSelector.style.height = `${height}px`;
 			rowSelector.style.top = `${y - parentY}px`;
 
@@ -177,6 +178,10 @@
 			if (!rowSelector) {
 				rowSelector = document.createElement('div');
 				rowSelector.classList.add(rowSelectionClass);
+
+				WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-row-selector-icon-wrapper').then((icon) => {
+					rowSelector.appendChild(icon);
+				});
 
 				document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(rowSelector);
 			}
@@ -202,7 +207,7 @@
 			const rowSelector = getRowSelector();
 			if (rowSelector) {
 				// hide row selector element if any found
-				rowSelector.style.display = 'none';
+				rowSelector.classList.remove('wptb-row-selection-visible');
 			}
 
 			// clear up last hovered row element value

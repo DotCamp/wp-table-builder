@@ -87,7 +87,7 @@ body > img {
 
 .wptb-builder-header {
     position: sticky !important;
-    top: 0px;
+    top: 0;
     z-index: 10;
 }
 
@@ -6083,11 +6083,35 @@ wptb_shortcode_container_element {
     color: var(--wptb-plugin-gray-600) !important;
 }
 
+/*region background menu*/
 .wptb-row-selection {
     position: absolute;
-    background-color: red;
+    background-color: var(--wptb-plugin-logo-color);
     display: none;
-    width: 25px;
+    width: 30px;
     transition: top 0.2s ease-out;
+    cursor: pointer;
 }
+
+.wptb-row-selection-visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-row-selector-icon-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-row-selector-icon-wrapper svg {
+    width: 20px;
+    height: auto;
+    fill: var(--wptb-plugin-theme-color-light)
+}
+
+/*endregion*/
 
