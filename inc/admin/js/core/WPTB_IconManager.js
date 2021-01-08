@@ -23,6 +23,59 @@
 		const iconList = list;
 
 		/**
+		 * Cached icons.
+		 *
+		 * @type {Object}
+		 */
+		const cachedIcons = {};
+
+		/**
+		 * Prepare an icon with a wrapper.
+		 *
+		 * @param {string} iconSvgString string representation of icon
+		 * @param {string | null} extraClass name of extra class to apply to icon wrapper
+		 * @return {HTMLDivElement} created icon wrapper
+		 */
+		const prepareIcon = (iconSvgString, extraClass = null) => {
+			const iconWrapper = document.createElement('div');
+
+			// if an extra class is defined, add it to icon wrapper
+			if (extraClass) {
+				iconWrapper.classList.add(extraClass);
+			}
+
+			iconWrapper.innerHTML = iconSvgString;
+
+			return iconWrapper;
+		};
+
+		/**
+		 * Get a cached icon.
+		 *
+		 * @param {string} iconName name of the icon
+		 * @param {string} extraClass extra class name to add to icon wrapper
+		 * @return {null | Element} Prepared cached icon or null if no cached version is found
+		 */
+		const getCachedIcon = (iconName, extraClass) => {
+			if (cachedIcons[iconName]) {
+				// TODO [erdembircan] remove for production
+				console.log(`icon served from cache [${iconName}]`);
+				return prepareIcon(cachedIcons[iconName], extraClass);
+			}
+			return null;
+		};
+
+		/**
+		 * Add an icon to cache.
+		 *
+		 * @param {string} iconName name of the icon to be stored
+		 * @param {string} stringifiedIcon stringified version of the icon
+		 */
+		const addToCache = (iconName, stringifiedIcon) => {
+			cachedIcons[iconName] = stringifiedIcon;
+		};
+
+		/**
 		 * Get an icon.
 		 *
 		 * Icons sent with this function are wrapped with a 'div' element.
@@ -34,6 +87,12 @@
 		this.getIcon = (iconName, extraClass = null) => {
 			// eslint-disable-next-line consistent-return
 			return new Promise((res, rej) => {
+				// if cached version is found, return that version
+				const cachedIcon = getCachedIcon(iconName, extraClass);
+				if (cachedIcon) {
+					return res(cachedIcon);
+				}
+
 				if (iconList[iconName]) {
 					return fetch(iconList[iconName])
 						.then((resp) => {
@@ -47,14 +106,10 @@
 								throw new Error(`an error occurred while fetching icon [${iconName}]`);
 							}
 
-							const iconWrapper = document.createElement('div');
-							// if an extra class is defined, add it to icon wrapper
-							if(extraClass){
-								iconWrapper.classList.add(extraClass);
-							}
-							iconWrapper.innerHTML = iconString;
+							// add icon to cache
+							addToCache(iconName, iconString);
 
-							return res(iconWrapper);
+							return res(prepareIcon(iconString, extraClass));
 						})
 						.catch((err) => {
 							return rej(new Error(err));
