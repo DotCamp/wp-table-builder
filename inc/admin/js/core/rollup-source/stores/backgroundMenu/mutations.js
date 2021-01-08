@@ -45,7 +45,7 @@ const mutations = {
 	 */
 	updateHoveredRowElement: (state, rowElement) => {
 		// eslint-disable-next-line no-param-reassign
-		state.hoveredRow.element = rowElement;
+		state.hovered.row.element = rowElement;
 	},
 };
 

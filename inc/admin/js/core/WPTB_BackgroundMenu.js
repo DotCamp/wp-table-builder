@@ -98,6 +98,41 @@
 		};
 
 		/**
+		 * Remove all highlight visuals from cells.
+		 */
+		const removeHighlights = () => {
+			// remove any active highlighted cells
+			const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
+
+			// eslint-disable-next-line array-callback-return
+			allCells.map((cell) => {
+				cell.classList.remove('wptb-highlighted');
+			});
+		};
+
+		/**
+		 * Extracted cell highlight logic to use with other parts of component.
+		 *
+		 * @param {Element} targetElement target element
+		 * @param {boolean} multiSelection is multi selection active, multi selection should be enabled for elements after the first selected one onwards
+		 */
+		const highlightCellLogic = (targetElement, multiSelection = false) => {
+			const currentTargetType = targetElement.nodeName.toLowerCase();
+
+			if (!multiSelection) {
+				removeHighlights();
+			}
+
+			// only add highlight style to table cell elements
+			if (currentTargetType !== 'td') {
+				// eslint-disable-next-line no-param-reassign
+				targetElement = targetElement.parentNode;
+			}
+
+			targetElement.classList.add('wptb-highlighted');
+		};
+
+		/**
 		 * Highlight selected data cell element.
 		 *
 		 * @param {Event} event click event
@@ -106,24 +141,28 @@
 			event.preventDefault();
 			event.stopPropagation();
 
-			const currentTargetType = event.target.nodeName.toLowerCase();
+			// @moved
+			// const currentTargetType = event.target.nodeName.toLowerCase();
 
-			let targetElement = event.target;
+			const targetElement = event.target;
 
-			// remove any active highlighted cells
-			const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
+			highlightCellLogic(targetElement);
 
-			// eslint-disable-next-line array-callback-return
-			allCells.map((cell) => {
-				cell.classList.remove('wptb-highlighted');
-			});
-
-			// only add highlight style to table cell elements
-			if (currentTargetType !== 'td') {
-				targetElement = event.target.parentNode;
-			}
-
-			targetElement.classList.add('wptb-highlighted');
+			// @moved
+			// // remove any active highlighted cells
+			// const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
+			//
+			// // eslint-disable-next-line array-callback-return
+			// allCells.map((cell) => {
+			// 	cell.classList.remove('wptb-highlighted');
+			// });
+			//
+			// // only add highlight style to table cell elements
+			// if (currentTargetType !== 'td') {
+			// 	targetElement = event.target.parentNode;
+			// }
+			//
+			// targetElement.classList.add('wptb-highlighted');
 
 			store.commit('setMenuSelectedTableElement', { type: store.state.types.selected.cell, item: targetElement });
 		};
@@ -169,6 +208,31 @@
 		};
 
 		/**
+		 * Selecting an entire row operation handler.
+		 */
+		const selectRow = () => {
+			const currentActiveRow = store.getters.hoveredRow;
+
+			if (currentActiveRow) {
+				const [first, ...rest] = Array.from(currentActiveRow.querySelectorAll('td'));
+
+				// don't activate multi highlight for first element to clear any previous highlighted cell
+				highlightCellLogic(first);
+
+				// activate multi highlight for the rest
+				// eslint-disable-next-line array-callback-return
+				rest.map((cell) => {
+					highlightCellLogic(cell, true);
+				});
+
+				store.commit('setMenuSelectedTableElement', {
+					type: store.getters.types.selected.row,
+					item: currentActiveRow,
+				});
+			}
+		};
+
+		/**
 		 * Assign row select handlers for current table.
 		 */
 		const assignRowClickHandler = () => {
@@ -178,12 +242,21 @@
 			if (!rowSelector) {
 				rowSelector = document.createElement('div');
 				rowSelector.classList.add(rowSelectionClass);
+				rowSelector.title = 'Select row';
 
 				WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-row-selector-icon-wrapper').then((icon) => {
 					rowSelector.appendChild(icon);
 				});
 
+				// add row selector element to its parent container
 				document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(rowSelector);
+
+				rowSelector.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					selectRow();
+				});
 			}
 
 			const rows = Array.from(getCurrentTable().querySelectorAll('tr'));
@@ -239,6 +312,13 @@
 		};
 
 		/**
+		 * Clear selection from store.
+		 */
+		const clearSelection = () => {
+			store.dispatch('clearSelection');
+		};
+
+		/**
 		 * Initialize hook for component.
 		 */
 		this.init = () => {
@@ -258,6 +338,8 @@
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
 					removeCellClickHandlers();
 					removeRowHandlers();
+					removeHighlights();
+					clearSelection();
 				}
 			});
 

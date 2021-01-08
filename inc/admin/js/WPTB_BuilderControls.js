@@ -27773,6 +27773,9 @@ var _default = {
               colorVal = item.dataset.wptbOwnBgColor || '';
               break;
 
+            case this.types.selected.row:
+              break;
+
             default:
               break;
           }
@@ -27793,7 +27796,22 @@ var _default = {
       });
     });
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['generalOptions', 'currentSelection', 'types'])),
+  computed: _objectSpread({
+    customColorControlLabel: function customColorControlLabel() {
+      var currentType = this.currentSelection.type;
+
+      switch (currentType) {
+        case this.types.selected.cell:
+          return this.translationM('selectedCell');
+
+        case this.types.selected.row:
+          return this.translationM('selectedRow');
+
+        default:
+          return '';
+      }
+    }
+  }, (0, _vuex.mapGetters)(['generalOptions', 'currentSelection', 'types'])),
   methods: _objectSpread({
     setSelectedBackground: function setSelectedBackground(color) {
       this.backgroundBuffer.color = color;
@@ -27913,7 +27931,7 @@ exports.default = _default;
                     _c("color-picker", {
                       attrs: {
                         color: _vm.backgroundBuffer.color,
-                        label: _vm.translationM("selectedCell")
+                        label: _vm.customColorControlLabel
                       },
                       on: { colorChanged: _vm.setSelectedBackground }
                     })
@@ -28116,8 +28134,10 @@ var state = {
     type: null,
     item: null
   },
-  hoveredRow: {
-    element: null
+  hovered: {
+    row: {
+      element: null
+    }
   }
 };
 /** @module state */
@@ -28168,6 +28188,16 @@ var getters = {
    */
   currentSelection: function currentSelection(state) {
     return state.selected;
+  },
+
+  /**
+   * Get currently hovered row element.
+   *
+   * @param {Object} state background menu state
+   * @return {null|Element} currently hovered row
+   */
+  hoveredRow: function hoveredRow(state) {
+    return state.hovered.row.element;
   }
 };
 /** @module getters */
@@ -28236,12 +28266,46 @@ var mutations = {
    */
   updateHoveredRowElement: function updateHoveredRowElement(state, rowElement) {
     // eslint-disable-next-line no-param-reassign
-    state.hoveredRow.element = rowElement;
+    state.hovered.row.element = rowElement;
   }
 };
 /** @module mutations */
 
 var _default = mutations;
+exports.default = _default;
+},{}],"stores/backgroundMenu/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Actions for background menu store.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Clear selection.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit mutation commit function
+   */
+  clearSelection: function clearSelection(_ref) {
+    var commit = _ref.commit;
+    commit('setMenuSelectedTableElement', {
+      type: null,
+      item: null
+    });
+  }
+};
+/**
+ * @module actions
+ */
+
+var _default = actions;
 exports.default = _default;
 },{}],"stores/backgroundMenu/plugin.js":[function(require,module,exports) {
 "use strict";
@@ -28301,6 +28365,15 @@ var subscriptions = function subscriptions(store) {
     new WPTB_TableStateSaveManager().tableStateSet();
   }, {
     deep: true
+  }); // TODO [erdembircan] remove for production
+
+  store.watch(function () {
+    return store.state;
+  }, function () {
+    // TODO [erdembircan] remove for production
+    console.log(store.state);
+  }, {
+    deep: true
   }); // watch store mutations
 
   store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
@@ -28326,6 +28399,8 @@ var _getters = _interopRequireDefault(require("./getters"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
+var _actions = _interopRequireDefault(require("./actions"));
+
 var _plugin = _interopRequireDefault(require("./plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -28339,6 +28414,7 @@ var defaultStore = {
   state: _state.default,
   getters: _getters.default,
   mutations: _mutations.default,
+  actions: _actions.default,
   plugins: [_plugin.default],
   strict: true
 };
@@ -28347,7 +28423,7 @@ var defaultStore = {
 var _default = (0, _index.default)(defaultStore);
 
 exports.default = _default;
-},{"../index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js","./plugin":"stores/backgroundMenu/plugin.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
+},{"../index":"stores/index.js","./state":"stores/backgroundMenu/state.js","./getters":"stores/backgroundMenu/getters.js","./mutations":"stores/backgroundMenu/mutations.js","./actions":"stores/backgroundMenu/actions.js","./plugin":"stores/backgroundMenu/plugin.js"}],"mountPoints/WPTB_BackgroundMenu.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28384,6 +28460,7 @@ var _default = {
           headerBg: (0, _i18n.__)('header background', 'wp-table-builder'),
           customSelection: (0, _i18n.__)('custom selection color options', 'wp-table-builder'),
           selectedCell: (0, _i18n.__)('selected cell background', 'wp-table-builder'),
+          selectedRow: (0, _i18n.__)('selected row background', 'wp-table-builder'),
           emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
         }
       }
@@ -28399,11 +28476,12 @@ var _default = {
         options: {
           general: {}
         }
-      };
+      }; // if no dataset is defined, use empty string to indicate an empty color for color picker
+
       var parsedGeneral = {
-        headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
-        evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
-        oddBg: tableElement.dataset.wptbOddRowBackgroundColor
+        headerBg: tableElement.dataset.wptbHeaderBackgroundColor || '',
+        evenBg: tableElement.dataset.wptbEvenRowBackgroundColor || '',
+        oddBg: tableElement.dataset.wptbOddRowBackgroundColor || ''
       };
       parsedFromTable.options.general = Object.keys(parsedGeneral).reduce(function (carry, item) {
         if (Object.prototype.hasOwnProperty.call(parsedGeneral, item)) {

@@ -26,7 +26,7 @@
 					<color-picker
 						@colorChanged="setSelectedBackground"
 						:color="backgroundBuffer.color"
-						:label="translationM('selectedCell')"
+						:label="customColorControlLabel"
 					></color-picker>
 				</div>
 			</section-group-collapse>
@@ -64,6 +64,8 @@ export default {
 							// get color value from cell dataset attribute
 							colorVal = item.dataset.wptbOwnBgColor || '';
 							break;
+						case this.types.selected.row:
+							break;
 						default:
 							break;
 					}
@@ -82,6 +84,18 @@ export default {
 		});
 	},
 	computed: {
+		customColorControlLabel() {
+			const currentType = this.currentSelection.type;
+
+			switch (currentType) {
+				case this.types.selected.cell:
+					return this.translationM('selectedCell');
+				case this.types.selected.row:
+					return this.translationM('selectedRow');
+				default:
+					return '';
+			}
+		},
 		...mapGetters(['generalOptions', 'currentSelection', 'types']),
 	},
 	methods: {

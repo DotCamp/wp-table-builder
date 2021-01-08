@@ -20,6 +20,7 @@ export default {
 					headerBg: __('header background', 'wp-table-builder'),
 					customSelection: __('custom selection color options', 'wp-table-builder'),
 					selectedCell: __('selected cell background', 'wp-table-builder'),
+					selectedRow: __('selected row background', 'wp-table-builder'),
 					emptySelectionMessage: __(
 						'Select a row/column/cell to change their background properties.',
 						'wp-table-builder'
@@ -40,10 +41,11 @@ export default {
 				},
 			};
 
+			// if no dataset is defined, use empty string to indicate an empty color for color picker
 			const parsedGeneral = {
-				headerBg: tableElement.dataset.wptbHeaderBackgroundColor,
-				evenBg: tableElement.dataset.wptbEvenRowBackgroundColor,
-				oddBg: tableElement.dataset.wptbOddRowBackgroundColor,
+				headerBg: tableElement.dataset.wptbHeaderBackgroundColor || '',
+				evenBg: tableElement.dataset.wptbEvenRowBackgroundColor || '',
+				oddBg: tableElement.dataset.wptbOddRowBackgroundColor || '',
 			};
 
 			parsedFromTable.options.general = Object.keys(parsedGeneral).reduce((carry, item) => {

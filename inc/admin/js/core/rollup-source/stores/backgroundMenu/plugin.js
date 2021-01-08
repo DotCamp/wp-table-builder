@@ -47,6 +47,18 @@ const subscriptions = (store) => {
 		{ deep: true }
 	);
 
+	// TODO [erdembircan] remove for production
+	store.watch(
+		() => {
+			return store.state;
+		},
+		() => {
+			// TODO [erdembircan] remove for production
+			console.log(store.state);
+		},
+		{ deep: true }
+	);
+
 	// watch store mutations
 	store.subscribe(mutationWatchFunction(mutationWatchList, store));
 };

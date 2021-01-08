@@ -2,6 +2,7 @@ import createStore from '../index';
 import state from './state';
 import getters from './getters';
 import mutations from './mutations';
+import actions from './actions';
 import subscriptions from './plugin';
 
 /**
@@ -9,7 +10,7 @@ import subscriptions from './plugin';
  *
  * @type {Object}
  */
-const defaultStore = { state, getters, mutations, plugins: [subscriptions], strict: true };
+const defaultStore = { state, getters, mutations, actions, plugins: [subscriptions], strict: true };
 
 /** @module createStore */
 export default createStore(defaultStore);

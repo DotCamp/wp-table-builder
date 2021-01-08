@@ -22,8 +22,10 @@ const state = {
 		type: null,
 		item: null,
 	},
-	hoveredRow: {
-		element: null,
+	hovered: {
+		row: {
+			element: null,
+		},
 	},
 };
 

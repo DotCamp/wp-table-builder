@@ -31,6 +31,16 @@ const getters = {
 	currentSelection: (state) => {
 		return state.selected;
 	},
+
+	/**
+	 * Get currently hovered row element.
+	 *
+	 * @param {Object} state background menu state
+	 * @return {null|Element} currently hovered row
+	 */
+	hoveredRow: (state) => {
+		return state.hovered.row.element;
+	},
 };
 
 /** @module getters */
