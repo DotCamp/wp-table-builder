@@ -27774,6 +27774,8 @@ var _default = {
               break;
 
             case this.types.selected.row:
+              // get color value from row dataset attribute
+              colorVal = item.dataset.wptbBgColor || '';
               break;
 
             default:
@@ -27815,11 +27817,24 @@ var _default = {
   methods: _objectSpread({
     setSelectedBackground: function setSelectedBackground(color) {
       this.backgroundBuffer.color = color;
-      var item = this.currentSelection.item;
+      var _this$currentSelectio = this.currentSelection,
+          item = _this$currentSelectio.item,
+          type = _this$currentSelectio.type;
 
       if (item) {
-        item.dataset.wptbOwnBgColor = color;
+        // eslint-disable-next-line default-case
+        switch (type) {
+          case this.types.selected.cell:
+            item.dataset.wptbOwnBgColor = color;
+            break;
+
+          case this.types.selected.row:
+            item.dataset.wptbBgColor = color;
+            break;
+        }
+
         item.style.backgroundColor = color;
+        WPTB_BackgroundMenu.applyOptions();
         this.markTableDirty();
       }
     }

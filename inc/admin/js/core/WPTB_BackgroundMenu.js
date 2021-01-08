@@ -81,8 +81,13 @@
 			// apply even/odd row color
 			// eslint-disable-next-line array-callback-return
 			rest.map((row, index) => {
+				// ruleset to decide whether row has a custom bg color applied or not
+				const customBgColorRuleSet = ['', null, undefined];
+				const customBgColor = row.dataset.wptbBgColor;
+				const hasCustomBgColor = !customBgColorRuleSet.includes(customBgColor);
+
 				// eslint-disable-next-line no-param-reassign
-				row.style.backgroundColor = index % 2 === 0 ? evenBg : oddBg;
+				row.style.backgroundColor = hasCustomBgColor ? customBgColor : index % 2 === 0 ? evenBg : oddBg;
 			});
 		};
 
@@ -141,10 +146,13 @@
 			event.preventDefault();
 			event.stopPropagation();
 
-			// @moved
-			// const currentTargetType = event.target.nodeName.toLowerCase();
+			const currentTargetType = event.target.nodeName.toLowerCase();
 
-			const targetElement = event.target;
+			let targetElement = event.target;
+
+			if (currentTargetType !== 'td') {
+				targetElement = event.target.parentNode;
+			}
 
 			highlightCellLogic(targetElement);
 

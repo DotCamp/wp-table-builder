@@ -65,6 +65,8 @@ export default {
 							colorVal = item.dataset.wptbOwnBgColor || '';
 							break;
 						case this.types.selected.row:
+							// get color value from row dataset attribute
+							colorVal = item.dataset.wptbBgColor || '';
 							break;
 						default:
 							break;
@@ -102,11 +104,22 @@ export default {
 		setSelectedBackground(color) {
 			this.backgroundBuffer.color = color;
 
-			const { item } = this.currentSelection;
+			const { item, type } = this.currentSelection;
 
 			if (item) {
-				item.dataset.wptbOwnBgColor = color;
+				// eslint-disable-next-line default-case
+				switch (type) {
+					case this.types.selected.cell:
+						item.dataset.wptbOwnBgColor = color;
+						break;
+					case this.types.selected.row:
+						item.dataset.wptbBgColor = color;
+						break;
+				}
+
 				item.style.backgroundColor = color;
+
+				WPTB_BackgroundMenu.applyOptions();
 				this.markTableDirty();
 			}
 		},
