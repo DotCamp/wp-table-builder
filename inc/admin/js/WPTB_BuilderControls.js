@@ -27694,6 +27694,102 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    message: {
+      type: String,
+      default: 'default message'
+    }
+  },
+  data: function data() {
+    return {
+      icons: {
+        info: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/></svg>'
+      }
+    };
+  },
+  methods: {
+    getIcon: function getIcon(type) {
+      var _this$icons$type;
+
+      return (_this$icons$type = this.icons[type]) !== null && _this$icons$type !== void 0 ? _this$icons$type : this.icons.info;
+    }
+  }
+};
+exports.default = _default;
+        var $9b98d7 = exports.default || module.exports;
+      
+      if (typeof $9b98d7 === 'function') {
+        $9b98d7 = $9b98d7.options;
+      }
+    
+        /* template */
+        Object.assign($9b98d7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-panel-message"
+          },
+          [
+            _c("div", {
+              staticClass:
+                "wptb-panel-message-icon wptb-flex-row wptb-flex-align-center wptb-flex-justify-center",
+              domProps: { innerHTML: _vm._s(_vm.getIcon("info")) }
+            }),
+            _vm._v(" "),
+            _c("div", { domProps: { innerHTML: _vm._s(_vm.message) } })
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"containers/TableBackgroundMenu.vue":[function(require,module,exports) {
 "use strict";
 
@@ -27712,6 +27808,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/with
 
 var _PanelPlainMessage = _interopRequireDefault(require("../components/leftPanel/PanelPlainMessage"));
 
+var _PanelMessageRow = _interopRequireDefault(require("../components/leftPanel/PanelMessageRow"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -27722,6 +27820,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    PanelMessageRow: _PanelMessageRow.default,
     PanelPlainMessage: _PanelPlainMessage.default,
     ColorPicker: _ColorPicker.default,
     SectionGroupCollapse: _SectionGroupCollapse.default
@@ -27788,7 +27887,8 @@ var _default = {
         default:
           return '';
       }
-    }
+    },
+    columnMixedMessageVisibility: function columnMixedMessageVisibility() {}
   }, (0, _vuex.mapGetters)(['generalOptions', 'currentSelection', 'types'])),
   methods: _objectSpread({
     setSelectedBackground: function setSelectedBackground(color) {
@@ -27807,9 +27907,24 @@ var _default = {
           case this.types.selected.row:
             item.dataset.wptbBgColor = color;
             break;
-        }
 
-        item.style.backgroundColor = color;
+          case this.types.selected.column:
+            // for column type, item value is stored as an array
+            // eslint-disable-next-line array-callback-return
+            item.map(function (cell) {
+              // eslint-disable-next-line no-param-reassign
+              cell.dataset.wptbOwnBgColor = color;
+            });
+            break;
+        } // eslint-disable-next-line no-const-assign
+
+
+        item = Array.isArray(item) ? item : [item]; // eslint-disable-next-line array-callback-return
+
+        item.map(function (a) {
+          // eslint-disable-next-line no-param-reassign
+          a.style.backgroundColor = color;
+        });
         WPTB_BackgroundMenu.applyOptions();
         this.markTableDirty();
       }
@@ -27925,7 +28040,13 @@ exports.default = _default;
                         label: _vm.customColorControlLabel
                       },
                       on: { colorChanged: _vm.setSelectedBackground }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.columnMixedMessageVisibility
+                      ? _c("panel-message-row", {
+                          attrs: { message: "panel message" }
+                        })
+                      : _vm._e()
                   ],
                   1
                 )
@@ -27949,7 +28070,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../components/ColorPicker":"components/ColorPicker.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../components/leftPanel/PanelPlainMessage":"components/leftPanel/PanelPlainMessage.vue"}],"stores/general.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../components/leftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","../components/ColorPicker":"components/ColorPicker.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../components/leftPanel/PanelPlainMessage":"components/leftPanel/PanelPlainMessage.vue","../components/leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28128,6 +28249,10 @@ var state = {
   hovered: {
     row: {
       element: null
+    },
+    cell: {
+      element: null,
+      index: null
     }
   }
 };
@@ -28189,6 +28314,16 @@ var getters = {
    */
   hoveredRow: function hoveredRow(state) {
     return state.hovered.row.element;
+  },
+
+  /**
+   * Get currently hovered cell element
+   *
+   * @param {Object} state background menu state
+   * @return {Object} hovered cell info objectt
+   */
+  hoveredCell: function hoveredCell(state) {
+    return state.hovered.cell;
   }
 };
 /** @module getters */
@@ -28231,7 +28366,7 @@ var mutations = {
    * @param {Object} state background menu state object
    * @param {Object} root mutation object
    * @param {string} root.type element type
-   * @param {HTMLElement} root.item element
+   * @param {HTMLElement | Array} root.item element or array of elements
    */
   setMenuSelectedTableElement: function setMenuSelectedTableElement(state, _ref2) {
     var type = _ref2.type,
@@ -28258,6 +28393,23 @@ var mutations = {
   updateHoveredRowElement: function updateHoveredRowElement(state, rowElement) {
     // eslint-disable-next-line no-param-reassign
     state.hovered.row.element = rowElement;
+  },
+
+  /**
+   * Update current cell element which is hovered.
+   *
+   * @param {Object} state background menu state object
+   * @param {Object} root payload
+   * @param {Object} root.element hovered cell element
+   * @param {number} root.index elements index on its container row
+   */
+  updateHoveredCellElement: function updateHoveredCellElement(state, _ref3) {
+    var element = _ref3.element,
+        index = _ref3.index;
+    // eslint-disable-next-line no-param-reassign
+    state.hovered.cell.element = element; // eslint-disable-next-line no-param-reassign
+
+    state.hovered.cell.index = index;
   }
 };
 /** @module mutations */
@@ -28289,6 +28441,21 @@ var actions = {
     commit('setMenuSelectedTableElement', {
       type: null,
       item: null
+    });
+  },
+
+  /**
+   * Clear hover states of background menu store.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit mutation commit function
+   */
+  clearHoverStates: function clearHoverStates(_ref2) {
+    var commit = _ref2.commit;
+    commit('updateHoveredRowElement', null);
+    commit('updateHoveredCellElement', {
+      element: null,
+      index: null
     });
   }
 };

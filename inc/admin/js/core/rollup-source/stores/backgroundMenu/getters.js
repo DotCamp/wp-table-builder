@@ -41,6 +41,15 @@ const getters = {
 	hoveredRow: (state) => {
 		return state.hovered.row.element;
 	},
+	/**
+	 * Get currently hovered cell element
+	 *
+	 * @param {Object} state background menu state
+	 * @return {Object} hovered cell info objectt
+	 */
+	hoveredCell: (state) => {
+		return state.hovered.cell;
+	},
 };
 
 /** @module getters */

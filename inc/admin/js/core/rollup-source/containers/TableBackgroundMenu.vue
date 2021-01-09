@@ -28,6 +28,7 @@
 						:color="backgroundBuffer.color"
 						:label="customColorControlLabel"
 					></color-picker>
+					<panel-message-row v-if="columnMixedMessageVisibility" message="panel message"></panel-message-row>
 				</div>
 			</section-group-collapse>
 		</div>
@@ -40,9 +41,10 @@ import SectionGroupCollapse from '../components/leftPanel/SectionGroupCollapse';
 import ColorPicker from '../components/ColorPicker';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import PanelPlainMessage from '../components/leftPanel/PanelPlainMessage';
+import PanelMessageRow from '../components/leftPanel/PanelMessageRow';
 
 export default {
-	components: { PanelPlainMessage, ColorPicker, SectionGroupCollapse },
+	components: { PanelMessageRow, PanelPlainMessage, ColorPicker, SectionGroupCollapse },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -98,13 +100,14 @@ export default {
 					return '';
 			}
 		},
+		columnMixedMessageVisibility() {},
 		...mapGetters(['generalOptions', 'currentSelection', 'types']),
 	},
 	methods: {
 		setSelectedBackground(color) {
 			this.backgroundBuffer.color = color;
 
-			const { item, type } = this.currentSelection;
+			let { item, type } = this.currentSelection;
 
 			if (item) {
 				// eslint-disable-next-line default-case
@@ -115,9 +118,24 @@ export default {
 					case this.types.selected.row:
 						item.dataset.wptbBgColor = color;
 						break;
+					case this.types.selected.column:
+						// for column type, item value is stored as an array
+						// eslint-disable-next-line array-callback-return
+						item.map((cell) => {
+							// eslint-disable-next-line no-param-reassign
+							cell.dataset.wptbOwnBgColor = color;
+						});
+						break;
 				}
 
-				item.style.backgroundColor = color;
+				// eslint-disable-next-line no-const-assign
+				item = Array.isArray(item) ? item : [item];
+
+				// eslint-disable-next-line array-callback-return
+				item.map((a) => {
+					// eslint-disable-next-line no-param-reassign
+					a.style.backgroundColor = color;
+				});
 
 				WPTB_BackgroundMenu.applyOptions();
 				this.markTableDirty();

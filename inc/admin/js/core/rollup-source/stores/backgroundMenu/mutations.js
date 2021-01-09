@@ -23,7 +23,7 @@ const mutations = {
 	 * @param {Object} state background menu state object
 	 * @param {Object} root mutation object
 	 * @param {string} root.type element type
-	 * @param {HTMLElement} root.item element
+	 * @param {HTMLElement | Array} root.item element or array of elements
 	 */
 	setMenuSelectedTableElement: (state, { type, item }) => {
 		// eslint-disable-next-line no-param-reassign
@@ -46,6 +46,20 @@ const mutations = {
 	updateHoveredRowElement: (state, rowElement) => {
 		// eslint-disable-next-line no-param-reassign
 		state.hovered.row.element = rowElement;
+	},
+	/**
+	 * Update current cell element which is hovered.
+	 *
+	 * @param {Object} state background menu state object
+	 * @param {Object} root payload
+	 * @param {Object} root.element hovered cell element
+	 * @param {number} root.index elements index on its container row
+	 */
+	updateHoveredCellElement: (state, { element, index }) => {
+		// eslint-disable-next-line no-param-reassign
+		state.hovered.cell.element = element;
+		// eslint-disable-next-line no-param-reassign
+		state.hovered.cell.index = index;
 	},
 };
 

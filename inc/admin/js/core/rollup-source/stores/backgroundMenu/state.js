@@ -26,6 +26,10 @@ const state = {
 		row: {
 			element: null,
 		},
+		cell: {
+			element: null,
+			index: null,
+		},
 	},
 };
 

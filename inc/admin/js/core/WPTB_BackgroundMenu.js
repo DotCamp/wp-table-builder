@@ -9,6 +9,8 @@
 	/**
 	 * Background menu component.
 	 *
+	 * TODO [erdembircan] detailed explanation of component
+	 *
 	 * @class
 	 */
 	function BackgroundMenu() {
@@ -156,33 +158,27 @@
 
 			highlightCellLogic(targetElement);
 
-			// @moved
-			// // remove any active highlighted cells
-			// const allCells = Array.from(getCurrentTable().querySelectorAll('td'));
-			//
-			// // eslint-disable-next-line array-callback-return
-			// allCells.map((cell) => {
-			// 	cell.classList.remove('wptb-highlighted');
-			// });
-			//
-			// // only add highlight style to table cell elements
-			// if (currentTargetType !== 'td') {
-			// 	targetElement = event.target.parentNode;
-			// }
-			//
-			// targetElement.classList.add('wptb-highlighted');
-
 			store.commit('setMenuSelectedTableElement', { type: store.state.types.selected.cell, item: targetElement });
 		};
 
 		/**
-		 * Get row selection element.
+		 * Get column selection element.
 		 *
 		 * @return {Element} row selection element
 		 */
-		const getRowSelector = () => {
-			const rowSelectionClass = '.wptb-row-selection';
+		const getColumnSelector = () => {
+			const rowSelectionClass = '.wptb-col-selection';
 			return document.querySelector(rowSelectionClass);
+		};
+
+		/**
+		 * Get column selection element.
+		 *
+		 * @return {Element} column selection element
+		 */
+		const getRowSelector = () => {
+			const columnSelectionClass = '.wptb-row-selection';
+			return document.querySelector(columnSelectionClass);
 		};
 
 		/**
@@ -196,6 +192,52 @@
 		};
 
 		/**
+		 * Handle mouse over event for table cells.
+		 *
+		 * @param {Event} event event object
+		 */
+		const cellMouseEnter = (event) => {
+			const targetElement = event.target;
+
+			// find index of cell element relative to its container row element
+			const index = Array.from(targetElement.parentNode.querySelectorAll('td')).reduce(
+				(carry, current, cellIndex) => {
+					return current === targetElement ? cellIndex : carry;
+				},
+				-1
+			);
+
+			// update hovered cell element on store
+			store.commit('updateHoveredCellElement', { element: targetElement, index });
+		};
+
+		/**
+		 * Get all cells at the given column index.
+		 *
+		 * @param {number | string} columnIndex column index
+		 */
+		const getCellsAtColumnIndex = (columnIndex) => {
+			// parse index to an integer if its type is not a number
+			const parsedIndex = typeof columnIndex === 'number' ? columnIndex : Number.parseInt(columnIndex, 10);
+
+			const cells = [];
+			// eslint-disable-next-line no-restricted-globals
+			if (!isNaN(parsedIndex)) {
+				// eslint-disable-next-line array-callback-return
+				Array.from(getCurrentTable().querySelectorAll('tr')).map((row) => {
+					const [cellAtIndex] = Array.from(row.querySelectorAll('td')).splice(parsedIndex, 1);
+
+					// only push the cell to found ones if there is a cell at the given index
+					if (cellAtIndex) {
+						cells.push(cellAtIndex);
+					}
+				});
+			}
+
+			return cells;
+		};
+
+		/**
 		 * Calculate row selector position relative to supplied table row element.
 		 *
 		 * @param {Element} targetRow target row element
@@ -205,14 +247,39 @@
 			const { height, x, y } = targetRow.getBoundingClientRect();
 
 			const rowSelector = getRowSelector();
-			rowSelector.classList.add('wptb-row-selection-visible');
-			// rowSelector.style.display = 'block';
+			rowSelector.classList.add('wptb-bg-selection-visible');
 			rowSelector.style.height = `${height}px`;
 			rowSelector.style.top = `${y - parentY}px`;
 
 			// since row selector is hidden with 'display: none' css rule, should get its size values after it becomes visible
 			const { width: selectorWidth } = getRowSelector().getBoundingClientRect();
 			rowSelector.style.left = `${x - parentX - selectorWidth}px`;
+		};
+
+		/**
+		 * Calculate position of column selector element.
+		 *
+		 * @param {number | string} index index of the column relative to current table
+		 */
+		const columnSelectorPosition = (index) => {
+			const cellsAtIndex = getCellsAtColumnIndex(index);
+
+			if (cellsAtIndex.length > 0) {
+				const colSelector = getColumnSelector();
+
+				// select the cell width lowest width value to use as a pivot point
+				const cellToUse = cellsAtIndex.reduce((carry, cell) => {
+					return carry.offsetWidth > cell.offsetWidth ? cell : carry;
+				}, cellsAtIndex[0]);
+
+				const { x: parentX } = document.querySelector('.wptb-table-setup').getBoundingClientRect();
+				const { width, x } = cellToUse.getBoundingClientRect();
+
+				colSelector.classList.add('wptb-bg-selection-visible');
+				colSelector.style.left = `${x - parentX}px`;
+				colSelector.style.top = `${-colSelector.offsetHeight}px`;
+				colSelector.style.width = `${width}px`;
+			}
 		};
 
 		/**
@@ -241,31 +308,88 @@
 		};
 
 		/**
+		 * Select cells of an entire column.
+		 *
+		 * This function will use store index value to determine which column to use.
+		 */
+		const selectColumn = () => {
+			const { index } = store.getters.hoveredCell;
+
+			if (index !== null) {
+				const [first, ...rest] = getCellsAtColumnIndex(index);
+				highlightCellLogic(first);
+				// eslint-disable-next-line array-callback-return
+				rest.map((cell) => {
+					highlightCellLogic(cell, true);
+				});
+
+				store.commit('setMenuSelectedTableElement', {
+					type: store.getters.types.selected.column,
+					item: [first, ...rest],
+				});
+			}
+		};
+
+		/**
+		 * Add a container that will contain row and column selectors.
+		 */
+		const addSelectorToolbox = () => {
+			// main toolbox wrapper
+			const toolbox = document.createElement('div');
+			toolbox.classList.add('wptb-bg-color-selectors');
+
+			// row selector
+			const rowSelector = document.createElement('div');
+			rowSelector.classList.add('wptb-row-selection', 'wptb-bg-selection-item');
+			rowSelector.title = 'Select row';
+
+			WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-selector-icon-wrapper').then((icon) => {
+				rowSelector.appendChild(icon);
+			});
+
+			const colSelector = document.createElement('div');
+			colSelector.classList.add('wptb-col-selection', 'wptb-bg-selection-item');
+			colSelector.title = 'Select column';
+			WPTB_IconManager.getIcon('arrow-alt-circle-down', 'wptb-selector-icon-wrapper').then((icon) => {
+				colSelector.appendChild(icon);
+			});
+
+			// add column selector click event
+			colSelector.addEventListener('click', (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+
+				selectColumn();
+			});
+
+			// add row selector to toolbox
+			toolbox.appendChild(rowSelector);
+
+			// add column selector to toolbox
+			toolbox.appendChild(colSelector);
+
+			// add toolbox element to its parent container
+			document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(toolbox);
+		};
+
+		/**
 		 * Assign row select handlers for current table.
 		 */
 		const assignRowClickHandler = () => {
-			const rowSelectionClass = 'wptb-row-selection';
-			let rowSelector = getRowSelector();
+			const selectorToolbox = document.querySelector('wptb-bg-color-selectors');
 
-			if (!rowSelector) {
-				rowSelector = document.createElement('div');
-				rowSelector.classList.add(rowSelectionClass);
-				rowSelector.title = 'Select row';
-
-				WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-row-selector-icon-wrapper').then((icon) => {
-					rowSelector.appendChild(icon);
-				});
-
-				// add row selector element to its parent container
-				document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(rowSelector);
-
-				rowSelector.addEventListener('click', (event) => {
-					event.preventDefault();
-					event.stopPropagation();
-
-					selectRow();
-				});
+			if (!selectorToolbox) {
+				addSelectorToolbox();
 			}
+
+			const rowSelector = getRowSelector();
+
+			rowSelector.addEventListener('click', (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+
+				selectRow();
+			});
 
 			const rows = Array.from(getCurrentTable().querySelectorAll('tr'));
 
@@ -288,7 +412,7 @@
 			const rowSelector = getRowSelector();
 			if (rowSelector) {
 				// hide row selector element if any found
-				rowSelector.classList.remove('wptb-row-selection-visible');
+				rowSelector.classList.remove('wptb-bg-selection-visible');
 			}
 
 			// clear up last hovered row element value
@@ -304,26 +428,32 @@
 			// eslint-disable-next-line array-callback-return
 			cells.map((cell) => {
 				cell.addEventListener('click', highlightCell);
+				cell.addEventListener('mouseenter', cellMouseEnter);
 			});
 		};
 
 		/**
 		 * Remove cell click handlers from data cells.
 		 */
-		const removeCellClickHandlers = () => {
+		const removeCellHandlers = () => {
 			const cells = Array.from(getCurrentTable().querySelectorAll('td'));
 
 			// eslint-disable-next-line array-callback-return
 			cells.map((cell) => {
 				cell.removeEventListener('click', highlightCell);
+				cell.removeEventListener('mouseenter', cellMouseEnter);
 			});
+
+			// hide column selector element
+			getColumnSelector().classList.remove('wptb-bg-selection-visible');
 		};
 
 		/**
-		 * Clear selection from store.
+		 * Clear specific states from store.
 		 */
-		const clearSelection = () => {
+		const clearStates = () => {
 			store.dispatch('clearSelection');
+			store.dispatch('clearHoverStates');
 		};
 
 		/**
@@ -344,10 +474,10 @@
 				}
 
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
-					removeCellClickHandlers();
+					removeCellHandlers();
 					removeRowHandlers();
 					removeHighlights();
-					clearSelection();
+					clearStates();
 				}
 			});
 
@@ -371,6 +501,9 @@
 							// update row selector position on hovered row element changes
 							rowSelectorPosition(payload);
 						}
+						break;
+					case 'updateHoveredCellElement':
+						columnSelectorPosition(payload.index);
 						break;
 					default:
 						break;
