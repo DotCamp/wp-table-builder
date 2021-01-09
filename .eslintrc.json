@@ -49,6 +49,7 @@
     "WPTB_NotificationManager": true,
     "WPTB_Store": true,
     "WPTB_BackgroundMenu": true,
-    "WPTB_IconManager": true
+    "WPTB_IconManager": true,
+    "wptb_admin_object": true
   }
 }

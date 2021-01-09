@@ -5645,9 +5645,13 @@ wptb_shortcode_container_element {
 }
 
 .wptb-color-picker-clear-color-indicator svg {
+    fill: var(--wptb-plugin-red-600)
+}
+
+.wptb-color-picker-icon-standards svg {
     width: 15px;
     height: auto;
-    fill: var(--wptb-plugin-red-600)
+
 }
 
 .wptb-color-picker-selected-color {
@@ -5678,8 +5682,6 @@ wptb_shortcode_container_element {
 }
 
 .wptb-color-picker-logo svg {
-    width: 15px;
-    height: auto;
     fill: currentColor;
 }
 
@@ -5727,6 +5729,10 @@ wptb_shortcode_container_element {
     font-size: 90% !important;
     color: var(--wptb-plugin-red-600);
     cursor: pointer;
+}
+
+.wptb-color-picker-clear-color svg {
+    fill: currentColor;
 }
 
 /*endregion*/

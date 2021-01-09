@@ -22229,13 +22229,6 @@ var _functions = require("../functions");
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 var _default = {
   props: {
     label: {
@@ -22262,7 +22255,11 @@ var _default = {
     return {
       visibility: false,
       toolPosition: {},
-      id: null
+      id: null,
+      icons: {
+        noColor: null,
+        palette: null
+      }
     };
   },
   mounted: function mounted() {
@@ -22277,6 +22274,12 @@ var _default = {
       });
       document.addEventListener('keyup', _this.handleHide);
       _this.id = (0, _functions.generateUniqueId)();
+      WPTB_IconManager.getIcon('tint-slash', null, true).then(function (resp) {
+        _this.icons.noColor = resp;
+      });
+      WPTB_IconManager.getIcon('palette', null, true).then(function (resp) {
+        _this.icons.palette = resp;
+      });
       WPTB_Store.subscribe('setActiveColorPicker', function (activeId) {
         _this.setVisibility(activeId === _this.id);
       });
@@ -22420,39 +22423,19 @@ exports.default = _default;
           },
           [
             _c("div", { staticClass: "wptb-color-picker-inner-indicator" }, [
-              _c(
-                "div",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.color === "",
-                      expression: "color === ''"
-                    }
-                  ],
-                  staticClass: "wptb-color-picker-clear-color-indicator"
-                },
-                [
-                  _c(
-                    "svg",
-                    {
-                      attrs: {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        viewBox: "0 0 640 512"
-                      }
-                    },
-                    [
-                      _c("path", {
-                        attrs: {
-                          d:
-                            "M633.82 458.1L494.97 350.78c.52-5.57 1.03-11.16 1.03-16.87 0-111.76-99.79-153.34-146.78-311.82-7.94-28.78-49.44-30.12-58.44 0-15.52 52.34-36.87 91.96-58.49 125.68L45.47 3.37C38.49-2.05 28.43-.8 23.01 6.18L3.37 31.45C-2.05 38.42-.8 48.47 6.18 53.9l588.36 454.73c6.98 5.43 17.03 4.17 22.46-2.81l19.64-25.27c5.41-6.97 4.16-17.02-2.82-22.45zM144 333.91C144 432.35 222.72 512 320 512c44.71 0 85.37-16.96 116.4-44.7L162.72 255.78c-11.41 23.5-18.72 48.35-18.72 78.13z"
-                        }
-                      })
-                    ]
-                  )
-                ]
-              ),
+              _c("div", {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.color === "",
+                    expression: "color === ''"
+                  }
+                ],
+                staticClass:
+                  "wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards",
+                domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+              }),
               _vm._v(" "),
               _c("div", {
                 staticClass:
@@ -22466,25 +22449,11 @@ exports.default = _default;
               })
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "wptb-color-picker-logo" }, [
-              _c(
-                "svg",
-                {
-                  attrs: {
-                    xmlns: "http://www.w3.org/2000/svg",
-                    viewBox: "0 0 512 512"
-                  }
-                },
-                [
-                  _c("path", {
-                    attrs: {
-                      d:
-                        "M204.3 5C104.9 24.4 24.8 104.3 5.2 203.4c-37 187 131.7 326.4 258.8 306.7 41.2-6.4 61.4-54.6 42.5-91.7-23.1-45.4 9.9-98.4 60.9-98.4h79.7c35.8 0 64.8-29.6 64.9-65.3C511.5 97.1 368.1-26.9 204.3 5zM96 320c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm32-128c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128-64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32zm128 64c-17.7 0-32-14.3-32-32s14.3-32 32-32 32 14.3 32 32-14.3 32-32 32z"
-                    }
-                  })
-                ]
-              )
-            ])
+            _c("div", {
+              staticClass:
+                "wptb-color-picker-logo wptb-color-picker-icon-standards",
+              domProps: { innerHTML: _vm._s(_vm.icons.palette) }
+            })
           ]
         ),
         _vm._v(" "),
@@ -22535,7 +22504,14 @@ exports.default = _default;
                           }
                         }
                       },
-                      [_vm._v("\n\t\t\t\t\t\tClear\n\t\t\t\t\t")]
+                      [
+                        _c("div", {
+                          staticClass: "wptb-color-picker-icon-standards",
+                          domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+                        }),
+                        _vm._v(" "),
+                        _c("div", [_vm._v("Clear")])
+                      ]
                     )
                   ]
                 )

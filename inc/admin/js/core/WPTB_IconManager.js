@@ -53,14 +53,13 @@
 		 * Get a cached icon.
 		 *
 		 * @param {string} iconName name of the icon
-		 * @param {string} extraClass extra class name to add to icon wrapper
+		 * @param {string | null} extraClass extra class name to add to icon wrapper
+		 * @param {string | null} getStringifiedVersion get stringified version of the icon
 		 * @return {null | Element} Prepared cached icon or null if no cached version is found
 		 */
-		const getCachedIcon = (iconName, extraClass) => {
+		const getCachedIcon = (iconName, extraClass = null, getStringifiedVersion = false) => {
 			if (cachedIcons[iconName]) {
-				// TODO [erdembircan] remove for production
-				console.log(`icon served from cache [${iconName}]`);
-				return prepareIcon(cachedIcons[iconName], extraClass);
+				return getStringifiedVersion ? cachedIcons[iconName] : prepareIcon(cachedIcons[iconName], extraClass);
 			}
 			return null;
 		};
@@ -82,13 +81,14 @@
 		 *
 		 * @param {string} iconName name of the icon
 		 * @param {string} extraClass extra class to add to icon wrapper
-		 * @return {Promise<void>} a Promise that will be resolved when icon is fetched from server.
+		 * @param {string} getStringifiedVersion get stringified version of icon
+		 * @return {Promise<void>} a Promise that will be resolved when icon is fetched from server
 		 */
-		this.getIcon = (iconName, extraClass = null) => {
+		this.getIcon = (iconName, extraClass = null, getStringifiedVersion = false) => {
 			// eslint-disable-next-line consistent-return
 			return new Promise((res, rej) => {
 				// if cached version is found, return that version
-				const cachedIcon = getCachedIcon(iconName, extraClass);
+				const cachedIcon = getCachedIcon(iconName, extraClass, getStringifiedVersion);
 				if (cachedIcon) {
 					return res(cachedIcon);
 				}
@@ -109,7 +109,7 @@
 							// add icon to cache
 							addToCache(iconName, iconString);
 
-							return res(prepareIcon(iconString, extraClass));
+							return res(getStringifiedVersion ? iconString : prepareIcon(iconString, extraClass));
 						})
 						.catch((err) => {
 							return rej(new Error(err));
