@@ -23,7 +23,7 @@ export default {
 					selectedRow: __('selected row background', 'wp-table-builder'),
 					selectedColumn: __('selected column background', 'wp-table-builder'),
 					mixedColumnColorMessage: __(
-						'There are cells with different color values on this column, applying column wide color will override those values.',
+						'There are cells with different color values on this column, applying column wide color values will override those.',
 						'wp-table-builder'
 					),
 					emptySelectionMessage: __(

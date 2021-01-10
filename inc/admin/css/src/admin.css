@@ -6125,6 +6125,10 @@ wptb_shortcode_container_element {
 
 /*endregion*/
 
+.wptb-panel-message {
+    color: var(--wptb-plugin-gray-600);
+}
+
 .wptb-panel-message-icon {
     margin-right: 10px;
 }

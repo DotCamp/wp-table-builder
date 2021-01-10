@@ -28550,16 +28550,19 @@ var subscriptions = function subscriptions(store) {
     new WPTB_TableStateSaveManager().tableStateSet();
   }, {
     deep: true
-  }); // TODO [erdembircan] remove for production
-
-  store.watch(function () {
-    return store.state;
-  }, function () {
-    // TODO [erdembircan] remove for production
-    console.log(store.state);
-  }, {
-    deep: true
-  }); // watch store mutations
+  }); // @deprecated dev option
+  // // TODO [erdembircan] remove for production
+  // store.watch(
+  // 	() => {
+  // 		return store.state;
+  // 	},
+  // 	() => {
+  // 		// TODO [erdembircan] remove for production
+  // 		console.log(store.state);
+  // 	},
+  // 	{ deep: true }
+  // );
+  // watch store mutations
 
   store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
 };
@@ -28647,7 +28650,7 @@ var _default = {
           selectedCell: (0, _i18n.__)('selected cell background', 'wp-table-builder'),
           selectedRow: (0, _i18n.__)('selected row background', 'wp-table-builder'),
           selectedColumn: (0, _i18n.__)('selected column background', 'wp-table-builder'),
-          mixedColumnColorMessage: (0, _i18n.__)('There are cells with different color values on this column, applying column wide color will override those values.', 'wp-table-builder'),
+          mixedColumnColorMessage: (0, _i18n.__)('There are cells with different color values on this column, applying column wide color values will override those.', 'wp-table-builder'),
           emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
         }
       }

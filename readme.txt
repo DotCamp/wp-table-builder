@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.6
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -87,6 +87,17 @@ That's it. You're done!
 8. Shortcode in WP Table Builder.
 
 == Changelog ==
+
+= 1.3.4 =
+
+* NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
+* IMPROVE: Text element placeholder text is replaced with a more appropriate one.
+* IMPROVE: Button html element support for custom html table element.
+* IMPROVE: New background logic and menu.
+* FIX: Fixed an issue where newly created table text elements share same identification number.
+* FIX: Fixed an issue affecting row colors of static top row enabled responsive tables.
+* FIX: Fixed an issue affecting text element where at certain situations align options are not working.
+
 
 = 1.3.3 =
 

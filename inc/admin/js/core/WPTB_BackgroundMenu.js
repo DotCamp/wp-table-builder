@@ -88,7 +88,7 @@
 				const customBgColor = row.dataset.wptbBgColor;
 				const hasCustomBgColor = !customBgColorRuleSet.includes(customBgColor);
 
-				// eslint-disable-next-line no-param-reassign
+				// eslint-disable-next-line no-param-reassign,no-nested-ternary
 				row.style.backgroundColor = hasCustomBgColor ? customBgColor : index % 2 === 0 ? evenBg : oddBg;
 			});
 		};
