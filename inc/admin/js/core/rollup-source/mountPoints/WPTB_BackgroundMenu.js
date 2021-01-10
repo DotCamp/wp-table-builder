@@ -21,6 +21,11 @@ export default {
 					customSelection: __('custom selection color options', 'wp-table-builder'),
 					selectedCell: __('selected cell background', 'wp-table-builder'),
 					selectedRow: __('selected row background', 'wp-table-builder'),
+					selectedColumn: __('selected column background', 'wp-table-builder'),
+					mixedColumnColorMessage: __(
+						'There are cells with different color values on this column, applying column wide color will override those values.',
+						'wp-table-builder'
+					),
 					emptySelectionMessage: __(
 						'Select a row/column/cell to change their background properties.',
 						'wp-table-builder'

@@ -28,7 +28,10 @@
 						:color="backgroundBuffer.color"
 						:label="customColorControlLabel"
 					></color-picker>
-					<panel-message-row v-if="columnMixedMessageVisibility" message="panel message"></panel-message-row>
+					<panel-message-row
+						v-if="columnMixedMessageVisibility"
+						:message="translationM('mixedColumnColorMessage')"
+					></panel-message-row>
 				</div>
 			</section-group-collapse>
 		</div>
@@ -70,6 +73,9 @@ export default {
 							// get color value from row dataset attribute
 							colorVal = item.dataset.wptbBgColor || '';
 							break;
+						case this.types.selected.column:
+							colorVal = this.columnItemSharesColor(item) ? item[0].dataset.wptbOwnBgColor || '' : '';
+							break;
 						default:
 							break;
 					}
@@ -96,14 +102,32 @@ export default {
 					return this.translationM('selectedCell');
 				case this.types.selected.row:
 					return this.translationM('selectedRow');
+				case this.types.selected.column:
+					return this.translationM('selectedColumn');
 				default:
 					return '';
 			}
 		},
-		columnMixedMessageVisibility() {},
+		columnMixedMessageVisibility() {
+			const { type, item } = this.currentSelection;
+			if (type === this.types.selected.column) {
+				return !this.columnItemSharesColor(item);
+			}
+
+			return false;
+		},
 		...mapGetters(['generalOptions', 'currentSelection', 'types']),
 	},
 	methods: {
+		columnItemSharesColor(columnItems) {
+			const colorToCheck = getComputedStyle(columnItems[0]).backgroundColor;
+
+			const allSameColor = columnItems.every((a) => {
+				return getComputedStyle(a).backgroundColor === colorToCheck;
+			});
+
+			return allSameColor;
+		},
 		setSelectedBackground(color) {
 			this.backgroundBuffer.color = color;
 
@@ -139,6 +163,8 @@ export default {
 
 				WPTB_BackgroundMenu.applyOptions();
 				this.markTableDirty();
+
+				this.repaintMessage += 1;
 			}
 		},
 		...mapMutations(['setGeneralOption', 'markTableDirty']),

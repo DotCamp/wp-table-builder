@@ -27853,6 +27853,10 @@ var _default = {
               colorVal = item.dataset.wptbBgColor || '';
               break;
 
+            case this.types.selected.column:
+              colorVal = this.columnItemSharesColor(item) ? item[0].dataset.wptbOwnBgColor || '' : '';
+              break;
+
             default:
               break;
           }
@@ -27884,18 +27888,38 @@ var _default = {
         case this.types.selected.row:
           return this.translationM('selectedRow');
 
+        case this.types.selected.column:
+          return this.translationM('selectedColumn');
+
         default:
           return '';
       }
     },
-    columnMixedMessageVisibility: function columnMixedMessageVisibility() {}
+    columnMixedMessageVisibility: function columnMixedMessageVisibility() {
+      var _this$currentSelectio = this.currentSelection,
+          type = _this$currentSelectio.type,
+          item = _this$currentSelectio.item;
+
+      if (type === this.types.selected.column) {
+        return !this.columnItemSharesColor(item);
+      }
+
+      return false;
+    }
   }, (0, _vuex.mapGetters)(['generalOptions', 'currentSelection', 'types'])),
   methods: _objectSpread({
+    columnItemSharesColor: function columnItemSharesColor(columnItems) {
+      var colorToCheck = getComputedStyle(columnItems[0]).backgroundColor;
+      var allSameColor = columnItems.every(function (a) {
+        return getComputedStyle(a).backgroundColor === colorToCheck;
+      });
+      return allSameColor;
+    },
     setSelectedBackground: function setSelectedBackground(color) {
       this.backgroundBuffer.color = color;
-      var _this$currentSelectio = this.currentSelection,
-          item = _this$currentSelectio.item,
-          type = _this$currentSelectio.type;
+      var _this$currentSelectio2 = this.currentSelection,
+          item = _this$currentSelectio2.item,
+          type = _this$currentSelectio2.type;
 
       if (item) {
         // eslint-disable-next-line default-case
@@ -27927,6 +27951,7 @@ var _default = {
         });
         WPTB_BackgroundMenu.applyOptions();
         this.markTableDirty();
+        this.repaintMessage += 1;
       }
     }
   }, (0, _vuex.mapMutations)(['setGeneralOption', 'markTableDirty']))
@@ -28044,7 +28069,9 @@ exports.default = _default;
                     _vm._v(" "),
                     _vm.columnMixedMessageVisibility
                       ? _c("panel-message-row", {
-                          attrs: { message: "panel message" }
+                          attrs: {
+                            message: _vm.translationM("mixedColumnColorMessage")
+                          }
                         })
                       : _vm._e()
                   ],
@@ -28619,6 +28646,8 @@ var _default = {
           customSelection: (0, _i18n.__)('custom selection color options', 'wp-table-builder'),
           selectedCell: (0, _i18n.__)('selected cell background', 'wp-table-builder'),
           selectedRow: (0, _i18n.__)('selected row background', 'wp-table-builder'),
+          selectedColumn: (0, _i18n.__)('selected column background', 'wp-table-builder'),
+          mixedColumnColorMessage: (0, _i18n.__)('There are cells with different color values on this column, applying column wide color will override those values.', 'wp-table-builder'),
           emptySelectionMessage: (0, _i18n.__)('Select a row/column/cell to change their background properties.', 'wp-table-builder')
         }
       }

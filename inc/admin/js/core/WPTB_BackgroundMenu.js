@@ -455,6 +455,23 @@
 			store.dispatch('clearSelection');
 			store.dispatch('clearHoverStates');
 		};
+		/**
+		 * Clear out hover,edit active etc indicators that might have been stated on table.
+		 */
+		const clearTableIndicators = () => {
+			const currentTable = getCurrentTable();
+
+			// remove active edit indicators
+			Array.from(currentTable.querySelectorAll('.edit-active')).map((el) => {
+				el.classList.remove('edit-active');
+			});
+
+			// hide element hover toolbox
+			const elementActionsToolbox = document.querySelector('.wptb-actions');
+			if (elementActionsToolbox) {
+				elementActionsToolbox.style.display = 'none';
+			}
+		};
 
 		/**
 		 * Initialize hook for component.
@@ -471,6 +488,7 @@
 				if (WPTB_Helper.getPreviousSection() !== 'background_menu' && detail === 'background_menu') {
 					assignCellClickHandlers();
 					assignRowClickHandler();
+					clearTableIndicators();
 				}
 
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
