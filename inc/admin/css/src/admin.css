@@ -6123,6 +6123,15 @@ wptb_shortcode_container_element {
     height: 30px;
 }
 
+.wptb-bg-column-rail {
+    position: absolute;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    border: 1px solid red
+}
+
 /*endregion*/
 
 .wptb-panel-message {

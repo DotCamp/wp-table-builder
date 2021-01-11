@@ -172,6 +172,15 @@
 		};
 
 		/**
+		 * Get column rail element
+		 *
+		 * @return {Element} column rail element
+		 */
+		const getColumnRail = () => {
+			return document.querySelector('.wptb-bg-color-selectors .wptb-bg-column-rail');
+		};
+
+		/**
 		 * Get column selection element.
 		 *
 		 * @return {Element} column selection element
@@ -277,9 +286,53 @@
 
 				colSelector.classList.add('wptb-bg-selection-visible');
 				colSelector.style.left = `${x - parentX}px`;
-				colSelector.style.top = `${-colSelector.offsetHeight}px`;
+				// colSelector.style.top = `${-colSelector.offsetHeight}px`;
 				colSelector.style.width = `${width}px`;
 			}
+		};
+
+		/**
+		 * Add column marks to selector rail.
+		 *
+		 * @param {Element} columnRailElement column rail element
+		 */
+		const addColumnMarksToRail = (columnRailElement) => {
+			// clear rail from all previous mark elements
+			Array.from(columnRailElement.querySelectorAll('.wptb-bg-rail-mark')).map((mark) => {
+				mark.remove();
+			});
+
+			const currentTable = getCurrentTable();
+			// find row with most columns to use an index
+			// eslint-disable-next-line array-callback-return
+			const indexRow = Array.from(currentTable.querySelectorAll('tr')).reduce((carry, item) => {
+				if (carry === null) {
+					return item;
+				}
+				const currentRowCellCount = item.querySelectorAll('td').length;
+				const carryRowCellCount = carry.querySelectorAll('td').length;
+
+				return currentRowCellCount > carryRowCellCount ? item : carry;
+			}, null);
+		};
+
+		/**
+		 * Calculate rail positions.
+		 *
+		 * This function will calculate main component position and also fill up rail with column marks.
+		 */
+		const calculateRailPositions = () => {
+			const currentTable = getCurrentTable();
+
+			const { width: tableWidth } = currentTable.getBoundingClientRect();
+
+			// column rail position calculations
+			const columnRail = getColumnRail();
+			const { height: columnRailHeight } = columnRail.getBoundingClientRect();
+			columnRail.style.top = `-${columnRailHeight}px`;
+			columnRail.style.width = `${tableWidth}px`;
+
+			addColumnMarksToRail(columnRail);
 		};
 
 		/**
@@ -347,6 +400,11 @@
 				rowSelector.appendChild(icon);
 			});
 
+			// column rail
+			const columnRail = document.createElement('div');
+			columnRail.classList.add('wptb-bg-column-rail');
+
+			// column selector
 			const colSelector = document.createElement('div');
 			colSelector.classList.add('wptb-col-selection', 'wptb-bg-selection-item');
 			colSelector.title = 'Select column';
@@ -362,11 +420,13 @@
 				selectColumn();
 			});
 
+			// add column selector to column rail
+			columnRail.appendChild(colSelector);
+
 			// add row selector to toolbox
 			toolbox.appendChild(rowSelector);
-
-			// add column selector to toolbox
-			toolbox.appendChild(colSelector);
+			// add column rail to toolbox
+			toolbox.appendChild(columnRail);
 
 			// add toolbox element to its parent container
 			document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(toolbox);
@@ -376,12 +436,6 @@
 		 * Assign row select handlers for current table.
 		 */
 		const assignRowClickHandler = () => {
-			const selectorToolbox = document.querySelector('wptb-bg-color-selectors');
-
-			if (!selectorToolbox) {
-				addSelectorToolbox();
-			}
-
 			const rowSelector = getRowSelector();
 
 			rowSelector.addEventListener('click', (event) => {
@@ -486,9 +540,16 @@
 				}
 
 				if (WPTB_Helper.getPreviousSection() !== 'background_menu' && detail === 'background_menu') {
+					// add toolbox to document
+					const selectorToolbox = document.querySelector('wptb-bg-color-selectors');
+					if (!selectorToolbox) {
+						addSelectorToolbox();
+					}
+
 					assignCellClickHandlers();
 					assignRowClickHandler();
 					clearTableIndicators();
+					calculateRailPositions();
 				}
 
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
