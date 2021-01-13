@@ -30,6 +30,15 @@
 		};
 
 		/**
+		 * Get selector toolbox element.
+		 *
+		 * @return {Element | undefined} selector toolbox
+		 */
+		const getSelectorToolbox = () => {
+			return document.querySelector('.wptb-bg-color-selectors');
+		};
+
+		/**
 		 * Get background specific options from table attributes.
 		 */
 		const parseOptionsFromTable = () => {
@@ -298,6 +307,7 @@
 		 */
 		const addColumnMarksToRail = (columnRailElement) => {
 			// clear rail from all previous mark elements
+			// eslint-disable-next-line array-callback-return
 			Array.from(columnRailElement.querySelectorAll('.wptb-bg-rail-mark')).map((mark) => {
 				mark.remove();
 			});
@@ -314,6 +324,27 @@
 
 				return currentRowCellCount > carryRowCellCount ? item : carry;
 			}, null);
+
+			// get required position data for each cell element at our index row, this position data will be used to put rails on correct places to be in sync with columns
+			const indexRowCellData = Array.from(indexRow.querySelectorAll('td')).map((cell) => {
+				const { x, width } = cell.getBoundingClientRect();
+				return { cellX: x, cellWidth: width };
+			});
+
+			// eslint-disable-next-line array-callback-return
+			indexRowCellData.map((cellDataObject, index) => {
+				const railMark = document.createElement('div');
+				railMark.classList.add('wptb-bg-rail-mark');
+				railMark.style.width = `${cellDataObject.cellWidth}px`;
+				railMark.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					store.commit('updateHoveredCellElement', {element: null, index});
+
+				});
+				columnRailElement.appendChild(railMark);
+			});
 		};
 
 		/**
@@ -454,6 +485,15 @@
 		};
 
 		/**
+		 * Set visibility of selector toolbox.
+		 *
+		 * @param {boolean} visible visibility state
+		 */
+		const selectorToolboxVisibility = (visible = true) => {
+			getSelectorToolbox().dataset.visible = visible;
+		};
+
+		/**
 		 * Remove row related event listeners and handlers
 		 */
 		const removeRowHandlers = () => {
@@ -463,11 +503,12 @@
 				row.removeEventListener('mouseenter', rowMouseEnter);
 			});
 
-			const rowSelector = getRowSelector();
-			if (rowSelector) {
-				// hide row selector element if any found
-				rowSelector.classList.remove('wptb-bg-selection-visible');
-			}
+			// @deprecated
+			// const rowSelector = getRowSelector();
+			// if (rowSelector) {
+			// 	// hide row selector element if any found
+			// 	rowSelector.classList.remove('wptb-bg-selection-visible');
+			// }
 
 			// clear up last hovered row element value
 			store.commit('updateHoveredRowElement', null);
@@ -528,6 +569,25 @@
 		};
 
 		/**
+		 * Startup positions for selectors.
+		 */
+		const startUpPositionsForSelectors = () => {
+			// start both column and row selectors at first row and first column
+			columnSelectorPosition(0);
+			rowSelectorPosition(getCurrentTable().querySelector('tr'));
+		};
+
+		/**
+		 * Remove various event listeners and clear out states.
+		 */
+		const removeHandlersAndStates = () => {
+			removeCellHandlers();
+			removeRowHandlers();
+			removeHighlights();
+			clearStates();
+		};
+
+		/**
 		 * Initialize hook for component.
 		 */
 		this.init = () => {
@@ -540,23 +600,21 @@
 				}
 
 				if (WPTB_Helper.getPreviousSection() !== 'background_menu' && detail === 'background_menu') {
-					// add toolbox to document
-					const selectorToolbox = document.querySelector('wptb-bg-color-selectors');
-					if (!selectorToolbox) {
+					if (!getSelectorToolbox()) {
 						addSelectorToolbox();
 					}
 
+					selectorToolboxVisibility(true);
 					assignCellClickHandlers();
 					assignRowClickHandler();
 					clearTableIndicators();
 					calculateRailPositions();
+					startUpPositionsForSelectors();
 				}
 
 				if (WPTB_Helper.getPreviousSection() === 'background_menu' && detail !== 'background_menu') {
-					removeCellHandlers();
-					removeRowHandlers();
-					removeHighlights();
-					clearStates();
+					selectorToolboxVisibility(false);
+					removeHandlersAndStates();
 				}
 			});
 

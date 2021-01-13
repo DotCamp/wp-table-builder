@@ -6093,16 +6093,21 @@ wptb_shortcode_container_element {
 .wptb-bg-selection-item {
     position: absolute;
     background-color: var(--wptb-plugin-logo-color);
-    display: none;
     width: 30px;
     transition: all 0.2s ease-out;
     cursor: pointer;
-}
-
-.wptb-bg-selection-visible {
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.wptb-bg-color-selectors[data-visible='false']{
+    display:none !important;
+
+}
+
+.wptb-bg-selection-visible {
 }
 
 .wptb-selector-icon-wrapper {
@@ -6126,10 +6131,23 @@ wptb_shortcode_container_element {
 .wptb-bg-column-rail {
     position: absolute;
     display: grid;
+    grid-auto-flow: column;
     justify-content: center;
     align-items: center;
     height: 30px;
-    border: 1px solid red
+}
+
+.wptb-bg-rail-mark {
+    /*background-color: var(--wptb-plugin-logo-color);*/
+    border: 2px dashed var(--wptb-plugin-logo-color);
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+    cursor:pointer;
+}
+
+.wptb-bg-rail-mark:hover {
+    opacity: 0.5;
 }
 
 /*endregion*/
