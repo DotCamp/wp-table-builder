@@ -9,8 +9,6 @@
 	/**
 	 * Background menu component.
 	 *
-	 * TODO [erdembircan] detailed explanation of component
-	 *
 	 * @class
 	 */
 	function BackgroundMenu() {
@@ -190,6 +188,15 @@
 		};
 
 		/**
+		 * Get row rail element
+		 *
+		 * @return {Element} row rail element
+		 */
+		const getRowRail = () => {
+			return document.querySelector('.wptb-bg-color-selectors .wptb-bg-row-rail');
+		};
+
+		/**
 		 * Get column selection element.
 		 *
 		 * @return {Element} column selection element
@@ -261,17 +268,18 @@
 		 * @param {Element} targetRow target row element
 		 */
 		const rowSelectorPosition = (targetRow) => {
-			const { x: parentX, y: parentY } = document.querySelector('.wptb-table-setup').getBoundingClientRect();
-			const { height, x, y } = targetRow.getBoundingClientRect();
+			const { y: parentY } = document.querySelector('.wptb-table-setup').getBoundingClientRect();
+			const { height, y } = targetRow.getBoundingClientRect();
 
 			const rowSelector = getRowSelector();
 			rowSelector.classList.add('wptb-bg-selection-visible');
 			rowSelector.style.height = `${height}px`;
 			rowSelector.style.top = `${y - parentY}px`;
 
-			// since row selector is hidden with 'display: none' css rule, should get its size values after it becomes visible
-			const { width: selectorWidth } = getRowSelector().getBoundingClientRect();
-			rowSelector.style.left = `${x - parentX - selectorWidth}px`;
+			// @deprecated
+			// // since row selector is hidden with 'display: none' css rule, should get its size values after it becomes visible
+			// const { width: selectorWidth } = getRowSelector().getBoundingClientRect();
+			// rowSelector.style.left = `${x - parentX - selectorWidth}px`;
 		};
 
 		/**
@@ -298,6 +306,17 @@
 				// colSelector.style.top = `${-colSelector.offsetHeight}px`;
 				colSelector.style.width = `${width}px`;
 			}
+		};
+
+		/**
+		 * Create rail mark element.
+		 *
+		 * @return {HTMLDivElement} rail mark element
+		 */
+		const createRailMark = () => {
+			const railMark = document.createElement('div');
+			railMark.classList.add('wptb-bg-rail-mark');
+			return railMark;
 		};
 
 		/**
@@ -333,17 +352,51 @@
 
 			// eslint-disable-next-line array-callback-return
 			indexRowCellData.map((cellDataObject, index) => {
-				const railMark = document.createElement('div');
-				railMark.classList.add('wptb-bg-rail-mark');
+				// create a new rail mark element and update its properties
+				const railMark = createRailMark();
 				railMark.style.width = `${cellDataObject.cellWidth}px`;
 				railMark.addEventListener('click', (event) => {
 					event.preventDefault();
 					event.stopPropagation();
 
-					store.commit('updateHoveredCellElement', {element: null, index});
-
+					store.commit('updateHoveredCellElement', { element: null, index });
 				});
 				columnRailElement.appendChild(railMark);
+			});
+		};
+
+		/**
+		 * Add row marks to selector rail.
+		 *
+		 * @param {Element} rowRailElement row rail element
+		 */
+		const addRowMarksToRail = (rowRailElement) => {
+			// clear any rail mark available within row rail element
+			// eslint-disable-next-line array-callback-return
+			Array.from(rowRailElement.querySelectorAll('.wptb-bg-rail-mark')).map((mark) => {
+				mark.remove();
+			});
+
+			// get position data for row elements in current table
+			const rowsPositionsObject = Array.from(getCurrentTable().querySelectorAll('tr')).map((row) => {
+				const { height } = row.getBoundingClientRect();
+
+				return { element: row, rowHeight: height };
+			});
+
+			rowsPositionsObject.map((rowPositionObject) => {
+				// create a rail mark element and update its properties
+				const railMark = createRailMark();
+				railMark.style.height = `${rowPositionObject.rowHeight}px`;
+				railMark.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					store.commit('updateHoveredRowElement', rowPositionObject.element);
+				});
+
+				// add rail mark to row rail element
+				rowRailElement.appendChild(railMark);
 			});
 		};
 
@@ -355,15 +408,23 @@
 		const calculateRailPositions = () => {
 			const currentTable = getCurrentTable();
 
-			const { width: tableWidth } = currentTable.getBoundingClientRect();
+			const { width: tableWidth, height: tableHeight } = currentTable.getBoundingClientRect();
 
 			// column rail position calculations
 			const columnRail = getColumnRail();
 			const { height: columnRailHeight } = columnRail.getBoundingClientRect();
 			columnRail.style.top = `-${columnRailHeight}px`;
 			columnRail.style.width = `${tableWidth}px`;
-
+			// add rail marks to column rail
 			addColumnMarksToRail(columnRail);
+
+			// row rail position calculations
+			const rowRail = getRowRail();
+			const { width: rowRailWidth } = rowRail.getBoundingClientRect();
+			rowRail.style.left = `-${rowRailWidth}px`;
+			rowRail.style.height = `${tableHeight}px`;
+			// add rail marks to column rail
+			addRowMarksToRail(rowRail);
 		};
 
 		/**
@@ -422,11 +483,14 @@
 			const toolbox = document.createElement('div');
 			toolbox.classList.add('wptb-bg-color-selectors');
 
+			// row rail
+			const rowRail = document.createElement('div');
+			rowRail.classList.add('wptb-bg-row-rail');
+
 			// row selector
 			const rowSelector = document.createElement('div');
 			rowSelector.classList.add('wptb-row-selection', 'wptb-bg-selection-item');
 			rowSelector.title = 'Select row';
-
 			WPTB_IconManager.getIcon('arrow-alt-circle-right', 'wptb-selector-icon-wrapper').then((icon) => {
 				rowSelector.appendChild(icon);
 			});
@@ -451,13 +515,14 @@
 				selectColumn();
 			});
 
+			// add row selector to column rail
+			rowRail.appendChild(rowSelector);
 			// add column selector to column rail
 			columnRail.appendChild(colSelector);
-
-			// add row selector to toolbox
-			toolbox.appendChild(rowSelector);
 			// add column rail to toolbox
 			toolbox.appendChild(columnRail);
+			// add row rail to toolbox
+			toolbox.appendChild(rowRail);
 
 			// add toolbox element to its parent container
 			document.querySelector('.wptb-builder-content .wptb-table-setup').appendChild(toolbox);
@@ -573,8 +638,8 @@
 		 */
 		const startUpPositionsForSelectors = () => {
 			// start both column and row selectors at first row and first column
-			columnSelectorPosition(0);
-			rowSelectorPosition(getCurrentTable().querySelector('tr'));
+			store.commit('updateHoveredCellElement', { element: null, index: 0 });
+			store.commit('updateHoveredRowElement', getCurrentTable().querySelector('tr'));
 		};
 
 		/**
