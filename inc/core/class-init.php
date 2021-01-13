@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager;
 use WP_Table_Builder\Inc\Admin\Style_Pass;
 use WP_Table_Builder\Inc\Frontend as Frontend;
 use WP_Table_Builder\Inc\Admin\Managers\Elements_Manager as Elements_Manager;
@@ -215,8 +216,12 @@ class Init {
 			// initialize upsells manager
 			Upsells_Manager::init();
 		}, 99 );
-		//initialize notification manager
+
+		// initialize notification manager
 		Notification_Manager::init();
+
+		// initialize what is new manager
+		What_Is_New_Manager::init();
 	}
 
 	/**

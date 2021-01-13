@@ -12,7 +12,6 @@ use function get_plugins;
 use function current_user_can;
 use function wp_create_nonce;
 use function wp_localize_script;
-use function WP_Table_Builder\wptb_fs;
 
 /**
  * Register menu elements and do other global tasks.

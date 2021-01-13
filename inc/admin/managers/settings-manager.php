@@ -143,9 +143,9 @@ class Settings_Manager {
 	}
 
 	/**
-	 * WordPress user_has_cap filter callback function
+	 * WordPress user_has_cap filter callback function.
 	 *
-	 * We will be using this hook to allow option defined user roles to use table builder at front-end
+	 * We will be using this hook to allow option defined user roles to use table builder at front-end.
 	 *
 	 * @param array $all_caps current user caps
 	 *
