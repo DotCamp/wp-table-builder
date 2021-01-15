@@ -1,4 +1,4 @@
-(function ($) {
+(function () {
 	/**
 	 * All of the code for your public-facing JavaScript source
 	 * should reside in this file.
@@ -29,7 +29,7 @@
 	 * The file is enqueued from inc/frontend/class-frontend.php.
 	 */
 
-	jQuery(document).ready(function ($) {
+	document.addEventListener('DOMContentLoaded', function() {
 		const tableContainers = document.getElementsByClassName('wptb-table-container');
 		/**
 		 * Adds hover color change support for supported button elements.
@@ -175,7 +175,7 @@
 		wptb_tableReconstraction();
 
 		// when window resize call wpcd_archiveSectionSmall and wptb_tableGenerateMobile
-		$(window).resize(function () {
+		window.addEventListener('resize', function() {
 			wptb_tdDefaultWidth();
 			wptb_tableReconstraction();
 		});
@@ -765,4 +765,4 @@
 
 		WPTB_StylePass.init(WptbFrontendData.stylePass);
 	});
-})(jQuery);
+})();
