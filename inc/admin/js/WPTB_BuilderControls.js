@@ -25644,7 +25644,212 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerDevTool":"containers/NotificationManagerDevTool.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/NotificationManagerDevTool":"containers/NotificationManagerDevTool.vue"}],"containers/WhatIsNew.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    notes: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    version: {
+      type: String,
+      default: '1.0.0'
+    }
+  },
+  data: function data() {
+    return {
+      icons: {
+        lightbulb: null,
+        times: null
+      },
+      windowVisibility: true
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return WPTB_IconManager.getIcon('lightbulb', null, true);
+
+            case 2:
+              _this.icons.lightbulb = _context.sent;
+              _context.next = 5;
+              return WPTB_IconManager.getIcon('times', null, true);
+
+            case 5:
+              _this.icons.times = _context.sent;
+
+            case 6:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    closeWindow: function closeWindow() {
+      // remove mounted element
+      this.$root.$el.remove(); // destroy main vue instance
+
+      this.$root.$destroy();
+    },
+    setWindowVisibility: function setWindowVisibility(state) {
+      this.windowVisibility = state;
+    }
+  }
+};
+exports.default = _default;
+        var $b051b1 = exports.default || module.exports;
+      
+      if (typeof $b051b1 === 'function') {
+        $b051b1 = $b051b1.options;
+      }
+    
+        /* template */
+        Object.assign($b051b1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "transition",
+    {
+      attrs: { name: "wptb-fade", appear: "" },
+      on: { "after-leave": _vm.closeWindow }
+    },
+    [
+      _vm.windowVisibility
+        ? _c("div", { staticClass: "wptb-what-is-new-container" }, [
+            _c("div", { staticClass: "wptb-what-is-new-window" }, [
+              _c("div", { staticClass: "wptb-what-is-new-header" }, [
+                _c("div", { staticClass: "wptb-what-is-new-header-version" }, [
+                  _c("span", {
+                    staticClass: "wptb-what-is-new-header-text-icon",
+                    domProps: { innerHTML: _vm._s(_vm.icons.lightbulb) }
+                  }),
+                  _vm._v(
+                    " Version\n\t\t\t\t\t" + _vm._s(_vm.version) + "\n\t\t\t\t"
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", {
+                  staticClass: "wptb-what-is-new-header-close",
+                  domProps: { innerHTML: _vm._s(_vm.icons.times) },
+                  on: {
+                    click: function($event) {
+                      return _vm.setWindowVisibility(false)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "wptb-what-is-new-content" }, [
+                _vm._v("content")
+              ])
+            ])
+          ])
+        : _vm._e()
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"mountPoints/WPTB_WhatIsNew.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vue = _interopRequireDefault(require("vue"));
+
+var _WhatIsNew = _interopRequireDefault(require("../containers/WhatIsNew"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _default = {
+  name: 'WhatIsNew',
+  handler: function whatIsNewComponent() {
+    // eslint-disable-next-line camelcase
+    var _wptb_admin_object = wptb_admin_object,
+        whatIsNew = _wptb_admin_object.whatIsNew; // only load component if associated data object is found
+
+    if (whatIsNew) {
+      var containerId = 'wptbWhatIsNew';
+      var containerWrapper = document.createElement('div');
+      containerWrapper.id = containerId;
+      document.body.appendChild(containerWrapper); // parse version number from data object
+
+      var versionNumber = Object.keys(whatIsNew).filter(function (key) {
+        return Object.prototype.hasOwnProperty.call(whatIsNew, key);
+      }).shift();
+      var vueInstanceData = {
+        version: versionNumber,
+        notes: whatIsNew[versionNumber]
+      };
+      new _vue.default({
+        data: vueInstanceData,
+        components: {
+          WhatIsNew: _WhatIsNew.default
+        },
+        template: '<what-is-new :version="version" :notes="notes" ></what-is-new>'
+      }).$mount(containerWrapper);
+    }
+  }
+};
+exports.default = _default;
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/WhatIsNew":"containers/WhatIsNew.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -25676,6 +25881,8 @@ var _WPTB_NotificationManagerView = _interopRequireDefault(require("./mountPoint
 
 var _WPTB_NotificationManagerDevTool = _interopRequireDefault(require("./mountPoints/WPTB_NotificationManagerDevTool"));
 
+var _WPTB_WhatIsNew = _interopRequireDefault(require("./mountPoints/WPTB_WhatIsNew"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable camelcase */
@@ -25694,7 +25901,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default];
 /**
  * Register control element.
  *
@@ -25706,5 +25913,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

@@ -5209,10 +5209,11 @@ wptb_shortcode_container_element {
     padding: 5px;
     margin: 0;
 }
+
 .wptb-plugin-header-toolbar .dashicons {
     color: var(--wptb-plugin-logo-color) !important;
     font-weight: bold !important;
- }
+}
 
 /*endregion*/
 
@@ -5810,6 +5811,7 @@ wptb_shortcode_container_element {
         transform: perspective(100px) rotateX(0deg);
     }
 }
+
 /*region notification manager*/
 .wptb-notification-manager {
     position: fixed;
@@ -5947,6 +5949,90 @@ wptb_shortcode_container_element {
     color: var(--wptb-plugin-theme-color-light);
     font-weight: bold;
     animation: wptb-more-pop 0.2s ease-out;
+}
+
+/*endregion*/
+
+/*region What Is New*/
+.wptb-what-is-new-container {
+    position: fixed;
+    z-index: 100000000;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-what-is-new-window {
+    background-color: var(--wptb-plugin-theme-color-light);
+    width: 700px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(min-content, max-content) 300px;
+    grid-template-areas: 'header' 'content';
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    font-size: 110% !important;
+    color: var(--wptb-plugin-gray-700) !important;
+}
+
+.wptb-what-is-new-header {
+    grid-area: header;
+    border-bottom: 1px solid var(--wptb-plugin-gray-400);
+    display: flex;
+    height: 45px;
+}
+
+.wptb-what-is-new-header-version {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-what-is-new-header-text-icon {
+    width: 15px;
+    height: auto;
+    fill: var(--wptb-plugin-yellow-500);
+    margin: 0 5px;
+}
+
+.wptb-what-is-new-header-close {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid var(--wptb-plugin-gray-400);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-what-is-new-header-close:hover {
+    background-color: var(--wptb-plugin-gray-300);
+}
+
+
+.wptb-what-is-new-header-close:hover svg {
+    fill: var(--wptb-plugin-gray-700);
+}
+
+.wptb-what-is-new-header-close svg {
+    width: 15px;
+    height: auto;
+    fill: var(--wptb-plugin-gray-500);
+    transition: all 0.2s ease-out;
+}
+
+
+.wptb-what-is-new-content {
+    grid-area: content;
 }
 
 

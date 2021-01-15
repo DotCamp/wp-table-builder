@@ -86,6 +86,9 @@ var WPTB_Initializer = function () {
 
     WPTB_Helper.calledByBlock();
 
+    // call what-is-new component
+    WPTB_ControlsManager.callControlScript('WhatIsNew');
+
     // initialize notification manager
     WPTB_NotificationManager.init();
 };
