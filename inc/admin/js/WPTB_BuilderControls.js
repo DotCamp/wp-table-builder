@@ -25677,6 +25677,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     notes: {
@@ -25694,9 +25732,12 @@ var _default = {
     return {
       icons: {
         lightbulb: null,
-        times: null
+        times: null,
+        chevronRight: null,
+        chevronLeft: null
       },
-      windowVisibility: true
+      windowVisibility: true,
+      currentNoteIndex: 0
     };
   },
   mounted: function mounted() {
@@ -25717,14 +25758,38 @@ var _default = {
 
             case 5:
               _this.icons.times = _context.sent;
+              _context.next = 8;
+              return WPTB_IconManager.getIcon('chevron-left', null, true);
 
-            case 6:
+            case 8:
+              _this.icons.chevronLeft = _context.sent;
+              _context.next = 11;
+              return WPTB_IconManager.getIcon('chevron-right', null, true);
+
+            case 11:
+              _this.icons.chevronRight = _context.sent;
+
+            case 12:
             case "end":
               return _context.stop();
           }
         }
       }, _callee);
     }))();
+  },
+  computed: {
+    totalNotes: function totalNotes() {
+      return this.notes.length;
+    },
+    currentNoteText: function currentNoteText() {
+      return this.notes[this.currentNoteIndex].text;
+    },
+    navStatus: function navStatus() {
+      return {
+        decrement: this.currentNoteIndex > 0,
+        increment: this.currentNoteIndex + 1 < this.notes.length
+      };
+    }
   },
   methods: {
     closeWindow: function closeWindow() {
@@ -25735,6 +25800,13 @@ var _default = {
     },
     setWindowVisibility: function setWindowVisibility(state) {
       this.windowVisibility = state;
+    },
+    limitToRange: function limitToRange(val) {
+      // eslint-disable-next-line no-nested-ternary
+      return val < 0 ? 0 : val >= this.notes.length ? this.notes.length - 1 : val;
+    },
+    modifyIndex: function modifyIndex(value) {
+      this.currentNoteIndex = this.limitToRange(this.currentNoteIndex + value);
     }
   }
 };
@@ -25784,7 +25856,136 @@ exports.default = _default;
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "wptb-what-is-new-content" }, [
-                _vm._v("content")
+                _c(
+                  "div",
+                  { staticClass: "wptb-what-is-new-note-image-carousel" },
+                  [
+                    _c("div", {
+                      staticClass: "wptb-what-is-new-carousel-nav-button",
+                      attrs: { disabled: !_vm.navStatus.decrement },
+                      domProps: { innerHTML: _vm._s(_vm.icons.chevronLeft) },
+                      on: {
+                        "!click": function($event) {
+                          $event.preventDefault()
+                          return _vm.modifyIndex(-1)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "wptb-what-is-new-images-wrapper" },
+                      _vm._l(_vm.notes, function(ref, index) {
+                        var image = ref.image
+                        var isPro = ref.isPro
+                        return _c(
+                          "transition",
+                          { key: index, attrs: { name: "wptb-fade" } },
+                          [
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.currentNoteIndex === index,
+                                    expression: "currentNoteIndex === index"
+                                  }
+                                ],
+                                staticClass: "wptb-what-is-new-image-background"
+                              },
+                              [
+                                isPro
+                                  ? _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "wptb-what-is-new-pro-indicator"
+                                      },
+                                      [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "wptb-what-is-new-pro-indicator-text wptb-plugin-box-shadow-md"
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n\t\t\t\t\t\t\t\t\t\tPRO\n\t\t\t\t\t\t\t\t\t"
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("div", {
+                                          staticClass:
+                                            "wptb-what-is-new-pro-indicator-triangle-end"
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("img", {
+                                  staticClass:
+                                    "wptb-plugin-filter-box-shadow-md",
+                                  attrs: { src: image }
+                                })
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", {
+                      staticClass: "wptb-what-is-new-carousel-nav-button",
+                      attrs: { disabled: !_vm.navStatus.increment },
+                      domProps: { innerHTML: _vm._s(_vm.icons.chevronRight) },
+                      on: {
+                        "!click": function($event) {
+                          $event.preventDefault()
+                          return _vm.modifyIndex(1)
+                        }
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "wptb-what-is-new-note-index" }, [
+                  _vm._v(
+                    _vm._s(_vm.currentNoteIndex + 1) +
+                      "/" +
+                      _vm._s(_vm.totalNotes)
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "wptb-what-is-new-note-text-container" },
+                  _vm._l(_vm.notes, function(ref, index) {
+                    var text = ref.text
+                    return _c(
+                      "transition",
+                      { key: index, attrs: { name: "wptb-fade" } },
+                      [
+                        _c("div", {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.currentNoteIndex === index,
+                              expression: "currentNoteIndex === index"
+                            }
+                          ],
+                          staticClass: "wptb-what-is-new-note-text",
+                          domProps: { innerHTML: _vm._s(text) }
+                        })
+                      ]
+                    )
+                  }),
+                  1
+                )
               ])
             ])
           ])

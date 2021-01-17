@@ -59,22 +59,44 @@ class What_Is_New_Manager {
 	}
 
 	/**
+	 * Get notes for versions.
+	 *
+	 * Add version notes here for upcoming versions.
+	 *
+	 * @return array notes array
+	 */
+	private static function get_notes() {
+		return [
+			'1.3.4' => [
+				static::prepare_what_is_new_note( 'New background menu and improved color logic for better table colors. (PRO test)', 'background_menu.png', true ),
+				static::prepare_what_is_new_note( 'Upgraded color picker, now alpha channel can be used for background color values which enables transparency.', 'new_color_picker.png' ),
+				static::prepare_what_is_new_note( 'A global wrapper function for rendering tables inside theme and plugin files.', 'theme_inline_render_function.png' ),
+			]
+		];
+	}
+
+	/**
+	 * Add changelog page to supplied what is new notes.
+	 *
+	 * @param array $notes notes array
+	 *
+	 * @return array notes array with added changelog section
+	 */
+	private static function add_changelog_link_to_notes( $notes ) {
+		$patch_notes    = esc_html__( 'Patch notes' );
+		$patch_note_url = 'https://wordpress.org/plugins/wp-table-builder/#developers';
+		$notes[]        = static::prepare_what_is_new_note( "<a href='$patch_note_url' target='_blank'>$patch_notes</a>", 'wptb-logo-new.png' );
+
+		return $notes;
+	}
+
+	/**
 	 * Get latest release what is new notes.
 	 *
 	 * @return array release notes array
 	 */
 	private static function what_is_new_notes() {
-		$notes = [
-			'1.3.3' => [
-				static::prepare_what_is_new_note( 'older test note1', '1.png' ),
-			],
-			'1.3.4' => [
-				static::prepare_what_is_new_note( 'just a test note1', '1.png' ),
-				static::prepare_what_is_new_note( 'just a test note2', '1.png' ),
-				static::prepare_what_is_new_note( 'just a test note3', '1.png' ),
-				static::prepare_what_is_new_note( 'just a test note4', '1.png' ),
-			]
-		];
+		$notes = static::get_notes();
 
 		// sort versions from high to low
 		uksort( $notes, function ( $a, $b ) {
@@ -83,7 +105,7 @@ class What_Is_New_Manager {
 
 		$latest_version = array_keys( $notes )[0];
 
-		return [ $latest_version => $notes[ $latest_version ] ];
+		return [ $latest_version => static::add_changelog_link_to_notes( $notes[ $latest_version ] ) ];
 	}
 
 	/**

@@ -91,6 +91,7 @@ That's it. You're done!
 = 1.3.4 =
 
 * NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
+* NEW: What-is-new component that will be after every update to point out key improvements and new additions to plugin.
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 * IMPROVE: Button html element support for custom html table element.
 * FIX: Fixed an issue where newly created table text elements share same identification number.
