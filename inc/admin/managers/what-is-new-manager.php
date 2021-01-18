@@ -51,8 +51,15 @@ class What_Is_New_Manager {
 	 * @return array prepared release note object.
 	 */
 	private static function prepare_what_is_new_note( $text, $image, $isPro = false ) {
+		$is_pro_enabled = Upsells_Manager::check_pro_status();
+
+		// show an upsell at pro enabled notes if no valid pro license is currently installed
+		$format        = '<div>%s</div>' . ( $isPro && !$is_pro_enabled ? '<a target="_blank" class="wptb-upsells-pro-label" href="%s"><div >%s</div></a>' : '' );
+
+		$prepared_text = sprintf( $format, $text, 'https://wptablebuilder.com/pricing/', esc_html__( 'Get PRO' ) );
+
 		return [
-			'text'  => $text,
+			'text'  => $prepared_text,
 			'image' => trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'assets/images/what-is-new/' . $image,
 			'isPro' => $isPro
 		];

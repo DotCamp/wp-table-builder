@@ -6038,7 +6038,7 @@ wptb_shortcode_container_element {
     grid-area: content;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 200px minmax(min-content, max-content) 70px;
+    grid-template-rows: 200px minmax(min-content, max-content) 90px;
     grid-template-areas: 'imageContainer' 'noteIndex' 'textContainer';
     justify-content: center;
     align-items: center;
@@ -6074,9 +6074,15 @@ wptb_shortcode_container_element {
     grid-row: 1;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     text-align: center;
     margin: 0 20px;
+}
+
+.wptb-what-is-new-note-text .wptb-upsells-pro-label {
+    margin: 10px;
+    text-decoration: none;
 }
 
 .wptb-what-is-new-carousel-nav-button {
