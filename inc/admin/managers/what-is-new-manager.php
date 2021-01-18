@@ -68,7 +68,9 @@ class What_Is_New_Manager {
 	private static function get_notes() {
 		return [
 			'1.3.4' => [
-				static::prepare_what_is_new_note( 'New background menu and improved color logic for better table colors. (PRO test)', 'background_menu.png', true ),
+				static::prepare_what_is_new_note( 'Data tables are ready to be used from generate menu.', 'generate_data_table.png' ),
+				static::prepare_what_is_new_note( 'Extra data table options are available for pro version users to use WP posts, external and local databases as data sources in their data tables.', 'pro_data_table_options.png', true ),
+				static::prepare_what_is_new_note( 'New background menu and improved color logic for better table colors.', 'background_menu.png' ),
 				static::prepare_what_is_new_note( 'Upgraded color picker, now alpha channel can be used for background color values which enables transparency.', 'new_color_picker.png' ),
 				static::prepare_what_is_new_note( 'A global wrapper function for rendering tables inside theme and plugin files.', 'theme_inline_render_function.png' ),
 			]

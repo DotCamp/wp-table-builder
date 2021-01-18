@@ -6076,6 +6076,7 @@ wptb_shortcode_container_element {
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin: 0 20px;
 }
 
 .wptb-what-is-new-carousel-nav-button {
