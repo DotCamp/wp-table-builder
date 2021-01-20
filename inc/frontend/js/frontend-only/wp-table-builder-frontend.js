@@ -35,7 +35,7 @@
 		/**
 		 * Adds hover color change support for supported button elements.
 		 *
-		 * @param querySelector
+		 * @param {string} querySelector query selector string
 		 */
 		function addHoverSupport(querySelector) {
 			const buttons = Array.from(document.querySelectorAll(querySelector));
@@ -652,6 +652,8 @@
 					 * Table width logic to determine final width on rendered tables.
 					 */
 					const tableWidthLogic = () => {
+						// eslint-disable-next-line no-shadow
+						const wptbTableContainerWidth = wptbTableContainer.offsetWidth;
 						if (wptbTableTdsSumMaxWidth < wptbTableContainerWidth) {
 							if (wptbCellsWidthAutoCount) {
 								table.style.minWidth = '100%';
@@ -702,6 +704,14 @@
 
 					// if current table container width is equal or lower than zero, than it means it is hidden through css styles, width calculations should be done when it becomes visible again
 					if (wptbTableContainerWidth <= 0) {
+						/**
+						 * Find parent element that is responsible for hiding our table.
+						 *
+						 * This function is recursive, it will keep searching parents till it hit 'body' element.
+						 *
+						 * @param {Element} currentElement current element in check
+						 * @return {null|Element} found parent or null
+						 */
 						const findParentWithNoDisplay = (currentElement) => {
 							const currentParent = currentElement.parentNode;
 							const parentDisplayStatus = getComputedStyle(currentParent).display;
@@ -717,10 +727,46 @@
 							return currentParent;
 						};
 
-						WPTB_Logger.log('Table is hidden');
+						// @deprecated
+						// // get current table's id for logging purposes
+						// const containerClassList = wptbTableContainer.getAttribute('class');
+						// const [, tableId] = containerClassList.match(/wptb-table-(\d.+)?\s/);
+						// WPTB_Logger.log(`Table #${tableId} is hidden.`);
 
+						// find parent container with hidden display property
 						const culpritParent = findParentWithNoDisplay(wptbTableContainer);
+						if (culpritParent) {
+							// setup a mutation observer to detect visibility change of parent which is responsible for hiding our table
+							const config = { attributes: true, childList: false, subtree: false };
+							const parentObserver = new MutationObserver((mutationRecord) => {
+								try {
+									// eslint-disable-next-line array-callback-return
+									mutationRecord.map((mutation) => {
+										const currentVisibility = getComputedStyle(mutation.target).display !== 'none';
+										const { width: containerWidth } = mutation.target.getBoundingClientRect();
+										if (currentVisibility && containerWidth > 0) {
+											// @deprecated
+											// WPTB_Logger.log(`Table #${tableId} is now visible.`);
+											// call width logic and start calculations for our table since it is visible now
+											tableWidthLogic();
+
+											// disconnect observer
+											parentObserver.disconnect();
+
+											// get out of iteration
+											throw new Error('get out of iteration');
+										}
+									});
+								} catch (e) {
+									// do nothing since an error is thrown to get out of array iteration
+								}
+							});
+
+							// observe parent for visibility changes
+							parentObserver.observe(culpritParent, config);
+						}
 					} else {
+						// if no hidden parent element is found, it means our table is visible, continue normally
 						tableWidthLogic();
 					}
 

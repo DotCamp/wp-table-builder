@@ -96,6 +96,7 @@ That's it. You're done!
 * FIX: Fixed an issue where newly created table text elements share same identification number.
 * FIX: Fixed an issue affecting row colors of static top row enabled responsive tables.
 * FIX: Fixed an issue affecting text element where at certain situations align options are not working.
+* FIX: Fixed an issue affecting table layouts where they are hidden at page load through tabs or any other CSS visibility rules.
 
 
 = 1.3.3 =
