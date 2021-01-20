@@ -83,6 +83,9 @@ class Style_Pass {
 				'selectors' => [
 					'{{{data.container}}}' => [ 'data-disable-theme-styles', '1', null ]
 				]
+			],
+			'extraTableStyles'   => [
+				'type' => Controls_Manager::EXTRA_STYLES
 			]
 		];
 
