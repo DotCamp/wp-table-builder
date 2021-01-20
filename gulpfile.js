@@ -9,6 +9,7 @@ const uglify = require('gulp-uglify');
 const gulpConfig = {
 	frontEndJs: {
 		src: [
+			'./inc/admin/js/core/WPTB_Logger.js',
 			'./inc/admin/js/core/WPTB_CutGlueTable.js',
 			'./inc/admin/js/core/WPTB_GetDirectionAfterReconstruction.js',
 			'./inc/admin/js/core/WPTB_SortableTable.js',

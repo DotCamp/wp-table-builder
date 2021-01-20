@@ -717,8 +717,7 @@
 							return currentParent;
 						};
 
-						// TODO [erdembircan] remove for production
-						console.log('table content is hidden');
+						WPTB_Logger.log('Table is hidden');
 
 						const culpritParent = findParentWithNoDisplay(wptbTableContainer);
 					} else {
