@@ -31,6 +31,7 @@
 
 	jQuery(document).ready(function ($) {
 		const tableContainers = document.getElementsByClassName('wptb-table-container');
+
 		/**
 		 * Adds hover color change support for supported button elements.
 		 *
@@ -646,51 +647,82 @@
 					const { wptbCellsWidthAutoCount } = table.dataset;
 					let styleElementCreate = false;
 					let tableTdWidthAuto;
-					if (wptbTableTdsSumMaxWidth < wptbTableContainerWidth) {
-						if (wptbCellsWidthAutoCount) {
-							table.style.minWidth = '100%';
 
-							//                        if( frontendEditLink && frontendEditLink[i] ) {
-							//                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
-							//                        }
+					/**
+					 * Table width logic to determine final width on rendered tables.
+					 */
+					const tableWidthLogic = () => {
+						if (wptbTableTdsSumMaxWidth < wptbTableContainerWidth) {
+							if (wptbCellsWidthAutoCount) {
+								table.style.minWidth = '100%';
 
-							if (table.mergingСellsHorizontally) {
-								table.style.width = 'auto';
-								const tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
-								tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
-								tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
-								styleElementCreate = true;
+								//                        if( frontendEditLink && frontendEditLink[i] ) {
+								//                            frontendEditLink[i].style.minWidth = wptbTableTdsSumMaxWidth + 'px';
+								//                        }
+
+								if (table.mergingСellsHorizontally) {
+									table.style.width = 'auto';
+									const tableTdsWidthAutoCommon = wptbTableContainerWidth - wptbFixedWidthSize;
+									tableTdWidthAuto = tableTdsWidthAutoCommon / wptbCellsWidthAutoCount;
+									tableTdWidthAuto = tableTdWidthAuto - tdPaddingCommon - tableTdBorderCommonWidth;
+									styleElementCreate = true;
+								} else {
+									table.style.width = '100%';
+
+									//                            if( frontendEditLink && frontendEditLink[i] ) {
+									//                                frontendEditLink[i].style.width = '100%';
+									//                                frontendEditLink[i].style.maxWidth = '100%';
+									//                            }
+								}
 							} else {
-								table.style.width = '100%';
+								table.style.width = 'auto';
+								table.style.minWidth = null;
+								table.style.maxWidth = `${wptbTableTdsSumMaxWidth}px`;
 
-								//                            if( frontendEditLink && frontendEditLink[i] ) {
-								//                                frontendEditLink[i].style.width = '100%';
-								//                                frontendEditLink[i].style.maxWidth = '100%';
-								//                            }
+								//                        if( frontendEditLink && frontendEditLink[i] ) {
+								//                            frontendEditLink[i].style.width = null;
+								//                            frontendEditLink[i].style.minWidth = null;
+								//                            frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
+								//                        }
 							}
 						} else {
+							table.style.maxWidth = null;
+							table.style.minWidth = `${table.dataset.wptbTableTdsSumMaxWidth}px`;
 							table.style.width = 'auto';
-							table.style.minWidth = null;
-							table.style.maxWidth = `${wptbTableTdsSumMaxWidth}px`;
+							tableTdWidthAuto = table.dataset.wptbTdWidthAuto ? table.dataset.wptbTdWidthAuto : '100';
+							styleElementCreate = true;
 
-							//                        if( frontendEditLink && frontendEditLink[i] ) {
-							//                            frontendEditLink[i].style.width = null;
-							//                            frontendEditLink[i].style.minWidth = null;
-							//                            frontendEditLink[i].style.maxWidth = wptbTableTdsSumMaxWidth + 'px';
-							//                        }
+							//                    if( frontendEditLink && frontendEditLink[i] ) {
+							//                        frontendEditLink[i].style.maxWidth = '100%';
+							//                        frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
+							//                        frontendEditLink[i].style.width = null;
+							//                    }
 						}
-					} else {
-						table.style.maxWidth = null;
-						table.style.minWidth = `${table.dataset.wptbTableTdsSumMaxWidth}px`;
-						table.style.width = 'auto';
-						tableTdWidthAuto = table.dataset.wptbTdWidthAuto ? table.dataset.wptbTdWidthAuto : '100';
-						styleElementCreate = true;
+					};
 
-						//                    if( frontendEditLink && frontendEditLink[i] ) {
-						//                        frontendEditLink[i].style.maxWidth = '100%';
-						//                        frontendEditLink[i].style.minWidth = table.dataset.wptbTableTdsSumMaxWidth + 'px';
-						//                        frontendEditLink[i].style.width = null;
-						//                    }
+					// if current table container width is equal or lower than zero, than it means it is hidden through css styles, width calculations should be done when it becomes visible again
+					if (wptbTableContainerWidth <= 0) {
+						const findParentWithNoDisplay = (currentElement) => {
+							const currentParent = currentElement.parentNode;
+							const parentDisplayStatus = getComputedStyle(currentParent).display;
+							// lower cased element name
+							const parentType = currentParent.nodeName.toLowerCase();
+							if (parentDisplayStatus !== 'none' && parentType !== 'body') {
+								return findParentWithNoDisplay(currentParent);
+							}
+							// hit body element, should return null to signal a problem with current DOM
+							if (parentType === 'body') {
+								return null;
+							}
+							return currentParent;
+						};
+
+						// TODO [erdembircan] remove for production
+						console.log('table content is hidden');
+
+						const culpritParent = findParentWithNoDisplay(wptbTableContainer);
+					} else {
+						tableWidthLogic();
 					}
 
 					const { head } = document;
@@ -754,11 +786,12 @@
 				sortableTable.sortableTableInitialization(responsiveFront);
 			}
 		}
+
 		sortingTable();
-		var responsiveFrontReady = new CustomEvent('responsive:front', {
+		const responsiveFrontReady = new CustomEvent('responsive:front', {
 			detail: {
-				responsiveFront
-			}
+				responsiveFront,
+			},
 		});
 		document.dispatchEvent(responsiveFrontReady);
 		responsiveFront.rebuildTables();
