@@ -705,6 +705,17 @@
 					// if current table container width is equal or lower than zero, than it means it is hidden through css styles, width calculations should be done when it becomes visible again
 					if (wptbTableContainerWidth <= 0) {
 						/**
+						 * Calculate element visibility status.
+						 *
+						 * @param {Element} element element to check
+						 * @return {boolean} whether element is visible or not
+						 */
+						const elementVisibilityStatus = (element) => {
+							const { display, visibility } = getComputedStyle(element);
+							return display !== 'none' || visibility === 'visible';
+						};
+
+						/**
 						 * Find parent element that is responsible for hiding our table.
 						 *
 						 * This function is recursive, it will keep searching parents till it hit 'body' element.
@@ -714,10 +725,12 @@
 						 */
 						const findParentWithNoDisplay = (currentElement) => {
 							const currentParent = currentElement.parentNode;
-							const parentDisplayStatus = getComputedStyle(currentParent).display;
+							const parentDisplayStatus = elementVisibilityStatus(currentParent);
 							// lower cased element name
 							const parentType = currentParent.nodeName.toLowerCase();
-							if (parentDisplayStatus !== 'none' && parentType !== 'body') {
+
+							// if parent is visible make a recursive call
+							if (!parentDisplayStatus && parentType !== 'body') {
 								return findParentWithNoDisplay(currentParent);
 							}
 							// hit body element, should return null to signal a problem with current DOM
@@ -726,12 +739,6 @@
 							}
 							return currentParent;
 						};
-
-						// @deprecated
-						// // get current table's id for logging purposes
-						// const containerClassList = wptbTableContainer.getAttribute('class');
-						// const [, tableId] = containerClassList.match(/wptb-table-(\d.+)?\s/);
-						// WPTB_Logger.log(`Table #${tableId} is hidden.`);
 
 						// find parent container with hidden display property
 						const culpritParent = findParentWithNoDisplay(wptbTableContainer);
@@ -742,12 +749,11 @@
 								try {
 									// eslint-disable-next-line array-callback-return
 									mutationRecord.map((mutation) => {
-										const currentVisibility = getComputedStyle(mutation.target).display !== 'none';
+										const currentVisibility = elementVisibilityStatus(mutation.target);
 										const { width: containerWidth } = mutation.target.getBoundingClientRect();
+
+										// call width logic and start calculations for our table since it is visible now
 										if (currentVisibility && containerWidth > 0) {
-											// @deprecated
-											// WPTB_Logger.log(`Table #${tableId} is now visible.`);
-											// call width logic and start calculations for our table since it is visible now
 											tableWidthLogic();
 
 											// disconnect observer
