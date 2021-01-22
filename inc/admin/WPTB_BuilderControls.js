@@ -36731,32 +36731,15 @@ var _default = {
   mixins: [_ControlBase.default],
   data: function data() {
     return {
-      code: '/* Enter your custom CSS properties here */',
+      code: 'css value',
       cmOptions: {
         tabSize: 4,
         styleActiveLine: true,
         lineNumbers: true,
         line: true,
-        mode: 'text/css',
-        showCursorWhenSelecting: true,
-        lineWrapping: true
+        mode: 'text/css'
       }
     };
-  },
-  mounted: function mounted() {
-    this.$nextTick(function () {});
-  },
-  methods: {
-    codeMirrorReady: function codeMirrorReady(CodeMirror) {
-      // because toggle group content is hidden, codemirror can not execute its size calculations correctly, listening section group visible event to force calculate those values when containing section group becomes visible
-      document.addEventListener('wptb:section-group:visible', function (_ref) {
-        var detail = _ref.detail;
-
-        if (detail === 'style_pass_settings') {
-          CodeMirror.refresh();
-        }
-      });
-    }
   }
 };
 exports.default = _default;
@@ -36784,9 +36767,7 @@ exports.default = _default;
       { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
       [
         _c("codemirror", {
-          ref: "codeMirrorBase",
           attrs: { options: _vm.cmOptions },
-          on: { ready: _vm.codeMirrorReady },
           model: {
             value: _vm.code,
             callback: function($$v) {

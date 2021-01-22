@@ -94,6 +94,6 @@ class Style_Pass {
 		Control_Section_Group_Collapse::add_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, [
 			$context,
 			'add_control'
-		], true );
+		], false );
 	}
 }

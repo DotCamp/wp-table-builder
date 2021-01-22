@@ -55,7 +55,9 @@ class Control_Section_Group_Collapse_Start extends Base_Control {
 
         <wptb-template-script>
             (function noConflict($) {
-            const togglePanelWrapper = $('#{{{sectionId}}}');
+            const sectionId = '{{{sectionId}}}';
+            const [,groupName] = sectionId.match(/(.+)_.+/);
+            const togglePanelWrapper = $(`#${sectionId}`);
             const elementSettingWrapper = togglePanelWrapper.parent();
             const toggleTarget = togglePanelWrapper.find('.wptb-panel-section-toggle-target');
             const panelToggleHeader = togglePanelWrapper.find('.wptb-panel-toggle');
@@ -69,7 +71,13 @@ class Control_Section_Group_Collapse_Start extends Base_Control {
             }
 
             togglePanelWrapper.toggleClass('wptb-panel-toggle-content');
-            toggleTarget.slideToggle();
+
+            toggleTarget.slideToggle(() => {
+            if(!togglePanelWrapper.attr('class').includes('wptb-panel-toggle-content')){
+            WPTB_Helper.wptbDocumentEventGenerate('wptb:section-group:visible', document , groupName);
+            }
+            }
+            );
             }
 
             if({{{openState}}} === false){
