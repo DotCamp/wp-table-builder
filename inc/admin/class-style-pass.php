@@ -6,9 +6,9 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
+use function add_action;
 use function add_filter;
 use function trailingslashit;
-use const add_action;
 
 if ( ! defined( 'WPINC' ) ) {
 	die();
@@ -85,13 +85,15 @@ class Style_Pass {
 				]
 			],
 			'extraTableStyles'   => [
+				'label' => esc_html__('Extra styles', 'wp-table-builder'),
 				'type' => Controls_Manager::EXTRA_STYLES
 			]
 		];
 
+		// TODO [erdembircan] change open_state to false for production
 		Control_Section_Group_Collapse::add_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, [
 			$context,
 			'add_control'
-		], false );
+		], true );
 	}
 }
