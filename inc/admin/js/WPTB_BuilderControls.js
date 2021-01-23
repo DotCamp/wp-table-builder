@@ -12013,33 +12013,177 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function ControlsManager() {
   var controlScripts = {};
   var controlData = {};
+  var previousSettings = {};
   var tableSettings = {
     settings: {}
   };
-  var subscribers = {};
+  var subscribers = [];
   /**
+   * Subscriber object.
+   *
+   * By providing a control id, you can subscribe to a control instead of whole table settings.
+   *
+   * @param {Object} subOptions subscriber options
+   * @class
+   */
+
+  function Subscriber(subOptions) {
+    var _this = this;
+
+    /**
+     * Default options for subscriber.
+     *
+     * @type {Object}
+     */
+    var defaultOptions = {
+      id: null,
+      controlId: null,
+      useEventValue: false,
+      callback: function callback() {}
+    }; // merge default options with supplied ones
+
+    this.options = _objectSpread(_objectSpread({}, defaultOptions), subOptions);
+    /**
+     * Parse and reform supplied default table settings.
+     *
+     * @param {Object} settings settings object
+     * @param {boolean} useEventValue whether to use event value instead of target value
+     * @return {Object} reformed settings object
+     */
+
+    var parseSettings = function parseSettings(settings) {
+      var useEventValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      return Object.keys(settings).reduce(function (carry, item) {
+        var finalCarry = carry;
+
+        if (Object.prototype.hasOwnProperty.call(settings, item)) {
+          var valueKey = useEventValue ? 'eventValue' : 'targetValue';
+          finalCarry[item] = settings[item][valueKey];
+        }
+
+        return finalCarry;
+      }, {});
+    };
+    /**
+     * Logic for calling control subscribers.
+     *
+     * @param {Object} setting settings object
+     * @param {Object} previousSetting previous version of settings object
+     */
+
+
+    var controlSubscriberLogic = function controlSubscriberLogic(setting, previousSetting) {
+      var _this$options = _this.options,
+          controlId = _this$options.controlId,
+          useEventValue = _this$options.useEventValue,
+          callback = _this$options.callback;
+      var currentValue = parseSettings(setting, useEventValue)[controlId];
+
+      if (currentValue !== undefined) {
+        var previousValue = parseSettings(previousSetting)[controlId]; // only call callback if current and previous values are different from each other
+
+        if (currentValue !== previousValue) {
+          callback(currentValue);
+        }
+      }
+    };
+    /**
+     * Call subscriber.
+     *
+     * @param {Object} settings settings object
+     * @param {Object} previousSettings previous version of the settings object, this object will be used for control subscribers to decide whether to call them or not by comparing current and previous values of control item
+     */
+
+
+    this.call = function (settings, previousSettings) {
+      var _this$options2 = _this.options,
+          controlId = _this$options2.controlId,
+          callback = _this$options2.callback,
+          useEventValue = _this$options2.useEventValue; // if there is a control id, then it means subscriber is subscribed to a control instead of whole table settings
+
+      if (callback && typeof callback === 'function') {
+        if (controlId) {
+          controlSubscriberLogic(settings, previousSettings);
+        } else {
+          callback(parseSettings(settings, useEventValue));
+        }
+      } else {
+        throw new Error('an invalid type of callback property is defined for subscriber');
+      }
+    };
+  }
+  /**
+   * @deprecated
    * Get current table settings.
    *
+   * This function is being used in ControlBase for component visibility changes. That functionality will be updated in the future and this function will be removed. Do not use this, use subscribe operations instead.
+   *
+   * @param {boolean} useEventValue whether to use event value instead of element value
    * @return {Object} current table settings
    */
 
+
   function getTableSettings() {
-    return tableSettings.settings;
+    var useEventValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    return Object.keys(tableSettings.settings).reduce(function (carry, item) {
+      var finalCarry = carry;
+
+      if (Object.prototype.hasOwnProperty.call(tableSettings.settings, item)) {
+        var valueKey = useEventValue ? 'eventValue' : 'targetValue';
+        finalCarry[item] = tableSettings.settings[item][valueKey];
+      }
+
+      return finalCarry;
+    }, {});
   }
   /**
    * Subscribe to table settings changes
    *
    * @param {string} id unique id for subscription
    * @param {Function} callback callback when an update happens
+   * @param {boolean} useEventValue use event value instead of target element value
    */
 
 
   function subscribe(id, callback) {
-    subscribers[id] = callback;
+    var useEventValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var subscriber = new Subscriber({
+      id: id,
+      callback: callback,
+      useEventValue: useEventValue
+    });
+    subscribers.push(subscriber);
+    subscriber.call(tableSettings.settings, previousSettings);
+  }
+  /**
+   *
+   * @param {string} id subscriber id
+   * @param {string} controlId id of the control being subscribed to
+   * @param {Function} callback callback function that will be executed on control value change
+   * @param {boolean} useEventValue whether to use event value instead of target value
+   */
 
-    if (typeof callback === 'function') {
-      callback(getTableSettings());
-    }
+
+  function subscribeToControl(id, controlId, callback) {
+    var useEventValue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    // @deprecated
+    // if (typeof callback === 'function') {
+    // 	subscribers[id] = {
+    // 		callback,
+    // 		controlId,
+    // 		useEventValue,
+    // 	};
+    // } else {
+    // 	throw new Error('Invalid callback function is provided for subscribeToControl.');
+    // }
+    var subscriber = new Subscriber({
+      id: id,
+      controlId: controlId,
+      callback: callback,
+      useEventValue: useEventValue
+    });
+    subscribers.push(subscriber);
+    subscriber.call(tableSettings.settings, previousSettings);
   }
   /**
    * Call subscribers on update.
@@ -12047,15 +12191,8 @@ function ControlsManager() {
 
 
   function callSubscribers() {
-    // eslint-disable-next-line array-callback-return
-    Object.keys(subscribers).map(function (s) {
-      if (Object.prototype.hasOwnProperty.call(subscribers, s)) {
-        var callback = subscribers[s];
-
-        if (typeof callback === 'function') {
-          callback(getTableSettings());
-        }
-      }
+    subscribers.map(function (s) {
+      return s.call(tableSettings.settings, previousSettings);
     });
   }
   /**
@@ -12067,6 +12204,8 @@ function ControlsManager() {
 
   function updateTableSettings(input) {
     if (input) {
+      // update previous settings
+      previousSettings = tableSettings.settings;
       tableSettings.settings = _objectSpread(_objectSpread({}, tableSettings.settings), input);
       callSubscribers();
     }
@@ -12081,8 +12220,8 @@ function ControlsManager() {
       var table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
       WPTB_Helper.controlsInclude(table, function (input) {
         return updateTableSettings(input);
-      });
-    }, true);
+      }, true);
+    });
   }
   /**
    * Controls manager init.
@@ -12163,7 +12302,8 @@ function ControlsManager() {
     callControlScript: callControlScript,
     setControlData: setControlData,
     getControlData: getControlData,
-    subscribe: subscribe
+    subscribe: subscribe,
+    subscribeToControl: subscribeToControl
   };
 }
 /**
@@ -36515,6 +36655,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   components: {
     CssCodeInput: _CssCodeInput.default
@@ -36522,7 +36663,7 @@ var _default = {
   mixins: [_ControlBase.default],
   data: function data() {
     return {
-      code: '/* Enter your custom CSS rules here */',
+      code: '',
       cmOptions: {
         tabSize: 4,
         styleActiveLine: true,
@@ -36533,6 +36674,20 @@ var _default = {
         lineWrapping: true
       }
     };
+  },
+  watch: {
+    elementMainValue: function elementMainValue(n) {
+      this.basicValueUpdate(n, true);
+    },
+    code: function code(n) {
+      // base64 encode value to write to table data attribute
+      this.elementMainValue = btoa(n);
+    }
+  },
+  mounted: function mounted() {
+    this.assignDefaultValue(); // base64 decode default/saved value to use at code input component
+
+    this.code = atob(this.elementMainValue);
   },
   methods: {
     cssInputReady: function cssInputReady(CssCodeInputInstance) {
@@ -36580,6 +36735,13 @@ exports.default = _default;
             },
             expression: "code"
           }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          staticClass: "wptb-element-property",
+          class: _vm.uniqueId,
+          staticStyle: { display: "none" },
+          domProps: { value: _vm.elementMainValue }
         })
       ],
       1

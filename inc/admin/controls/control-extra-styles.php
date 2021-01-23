@@ -46,7 +46,8 @@ class Control_Extra_Styles extends Base_Control {
         WPTB_ControlsManager.setControlData( uniqueItemClass, data );
         #>
         <div id="{{{uniqueItemClass}}}">
-            <extra-styles-control :label="label"></extra-styles-control>
+            <extra-styles-control unique-id="{{{uniqueItemClass}}}" :selectors="selectors"
+                                  :default-value="defaultValue" :label="label"></extra-styles-control>
         </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ControlExtraStyles', '{{{uniqueItemClass}}}');

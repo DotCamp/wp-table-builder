@@ -85,8 +85,17 @@ class Style_Pass {
 				]
 			],
 			'extraTableStyles'   => [
-				'label' => esc_html__('Extra styles', 'wp-table-builder'),
-				'type' => Controls_Manager::EXTRA_STYLES
+				'label'        => esc_html__( 'Extra styles', 'wp-table-builder' ),
+				'type'         => Controls_Manager::EXTRA_STYLES,
+				'selectors'    => [
+					[
+						'query' => '{{{data.container}}}',
+						'type'  => Controls_Manager::DATASET,
+						'key'   => 'wptbExtraStyles'
+					]
+				],
+				// send default value as base64 encoded string
+				"defaultValue" => base64_encode(( '/* Enter your custom CSS rules here */' ))
 			]
 		];
 

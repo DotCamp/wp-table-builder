@@ -9,16 +9,118 @@
 function ControlsManager() {
 	const controlScripts = {};
 	const controlData = {};
+	let previousSettings = {};
 	const tableSettings = { settings: {} };
-	const subscribers = {};
+	const subscribers = [];
 
 	/**
+	 * Subscriber object.
+	 *
+	 * By providing a control id, you can subscribe to a control instead of whole table settings.
+	 *
+	 * @param {Object} subOptions subscriber options
+	 * @class
+	 */
+	function Subscriber(subOptions) {
+		/**
+		 * Default options for subscriber.
+		 *
+		 * @type {Object}
+		 */
+		const defaultOptions = {
+			id: null,
+			controlId: null,
+			useEventValue: false,
+			callback: () => {},
+		};
+
+		// merge default options with supplied ones
+		this.options = { ...defaultOptions, ...subOptions };
+
+		/**
+		 * Parse and reform supplied default table settings.
+		 *
+		 * @param {Object} settings settings object
+		 * @param {boolean} useEventValue whether to use event value instead of target value
+		 * @return {Object} reformed settings object
+		 */
+		const parseSettings = (settings, useEventValue = false) => {
+			return Object.keys(settings).reduce((carry, item) => {
+				const finalCarry = carry;
+
+				if (Object.prototype.hasOwnProperty.call(settings, item)) {
+					const valueKey = useEventValue ? 'eventValue' : 'targetValue';
+
+					finalCarry[item] = settings[item][valueKey];
+				}
+
+				return finalCarry;
+			}, {});
+		};
+
+		/**
+		 * Logic for calling control subscribers.
+		 *
+		 * @param {Object} setting settings object
+		 * @param {Object} previousSetting previous version of settings object
+		 */
+		const controlSubscriberLogic = (setting, previousSetting) => {
+			const { controlId, useEventValue, callback } = this.options;
+			const currentValue = parseSettings(setting, useEventValue)[controlId];
+
+			if (currentValue !== undefined) {
+				const previousValue = parseSettings(previousSetting)[controlId];
+
+				// only call callback if current and previous values are different from each other
+				if (currentValue !== previousValue) {
+					callback(currentValue);
+				}
+			}
+		};
+
+		/**
+		 * Call subscriber.
+		 *
+		 * @param {Object} settings settings object
+		 * @param {Object} previousSettings previous version of the settings object, this object will be used for control subscribers to decide whether to call them or not by comparing current and previous values of control item
+		 */
+		this.call = (settings, previousSettings) => {
+			const { controlId, callback, useEventValue } = this.options;
+
+			// if there is a control id, then it means subscriber is subscribed to a control instead of whole table settings
+			if (callback && typeof callback === 'function') {
+				if (controlId) {
+					controlSubscriberLogic(settings, previousSettings);
+				} else {
+					callback(parseSettings(settings, useEventValue));
+				}
+			} else {
+				throw new Error('an invalid type of callback property is defined for subscriber');
+			}
+		};
+	}
+
+	/**
+	 * @deprecated
 	 * Get current table settings.
 	 *
+	 * This function is being used in ControlBase for component visibility changes. That functionality will be updated in the future and this function will be removed. Do not use this, use subscribe operations instead.
+	 *
+	 * @param {boolean} useEventValue whether to use event value instead of element value
 	 * @return {Object} current table settings
 	 */
-	function getTableSettings() {
-		return tableSettings.settings;
+	function getTableSettings(useEventValue = false) {
+		return Object.keys(tableSettings.settings).reduce((carry, item) => {
+			const finalCarry = carry;
+
+			if (Object.prototype.hasOwnProperty.call(tableSettings.settings, item)) {
+				const valueKey = useEventValue ? 'eventValue' : 'targetValue';
+
+				finalCarry[item] = tableSettings.settings[item][valueKey];
+			}
+
+			return finalCarry;
+		}, {});
 	}
 
 	/**
@@ -26,28 +128,42 @@ function ControlsManager() {
 	 *
 	 * @param {string} id unique id for subscription
 	 * @param {Function} callback callback when an update happens
+	 * @param {boolean} useEventValue use event value instead of target element value
 	 */
-	function subscribe(id, callback) {
-		subscribers[id] = callback;
+	function subscribe(id, callback, useEventValue = false) {
+		const subscriber = new Subscriber({ id, callback, useEventValue });
+		subscribers.push(subscriber);
+		subscriber.call(tableSettings.settings, previousSettings);
+	}
 
-		if (typeof callback === 'function') {
-			callback(getTableSettings());
-		}
+	/**
+	 *
+	 * @param {string} id subscriber id
+	 * @param {string} controlId id of the control being subscribed to
+	 * @param {Function} callback callback function that will be executed on control value change
+	 * @param {boolean} useEventValue whether to use event value instead of target value
+	 */
+	function subscribeToControl(id, controlId, callback, useEventValue = false) {
+		// @deprecated
+		// if (typeof callback === 'function') {
+		// 	subscribers[id] = {
+		// 		callback,
+		// 		controlId,
+		// 		useEventValue,
+		// 	};
+		// } else {
+		// 	throw new Error('Invalid callback function is provided for subscribeToControl.');
+		// }
+		const subscriber = new Subscriber({ id, controlId, callback, useEventValue });
+		subscribers.push(subscriber);
+		subscriber.call(tableSettings.settings, previousSettings);
 	}
 
 	/**
 	 * Call subscribers on update.
 	 */
 	function callSubscribers() {
-		// eslint-disable-next-line array-callback-return
-		Object.keys(subscribers).map((s) => {
-			if (Object.prototype.hasOwnProperty.call(subscribers, s)) {
-				const callback = subscribers[s];
-				if (typeof callback === 'function') {
-					callback(getTableSettings());
-				}
-			}
-		});
+		subscribers.map((s) => s.call(tableSettings.settings, previousSettings));
 	}
 
 	/**
@@ -57,6 +173,8 @@ function ControlsManager() {
 	 */
 	function updateTableSettings(input) {
 		if (input) {
+			// update previous settings
+			previousSettings = tableSettings.settings;
 			tableSettings.settings = { ...tableSettings.settings, ...input };
 			callSubscribers();
 		}
@@ -66,15 +184,11 @@ function ControlsManager() {
 	 * Attach to table settings changes.
 	 */
 	function attachToSettingChanges() {
-		document.addEventListener(
-			'wptb:table:generated',
-			() => {
-				const table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
+		document.addEventListener('wptb:table:generated', () => {
+			const table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
 
-				WPTB_Helper.controlsInclude(table, (input) => updateTableSettings(input));
-			},
-			true
-		);
+			WPTB_Helper.controlsInclude(table, (input) => updateTableSettings(input), true);
+		});
 	}
 
 	/**
@@ -138,7 +252,17 @@ function ControlsManager() {
 		}
 		return controlData[id];
 	}
-	return { getTableSettings, init, addControlScript, callControlScript, setControlData, getControlData, subscribe };
+
+	return {
+		getTableSettings,
+		init,
+		addControlScript,
+		callControlScript,
+		setControlData,
+		getControlData,
+		subscribe,
+		subscribeToControl,
+	};
 }
 
 /**

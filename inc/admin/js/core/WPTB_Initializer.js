@@ -82,6 +82,7 @@ const WPTB_Initializer = function () {
 
 	// block tinyMCE from activation at manage cells menu
 	WPTB_Helper.blockTinyMCEManageCells();
+
 	// initialize header toolbox
 	new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
 
@@ -95,4 +96,20 @@ const WPTB_Initializer = function () {
 
 	// initialize notification manager
 	WPTB_NotificationManager.init();
+
+	// start up extra styles for builder and make connection to necessary hooks
+	document.addEventListener('wptb:table:generated', () => {
+		WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.builder);
+
+		// subscribe to table settings changes to update extra styles
+		WPTB_ControlsManager.subscribeToControl(
+			'extraStyles',
+			'extraTableStyles',
+			(val) => {
+				// TODO [erdembircan] remove for production
+				console.log(val);
+			},
+			true
+		);
+	});
 };

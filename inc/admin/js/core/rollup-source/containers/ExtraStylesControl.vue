@@ -3,6 +3,7 @@
 		<div class="wptb-settings-item-header wptb-text-transform-cap">{{ label }}</div>
 		<div class="wptb-settings-row wptb-settings-middle-xs">
 			<css-code-input v-model="code" @ready="cssInputReady"></css-code-input>
+			<input style="display: none;" class="wptb-element-property" :class="uniqueId" :value="elementMainValue" />
 		</div>
 	</div>
 </template>
@@ -16,7 +17,7 @@ export default {
 	mixins: [ControlBase],
 	data() {
 		return {
-			code: '/* Enter your custom CSS rules here */',
+			code: '',
 			cmOptions: {
 				tabSize: 4,
 				styleActiveLine: true,
@@ -27,6 +28,21 @@ export default {
 				lineWrapping: true,
 			},
 		};
+	},
+	watch: {
+		elementMainValue(n) {
+			this.basicValueUpdate(n, true);
+		},
+		code(n) {
+			// base64 encode value to write to table data attribute
+			this.elementMainValue = btoa(n);
+		},
+	},
+	mounted() {
+		this.assignDefaultValue();
+
+		// base64 decode default/saved value to use at code input component
+		this.code = atob(this.elementMainValue);
 	},
 	methods: {
 		cssInputReady(CssCodeInputInstance) {
