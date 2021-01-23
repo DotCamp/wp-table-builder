@@ -35448,310 +35448,7 @@ var global = arguments[3];
 
 })));
 
-},{}],"../../../../../node_modules/vue-codemirror/dist/vue-codemirror.js":[function(require,module,exports) {
-var define;
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function (obj) { return typeof obj; }; } else { _typeof = function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-!function (e, t) {
-  "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "object" == (typeof module === "undefined" ? "undefined" : _typeof(module)) ? module.exports = t(require("codemirror")) : "function" == typeof define && define.amd ? define(["codemirror"], t) : "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? exports.VueCodemirror = t(require("codemirror")) : e.VueCodemirror = t(e.codemirror);
-}(this, function (e) {
-  return function (e) {
-    function t(r) {
-      if (n[r]) return n[r].exports;
-      var o = n[r] = {
-        i: r,
-        l: !1,
-        exports: {}
-      };
-      return e[r].call(o.exports, o, o.exports, t), o.l = !0, o.exports;
-    }
-
-    var n = {};
-    return t.m = e, t.c = n, t.i = function (e) {
-      return e;
-    }, t.d = function (e, n, r) {
-      t.o(e, n) || Object.defineProperty(e, n, {
-        configurable: !1,
-        enumerable: !0,
-        get: r
-      });
-    }, t.n = function (e) {
-      var n = e && e.__esModule ? function () {
-        return e.default;
-      } : function () {
-        return e;
-      };
-      return t.d(n, "a", n), n;
-    }, t.o = function (e, t) {
-      return Object.prototype.hasOwnProperty.call(e, t);
-    }, t.p = "/", t(t.s = 3);
-  }([function (t, n) {
-    t.exports = e;
-  }, function (e, t, n) {
-    "use strict";
-
-    Object.defineProperty(t, "__esModule", {
-      value: !0
-    });
-
-    var r = n(0),
-        o = function (e) {
-      return e && e.__esModule ? e : {
-        default: e
-      };
-    }(r),
-        i = window.CodeMirror || o.default;
-
-    "function" != typeof Object.assign && Object.defineProperty(Object, "assign", {
-      value: function (e, t) {
-        if (null == e) throw new TypeError("Cannot convert undefined or null to object");
-
-        for (var n = Object(e), r = 1; r < arguments.length; r++) {
-          var o = arguments[r];
-          if (null != o) for (var i in o) Object.prototype.hasOwnProperty.call(o, i) && (n[i] = o[i]);
-        }
-
-        return n;
-      },
-      writable: !0,
-      configurable: !0
-    }), t.default = {
-      name: "codemirror",
-      data: function () {
-        return {
-          content: "",
-          codemirror: null,
-          cminstance: null
-        };
-      },
-      props: {
-        code: String,
-        value: String,
-        marker: Function,
-        unseenLines: Array,
-        name: {
-          type: String,
-          default: "codemirror"
-        },
-        placeholder: {
-          type: String,
-          default: ""
-        },
-        merge: {
-          type: Boolean,
-          default: !1
-        },
-        options: {
-          type: Object,
-          default: function () {
-            return {};
-          }
-        },
-        events: {
-          type: Array,
-          default: function () {
-            return [];
-          }
-        },
-        globalOptions: {
-          type: Object,
-          default: function () {
-            return {};
-          }
-        },
-        globalEvents: {
-          type: Array,
-          default: function () {
-            return [];
-          }
-        }
-      },
-      watch: {
-        options: {
-          deep: !0,
-          handler: function (e) {
-            for (var t in e) this.cminstance.setOption(t, e[t]);
-          }
-        },
-        merge: function () {
-          this.$nextTick(this.switchMerge);
-        },
-        code: function (e) {
-          this.handerCodeChange(e);
-        },
-        value: function (e) {
-          this.handerCodeChange(e);
-        }
-      },
-      methods: {
-        initialize: function () {
-          var e = this,
-              t = Object.assign({}, this.globalOptions, this.options);
-          this.merge ? (this.codemirror = i.MergeView(this.$refs.mergeview, t), this.cminstance = this.codemirror.edit) : (this.codemirror = i.fromTextArea(this.$refs.textarea, t), this.cminstance = this.codemirror, this.cminstance.setValue(this.code || this.value || this.content)), this.cminstance.on("change", function (t) {
-            e.content = t.getValue(), e.$emit && e.$emit("input", e.content);
-          });
-          var n = {};
-          ["scroll", "changes", "beforeChange", "cursorActivity", "keyHandled", "inputRead", "electricInput", "beforeSelectionChange", "viewportChange", "swapDoc", "gutterClick", "gutterContextMenu", "focus", "blur", "refresh", "optionChange", "scrollCursorIntoView", "update"].concat(this.events).concat(this.globalEvents).filter(function (e) {
-            return !n[e] && (n[e] = !0);
-          }).forEach(function (t) {
-            e.cminstance.on(t, function () {
-              for (var n = arguments.length, r = Array(n), o = 0; o < n; o++) r[o] = arguments[o];
-
-              e.$emit.apply(e, [t].concat(r));
-              var i = t.replace(/([A-Z])/g, "-$1").toLowerCase();
-              i !== t && e.$emit.apply(e, [i].concat(r));
-            });
-          });
-          this.$emit("ready", this.codemirror), this.unseenLineMarkers(), this.refresh();
-        },
-        refresh: function () {
-          var e = this;
-          this.$nextTick(function () {
-            e.cminstance.refresh();
-          });
-        },
-        destroy: function () {
-          var e = this.cminstance.doc.cm.getWrapperElement();
-          e && e.remove && e.remove();
-        },
-        handerCodeChange: function (e) {
-          if (e !== this.cminstance.getValue()) {
-            var t = this.cminstance.getScrollInfo();
-            this.cminstance.setValue(e), this.content = e, this.cminstance.scrollTo(t.left, t.top);
-          }
-
-          this.unseenLineMarkers();
-        },
-        unseenLineMarkers: function () {
-          var e = this;
-          void 0 !== this.unseenLines && void 0 !== this.marker && this.unseenLines.forEach(function (t) {
-            var n = e.cminstance.lineInfo(t);
-            e.cminstance.setGutterMarker(t, "breakpoints", n.gutterMarkers ? null : e.marker());
-          });
-        },
-        switchMerge: function () {
-          var e = this.cminstance.doc.history,
-              t = this.cminstance.doc.cleanGeneration;
-          this.options.value = this.cminstance.getValue(), this.destroy(), this.initialize(), this.cminstance.doc.history = e, this.cminstance.doc.cleanGeneration = t;
-        }
-      },
-      mounted: function () {
-        this.initialize();
-      },
-      beforeDestroy: function () {
-        this.destroy();
-      }
-    };
-  }, function (e, t, n) {
-    "use strict";
-
-    Object.defineProperty(t, "__esModule", {
-      value: !0
-    });
-    var r = n(1),
-        o = n.n(r);
-
-    for (var i in r) ["default", "default"].indexOf(i) < 0 && function (e) {
-      n.d(t, e, function () {
-        return r[e];
-      });
-    }(i);
-
-    var s = n(5),
-        c = n(4),
-        a = c(o.a, s.a, !1, null, null, null);
-    t.default = a.exports;
-  }, function (e, t, n) {
-    "use strict";
-
-    function r(e) {
-      return e && e.__esModule ? e : {
-        default: e
-      };
-    }
-
-    Object.defineProperty(t, "__esModule", {
-      value: !0
-    }), t.install = t.codemirror = t.CodeMirror = void 0;
-
-    var o = n(0),
-        i = r(o),
-        s = n(2),
-        c = r(s),
-        a = window.CodeMirror || i.default,
-        u = function (e, t) {
-      t && (t.options && (c.default.props.globalOptions.default = function () {
-        return t.options;
-      }), t.events && (c.default.props.globalEvents.default = function () {
-        return t.events;
-      })), e.component(c.default.name, c.default);
-    },
-        l = {
-      CodeMirror: a,
-      codemirror: c.default,
-      install: u
-    };
-
-    t.default = l, t.CodeMirror = a, t.codemirror = c.default, t.install = u;
-  }, function (e, t) {
-    e.exports = function (e, t, n, r, o, i) {
-      var s,
-          c = e = e || {},
-          a = _typeof(e.default);
-
-      "object" !== a && "function" !== a || (s = e, c = e.default);
-      var u = "function" == typeof c ? c.options : c;
-      t && (u.render = t.render, u.staticRenderFns = t.staticRenderFns, u._compiled = !0), n && (u.functional = !0), o && (u._scopeId = o);
-      var l;
-
-      if (i ? (l = function (e) {
-        e = e || this.$vnode && this.$vnode.ssrContext || this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext, e || "undefined" == typeof __VUE_SSR_CONTEXT__ || (e = __VUE_SSR_CONTEXT__), r && r.call(this, e), e && e._registeredComponents && e._registeredComponents.add(i);
-      }, u._ssrRegister = l) : r && (l = r), l) {
-        var f = u.functional,
-            d = f ? u.render : u.beforeCreate;
-        f ? (u._injectStyles = l, u.render = function (e, t) {
-          return l.call(t), d(e, t);
-        }) : u.beforeCreate = d ? [].concat(d, l) : [l];
-      }
-
-      return {
-        esModule: s,
-        exports: c,
-        options: u
-      };
-    };
-  }, function (e, t, n) {
-    "use strict";
-
-    var r = function () {
-      var e = this,
-          t = e.$createElement,
-          n = e._self._c || t;
-      return n("div", {
-        staticClass: "vue-codemirror",
-        class: {
-          merge: e.merge
-        }
-      }, [e.merge ? n("div", {
-        ref: "mergeview"
-      }) : n("textarea", {
-        ref: "textarea",
-        attrs: {
-          name: e.name,
-          placeholder: e.placeholder
-        }
-      })]);
-    },
-        o = [],
-        i = {
-      render: r,
-      staticRenderFns: o
-    };
-
-    t.a = i;
-  }]);
-});
-},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js"}],"../../../../../node_modules/codemirror/lib/codemirror.css":[function(require,module,exports) {
+},{}],"../../../../../node_modules/codemirror/lib/codemirror.css":[function(require,module,exports) {
 
 },{}],"../../../../../node_modules/codemirror/addon/selection/active-line.js":[function(require,module,exports) {
 var define;
@@ -36695,7 +36392,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
 
 });
 
-},{"../../lib/codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js"}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
+},{"../../lib/codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js"}],"components/CssCodeInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36703,7 +36400,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _vueCodemirror = require("vue-codemirror");
+var _codemirror = _interopRequireDefault(require("codemirror"));
 
 require("codemirror/lib/codemirror.css");
 
@@ -36711,7 +36408,101 @@ require("codemirror/addon/selection/active-line");
 
 require("codemirror/mode/css/css");
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    options: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    value: {
+      type: String,
+      default: '/* Enter your custom CSS rules here */'
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      defaultOptions: {
+        mode: 'text/css',
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        showCursorWhenSelecting: true,
+        lineWrapping: true
+      },
+      instance: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      // merge options and create a codemirror instance
+      _this.instance = (0, _codemirror.default)(_this.$refs.mainWrapper, _objectSpread(_objectSpread(_objectSpread({}, _this.defaultOptions), _this.options), {}, {
+        value: _this.value
+      })); // fire a value changed event to signal a change occurred on code input
+
+      _this.instance.on('change', function (instance) {
+        _this.$emit('valueChanged', instance.getValue());
+      }); // fire a ready event to signal code input instance is ready to be used
+
+
+      _this.$emit('ready', _this.instance);
+    });
+  }
+};
+exports.default = _default;
+        var $4a3317 = exports.default || module.exports;
+      
+      if (typeof $4a3317 === 'function') {
+        $4a3317 = $4a3317.options;
+      }
+    
+        /* template */
+        Object.assign($4a3317, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { ref: "mainWrapper", staticClass: "wptb-css-code-input" })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js"}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+
+var _CssCodeInput = _interopRequireDefault(require("../components/CssCodeInput"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36726,12 +36517,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 var _default = {
   components: {
-    codemirror: _vueCodemirror.codemirror
+    CssCodeInput: _CssCodeInput.default
   },
   mixins: [_ControlBase.default],
   data: function data() {
     return {
-      code: '/* Enter your custom CSS properties here */',
+      code: '/* Enter your custom CSS rules here */',
       cmOptions: {
         tabSize: 4,
         styleActiveLine: true,
@@ -36743,17 +36534,14 @@ var _default = {
       }
     };
   },
-  mounted: function mounted() {
-    this.$nextTick(function () {});
-  },
   methods: {
-    codeMirrorReady: function codeMirrorReady(CodeMirror) {
-      // because toggle group content is hidden, codemirror can not execute its size calculations correctly, listening section group visible event to force calculate those values when containing section group becomes visible
+    cssInputReady: function cssInputReady(CssCodeInputInstance) {
+      // because toggle group content is hidden, css code input can not execute its size calculations correctly, listening section group visible event to force calculate those values when containing section group becomes visible
       document.addEventListener('wptb:section-group:visible', function (_ref) {
         var detail = _ref.detail;
 
         if (detail === 'style_pass_settings') {
-          CodeMirror.refresh();
+          CssCodeInputInstance.refresh();
         }
       });
     }
@@ -36783,10 +36571,8 @@ exports.default = _default;
       "div",
       { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
       [
-        _c("codemirror", {
-          ref: "codeMirrorBase",
-          attrs: { options: _vm.cmOptions },
-          on: { ready: _vm.codeMirrorReady },
+        _c("css-code-input", {
+          on: { ready: _vm.cssInputReady },
           model: {
             value: _vm.code,
             callback: function($$v) {
@@ -36812,7 +36598,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-codemirror":"../../../../../node_modules/vue-codemirror/dist/vue-codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","../mixins/ControlBase":"mixins/ControlBase.js"}],"mountPoints/WPTB_ExtraStylesControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/CssCodeInput":"components/CssCodeInput.vue"}],"mountPoints/WPTB_ExtraStylesControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

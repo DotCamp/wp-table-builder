@@ -5955,7 +5955,7 @@ wptb_shortcode_container_element {
 /*endregion*/
 
 /*region extra styles*/
-.vue-codemirror {
+.wptb-css-code-input {
     width: 100% !important;
     max-width: 100% !important;
     border: 1px solid #ddd !important;
