@@ -105,9 +105,8 @@ const WPTB_Initializer = function () {
 		WPTB_ControlsManager.subscribeToControl(
 			'extraStyles',
 			'extraTableStyles',
-			(val) => {
-				// TODO [erdembircan] remove for production
-				console.log(val);
+			() => {
+				WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.builder);
 			},
 			true
 		);
