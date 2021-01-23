@@ -676,8 +676,7 @@
 			textElements = [...textElements];
 			let value = '';
 			for (let j = 0; j < textElements.length; j++) {
-				const p = textElements[j].querySelector('p');
-				value += p.innerText;
+				value += textElements[j].innerText;
 				if (j !== textElements.length - 1) value += ' ';
 			}
 
