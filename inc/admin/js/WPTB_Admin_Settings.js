@@ -12961,27 +12961,12 @@ var _ActiveSectionIndicator = _interopRequireDefault(require("./ActiveSectionInd
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   model: {
     prop: 'currentSection',
@@ -13019,15 +13004,24 @@ var _default = {
   },
   computed: {
     getItems: function getItems() {
-      if (Array.isArray(this.items)) {
-        return this.items.reduce(function (carry, item) {
-          // eslint-disable-next-line no-param-reassign
-          carry[item] = item;
-          return carry;
-        }, {});
-      }
+      var items = this.items;
+      return Object.keys(items).reduce(function (carry, item) {
+        if (Object.prototype.hasOwnProperty.call(items, item)) {
+          carry.push(_objectSpread(_objectSpread({
+            priority: 0
+          }, items[item]), {}, {
+            id: item
+          }));
+        }
 
-      return this.items;
+        return carry;
+      }, []).sort(function (a, b) {
+        if (a.id === 'general' || b.id === 'general') {
+          return a.id === 'general' ? -1 : 1;
+        }
+
+        return b.priority - a.priority;
+      });
     }
   },
   methods: {
@@ -13063,12 +13057,12 @@ exports.default = _default;
           class: { child: _vm.child }
         },
         [
-          _vm._l(_vm.getItems, function(label, item) {
+          _vm._l(_vm.getItems, function(item) {
             return _c("section-item", {
-              key: item,
+              key: item.id,
               attrs: {
-                name: item,
-                label: label,
+                name: item.id,
+                label: item.label,
                 current: _vm.innerCurrentSection,
                 disabled: _vm.disabled
               },
@@ -14688,7 +14682,7 @@ var _default = {
 
     // eslint-disable-next-line array-callback-return
     Object.keys(this.sectionsData).map(function (section) {
-      _this.sections[section] = _this.sectionsData[section].label;
+      _this.sections[section] = _this.sectionsData[section];
 
       if (Object.prototype.hasOwnProperty.call(_this.sectionsData, section)) {
         if (_this.parsedFields[section] === undefined) {

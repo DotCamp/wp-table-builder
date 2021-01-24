@@ -2,10 +2,10 @@
 	<div>
 		<div ref="wrapper" class="wptb-settings-sections-wrapper" :class="{ child }">
 			<section-item
-				v-for="(label, item) in getItems"
-				:name="item"
-				:label="label"
-				:key="item"
+				v-for="item in getItems"
+				:name="item.id"
+				:label="item.label"
+				:key="item.id"
 				@sectionchange="handleSectionChange"
 				@activeSectionElement="handleActiveSectionElement"
 				:current="innerCurrentSection"
@@ -57,14 +57,20 @@ export default {
 	},
 	computed: {
 		getItems() {
-			if (Array.isArray(this.items)) {
-				return this.items.reduce((carry, item) => {
-					// eslint-disable-next-line no-param-reassign
-					carry[item] = item;
+			const { items } = this;
+			return Object.keys(items)
+				.reduce((carry, item) => {
+					if (Object.prototype.hasOwnProperty.call(items, item)) {
+						carry.push({ priority: 0, ...items[item], id: item });
+					}
 					return carry;
-				}, {});
-			}
-			return this.items;
+				}, [])
+				.sort((a, b) => {
+					if (a.id === 'general' || b.id === 'general') {
+						return a.id === 'general' ? -1 : 1;
+					}
+					return b.priority - a.priority;
+				});
 		},
 	},
 	methods: {

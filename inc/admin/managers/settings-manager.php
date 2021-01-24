@@ -107,6 +107,7 @@ class Settings_Manager {
 	protected function initialize_additional() {
 		Version_Control_Manager::init();
 		Tag_Manager::init();
+		General_Styles_Manager::init();
 	}
 
 	/**

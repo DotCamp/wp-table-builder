@@ -68,7 +68,7 @@ export default {
 	beforeMount() {
 		// eslint-disable-next-line array-callback-return
 		Object.keys(this.sectionsData).map((section) => {
-			this.sections[section] = this.sectionsData[section].label;
+			this.sections[section] = this.sectionsData[section];
 			if (Object.prototype.hasOwnProperty.call(this.sectionsData, section)) {
 				if (this.parsedFields[section] === undefined) {
 					this.parsedFields[section] = [];
