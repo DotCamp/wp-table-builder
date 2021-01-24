@@ -28,6 +28,14 @@
 			builder: 'builder',
 			frontEnd: 'frontEnd',
 		};
+
+		/**
+		 * Current mode extra styles are operating on.
+		 *
+		 * @type {string}
+		 */
+		this.currentMode = this.modes.builder;
+
 		/**
 		 * HTML queries for table element in different plugin modes
 		 *
@@ -45,9 +53,8 @@
 		 * @return {string} formatted styles
 		 */
 		const formatStyles = (styles) => {
-			const finalForm = styles.replaceAll(/(\r?\n)/g, '');
-
-			return finalForm;
+			// remove all newlines from style string to make it a one liner
+			return styles.replaceAll(/(\r?\n)/g, '');
 		};
 
 		/**
@@ -97,6 +104,7 @@
 
 				const styleId = styleIdPrefix + tableId;
 
+				// since stylesheets are created for frontend only once at startup, checking document head for any created style object will work even with theme disabled tables which at builder, they are not inside a shadow-root
 				let styleElement = document.head.querySelector(`#${styleId}`);
 
 				// if no style element is found, create one
@@ -104,7 +112,15 @@
 					styleElement = document.createElement('style');
 					styleElement.type = 'text/css';
 					styleElement.id = styleId;
-					document.head.appendChild(styleElement);
+
+					const isThemeStylesDisabled = tableElement.dataset.disableThemeStyles;
+
+					// if theme styles are disabled, it means our table is residing inside a shadow-root, place style element inside shadow-root instead of document head
+					if (isThemeStylesDisabled && this.currentMode === this.modes.frontEnd) {
+						tableElement.insertAdjacentElement('beforebegin', styleElement);
+					} else {
+						document.head.appendChild(styleElement);
+					}
 				}
 
 				// reform style rules so they will only affect the table they are assigned to
@@ -122,6 +138,7 @@
 		 * @param {string} mode operation mode to apply styles
 		 */
 		this.applyStyles = (mode = this.modes.frontEnd) => {
+			this.currentMode = mode;
 			const allTables = Array.from(document.querySelectorAll(tableQueries[mode]));
 			allTables.map(applyExtraStyle);
 		};
