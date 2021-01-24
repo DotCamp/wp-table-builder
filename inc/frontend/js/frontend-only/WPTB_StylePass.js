@@ -100,6 +100,7 @@
 		};
 
 		this.prepareAllStylesheets = (stylesheetsObj, root) => {
+			// eslint-disable-next-line array-callback-return
 			Object.keys(stylesheetsObj).map((s) => {
 				if (Object.prototype.hasOwnProperty.call(stylesheetsObj, s)) {
 					this.prepareStylesheet(s, stylesheetsObj[s], root);

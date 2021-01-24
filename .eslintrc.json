@@ -48,6 +48,7 @@
     "WptbFrontendData": true,
     "WPTB_NotificationManager": true,
     "WPTB_Logger": true,
-    "WPTB_ExtraStyles": true
+    "WPTB_ExtraStyles": true,
+    "WPTB_SortableTable": true
   }
 }

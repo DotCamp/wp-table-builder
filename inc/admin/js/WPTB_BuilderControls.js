@@ -12166,16 +12166,6 @@ function ControlsManager() {
 
   function subscribeToControl(id, controlId, callback) {
     var useEventValue = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-    // @deprecated
-    // if (typeof callback === 'function') {
-    // 	subscribers[id] = {
-    // 		callback,
-    // 		controlId,
-    // 		useEventValue,
-    // 	};
-    // } else {
-    // 	throw new Error('Invalid callback function is provided for subscribeToControl.');
-    // }
     var subscriber = new Subscriber({
       id: id,
       controlId: controlId,

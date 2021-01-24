@@ -144,16 +144,6 @@ function ControlsManager() {
 	 * @param {boolean} useEventValue whether to use event value instead of target value
 	 */
 	function subscribeToControl(id, controlId, callback, useEventValue = false) {
-		// @deprecated
-		// if (typeof callback === 'function') {
-		// 	subscribers[id] = {
-		// 		callback,
-		// 		controlId,
-		// 		useEventValue,
-		// 	};
-		// } else {
-		// 	throw new Error('Invalid callback function is provided for subscribeToControl.');
-		// }
 		const subscriber = new Subscriber({ id, controlId, callback, useEventValue });
 		subscribers.push(subscriber);
 		subscriber.call(tableSettings.settings, previousSettings);
