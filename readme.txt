@@ -101,6 +101,7 @@ That's it. You're done!
 * FIX: Fixed an issue affecting text element where at certain situations align options are not working.
 * FIX: Fixed an issue affecting table layouts where they are hidden at page load through tabs or any other CSS visibility rules.
 * FIX: Fixed an issue where deleting a text element also deletes its container.
+* FIX: Fixed an issue affecting one row tables where top row as header or static top row options don't render the table correctly.
 
 = 1.3.3 =
 

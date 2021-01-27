@@ -1046,7 +1046,11 @@
 				}
 
 				// count of header rows that will be created
-				const headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+				let headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+
+				// in a situation where no cells are bind to header, only render header
+				headerCount = headerCount === 0 ? 1 : headerCount;
+
 				// row index on original table
 				let currentOriginalRow = 1;
 				for (let r = 0; r < headerCount; r += 1) {
@@ -1104,7 +1108,10 @@
 			} else {
 				// stack direction is row
 				// number of headers that will be created
-				const headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+				let headerCount = Math.ceil((rows - 1) / itemsPerHeader);
+
+				// in a situation where no cells are bind to header, only render header
+				headerCount = headerCount === 0 ? 1 : headerCount;
 
 				let currentOriginalRow = 1;
 
