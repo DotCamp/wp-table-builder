@@ -318,15 +318,15 @@ class Admin_Menu {
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
 
-			// TODO [erdembircan] remove for production
-			$admin_js_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
+			// TODO [erdembircan] comment for production
+//			$admin_js_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
 			// TODO [erdembircan] change version to plugin version for production
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), $admin_js_dev_version, true );
+			), NS\PLUGIN_VERSION, true );
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
@@ -456,29 +456,29 @@ class Admin_Menu {
 	public function tables_list() {
 		$table_list = new WPTB_Listing();
 		?>
-      <div class="wrap">
-        <div style="margin-bottom: 30px;">
-          <h1 class="wp-heading-inline">
-			  <?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
-          </h1>
-          <span class="wptb-split-page-title-action">
+        <div class="wrap">
+            <div style="margin-bottom: 30px;">
+                <h1 class="wp-heading-inline">
+					<?php esc_html_e( 'All Tables', 'wp-table-builder' ); ?>
+                </h1>
+                <span class="wptb-split-page-title-action">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=wptb-builder' ) ); ?>"
-               class="page-title-action">
+                           class="page-title-action">
 							<?php esc_html_e( 'Add New', 'wp-table-builder' ); ?>
 						</a>
 					</span>
-        </div>
-		  <?php
-		  $table_list->prepare_items();
-		  $table_list->views();
-		  ?>
-        <form method="get">
-          <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
+            </div>
 			<?php
-			$table_list->search_box( 'Search Tables', 'search_tables' );
-			$table_list->display(); ?>
-        </form>
-      </div>
+			$table_list->prepare_items();
+			$table_list->views();
+			?>
+            <form method="get">
+                <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
+				<?php
+				$table_list->search_box( 'Search Tables', 'search_tables' );
+				$table_list->display(); ?>
+            </form>
+        </div>
 		<?php
 	}
 
