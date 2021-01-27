@@ -555,7 +555,11 @@
 		 * @param {boolean} visible visibility state
 		 */
 		const selectorToolboxVisibility = (visible = true) => {
-			getSelectorToolbox().dataset.visible = visible;
+			const toolbox = getSelectorToolbox();
+
+			if (toolbox) {
+				getSelectorToolbox().dataset.visible = visible;
+			}
 		};
 
 		/**
