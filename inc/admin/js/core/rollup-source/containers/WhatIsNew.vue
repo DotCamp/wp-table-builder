@@ -1,7 +1,7 @@
 <template>
 	<transition name="wptb-fade" appear @after-leave="closeWindow">
 		<div class="wptb-what-is-new-container" v-if="windowVisibility">
-			<div class="wptb-what-is-new-window">
+			<div class="wptb-what-is-new-window wptb-plugin-filter-box-shadow-md">
 				<div class="wptb-what-is-new-header">
 					<div class="wptb-what-is-new-header-version">
 						<span class="wptb-what-is-new-header-text-icon" v-html="icons.lightbulb"></span> Version

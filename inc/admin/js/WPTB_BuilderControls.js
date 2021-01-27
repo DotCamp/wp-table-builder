@@ -25832,162 +25832,176 @@ exports.default = _default;
     [
       _vm.windowVisibility
         ? _c("div", { staticClass: "wptb-what-is-new-container" }, [
-            _c("div", { staticClass: "wptb-what-is-new-window" }, [
-              _c("div", { staticClass: "wptb-what-is-new-header" }, [
-                _c("div", { staticClass: "wptb-what-is-new-header-version" }, [
-                  _c("span", {
-                    staticClass: "wptb-what-is-new-header-text-icon",
-                    domProps: { innerHTML: _vm._s(_vm.icons.lightbulb) }
-                  }),
-                  _vm._v(
-                    " Version\n\t\t\t\t\t" + _vm._s(_vm.version) + "\n\t\t\t\t"
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", {
-                  staticClass: "wptb-what-is-new-header-close",
-                  domProps: { innerHTML: _vm._s(_vm.icons.times) },
-                  on: {
-                    click: function($event) {
-                      return _vm.setWindowVisibility(false)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "wptb-what-is-new-content" }, [
-                _c(
-                  "div",
-                  { staticClass: "wptb-what-is-new-note-image-carousel" },
-                  [
-                    _c("div", {
-                      staticClass: "wptb-what-is-new-carousel-nav-button",
-                      attrs: { disabled: !_vm.navStatus.decrement },
-                      domProps: { innerHTML: _vm._s(_vm.icons.chevronLeft) },
-                      on: {
-                        "!click": function($event) {
-                          $event.preventDefault()
-                          return _vm.modifyIndex(-1)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "wptb-what-is-new-images-wrapper" },
-                      _vm._l(_vm.notes, function(ref, index) {
-                        var image = ref.image
-                        var isPro = ref.isPro
-                        return _c(
-                          "transition",
-                          { key: index, attrs: { name: "wptb-fade" } },
-                          [
-                            _c(
-                              "div",
-                              {
-                                directives: [
-                                  {
-                                    name: "show",
-                                    rawName: "v-show",
-                                    value: _vm.currentNoteIndex === index,
-                                    expression: "currentNoteIndex === index"
-                                  }
-                                ],
-                                staticClass: "wptb-what-is-new-image-background"
-                              },
-                              [
-                                isPro
-                                  ? _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "wptb-what-is-new-pro-indicator"
-                                      },
-                                      [
-                                        _c(
-                                          "div",
-                                          {
-                                            staticClass:
-                                              "wptb-what-is-new-pro-indicator-text wptb-plugin-box-shadow-md"
-                                          },
-                                          [
-                                            _vm._v(
-                                              "\n\t\t\t\t\t\t\t\t\t\tPRO\n\t\t\t\t\t\t\t\t\t"
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c("div", {
-                                          staticClass:
-                                            "wptb-what-is-new-pro-indicator-triangle-end"
-                                        })
-                                      ]
-                                    )
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _c("img", {
-                                  staticClass:
-                                    "wptb-plugin-filter-box-shadow-md",
-                                  attrs: { src: image }
-                                })
-                              ]
-                            )
-                          ]
-                        )
+            _c(
+              "div",
+              {
+                staticClass:
+                  "wptb-what-is-new-window wptb-plugin-filter-box-shadow-md"
+              },
+              [
+                _c("div", { staticClass: "wptb-what-is-new-header" }, [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-what-is-new-header-version" },
+                    [
+                      _c("span", {
+                        staticClass: "wptb-what-is-new-header-text-icon",
+                        domProps: { innerHTML: _vm._s(_vm.icons.lightbulb) }
                       }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("div", {
-                      staticClass: "wptb-what-is-new-carousel-nav-button",
-                      attrs: { disabled: !_vm.navStatus.increment },
-                      domProps: { innerHTML: _vm._s(_vm.icons.chevronRight) },
-                      on: {
-                        "!click": function($event) {
-                          $event.preventDefault()
-                          return _vm.modifyIndex(1)
-                        }
+                      _vm._v(
+                        " Version\n\t\t\t\t\t" +
+                          _vm._s(_vm.version) +
+                          "\n\t\t\t\t"
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", {
+                    staticClass: "wptb-what-is-new-header-close",
+                    domProps: { innerHTML: _vm._s(_vm.icons.times) },
+                    on: {
+                      click: function($event) {
+                        return _vm.setWindowVisibility(false)
                       }
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "wptb-what-is-new-note-index" }, [
-                  _vm._v(
-                    _vm._s(_vm.currentNoteIndex + 1) +
-                      "/" +
-                      _vm._s(_vm.totalNotes)
-                  )
+                    }
+                  })
                 ]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-what-is-new-note-text-container" },
-                  _vm._l(_vm.notes, function(ref, index) {
-                    var text = ref.text
-                    return _c(
-                      "transition",
-                      { key: index, attrs: { name: "wptb-fade" } },
-                      [
-                        _c("div", {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.currentNoteIndex === index,
-                              expression: "currentNoteIndex === index"
-                            }
-                          ],
-                          staticClass: "wptb-what-is-new-note-text",
-                          domProps: { innerHTML: _vm._s(text) }
-                        })
-                      ]
+                _c("div", { staticClass: "wptb-what-is-new-content" }, [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-what-is-new-note-image-carousel" },
+                    [
+                      _c("div", {
+                        staticClass: "wptb-what-is-new-carousel-nav-button",
+                        attrs: { disabled: !_vm.navStatus.decrement },
+                        domProps: { innerHTML: _vm._s(_vm.icons.chevronLeft) },
+                        on: {
+                          "!click": function($event) {
+                            $event.preventDefault()
+                            return _vm.modifyIndex(-1)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "wptb-what-is-new-images-wrapper" },
+                        _vm._l(_vm.notes, function(ref, index) {
+                          var image = ref.image
+                          var isPro = ref.isPro
+                          return _c(
+                            "transition",
+                            { key: index, attrs: { name: "wptb-fade" } },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.currentNoteIndex === index,
+                                      expression: "currentNoteIndex === index"
+                                    }
+                                  ],
+                                  staticClass:
+                                    "wptb-what-is-new-image-background"
+                                },
+                                [
+                                  isPro
+                                    ? _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "wptb-what-is-new-pro-indicator"
+                                        },
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "wptb-what-is-new-pro-indicator-text wptb-plugin-box-shadow-md"
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n\t\t\t\t\t\t\t\t\t\tPRO\n\t\t\t\t\t\t\t\t\t"
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c("div", {
+                                            staticClass:
+                                              "wptb-what-is-new-pro-indicator-triangle-end"
+                                          })
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("img", {
+                                    staticClass:
+                                      "wptb-plugin-filter-box-shadow-md",
+                                    attrs: { src: image }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("div", {
+                        staticClass: "wptb-what-is-new-carousel-nav-button",
+                        attrs: { disabled: !_vm.navStatus.increment },
+                        domProps: { innerHTML: _vm._s(_vm.icons.chevronRight) },
+                        on: {
+                          "!click": function($event) {
+                            $event.preventDefault()
+                            return _vm.modifyIndex(1)
+                          }
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "wptb-what-is-new-note-index" }, [
+                    _vm._v(
+                      _vm._s(_vm.currentNoteIndex + 1) +
+                        "/" +
+                        _vm._s(_vm.totalNotes)
                     )
-                  }),
-                  1
-                )
-              ])
-            ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "wptb-what-is-new-note-text-container" },
+                    _vm._l(_vm.notes, function(ref, index) {
+                      var text = ref.text
+                      return _c(
+                        "transition",
+                        { key: index, attrs: { name: "wptb-fade" } },
+                        [
+                          _c("div", {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.currentNoteIndex === index,
+                                expression: "currentNoteIndex === index"
+                              }
+                            ],
+                            staticClass: "wptb-what-is-new-note-text",
+                            domProps: { innerHTML: _vm._s(text) }
+                          })
+                        ]
+                      )
+                    }),
+                    1
+                  )
+                ])
+              ]
+            )
           ])
         : _vm._e()
     ]
