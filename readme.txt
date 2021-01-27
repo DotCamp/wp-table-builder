@@ -94,11 +94,11 @@ That's it. You're done!
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 * IMPROVE: Button html element support for custom html table element.
 * IMPROVE: More frequently used table settings are moved to a higher priority position.
+* IMPROVE: Better manage cells menu layout to keep top and bottom row tools always visible.
 * FIX: Fixed an issue where newly created table text elements share same identification number.
 * FIX: Fixed an issue affecting row colors of static top row enabled responsive tables.
 * FIX: Fixed an issue affecting text element where at certain situations align options are not working.
 * FIX: Fixed an issue affecting table layouts where they are hidden at page load through tabs or any other CSS visibility rules.
-
 
 = 1.3.3 =
 

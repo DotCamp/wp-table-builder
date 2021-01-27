@@ -2139,6 +2139,8 @@ var WPTB_Helper = {
 			wptbPreviewTable = wptbPreviewTable[0];
 		}
 
+		const builderPanel = document.querySelector('.wptb-builder-panel');
+
 		if (bar.length > 0) {
 			let toggleEditMode = '';
 			for (let i = 0; i < bar.length; i++) {
@@ -2156,6 +2158,9 @@ var WPTB_Helper = {
 						}
 					}
 					toggleEditMode = 'closed';
+
+					builderPanel.dataset.manageCellsActive = false;
+
 					// @deprecated
 					// WPTB_Helper.activateSection('elements');
 				} else if (!close) {
@@ -2166,6 +2171,8 @@ var WPTB_Helper = {
 					wptbPreviewTable.parentNode.classList.add('wptb-preview-table-manage-cells');
 
 					toggleEditMode = 'opened';
+
+					builderPanel.dataset.manageCellsActive = true;
 				}
 			}
 

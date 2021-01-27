@@ -88,4 +88,8 @@ var WPTB_Initializer = function () {
 
     // initialize notification manager
     WPTB_NotificationManager.init();
+
+    // @deprecated
+    // // add scroll operation calculations to window
+    // new WPTB_RowMove().attachScrollOperationCalculations();
 };
