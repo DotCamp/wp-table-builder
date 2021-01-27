@@ -120,6 +120,11 @@
 		};
 	}
 
-	// return singleton icon manager instance
-	return new IconManager(wptb_admin_object.iconManager);
+	// eslint-disable-next-line no-restricted-globals
+	const context = self || global;
+	if (context.wptb_admin_object) {
+		return new IconManager(wptb_admin_object.iconManager);
+	}
+
+	return null;
 });
