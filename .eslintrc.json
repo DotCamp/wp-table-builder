@@ -47,6 +47,7 @@
     "wptbBlockData": true,
     "WptbFrontendData": true,
     "WPTB_NotificationManager": true,
-    "WPTB_Logger": true
+    "WPTB_Logger": true,
+    "wptb_admin_object": true
   }
 }
