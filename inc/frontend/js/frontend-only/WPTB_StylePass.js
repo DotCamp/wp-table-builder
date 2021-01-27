@@ -4,7 +4,8 @@
 (function attachToGlobal(globalKey, context, factory) {
 	// eslint-disable-next-line no-param-reassign
 	context[globalKey] = factory();
-})('WPTB_StylePass', self || global, function () {
+	// eslint-disable-next-line no-restricted-globals
+})('WPTB_StylePass', self || global, function factory() {
 	/**
 	 * Style pass component
 	 * This component will be used to either let or block theme related styling to affect table styles.
@@ -89,6 +90,7 @@
 				return;
 			}
 			const container = document.createElement('div');
+			container.classList.add('wptb-shadow-root-container');
 			const maxWidth = tableContainer.querySelector('table').dataset.wptbTableContainerMaxWidth;
 			if (maxWidth) {
 				container.style.maxWidth = `${maxWidth}px`;
@@ -100,6 +102,7 @@
 		};
 
 		this.prepareAllStylesheets = (stylesheetsObj, root) => {
+			// eslint-disable-next-line array-callback-return
 			Object.keys(stylesheetsObj).map((s) => {
 				if (Object.prototype.hasOwnProperty.call(stylesheetsObj, s)) {
 					this.prepareStylesheet(s, stylesheetsObj[s], root);
