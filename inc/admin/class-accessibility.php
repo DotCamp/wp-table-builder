@@ -23,7 +23,7 @@ class Accessibility {
 	 * Accessibility constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp-table-builder/table_settings_registered', [ $this, 'add_controls' ], 1, 1 );
+		add_action( 'wp-table-builder/table_settings_registered', [ $this, 'add_controls' ], 3, 1 );
 	}
 
 	public function add_controls( $context ) {

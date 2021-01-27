@@ -6,9 +6,9 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
+use function add_action;
 use function add_filter;
 use function trailingslashit;
-use const add_action;
 
 if ( ! defined( 'WPINC' ) ) {
 	die();
@@ -26,7 +26,7 @@ class Style_Pass {
 	 * Initialize style pass.
 	 */
 	public static function init() {
-		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_controls' ] );
+		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_controls' ], 1 );
 		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'frontend_data' ], 99, 1 );
 	}
 
@@ -55,11 +55,10 @@ class Style_Pass {
 	}
 
 	/**
-	 * Prepare url for the given stylesheet
+	 * Prepare url for the given stylesheet.
 	 *
 	 * @param string $relative_url path to css file relative to plugin base
 	 * @param int $version file version
-	 *
 	 * @param null $plugin_root root url for plugin, if no value is supplied normal version root url will be used
 	 *
 	 * @return string formed stylesheet url

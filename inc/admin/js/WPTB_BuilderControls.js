@@ -17490,8 +17490,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var value = '';
 
       for (var j = 0; j < textElements.length; j++) {
-        var p = textElements[j].querySelector('p');
-        value += p.innerText;
+        value += textElements[j].innerText;
         if (j !== textElements.length - 1) value += ' ';
       }
 

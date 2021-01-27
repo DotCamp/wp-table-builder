@@ -8,7 +8,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * WP Table Builder collapsible section group start section
+ * WP Table Builder collapsible section group start section.
  *
  * This is the start section of the section group that adds header and collapse mechanics with wrapper element for inner controls.
  */

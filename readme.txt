@@ -93,6 +93,7 @@ That's it. You're done!
 * NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 * IMPROVE: Button html element support for custom html table element.
+* IMPROVE: More frequently used table settings are moved to a higher priority position.
 * FIX: Fixed an issue where newly created table text elements share same identification number.
 * FIX: Fixed an issue affecting row colors of static top row enabled responsive tables.
 * FIX: Fixed an issue affecting text element where at certain situations align options are not working.

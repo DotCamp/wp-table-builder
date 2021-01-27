@@ -26,7 +26,7 @@ class Control_Section_Group_Collapse {
 	 * @param bool $open_state force section to start as opened or not
 	 */
 	public static function add_section( $section_id, $section_label, $section_controls, $control_call, $open_state = true ) {
-        $section_controls = apply_filters( 'wp-table-builder/register-controls-section-group/' . $section_id, $section_controls, $section_id );
+		$section_controls = apply_filters( 'wp-table-builder/register-controls-section-group/' . $section_id, $section_controls, $section_id );
 		$start_section_id = "${section_id}_section-group-start";
 		$end_section_id   = "${section_id}_section-group-end";
 
@@ -35,15 +35,15 @@ class Control_Section_Group_Collapse {
 
 		// add group controls
 		foreach ( $section_controls as $control_id => $control_args ) {
-		    $control_pos = 0;
-		    if( is_array( $control_args ) ) {
-                if( array_key_exists( 'control_pos', $control_args ) ) {
-                    $control_pos = $control_args['control_pos'];
-                }
-		        if( array_key_exists( 'control_args', $control_args ) ) {
-		            $control_args = $control_args['control_args'];
-                }
-            }
+			$control_pos = 0;
+			if ( is_array( $control_args ) ) {
+				if ( array_key_exists( 'control_pos', $control_args ) ) {
+					$control_pos = $control_args['control_pos'];
+				}
+				if ( array_key_exists( 'control_args', $control_args ) ) {
+					$control_args = $control_args['control_args'];
+				}
+			}
 			call_user_func( $control_call, $control_id, $control_args, $control_pos );
 		}
 
@@ -69,7 +69,7 @@ class Control_Section_Group_Collapse {
 	}
 
 	/**
-	 * Add section end control to control manager
+	 * Add section end control to control manager.
 	 *
 	 * @param string $start_id id of the first element of control group
 	 * @param string $end_id id of the last element of control group
@@ -82,6 +82,4 @@ class Control_Section_Group_Collapse {
 			'endId'   => $end_id,
 		] );
 	}
-
-
 }

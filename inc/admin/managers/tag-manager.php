@@ -66,7 +66,7 @@ class Tag_Manager {
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_menu_scripts' ] );
 
 		add_action( 'wptb_admin_menu', [ __CLASS__, 'register_menu' ] );
-		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_section' ], 1, 1 );
+		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_section' ], 2, 1 );
 
 		add_action( 'wp-table-builder/new_table_saved', [ __CLASS__, 'save_terms' ], 1, 2 );
 		add_action( 'wp-table-builder/table_edited', [ __CLASS__, 'save_terms' ], 1, 2 );
@@ -148,7 +148,7 @@ class Tag_Manager {
 	 * @return array terms
 	 */
 	public static function table_tags_count( $terms, $tax ) {
-		if ( is_array($tax) && in_array( static::TAX_ID, $tax ) ) {
+		if ( is_array( $tax ) && in_array( static::TAX_ID, $tax ) ) {
 			array_walk( $terms, function ( $term ) {
 				if ( $term->taxonomy === static::TAX_ID ) {
 					$count = ( new WP_Query( [
@@ -364,9 +364,9 @@ class Tag_Manager {
 	 */
 	public static function show_tags_menu() {
 		?>
-      <iframe src="<?php echo admin_url( 'edit-tags.php?taxonomy=table_tags' ); ?>"
-              class="wptb-table-tags-menu-wrapper">
-      </iframe>
+        <iframe src="<?php echo admin_url( 'edit-tags.php?taxonomy=table_tags' ); ?>"
+                class="wptb-table-tags-menu-wrapper">
+        </iframe>
 		<?php
 	}
 
