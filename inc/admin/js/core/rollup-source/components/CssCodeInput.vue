@@ -1,5 +1,9 @@
 <template>
-	<div ref="mainWrapper" class="wptb-css-code-input"></div>
+	<div ref="mainWrapper" class="wptb-css-code-input">
+		<empty-cover v-if="disabled">
+			<slot name="disabled"></slot>
+		</empty-cover>
+	</div>
 </template>
 
 <script>
@@ -7,8 +11,10 @@ import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/selection/active-line';
 import 'codemirror/mode/css/css';
+import EmptyCover from './EmptyCover';
 
 export default {
+	components: { EmptyCover },
 	props: {
 		options: {
 			type: Object,
@@ -19,6 +25,10 @@ export default {
 		value: {
 			type: String,
 			default: '/* Enter your custom CSS rules here */',
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	model: {
@@ -38,6 +48,14 @@ export default {
 			},
 			instance: null,
 		};
+	},
+	watch: {
+		value(n) {
+			// only update css code value if supplied value is different than the one on the input, this way we don't need to recalculate current cursor position after every update
+			if (this.instance && this.instance.getValue() !== n) {
+				this.instance.setValue(n);
+			}
+		},
 	},
 	mounted() {
 		this.$nextTick(() => {

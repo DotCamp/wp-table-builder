@@ -11,7 +11,7 @@
 			:disabled="!canSubmit"
 			@resetStore="resetStore"
 			@submitSettings="submitSettings"
-			:template-data="settings"
+			:template-data="sectionData"
 		></component>
 		<menu-footer>
 			<portal-target name="footerButtons"></portal-target>
@@ -27,6 +27,7 @@ import MenuFooter from '../components/MenuFooter.vue';
 import MenuButton from '../components/MenuButton.vue';
 import GeneralSettings from './GeneralSettings';
 import VersionControlSettings from '../components/VersionControlSettings';
+import GeneralStylesSettings from '../components/Settings/GeneralStylesSettings';
 
 export default {
 	props: ['sectionsData', 'settings', 'pluginInfo'],
@@ -37,6 +38,7 @@ export default {
 		MenuFooter,
 		GeneralSettings,
 		VersionControlSettings,
+		GeneralStylesSettings,
 	},
 	mixins: [withStore, withMessage],
 	data() {
@@ -93,8 +95,14 @@ export default {
 				return key;
 			}
 		});
+
+		// TODO [erdembircan] remove for production
+		this.currentSection = 'generalStyles';
 	},
 	computed: {
+		sectionData() {
+			return this.settings[this.currentSection] || {};
+		},
 		currentFields() {
 			return this.parsedFields[this.currentSection];
 		},

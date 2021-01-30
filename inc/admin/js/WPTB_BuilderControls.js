@@ -36538,6 +36538,8 @@ require("codemirror/addon/selection/active-line");
 
 require("codemirror/mode/css/css");
 
+var _EmptyCover = _interopRequireDefault(require("./EmptyCover"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -36547,6 +36549,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
+  components: {
+    EmptyCover: _EmptyCover.default
+  },
   props: {
     options: {
       type: Object,
@@ -36557,6 +36562,10 @@ var _default = {
     value: {
       type: String,
       default: '/* Enter your custom CSS rules here */'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -36576,6 +36585,14 @@ var _default = {
       },
       instance: null
     };
+  },
+  watch: {
+    value: function value(n) {
+      // only update css code value if supplied value is different than the one on the input, this way we don't need to recalculate current cursor position after every update
+      if (this.instance && this.instance.getValue() !== n) {
+        this.instance.setValue(n);
+      }
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -36608,7 +36625,12 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { ref: "mainWrapper", staticClass: "wptb-css-code-input" })
+  return _c(
+    "div",
+    { ref: "mainWrapper", staticClass: "wptb-css-code-input" },
+    [_vm.disabled ? _c("empty-cover", [_vm._t("disabled")], 2) : _vm._e()],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36622,7 +36644,7 @@ render._withStripped = true
           };
         })());
       
-},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js"}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
+},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","./EmptyCover":"components/EmptyCover.vue"}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -5956,10 +5956,16 @@ wptb_shortcode_container_element {
 
 /*region extra styles*/
 .wptb-css-code-input {
+    position: relative;
     width: 100% !important;
     max-width: 100% !important;
     border: 1px solid #ddd !important;
     border-radius: 3px;
+}
+
+.wptb-css-code-input .wptb-menu-empty-cover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    z-index: 10000000;
 }
 
 .CodeMirror {
@@ -5969,6 +5975,31 @@ wptb_shortcode_container_element {
 
 .CodeMirror * {
     font-size: 12px !important;
+}
+
+/*endregion*/
+
+/*region general styles settings menu*/
+.wptb-general-style-settings {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(min-content, max-content) 1fr;
+    grid-gap: 20px;
+}
+
+.wptb-general-style-settings .wptb-menu-empty-cover {
+    color: var(--wptb-plugin-logo-color) !important;
+}
+
+.wptb-general-style-settings .wptb-css-code-input {
+    height: 100% !important;
+}
+
+.wptb-general-style-settings .CodeMirror {
+    height: 100% !important;
+    max-height: 100% !important;
 }
 
 /*endregion*/

@@ -13049,6 +13049,34 @@ var withMessage = {
 };
 var _default = withMessage;
 exports.default = _default;
+},{}],"components/BusyRotate.vue":[function(require,module,exports) {
+
+        var $ac8ef1 = exports.default || module.exports;
+      
+      if (typeof $ac8ef1 === 'function') {
+        $ac8ef1 = $ac8ef1.options;
+      }
+    
+        /* template */
+        Object.assign($ac8ef1, (function () {
+          var render = function(_h, _vm) {
+  var _c = _vm._c
+  return _c("span", {
+    staticClass: "dashicons dashicons-image-rotate wptb-settings-fetching"
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: true
+          };
+        })());
+      
 },{}],"components/MessageDisplay.vue":[function(require,module,exports) {
 "use strict";
 
@@ -13058,6 +13086,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
+var _BusyRotate = _interopRequireDefault(require("./BusyRotate"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13072,6 +13102,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 var _default = {
+  components: {
+    BusyRotate: _BusyRotate.default
+  },
   mixins: [_withMessage.default]
 };
 exports.default = _default;
@@ -13091,12 +13124,7 @@ exports.default = _default;
     "div",
     { staticClass: "wptb-settings-messages" },
     [
-      _vm.withMessageData.busy
-        ? _c("span", {
-            staticClass:
-              "dashicons dashicons-image-rotate wptb-settings-fetching"
-          })
-        : _vm._e(),
+      _vm.withMessageData.busy ? _c("busy-rotate") : _vm._e(),
       _vm._v(" "),
       _c("transition", { attrs: { name: "wptb-fade" } }, [
         _vm.withMessageData.show
@@ -13126,7 +13154,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withMessage":"mixins/withMessage.js"}],"components/MenuButton.vue":[function(require,module,exports) {
+},{"../mixins/withMessage":"mixins/withMessage.js","./BusyRotate":"components/BusyRotate.vue"}],"components/MenuButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

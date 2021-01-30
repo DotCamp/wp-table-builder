@@ -49,11 +49,11 @@ class Settings_Manager {
 	 * @var array
 	 */
 	public $defaults = [
-		'allowed_roles'  => [ 'administrator' ],
-		'panel_location' => 'left',
-		'allow_edit_link_frontend' => false,
+		'allowed_roles'                    => [ 'administrator' ],
+		'panel_location'                   => 'left',
+		'allow_edit_link_frontend'         => false,
 		'give_credits_to_wp_table_builder' => false,
-		'restrict_users_to_their_tables' => false,
+		'restrict_users_to_their_tables'   => false,
 	];
 
 	/**
@@ -61,11 +61,11 @@ class Settings_Manager {
 	 * @var string[]
 	 */
 	public $sanitization_rules = [
-		'allowed_roles'  => 'sanitize_text_field',
-		'panel_location' => 'sanitize_text_field',
-		'allow_edit_link_frontend' => 'sanitize_text_field',
+		'allowed_roles'                    => 'sanitize_text_field',
+		'panel_location'                   => 'sanitize_text_field',
+		'allow_edit_link_frontend'         => 'sanitize_text_field',
 		'give_credits_to_wp_table_builder' => 'sanitize_text_field',
-		'restrict_users_to_their_tables' => 'sanitize_text_field',
+		'restrict_users_to_their_tables'   => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
@@ -265,13 +265,13 @@ class Settings_Manager {
 					'general' => [
 						'label'  => esc_html__( 'general', 'wp-table-builder' ),
 						'fields' => [
-							'allowed_roles'  => [
+							'allowed_roles'                    => [
 								'type'    => 'multiCheckbox',
 								'options' => wp_roles()->role_names,
 								'section' => 'general',
 								'label'   => esc_html__( 'Allowed User Roles', 'wp-table-builder' )
 							],
-							'panel_location' => [
+							'panel_location'                   => [
 								'type'    => 'dropdown',
 								'options' => [
 									[
@@ -286,17 +286,17 @@ class Settings_Manager {
 								'section' => 'general',
 								'label'   => esc_html__( 'Sidebar location', 'wp-table-builder' )
 							],
-							'allow_edit_link_frontend'  => [
+							'allow_edit_link_frontend'         => [
 								'type'    => 'checkbox',
 								'section' => 'general',
 								'label'   => esc_html__( 'Show edit table link on frontend', 'wp-table-builder' )
 							],
-							'give_credits_to_wp_table_builder'  => [
+							'give_credits_to_wp_table_builder' => [
 								'type'    => 'checkbox',
 								'section' => 'general',
 								'label'   => esc_html__( 'Give Credits to WP Table Builder', 'wp-table-builder' )
 							],
-							'restrict_users_to_their_tables'  => [
+							'restrict_users_to_their_tables'   => [
 								'type'    => 'checkbox',
 								'section' => 'general',
 								'label'   => esc_html__( 'Restrict Users Access to Their Tables Only', 'wp-table-builder' )
@@ -308,7 +308,7 @@ class Settings_Manager {
 				'strings'      => $strings
 			];
 
-			// filter for frontend data
+			// filter for admin settings frontend data
 			$frontend_data = apply_filters( 'wp-table-builder/filter/settings_manager_frontend_data', $frontend_data );
 
 			// front-end data enqueue
