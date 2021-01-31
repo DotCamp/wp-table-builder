@@ -54,22 +54,27 @@
 		 */
 		const formatStyles = (styles) => {
 			// remove all newlines from style string to make it a one liner
-			return styles.replaceAll(/(\r?\n)/g, '');
+			const newLinesRemoved = styles.replaceAll(/(\r?\n)/g, '');
+
+			// remove all comments
+			const withoutComments = newLinesRemoved.replaceAll(/(\/\*.+?\*\/)/g, '');
+
+			return withoutComments;
 		};
 
 		/**
 		 * Reform style rules so they will only affect given table id.
 		 *
-		 * @param {number} tableId table id
+		 * @param {number} prefix table id
 		 * @param {string} extraStyles extra styles
 		 * @return {string} new style properties prefixed with table id class
 		 */
-		const affectOnlyTable = (tableId, extraStyles) => {
+		const prefixStyleRules = (prefix, extraStyles) => {
 			// reformat styles into a suitable form for our regexp operations
 			const formattedStyles = formatStyles(extraStyles);
 
-			// instead of a raw class name, a css query styled class name (with a dot on start) is formed
-			const tableUniqueClass = `.wptb-element-main-table_setting-${tableId}`;
+			// // instead of a raw class name, a css query styled class name (with a dot on start) is formed
+			// const tableUniqueClass = `.wptb-element-main-table_setting-${prefix}`;
 
 			const splitStyles = formattedStyles.split('}');
 			const prefixedStylesArray = [];
@@ -80,11 +85,11 @@
 				const matches = regExp.exec(split);
 
 				if (matches) {
-					prefixedStylesArray.push(split.replace(matches[1], `${tableUniqueClass} ${matches[1]}`));
+					prefixedStylesArray.push(split.replace(matches[1], `${prefix} ${matches[1]}`));
 				}
 			});
 
-			return prefixedStylesArray.join('}');
+			return `${prefixedStylesArray.join('}')}}`;
 		};
 
 		/**
@@ -122,9 +127,9 @@
 						document.head.appendChild(styleElement);
 					}
 				}
-
+				const uniqueClass = `.wptb-element-main-table_setting-${tableId}`;
 				// reform style rules so they will only affect the table they are assigned to
-				const prefixedStyles = affectOnlyTable(tableId, extraStyles);
+				const prefixedStyles = prefixStyleRules(uniqueClass, extraStyles);
 
 				// remove previous styles with updated ones
 				styleElement.innerHTML = '';
@@ -133,14 +138,34 @@
 		};
 
 		/**
+		 * Apply general styles to document.
+		 *
+		 * @param {string} generalStyles general style rules
+		 */
+		const applyGeneralStyles = (generalStyles) => {
+			const generalStylesheet = document.createElement('style');
+			generalStylesheet.type = 'text/css';
+			generalStylesheet.id = 'wptb-general-styles';
+
+			document.head.appendChild(generalStylesheet);
+			const prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
+			generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
+		};
+
+		/**
 		 * Apply extra styles to all available tables on DOM.
 		 *
 		 * @param {string} mode operation mode to apply styles
+		 * @param {string} generalStyles general style rules
 		 */
-		this.applyStyles = (mode = this.modes.frontEnd) => {
+		this.applyStyles = (mode = this.modes.frontEnd, generalStyles = null) => {
 			this.currentMode = mode;
 			const allTables = Array.from(document.querySelectorAll(tableQueries[mode]));
 			allTables.map(applyExtraStyle);
+
+			if (mode === this.modes.frontEnd && generalStyles) {
+				applyGeneralStyles(generalStyles);
+			}
 		};
 	}
 
