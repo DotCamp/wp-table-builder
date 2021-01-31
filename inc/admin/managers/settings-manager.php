@@ -8,6 +8,8 @@ use function add_filter;
 use function add_submenu_page;
 use function apply_filters;
 use function get_option;
+use function json_decode;
+use function json_encode;
 use function register_setting;
 use function wp_enqueue_script;
 use function wp_get_current_user;
@@ -351,7 +353,7 @@ class Settings_Manager {
 	}
 
 	/**
-	 * Sanitize plugin options on update
+	 * Sanitize plugin options on update.
 	 *
 	 * @param array $raw_value input value
 	 *
@@ -363,7 +365,7 @@ class Settings_Manager {
 
 
 	/**
-	 * Batch sanitize array with defined sanitization rules
+	 * Batch sanitize array with defined sanitization rules.
 	 *
 	 * This function not only sanitize the options, also will make sure only option fields defined in ruleset are ended up in the final options array
 	 *

@@ -5,15 +5,19 @@
 			<css-code-input v-model="code" @ready="cssInputReady"></css-code-input>
 			<input style="display: none;" class="wptb-element-property" :class="uniqueId" :value="elementMainValue" />
 		</div>
+		<panel-message-row
+			message="<b>!important</b> directive will be added automatically to your style rules."
+		></panel-message-row>
 	</div>
 </template>
 
 <script>
 import ControlBase from '../mixins/ControlBase';
 import CssCodeInput from '../components/CssCodeInput';
+import PanelMessageRow from '../components/leftPanel/PanelMessageRow';
 
 export default {
-	components: { CssCodeInput },
+	components: { PanelMessageRow, CssCodeInput },
 	mixins: [ControlBase],
 	data() {
 		return {

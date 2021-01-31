@@ -36644,7 +36644,103 @@ render._withStripped = true
           };
         })());
       
-},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","./EmptyCover":"components/EmptyCover.vue"}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
+},{"codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js","codemirror/lib/codemirror.css":"../../../../../node_modules/codemirror/lib/codemirror.css","codemirror/addon/selection/active-line":"../../../../../node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/css/css":"../../../../../node_modules/codemirror/mode/css/css.js","./EmptyCover":"components/EmptyCover.vue"}],"components/leftPanel/PanelMessageRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    message: {
+      type: String,
+      default: 'default message'
+    }
+  },
+  data: function data() {
+    return {
+      icons: {
+        info: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/></svg>'
+      }
+    };
+  },
+  methods: {
+    getIcon: function getIcon(type) {
+      var _this$icons$type;
+
+      return (_this$icons$type = this.icons[type]) !== null && _this$icons$type !== void 0 ? _this$icons$type : this.icons.info;
+    }
+  }
+};
+exports.default = _default;
+        var $9b98d7 = exports.default || module.exports;
+      
+      if (typeof $9b98d7 === 'function') {
+        $9b98d7 = $9b98d7.options;
+      }
+    
+        /* template */
+        Object.assign($9b98d7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c(
+          "div",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-panel-message"
+          },
+          [
+            _c("div", {
+              staticClass:
+                "wptb-panel-message-icon wptb-flex-row wptb-flex-align-center wptb-flex-justify-center",
+              domProps: { innerHTML: _vm._s(_vm.getIcon("info")) }
+            }),
+            _vm._v(" "),
+            _c("div", { domProps: { innerHTML: _vm._s(_vm.message) } })
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/ExtraStylesControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36655,6 +36751,8 @@ exports.default = void 0;
 var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
 
 var _CssCodeInput = _interopRequireDefault(require("../components/CssCodeInput"));
+
+var _PanelMessageRow = _interopRequireDefault(require("../components/leftPanel/PanelMessageRow"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36668,8 +36766,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
 var _default = {
   components: {
+    PanelMessageRow: _PanelMessageRow.default,
     CssCodeInput: _CssCodeInput.default
   },
   mixins: [_ControlBase.default],
@@ -36727,38 +36829,49 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "wptb-settings-item-header wptb-text-transform-cap" },
-      [_vm._v(_vm._s(_vm.label))]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
-      [
-        _c("css-code-input", {
-          on: { ready: _vm.cssInputReady },
-          model: {
-            value: _vm.code,
-            callback: function($$v) {
-              _vm.code = $$v
-            },
-            expression: "code"
-          }
-        }),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "wptb-element-property",
-          class: _vm.uniqueId,
-          staticStyle: { display: "none" },
-          domProps: { value: _vm.elementMainValue }
-        })
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-settings-item-header wptb-text-transform-cap" },
+        [_vm._v(_vm._s(_vm.label))]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
+        [
+          _c("css-code-input", {
+            on: { ready: _vm.cssInputReady },
+            model: {
+              value: _vm.code,
+              callback: function($$v) {
+                _vm.code = $$v
+              },
+              expression: "code"
+            }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "wptb-element-property",
+            class: _vm.uniqueId,
+            staticStyle: { display: "none" },
+            domProps: { value: _vm.elementMainValue }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("panel-message-row", {
+        attrs: {
+          message:
+            "<b>!important</b> directive will be added automatically to your style rules."
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -36772,7 +36885,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/CssCodeInput":"components/CssCodeInput.vue"}],"mountPoints/WPTB_ExtraStylesControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/CssCodeInput":"components/CssCodeInput.vue","../components/leftPanel/PanelMessageRow":"components/leftPanel/PanelMessageRow.vue"}],"mountPoints/WPTB_ExtraStylesControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

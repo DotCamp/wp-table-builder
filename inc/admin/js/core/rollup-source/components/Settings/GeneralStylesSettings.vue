@@ -2,7 +2,10 @@
 	<fragment>
 		<menu-content :center="true">
 			<div class="wptb-general-style-settings">
-				<div class="wptb-general-style-header">{{ strings.headerText }}</div>
+				<div>
+					<div class="wptb-general-style-header">{{ strings.headerText }}</div>
+<!--					<div class="wptb-general-style-header">{{ strings.subHeaderText }}</div>-->
+				</div>
 				<div class="wptb-general-css-code-input">
 					<css-code-input :disabled="isBusy()" v-model="code">
 						<template v-slot:disabled>

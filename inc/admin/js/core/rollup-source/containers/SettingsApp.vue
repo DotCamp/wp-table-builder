@@ -80,6 +80,7 @@ export default {
 					this.sectionsData[section].fields !== undefined &&
 					typeof this.sectionsData[section].fields === 'object'
 				) {
+					// eslint-disable-next-line array-callback-return
 					Object.keys(this.sectionsData[section].fields).map((field) => {
 						if (Object.prototype.hasOwnProperty.call(this.sectionsData[section].fields, field)) {
 							this.parsedFields[section].push({ ...this.sectionsData[section].fields[field], id: field });
@@ -89,15 +90,12 @@ export default {
 			}
 		});
 
-		// eslint-disable-next-line array-callback-return
+		// eslint-disable-next-line array-callback-return,consistent-return
 		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
 			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
 				return key;
 			}
 		});
-
-		// TODO [erdembircan] remove for production
-		this.currentSection = 'generalStyles';
 	},
 	computed: {
 		sectionData() {

@@ -14394,6 +14394,7 @@ var _default = {
       var _this = this;
 
       if (!this.isVersionSelected(this.currentVersion) && !this.isBusy()) {
+        // eslint-disable-next-line no-alert
         if (window.confirm(this.strings.rollbackConfirmation)) {
           this.setBusy(true);
           var formData = new FormData();
@@ -25622,6 +25623,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
 var _default = {
   mixins: [_SettingsMenuSection.default, _withMessage.default],
   components: {
@@ -25720,8 +25724,10 @@ exports.default = _default;
     [
       _c("menu-content", { attrs: { center: true } }, [
         _c("div", { staticClass: "wptb-general-style-settings" }, [
-          _c("div", { staticClass: "wptb-general-style-header" }, [
-            _vm._v(_vm._s(_vm.strings.headerText))
+          _c("div", [
+            _c("div", { staticClass: "wptb-general-style-header" }, [
+              _vm._v(_vm._s(_vm.strings.headerText))
+            ])
           ]),
           _vm._v(" "),
           _c(
@@ -25762,7 +25768,7 @@ exports.default = _default;
               attrs: { disabled: _vm.buttonDisabledState, type: "danger" },
               on: { click: _vm.resetCodeToCached }
             },
-            [_vm._v(_vm._s(_vm.strings.revert) + "\n\t\t")]
+            [_vm._v(_vm._s(_vm.strings.revert) + "\n\t\t\t")]
           ),
           _vm._v(" "),
           _c(
@@ -25891,6 +25897,7 @@ var _default = {
         }
 
         if (_this.sectionsData[section].fields !== undefined && _typeof(_this.sectionsData[section].fields) === 'object') {
+          // eslint-disable-next-line array-callback-return
           Object.keys(_this.sectionsData[section].fields).map(function (field) {
             if (Object.prototype.hasOwnProperty.call(_this.sectionsData[section].fields, field)) {
               _this.parsedFields[section].push(_objectSpread(_objectSpread({}, _this.sectionsData[section].fields[field]), {}, {
@@ -25900,7 +25907,7 @@ var _default = {
           });
         }
       }
-    }); // eslint-disable-next-line array-callback-return
+    }); // eslint-disable-next-line array-callback-return,consistent-return
 
     var _Object$keys$map = Object.keys(this.parsedFields).map(function (key) {
       if (Object.prototype.hasOwnProperty.call(_this.parsedFields, key)) {
@@ -25911,8 +25918,6 @@ var _default = {
     var _Object$keys$map2 = _slicedToArray(_Object$keys$map, 1);
 
     this.currentSection = _Object$keys$map2[0];
-    // TODO [erdembircan] remove for production
-    this.currentSection = 'generalStyles';
   },
   computed: {
     sectionData: function sectionData() {

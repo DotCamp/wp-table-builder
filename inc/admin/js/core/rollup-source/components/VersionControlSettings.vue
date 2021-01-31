@@ -117,6 +117,7 @@ export default {
 		},
 		installVersion() {
 			if (!this.isVersionSelected(this.currentVersion) && !this.isBusy()) {
+				// eslint-disable-next-line no-alert
 				if (window.confirm(this.strings.rollbackConfirmation)) {
 					this.setBusy(true);
 					const formData = new FormData();

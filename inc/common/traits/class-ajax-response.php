@@ -11,7 +11,7 @@ namespace WP_Table_Builder\Inc\Common\Traits;
  */
 trait Ajax_Response {
 	/**
-	 * response data
+	 * Response data.
 	 *
 	 * @var array
 	 */

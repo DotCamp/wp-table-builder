@@ -6004,3 +6004,18 @@ wptb_shortcode_container_element {
 
 /*endregion*/
 
+/*region panel message component*/
+.wptb-panel-message {
+    color: var(--wptb-plugin-gray-600);
+}
+
+.wptb-panel-message-icon {
+    margin-right: 10px;
+}
+
+.wptb-panel-message-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--wptb-plugin-yellow-500);
+}
+/*endregion*/

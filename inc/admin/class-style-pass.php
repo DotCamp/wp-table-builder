@@ -9,12 +9,16 @@ use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_action;
 use function add_filter;
-use function admin_url;
+use function add_query_arg;
+use function apply_filters;
+use function check_admin_referer;
+use function current_user_can;
 use function esc_html__;
+use function get_admin_url;
 use function get_option;
-use function sanitize_text_field;
 use function trailingslashit;
 use function update_option;
+use function wp_create_nonce;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -74,14 +78,15 @@ class Style_Pass {
 	 */
 	public static function settings_menu_data( $settings_data ) {
 		$extra_style_strings = [
-			'headerText' => esc_html__( 'Add style rules that will be available for all your tables.' )
+			'headerText'    => esc_html__( 'Add style rules that will be available for all your tables.' ),
+			'subHeaderText' => esc_html__( '!important directive will be added automatically to your style rules.' ),
 		];
+
 		// add translation strings to script
 		$settings_data['strings'] = array_merge( $settings_data['strings'], $extra_style_strings );
 
 		// get saved general styles from option
 		$general_styles = get_option( static::GENERAL_STYLES_OPTION_NAME, '/*' . esc_html__( 'Enter your custom CSS rules here...' . '*/' ) );
-
 
 		// security related data for general styles
 		$security = [
@@ -169,7 +174,6 @@ class Style_Pass {
 			]
 		];
 
-		// TODO [erdembircan] change open_state to false for production
 		Control_Section_Group_Collapse::add_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, [
 			$context,
 			'add_control'

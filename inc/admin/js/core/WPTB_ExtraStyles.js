@@ -53,28 +53,23 @@
 		 * @return {string} formatted styles
 		 */
 		const formatStyles = (styles) => {
-			// remove all newlines from style string to make it a one liner
-			const newLinesRemoved = styles.replaceAll(/(\r?\n)/g, '');
+			// remove all newlines, comments and '!important' from style string to make it a one liner
+			const cleaned = styles.replaceAll(/(\r?\n)|(\/\*.+?\*\/)|(\s*!important)/g, '');
 
-			// remove all comments
-			const withoutComments = newLinesRemoved.replaceAll(/(\/\*.+?\*\/)/g, '');
-
-			return withoutComments;
+			// add '!important' to all rules to override default style rules
+			return cleaned.replaceAll(';', ' !important;');
 		};
 
 		/**
 		 * Reform style rules so they will only affect given table id.
 		 *
-		 * @param {number} prefix table id
+		 * @param {number} prefix prefix string that will be added to all rules
 		 * @param {string} extraStyles extra styles
 		 * @return {string} new style properties prefixed with table id class
 		 */
 		const prefixStyleRules = (prefix, extraStyles) => {
 			// reformat styles into a suitable form for our regexp operations
 			const formattedStyles = formatStyles(extraStyles);
-
-			// // instead of a raw class name, a css query styled class name (with a dot on start) is formed
-			// const tableUniqueClass = `.wptb-element-main-table_setting-${prefix}`;
 
 			const splitStyles = formattedStyles.split('}');
 			const prefixedStylesArray = [];
@@ -163,6 +158,7 @@
 			const allTables = Array.from(document.querySelectorAll(tableQueries[mode]));
 			allTables.map(applyExtraStyle);
 
+			// only apply general styles on client frontend if any general styles are defined
 			if (mode === this.modes.frontEnd && generalStyles) {
 				applyGeneralStyles(generalStyles);
 			}
