@@ -104,6 +104,7 @@ export default {
 					sortControls: __('sort controls', 'wptb-table-builder'),
 					selectControls: __('select controls', 'wptb-table-builder'),
 					logicControls: __('logic controls', 'wptb-table-builder'),
+					generateHeaderMessage: __('Create a layout for your data table.', 'wptb-table-builder'),
 					elementNotSupported: __('This element is not supported with data tables.', 'wptb-table-builder'),
 					percentage: __('percentage', 'wptb-table-builder'),
 					elementColumnBasicBindingMessage: __(

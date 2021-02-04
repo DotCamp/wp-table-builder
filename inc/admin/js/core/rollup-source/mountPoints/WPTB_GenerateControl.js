@@ -10,7 +10,7 @@ import createStore from '../stores/generate';
 
 export default {
 	name: 'Generate',
-	handler: function dataTableJS(dataTableEnabled = true) {
+	handler: function dataTableJS(dataTableEnabled = true, headerMessage = null) {
 		Vue.config.productionTip = false;
 
 		// setup filters
@@ -27,6 +27,7 @@ export default {
 			env: process.env.NODE_ENV,
 			dataTableCardEnabled: dataTableEnabled,
 			strings: data.strings,
+			headerMessage,
 		};
 
 		// create generate app store

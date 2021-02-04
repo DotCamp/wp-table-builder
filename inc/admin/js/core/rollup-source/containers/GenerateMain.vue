@@ -2,6 +2,7 @@
 	<div class="wptb-generate-wrapper">
 		<div class="wptb-generate-menu">
 			<div class="wptb-generate-menu-header">
+				<div class="wptb-generate-header-message" v-if="getHeaderMessage">{{ getHeaderMessage }}</div>
 				<input
 					v-model.trim="searchString"
 					ref="search"
@@ -107,7 +108,7 @@ export default {
 		isPro() {
 			return this.version === 'pro';
 		},
-		...mapGetters(['appData', 'isDevBuild', 'strings']),
+		...mapGetters(['appData', 'isDevBuild', 'strings', 'getHeaderMessage']),
 	},
 	methods: {
 		deselect() {

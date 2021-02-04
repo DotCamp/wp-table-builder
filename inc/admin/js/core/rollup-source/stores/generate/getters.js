@@ -15,6 +15,9 @@ const getters = {
 	strings: (state) => {
 		return state.strings;
 	},
+	getHeaderMessage: (state) => {
+		return state.headerMessage;
+	},
 };
 
 /** @module getters */

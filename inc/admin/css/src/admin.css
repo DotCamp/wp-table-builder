@@ -4562,6 +4562,12 @@ wptb_shortcode_container_element {
     border-bottom: 1px solid var(--wptb-plugin-gray-300);
 }
 
+.wptb-generate-header-message {
+    margin-bottom: 20px;
+    font-size: 120%;
+    color: var(--wptb-plugin-gray-500);
+}
+
 .wptb-generate-menu-listing {
     grid-area: listing;
     padding: 30px;

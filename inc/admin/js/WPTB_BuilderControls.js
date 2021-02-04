@@ -27325,7 +27325,7 @@ var _default = {
       DataTableManagerStatic.getInstance().markTableAsDataTable(); // only call generate component if there is no active table in builder
 
       if (!this.tableIsActive) {
-        WPTB_ControlsManager.callControlScript('Generate', false);
+        WPTB_ControlsManager.callControlScript('Generate', false, this.translationM('generateHeaderMessage'));
       } // set table dirty
 
 
@@ -36041,6 +36041,7 @@ var _default = {
           sortControls: (0, _i18n.__)('sort controls', 'wptb-table-builder'),
           selectControls: (0, _i18n.__)('select controls', 'wptb-table-builder'),
           logicControls: (0, _i18n.__)('logic controls', 'wptb-table-builder'),
+          generateHeaderMessage: (0, _i18n.__)('Create a layout for your data table.', 'wptb-table-builder'),
           elementNotSupported: (0, _i18n.__)('This element is not supported with data tables.', 'wptb-table-builder'),
           percentage: (0, _i18n.__)('percentage', 'wptb-table-builder'),
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
@@ -38316,7 +38317,7 @@ var _default = {
     isPro: function isPro() {
       return this.version === 'pro';
     }
-  }, (0, _vuex.mapGetters)(['appData', 'isDevBuild', 'strings'])),
+  }, (0, _vuex.mapGetters)(['appData', 'isDevBuild', 'strings', 'getHeaderMessage'])),
   methods: {
     deselect: function deselect() {
       this.activeCard = '';
@@ -38690,6 +38691,12 @@ exports.default = _default;
   return _c("div", { staticClass: "wptb-generate-wrapper" }, [
     _c("div", { staticClass: "wptb-generate-menu" }, [
       _c("div", { staticClass: "wptb-generate-menu-header" }, [
+        _vm.getHeaderMessage
+          ? _c("div", { staticClass: "wptb-generate-header-message" }, [
+              _vm._v(_vm._s(_vm.getHeaderMessage))
+            ])
+          : _vm._e(),
+        _vm._v(" "),
         _c("input", {
           directives: [
             {
@@ -38798,6 +38805,9 @@ var getters = {
   },
   strings: function strings(state) {
     return state.strings;
+  },
+  getHeaderMessage: function getHeaderMessage(state) {
+    return state.headerMessage;
   }
 };
 /** @module getters */
@@ -38884,6 +38894,7 @@ var _default = {
     var _global$wptbGenerateM;
 
     var dataTableEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    var headerMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     _vue.default.config.productionTip = false; // setup filters
 
     _vue.default.use(_filters.default);
@@ -38900,7 +38911,8 @@ var _default = {
       icons: data.icons,
       env: "development",
       dataTableCardEnabled: dataTableEnabled,
-      strings: data.strings
+      strings: data.strings,
+      headerMessage: headerMessage
     }; // create generate app store
 
     var store = (0, _generate.default)({

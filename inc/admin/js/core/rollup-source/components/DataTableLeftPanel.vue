@@ -44,7 +44,7 @@ export default {
 
 			// only call generate component if there is no active table in builder
 			if (!this.tableIsActive) {
-				WPTB_ControlsManager.callControlScript('Generate', false);
+				WPTB_ControlsManager.callControlScript('Generate', false, this.translationM('generateHeaderMessage'));
 			}
 
 			// set table dirty
