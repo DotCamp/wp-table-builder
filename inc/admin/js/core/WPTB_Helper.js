@@ -1987,6 +1987,8 @@ var WPTB_Helper = {
 					messagingArea = document.getElementById('wptb-messaging-area');
 
 					if (data[0] == 'saved') {
+						WPTB_Helper.wptbDocumentEventGenerate('wptb:saved:response:data', document, data[2] );
+
 						let builderPageUrl = document.location.href.replace('#', '');
 						const regex = new RegExp('&table=(.+)', 'i');
 						builderPageUrl = builderPageUrl.replace(regex, '');
@@ -2017,6 +2019,7 @@ var WPTB_Helper = {
 						return;
 					}
 					if (data[0] == 'edited' && startSaving) {
+						WPTB_Helper.wptbDocumentEventGenerate('wptb:saved:response:data', document, data[2] );
 						document.wptbId = data[1];
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
 						document.getElementsByClassName('wptb-embed-btn')[0].classList.remove('wptb-button-disable');
@@ -2039,6 +2042,7 @@ var WPTB_Helper = {
 							wptbSaveBtn.classList.remove('active');
 						}
 					} else if (data[0] == 'edited') {
+						WPTB_Helper.wptbDocumentEventGenerate('wptb:saved:response:data', document, data[2] );
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully updated.</div>`;
 						event.target.dataset.wptbTableStateNumberSave = window.wptbTableStateNumberShow;
 

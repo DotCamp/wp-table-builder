@@ -6,6 +6,7 @@ namespace WP_Table_Builder\Inc\Admin;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use function add_filter;
 use function trailingslashit;
 use const add_action;
@@ -21,13 +22,16 @@ if ( ! defined( 'WPINC' ) ) {
  * @package WP_Table_Builder\Inc\Admin
  */
 class Style_Pass {
+	use Init_Once;
 
 	/**
 	 * Initialize style pass.
 	 */
 	public static function init() {
-		add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_controls' ] );
-		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'frontend_data' ], 99, 1 );
+		if ( ! static::is_initialized() ) {
+			add_action( 'wp-table-builder/table_settings_registered', [ __CLASS__, 'add_setting_controls' ] );
+			add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'frontend_data' ], 99, 1 );
+		}
 	}
 
 	/**

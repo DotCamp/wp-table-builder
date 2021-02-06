@@ -191,7 +191,7 @@ const DataTableManagerStatic = (() => {
 
 			document.addEventListener('wptb:save:before', ({ detail }) => {
 				// eslint-disable-next-line no-param-reassign
-				detail.dataTable = true;
+				detail.wptbDataTable = true;
 			});
 		};
 
