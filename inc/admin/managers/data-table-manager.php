@@ -9,6 +9,7 @@ use function add_action;
 use function add_filter;
 use function add_post_meta;
 use function get_post_meta;
+use function json_decode;
 use function register_post_type;
 use function update_post_meta;
 use function wp_insert_post;
@@ -43,7 +44,9 @@ class Data_Table_Manager {
 	 */
 	public static function init() {
 		if ( ! static::is_initialized() ) {
-			static::register_table_data_type();// add data table data
+			// initialize data object manager
+			Data_Object_Manager::init();
+
 			add_filter( 'wp-table-builder/filter/admin_data', [ __CLASS__, 'add_admin_data' ] );
 			add_action( 'wp-table-builder/new_table_saved', [ __CLASS__, 'table_saved' ], 10, 2 );
 			add_action( 'wp-table-builder/table_edited', [ __CLASS__, 'table_saved' ], 10, 2 );
@@ -53,6 +56,7 @@ class Data_Table_Manager {
 
 	/**
 	 * Register table data post type to WordPress.
+	 * @deprecated
 	 */
 	public static function register_table_data_type() {
 		// table data post type options
@@ -117,61 +121,13 @@ class Data_Table_Manager {
 		if ( property_exists( $params, 'wptbDataTable' ) ) {
 			add_post_meta( $id, '_wptb_data_table_', 'true' );
 
-			$table_data_id_exists      = property_exists( $params, 'wptbTableDataId' ) && $params->wptbTableDataId !== null;
-			$table_data_content_exists = property_exists( $params, 'wptbTableDataContent' );
+			if ( property_exists( $params, 'wptbDataObject' ) ) {
+				$parsed_data_object_args = json_decode( base64_decode( $params->wptbDataObject ) );
 
-			// if no data id is present but have a data content, create a new table data object
-			if ( ! $table_data_id_exists && $table_data_content_exists ) {
-				$table_data_content = $params->wptbTableDataContent;
-
-				// create a new table data post type
-				$status = static::create_table_data_object( $table_data_content );
-
-				if ( ! is_wp_error( $status ) ) {
-					// add created table data post id to table post
-					add_post_meta( $id, self::TABLE_POST_ID_META, $status );
-
-					// send created table data post id to frontend
-					add_filter( 'wp-table-builder/filter/saved_table_response_data', function ( $data ) use ( $status ) {
-						if ( ! isset( $data['dataTable'] ) ) {
-							$data['dataTable'] = [];
-						}
-
-						$data['dataTable']['tableDataId'] = $status;
-
-						return $data;
-					} );
-				}
-			} else if ( $table_data_id_exists && $table_data_content_exists ) {
-				static::update_data_object_content( $params->wptbTableDataId, $params->wptbTableDataContent );
+				// update/create data object related to data table with received options
+				$update_status =  Data_Object_Manager::update_data_object($parsed_data_object_args);
 			}
 		}
-	}
-
-	/**
-	 * Update data content of table data post type.
-	 *
-	 * @param string $id table data post id
-	 * @param string $content data content
-	 */
-	private static function update_data_object_content( $id, $content ) {
-		update_post_meta( $id, '_wptb_data_content_', $content );
-	}
-
-	/**
-	 * Create a new table data post type.
-	 *
-	 * @param string $data_content data content
-	 *
-	 * @return int|WP_Error id of created table data post or WP_Error
-	 */
-	private static function create_table_data_object( $data_content ) {
-		return wp_insert_post( [
-			'post_type'  => self::TABLE_DATA_POST_TYPE,
-			'meta_input' => [
-				'_wptb_data_content_' => $data_content
-			]
-		] );
 	}
 
 	/**

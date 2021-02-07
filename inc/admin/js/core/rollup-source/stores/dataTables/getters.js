@@ -344,6 +344,14 @@ const getters = {
 	getDataManager: (state) => {
 		return state.dataManager;
 	},
+	/**
+	 * Get data object including data object post type related properties.
+	 *
+	 * @param {Object} state store state
+	 */
+	getDataObject: (state) => {
+		return state.dataSource.dataObject;
+	},
 };
 
 export default getters;

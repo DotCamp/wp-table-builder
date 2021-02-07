@@ -155,13 +155,6 @@ const DataTableManagerStatic = (() => {
 			document.addEventListener('wptb:table:generated', () => {
 				if (isDataTableEnabled()) {
 					this.load();
-
-					// @deprecated
-					// document.addEventListener('wptbSectionChanged', (e) => {
-					// 	if (e.detail === this.sectionName) {
-					// 		this.load();
-					// 	}
-					// });
 				}
 			});
 		};
@@ -189,10 +182,11 @@ const DataTableManagerStatic = (() => {
 				}
 			});
 
-			document.addEventListener('wptb:save:before', ({ detail }) => {
-				// eslint-disable-next-line no-param-reassign
-				detail.wptbDataTable = true;
-			});
+			// @deprecated
+			// document.addEventListener('wptb:save:before', ({ detail }) => {
+			// 	// eslint-disable-next-line no-param-reassign
+			// 	detail.wptbDataTable = true;
+			// });
 		};
 
 		this.init();

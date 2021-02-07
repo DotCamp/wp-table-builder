@@ -1,4 +1,5 @@
 import DeBouncer from '../../functions/DeBouncer';
+
 /**
  * Data table store actions.
  *
@@ -312,8 +313,8 @@ const actions = {
 	 *
 	 * @param {{state}} vuex store object
 	 */
-	addOptionsAndDataToSave({ state }) {
-		document.addEventListener('wptb:save:before', () => {
+	addOptionsAndDataToSave({ state, getters }) {
+		document.addEventListener('wptb:save:before', ({ detail }) => {
 			const { dataSource, dataManager } = state;
 
 			const dataToSave = { dataSource, dataManager };
@@ -325,6 +326,14 @@ const actions = {
 			);
 			if (table) {
 				table.dataset.wptbDataTableOptions = encoded;
+			}
+
+			if (typeof detail === 'object') {
+				// eslint-disable-next-line no-param-reassign
+				detail.wptbDataTable = true;
+				detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject));
+				// TODO [erdembircan] remove for production
+				console.log(detail);
 			}
 		});
 	},

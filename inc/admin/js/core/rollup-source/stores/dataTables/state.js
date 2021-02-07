@@ -19,6 +19,10 @@ const state = {
 	screen: null,
 	proEnabled: false,
 	dataSource: {
+		dataObject: {
+			id: null,
+			type: null,
+		},
 		selected: null,
 		card: {
 			softSelectedId: null,

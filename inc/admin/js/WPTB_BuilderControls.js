@@ -34011,6 +34011,10 @@ var state = {
   screen: null,
   proEnabled: false,
   dataSource: {
+    dataObject: {
+      id: null,
+      type: null
+    },
     selected: null,
     card: {
       softSelectedId: null
@@ -34572,6 +34576,8 @@ var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -35048,8 +35054,10 @@ var actions = {
    * @param {{state}} vuex store object
    */
   addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref25) {
-    var state = _ref25.state;
-    document.addEventListener('wptb:save:before', function () {
+    var state = _ref25.state,
+        getters = _ref25.getters;
+    document.addEventListener('wptb:save:before', function (_ref26) {
+      var detail = _ref26.detail;
       var dataSource = state.dataSource,
           dataManager = state.dataManager;
       var dataToSave = {
@@ -35063,6 +35071,14 @@ var actions = {
       if (table) {
         table.dataset.wptbDataTableOptions = encoded;
       }
+
+      if (_typeof(detail) === 'object') {
+        // eslint-disable-next-line no-param-reassign
+        detail.wptbDataTable = true;
+        detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject)); // TODO [erdembircan] remove for production
+
+        console.log(detail);
+      }
     });
   },
 
@@ -35071,8 +35087,8 @@ var actions = {
    *
    * @param {{commit}} vuex store object
    */
-  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref26) {
-    var commit = _ref26.commit;
+  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref27) {
+    var commit = _ref27.commit;
     var selectId = {
       id: null,
       resolve: null
@@ -35104,8 +35120,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {Object} rowObject row object
    */
-  addRowObjectAsHeader: function addRowObjectAsHeader(_ref27, rowObject) {
-    var commit = _ref27.commit;
+  addRowObjectAsHeader: function addRowObjectAsHeader(_ref28, rowObject) {
+    var commit = _ref28.commit;
     // add property that will mark this row object as created for only column name purposes
     // eslint-disable-next-line no-param-reassign
     rowObject.generatedForHeader = true;
@@ -35123,21 +35139,21 @@ var actions = {
    * @param {string} query element query
    * @return {HTMLElement|null} found table
    */
-  findMainTable: function findMainTable(_ref28, query) {
-    var commit = _ref28.commit;
+  findMainTable: function findMainTable(_ref29, query) {
+    var commit = _ref29.commit;
     var mainTable = document.querySelector(query);
     commit('setTargetTable', mainTable);
     commit('setTableActiveStatus', mainTable !== null);
     return mainTable;
   },
-  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref29, query) {
+  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref30, query) {
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
       var dispatch, mainTable;
       return regeneratorRuntime.wrap(function _callee7$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              dispatch = _ref29.dispatch;
+              dispatch = _ref30.dispatch;
               _context7.next = 3;
               return dispatch('findMainTable', query);
 
@@ -35188,8 +35204,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {HTMLElement} tableElement main table element
    */
-  setUpTableMutationObserver: function setUpTableMutationObserver(_ref31, tableElement) {
-    var commit = _ref31.commit;
+  setUpTableMutationObserver: function setUpTableMutationObserver(_ref32, tableElement) {
+    var commit = _ref32.commit;
     // observer config object
     var config = {
       attributes: true,
@@ -35643,6 +35659,15 @@ var getters = {
    */
   getDataManager: function getDataManager(state) {
     return state.dataManager;
+  },
+
+  /**
+   * Get data object including data object post type related properties.
+   *
+   * @param {Object} state store state
+   */
+  getDataObject: function getDataObject(state) {
+    return state.dataSource.dataObject;
   }
 };
 var _default = getters;
