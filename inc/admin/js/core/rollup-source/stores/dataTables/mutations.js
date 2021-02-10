@@ -416,6 +416,15 @@ const mutations = {
 	setTableActiveStatus: (state, status) => {
 		state.tableIsActive = status;
 	},
+	/**
+	 * Set data object.
+	 *
+	 * @param {Object} state data table state
+	 * @param {Object} dataObject data object
+	 */
+	setDataObject: (state, dataObject) => {
+		state.dataSource.dataObject = dataObject;
+	},
 };
 
 /** @module mutations */

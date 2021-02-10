@@ -33876,7 +33876,9 @@ var _default = {
 
     this.addOptionsAndDataToSave(); // set up proxy for select click id
 
-    this.setUpSelectionIdProxy();
+    this.setUpSelectionIdProxy(); // watch for save operation process responses
+
+    this.watchSavedResponse();
   },
   computed: _objectSpread({
     /**
@@ -33891,7 +33893,7 @@ var _default = {
       };
     }
   }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -34013,7 +34015,8 @@ var state = {
   dataSource: {
     dataObject: {
       id: null,
-      type: null
+      type: 'csv',
+      options: []
     },
     selected: null,
     card: {
@@ -34558,6 +34561,16 @@ var mutations = {
    */
   setTableActiveStatus: function setTableActiveStatus(state, status) {
     state.tableIsActive = status;
+  },
+
+  /**
+   * Set data object.
+   *
+   * @param {Object} state data table state
+   * @param {Object} dataObject data object
+   */
+  setDataObject: function setDataObject(state, dataObject) {
+    state.dataSource.dataObject = dataObject;
   }
 };
 /** @module mutations */
@@ -34575,6 +34588,10 @@ exports.default = void 0;
 var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -35073,11 +35090,10 @@ var actions = {
       }
 
       if (_typeof(detail) === 'object') {
-        // eslint-disable-next-line no-param-reassign
+        /* eslint-disable no-param-reassign */
         detail.wptbDataTable = true;
-        detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject)); // TODO [erdembircan] remove for production
-
-        console.log(detail);
+        detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject));
+        /* eslint-enable no-param-reassign */
       }
     });
   },
@@ -35222,6 +35238,29 @@ var actions = {
 
     var observer = new MutationObserver(callback);
     observer.observe(tableElement, config);
+  },
+
+  /**
+   * Watch table for save events.
+   *
+   * @param {Object} root store action object
+   * @param {Function} root.commit commit function for mutations
+   */
+  watchSavedResponse: function watchSavedResponse(_ref33) {
+    var commit = _ref33.commit;
+    document.addEventListener('wptb:saved:response:data', function (_ref34) {
+      var detail = _ref34.detail;
+
+      if (detail.dataTable) {
+        if (detail.dataTable.dataObject) {
+          var _detail$dataTable$dat = detail.dataTable.dataObject,
+              content = _detail$dataTable$dat.content,
+              rest = _objectWithoutProperties(_detail$dataTable$dat, ["content"]);
+
+          commit('setDataObject', rest);
+        }
+      }
+    });
   }
 };
 /** @module actions */

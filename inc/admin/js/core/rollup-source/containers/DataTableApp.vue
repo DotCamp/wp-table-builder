@@ -58,6 +58,9 @@ export default {
 
 		// set up proxy for select click id
 		this.setUpSelectionIdProxy();
+
+		// watch for save operation process responses
+		this.watchSavedResponse();
 	},
 	computed: {
 		/**
@@ -81,6 +84,7 @@ export default {
 			'addOptionsAndDataToSave',
 			'setUpSelectionIdProxy',
 			'handleMainTableDiscoveryProcess',
+			'watchSavedResponse',
 		]),
 	},
 };

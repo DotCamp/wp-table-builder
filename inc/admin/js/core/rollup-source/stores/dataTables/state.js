@@ -21,7 +21,8 @@ const state = {
 	dataSource: {
 		dataObject: {
 			id: null,
-			type: null,
+			type: 'csv',
+			options: [],
 		},
 		selected: null,
 		card: {

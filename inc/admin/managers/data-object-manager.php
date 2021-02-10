@@ -56,8 +56,24 @@ class Data_Object_Manager {
 	 *
 	 * @param array $data_object_args data object options
 	 *
+	 * @return int id of created data object or 0 if an error occurred
 	 */
 	public static function update_data_object( $data_object_args ) {
-		$data_object = new Data_Object($data_object_args);
+		$data_object = new Data_Object( $data_object_args );
+
+		return $data_object->update_object();
+	}
+
+	/**
+	 * Get data object properties.
+	 *
+	 * @param int $id data object id
+	 *
+	 * @return array data object related properties
+	 */
+	public static function get_data_object( $id ) {
+		$temp_data_object = new Data_Object( [ 'id' => $id ] );
+
+		return $temp_data_object->get_object_data();
 	}
 }

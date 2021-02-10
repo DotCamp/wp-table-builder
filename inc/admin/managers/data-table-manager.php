@@ -2,17 +2,13 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-use WP_Error;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
 use function add_filter;
 use function add_post_meta;
+use function esc_html__;
 use function get_post_meta;
-use function json_decode;
-use function register_post_type;
-use function update_post_meta;
-use function wp_insert_post;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -52,28 +48,6 @@ class Data_Table_Manager {
 			add_action( 'wp-table-builder/table_edited', [ __CLASS__, 'table_saved' ], 10, 2 );
 			add_filter( 'wp-table-builder/title_listing', [ __CLASS__, 'title_listing' ], 10, 2 );
 		}
-	}
-
-	/**
-	 * Register table data post type to WordPress.
-	 * @deprecated
-	 */
-	public static function register_table_data_type() {
-		// table data post type options
-		$args = [
-			'label'              => 'WPTB Table Data',
-			'public'             => false,
-			'exclude'            => true,
-			'publicly_queryable' => false,
-			'show_ui'            => false,
-			'show_in_menu'       => false,
-			'show_in_rest'       => false,
-			'can_export'         => false,
-			'supports'           => [ 'title', 'custom_fields' ],
-			'rewrite'            => false,
-		];
-
-		register_post_type( self::TABLE_DATA_POST_TYPE, $args );
 	}
 
 	/**
@@ -125,7 +99,22 @@ class Data_Table_Manager {
 				$parsed_data_object_args = json_decode( base64_decode( $params->wptbDataObject ) );
 
 				// update/create data object related to data table with received options
-				$update_status =  Data_Object_Manager::update_data_object($parsed_data_object_args);
+				$update_status = Data_Object_Manager::update_data_object( $parsed_data_object_args );
+
+				// return data table related response data to frontend
+				add_filter( 'wp-table-builder/filter/saved_table_response_data', function ( $response_data ) use ( $update_status ) {
+					$data_table_response_data = [];
+					if ( ! $update_status ) {
+						$data_table_response_data['error'] = esc_html__( 'an error occurred while creating table data object, please try again later' );
+					} else {
+						// fill data table response data array with specific values helpful for frontend components
+						$data_table_response_data['dataObject'] = Data_Object_Manager::get_data_object( $update_status );
+					}
+
+					$response_data['dataTable'] = $data_table_response_data;
+
+					return $response_data;
+				} );
 			}
 		}
 	}

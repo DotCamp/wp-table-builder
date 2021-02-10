@@ -329,11 +329,10 @@ const actions = {
 			}
 
 			if (typeof detail === 'object') {
-				// eslint-disable-next-line no-param-reassign
+				/* eslint-disable no-param-reassign */
 				detail.wptbDataTable = true;
 				detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject));
-				// TODO [erdembircan] remove for production
-				console.log(detail);
+				/* eslint-enable no-param-reassign */
 			}
 		});
 	},
@@ -439,6 +438,22 @@ const actions = {
 		const observer = new MutationObserver(callback);
 
 		observer.observe(tableElement, config);
+	},
+	/**
+	 * Watch table for save events.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.commit commit function for mutations
+	 */
+	watchSavedResponse({ commit }) {
+		document.addEventListener('wptb:saved:response:data', ({ detail }) => {
+			if (detail.dataTable) {
+				if (detail.dataTable.dataObject) {
+					const { content, ...rest } = detail.dataTable.dataObject;
+					commit('setDataObject', rest);
+				}
+			}
+		});
 	},
 };
 

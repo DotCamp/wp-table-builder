@@ -1987,6 +1987,7 @@ var WPTB_Helper = {
 					messagingArea = document.getElementById('wptb-messaging-area');
 
 					if (data[0] == 'saved') {
+						// wptb:saved:response:data event hook
 						WPTB_Helper.wptbDocumentEventGenerate('wptb:saved:response:data', document, data[2] );
 
 						let builderPageUrl = document.location.href.replace('#', '');
@@ -2019,6 +2020,7 @@ var WPTB_Helper = {
 						return;
 					}
 					if (data[0] == 'edited' && startSaving) {
+						// wptb:saved:response:data event hook
 						WPTB_Helper.wptbDocumentEventGenerate('wptb:saved:response:data', document, data[2] );
 						document.wptbId = data[1];
 						messagingArea.innerHTML = `<div class="wptb-success wptb-message">Table "${t}" was successfully saved.</div>`;
