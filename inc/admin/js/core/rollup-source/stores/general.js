@@ -1,6 +1,9 @@
 import Vuex from 'vuex';
+import deepmerge from 'deepmerge';
 /**
  * Deep merge object.
+ *
+ * @deprecated
  *
  * @param {Object} source source object
  * @param {Object} target target object
@@ -34,5 +37,5 @@ export const objectDeepMerge = (source, target) => {
  * @return {Object} Vuex store
  */
 export const createBasicStore = (defaultStore, extraStore) => {
-	return new Vuex.Store(objectDeepMerge(defaultStore, extraStore));
+	return new Vuex.Store(deepmerge(defaultStore, extraStore));
 };

@@ -21,10 +21,9 @@ const state = {
 	dataSource: {
 		dataObject: {
 			id: null,
-			type: 'csv',
-			options: [],
+			type: null,
+			options: {},
 		},
-		selected: null,
 		card: {
 			softSelectedId: null,
 		},

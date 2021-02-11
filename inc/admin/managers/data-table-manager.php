@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Table_Builder\Inc\Admin\Classes\Data_Object;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
@@ -9,6 +10,7 @@ use function add_filter;
 use function add_post_meta;
 use function esc_html__;
 use function get_post_meta;
+use function update_post_meta;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -33,7 +35,7 @@ class Data_Table_Manager {
 	/**
 	 * Meta key of tables for table data post ids.
 	 */
-	const TABLE_POST_ID_META = '_wptb_table_data_id_';
+	const TABLE_OBJECT_ID_META = 'wptb_table_object_id';
 
 	/**
 	 * Initialize static class.
@@ -102,13 +104,16 @@ class Data_Table_Manager {
 				$update_status = Data_Object_Manager::update_data_object( $parsed_data_object_args );
 
 				// return data table related response data to frontend
-				add_filter( 'wp-table-builder/filter/saved_table_response_data', function ( $response_data ) use ( $update_status ) {
+				add_filter( 'wp-table-builder/filter/saved_table_response_data', function ( $response_data ) use ( $update_status, $id ) {
 					$data_table_response_data = [];
 					if ( ! $update_status ) {
 						$data_table_response_data['error'] = esc_html__( 'an error occurred while creating table data object, please try again later' );
 					} else {
 						// fill data table response data array with specific values helpful for frontend components
-						$data_table_response_data['dataObject'] = Data_Object_Manager::get_data_object( $update_status );
+						$data_object                            = Data_Object_Manager::get_data_object( $update_status );
+						$data_table_response_data['dataObject'] = $data_object;
+
+						update_post_meta( $id, self::TABLE_OBJECT_ID_META, $data_object['id'] );
 					}
 
 					$response_data['dataTable'] = $data_table_response_data;
@@ -120,17 +125,26 @@ class Data_Table_Manager {
 	}
 
 	/**
-	 * Add data table related data to frontend script.
+	 * Add data table related data to builder.
 	 *
 	 * @param array $admin_data admin data
 	 *
 	 * @return array admin data array
 	 */
 	public static function add_admin_data( $admin_data ) {
+		$data_object = [];
+
+		// if data table is enabled and editing a table, get data table related data object
+		if ( isset( $_GET['table'] ) && static::is_data_table_enabled( $_GET['table'] ) ) {
+			$table_id       = $_GET['table'];
+			$data_object_id = get_post_meta( $table_id, self::TABLE_OBJECT_ID_META, true );
+			$data_object    = ( new Data_Object( [ 'id' => $data_object_id ] ) )->get_object_data();
+		}
+
 		$icon_manager = Init::instance()->get_icon_manager();
 		$data_table   = [
-			'iconList' => $icon_manager->get_icon_list(),
-			'icons'    => [
+			'iconList'   => $icon_manager->get_icon_list(),
+			'icons'      => [
 				'csv'                 => $icon_manager->get_icon( 'file-csv' ),
 				'database'            => $icon_manager->get_icon( 'database' ),
 				'wordpressPost'       => $icon_manager->get_icon( 'wordpress-simple' ),
@@ -141,7 +155,8 @@ class Data_Table_Manager {
 				'sortUp'              => $icon_manager->get_icon( 'sort-alpha-up' ),
 				'cog'                 => $icon_manager->get_icon( 'cog' ),
 			],
-			'proUrl'   => 'https://wptablebuilder.com/',
+			'proUrl'     => 'https://wptablebuilder.com/',
+			'dataObject' => $data_object
 		];
 
 		$admin_data['dataTable'] = $data_table;

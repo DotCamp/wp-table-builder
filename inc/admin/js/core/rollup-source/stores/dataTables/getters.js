@@ -271,7 +271,7 @@ const getters = {
 	 * @return {*} generated data source id
 	 */
 	getSelectedDataSource: (state) => {
-		return state.dataSource.selected;
+		return state.dataSource.dataObject.type;
 	},
 	/**
 	 * Get id of the current source in setup.

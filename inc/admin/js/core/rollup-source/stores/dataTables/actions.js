@@ -51,12 +51,14 @@ const actions = {
 	 * @param {{commit, dispatch}} mutation commit function
 	 * @param {string} sourceId selected source id
 	 */
-	startSourceSetup({ commit, dispatch }, sourceId) {
+	async startSourceSetup({ commit, dispatch }, sourceId) {
 		// set source id
 		commit('setSetupSourceId', sourceId);
 
 		// reset selected data source
-		commit('setSelectedDataSource', null);
+		// @deprecated
+		// commit('setSelectedDataSource', null);
+		await dispatch('dataSourceChangeOperation', null);
 
 		// clear temp data manager
 		commit('clearTempDataManager');
@@ -66,6 +68,18 @@ const actions = {
 
 		// set screen
 		dispatch('setCurrentScreenFromId', sourceId);
+	},
+	/**
+	 * Change data source type operation.
+	 * This action will reset data object to default first.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.commit store mutation commit function
+	 * @param {string} sourceId data source type
+	 */
+	dataSourceChangeOperation({ commit }, sourceId) {
+		commit('resetToDefaults', 'dataSource.dataObject');
+		commit('setSelectedDataSource', sourceId);
 	},
 	/**
 	 * Set current setup screen from id.
@@ -303,10 +317,12 @@ const actions = {
 	 *
 	 * @param {{commit, getters}} vuex store object
 	 */
-	setCurrentSourceAsSelected({ commit, getters }) {
+	setCurrentSourceAsSelected({ dispatch, getters }) {
 		const currentSourceInSetup = getters.getCurrentSourceSetupId;
 
-		commit('setSelectedDataSource', currentSourceInSetup);
+		// @deprecated
+		// commit('setSelectedDataSource', currentSourceInSetup);
+		dispatch('dataSourceChangeOperation', currentSourceInSetup);
 	},
 	/**
 	 * Mark certain properties of data table for save process.
@@ -315,9 +331,12 @@ const actions = {
 	 */
 	addOptionsAndDataToSave({ state, getters }) {
 		document.addEventListener('wptb:save:before', ({ detail }) => {
-			const { dataSource, dataManager } = state;
+			// @ deprecated
+			// const { dataSource, dataManager } = state;
 
-			const dataToSave = { dataSource, dataManager };
+			const { dataManager } = state;
+
+			const dataToSave = { dataManager };
 			const stringified = JSON.stringify(dataToSave);
 			const encoded = btoa(stringified);
 
@@ -449,11 +468,24 @@ const actions = {
 		document.addEventListener('wptb:saved:response:data', ({ detail }) => {
 			if (detail.dataTable) {
 				if (detail.dataTable.dataObject) {
-					const { content, ...rest } = detail.dataTable.dataObject;
+					const { content, options, ...rest } = detail.dataTable.dataObject;
 					commit('setDataObject', rest);
 				}
 			}
 		});
+	},
+	/**
+	 * Sync data source setup according to store properties.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.commit commit function for mutations
+	 * @param {Function} root.getters getters store state getters
+	 */
+	syncDataSourceSetup({ commit, getters }) {
+		const { type } = getters.getDataObject;
+
+		commit('setSetupSourceId', type);
+		commit('setSetupSourceDataCreatedStatus', type !== null);
 	},
 };
 

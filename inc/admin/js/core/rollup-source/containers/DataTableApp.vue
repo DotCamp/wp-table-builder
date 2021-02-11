@@ -61,6 +61,9 @@ export default {
 
 		// watch for save operation process responses
 		this.watchSavedResponse();
+
+		// sync data source setup related state according to start up values, especially if builder is started at edit mode so it starts with a data object
+		this.syncDataSourceSetup();
 	},
 	computed: {
 		/**
@@ -85,6 +88,7 @@ export default {
 			'setUpSelectionIdProxy',
 			'handleMainTableDiscoveryProcess',
 			'watchSavedResponse',
+			'syncDataSourceSetup',
 		]),
 	},
 };

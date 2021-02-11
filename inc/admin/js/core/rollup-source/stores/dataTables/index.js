@@ -54,6 +54,7 @@ const prepareDefaults = (state, target) => {
 const createStore = (extraStoreOptions = {}) => {
 	// create defaults for datasource setup
 	prepareDefaults(storeOptions.state, 'dataSource.setup');
+	prepareDefaults(storeOptions.state, 'dataSource.dataObject');
 
 	return createBasicStore(storeOptions, extraStoreOptions);
 };

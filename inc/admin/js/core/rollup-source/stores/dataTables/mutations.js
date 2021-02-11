@@ -331,7 +331,7 @@ const mutations = {
 	 * @param {string} sourceId source id
 	 */
 	setSelectedDataSource: (state, sourceId) => {
-		state.dataSource.selected = sourceId;
+		state.dataSource.dataObject.type = sourceId;
 	},
 	/**
 	 * Set parsed data object property values.

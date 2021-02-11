@@ -21026,7 +21026,134 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue","./AutoModePanelControls":"components/AutoModePanelControls.vue"}],"stores/general.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbed":"components/PanelSectionGroupTabbed.vue","./AutoModePanelControls":"components/AutoModePanelControls.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+'use strict';
+
+var isMergeableObject = function isMergeableObject(value) {
+  return isNonNullObject(value) && !isSpecial(value);
+};
+
+function isNonNullObject(value) {
+  return !!value && typeof value === 'object';
+}
+
+function isSpecial(value) {
+  var stringValue = Object.prototype.toString.call(value);
+  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+
+
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+  return value.$$typeof === REACT_ELEMENT_TYPE;
+}
+
+function emptyTarget(val) {
+  return Array.isArray(val) ? [] : {};
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+  return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
+}
+
+function defaultArrayMerge(target, source, options) {
+  return target.concat(source).map(function (element) {
+    return cloneUnlessOtherwiseSpecified(element, options);
+  });
+}
+
+function getMergeFunction(key, options) {
+  if (!options.customMerge) {
+    return deepmerge;
+  }
+
+  var customMerge = options.customMerge(key);
+  return typeof customMerge === 'function' ? customMerge : deepmerge;
+}
+
+function getEnumerableOwnPropertySymbols(target) {
+  return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(target).filter(function (symbol) {
+    return target.propertyIsEnumerable(symbol);
+  }) : [];
+}
+
+function getKeys(target) {
+  return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target));
+}
+
+function propertyIsOnObject(object, property) {
+  try {
+    return property in object;
+  } catch (_) {
+    return false;
+  }
+} // Protects from prototype poisoning and unexpected merging up the prototype chain.
+
+
+function propertyIsUnsafe(target, key) {
+  return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
+  && !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
+  && Object.propertyIsEnumerable.call(target, key)); // and also unsafe if they're nonenumerable.
+}
+
+function mergeObject(target, source, options) {
+  var destination = {};
+
+  if (options.isMergeableObject(target)) {
+    getKeys(target).forEach(function (key) {
+      destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+    });
+  }
+
+  getKeys(source).forEach(function (key) {
+    if (propertyIsUnsafe(target, key)) {
+      return;
+    }
+
+    if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+      destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
+    } else {
+      destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+    }
+  });
+  return destination;
+}
+
+function deepmerge(target, source, options) {
+  options = options || {};
+  options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+  options.isMergeableObject = options.isMergeableObject || isMergeableObject; // cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
+  // implementations can use it. The caller may not replace it.
+
+  options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
+  var sourceIsArray = Array.isArray(source);
+  var targetIsArray = Array.isArray(target);
+  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+  if (!sourceAndTargetTypesMatch) {
+    return cloneUnlessOtherwiseSpecified(source, options);
+  } else if (sourceIsArray) {
+    return options.arrayMerge(target, source, options);
+  } else {
+    return mergeObject(target, source, options);
+  }
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+  if (!Array.isArray(array)) {
+    throw new Error('first argument should be an array');
+  }
+
+  return array.reduce(function (prev, next) {
+    return deepmerge(prev, next, options);
+  }, {});
+};
+
+var deepmerge_1 = deepmerge;
+module.exports = deepmerge_1;
+},{}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21035,6 +21162,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.createBasicStore = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21048,6 +21177,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 /**
  * Deep merge object.
+ *
+ * @deprecated
  *
  * @param {Object} source source object
  * @param {Object} target target object
@@ -21083,11 +21214,11 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
 exports.objectDeepMerge = objectDeepMerge;
 
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
-  return new _vuex.default.Store(objectDeepMerge(defaultStore, extraStore));
+  return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
 };
 
 exports.createBasicStore = createBasicStore;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"stores/responsive/getters.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/responsive/getters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -33878,7 +34009,9 @@ var _default = {
 
     this.setUpSelectionIdProxy(); // watch for save operation process responses
 
-    this.watchSavedResponse();
+    this.watchSavedResponse(); // sync data source setup related state according to start up values, especially if builder is started at edit mode so it starts with a data object
+
+    this.syncDataSourceSetup();
   },
   computed: _objectSpread({
     /**
@@ -33893,7 +34026,7 @@ var _default = {
       };
     }
   }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse', 'syncDataSourceSetup']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -34015,10 +34148,9 @@ var state = {
   dataSource: {
     dataObject: {
       id: null,
-      type: 'csv',
-      options: []
+      type: null,
+      options: {}
     },
-    selected: null,
     card: {
       softSelectedId: null
     },
@@ -34458,7 +34590,7 @@ var mutations = {
    * @param {string} sourceId source id
    */
   setSelectedDataSource: function setSelectedDataSource(state, sourceId) {
-    state.dataSource.selected = sourceId;
+    state.dataSource.dataObject.type = sourceId;
   },
 
   /**
@@ -34658,18 +34790,50 @@ var actions = {
    * @param {string} sourceId selected source id
    */
   startSourceSetup: function startSourceSetup(_ref5, sourceId) {
-    var commit = _ref5.commit,
-        dispatch = _ref5.dispatch;
-    // set source id
-    commit('setSetupSourceId', sourceId); // reset selected data source
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var commit, dispatch;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              commit = _ref5.commit, dispatch = _ref5.dispatch;
+              // set source id
+              commit('setSetupSourceId', sourceId); // reset selected data source
+              // @deprecated
+              // commit('setSelectedDataSource', null);
 
-    commit('setSelectedDataSource', null); // clear temp data manager
+              _context.next = 4;
+              return dispatch('dataSourceChangeOperation', null);
 
-    commit('clearTempDataManager'); // clear setup
+            case 4:
+              // clear temp data manager
+              commit('clearTempDataManager'); // clear setup
 
-    commit('resetToDefaults', 'dataSource.setup'); // set screen
+              commit('resetToDefaults', 'dataSource.setup'); // set screen
 
-    dispatch('setCurrentScreenFromId', sourceId);
+              dispatch('setCurrentScreenFromId', sourceId);
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+
+  /**
+   * Change data source type operation.
+   * This action will reset data object to default first.
+   *
+   * @param {Object} root store action object
+   * @param {Function} root.commit store mutation commit function
+   * @param {string} sourceId data source type
+   */
+  dataSourceChangeOperation: function dataSourceChangeOperation(_ref6, sourceId) {
+    var commit = _ref6.commit;
+    commit('resetToDefaults', 'dataSource.dataObject');
+    commit('setSelectedDataSource', sourceId);
   },
 
   /**
@@ -34678,8 +34842,8 @@ var actions = {
    * @param {{dispatch}} vuex store object
    * @param {string} sourceId source id
    */
-  setCurrentScreenFromId: function setCurrentScreenFromId(_ref6, sourceId) {
-    var dispatch = _ref6.dispatch;
+  setCurrentScreenFromId: function setCurrentScreenFromId(_ref7, sourceId) {
+    var dispatch = _ref7.dispatch;
     var screenName = "".concat(sourceId[0].toUpperCase() + sourceId.slice(1), "Setup");
     dispatch('setCurrentScreen', screenName);
   },
@@ -34691,11 +34855,11 @@ var actions = {
    * @param {{value,index}} payload
    * @return {Object} cell object
    */
-  generateCell: function generateCell(_ref7, _ref8) {
-    var getters = _ref7.getters,
-        commit = _ref7.commit;
-    var value = _ref8.value,
-        index = _ref8.index;
+  generateCell: function generateCell(_ref8, _ref9) {
+    var getters = _ref8.getters,
+        commit = _ref8.commit;
+    var value = _ref9.value,
+        index = _ref9.index;
     var colId = getters.getDataManagerColId(index);
 
     if (!colId) {
@@ -34716,10 +34880,10 @@ var actions = {
    * @param {Array} colValues column values
    * @return {Function} generated new row object
    */
-  generateRow: function generateRow(_ref9, colValues) {
-    var commit = _ref9.commit,
-        getters = _ref9.getters,
-        dispatch = _ref9.dispatch;
+  generateRow: function generateRow(_ref10, colValues) {
+    var commit = _ref10.commit,
+        getters = _ref10.getters,
+        dispatch = _ref10.dispatch;
     var rowId = getters.generateUniqueId();
     commit('pushDataManagerRowId', rowId);
     var rowObj = {
@@ -34728,32 +34892,32 @@ var actions = {
     }; // eslint-disable-next-line array-callback-return
 
     colValues.map( /*#__PURE__*/function () {
-      var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(value, i) {
+      var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(value, i) {
         var cellObject;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.next = 2;
+                _context2.next = 2;
                 return dispatch('generateCell', {
                   value: value,
                   index: i
                 });
 
               case 2:
-                cellObject = _context.sent;
+                cellObject = _context2.sent;
                 rowObj.values.push(cellObject);
 
               case 4:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }));
 
       return function (_x, _x2) {
-        return _ref10.apply(this, arguments);
+        return _ref11.apply(this, arguments);
       };
     }());
     return rowObj;
@@ -34765,11 +34929,11 @@ var actions = {
    * @param {{commit, getters}} vuex store object
    * @param {{data, markAsImported}} data data array
    */
-  addDataManagerTempData: function addDataManagerTempData(_ref11, _ref12) {
-    var commit = _ref11.commit,
-        dispatch = _ref11.dispatch;
-    var data = _ref12.data,
-        markAsImported = _ref12.markAsImported;
+  addDataManagerTempData: function addDataManagerTempData(_ref12, _ref13) {
+    var commit = _ref12.commit,
+        dispatch = _ref12.dispatch;
+    var data = _ref13.data,
+        markAsImported = _ref13.markAsImported;
 
     if (markAsImported === undefined) {
       // eslint-disable-next-line no-param-reassign
@@ -34793,24 +34957,24 @@ var actions = {
     });
     commit('clearTempDataManager');
     confirmedData.map( /*#__PURE__*/function () {
-      var _ref13 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(r) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(r) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context2.next = 2;
+                _context3.next = 2;
                 return dispatch('addRowToDataManager', r);
 
               case 2:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }));
 
       return function (_x3) {
-        return _ref13.apply(this, arguments);
+        return _ref14.apply(this, arguments);
       };
     }());
 
@@ -34828,9 +34992,9 @@ var actions = {
    * @param {{state,commit}} vuex store object
    * @param {string} tabId tab id to change to
    */
-  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref14, tabId) {
-    var state = _ref14.state,
-        commit = _ref14.commit;
+  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref15, tabId) {
+    var state = _ref15.state,
+        commit = _ref15.commit;
     commit('setActiveControlTabGroup', {
       sourceId: state.dataSource.setup.sourceId,
       tabId: tabId
@@ -34845,8 +35009,8 @@ var actions = {
    * @param {string} callerId id of the component that started the operation
    * @return {Promise} Promise object
    */
-  startRowSelectOperation: function startRowSelectOperation(_ref15, callerId) {
-    var commit = _ref15.commit;
+  startRowSelectOperation: function startRowSelectOperation(_ref16, callerId) {
+    var commit = _ref16.commit;
     // set app to busy
     commit('setBusy', true); // reset selection data
 
@@ -34875,9 +35039,9 @@ var actions = {
    *
    * @param {{state, commit}} vuex store object
    */
-  cancelRowSelectOperation: function cancelRowSelectOperation(_ref16) {
-    var state = _ref16.state,
-        commit = _ref16.commit;
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref17) {
+    var state = _ref17.state,
+        commit = _ref17.commit;
     commit('setSelectStatus', false);
     state.dataManager.select.clickId.resolve(null);
     commit('resetSelectData');
@@ -34890,11 +35054,11 @@ var actions = {
    * @param {{cellId, value}} payload
    *
    */
-  setDataCellValue: function setDataCellValue(_ref17, _ref18) {
-    var getters = _ref17.getters,
-        commit = _ref17.commit;
-    var cellId = _ref18.cellId,
-        value = _ref18.value;
+  setDataCellValue: function setDataCellValue(_ref18, _ref19) {
+    var getters = _ref18.getters,
+        commit = _ref18.commit;
+    var cellId = _ref19.cellId,
+        value = _ref19.value;
 
     var _getters$parseCellId = getters.parseCellId(cellId),
         rowId = _getters$parseCellId.rowId,
@@ -34915,15 +35079,15 @@ var actions = {
    * @param {{getters,dispatch,commit}} vuex store object
    * @param {Array} colValues values for columns
    */
-  addRowToDataManager: function addRowToDataManager(_ref19) {
+  addRowToDataManager: function addRowToDataManager(_ref20) {
     var _arguments = arguments;
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
       var getters, dispatch, commit, colValues, innerColValues, rowObject;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              getters = _ref19.getters, dispatch = _ref19.dispatch, commit = _ref19.commit;
+              getters = _ref20.getters, dispatch = _ref20.dispatch, commit = _ref20.commit;
               colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
               innerColValues = colValues;
 
@@ -34933,19 +35097,19 @@ var actions = {
                 });
               }
 
-              _context3.next = 6;
+              _context4.next = 6;
               return dispatch('generateRow', innerColValues);
 
             case 6:
-              rowObject = _context3.sent;
+              rowObject = _context4.sent;
               commit('addRowToDataTable', rowObject);
 
             case 8:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3);
+      }, _callee4);
     }))();
   },
 
@@ -34955,36 +35119,36 @@ var actions = {
    * @param {{commit, getters, dispatch}} vuex store object
    * @param {string} value value of the newly added cells
    */
-  addColumnToDataManager: function addColumnToDataManager(_ref20) {
+  addColumnToDataManager: function addColumnToDataManager(_ref21) {
     var _arguments2 = arguments;
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
       var commit, getters, dispatch, value, colCount, rowCount;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              commit = _ref20.commit, getters = _ref20.getters, dispatch = _ref20.dispatch;
+              commit = _ref21.commit, getters = _ref21.getters, dispatch = _ref21.dispatch;
               value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
               colCount = getters.getColCount;
               rowCount = getters.getRowCount;
-              _context5.next = 6;
+              _context6.next = 6;
               return Array.from(new Array(rowCount)).map(function () {
                 return '';
               }).map( /*#__PURE__*/function () {
-                var _ref21 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
+                var _ref22 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(r, rowIndex) {
                   var cellObject;
-                  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                  return regeneratorRuntime.wrap(function _callee5$(_context5) {
                     while (1) {
-                      switch (_context4.prev = _context4.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
-                          _context4.next = 2;
+                          _context5.next = 2;
                           return dispatch('generateCell', {
                             value: value,
                             index: colCount
                           });
 
                         case 2:
-                          cellObject = _context4.sent;
+                          cellObject = _context5.sent;
                           commit('addCellToDataTableRow', {
                             rowIndex: rowIndex,
                             cellObject: cellObject
@@ -34992,23 +35156,23 @@ var actions = {
 
                         case 4:
                         case "end":
-                          return _context4.stop();
+                          return _context5.stop();
                       }
                     }
-                  }, _callee4);
+                  }, _callee5);
                 }));
 
                 return function (_x4, _x5) {
-                  return _ref21.apply(this, arguments);
+                  return _ref22.apply(this, arguments);
                 };
               }());
 
             case 6:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5);
+      }, _callee6);
     }))();
   },
 
@@ -35018,9 +35182,9 @@ var actions = {
    * @param {{commit, getters}} vuex store object
    * @param {string} rowId row id
    */
-  deleteDataTableRow: function deleteDataTableRow(_ref22, rowId) {
-    var commit = _ref22.commit,
-        getters = _ref22.getters;
+  deleteDataTableRow: function deleteDataTableRow(_ref23, rowId) {
+    var commit = _ref23.commit,
+        getters = _ref23.getters;
     var index = getters.getDataManagerIndexFromId(rowId);
     commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
 
@@ -35039,8 +35203,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {string} colId column id
    */
-  deleteDataTableCol: function deleteDataTableCol(_ref23, colId) {
-    var commit = _ref23.commit;
+  deleteDataTableCol: function deleteDataTableCol(_ref24, colId) {
+    var commit = _ref24.commit;
     // @deprecated
     // const index = getters.getDataManagerIndexFromId(colId, 'col');
     commit('deleteColFromDataTable', colId); // @deprecated
@@ -35058,11 +35222,13 @@ var actions = {
    *
    * @param {{commit, getters}} vuex store object
    */
-  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref24) {
-    var commit = _ref24.commit,
-        getters = _ref24.getters;
-    var currentSourceInSetup = getters.getCurrentSourceSetupId;
-    commit('setSelectedDataSource', currentSourceInSetup);
+  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref25) {
+    var dispatch = _ref25.dispatch,
+        getters = _ref25.getters;
+    var currentSourceInSetup = getters.getCurrentSourceSetupId; // @deprecated
+    // commit('setSelectedDataSource', currentSourceInSetup);
+
+    dispatch('dataSourceChangeOperation', currentSourceInSetup);
   },
 
   /**
@@ -35070,15 +35236,15 @@ var actions = {
    *
    * @param {{state}} vuex store object
    */
-  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref25) {
-    var state = _ref25.state,
-        getters = _ref25.getters;
-    document.addEventListener('wptb:save:before', function (_ref26) {
-      var detail = _ref26.detail;
-      var dataSource = state.dataSource,
-          dataManager = state.dataManager;
+  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref26) {
+    var state = _ref26.state,
+        getters = _ref26.getters;
+    document.addEventListener('wptb:save:before', function (_ref27) {
+      var detail = _ref27.detail;
+      // @ deprecated
+      // const { dataSource, dataManager } = state;
+      var dataManager = state.dataManager;
       var dataToSave = {
-        dataSource: dataSource,
         dataManager: dataManager
       };
       var stringified = JSON.stringify(dataToSave);
@@ -35103,8 +35269,8 @@ var actions = {
    *
    * @param {{commit}} vuex store object
    */
-  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref27) {
-    var commit = _ref27.commit;
+  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref28) {
+    var commit = _ref28.commit;
     var selectId = {
       id: null,
       resolve: null
@@ -35136,8 +35302,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {Object} rowObject row object
    */
-  addRowObjectAsHeader: function addRowObjectAsHeader(_ref28, rowObject) {
-    var commit = _ref28.commit;
+  addRowObjectAsHeader: function addRowObjectAsHeader(_ref29, rowObject) {
+    var commit = _ref29.commit;
     // add property that will mark this row object as created for only column name purposes
     // eslint-disable-next-line no-param-reassign
     rowObject.generatedForHeader = true;
@@ -35155,49 +35321,49 @@ var actions = {
    * @param {string} query element query
    * @return {HTMLElement|null} found table
    */
-  findMainTable: function findMainTable(_ref29, query) {
-    var commit = _ref29.commit;
+  findMainTable: function findMainTable(_ref30, query) {
+    var commit = _ref30.commit;
     var mainTable = document.querySelector(query);
     commit('setTargetTable', mainTable);
     commit('setTableActiveStatus', mainTable !== null);
     return mainTable;
   },
-  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref30, query) {
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref31, query) {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
       var dispatch, mainTable;
-      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      return regeneratorRuntime.wrap(function _callee8$(_context8) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
-              dispatch = _ref30.dispatch;
-              _context7.next = 3;
+              dispatch = _ref31.dispatch;
+              _context8.next = 3;
               return dispatch('findMainTable', query);
 
             case 3:
-              mainTable = _context7.sent;
+              mainTable = _context8.sent;
 
               // if main table is not available at the time this action is called, add an event listener to table generated event to find it again
               if (!mainTable) {
-                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
                   var foundMainTable;
-                  return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                  return regeneratorRuntime.wrap(function _callee7$(_context7) {
                     while (1) {
-                      switch (_context6.prev = _context6.next) {
+                      switch (_context7.prev = _context7.next) {
                         case 0:
-                          _context6.next = 2;
+                          _context7.next = 2;
                           return dispatch('findMainTable', query);
 
                         case 2:
-                          foundMainTable = _context6.sent;
+                          foundMainTable = _context7.sent;
                           // set up a mutation observer for main table
                           dispatch('setUpTableMutationObserver', foundMainTable);
 
                         case 4:
                         case "end":
-                          return _context6.stop();
+                          return _context7.stop();
                       }
                     }
-                  }, _callee6);
+                  }, _callee7);
                 })));
               } else {
                 // set up a mutation observer for main table
@@ -35206,10 +35372,10 @@ var actions = {
 
             case 5:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
         }
-      }, _callee7);
+      }, _callee8);
     }))();
   },
 
@@ -35220,8 +35386,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {HTMLElement} tableElement main table element
    */
-  setUpTableMutationObserver: function setUpTableMutationObserver(_ref32, tableElement) {
-    var commit = _ref32.commit;
+  setUpTableMutationObserver: function setUpTableMutationObserver(_ref33, tableElement) {
+    var commit = _ref33.commit;
     // observer config object
     var config = {
       attributes: true,
@@ -35246,21 +35412,37 @@ var actions = {
    * @param {Object} root store action object
    * @param {Function} root.commit commit function for mutations
    */
-  watchSavedResponse: function watchSavedResponse(_ref33) {
-    var commit = _ref33.commit;
-    document.addEventListener('wptb:saved:response:data', function (_ref34) {
-      var detail = _ref34.detail;
+  watchSavedResponse: function watchSavedResponse(_ref34) {
+    var commit = _ref34.commit;
+    document.addEventListener('wptb:saved:response:data', function (_ref35) {
+      var detail = _ref35.detail;
 
       if (detail.dataTable) {
         if (detail.dataTable.dataObject) {
           var _detail$dataTable$dat = detail.dataTable.dataObject,
               content = _detail$dataTable$dat.content,
-              rest = _objectWithoutProperties(_detail$dataTable$dat, ["content"]);
+              options = _detail$dataTable$dat.options,
+              rest = _objectWithoutProperties(_detail$dataTable$dat, ["content", "options"]);
 
           commit('setDataObject', rest);
         }
       }
     });
+  },
+
+  /**
+   * Sync data source setup according to store properties.
+   *
+   * @param {Object} root store action object
+   * @param {Function} root.commit commit function for mutations
+   * @param {Function} root.getters getters store state getters
+   */
+  syncDataSourceSetup: function syncDataSourceSetup(_ref36) {
+    var commit = _ref36.commit,
+        getters = _ref36.getters;
+    var type = getters.getDataObject.type;
+    commit('setSetupSourceId', type);
+    commit('setSetupSourceDataCreatedStatus', type !== null);
   }
 };
 /** @module actions */
@@ -35615,7 +35797,7 @@ var getters = {
    * @return {*} generated data source id
    */
   getSelectedDataSource: function getSelectedDataSource(state) {
-    return state.dataSource.selected;
+    return state.dataSource.dataObject.type;
   },
 
   /**
@@ -35986,6 +36168,7 @@ var createStore = function createStore() {
   var extraStoreOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   // create defaults for datasource setup
   prepareDefaults(storeOptions.state, 'dataSource.setup');
+  prepareDefaults(storeOptions.state, 'dataSource.dataObject');
   return (0, _general.createBasicStore)(storeOptions, extraStoreOptions);
 };
 /** @module createStore */
@@ -36158,9 +36341,13 @@ var _default = {
       var savedDataTableOptions = table.dataset.wptbDataTableOptions;
 
       if (savedDataTableOptions) {
-        var decodedOptions = JSON.parse(atob(savedDataTableOptions)); // update tableIsActive store state
+        var decodedOptions = JSON.parse(atob(savedDataTableOptions)); // update extra store options state
 
-        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptions, {
+        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptions, {}, {
+          dataSource: {
+            dataObject: data.dataObject
+          }
+        }, {
           tableIsActive: true
         });
       }
