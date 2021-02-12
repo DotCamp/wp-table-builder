@@ -34,7 +34,7 @@ class Data_Object {
 	private $default_args = [
 		'id'      => null,
 		'type'    => null,
-		'content' => null,
+		'content' => [],
 		'controls' => [],
 	];
 

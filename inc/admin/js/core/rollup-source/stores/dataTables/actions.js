@@ -331,12 +331,12 @@ const actions = {
 	 */
 	addOptionsAndDataToSave({ state, getters }) {
 		document.addEventListener('wptb:save:before', ({ detail }) => {
-			// @ deprecated
-			// const { dataSource, dataManager } = state;
-
 			const { dataManager } = state;
 
-			const dataToSave = { dataManager };
+			// select data manager properties that will be saved to table
+			const { controls, select, ...dataManagerRest } = dataManager;
+
+			const dataToSave = { dataManager: dataManagerRest };
 			const stringified = JSON.stringify(dataToSave);
 			const encoded = btoa(stringified);
 

@@ -14,10 +14,6 @@ const mutationWatchList = {
 		// set col count from table data
 		store.commit('setColCount', colCount);
 	},
-	setDataManagerControl: ({ payload }, state, store) => {
-		// sync data object control from store
-		store.commit('setDataObjectControl', payload);
-	},
 };
 
 /**
@@ -87,6 +83,19 @@ const stateWatchList = {
 		callBack: (store) => () => {
 			// set row count from table data
 			store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+		},
+	},
+	syncDataObject: {
+		watch: ['dataManager.controls'],
+		callBack: (store) => () => {
+			const currentDataObject = store.getters.getDataObject;
+
+			// update data object with various fields from store state
+			const mergeData = {
+				controls: store.state.dataManager.controls,
+			};
+
+			store.commit('setDataObject', { ...currentDataObject, ...mergeData });
 		},
 	},
 	dirtyTable: {

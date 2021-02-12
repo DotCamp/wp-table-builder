@@ -34717,17 +34717,13 @@ var mutations = {
   },
 
   /**
-   * Sync data object control value.
+   * Merge temp data object with the supplied object.
    *
    * @param {Object} state store state
-   * @param {Object} payload mutation payload
-   * @param {string} payload.key control key
-   * @param {string} payload.value control value
+   * @param {Object} dataObject data object
    */
-  setDataObjectControl: function setDataObjectControl(state, _ref8) {
-    var key = _ref8.key,
-        value = _ref8.value;
-    state.dataSource.dataObject.controls[key] = value;
+  mergeTempData: function mergeTempData(state, dataObject) {
+    state.dataManager.tempData = _objectSpread({}, state.dataManager.tempData, {}, dataObject);
   }
 };
 /** @module mutations */
@@ -34747,6 +34743,10 @@ var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -35262,11 +35262,14 @@ var actions = {
         getters = _ref26.getters;
     document.addEventListener('wptb:save:before', function (_ref27) {
       var detail = _ref27.detail;
-      // @ deprecated
-      // const { dataSource, dataManager } = state;
-      var dataManager = state.dataManager;
+      var dataManager = state.dataManager; // select data manager properties that will be saved to table
+
+      var controls = dataManager.controls,
+          select = dataManager.select,
+          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select"]);
+
       var dataToSave = {
-        dataManager: dataManager
+        dataManager: dataManagerRest
       };
       var stringified = JSON.stringify(dataToSave);
       var encoded = btoa(stringified);
@@ -35923,6 +35926,12 @@ exports.default = void 0;
 
 var _functions = require("../../functions");
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Mutation watch list.
  *
@@ -35936,11 +35945,6 @@ var mutationWatchList = {
     var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
 
     store.commit('setColCount', colCount);
-  },
-  setDataManagerControl: function setDataManagerControl(_ref2, state, store) {
-    var payload = _ref2.payload;
-    // sync data object control from store
-    store.commit('setDataObjectControl', payload);
   }
 };
 /**
@@ -36020,6 +36024,19 @@ var stateWatchList = {
       return function () {
         // set row count from table data
         store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+      };
+    }
+  },
+  syncDataObject: {
+    watch: ['dataManager.controls'],
+    callBack: function callBack(store) {
+      return function () {
+        var currentDataObject = store.getters.getDataObject; // update data object with various fields from store state
+
+        var mergeData = {
+          controls: store.state.dataManager.controls
+        };
+        store.commit('setDataObject', _objectSpread({}, currentDataObject, {}, mergeData));
       };
     }
   },

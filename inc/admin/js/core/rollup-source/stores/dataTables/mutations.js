@@ -436,15 +436,13 @@ const mutations = {
 		state.dataManager.controls = controlsObject;
 	},
 	/**
-	 * Sync data object control value.
+	 * Merge temp data object with the supplied object.
 	 *
 	 * @param {Object} state store state
-	 * @param {Object} payload mutation payload
-	 * @param {string} payload.key control key
-	 * @param {string} payload.value control value
+	 * @param {Object} dataObject data object
 	 */
-	setDataObjectControl: (state, { key, value }) => {
-		state.dataSource.dataObject.controls[key] = value;
+	mergeTempData: (state, dataObject) => {
+		state.dataManager.tempData = { ...state.dataManager.tempData, ...dataObject };
 	},
 };
 
