@@ -86,7 +86,7 @@ const stateWatchList = {
 		},
 	},
 	syncDataObject: {
-		watch: ['dataManager.controls'],
+		watch: ['dataManager.controls', 'dataManager.tempData'],
 		callBack: (store) => () => {
 			const currentDataObject = store.getters.getDataObject;
 
@@ -95,7 +95,9 @@ const stateWatchList = {
 				controls: store.state.dataManager.controls,
 			};
 
-			store.commit('setDataObject', { ...currentDataObject, ...mergeData });
+			const mergedData = { ...currentDataObject, ...mergeData };
+
+			store.commit('setDataObject', mergedData);
 		},
 	},
 	dirtyTable: {

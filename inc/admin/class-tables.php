@@ -153,7 +153,9 @@ class Tables {
 		}
 		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>' . $post_edit_link;
 
+		// shortcode table filter hook
+		$html = apply_filters( 'wp-table-builder/filter/shortcode_table', $html, $args );
+
 		return ( $html );
 	}
-
 }

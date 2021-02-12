@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use DOMDocument;
 use WP_Table_Builder\Inc\Admin\Classes\Data_Object;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Core\Init;
@@ -49,7 +50,45 @@ class Data_Table_Manager {
 			add_action( 'wp-table-builder/new_table_saved', [ __CLASS__, 'table_saved' ], 10, 2 );
 			add_action( 'wp-table-builder/table_edited', [ __CLASS__, 'table_saved' ], 10, 2 );
 			add_filter( 'wp-table-builder/title_listing', [ __CLASS__, 'title_listing' ], 10, 2 );
+			add_filter( 'wp-table-builder/filter/shortcode_table', [ __CLASS__, 'shortcode_table' ], 10, 2 );
 		}
+	}
+
+	/**
+	 * Html representation of table prepared for shortcode.
+	 *
+	 * Specific data object properties will be added to table data sets for front end use.
+	 *
+	 * @param string $table_html table html
+	 * @param array $shortcode_args shortcode arguments
+	 *
+	 * @return false|string
+	 */
+	public static function shortcode_table( $table_html, $shortcode_args ) {
+		$table_id = $shortcode_args['id'];
+
+		// only start dom document modification if data table is enabled
+		if ( static::is_data_table_enabled( $table_id ) ) {
+			$dom_document = new DOMDocument();
+			$dom_document->loadHTML( $table_html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+
+			$table = $dom_document->getElementsByTagName( 'table' )->item( 0 );
+
+			// get saved data table options on table
+			$data_table_options_base_64 = $table->getAttribute( 'data-wptb-data-table-options' );
+			$data_table_options         = json_decode( base64_decode( $data_table_options_base_64 ) );
+
+			// data object related to data table
+			$data_object = static::get_table_data_object( $table_id );
+
+			// add content to dataset
+			$data_table_options->dataManager->tempData = $data_object['content'];
+			$table->setAttribute( 'data-wptb-data-table-options', base64_encode( json_encode( $data_table_options ) ) );
+
+			return $dom_document->saveHTML();
+		}
+
+		return $table_html;
 	}
 
 	/**
@@ -125,6 +164,19 @@ class Data_Table_Manager {
 	}
 
 	/**
+	 * Get data object related to supplied table id.
+	 *
+	 * @param int $table_id table id
+	 *
+	 * @return array data object
+	 */
+	public static function get_table_data_object( $table_id ) {
+		$data_object_id = get_post_meta( $table_id, self::TABLE_OBJECT_ID_META, true );
+
+		return ( new Data_Object( [ 'id' => $data_object_id ] ) )->get_object_data();
+	}
+
+	/**
 	 * Add data table related data to builder.
 	 *
 	 * @param array $admin_data admin data
@@ -136,9 +188,13 @@ class Data_Table_Manager {
 
 		// if data table is enabled and editing a table, get data table related data object
 		if ( isset( $_GET['table'] ) && static::is_data_table_enabled( $_GET['table'] ) ) {
-			$table_id       = $_GET['table'];
-			$data_object_id = get_post_meta( $table_id, self::TABLE_OBJECT_ID_META, true );
-			$data_object    = ( new Data_Object( [ 'id' => $data_object_id ] ) )->get_object_data();
+			$table_id = $_GET['table'];
+
+			// @deprecated
+//			$data_object_id = get_post_meta( $table_id, self::TABLE_OBJECT_ID_META, true );
+//			$data_object    = ( new Data_Object( [ 'id' => $data_object_id ] ) )->get_object_data();
+
+			$data_object = static::get_table_data_object( $table_id );
 		}
 
 		$icon_manager = Init::instance()->get_icon_manager();

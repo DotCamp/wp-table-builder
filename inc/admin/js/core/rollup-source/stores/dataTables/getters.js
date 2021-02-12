@@ -352,6 +352,15 @@ const getters = {
 	getDataObject: (state) => {
 		return state.dataSource.dataObject;
 	},
+	/**
+	 * Get temp data object.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} temp data object
+	 */
+	getTempDataObject: (state) => {
+		return state.dataManager.tempData;
+	},
 };
 
 export default getters;

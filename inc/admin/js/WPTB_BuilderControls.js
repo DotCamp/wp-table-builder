@@ -34152,7 +34152,8 @@ var state = {
       controls: {
         firstRowAsColumnName: false,
         indexRow: null
-      }
+      },
+      content: {}
     },
     card: {
       softSelectedId: null
@@ -34742,6 +34743,12 @@ var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -35266,7 +35273,8 @@ var actions = {
 
       var controls = dataManager.controls,
           select = dataManager.select,
-          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select"]);
+          tempData = dataManager.tempData,
+          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select", "tempData"]);
 
       var dataToSave = {
         dataManager: dataManagerRest
@@ -35282,7 +35290,12 @@ var actions = {
       if (_typeof(detail) === 'object') {
         /* eslint-disable no-param-reassign */
         detail.wptbDataTable = true;
-        detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject));
+
+        var dataObject = _objectSpread({}, getters.getDataObject); // because of a object bug, add data object content here, this is just a workaround, will work for possible fix for this in the future updates
+
+
+        dataObject.content = getters.getTempDataObject;
+        detail.wptbDataObject = btoa(JSON.stringify(dataObject));
         /* eslint-enable no-param-reassign */
       }
     });
@@ -35462,10 +35475,12 @@ var actions = {
         getters = _ref36.getters;
     var _getters$getDataObjec = getters.getDataObject,
         type = _getters$getDataObjec.type,
-        controls = _getters$getDataObjec.controls;
+        controls = _getters$getDataObjec.controls,
+        content = _getters$getDataObjec.content;
     commit('setSetupSourceId', type);
     commit('setSetupSourceDataCreatedStatus', type !== null);
     commit('setDataManagerControlObject', controls);
+    commit('mergeTempData', _objectSpread({}, content));
   }
 };
 /** @module actions */
@@ -35912,6 +35927,16 @@ var getters = {
    */
   getDataObject: function getDataObject(state) {
     return state.dataSource.dataObject;
+  },
+
+  /**
+   * Get temp data object.
+   *
+   * @param {Object} state store state
+   * @return {Object} temp data object
+   */
+  getTempDataObject: function getTempDataObject(state) {
+    return state.dataManager.tempData;
   }
 };
 var _default = getters;
@@ -36028,7 +36053,7 @@ var stateWatchList = {
     }
   },
   syncDataObject: {
-    watch: ['dataManager.controls'],
+    watch: ['dataManager.controls', 'dataManager.tempData'],
     callBack: function callBack(store) {
       return function () {
         var currentDataObject = store.getters.getDataObject; // update data object with various fields from store state
@@ -36036,7 +36061,10 @@ var stateWatchList = {
         var mergeData = {
           controls: store.state.dataManager.controls
         };
-        store.commit('setDataObject', _objectSpread({}, currentDataObject, {}, mergeData));
+
+        var mergedData = _objectSpread({}, currentDataObject, {}, mergeData);
+
+        store.commit('setDataObject', mergedData);
       };
     }
   },

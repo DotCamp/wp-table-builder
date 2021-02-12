@@ -26,6 +26,7 @@ const state = {
 				firstRowAsColumnName: false,
 				indexRow: null,
 			},
+			content: {},
 		},
 		card: {
 			softSelectedId: null,

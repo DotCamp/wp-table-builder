@@ -334,7 +334,7 @@ const actions = {
 			const { dataManager } = state;
 
 			// select data manager properties that will be saved to table
-			const { controls, select, ...dataManagerRest } = dataManager;
+			const { controls, select, tempData, ...dataManagerRest } = dataManager;
 
 			const dataToSave = { dataManager: dataManagerRest };
 			const stringified = JSON.stringify(dataToSave);
@@ -350,7 +350,12 @@ const actions = {
 			if (typeof detail === 'object') {
 				/* eslint-disable no-param-reassign */
 				detail.wptbDataTable = true;
-				detail.wptbDataObject = btoa(JSON.stringify(getters.getDataObject));
+
+				const dataObject = { ...getters.getDataObject };
+				// because of a object bug, add data object content here, this is just a workaround, will work for possible fix for this in the future updates
+				dataObject.content = getters.getTempDataObject;
+
+				detail.wptbDataObject = btoa(JSON.stringify(dataObject));
 				/* eslint-enable no-param-reassign */
 			}
 		});
@@ -482,11 +487,12 @@ const actions = {
 	 * @param {Function} root.getters getters store state getters
 	 */
 	syncDataSourceSetup({ commit, getters }) {
-		const { type, controls } = getters.getDataObject;
+		const { type, controls, content } = getters.getDataObject;
 
 		commit('setSetupSourceId', type);
 		commit('setSetupSourceDataCreatedStatus', type !== null);
 		commit('setDataManagerControlObject', controls);
+		commit('mergeTempData', { ...content });
 	},
 };
 
