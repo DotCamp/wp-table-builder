@@ -34149,7 +34149,10 @@ var state = {
     dataObject: {
       id: null,
       type: null,
-      options: {}
+      controls: {
+        firstRowAsColumnName: false,
+        indexRow: null
+      }
     },
     card: {
       softSelectedId: null
@@ -34177,10 +34180,7 @@ var state = {
       colCount: 0,
       rowCount: 0
     },
-    controls: {
-      firstRowAsColumnName: false,
-      indexRow: null
-    },
+    controls: {},
     select: {
       callerId: null,
       active: false,
@@ -34703,6 +34703,31 @@ var mutations = {
    */
   setDataObject: function setDataObject(state, dataObject) {
     state.dataSource.dataObject = dataObject;
+  },
+
+  /**
+   * Set data manager controls object.
+   * This mutation will be mainly used to sync data object controls with data manager.
+   *
+   * @param {Object} state store state
+   * @param {Object} controlsObject controls object
+   */
+  setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
+    state.dataManager.controls = controlsObject;
+  },
+
+  /**
+   * Sync data object control value.
+   *
+   * @param {Object} state store state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.key control key
+   * @param {string} payload.value control value
+   */
+  setDataObjectControl: function setDataObjectControl(state, _ref8) {
+    var key = _ref8.key,
+        value = _ref8.value;
+    state.dataSource.dataObject.controls[key] = value;
   }
 };
 /** @module mutations */
@@ -34720,10 +34745,6 @@ exports.default = void 0;
 var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -35419,11 +35440,7 @@ var actions = {
 
       if (detail.dataTable) {
         if (detail.dataTable.dataObject) {
-          var _detail$dataTable$dat = detail.dataTable.dataObject,
-              content = _detail$dataTable$dat.content,
-              options = _detail$dataTable$dat.options,
-              rest = _objectWithoutProperties(_detail$dataTable$dat, ["content", "options"]);
-
+          var rest = Object.assign({}, detail.dataTable.dataObject);
           commit('setDataObject', rest);
         }
       }
@@ -35440,9 +35457,12 @@ var actions = {
   syncDataSourceSetup: function syncDataSourceSetup(_ref36) {
     var commit = _ref36.commit,
         getters = _ref36.getters;
-    var type = getters.getDataObject.type;
+    var _getters$getDataObjec = getters.getDataObject,
+        type = _getters$getDataObjec.type,
+        controls = _getters$getDataObjec.controls;
     commit('setSetupSourceId', type);
     commit('setSetupSourceDataCreatedStatus', type !== null);
+    commit('setDataManagerControlObject', controls);
   }
 };
 /** @module actions */
@@ -35916,6 +35936,11 @@ var mutationWatchList = {
     var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
 
     store.commit('setColCount', colCount);
+  },
+  setDataManagerControl: function setDataManagerControl(_ref2, state, store) {
+    var payload = _ref2.payload;
+    // sync data object control from store
+    store.commit('setDataObjectControl', payload);
   }
 };
 /**

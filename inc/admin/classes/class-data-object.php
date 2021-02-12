@@ -35,7 +35,7 @@ class Data_Object {
 		'id'      => null,
 		'type'    => null,
 		'content' => null,
-		'options' => []
+		'controls' => [],
 	];
 
 	/**
@@ -122,7 +122,6 @@ class Data_Object {
 	 * @return false|array update process status or false if an error occurred during update process
 	 */
 	public function update_object( $args = [] ) {
-		$this->reload_object_data();
 		$this->current_args = $this->merge_options( $this->current_args, $args );
 
 		// if no type is defined for data object, return false

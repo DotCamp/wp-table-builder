@@ -14,6 +14,10 @@ const mutationWatchList = {
 		// set col count from table data
 		store.commit('setColCount', colCount);
 	},
+	setDataManagerControl: ({ payload }, state, store) => {
+		// sync data object control from store
+		store.commit('setDataObjectControl', payload);
+	},
 };
 
 /**

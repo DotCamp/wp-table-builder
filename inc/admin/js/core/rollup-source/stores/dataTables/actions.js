@@ -468,7 +468,7 @@ const actions = {
 		document.addEventListener('wptb:saved:response:data', ({ detail }) => {
 			if (detail.dataTable) {
 				if (detail.dataTable.dataObject) {
-					const { content, options, ...rest } = detail.dataTable.dataObject;
+					const { ...rest } = detail.dataTable.dataObject;
 					commit('setDataObject', rest);
 				}
 			}
@@ -482,10 +482,11 @@ const actions = {
 	 * @param {Function} root.getters getters store state getters
 	 */
 	syncDataSourceSetup({ commit, getters }) {
-		const { type } = getters.getDataObject;
+		const { type, controls } = getters.getDataObject;
 
 		commit('setSetupSourceId', type);
 		commit('setSetupSourceDataCreatedStatus', type !== null);
+		commit('setDataManagerControlObject', controls);
 	},
 };
 

@@ -425,6 +425,27 @@ const mutations = {
 	setDataObject: (state, dataObject) => {
 		state.dataSource.dataObject = dataObject;
 	},
+	/**
+	 * Set data manager controls object.
+	 * This mutation will be mainly used to sync data object controls with data manager.
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} controlsObject controls object
+	 */
+	setDataManagerControlObject: (state, controlsObject) => {
+		state.dataManager.controls = controlsObject;
+	},
+	/**
+	 * Sync data object control value.
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} payload mutation payload
+	 * @param {string} payload.key control key
+	 * @param {string} payload.value control value
+	 */
+	setDataObjectControl: (state, { key, value }) => {
+		state.dataSource.dataObject.controls[key] = value;
+	},
 };
 
 /** @module mutations */

@@ -22,7 +22,10 @@ const state = {
 		dataObject: {
 			id: null,
 			type: null,
-			options: {},
+			controls: {
+				firstRowAsColumnName: false,
+				indexRow: null,
+			},
 		},
 		card: {
 			softSelectedId: null,
@@ -50,10 +53,7 @@ const state = {
 			colCount: 0,
 			rowCount: 0,
 		},
-		controls: {
-			firstRowAsColumnName: false,
-			indexRow: null,
-		},
+		controls: {},
 		select: {
 			callerId: null,
 			active: false,
