@@ -76,19 +76,33 @@ class Data_Table_Manager {
 
 			// get saved data table options on table
 			$data_table_options_base_64 = $table->getAttribute( 'data-wptb-data-table-options' );
-			$data_table_options         = json_decode( base64_decode( $data_table_options_base_64 ) );
+			$data_table_options         = json_decode( base64_decode( $data_table_options_base_64 ), true );
 
 			// data object related to data table
 			$data_object = static::get_table_data_object( $table_id );
 
+			$content = static::generate_data( (array) $data_object['content'], $data_table_options['dataManager']['bindings'] );
+
 			// add content to dataset
-			$data_table_options->dataManager->tempData = $data_object['content'];
+			$data_table_options['dataManager']['tempData'] = $content;
 			$table->setAttribute( 'data-wptb-data-table-options', base64_encode( json_encode( $data_table_options ) ) );
 
 			return $dom_document->saveHTML();
 		}
 
 		return $table_html;
+	}
+
+	/**
+	 * Filter and manipulate data array according to supplied data table bindings.
+	 *
+	 * @param array $data data array
+	 * @param array $bindings bindings array
+	 *
+	 * @return array filtered data array
+	 */
+	private static function generate_data( $data, $bindings ) {
+		return Data_Table_Binding_Manager::generate_data( $data, $bindings );
 	}
 
 	/**

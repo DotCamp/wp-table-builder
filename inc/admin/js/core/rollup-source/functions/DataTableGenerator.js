@@ -100,6 +100,7 @@
 		}
 		return null;
 	};
+
 	/**
 	 * Operator type.
 	 *
@@ -1052,19 +1053,24 @@
 			// parse data table options from table dataset
 			const dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
 
-			const generatedTable = this.generateDataTable(
-				targetTable,
-				dataTableOptions.dataManager.bindings,
-				dataTableOptions.dataManager.tempData.parsedData.values
-			);
-
 			const mainWrapper = targetTable.parentNode;
-
 			// remove blueprint table from DOM
 			targetTable.remove();
 
-			// add generated table as our new table to DOM
-			mainWrapper.appendChild(generatedTable);
+			// only generate table if data values are present
+			if (dataTableOptions.dataManager.tempData.parsedData.values.length > 0) {
+				const generatedTable = this.generateDataTable(
+					targetTable,
+					dataTableOptions.dataManager.bindings,
+					dataTableOptions.dataManager.tempData.parsedData.values
+				);
+
+				// add generated table as our new table to DOM
+				mainWrapper.appendChild(generatedTable);
+			} else {
+				// remove all traces of table element from dom
+				mainWrapper.parentNode.remove();
+			}
 		};
 
 		/**

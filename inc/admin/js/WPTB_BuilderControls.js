@@ -33646,14 +33646,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var prepareFrontendTable = function prepareFrontendTable(targetTable) {
       // parse data table options from table dataset
       var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
-
-      var generatedTable = _this7.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values);
-
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
-      targetTable.remove(); // add generated table as our new table to DOM
+      targetTable.remove(); // only generate table if data values are present
 
-      mainWrapper.appendChild(generatedTable);
+      if (dataTableOptions.dataManager.tempData.parsedData.values.length > 0) {
+        var generatedTable = _this7.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values); // add generated table as our new table to DOM
+
+
+        mainWrapper.appendChild(generatedTable);
+      } else {
+        // remove all traces of table element from dom
+        mainWrapper.parentNode.remove();
+      }
     };
     /**
      * Generate data tables for frontend.
