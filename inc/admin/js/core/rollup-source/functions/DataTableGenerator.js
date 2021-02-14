@@ -1073,9 +1073,6 @@
 			// parse data table options from table dataset
 			const dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
 
-			// TODO [erdembircan] remove for production
-			console.log(`Data rows: ${dataTableOptions.dataManager.tempData.parsedData.values.length}`);
-
 			const mainWrapper = targetTable.parentNode;
 			// remove blueprint table from DOM
 			targetTable.remove();

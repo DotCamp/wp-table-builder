@@ -29,16 +29,30 @@ class Data_Table_Operator_Binding extends Data_Table_Binding_Base {
 	 * Logic used to generate data.
 	 * @return array generated data
 	 */
-	function generate_data_logic() {
+	public function generate_data_logic() {
 		$operator_bindings = $this->get_operator_bindings();
 
 		$operator_type = $operator_bindings['operatorType'];
 
-		return call_user_func( [
+		return $this->call_operator_logic( $operator_type, $operator_bindings['compareColumn'] );
+	}
+
+
+	/**
+	 * Call operator type specific logic function.
+	 *
+	 * @param string $operator_type type of operator
+	 * @param mixed ...$args arguments to call operator logic
+	 *
+	 * @return array operator logic result
+	 */
+	private function call_operator_logic( $operator_type, ...$args ) {
+		return call_user_func_array( [
 			$this,
 			$operator_type . '_operator_type_logic'
-		], $operator_bindings['compareColumn'] );
+		], $args );
 	}
+
 
 	/**
 	 * Final call before generated data is sent.
@@ -71,6 +85,26 @@ class Data_Table_Operator_Binding extends Data_Table_Binding_Base {
 		}
 
 		return $final_data;
+	}
+
+	/**
+	 * Not operator type logic.
+	 *
+	 * @param string $compare_column compare column id
+	 *
+	 * @return array equal row data
+	 */
+	private function not_operator_type_logic( $compare_column ) {
+		$operator_second = $this->get_operator_bindings()['operatorType2'];
+
+		$operator_result_data = $this->call_operator_logic( $operator_second, $compare_column );
+		$row_ids              = array_map( function ( $row ) {
+			return $row['rowId'];
+		}, $operator_result_data );
+
+		return array_filter( $this->data, function ( $row ) use ( $row_ids ) {
+			return ! in_array( $row->rowId, $row_ids );
+		} );
 	}
 
 	/**

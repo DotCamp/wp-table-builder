@@ -33668,9 +33668,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var prepareFrontendTable = function prepareFrontendTable(targetTable) {
       // parse data table options from table dataset
-      var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions)); // TODO [erdembircan] remove for production
-
-      console.log("Data rows: ".concat(dataTableOptions.dataManager.tempData.parsedData.values.length));
+      var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
       targetTable.remove(); // only generate table if data values are present
