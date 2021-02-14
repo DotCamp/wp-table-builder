@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Class Data_Table_Auto_Binding.
  *
- * Auto mode binding for data table
+ * Auto mode binding for data table.
  * @package WP_Table_Builder\Inc\Admin\Classes
  */
 class Data_Table_Auto_Binding extends Data_Table_Binding_Base {

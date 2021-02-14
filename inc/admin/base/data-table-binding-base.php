@@ -21,7 +21,7 @@ abstract class Data_Table_Binding_Base {
 	protected $data;
 
 	/**
-	 * Binding array
+	 * Binding array.
 	 * @var array
 	 */
 	protected $binding;
@@ -43,4 +43,16 @@ abstract class Data_Table_Binding_Base {
 	 */
 	abstract function generate_data();
 
+	/**
+	 * Get column values.
+	 *
+	 * @param string $col_id column id
+	 *
+	 * @return array column values
+	 */
+	public function get_column_values( $col_id ) {
+		$column_values = array_reduce( $this->data, function ( $carry, $row ) {
+
+		} );
+	}
 }
