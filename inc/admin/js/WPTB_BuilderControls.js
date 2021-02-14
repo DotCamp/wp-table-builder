@@ -32707,7 +32707,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
          */
         // eslint-disable-next-line no-unused-vars
         calculateMaxRows: function calculateMaxRows(bindingOptions) {
-          return this.getOperatorResult(bindingOptions).length;
+          return sliceResult(this.getOperatorResult(bindingOptions), bindingOptions).length;
         },
 
         /**
@@ -32767,7 +32767,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.getOperatorResult = function (options) {
       // eslint-disable-next-line prefer-spread
-      return sliceResult(_this.innerOperatorResult(options), options);
+      // return sliceResult(this.innerOperatorResult(options), options);
+      return _this.innerOperatorResult(options);
     };
 
     upliftMethodsToInstanceContext();
@@ -33399,6 +33400,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
     };
     /**
+     * Slice row data values according to its bindings.
+     *
+     * @param {Object} rowBindings row bindings
+     * @param {Array} rowValues row values
+     * @return {Array} sliced row data values
+     */
+
+
+    var sliceRowDataValues = function sliceRowDataValues(rowBindings, rowValues) {
+      var slicedValues = rowValues;
+      var _rowBindings$operator = rowBindings.operator,
+          rowAmount = _rowBindings$operator.rowAmount,
+          rowCustomAmount = _rowBindings$operator.rowCustomAmount;
+
+      if (rowBindings.mode === 'operator' && rowAmount === 'custom') {
+        var sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
+        slicedValues = slicedValues.slice(0, sliceAmount);
+      }
+
+      return slicedValues;
+    };
+    /**
      * Sort row data values.
      *
      * @param {Object} sortOptions options object
@@ -33462,7 +33485,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
       var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      var sortedValues = sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this7.dataManager.instance.getValues()); // eslint-disable-next-line array-callback-return
+      var sortedValues = sliceRowDataValues(rowBindings, sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this7.dataManager.instance.getValues())); // eslint-disable-next-line array-callback-return
 
       tableElements.map(function (tableElement) {
         var bindingColIdObject = (customBindings === null || customBindings === void 0 ? void 0 : customBindings.column[parseTableElementId(tableElement)]) || getTableElementBinding(tableElement, 'column');
@@ -33645,7 +33668,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var prepareFrontendTable = function prepareFrontendTable(targetTable) {
       // parse data table options from table dataset
-      var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
+      var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions)); // TODO [erdembircan] remove for production
+
+      console.log("Data rows: ".concat(dataTableOptions.dataManager.tempData.parsedData.values.length));
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
       targetTable.remove(); // only generate table if data values are present

@@ -120,7 +120,7 @@
 				 */
 				// eslint-disable-next-line no-unused-vars
 				calculateMaxRows(bindingOptions) {
-					return this.getOperatorResult(bindingOptions).length;
+					return sliceResult(this.getOperatorResult(bindingOptions), bindingOptions).length;
 				},
 				/**
 				 * Get operator result values.
@@ -186,7 +186,8 @@
 		// eslint-disable-next-line no-shadow
 		this.getOperatorResult = (options) => {
 			// eslint-disable-next-line prefer-spread
-			return sliceResult(this.innerOperatorResult(options), options);
+			// return sliceResult(this.innerOperatorResult(options), options);
+			return this.innerOperatorResult(options);
 		};
 
 		upliftMethodsToInstanceContext();
@@ -786,6 +787,24 @@
 		};
 
 		/**
+		 * Slice row data values according to its bindings.
+		 *
+		 * @param {Object} rowBindings row bindings
+		 * @param {Array} rowValues row values
+		 * @return {Array} sliced row data values
+		 */
+		const sliceRowDataValues = (rowBindings, rowValues) => {
+			let slicedValues = rowValues;
+			const { rowAmount, rowCustomAmount } = rowBindings.operator;
+			if (rowBindings.mode === 'operator' && rowAmount === 'custom') {
+				const sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
+				slicedValues = slicedValues.slice(0, sliceAmount);
+			}
+
+			return slicedValues;
+		};
+
+		/**
 		 * Sort row data values.
 		 *
 		 * @param {Object} sortOptions options object
@@ -847,10 +866,11 @@
 			customValues = null,
 			customBindings = null
 		) => {
-			const sortedValues = sortRowDataValues(
-				rowBindings?.sort,
-				customValues || this.dataManager.instance.getValues()
+			const sortedValues = sliceRowDataValues(
+				rowBindings,
+				sortRowDataValues(rowBindings?.sort, customValues || this.dataManager.instance.getValues())
 			);
+
 			// eslint-disable-next-line array-callback-return
 			tableElements.map((tableElement) => {
 				const bindingColIdObject =
@@ -1052,6 +1072,9 @@
 		const prepareFrontendTable = (targetTable) => {
 			// parse data table options from table dataset
 			const dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
+
+			// TODO [erdembircan] remove for production
+			console.log(`Data rows: ${dataTableOptions.dataManager.tempData.parsedData.values.length}`);
 
 			const mainWrapper = targetTable.parentNode;
 			// remove blueprint table from DOM
