@@ -17,10 +17,10 @@ if ( ! defined( 'WPINC' ) ) {
  */
 class Data_Table_Auto_Binding extends Data_Table_Binding_Base {
 	/**
-	 * Generate data based on data bindings.
-	 * @return array
+	 * Logic used to generate data.
+	 * @return array generated data
 	 */
-	function generate_data() {
+	function generate_data_logic() {
 		return $this->data;
 	}
 }
