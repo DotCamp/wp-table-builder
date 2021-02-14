@@ -80,10 +80,20 @@ class Data_Table_Operator_Binding extends Data_Table_Binding_Base {
 	 *
 	 * @return array equal row data
 	 */
-	private function equal_operator_type_logic( $compare_column  ) {
+	private function equal_operator_type_logic( $compare_column ) {
+		$equal_amount  = $this->get_operator_bindings()['equalAmount'];
+		$column_values = $this->get_column_values( $compare_column );
 
+		$rows_ids = array_reduce( $column_values, function ( $carry, $cell ) use ( $equal_amount ) {
+			if ( $cell['value'] === $equal_amount ) {
+				$carry[] = $cell['rowId'];
+			}
+
+			return $carry;
+		} );
+
+		return $this->get_row( $rows_ids );
 	}
-
 
 	/**
 	 * Higher than operator type logic.
@@ -93,11 +103,35 @@ class Data_Table_Operator_Binding extends Data_Table_Binding_Base {
 	 * @return array higher than row data
 	 */
 	private function higher_operator_type_logic( $compare_column ) {
+		return $this->higher_lower_operator_type_base( $compare_column, true );
+
+	}
+
+	/**
+	 * Lower than operator type logic.
+	 *
+	 * @param string $compare_column compare column id
+	 *
+	 * @return array lower than row data
+	 */
+	private function lower_operator_type_logic( $compare_column ) {
+		return $this->higher_lower_operator_type_base( $compare_column, false );
+	}
+
+	/**
+	 * Higher/lower than operator type base.
+	 *
+	 * @param string $compare_column compare column id
+	 * @param boolean $higher use higher than logic or lower than
+	 *
+	 * @return array higher/lower than row data
+	 */
+	private function higher_lower_operator_type_base( $compare_column, $higher ) {
 		$column_values = $this->get_column_values( $compare_column );
 		$amount        = $this->get_operator_bindings()['thanAmount'];
 
-		$row_ids = array_reduce( $column_values, function ( $carry, $cell ) use ( $amount ) {
-			if ( $cell['value'] > $amount ) {
+		$row_ids = array_reduce( $column_values, function ( $carry, $cell ) use ( $amount, $higher ) {
+			if ( $higher ? $cell['value'] > $amount : $cell['value'] < $amount ) {
 				$carry[] = $cell['rowId'];
 			}
 
