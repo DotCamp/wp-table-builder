@@ -51,8 +51,35 @@ abstract class Data_Table_Binding_Base {
 	 * @return array column values
 	 */
 	public function get_column_values( $col_id ) {
-		$column_values = array_reduce( $this->data, function ( $carry, $row ) {
+		return array_reduce( $this->data, function ( $carry, $row ) use ( $col_id ) {
+			$row_id = $row->rowId;
 
-		} );
+			$row_values = array_reduce( $row->values, function ( $carry, $value ) use ( $col_id, $row_id ) {
+				if ( $value->colId === $col_id ) {
+					$carry[] = array_merge( (array) $value, [ 'rowId' => $row_id ] );
+				}
+
+				return $carry;
+			}, [] );
+
+			return array_merge( $carry, $row_values );
+		}, [] );
+	}
+
+	/**
+	 * Get row array.
+	 *
+	 * @param string $row_id row id
+	 *
+	 * @return array row object
+	 */
+	public function get_row( $row_id ) {
+		return array_reduce( $this->data, function ( $carry, $row ) use ( $row_id ) {
+			if ( $row->rowId === $row_id ) {
+				$carry = (array) $row;
+			}
+
+			return $carry;
+		}, [] );
 	}
 }
