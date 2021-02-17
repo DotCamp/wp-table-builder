@@ -6,7 +6,16 @@ const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 
+/**
+ * Gulp configuration object for path locations.
+ *
+ * @type {Object}
+ */
 const gulpConfig = {
+	adminJs: {
+		src: ['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js', './inc/admin/js/WPTB_Store.js'],
+		dest: '.',
+	},
 	frontEndJs: {
 		src: [
 			'./inc/admin/js/core/WPTB_Logger.js',
@@ -24,7 +33,7 @@ const gulpConfig = {
 
 function adminJs() {
 	return gulp
-		.src(['./inc/admin/js/core/*.js', './inc/admin/js/core-premium/*.js'])
+		.src(gulpConfig.adminJs.src, { allowEmpty: true })
 		.pipe(sourcemaps.init())
 		.pipe(
 			babel({
@@ -35,7 +44,7 @@ function adminJs() {
 		.pipe(concat('./inc/admin/js/admin.js'))
 		.pipe(uglify())
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('.'));
+		.pipe(gulp.dest(gulpConfig.adminJs.dest));
 }
 
 function minify() {
@@ -72,23 +81,20 @@ function cssFrontend() {
 }
 
 exports.watch = gulp.parallel(
-	function watchAdminJs() {
-		return gulp.watch(
-			[
-				'./inc/admin/js/core/*.js',
-				'./inc/admin/js/core-premium/*.js',
-				'./inc/admin/js/WPTB_ResponsiveFrontend.js',
-			],
-			adminJs
-		);
+	async function watchAdminJs() {
+		await adminJs();
+		return gulp.watch(gulpConfig.adminJs.src, adminJs);
 	},
-	function watchFrontendJs() {
+	async function watchFrontendJs() {
+		await frontendJs();
 		return gulp.watch(gulpConfig.frontEndJs.src, frontendJs);
 	},
-	function watchAdminStyles() {
+	async function watchAdminStyles() {
+		await cssAdmin();
 		return gulp.watch(['./inc/admin/css/src/*.css'], cssAdmin);
 	},
-	function watchFrontendStyles() {
+	async function watchFrontendStyles() {
+		await cssFrontend();
 		return gulp.watch(['./inc/frontend/css/src/*.css'], cssFrontend);
 	}
 );

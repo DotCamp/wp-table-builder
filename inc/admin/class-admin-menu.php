@@ -317,16 +317,18 @@ class Admin_Menu {
 				wp_localize_script( static::$generate_menu_script_hook, 'wptbGenerateMenuData', $generate_data );
 			}
 
-			// TODO [erdembircan] comment for production
-//			$admin_js_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
+			// development version to bypass cache issues
+			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
 			// TODO [erdembircan] change version to plugin version for production
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), NS\PLUGIN_VERSION, true );
+			), $admin_script_dev_version, true );
+
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
+
 			wp_register_script( 'wptb-admin-builder-tinymce-jquery-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/jquery.tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 
 			wp_enqueue_style( 'wp-color-picker' );

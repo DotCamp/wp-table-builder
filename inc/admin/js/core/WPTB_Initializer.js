@@ -12,7 +12,7 @@ var WPTB_Initializer = function () {
             rowsIncrementButton = tableGenerator.getElementsByClassName('wptb-input-number-increment')[1],
             columnsInput = document.getElementById('wptb-columns-number'),
             rowsInput = document.getElementById('wptb-rows-number');
-    
+
     // columnsDecrementButton.onclick = function () {
     //         if (columnsInput.value > MIN_COLUMNS) {
     //                 columnsInput.value--;
@@ -50,7 +50,7 @@ var WPTB_Initializer = function () {
     // }
 
     // register and setup section buttons
-    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells']);
+    WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells', 'background_menu']);
     WPTB_Helper.setupSectionButtons();
 
     // activate elements section for startup
@@ -75,7 +75,8 @@ var WPTB_Initializer = function () {
     WPTB_Helper.showElementsListOnRemove();
 
     // block tinyMCE from activation at manage cells menu
-    WPTB_Helper.blockTinyMCEManageCells();
+	WPTB_Helper.blockTinyMCE();
+
     // initialize header toolbox
     new WPTB_HeaderToolbox('.wptb-plugin-header-toolbar').init();
 

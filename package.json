@@ -21,7 +21,7 @@
     "vue": "./node_modules/vue/dist/vue.esm.js"
   },
   "resolutions": {
-    "graceful-fs": "4.2.3"
+    "graceful-fs": "4.2.2"
   },
   "repository": {
     "type": "git",
@@ -73,11 +73,13 @@
     "@wordpress/components": "^11.0.0",
     "@wordpress/data": "^4.24.0",
     "@wordpress/i18n": "^3.11.0",
+    "deepmerge": "^4.2.2",
     "gulp-rename": "^1.4.0",
     "portal-vue": "^2.1.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "vue": "^2.6.11",
+    "vue-color": "^2.8.0",
     "vue-fragment": "^1.5.1",
     "vue-hot-reload-api": "^2.3.4",
     "vuex": "^3.5.1"

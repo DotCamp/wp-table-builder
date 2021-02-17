@@ -1,6 +1,6 @@
 <?php
 /**
- * Left panel responsive options menu view
+ * Left panel responsive options menu view.
  */
 
 // if called directly, abort

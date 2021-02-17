@@ -40,15 +40,15 @@ class Table_Setting_Element extends Element_Base_Object {
 		return esc_html_e( 'Table Setting', 'wp-table-builder' );
 	}
 
-    /**
-     * Include file with js script for element button
-     *
-     * @since 1.1.2
-     * @access protected
-     */
-    public function element_script() {
-        return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-settings.js' );
-    }
+	/**
+	 * Include file with js script for element button
+	 *
+	 * @since 1.1.2
+	 * @access protected
+	 */
+	public function element_script() {
+		return wp_normalize_path( NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/table-element-scripts/table-settings.js' );
+	}
 
 	/**
 	 * Register the element controls.
@@ -60,8 +60,8 @@ class Table_Setting_Element extends Element_Base_Object {
 	 * @access protected
 	 */
 	protected function _register_controls() {
-        $this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
-        $this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
+		$this->setDefaultControlArg( 'elementOptionsGroupId', 'table-settings-group' );
+		$this->setDefaultControlArg( 'elementOptionClass', 'wptb-element-option' );
 		$general_section_group_controls = [
 			// @deprecated
 			// 'tableManageCells' =>
@@ -113,7 +113,7 @@ class Table_Setting_Element extends Element_Base_Object {
 					'appearDependOnControl' => [ 'applyTableContainerMaxWidth', [ 'checked' ], [ 'unchecked' ] ]
 				],
 
-			'tableCellMinAutoWidth' =>
+			'tableCellMinAutoWidth'   =>
 				[
 					'label'        => __( 'Table Cell Min Auto Width', 'wp_table_builder' ),
 					'type'         => Controls_Manager::SIZE,
@@ -125,60 +125,61 @@ class Table_Setting_Element extends Element_Base_Object {
 					'defaultValue' => 100,
 					'dimension'    => 'px'
 				],
-            'tableSortableVertical' =>
-                [
-                    'label'        => __( 'Sortable Table Vertically', 'wp_table_builder' ),
-                    'type'      => Controls_Manager::TOGGLE,
-                    'selectors' => [
-                        '{{{data.container}}}' => [ 'data-wptb-sortable-table-vertical', '1', null ]
-                    ]
-                ],
-            'tableSortableHorizontal' =>
-                [
-                    'label'        => __( 'Sortable Table Horizontally', 'wp_table_builder' ),
-                    'type'      => Controls_Manager::TOGGLE,
-                    'selectors' => [
-                        '{{{data.container}}}' => [ 'data-wptb-sortable-table-horizontal', '1', null ]
-                    ]
-                ]
-		];
-
-		$background_section_group_controls = [
-			'tableHeaderBackground'  =>
+			'tableSortableVertical'   =>
 				[
-					'label'     => __( 'Header Background', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR,
+					'label'     => __( 'Sortable Table Vertically', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
 					'selectors' => [
-						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color', 'data-wptb-bg-color' ]
-					],
-					'dataSets' => [
-						'{{{data.container}}}' => 'wptbHeaderBackgroundColor'
+						'{{{data.container}}}' => [ 'data-wptb-sortable-table-vertical', '1', null ]
 					]
 				],
-			'tableEvenRowBackground' =>
+			'tableSortableHorizontal' =>
 				[
-					'label'     => __( 'Even Row Background', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR,
+					'label'     => __( 'Sortable Table Horizontally', 'wp_table_builder' ),
+					'type'      => Controls_Manager::TOGGLE,
 					'selectors' => [
-						'{{{data.container}}} tbody tr:nth-child(2n + 2)' => [ 'background-color', 'data-wptb-bg-color' ]
-					],
-					'dataSets' => [
-						'{{{data.container}}}' => 'wptbEvenRowBackgroundColor'
-					]
-				],
-
-			'tableOddRowBackground' =>
-				[
-					'label'     => __( 'Odd Row Background', 'wp_table_builder' ),
-					'type'      => Controls_Manager::COLOR,
-					'selectors' => [
-						'{{{data.container}}} tbody tr:nth-child(2n + 3)' => [ 'background-color', 'data-wptb-bg-color' ]
-					],
-					'dataSets' => [
-						'{{{data.container}}}' => 'wptbOddRowBackgroundColor'
+						'{{{data.container}}}' => [ 'data-wptb-sortable-table-horizontal', '1', null ]
 					]
 				]
 		];
+
+		// @deprecated in favor of new background menu
+//		$background_section_group_controls = [
+//			'tableHeaderBackground'  =>
+//				[
+//					'label'     => __( 'Header Background', 'wp_table_builder' ),
+//					'type'      => Controls_Manager::COLOR,
+//					'selectors' => [
+//						'{{{data.container}}} tbody tr:nth-child(1)' => [ 'background-color', 'data-wptb-bg-color' ]
+//					],
+//					'dataSets' => [
+//						'{{{data.container}}}' => 'wptbHeaderBackgroundColor'
+//					]
+//				],
+//			'tableEvenRowBackground' =>
+//				[
+//					'label'     => __( 'Even Row Background', 'wp_table_builder' ),
+//					'type'      => Controls_Manager::COLOR,
+//					'selectors' => [
+//						'{{{data.container}}} tbody tr:nth-child(2n + 2)' => [ 'background-color', 'data-wptb-bg-color' ]
+//					],
+//					'dataSets' => [
+//						'{{{data.container}}}' => 'wptbEvenRowBackgroundColor'
+//					]
+//				],
+//
+//			'tableOddRowBackground' =>
+//				[
+//					'label'     => __( 'Odd Row Background', 'wp_table_builder' ),
+//					'type'      => Controls_Manager::COLOR,
+//					'selectors' => [
+//						'{{{data.container}}} tbody tr:nth-child(2n + 3)' => [ 'background-color', 'data-wptb-bg-color' ]
+//					],
+//					'dataSets' => [
+//						'{{{data.container}}}' => 'wptbOddRowBackgroundColor'
+//					]
+//				]
+//		];
 
 		$border_section_group_controls = [
 
@@ -211,16 +212,16 @@ class Table_Setting_Element extends Element_Base_Object {
 					'selectors' => [
 						'{{{data.container}}} td' => [ 'border-style', 'solid', 'none' ],
 					],
-					'checked' => true
+					'checked'   => true
 				],
-			'headerInnerBorder'     =>
+			'headerInnerBorder'    =>
 				[
-					'label'     => __( 'Header Inner Border', 'wp_table_builder' ),
-					'type'      => Controls_Manager::TOGGLE,
-					'selectors' => [
+					'label'                 => __( 'Header Inner Border', 'wp_table_builder' ),
+					'type'                  => Controls_Manager::TOGGLE,
+					'selectors'             => [
 						'{{{data.container}}} tr:first-child td' => [ 'border-style', 'solid', 'none' ],
 					],
-					'checked' => true,
+					'checked'               => true,
 					'appearDependOnControl' => [ 'applyInnerBorder', [ 'checked' ], [ 'unchecked' ] ]
 				],
 			'tableInnerBorderSize' =>
@@ -260,8 +261,8 @@ class Table_Setting_Element extends Element_Base_Object {
 		$help_support_section_grup_controls = [
 			'helpSupportLinks' => [
 				'label' => 'test',
-				'type' => Controls_Manager::HTML_OUTPUT,
-				'html' => sprintf('<div class="wptb-help-support-section-wrapper"><div><a href="https://wptablebuilder.com/" target="_blank">%s</a></div><div><a href="https://wptablebuilder.com/community/" target="_blank">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/" target="_blank">%s</a></div></div>', esc_html__('Our Website' , 'wp_table_builder'), esc_html__('Support Community Forum' , 'wp_table_builder'), esc_html__('Facebook Group' , 'wp_table_builder'))
+				'type'  => Controls_Manager::HTML_OUTPUT,
+				'html'  => sprintf( '<div class="wptb-help-support-section-wrapper"><div><a href="https://wptablebuilder.com/" target="_blank">%s</a></div><div><a href="https://wptablebuilder.com/community/" target="_blank">%s</a></div><div><a href="https://www.facebook.com/groups/wptbplugin/" target="_blank">%s</a></div></div>', esc_html__( 'Our Website', 'wp_table_builder' ), esc_html__( 'Support Community Forum', 'wp_table_builder' ), esc_html__( 'Facebook Group', 'wp_table_builder' ) )
 			]
 		];
 
@@ -271,11 +272,12 @@ class Table_Setting_Element extends Element_Base_Object {
 			'add_control'
 		] );
 
-		// background section group
-		Control_Section_Group_Collapse::add_section( 'table_settings_background', esc_html__( 'background', NS\PLUGIN_TEXT_DOMAIN ), $background_section_group_controls, [
-			$this,
-			'add_control'
-		], false );
+		// @deprecated in favor of new background menu
+//		// background section group
+//		Control_Section_Group_Collapse::add_section( 'table_settings_background', esc_html__( 'background', NS\PLUGIN_TEXT_DOMAIN ), $background_section_group_controls, [
+//			$this,
+//			'add_control'
+//		], false );
 
 		// border section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_border', esc_html__( 'border', NS\PLUGIN_TEXT_DOMAIN ), $border_section_group_controls, [
@@ -284,7 +286,7 @@ class Table_Setting_Element extends Element_Base_Object {
 		], false );
 
 		// table settings registered action hook
-		do_action('wp-table-builder/table_settings_registered', $this);
+		do_action( 'wp-table-builder/table_settings_registered', $this );
 
 		// help&support section group
 		Control_Section_Group_Collapse::add_section( 'table_settings_help_support', esc_html__( 'help & support', NS\PLUGIN_TEXT_DOMAIN ), $help_support_section_grup_controls, [
@@ -292,162 +294,162 @@ class Table_Setting_Element extends Element_Base_Object {
 			'add_control'
 		], false );
 
-        $this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
-        $this->setDefaultControlArg('elementOptionsContainerOn', 'false');
-        $this->setDefaultControlArg('elementOptionContainerOn', 'false');
+		$this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-top' );
+		$this->setDefaultControlArg( 'elementOptionsContainerOn', 'false' );
+		$this->setDefaultControlArg( 'elementOptionContainerOn', 'false' );
 
 		$this->add_control(
-            'addLeftColumn',
-            [
-                'label' => __( 'Add Left Column', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
-                'id' => 'wptb-add-start-column',
-                'title' => __( 'Add Column to the Start', 'wp-table-builder' )
-            ]
-        );
+			'addLeftColumn',
+			[
+				'label'            => __( 'Add Left Column', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
+				'id'               => 'wptb-add-start-column',
+				'title'            => __( 'Add Column to the Start', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'addRightColumn',
-            [
-                'label' => __( 'Add Right Column', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
-                'id' => 'wptb-add-end-column',
-                'title' => __( 'Add Column to the End', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'addRightColumn',
+			[
+				'label'            => __( 'Add Right Column', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
+				'id'               => 'wptb-add-end-column',
+				'title'            => __( 'Add Column to the End', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'addTopRow',
-            [
-                'label' => __( 'Add Top Row', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
-                'id' => 'wptb-add-start-row',
-                'title' => __( 'Add Row to the Start', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'addTopRow',
+			[
+				'label'            => __( 'Add Top Row', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
+				'id'               => 'wptb-add-start-row',
+				'title'            => __( 'Add Row to the Start', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'addBottomRow',
-            [
-                'label' => __( 'Add Bottom Row', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
-                'id' => 'wptb-add-end-row',
-                'title' => __( 'Add Row to the End', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'addBottomRow',
+			[
+				'label'            => __( 'Add Bottom Row', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-no-cell-action visible',
+				'id'               => 'wptb-add-end-row',
+				'title'            => __( 'Add Row to the End', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'mergeSelectedCells',
-            [
-                'label' => __( 'Merge', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-multiple-select-action',
-                'id' => 'wptb-merge-cells',
-                'title' => __( 'Merge Selected Cells', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'mergeSelectedCells',
+			[
+				'label'            => __( 'Merge', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-multiple-select-action',
+				'id'               => 'wptb-merge-cells',
+				'title'            => __( 'Merge Selected Cells', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'splitSelectedSell',
-            [
-                'label' => __( 'Split', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-split-cell',
-                'title' => __( 'Unmerge Selected Cell', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'splitSelectedSell',
+			[
+				'label'            => __( 'Split', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-split-cell',
+				'title'            => __( 'Unmerge Selected Cell', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'deleteHighlightedColumn',
-            [
-                'label' => __( 'Remove Column', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-delete-column',
-                'title' => __( 'Delete Highlighted Column', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'deleteHighlightedColumn',
+			[
+				'label'            => __( 'Remove Column', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-delete-column',
+				'title'            => __( 'Delete Highlighted Column', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'deleteHighlightedRow',
-            [
-                'label' => __( 'Remove Row', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-delete-row',
-                'title' => __( 'Delete Highlighted Row', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'deleteHighlightedRow',
+			[
+				'label'            => __( 'Remove Row', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-delete-row',
+				'title'            => __( 'Delete Highlighted Row', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'closeManageCellsModeTop',
-            [
-                'label' => __( 'Close', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-table-edit-mode-close',
-                'title' => __( 'Close Manage Cells Mode', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'closeManageCellsModeTop',
+			[
+				'label'            => __( 'Close', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-table-edit-mode-close',
+				'title'            => __( 'Close Manage Cells Mode', 'wp-table-builder' )
+			]
+		);
 
-        $this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-bottom' );
+		$this->setDefaultControlArg( 'elementOptionsGroupId', 'wptb-bar-bottom' );
 
-        $this->add_control(
-            'insertColumnAfter',
-            [
-                'label' => __( 'Insert Column After', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-add-column-after',
-                'title' => __( 'Add Column After Highlighted One', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'insertColumnAfter',
+			[
+				'label'            => __( 'Insert Column After', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-add-column-after',
+				'title'            => __( 'Add Column After Highlighted One', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'insertColumnBefore',
-            [
-                'label' => __( 'Insert Column Before', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-add-column-before',
-                'title' => __( 'Add Column Before Highlighted One', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'insertColumnBefore',
+			[
+				'label'            => __( 'Insert Column Before', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-add-column-before',
+				'title'            => __( 'Add Column Before Highlighted One', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'insertRowAfter',
-            [
-                'label' => __( 'Insert Row After', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-add-row-after',
-                'title' => __( 'Add Row After Highlighted One', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'insertRowAfter',
+			[
+				'label'            => __( 'Insert Row After', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-add-row-after',
+				'title'            => __( 'Add Row After Highlighted One', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'insertRowBefore',
-            [
-                'label' => __( 'Insert Row Before', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-single-action',
-                'id' => 'wptb-add-row-before',
-                'title' => __( 'Add Row Before Highlighted One', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'insertRowBefore',
+			[
+				'label'            => __( 'Insert Row Before', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-single-action',
+				'id'               => 'wptb-add-row-before',
+				'title'            => __( 'Add Row Before Highlighted One', 'wp-table-builder' )
+			]
+		);
 
-        $this->add_control(
-            'closeManageCellsModeBottom',
-            [
-                'label' => __( 'Close', 'wp_table_builder' ),
-                'type'  => Controls_Manager::BUTTON2,
-                'additionsClasses' => 'wptb-table_change_button wptb-table-edit-mode-close',
-                'title' => __( 'Close Manage Cells Mode', 'wp-table-builder' )
-            ]
-        );
+		$this->add_control(
+			'closeManageCellsModeBottom',
+			[
+				'label'            => __( 'Close', 'wp_table_builder' ),
+				'type'             => Controls_Manager::BUTTON2,
+				'additionsClasses' => 'wptb-table_change_button wptb-table-edit-mode-close',
+				'title'            => __( 'Close Manage Cells Mode', 'wp-table-builder' )
+			]
+		);
 	}
 }

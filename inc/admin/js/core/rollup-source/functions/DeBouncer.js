@@ -3,8 +3,8 @@
  *
  * Add a timeout to supplied function to delay its execution on certain situations, mostly in order to increase performance on repeating functions.
  *
- * @return {function} main debounce function
- * @constructor
+ * @return {Function} main debounce function
+ * @class
  */
 function DeBouncer() {
 	const actionIds = {};
@@ -13,7 +13,7 @@ function DeBouncer() {
 	 * Main debounce function.
 	 *
 	 * @param {number} id unique id for action
-	 * @param {function} callable function to be called
+	 * @param {Function} callable function to be called
 	 * @param {number} timeout timeout duration in milliseconds
 	 */
 	function deBounce(id, callable, timeout = 2000) {

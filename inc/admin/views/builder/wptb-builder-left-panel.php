@@ -107,13 +107,17 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                  style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-table-settings.php'; ?>
             </div>
-
             <!--            responsive menu-->
             <div class="wptb-responsive-section wptb-left-panel-sidebar-content"
                  data-wptb-section="table_responsive_menu" style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-responsive-panel.php'; ?>
             </div>
-            <!--            element controls-->
+          <!--            background settings-->
+          <div class="wptb-responsive-section wptb-left-panel-sidebar-content"
+               data-wptb-section="background_menu" style="display: none">
+	          <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-background-menu.php'; ?>
+          </div>
+          <!--            element controls-->
             <div id="element-options-group" class="wptb-tab-content wptb-left-panel-sidebar-content"
                  data-wptb-section="options_group"
                  style="display: none;">
