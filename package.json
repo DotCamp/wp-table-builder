@@ -63,7 +63,6 @@
     "gulp-watch": "^4.2.4",
     "gulp-wp-pot": "^2.0.4",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-custom-dist-structure": "^1.1.16",
     "prettier": "^2.0.5",
     "vue-template-compiler": "^2.6.11"
   },
@@ -80,7 +79,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "vue": "^2.6.11",
-    "vue-codemirror": "^4.0.6",
     "vue-fragment": "^1.5.1",
     "vue-hot-reload-api": "^2.3.4",
     "vuex": "^3.5.1"
