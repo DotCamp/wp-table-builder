@@ -85,6 +85,14 @@ class Data_Table_Manager {
 
 			// add content to dataset
 			$data_table_options['dataManager']['tempData'] = $content;
+			$data_table_options['dataManager']['tempData'] = $content;
+
+			/**
+			 * Clear out unnecessary data for frontend.
+			 */
+			$data_table_options['dataManager']['tempData']['values']     = [];
+			$data_table_options['dataManager']['tempData']['parsedData'] = [];
+
 			$table->setAttribute( 'data-wptb-data-table-options', base64_encode( json_encode( $data_table_options ) ) );
 
 			return $dom_document->saveHTML();

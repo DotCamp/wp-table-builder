@@ -75,15 +75,22 @@ class Data_Table_Binding_Manager {
 
 			$generated_row_data = $mode_instance->generate_data();
 
-			// filter generated array so that already included row values will not end up on final result
-			$filtered_generated_data = array_filter( $generated_row_data, function ( $row_data ) use ( $carry ) {
-				return ! in_array( $row_data, $carry );
-			} );
+			// @deprecated
+//			// filter generated array so that already included row values will not end up on final result
+//			$filtered_generated_data = array_filter( $generated_row_data, function ( $row_data ) use ( $carry ) {
+//				return ! in_array( $row_data, $carry );
+//			} );
 
-			return array_merge( $carry, $filtered_generated_data );
+//			return array_merge( $carry, $filtered_generated_data );
+			$carry[ $key ] = $generated_row_data;
+
+			return $carry;
 		}, [] );
 
-		$data['parsedData']->values = $generated_data;
+		// @deprecated
+//		$data['parsedData']->values = $generated_data;
+
+		$data['generatedData'] = $generated_data;
 
 		return $data;
 	}
