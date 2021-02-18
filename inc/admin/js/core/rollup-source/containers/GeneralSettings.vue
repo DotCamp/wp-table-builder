@@ -5,16 +5,14 @@
 				<control-item :field-data="field" :modelBind="store"></control-item>
 			</setting-card>
 		</menu-content>
-		<portal to="footerButtons">
-			<div class="wptb-settings-button-container">
-				<menu-button type="danger" :disabled="disabled" @click="$emit('resetStore')"
-					>{{ strings.revert }}
-				</menu-button>
-				<menu-button type="primary" :disabled="disabled" @click="$emit('submitSettings')"
-					>{{ strings.submit }}
-				</menu-button>
-			</div>
-		</portal>
+		<footer-buttons>
+			<menu-button type="danger" :disabled="disabled" @click="$emit('resetStore')"
+				>{{ strings.revert }}
+			</menu-button>
+			<menu-button type="primary" :disabled="disabled" @click="$emit('submitSettings')"
+				>{{ strings.submit }}
+			</menu-button>
+		</footer-buttons>
 	</fragment>
 </template>
 <script>
@@ -23,6 +21,7 @@ import SettingCard from '../components/SettingCard';
 import ControlItem from '../components/ControlItem';
 import MenuContent from '../components/MenuContent';
 import MenuButton from '../components/MenuButton';
+import FooterButtons from '../components/Settings/FooterButtons';
 
 export default {
 	props: {
@@ -43,6 +42,6 @@ export default {
 			default: false,
 		},
 	},
-	components: { SettingCard, ControlItem, MenuContent, Fragment, MenuButton },
+	components: { SettingCard, ControlItem, MenuContent, Fragment, MenuButton, FooterButtons },
 };
 </script>

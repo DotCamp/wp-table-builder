@@ -41,22 +41,20 @@
 						<div class="wptb-version-control-warning-info">{{ strings.warningInfo }}</div>
 					</div>
 				</div>
-				<changelog :version="selectedVersion" :raw-changelog="getVersionControlData().changelog"></changelog>
+				<changelog :version="selectedVersion" :raw-changelog="sectionData.changelog"></changelog>
 			</div>
 			<div v-else v-html="form"></div>
 		</menu-content>
-		<portal to="footerButtons">
-			<div class="wptb-settings-button-container">
-				<menu-button
-					v-if="!installResult"
-					:disabled="isVersionSelected(currentVersion) || isBusy()"
-					type="primary"
-					@click="installVersion"
-					>{{ `${strings.installVersion} ${selectedVersion}` }}
-				</menu-button>
-				<menu-button v-if="installResult" type="primary" @click="reloadPage">{{ strings.reload }}</menu-button>
-			</div>
-		</portal>
+		<footer-buttons>
+			<menu-button
+				v-if="!installResult"
+				:disabled="isVersionSelected(currentVersion) || isBusy()"
+				type="primary"
+				@click="installVersion"
+				>{{ `${strings.installVersion} ${selectedVersion}` }}
+			</menu-button>
+			<menu-button v-if="installResult" type="primary" @click="reloadPage">{{ strings.reload }}</menu-button>
+		</footer-buttons>
 	</fragment>
 </template>
 
@@ -68,18 +66,12 @@ import VersionControlRow from './VersionControlRow';
 import VersionIndicator from './VersionIndicator';
 import Changelog from './Changelog';
 import withMessage from '../mixins/withMessage';
+import FooterButtons from './Settings/FooterButtons';
+import SettingsMenuSection from '../mixins/SettingsMenuSection';
 
 export default {
-	props: {
-		templateData: {
-			type: Object,
-			default: () => {
-				return {};
-			},
-		},
-	},
-	components: { VersionControlRow, MenuContent, Fragment, MenuButton, VersionIndicator, Changelog },
-	mixins: [withMessage],
+	components: { FooterButtons, VersionControlRow, MenuContent, Fragment, MenuButton, VersionIndicator, Changelog },
+	mixins: [withMessage, SettingsMenuSection],
 	data() {
 		return {
 			selectedVersion: '1.0.0',
@@ -92,10 +84,10 @@ export default {
 		};
 	},
 	mounted() {
-		const { currentVersion } = this.getVersionControlData();
+		const { currentVersion } = this.sectionData;
 		this.currentVersion = currentVersion;
-		this.latestVersion = this.getVersionControlData().latestVersion;
-		this.allVersions = this.getVersionControlData().allVersions;
+		this.latestVersion = this.sectionData.latestVersion;
+		this.allVersions = this.sectionData.allVersions;
 		this.selectedVersion = this.allVersions[currentVersion] !== undefined ? currentVersion : this.latestVersion;
 	},
 	computed: {
@@ -119,20 +111,18 @@ export default {
 		isVersionSelected(v) {
 			return this.selectedVersion === v;
 		},
-		getVersionControlData() {
-			return this.templateData.versionControl;
-		},
 		updateToLatest() {
 			this.selectedVersion = this.latestVersion;
 			this.installVersion();
 		},
 		installVersion() {
 			if (!this.isVersionSelected(this.currentVersion) && !this.isBusy()) {
+				// eslint-disable-next-line no-alert
 				if (window.confirm(this.strings.rollbackConfirmation)) {
 					this.setBusy(true);
 					const formData = new FormData();
 
-					const { action, nonce, ajaxUrl } = this.getVersionControlData().security;
+					const { action, nonce, ajaxUrl } = this.sectionData.security;
 
 					formData.append('action', action);
 					formData.append('nonce', nonce);

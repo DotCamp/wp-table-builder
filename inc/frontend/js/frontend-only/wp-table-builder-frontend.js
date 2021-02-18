@@ -832,7 +832,7 @@
 		// sorting table
 		function sortingTable() {
 			const tables = document.querySelectorAll('.wptb-preview-table');
-			for (let i = 0; i < tables.length; i++) {
+			for (let i = 0; i < tables.length; i += 1) {
 				const sortableTable = new WPTB_SortableTable({ table: tables[i] });
 				sortableTable.sortableTableInitialization(responsiveFront);
 			}
@@ -845,8 +845,14 @@
 			},
 		});
 		document.dispatchEvent(responsiveFrontReady);
+
+		// apply defined extra styles to tables if there is any
+		WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.frontEnd, WptbFrontendData.generalStyles);
+
+		// rebuild tables according to current responsive mode
 		responsiveFront.rebuildTables();
 
+		// initialize style pass
 		WPTB_StylePass.init(WptbFrontendData.stylePass);
 	});
 })(jQuery);

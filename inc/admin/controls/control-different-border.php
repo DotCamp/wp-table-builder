@@ -2,8 +2,10 @@
 
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
-use const esc_html__;
+use function esc_html__;
+use function json_encode;
 
+// if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
 	die();
 }
@@ -50,17 +52,18 @@ class Control_Different_Border extends Base_Control {
 
 		$json_strings = json_encode( $strings );
 		?>
-      <#
-      const uniqueItemClass = data.elementControlTargetUnicClass;
-      WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-      data.strings = JSON.parse('<?php echo $json_strings; ?>');
-      #>
-      <div id="{{{uniqueItemClass}}}">
-        <different-border-control :appear-depend-on-control="appearDependOnControl" :strings="strings"></different-border-control>
-      </div>
-      <wptb-template-script>
-        WPTB_ControlsManager.callControlScript('ControlDifferentBorder', '{{{uniqueItemClass}}}');
-      </wptb-template-script>
+        <#
+        const uniqueItemClass = data.elementControlTargetUnicClass;
+        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+        data.strings = JSON.parse('<?php echo $json_strings; ?>');
+        #>
+        <div id="{{{uniqueItemClass}}}">
+            <different-border-control :appear-depend-on-control="appearDependOnControl"
+                                      :strings="strings"></different-border-control>
+        </div>
+        <wptb-template-script>
+            WPTB_ControlsManager.callControlScript('ControlDifferentBorder', '{{{uniqueItemClass}}}');
+        </wptb-template-script>
 		<?php
 
 	}

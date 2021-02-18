@@ -169,6 +169,11 @@ class Controls_Manager {
 	 */
 	const LOCAL_DEV = 'local_dev_file';
 
+	/**
+	 * Adding different border control.
+	 */
+	const EXTRA_STYLES = 'extra_styles';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -231,6 +236,7 @@ class Controls_Manager {
 			self::TAG_CONTROL,
 			self::DIFFERENT_BORDER,
 			self::LOCAL_DEV,
+			self::EXTRA_STYLES,
 		];
 	}
 
@@ -326,7 +332,7 @@ class Controls_Manager {
 		foreach ( self::get_controls_names() as $control_id ) {
 			$control_class_id = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $control_id ) ) );
 			$class_name       = '\WP_Table_Builder\Inc\Admin\Controls\Control_' . $control_class_id;
-			if ( class_exists( $class_name )  && $class_name::register_evaluation()) {
+			if ( class_exists( $class_name ) && $class_name::register_evaluation() ) {
 				$this->register_control_object( $control_id, new $class_name() );
 			}
 		}
@@ -411,9 +417,9 @@ class Controls_Manager {
 		if ( ! is_null( $this->stacks ) && is_array( $this->stacks ) ) {
 			foreach ( $this->stacks as $key => $value ):
 				?>
-              <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
-				  <?php echo json_encode( $value ); ?>
-              </script>
+                <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
+					<?php echo json_encode( $value ); ?>
+                </script>
 			<?php
 			endforeach;
 		}

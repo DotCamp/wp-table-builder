@@ -20,6 +20,7 @@ import WPTB_NotificationManagerView from './mountPoints/WPTB_NotificationManager
 import WPTB_NotificationManagerDevTool from './mountPoints/WPTB_NotificationManagerDevTool';
 import WPTB_WhatIsNew from './mountPoints/WPTB_WhatIsNew';
 import WPTB_BackgroundMenu from './mountPoints/WPTB_BackgroundMenu';
+import WPTB_ExtraStylesControl from './mountPoints/WPTB_ExtraStylesControl';
 
 // turn off Vue production message at console
 Vue.config.productionTip = false;
@@ -48,6 +49,7 @@ const controls = [
 	WPTB_NotificationManagerDevTool,
 	WPTB_WhatIsNew,
 	WPTB_BackgroundMenu,
+	WPTB_ExtraStylesControl,
 ];
 
 /**

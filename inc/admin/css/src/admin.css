@@ -6007,6 +6007,7 @@ wptb_shortcode_container_element {
     fill: currentColor;
 }
 
+
 .wptb-notification-manager-dev-tool-wrapper {
     position: absolute;
     top: 50%;
@@ -6315,6 +6316,31 @@ wptb_shortcode_container_element {
 
 /*endregion*/
 
+/*region extra styles*/
+.wptb-css-code-input {
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 1px solid #ddd !important;
+    border-radius: 3px;
+}
+
+.wptb-css-code-input .wptb-menu-empty-cover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    z-index: 10000000;
+}
+
+.CodeMirror {
+    max-height: 200px !important;
+    height: 200px !important;
+}
+
+.CodeMirror * {
+    font-size: 12px !important;
+}
+
+/*endregion*/
+
 .wptb-plugin-inner-shadow {
     box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.09) 0px 2px 4px 0px inset;
 }
@@ -6399,6 +6425,32 @@ wptb_shortcode_container_element {
 
 /*endregion*/
 
+/*region general styles settings menu*/
+.wptb-general-style-settings {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(min-content, max-content) 1fr;
+    grid-gap: 20px;
+}
+
+.wptb-general-style-settings .wptb-menu-empty-cover {
+    color: var(--wptb-plugin-logo-color) !important;
+}
+
+.wptb-general-style-settings .wptb-css-code-input {
+    height: 100% !important;
+}
+
+.wptb-general-style-settings .CodeMirror {
+    height: 100% !important;
+    max-height: 100% !important;
+}
+
+/*endregion*/
+
+/*region panel message component*/
 .wptb-panel-message {
     color: var(--wptb-plugin-gray-600);
 }
@@ -6412,3 +6464,5 @@ wptb_shortcode_container_element {
     height: 20px;
     fill: var(--wptb-plugin-yellow-500);
 }
+
+/*endregion*/

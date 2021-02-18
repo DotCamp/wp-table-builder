@@ -11,7 +11,7 @@ namespace WP_Table_Builder\Inc\Common\Traits;
  */
 trait Ajax_Response {
 	/**
-	 * response data
+	 * Response data.
 	 *
 	 * @var array
 	 */
@@ -44,10 +44,18 @@ trait Ajax_Response {
 	public function send_json( $die = true ) {
 		header( 'Content-Type: application/json' );
 		echo json_encode( $this->response_data );
+		$this->reset_data();
 
 		if ( $die ) {
 			die();
 		}
+	}
+
+	/**
+	 * Reset ajax data.
+	 */
+	private function reset_data() {
+		$this->response_data = [];
 	}
 
 	/**

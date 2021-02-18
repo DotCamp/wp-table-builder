@@ -92,6 +92,7 @@ That's it. You're done!
 
 * NEW: Global PHP function to inline render any table inside theme files (wptb_render_table).
 * NEW: What-is-new component that will be shown after every update to point out key improvements and new additions to plugin.
+* NEW: Extra styles control to override styles affecting your table.
 * IMPROVE: Text element placeholder text is replaced with a more appropriate one.
 * IMPROVE: Button html element support for custom html table element.
 * IMPROVE: More frequently used table settings are moved to a higher priority position.

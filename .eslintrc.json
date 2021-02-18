@@ -51,6 +51,8 @@
     "WPTB_Store": true,
     "WPTB_BackgroundMenu": true,
     "WPTB_IconManager": true,
-    "wptb_admin_object": true
+    "wptb_admin_object": true,
+    "WPTB_ExtraStyles": true,
+    "WPTB_SortableTable": true
   }
 }

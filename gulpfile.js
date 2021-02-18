@@ -18,6 +18,7 @@ const gulpConfig = {
 	},
 	frontEndJs: {
 		src: [
+			'./inc/admin/js/core/WPTB_ExtraStyles.js',
 			'./inc/admin/js/core/WPTB_Logger.js',
 			'./inc/admin/js/core/WPTB_CutGlueTable.js',
 			'./inc/admin/js/core/WPTB_GetDirectionAfterReconstruction.js',
@@ -28,6 +29,14 @@ const gulpConfig = {
 			'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
 		],
 		dest: './inc/frontend/js/wp-table-builder-frontend.js',
+	},
+	adminCss: {
+		src: ['./inc/admin/css/src/*.css', '!./inc/admin/css/src/admin.css'],
+		dest: './inc/admin/css',
+	},
+	onlyAdminCss: {
+		src: ['./inc/admin/css/src/admin.css', './inc/admin/js/WPTB_BuilderControls.css'],
+		dest: './inc/admin/css/admin.css',
 	},
 };
 
@@ -69,7 +78,20 @@ function frontendJs() {
 }
 
 function cssAdmin() {
-	return gulp.src(['./inc/admin/css/src/*.css']).pipe(autoprefixer()).pipe(csso()).pipe(gulp.dest('./inc/admin/css'));
+	return gulp
+		.src(gulpConfig.adminCss.src)
+		.pipe(autoprefixer())
+		.pipe(csso())
+		.pipe(gulp.dest(gulpConfig.adminCss.dest));
+}
+
+function onlyCssAdmin() {
+	return gulp
+		.src(gulpConfig.onlyAdminCss.src)
+		.pipe(autoprefixer())
+		.pipe(concat(gulpConfig.onlyAdminCss.dest))
+		.pipe(csso())
+		.pipe(gulp.dest('.'));
 }
 
 function cssFrontend() {
@@ -93,10 +115,14 @@ exports.watch = gulp.parallel(
 		await cssAdmin();
 		return gulp.watch(['./inc/admin/css/src/*.css'], cssAdmin);
 	},
+	async function watchOnlyAdminStyles() {
+		await onlyCssAdmin();
+		return gulp.watch(gulpConfig.onlyAdminCss.src, onlyCssAdmin);
+	},
 	async function watchFrontendStyles() {
 		await cssFrontend();
 		return gulp.watch(['./inc/frontend/css/src/*.css'], cssFrontend);
 	}
 );
 
-exports.default = gulp.parallel(adminJs, frontendJs, cssAdmin, cssFrontend);
+exports.default = gulp.parallel(adminJs, frontendJs, cssAdmin, onlyCssAdmin, cssFrontend);

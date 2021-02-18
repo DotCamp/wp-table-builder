@@ -93,6 +93,21 @@ var WPTB_Initializer = function () {
     // initialize notification manager
     WPTB_NotificationManager.init();
 
+	// start up extra styles for builder and make connections to necessary hooks
+	document.addEventListener('wptb:table:generated', () => {
+		WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.builder);
+
+		// subscribe to table settings changes to update extra styles
+		WPTB_ControlsManager.subscribeToControl(
+			'extraStyles',
+			'extraTableStyles',
+			() => {
+				WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.builder);
+			},
+			true
+		);
+	});
+
     // @deprecated
     // // add scroll operation calculations to window
     // new WPTB_RowMove().attachScrollOperationCalculations();

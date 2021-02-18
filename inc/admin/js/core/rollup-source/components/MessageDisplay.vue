@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-settings-messages">
-		<span v-if="withMessageData.busy" class="dashicons dashicons-image-rotate wptb-settings-fetching"></span>
+		<busy-rotate v-if="withMessageData.busy"></busy-rotate>
 		<transition name="wptb-fade">
 			<span class="wptb-settings-message" :class="[withMessageData.type]" v-if="withMessageData.show">{{
 				withMessageData.message
@@ -10,8 +10,10 @@
 </template>
 <script>
 import withMessage from '../mixins/withMessage';
+import BusyRotate from './BusyRotate';
 
 export default {
+	components: { BusyRotate },
 	mixins: [withMessage],
 };
 </script>

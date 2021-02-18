@@ -11,7 +11,7 @@
 			:disabled="!canSubmit"
 			@resetStore="resetStore"
 			@submitSettings="submitSettings"
-			:template-data="settings"
+			:template-data="sectionData"
 		></component>
 		<menu-footer>
 			<portal-target name="footerButtons"></portal-target>
@@ -27,6 +27,7 @@ import MenuFooter from '../components/MenuFooter.vue';
 import MenuButton from '../components/MenuButton.vue';
 import GeneralSettings from './GeneralSettings';
 import VersionControlSettings from '../components/VersionControlSettings';
+import GeneralStylesSettings from '../components/Settings/GeneralStylesSettings';
 
 export default {
 	props: ['sectionsData', 'settings', 'pluginInfo'],
@@ -37,6 +38,7 @@ export default {
 		MenuFooter,
 		GeneralSettings,
 		VersionControlSettings,
+		GeneralStylesSettings,
 	},
 	mixins: [withStore, withMessage],
 	data() {
@@ -68,7 +70,7 @@ export default {
 	beforeMount() {
 		// eslint-disable-next-line array-callback-return
 		Object.keys(this.sectionsData).map((section) => {
-			this.sections[section] = this.sectionsData[section].label;
+			this.sections[section] = this.sectionsData[section];
 			if (Object.prototype.hasOwnProperty.call(this.sectionsData, section)) {
 				if (this.parsedFields[section] === undefined) {
 					this.parsedFields[section] = [];
@@ -78,6 +80,7 @@ export default {
 					this.sectionsData[section].fields !== undefined &&
 					typeof this.sectionsData[section].fields === 'object'
 				) {
+					// eslint-disable-next-line array-callback-return
 					Object.keys(this.sectionsData[section].fields).map((field) => {
 						if (Object.prototype.hasOwnProperty.call(this.sectionsData[section].fields, field)) {
 							this.parsedFields[section].push({ ...this.sectionsData[section].fields[field], id: field });
@@ -87,7 +90,7 @@ export default {
 			}
 		});
 
-		// eslint-disable-next-line array-callback-return
+		// eslint-disable-next-line array-callback-return,consistent-return
 		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
 			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
 				return key;
@@ -95,6 +98,9 @@ export default {
 		});
 	},
 	computed: {
+		sectionData() {
+			return this.settings[this.currentSection] || {};
+		},
 		currentFields() {
 			return this.parsedFields[this.currentSection];
 		},
