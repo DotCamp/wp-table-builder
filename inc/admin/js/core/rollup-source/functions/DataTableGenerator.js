@@ -795,10 +795,14 @@
 		 */
 		const sliceRowDataValues = (rowBindings, rowValues) => {
 			let slicedValues = rowValues;
-			const { rowAmount, rowCustomAmount } = rowBindings.operator;
-			if (rowBindings.mode === 'operator' && rowAmount === 'custom') {
-				const sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
-				slicedValues = slicedValues.slice(0, sliceAmount);
+
+			// null check for builder startup
+			if (rowBindings && rowBindings.mode === 'operator') {
+				const { rowAmount, rowCustomAmount } = rowBindings.operator;
+				if (rowAmount === 'custom') {
+					const sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
+					slicedValues = slicedValues.slice(0, sliceAmount);
+				}
 			}
 
 			return slicedValues;

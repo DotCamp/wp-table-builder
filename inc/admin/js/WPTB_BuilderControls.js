@@ -33409,14 +33409,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     var sliceRowDataValues = function sliceRowDataValues(rowBindings, rowValues) {
-      var slicedValues = rowValues;
-      var _rowBindings$operator = rowBindings.operator,
-          rowAmount = _rowBindings$operator.rowAmount,
-          rowCustomAmount = _rowBindings$operator.rowCustomAmount;
+      var slicedValues = rowValues; // null check for builder startup
 
-      if (rowBindings.mode === 'operator' && rowAmount === 'custom') {
-        var sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
-        slicedValues = slicedValues.slice(0, sliceAmount);
+      if (rowBindings && rowBindings.mode === 'operator') {
+        var _rowBindings$operator = rowBindings.operator,
+            rowAmount = _rowBindings$operator.rowAmount,
+            rowCustomAmount = _rowBindings$operator.rowCustomAmount;
+
+        if (rowAmount === 'custom') {
+          var sliceAmount = rowCustomAmount > rowValues.length ? rowValues.length : rowCustomAmount;
+          slicedValues = slicedValues.slice(0, sliceAmount);
+        }
       }
 
       return slicedValues;
