@@ -31,7 +31,7 @@ class Upsells_Manager {
 	 * Initialize manager.
 	 */
 	public static function init() {
-		if ( ! static::check_pro_status() ) {
+		if ( ! Addon_Manager::check_pro_status() ) {
 			static::$upsell_messages = [
 				'after_elements'  => [
 					'message' => esc_html__( 'For More Advanced Elements', 'wp-table-builder' ),
@@ -110,15 +110,15 @@ class Upsells_Manager {
 	 */
 	protected static function prepare_upsell_element( $message, $url ) {
 		?>
-      <a class="wptb-upsells-anchor" href="<?php echo esc_url( $url ); ?>"
-         target="_blank">
-        <div class="wptb-upsells-wrapper">
-          <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
-				  "<div>$message</div>",
-				  static::$upsell_messages['generic_end']
-			  ] ); ?></div>
-        </div>
-      </a>
+        <a class="wptb-upsells-anchor" href="<?php echo esc_url( $url ); ?>"
+           target="_blank">
+            <div class="wptb-upsells-wrapper">
+                <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
+						"<div>$message</div>",
+						static::$upsell_messages['generic_end']
+					] ); ?></div>
+            </div>
+        </a>
 		<?php
 	}
 
@@ -126,6 +126,7 @@ class Upsells_Manager {
 	 * Check status of pro version.
 	 * This check will return true only if a valid license is activated for pro version.
 	 * @return bool pro enabled or not
+	 * @deprecated
 	 */
 	public static function check_pro_status() {
 		return class_exists( '\WP_Table_Builder_Pro\Inc\Admin\Managers\Freemius_Manager' ) && filter_var( Freemius_Manager::is_premium_activated(), FILTER_VALIDATE_BOOLEAN );

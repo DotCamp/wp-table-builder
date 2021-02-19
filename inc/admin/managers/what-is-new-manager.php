@@ -51,7 +51,7 @@ class What_Is_New_Manager {
 	 * @return array prepared release note object.
 	 */
 	private static function prepare_what_is_new_note( $text, $image, $isPro = false ) {
-		$is_pro_enabled = Upsells_Manager::check_pro_status();
+		$is_pro_enabled = Addon_Manager::check_pro_status();
 
 		// show an upsell at pro enabled notes if no valid pro license is currently installed
 		$format        = '<div>%s</div>' . ( $isPro && !$is_pro_enabled ? '<a target="_blank" class="wptb-upsells-pro-label" href="%s"><div >%s</div></a>' : '' );
