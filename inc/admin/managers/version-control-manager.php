@@ -36,6 +36,11 @@ class Version_Control_Manager {
 	const VERSION_N = 5;
 
 	/**
+	 * Lowest pro version available.
+	 */
+	const LOWEST_PRO_VERSION = '1.3.1';
+
+	/**
 	 * Plugin slug
 	 */
 	const PLUGIN_SLUG = 'wp-table-builder';
@@ -192,6 +197,17 @@ class Version_Control_Manager {
 
 		// limit version amount
 		$allVersions = array_slice( $allVersions, 0, static::VERSION_N );
+
+
+		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
+		if ( Addon_Manager::check_pro_status() ) {
+			$oldest_pro_version = static::LOWEST_PRO_VERSION;
+			$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
+
+				return version_compare( $version, $oldest_pro_version, '>=' );
+			}, ARRAY_FILTER_USE_KEY );
+		}
+
 
 		// add version control related data
 		$frontend_data['data']['versionControl'] = compact( 'currentVersion', 'latestVersion', 'allVersions',
