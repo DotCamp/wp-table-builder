@@ -109,8 +109,12 @@ class Version_Control_Manager {
 				$download_url = $versions[ $version_to_install ];
 				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
 
-				add_filter( 'upgrader_package_options', function ( $options ) {
+				add_filter( 'upgrader_package_options', function ( $options ) use ( $version_to_install ) {
 					$options['abort_if_destination_exists'] = false;
+					$options['hook_extra']                  = array_merge( $options['hook_extra'], [
+						'plugin'  => 'wp-table-builder/wp-table-builder.php',
+						'version' => $version_to_install
+					] );
 
 					return $options;
 				} );

@@ -5,11 +5,13 @@ namespace WP_Table_Builder\Inc\Core;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin as Admin;
 use WP_Table_Builder\Inc\Admin\Accessibility;
+use WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base;
 use WP_Table_Builder\Inc\Admin\Managers\Gutenberg_Block_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager;
 use WP_Table_Builder\Inc\Admin\Style_Pass;
 use WP_Table_Builder\Inc\Frontend as Frontend;
@@ -28,7 +30,7 @@ use function add_action;
  *
  * @author     Imtiaz Rayhan
  */
-class Init {
+class Init extends Version_Sync_Base {
 
 	/**
 	 * Instance to instantiate object.
@@ -195,6 +197,12 @@ class Init {
 	 */
 	private function load_dependencies() {
 		$this->loader = new Loader();
+
+		// initialize version sync manager
+		Version_Sync_Manager::init();
+
+		// subscribe base plugin to version sync manager
+		$this->subscribe_to_version_sync();
 
 		// initialize settings manager
 		$this->settings_manager = new Settings_Manager( 'wp_table_builder_settings', $this->loader );
@@ -405,5 +413,45 @@ STYLE;
 			$this->controls_manager->output_controls_templates();
 			$this->controls_manager->output_control_stacks();
 		} );
+	}
+
+	/**
+	 * Get slug of plugin/addon used in its distribution API.
+	 * @return string
+	 */
+	public function get_version_slug() {
+		return 'wp-table-builder';
+	}
+
+	/**
+	 * Parse version number from package url.
+	 *
+	 * @param string $package package url
+	 *
+	 * @return string version number
+	 */
+	public function parse_version_from_package( $package ) {
+		$parsed_version = null;
+		$match          = [];
+
+		preg_match( '/^.+(?:wp-table-builder)\.(.+)(?:\..+)$/', $package, $match );
+
+		if ( $match[1] ) {
+			$parsed_version = $match[1];
+		}
+
+		return $parsed_version;
+	}
+
+	/**
+	 * Callback hook for version sync manager when a subscriber attempted an install operation.
+	 *
+	 * @param string $slug subscriber slug
+	 * @param string $version version to install
+	 *
+	 * @return mixed
+	 */
+	public function version_sync_logic( $slug, $version ) {
+		// TODO: Implement version_sync_logic() method.
 	}
 }
