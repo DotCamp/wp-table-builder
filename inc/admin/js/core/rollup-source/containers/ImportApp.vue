@@ -1,7 +1,11 @@
 <template>
 	<div>
 		<portal to="childSections">
-			<sections :child="true" :items="[strings.file, strings.plugins]" v-model="currentSection"> </sections>
+			<sections
+				:child="true"
+				:items="{ file: { label: strings.file }, plugin: { label: strings.plugins } }"
+				v-model="currentSection"
+			></sections>
 		</portal>
 		<menu-content :center="true">
 			<component class="wptb-flex wptb-flex-col wptb-flex-align-center" :is="currentTemplate" :options="options">

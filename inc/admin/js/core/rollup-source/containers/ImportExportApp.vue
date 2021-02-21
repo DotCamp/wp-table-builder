@@ -4,11 +4,17 @@
 		<menu-header :logo-src="pluginInfo.logo" :logo-alt="strings.logoAlt" :plugin-name="pluginInfo.pluginName">
 			<a :href="pluginInfo.pluginHomepage">{{ strings.homepage }}</a>
 		</menu-header>
-		<sections v-model="currentSection" :items="[strings.importSection, strings.exportSection]">
+		<sections
+			v-model="currentSection"
+			:items="{
+				Import: { label: strings.importSection },
+				Export: { label: strings.exportSection },
+			}"
+		>
 			<portal-target name="childSections"></portal-target>
 		</sections>
 		<menu-content :center="true">
-			<component :options="options" :plugin-info="pluginInfo" :is="currentTemplate"> </component>
+			<component :options="options" :plugin-info="pluginInfo" :is="currentTemplate"></component>
 		</menu-content>
 		<menu-footer>
 			<portal-target name="footerButtons"></portal-target>
@@ -38,7 +44,7 @@ export default {
 		/**
 		 * Get current template component name
 		 *
-		 * @returns {string} current template component name
+		 * @return {string} current template component name
 		 */
 		currentTemplate() {
 			return `${this.currentSection}App`;
