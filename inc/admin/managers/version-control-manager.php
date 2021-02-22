@@ -3,7 +3,9 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use Plugin_Upgrader;
+use WP_Error;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use function activate_plugin;
 use function add_action;
@@ -27,7 +29,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Manager for plugin version rollback operations.
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
-class Version_Control_Manager {
+class Version_Control_Manager extends Version_Sync_Base {
 	use Ajax_Response;
 
 	/**
@@ -218,5 +220,45 @@ class Version_Control_Manager {
 			'changelog', 'security' );
 
 		return $frontend_data;
+	}
+
+	/**
+	 * Get slug of plugin/addon used in its distribution API.
+	 * @return string slug
+	 */
+	public function get_version_slug() {
+		return 'wp-table-builder';
+	}
+
+	/**
+	 * Parse version number from package url.
+	 *
+	 * @param string $package package url
+	 *
+	 * @return string version number
+	 */
+	public function parse_version_from_package( $package ) {
+		$parsed_version = null;
+		$match          = [];
+
+		preg_match( '/^.+(?:wp-table-builder)\.(.+)(?:\..+)$/', $package, $match );
+
+		if ( $match[1] ) {
+			$parsed_version = $match[1];
+		}
+
+		return $parsed_version;
+	}
+
+	/**
+	 * Callback hook for version sync manager when a subscriber attempted an install operation.
+	 *
+	 * @param string $slug subscriber slug
+	 * @param string $version version to install
+	 *
+	 * @return false|WP_Error false to permit install(i know, but it is what it is) or WP_Error to cancel it
+	 */
+	public function version_sync_logic( $slug, $version ) {
+		// TODO: Implement version_sync_logic() method.
 	}
 }

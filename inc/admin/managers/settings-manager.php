@@ -110,6 +110,9 @@ class Settings_Manager {
 		Version_Control_Manager::init();
 		Tag_Manager::init();
 		General_Styles_Manager::init();
+
+		// subscribe to version sync
+		( Version_Control_Manager::instance() )->subscribe_to_version_sync();
 	}
 
 	/**
