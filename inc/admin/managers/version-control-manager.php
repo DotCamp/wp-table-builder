@@ -7,6 +7,7 @@ use WP_Error;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
+use WP_Table_Builder_Pro\Inc\Admin\Managers\Version_Control_Manager as Version_Control_Manager_Pro;
 use function activate_plugin;
 use function add_action;
 use function add_filter;
@@ -36,11 +37,6 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 * Number of latest versions that will be available for rollback.
 	 */
 	const VERSION_N = 5;
-
-	/**
-	 * Lowest pro version available.
-	 */
-	const LOWEST_PRO_VERSION = '1.3.1';
 
 	/**
 	 * Plugin slug
@@ -207,13 +203,12 @@ class Version_Control_Manager extends Version_Sync_Base {
 
 		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
 		if ( Addon_Manager::check_pro_status() ) {
-			$oldest_pro_version = static::LOWEST_PRO_VERSION;
+			$oldest_pro_version = ( Version_Control_Manager_Pro::get_instance() )->lowest_version_available();
 			$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
 
 				return version_compare( $version, $oldest_pro_version, '>=' );
 			}, ARRAY_FILTER_USE_KEY );
 		}
-
 
 		// add version control related data
 		$frontend_data['data']['versionControl'] = compact( 'currentVersion', 'latestVersion', 'allVersions',
