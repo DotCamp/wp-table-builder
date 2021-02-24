@@ -203,7 +203,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 
 		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
 		if ( Addon_Manager::check_pro_status() ) {
-			$oldest_pro_version = ( Version_Control_Manager_Pro::get_instance() )->lowest_version_available();
+			$oldest_pro_version = ( Version_Control_Manager_Pro::get_instance() )->highest_lowest_version_available();
 			$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
 
 				return version_compare( $version, $oldest_pro_version, '>=' );
@@ -230,7 +230,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 *
 	 * @param string $package package url
 	 *
-	 * @return string version number
+	 * @return string|null version number
 	 */
 	public function parse_version_from_package( $package ) {
 		$parsed_version = null;

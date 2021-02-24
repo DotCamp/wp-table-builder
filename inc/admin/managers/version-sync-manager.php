@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 // if called directly, abort
+use WP_Error;
 use function add_filter;
 use function is_wp_error;
 
@@ -79,11 +80,16 @@ class Version_Sync_Manager {
 	 * @param Object $context upgrader class context
 	 * @param array $hook_extra extra hook arguments
 	 *
-	 * @return bool status of download process
+	 * @return bool|WP_Error status of download process
 	 */
 	public static function call_subs( $status, $package, $context, $hook_extra ) {
 		$final_status = $status;
 		if ( isset( $hook_extra['plugin'] ) ) {
+			// short circuit sub calling if current install process marked as not to trigger version sync manager
+			if ( isset( $hook_extra['wptb-version-sync-trigger'] ) && $hook_extra['wptb-version-sync-trigger'] === false ) {
+				return $final_status;
+			}
+
 			$slug = static::parse_slug_from_relative_path( $hook_extra['plugin'] );
 
 			// only continue logic operations if slug of plugin that is currently being on install process is a subscribed one
@@ -101,7 +107,8 @@ class Version_Sync_Manager {
 					}, ARRAY_FILTER_USE_KEY );
 
 					$final_status = array_reduce( array_keys( $other_subs ), function ( $carry, $sub_id ) use ( $slug, $version, $other_subs ) {
-						$sub_status = $other_subs[ $sub_id ]->version_sync_logic( $slug, $version );
+						// TODO [erdembircan] change version to supplied version for production after testing
+						$sub_status = $other_subs[ $sub_id ]->version_sync_logic( $slug, '1.3.0' );
 						if ( is_wp_error( $sub_status ) ) {
 							$carry = $sub_status;
 						}
@@ -140,7 +147,7 @@ class Version_Sync_Manager {
 	 * @param Object $instance subscriber class instance
 	 */
 	public static function subscribe( $slug, $instance ) {
-		if ( is_subclass_of( $instance, 'WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base' ) ) {
+		if ( is_subclass_of( $instance, '\WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base' ) ) {
 			static::$subscribers[ $slug ] = $instance;
 		}
 	}
