@@ -256,4 +256,22 @@ class Version_Control_Manager extends Version_Sync_Base {
 	public function version_sync_logic( $slug, $version ) {
 		// TODO: Implement version_sync_logic() method.
 	}
+
+	/**
+	 * Plugin __FILE__
+	 * @return string plugin file
+	 */
+	public function plugin_file() {
+		// TODO: Implement plugin_file() method.
+	}
+
+	/**
+	 * Plugin specific logic for fetching versions and their info.
+	 *
+	 * Use plugin version for keys and info for their values. Use 'url' property key for download link.
+	 * @return array|WP_Error versions array
+	 */
+	protected function get_plugin_versions() {
+		// TODO: Implement get_plugin_versions() method.
+	}
 }

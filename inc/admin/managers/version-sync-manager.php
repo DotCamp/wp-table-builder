@@ -2,12 +2,14 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
-// if called directly, abort
 use WP_Error;
 use function add_action;
 use function add_filter;
+use function delete_transient;
 use function is_wp_error;
+use function set_transient;
 
+// if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
 	die();
 }
@@ -44,48 +46,10 @@ class Version_Sync_Manager {
 		if ( ! static::$initialized ) {
 			add_filter( 'upgrader_pre_download', [ __CLASS__, 'call_subs' ], 10, 4 );
 
-			// TODO [erdembircan] remove for production
-			add_filter( 'plugin_row_meta', [ __CLASS__, 'plugin_row_meta' ], 10, 3 );
-			add_action( 'wp_ajax_version_sync_test', [ __CLASS__, 'version_sync_test' ] );
-
 			static::show_error_message();
 		}
 
 		static::$initialized = true;
-	}
-
-	public static function version_sync_test() {
-		static::call_subs( false, 'https://downloads.wordpress.org/plugin/wp-table-builder.1.3.3.zip', null, [ 'plugin' => 'wp-table-builder/wp-table-builder.php' ] );
-		echo json_encode( [ 'message' => 'ok' ] );
-		die();
-	}
-
-// TODO [erdembircan] remove for production
-	public static function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data ) {
-		if ( $plugin_data['slug'] === 'wp-table-builder' ) {
-			$admin_url                = get_admin_url( null, 'admin-ajax.php' );
-			$version_sync_test_button = <<<WSTB
-<button id="wptb-version-sync-test">Version Sync Test Button</button>
-<script type="application/javascript">
-const versionSyncTestButton = document.querySelector('#wptb-version-sync-test');
-
-versionSyncTestButton.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const url = '$admin_url';
-    
-    e.target.disabled = true;
-    fetch(url + '?action=version_sync_test').then((resp) => {return resp.json()}).then((res) => {
-        window.location.reload();
-    })
-})
-</script>
-WSTB;
-
-
-			$plugin_meta[] = $version_sync_test_button;
-		}
-
-		return $plugin_meta;
 	}
 
 	/**
@@ -154,13 +118,20 @@ WSTB;
 
 					$final_status = array_reduce( array_keys( $other_subs ), function ( $carry, $sub_id ) use ( $slug, $version, $other_subs ) {
 						// TODO [erdembircan] change version to supplied version for production after testing
-						$sub_status = $other_subs[ $sub_id ]->version_sync_logic( $slug, '1.3.4' );
+						$sub_status = $other_subs[ $sub_id ]->version_sync_logic( $slug, $version );
 						if ( is_wp_error( $sub_status ) ) {
 							$carry = $sub_status;
 						}
 
 						return $carry;
 					}, $final_status );
+
+					// if collective final status is not an error, signal other subscribers to upgrade/downgrade/do nothing themselves
+					if ( ! is_wp_error( $final_status ) ) {
+						foreach ( $other_subs as $sub_id => $context ) {
+							$context->install( $slug, $version );
+						}
+					}
 				}
 			}
 		}

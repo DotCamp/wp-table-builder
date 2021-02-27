@@ -2,13 +2,13 @@
 
 namespace WP_Table_Builder\Inc\Admin\Base;
 
-// if called directly, abort
 use Plugin_Upgrader;
 use WP_Error;
 use WP_Table_Builder\Inc\Admin\Managers\Version_Control_Upgrader_Skin;
 use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
 use function add_filter;
 
+// if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
 	die();
 }
@@ -20,6 +20,10 @@ if ( ! defined( 'WPINC' ) ) {
  * @package WP_Table_Builder\Inc\Admin\Base
  */
 abstract class Version_Sync_Base {
+	/**
+	 * Minute in seconds.
+	 */
+	const MINUTE_IN_SECONDS = 60;
 
 	/**
 	 * Check availability of version sync manager.
@@ -45,6 +49,12 @@ abstract class Version_Sync_Base {
 	abstract public function parse_version_from_package( $package );
 
 	/**
+	 * Plugin __FILE__
+	 * @return string plugin file
+	 */
+	abstract public function plugin_file();
+
+	/**
 	 * Callback hook for version sync manager when a subscriber attempted an install operation.
 	 *
 	 * @param string $slug subscriber slug
@@ -64,6 +74,66 @@ abstract class Version_Sync_Base {
 	}
 
 	/**
+	 * Plugin specific logic for fetching versions and their info.
+	 *
+	 * Use plugin version for keys and info for their values. Use 'url' property key for download link.
+	 * @return array|WP_Error versions array
+	 */
+	abstract protected function get_plugin_versions();
+
+	/**
+	 * Get All available plugin versions and their infos.
+	 *
+	 * To minimize API calls , this function will set the value of versions info as a transient object with an expiration timer.
+	 *
+	 * @param bool $force force to fetch versions from remote Freemius API
+	 *
+	 * @return WP_Error|array plugin versions
+	 */
+	protected final function plugin_versions( $force = false ) {
+		$transient_key = 'wptb-' . $this->get_version_slug() . '-versions-info';
+		$versions_info = false;
+
+		// get cached version if force options is disabled
+		if ( ! $force ) {
+			$versions_info = get_transient( $transient_key );
+		}
+
+		if ( $versions_info === false || ! is_array( $versions_info ) ) {
+			// use extending components implemented function to fetch version info
+			$versions_info = $this->get_plugin_versions();
+
+			// if an error occurred on fetch process, don't update transient value
+			if ( ! is_wp_error( $versions_info ) ) {
+				// 10 minute expiration timer for transient data
+				set_transient( $transient_key, $versions_info, 10 * self::MINUTE_IN_SECONDS );
+			}
+		}
+
+		return $versions_info;
+	}
+
+
+	/**
+	 * Install a version of subscriber.
+	 *
+	 * @param string $calling_slug slug of calling plugin
+	 * @param string $version version to install
+	 */
+	public function install( $calling_slug, $version ) {
+		$current_version = ( get_plugin_data( $this->plugin_file() ) )['Version'];
+
+		// only continue install process if version is different than the current one
+		if ( $version !== $current_version ) {
+			$relative_path = str_replace( trailingslashit( WP_PLUGIN_DIR ), '', $this->plugin_file() );
+			$versions      = $this->plugin_versions();
+			if ( isset( ( $versions[ $version ] )['url'] ) ) {
+				$this->install_version( $relative_path, ( $versions[ $version ] )['url'] );
+			}
+		}
+	}
+
+	/**
 	 * Install version of plugin.
 	 *
 	 * @param string $relative_path relative path of entry file of plugin to plugin directory
@@ -73,6 +143,11 @@ abstract class Version_Sync_Base {
 	 * @return bool|WP_Error true on success, false or WP_Error on failure
 	 */
 	protected final function install_version( $relative_path, $package_url, $trigger_sync_manager = false ) {
+		require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php' );
+
 		// instantiate plugin upgrader with a custom upgrader skin
 		$upgrader = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
 
@@ -87,5 +162,44 @@ abstract class Version_Sync_Base {
 		} );
 
 		return $upgrader->install( $package_url, [ 'overwrite_package' => true ] );
+	}
+
+	/**
+	 * Check if supplied version is within limits of defined pro versions.
+	 *
+	 * @param string $version version number to check
+	 * @param array $versions_info versions info array
+	 *
+	 * @return bool within limits or not
+	 */
+	protected final function is_within_defined_version_limits( $version, $versions_info ) {
+		return in_array( $version, array_keys( $versions_info ) );
+	}
+
+	/**
+	 * Highest/Lowest version available for pro.
+	 *
+	 * @param bool $lowest get lowest version, if not will get highest
+	 * @param null|array $versions versions info array to use, if not supplied, version infos will be fetched.
+	 *
+	 * @return string lowest version available
+	 */
+	public final function highest_lowest_version_available( $lowest = true, $versions = null ) {
+		$array_to_use = $versions;
+
+		if ( $array_to_use === null || ! is_array( $array_to_use ) ) {
+			// if no versions array is supplied, fetch versions info from api
+			$array_to_use = $this->plugin_versions();
+
+			if ( is_wp_error( $array_to_use ) ) {
+				$array_to_use = [];
+			}
+		}
+
+		$operator = $lowest ? '<' : '>';
+
+		return array_reduce( array_keys( $array_to_use ), function ( $carry, $version ) use ( $operator ) {
+			return $carry === null ? $version : ( version_compare( $carry, $version, $operator ) ? $carry : $version );
+		}, null );
 	}
 }
