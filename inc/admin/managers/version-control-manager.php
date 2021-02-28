@@ -254,9 +254,13 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 * @return false|WP_Error false to permit install(i know, but it is what it is) or WP_Error to cancel it
 	 */
 	public function version_sync_logic( $slug, $version ) {
-		// TODO: Implement version_sync_logic() method.
+		$final_status = false;
 
-		return new WP_Error( 501, 'development' );
+		if ( $slug === 'wp-table-builder-pro' ) {
+			$final_status = $this->generic_sync_logic( $slug, $version );
+		}
+
+		return $final_status;
 	}
 
 	/**
@@ -274,6 +278,20 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 * @return array|WP_Error versions array
 	 */
 	protected function get_plugin_versions() {
-		$info = plugins_api( 'plugin_information', [ 'slug' => $this->get_version_slug() ] );
+		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+
+		$versions = new WP_Error( 501, esc_html__( 'An error occurred while fetching wp-table-builder versions, please try again later' ) );
+
+		$info = (array) plugins_api( 'plugin_information', [ 'slug' => $this->get_version_slug() ] );
+
+		if ( isset( $info['versions'] ) ) {
+			$versions = array_reduce( array_keys( $info['versions'] ), function ( $carry, $key ) use ( $info ) {
+				$carry[ $key ] = [ 'url' => ( $info['versions'] )[ $key ] ];
+
+				return $carry;
+			}, [] );
+		}
+
+		return $versions;
 	}
 }
