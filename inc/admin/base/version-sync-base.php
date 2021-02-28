@@ -177,6 +177,45 @@ abstract class Version_Sync_Base {
 	}
 
 	/**
+	 * Generic sync logic that can be used for common install operations.
+	 *
+	 * @param string $slug subscriber slug
+	 * @param string $version version to install
+	 */
+	protected final function generic_sync_logic( $slug, $version ) {
+		// override this value for return values of separate version sync logic results
+		$return_value = false;
+
+		// get all available plugin versions
+		$versions_info = $this->plugin_versions();
+
+		if ( is_wp_error( $versions_info ) ) {
+			return $return_value;
+		}
+
+		// version is within limits of pro versions
+		if ( $this->is_within_defined_version_limits( $version, $versions_info ) ) {
+			$return_value = false;
+		} else if ( version_compare( $version, $this->highest_lowest_version_available( false ), '>' ) ) {
+			// force fetch versions info to check for a last minute latest pro version update
+			$this->plugin_versions( true );
+
+			// no update found, give error
+			if ( $version !== $this->highest_lowest_version_available( false ) ) {
+				$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for  %s, please check for an update later.' ), $version, $this->get_version_slug() ) );
+			} else {
+				// update found
+				$return_value = false;
+			}
+		} else {
+			// version in check is out of stable bounds of pro addon
+			$return_value = new WP_Error( 501, sprintf( esc_html__( 'Version mismatch: Version %s is not available for %s.' ), $version, $this->get_version_slug() ) );
+		}
+
+		return $return_value;
+	}
+
+	/**
 	 * Highest/Lowest version available for pro.
 	 *
 	 * @param bool $lowest get lowest version, if not will get highest

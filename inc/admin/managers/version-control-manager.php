@@ -255,6 +255,8 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 */
 	public function version_sync_logic( $slug, $version ) {
 		// TODO: Implement version_sync_logic() method.
+
+		return new WP_Error( 501, 'development' );
 	}
 
 	/**
@@ -262,7 +264,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 * @return string plugin file
 	 */
 	public function plugin_file() {
-		// TODO: Implement plugin_file() method.
+		return NS\PLUGIN__FILE__;
 	}
 
 	/**
@@ -272,6 +274,6 @@ class Version_Control_Manager extends Version_Sync_Base {
 	 * @return array|WP_Error versions array
 	 */
 	protected function get_plugin_versions() {
-		// TODO: Implement get_plugin_versions() method.
+		$info = plugins_api( 'plugin_information', [ 'slug' => $this->get_version_slug() ] );
 	}
 }
