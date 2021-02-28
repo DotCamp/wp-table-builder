@@ -121,14 +121,14 @@ abstract class Version_Sync_Base {
 	 * @param string $version version to install
 	 */
 	public function install( $calling_slug, $version ) {
-		$current_version = ( get_plugin_data( $this->plugin_file() ) )['Version'];
+		$current_version = get_plugin_data( $this->plugin_file() ) ['Version'];
 
 		// only continue install process if version is different than the current one
 		if ( $version !== $current_version ) {
 			$relative_path = str_replace( trailingslashit( WP_PLUGIN_DIR ), '', $this->plugin_file() );
 			$versions      = $this->plugin_versions();
-			if ( isset( ( $versions[ $version ] )['url'] ) ) {
-				$this->install_version( $relative_path, ( $versions[ $version ] )['url'] );
+			if ( isset( $versions[ $version ] ['url'] ) ) {
+				$this->install_version( $relative_path, $versions[ $version ] ['url'] );
 			}
 		}
 	}

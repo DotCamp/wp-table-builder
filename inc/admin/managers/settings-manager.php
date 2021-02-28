@@ -112,7 +112,7 @@ class Settings_Manager {
 		General_Styles_Manager::init();
 
 		// subscribe to version sync
-		( Version_Control_Manager::instance() )->subscribe_to_version_sync();
+		Version_Control_Manager::instance()->subscribe_to_version_sync();
 	}
 
 	/**
