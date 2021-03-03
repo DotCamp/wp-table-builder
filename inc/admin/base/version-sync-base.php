@@ -40,6 +40,14 @@ abstract class Version_Sync_Base {
 	abstract public function get_version_slug();
 
 	/**
+	 * Get text domain of the plugin.
+	 *
+	 * It will be used for ajax upgraders to identify our plugin since slug is not supplied in plugin info property of that upgrader skin.
+	 * @return string
+	 */
+	abstract public function get_text_domain();
+
+	/**
 	 * Parse version number from package url.
 	 *
 	 * @param string $package package url
@@ -149,7 +157,7 @@ abstract class Version_Sync_Base {
 		require_once( ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php' );
 
 		// instantiate plugin upgrader with a custom upgrader skin
-		$upgrader = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+		$upgrader = new Plugin_Upgrader( new Version_Control_Upgrader_Skin( [], [ 'wptb-version-sync-trigger' => false ] ) );
 
 		add_filter( 'upgrader_package_options', function ( $options ) use ( $relative_path, $trigger_sync_manager ) {
 			$options['abort_if_destination_exists'] = false;

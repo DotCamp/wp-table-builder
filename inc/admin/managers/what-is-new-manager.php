@@ -129,7 +129,6 @@ class What_Is_New_Manager {
 		$latest_release_notes_version       = array_keys( $latest_release_notes )[0];
 		$previously_displayed_notes_version = get_option( static::$previously_displayed_version_number_option_name, '1.0.0' );
 
-		// TODO [erdembircan] change compare operator to '>' for production
 		// only send frontend data if latest release note version is more newer
 		if ( version_compare( $latest_release_notes_version, $previously_displayed_notes_version, '>' ) ) {
 			$admin_data['whatIsNew'] = $latest_release_notes;

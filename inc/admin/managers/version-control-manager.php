@@ -105,7 +105,7 @@ class Version_Control_Manager extends Version_Sync_Base {
 				$versions = $versions_object->versions;
 
 				$download_url = $versions[ $version_to_install ];
-				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin( [], $versions_object ) );
 
 				add_filter( 'upgrader_package_options', function ( $options ) use ( $version_to_install ) {
 					$options['abort_if_destination_exists'] = false;
@@ -203,11 +203,13 @@ class Version_Control_Manager extends Version_Sync_Base {
 
 		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
 		if ( Addon_Manager::check_pro_status() ) {
-			$oldest_pro_version = Version_Control_Manager_Pro::get_instance()->highest_lowest_version_available();
-			$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
+			if ( class_exists( '\WP_Table_Builder_Pro\Inc\Admin\Managers\Version_Control_Manager', false ) ) {
+				$oldest_pro_version = Version_Control_Manager_Pro::get_instance()->highest_lowest_version_available();
+				$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
 
-				return version_compare( $version, $oldest_pro_version, '>=' );
-			}, ARRAY_FILTER_USE_KEY );
+					return version_compare( $version, $oldest_pro_version, '>=' );
+				}, ARRAY_FILTER_USE_KEY );
+			}
 		}
 
 		// add version control related data
@@ -293,5 +295,15 @@ class Version_Control_Manager extends Version_Sync_Base {
 		}
 
 		return $versions;
+	}
+
+	/**
+	 * Get text domain of the plugin.
+	 *
+	 * It will be used for ajax upgraders to identify our plugin since slug is not supplied in plugin info property of that upgrader skin.
+	 * @return string
+	 */
+	public function get_text_domain() {
+		return 'wp-table-builder';
 	}
 }
