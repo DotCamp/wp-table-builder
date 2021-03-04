@@ -5,6 +5,8 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use WP_Error;
 use WP_Upgrader_Skin;
 
+require_once( ABSPATH . '/wp-admin/includes/class-wp-upgrader-skin.php' );
+
 // if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -13,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Class Version_Control_Upgrader_Skin
  *
- * Upgrader skin for version rollback operations.
+ * Upgrader skin for version rollback and version sync operations.
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
 class Version_Control_Upgrader_Skin extends WP_Upgrader_Skin {
@@ -22,6 +24,24 @@ class Version_Control_Upgrader_Skin extends WP_Upgrader_Skin {
 	 * @var array
 	 */
 	protected $errors = [];
+
+	/**
+	 * Plugin info.
+	 * @var array
+	 */
+	public $plugin_info = [];
+
+	/**
+	 * Version_Control_Upgrader_Skin constructor.
+	 *
+	 * @param array $plugin_info
+	 */
+	public function __construct( $options, $plugin_info = [] ) {
+		$this->plugin_info = $plugin_info;
+
+		parent::__construct( $options );
+	}
+
 
 	/**
 	 * @param string $string
@@ -74,19 +94,6 @@ class Version_Control_Upgrader_Skin extends WP_Upgrader_Skin {
 	 * @since 2.8.0
 	 */
 	public function request_filesystem_credentials( $error = false, $context = '', $allow_relaxed_file_ownership = false ) {
-//		$result = false;
-//		ob_start();
-//		$result = parent::request_filesystem_credentials( $error, $context, $allow_relaxed_file_ownership );
-//		$html   = ob_get_clean();
-//
-//		if ( !$result ) {
-//			header( 'Content-Type: text/html' );
-//			echo $html;
-//			die();
-//		}
-//
-//		return $result;
-
 		return true;
 	}
 

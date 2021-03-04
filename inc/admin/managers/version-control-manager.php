@@ -3,8 +3,11 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use Plugin_Upgrader;
+use WP_Error;
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
+use WP_Table_Builder_Pro\Inc\Admin\Managers\Version_Control_Manager as Version_Control_Manager_Pro;
 use function activate_plugin;
 use function add_action;
 use function add_filter;
@@ -27,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Manager for plugin version rollback operations.
  * @package WP_Table_Builder\Inc\Admin\Managers
  */
-class Version_Control_Manager {
+class Version_Control_Manager extends Version_Sync_Base {
 	use Ajax_Response;
 
 	/**
@@ -102,10 +105,14 @@ class Version_Control_Manager {
 				$versions = $versions_object->versions;
 
 				$download_url = $versions[ $version_to_install ];
-				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin() );
+				$upgrader     = new Plugin_Upgrader( new Version_Control_Upgrader_Skin( [], $versions_object ) );
 
-				add_filter( 'upgrader_package_options', function ( $options ) {
+				add_filter( 'upgrader_package_options', function ( $options ) use ( $version_to_install ) {
 					$options['abort_if_destination_exists'] = false;
+					$options['hook_extra']                  = array_merge( $options['hook_extra'], [
+						'plugin'  => 'wp-table-builder/wp-table-builder.php',
+						'version' => $version_to_install
+					] );
 
 					return $options;
 				} );
@@ -193,10 +200,110 @@ class Version_Control_Manager {
 		// limit version amount
 		$allVersions = array_slice( $allVersions, 0, static::VERSION_N );
 
+
+		// if pro version is enabled, limit oldest version to rollback to pro oldest version to avoid version mismatch issues for older version of the base plugin
+		if ( Addon_Manager::check_pro_status() ) {
+			if ( class_exists( '\WP_Table_Builder_Pro\Inc\Admin\Managers\Version_Control_Manager', false ) ) {
+				$oldest_pro_version = Version_Control_Manager_Pro::get_instance()->highest_lowest_version_available();
+				$allVersions        = array_filter( $allVersions, function ( $version ) use ( $oldest_pro_version ) {
+
+					return version_compare( $version, $oldest_pro_version, '>=' );
+				}, ARRAY_FILTER_USE_KEY );
+			}
+		}
+
 		// add version control related data
 		$frontend_data['data']['versionControl'] = compact( 'currentVersion', 'latestVersion', 'allVersions',
 			'changelog', 'security' );
 
 		return $frontend_data;
+	}
+
+	/**
+	 * Get slug of plugin/addon used in its distribution API.
+	 * @return string slug
+	 */
+	public function get_version_slug() {
+		return 'wp-table-builder';
+	}
+
+	/**
+	 * Parse version number from package url.
+	 *
+	 * @param string $package package url
+	 *
+	 * @return string|null version number
+	 */
+	public function parse_version_from_package( $package ) {
+		$parsed_version = null;
+		$match          = [];
+
+		preg_match( '/^.+(?:wp-table-builder)\.(.+)(?:\..+)$/', $package, $match );
+
+		if ( $match[1] ) {
+			$parsed_version = $match[1];
+		}
+
+		return $parsed_version;
+	}
+
+	/**
+	 * Callback hook for version sync manager when a subscriber attempted an install operation.
+	 *
+	 * @param string $slug subscriber slug
+	 * @param string $version version to install
+	 *
+	 * @return false|WP_Error false to permit install(i know, but it is what it is) or WP_Error to cancel it
+	 */
+	public function version_sync_logic( $slug, $version ) {
+		$final_status = false;
+
+		if ( $slug === 'wp-table-builder-pro' ) {
+			$final_status = $this->generic_sync_logic( $slug, $version );
+		}
+
+		return $final_status;
+	}
+
+	/**
+	 * Plugin __FILE__
+	 * @return string plugin file
+	 */
+	public function plugin_file() {
+		return NS\PLUGIN__FILE__;
+	}
+
+	/**
+	 * Plugin specific logic for fetching versions and their info.
+	 *
+	 * Use plugin version for keys and info for their values. Use 'url' property key for download link.
+	 * @return array|WP_Error versions array
+	 */
+	protected function get_plugin_versions() {
+		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+
+		$versions = new WP_Error( 501, esc_html__( 'An error occurred while fetching wp-table-builder versions, please try again later' ) );
+
+		$info = (array) plugins_api( 'plugin_information', [ 'slug' => $this->get_version_slug() ] );
+
+		if ( isset( $info['versions'] ) ) {
+			$versions = array_reduce( array_keys( $info['versions'] ), function ( $carry, $key ) use ( $info ) {
+				$carry[ $key ] = [ 'url' => $info['versions'] [ $key ] ];
+
+				return $carry;
+			}, [] );
+		}
+
+		return $versions;
+	}
+
+	/**
+	 * Get text domain of the plugin.
+	 *
+	 * It will be used for ajax upgraders to identify our plugin since slug is not supplied in plugin info property of that upgrader skin.
+	 * @return string
+	 */
+	public function get_text_domain() {
+		return 'wp-table-builder';
 	}
 }

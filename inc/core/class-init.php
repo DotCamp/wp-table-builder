@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Icon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Notification_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Screen_Options_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Upsells_Manager;
+use WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager;
 use WP_Table_Builder\Inc\Admin\Style_Pass;
 use WP_Table_Builder\Inc\Frontend as Frontend;
@@ -195,6 +196,9 @@ class Init {
 	 */
 	private function load_dependencies() {
 		$this->loader = new Loader();
+
+		// initialize version sync manager
+		Version_Sync_Manager::init();
 
 		// initialize settings manager
 		$this->settings_manager = new Settings_Manager( 'wp_table_builder_settings', $this->loader );

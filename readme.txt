@@ -104,6 +104,7 @@ That's it. You're done!
 * FIX: Fixed an issue where deleting a text element also deletes its container.
 * FIX: Fixed an issue affecting one row tables where top row as header or static top row options don't render the table correctly.
 * IMPROVE: New background logic and menu.
+* PRO: IMPROVE: Version sync capability to keep both base and pro versions of plugin in sync with each other at update and downgrade operations.
 
 = 1.3.3 =
 
