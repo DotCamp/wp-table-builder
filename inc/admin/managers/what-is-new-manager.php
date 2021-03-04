@@ -76,8 +76,10 @@ class What_Is_New_Manager {
 		return [
 			'1.3.4' => [
 				static::prepare_what_is_new_note( 'New background menu and improved color logic for better table colors.', 'background_menu.png' ),
+				static::prepare_what_is_new_note( 'Extra styles controls and settings menu to improve control over your styles.', 'extra_styles.png' ),
 				static::prepare_what_is_new_note( 'Upgraded color picker, now alpha channel can be used for background color values which enables transparency.', 'new_color_picker.png' ),
 				static::prepare_what_is_new_note( 'A global wrapper function for rendering tables inside theme and plugin files.', 'theme_inline_render_function.png' ),
+				static::prepare_what_is_new_note( 'Version sync capability to keep both base and pro versions of plugin in sync with each other at update and downgrade operations.', 'version_sync.png', true ),
 			]
 		];
 	}

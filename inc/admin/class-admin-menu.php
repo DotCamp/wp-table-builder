@@ -325,7 +325,7 @@ class Admin_Menu {
 				'jquery',
 				'wptb-admin-builder-tinymce-js',
 				'wp-color-picker'
-			), $admin_script_dev_version, true );
+			), NS\PLUGIN_VERSION, true );
 
 			wp_register_script( 'wptb-admin-builder-tinymce-js', plugin_dir_url( __FILE__ ) . 'js/tinymce/tinymce.min.js', array(), NS\PLUGIN_VERSION, false );
 

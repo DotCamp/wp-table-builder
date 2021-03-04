@@ -6293,6 +6293,7 @@ wptb_shortcode_container_element {
     left: -20px;
     top: 10px;
     color: var(--wptb-plugin-theme-color-light);
+    z-index: 1;
 }
 
 .wptb-what-is-new-pro-indicator-text {
