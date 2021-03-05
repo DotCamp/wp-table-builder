@@ -523,6 +523,24 @@
 		this.currentValues = {};
 
 		/**
+		 * Whether to bypass data generation and use generatedData instead.
+		 *
+		 * @type {boolean}
+		 */
+		this.bypassDataGeneration = false;
+
+		/**
+		 * Supplied generated data for data table generator.
+		 *
+		 * This data is supplied from backend to minimize data supplied for client side to improve load times and performance. If this data is supplied, there is no need to calculate data according to row bindings since they are already calculated and generated at backend.
+		 *
+		 * Blueprint row ids are used as keys and data it will be populated with will be values of this object.
+		 *
+		 * @type {Object}
+		 */
+		let generatedData = null;
+
+		/**
 		 * Parse target element into its cells and rows.
 		 *
 		 * @param {HTMLElement} table table element to be parsed
@@ -588,11 +606,31 @@
 		};
 
 		/**
+		 * Get generated data assigned to blueprint row.
+		 *
+		 * @param {string} rowId blueprint row id
+		 * @return {Array} blueprint generated data
+		 */
+		const getBlueprintGeneratedData = (rowId) => {
+			let data = [];
+			if (generatedData !== null && generatedData[rowId]) {
+				data = generatedData[rowId];
+			}
+
+			return data;
+		};
+
+		/**
 		 * Calculate maximum amount of rows that can be populated from a blueprint row.
 		 *
 		 * @param {HTMLElement} rowElement row element
 		 */
 		const calculateMaxRows = (rowElement) => {
+			// if bypassing data generation
+			if (this.bypassDataGeneration) {
+				return getBlueprintGeneratedData(getRowId(rowElement)).length;
+			}
+
 			const rowBindingMode = getRowBinding(rowElement)?.mode;
 
 			// if row binding mode is not defined for the row element, use auto as default
@@ -857,6 +895,7 @@
 		/**
 		 * Batch populate table elements with their assigned binding values.
 		 *
+		 * @param {string} rowId id of the current blueprint row
 		 * @param {Array} tableElements an array of table elements
 		 * @param {number} rowIndex index of current row this table elements belongs to
 		 * @param {Object} rowBindings row bindings for the parent row of the supplied table elements
@@ -864,6 +903,7 @@
 		 * @param {Object} customBindings custom bindings to use instead of element and rows defined ones
 		 */
 		const batchPopulateTableElements = (
+			rowId,
 			tableElements,
 			rowIndex,
 			rowBindings,
@@ -887,10 +927,11 @@
 					// eslint-disable-next-line array-callback-return
 					Object.keys(bindingColIdObject).map((key) => {
 						if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
+							// if bypass data generation is active, use the values assigned to current blueprint row instead of sorted/data manager values
 							value[key] = this.dataManager.instance.getColumnValueByIndex(
 								rowIndex,
 								bindingColIdObject[key],
-								sortedValues
+								this.bypassDataGeneration ? getBlueprintGeneratedData(rowId) : sortedValues
 							);
 						}
 					});
@@ -967,15 +1008,23 @@
 					return carry;
 				}, {});
 
-				batchPopulateTableElements(rowElements, rowIndex, getRowBinding(rowElement), null, {
-					column: autoBindings,
-				});
+				batchPopulateTableElements(
+					getRowId(rowElement),
+					rowElements,
+					rowIndex,
+					getRowBinding(rowElement),
+					null,
+					{
+						column: autoBindings,
+					}
+				);
 			},
 			operator: (rowElement, rowIndex) => {
 				const rowBindings = getRowBinding(rowElement);
 				const operatorOptions = rowBindings.operator;
 
 				batchPopulateTableElements(
+					getRowId(rowElement),
 					getTableElementsFromRow(rowElement),
 					rowIndex,
 					rowBindings,
@@ -1013,7 +1062,7 @@
 				applyRowBindings(rowBinding.mode, clonedRow, index);
 			} else {
 				const rowElements = getTableElementsFromRow(clonedRow);
-				batchPopulateTableElements(rowElements, index, rowBinding);
+				batchPopulateTableElements(getRowId(blueprintRow), rowElements, index, rowBinding);
 			}
 
 			return clonedRow;
@@ -1069,6 +1118,63 @@
 		};
 
 		/**
+		 * Make supplied generated data compatible with data manager.
+		 *
+		 * @param {Object} rawData supplied generated data
+		 * @return {Array} compatible generated data
+		 */
+		const makeGeneratedDataCompatible = (rawData) => {
+			const allRowValues = Object.keys(rawData)
+				.filter((key) => {
+					return Object.prototype.hasOwnProperty.call(rawData, key);
+				})
+				.map((key) => {
+					return rawData[key];
+				})
+				.flat(1);
+
+			return allRowValues.reduce(
+				(carry, rowData) => {
+					const { rowId } = rowData;
+					if (!carry.rowIdSet.includes(rowId)) {
+						carry.rowIdSet.push(rowId);
+						carry.finalRowValues.push(rowData);
+					}
+
+					return carry;
+				},
+				{ finalRowValues: [], rowIdSet: [] }
+			).finalRowValues;
+		};
+
+		/**
+		 * Prepare various operations for bypassing data generation
+		 *
+		 * @param {Object} dataTableOptions data table options
+		 */
+		const bypassDataGenerationPreparations = (dataTableOptions) => {
+			// whether to use supplied generated data or generate it on frontend
+			this.bypassDataGeneration = dataTableOptions.dataManager.tempData.generatedData !== undefined;
+
+			if (this.bypassDataGeneration) {
+				generatedData = dataTableOptions.dataManager.tempData.generatedData;
+
+				// if an object is sent as values instead of an array, reformat values as array
+				Object.keys(generatedData)
+					.filter((key) => {
+						return Object.prototype.hasOwnProperty.call(generatedData, key);
+					})
+					.map((blueprintRowId) => {
+						const blueprintValues = generatedData[blueprintRowId];
+
+						if (typeof blueprintValues === 'object') {
+							generatedData[blueprintRowId] = Object.values(generatedData[blueprintRowId]);
+						}
+					});
+			}
+		};
+
+		/**
 		 * Prepare data table for frontend.
 		 *
 		 * @param {HTMLElement} targetTable target table
@@ -1077,22 +1183,32 @@
 			// parse data table options from table dataset
 			const dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions));
 
-		// TODO [erdembircan] remove for production
-		console.log(dataTableOptions);
+			// TODO [erdembircan] remove for production
+			console.log(dataTableOptions);
+
+			// bypass data generation preparations
+			bypassDataGenerationPreparations(dataTableOptions);
+
+			// TODO [erdembircan] remove for production
+			console.log(`bypass data generation: ${this.bypassDataGeneration}`);
+
+			// TODO [erdembircan] remove for production
+			console.table(generatedData);
 
 			const mainWrapper = targetTable.parentNode;
 			// remove blueprint table from DOM
 			targetTable.remove();
 
-			// TODO [erdembircan] remove for production
-			console.log(`Data rows: ${dataTableOptions.dataManager.tempData.parsedData.values.length}`);
+			const dataToUse = this.bypassDataGeneration
+				? makeGeneratedDataCompatible(generatedData)
+				: dataTableOptions.dataManager.tempData.parsedData.values;
 
 			// only generate table if data values are present
-			if (dataTableOptions.dataManager.tempData.parsedData.values.length > 0) {
+			if (dataToUse.length > 0) {
 				const generatedTable = this.generateDataTable(
 					targetTable,
 					dataTableOptions.dataManager.bindings,
-					dataTableOptions.dataManager.tempData.parsedData.values
+					dataToUse
 				);
 
 				// add generated table as our new table to DOM

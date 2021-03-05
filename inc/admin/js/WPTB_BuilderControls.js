@@ -33137,6 +33137,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.currentValues = {};
     /**
+     * Whether to bypass data generation and use generatedData instead.
+     *
+     * @type {boolean}
+     */
+
+    this.bypassDataGeneration = false;
+    /**
+     * Supplied generated data for data table generator.
+     *
+     * This data is supplied from backend to minimize data supplied for client side to improve load times and performance. If this data is supplied, there is no need to calculate data according to row bindings since they are already calculated and generated at backend.
+     *
+     * Blueprint row ids are used as keys and data it will be populated with will be values of this object.
+     *
+     * @type {Object}
+     */
+
+    var generatedData = null;
+    /**
      * Parse target element into its cells and rows.
      *
      * @param {HTMLElement} table table element to be parsed
@@ -33205,6 +33223,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return binding;
     };
     /**
+     * Get generated data assigned to blueprint row.
+     *
+     * @param {string} rowId blueprint row id
+     * @return {Array} blueprint generated data
+     */
+
+
+    var getBlueprintGeneratedData = function getBlueprintGeneratedData(rowId) {
+      var data = [];
+
+      if (generatedData !== null && generatedData[rowId]) {
+        data = generatedData[rowId];
+      }
+
+      return data;
+    };
+    /**
      * Calculate maximum amount of rows that can be populated from a blueprint row.
      *
      * @param {HTMLElement} rowElement row element
@@ -33213,6 +33248,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var calculateMaxRows = function calculateMaxRows(rowElement) {
       var _getRowBinding;
+
+      // if bypassing data generation
+      if (_this7.bypassDataGeneration) {
+        return getBlueprintGeneratedData(getRowId(rowElement)).length;
+      }
 
       var rowBindingMode = (_getRowBinding = getRowBinding(rowElement)) === null || _getRowBinding === void 0 ? void 0 : _getRowBinding.mode; // if row binding mode is not defined for the row element, use auto as default
 
@@ -33477,6 +33517,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Batch populate table elements with their assigned binding values.
      *
+     * @param {string} rowId id of the current blueprint row
      * @param {Array} tableElements an array of table elements
      * @param {number} rowIndex index of current row this table elements belongs to
      * @param {Object} rowBindings row bindings for the parent row of the supplied table elements
@@ -33485,9 +33526,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      */
 
 
-    var batchPopulateTableElements = function batchPopulateTableElements(tableElements, rowIndex, rowBindings) {
-      var customValues = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-      var customBindings = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    var batchPopulateTableElements = function batchPopulateTableElements(rowId, tableElements, rowIndex, rowBindings) {
+      var customValues = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+      var customBindings = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
       var sortedValues = sliceRowDataValues(rowBindings, sortRowDataValues(rowBindings === null || rowBindings === void 0 ? void 0 : rowBindings.sort, customValues || _this7.dataManager.instance.getValues())); // eslint-disable-next-line array-callback-return
 
       tableElements.map(function (tableElement) {
@@ -33498,7 +33539,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           Object.keys(bindingColIdObject).map(function (key) {
             if (Object.prototype.hasOwnProperty.call(bindingColIdObject, key)) {
-              value[key] = _this7.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], sortedValues);
+              // if bypass data generation is active, use the values assigned to current blueprint row instead of sorted/data manager values
+              value[key] = _this7.dataManager.instance.getColumnValueByIndex(rowIndex, bindingColIdObject[key], _this7.bypassDataGeneration ? getBlueprintGeneratedData(rowId) : sortedValues);
             }
           });
 
@@ -33569,14 +33611,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           });
           return carry;
         }, {});
-        batchPopulateTableElements(rowElements, rowIndex, getRowBinding(rowElement), null, {
+        batchPopulateTableElements(getRowId(rowElement), rowElements, rowIndex, getRowBinding(rowElement), null, {
           column: autoBindings
         });
       },
       operator: function operator(rowElement, rowIndex) {
         var rowBindings = getRowBinding(rowElement);
         var operatorOptions = rowBindings.operator;
-        batchPopulateTableElements(getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this7.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
+        batchPopulateTableElements(getRowId(rowElement), getTableElementsFromRow(rowElement), rowIndex, rowBindings, _this7.operatorFactory.getOperator(operatorOptions.operatorType).getOperatorResult(operatorOptions));
       }
     };
     /**
@@ -33609,7 +33651,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         applyRowBindings(rowBinding.mode, clonedRow, index);
       } else {
         var rowElements = getTableElementsFromRow(clonedRow);
-        batchPopulateTableElements(rowElements, index, rowBinding);
+        batchPopulateTableElements(getRowId(blueprintRow), rowElements, index, rowBinding);
       }
 
       return clonedRow;
@@ -33663,6 +33705,59 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return clonedTable;
     };
     /**
+     * Make supplied generated data compatible with data manager.
+     *
+     * @param {Object} rawData supplied generated data
+     * @return {Array} compatible generated data
+     */
+
+
+    var makeGeneratedDataCompatible = function makeGeneratedDataCompatible(rawData) {
+      var allRowValues = Object.keys(rawData).filter(function (key) {
+        return Object.prototype.hasOwnProperty.call(rawData, key);
+      }).map(function (key) {
+        return rawData[key];
+      }).flat(1);
+      return allRowValues.reduce(function (carry, rowData) {
+        var rowId = rowData.rowId;
+
+        if (!carry.rowIdSet.includes(rowId)) {
+          carry.rowIdSet.push(rowId);
+          carry.finalRowValues.push(rowData);
+        }
+
+        return carry;
+      }, {
+        finalRowValues: [],
+        rowIdSet: []
+      }).finalRowValues;
+    };
+    /**
+     * Prepare various operations for bypassing data generation
+     *
+     * @param {Object} dataTableOptions data table options
+     */
+
+
+    var bypassDataGenerationPreparations = function bypassDataGenerationPreparations(dataTableOptions) {
+      // whether to use supplied generated data or generate it on frontend
+      _this7.bypassDataGeneration = dataTableOptions.dataManager.tempData.generatedData !== undefined;
+
+      if (_this7.bypassDataGeneration) {
+        generatedData = dataTableOptions.dataManager.tempData.generatedData; // if an object is sent as values instead of an array, reformat values as array
+
+        Object.keys(generatedData).filter(function (key) {
+          return Object.prototype.hasOwnProperty.call(generatedData, key);
+        }).map(function (blueprintRowId) {
+          var blueprintValues = generatedData[blueprintRowId];
+
+          if (_typeof(blueprintValues) === 'object') {
+            generatedData[blueprintRowId] = Object.values(generatedData[blueprintRowId]);
+          }
+        });
+      }
+    };
+    /**
      * Prepare data table for frontend.
      *
      * @param {HTMLElement} targetTable target table
@@ -33673,15 +33768,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       // parse data table options from table dataset
       var dataTableOptions = JSON.parse(atob(targetTable.dataset.wptbDataTableOptions)); // TODO [erdembircan] remove for production
 
-      console.log(dataTableOptions);
+      console.log(dataTableOptions); // bypass data generation preparations
+
+      bypassDataGenerationPreparations(dataTableOptions); // TODO [erdembircan] remove for production
+
+      console.log("bypass data generation: ".concat(_this7.bypassDataGeneration)); // TODO [erdembircan] remove for production
+
+      console.table(generatedData);
       var mainWrapper = targetTable.parentNode; // remove blueprint table from DOM
 
-      targetTable.remove(); // TODO [erdembircan] remove for production
+      targetTable.remove();
+      var dataToUse = _this7.bypassDataGeneration ? makeGeneratedDataCompatible(generatedData) : dataTableOptions.dataManager.tempData.parsedData.values; // only generate table if data values are present
 
-      console.log("Data rows: ".concat(dataTableOptions.dataManager.tempData.parsedData.values.length)); // only generate table if data values are present
-
-      if (dataTableOptions.dataManager.tempData.parsedData.values.length > 0) {
-        var generatedTable = _this7.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataTableOptions.dataManager.tempData.parsedData.values); // add generated table as our new table to DOM
+      if (dataToUse.length > 0) {
+        var generatedTable = _this7.generateDataTable(targetTable, dataTableOptions.dataManager.bindings, dataToUse); // add generated table as our new table to DOM
 
 
         mainWrapper.appendChild(generatedTable);
