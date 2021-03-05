@@ -183,7 +183,6 @@ const actions = {
 	/**
 	 * Start select operation.
 	 *
-	 * @async
 	 * @param {{commit}} vuex store object
 	 * @param {string} callerId id of the component that started the operation
 	 * @return {Promise} Promise object
@@ -336,13 +335,64 @@ const actions = {
 			// select data manager properties that will be saved to table
 			const { controls, select, tempData, ...dataManagerRest } = dataManager;
 
-			const dataToSave = { dataManager: dataManagerRest };
-			const stringified = JSON.stringify(dataToSave);
-			const encoded = btoa(stringified);
+			// break object reference with store
+			const dataManagerToSave = { ...dataManagerRest };
+			const { bindings } = dataManagerToSave;
 
 			const table = document.querySelector(
 				'.wptb-management_table_container .wptb-table-setup .wptb-preview-table'
 			);
+
+			// validate bindings and remove invalid ones
+			if (bindings && table) {
+				const { column: columnBindings, row: rowBindings } = bindings;
+
+				/**
+				 * Validate bindings.
+				 *
+				 * @param {Object} binding binding object
+				 * @param {Function} queryCall function to form a query to check for elements inside table. If query returns an element, it means binding is valid. Function takes binding element id as its only argument
+				 * @param {HTMLElement} tableElement table element
+				 */
+				function validateBinding(binding, queryCall, tableElement) {
+					// validate column bindings
+					const elementIds = Object.keys(binding).filter((key) => {
+						return Object.prototype.hasOwnProperty.call(binding, key);
+					});
+
+					// eslint-disable-next-line array-callback-return
+					elementIds.map((elementId) => {
+						const formedElementUniqueClassQuery = queryCall(elementId);
+						if (!tableElement.querySelector(formedElementUniqueClassQuery)) {
+							// eslint-disable-next-line no-param-reassign
+							delete binding[elementId];
+						}
+					});
+				}
+
+				// validate column bindings
+				validateBinding(
+					columnBindings,
+					(bindingId) => {
+						return `.wptb-element-${bindingId}`;
+					},
+					table
+				);
+
+				// validate row bindings
+				validateBinding(
+					rowBindings,
+					(bindingId) => {
+						return `tr[data-data-table-row-id='${bindingId}']`;
+					},
+					table
+				);
+			}
+
+			const dataToSave = { dataManager: dataManagerToSave };
+			const stringified = JSON.stringify(dataToSave);
+			const encoded = btoa(stringified);
+
 			if (table) {
 				table.dataset.wptbDataTableOptions = encoded;
 			}

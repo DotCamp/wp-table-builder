@@ -34878,13 +34878,13 @@ var _DeBouncer = _interopRequireDefault(require("../../functions/DeBouncer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
@@ -35167,7 +35167,6 @@ var actions = {
   /**
    * Start select operation.
    *
-   * @async
    * @param {{commit}} vuex store object
    * @param {string} callerId id of the component that started the operation
    * @return {Promise} Promise object
@@ -35409,14 +35408,56 @@ var actions = {
       var controls = dataManager.controls,
           select = dataManager.select,
           tempData = dataManager.tempData,
-          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select", "tempData"]);
+          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select", "tempData"]); // break object reference with store
+
+
+      var dataManagerToSave = _objectSpread({}, dataManagerRest);
+
+      var bindings = dataManagerToSave.bindings;
+      var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table'); // validate bindings and remove invalid ones
+
+      if (bindings && table) {
+        var columnBindings = bindings.column,
+            rowBindings = bindings.row;
+        /**
+         * Validate bindings.
+         *
+         * @param {Object} binding binding object
+         * @param {Function} queryCall function to form a query to check for elements inside table. If query returns an element, it means binding is valid. Function takes binding element id as its only argument
+         * @param {HTMLElement} tableElement table element
+         */
+
+        function validateBinding(binding, queryCall, tableElement) {
+          // validate column bindings
+          var elementIds = Object.keys(binding).filter(function (key) {
+            return Object.prototype.hasOwnProperty.call(binding, key);
+          }); // eslint-disable-next-line array-callback-return
+
+          elementIds.map(function (elementId) {
+            var formedElementUniqueClassQuery = queryCall(elementId);
+
+            if (!tableElement.querySelector(formedElementUniqueClassQuery)) {
+              // eslint-disable-next-line no-param-reassign
+              delete binding[elementId];
+            }
+          });
+        } // validate column bindings
+
+
+        validateBinding(columnBindings, function (bindingId) {
+          return ".wptb-element-".concat(bindingId);
+        }, table); // validate row bindings
+
+        validateBinding(rowBindings, function (bindingId) {
+          return "tr[data-data-table-row-id='".concat(bindingId, "']");
+        }, table);
+      }
 
       var dataToSave = {
-        dataManager: dataManagerRest
+        dataManager: dataManagerToSave
       };
       var stringified = JSON.stringify(dataToSave);
       var encoded = btoa(stringified);
-      var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
 
       if (table) {
         table.dataset.wptbDataTableOptions = encoded;
