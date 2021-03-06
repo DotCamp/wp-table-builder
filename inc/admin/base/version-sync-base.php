@@ -189,6 +189,8 @@ abstract class Version_Sync_Base {
 	 *
 	 * @param string $slug subscriber slug
 	 * @param string $version version to install
+	 *
+	 * @return bool|WP_Error false for approval or WP_Error on failure
 	 */
 	protected final function generic_sync_logic( $slug, $version ) {
 		// override this value for return values of separate version sync logic results

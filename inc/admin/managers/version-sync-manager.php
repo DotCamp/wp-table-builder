@@ -192,7 +192,8 @@ class Version_Sync_Manager {
 	 * @param Object $instance subscriber class instance
 	 */
 	public static function subscribe( $slug, $instance ) {
-		if ( is_subclass_of( $instance, '\WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base' ) ) {
+		// TODO [erdembircan] after v1.3.4, change it to only base version
+		if ( is_subclass_of( $instance, '\WP_Table_Builder\Inc\Admin\Base\Version_Sync_Base' ) || is_subclass_of( $instance, '\WP_Table_Builder_Pro\Inc\Admin\Base\Version_Sync_Base' ) ) {
 			static::$subscribers[ $slug ] = $instance;
 		}
 	}
