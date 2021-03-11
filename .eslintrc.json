@@ -50,6 +50,7 @@
     "WptbResponsive": true,
     "wptb_admin_object": true,
     "DataTableManagerStatic": true,
-    "WPTB_DataTableGenerator": true
+    "WPTB_DataTableGenerator": true,
+    "wptbTableDataMenu": true
   }
 }

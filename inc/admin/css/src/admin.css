@@ -21,6 +21,7 @@
     --wptb-plugin-red-500: #F56565;
     --wptb-plugin-red-600: #E53E3E;
     --wptb-plugin-blue-300: #90CDF4;
+    --wptb-plugin-blue-400: #60A5FA;
     --wptb-plugin-white: #FFF;
     --wptb-plugin-black: #000;
     --wptb-plugin-gold: #D4AF37;
@@ -6383,7 +6384,7 @@ thead .wptb-data-manager-table-data-value {
     align-items: center;
 }
 
-.wptb-data-panel-control-group-icon{
+.wptb-data-panel-control-group-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -6400,7 +6401,7 @@ thead .wptb-data-manager-table-data-value {
     vertical-align: middle;
 }
 
-.wptb-data-panel-control-group-icon svg{
+.wptb-data-panel-control-group-icon svg {
     width: 100%;
     height: 100%;
     fill: var(--wptb-plugin-logo-color);
@@ -6409,4 +6410,55 @@ thead .wptb-data-manager-table-data-value {
 .wptb-data-panel-string-input .wptb-size-input {
     min-width: 100px;
 }
+
+/*region table data menu*/
+.wptb-table-data-section-wrapper {
+    padding: 0 !important;
+    margin-top: -10px;
+}
+
+.wptb-table-data-section {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 1fr;
+}
+
+.wptb-table-data-listings {
+    border-right: 2px solid var(--wptb-plugin-gray-400);
+}
+
+.wptb-data-listing-row {
+    padding: 10px 20px 10px 20px;
+    border-bottom: 1px solid var(--wptb-plugin-gray-300);
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-data-listing-row:hover {
+    background-color: var(--wptb-plugin-gray-300);
+}
+
+.wptb-data-listing-row[data-active-row='true'] {
+    background-color: var(--wptb-plugin-logo-color) !important;
+    color: var(--wptb-plugin-theme-color-light) !important;
+}
+
+
+.wptb-table-data-listings-header {
+    text-transform: capitalize;
+    font-size: 110% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0 10px 0;
+    border-bottom: 2px solid var(--wptb-plugin-gray-400);
+    font-weight: bold;
+    background-color: var(--wptb-plugin-logo-color);
+    color: var(--wptb-plugin-theme-color-light);
+}
+
+/*endregion*/
 

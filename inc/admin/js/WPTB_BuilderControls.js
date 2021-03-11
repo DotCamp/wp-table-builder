@@ -21159,7 +21159,7 @@ module.exports = deepmerge_1;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createBasicStore = exports.objectDeepMerge = void 0;
+exports.createBasicStore = exports.defaultTranslationGetter = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
@@ -21203,6 +21203,25 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
   return source;
 };
 /**
+ * Merge default translation getter into your getters object.
+ *
+ * @param {Object} getters getters object
+ * @return {Object} merged getters object
+ */
+
+
+exports.objectDeepMerge = objectDeepMerge;
+
+var defaultTranslationGetter = function defaultTranslationGetter(getters) {
+  return (0, _deepmerge.default)(getters, {
+    translation: function translation(state) {
+      return function (key) {
+        return state.strings[key];
+      };
+    }
+  });
+};
+/**
  * Create a basic store with the given store object.
  *
  * @param {Object} defaultStore default store object
@@ -21211,7 +21230,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
  */
 
 
-exports.objectDeepMerge = objectDeepMerge;
+exports.defaultTranslationGetter = defaultTranslationGetter;
 
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
   return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
@@ -26748,6 +26767,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /**
  * Translation mixin for stores with strings state and translation getter.
+ *
+ * You can use defaultTranslationGetter in general.js for easy merge functionality into your getters.
  *
  * @type {Object}
  */

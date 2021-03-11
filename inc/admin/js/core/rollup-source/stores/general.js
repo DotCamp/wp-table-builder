@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import deepmerge from 'deepmerge';
+
 /**
  * Deep merge object.
  *
@@ -27,6 +28,20 @@ export const objectDeepMerge = (source, target) => {
 	});
 
 	return source;
+};
+
+/**
+ * Merge default translation getter into your getters object.
+ *
+ * @param {Object} getters getters object
+ * @return {Object} merged getters object
+ */
+export const defaultTranslationGetter = (getters) => {
+	return deepmerge(getters, {
+		translation: (state) => (key) => {
+			return state.strings[key];
+		},
+	});
 };
 
 /**

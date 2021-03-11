@@ -3,6 +3,8 @@ import { mapGetters } from 'vuex';
 /**
  * Translation mixin for stores with strings state and translation getter.
  *
+ * You can use defaultTranslationGetter in general.js for easy merge functionality into your getters.
+ *
  * @type {Object}
  */
 const withNativeTranslationStore = {

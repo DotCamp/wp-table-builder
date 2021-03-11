@@ -33,7 +33,6 @@ trait Ajax_Response {
 	 */
 	public function set_error( $error ) {
 		$this->response_data['error'] = $error;
-
 	}
 
 	/**
