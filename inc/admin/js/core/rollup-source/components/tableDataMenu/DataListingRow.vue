@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-data-listing-row" :data-active-row="isActive" @click="rowClick">
+	<div class="wptb-data-listing-row" :data-disabled="disabled" :data-active-row="isActive" @click="rowClick">
 		{{ title }}
 	</div>
 </template>
@@ -18,6 +18,10 @@ export default {
 		title: {
 			type: String,
 			required: true,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	model: {

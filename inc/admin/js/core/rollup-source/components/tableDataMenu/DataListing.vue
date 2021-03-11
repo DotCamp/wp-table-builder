@@ -9,6 +9,7 @@
 			:id="data.ID"
 			:title="data.post_title"
 			v-model="activeId"
+			:disabled="getBusyState"
 		></data-listing-row>
 	</div>
 </template>
@@ -25,10 +26,10 @@ export default {
 				return this.$store.getters.getEditorActiveId;
 			},
 			set(dataObjectId) {
-				this.$store.commit('setEditorActiveId', dataObjectId);
+				this.$store.dispatch('mutationBusyPass', { name: 'setEditorActiveId', value: dataObjectId });
 			},
 		},
-		...mapGetters(['simpleDataObjects']),
+		...mapGetters(['simpleDataObjects', 'getBusyState']),
 	},
 };
 </script>

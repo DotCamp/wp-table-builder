@@ -1,6 +1,9 @@
 <template>
-	<div class="wptb-table-data-content">
+	<div class="wptb-table-data-content" style="font-size: 90% !important;">
+		<pre>
 		{{ dataObject }}
+    </pre
+		>
 	</div>
 </template>
 
@@ -12,10 +15,13 @@ export default {
 		getEditorActiveId(n) {
 			this.resetDataObject();
 			if (n !== null) {
-				this.fetchDataObject(n).then((resp) => {
-					// TODO [erdembircan] remove for production
-					console.log(resp);
-				});
+				this.fetchDataObject(n)
+					.then((resp) => {
+						this.dataObject = resp;
+					})
+					.catch(() => {
+						// do nothing
+					});
 			}
 		},
 	},

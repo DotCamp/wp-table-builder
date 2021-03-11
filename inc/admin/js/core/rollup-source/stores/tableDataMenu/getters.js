@@ -20,8 +20,8 @@ const getters = {
 	 * @param {Object} state store state
 	 * @return {boolean} busy status
 	 */
-	isBusy(state) {
-		return state.app.bust;
+	getBusyState(state) {
+		return state.app.busy;
 	},
 	/**
 	 * Get active data object id on editor.
@@ -40,6 +40,15 @@ const getters = {
 	 */
 	getSecurityProps: (state) => (key) => {
 		return state.security[key];
+	},
+	/**
+	 * Get message properties.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} message object
+	 */
+	getMessageObject(state) {
+		return state.app.message;
 	},
 };
 

@@ -14861,6 +14861,10 @@ var _default = {
     title: {
       type: String,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -14896,7 +14900,7 @@ exports.default = _default;
     "div",
     {
       staticClass: "wptb-data-listing-row",
-      attrs: { "data-active-row": _vm.isActive },
+      attrs: { "data-disabled": _vm.disabled, "data-active-row": _vm.isActive },
       on: { click: _vm.rowClick }
     },
     [_vm._v("\n\t" + _vm._s(_vm.title) + "\n")]
@@ -14944,10 +14948,13 @@ var _default = {
         return this.$store.getters.getEditorActiveId;
       },
       set: function set(dataObjectId) {
-        this.$store.commit('setEditorActiveId', dataObjectId);
+        this.$store.dispatch('mutationBusyPass', {
+          name: 'setEditorActiveId',
+          value: dataObjectId
+        });
       }
     }
-  }, (0, _vuex.mapGetters)(['simpleDataObjects']))
+  }, (0, _vuex.mapGetters)(['simpleDataObjects', 'getBusyState']))
 };
 exports.default = _default;
         var $a45085 = exports.default || module.exports;
@@ -14973,7 +14980,11 @@ exports.default = _default;
       _vm._l(_vm.simpleDataObjects, function(data) {
         return _c("data-listing-row", {
           key: data.ID,
-          attrs: { id: data.ID, title: data.post_title },
+          attrs: {
+            id: data.ID,
+            title: data.post_title,
+            disabled: _vm.getBusyState
+          },
           model: {
             value: _vm.activeId,
             callback: function($$v) {
@@ -15018,12 +15029,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   watch: {
     getEditorActiveId: function getEditorActiveId(n) {
+      var _this = this;
+
       this.resetDataObject();
 
       if (n !== null) {
         this.fetchDataObject(n).then(function (resp) {
-          // TODO [erdembircan] remove for production
-          console.log(resp);
+          _this.dataObject = resp;
+        }).catch(function () {// do nothing
         });
       }
     }
@@ -15053,9 +15066,14 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-table-data-content" }, [
-    _vm._v("\n\t" + _vm._s(_vm.dataObject) + "\n")
-  ])
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-table-data-content",
+      staticStyle: { "font-size": "90% !important" }
+    },
+    [_c("pre", [_vm._v("\t\t" + _vm._s(_vm.dataObject) + "\n    ")])]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -15229,7 +15247,88 @@ render._withStripped = true
           };
         })());
       
-},{"../Sections":"components/Sections.vue","./TableDataEditorSection":"components/tableDataMenu/TableDataEditorSection.vue"}],"containers/TableDataMenuApp.vue":[function(require,module,exports) {
+},{"../Sections":"components/Sections.vue","./TableDataEditorSection":"components/tableDataMenu/TableDataEditorSection.vue"}],"components/tableDataMenu/MessageListener.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withMessage = _interopRequireDefault(require("../../mixins/withMessage"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  mixins: [_withMessage.default],
+  watch: {
+    getBusyState: function getBusyState(status) {
+      this.setBusy(status);
+    },
+    getMessageObject: {
+      handler: function handler(_ref) {
+        var type = _ref.type,
+            content = _ref.content;
+
+        if (content !== '') {
+          this.setMessage({
+            message: content,
+            type: type
+          });
+        }
+      },
+      deep: true
+    },
+    withMessageData: {
+      handler: function handler(_ref2) {
+        var show = _ref2.show;
+
+        if (!show) {
+          this.setOkMessage('');
+        }
+      },
+      deep: true
+    }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getBusyState', 'getMessageObject'])),
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setOkMessage']))
+};
+exports.default = _default;
+        var $8bc565 = exports.default || module.exports;
+      
+      if (typeof $8bc565 === 'function') {
+        $8bc565 = $8bc565.options;
+      }
+    
+        /* template */
+        Object.assign($8bc565, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("span")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withMessage":"mixins/withMessage.js"}],"containers/TableDataMenuApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15245,8 +15344,11 @@ var _Sections = _interopRequireDefault(require("../components/Sections"));
 
 var _TableDataSection = _interopRequireDefault(require("../components/tableDataMenu/TableDataSection"));
 
+var _MessageListener = _interopRequireDefault(require("../components/tableDataMenu/MessageListener"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -15281,6 +15383,7 @@ var _default = {
     }
   },
   components: {
+    MessageListener: _MessageListener.default,
     MenuHeader: _MenuHeader.default,
     MenuFooter: _MenuFooter.default,
     Sections: _Sections.default,
@@ -15313,54 +15416,61 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-menu-page-wrapper" }, [
-    _c(
-      "div",
-      { staticClass: "wptb-settings-wrapper" },
-      [
-        _c(
-          "menu-header",
-          {
-            attrs: {
-              "logo-src": _vm.pluginInfo.logo,
-              "logo-alt": _vm.translationM("homepage"),
-              "plugin-name": _vm.pluginInfo.pluginName
-            }
-          },
-          [
-            _c("a", { attrs: { href: _vm.pluginInfo.pluginHomepage } }, [
-              _vm._v(_vm._s(_vm.translationM("homepage")))
-            ])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "sections",
-          {
-            attrs: { items: _vm.sections },
-            model: {
-              value: _vm.currentSection,
-              callback: function($$v) {
-                _vm.currentSection = $$v
-              },
-              expression: "currentSection"
-            }
-          },
-          [_c("portal-target", { attrs: { name: "childSections" } })],
-          1
-        ),
-        _vm._v(" "),
-        _c(_vm.currentSectionComponent, { tag: "component" }),
-        _vm._v(" "),
-        _c(
-          "menu-footer",
-          [_c("portal-target", { attrs: { name: "footerButtons" } })],
-          1
-        )
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    { staticClass: "wptb-menu-page-wrapper" },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-settings-wrapper" },
+        [
+          _c(
+            "menu-header",
+            {
+              attrs: {
+                "logo-src": _vm.pluginInfo.logo,
+                "logo-alt": _vm.translationM("homepage"),
+                "plugin-name": _vm.pluginInfo.pluginName
+              }
+            },
+            [
+              _c("a", { attrs: { href: _vm.pluginInfo.pluginHomepage } }, [
+                _vm._v(_vm._s(_vm.translationM("homepage")))
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "sections",
+            {
+              attrs: { items: _vm.sections },
+              model: {
+                value: _vm.currentSection,
+                callback: function($$v) {
+                  _vm.currentSection = $$v
+                },
+                expression: "currentSection"
+              }
+            },
+            [_c("portal-target", { attrs: { name: "childSections" } })],
+            1
+          ),
+          _vm._v(" "),
+          _c(_vm.currentSectionComponent, { tag: "component" }),
+          _vm._v(" "),
+          _c(
+            "menu-footer",
+            [_c("portal-target", { attrs: { name: "footerButtons" } })],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("message-listener")
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -15374,7 +15484,7 @@ render._withStripped = true
           };
         })());
       
-},{"../components/MenuHeader":"components/MenuHeader.vue","../components/MenuFooter":"components/MenuFooter.vue","../components/Sections":"components/Sections.vue","../components/tableDataMenu/TableDataSection":"components/tableDataMenu/TableDataSection.vue"}],"stores/tableDataMenu/state.js":[function(require,module,exports) {
+},{"../components/MenuHeader":"components/MenuHeader.vue","../components/MenuFooter":"components/MenuFooter.vue","../components/Sections":"components/Sections.vue","../components/tableDataMenu/TableDataSection":"components/tableDataMenu/TableDataSection.vue","../components/tableDataMenu/MessageListener":"components/tableDataMenu/MessageListener.vue"}],"stores/tableDataMenu/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15389,7 +15499,11 @@ exports.default = void 0;
  */
 var state = {
   app: {
-    busy: false
+    busy: false,
+    message: {
+      type: 'ok',
+      content: ''
+    }
   },
   editor: {
     activeId: null
@@ -15432,8 +15546,8 @@ var getters = {
    * @param {Object} state store state
    * @return {boolean} busy status
    */
-  isBusy: function isBusy(state) {
-    return state.app.bust;
+  getBusyState: function getBusyState(state) {
+    return state.app.busy;
   },
 
   /**
@@ -15456,6 +15570,16 @@ var getters = {
     return function (key) {
       return state.security[key];
     };
+  },
+
+  /**
+   * Get message properties.
+   *
+   * @param {Object} state store state
+   * @return {Object} message object
+   */
+  getMessageObject: function getMessageObject(state) {
+    return state.app.message;
   }
 };
 /**
@@ -15479,6 +15603,27 @@ exports.default = void 0;
  */
 var actions = {
   /**
+   * Commit a mutation based on busy state.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit store commit function
+   * @param {Object} root.getters store getters
+   * @param {Object} mutationPayload mutation payload object
+   * @param {string} mutationPayload.name mutation name
+   * @param {*} mutationPayload.value mutation value
+   */
+  mutationBusyPass: function mutationBusyPass(_ref, _ref2) {
+    var commit = _ref.commit,
+        getters = _ref.getters;
+    var name = _ref2.name,
+        value = _ref2.value;
+
+    if (!getters.getBusyState) {
+      commit(name, value);
+    }
+  },
+
+  /**
    * Fetch data object properties.
    *
    * @param {Object} root store object
@@ -15486,9 +15631,9 @@ var actions = {
    * @param {Function} root.commit store commit function
    * @param {number} id data object id
    */
-  fetchDataObject: function fetchDataObject(_ref, id) {
-    var getters = _ref.getters,
-        commit = _ref.commit;
+  fetchDataObject: function fetchDataObject(_ref3, id) {
+    var getters = _ref3.getters,
+        commit = _ref3.commit;
 
     var _getters$getSecurityP = getters.getSecurityProps('dataObjectContent'),
         nonce = _getters$getSecurityP.nonce,
@@ -15514,7 +15659,9 @@ var actions = {
         }
 
         dataObject = resp.data.dataObject;
-      }).catch(function (error) {}).finally(function () {
+      }).catch(function (err) {
+        commit('setErrorMessage', err.message);
+      }).finally(function () {
         commit('resetBusy');
         var resolveFunction = dataObject === null ? reject : resolve;
         resolveFunction(dataObject);
@@ -15571,6 +15718,28 @@ var mutations = {
   resetBusy: function resetBusy(state) {
     // eslint-disable-next-line no-param-reassign
     state.app.busy = false;
+  },
+
+  /**
+   * Set a menu message.
+   *
+   * @param {Object} state table data store state
+   * @param {string} content message content
+   */
+  setOkMessage: function setOkMessage(state, content) {
+    this.state.app.message.type = 'ok';
+    this.state.app.message.content = content;
+  },
+
+  /**
+   * Set a menu error message.
+   *
+   * @param {Object} state table data store state
+   * @param {string} content message content
+   */
+  setErrorMessage: function setErrorMessage(state, content) {
+    this.state.app.message.type = 'error';
+    this.state.app.message.content = content;
   }
 };
 /**

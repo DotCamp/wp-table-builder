@@ -16,6 +16,7 @@
 				<portal-target name="footerButtons"></portal-target>
 			</menu-footer>
 		</div>
+		<message-listener></message-listener>
 	</div>
 </template>
 <script>
@@ -23,6 +24,7 @@ import MenuHeader from '../components/MenuHeader';
 import MenuFooter from '../components/MenuFooter';
 import Sections from '../components/Sections';
 import TableDataSection from '../components/tableDataMenu/TableDataSection';
+import MessageListener from '../components/tableDataMenu/MessageListener';
 
 export default {
 	props: {
@@ -37,7 +39,7 @@ export default {
 			},
 		},
 	},
-	components: { MenuHeader, MenuFooter, Sections, TableDataSection },
+	components: { MessageListener, MenuHeader, MenuFooter, Sections, TableDataSection },
 	data() {
 		return {
 			sections: {

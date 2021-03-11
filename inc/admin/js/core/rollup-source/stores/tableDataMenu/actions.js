@@ -5,6 +5,21 @@
  */
 const actions = {
 	/**
+	 * Commit a mutation based on busy state.
+	 *
+	 * @param {Object} root store object
+	 * @param {Function} root.commit store commit function
+	 * @param {Object} root.getters store getters
+	 * @param {Object} mutationPayload mutation payload object
+	 * @param {string} mutationPayload.name mutation name
+	 * @param {*} mutationPayload.value mutation value
+	 */
+	mutationBusyPass({ commit, getters }, { name, value }) {
+		if (!getters.getBusyState) {
+			commit(name, value);
+		}
+	},
+	/**
 	 * Fetch data object properties.
 	 *
 	 * @param {Object} root store object
@@ -37,7 +52,9 @@ const actions = {
 					}
 					dataObject = resp.data.dataObject;
 				})
-				.catch((error) => {})
+				.catch((err) => {
+					commit('setErrorMessage', err.message);
+				})
 				.finally(() => {
 					commit('resetBusy');
 					const resolveFunction = dataObject === null ? reject : resolve;

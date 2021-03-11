@@ -6,6 +6,10 @@
 const state = {
 	app: {
 		busy: false,
+		message: {
+			type: 'ok',
+			content: '',
+		},
 	},
 	editor: {
 		activeId: null,

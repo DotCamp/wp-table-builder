@@ -6445,6 +6445,15 @@ thead .wptb-data-manager-table-data-value {
     color: var(--wptb-plugin-theme-color-light) !important;
 }
 
+.wptb-data-listing-row[data-active-row='true'][data-disabled='true'] {
+    background-color: var(--wptb-plugin-gray-500) !important;
+}
+
+.wptb-data-listing-row[data-disabled='true'] {
+    background-color: var(--wptb-plugin-theme-color-light) !important;
+    color: var(--wptb-plugin-gray-400) !important;
+    cursor: default;
+}
 
 .wptb-table-data-listings-header {
     text-transform: capitalize;
@@ -6458,6 +6467,11 @@ thead .wptb-data-manager-table-data-value {
     font-weight: bold;
     background-color: var(--wptb-plugin-logo-color);
     color: var(--wptb-plugin-theme-color-light);
+}
+
+.wptb-table-data-content {
+    width: 100%;
+    overflow: auto;
 }
 
 /*endregion*/

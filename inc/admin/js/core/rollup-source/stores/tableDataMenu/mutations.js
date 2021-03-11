@@ -32,6 +32,26 @@ const mutations = {
 		// eslint-disable-next-line no-param-reassign
 		state.app.busy = false;
 	},
+	/**
+	 * Set a menu message.
+	 *
+	 * @param {Object} state table data store state
+	 * @param {string} content message content
+	 */
+	setOkMessage(state, content) {
+		this.state.app.message.type = 'ok';
+		this.state.app.message.content = content;
+	},
+	/**
+	 * Set a menu error message.
+	 *
+	 * @param {Object} state table data store state
+	 * @param {string} content message content
+	 */
+	setErrorMessage(state, content) {
+		this.state.app.message.type = 'error';
+		this.state.app.message.content = content;
+	},
 };
 
 /**
