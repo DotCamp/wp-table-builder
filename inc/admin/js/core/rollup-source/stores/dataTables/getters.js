@@ -101,15 +101,6 @@ const getters = {
 		return state.dataSource.setup.sourceDataCreated;
 	},
 	/**
-	 * Get current control values of temp data manager.
-	 *
-	 * @param {Object} state store state
-	 * @return {Object} control values
-	 */
-	getDataManagerControls(state) {
-		return state.dataManager.controls;
-	},
-	/**
 	 * Get data values of temp data manager.
 	 *
 	 * @param {Object} state store state
@@ -117,15 +108,6 @@ const getters = {
 	 */
 	getDataManagerData(state) {
 		return state.dataManager.data;
-	},
-	/**
-	 * Get temp data values of data manager.
-	 *
-	 * @param {Object} state store state
-	 * @return {Array} temp data
-	 */
-	getDataManagerTempData(state) {
-		return state.dataManager.tempData.values;
 	},
 	/**
 	 * Generate unique id.

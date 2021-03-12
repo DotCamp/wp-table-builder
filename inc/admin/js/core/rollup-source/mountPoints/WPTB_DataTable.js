@@ -5,9 +5,11 @@ import Vue from 'vue';
 import Fragment from 'vue-fragment';
 import { __ } from '@wordpress/i18n';
 import VuePortal from 'portal-vue';
+import deepmerge from 'deepmerge';
 import DataTableApp from '../containers/DataTableApp';
 import createStore from '../stores/dataTables';
 import filters from '../plugins/filters';
+import createDataManagerModule from '../stores/modules/dataManager';
 
 export default {
 	name: 'DataTable',
@@ -160,6 +162,14 @@ export default {
 		// use default filters
 		Vue.use(filters);
 
+		// add store modules
+		if (!extraStoreOptions.modules) {
+			extraStoreOptions.modules = {};
+		}
+
+		// extra state options for data manager module, this will be merged with any data manager related saved data
+		let extraDataManagerModuleStateOptions = {};
+
 		// load saved data table options from table, if there is any
 		const table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
 		if (table && table.dataset.wptbDataTable === 'true') {
@@ -168,15 +178,25 @@ export default {
 			if (savedDataTableOptions) {
 				const decodedOptions = JSON.parse(atob(savedDataTableOptions));
 
+				const { dataManager, ...decodedOptionsRest } = decodedOptions;
+
 				// update extra store options state
 				extraStoreOptions.state = {
 					...extraStoreOptions.state,
-					...decodedOptions,
+					...decodedOptionsRest,
 					...{ dataSource: { dataObject: data.dataObject } },
 					tableIsActive: true,
 				};
+
+				// merge saved data manager options with default ones
+				if (dataManager && typeof dataManager === 'object') {
+					extraDataManagerModuleStateOptions = deepmerge(extraDataManagerModuleStateOptions, dataManager);
+				}
 			}
 		}
+
+		// add data manager module to store
+		extraStoreOptions.modules.dataManager = createDataManagerModule({ state: extraDataManagerModuleStateOptions });
 
 		new Vue({
 			components: { DataTableApp },

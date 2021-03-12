@@ -29406,6 +29406,10 @@ var _default = {
     useTemp: {
       type: Boolean,
       default: true
+    },
+    useDefault: {
+      type: Boolean,
+      default: true
     }
   },
   components: {
@@ -29423,7 +29427,7 @@ var _default = {
   },
   created: function created() {
     // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
-    if (!this.getSelectedDataSource) {
+    if (this.useDefault) {
       this.addDataManagerTempData({
         data: [['1', '2', '3'], ['4', '5', '6']],
         markAsImported: false
@@ -29435,7 +29439,7 @@ var _default = {
 
     this.$nextTick(function () {
       // if there is already a data source is selected, it means there is already a data on data manager, so prepare our header and values at mount.
-      if (_this.getSelectedDataSource) {
+      if (!_this.useDefault) {
         _this.prepareTableValues(_this.getDataManagerTempData);
       }
 
@@ -29762,7 +29766,7 @@ var _default = {
       this.$emit('fileSelected', n);
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentSetupGroupTab'])),
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentSetupGroupTab', 'getSelectedDataSource'])),
   methods: {
     handleCsvImport: function handleCsvImport() {
       this.$emit('csvImport');
@@ -29859,7 +29863,12 @@ exports.default = _default;
             expression: "currentSetupGroupTab('csv') === 'dataManager'"
           }
         ],
-        key: "dataManager"
+        key: "dataManager",
+        attrs: {
+          "use-default":
+            _vm.getSelectedDataSource === undefined ||
+            _vm.getSelectedDataSource === null
+        }
       })
     ],
     1
@@ -34325,32 +34334,6 @@ var state = {
       }
     }
   },
-  dataManager: {
-    tempData: {
-      parsedData: {
-        header: [],
-        values: []
-      },
-      rowIds: [],
-      colIds: [],
-      values: [],
-      colCount: 0,
-      rowCount: 0
-    },
-    controls: {},
-    select: {
-      callerId: null,
-      active: false,
-      hoverId: null,
-      clickId: null,
-      type: 'row'
-    },
-    bindings: {
-      row: {},
-      element: {},
-      column: {}
-    }
-  },
   leftPanelId: '#dataTableLeftPanel',
   devStartupScreen: 'DataSourceSelection',
   defaults: {}
@@ -34871,17 +34854,16 @@ var mutations = {
    */
   setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
     state.dataManager.controls = controlsObject;
-  },
+  } // /**
+  //  * Merge temp data object with the supplied object.
+  //  *
+  //  * @param {Object} state store state
+  //  * @param {Object} dataObject data object
+  //  */
+  // mergeTempData: (state, dataObject) => {
+  // 	state.dataManager.tempData = { ...state.dataManager.tempData, ...dataObject };
+  // },
 
-  /**
-   * Merge temp data object with the supplied object.
-   *
-   * @param {Object} state store state
-   * @param {Object} dataObject data object
-   */
-  mergeTempData: function mergeTempData(state, dataObject) {
-    state.dataManager.tempData = _objectSpread({}, state.dataManager.tempData, {}, dataObject);
-  }
 };
 /** @module mutations */
 
@@ -35820,16 +35802,6 @@ var getters = {
   },
 
   /**
-   * Get current control values of temp data manager.
-   *
-   * @param {Object} state store state
-   * @return {Object} control values
-   */
-  getDataManagerControls: function getDataManagerControls(state) {
-    return state.dataManager.controls;
-  },
-
-  /**
    * Get data values of temp data manager.
    *
    * @param {Object} state store state
@@ -35837,16 +35809,6 @@ var getters = {
    */
   getDataManagerData: function getDataManagerData(state) {
     return state.dataManager.data;
-  },
-
-  /**
-   * Get temp data values of data manager.
-   *
-   * @param {Object} state store state
-   * @return {Array} temp data
-   */
-  getDataManagerTempData: function getDataManagerTempData(state) {
-    return state.dataManager.tempData.values;
   },
 
   /**
@@ -36357,9 +36319,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _vuex = _interopRequireDefault(require("vuex"));
-
 var _vue = _interopRequireDefault(require("vue"));
+
+var _vuex = _interopRequireDefault(require("vuex"));
 
 var _state = _interopRequireDefault(require("./state"));
 
@@ -36443,7 +36405,177 @@ var createStore = function createStore() {
 
 var _default = createStore;
 exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","vue":"../../../../../node_modules/vue/dist/vue.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js"}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Data manager state.
+ *
+ * @type {Object}
+ */
+var state = {
+  tempData: {
+    parsedData: {
+      header: [],
+      values: []
+    },
+    rowIds: [],
+    colIds: [],
+    values: [],
+    colCount: 0,
+    rowCount: 0
+  },
+  controls: {},
+  select: {
+    callerId: null,
+    active: false,
+    hoverId: null,
+    clickId: null,
+    type: 'row'
+  },
+  bindings: {
+    row: {},
+    element: {},
+    column: {}
+  }
+};
+/**
+ * @module state
+ */
+
+var _default = state;
+exports.default = _default;
+},{}],"stores/modules/dataManager/mutations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Data manager store mutations.
+ *
+ * @type {Object}
+ */
+var mutations = {
+  /**
+   * Merge temp data object with the supplied object.
+   *
+   * @param {Object} state store state
+   * @param {Object} dataObject data object
+   */
+  mergeTempData: function mergeTempData(state, dataObject) {
+    state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
+  }
+};
+/**
+ * @module mutations
+ */
+
+var _default = mutations;
+exports.default = _default;
+},{}],"stores/modules/dataManager/getters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Data manager store getters.
+ *
+ * @type {Object}
+ */
+var getters = {
+  /**
+   * Get temp data values of data manager.
+   *
+   * @param {Object} state store state
+   * @return {Array} temp data
+   */
+  getDataManagerTempData: function getDataManagerTempData(state) {
+    return state.tempData.values;
+  },
+
+  /**
+   * Get current control values of temp data manager.
+   *
+   * @param {Object} state store state
+   * @return {Object} control values
+   */
+  getDataManagerControls: function getDataManagerControls(state) {
+    return state.controls;
+  }
+};
+/**
+ * @module getters
+ */
+
+var _default = getters;
+exports.default = _default;
+},{}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.defaultStoreOptions = void 0;
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _state = _interopRequireDefault(require("./state"));
+
+var _mutations = _interopRequireDefault(require("./mutations"));
+
+var _getters = _interopRequireDefault(require("./getters"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default store options.
+ *
+ * @type {Object}
+ */
+var defaultStoreOptions = {
+  state: _state.default,
+  mutations: _mutations.default,
+  getters: _getters.default
+};
+/**
+ * Get module options.
+ *
+ * @param {Object} extraStoreOptions extra store options
+ * @return {Object} merged module store options
+ */
+
+exports.defaultStoreOptions = defaultStoreOptions;
+
+var getModuleOptions = function getModuleOptions(extraStoreOptions) {
+  return (0, _deepmerge.default)(defaultStoreOptions, extraStoreOptions);
+};
+/**
+ * @module getModuleOptions
+ */
+
+
+var _default = getModuleOptions;
+exports.default = _default;
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36459,19 +36591,29 @@ var _i18n = require("@wordpress/i18n");
 
 var _portalVue = _interopRequireDefault(require("portal-vue"));
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 var _DataTableApp = _interopRequireDefault(require("../containers/DataTableApp"));
 
 var _dataTables = _interopRequireDefault(require("../stores/dataTables"));
 
 var _filters = _interopRequireDefault(require("../plugins/filters"));
 
+var _dataManager = _interopRequireDefault(require("../stores/modules/dataManager"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 var _default = {
   name: 'DataTable',
@@ -36599,8 +36741,15 @@ var _default = {
     _vue.default.use(_vueFragment.default.Plugin); // use default filters
 
 
-    _vue.default.use(_filters.default); // load saved data table options from table, if there is any
+    _vue.default.use(_filters.default); // add store modules
 
+
+    if (!extraStoreOptions.modules) {
+      extraStoreOptions.modules = {};
+    } // extra state options for data manager module, this will be merged with any data manager related saved data
+
+
+    var extraDataManagerModuleStateOptions = {}; // load saved data table options from table, if there is any
 
     var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table');
 
@@ -36608,18 +36757,30 @@ var _default = {
       var savedDataTableOptions = table.dataset.wptbDataTableOptions;
 
       if (savedDataTableOptions) {
-        var decodedOptions = JSON.parse(atob(savedDataTableOptions)); // update extra store options state
+        var decodedOptions = JSON.parse(atob(savedDataTableOptions));
 
-        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptions, {}, {
+        var dataManager = decodedOptions.dataManager,
+            decodedOptionsRest = _objectWithoutProperties(decodedOptions, ["dataManager"]); // update extra store options state
+
+
+        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptionsRest, {}, {
           dataSource: {
             dataObject: data.dataObject
           }
         }, {
           tableIsActive: true
-        });
-      }
-    }
+        }); // merge saved data manager options with default ones
 
+        if (dataManager && _typeof(dataManager) === 'object') {
+          extraDataManagerModuleStateOptions = (0, _deepmerge.default)(extraDataManagerModuleStateOptions, dataManager);
+        }
+      }
+    } // add data manager module to store
+
+
+    extraStoreOptions.modules.dataManager = (0, _dataManager.default)({
+      state: extraDataManagerModuleStateOptions
+    });
     new _vue.default({
       components: {
         DataTableApp: _DataTableApp.default
@@ -36631,7 +36792,7 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js"}],"plugins/strings.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../containers/DataTableApp":"containers/DataTableApp.vue","../stores/dataTables":"stores/dataTables/index.js","../plugins/filters":"plugins/filters.js","../stores/modules/dataManager":"stores/modules/dataManager/index.js"}],"plugins/strings.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

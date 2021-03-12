@@ -15253,7 +15253,1292 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../SearchInput":"components/SearchInput.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../SearchInput":"components/SearchInput.vue"}],"mixins/withStoreBusy.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Mixin for using store connected busy state to component.
+ *
+ * @type {Object}
+ */
+var withStoreBusy = {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
+    isBusy: function isBusy() {
+      return this.busyStatus;
+    }
+  })
+};
+var _default = withStoreBusy;
+exports.default = _default;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/dataTable/DataTableDragHandle.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    position: {
+      type: String,
+      default: 'top'
+    }
+  },
+  data: function data() {
+    return {
+      dragActive: false,
+      startScreenX: 0,
+      startScreenY: 0
+    };
+  },
+  computed: {
+    calculatePosition: function calculatePosition() {
+      var style = {};
+      var positionVal = '-5px';
+
+      switch (this.position) {
+        case 'top':
+          {
+            style.top = positionVal;
+            style.cursor = 'n-resize';
+            style.width = '100%';
+            style.height = '10px';
+            break;
+          }
+
+        case 'bottom':
+          {
+            style.bottom = positionVal;
+            style.cursor = 'n-resize';
+            style.width = '100%';
+            style.height = '10px';
+            break;
+          }
+
+        case 'left':
+          {
+            style.left = positionVal;
+            style.cursor = 'w-resize';
+            style.height = '100%';
+            style.width = '10px';
+            break;
+          }
+
+        case 'right':
+          {
+            style.right = positionVal;
+            style.cursor = 'e-resize';
+            style.height = '100%';
+            style.width = '10px';
+            break;
+          }
+
+        default:
+          {
+            style.top = '-5px';
+            style.cursor = 'n-resize';
+            style.width = '100%';
+            style.height = '10px';
+            break;
+          }
+      }
+
+      return style;
+    }
+  },
+  methods: {
+    handleHover: function handleHover(status) {
+      this.$emit('handleHover', status);
+    },
+    handleDragStart: function handleDragStart(event) {
+      this.dragActive = true; // hide element feedback image on drag operation
+
+      var emptyElement = document.createElement('div');
+      event.dataTransfer.setDragImage(emptyElement, 0, 0);
+      this.startScreenX = event.clientX;
+      this.startScreenY = event.clientY;
+      this.$emit('draggingStart');
+    },
+    handleDrag: function handleDrag(event) {
+      if (this.dragActive && event.clientY !== 0 || event.clientX !== 0) {
+        this.$emit('dragging', {
+          y: this.startScreenY - event.clientY,
+          x: this.startScreenX - event.clientX
+        });
+      }
+    },
+    handleDragEnd: function handleDragEnd() {
+      this.dragActive = false;
+      this.$emit('draggingEnd');
+    }
+  }
+};
+exports.default = _default;
+        var $3fa20f = exports.default || module.exports;
+      
+      if (typeof $3fa20f === 'function') {
+        $3fa20f = $3fa20f.options;
+      }
+    
+        /* template */
+        Object.assign($3fa20f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {
+    staticClass: "wptb-data-table-generated-preview-height-handle",
+    style: _vm.calculatePosition,
+    attrs: { draggable: "true" },
+    on: {
+      "!mouseenter": function($event) {
+        $event.preventDefault()
+        return _vm.handleHover(true)
+      },
+      "!mouseleave": function($event) {
+        $event.preventDefault()
+        return _vm.handleHover(false)
+      },
+      dragstart: _vm.handleDragStart,
+      "!drag": function($event) {
+        $event.preventDefault()
+        return _vm.handleDrag($event)
+      },
+      dragend: _vm.handleDragEnd
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: "data-v-3fa20f",
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/DataManagerCell.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
+var _DataTableDragHandle = _interopRequireDefault(require("./dataTable/DataTableDragHandle"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    value: {
+      type: null,
+      default: 0
+    },
+    placeHolder: {
+      type: String,
+      default: 'enter data'
+    },
+    selectionEnabled: {
+      type: Boolean,
+      default: false
+    },
+    rowId: {
+      type: String,
+      default: ''
+    },
+    colId: {
+      type: String,
+      default: ''
+    }
+  },
+  mixins: [_withStoreBusy.default],
+  components: {
+    DataTableDragHandle: _DataTableDragHandle.default
+  },
+  data: function data() {
+    return {
+      saved: {
+        width: 200,
+        height: 200
+      },
+      style: {
+        width: 0,
+        height: 0
+      }
+    };
+  },
+  watch: {
+    getCurrentSourceSetupTab: function getCurrentSourceSetupTab() {
+      this.calculateCurrentDimensions();
+    },
+    isVisible: function isVisible() {
+      this.calculateCurrentDimensions();
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.calculateCurrentDimensions();
+    });
+  },
+  computed: _objectSpread({
+    cellStyle: function cellStyle() {
+      return {
+        width: "".concat(this.style.width, "px"),
+        height: "".concat(this.style.height, "px")
+      };
+    },
+    id: function id() {
+      return "".concat(this.rowId, "-").concat(this.colId);
+    },
+    innerValue: {
+      get: function get() {
+        var _this$getDataCellObje;
+
+        return (_this$getDataCellObje = this.getDataCellObject(this.rowId, this.colId)) === null || _this$getDataCellObje === void 0 ? void 0 : _this$getDataCellObje.value;
+      },
+      set: function set(n) {
+        this.setDataCellValue({
+          cellId: this.id,
+          value: n
+        });
+      }
+    }
+  }, (0, _vuex.mapGetters)(['getDataCellObject', 'isVisible', 'getCurrentSourceSetupTab'])),
+  methods: _objectSpread({
+    handleHeightResize: function handleHeightResize(_ref) {
+      var y = _ref.y;
+      this.style.height = this.saved.height - y;
+    },
+    handleWidthResize: function handleWidthResize(_ref2) {
+      var x = _ref2.x;
+      this.style.width = this.saved.width - x;
+    },
+    calculateCurrentDimensions: function calculateCurrentDimensions() {
+      if (this.getCurrentSourceSetupTab === 'dataManager' && this.isVisible) {
+        var _this$$refs$refCell$g = this.$refs.refCell.getBoundingClientRect(),
+            width = _this$$refs$refCell$g.width,
+            height = _this$$refs$refCell$g.height;
+
+        this.saved.width = width;
+        this.saved.height = height;
+        this.style.width = width;
+        this.style.height = height;
+      }
+    },
+    handleHoverEnd: function handleHoverEnd() {
+      if (this.selectionEnabled) {
+        this.$emit('cellHoverEnd', this.rowId, this.colId);
+      }
+    },
+    handleHover: function handleHover() {
+      if (this.selectionEnabled) {
+        this.$emit('cellHover', this.id);
+      }
+    },
+    handleClick: function handleClick() {
+      if (this.selectionEnabled) {
+        this.$emit('cellClick', this.id);
+      }
+    }
+  }, (0, _vuex.mapActions)(['setDataCellValue']))
+};
+exports.default = _default;
+        var $8ae122 = exports.default || module.exports;
+      
+      if (typeof $8ae122 === 'function') {
+        $8ae122 = $8ae122.options;
+      }
+    
+        /* template */
+        Object.assign($8ae122, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "td",
+    {
+      ref: "refCell",
+      staticClass: "wptb-data-manager-table-data-value",
+      style: _vm.cellStyle,
+      attrs: { id: _vm.id },
+      on: { mouseenter: _vm.handleHover, mouseleave: _vm.handleHoverEnd }
+    },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-data-manager-table-data-value-inner-wrapper" },
+        [
+          _c("data-table-drag-handle", {
+            attrs: { position: "bottom" },
+            on: {
+              draggingStart: _vm.calculateCurrentDimensions,
+              dragging: _vm.handleHeightResize,
+              draggingEnd: _vm.calculateCurrentDimensions
+            }
+          }),
+          _vm._v(" "),
+          _c("data-table-drag-handle", {
+            attrs: { position: "right" },
+            on: {
+              draggingStart: _vm.calculateCurrentDimensions,
+              draggingEnd: _vm.calculateCurrentDimensions,
+              dragging: _vm.handleWidthResize
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "wptb-data-manager-cell-input-wrapper",
+              on: {
+                "!click": function($event) {
+                  $event.preventDefault()
+                  return _vm.handleClick($event)
+                }
+              }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.innerValue,
+                    expression: "innerValue"
+                  }
+                ],
+                staticClass: "wptb-data-manager-cell-input",
+                attrs: {
+                  disabled: _vm.isBusy,
+                  placeholder: _vm.placeHolder,
+                  type: "text"
+                },
+                domProps: { value: _vm.innerValue },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.innerValue = $event.target.value
+                  }
+                }
+              })
+            ]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js","./dataTable/DataTableDragHandle":"components/dataTable/DataTableDragHandle.vue"}],"components/DataManagerSelect.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  data: function data() {
+    return {
+      width: 0,
+      height: 0,
+      left: 0,
+      top: 0
+    };
+  },
+  watch: {
+    'getSelectOperationData.hoverId': {
+      handler: function handler(n) {
+        if (n !== null) {
+          var _this$parseCellId = this.parseCellId(n),
+              rowId = _this$parseCellId.rowId,
+              colId = _this$parseCellId.colId;
+
+          var targetRow = document.getElementById("".concat(rowId));
+          var tableWrapper = document.querySelector('.wptb-data-manager-table-wrapper');
+
+          if (targetRow) {
+            var _targetRow$getBoundin = targetRow.getBoundingClientRect(),
+                width = _targetRow$getBoundin.width,
+                height = _targetRow$getBoundin.height,
+                x = _targetRow$getBoundin.x,
+                y = _targetRow$getBoundin.y;
+
+            var _tableWrapper$getBoun = tableWrapper.getBoundingClientRect(),
+                wrapperY = _tableWrapper$getBoun.y;
+
+            this.width = width;
+            this.height = height;
+            this.left = 0;
+            this.top = y - wrapperY;
+          }
+        }
+      }
+    }
+  },
+  computed: _objectSpread({
+    visibility: function visibility() {
+      var _this$getSelectOperat = this.getSelectOperationData,
+          active = _this$getSelectOperat.active,
+          hoverId = _this$getSelectOperat.hoverId;
+      return active && hoverId !== null;
+    },
+    style: function style() {
+      return {
+        left: "".concat(this.left, "px"),
+        top: "".concat(this.top, "px"),
+        width: "".concat(this.width, "px"),
+        height: "".concat(this.height, "px")
+      };
+    }
+  }, (0, _vuex.mapGetters)(['getSelectOperationData', 'parseCellId']))
+};
+exports.default = _default;
+        var $52f7f9 = exports.default || module.exports;
+      
+      if (typeof $52f7f9 === 'function') {
+        $52f7f9 = $52f7f9.options;
+      }
+    
+        /* template */
+        Object.assign($52f7f9, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {
+    directives: [
+      {
+        name: "show",
+        rawName: "v-show",
+        value: _vm.visibility,
+        expression: "visibility"
+      }
+    ],
+    ref: "main",
+    staticClass: "wptb-data-manager-select wptb-repeating-linear-gradient",
+    style: _vm.style
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManagerTableAddControls.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  data: function data() {
+    return {
+      colStyleValues: {
+        top: 0
+      }
+    };
+  },
+  watch: {
+    getDataManagerTempData: {
+      handler: function handler() {
+        this.calculateColControlValues();
+      },
+      deep: true
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.calculateColControlValues();
+    });
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData']), {
+    colControlStyle: function colControlStyle() {
+      return {
+        top: this.colStyleValues.top
+      };
+    }
+  }),
+  methods: _objectSpread({
+    calculateColControlValues: function calculateColControlValues() {
+      var valuesInfoRow = document.querySelector('.wptb-data-manager-table-wrapper .wptb-data-manager-info-values');
+      var dataTable = document.querySelector('.wptb-data-manager-table-wrapper table'); // calculate column add button position
+
+      if (valuesInfoRow && dataTable) {
+        var _valuesInfoRow$getBou = valuesInfoRow.getBoundingClientRect(),
+            top = _valuesInfoRow$getBou.top;
+
+        var _dataTable$getBoundin = dataTable.getBoundingClientRect(),
+            tableTop = _dataTable$getBoundin.top;
+
+        this.colStyleValues.top = "".concat(top - tableTop, "px");
+      }
+    },
+    addRow: function addRow() {
+      this.addRowToDataManager();
+    },
+    addCol: function addCol() {
+      this.addColumnToDataManager();
+    }
+  }, (0, _vuex.mapActions)(['addRowToDataManager', 'addColumnToDataManager']))
+};
+exports.default = _default;
+        var $87272c = exports.default || module.exports;
+      
+      if (typeof $87272c === 'function') {
+        $87272c = $87272c.options;
+      }
+    
+        /* template */
+        Object.assign($87272c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("fragment", [
+    _c(
+      "div",
+      {
+        staticClass: "wptb-data-manager-default-add",
+        attrs: { "data-type": "row" },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            $event.stopPropagation()
+            return _vm.addRow($event)
+          }
+        }
+      },
+      [_vm._v("+")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "wptb-data-manager-default-add",
+        style: _vm.colControlStyle,
+        attrs: { "data-type": "col" },
+        on: {
+          "!click": function($event) {
+            $event.preventDefault()
+            $event.stopPropagation()
+            return _vm.addCol($event)
+          }
+        }
+      },
+      [_vm._v("\n\t\t+\n\t")]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManagerDataRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _DataManagerCell = _interopRequireDefault(require("./DataManagerCell"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    rowObject: {
+      type: Object,
+      required: true
+    }
+  },
+  components: {
+    DataManagerCell: _DataManagerCell.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['formCellId'])),
+  methods: {
+    handleCellHoverEnd: function handleCellHoverEnd(id) {
+      this.$emit('cellHoverEnd', id);
+    },
+    handleCellClick: function handleCellClick(id) {
+      this.$emit('cellClick', id);
+    },
+    handleCellHover: function handleCellHover(id) {
+      this.$emit('cellHover', id);
+    },
+    rowOver: function rowOver() {
+      console.log('over');
+    }
+  }
+};
+exports.default = _default;
+        var $73e988 = exports.default || module.exports;
+      
+      if (typeof $73e988 === 'function') {
+        $73e988 = $73e988.options;
+      }
+    
+        /* template */
+        Object.assign($73e988, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    { attrs: { id: _vm.rowObject.rowId } },
+    _vm._l(_vm.rowObject.values, function(cell) {
+      return _c("data-manager-cell", {
+        key: _vm.formCellId(_vm.rowObject.rowId, cell.colId),
+        attrs: {
+          "place-holder": _vm.translationM("value"),
+          value: cell.value,
+          "row-id": _vm.rowObject.rowId,
+          "col-id": cell.colId,
+          "selection-enabled": true
+        },
+        on: {
+          cellClick: _vm.handleCellClick,
+          cellHover: _vm.handleCellHover,
+          cellHoverEnd: _vm.handleCellHoverEnd
+        }
+      })
+    }),
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerCell":"components/DataManagerCell.vue"}],"components/DataManagerIndexActions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    type: {
+      type: String,
+      default: 'row'
+    }
+  },
+  data: function data() {
+    return {
+      showIndicator: false,
+      indicatorStyle: {}
+    };
+  },
+  computed: _objectSpread({
+    calculatePosition: function calculatePosition() {
+      var _this$parseCellId = this.parseCellId(this.getHoverId),
+          rowId = _this$parseCellId.rowId;
+
+      var tableWrapper = document.querySelector('.wptb-data-manager-table-wrapper');
+
+      if (this.type === 'row') {
+        var hoveredRow = document.getElementById(rowId);
+
+        if (hoveredRow && tableWrapper) {
+          var _this$$refs$container = this.$refs.container.getBoundingClientRect(),
+              width = _this$$refs$container.width;
+
+          var _hoveredRow$getBoundi = hoveredRow.getBoundingClientRect(),
+              y = _hoveredRow$getBoundi.y,
+              height = _hoveredRow$getBoundi.height;
+
+          var _tableWrapper$getBoun = tableWrapper.getBoundingClientRect(),
+              tableWrapperY = _tableWrapper$getBoun.y; // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+
+
+          this.indicatorStyle = {
+            left: 0,
+            top: "".concat(y - tableWrapperY, "px"),
+            width: '100%',
+            height: "".concat(height, "px")
+          };
+          return {
+            left: "-".concat(width, "px"),
+            top: "".concat(y - tableWrapperY, "px"),
+            height: "".concat(height, "px")
+          };
+        }
+      } else {
+        var hoveredCell = document.getElementById(this.getHoverId);
+
+        if (hoveredCell && tableWrapper) {
+          var _this$$refs$container2 = this.$refs.container.getBoundingClientRect(),
+              _height = _this$$refs$container2.height;
+
+          var _hoveredCell$getBound = hoveredCell.getBoundingClientRect(),
+              x = _hoveredCell$getBound.x,
+              _width = _hoveredCell$getBound.width;
+
+          var _tableWrapper$getBoun2 = tableWrapper.getBoundingClientRect(),
+              tableWrapperX = _tableWrapper$getBoun2.x; // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+
+
+          this.indicatorStyle = {
+            left: "".concat(x - tableWrapperX, "px"),
+            top: 0,
+            width: "".concat(_width, "px"),
+            bottom: 0
+          };
+          return {
+            top: "-".concat(_height, "px"),
+            left: "".concat(x - tableWrapperX, "px"),
+            width: "".concat(_width, "px")
+          };
+        }
+      }
+
+      return {};
+    },
+    indexId: function indexId() {
+      return this.getHoverId;
+    }
+  }, (0, _vuex.mapGetters)(['getHoverId', 'parseCellId'])),
+  methods: {
+    indexDelete: function indexDelete() {
+      this.$emit('indexDelete', this.getHoverId);
+    }
+  }
+};
+exports.default = _default;
+        var $2f62e2 = exports.default || module.exports;
+      
+      if (typeof $2f62e2 === 'function') {
+        $2f62e2 = $2f62e2.options;
+      }
+    
+        /* template */
+        Object.assign($2f62e2, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("fragment", [
+    _c(
+      "div",
+      {
+        ref: "container",
+        staticClass: "wptb-data-manager-index-actions",
+        style: _vm.calculatePosition,
+        attrs: { type: _vm.type },
+        on: {
+          mouseenter: function($event) {
+            _vm.showIndicator = true
+          },
+          mouseleave: function($event) {
+            _vm.showIndicator = false
+          }
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "wptb-data-manager-index-delete",
+            on: { click: _vm.indexDelete }
+          },
+          [_c("span", { staticClass: "dashicons dashicons-trash" })]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _vm.showIndicator
+      ? _c("div", {
+          staticClass:
+            "wptb-data-manager-index-indicator wptb-repeating-linear-gradient-red",
+          style: _vm.indicatorStyle
+        })
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/DataManager.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _DataManagerCell = _interopRequireDefault(require("./DataManagerCell"));
+
+var _DataManagerSelect = _interopRequireDefault(require("./DataManagerSelect"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _DataManagerTableAddControls = _interopRequireDefault(require("./DataManagerTableAddControls"));
+
+var _DataManagerDataRow = _interopRequireDefault(require("./DataManagerDataRow"));
+
+var _DataManagerIndexActions = _interopRequireDefault(require("./DataManagerIndexActions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    useTemp: {
+      type: Boolean,
+      default: true
+    },
+    useDefault: {
+      type: Boolean,
+      default: true
+    }
+  },
+  components: {
+    DataManagerDataRow: _DataManagerDataRow.default,
+    DataManagerTableAddControls: _DataManagerTableAddControls.default,
+    DataManagerCell: _DataManagerCell.default,
+    DataManagerSelect: _DataManagerSelect.default,
+    DataManagerIndexActions: _DataManagerIndexActions.default
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      columnNameRowIndex: null
+    };
+  },
+  created: function created() {
+    // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+    if (this.useDefault) {
+      this.addDataManagerTempData({
+        data: [['1', '2', '3'], ['4', '5', '6']],
+        markAsImported: false
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      // if there is already a data source is selected, it means there is already a data on data manager, so prepare our header and values at mount.
+      if (!_this.useDefault) {
+        _this.prepareTableValues(_this.getDataManagerTempData);
+      }
+
+      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
+    });
+  },
+  watch: {
+    getDataManagerTempData: {
+      handler: function handler(n) {
+        this.prepareTableValues(n);
+      },
+      deep: true
+    },
+    'getDataManagerControls.firstRowAsColumnName': {
+      handler: function handler(n) {
+        this.calculateColumnNameRowIndex(n);
+      }
+    },
+    getDataManagerControls: {
+      handler: function handler() {
+        this.prepareTableValues(this.getDataManagerTempData);
+      },
+      deep: true
+    }
+  },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData']), {
+    infoRowSpan: function infoRowSpan() {
+      var _this$parsedData$head, _this$parsedData$head2;
+
+      return this.getColCount === 0 ? (_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : (_this$parsedData$head2 = _this$parsedData$head.values) === null || _this$parsedData$head2 === void 0 ? void 0 : _this$parsedData$head2.length : this.getColCount;
+    }
+  }),
+  methods: _objectSpread({
+    handleRowDelete: function handleRowDelete(id) {
+      var _this$parseCellId = this.parseCellId(id),
+          rowId = _this$parseCellId.rowId;
+
+      this.deleteDataTableRow(rowId);
+    },
+    handleColDelete: function handleColDelete(id) {
+      var _this$parseCellId2 = this.parseCellId(id),
+          colId = _this$parseCellId2.colId;
+
+      this.deleteDataTableCol(colId);
+    },
+    handleCellClick: function handleCellClick(id) {
+      this.setSelectId(id);
+    },
+    handleCellHover: function handleCellHover(id) {
+      this.setHoverId(id);
+    },
+    handleCellHoverEnd: function handleCellHoverEnd() {// this.setHoverId(null);
+    },
+    calculateColumnNameRowIndex: function calculateColumnNameRowIndex(n) {
+      if (n) {
+        this.setDataManagerControl({
+          key: 'indexRow',
+          value: this.getDataManagerRowId(0)
+        });
+      }
+    },
+    generateEmptyRow: function generateEmptyRow(colCount) {
+      var rowId = this.generateUniqueId()();
+      var rowObject = {
+        rowId: rowId,
+        values: []
+      };
+
+      for (var i = 0; i < colCount; i += 1) {
+        rowObject.values.push({
+          colId: this.generateUniqueId()(),
+          value: ''
+        });
+      }
+
+      return rowObject;
+    },
+    prepareTableValues: function prepareTableValues(tableValue) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var _this2$getDataManager, firstRowAsColumnName, indexRow, header;
+
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!(tableValue.length > 0)) {
+                  _context.next = 11;
+                  break;
+                }
+
+                _this2$getDataManager = _this2.getDataManagerControls, firstRowAsColumnName = _this2$getDataManager.firstRowAsColumnName, indexRow = _this2$getDataManager.indexRow; // recalculate first row index for column names
+
+                _this2.calculateColumnNameRowIndex(firstRowAsColumnName);
+
+                header = tableValue.find(function (row) {
+                  return row.rowId === indexRow;
+                });
+
+                if (header) {
+                  _context.next = 9;
+                  break;
+                }
+
+                _context.next = 7;
+                return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function (_, i) {
+                  return "".concat(_this2.translationM('column'), " ").concat(i + 1);
+                }));
+
+              case 7:
+                header = _context.sent;
+
+                _this2.addRowObjectAsHeader(header);
+
+              case 9:
+                // find column index row
+                _this2.setParsedData({
+                  key: 'header',
+                  value: [header]
+                }); // filter out column index row
+
+
+                _this2.setParsedData({
+                  key: 'values',
+                  value: tableValue.filter(function (t) {
+                    return t.rowId !== indexRow;
+                  })
+                });
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    }
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+};
+exports.default = _default;
+        var $6edceb = exports.default || module.exports;
+      
+      if (typeof $6edceb === 'function') {
+        $6edceb = $6edceb.options;
+      }
+    
+        /* template */
+        Object.assign($6edceb, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-plugin-width-full wptb-plugin-height-full" },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-data-manager-table",
+          attrs: { "data-select": _vm.isDataSelectionActive }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "wptb-data-manager-table-wrapper" },
+            [
+              _c("table", [
+                _c(
+                  "thead",
+                  [
+                    _c(
+                      "tr",
+                      {
+                        staticClass: "wptb-data-manager-table-column-name-info"
+                      },
+                      [
+                        _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                          _vm._v(_vm._s(_vm.translationM("columnNames")))
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.parsedData.header, function(headerRow) {
+                      return _c(
+                        "tr",
+                        {
+                          key: headerRow.rowId,
+                          attrs: { id: headerRow.rowId }
+                        },
+                        _vm._l(headerRow.values, function(headerCell) {
+                          return _c("data-manager-cell", {
+                            key: _vm.formCellId(
+                              headerRow.rowId,
+                              headerCell.colId
+                            ),
+                            attrs: {
+                              "place-holder": _vm.translationM("columnName"),
+                              value: headerCell.value,
+                              "row-id": headerRow.rowId,
+                              "col-id": headerCell.colId
+                            }
+                          })
+                        }),
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "tr",
+                      {
+                        staticClass:
+                          "wptb-data-manager-table-column-name-info wptb-data-manager-info-values"
+                      },
+                      [
+                        _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
+                          _vm._v(_vm._s(_vm.translationM("values")))
+                        ])
+                      ]
+                    )
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.parsedData.values, function(row) {
+                    return _c("data-manager-data-row", {
+                      key: row.rowId,
+                      attrs: { "row-object": row },
+                      on: {
+                        cellClick: _vm.handleCellClick,
+                        cellHover: _vm.handleCellHover,
+                        cellHoverEnd: _vm.handleCellHoverEnd
+                      }
+                    })
+                  }),
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("data-manager-index-actions", {
+                attrs: { type: "row" },
+                on: { indexDelete: _vm.handleRowDelete }
+              }),
+              _vm._v(" "),
+              _c("data-manager-index-actions", {
+                attrs: { type: "col" },
+                on: { indexDelete: _vm.handleColDelete }
+              }),
+              _vm._v(" "),
+              _c("data-manager-select"),
+              _vm._v(" "),
+              _c("data-manager-table-add-controls")
+            ],
+            1
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15265,6 +16550,8 @@ var _vuex = require("vuex");
 
 var _MenuButton = _interopRequireDefault(require("../MenuButton"));
 
+var _DataManager = _interopRequireDefault(require("../DataManager"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -15275,6 +16562,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    DataManager: _DataManager.default,
     MenuButton: _MenuButton.default
   },
   watch: {
@@ -15321,11 +16609,9 @@ exports.default = _default;
     [
       _c(
         "div",
-        {
-          staticClass: "wptb-table-data-content",
-          staticStyle: { "font-size": "90% !important" }
-        },
-        [_c("pre", [_vm._v("\t\t" + _vm._s(_vm.dataObject) + "\n    ")])]
+        { staticClass: "wptb-table-data-content" },
+        [_c("data-manager")],
+        1
       ),
       _vm._v(" "),
       _c("portal", { attrs: { to: "footerButtons" } }, [
@@ -15360,7 +16646,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16288,7 +17574,177 @@ var createStore = function createStore(extraOptions) {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Data manager state.
+ *
+ * @type {Object}
+ */
+var state = {
+  tempData: {
+    parsedData: {
+      header: [],
+      values: []
+    },
+    rowIds: [],
+    colIds: [],
+    values: [],
+    colCount: 0,
+    rowCount: 0
+  },
+  controls: {},
+  select: {
+    callerId: null,
+    active: false,
+    hoverId: null,
+    clickId: null,
+    type: 'row'
+  },
+  bindings: {
+    row: {},
+    element: {},
+    column: {}
+  }
+};
+/**
+ * @module state
+ */
+
+var _default = state;
+exports.default = _default;
+},{}],"stores/modules/dataManager/mutations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Data manager store mutations.
+ *
+ * @type {Object}
+ */
+var mutations = {
+  /**
+   * Merge temp data object with the supplied object.
+   *
+   * @param {Object} state store state
+   * @param {Object} dataObject data object
+   */
+  mergeTempData: function mergeTempData(state, dataObject) {
+    state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
+  }
+};
+/**
+ * @module mutations
+ */
+
+var _default = mutations;
+exports.default = _default;
+},{}],"stores/modules/dataManager/getters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Data manager store getters.
+ *
+ * @type {Object}
+ */
+var getters = {
+  /**
+   * Get temp data values of data manager.
+   *
+   * @param {Object} state store state
+   * @return {Array} temp data
+   */
+  getDataManagerTempData: function getDataManagerTempData(state) {
+    return state.tempData.values;
+  },
+
+  /**
+   * Get current control values of temp data manager.
+   *
+   * @param {Object} state store state
+   * @return {Object} control values
+   */
+  getDataManagerControls: function getDataManagerControls(state) {
+    return state.controls;
+  }
+};
+/**
+ * @module getters
+ */
+
+var _default = getters;
+exports.default = _default;
+},{}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.defaultStoreOptions = void 0;
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _state = _interopRequireDefault(require("./state"));
+
+var _mutations = _interopRequireDefault(require("./mutations"));
+
+var _getters = _interopRequireDefault(require("./getters"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default store options.
+ *
+ * @type {Object}
+ */
+var defaultStoreOptions = {
+  state: _state.default,
+  mutations: _mutations.default,
+  getters: _getters.default
+};
+/**
+ * Get module options.
+ *
+ * @param {Object} extraStoreOptions extra store options
+ * @return {Object} merged module store options
+ */
+
+exports.defaultStoreOptions = defaultStoreOptions;
+
+var getModuleOptions = function getModuleOptions(extraStoreOptions) {
+  return (0, _deepmerge.default)(defaultStoreOptions, extraStoreOptions);
+};
+/**
+ * @module getModuleOptions
+ */
+
+
+var _default = getModuleOptions;
+exports.default = _default;
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -16302,6 +17758,8 @@ var _TableDataMenuApp = _interopRequireDefault(require("./containers/TableDataMe
 var _tableDataMenu = _interopRequireDefault(require("./stores/tableDataMenu"));
 
 var _withNativeTranslationStore = _interopRequireDefault(require("./mixins/withNativeTranslationStore"));
+
+var _dataManager = require("./stores/modules/dataManager");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16337,6 +17795,9 @@ var extraStoreOptions = {
     strings: menuData.strings,
     dataSimple: menuData.dataObjectsSimple,
     security: menuData.security
+  },
+  modules: {
+    dataManager: _dataManager.defaultStoreOptions
   }
 };
 new _vue.default({
@@ -16349,5 +17810,5 @@ new _vue.default({
     pluginInfo: menuData.pluginInfo
   }
 }).$mount('#wptbTableDataMenuMount');
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./containers/TableDataMenuApp":"containers/TableDataMenuApp.vue","./stores/tableDataMenu":"stores/tableDataMenu/index.js","./mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}]},{},["WPTB_Table_Data_Menu.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./containers/TableDataMenuApp":"containers/TableDataMenuApp.vue","./stores/tableDataMenu":"stores/tableDataMenu/index.js","./mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./stores/modules/dataManager":"stores/modules/dataManager/index.js"}]},{},["WPTB_Table_Data_Menu.js"], null)
 //# sourceMappingURL=/WPTB_Table_Data_Menu.js.map

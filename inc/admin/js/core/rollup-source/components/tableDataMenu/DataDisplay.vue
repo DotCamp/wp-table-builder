@@ -1,10 +1,7 @@
 <template>
 	<fragment>
-		<div class="wptb-table-data-content" style="font-size: 90% !important;">
-			<pre>
-		{{ dataObject }}
-    </pre
-			>
+		<div class="wptb-table-data-content">
+			<data-manager></data-manager>
 		</div>
 		<portal to="footerButtons">
 			<div v-if="getEditorActiveId !== null" class="wptb-table-data-menu-footer-buttons-container">
@@ -18,9 +15,10 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import MenuButton from '../MenuButton';
+import DataManager from '../DataManager';
 
 export default {
-	components: { MenuButton },
+	components: { DataManager, MenuButton },
 	watch: {
 		getEditorActiveId(n) {
 			this.resetDataObject();

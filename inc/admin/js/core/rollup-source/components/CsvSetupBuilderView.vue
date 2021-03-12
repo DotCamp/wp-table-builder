@@ -19,7 +19,11 @@
 				</store-material-button>
 			</transition>
 		</div>
-		<data-manager key="dataManager" v-show="currentSetupGroupTab('csv') === 'dataManager'"></data-manager>
+		<data-manager
+			key="dataManager"
+			v-show="currentSetupGroupTab('csv') === 'dataManager'"
+			:use-default="getSelectedDataSource === undefined || getSelectedDataSource === null"
+		></data-manager>
 	</div>
 </template>
 <script>
@@ -51,7 +55,7 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(['currentSetupGroupTab']),
+		...mapGetters(['currentSetupGroupTab', 'getSelectedDataSource']),
 	},
 	methods: {
 		handleCsvImport() {

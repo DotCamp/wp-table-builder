@@ -56,6 +56,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		useDefault: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	components: {
 		DataManagerDataRow,
@@ -72,7 +76,7 @@ export default {
 	},
 	created() {
 		// only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
-		if (!this.getSelectedDataSource) {
+		if (this.useDefault) {
 			this.addDataManagerTempData({
 				data: [
 					['1', '2', '3'],
@@ -85,7 +89,7 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			// if there is already a data source is selected, it means there is already a data on data manager, so prepare our header and values at mount.
-			if (this.getSelectedDataSource) {
+			if (!this.useDefault) {
 				this.prepareTableValues(this.getDataManagerTempData);
 			}
 			this.calculateColumnNameRowIndex(this.getDataManagerControls.firstRowAsColumnName);

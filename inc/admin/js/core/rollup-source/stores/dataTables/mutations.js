@@ -435,15 +435,15 @@ const mutations = {
 	setDataManagerControlObject: (state, controlsObject) => {
 		state.dataManager.controls = controlsObject;
 	},
-	/**
-	 * Merge temp data object with the supplied object.
-	 *
-	 * @param {Object} state store state
-	 * @param {Object} dataObject data object
-	 */
-	mergeTempData: (state, dataObject) => {
-		state.dataManager.tempData = { ...state.dataManager.tempData, ...dataObject };
-	},
+	// /**
+	//  * Merge temp data object with the supplied object.
+	//  *
+	//  * @param {Object} state store state
+	//  * @param {Object} dataObject data object
+	//  */
+	// mergeTempData: (state, dataObject) => {
+	// 	state.dataManager.tempData = { ...state.dataManager.tempData, ...dataObject };
+	// },
 };
 
 /** @module mutations */
