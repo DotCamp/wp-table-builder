@@ -14848,6 +14848,10 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   props: {
     id: {
@@ -14865,6 +14869,10 @@ var _default = {
     disabled: {
       type: Boolean,
       default: false
+    },
+    searchClause: {
+      type: String,
+      default: ''
     }
   },
   model: {
@@ -14874,6 +14882,14 @@ var _default = {
   computed: {
     isActive: function isActive() {
       return this.activeId === this.id;
+    },
+    finalTitle: function finalTitle() {
+      if (this.searchClause === '') {
+        return this.title;
+      }
+
+      var regexp = new RegExp("(".concat(this.searchClause, ")"), 'gi');
+      return "<span class=\"wptb-data-listing-row-search-clause-wrap\">".concat(this.title.replaceAll(regexp, '<span class="wptb-data-listing-row-search-clause">$&</span>'), "</spanc>");
     }
   },
   methods: {
@@ -14896,15 +14912,195 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-data-listing-row",
-      attrs: { "data-disabled": _vm.disabled, "data-active-row": _vm.isActive },
-      on: { click: _vm.rowClick }
+  return _c("div", {
+    staticClass: "wptb-data-listing-row",
+    attrs: { "data-disabled": _vm.disabled, "data-active-row": _vm.isActive },
+    domProps: { innerHTML: _vm._s(_vm.finalTitle) },
+    on: { click: _vm.rowClick }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"mixins/withNativeTranslationStore.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Translation mixin for stores with strings state and translation getter.
+ *
+ * You can use defaultTranslationGetter in general.js for easy merge functionality into your getters.
+ *
+ * @type {Object}
+ */
+var withNativeTranslationStore = {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation'])),
+  methods: {
+    /**
+     * Translation method to be used outside of templates.
+     *
+     * @param {string} key translation key
+     */
+    translationM: function translationM(key) {
+      return this.$store.getters.translation(key);
+    }
+  }
+};
+/* @module withNativeTranslationStore */
+
+var _default = withNativeTranslationStore;
+exports.default = _default;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/SearchInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    placeholder: {
+      type: String,
+      default: ''
     },
-    [_vm._v("\n\t" + _vm._s(_vm.title) + "\n")]
-  )
+    value: {
+      type: String,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      searchTerm: this.value
+    };
+  },
+  mounted: function mounted() {},
+  watch: {
+    searchTerm: function searchTerm(n) {
+      this.$emit('valueChanged', n);
+    },
+    value: function value(n) {
+      this.searchTerm = n;
+    }
+  },
+  computed: {
+    clearButtonVisibility: function clearButtonVisibility() {
+      return this.searchTerm !== '';
+    }
+  },
+  methods: {
+    clearSearch: function clearSearch() {
+      if (!this.disabled) {
+        this.searchTerm = '';
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $69c79d = exports.default || module.exports;
+      
+      if (typeof $69c79d === 'function') {
+        $69c79d = $69c79d.options;
+      }
+    
+        /* template */
+        Object.assign($69c79d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-search-input-wrapper" }, [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.searchTerm,
+          expression: "searchTerm"
+        }
+      ],
+      staticClass: "wptb-search-input-element",
+      attrs: {
+        disabled: _vm.disabled,
+        type: "text",
+        placeholder: _vm.placeholder
+      },
+      domProps: { value: _vm.searchTerm },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.searchTerm = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _vm.clearButtonVisibility
+      ? _c(
+          "div",
+          {
+            staticClass: "wptb-search-input-clear",
+            attrs: { "data-disabled": _vm.disabled },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.clearSearch($event)
+              }
+            }
+          },
+          [_vm._v("\n\t\tX\n\t")]
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -14930,6 +15126,10 @@ var _vuex = require("vuex");
 
 var _DataListingRow = _interopRequireDefault(require("./DataListingRow"));
 
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _SearchInput = _interopRequireDefault(require("../SearchInput"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -14939,8 +15139,15 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
+  mixins: [_withNativeTranslationStore.default],
   components: {
+    SearchInput: _SearchInput.default,
     DataListingRow: _DataListingRow.default
+  },
+  data: function data() {
+    return {
+      searchClause: ''
+    };
   },
   computed: _objectSpread({
     activeId: {
@@ -14953,6 +15160,14 @@ var _default = {
           value: dataObjectId
         });
       }
+    },
+    filteredDataObject: function filteredDataObject() {
+      var _this = this;
+
+      return this.simpleDataObjects.filter(function (dataObject) {
+        var regExp = new RegExp("(".concat(_this.searchClause, ")"), 'gi');
+        return dataObject.post_title.match(regExp);
+      });
     }
   }, (0, _vuex.mapGetters)(['simpleDataObjects', 'getBusyState']))
 };
@@ -14977,25 +15192,53 @@ exports.default = _default;
         _vm._v("\n\t\t" + _vm._s(_vm.translationM("data")) + "\n\t")
       ]),
       _vm._v(" "),
-      _vm._l(_vm.simpleDataObjects, function(data) {
-        return _c("data-listing-row", {
-          key: data.ID,
-          attrs: {
-            id: data.ID,
-            title: data.post_title,
-            disabled: _vm.getBusyState
-          },
-          model: {
-            value: _vm.activeId,
-            callback: function($$v) {
-              _vm.activeId = $$v
+      _c(
+        "div",
+        { staticClass: "wptb-table-data-listing-search" },
+        [
+          _c("search-input", {
+            staticClass: "wptb-table-data-listing-search-input",
+            attrs: {
+              placeholder: _vm.translationM("search"),
+              disabled: _vm.getBusyState
             },
-            expression: "activeId"
-          }
-        })
-      })
+            model: {
+              value: _vm.searchClause,
+              callback: function($$v) {
+                _vm.searchClause = $$v
+              },
+              expression: "searchClause"
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "transition-group",
+        { attrs: { name: "wptb-fade" } },
+        _vm._l(_vm.filteredDataObject, function(data) {
+          return _c("data-listing-row", {
+            key: data.ID,
+            attrs: {
+              id: data.ID,
+              title: data.post_title,
+              disabled: _vm.getBusyState,
+              "search-clause": _vm.searchClause
+            },
+            model: {
+              value: _vm.activeId,
+              callback: function($$v) {
+                _vm.activeId = $$v
+              },
+              expression: "activeId"
+            }
+          })
+        }),
+        1
+      )
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
@@ -15010,7 +15253,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../SearchInput":"components/SearchInput.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15020,6 +15263,10 @@ exports.default = void 0;
 
 var _vuex = require("vuex");
 
+var _MenuButton = _interopRequireDefault(require("../MenuButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -15027,6 +15274,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
+  components: {
+    MenuButton: _MenuButton.default
+  },
   watch: {
     getEditorActiveId: function getEditorActiveId(n) {
       var _this = this;
@@ -15067,12 +15317,35 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    {
-      staticClass: "wptb-table-data-content",
-      staticStyle: { "font-size": "90% !important" }
-    },
-    [_c("pre", [_vm._v("\t\t" + _vm._s(_vm.dataObject) + "\n    ")])]
+    "fragment",
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-table-data-content",
+          staticStyle: { "font-size": "90% !important" }
+        },
+        [_c("pre", [_vm._v("\t\t" + _vm._s(_vm.dataObject) + "\n    ")])]
+      ),
+      _vm._v(" "),
+      _c("portal", { attrs: { to: "footerButtons" } }, [
+        _vm.getEditorActiveId !== null
+          ? _c(
+              "div",
+              { staticClass: "wptb-table-data-menu-footer-buttons-container" },
+              [
+                _c("menu-button", { attrs: { type: "danger" } }, [
+                  _vm._v(_vm._s(_vm.translationM("revert")))
+                ]),
+                _vm._v(" "),
+                _c("menu-button", [_vm._v(_vm._s(_vm.translationM("save")))])
+              ],
+              1
+            )
+          : _vm._e()
+      ])
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -15087,7 +15360,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16015,47 +16288,7 @@ var createStore = function createStore(extraOptions) {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"mixins/withNativeTranslationStore.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _vuex = require("vuex");
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-/**
- * Translation mixin for stores with strings state and translation getter.
- *
- * You can use defaultTranslationGetter in general.js for easy merge functionality into your getters.
- *
- * @type {Object}
- */
-var withNativeTranslationStore = {
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation'])),
-  methods: {
-    /**
-     * Translation method to be used outside of templates.
-     *
-     * @param {string} key translation key
-     */
-    translationM: function translationM(key) {
-      return this.$store.getters.translation(key);
-    }
-  }
-};
-/* @module withNativeTranslationStore */
-
-var _default = withNativeTranslationStore;
-exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));

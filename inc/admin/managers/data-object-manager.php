@@ -105,6 +105,9 @@ class Data_Object_Manager {
 				'tableData' => esc_html__( 'Table data', 'wp-table-builder' ),
 				'data'      => esc_html__( 'table data', 'wp-table-builder' ),
 				'editor'    => esc_html__( 'editor', 'wp-table-builder' ),
+				'search'    => esc_html__( 'search', 'wp-table-builder' ),
+				'save'    => esc_html__( 'save', 'wp-table-builder' ),
+				'revert'    => esc_html__( 'revert', 'wp-table-builder' ),
 			];
 
 			$security = [

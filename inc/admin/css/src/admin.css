@@ -6449,11 +6449,26 @@ thead .wptb-data-manager-table-data-value {
     background-color: var(--wptb-plugin-gray-500) !important;
 }
 
+.wptb-data-listing-row[data-active-row='true'] .wptb-data-listing-row-search-clause {
+    color: var(--wptb-plugin-theme-color-light) !important;
+}
+
 .wptb-data-listing-row[data-disabled='true'] {
     background-color: var(--wptb-plugin-theme-color-light) !important;
     color: var(--wptb-plugin-gray-400) !important;
     cursor: default;
 }
+
+.wptb-data-listing-row-search-clause-wrap {
+    color: var(--wptb-plugin-gray-500);
+
+}
+
+.wptb-data-listing-row-search-clause {
+    color: var(--wptb-plugin-logo-color) !important;
+    font-weight: bold !important;
+}
+
 
 .wptb-table-data-listings-header {
     text-transform: capitalize;
@@ -6474,5 +6489,63 @@ thead .wptb-data-manager-table-data-value {
     overflow: auto;
 }
 
+.wptb-table-data-listing-search {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--wptb-plugin-gray-300);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-table-data-listing-search-input {
+    width: 90% !important;
+}
+
+.wptb-table-data-menu-footer-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /*endregion*/
 
+
+/*region search input component*/
+.wptb-search-input-wrapper {
+    position: relative;
+    width: fit-content;
+}
+
+.wptb-search-input-element {
+    width: 100% !important;
+    border: 1px solid var(--wptb-plugin-gray-400) !important;
+    text-align: center;
+    color: inherit;
+    border-radius: 999px !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+}
+
+.wptb-search-input-element:active, .wptb-search-input-element:focus {
+    border: 1px solid var(--wptb-plugin-gray-500) !important;
+    inset: 0 !important;
+    box-shadow: none !important;
+}
+
+.wptb-search-input-clear {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0px 5px;
+    color: var(--wptb-plugin-red-500);
+    font-weight: bold;
+}
+.wptb-search-input-clear[data-disabled='true'] {
+    color: var(--wptb-plugin-gray-500) !important;
+}
+/*endregion*/

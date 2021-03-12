@@ -3,23 +3,42 @@
 		<div class="wptb-table-data-listings-header">
 			{{ translationM('data') }}
 		</div>
-		<data-listing-row
-			v-for="data in simpleDataObjects"
-			:key="data.ID"
-			:id="data.ID"
-			:title="data.post_title"
-			v-model="activeId"
-			:disabled="getBusyState"
-		></data-listing-row>
+		<div class="wptb-table-data-listing-search">
+			<search-input
+				class="wptb-table-data-listing-search-input"
+				:placeholder="translationM('search')"
+				v-model="searchClause"
+				:disabled="getBusyState"
+			></search-input>
+		</div>
+		<transition-group name="wptb-fade">
+			<data-listing-row
+				v-for="data in filteredDataObject"
+				:key="data.ID"
+				:id="data.ID"
+				:title="data.post_title"
+				v-model="activeId"
+				:disabled="getBusyState"
+				:search-clause="searchClause"
+			></data-listing-row>
+		</transition-group>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import DataListingRow from './DataListingRow';
+import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
+import SearchInput from '../SearchInput';
 
 export default {
-	components: { DataListingRow },
+	mixins: [withNativeTranslationStore],
+	components: { SearchInput, DataListingRow },
+	data() {
+		return {
+			searchClause: '',
+		};
+	},
 	computed: {
 		activeId: {
 			get() {
@@ -28,6 +47,12 @@ export default {
 			set(dataObjectId) {
 				this.$store.dispatch('mutationBusyPass', { name: 'setEditorActiveId', value: dataObjectId });
 			},
+		},
+		filteredDataObject() {
+			return this.simpleDataObjects.filter((dataObject) => {
+				const regExp = new RegExp(`(${this.searchClause})`, 'gi');
+				return dataObject.post_title.match(regExp);
+			});
 		},
 		...mapGetters(['simpleDataObjects', 'getBusyState']),
 	},
