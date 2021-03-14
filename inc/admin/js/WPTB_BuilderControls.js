@@ -21153,17 +21153,209 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
+},{}],"functions/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isObjectValuesSame = exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+/**
+ * General functions that can be used through out app.
+ */
+
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+/**
+ * Set object property from string.
+ *
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @param {*} value value
+ */
+
+
+exports.objectPropertyFromString = objectPropertyFromString;
+
+var setObjectPropertyFromString = function setObjectPropertyFromString(stringKey, target, value) {
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  if (splitKey.length === 1) {
+    // eslint-disable-next-line no-param-reassign
+    target[splitKey[0]] = value;
+  } else {
+    var parents = splitKey.slice(0, splitKey.length - 1);
+    var parent = parents.reduce(function (carry, item) {
+      return carry[item];
+    }, target);
+    parent[splitKey[splitKey.length - 1]] = value;
+  }
+};
+/**
+ * Get element id from a table element's class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no id is found
+ */
+
+
+exports.setObjectPropertyFromString = setObjectPropertyFromString;
+
+var parseTableElementId = function parseTableElementId(tableElement) {
+  if (tableElement) {
+    var activeElementIdArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementIdArray) {
+      return activeElementIdArray.replace('wptb-element-', '');
+    }
+  }
+
+  return null;
+};
+/**
+ * Find table element type from its class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no type is found
+ */
+
+
+exports.parseTableElementId = parseTableElementId;
+
+var parseElementType = function parseElementType(tableElement) {
+  if (tableElement) {
+    var activeElementKindArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementKindArray) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+
+      var _regExp$exec = regExp.exec(activeElementKindArray),
+          _regExp$exec2 = _slicedToArray(_regExp$exec, 2),
+          elementType = _regExp$exec2[1];
+
+      return elementType;
+    }
+  }
+
+  return null;
+};
+/**
+ * Get a parent of an element in a specific node type.
+ *
+ * @param {HTMLElement} element element
+ * @param {string} type node type
+ */
+
+
+exports.parseElementType = parseElementType;
+
+var getParentOfType = function getParentOfType(element, type) {
+  function recursiveParent(el) {
+    var parent = el.parentNode;
+
+    if (parent.nodeName === type.toUpperCase()) {
+      return parent;
+    }
+
+    return recursiveParent(parent);
+  }
+
+  return recursiveParent(element);
+};
+/**
+ * Generate an unique id.
+ *
+ * @param {number} id length
+ * @param length
+ * @return {string} generated id
+ */
+
+
+exports.getParentOfType = getParentOfType;
+
+var generateUniqueId = function generateUniqueId() {
+  var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+  var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+  var key = '';
+
+  for (var i = 0; i < length; i += 1) {
+    key += variables[Math.floor(Math.random() * variables.length)];
+  }
+
+  return key;
+};
+/**
+ * Compare equality of objects on value level.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {boolean} equal or not
+ */
+
+
+exports.generateUniqueId = generateUniqueId;
+
+var isObjectValuesSame = function isObjectValuesSame(source, target) {
+  return Object.keys(source).every(function (k) {
+    return source[k] === target[k];
+  });
+};
+
+exports.isObjectValuesSame = isObjectValuesSame;
 },{}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createBasicStore = exports.defaultTranslationGetter = exports.objectDeepMerge = void 0;
+exports.stateWatchFunction = exports.actionWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.defaultTranslationGetter = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _functions = require("../functions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21235,9 +21427,99 @@ exports.defaultTranslationGetter = defaultTranslationGetter;
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
   return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
 };
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
 
 exports.createBasicStore = createBasicStore;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/responsive/getters.js":[function(require,module,exports) {
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+/**
+ * Watch a list of actions from a list.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Object} action subscribe object
+ */
+
+
+exports.mutationWatchFunction = mutationWatchFunction;
+
+var actionWatchFunction = function actionWatchFunction(watchList, store) {
+  return {
+    before: function before(action, state) {
+      if (watchList.before[action.type]) {
+        watchList.before[action.type](action, state, store);
+      }
+    },
+    after: function after(action, state) {
+      if (watchList.after[action.type]) {
+        watchList.after[action.type](action, state, store);
+      }
+    }
+  };
+};
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+
+
+exports.actionWatchFunction = actionWatchFunction;
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
+
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _functions.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), callBack(store), {
+          deep: true
+        });
+      });
+    }
+  });
+};
+
+exports.stateWatchFunction = stateWatchFunction;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../functions":"functions/index.js"}],"stores/responsive/getters.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26759,6 +27041,8 @@ exports.default = void 0;
 
 var _vuex = require("vuex");
 
+var _i18n = require("@wordpress/i18n");
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -26782,6 +27066,16 @@ var withNativeTranslationStore = {
      */
     translationM: function translationM(key) {
       return this.$store.getters.translation(key);
+    },
+
+    /**
+     * Translate using WordPress client function.
+     *
+     * @param {string} phrase phrase to be translated
+     * @return {string} translated string
+     */
+    translationW: function translationW(phrase) {
+      return (0, _i18n.__)(phrase, 'wp-table-builder');
     }
   }
 };
@@ -26789,7 +27083,7 @@ var withNativeTranslationStore = {
 
 var _default = withNativeTranslationStore;
 exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"functions/DataSourceObject.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js"}],"functions/DataSourceObject.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29429,7 +29723,7 @@ var _default = {
     // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
     if (this.useDefault) {
       this.addDataManagerTempData({
-        data: [['1', '2', '3'], ['4', '5', '6']],
+        data: this.generateDefaultRowData(5, 5),
         markAsImported: false
       });
     }
@@ -29443,7 +29737,10 @@ var _default = {
         _this.prepareTableValues(_this.getDataManagerTempData);
       }
 
-      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
+      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName); // set up proxy for select click id
+
+
+      _this.setUpSelectionIdProxy();
     });
   },
   watch: {
@@ -29473,6 +29770,23 @@ var _default = {
     }
   }),
   methods: _objectSpread({
+    generateDefaultRowData: function generateDefaultRowData(rows, cols) {
+      var data = []; // eslint-disable-next-line no-plusplus
+
+      var _loop = function _loop(i) {
+        var tempArray = new Array(cols).fill(1);
+        tempArray.map(function (val, index) {
+          tempArray[index] = i * cols + index + 1;
+        });
+        data.push(tempArray);
+      };
+
+      for (var i = 0; i < rows; i++) {
+        _loop(i);
+      }
+
+      return data;
+    },
     handleRowDelete: function handleRowDelete(id) {
       var _this$parseCellId = this.parseCellId(id),
           rowId = _this$parseCellId.rowId;
@@ -29547,7 +29861,7 @@ var _default = {
 
                 _context.next = 7;
                 return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function (_, i) {
-                  return "".concat(_this2.translationM('column'), " ").concat(i + 1);
+                  return "".concat(_this2.translationW('Column'), " ").concat(i + 1);
                 }));
 
               case 7:
@@ -29578,7 +29892,7 @@ var _default = {
         }, _callee);
       }))();
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -29619,7 +29933,7 @@ exports.default = _default;
                       },
                       [
                         _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                          _vm._v(_vm._s(_vm.translationM("columnNames")))
+                          _vm._v(_vm._s(_vm.translationW("column names")))
                         ])
                       ]
                     ),
@@ -29657,7 +29971,7 @@ exports.default = _default;
                       },
                       [
                         _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                          _vm._v(_vm._s(_vm.translationM("values")))
+                          _vm._v(_vm._s(_vm.translationW("values")))
                         ])
                       ]
                     )
@@ -29970,7 +30284,9 @@ var _default = {
 
           _this.addDataManagerTempData({
             data: csvData
-          }); // show data manager setup
+          });
+
+          _this.setSetupSourceDataCreatedStatus(true); // show data manager setup
 
 
           _this.setActiveTabGroupForCurrentSource('dataManager');
@@ -29986,7 +30302,7 @@ var _default = {
         csvReader.readAsText(this.currentFile);
       }
     }
-  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']))
+  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId', 'setSetupSourceDataCreatedStatus']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']))
 };
 exports.default = _default;
         var $69ad22 = exports.default || module.exports;
@@ -30223,196 +30539,6 @@ render._withStripped = true
           };
         })());
       
-},{}],"functions/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.isObjectValuesSame = exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-/**
- * General functions that can be used through out app.
- */
-
-/**
- * Get a property value from an object with a string key.
- 
- * @param {string} stringKey key
- * @param {Object} target target object
- * @return {*} property value
- */
-// eslint-disable-next-line import/prefer-default-export
-var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
-  // split string key for inner properties
-  var splitKey = stringKey.split('.');
-
-  if (!Array.isArray(splitKey)) {
-    splitKey = [splitKey];
-  }
-
-  return splitKey.reduce(function (carry, item) {
-    return carry[item];
-  }, target);
-};
-/**
- * Set object property from string.
- *
- * @param {string} stringKey key
- * @param {Object} target target object
- * @param {*} value value
- */
-
-
-exports.objectPropertyFromString = objectPropertyFromString;
-
-var setObjectPropertyFromString = function setObjectPropertyFromString(stringKey, target, value) {
-  var splitKey = stringKey.split('.');
-
-  if (!Array.isArray(splitKey)) {
-    splitKey = [splitKey];
-  }
-
-  if (splitKey.length === 1) {
-    // eslint-disable-next-line no-param-reassign
-    target[splitKey[0]] = value;
-  } else {
-    var parents = splitKey.slice(0, splitKey.length - 1);
-    var parent = parents.reduce(function (carry, item) {
-      return carry[item];
-    }, target);
-    parent[splitKey[splitKey.length - 1]] = value;
-  }
-};
-/**
- * Get element id from a table element's class.
- *
- * @param {HTMLElement} tableElement table element
- * @return {null|string} null if no id is found
- */
-
-
-exports.setObjectPropertyFromString = setObjectPropertyFromString;
-
-var parseTableElementId = function parseTableElementId(tableElement) {
-  if (tableElement) {
-    var activeElementIdArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
-      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
-      return regExp.test(c);
-    })[0];
-
-    if (activeElementIdArray) {
-      return activeElementIdArray.replace('wptb-element-', '');
-    }
-  }
-
-  return null;
-};
-/**
- * Find table element type from its class.
- *
- * @param {HTMLElement} tableElement table element
- * @return {null|string} null if no type is found
- */
-
-
-exports.parseTableElementId = parseTableElementId;
-
-var parseElementType = function parseElementType(tableElement) {
-  if (tableElement) {
-    var activeElementKindArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
-      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
-      return regExp.test(c);
-    })[0];
-
-    if (activeElementKindArray) {
-      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
-
-      var _regExp$exec = regExp.exec(activeElementKindArray),
-          _regExp$exec2 = _slicedToArray(_regExp$exec, 2),
-          elementType = _regExp$exec2[1];
-
-      return elementType;
-    }
-  }
-
-  return null;
-};
-/**
- * Get a parent of an element in a specific node type.
- *
- * @param {HTMLElement} element element
- * @param {string} type node type
- */
-
-
-exports.parseElementType = parseElementType;
-
-var getParentOfType = function getParentOfType(element, type) {
-  function recursiveParent(el) {
-    var parent = el.parentNode;
-
-    if (parent.nodeName === type.toUpperCase()) {
-      return parent;
-    }
-
-    return recursiveParent(parent);
-  }
-
-  return recursiveParent(element);
-};
-/**
- * Generate an unique id.
- *
- * @param {number} id length
- * @param length
- * @return {string} generated id
- */
-
-
-exports.getParentOfType = getParentOfType;
-
-var generateUniqueId = function generateUniqueId() {
-  var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
-  var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
-  var key = '';
-
-  for (var i = 0; i < length; i += 1) {
-    key += variables[Math.floor(Math.random() * variables.length)];
-  }
-
-  return key;
-};
-/**
- * Compare equality of objects on value level.
- *
- * @param {Object} source source object
- * @param {Object} target target object
- * @return {boolean} equal or not
- */
-
-
-exports.generateUniqueId = generateUniqueId;
-
-var isObjectValuesSame = function isObjectValuesSame(source, target) {
-  return Object.keys(source).every(function (k) {
-    return source[k] === target[k];
-  });
-};
-
-exports.isObjectValuesSame = isObjectValuesSame;
 },{}],"components/dataTable/elementOptionTypeList.js":[function(require,module,exports) {
 "use strict";
 
@@ -34170,9 +34296,10 @@ var _default = {
 
     this.setComponentVisibility(WPTB_Helper.getCurrentSection() === this.sectionName); // enable saving data table options to table on table save operation
 
-    this.addOptionsAndDataToSave(); // set up proxy for select click id
-
-    this.setUpSelectionIdProxy(); // watch for save operation process responses
+    this.addOptionsAndDataToSave(); // @deprecated
+    // set up proxy for select click id
+    // this.setUpSelectionIdProxy();
+    // watch for save operation process responses
 
     this.watchSavedResponse(); // sync data source setup related state according to start up values, especially if builder is started at edit mode so it starts with a data object
 
@@ -34461,19 +34588,6 @@ var mutations = {
   },
 
   /**
-   * Clear contents of temp data manager.
-   *
-   * @param {Object} state data table state
-   */
-  clearTempDataManager: function clearTempDataManager(state) {
-    state.dataManager.tempData.values = [];
-    state.dataManager.tempData.rowIds = [];
-    state.dataManager.tempData.colIds = [];
-    state.dataManager.tempData.colCount = 0;
-    state.dataManager.tempData.rowCount = 0;
-  },
-
-  /**
    * Replace current data in temp data manager with new one.
    *
    * @param {Object} state data table state
@@ -34481,58 +34595,6 @@ var mutations = {
    */
   setDataManagerTempData: function setDataManagerTempData(state, data) {
     state.dataManager.tempData.values = data;
-  },
-
-  /**
-   * Set control value for data manager.
-   *
-   * @param {Object} state data table state
-   * @param {{key, value}} mutation payload
-   */
-  setDataManagerControl: function setDataManagerControl(state, _ref2) {
-    var key = _ref2.key,
-        value = _ref2.value;
-    state.dataManager.controls[key] = value;
-  },
-
-  /**
-   * Push a row id to data manager.
-   *
-   * @param {Object} state data table state
-   * @param {string} id id to be pushed
-   */
-  pushDataManagerRowId: function pushDataManagerRowId(state, id) {
-    state.dataManager.tempData.rowIds.push(id);
-  },
-
-  /**
-   * Push a column id to data manager.
-   *
-   * @param {Object} state data table state
-   * @param {string} id id to be pushed
-   */
-  pushDataManagerColId: function pushDataManagerColId(state, id) {
-    state.dataManager.tempData.colIds.push(id);
-  },
-
-  /**
-   * Set current row count.
-   *
-   * @param {Object} state data table state
-   * @param {number} count count
-   */
-  setRowCount: function setRowCount(state, count) {
-    state.dataManager.tempData.rowCount = count;
-  },
-
-  /**
-   * Set current column count.
-   *
-   * @param {Object} state data table state
-   * @param {number} count count
-   */
-  setColCount: function setColCount(state, count) {
-    state.dataManager.tempData.colCount = count;
   },
 
   /**
@@ -34589,51 +34651,6 @@ var mutations = {
   },
 
   /**
-   * Set store id of selected cell.
-   *
-   * @param {Object} state data table state
-   * @param {string} id set id for selected cell
-   */
-  setSelectId: function setSelectId(state, id) {
-    state.dataManager.select.clickId.id = id;
-  },
-
-  /**
-   * Set store id of hovered cell.
-   *
-   * @param {Object} state data table state
-   * @param {string} id set id for hovered cell
-   */
-  setHoverId: function setHoverId(state, id) {
-    state.dataManager.select.hoverId = id;
-  },
-
-  /**
-   * Set value to a data cell object
-   *
-   * @param {Object} state data table state
-   * @param {{rowId, colId, value}} mutation payload
-   */
-  setDataCellObjectValue: function setDataCellObjectValue(state, _ref3) {
-    var rowId = _ref3.rowId,
-        colId = _ref3.colId,
-        value = _ref3.value;
-    var rowObject = state.dataManager.tempData.values.find(function (r) {
-      return r.rowId === rowId;
-    });
-
-    if (rowObject) {
-      var cell = rowObject.values.find(function (c) {
-        return c.colId === colId;
-      });
-
-      if (cell) {
-        cell.value = value;
-      }
-    }
-  },
-
-  /**
    * Reset a property to its default values if defined.
    *
    * @param {Object} state data table state
@@ -34648,82 +34665,6 @@ var mutations = {
   },
 
   /**
-   * Add a row data to data manager.
-   *
-   * @param {Object} state data table state
-   * @param {Object} rowData row data object
-   */
-  addRowToDataTable: function addRowToDataTable(state, rowData) {
-    state.dataManager.tempData.values.push(rowData);
-  },
-
-  /**
-   * Add a cell to a table data row.
-   *
-   * Since because of the logic of the tables, when used, this mutation should be applied to all rows of the data manager table.
-   *
-   * @param {Object} state data table state
-   * @param {{rowIndex, cellObject}} mutation payload object
-   */
-  addCellToDataTableRow: function addCellToDataTableRow(state, _ref4) {
-    var rowIndex = _ref4.rowIndex,
-        cellObject = _ref4.cellObject;
-
-    if (rowIndex < state.dataManager.tempData.rowCount) {
-      // create a new rowObject to trigger reactivity
-      var rowObject = _objectSpread({}, state.dataManager.tempData.values[rowIndex]);
-
-      rowObject.values.push(cellObject);
-      state.dataManager.tempData.values.splice(rowIndex, 1, rowObject);
-    }
-  },
-
-  /**
-   * Delete a row from data manager.
-   *
-   * @param {Object} state data table state
-   * @param {string} rowId row id
-   */
-  deleteRowFromDataTable: function deleteRowFromDataTable(state, rowId) {
-    var rowIndex = state.dataManager.tempData.rowIds.indexOf(rowId);
-
-    if (rowIndex > -1) {
-      state.dataManager.tempData.values.splice(rowIndex, 1); // also delete row id from indexes
-
-      state.dataManager.tempData.rowIds.splice(rowIndex, 1);
-    }
-  },
-
-  /**
-   * Delete a column from data manager.
-   *
-   * @param {Object} state data table state
-   * @param {string} colId column id
-   */
-  deleteColFromDataTable: function deleteColFromDataTable(state, colId) {
-    var colIndex = state.dataManager.tempData.colIds.indexOf(colId);
-
-    if (colIndex >= 0) {
-      // generate new values to trigger reactivity
-      var newValues = state.dataManager.tempData.values.reduce(function (carry, val) {
-        var nVal = _objectSpread({}, val);
-
-        carry.push(nVal);
-        return carry;
-      }, []); // eslint-disable-next-line array-callback-return
-
-      newValues.map(function (v) {
-        v.values.splice(colIndex, 1);
-      });
-      state.dataManager.tempData.values = newValues; // also delete col id from indexes
-
-      state.dataManager.tempData.colIds.splice(colIndex, 1); // update column count
-
-      state.dataManager.tempData.colCount -= 1;
-    }
-  },
-
-  /**
    * Set data source id as selected source.
    *
    * @param {Object} state data table state
@@ -34734,36 +34675,14 @@ var mutations = {
   },
 
   /**
-   * Set parsed data object property values.
-   *
-   * @param {Object} state data table state
-   * @param {{key, value}} mutation payload
-   */
-  setParsedData: function setParsedData(state, _ref5) {
-    var key = _ref5.key,
-        value = _ref5.value;
-    state.dataManager.tempData.parsedData[key] = value;
-  },
-
-  /**
    * Set table as dirty
    *
    * @param {Object} state data table state
    */
-  setTableDirty: function setTableDirty(state) {
-    if (state.tableIsActive) {
-      new WPTB_TableStateSaveManager().tableStateSet();
-    }
-  },
-
-  /**
-   * Set proxy for selection click id.
-   *
-   * @param {Object} state data table state
-   * @param {Proxy} proxy proxy object
-   */
-  setClickIdProxy: function setClickIdProxy(state, proxy) {
-    state.dataManager.select.clickId = proxy;
+  setTableDirty: function setTableDirty(state) {// TODO [erdembircan] uncomment for production
+    // if (state.tableIsActive) {
+    // 	new WPTB_TableStateSaveManager().tableStateSet();
+    // }
   },
 
   /**
@@ -34772,10 +34691,10 @@ var mutations = {
    * @param {Object} state data table state
    * @param {{id, value, subIndex}} mutation payload
    */
-  setColumnBindingForElement: function setColumnBindingForElement(state, _ref6) {
-    var id = _ref6.id,
-        value = _ref6.value,
-        subIndex = _ref6.subIndex;
+  setColumnBindingForElement: function setColumnBindingForElement(state, _ref2) {
+    var id = _ref2.id,
+        value = _ref2.value,
+        subIndex = _ref2.subIndex;
 
     var bindings = _objectSpread({}, state.dataManager.bindings); // create a fresh object for the element binding if there isn't  any
 
@@ -34794,10 +34713,10 @@ var mutations = {
    * @param {Object} state data table state
    * @param {{id, value, subIndex}} mutation payload
    */
-  setRowBindingForId: function setRowBindingForId(state, _ref7) {
-    var id = _ref7.id,
-        value = _ref7.value,
-        subIndex = _ref7.subIndex;
+  setRowBindingForId: function setRowBindingForId(state, _ref3) {
+    var id = _ref3.id,
+        value = _ref3.value,
+        subIndex = _ref3.subIndex;
 
     var bindings = _objectSpread({}, state.dataManager.bindings);
 
@@ -34854,16 +34773,7 @@ var mutations = {
    */
   setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
     state.dataManager.controls = controlsObject;
-  } // /**
-  //  * Merge temp data object with the supplied object.
-  //  *
-  //  * @param {Object} state store state
-  //  * @param {Object} dataObject data object
-  //  */
-  // mergeTempData: (state, dataObject) => {
-  // 	state.dataManager.tempData = { ...state.dataManager.tempData, ...dataObject };
-  // },
-
+  }
 };
 /** @module mutations */
 
@@ -35015,152 +34925,14 @@ var actions = {
   },
 
   /**
-   * Generate a new cell object.
-   *
-   * @param {{getters, commit}} vuex store object
-   * @param {{value,index}} payload
-   * @return {Object} cell object
-   */
-  generateCell: function generateCell(_ref8, _ref9) {
-    var getters = _ref8.getters,
-        commit = _ref8.commit;
-    var value = _ref9.value,
-        index = _ref9.index;
-    var colId = getters.getDataManagerColId(index);
-
-    if (!colId) {
-      colId = getters.generateUniqueId();
-      commit('pushDataManagerColId', colId);
-    }
-
-    return {
-      colId: colId,
-      value: value
-    };
-  },
-
-  /**
-   * Generate a new row for data table manager.
-   *
-   * @param {{commit, getters, dispatch}} vuex store object
-   * @param {Array} colValues column values
-   * @return {Function} generated new row object
-   */
-  generateRow: function generateRow(_ref10, colValues) {
-    var commit = _ref10.commit,
-        getters = _ref10.getters,
-        dispatch = _ref10.dispatch;
-    var rowId = getters.generateUniqueId();
-    commit('pushDataManagerRowId', rowId);
-    var rowObj = {
-      rowId: rowId,
-      values: []
-    }; // eslint-disable-next-line array-callback-return
-
-    colValues.map( /*#__PURE__*/function () {
-      var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(value, i) {
-        var cellObject;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return dispatch('generateCell', {
-                  value: value,
-                  index: i
-                });
-
-              case 2:
-                cellObject = _context2.sent;
-                rowObj.values.push(cellObject);
-
-              case 4:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }));
-
-      return function (_x, _x2) {
-        return _ref11.apply(this, arguments);
-      };
-    }());
-    return rowObj;
-  },
-
-  /**
-   * Add temp data to data manager.
-   *
-   * @param {{commit, getters}} vuex store object
-   * @param {{data, markAsImported}} data data array
-   */
-  addDataManagerTempData: function addDataManagerTempData(_ref12, _ref13) {
-    var commit = _ref12.commit,
-        dispatch = _ref12.dispatch;
-    var data = _ref13.data,
-        markAsImported = _ref13.markAsImported;
-
-    if (markAsImported === undefined) {
-      // eslint-disable-next-line no-param-reassign
-      markAsImported = true;
-    }
-
-    var confirmedData = Array.isArray(data) ? data : [];
-    var maxCellsPerRow = confirmedData.reduce(function (carry, item) {
-      return Math.max(item.length, carry);
-    }, 0); // fill missing cells per rows to maximum column count
-    // eslint-disable-next-line array-callback-return
-
-    confirmedData.map(function (r) {
-      if (r.length < maxCellsPerRow) {
-        var difference = maxCellsPerRow - r.length;
-
-        for (var i = 0; i < difference; i += 1) {
-          r.push('');
-        }
-      }
-    });
-    commit('clearTempDataManager');
-    confirmedData.map( /*#__PURE__*/function () {
-      var _ref14 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(r) {
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return dispatch('addRowToDataManager', r);
-
-              case 2:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }));
-
-      return function (_x3) {
-        return _ref14.apply(this, arguments);
-      };
-    }());
-
-    if (markAsImported) {
-      // mark data created status
-      commit('setSetupSourceDataCreatedStatus', true);
-    }
-
-    commit('setHoverId', null);
-  },
-
-  /**
    * Set tab of current active source setup.
    *
    * @param {{state,commit}} vuex store object
    * @param {string} tabId tab id to change to
    */
-  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref15, tabId) {
-    var state = _ref15.state,
-        commit = _ref15.commit;
+  setActiveTabGroupForCurrentSource: function setActiveTabGroupForCurrentSource(_ref8, tabId) {
+    var state = _ref8.state,
+        commit = _ref8.commit;
     commit('setActiveControlTabGroup', {
       sourceId: state.dataSource.setup.sourceId,
       tabId: tabId
@@ -35174,8 +34946,8 @@ var actions = {
    * @param {string} callerId id of the component that started the operation
    * @return {Promise} Promise object
    */
-  startRowSelectOperation: function startRowSelectOperation(_ref16, callerId) {
-    var commit = _ref16.commit;
+  startRowSelectOperation: function startRowSelectOperation(_ref9, callerId) {
+    var commit = _ref9.commit;
     // set app to busy
     commit('setBusy', true); // reset selection data
 
@@ -35204,182 +34976,12 @@ var actions = {
    *
    * @param {{state, commit}} vuex store object
    */
-  cancelRowSelectOperation: function cancelRowSelectOperation(_ref17) {
-    var state = _ref17.state,
-        commit = _ref17.commit;
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref10) {
+    var state = _ref10.state,
+        commit = _ref10.commit;
     commit('setSelectStatus', false);
     state.dataManager.select.clickId.resolve(null);
     commit('resetSelectData');
-  },
-
-  /**
-   * Set value of data cell.
-   *
-   * @param {{getters}} vuex store object
-   * @param {{cellId, value}} payload
-   *
-   */
-  setDataCellValue: function setDataCellValue(_ref18, _ref19) {
-    var getters = _ref18.getters,
-        commit = _ref18.commit;
-    var cellId = _ref19.cellId,
-        value = _ref19.value;
-
-    var _getters$parseCellId = getters.parseCellId(cellId),
-        rowId = _getters$parseCellId.rowId,
-        colId = _getters$parseCellId.colId;
-
-    commit('setDataCellObjectValue', {
-      rowId: rowId,
-      colId: colId,
-      value: value
-    });
-    commit('setSetupSourceDataCreatedStatus', true);
-  },
-
-  /**
-   * Add a new row to data manager.
-   *
-   * @async
-   * @param {{getters,dispatch,commit}} vuex store object
-   * @param {Array} colValues values for columns
-   */
-  addRowToDataManager: function addRowToDataManager(_ref20) {
-    var _arguments = arguments;
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-      var getters, dispatch, commit, colValues, innerColValues, rowObject;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              getters = _ref20.getters, dispatch = _ref20.dispatch, commit = _ref20.commit;
-              colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
-              innerColValues = colValues;
-
-              if (colValues.length === 0) {
-                innerColValues = Array.from(new Array(getters.getColCount)).map(function () {
-                  return '';
-                });
-              }
-
-              _context4.next = 6;
-              return dispatch('generateRow', innerColValues);
-
-            case 6:
-              rowObject = _context4.sent;
-              commit('addRowToDataTable', rowObject);
-
-            case 8:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }))();
-  },
-
-  /**
-   * Add a column to data manager.
-   *
-   * @param {{commit, getters, dispatch}} vuex store object
-   * @param {string} value value of the newly added cells
-   */
-  addColumnToDataManager: function addColumnToDataManager(_ref21) {
-    var _arguments2 = arguments;
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-      var commit, getters, dispatch, value, colCount, rowCount;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              commit = _ref21.commit, getters = _ref21.getters, dispatch = _ref21.dispatch;
-              value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
-              colCount = getters.getColCount;
-              rowCount = getters.getRowCount;
-              _context6.next = 6;
-              return Array.from(new Array(rowCount)).map(function () {
-                return '';
-              }).map( /*#__PURE__*/function () {
-                var _ref22 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(r, rowIndex) {
-                  var cellObject;
-                  return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                    while (1) {
-                      switch (_context5.prev = _context5.next) {
-                        case 0:
-                          _context5.next = 2;
-                          return dispatch('generateCell', {
-                            value: value,
-                            index: colCount
-                          });
-
-                        case 2:
-                          cellObject = _context5.sent;
-                          commit('addCellToDataTableRow', {
-                            rowIndex: rowIndex,
-                            cellObject: cellObject
-                          });
-
-                        case 4:
-                        case "end":
-                          return _context5.stop();
-                      }
-                    }
-                  }, _callee5);
-                }));
-
-                return function (_x4, _x5) {
-                  return _ref22.apply(this, arguments);
-                };
-              }());
-
-            case 6:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6);
-    }))();
-  },
-
-  /**
-   * Delete a row object from data manager table.
-   *
-   * @param {{commit, getters}} vuex store object
-   * @param {string} rowId row id
-   */
-  deleteDataTableRow: function deleteDataTableRow(_ref23, rowId) {
-    var commit = _ref23.commit,
-        getters = _ref23.getters;
-    var index = getters.getDataManagerIndexFromId(rowId);
-    commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
-
-    var hoverRowIndex = index - 1 >= 0 ? index - 1 : index;
-    var hoverRowId = getters.getDataManagerRowId(hoverRowIndex);
-
-    var _getters$parseCellId2 = getters.parseCellId(getters.getHoverId),
-        colId = _getters$parseCellId2.colId;
-
-    commit('setHoverId', getters.formCellId(hoverRowId, colId));
-  },
-
-  /**
-   * Delete a column object from data manager table.
-   *
-   * @param {{commit}} vuex store object
-   * @param {string} colId column id
-   */
-  deleteDataTableCol: function deleteDataTableCol(_ref24, colId) {
-    var commit = _ref24.commit;
-    // @deprecated
-    // const index = getters.getDataManagerIndexFromId(colId, 'col');
-    commit('deleteColFromDataTable', colId); // @deprecated
-    // // calculate hover id that will be focused on after delete operation
-    // const hoverColIndex = index - 1 >= 0 ? index - 1 : index;
-    // const hoverColId = getters.getDataManagerColId(hoverColIndex);
-    // const { rowId } = getters.parseCellId(getters.getHoverId);
-    // commit('setHoverId', getters.formCellId(rowId, hoverColId));
-
-    commit('setHoverId', null);
   },
 
   /**
@@ -35387,9 +34989,9 @@ var actions = {
    *
    * @param {{commit, getters}} vuex store object
    */
-  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref25) {
-    var dispatch = _ref25.dispatch,
-        getters = _ref25.getters;
+  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref11) {
+    var dispatch = _ref11.dispatch,
+        getters = _ref11.getters;
     var currentSourceInSetup = getters.getCurrentSourceSetupId; // @deprecated
     // commit('setSelectedDataSource', currentSourceInSetup);
 
@@ -35401,11 +35003,11 @@ var actions = {
    *
    * @param {{state}} vuex store object
    */
-  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref26) {
-    var state = _ref26.state,
-        getters = _ref26.getters;
-    document.addEventListener('wptb:save:before', function (_ref27) {
-      var detail = _ref27.detail;
+  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref12) {
+    var state = _ref12.state,
+        getters = _ref12.getters;
+    document.addEventListener('wptb:save:before', function (_ref13) {
+      var detail = _ref13.detail;
       var dataManager = state.dataManager; // select data manager properties that will be saved to table
 
       var controls = dataManager.controls,
@@ -35429,6 +35031,7 @@ var actions = {
          * @param {Function} queryCall function to form a query to check for elements inside table. If query returns an element, it means binding is valid. Function takes binding element id as its only argument
          * @param {HTMLElement} tableElement table element
          */
+        // eslint-disable-next-line no-inner-declarations
 
         function validateBinding(binding, queryCall, tableElement) {
           // validate column bindings
@@ -35481,105 +35084,55 @@ var actions = {
   },
 
   /**
-   * Set up a proxy for selection click id.
-   *
-   * @param {{commit}} vuex store object
-   */
-  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref28) {
-    var commit = _ref28.commit;
-    var selectId = {
-      id: null,
-      resolve: null
-    };
-    var clickIdHandler = {
-      set: function set(obj, prop, val) {
-        if (prop === 'resolve') {
-          // eslint-disable-next-line no-param-reassign
-          obj[prop] = val;
-        } else {
-          // eslint-disable-next-line no-param-reassign
-          obj[prop] = val; // if resolve property is defined, call it with assigned value
-
-          if (obj.resolve) {
-            obj.resolve(val);
-          }
-        }
-
-        return true;
-      }
-    }; // set proxy for clicked cell id of select operation
-
-    commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
-  },
-
-  /**
-   * Add a row object as a header to data values
-   *
-   * @param {{commit}} vuex store object
-   * @param {Object} rowObject row object
-   */
-  addRowObjectAsHeader: function addRowObjectAsHeader(_ref29, rowObject) {
-    var commit = _ref29.commit;
-    // add property that will mark this row object as created for only column name purposes
-    // eslint-disable-next-line no-param-reassign
-    rowObject.generatedForHeader = true;
-    commit('setDataManagerControl', {
-      key: 'indexRow',
-      value: rowObject.rowId
-    });
-    commit('addRowToDataTable', rowObject);
-  },
-
-  /**
    * Find main table of the builder.
    *
    * @param {{commit}} vuex store object
    * @param {string} query element query
    * @return {HTMLElement|null} found table
    */
-  findMainTable: function findMainTable(_ref30, query) {
-    var commit = _ref30.commit;
+  findMainTable: function findMainTable(_ref14, query) {
+    var commit = _ref14.commit;
     var mainTable = document.querySelector(query);
     commit('setTargetTable', mainTable);
     commit('setTableActiveStatus', mainTable !== null);
     return mainTable;
   },
-  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref31, query) {
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref15, query) {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       var dispatch, mainTable;
-      return regeneratorRuntime.wrap(function _callee8$(_context8) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              dispatch = _ref31.dispatch;
-              _context8.next = 3;
+              dispatch = _ref15.dispatch;
+              _context3.next = 3;
               return dispatch('findMainTable', query);
 
             case 3:
-              mainTable = _context8.sent;
+              mainTable = _context3.sent;
 
               // if main table is not available at the time this action is called, add an event listener to table generated event to find it again
               if (!mainTable) {
-                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                   var foundMainTable;
-                  return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                  return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
-                      switch (_context7.prev = _context7.next) {
+                      switch (_context2.prev = _context2.next) {
                         case 0:
-                          _context7.next = 2;
+                          _context2.next = 2;
                           return dispatch('findMainTable', query);
 
                         case 2:
-                          foundMainTable = _context7.sent;
+                          foundMainTable = _context2.sent;
                           // set up a mutation observer for main table
                           dispatch('setUpTableMutationObserver', foundMainTable);
 
                         case 4:
                         case "end":
-                          return _context7.stop();
+                          return _context2.stop();
                       }
                     }
-                  }, _callee7);
+                  }, _callee2);
                 })));
               } else {
                 // set up a mutation observer for main table
@@ -35588,10 +35141,10 @@ var actions = {
 
             case 5:
             case "end":
-              return _context8.stop();
+              return _context3.stop();
           }
         }
-      }, _callee8);
+      }, _callee3);
     }))();
   },
 
@@ -35602,8 +35155,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {HTMLElement} tableElement main table element
    */
-  setUpTableMutationObserver: function setUpTableMutationObserver(_ref33, tableElement) {
-    var commit = _ref33.commit;
+  setUpTableMutationObserver: function setUpTableMutationObserver(_ref17, tableElement) {
+    var commit = _ref17.commit;
     // observer config object
     var config = {
       attributes: true,
@@ -35628,10 +35181,10 @@ var actions = {
    * @param {Object} root store action object
    * @param {Function} root.commit commit function for mutations
    */
-  watchSavedResponse: function watchSavedResponse(_ref34) {
-    var commit = _ref34.commit;
-    document.addEventListener('wptb:saved:response:data', function (_ref35) {
-      var detail = _ref35.detail;
+  watchSavedResponse: function watchSavedResponse(_ref18) {
+    var commit = _ref18.commit;
+    document.addEventListener('wptb:saved:response:data', function (_ref19) {
+      var detail = _ref19.detail;
 
       if (detail.dataTable) {
         if (detail.dataTable.dataObject) {
@@ -35649,9 +35202,9 @@ var actions = {
    * @param {Function} root.commit commit function for mutations
    * @param {Function} root.getters getters store state getters
    */
-  syncDataSourceSetup: function syncDataSourceSetup(_ref36) {
-    var commit = _ref36.commit,
-        getters = _ref36.getters;
+  syncDataSourceSetup: function syncDataSourceSetup(_ref20) {
+    var commit = _ref20.commit,
+        getters = _ref20.getters;
     var _getters$getDataObjec = getters.getDataObject,
         type = _getters$getDataObjec.type,
         controls = _getters$getDataObjec.controls,
@@ -35673,18 +35226,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * Data table getter methods.
@@ -35812,182 +35353,6 @@ var getters = {
   },
 
   /**
-   * Generate unique id.
-   *
-   * @return {Function} generate function
-   */
-  generateUniqueId: function generateUniqueId() {
-    return function () {
-      var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
-      var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
-      var key = '';
-
-      for (var i = 0; i < length; i += 1) {
-        key += variables[Math.floor(Math.random() * variables.length)];
-      }
-
-      return key;
-    };
-  },
-
-  /**
-   * Get data manager row id of a given index.
-   *
-   * @param {Object} state store state
-   * @return {function(*): (*|0)} function that can be used with an argument
-   */
-  getDataManagerRowId: function getDataManagerRowId(state) {
-    return function (index) {
-      if (state.dataManager.tempData.rowIds[index]) {
-        return state.dataManager.tempData.rowIds[index];
-      }
-
-      return null;
-    };
-  },
-
-  /**
-   * Get data manager column id of a given index.
-   *
-   * @param {Object} state store state
-   * @return {function(*): (*|0)} function that can be used with an argument
-   */
-  getDataManagerColId: function getDataManagerColId(state) {
-    return function (index) {
-      if (state.dataManager.tempData.colIds[index]) {
-        return state.dataManager.tempData.colIds[index];
-      }
-
-      return null;
-    };
-  },
-
-  /**
-   * Get current column count.
-   *
-   * @param {Object} state data table state
-   * @return {number} column count
-   */
-  getColCount: function getColCount(state) {
-    return state.dataManager.tempData.colCount;
-  },
-
-  /**
-   * Get current row count.
-   *
-   * @param {Object} state data table state
-   * @return {number} column count
-   */
-  getRowCount: function getRowCount(state) {
-    return state.dataManager.tempData.rowCount;
-  },
-
-  /**
-   * Get data related to select operation.
-   *
-   * @param {Object} state store state
-   * @return {Object} select operation related data
-   */
-  getSelectOperationData: function getSelectOperationData(state) {
-    return state.dataManager.select;
-  },
-
-  /**
-   * Is data selection active on data table manager.
-   *
-   * @param {Object} state store state
-   * @return {boolean} active or not
-   */
-  isDataSelectionActive: function isDataSelectionActive(state) {
-    return state.dataManager.select.active;
-  },
-
-  /**
-   * Get row and column ids of a cell from a formed id.
-   *
-   * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
-   */
-  parseCellId: function parseCellId() {
-    return function (formedId) {
-      var idObject = {
-        rowId: null,
-        colId: null
-      };
-
-      if (formedId !== null) {
-        var _formedId$split = formedId.split('-'),
-            _formedId$split2 = _slicedToArray(_formedId$split, 2),
-            rowId = _formedId$split2[0],
-            colId = _formedId$split2[1];
-
-        idObject.rowId = rowId;
-        idObject.colId = colId;
-      }
-
-      return idObject;
-    };
-  },
-
-  /**
-   * Form a cell id from row and col ids.
-   *
-   * @return {function(*, *): string} cell id form function
-   */
-  formCellId: function formCellId() {
-    return function (rowId, colId) {
-      return "".concat(rowId, "-").concat(colId);
-    };
-  },
-
-  /**
-   * Get data cell object
-   *
-   * @param {Object} state store state
-   * @param {Object} getters store getters
-   */
-  // eslint-disable-next-line no-shadow
-  getDataCellObject: function getDataCellObject(state, getters) {
-    return function (rowId, colId) {
-      var dataValues = getters.getDataManagerTempData;
-      var row = dataValues.find(function (r) {
-        return r.rowId === rowId;
-      });
-
-      if (row) {
-        var cellObjects = row.values;
-        return cellObjects.find(function (c) {
-          return c.colId === colId;
-        });
-      }
-
-      return null;
-    };
-  },
-
-  /**
-   * Get hover id of current hovered cell.
-   *
-   * @param {Object} state store state
-   * @return {null|string} hover id of the hovered data table cell
-   */
-  getHoverId: function getHoverId(state) {
-    return state.dataManager.select.hoverId;
-  },
-
-  /**
-   * Get index of given type and id from data manager ids.
-   *
-   * @param {Object} state store state
-   * @return {Function} function to be used to determine index from id.
-   */
-  getDataManagerIndexFromId: function getDataManagerIndexFromId(state) {
-    return function (id) {
-      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'row';
-      return state.dataManager.tempData["".concat(type, "Ids")].indexOf(id);
-    };
-  },
-
-  /**
    * Get selected and generated data source id.
    *
    * @param {Object} state store state
@@ -36017,18 +35382,6 @@ var getters = {
   // eslint-disable-next-line no-shadow
   getCurrentSourceSetupTab: function getCurrentSourceSetupTab(state, getters) {
     return getters.currentSetupGroupTab(getters.getCurrentSourceSetupId);
-  },
-
-  /**
-   * Get parsed values of data table.
-   *
-   * This object will contain separated values of header and body values of data table.
-   *
-   * @param {Object} state store state
-   * @return {Object} parsed data object
-   */
-  parsedData: function parsedData(state) {
-    return state.dataManager.tempData.parsedData;
   },
 
   /**
@@ -36108,7 +35461,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _functions = require("../../functions");
+var _general = require("../general");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -36117,81 +35470,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**
- * Mutation watch list.
- *
- * Keys for mutation types, and values for function to be called when specified mutation type is applied.
- *
- * @type {Object}
- */
-var mutationWatchList = {
-  addRowToDataTable: function addRowToDataTable(_ref, state, store) {
-    var payload = _ref.payload;
-    var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
-
-    store.commit('setColCount', colCount);
-  }
-};
-/**
  * Action watch list.
  *
- * Keys for action types, and values for function to be called when specified action type is applied.
- *
  * @type {Object}
  */
-
 var actionWatchList = {
   before: {},
   after: {
-    addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
-      var colCount = store.getters.getColCount + 1; // set col count from table data
-
-      store.commit('setColCount', colCount);
+    setDataCellValue: function setDataCellValue(payload, state, store) {
+      store.commit('setSetupSourceDataCreatedStatus', true);
     }
   }
-};
-/**
- * Watch a list of actions from a list.
- *
- * @param {Object} watchList watch list to be used
- * @param {Object} store store object
- * @return {Object} action subscribe object
- */
-
-var actionWatchFunction = function actionWatchFunction(watchList, store) {
-  return {
-    before: function before(action, state) {
-      if (watchList.before[action.type]) {
-        watchList.before[action.type](action, state, store);
-      }
-    },
-    after: function after(action, state) {
-      if (watchList.after[action.type]) {
-        watchList.after[action.type](action, state, store);
-      }
-    }
-  };
-};
-/**
- * Watch function to be used at store event subscriptions.
- *
- * @param {Object} watchList watch list to be used
- * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
- */
-
-
-var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    var payload = args[0];
-
-    if (watchList[payload.type]) {
-      watchList[payload.type].apply(watchList, args.concat([store]));
-    }
-  };
 };
 /**
  * State watch list.
@@ -36199,18 +35488,7 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
  * @type {Object}
  */
 
-
 var stateWatchList = {
-  tempData: {
-    callAtStart: true,
-    watch: 'dataManager.tempData.values',
-    callBack: function callBack(store) {
-      return function () {
-        // set row count from table data
-        store.commit('setRowCount', store.getters.getDataManagerTempData.length);
-      };
-    }
-  },
   syncDataObject: {
     watch: ['dataManager.controls', 'dataManager.tempData'],
     callBack: function callBack(store) {
@@ -36234,65 +35512,7 @@ var stateWatchList = {
         store.commit('setTableDirty');
       };
     }
-  },
-  headerRow: {
-    watch: ['dataManager.controls.indexRow'],
-    callBack: function callBack(store) {
-      return function () {
-        var indexRow = store.state.dataManager.controls.indexRow;
-        var deleteIds = []; // delete all rows that are generated for header that are not current index row
-        // eslint-disable-next-line array-callback-return
-
-        store.state.dataManager.tempData.values.map(function (r) {
-          if (r.rowId !== indexRow && r.generatedForHeader) {
-            deleteIds.push(r.rowId);
-          }
-        }); // eslint-disable-next-line array-callback-return
-
-        deleteIds.map(function (id) {
-          store.commit('deleteRowFromDataTable', id);
-        });
-      };
-    }
   }
-};
-/**
- * State watch function.
- *
- * @param {Object} store vuex store object
- * @param {Object} watchList watch list */
-
-var stateWatchFunction = function stateWatchFunction(store, watchList) {
-  // eslint-disable-next-line array-callback-return
-  Object.keys(watchList).map(function (k) {
-    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
-      var _watchList$k = watchList[k],
-          watch = _watchList$k.watch,
-          callBack = _watchList$k.callBack,
-          callAtStart = _watchList$k.callAtStart;
-
-      if (!Array.isArray(watch)) {
-        watch = [watch];
-      }
-
-      var stateGetter = function stateGetter(keyString, storeObject) {
-        return function () {
-          return (0, _functions.objectPropertyFromString)(keyString, storeObject.state);
-        };
-      }; // eslint-disable-next-line array-callback-return
-
-
-      watch.map(function (w) {
-        if (callAtStart) {
-          callBack(store)(stateGetter(w, store)());
-        }
-
-        store.watch(stateGetter(w, store), callBack(store), {
-          deep: true
-        });
-      });
-    }
-  });
 };
 /**
  * Store subscriptions to watch various store events.
@@ -36300,18 +35520,16 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
  * @param {Object} store flux store
  */
 
-
 var subscriptions = function subscriptions(store) {
-  stateWatchFunction(store, stateWatchList);
-  store.subscribe(mutationWatchFunction(mutationWatchList, store));
-  store.subscribeAction(actionWatchFunction(actionWatchList, store));
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
 };
 /* @module subscriptions */
 
 
 var _default = subscriptions;
 exports.default = _default;
-},{"../../functions":"functions/index.js"}],"stores/dataTables/index.js":[function(require,module,exports) {
+},{"../general":"stores/general.js"}],"stores/dataTables/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36405,7 +35623,394 @@ var createStore = function createStore() {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js"}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/**
+ * Data manager store actions.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Add temp data to data manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store commit function
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Object} payload action payload object
+   * @param {Object} payload.data data
+   */
+  addDataManagerTempData: function addDataManagerTempData(_ref, _ref2) {
+    var commit = _ref.commit,
+        dispatch = _ref.dispatch;
+    var data = _ref2.data;
+    var confirmedData = Array.isArray(data) ? data : [];
+    var maxCellsPerRow = confirmedData.reduce(function (carry, item) {
+      return Math.max(item.length, carry);
+    }, 0); // fill missing cells per rows to maximum column count
+    // eslint-disable-next-line array-callback-return
+
+    confirmedData.map(function (r) {
+      if (r.length < maxCellsPerRow) {
+        var difference = maxCellsPerRow - r.length;
+
+        for (var i = 0; i < difference; i += 1) {
+          r.push('');
+        }
+      }
+    });
+    commit('clearTempDataManager');
+    confirmedData.map( /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(r) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return dispatch('addRowToDataManager', r);
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function (_x) {
+        return _ref3.apply(this, arguments);
+      };
+    }());
+    commit('setHoverId', null);
+  },
+
+  /**
+   * Generate a new row for data table manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Array} colValues column values
+   * @return {Function} generated new row object
+   */
+  generateRow: function generateRow(_ref4, colValues) {
+    var commit = _ref4.commit,
+        getters = _ref4.getters,
+        dispatch = _ref4.dispatch;
+    var rowId = getters.generateUniqueId();
+    commit('pushDataManagerRowId', rowId);
+    var rowObj = {
+      rowId: rowId,
+      values: []
+    }; // eslint-disable-next-line array-callback-return
+
+    colValues.map( /*#__PURE__*/function () {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(value, i) {
+        var cellObject;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return dispatch('generateCell', {
+                  value: value,
+                  index: i
+                });
+
+              case 2:
+                cellObject = _context2.sent;
+                rowObj.values.push(cellObject);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x2, _x3) {
+        return _ref5.apply(this, arguments);
+      };
+    }());
+    return rowObj;
+  },
+
+  /**
+   * Add a new row to data manager.
+   *
+   * @async
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Array} colValues values for columns
+   */
+  addRowToDataManager: function addRowToDataManager(_ref6) {
+    var _arguments = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var getters, dispatch, commit, colValues, innerColValues, rowObject;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              getters = _ref6.getters, dispatch = _ref6.dispatch, commit = _ref6.commit;
+              colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
+              innerColValues = colValues;
+
+              if (colValues.length === 0) {
+                innerColValues = Array.from(new Array(getters.getColCount)).map(function () {
+                  return '';
+                });
+              }
+
+              _context3.next = 6;
+              return dispatch('generateRow', innerColValues);
+
+            case 6:
+              rowObject = _context3.sent;
+              commit('addRowToDataTable', rowObject);
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+
+  /**
+   * Generate a new cell object.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} payload payload object
+   * @param {string|number} payload.value value
+   * @param {number} payload.index column index
+   *
+   * @return {Object} cell object
+   */
+  generateCell: function generateCell(_ref7, _ref8) {
+    var getters = _ref7.getters,
+        commit = _ref7.commit;
+    var value = _ref8.value,
+        index = _ref8.index;
+    var colId = getters.getDataManagerColId(index);
+
+    if (!colId) {
+      colId = getters.generateUniqueId();
+      commit('pushDataManagerColId', colId);
+    }
+
+    return {
+      colId: colId,
+      value: value
+    };
+  },
+
+  /**
+   * Add a row object as a header to data values
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   *
+   * @param {Object} rowObject row object
+   */
+  addRowObjectAsHeader: function addRowObjectAsHeader(_ref9, rowObject) {
+    var commit = _ref9.commit;
+    // add property that will mark this row object as created for only column name purposes
+    // eslint-disable-next-line no-param-reassign
+    rowObject.generatedForHeader = true;
+    commit('setDataManagerControl', {
+      key: 'indexRow',
+      value: rowObject.rowId
+    });
+    commit('addRowToDataTable', rowObject);
+  },
+
+  /**
+   * Add a column to data manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {string} value value of the newly added cells
+   */
+  addColumnToDataManager: function addColumnToDataManager(_ref10) {
+    var _arguments2 = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+      var commit, getters, dispatch, value, colCount, rowCount;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              commit = _ref10.commit, getters = _ref10.getters, dispatch = _ref10.dispatch;
+              value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
+              colCount = getters.getColCount;
+              rowCount = getters.getRowCount;
+              _context5.next = 6;
+              return Array.from(new Array(rowCount)).map(function () {
+                return '';
+              }).map( /*#__PURE__*/function () {
+                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
+                  var cellObject;
+                  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                      switch (_context4.prev = _context4.next) {
+                        case 0:
+                          _context4.next = 2;
+                          return dispatch('generateCell', {
+                            value: value,
+                            index: colCount
+                          });
+
+                        case 2:
+                          cellObject = _context4.sent;
+                          commit('addCellToDataTableRow', {
+                            rowIndex: rowIndex,
+                            cellObject: cellObject
+                          });
+
+                        case 4:
+                        case "end":
+                          return _context4.stop();
+                      }
+                    }
+                  }, _callee4);
+                }));
+
+                return function (_x4, _x5) {
+                  return _ref11.apply(this, arguments);
+                };
+              }());
+
+            case 6:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }))();
+  },
+
+  /**
+   * Delete a row object from data manager table.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} root.getters vuex store getter
+   * @param {string} rowId row id
+   */
+  deleteDataTableRow: function deleteDataTableRow(_ref12, rowId) {
+    var commit = _ref12.commit,
+        getters = _ref12.getters;
+    var index = getters.getDataManagerIndexFromId(rowId);
+    commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
+
+    var hoverRowIndex = index - 1 >= 0 ? index - 1 : index;
+    var hoverRowId = getters.getDataManagerRowId(hoverRowIndex);
+
+    var _getters$parseCellId = getters.parseCellId(getters.getHoverId),
+        colId = _getters$parseCellId.colId;
+
+    commit('setHoverId', getters.formCellId(hoverRowId, colId));
+  },
+
+  /**
+   * Delete a column object from data manager table.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {string} colId column id
+   */
+  deleteDataTableCol: function deleteDataTableCol(_ref13, colId) {
+    var commit = _ref13.commit;
+    commit('deleteColFromDataTable', colId);
+    commit('setHoverId', null);
+  },
+
+  /**
+   * Set value of data cell.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} payload action payload
+   * @param {string} payload.cellId cell id
+   * @param {string|number} payload.value cell value
+   */
+  setDataCellValue: function setDataCellValue(_ref14, _ref15) {
+    var getters = _ref14.getters,
+        commit = _ref14.commit;
+    var cellId = _ref15.cellId,
+        value = _ref15.value;
+
+    var _getters$parseCellId2 = getters.parseCellId(cellId),
+        rowId = _getters$parseCellId2.rowId,
+        colId = _getters$parseCellId2.colId;
+
+    commit('setDataCellObjectValue', {
+      rowId: rowId,
+      colId: colId,
+      value: value
+    }); // @deprecated
+    // commit('setSetupSourceDataCreatedStatus', true);
+  },
+
+  /**
+   * Set up a proxy for selection click id.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   */
+  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref16) {
+    var commit = _ref16.commit;
+    var selectId = {
+      id: null,
+      resolve: null
+    };
+    var clickIdHandler = {
+      set: function set(obj, prop, val) {
+        if (prop === 'resolve') {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val;
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val; // if resolve property is defined, call it with assigned value
+
+          if (obj.resolve) {
+            obj.resolve(val);
+          }
+        }
+
+        return true;
+      }
+    }; // set proxy for clicked cell id of select operation
+
+    commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
+  }
+};
+/**
+ * @module actions
+ */
+
+var _default = actions;
+exports.default = _default;
+},{}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36480,6 +36085,223 @@ var mutations = {
    */
   mergeTempData: function mergeTempData(state, dataObject) {
     state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
+  },
+
+  /**
+   * Clear contents of temp data manager.
+   *
+   * @param {Object} state data table state
+   */
+  clearTempDataManager: function clearTempDataManager(state) {
+    state.tempData.values = [];
+    state.tempData.rowIds = [];
+    state.tempData.colIds = [];
+    state.tempData.colCount = 0;
+    state.tempData.rowCount = 0;
+  },
+
+  /**
+   * Push a row id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerRowId: function pushDataManagerRowId(state, id) {
+    state.tempData.rowIds.push(id);
+  },
+
+  /**
+   * Push a column id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerColId: function pushDataManagerColId(state, id) {
+    state.tempData.colIds.push(id);
+  },
+
+  /**
+   * Add a row data to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {Object} rowData row data object
+   */
+  addRowToDataTable: function addRowToDataTable(state, rowData) {
+    state.tempData.values.push(rowData);
+  },
+
+  /**
+   * Set store id of hovered cell.
+   *
+   * @param {Object} state data table state
+   * @param {string} id set id for hovered cell
+   */
+  setHoverId: function setHoverId(state, id) {
+    state.select.hoverId = id;
+  },
+
+  /**
+   * Set control value for data manager.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.key control key
+   * @param {string|number|boolean} payload.value control value
+   */
+  setDataManagerControl: function setDataManagerControl(state, _ref) {
+    var key = _ref.key,
+        value = _ref.value;
+    state.controls[key] = value;
+  },
+
+  /**
+   * Set parsed data object property values.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.key data key
+   * @param {string|number|boolean} payload.value data value
+   */
+  setParsedData: function setParsedData(state, _ref2) {
+    var key = _ref2.key,
+        value = _ref2.value;
+    state.tempData.parsedData[key] = value;
+  },
+
+  /**
+   * Set current column count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setColCount: function setColCount(state, count) {
+    state.tempData.colCount = count;
+  },
+
+  /**
+   * Set current row count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setRowCount: function setRowCount(state, count) {
+    state.tempData.rowCount = count;
+  },
+
+  /**
+   * Add a cell to a table data row.
+   *
+   * Since because of the logic of the tables, when used, this mutation should be applied to all rows of the data manager table.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload object
+   * @param {number} payload.rowIndex row index
+   * @param {Object} payload.cellObject cell object to be added
+   */
+  addCellToDataTableRow: function addCellToDataTableRow(state, _ref3) {
+    var rowIndex = _ref3.rowIndex,
+        cellObject = _ref3.cellObject;
+
+    if (rowIndex < state.tempData.rowCount) {
+      // create a new rowObject to trigger reactivity
+      var rowObject = _objectSpread({}, state.tempData.values[rowIndex]);
+
+      rowObject.values.push(cellObject);
+      state.tempData.values.splice(rowIndex, 1, rowObject);
+    }
+  },
+
+  /**
+   * Set value to a data cell object
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.rowId cell row id
+   * @param {string} payload.colId cell column id
+   * @param {string|number} payload.value cell column value
+   */
+  setDataCellObjectValue: function setDataCellObjectValue(state, _ref4) {
+    var rowId = _ref4.rowId,
+        colId = _ref4.colId,
+        value = _ref4.value;
+    var rowObject = state.tempData.values.find(function (r) {
+      return r.rowId === rowId;
+    });
+
+    if (rowObject) {
+      var cell = rowObject.values.find(function (c) {
+        return c.colId === colId;
+      });
+
+      if (cell) {
+        cell.value = value;
+      }
+    }
+  },
+
+  /**
+   * Delete a row from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} rowId row id
+   */
+  deleteRowFromDataTable: function deleteRowFromDataTable(state, rowId) {
+    var rowIndex = state.tempData.rowIds.indexOf(rowId);
+
+    if (rowIndex > -1) {
+      state.tempData.values.splice(rowIndex, 1); // also delete row id from indexes
+
+      state.tempData.rowIds.splice(rowIndex, 1);
+    }
+  },
+
+  /**
+   * Delete a column from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} colId column id
+   */
+  deleteColFromDataTable: function deleteColFromDataTable(state, colId) {
+    var colIndex = state.tempData.colIds.indexOf(colId);
+
+    if (colIndex >= 0) {
+      // generate new values to trigger reactivity
+      var newValues = state.tempData.values.reduce(function (carry, val) {
+        var nVal = _objectSpread({}, val);
+
+        carry.push(nVal);
+        return carry;
+      }, []); // eslint-disable-next-line array-callback-return
+
+      newValues.map(function (v) {
+        v.values.splice(colIndex, 1);
+      });
+      state.tempData.values = newValues; // also delete col id from indexes
+
+      state.tempData.colIds.splice(colIndex, 1); // update column count
+
+      state.tempData.colCount -= 1;
+    }
+  },
+
+  /**
+   * Set store id of selected cell.
+   *
+   * @param {Object} state data table state
+   * @param {string} id set id for selected cell
+   */
+  setSelectId: function setSelectId(state, id) {
+    state.select.clickId.id = id;
+  },
+
+  /**
+   * Set proxy for selection click id.
+   *
+   * @param {Object} state data table state
+   * @param {Proxy} proxy proxy object
+   */
+  setClickIdProxy: function setClickIdProxy(state, proxy) {
+    state.select.clickId = proxy;
   }
 };
 /**
@@ -36495,6 +36317,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * Data manager store getters.
@@ -36520,6 +36354,194 @@ var getters = {
    */
   getDataManagerControls: function getDataManagerControls(state) {
     return state.controls;
+  },
+
+  /**
+   * Get current column count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getColCount: function getColCount(state) {
+    return state.tempData.colCount;
+  },
+
+  /**
+   * Get current row count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getRowCount: function getRowCount(state) {
+    return state.tempData.rowCount;
+  },
+
+  /**
+   * Generate unique id.
+   *
+   * @return {Function} generate function
+   */
+  generateUniqueId: function generateUniqueId() {
+    return function () {
+      var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 11;
+      var variables = 'abcdef0123456789'.split('');
+      var key = '';
+
+      for (var i = 0; i < length; i += 1) {
+        key += variables[Math.floor(Math.random() * variables.length)];
+      }
+
+      return key;
+    };
+  },
+
+  /**
+   * Get data manager column id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerColId: function getDataManagerColId(state) {
+    return function (index) {
+      if (state.tempData.colIds[index]) {
+        return state.tempData.colIds[index];
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Is data selection active on data table manager.
+   *
+   * @param {Object} state store state
+   * @return {boolean} active or not
+   */
+  isDataSelectionActive: function isDataSelectionActive(state) {
+    return state.select.active;
+  },
+
+  /**
+   * Get parsed values of data table.
+   *
+   * This object will contain separated values of header and body values of data table.
+   *
+   * @param {Object} state store state
+   * @return {Object} parsed data object
+   */
+  parsedData: function parsedData(state) {
+    return state.tempData.parsedData;
+  },
+
+  /**
+   * Get row and column ids of a cell from a formed id.
+   *
+   * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
+   */
+  parseCellId: function parseCellId() {
+    return function (formedId) {
+      var idObject = {
+        rowId: null,
+        colId: null
+      };
+
+      if (formedId !== null) {
+        var _formedId$split = formedId.split('-'),
+            _formedId$split2 = _slicedToArray(_formedId$split, 2),
+            rowId = _formedId$split2[0],
+            colId = _formedId$split2[1];
+
+        idObject.rowId = rowId;
+        idObject.colId = colId;
+      }
+
+      return idObject;
+    };
+  },
+
+  /**
+   * Get hover id of current hovered cell.
+   *
+   * @param {Object} state store state
+   * @return {null|string} hover id of the hovered data table cell
+   */
+  getHoverId: function getHoverId(state) {
+    return state.select.hoverId;
+  },
+
+  /**
+   * Get data related to select operation.
+   *
+   * @param {Object} state store state
+   * @return {Object} select operation related data
+   */
+  getSelectOperationData: function getSelectOperationData(state) {
+    return state.select;
+  },
+
+  /**
+   * Form a cell id from row and col ids.
+   *
+   * @return {function(*, *): string} cell id form function
+   */
+  formCellId: function formCellId() {
+    return function (rowId, colId) {
+      return "".concat(rowId, "-").concat(colId);
+    };
+  },
+
+  /**
+   * Get data cell object
+   *
+   * @param {Object} state store state
+   * @param {Object} getters store getters
+   */
+  // eslint-disable-next-line no-shadow
+  getDataCellObject: function getDataCellObject(state, getters) {
+    return function (rowId, colId) {
+      var dataValues = getters.getDataManagerTempData;
+      var row = dataValues.find(function (r) {
+        return r.rowId === rowId;
+      });
+
+      if (row) {
+        var cellObjects = row.values;
+        return cellObjects.find(function (c) {
+          return c.colId === colId;
+        });
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Get data manager row id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerRowId: function getDataManagerRowId(state) {
+    return function (index) {
+      if (state.tempData.rowIds[index]) {
+        return state.tempData.rowIds[index];
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Get index of given type and id from data manager ids.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to be used to determine index from id.
+   */
+  getDataManagerIndexFromId: function getDataManagerIndexFromId(state) {
+    return function (id) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'row';
+      return state.tempData["".concat(type, "Ids")].indexOf(id);
+    };
   }
 };
 /**
@@ -36528,7 +36550,108 @@ var getters = {
 
 var _default = getters;
 exports.default = _default;
-},{}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
+},{}],"stores/modules/dataManager/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _general = require("../../general");
+
+/**
+ * Mutation watch list.
+ *
+ * Keys for mutation types, and values for function to be called when specified mutation type is applied.
+ *
+ * @type {Object}
+ */
+var mutationWatchList = {
+  addRowToDataTable: function addRowToDataTable(_ref, state, store) {
+    var payload = _ref.payload;
+    var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
+
+    store.commit('setColCount', colCount);
+  }
+};
+/**
+ * Action watch list.
+ *
+ * Keys for action types, and values for function to be called when specified action type is applied.
+ *
+ * @type {Object}
+ */
+
+var actionWatchList = {
+  before: {},
+  after: {
+    addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
+      var colCount = store.getters.getColCount + 1; // set col count from table data
+
+      store.commit('setColCount', colCount);
+    }
+  }
+};
+/**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+
+var stateWatchList = {
+  tempData: {
+    callAtStart: true,
+    watch: 'dataManager.tempData.values',
+    callBack: function callBack(store) {
+      return function () {
+        // set row count from table data
+        store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+      };
+    }
+  },
+  headerRow: {
+    watch: ['dataManager.controls.indexRow'],
+    callBack: function callBack(store) {
+      return function () {
+        var indexRow = store.state.dataManager.controls.indexRow;
+        var deleteIds = []; // delete all rows that are generated for header that are not current index row
+        // eslint-disable-next-line array-callback-return
+
+        store.state.dataManager.tempData.values.map(function (r) {
+          if (r.rowId !== indexRow && r.generatedForHeader) {
+            deleteIds.push(r.rowId);
+          }
+        }); // eslint-disable-next-line array-callback-return
+
+        deleteIds.map(function (id) {
+          store.commit('deleteRowFromDataTable', id);
+        });
+      };
+    }
+  }
+};
+/**
+ * Store subscriptions for data manager
+ *
+ * @param {Object} store store object
+ */
+
+var subscriptions = function subscriptions(store) {
+  // TODO [erdembircan] remove for production
+  console.log('module subscriptions called');
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+  store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
+  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
+};
+/**
+ * @module subscriptions
+ */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"../../general":"stores/general.js"}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36538,11 +36661,15 @@ exports.default = exports.defaultStoreOptions = void 0;
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
+var _actions = _interopRequireDefault(require("./actions"));
+
 var _state = _interopRequireDefault(require("./state"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
 var _getters = _interopRequireDefault(require("./getters"));
+
+var _plugin = _interopRequireDefault(require("./plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36554,7 +36681,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var defaultStoreOptions = {
   state: _state.default,
   mutations: _mutations.default,
-  getters: _getters.default
+  getters: _getters.default,
+  actions: _actions.default,
+  plugins: [_plugin.default],
+  strict: true
 };
 /**
  * Get module options.
@@ -36575,7 +36705,7 @@ var getModuleOptions = function getModuleOptions(extraStoreOptions) {
 
 var _default = getModuleOptions;
 exports.default = _default;
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./actions":"stores/modules/dataManager/actions.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js","./plugin":"stores/modules/dataManager/plugin.js"}],"mountPoints/WPTB_DataTable.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36599,7 +36729,11 @@ var _dataTables = _interopRequireDefault(require("../stores/dataTables"));
 
 var _filters = _interopRequireDefault(require("../plugins/filters"));
 
-var _dataManager = _interopRequireDefault(require("../stores/modules/dataManager"));
+var _dataManager = _interopRequireWildcard(require("../stores/modules/dataManager"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36614,6 +36748,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var _default = {
   name: 'DataTable',
@@ -36732,7 +36878,8 @@ var _default = {
             return state.icons[iconId];
           };
         }
-      }
+      },
+      plugins: _toConsumableArray(_dataManager.defaultStoreOptions.plugins)
     }; // portal initialization for vue instance
 
     _vue.default.use(_portalVue.default); // fragment initialization

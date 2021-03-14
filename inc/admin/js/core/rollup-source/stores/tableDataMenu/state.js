@@ -14,6 +14,8 @@ const state = {
 	editor: {
 		activeId: null,
 	},
+	visibility: true,
+	setupTab: 'dataManager',
 };
 
 /**

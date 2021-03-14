@@ -34,6 +34,7 @@ const extraStoreOptions = {
 		dataSimple: menuData.dataObjectsSimple,
 		security: menuData.security,
 	},
+	plugins: [...dataManager.plugins],
 	modules: {
 		dataManager,
 	},

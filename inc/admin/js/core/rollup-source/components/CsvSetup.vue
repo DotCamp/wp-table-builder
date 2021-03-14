@@ -70,6 +70,7 @@ export default {
 
 					// set csv data to temp data manager
 					this.addDataManagerTempData({ data: csvData });
+					this.setSetupSourceDataCreatedStatus(true);
 
 					// show data manager setup
 					this.setActiveTabGroupForCurrentSource('dataManager');
@@ -86,7 +87,7 @@ export default {
 				csvReader.readAsText(this.currentFile);
 			}
 		},
-		...mapMutations(['setBusy', 'setSetupSourceId']),
+		...mapMutations(['setBusy', 'setSetupSourceId', 'setSetupSourceDataCreatedStatus']),
 		...mapActions(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']),
 	},
 };

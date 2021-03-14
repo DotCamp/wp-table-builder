@@ -24,6 +24,17 @@ const getters = {
 		return state.app.busy;
 	},
 	/**
+	 * Get app busy status.
+	 *
+	 * Compatibility function fow withStoreBusy mixin.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} busy status
+	 */
+	busyStatus(state) {
+		return state.app.busy;
+	},
+	/**
 	 * Get active data object id on editor.
 	 *
 	 * @param {Object} state store state
@@ -49,6 +60,12 @@ const getters = {
 	 */
 	getMessageObject(state) {
 		return state.app.message;
+	},
+	isVisible(state) {
+		return state.visibility;
+	},
+	getCurrentSourceSetupTab(state) {
+		return state.setupTab;
 	},
 };
 

@@ -9,7 +9,9 @@ import deepmerge from 'deepmerge';
 import DataTableApp from '../containers/DataTableApp';
 import createStore from '../stores/dataTables';
 import filters from '../plugins/filters';
-import createDataManagerModule from '../stores/modules/dataManager';
+import createDataManagerModule, {
+	defaultStoreOptions as dataManagerDefaultOptions,
+} from '../stores/modules/dataManager';
 
 export default {
 	name: 'DataTable',
@@ -151,8 +153,8 @@ export default {
 					return state.icons[iconId];
 				},
 			},
+			plugins: [...dataManagerDefaultOptions.plugins],
 		};
-
 		// portal initialization for vue instance
 		Vue.use(VuePortal);
 

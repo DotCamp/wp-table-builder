@@ -5,7 +5,7 @@
 				<table>
 					<thead>
 						<tr class="wptb-data-manager-table-column-name-info">
-							<th :colspan="infoRowSpan">{{ translationM('columnNames') }}</th>
+							<th :colspan="infoRowSpan">{{ translationW('column names') }}</th>
 						</tr>
 						<tr v-for="headerRow in parsedData.header" :key="headerRow.rowId" :id="headerRow.rowId">
 							<data-manager-cell
@@ -18,7 +18,7 @@
 							></data-manager-cell>
 						</tr>
 						<tr class="wptb-data-manager-table-column-name-info wptb-data-manager-info-values">
-							<th :colspan="infoRowSpan">{{ translationM('values') }}</th>
+							<th :colspan="infoRowSpan">{{ translationW('values') }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -78,10 +78,7 @@ export default {
 		// only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
 		if (this.useDefault) {
 			this.addDataManagerTempData({
-				data: [
-					['1', '2', '3'],
-					['4', '5', '6'],
-				],
+				data: this.generateDefaultRowData(5, 5),
 				markAsImported: false,
 			});
 		}
@@ -93,6 +90,9 @@ export default {
 				this.prepareTableValues(this.getDataManagerTempData);
 			}
 			this.calculateColumnNameRowIndex(this.getDataManagerControls.firstRowAsColumnName);
+
+			// set up proxy for select click id
+			this.setUpSelectionIdProxy();
 		});
 	},
 	watch: {
@@ -132,6 +132,21 @@ export default {
 		},
 	},
 	methods: {
+		generateDefaultRowData(rows, cols) {
+			const data = [];
+			// eslint-disable-next-line no-plusplus
+			for (let i = 0; i < rows; i++) {
+				const tempArray = new Array(cols).fill(1);
+
+				tempArray.map((val, index) => {
+					tempArray[index] = i * cols + index + 1;
+				});
+
+				data.push(tempArray);
+			}
+
+			return data;
+		},
 		handleRowDelete(id) {
 			const { rowId } = this.parseCellId(id);
 			this.deleteDataTableRow(rowId);
@@ -178,7 +193,7 @@ export default {
 
 				if (!header) {
 					header = await this.generateRow(
-						Array.from(new Array(this.getColCount)).map((_, i) => `${this.translationM('column')} ${i + 1}`)
+						Array.from(new Array(this.getColCount)).map((_, i) => `${this.translationW('Column')} ${i + 1}`)
 					);
 					this.addRowObjectAsHeader(header);
 				}
@@ -202,6 +217,7 @@ export default {
 			'deleteDataTableCol',
 			'addRowObjectAsHeader',
 			'generateRow',
+			'setUpSelectionIdProxy',
 		]),
 		...mapMutations(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']),
 	},

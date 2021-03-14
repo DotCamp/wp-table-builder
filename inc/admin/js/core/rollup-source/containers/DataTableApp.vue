@@ -56,8 +56,9 @@ export default {
 		// enable saving data table options to table on table save operation
 		this.addOptionsAndDataToSave();
 
+		// @deprecated
 		// set up proxy for select click id
-		this.setUpSelectionIdProxy();
+		// this.setUpSelectionIdProxy();
 
 		// watch for save operation process responses
 		this.watchSavedResponse();

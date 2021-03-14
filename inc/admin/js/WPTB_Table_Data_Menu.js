@@ -14931,7 +14931,1469 @@ render._withStripped = true
           };
         })());
       
-},{}],"mixins/withNativeTranslationStore.js":[function(require,module,exports) {
+},{}],"../../../../../node_modules/memize/index.js":[function(require,module,exports) {
+/**
+ * Memize options object.
+ *
+ * @typedef MemizeOptions
+ *
+ * @property {number} [maxSize] Maximum size of the cache.
+ */
+
+/**
+ * Internal cache entry.
+ *
+ * @typedef MemizeCacheNode
+ *
+ * @property {?MemizeCacheNode|undefined} [prev] Previous node.
+ * @property {?MemizeCacheNode|undefined} [next] Next node.
+ * @property {Array<*>}                   args   Function arguments for cache
+ *                                               entry.
+ * @property {*}                          val    Function result.
+ */
+
+/**
+ * Properties of the enhanced function for controlling cache.
+ *
+ * @typedef MemizeMemoizedFunction
+ *
+ * @property {()=>void} clear Clear the cache.
+ */
+
+/**
+ * Accepts a function to be memoized, and returns a new memoized function, with
+ * optional options.
+ *
+ * @template {Function} F
+ *
+ * @param {F}             fn        Function to memoize.
+ * @param {MemizeOptions} [options] Options object.
+ *
+ * @return {F & MemizeMemoizedFunction} Memoized function.
+ */
+function memize(fn, options) {
+  var size = 0;
+  /** @type {?MemizeCacheNode|undefined} */
+
+  var head;
+  /** @type {?MemizeCacheNode|undefined} */
+
+  var tail;
+  options = options || {};
+
+  function memoized()
+  /* ...args */
+  {
+    var node = head,
+        len = arguments.length,
+        args,
+        i;
+
+    searchCache: while (node) {
+      // Perform a shallow equality test to confirm that whether the node
+      // under test is a candidate for the arguments passed. Two arrays
+      // are shallowly equal if their length matches and each entry is
+      // strictly equal between the two sets. Avoid abstracting to a
+      // function which could incur an arguments leaking deoptimization.
+      // Check whether node arguments match arguments length
+      if (node.args.length !== arguments.length) {
+        node = node.next;
+        continue;
+      } // Check whether node arguments match arguments values
+
+
+      for (i = 0; i < len; i++) {
+        if (node.args[i] !== arguments[i]) {
+          node = node.next;
+          continue searchCache;
+        }
+      } // At this point we can assume we've found a match
+      // Surface matched node to head if not already
+
+
+      if (node !== head) {
+        // As tail, shift to previous. Must only shift if not also
+        // head, since if both head and tail, there is no previous.
+        if (node === tail) {
+          tail = node.prev;
+        } // Adjust siblings to point to each other. If node was tail,
+        // this also handles new tail's empty `next` assignment.
+
+        /** @type {MemizeCacheNode} */
+
+
+        node.prev.next = node.next;
+
+        if (node.next) {
+          node.next.prev = node.prev;
+        }
+
+        node.next = head;
+        node.prev = null;
+        /** @type {MemizeCacheNode} */
+
+        head.prev = node;
+        head = node;
+      } // Return immediately
+
+
+      return node.val;
+    } // No cached value found. Continue to insertion phase:
+    // Create a copy of arguments (avoid leaking deoptimization)
+
+
+    args = new Array(len);
+
+    for (i = 0; i < len; i++) {
+      args[i] = arguments[i];
+    }
+
+    node = {
+      args: args,
+      // Generate the result from original function
+      val: fn.apply(null, args)
+    }; // Don't need to check whether node is already head, since it would
+    // have been returned above already if it was
+    // Shift existing head down list
+
+    if (head) {
+      head.prev = node;
+      node.next = head;
+    } else {
+      // If no head, follows that there's no tail (at initial or reset)
+      tail = node;
+    } // Trim tail if we're reached max size and are pending cache insertion
+
+
+    if (size ===
+    /** @type {MemizeOptions} */
+    options.maxSize) {
+      tail =
+      /** @type {MemizeCacheNode} */
+      tail.prev;
+      /** @type {MemizeCacheNode} */
+
+      tail.next = null;
+    } else {
+      size++;
+    }
+
+    head = node;
+    return node.val;
+  }
+
+  memoized.clear = function () {
+    head = null;
+    tail = null;
+    size = 0;
+  };
+
+  if ("development" === 'test') {
+    // Cache is not exposed in the public API, but used in tests to ensure
+    // expected list progression
+    memoized.getCache = function () {
+      return [head, tail, size];
+    };
+  } // Ignore reason: There's not a clear solution to create an intersection of
+  // the function with additional properties, where the goal is to retain the
+  // function signature of the incoming argument and add control properties
+  // on the return value.
+  // @ts-ignore
+
+
+  return memoized;
+}
+
+module.exports = memize;
+},{}],"../../../../../node_modules/sprintf-js/src/sprintf.js":[function(require,module,exports) {
+var define;
+/* global window, exports, define */
+
+!function() {
+    'use strict'
+
+    var re = {
+        not_string: /[^s]/,
+        not_bool: /[^t]/,
+        not_type: /[^T]/,
+        not_primitive: /[^v]/,
+        number: /[diefg]/,
+        numeric_arg: /[bcdiefguxX]/,
+        json: /[j]/,
+        not_json: /[^j]/,
+        text: /^[^\x25]+/,
+        modulo: /^\x25{2}/,
+        placeholder: /^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,
+        key: /^([a-z_][a-z_\d]*)/i,
+        key_access: /^\.([a-z_][a-z_\d]*)/i,
+        index_access: /^\[(\d+)\]/,
+        sign: /^[+-]/
+    }
+
+    function sprintf(key) {
+        // `arguments` is not an array, but should be fine for this call
+        return sprintf_format(sprintf_parse(key), arguments)
+    }
+
+    function vsprintf(fmt, argv) {
+        return sprintf.apply(null, [fmt].concat(argv || []))
+    }
+
+    function sprintf_format(parse_tree, argv) {
+        var cursor = 1, tree_length = parse_tree.length, arg, output = '', i, k, ph, pad, pad_character, pad_length, is_positive, sign
+        for (i = 0; i < tree_length; i++) {
+            if (typeof parse_tree[i] === 'string') {
+                output += parse_tree[i]
+            }
+            else if (typeof parse_tree[i] === 'object') {
+                ph = parse_tree[i] // convenience purposes only
+                if (ph.keys) { // keyword argument
+                    arg = argv[cursor]
+                    for (k = 0; k < ph.keys.length; k++) {
+                        if (arg == undefined) {
+                            throw new Error(sprintf('[sprintf] Cannot access property "%s" of undefined value "%s"', ph.keys[k], ph.keys[k-1]))
+                        }
+                        arg = arg[ph.keys[k]]
+                    }
+                }
+                else if (ph.param_no) { // positional argument (explicit)
+                    arg = argv[ph.param_no]
+                }
+                else { // positional argument (implicit)
+                    arg = argv[cursor++]
+                }
+
+                if (re.not_type.test(ph.type) && re.not_primitive.test(ph.type) && arg instanceof Function) {
+                    arg = arg()
+                }
+
+                if (re.numeric_arg.test(ph.type) && (typeof arg !== 'number' && isNaN(arg))) {
+                    throw new TypeError(sprintf('[sprintf] expecting number but found %T', arg))
+                }
+
+                if (re.number.test(ph.type)) {
+                    is_positive = arg >= 0
+                }
+
+                switch (ph.type) {
+                    case 'b':
+                        arg = parseInt(arg, 10).toString(2)
+                        break
+                    case 'c':
+                        arg = String.fromCharCode(parseInt(arg, 10))
+                        break
+                    case 'd':
+                    case 'i':
+                        arg = parseInt(arg, 10)
+                        break
+                    case 'j':
+                        arg = JSON.stringify(arg, null, ph.width ? parseInt(ph.width) : 0)
+                        break
+                    case 'e':
+                        arg = ph.precision ? parseFloat(arg).toExponential(ph.precision) : parseFloat(arg).toExponential()
+                        break
+                    case 'f':
+                        arg = ph.precision ? parseFloat(arg).toFixed(ph.precision) : parseFloat(arg)
+                        break
+                    case 'g':
+                        arg = ph.precision ? String(Number(arg.toPrecision(ph.precision))) : parseFloat(arg)
+                        break
+                    case 'o':
+                        arg = (parseInt(arg, 10) >>> 0).toString(8)
+                        break
+                    case 's':
+                        arg = String(arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 't':
+                        arg = String(!!arg)
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'T':
+                        arg = Object.prototype.toString.call(arg).slice(8, -1).toLowerCase()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'u':
+                        arg = parseInt(arg, 10) >>> 0
+                        break
+                    case 'v':
+                        arg = arg.valueOf()
+                        arg = (ph.precision ? arg.substring(0, ph.precision) : arg)
+                        break
+                    case 'x':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16)
+                        break
+                    case 'X':
+                        arg = (parseInt(arg, 10) >>> 0).toString(16).toUpperCase()
+                        break
+                }
+                if (re.json.test(ph.type)) {
+                    output += arg
+                }
+                else {
+                    if (re.number.test(ph.type) && (!is_positive || ph.sign)) {
+                        sign = is_positive ? '+' : '-'
+                        arg = arg.toString().replace(re.sign, '')
+                    }
+                    else {
+                        sign = ''
+                    }
+                    pad_character = ph.pad_char ? ph.pad_char === '0' ? '0' : ph.pad_char.charAt(1) : ' '
+                    pad_length = ph.width - (sign + arg).length
+                    pad = ph.width ? (pad_length > 0 ? pad_character.repeat(pad_length) : '') : ''
+                    output += ph.align ? sign + arg + pad : (pad_character === '0' ? sign + pad + arg : pad + sign + arg)
+                }
+            }
+        }
+        return output
+    }
+
+    var sprintf_cache = Object.create(null)
+
+    function sprintf_parse(fmt) {
+        if (sprintf_cache[fmt]) {
+            return sprintf_cache[fmt]
+        }
+
+        var _fmt = fmt, match, parse_tree = [], arg_names = 0
+        while (_fmt) {
+            if ((match = re.text.exec(_fmt)) !== null) {
+                parse_tree.push(match[0])
+            }
+            else if ((match = re.modulo.exec(_fmt)) !== null) {
+                parse_tree.push('%')
+            }
+            else if ((match = re.placeholder.exec(_fmt)) !== null) {
+                if (match[2]) {
+                    arg_names |= 1
+                    var field_list = [], replacement_field = match[2], field_match = []
+                    if ((field_match = re.key.exec(replacement_field)) !== null) {
+                        field_list.push(field_match[1])
+                        while ((replacement_field = replacement_field.substring(field_match[0].length)) !== '') {
+                            if ((field_match = re.key_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else if ((field_match = re.index_access.exec(replacement_field)) !== null) {
+                                field_list.push(field_match[1])
+                            }
+                            else {
+                                throw new SyntaxError('[sprintf] failed to parse named argument key')
+                            }
+                        }
+                    }
+                    else {
+                        throw new SyntaxError('[sprintf] failed to parse named argument key')
+                    }
+                    match[2] = field_list
+                }
+                else {
+                    arg_names |= 2
+                }
+                if (arg_names === 3) {
+                    throw new Error('[sprintf] mixing positional and named placeholders is not (yet) supported')
+                }
+
+                parse_tree.push(
+                    {
+                        placeholder: match[0],
+                        param_no:    match[1],
+                        keys:        match[2],
+                        sign:        match[3],
+                        pad_char:    match[4],
+                        align:       match[5],
+                        width:       match[6],
+                        precision:   match[7],
+                        type:        match[8]
+                    }
+                )
+            }
+            else {
+                throw new SyntaxError('[sprintf] unexpected placeholder')
+            }
+            _fmt = _fmt.substring(match[0].length)
+        }
+        return sprintf_cache[fmt] = parse_tree
+    }
+
+    /**
+     * export to either browser or node.js
+     */
+    /* eslint-disable quote-props */
+    if (typeof exports !== 'undefined') {
+        exports['sprintf'] = sprintf
+        exports['vsprintf'] = vsprintf
+    }
+    if (typeof window !== 'undefined') {
+        window['sprintf'] = sprintf
+        window['vsprintf'] = vsprintf
+
+        if (typeof define === 'function' && define['amd']) {
+            define(function() {
+                return {
+                    'sprintf': sprintf,
+                    'vsprintf': vsprintf
+                }
+            })
+        }
+    }
+    /* eslint-enable quote-props */
+}(); // eslint-disable-line
+
+},{}],"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.sprintf = sprintf;
+
+var _memize = _interopRequireDefault(require("memize"));
+
+var _sprintfJs = _interopRequireDefault(require("sprintf-js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * External dependencies
+ */
+
+/**
+ * Log to console, once per message; or more precisely, per referentially equal
+ * argument set. Because Jed throws errors, we log these to the console instead
+ * to avoid crashing the application.
+ *
+ * @param {...*} args Arguments to pass to `console.error`
+ */
+var logErrorOnce = (0, _memize.default)(console.error); // eslint-disable-line no-console
+
+/**
+ * Returns a formatted string. If an error occurs in applying the format, the
+ * original format string is returned.
+ *
+ * @param {string}    format The format of the string to generate.
+ * @param {...string} args   Arguments to apply to the format.
+ *
+ * @see http://www.diveintojavascript.com/projects/javascript-sprintf
+ *
+ * @return {string} The formatted string.
+ */
+
+function sprintf(format) {
+  try {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    return _sprintfJs.default.sprintf.apply(_sprintfJs.default, [format].concat(args));
+  } catch (error) {
+    logErrorOnce('sprintf error: \n\n' + error.toString());
+    return format;
+  }
+}
+},{"memize":"../../../../../node_modules/memize/index.js","sprintf-js":"../../../../../node_modules/sprintf-js/src/sprintf.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _defineProperty;
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+},{}],"../../../../../node_modules/@tannin/postfix/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = postfix;
+var PRECEDENCE, OPENERS, TERMINATORS, PATTERN;
+/**
+ * Operator precedence mapping.
+ *
+ * @type {Object}
+ */
+
+PRECEDENCE = {
+  '(': 9,
+  '!': 8,
+  '*': 7,
+  '/': 7,
+  '%': 7,
+  '+': 6,
+  '-': 6,
+  '<': 5,
+  '<=': 5,
+  '>': 5,
+  '>=': 5,
+  '==': 4,
+  '!=': 4,
+  '&&': 3,
+  '||': 2,
+  '?': 1,
+  '?:': 1
+};
+/**
+ * Characters which signal pair opening, to be terminated by terminators.
+ *
+ * @type {string[]}
+ */
+
+OPENERS = ['(', '?'];
+/**
+ * Characters which signal pair termination, the value an array with the
+ * opener as its first member. The second member is an optional operator
+ * replacement to push to the stack.
+ *
+ * @type {string[]}
+ */
+
+TERMINATORS = {
+  ')': ['('],
+  ':': ['?', '?:']
+};
+/**
+ * Pattern matching operators and openers.
+ *
+ * @type {RegExp}
+ */
+
+PATTERN = /<=|>=|==|!=|&&|\|\||\?:|\(|!|\*|\/|%|\+|-|<|>|\?|\)|:/;
+/**
+ * Given a C expression, returns the equivalent postfix (Reverse Polish)
+ * notation terms as an array.
+ *
+ * If a postfix string is desired, simply `.join( ' ' )` the result.
+ *
+ * @example
+ *
+ * ```js
+ * import postfix from '@tannin/postfix';
+ *
+ * postfix( 'n > 1' );
+ * // ⇒ [ 'n', '1', '>' ]
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {string[]} Postfix terms.
+ */
+
+function postfix(expression) {
+  var terms = [],
+      stack = [],
+      match,
+      operator,
+      term,
+      element;
+
+  while (match = expression.match(PATTERN)) {
+    operator = match[0]; // Term is the string preceding the operator match. It may contain
+    // whitespace, and may be empty (if operator is at beginning).
+
+    term = expression.substr(0, match.index).trim();
+
+    if (term) {
+      terms.push(term);
+    }
+
+    while (element = stack.pop()) {
+      if (TERMINATORS[operator]) {
+        if (TERMINATORS[operator][0] === element) {
+          // Substitution works here under assumption that because
+          // the assigned operator will no longer be a terminator, it
+          // will be pushed to the stack during the condition below.
+          operator = TERMINATORS[operator][1] || operator;
+          break;
+        }
+      } else if (OPENERS.indexOf(element) >= 0 || PRECEDENCE[element] < PRECEDENCE[operator]) {
+        // Push to stack if either an opener or when pop reveals an
+        // element of lower precedence.
+        stack.push(element);
+        break;
+      } // For each popped from stack, push to terms.
+
+
+      terms.push(element);
+    }
+
+    if (!TERMINATORS[operator]) {
+      stack.push(operator);
+    } // Slice matched fragment from expression to continue match.
+
+
+    expression = expression.substr(match.index + operator.length);
+  } // Push remainder of operand, if exists, to terms.
+
+
+  expression = expression.trim();
+
+  if (expression) {
+    terms.push(expression);
+  } // Pop remaining items from stack into terms.
+
+
+  return terms.concat(stack.reverse());
+}
+},{}],"../../../../../node_modules/@tannin/evaluate/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = evaluate;
+
+/**
+ * Operator callback functions.
+ *
+ * @type {Object}
+ */
+var OPERATORS = {
+  '!': function (a) {
+    return !a;
+  },
+  '*': function (a, b) {
+    return a * b;
+  },
+  '/': function (a, b) {
+    return a / b;
+  },
+  '%': function (a, b) {
+    return a % b;
+  },
+  '+': function (a, b) {
+    return a + b;
+  },
+  '-': function (a, b) {
+    return a - b;
+  },
+  '<': function (a, b) {
+    return a < b;
+  },
+  '<=': function (a, b) {
+    return a <= b;
+  },
+  '>': function (a, b) {
+    return a > b;
+  },
+  '>=': function (a, b) {
+    return a >= b;
+  },
+  '==': function (a, b) {
+    return a === b;
+  },
+  '!=': function (a, b) {
+    return a !== b;
+  },
+  '&&': function (a, b) {
+    return a && b;
+  },
+  '||': function (a, b) {
+    return a || b;
+  },
+  '?:': function (a, b, c) {
+    if (a) {
+      throw b;
+    }
+
+    return c;
+  }
+};
+/**
+ * Given an array of postfix terms and operand variables, returns the result of
+ * the postfix evaluation.
+ *
+ * @example
+ *
+ * ```js
+ * import evaluate from '@tannin/evaluate';
+ *
+ * // 3 + 4 * 5 / 6 ⇒ '3 4 5 * 6 / +'
+ * const terms = [ '3', '4', '5', '*', '6', '/', '+' ];
+ *
+ * evaluate( terms, {} );
+ * // ⇒ 6.333333333333334
+ * ```
+ *
+ * @param {string[]} postfix   Postfix terms.
+ * @param {Object}   variables Operand variables.
+ *
+ * @return {*} Result of evaluation.
+ */
+
+function evaluate(postfix, variables) {
+  var stack = [],
+      i,
+      j,
+      args,
+      getOperatorResult,
+      term,
+      value;
+
+  for (i = 0; i < postfix.length; i++) {
+    term = postfix[i];
+    getOperatorResult = OPERATORS[term];
+
+    if (getOperatorResult) {
+      // Pop from stack by number of function arguments.
+      j = getOperatorResult.length;
+      args = Array(j);
+
+      while (j--) {
+        args[j] = stack.pop();
+      }
+
+      try {
+        value = getOperatorResult.apply(null, args);
+      } catch (earlyReturn) {
+        return earlyReturn;
+      }
+    } else if (variables.hasOwnProperty(term)) {
+      value = variables[term];
+    } else {
+      value = +term;
+    }
+
+    stack.push(value);
+  }
+
+  return stack[0];
+}
+},{}],"../../../../../node_modules/@tannin/compile/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = compile;
+
+var _postfix = _interopRequireDefault(require("@tannin/postfix"));
+
+var _evaluate = _interopRequireDefault(require("@tannin/evaluate"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Given a C expression, returns a function which can be called to evaluate its
+ * result.
+ *
+ * @example
+ *
+ * ```js
+ * import compile from '@tannin/compile';
+ *
+ * const evaluate = compile( 'n > 1' );
+ *
+ * evaluate( { n: 2 } );
+ * // ⇒ true
+ * ```
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {(variables?:{[variable:string]:*})=>*} Compiled evaluator.
+ */
+function compile(expression) {
+  var terms = (0, _postfix.default)(expression);
+  return function (variables) {
+    return (0, _evaluate.default)(terms, variables);
+  };
+}
+},{"@tannin/postfix":"../../../../../node_modules/@tannin/postfix/index.js","@tannin/evaluate":"../../../../../node_modules/@tannin/evaluate/index.js"}],"../../../../../node_modules/@tannin/plural-forms/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = pluralForms;
+
+var _compile = _interopRequireDefault(require("@tannin/compile"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Given a C expression, returns a function which, when called with a value,
+ * evaluates the result with the value assumed to be the "n" variable of the
+ * expression. The result will be coerced to its numeric equivalent.
+ *
+ * @param {string} expression C expression.
+ *
+ * @return {Function} Evaluator function.
+ */
+function pluralForms(expression) {
+  var evaluate = (0, _compile.default)(expression);
+  return function (n) {
+    return +evaluate({
+      n: n
+    });
+  };
+}
+},{"@tannin/compile":"../../../../../node_modules/@tannin/compile/index.js"}],"../../../../../node_modules/tannin/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = Tannin;
+
+var _pluralForms = _interopRequireDefault(require("@tannin/plural-forms"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Tannin constructor options.
+ *
+ * @typedef {Object} TanninOptions
+ *
+ * @property {string}   [contextDelimiter] Joiner in string lookup with context.
+ * @property {Function} [onMissingKey]     Callback to invoke when key missing.
+ */
+
+/**
+ * Domain metadata.
+ *
+ * @typedef {Object} TanninDomainMetadata
+ *
+ * @property {string}            [domain]       Domain name.
+ * @property {string}            [lang]         Language code.
+ * @property {(string|Function)} [plural_forms] Plural forms expression or
+ *                                              function evaluator.
+ */
+
+/**
+ * Domain translation pair respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {[string,string]} TanninTranslation
+ */
+
+/**
+ * Locale data domain. The key is used as reference for lookup, the value an
+ * array of two string entries respectively representing the singular and plural
+ * translation.
+ *
+ * @typedef {{[key:string]:TanninDomainMetadata|TanninTranslation,'':TanninDomainMetadata|TanninTranslation}} TanninLocaleDomain
+ */
+
+/**
+ * Jed-formatted locale data.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @typedef {{[domain:string]:TanninLocaleDomain}} TanninLocaleData
+ */
+
+/**
+ * Default Tannin constructor options.
+ *
+ * @type {TanninOptions}
+ */
+var DEFAULT_OPTIONS = {
+  contextDelimiter: '\u0004',
+  onMissingKey: null
+};
+/**
+ * Given a specific locale data's config `plural_forms` value, returns the
+ * expression.
+ *
+ * @example
+ *
+ * ```
+ * getPluralExpression( 'nplurals=2; plural=(n != 1);' ) === '(n != 1)'
+ * ```
+ *
+ * @param {string} pf Locale data plural forms.
+ *
+ * @return {string} Plural forms expression.
+ */
+
+function getPluralExpression(pf) {
+  var parts, i, part;
+  parts = pf.split(';');
+
+  for (i = 0; i < parts.length; i++) {
+    part = parts[i].trim();
+
+    if (part.indexOf('plural=') === 0) {
+      return part.substr(7);
+    }
+  }
+}
+/**
+ * Tannin constructor.
+ *
+ * @class
+ *
+ * @param {TanninLocaleData} data      Jed-formatted locale data.
+ * @param {TanninOptions}    [options] Tannin options.
+ */
+
+
+function Tannin(data, options) {
+  var key;
+  /**
+   * Jed-formatted locale data.
+   *
+   * @name Tannin#data
+   * @type {TanninLocaleData}
+   */
+
+  this.data = data;
+  /**
+   * Plural forms function cache, keyed by plural forms string.
+   *
+   * @name Tannin#pluralForms
+   * @type {Object<string,Function>}
+   */
+
+  this.pluralForms = {};
+  /**
+   * Effective options for instance, including defaults.
+   *
+   * @name Tannin#options
+   * @type {TanninOptions}
+   */
+
+  this.options = {};
+
+  for (key in DEFAULT_OPTIONS) {
+    this.options[key] = options !== undefined && key in options ? options[key] : DEFAULT_OPTIONS[key];
+  }
+}
+/**
+ * Returns the plural form index for the given domain and value.
+ *
+ * @param {string} domain Domain on which to calculate plural form.
+ * @param {number} n      Value for which plural form is to be calculated.
+ *
+ * @return {number} Plural form index.
+ */
+
+
+Tannin.prototype.getPluralForm = function (domain, n) {
+  var getPluralForm = this.pluralForms[domain],
+      config,
+      plural,
+      pf;
+
+  if (!getPluralForm) {
+    config = this.data[domain][''];
+    pf = config['Plural-Forms'] || config['plural-forms'] || // Ignore reason: As known, there's no way to document the empty
+    // string property on a key to guarantee this as metadata.
+    // @ts-ignore
+    config.plural_forms;
+
+    if (typeof pf !== 'function') {
+      plural = getPluralExpression(config['Plural-Forms'] || config['plural-forms'] || // Ignore reason: As known, there's no way to document the empty
+      // string property on a key to guarantee this as metadata.
+      // @ts-ignore
+      config.plural_forms);
+      pf = (0, _pluralForms.default)(plural);
+    }
+
+    getPluralForm = this.pluralForms[domain] = pf;
+  }
+
+  return getPluralForm(n);
+};
+/**
+ * Translate a string.
+ *
+ * @param {string}      domain   Translation domain.
+ * @param {string|void} context  Context distinguishing terms of the same name.
+ * @param {string}      singular Primary key for translation lookup.
+ * @param {string=}     plural   Fallback value used for non-zero plural
+ *                               form index.
+ * @param {number=}     n        Value to use in calculating plural form.
+ *
+ * @return {string} Translated string.
+ */
+
+
+Tannin.prototype.dcnpgettext = function (domain, context, singular, plural, n) {
+  var index, key, entry;
+
+  if (n === undefined) {
+    // Default to singular.
+    index = 0;
+  } else {
+    // Find index by evaluating plural form for value.
+    index = this.getPluralForm(domain, n);
+  }
+
+  key = singular; // If provided, context is prepended to key with delimiter.
+
+  if (context) {
+    key = context + this.options.contextDelimiter + singular;
+  }
+
+  entry = this.data[domain][key]; // Verify not only that entry exists, but that the intended index is within
+  // range and non-empty.
+
+  if (entry && entry[index]) {
+    return entry[index];
+  }
+
+  if (this.options.onMissingKey) {
+    this.options.onMissingKey(singular, domain);
+  } // If entry not found, fall back to singular vs. plural with zero index
+  // representing the singular value.
+
+
+  return index === 0 ? singular : plural;
+};
+},{"@tannin/plural-forms":"../../../../../node_modules/@tannin/plural-forms/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createI18n = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/defineProperty"));
+
+var _tannin = _interopRequireDefault(require("tannin"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        (0, _defineProperty2.default)(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+/**
+ * External dependencies
+ */
+
+
+/**
+ * @typedef {Record<string,any>} LocaleData
+ */
+
+/**
+ * Default locale data to use for Tannin domain when not otherwise provided.
+ * Assumes an English plural forms expression.
+ *
+ * @type {LocaleData}
+ */
+var DEFAULT_LOCALE_DATA = {
+  '': {
+    /** @param {number} n */
+    plural_forms: function plural_forms(n) {
+      return n === 1 ? 0 : 1;
+    }
+  }
+};
+/**
+ * An i18n instance
+ *
+ * @typedef {Object} I18n
+ * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                    Jed-formatted JSON object shape.
+ * @property {Function} __            Retrieve the translation of text.
+ * @property {Function} _x            Retrieve translated string with gettext context.
+ * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
+ *                                    number.
+ * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
+ *                                    number, with gettext context.
+ * @property {Function} isRTL         Check if current locale is RTL.
+ */
+
+/**
+ * Create an i18n instance
+ *
+ * @param {LocaleData} [initialData]    Locale data configuration.
+ * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @return {I18n}                       I18n instance
+ */
+
+var createI18n = function createI18n(initialData, initialDomain) {
+  /**
+   * The underlying instance of Tannin to which exported functions interface.
+   *
+   * @type {Tannin}
+   */
+  var tannin = new _tannin.default({});
+  /**
+   * Merges locale data into the Tannin instance by domain. Accepts data in a
+   * Jed-formatted JSON object shape.
+   *
+   * @see http://messageformat.github.io/Jed/
+   *
+   * @param {LocaleData} [data]   Locale data configuration.
+   * @param {string}     [domain] Domain for which configuration applies.
+   */
+
+  var setLocaleData = function setLocaleData(data) {
+    var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
+    // a plural forms expression).
+
+    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
+  };
+  /**
+   * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
+   * otherwise previously assigned.
+   *
+   * @param {string|undefined} domain   Domain to retrieve the translated text.
+   * @param {string|undefined} context  Context information for the translators.
+   * @param {string}           single   Text to translate if non-plural. Used as
+   *                                    fallback return value on a caught error.
+   * @param {string}           [plural] The text to be used if the number is
+   *                                    plural.
+   * @param {number}           [number] The number to compare against to use
+   *                                    either the singular or plural form.
+   *
+   * @return {string} The translated string.
+   */
+
+
+  var dcnpgettext = function dcnpgettext() {
+    var domain = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+    var context = arguments.length > 1 ? arguments[1] : undefined;
+    var single = arguments.length > 2 ? arguments[2] : undefined;
+    var plural = arguments.length > 3 ? arguments[3] : undefined;
+    var number = arguments.length > 4 ? arguments[4] : undefined;
+
+    if (!tannin.data[domain]) {
+      setLocaleData(undefined, domain);
+    }
+
+    return tannin.dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Retrieve the translation of text.
+   *
+   * @see https://developer.wordpress.org/reference/functions/__/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated text.
+   */
+
+
+  var __ = function __(text, domain) {
+    return dcnpgettext(domain, undefined, text);
+  };
+  /**
+   * Retrieve translated string with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_x/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated context string without pipe.
+   */
+
+
+  var _x = function _x(text, context, domain) {
+    return dcnpgettext(domain, context, text);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_n/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _n = function _n(single, plural, number, domain) {
+    return dcnpgettext(domain, undefined, single, plural, number);
+  };
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number, with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_nx/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
+
+
+  var _nx = function _nx(single, plural, number, context, domain) {
+    return dcnpgettext(domain, context, single, plural, number);
+  };
+  /**
+   * Check if current locale is RTL.
+   *
+   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+   *
+   * @return {boolean} Whether locale is RTL.
+   */
+
+
+  var isRTL = function isRTL() {
+    return 'rtl' === _x('ltr', 'text direction');
+  };
+
+  if (initialData) {
+    setLocaleData(initialData, initialDomain);
+  }
+
+  return {
+    setLocaleData: setLocaleData,
+    __: __,
+    _x: _x,
+    _n: _n,
+    _nx: _nx,
+    isRTL: isRTL
+  };
+};
+
+exports.createI18n = createI18n;
+},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isRTL = exports._nx = exports._n = exports._x = exports.__ = exports.setLocaleData = void 0;
+
+var _createI18n = require("./create-i18n");
+
+/**
+ * Internal dependencies
+ */
+var i18n = (0, _createI18n.createI18n)();
+/*
+ * Comments in this file are duplicated from ./i18n due to
+ * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
+ */
+
+/**
+ * @typedef {import('./create-i18n').LocaleData} LocaleData
+ */
+
+/**
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ *
+ * @param {LocaleData} [data]   Locale data configuration.
+ * @param {string}     [domain] Domain for which configuration applies.
+ */
+
+var setLocaleData = i18n.setLocaleData.bind(i18n);
+/**
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated text.
+ */
+
+exports.setLocaleData = setLocaleData;
+
+var __ = i18n.__.bind(i18n);
+/**
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ *
+ * @param {string} text     Text to translate.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} Translated context string without pipe.
+ */
+
+
+exports.__ = __;
+
+var _x = i18n._x.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+
+exports._x = _x;
+
+var _n = i18n._n.bind(i18n);
+/**
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ *
+ * @param {string} single   The text to be used if the number is singular.
+ * @param {string} plural   The text to be used if the number is plural.
+ * @param {number} number   The number to compare against to use either the
+ *                          singular or plural form.
+ * @param {string} context  Context information for the translators.
+ * @param {string} [domain] Domain to retrieve the translated text.
+ *
+ * @return {string} The translated singular or plural form.
+ */
+
+
+exports._n = _n;
+
+var _nx = i18n._nx.bind(i18n);
+/**
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ *
+ * @return {boolean} Whether locale is RTL.
+ */
+
+
+exports._nx = _nx;
+var isRTL = i18n.isRTL.bind(i18n);
+exports.isRTL = isRTL;
+},{"./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  sprintf: true,
+  setLocaleData: true,
+  __: true,
+  _x: true,
+  _n: true,
+  _nx: true,
+  isRTL: true
+};
+Object.defineProperty(exports, "sprintf", {
+  enumerable: true,
+  get: function () {
+    return _sprintf.sprintf;
+  }
+});
+Object.defineProperty(exports, "setLocaleData", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.setLocaleData;
+  }
+});
+Object.defineProperty(exports, "__", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.__;
+  }
+});
+Object.defineProperty(exports, "_x", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._x;
+  }
+});
+Object.defineProperty(exports, "_n", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._n;
+  }
+});
+Object.defineProperty(exports, "_nx", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n._nx;
+  }
+});
+Object.defineProperty(exports, "isRTL", {
+  enumerable: true,
+  get: function () {
+    return _defaultI18n.isRTL;
+  }
+});
+
+var _sprintf = require("./sprintf");
+
+var _createI18n = require("./create-i18n");
+
+Object.keys(_createI18n).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _createI18n[key];
+    }
+  });
+});
+
+var _defaultI18n = require("./default-i18n");
+},{"./sprintf":"../../../../../node_modules/@wordpress/i18n/build-module/sprintf.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js","./default-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js"}],"mixins/withNativeTranslationStore.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14940,6 +16402,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _vuex = require("vuex");
+
+var _i18n = require("@wordpress/i18n");
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -14964,6 +16428,16 @@ var withNativeTranslationStore = {
      */
     translationM: function translationM(key) {
       return this.$store.getters.translation(key);
+    },
+
+    /**
+     * Translate using WordPress client function.
+     *
+     * @param {string} phrase phrase to be translated
+     * @return {string} translated string
+     */
+    translationW: function translationW(phrase) {
+      return (0, _i18n.__)(phrase, 'wp-table-builder');
     }
   }
 };
@@ -14971,7 +16445,7 @@ var withNativeTranslationStore = {
 
 var _default = withNativeTranslationStore;
 exports.default = _default;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js"}],"components/SearchInput.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js"}],"components/SearchInput.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16252,7 +17726,7 @@ var _default = {
     // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
     if (this.useDefault) {
       this.addDataManagerTempData({
-        data: [['1', '2', '3'], ['4', '5', '6']],
+        data: this.generateDefaultRowData(5, 5),
         markAsImported: false
       });
     }
@@ -16266,7 +17740,10 @@ var _default = {
         _this.prepareTableValues(_this.getDataManagerTempData);
       }
 
-      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName);
+      _this.calculateColumnNameRowIndex(_this.getDataManagerControls.firstRowAsColumnName); // set up proxy for select click id
+
+
+      _this.setUpSelectionIdProxy();
     });
   },
   watch: {
@@ -16296,6 +17773,23 @@ var _default = {
     }
   }),
   methods: _objectSpread({
+    generateDefaultRowData: function generateDefaultRowData(rows, cols) {
+      var data = []; // eslint-disable-next-line no-plusplus
+
+      var _loop = function _loop(i) {
+        var tempArray = new Array(cols).fill(1);
+        tempArray.map(function (val, index) {
+          tempArray[index] = i * cols + index + 1;
+        });
+        data.push(tempArray);
+      };
+
+      for (var i = 0; i < rows; i++) {
+        _loop(i);
+      }
+
+      return data;
+    },
     handleRowDelete: function handleRowDelete(id) {
       var _this$parseCellId = this.parseCellId(id),
           rowId = _this$parseCellId.rowId;
@@ -16370,7 +17864,7 @@ var _default = {
 
                 _context.next = 7;
                 return _this2.generateRow(Array.from(new Array(_this2.getColCount)).map(function (_, i) {
-                  return "".concat(_this2.translationM('column'), " ").concat(i + 1);
+                  return "".concat(_this2.translationW('Column'), " ").concat(i + 1);
                 }));
 
               case 7:
@@ -16401,7 +17895,7 @@ var _default = {
         }, _callee);
       }))();
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -16442,7 +17936,7 @@ exports.default = _default;
                       },
                       [
                         _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                          _vm._v(_vm._s(_vm.translationM("columnNames")))
+                          _vm._v(_vm._s(_vm.translationW("column names")))
                         ])
                       ]
                     ),
@@ -16480,7 +17974,7 @@ exports.default = _default;
                       },
                       [
                         _c("th", { attrs: { colspan: _vm.infoRowSpan } }, [
-                          _vm._v(_vm._s(_vm.translationM("values")))
+                          _vm._v(_vm._s(_vm.translationW("values")))
                         ])
                       ]
                     )
@@ -17066,7 +18560,9 @@ var state = {
   },
   editor: {
     activeId: null
-  }
+  },
+  visibility: true,
+  setupTab: 'dataManager'
 };
 /**
  * @module state
@@ -17110,6 +18606,18 @@ var getters = {
   },
 
   /**
+   * Get app busy status.
+   *
+   * Compatibility function fow withStoreBusy mixin.
+   *
+   * @param {Object} state store state
+   * @return {boolean} busy status
+   */
+  busyStatus: function busyStatus(state) {
+    return state.app.busy;
+  },
+
+  /**
    * Get active data object id on editor.
    *
    * @param {Object} state store state
@@ -17139,6 +18647,12 @@ var getters = {
    */
   getMessageObject: function getMessageObject(state) {
     return state.app.message;
+  },
+  isVisible: function isVisible(state) {
+    return state.visibility;
+  },
+  getCurrentSourceSetupTab: function getCurrentSourceSetupTab(state) {
+    return state.setupTab;
   }
 };
 /**
@@ -17434,17 +18948,209 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
+},{}],"functions/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isObjectValuesSame = exports.generateUniqueId = exports.getParentOfType = exports.parseElementType = exports.parseTableElementId = exports.setObjectPropertyFromString = exports.objectPropertyFromString = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+/**
+ * General functions that can be used through out app.
+ */
+
+/**
+ * Get a property value from an object with a string key.
+ 
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @return {*} property value
+ */
+// eslint-disable-next-line import/prefer-default-export
+var objectPropertyFromString = function objectPropertyFromString(stringKey, target) {
+  // split string key for inner properties
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  return splitKey.reduce(function (carry, item) {
+    return carry[item];
+  }, target);
+};
+/**
+ * Set object property from string.
+ *
+ * @param {string} stringKey key
+ * @param {Object} target target object
+ * @param {*} value value
+ */
+
+
+exports.objectPropertyFromString = objectPropertyFromString;
+
+var setObjectPropertyFromString = function setObjectPropertyFromString(stringKey, target, value) {
+  var splitKey = stringKey.split('.');
+
+  if (!Array.isArray(splitKey)) {
+    splitKey = [splitKey];
+  }
+
+  if (splitKey.length === 1) {
+    // eslint-disable-next-line no-param-reassign
+    target[splitKey[0]] = value;
+  } else {
+    var parents = splitKey.slice(0, splitKey.length - 1);
+    var parent = parents.reduce(function (carry, item) {
+      return carry[item];
+    }, target);
+    parent[splitKey[splitKey.length - 1]] = value;
+  }
+};
+/**
+ * Get element id from a table element's class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no id is found
+ */
+
+
+exports.setObjectPropertyFromString = setObjectPropertyFromString;
+
+var parseTableElementId = function parseTableElementId(tableElement) {
+  if (tableElement) {
+    var activeElementIdArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementIdArray) {
+      return activeElementIdArray.replace('wptb-element-', '');
+    }
+  }
+
+  return null;
+};
+/**
+ * Find table element type from its class.
+ *
+ * @param {HTMLElement} tableElement table element
+ * @return {null|string} null if no type is found
+ */
+
+
+exports.parseTableElementId = parseTableElementId;
+
+var parseElementType = function parseElementType(tableElement) {
+  if (tableElement) {
+    var activeElementKindArray = tableElement.getAttribute('class').split(' ').filter(function (c) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+      return regExp.test(c);
+    })[0];
+
+    if (activeElementKindArray) {
+      var regExp = new RegExp(/^wptb-element-(.+)-(\d+)$/, 'g');
+
+      var _regExp$exec = regExp.exec(activeElementKindArray),
+          _regExp$exec2 = _slicedToArray(_regExp$exec, 2),
+          elementType = _regExp$exec2[1];
+
+      return elementType;
+    }
+  }
+
+  return null;
+};
+/**
+ * Get a parent of an element in a specific node type.
+ *
+ * @param {HTMLElement} element element
+ * @param {string} type node type
+ */
+
+
+exports.parseElementType = parseElementType;
+
+var getParentOfType = function getParentOfType(element, type) {
+  function recursiveParent(el) {
+    var parent = el.parentNode;
+
+    if (parent.nodeName === type.toUpperCase()) {
+      return parent;
+    }
+
+    return recursiveParent(parent);
+  }
+
+  return recursiveParent(element);
+};
+/**
+ * Generate an unique id.
+ *
+ * @param {number} id length
+ * @param length
+ * @return {string} generated id
+ */
+
+
+exports.getParentOfType = getParentOfType;
+
+var generateUniqueId = function generateUniqueId() {
+  var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 5;
+  var variables = ['a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5'];
+  var key = '';
+
+  for (var i = 0; i < length; i += 1) {
+    key += variables[Math.floor(Math.random() * variables.length)];
+  }
+
+  return key;
+};
+/**
+ * Compare equality of objects on value level.
+ *
+ * @param {Object} source source object
+ * @param {Object} target target object
+ * @return {boolean} equal or not
+ */
+
+
+exports.generateUniqueId = generateUniqueId;
+
+var isObjectValuesSame = function isObjectValuesSame(source, target) {
+  return Object.keys(source).every(function (k) {
+    return source[k] === target[k];
+  });
+};
+
+exports.isObjectValuesSame = isObjectValuesSame;
 },{}],"stores/general.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createBasicStore = exports.defaultTranslationGetter = exports.objectDeepMerge = void 0;
+exports.stateWatchFunction = exports.actionWatchFunction = exports.mutationWatchFunction = exports.createBasicStore = exports.defaultTranslationGetter = exports.objectDeepMerge = void 0;
 
 var _vuex = _interopRequireDefault(require("vuex"));
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+var _functions = require("../functions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17516,9 +19222,99 @@ exports.defaultTranslationGetter = defaultTranslationGetter;
 var createBasicStore = function createBasicStore(defaultStore, extraStore) {
   return new _vuex.default.Store((0, _deepmerge.default)(defaultStore, extraStore));
 };
+/**
+ * Watch function to be used at store event subscriptions.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Function} function to be called at action dispatch
+ */
+
 
 exports.createBasicStore = createBasicStore;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/tableDataMenu/index.js":[function(require,module,exports) {
+
+var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var payload = args[0];
+
+    if (watchList[payload.type]) {
+      watchList[payload.type].apply(watchList, args.concat([store]));
+    }
+  };
+};
+/**
+ * Watch a list of actions from a list.
+ *
+ * @param {Object} watchList watch list to be used
+ * @param {Object} store store object
+ * @return {Object} action subscribe object
+ */
+
+
+exports.mutationWatchFunction = mutationWatchFunction;
+
+var actionWatchFunction = function actionWatchFunction(watchList, store) {
+  return {
+    before: function before(action, state) {
+      if (watchList.before[action.type]) {
+        watchList.before[action.type](action, state, store);
+      }
+    },
+    after: function after(action, state) {
+      if (watchList.after[action.type]) {
+        watchList.after[action.type](action, state, store);
+      }
+    }
+  };
+};
+/**
+ * State watch function.
+ *
+ * @param {Object} store vuex store object
+ * @param {Object} watchList watch list */
+
+
+exports.actionWatchFunction = actionWatchFunction;
+
+var stateWatchFunction = function stateWatchFunction(store, watchList) {
+  // eslint-disable-next-line array-callback-return
+  Object.keys(watchList).map(function (k) {
+    if (Object.prototype.hasOwnProperty.call(watchList, k)) {
+      var _watchList$k = watchList[k],
+          watch = _watchList$k.watch,
+          callBack = _watchList$k.callBack,
+          callAtStart = _watchList$k.callAtStart;
+
+      if (!Array.isArray(watch)) {
+        watch = [watch];
+      }
+
+      var stateGetter = function stateGetter(keyString, storeObject) {
+        return function () {
+          return (0, _functions.objectPropertyFromString)(keyString, storeObject.state);
+        };
+      }; // eslint-disable-next-line array-callback-return
+
+
+      watch.map(function (w) {
+        if (callAtStart) {
+          callBack(store)(stateGetter(w, store)());
+        }
+
+        store.watch(stateGetter(w, store), callBack(store), {
+          deep: true
+        });
+      });
+    }
+  });
+};
+
+exports.stateWatchFunction = stateWatchFunction;
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../functions":"functions/index.js"}],"stores/tableDataMenu/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17574,7 +19370,394 @@ var createStore = function createStore(extraOptions) {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+/**
+ * Data manager store actions.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Add temp data to data manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store commit function
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Object} payload action payload object
+   * @param {Object} payload.data data
+   */
+  addDataManagerTempData: function addDataManagerTempData(_ref, _ref2) {
+    var commit = _ref.commit,
+        dispatch = _ref.dispatch;
+    var data = _ref2.data;
+    var confirmedData = Array.isArray(data) ? data : [];
+    var maxCellsPerRow = confirmedData.reduce(function (carry, item) {
+      return Math.max(item.length, carry);
+    }, 0); // fill missing cells per rows to maximum column count
+    // eslint-disable-next-line array-callback-return
+
+    confirmedData.map(function (r) {
+      if (r.length < maxCellsPerRow) {
+        var difference = maxCellsPerRow - r.length;
+
+        for (var i = 0; i < difference; i += 1) {
+          r.push('');
+        }
+      }
+    });
+    commit('clearTempDataManager');
+    confirmedData.map( /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(r) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return dispatch('addRowToDataManager', r);
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function (_x) {
+        return _ref3.apply(this, arguments);
+      };
+    }());
+    commit('setHoverId', null);
+  },
+
+  /**
+   * Generate a new row for data table manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Array} colValues column values
+   * @return {Function} generated new row object
+   */
+  generateRow: function generateRow(_ref4, colValues) {
+    var commit = _ref4.commit,
+        getters = _ref4.getters,
+        dispatch = _ref4.dispatch;
+    var rowId = getters.generateUniqueId();
+    commit('pushDataManagerRowId', rowId);
+    var rowObj = {
+      rowId: rowId,
+      values: []
+    }; // eslint-disable-next-line array-callback-return
+
+    colValues.map( /*#__PURE__*/function () {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(value, i) {
+        var cellObject;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return dispatch('generateCell', {
+                  value: value,
+                  index: i
+                });
+
+              case 2:
+                cellObject = _context2.sent;
+                rowObj.values.push(cellObject);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function (_x2, _x3) {
+        return _ref5.apply(this, arguments);
+      };
+    }());
+    return rowObj;
+  },
+
+  /**
+   * Add a new row to data manager.
+   *
+   * @async
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Array} colValues values for columns
+   */
+  addRowToDataManager: function addRowToDataManager(_ref6) {
+    var _arguments = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var getters, dispatch, commit, colValues, innerColValues, rowObject;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              getters = _ref6.getters, dispatch = _ref6.dispatch, commit = _ref6.commit;
+              colValues = _arguments.length > 1 && _arguments[1] !== undefined ? _arguments[1] : [];
+              innerColValues = colValues;
+
+              if (colValues.length === 0) {
+                innerColValues = Array.from(new Array(getters.getColCount)).map(function () {
+                  return '';
+                });
+              }
+
+              _context3.next = 6;
+              return dispatch('generateRow', innerColValues);
+
+            case 6:
+              rowObject = _context3.sent;
+              commit('addRowToDataTable', rowObject);
+
+            case 8:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+
+  /**
+   * Generate a new cell object.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} payload payload object
+   * @param {string|number} payload.value value
+   * @param {number} payload.index column index
+   *
+   * @return {Object} cell object
+   */
+  generateCell: function generateCell(_ref7, _ref8) {
+    var getters = _ref7.getters,
+        commit = _ref7.commit;
+    var value = _ref8.value,
+        index = _ref8.index;
+    var colId = getters.getDataManagerColId(index);
+
+    if (!colId) {
+      colId = getters.generateUniqueId();
+      commit('pushDataManagerColId', colId);
+    }
+
+    return {
+      colId: colId,
+      value: value
+    };
+  },
+
+  /**
+   * Add a row object as a header to data values
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   *
+   * @param {Object} rowObject row object
+   */
+  addRowObjectAsHeader: function addRowObjectAsHeader(_ref9, rowObject) {
+    var commit = _ref9.commit;
+    // add property that will mark this row object as created for only column name purposes
+    // eslint-disable-next-line no-param-reassign
+    rowObject.generatedForHeader = true;
+    commit('setDataManagerControl', {
+      key: 'indexRow',
+      value: rowObject.rowId
+    });
+    commit('addRowToDataTable', rowObject);
+  },
+
+  /**
+   * Add a column to data manager.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.dispatch vuex store action function
+   * @param {string} value value of the newly added cells
+   */
+  addColumnToDataManager: function addColumnToDataManager(_ref10) {
+    var _arguments2 = arguments;
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+      var commit, getters, dispatch, value, colCount, rowCount;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              commit = _ref10.commit, getters = _ref10.getters, dispatch = _ref10.dispatch;
+              value = _arguments2.length > 1 && _arguments2[1] !== undefined ? _arguments2[1] : '';
+              colCount = getters.getColCount;
+              rowCount = getters.getRowCount;
+              _context5.next = 6;
+              return Array.from(new Array(rowCount)).map(function () {
+                return '';
+              }).map( /*#__PURE__*/function () {
+                var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(r, rowIndex) {
+                  var cellObject;
+                  return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                    while (1) {
+                      switch (_context4.prev = _context4.next) {
+                        case 0:
+                          _context4.next = 2;
+                          return dispatch('generateCell', {
+                            value: value,
+                            index: colCount
+                          });
+
+                        case 2:
+                          cellObject = _context4.sent;
+                          commit('addCellToDataTableRow', {
+                            rowIndex: rowIndex,
+                            cellObject: cellObject
+                          });
+
+                        case 4:
+                        case "end":
+                          return _context4.stop();
+                      }
+                    }
+                  }, _callee4);
+                }));
+
+                return function (_x4, _x5) {
+                  return _ref11.apply(this, arguments);
+                };
+              }());
+
+            case 6:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }))();
+  },
+
+  /**
+   * Delete a row object from data manager table.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} root.getters vuex store getter
+   * @param {string} rowId row id
+   */
+  deleteDataTableRow: function deleteDataTableRow(_ref12, rowId) {
+    var commit = _ref12.commit,
+        getters = _ref12.getters;
+    var index = getters.getDataManagerIndexFromId(rowId);
+    commit('deleteRowFromDataTable', rowId); // calculate hover id that will be focused on after delete operation
+
+    var hoverRowIndex = index - 1 >= 0 ? index - 1 : index;
+    var hoverRowId = getters.getDataManagerRowId(hoverRowIndex);
+
+    var _getters$parseCellId = getters.parseCellId(getters.getHoverId),
+        colId = _getters$parseCellId.colId;
+
+    commit('setHoverId', getters.formCellId(hoverRowId, colId));
+  },
+
+  /**
+   * Delete a column object from data manager table.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   * @param {string} colId column id
+   */
+  deleteDataTableCol: function deleteDataTableCol(_ref13, colId) {
+    var commit = _ref13.commit;
+    commit('deleteColFromDataTable', colId);
+    commit('setHoverId', null);
+  },
+
+  /**
+   * Set value of data cell.
+   *
+   * @param {Object} root vuex store object
+   * @param {Object} root.getters vuex store getter
+   * @param {Function} root.commit vuex store mutation function
+   * @param {Object} payload action payload
+   * @param {string} payload.cellId cell id
+   * @param {string|number} payload.value cell value
+   */
+  setDataCellValue: function setDataCellValue(_ref14, _ref15) {
+    var getters = _ref14.getters,
+        commit = _ref14.commit;
+    var cellId = _ref15.cellId,
+        value = _ref15.value;
+
+    var _getters$parseCellId2 = getters.parseCellId(cellId),
+        rowId = _getters$parseCellId2.rowId,
+        colId = _getters$parseCellId2.colId;
+
+    commit('setDataCellObjectValue', {
+      rowId: rowId,
+      colId: colId,
+      value: value
+    }); // @deprecated
+    // commit('setSetupSourceDataCreatedStatus', true);
+  },
+
+  /**
+   * Set up a proxy for selection click id.
+   *
+   * @param {Object} root vuex store object
+   * @param {Function} root.commit vuex store mutation function
+   */
+  setUpSelectionIdProxy: function setUpSelectionIdProxy(_ref16) {
+    var commit = _ref16.commit;
+    var selectId = {
+      id: null,
+      resolve: null
+    };
+    var clickIdHandler = {
+      set: function set(obj, prop, val) {
+        if (prop === 'resolve') {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val;
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          obj[prop] = val; // if resolve property is defined, call it with assigned value
+
+          if (obj.resolve) {
+            obj.resolve(val);
+          }
+        }
+
+        return true;
+      }
+    }; // set proxy for clicked cell id of select operation
+
+    commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
+  }
+};
+/**
+ * @module actions
+ */
+
+var _default = actions;
+exports.default = _default;
+},{}],"stores/modules/dataManager/state.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17649,6 +19832,223 @@ var mutations = {
    */
   mergeTempData: function mergeTempData(state, dataObject) {
     state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
+  },
+
+  /**
+   * Clear contents of temp data manager.
+   *
+   * @param {Object} state data table state
+   */
+  clearTempDataManager: function clearTempDataManager(state) {
+    state.tempData.values = [];
+    state.tempData.rowIds = [];
+    state.tempData.colIds = [];
+    state.tempData.colCount = 0;
+    state.tempData.rowCount = 0;
+  },
+
+  /**
+   * Push a row id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerRowId: function pushDataManagerRowId(state, id) {
+    state.tempData.rowIds.push(id);
+  },
+
+  /**
+   * Push a column id to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} id id to be pushed
+   */
+  pushDataManagerColId: function pushDataManagerColId(state, id) {
+    state.tempData.colIds.push(id);
+  },
+
+  /**
+   * Add a row data to data manager.
+   *
+   * @param {Object} state data table state
+   * @param {Object} rowData row data object
+   */
+  addRowToDataTable: function addRowToDataTable(state, rowData) {
+    state.tempData.values.push(rowData);
+  },
+
+  /**
+   * Set store id of hovered cell.
+   *
+   * @param {Object} state data table state
+   * @param {string} id set id for hovered cell
+   */
+  setHoverId: function setHoverId(state, id) {
+    state.select.hoverId = id;
+  },
+
+  /**
+   * Set control value for data manager.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.key control key
+   * @param {string|number|boolean} payload.value control value
+   */
+  setDataManagerControl: function setDataManagerControl(state, _ref) {
+    var key = _ref.key,
+        value = _ref.value;
+    state.controls[key] = value;
+  },
+
+  /**
+   * Set parsed data object property values.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.key data key
+   * @param {string|number|boolean} payload.value data value
+   */
+  setParsedData: function setParsedData(state, _ref2) {
+    var key = _ref2.key,
+        value = _ref2.value;
+    state.tempData.parsedData[key] = value;
+  },
+
+  /**
+   * Set current column count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setColCount: function setColCount(state, count) {
+    state.tempData.colCount = count;
+  },
+
+  /**
+   * Set current row count.
+   *
+   * @param {Object} state data table state
+   * @param {number} count count
+   */
+  setRowCount: function setRowCount(state, count) {
+    state.tempData.rowCount = count;
+  },
+
+  /**
+   * Add a cell to a table data row.
+   *
+   * Since because of the logic of the tables, when used, this mutation should be applied to all rows of the data manager table.
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload object
+   * @param {number} payload.rowIndex row index
+   * @param {Object} payload.cellObject cell object to be added
+   */
+  addCellToDataTableRow: function addCellToDataTableRow(state, _ref3) {
+    var rowIndex = _ref3.rowIndex,
+        cellObject = _ref3.cellObject;
+
+    if (rowIndex < state.tempData.rowCount) {
+      // create a new rowObject to trigger reactivity
+      var rowObject = _objectSpread({}, state.tempData.values[rowIndex]);
+
+      rowObject.values.push(cellObject);
+      state.tempData.values.splice(rowIndex, 1, rowObject);
+    }
+  },
+
+  /**
+   * Set value to a data cell object
+   *
+   * @param {Object} state data table state
+   * @param {Object} payload mutation payload
+   * @param {string} payload.rowId cell row id
+   * @param {string} payload.colId cell column id
+   * @param {string|number} payload.value cell column value
+   */
+  setDataCellObjectValue: function setDataCellObjectValue(state, _ref4) {
+    var rowId = _ref4.rowId,
+        colId = _ref4.colId,
+        value = _ref4.value;
+    var rowObject = state.tempData.values.find(function (r) {
+      return r.rowId === rowId;
+    });
+
+    if (rowObject) {
+      var cell = rowObject.values.find(function (c) {
+        return c.colId === colId;
+      });
+
+      if (cell) {
+        cell.value = value;
+      }
+    }
+  },
+
+  /**
+   * Delete a row from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} rowId row id
+   */
+  deleteRowFromDataTable: function deleteRowFromDataTable(state, rowId) {
+    var rowIndex = state.tempData.rowIds.indexOf(rowId);
+
+    if (rowIndex > -1) {
+      state.tempData.values.splice(rowIndex, 1); // also delete row id from indexes
+
+      state.tempData.rowIds.splice(rowIndex, 1);
+    }
+  },
+
+  /**
+   * Delete a column from data manager.
+   *
+   * @param {Object} state data table state
+   * @param {string} colId column id
+   */
+  deleteColFromDataTable: function deleteColFromDataTable(state, colId) {
+    var colIndex = state.tempData.colIds.indexOf(colId);
+
+    if (colIndex >= 0) {
+      // generate new values to trigger reactivity
+      var newValues = state.tempData.values.reduce(function (carry, val) {
+        var nVal = _objectSpread({}, val);
+
+        carry.push(nVal);
+        return carry;
+      }, []); // eslint-disable-next-line array-callback-return
+
+      newValues.map(function (v) {
+        v.values.splice(colIndex, 1);
+      });
+      state.tempData.values = newValues; // also delete col id from indexes
+
+      state.tempData.colIds.splice(colIndex, 1); // update column count
+
+      state.tempData.colCount -= 1;
+    }
+  },
+
+  /**
+   * Set store id of selected cell.
+   *
+   * @param {Object} state data table state
+   * @param {string} id set id for selected cell
+   */
+  setSelectId: function setSelectId(state, id) {
+    state.select.clickId.id = id;
+  },
+
+  /**
+   * Set proxy for selection click id.
+   *
+   * @param {Object} state data table state
+   * @param {Proxy} proxy proxy object
+   */
+  setClickIdProxy: function setClickIdProxy(state, proxy) {
+    state.select.clickId = proxy;
   }
 };
 /**
@@ -17664,6 +20064,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * Data manager store getters.
@@ -17689,6 +20101,194 @@ var getters = {
    */
   getDataManagerControls: function getDataManagerControls(state) {
     return state.controls;
+  },
+
+  /**
+   * Get current column count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getColCount: function getColCount(state) {
+    return state.tempData.colCount;
+  },
+
+  /**
+   * Get current row count.
+   *
+   * @param {Object} state data table state
+   * @return {number} column count
+   */
+  getRowCount: function getRowCount(state) {
+    return state.tempData.rowCount;
+  },
+
+  /**
+   * Generate unique id.
+   *
+   * @return {Function} generate function
+   */
+  generateUniqueId: function generateUniqueId() {
+    return function () {
+      var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 11;
+      var variables = 'abcdef0123456789'.split('');
+      var key = '';
+
+      for (var i = 0; i < length; i += 1) {
+        key += variables[Math.floor(Math.random() * variables.length)];
+      }
+
+      return key;
+    };
+  },
+
+  /**
+   * Get data manager column id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerColId: function getDataManagerColId(state) {
+    return function (index) {
+      if (state.tempData.colIds[index]) {
+        return state.tempData.colIds[index];
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Is data selection active on data table manager.
+   *
+   * @param {Object} state store state
+   * @return {boolean} active or not
+   */
+  isDataSelectionActive: function isDataSelectionActive(state) {
+    return state.select.active;
+  },
+
+  /**
+   * Get parsed values of data table.
+   *
+   * This object will contain separated values of header and body values of data table.
+   *
+   * @param {Object} state store state
+   * @return {Object} parsed data object
+   */
+  parsedData: function parsedData(state) {
+    return state.tempData.parsedData;
+  },
+
+  /**
+   * Get row and column ids of a cell from a formed id.
+   *
+   * @return {function(*): {colId: *, rowId: *}} function that will be used to parse cell id
+   */
+  parseCellId: function parseCellId() {
+    return function (formedId) {
+      var idObject = {
+        rowId: null,
+        colId: null
+      };
+
+      if (formedId !== null) {
+        var _formedId$split = formedId.split('-'),
+            _formedId$split2 = _slicedToArray(_formedId$split, 2),
+            rowId = _formedId$split2[0],
+            colId = _formedId$split2[1];
+
+        idObject.rowId = rowId;
+        idObject.colId = colId;
+      }
+
+      return idObject;
+    };
+  },
+
+  /**
+   * Get hover id of current hovered cell.
+   *
+   * @param {Object} state store state
+   * @return {null|string} hover id of the hovered data table cell
+   */
+  getHoverId: function getHoverId(state) {
+    return state.select.hoverId;
+  },
+
+  /**
+   * Get data related to select operation.
+   *
+   * @param {Object} state store state
+   * @return {Object} select operation related data
+   */
+  getSelectOperationData: function getSelectOperationData(state) {
+    return state.select;
+  },
+
+  /**
+   * Form a cell id from row and col ids.
+   *
+   * @return {function(*, *): string} cell id form function
+   */
+  formCellId: function formCellId() {
+    return function (rowId, colId) {
+      return "".concat(rowId, "-").concat(colId);
+    };
+  },
+
+  /**
+   * Get data cell object
+   *
+   * @param {Object} state store state
+   * @param {Object} getters store getters
+   */
+  // eslint-disable-next-line no-shadow
+  getDataCellObject: function getDataCellObject(state, getters) {
+    return function (rowId, colId) {
+      var dataValues = getters.getDataManagerTempData;
+      var row = dataValues.find(function (r) {
+        return r.rowId === rowId;
+      });
+
+      if (row) {
+        var cellObjects = row.values;
+        return cellObjects.find(function (c) {
+          return c.colId === colId;
+        });
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Get data manager row id of a given index.
+   *
+   * @param {Object} state store state
+   * @return {function(*): (*|0)} function that can be used with an argument
+   */
+  getDataManagerRowId: function getDataManagerRowId(state) {
+    return function (index) {
+      if (state.tempData.rowIds[index]) {
+        return state.tempData.rowIds[index];
+      }
+
+      return null;
+    };
+  },
+
+  /**
+   * Get index of given type and id from data manager ids.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to be used to determine index from id.
+   */
+  getDataManagerIndexFromId: function getDataManagerIndexFromId(state) {
+    return function (id) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'row';
+      return state.tempData["".concat(type, "Ids")].indexOf(id);
+    };
   }
 };
 /**
@@ -17697,7 +20297,108 @@ var getters = {
 
 var _default = getters;
 exports.default = _default;
-},{}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
+},{}],"stores/modules/dataManager/plugin.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _general = require("../../general");
+
+/**
+ * Mutation watch list.
+ *
+ * Keys for mutation types, and values for function to be called when specified mutation type is applied.
+ *
+ * @type {Object}
+ */
+var mutationWatchList = {
+  addRowToDataTable: function addRowToDataTable(_ref, state, store) {
+    var payload = _ref.payload;
+    var colCount = Math.max(payload.values.length, store.getters.getColCount); // set col count from table data
+
+    store.commit('setColCount', colCount);
+  }
+};
+/**
+ * Action watch list.
+ *
+ * Keys for action types, and values for function to be called when specified action type is applied.
+ *
+ * @type {Object}
+ */
+
+var actionWatchList = {
+  before: {},
+  after: {
+    addColumnToDataManager: function addColumnToDataManager(payload, state, store) {
+      var colCount = store.getters.getColCount + 1; // set col count from table data
+
+      store.commit('setColCount', colCount);
+    }
+  }
+};
+/**
+ * State watch list.
+ *
+ * @type {Object}
+ */
+
+var stateWatchList = {
+  tempData: {
+    callAtStart: true,
+    watch: 'dataManager.tempData.values',
+    callBack: function callBack(store) {
+      return function () {
+        // set row count from table data
+        store.commit('setRowCount', store.getters.getDataManagerTempData.length);
+      };
+    }
+  },
+  headerRow: {
+    watch: ['dataManager.controls.indexRow'],
+    callBack: function callBack(store) {
+      return function () {
+        var indexRow = store.state.dataManager.controls.indexRow;
+        var deleteIds = []; // delete all rows that are generated for header that are not current index row
+        // eslint-disable-next-line array-callback-return
+
+        store.state.dataManager.tempData.values.map(function (r) {
+          if (r.rowId !== indexRow && r.generatedForHeader) {
+            deleteIds.push(r.rowId);
+          }
+        }); // eslint-disable-next-line array-callback-return
+
+        deleteIds.map(function (id) {
+          store.commit('deleteRowFromDataTable', id);
+        });
+      };
+    }
+  }
+};
+/**
+ * Store subscriptions for data manager
+ *
+ * @param {Object} store store object
+ */
+
+var subscriptions = function subscriptions(store) {
+  // TODO [erdembircan] remove for production
+  console.log('module subscriptions called');
+  (0, _general.stateWatchFunction)(store, stateWatchList);
+  store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
+  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
+};
+/**
+ * @module subscriptions
+ */
+
+
+var _default = subscriptions;
+exports.default = _default;
+},{"../../general":"stores/general.js"}],"stores/modules/dataManager/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17707,11 +20408,15 @@ exports.default = exports.defaultStoreOptions = void 0;
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
+var _actions = _interopRequireDefault(require("./actions"));
+
 var _state = _interopRequireDefault(require("./state"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
 var _getters = _interopRequireDefault(require("./getters"));
+
+var _plugin = _interopRequireDefault(require("./plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17723,7 +20428,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var defaultStoreOptions = {
   state: _state.default,
   mutations: _mutations.default,
-  getters: _getters.default
+  getters: _getters.default,
+  actions: _actions.default,
+  plugins: [_plugin.default],
+  strict: true
 };
 /**
  * Get module options.
@@ -17744,7 +20452,7 @@ var getModuleOptions = function getModuleOptions(extraStoreOptions) {
 
 var _default = getModuleOptions;
 exports.default = _default;
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./actions":"stores/modules/dataManager/actions.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js","./plugin":"stores/modules/dataManager/plugin.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -17762,6 +20470,18 @@ var _withNativeTranslationStore = _interopRequireDefault(require("./mixins/withN
 var _dataManager = require("./stores/modules/dataManager");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -17796,6 +20516,7 @@ var extraStoreOptions = {
     dataSimple: menuData.dataObjectsSimple,
     security: menuData.security
   },
+  plugins: _toConsumableArray(_dataManager.defaultStoreOptions.plugins),
   modules: {
     dataManager: _dataManager.defaultStoreOptions
   }

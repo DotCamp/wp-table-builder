@@ -1,4 +1,5 @@
 import { mapGetters } from 'vuex';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Translation mixin for stores with strings state and translation getter.
@@ -19,6 +20,15 @@ const withNativeTranslationStore = {
 		 */
 		translationM(key) {
 			return this.$store.getters.translation(key);
+		},
+		/**
+		 * Translate using WordPress client function.
+		 *
+		 * @param {string} phrase phrase to be translated
+		 * @return {string} translated string
+		 */
+		translationW(phrase) {
+			return __(phrase, 'wp-table-builder');
 		},
 	},
 };

@@ -93,6 +93,7 @@ class Data_Object_Manager {
 			// enqueue styles
 			Helpers::enqueue_file( $css_path );
 
+
 			$plugin_data = get_plugin_data( NS\PLUGIN__FILE__ );
 			$plugin_info = [
 				'logo'           => trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'assets/images/wptb-logo.png',
