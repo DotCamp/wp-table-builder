@@ -5,7 +5,9 @@
 		</div>
 		<portal to="footerButtons">
 			<div class="wptb-table-data-menu-footer-buttons-container">
-				<menu-button :disabled="revertDisableStatus" type="danger">{{ translationM('revert') }}</menu-button>
+				<menu-button @click="revertDataChanges" :disabled="revertDisableStatus" type="danger">{{
+					translationM('revert')
+				}}</menu-button>
 				<menu-button :disabled="saveDisabledStatus">{{ translationM('save') }}</menu-button>
 			</div>
 		</portal>
@@ -27,9 +29,7 @@ export default {
 					.then((resp) => {
 						this.dataObject = resp;
 
-						const { controls, content } = resp;
-						this.setDataManagerControlObject(controls);
-						this.mergeTempData(content);
+						this.mergeDataObject(this.dataObject);
 					})
 					.catch(() => {
 						// do nothing
@@ -43,20 +43,30 @@ export default {
 		};
 	},
 	computed: {
-		revertDisableStatus() {
+		genericDisabledStatus() {
+			if (this.getBusyState) {
+				return this.getBusyState;
+			}
+
 			return !this.isDirty;
+		},
+		revertDisableStatus() {
+			return this.genericDisabledStatus;
 		},
 		saveDisabledStatus() {
-			return !this.isDirty;
+			return this.genericDisabledStatus;
 		},
-		...mapGetters(['getEditorActiveId', 'isDirty']),
+		...mapGetters(['getEditorActiveId', 'isDirty', 'getBusyState']),
 	},
 	methods: {
 		resetDataObject() {
 			this.dataObject = null;
 		},
-		...mapActions(['fetchDataObject']),
-		...mapMutations(['setDataManagerControlObject', 'mergeTempData', 'dirtySwitchOn', 'dirtySwitchOff']),
+		revertDataChanges() {
+			this.revertTableData(this.dataObject);
+		},
+		...mapActions(['fetchDataObject', 'mergeDataObject', 'revertTableData']),
+		...mapMutations(['dirtySwitchOn', 'dirtySwitchOff']),
 	},
 };
 </script>

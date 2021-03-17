@@ -1,3 +1,5 @@
+import deepmerge from 'deepmerge';
+
 /**
  * Table data store actions.
  *
@@ -61,6 +63,31 @@ const actions = {
 					resolveFunction(dataObject);
 				});
 		});
+	},
+	/**
+	 * Merge data object with data manager.
+	 *
+	 * @param {Object} root store object
+	 * @param {Function} root.commit store mutation function
+	 * @param {Object} dataObject data object
+	 */
+	mergeDataObject({ commit }, dataObject) {
+		const { controls, content } = deepmerge({}, dataObject);
+
+		commit('setDataManagerControlObject', { ...controls });
+		commit('mergeTempData', { ...content });
+	},
+	/**
+	 * Revert table data to current data object which will strip all changes made.
+	 *
+	 * @param {Object} root store object
+	 * @param {Function} root.dispatch store action function
+	 * @param {Function} root.commit store mutation function
+	 * @param {Object} dataObject data object
+	 */
+	revertTableData({ dispatch, commit }, dataObject) {
+		dispatch('mergeDataObject', dataObject);
+		commit('resetAppDirtyStatus');
 	},
 };
 

@@ -18069,12 +18069,8 @@ var _default = {
       if (n !== null) {
         this.fetchDataObject(n).then(function (resp) {
           _this.dataObject = resp;
-          var controls = resp.controls,
-              content = resp.content;
 
-          _this.setDataManagerControlObject(controls);
-
-          _this.mergeTempData(content);
+          _this.mergeDataObject(_this.dataObject);
         }).catch(function () {// do nothing
         });
       }
@@ -18086,18 +18082,28 @@ var _default = {
     };
   },
   computed: _objectSpread({
-    revertDisableStatus: function revertDisableStatus() {
+    genericDisabledStatus: function genericDisabledStatus() {
+      if (this.getBusyState) {
+        return this.getBusyState;
+      }
+
       return !this.isDirty;
     },
+    revertDisableStatus: function revertDisableStatus() {
+      return this.genericDisabledStatus;
+    },
     saveDisabledStatus: function saveDisabledStatus() {
-      return !this.isDirty;
+      return this.genericDisabledStatus;
     }
-  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty'])),
+  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState'])),
   methods: _objectSpread({
     resetDataObject: function resetDataObject() {
       this.dataObject = null;
+    },
+    revertDataChanges: function revertDataChanges() {
+      this.revertTableData(this.dataObject);
     }
-  }, (0, _vuex.mapActions)(['fetchDataObject']), {}, (0, _vuex.mapMutations)(['setDataManagerControlObject', 'mergeTempData', 'dirtySwitchOn', 'dirtySwitchOff']))
+  }, (0, _vuex.mapActions)(['fetchDataObject', 'mergeDataObject', 'revertTableData']), {}, (0, _vuex.mapMutations)(['dirtySwitchOn', 'dirtySwitchOff']))
 };
 exports.default = _default;
         var $bd0480 = exports.default || module.exports;
@@ -18131,7 +18137,11 @@ exports.default = _default;
                 _c(
                   "menu-button",
                   {
-                    attrs: { disabled: _vm.revertDisableStatus, type: "danger" }
+                    attrs: {
+                      disabled: _vm.revertDisableStatus,
+                      type: "danger"
+                    },
+                    on: { click: _vm.revertDataChanges }
                   },
                   [_vm._v(_vm._s(_vm.translationM("revert")))]
                 ),
@@ -18694,186 +18704,6 @@ var getters = {
 
 var _default = getters;
 exports.default = _default;
-},{}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Table data store actions.
- *
- * @type {Object}
- */
-var actions = {
-  /**
-   * Commit a mutation based on busy state.
-   *
-   * @param {Object} root store object
-   * @param {Function} root.commit store commit function
-   * @param {Object} root.getters store getters
-   * @param {Object} mutationPayload mutation payload object
-   * @param {string} mutationPayload.name mutation name
-   * @param {*} mutationPayload.value mutation value
-   */
-  mutationBusyPass: function mutationBusyPass(_ref, _ref2) {
-    var commit = _ref.commit,
-        getters = _ref.getters;
-    var name = _ref2.name,
-        value = _ref2.value;
-
-    if (!getters.getBusyState) {
-      commit(name, value);
-    }
-  },
-
-  /**
-   * Fetch data object properties.
-   *
-   * @param {Object} root store object
-   * @param {Object} root.getters store getters
-   * @param {Function} root.commit store commit function
-   * @param {number} id data object id
-   */
-  fetchDataObject: function fetchDataObject(_ref3, id) {
-    var getters = _ref3.getters,
-        commit = _ref3.commit;
-
-    var _getters$getSecurityP = getters.getSecurityProps('dataObjectContent'),
-        nonce = _getters$getSecurityP.nonce,
-        action = _getters$getSecurityP.action;
-
-    var url = getters.getSecurityProps('url');
-    return new Promise(function (resolve, reject) {
-      var ajaxUrl = new URL(url);
-      ajaxUrl.searchParams.append('nonce', nonce);
-      ajaxUrl.searchParams.append('action', action);
-      ajaxUrl.searchParams.append('data_object_id', id);
-      commit('setBusy');
-      var dataObject = null;
-      fetch(ajaxUrl).then(function (res) {
-        if (!res.ok) {
-          throw new Error('an error occurred, please try again later');
-        }
-
-        return res.json();
-      }).then(function (resp) {
-        if (resp.error) {
-          throw new Error(resp.error);
-        }
-
-        dataObject = resp.data.dataObject;
-      }).catch(function (err) {
-        commit('setErrorMessage', err.message);
-      }).finally(function () {
-        commit('resetBusy');
-        var resolveFunction = dataObject === null ? reject : resolve;
-        resolveFunction(dataObject);
-      });
-    });
-  }
-};
-/**
- * @module actions
- */
-
-var _default = actions;
-exports.default = _default;
-},{}],"stores/tableDataMenu/mutations.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/* eslint-disable no-param-reassign */
-
-/**
- * Table data store mutations.
- *
- * @type {Object}
- */
-var mutations = {
-  /**
-   * Set active data object id.
-   *
-   * @param {Object} state table data store state
-   * @param {string} dataObjectId data object id
-   */
-  setEditorActiveId: function setEditorActiveId(state, dataObjectId) {
-    // eslint-disable-next-line no-param-reassign
-    state.editor.activeId = dataObjectId;
-  },
-
-  /**
-   * Set app status to busy.
-   *
-   * @param {Object} state table data store state
-   */
-  setBusy: function setBusy(state) {
-    // eslint-disable-next-line no-param-reassign
-    state.app.busy = true;
-  },
-
-  /**
-   * Reset app busy status.
-   *
-   * @param {Object} state table data store state
-   */
-  resetBusy: function resetBusy(state) {
-    // eslint-disable-next-line no-param-reassign
-    state.app.busy = false;
-  },
-
-  /**
-   * Set a menu message.
-   *
-   * @param {Object} state table data store state
-   * @param {string} content message content
-   */
-  setOkMessage: function setOkMessage(state, content) {
-    this.state.app.message.type = 'ok';
-    this.state.app.message.content = content;
-  },
-
-  /**
-   * Set a menu error message.
-   *
-   * @param {Object} state table data store state
-   * @param {string} content message content
-   */
-  setErrorMessage: function setErrorMessage(state, content) {
-    this.state.app.message.type = 'error';
-    this.state.app.message.content = content;
-  },
-
-  /**
-   * Set app to dirty
-   *
-   * @param {Object} state table data store state
-   */
-  setAppDirty: function setAppDirty(state) {
-    state.app.dirty = true;
-  },
-
-  /**
-   * Reset app to dirty
-   *
-   * @param {Object} state table data store state
-   */
-  resetAppDirtyStatus: function resetAppDirtyStatus(state) {
-    state.app.dirty = false;
-  }
-};
-/**
- * @module mutations
- */
-
-var _default = mutations;
-exports.default = _default;
 },{}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
@@ -19001,6 +18831,229 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
+},{}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _deepmerge2 = _interopRequireDefault(require("deepmerge"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Table data store actions.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Commit a mutation based on busy state.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit store commit function
+   * @param {Object} root.getters store getters
+   * @param {Object} mutationPayload mutation payload object
+   * @param {string} mutationPayload.name mutation name
+   * @param {*} mutationPayload.value mutation value
+   */
+  mutationBusyPass: function mutationBusyPass(_ref, _ref2) {
+    var commit = _ref.commit,
+        getters = _ref.getters;
+    var name = _ref2.name,
+        value = _ref2.value;
+
+    if (!getters.getBusyState) {
+      commit(name, value);
+    }
+  },
+
+  /**
+   * Fetch data object properties.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store getters
+   * @param {Function} root.commit store commit function
+   * @param {number} id data object id
+   */
+  fetchDataObject: function fetchDataObject(_ref3, id) {
+    var getters = _ref3.getters,
+        commit = _ref3.commit;
+
+    var _getters$getSecurityP = getters.getSecurityProps('dataObjectContent'),
+        nonce = _getters$getSecurityP.nonce,
+        action = _getters$getSecurityP.action;
+
+    var url = getters.getSecurityProps('url');
+    return new Promise(function (resolve, reject) {
+      var ajaxUrl = new URL(url);
+      ajaxUrl.searchParams.append('nonce', nonce);
+      ajaxUrl.searchParams.append('action', action);
+      ajaxUrl.searchParams.append('data_object_id', id);
+      commit('setBusy');
+      var dataObject = null;
+      fetch(ajaxUrl).then(function (res) {
+        if (!res.ok) {
+          throw new Error('an error occurred, please try again later');
+        }
+
+        return res.json();
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        dataObject = resp.data.dataObject;
+      }).catch(function (err) {
+        commit('setErrorMessage', err.message);
+      }).finally(function () {
+        commit('resetBusy');
+        var resolveFunction = dataObject === null ? reject : resolve;
+        resolveFunction(dataObject);
+      });
+    });
+  },
+
+  /**
+   * Merge data object with data manager.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit store mutation function
+   * @param {Object} dataObject data object
+   */
+  mergeDataObject: function mergeDataObject(_ref4, dataObject) {
+    var commit = _ref4.commit;
+
+    var _deepmerge = (0, _deepmerge2.default)({}, dataObject),
+        controls = _deepmerge.controls,
+        content = _deepmerge.content;
+
+    commit('setDataManagerControlObject', _objectSpread({}, controls));
+    commit('mergeTempData', _objectSpread({}, content));
+  },
+
+  /**
+   * Revert table data to current data object which will strip all changes made.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.dispatch store action function
+   * @param {Function} root.commit store mutation function
+   * @param {Object} dataObject data object
+   */
+  revertTableData: function revertTableData(_ref5, dataObject) {
+    var dispatch = _ref5.dispatch,
+        commit = _ref5.commit;
+    dispatch('mergeDataObject', dataObject);
+    commit('resetAppDirtyStatus');
+  }
+};
+/**
+ * @module actions
+ */
+
+var _default = actions;
+exports.default = _default;
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/tableDataMenu/mutations.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/* eslint-disable no-param-reassign */
+
+/**
+ * Table data store mutations.
+ *
+ * @type {Object}
+ */
+var mutations = {
+  /**
+   * Set active data object id.
+   *
+   * @param {Object} state table data store state
+   * @param {string} dataObjectId data object id
+   */
+  setEditorActiveId: function setEditorActiveId(state, dataObjectId) {
+    // eslint-disable-next-line no-param-reassign
+    state.editor.activeId = dataObjectId;
+  },
+
+  /**
+   * Set app status to busy.
+   *
+   * @param {Object} state table data store state
+   */
+  setBusy: function setBusy(state) {
+    // eslint-disable-next-line no-param-reassign
+    state.app.busy = true;
+  },
+
+  /**
+   * Reset app busy status.
+   *
+   * @param {Object} state table data store state
+   */
+  resetBusy: function resetBusy(state) {
+    // eslint-disable-next-line no-param-reassign
+    state.app.busy = false;
+  },
+
+  /**
+   * Set a menu message.
+   *
+   * @param {Object} state table data store state
+   * @param {string} content message content
+   */
+  setOkMessage: function setOkMessage(state, content) {
+    this.state.app.message.type = 'ok';
+    this.state.app.message.content = content;
+  },
+
+  /**
+   * Set a menu error message.
+   *
+   * @param {Object} state table data store state
+   * @param {string} content message content
+   */
+  setErrorMessage: function setErrorMessage(state, content) {
+    this.state.app.message.type = 'error';
+    this.state.app.message.content = content;
+  },
+
+  /**
+   * Set app to dirty
+   *
+   * @param {Object} state table data store state
+   */
+  setAppDirty: function setAppDirty(state) {
+    state.app.dirty = true;
+  },
+
+  /**
+   * Reset app to dirty
+   *
+   * @param {Object} state table data store state
+   */
+  resetAppDirtyStatus: function resetAppDirtyStatus(state) {
+    state.app.dirty = false;
+  }
+};
+/**
+ * @module mutations
+ */
+
+var _default = mutations;
+exports.default = _default;
 },{}],"functions/index.js":[function(require,module,exports) {
 "use strict";
 
