@@ -3072,6 +3072,7 @@ wptb_shortcode_container_element {
 
 .wptb-settings-wrapper {
     background-color: white;
+    max-width: 90%;
     min-width: 90%;
     height: 90%;
     display: grid;
@@ -6545,7 +6546,9 @@ thead .wptb-data-manager-table-data-value {
     color: var(--wptb-plugin-red-500);
     font-weight: bold;
 }
+
 .wptb-search-input-clear[data-disabled='true'] {
     color: var(--wptb-plugin-gray-500) !important;
 }
+
 /*endregion*/

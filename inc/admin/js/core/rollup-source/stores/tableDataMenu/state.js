@@ -5,6 +5,7 @@
  */
 const state = {
 	app: {
+		dirty: false,
 		busy: false,
 		message: {
 			type: 'ok',

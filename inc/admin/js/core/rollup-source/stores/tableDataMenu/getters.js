@@ -67,6 +67,15 @@ const getters = {
 	getCurrentSourceSetupTab(state) {
 		return state.setupTab;
 	},
+	/**
+	 * Get dirty status.
+	 *
+	 * @param {Object} state store state
+	 * @return {boolean} is dirty or not
+	 */
+	isDirty(state) {
+		return state.app.dirty;
+	},
 };
 
 /**

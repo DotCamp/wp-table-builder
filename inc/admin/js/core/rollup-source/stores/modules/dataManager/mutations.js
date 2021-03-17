@@ -75,6 +75,16 @@ const mutations = {
 		state.controls[key] = value;
 	},
 	/**
+	 * Set data manager controls object.
+	 * This mutation will be mainly used to sync data object controls with data manager.
+	 *
+	 * @param {Object} state store state
+	 * @param {Object} controlsObject controls object
+	 */
+	setDataManagerControlObject: (state, controlsObject) => {
+		state.controls = controlsObject;
+	},
+	/**
 	 * Set parsed data object property values.
 	 *
 	 * @param {Object} state data table state

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * Table data store mutations.
  *
@@ -51,6 +52,22 @@ const mutations = {
 	setErrorMessage(state, content) {
 		this.state.app.message.type = 'error';
 		this.state.app.message.content = content;
+	},
+	/**
+	 * Set app to dirty
+	 *
+	 * @param {Object} state table data store state
+	 */
+	setAppDirty(state) {
+		state.app.dirty = true;
+	},
+	/**
+	 * Reset app to dirty
+	 *
+	 * @param {Object} state table data store state
+	 */
+	resetAppDirtyStatus(state) {
+		state.app.dirty = false;
 	},
 };
 

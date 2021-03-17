@@ -75,10 +75,10 @@ export default {
 		};
 	},
 	created() {
-		// only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+		// only add default data to data manager if no source setup is completed at that time because there won't be any data available at data manager
 		if (this.useDefault) {
 			this.addDataManagerTempData({
-				data: this.generateDefaultRowData(5, 5),
+				data: this.generateDefaultRowData(2, 3),
 				markAsImported: false,
 			});
 		}
@@ -138,6 +138,7 @@ export default {
 			for (let i = 0; i < rows; i++) {
 				const tempArray = new Array(cols).fill(1);
 
+				// eslint-disable-next-line array-callback-return
 				tempArray.map((val, index) => {
 					tempArray[index] = i * cols + index + 1;
 				});

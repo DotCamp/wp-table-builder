@@ -21432,14 +21432,13 @@ var createBasicStore = function createBasicStore(defaultStore, extraStore) {
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
  */
 
 
 exports.createBasicStore = createBasicStore;
 
 var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
-  return function () {
+  store.subscribe(function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -21449,32 +21448,56 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
     if (watchList[payload.type]) {
       watchList[payload.type].apply(watchList, args.concat([store]));
     }
-  };
+  });
 };
 /**
  * Watch a list of actions from a list.
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Object} action subscribe object
  */
 
 
 exports.mutationWatchFunction = mutationWatchFunction;
 
 var actionWatchFunction = function actionWatchFunction(watchList, store) {
-  return {
+  /**
+   * Execute bulk handler.
+   *
+   * @param {string} actionOrder action order
+   * @param {Object} action action payload
+   * @param {Object} state state object
+   */
+  function executeBulkHandler(actionOrder, action, state) {
+    if (watchList.bulk && watchList.bulk[actionOrder]) {
+      var bulkList = watchList.bulk[actionOrder]; // eslint-disable-next-line array-callback-return
+
+      Object.keys(bulkList).map(function (bulkId) {
+        if (Object.prototype.hasOwnProperty.call(bulkList, bulkId)) {
+          if (bulkList[bulkId].actions.includes(action.type)) {
+            bulkList[bulkId].handler(action, state, store);
+          }
+        }
+      });
+    }
+  }
+
+  store.subscribeAction({
     before: function before(action, state) {
       if (watchList.before[action.type]) {
         watchList.before[action.type](action, state, store);
       }
+
+      executeBulkHandler('before', action, state);
     },
     after: function after(action, state) {
       if (watchList.after[action.type]) {
         watchList.after[action.type](action, state, store);
       }
+
+      executeBulkHandler('after', action, state);
     }
-  };
+  });
 };
 /**
  * State watch function.
@@ -29720,10 +29743,10 @@ var _default = {
     };
   },
   created: function created() {
-    // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+    // only add default data to data manager if no source setup is completed at that time because there won't be any data available at data manager
     if (this.useDefault) {
       this.addDataManagerTempData({
-        data: this.generateDefaultRowData(5, 5),
+        data: this.generateDefaultRowData(2, 3),
         markAsImported: false
       });
     }
@@ -29774,7 +29797,8 @@ var _default = {
       var data = []; // eslint-disable-next-line no-plusplus
 
       var _loop = function _loop(i) {
-        var tempArray = new Array(cols).fill(1);
+        var tempArray = new Array(cols).fill(1); // eslint-disable-next-line array-callback-return
+
         tempArray.map(function (val, index) {
           tempArray[index] = i * cols + index + 1;
         });
@@ -34762,17 +34786,6 @@ var mutations = {
    */
   setDataObject: function setDataObject(state, dataObject) {
     state.dataSource.dataObject = dataObject;
-  },
-
-  /**
-   * Set data manager controls object.
-   * This mutation will be mainly used to sync data object controls with data manager.
-   *
-   * @param {Object} state store state
-   * @param {Object} controlsObject controls object
-   */
-  setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
-    state.dataManager.controls = controlsObject;
   }
 };
 /** @module mutations */
@@ -35522,7 +35535,7 @@ var stateWatchList = {
 
 var subscriptions = function subscriptions(store) {
   (0, _general.stateWatchFunction)(store, stateWatchList);
-  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
+  (0, _general.actionWatchFunction)(actionWatchList, store);
 };
 /* @module subscriptions */
 
@@ -36155,6 +36168,17 @@ var mutations = {
   },
 
   /**
+   * Set data manager controls object.
+   * This mutation will be mainly used to sync data object controls with data manager.
+   *
+   * @param {Object} state store state
+   * @param {Object} controlsObject controls object
+   */
+  setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
+    state.controls = controlsObject;
+  },
+
+  /**
    * Set parsed data object property values.
    *
    * @param {Object} state data table state
@@ -36641,8 +36665,8 @@ var subscriptions = function subscriptions(store) {
   // TODO [erdembircan] remove for production
   console.log('module subscriptions called');
   (0, _general.stateWatchFunction)(store, stateWatchList);
-  store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
-  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
+  (0, _general.mutationWatchFunction)(mutationWatchList, store);
+  (0, _general.actionWatchFunction)(actionWatchList, store);
 };
 /**
  * @module subscriptions

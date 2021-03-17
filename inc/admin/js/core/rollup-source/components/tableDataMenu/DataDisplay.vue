@@ -1,19 +1,19 @@
 <template>
-	<fragment>
+	<fragment v-if="getEditorActiveId !== null">
 		<div class="wptb-table-data-content">
-			<data-manager></data-manager>
+			<data-manager :use-default="false"></data-manager>
 		</div>
 		<portal to="footerButtons">
-			<div v-if="getEditorActiveId !== null" class="wptb-table-data-menu-footer-buttons-container">
-				<menu-button type="danger">{{ translationM('revert') }}</menu-button>
-				<menu-button>{{ translationM('save') }}</menu-button>
+			<div class="wptb-table-data-menu-footer-buttons-container">
+				<menu-button :disabled="revertDisableStatus" type="danger">{{ translationM('revert') }}</menu-button>
+				<menu-button :disabled="saveDisabledStatus">{{ translationM('save') }}</menu-button>
 			</div>
 		</portal>
 	</fragment>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import MenuButton from '../MenuButton';
 import DataManager from '../DataManager';
 
@@ -26,6 +26,10 @@ export default {
 				this.fetchDataObject(n)
 					.then((resp) => {
 						this.dataObject = resp;
+
+						const { controls, content } = resp;
+						this.setDataManagerControlObject(controls);
+						this.mergeTempData(content);
 					})
 					.catch(() => {
 						// do nothing
@@ -39,13 +43,20 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(['getEditorActiveId']),
+		revertDisableStatus() {
+			return !this.isDirty;
+		},
+		saveDisabledStatus() {
+			return !this.isDirty;
+		},
+		...mapGetters(['getEditorActiveId', 'isDirty']),
 	},
 	methods: {
 		resetDataObject() {
 			this.dataObject = null;
 		},
 		...mapActions(['fetchDataObject']),
+		...mapMutations(['setDataManagerControlObject', 'mergeTempData', 'dirtySwitchOn', 'dirtySwitchOff']),
 	},
 };
 </script>

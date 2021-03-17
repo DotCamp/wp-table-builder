@@ -17723,10 +17723,10 @@ var _default = {
     };
   },
   created: function created() {
-    // only add default data to data manager no source setup is completed at that time because there won't be any data available at data manager
+    // only add default data to data manager if no source setup is completed at that time because there won't be any data available at data manager
     if (this.useDefault) {
       this.addDataManagerTempData({
-        data: this.generateDefaultRowData(5, 5),
+        data: this.generateDefaultRowData(2, 3),
         markAsImported: false
       });
     }
@@ -17777,7 +17777,8 @@ var _default = {
       var data = []; // eslint-disable-next-line no-plusplus
 
       var _loop = function _loop(i) {
-        var tempArray = new Array(cols).fill(1);
+        var tempArray = new Array(cols).fill(1); // eslint-disable-next-line array-callback-return
+
         tempArray.map(function (val, index) {
           tempArray[index] = i * cols + index + 1;
         });
@@ -18068,6 +18069,12 @@ var _default = {
       if (n !== null) {
         this.fetchDataObject(n).then(function (resp) {
           _this.dataObject = resp;
+          var controls = resp.controls,
+              content = resp.content;
+
+          _this.setDataManagerControlObject(controls);
+
+          _this.mergeTempData(content);
         }).catch(function () {// do nothing
         });
       }
@@ -18078,12 +18085,19 @@ var _default = {
       dataObject: null
     };
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getEditorActiveId'])),
+  computed: _objectSpread({
+    revertDisableStatus: function revertDisableStatus() {
+      return !this.isDirty;
+    },
+    saveDisabledStatus: function saveDisabledStatus() {
+      return !this.isDirty;
+    }
+  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty'])),
   methods: _objectSpread({
     resetDataObject: function resetDataObject() {
       this.dataObject = null;
     }
-  }, (0, _vuex.mapActions)(['fetchDataObject']))
+  }, (0, _vuex.mapActions)(['fetchDataObject']), {}, (0, _vuex.mapMutations)(['setDataManagerControlObject', 'mergeTempData', 'dirtySwitchOn', 'dirtySwitchOff']))
 };
 exports.default = _default;
         var $bd0480 = exports.default || module.exports;
@@ -18098,35 +18112,43 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "fragment",
-    [
-      _c(
-        "div",
-        { staticClass: "wptb-table-data-content" },
-        [_c("data-manager")],
-        1
-      ),
-      _vm._v(" "),
-      _c("portal", { attrs: { to: "footerButtons" } }, [
-        _vm.getEditorActiveId !== null
-          ? _c(
+  return _vm.getEditorActiveId !== null
+    ? _c(
+        "fragment",
+        [
+          _c(
+            "div",
+            { staticClass: "wptb-table-data-content" },
+            [_c("data-manager", { attrs: { "use-default": false } })],
+            1
+          ),
+          _vm._v(" "),
+          _c("portal", { attrs: { to: "footerButtons" } }, [
+            _c(
               "div",
               { staticClass: "wptb-table-data-menu-footer-buttons-container" },
               [
-                _c("menu-button", { attrs: { type: "danger" } }, [
-                  _vm._v(_vm._s(_vm.translationM("revert")))
-                ]),
+                _c(
+                  "menu-button",
+                  {
+                    attrs: { disabled: _vm.revertDisableStatus, type: "danger" }
+                  },
+                  [_vm._v(_vm._s(_vm.translationM("revert")))]
+                ),
                 _vm._v(" "),
-                _c("menu-button", [_vm._v(_vm._s(_vm.translationM("save")))])
+                _c(
+                  "menu-button",
+                  { attrs: { disabled: _vm.saveDisabledStatus } },
+                  [_vm._v(_vm._s(_vm.translationM("save")))]
+                )
               ],
               1
             )
-          : _vm._e()
-      ])
-    ],
-    1
-  )
+          ])
+        ],
+        1
+      )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -18552,6 +18574,7 @@ exports.default = void 0;
  */
 var state = {
   app: {
+    dirty: false,
     busy: false,
     message: {
       type: 'ok',
@@ -18653,6 +18676,16 @@ var getters = {
   },
   getCurrentSourceSetupTab: function getCurrentSourceSetupTab(state) {
     return state.setupTab;
+  },
+
+  /**
+   * Get dirty status.
+   *
+   * @param {Object} state store state
+   * @return {boolean} is dirty or not
+   */
+  isDirty: function isDirty(state) {
+    return state.app.dirty;
   }
 };
 /**
@@ -18756,6 +18789,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+/* eslint-disable no-param-reassign */
+
 /**
  * Table data store mutations.
  *
@@ -18813,6 +18848,24 @@ var mutations = {
   setErrorMessage: function setErrorMessage(state, content) {
     this.state.app.message.type = 'error';
     this.state.app.message.content = content;
+  },
+
+  /**
+   * Set app to dirty
+   *
+   * @param {Object} state table data store state
+   */
+  setAppDirty: function setAppDirty(state) {
+    state.app.dirty = true;
+  },
+
+  /**
+   * Reset app to dirty
+   *
+   * @param {Object} state table data store state
+   */
+  resetAppDirtyStatus: function resetAppDirtyStatus(state) {
+    state.app.dirty = false;
   }
 };
 /**
@@ -19227,14 +19280,13 @@ var createBasicStore = function createBasicStore(defaultStore, extraStore) {
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
  */
 
 
 exports.createBasicStore = createBasicStore;
 
 var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
-  return function () {
+  store.subscribe(function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -19244,32 +19296,56 @@ var mutationWatchFunction = function mutationWatchFunction(watchList, store) {
     if (watchList[payload.type]) {
       watchList[payload.type].apply(watchList, args.concat([store]));
     }
-  };
+  });
 };
 /**
  * Watch a list of actions from a list.
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Object} action subscribe object
  */
 
 
 exports.mutationWatchFunction = mutationWatchFunction;
 
 var actionWatchFunction = function actionWatchFunction(watchList, store) {
-  return {
+  /**
+   * Execute bulk handler.
+   *
+   * @param {string} actionOrder action order
+   * @param {Object} action action payload
+   * @param {Object} state state object
+   */
+  function executeBulkHandler(actionOrder, action, state) {
+    if (watchList.bulk && watchList.bulk[actionOrder]) {
+      var bulkList = watchList.bulk[actionOrder]; // eslint-disable-next-line array-callback-return
+
+      Object.keys(bulkList).map(function (bulkId) {
+        if (Object.prototype.hasOwnProperty.call(bulkList, bulkId)) {
+          if (bulkList[bulkId].actions.includes(action.type)) {
+            bulkList[bulkId].handler(action, state, store);
+          }
+        }
+      });
+    }
+  }
+
+  store.subscribeAction({
     before: function before(action, state) {
       if (watchList.before[action.type]) {
         watchList.before[action.type](action, state, store);
       }
+
+      executeBulkHandler('before', action, state);
     },
     after: function after(action, state) {
       if (watchList.after[action.type]) {
         watchList.after[action.type](action, state, store);
       }
+
+      executeBulkHandler('after', action, state);
     }
-  };
+  });
 };
 /**
  * State watch function.
@@ -19314,7 +19390,47 @@ var stateWatchFunction = function stateWatchFunction(store, watchList) {
 };
 
 exports.stateWatchFunction = stateWatchFunction;
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../functions":"functions/index.js"}],"stores/tableDataMenu/index.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../functions":"functions/index.js"}],"stores/tableDataMenu/plugins.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _general = require("../general");
+
+var actionWatchList = {
+  before: {},
+  after: {},
+  bulk: {
+    after: {
+      setDirty: {
+        actions: ['setDataCellValue', 'addRowToDataManager', 'addColumnToDataManager', 'deleteDataTableCol', 'deleteDataTableRow'],
+        handler: function handler(payload, state, store) {
+          store.commit('setAppDirty');
+        }
+      }
+    }
+  }
+};
+/**
+ * Store plugin subscription.
+ *
+ * @param {Object} store data data menu store
+ */
+
+var subscribe = function subscribe(store) {
+  (0, _general.actionWatchFunction)(actionWatchList, store);
+};
+/**
+ * @module subscribe
+ */
+
+
+var _default = subscribe;
+exports.default = _default;
+},{"../general":"stores/general.js"}],"stores/tableDataMenu/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19334,6 +19450,8 @@ var _actions = _interopRequireDefault(require("./actions"));
 
 var _mutations = _interopRequireDefault(require("./mutations"));
 
+var _plugins = _interopRequireDefault(require("./plugins"));
+
 var _general = require("../general");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -19351,7 +19469,8 @@ var defaultStore = {
   state: _state.default,
   mutations: _mutations.default,
   actions: _actions.default,
-  getters: (0, _general.defaultTranslationGetter)(_getters.default)
+  getters: (0, _general.defaultTranslationGetter)(_getters.default),
+  plugins: [_plugins.default]
 };
 /**
  * Create table data menu store.
@@ -19370,7 +19489,7 @@ var createStore = function createStore(extraOptions) {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","../general":"stores/general.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/tableDataMenu/state.js","./getters":"stores/tableDataMenu/getters.js","./actions":"stores/tableDataMenu/actions.js","./mutations":"stores/tableDataMenu/mutations.js","./plugins":"stores/tableDataMenu/plugins.js","../general":"stores/general.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19902,6 +20021,17 @@ var mutations = {
   },
 
   /**
+   * Set data manager controls object.
+   * This mutation will be mainly used to sync data object controls with data manager.
+   *
+   * @param {Object} state store state
+   * @param {Object} controlsObject controls object
+   */
+  setDataManagerControlObject: function setDataManagerControlObject(state, controlsObject) {
+    state.controls = controlsObject;
+  },
+
+  /**
    * Set parsed data object property values.
    *
    * @param {Object} state data table state
@@ -20388,8 +20518,8 @@ var subscriptions = function subscriptions(store) {
   // TODO [erdembircan] remove for production
   console.log('module subscriptions called');
   (0, _general.stateWatchFunction)(store, stateWatchList);
-  store.subscribe((0, _general.mutationWatchFunction)(mutationWatchList, store));
-  store.subscribeAction((0, _general.actionWatchFunction)(actionWatchList, store));
+  (0, _general.mutationWatchFunction)(mutationWatchList, store);
+  (0, _general.actionWatchFunction)(actionWatchList, store);
 };
 /**
  * @module subscriptions

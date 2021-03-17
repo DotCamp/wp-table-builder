@@ -50,7 +50,7 @@ const stateWatchList = {
  */
 const subscriptions = (store) => {
 	stateWatchFunction(store, stateWatchList);
-	store.subscribeAction(actionWatchFunction(actionWatchList, store));
+	actionWatchFunction(actionWatchList, store);
 };
 
 /* @module subscriptions */

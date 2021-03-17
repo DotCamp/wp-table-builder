@@ -81,8 +81,8 @@ const subscriptions = (store) => {
 	console.log('module subscriptions called');
 
 	stateWatchFunction(store, stateWatchList);
-	store.subscribe(mutationWatchFunction(mutationWatchList, store));
-	store.subscribeAction(actionWatchFunction(actionWatchList, store));
+	mutationWatchFunction(mutationWatchList, store);
+	actionWatchFunction(actionWatchList, store);
 };
 
 /**

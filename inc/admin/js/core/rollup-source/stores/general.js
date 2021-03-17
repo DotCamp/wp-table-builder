@@ -61,13 +61,14 @@ export const createBasicStore = (defaultStore, extraStore) => {
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Function} function to be called at action dispatch
  */
-export const mutationWatchFunction = (watchList, store) => (...args) => {
-	const [payload] = args;
-	if (watchList[payload.type]) {
-		watchList[payload.type](...args, store);
-	}
+export const mutationWatchFunction = (watchList, store) => {
+	store.subscribe((...args) => {
+		const [payload] = args;
+		if (watchList[payload.type]) {
+			watchList[payload.type](...args, store);
+		}
+	});
 };
 
 /**
@@ -75,21 +76,43 @@ export const mutationWatchFunction = (watchList, store) => (...args) => {
  *
  * @param {Object} watchList watch list to be used
  * @param {Object} store store object
- * @return {Object} action subscribe object
  */
 export const actionWatchFunction = (watchList, store) => {
-	return {
+	/**
+	 * Execute bulk handler.
+	 *
+	 * @param {string} actionOrder action order
+	 * @param {Object} action action payload
+	 * @param {Object} state state object
+	 */
+	function executeBulkHandler(actionOrder, action, state) {
+		if (watchList.bulk && watchList.bulk[actionOrder]) {
+			const bulkList = watchList.bulk[actionOrder];
+			// eslint-disable-next-line array-callback-return
+			Object.keys(bulkList).map((bulkId) => {
+				if (Object.prototype.hasOwnProperty.call(bulkList, bulkId)) {
+					if (bulkList[bulkId].actions.includes(action.type)) {
+						bulkList[bulkId].handler(action, state, store);
+					}
+				}
+			});
+		}
+	}
+
+	store.subscribeAction({
 		before: (action, state) => {
 			if (watchList.before[action.type]) {
 				watchList.before[action.type](action, state, store);
 			}
+			executeBulkHandler('before', action, state);
 		},
 		after: (action, state) => {
 			if (watchList.after[action.type]) {
 				watchList.after[action.type](action, state, store);
 			}
+			executeBulkHandler('after', action, state);
 		},
-	};
+	});
 };
 
 /**

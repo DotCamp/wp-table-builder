@@ -4,6 +4,7 @@ import state from './state';
 import getters from './getters';
 import actions from './actions';
 import mutations from './mutations';
+import tableDataPlugins from './plugins';
 import { createBasicStore, defaultTranslationGetter } from '../general';
 
 // use vuex store model
@@ -19,6 +20,7 @@ const defaultStore = {
 	mutations,
 	actions,
 	getters: defaultTranslationGetter(getters),
+	plugins: [tableDataPlugins],
 };
 
 /**
