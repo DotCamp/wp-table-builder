@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Classes;
 
 use function get_post_meta;
+use function get_the_title;
 use function wp_insert_post;
 
 // if called directly, abort
@@ -36,6 +37,7 @@ class Data_Object {
 		'type'    => null,
 		'content' => [],
 		'controls' => [],
+		'title' => '',
 	];
 
 	/**
@@ -72,7 +74,8 @@ class Data_Object {
 	private function merge_options( $base, $supplied ) {
 		$base_array     = (array) $base;
 		$supplied_array = (array) $supplied;
-		$merged_options = array_reduce( array_keys( $base ), function ( $carry, $item ) use ( $base_array, $supplied_array ) {
+
+		return array_reduce( array_keys( $base ), function ( $carry, $item ) use ( $base_array, $supplied_array ) {
 			$value = $base_array[ $item ];
 			if ( isset( $supplied_array[ $item ] ) ) {
 				$value = $supplied_array[ $item ];
@@ -82,14 +85,6 @@ class Data_Object {
 
 			return $carry;
 		}, [] );
-
-		// @deprecated
-//		// change type to csv for invalid data types
-//		if ( ! in_array( $merged_options['type'], self::DATA_TYPES ) ) {
-//			$merged_options['type'] = 'csv';
-//		}
-
-		return $merged_options;
 	}
 
 	/**
@@ -133,6 +128,7 @@ class Data_Object {
 		$meta_keys = $this->filter_args_for_meta();
 
 		$post_args = [
+			'post_title'  => $this->current_args['title'],
 			'post_type'  => self::WP_POST_TYPE_NAME,
 			'ID'         => $this->current_args['id'],
 			'meta_input' => $this->prepare_meta_input( $meta_keys )
@@ -201,8 +197,9 @@ class Data_Object {
 	private function reload_object_data() {
 		$id = $this->object_id();
 
-		if ( $id ) { // get saved meta values
+		if ( $id ) {
 			$context             = $this;
+			$this->current_args['title'] = get_the_title($id);
 			$fetched_meta_values = array_reduce( $this->filter_args_for_meta(), function ( $carry, $key ) use ( $id, $context ) {
 				$carry[ $key ] = get_post_meta( $id, $context->get_meta_key( $key ), true );
 

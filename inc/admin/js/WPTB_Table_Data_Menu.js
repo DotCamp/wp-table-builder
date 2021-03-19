@@ -13418,62 +13418,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"components/MenuContent.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    center: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
-exports.default = _default;
-        var $9ac5fb = exports.default || module.exports;
-      
-      if (typeof $9ac5fb === 'function') {
-        $9ac5fb = $9ac5fb.options;
-      }
-    
-        /* template */
-        Object.assign($9ac5fb, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-settings-controls-wrapper",
-      class: [_vm.center ? "center" : "grid"]
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
+},{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -14835,6 +14780,61 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
+},{}],"components/MenuContent.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    center: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $9ac5fb = exports.default || module.exports;
+      
+      if (typeof $9ac5fb === 'function') {
+        $9ac5fb = $9ac5fb.options;
+      }
+    
+        /* template */
+        Object.assign($9ac5fb, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-settings-controls-wrapper",
+      class: [_vm.center ? "center" : "grid"]
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/tableDataMenu/DataListingRow.vue":[function(require,module,exports) {
 "use strict";
 
@@ -18065,10 +18065,11 @@ var _default = {
       var _this = this;
 
       this.resetDataObject();
+      this.resetAppDirtyStatus();
 
       if (n !== null) {
         this.fetchDataObject(n).then(function (resp) {
-          _this.dataObject = resp;
+          _this.dataObject = resp.data.dataObject;
 
           _this.mergeDataObject(_this.dataObject);
         }).catch(function () {// do nothing
@@ -18094,16 +18095,47 @@ var _default = {
     },
     saveDisabledStatus: function saveDisabledStatus() {
       return this.genericDisabledStatus;
+    },
+    dataObjectTitle: {
+      get: function get() {
+        var title = '';
+
+        if (this.dataObject && this.dataObject.title) {
+          title = this.dataObject.title;
+        }
+
+        return title;
+      },
+      set: function set(n) {
+        this.dataObject.title = n;
+        this.setAppDirty();
+      }
     }
-  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState'])),
+  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject'])),
   methods: _objectSpread({
+    saveTableData: function saveTableData() {
+      var _this2 = this;
+
+      this.updateDataObjectAjax(this.prepareDataObject(this.dataObject)).then(function (_ref) {
+        var data = _ref.data;
+
+        _this2.setEditorActiveId(data.id);
+
+        _this2.setOkMessage(_this2.translationM('tableDataUpdateMessage'));
+
+        _this2.resetAppDirtyStatus();
+
+        _this2.$emit('dataSaved');
+      }).catch(function () {// do nothing
+      });
+    },
     resetDataObject: function resetDataObject() {
       this.dataObject = null;
     },
     revertDataChanges: function revertDataChanges() {
       this.revertTableData(this.dataObject);
     }
-  }, (0, _vuex.mapActions)(['fetchDataObject', 'mergeDataObject', 'revertTableData']), {}, (0, _vuex.mapMutations)(['dirtySwitchOn', 'dirtySwitchOff']))
+  }, (0, _vuex.mapActions)(['fetchDataObject', 'mergeDataObject', 'revertTableData', 'updateDataObjectAjax']), {}, (0, _vuex.mapMutations)(['resetAppDirtyStatus', 'setEditorActiveId', 'setOkMessage', 'setAppDirty']))
 };
 exports.default = _default;
         var $bd0480 = exports.default || module.exports;
@@ -18125,7 +18157,30 @@ exports.default = _default;
           _c(
             "div",
             { staticClass: "wptb-table-data-content" },
-            [_c("data-manager", { attrs: { "use-default": false } })],
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.dataObjectTitle,
+                    expression: "dataObjectTitle"
+                  }
+                ],
+                attrs: { placeholder: "data title" },
+                domProps: { value: _vm.dataObjectTitle },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.dataObjectTitle = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("data-manager", { attrs: { "use-default": false } })
+            ],
             1
           ),
           _vm._v(" "),
@@ -18148,7 +18203,10 @@ exports.default = _default;
                 _vm._v(" "),
                 _c(
                   "menu-button",
-                  { attrs: { disabled: _vm.saveDisabledStatus } },
+                  {
+                    attrs: { disabled: _vm.saveDisabledStatus },
+                    on: { click: _vm.saveTableData }
+                  },
                   [_vm._v(_vm._s(_vm.translationM("save")))]
                 )
               ],
@@ -18180,6 +18238,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _vuex = require("vuex");
+
 var _MenuContent = _interopRequireDefault(require("../MenuContent"));
 
 var _DataListing = _interopRequireDefault(require("./DataListing"));
@@ -18188,21 +18248,28 @@ var _DataDisplay = _interopRequireDefault(require("./DataDisplay"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   components: {
     MenuContent: _MenuContent.default,
     DataListing: _DataListing.default,
     DataDisplay: _DataDisplay.default
-  }
+  },
+  methods: _objectSpread({
+    handleDataSaved: function handleDataSaved() {
+      var _this = this;
+
+      this.fetchSimpleDataObjects().then(function (resp) {
+        _this.setSimpleDataObjects(resp.data.simpleDataObjects);
+      }).catch(function () {// do nothing
+      });
+    }
+  }, (0, _vuex.mapActions)(['fetchSimpleDataObjects']), {}, (0, _vuex.mapMutations)(['setSimpleDataObjects']))
 };
 exports.default = _default;
         var $222613 = exports.default || module.exports;
@@ -18224,7 +18291,11 @@ exports.default = _default;
       _c(
         "div",
         { staticClass: "wptb-table-data-section" },
-        [_c("data-listing"), _vm._v(" "), _c("data-display")],
+        [
+          _c("data-listing"),
+          _vm._v(" "),
+          _c("data-display", { on: { dataSaved: _vm.handleDataSaved } })
+        ],
         1
       )
     ]
@@ -18242,7 +18313,7 @@ render._withStripped = true
           };
         })());
       
-},{"../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue"}],"components/tableDataMenu/TableDataSection.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue"}],"components/tableDataMenu/TableDataSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18603,107 +18674,6 @@ var state = {
 
 var _default = state;
 exports.default = _default;
-},{}],"stores/tableDataMenu/getters.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Table data store getters.
- *
- * @type {Object}
- */
-var getters = {
-  /**
-   * Get simple data objects.
-   * This objects have minimum amount of data for listing purposes.
-   *
-   * @param {Object} state store state
-   * @return {Array} simple data objects
-   */
-  simpleDataObjects: function simpleDataObjects(state) {
-    return state.dataSimple;
-  },
-
-  /**
-   * Get app busy status.
-   *
-   * @param {Object} state store state
-   * @return {boolean} busy status
-   */
-  getBusyState: function getBusyState(state) {
-    return state.app.busy;
-  },
-
-  /**
-   * Get app busy status.
-   *
-   * Compatibility function fow withStoreBusy mixin.
-   *
-   * @param {Object} state store state
-   * @return {boolean} busy status
-   */
-  busyStatus: function busyStatus(state) {
-    return state.app.busy;
-  },
-
-  /**
-   * Get active data object id on editor.
-   *
-   * @param {Object} state store state
-   * @return {string|null} active data object id
-   */
-  getEditorActiveId: function getEditorActiveId(state) {
-    return state.editor.activeId;
-  },
-
-  /**
-   * Get security properties.
-   *
-   * @param {Object} state store state
-   * @return {Function} security properties function
-   */
-  getSecurityProps: function getSecurityProps(state) {
-    return function (key) {
-      return state.security[key];
-    };
-  },
-
-  /**
-   * Get message properties.
-   *
-   * @param {Object} state store state
-   * @return {Object} message object
-   */
-  getMessageObject: function getMessageObject(state) {
-    return state.app.message;
-  },
-  isVisible: function isVisible(state) {
-    return state.visibility;
-  },
-  getCurrentSourceSetupTab: function getCurrentSourceSetupTab(state) {
-    return state.setupTab;
-  },
-
-  /**
-   * Get dirty status.
-   *
-   * @param {Object} state store state
-   * @return {boolean} is dirty or not
-   */
-  isDirty: function isDirty(state) {
-    return state.app.dirty;
-  }
-};
-/**
- * @module getters
- */
-
-var _default = getters;
-exports.default = _default;
 },{}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
 'use strict';
 
@@ -18831,7 +18801,131 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
-},{}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
+},{}],"stores/tableDataMenu/getters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _deepmerge2 = _interopRequireDefault(require("deepmerge"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Table data store getters.
+ *
+ * @type {Object}
+ */
+var getters = {
+  /**
+   * Get simple data objects.
+   * This objects have minimum amount of data for listing purposes.
+   *
+   * @param {Object} state store state
+   * @return {Array} simple data objects
+   */
+  simpleDataObjects: function simpleDataObjects(state) {
+    return state.dataSimple;
+  },
+
+  /**
+   * Get app busy status.
+   *
+   * @param {Object} state store state
+   * @return {boolean} busy status
+   */
+  getBusyState: function getBusyState(state) {
+    return state.app.busy;
+  },
+
+  /**
+   * Get app busy status.
+   *
+   * Compatibility function fow withStoreBusy mixin.
+   *
+   * @param {Object} state store state
+   * @return {boolean} busy status
+   */
+  busyStatus: function busyStatus(state) {
+    return state.app.busy;
+  },
+
+  /**
+   * Get active data object id on editor.
+   *
+   * @param {Object} state store state
+   * @return {string|null} active data object id
+   */
+  getEditorActiveId: function getEditorActiveId(state) {
+    return state.editor.activeId;
+  },
+
+  /**
+   * Get security properties.
+   *
+   * @param {Object} state store state
+   * @return {Function} security properties function
+   */
+  getSecurityProps: function getSecurityProps(state) {
+    return function (key) {
+      return state.security[key];
+    };
+  },
+
+  /**
+   * Get message properties.
+   *
+   * @param {Object} state store state
+   * @return {Object} message object
+   */
+  getMessageObject: function getMessageObject(state) {
+    return state.app.message;
+  },
+  isVisible: function isVisible(state) {
+    return state.visibility;
+  },
+  getCurrentSourceSetupTab: function getCurrentSourceSetupTab(state) {
+    return state.setupTab;
+  },
+
+  /**
+   * Get dirty status.
+   *
+   * @param {Object} state store state
+   * @return {boolean} is dirty or not
+   */
+  isDirty: function isDirty(state) {
+    return state.app.dirty;
+  },
+
+  /**
+   * Prepare data object by updating various fields from data manager.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to get prepared data object
+   */
+  prepareDataObject: function prepareDataObject(state) {
+    return function (dataObject) {
+      var _deepmerge = (0, _deepmerge2.default)({}, state.dataManager),
+          controls = _deepmerge.controls,
+          tempData = _deepmerge.tempData;
+
+      var preparedDataObject = (0, _deepmerge2.default)({}, dataObject);
+      preparedDataObject.controls = controls;
+      preparedDataObject.content = tempData;
+      return preparedDataObject;
+    };
+  }
+};
+/**
+ * @module getters
+ */
+
+var _default = getters;
+exports.default = _default;
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18877,30 +18971,83 @@ var actions = {
   },
 
   /**
-   * Fetch data object properties.
+   * Ajax request for update/creating data object.
    *
    * @param {Object} root store object
    * @param {Object} root.getters store getters
-   * @param {Function} root.commit store commit function
-   * @param {number} id data object id
+   * @param {Function} root.dispatch store action function
+   * @param {Object} dataObject data object to be saved/updated
+   *
+   * @return {Promise} Promise
    */
-  fetchDataObject: function fetchDataObject(_ref3, id) {
+  updateDataObjectAjax: function updateDataObjectAjax(_ref3, dataObject) {
     var getters = _ref3.getters,
-        commit = _ref3.commit;
+        dispatch = _ref3.dispatch;
 
-    var _getters$getSecurityP = getters.getSecurityProps('dataObjectContent'),
+    var _getters$getSecurityP = getters.getSecurityProps('dataObjectUpdate'),
         nonce = _getters$getSecurityP.nonce,
         action = _getters$getSecurityP.action;
 
     var url = getters.getSecurityProps('url');
+    var formData = new FormData();
+    formData.append('nonce', nonce);
+    formData.append('action', action);
+    formData.append('dataObject', btoa(JSON.stringify(dataObject)));
+    return dispatch('genericFetch', {
+      url: url,
+      options: {
+        method: 'POST',
+        body: formData
+      }
+    });
+  },
+
+  /**
+   * Fetch data object properties.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store getters
+   * @param {Function} root.dispatch store action function
+   * @param {number} id data object id
+   */
+  fetchDataObject: function fetchDataObject(_ref4, id) {
+    var getters = _ref4.getters,
+        dispatch = _ref4.dispatch;
+
+    var _getters$getSecurityP2 = getters.getSecurityProps('dataObjectContent'),
+        nonce = _getters$getSecurityP2.nonce,
+        action = _getters$getSecurityP2.action;
+
+    var url = getters.getSecurityProps('url');
+    var ajaxUrl = new URL(url);
+    ajaxUrl.searchParams.append('nonce', nonce);
+    ajaxUrl.searchParams.append('action', action);
+    ajaxUrl.searchParams.append('data_object_id', id);
+    return dispatch('genericFetch', {
+      url: ajaxUrl
+    });
+  },
+
+  /**
+   * Generic fetch function.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit store commit function
+   * @param {Object} payload action payload
+   * @param {string} payload.url fetch url
+   * @param {Object} payload.options fetch operation options
+   */
+  genericFetch: function genericFetch(_ref5, _ref6) {
+    var commit = _ref5.commit;
+    var url = _ref6.url,
+        _ref6$options = _ref6.options,
+        options = _ref6$options === void 0 ? {
+      method: 'GET'
+    } : _ref6$options;
     return new Promise(function (resolve, reject) {
-      var ajaxUrl = new URL(url);
-      ajaxUrl.searchParams.append('nonce', nonce);
-      ajaxUrl.searchParams.append('action', action);
-      ajaxUrl.searchParams.append('data_object_id', id);
+      var responseObject = null;
       commit('setBusy');
-      var dataObject = null;
-      fetch(ajaxUrl).then(function (res) {
+      fetch(url, options).then(function (res) {
         if (!res.ok) {
           throw new Error('an error occurred, please try again later');
         }
@@ -18911,14 +19058,38 @@ var actions = {
           throw new Error(resp.error);
         }
 
-        dataObject = resp.data.dataObject;
+        responseObject = resp;
       }).catch(function (err) {
         commit('setErrorMessage', err.message);
       }).finally(function () {
         commit('resetBusy');
-        var resolveFunction = dataObject === null ? reject : resolve;
-        resolveFunction(dataObject);
+        var resolveFunction = responseObject === null ? reject : resolve;
+        resolveFunction(responseObject);
       });
+    });
+  },
+
+  /**
+   * Fetch simple data object properties.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store getters
+   * @param {Function} root.dispatch store action function
+   */
+  fetchSimpleDataObjects: function fetchSimpleDataObjects(_ref7) {
+    var getters = _ref7.getters,
+        dispatch = _ref7.dispatch;
+
+    var _getters$getSecurityP3 = getters.getSecurityProps('simpleDataObjects'),
+        nonce = _getters$getSecurityP3.nonce,
+        action = _getters$getSecurityP3.action;
+
+    var url = getters.getSecurityProps('url');
+    var ajaxUrl = new URL(url);
+    ajaxUrl.searchParams.append('nonce', nonce);
+    ajaxUrl.searchParams.append('action', action);
+    return dispatch('genericFetch', {
+      url: ajaxUrl
     });
   },
 
@@ -18929,8 +19100,8 @@ var actions = {
    * @param {Function} root.commit store mutation function
    * @param {Object} dataObject data object
    */
-  mergeDataObject: function mergeDataObject(_ref4, dataObject) {
-    var commit = _ref4.commit;
+  mergeDataObject: function mergeDataObject(_ref8, dataObject) {
+    var commit = _ref8.commit;
 
     var _deepmerge = (0, _deepmerge2.default)({}, dataObject),
         controls = _deepmerge.controls,
@@ -18948,9 +19119,9 @@ var actions = {
    * @param {Function} root.commit store mutation function
    * @param {Object} dataObject data object
    */
-  revertTableData: function revertTableData(_ref5, dataObject) {
-    var dispatch = _ref5.dispatch,
-        commit = _ref5.commit;
+  revertTableData: function revertTableData(_ref9, dataObject) {
+    var dispatch = _ref9.dispatch,
+        commit = _ref9.commit;
     dispatch('mergeDataObject', dataObject);
     commit('resetAppDirtyStatus');
   }
@@ -19046,6 +19217,16 @@ var mutations = {
    */
   resetAppDirtyStatus: function resetAppDirtyStatus(state) {
     state.app.dirty = false;
+  },
+
+  /**
+   * Set simple data objects
+   *
+   * @param {Object} state table data store state
+   * @param {Array} objects simple data objects array
+   */
+  setSimpleDataObjects: function setSimpleDataObjects(state, objects) {
+    this.state.dataSimple = objects;
   }
 };
 /**
