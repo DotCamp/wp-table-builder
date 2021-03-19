@@ -1,6 +1,9 @@
 <template>
 	<fragment v-if="getEditorActiveId !== null">
 		<div class="wptb-table-data-content">
+			<div class="wptb-table-data-title">
+				<text-modify-input :value.sync="dataObjectTitle"></text-modify-input>
+			</div>
 			<data-manager :use-default="false"></data-manager>
 		</div>
 		<portal to="footerButtons">
@@ -8,39 +11,40 @@
 				<menu-button @click="revertDataChanges" :disabled="revertDisableStatus" type="danger">{{
 					translationM('revert')
 				}}</menu-button>
-				<menu-button :disabled="saveDisabledStatus">{{ translationM('save') }}</menu-button>
+				<menu-button @click="saveTableData" :disabled="saveDisabledStatus">{{
+					translationM('save')
+				}}</menu-button>
 			</div>
 		</portal>
 	</fragment>
 </template>
 
 <script>
+import deepmerge from 'deepmerge';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import MenuButton from '../MenuButton';
 import DataManager from '../DataManager';
+import TextModifyInput from '../TextModifyInput';
 
 export default {
-	components: { DataManager, MenuButton },
+	components: { DataManager, MenuButton, TextModifyInput },
 	watch: {
 		getEditorActiveId(n) {
-			this.resetDataObject();
-			if (n !== null) {
-				this.fetchDataObject(n)
-					.then((resp) => {
-						this.dataObject = resp;
-
-						this.mergeDataObject(this.dataObject);
-					})
-					.catch(() => {
-						// do nothing
-					});
-			}
+			this.dataObjectOperations(n);
 		},
 	},
 	data() {
 		return {
 			dataObject: null,
+			dataObjectBackup: null,
 		};
+	},
+	mounted() {
+		this.$nextTick(() => {
+			if (this.getEditorActiveId !== null) {
+				this.dataObjectOperations(this.getEditorActiveId);
+			}
+		});
 	},
 	computed: {
 		genericDisabledStatus() {
@@ -56,17 +60,66 @@ export default {
 		saveDisabledStatus() {
 			return this.genericDisabledStatus;
 		},
-		...mapGetters(['getEditorActiveId', 'isDirty', 'getBusyState']),
+		dataObjectTitle: {
+			get() {
+				let title = ' ';
+				if (this.dataObject && this.dataObject.title) {
+					title = this.dataObject.title;
+				}
+
+				return title;
+			},
+			set(n) {
+				this.dataObject.title = n;
+				this.setAppDirty();
+			},
+		},
+		...mapGetters(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject']),
 	},
 	methods: {
+		dataObjectOperations(dataObjectId) {
+			this.resetDataObject();
+			this.resetAppDirtyStatus();
+			if (dataObjectId !== null) {
+				this.fetchDataObject(dataObjectId)
+					.then((resp) => {
+						this.dataObject = resp.data.dataObject;
+
+						// update data object backup with new data object
+						this.updateDataObjectBackup();
+
+						this.mergeDataObject(this.dataObject);
+					})
+					.catch(() => {
+						// do nothing
+					});
+			}
+		},
+		updateDataObjectBackup() {
+			// break reference link between each objects
+			this.dataObjectBackup = deepmerge({}, this.dataObject);
+		},
+		saveTableData() {
+			this.updateDataObjectAjax(this.prepareDataObject(this.dataObject))
+				.then(({ data }) => {
+					this.setEditorActiveId(data.id);
+					this.setOkMessage(this.translationM('tableDataUpdateMessage'));
+					this.resetAppDirtyStatus();
+					this.$emit('dataSaved');
+				})
+				.catch(() => {
+					// do nothing
+				});
+		},
 		resetDataObject() {
 			this.dataObject = null;
 		},
 		revertDataChanges() {
+			this.dataObject = deepmerge({}, this.dataObjectBackup);
 			this.revertTableData(this.dataObject);
 		},
-		...mapActions(['fetchDataObject', 'mergeDataObject', 'revertTableData']),
-		...mapMutations(['dirtySwitchOn', 'dirtySwitchOff']),
+		...mapActions(['fetchDataObject', 'mergeDataObject', 'revertTableData', 'updateDataObjectAjax']),
+		...mapMutations(['resetAppDirtyStatus', 'setEditorActiveId', 'setOkMessage', 'setAppDirty']),
 	},
 };
 </script>

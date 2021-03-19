@@ -127,8 +127,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.12
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 
@@ -5578,7 +5578,7 @@ Object.defineProperty(Vue.prototype, '$ssrContext', {
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
-Vue.version = '2.6.11';
+Vue.version = '2.6.12';
 /*  */
 // these are reserved for web because they are directly compiled away
 // during template compilation
@@ -7773,7 +7773,7 @@ function updateDOMProps(oldVnode, vnode) {
     } else if ( // skip the update if old and new VDOM state is the same.
     // `value` is handled separately because the DOM value may be temporarily
     // out of sync with VDOM state due to focus, composition and modifiers.
-    // This  #4521 by skipping the unnecesarry `checked` update.
+    // This  #4521 by skipping the unnecessary `checked` update.
     cur !== oldProps[key]) {
       // some property updates can throw
       // e.g. `value` on <progress> w/ non-finite value
@@ -10004,7 +10004,7 @@ function parse(template, options) {
       }
     },
     comment: function comment(text, start, end) {
-      // adding anyting as a sibling to the root node is forbidden
+      // adding anything as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored
       if (currentParent) {
         var child = {
@@ -12833,7 +12833,7 @@ var withMessage = {
     setMessage: function setMessage(options) {
       var _this = this;
 
-      var mergedOptions = _objectSpread({}, defaults, {}, options);
+      var mergedOptions = _objectSpread(_objectSpread({}, defaults), options);
 
       this.withMessageData.message = mergedOptions.message;
       this.withMessageData.type = mergedOptions.type;
@@ -13418,62 +13418,7 @@ render._withStripped = true
           };
         })());
       
-},{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"components/MenuContent.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    center: {
-      type: Boolean,
-      default: false
-    }
-  }
-};
-exports.default = _default;
-        var $9ac5fb = exports.default || module.exports;
-      
-      if (typeof $9ac5fb === 'function') {
-        $9ac5fb = $9ac5fb.options;
-      }
-    
-        /* template */
-        Object.assign($9ac5fb, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-settings-controls-wrapper",
-      class: [_vm.center ? "center" : "grid"]
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
+},{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"../../../../../node_modules/vuex/dist/vuex.esm.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -13485,8 +13430,8 @@ exports.install = install;
 exports.mapState = exports.mapMutations = exports.mapGetters = exports.mapActions = exports.createNamespacedHelpers = exports.Store = exports.default = void 0;
 
 /*!
- * vuex v3.5.1
- * (c) 2020 Evan You
+ * vuex v3.6.2
+ * (c) 2021 Evan You
  * @license MIT
  */
 function applyMixin(Vue) {
@@ -13780,7 +13725,12 @@ ModuleCollection.prototype.unregister = function unregister(path) {
 ModuleCollection.prototype.isRegistered = function isRegistered(path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
-  return parent.hasChild(key);
+
+  if (parent) {
+    return parent.hasChild(key);
+  }
+
+  return false;
 };
 
 function update(path, targetModule, newModule) {
@@ -14505,7 +14455,7 @@ var mapState = normalizeNamespace(function (namespace, states) {
 /**
  * Reduce the code which written in Vue.js for committing the mutation
  * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept another params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
  * @return {Object}
  */
 
@@ -14825,7 +14775,7 @@ function pad(num, maxLength) {
 var index = {
   Store: Store,
   install: install,
-  version: '3.5.1',
+  version: '3.6.2',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -14835,6 +14785,61 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
+},{}],"components/MenuContent.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    center: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $9ac5fb = exports.default || module.exports;
+      
+      if (typeof $9ac5fb === 'function') {
+        $9ac5fb = $9ac5fb.options;
+      }
+    
+        /* template */
+        Object.assign($9ac5fb, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-settings-controls-wrapper",
+      class: [_vm.center ? "center" : "grid"]
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/tableDataMenu/DataListingRow.vue":[function(require,module,exports) {
 "use strict";
 
@@ -15371,7 +15376,7 @@ var logErrorOnce = (0, _memize.default)(console.error); // eslint-disable-line n
  * original format string is returned.
  *
  * @param {string}    format The format of the string to generate.
- * @param {...string} args   Arguments to apply to the format.
+ * @param {...*} args Arguments to apply to the format.
  *
  * @see http://www.diveintojavascript.com/projects/javascript-sprintf
  *
@@ -16023,19 +16028,85 @@ var DEFAULT_LOCALE_DATA = {
     }
   }
 };
+/* eslint-disable jsdoc/valid-types */
+
+/**
+ * @typedef {(data?: LocaleData, domain?: string) => void} SetLocaleData
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ */
+
+/**
+ * @typedef {(domain?: string) => string} GetFilterDomain
+ * Retrieve the domain to use when calling domain-specific filters.
+ */
+
+/**
+ * @typedef {(text: string, domain?: string) => string} __
+ *
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ */
+
+/**
+ * @typedef {(text: string, context: string, domain?: string) => string} _x
+ *
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, domain?: string) => string} _n
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, context: string, domain?: string) => string} _nx
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ */
+
+/**
+ * @typedef {() => boolean} IsRtl
+ *
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ */
+
+/**
+ * @typedef {{ applyFilters: (hookName:string, ...args: unknown[]) => unknown}} ApplyFiltersInterface
+ */
+
+/* eslint-enable jsdoc/valid-types */
+
 /**
  * An i18n instance
  *
- * @typedef {Object} I18n
- * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
- *                                    Jed-formatted JSON object shape.
- * @property {Function} __            Retrieve the translation of text.
- * @property {Function} _x            Retrieve translated string with gettext context.
- * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
- *                                    number.
- * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
- *                                    number, with gettext context.
- * @property {Function} isRTL         Check if current locale is RTL.
+ * @typedef I18n
+ * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                         Jed-formatted JSON object shape.
+ * @property {__} __                       Retrieve the translation of text.
+ * @property {_x} _x                       Retrieve translated string with gettext context.
+ * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
+ *                                         number.
+ * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
+ *                                         number, with gettext context.
+ * @property {IsRtl} isRTL                 Check if current locale is RTL.
  */
 
 /**
@@ -16043,32 +16114,25 @@ var DEFAULT_LOCALE_DATA = {
  *
  * @param {LocaleData} [initialData]    Locale data configuration.
  * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @param {ApplyFiltersInterface} [hooks]     Hooks implementation.
  * @return {I18n}                       I18n instance
  */
 
-var createI18n = function createI18n(initialData, initialDomain) {
+var createI18n = function createI18n(initialData, initialDomain, hooks) {
   /**
    * The underlying instance of Tannin to which exported functions interface.
    *
    * @type {Tannin}
    */
   var tannin = new _tannin.default({});
-  /**
-   * Merges locale data into the Tannin instance by domain. Accepts data in a
-   * Jed-formatted JSON object shape.
-   *
-   * @see http://messageformat.github.io/Jed/
-   *
-   * @param {LocaleData} [data]   Locale data configuration.
-   * @param {string}     [domain] Domain for which configuration applies.
-   */
+  /** @type {SetLocaleData} */
 
   var setLocaleData = function setLocaleData(data) {
     var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
-    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
+    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
     // a plural forms expression).
 
-    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
+    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
   };
   /**
    * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
@@ -16100,86 +16164,141 @@ var createI18n = function createI18n(initialData, initialDomain) {
 
     return tannin.dcnpgettext(domain, context, single, plural, number);
   };
-  /**
-   * Retrieve the translation of text.
-   *
-   * @see https://developer.wordpress.org/reference/functions/__/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated text.
-   */
+  /** @type {GetFilterDomain} */
+
+
+  var getFilterDomain = function getFilterDomain(domain) {
+    if (typeof domain === 'undefined') {
+      return 'default';
+    }
+
+    return domain;
+  };
+  /** @type {__} */
 
 
   var __ = function __(text, domain) {
-    return dcnpgettext(domain, undefined, text);
+    var translation = dcnpgettext(domain, undefined, text);
+    /**
+     * Filters text with its translation.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext', translation, text, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_' + getFilterDomain(domain), translation, text, domain)
+    );
   };
-  /**
-   * Retrieve translated string with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_x/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated context string without pipe.
-   */
+  /** @type {_x} */
 
 
   var _x = function _x(text, context, domain) {
-    return dcnpgettext(domain, context, text);
+    var translation = dcnpgettext(domain, context, text);
+    /**
+     * Filters text with its translation based on context information.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext_with_context', translation, text, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_with_context_' + getFilterDomain(domain), translation, text, context, domain)
+    );
   };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_n/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
+  /** @type {_n} */
 
 
   var _n = function _n(single, plural, number, domain) {
-    return dcnpgettext(domain, undefined, single, plural, number);
+    var translation = dcnpgettext(domain, undefined, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext', translation, single, plural, number, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_' + getFilterDomain(domain), translation, single, plural, number, domain)
+    );
   };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number, with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_nx/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
+  /** @type {_nx} */
 
 
   var _nx = function _nx(single, plural, number, context, domain) {
-    return dcnpgettext(domain, context, single, plural, number);
+    var translation = dcnpgettext(domain, context, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string with gettext context.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext_with_context', translation, single, plural, number, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_with_context_' + getFilterDomain(domain), translation, single, plural, number, context, domain)
+    );
   };
-  /**
-   * Check if current locale is RTL.
-   *
-   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
-   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
-   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
-   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
-   *
-   * @return {boolean} Whether locale is RTL.
-   */
+  /** @type {IsRtl} */
 
 
   var isRTL = function isRTL() {
@@ -16201,7 +16320,831 @@ var createI18n = function createI18n(initialData, initialDomain) {
 };
 
 exports.createI18n = createI18n;
-},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _classCallCheck;
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Validate a namespace string.
+ *
+ * @param  {string} namespace The namespace to validate - should take the form
+ *                            `vendor/plugin/function`.
+ *
+ * @return {boolean}             Whether the namespace is valid.
+ */
+function validateNamespace(namespace) {
+  if ('string' !== typeof namespace || '' === namespace) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace must be a non-empty string.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace can only contain numbers, letters, dashes, periods, underscores and slashes.');
+    return false;
+  }
+
+  return true;
+}
+
+var _default = validateNamespace;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Validate a hookName string.
+ *
+ * @param  {string} hookName The hook name to validate. Should be a non empty string containing
+ *                           only numbers, letters, dashes, periods and underscores. Also,
+ *                           the hook name cannot begin with `__`.
+ *
+ * @return {boolean}            Whether the hook name is valid.
+ */
+function validateHookName(hookName) {
+  if ('string' !== typeof hookName || '' === hookName) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name must be a non-empty string.');
+    return false;
+  }
+
+  if (/^__/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name cannot begin with `__`.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name can only contain numbers, letters, dashes, periods and underscores.');
+    return false;
+  }
+
+  return true;
+}
+
+var _default = validateHookName;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback AddHook
+ *
+ * Adds the hook to the appropriate hooks container.
+ *
+ * @param {string}               hookName  Name of hook to add
+ * @param {string}               namespace The unique namespace identifying the callback in the form `vendor/plugin/function`.
+ * @param {import('.').Callback} callback  Function to call when the hook is run
+ * @param {number}               [priority=10]  Priority of this hook
+ */
+
+/**
+ * Returns a function which, when invoked, will add a hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {AddHook} Function that adds a new hook.
+ */
+function createAddHook(hooks, storeKey) {
+  return function addHook(hookName, namespace, callback) {
+    var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    if (!(0, _validateNamespace.default)(namespace)) {
+      return;
+    }
+
+    if ('function' !== typeof callback) {
+      // eslint-disable-next-line no-console
+      console.error('The hook callback must be a function.');
+      return;
+    } // Validate numeric priority
+
+
+    if ('number' !== typeof priority) {
+      // eslint-disable-next-line no-console
+      console.error('If specified, the hook priority must be a number.');
+      return;
+    }
+
+    var handler = {
+      callback: callback,
+      priority: priority,
+      namespace: namespace
+    };
+
+    if (hooksStore[hookName]) {
+      // Find the correct insert index of the new hook.
+      var handlers = hooksStore[hookName].handlers;
+      /** @type {number} */
+
+      var i;
+
+      for (i = handlers.length; i > 0; i--) {
+        if (priority >= handlers[i - 1].priority) {
+          break;
+        }
+      }
+
+      if (i === handlers.length) {
+        // If append, operate via direct assignment.
+        handlers[i] = handler;
+      } else {
+        // Otherwise, insert before index via splice.
+        handlers.splice(i, 0, handler);
+      } // We may also be currently executing this hook.  If the callback
+      // we're adding would come after the current callback, there's no
+      // problem; otherwise we need to increase the execution index of
+      // any other runs by 1 to account for the added element.
+
+
+      hooksStore.__current.forEach(function (hookInfo) {
+        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+          hookInfo.currentIndex++;
+        }
+      });
+    } else {
+      // This is the first hook of its type.
+      hooksStore[hookName] = {
+        handlers: [handler],
+        runs: 0
+      };
+    }
+
+    if (hookName !== 'hookAdded') {
+      hooks.doAction('hookAdded', hookName, namespace, callback, priority);
+    }
+  };
+}
+
+var _default = createAddHook;
+exports.default = _default;
+},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback RemoveHook
+ * Removes the specified callback (or all callbacks) from the hook with a given hookName
+ * and namespace.
+ *
+ * @param {string} hookName  The name of the hook to modify.
+ * @param {string} namespace The unique namespace identifying the callback in the
+ *                           form `vendor/plugin/function`.
+ *
+ * @return {number | undefined} The number of callbacks removed.
+ */
+
+/**
+ * Returns a function which, when invoked, will remove a specified hook or all
+ * hooks by the given name.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [removeAll=false] Whether to remove all callbacks for a hookName,
+ *                                                  without regard to namespace. Used to create
+ *                                                  `removeAll*` functions.
+ *
+ * @return {RemoveHook} Function that removes hooks.
+ */
+function createRemoveHook(hooks, storeKey) {
+  var removeAll = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function removeHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    if (!removeAll && !(0, _validateNamespace.default)(namespace)) {
+      return;
+    } // Bail if no hooks exist by this name
+
+
+    if (!hooksStore[hookName]) {
+      return 0;
+    }
+
+    var handlersRemoved = 0;
+
+    if (removeAll) {
+      handlersRemoved = hooksStore[hookName].handlers.length;
+      hooksStore[hookName] = {
+        runs: hooksStore[hookName].runs,
+        handlers: []
+      };
+    } else {
+      // Try to find the specified callback to remove.
+      var handlers = hooksStore[hookName].handlers;
+
+      var _loop = function _loop(i) {
+        if (handlers[i].namespace === namespace) {
+          handlers.splice(i, 1);
+          handlersRemoved++; // This callback may also be part of a hook that is
+          // currently executing.  If the callback we're removing
+          // comes after the current callback, there's no problem;
+          // otherwise we need to decrease the execution index of any
+          // other runs by 1 to account for the removed element.
+
+          hooksStore.__current.forEach(function (hookInfo) {
+            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+              hookInfo.currentIndex--;
+            }
+          });
+        }
+      };
+
+      for (var i = handlers.length - 1; i >= 0; i--) {
+        _loop(i);
+      }
+    }
+
+    if (hookName !== 'hookRemoved') {
+      hooks.doAction('hookRemoved', hookName, namespace);
+    }
+
+    return handlersRemoved;
+  };
+}
+
+var _default = createRemoveHook;
+exports.default = _default;
+},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * @callback HasHook
+ *
+ * Returns whether any handlers are attached for the given hookName and optional namespace.
+ *
+ * @param {string} hookName    The name of the hook to check for.
+ * @param {string} [namespace] Optional. The unique namespace identifying the callback
+ *                             in the form `vendor/plugin/function`.
+ *
+ * @return {boolean} Whether there are handlers that are attached to the given hook.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether any handlers are
+ * attached to a particular hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {HasHook} Function that returns whether any handlers are
+ *                   attached to a particular hook and optional namespace.
+ */
+function createHasHook(hooks, storeKey) {
+  return function hasHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey]; // Use the namespace if provided.
+
+    if ('undefined' !== typeof namespace) {
+      return hookName in hooksStore && hooksStore[hookName].handlers.some(function (hook) {
+        return hook.namespace === namespace;
+      });
+    }
+
+    return hookName in hooksStore;
+  };
+}
+
+var _default = createHasHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _arrayLikeToArray;
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _arrayWithoutHoles;
+
+var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return (0, _arrayLikeToArray.default)(arr);
+}
+},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _iterableToArray;
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _unsupportedIterableToArray;
+
+var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return (0, _arrayLikeToArray.default)(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0, _arrayLikeToArray.default)(o, minLen);
+}
+},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _nonIterableSpread;
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _toConsumableArray;
+
+var _arrayWithoutHoles = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayWithoutHoles"));
+
+var _iterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/iterableToArray"));
+
+var _unsupportedIterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/unsupportedIterableToArray"));
+
+var _nonIterableSpread = _interopRequireDefault(require("@babel/runtime/helpers/esm/nonIterableSpread"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) {
+  return (0, _arrayWithoutHoles.default)(arr) || (0, _iterableToArray.default)(arr) || (0, _unsupportedIterableToArray.default)(arr) || (0, _nonIterableSpread.default)();
+}
+},{"@babel/runtime/helpers/esm/arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js","@babel/runtime/helpers/esm/iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js","@babel/runtime/helpers/esm/unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js","@babel/runtime/helpers/esm/nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Returns a function which, when invoked, will execute all callbacks
+ * registered to a hook of the specified type, optionally returning the final
+ * value of the call chain.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [returnFirstArg=false] Whether each hook callback is expected to
+ *                                                       return its first argument.
+ *
+ * @return {(hookName:string, ...args: unknown[]) => unknown} Function that runs hook callbacks.
+ */
+function createRunHook(hooks, storeKey) {
+  var returnFirstArg = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function runHooks(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!hooksStore[hookName]) {
+      hooksStore[hookName] = {
+        handlers: [],
+        runs: 0
+      };
+    }
+
+    hooksStore[hookName].runs++;
+    var handlers = hooksStore[hookName].handlers; // The following code is stripped from production builds.
+
+    if ('production' !== "development") {
+      // Handle any 'all' hooks registered.
+      if ('hookAdded' !== hookName && hooksStore.all) {
+        handlers.push.apply(handlers, (0, _toConsumableArray2.default)(hooksStore.all.handlers));
+      }
+    }
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    if (!handlers || !handlers.length) {
+      return returnFirstArg ? args[0] : undefined;
+    }
+
+    var hookInfo = {
+      name: hookName,
+      currentIndex: 0
+    };
+
+    hooksStore.__current.push(hookInfo);
+
+    while (hookInfo.currentIndex < handlers.length) {
+      var handler = handlers[hookInfo.currentIndex];
+      var result = handler.callback.apply(null, args);
+
+      if (returnFirstArg) {
+        args[0] = result;
+      }
+
+      hookInfo.currentIndex++;
+    }
+
+    hooksStore.__current.pop();
+
+    if (returnFirstArg) {
+      return args[0];
+    }
+  };
+}
+
+var _default = createRunHook;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Returns a function which, when invoked, will return the name of the
+ * currently running hook, or `null` if no hook of the given type is currently
+ * running.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {() => string | null} Function that returns the current hook name or null.
+ */
+function createCurrentHook(hooks, storeKey) {
+  return function currentHook() {
+    var _hooksStore$__current, _hooksStore$__current2;
+
+    var hooksStore = hooks[storeKey];
+    return (_hooksStore$__current = (_hooksStore$__current2 = hooksStore.__current[hooksStore.__current.length - 1]) === null || _hooksStore$__current2 === void 0 ? void 0 : _hooksStore$__current2.name) !== null && _hooksStore$__current !== void 0 ? _hooksStore$__current : null;
+  };
+}
+
+var _default = createCurrentHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * @callback DoingHook
+ * Returns whether a hook is currently being executed.
+ *
+ * @param  {string} [hookName] The name of the hook to check for.  If
+ *                             omitted, will check for any hook being executed.
+ *
+ * @return {boolean} Whether the hook is being executed.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether a hook is
+ * currently being executed.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DoingHook} Function that returns whether a hook is currently
+ *                     being executed.
+ */
+function createDoingHook(hooks, storeKey) {
+  return function doingHook(hookName) {
+    var hooksStore = hooks[storeKey]; // If the hookName was not passed, check for any current hook.
+
+    if ('undefined' === typeof hookName) {
+      return 'undefined' !== typeof hooksStore.__current[0];
+    } // Return the __current hook.
+
+
+    return hooksStore.__current[0] ? hookName === hooksStore.__current[0].name : false;
+  };
+}
+
+var _default = createDoingHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback DidHook
+ *
+ * Returns the number of times an action has been fired.
+ *
+ * @param  {string} hookName The hook name to check.
+ *
+ * @return {number | undefined} The number of times the hook has run.
+ */
+
+/**
+ * Returns a function which, when invoked, will return the number of times a
+ * hook has been called.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DidHook} Function that returns a hook's call count.
+ */
+function createDidHook(hooks, storeKey) {
+  return function didHook(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
+  };
+}
+
+var _default = createDidHook;
+exports.default = _default;
+},{"./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports._Hooks = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/classCallCheck"));
+
+var _createAddHook = _interopRequireDefault(require("./createAddHook"));
+
+var _createRemoveHook = _interopRequireDefault(require("./createRemoveHook"));
+
+var _createHasHook = _interopRequireDefault(require("./createHasHook"));
+
+var _createRunHook = _interopRequireDefault(require("./createRunHook"));
+
+var _createCurrentHook = _interopRequireDefault(require("./createCurrentHook"));
+
+var _createDoingHook = _interopRequireDefault(require("./createDoingHook"));
+
+var _createDidHook = _interopRequireDefault(require("./createDidHook"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * Internal class for constructing hooks. Use `createHooks()` function
+ *
+ * Note, it is necessary to expose this class to make its type public.
+ *
+ * @private
+ */
+var _Hooks = function _Hooks() {
+  (0, _classCallCheck2.default)(this, _Hooks);
+  /** @type {import('.').Store} actions */
+
+  this.actions = Object.create(null);
+  this.actions.__current = [];
+  /** @type {import('.').Store} filters */
+
+  this.filters = Object.create(null);
+  this.filters.__current = [];
+  this.addAction = (0, _createAddHook.default)(this, 'actions');
+  this.addFilter = (0, _createAddHook.default)(this, 'filters');
+  this.removeAction = (0, _createRemoveHook.default)(this, 'actions');
+  this.removeFilter = (0, _createRemoveHook.default)(this, 'filters');
+  this.hasAction = (0, _createHasHook.default)(this, 'actions');
+  this.hasFilter = (0, _createHasHook.default)(this, 'filters');
+  this.removeAllActions = (0, _createRemoveHook.default)(this, 'actions', true);
+  this.removeAllFilters = (0, _createRemoveHook.default)(this, 'filters', true);
+  this.doAction = (0, _createRunHook.default)(this, 'actions');
+  this.applyFilters = (0, _createRunHook.default)(this, 'filters', true);
+  this.currentAction = (0, _createCurrentHook.default)(this, 'actions');
+  this.currentFilter = (0, _createCurrentHook.default)(this, 'filters');
+  this.doingAction = (0, _createDoingHook.default)(this, 'actions');
+  this.doingFilter = (0, _createDoingHook.default)(this, 'filters');
+  this.didAction = (0, _createDidHook.default)(this, 'actions');
+  this.didFilter = (0, _createDidHook.default)(this, 'filters');
+};
+/** @typedef {_Hooks} Hooks */
+
+/**
+ * Returns an instance of the hooks object.
+ *
+ * @return {Hooks} A Hooks instance.
+ */
+
+
+exports._Hooks = _Hooks;
+
+function createHooks() {
+  return new _Hooks();
+}
+
+var _default = createHooks;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/classCallCheck":"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js","./createAddHook":"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js","./createRemoveHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js","./createHasHook":"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js","./createRunHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js","./createCurrentHook":"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js","./createDoingHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js","./createDidHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "createHooks", {
+  enumerable: true,
+  get: function () {
+    return _createHooks2.default;
+  }
+});
+exports.filters = exports.actions = exports.didFilter = exports.didAction = exports.doingFilter = exports.doingAction = exports.currentFilter = exports.currentAction = exports.applyFilters = exports.doAction = exports.removeAllFilters = exports.removeAllActions = exports.hasFilter = exports.hasAction = exports.removeFilter = exports.removeAction = exports.addFilter = exports.addAction = void 0;
+
+var _createHooks2 = _interopRequireDefault(require("./createHooks"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/** @typedef {(...args: any[])=>any} Callback */
+
+/**
+ * @typedef Handler
+ * @property {Callback} callback  The callback
+ * @property {string}   namespace The namespace
+ * @property {number}   priority  The namespace
+ */
+
+/**
+ * @typedef Hook
+ * @property {Handler[]} handlers Array of handlers
+ * @property {number}    runs     Run counter
+ */
+
+/**
+ * @typedef Current
+ * @property {string} name         Hook name
+ * @property {number} currentIndex The index
+ */
+
+/**
+ * @typedef {Record<string, Hook> & {__current: Current[]}} Store
+ */
+
+/**
+ * @typedef {'actions' | 'filters'} StoreKey
+ */
+
+/**
+ * @typedef {import('./createHooks').Hooks} Hooks
+ */
+var _createHooks = (0, _createHooks2.default)(),
+    addAction = _createHooks.addAction,
+    addFilter = _createHooks.addFilter,
+    removeAction = _createHooks.removeAction,
+    removeFilter = _createHooks.removeFilter,
+    hasAction = _createHooks.hasAction,
+    hasFilter = _createHooks.hasFilter,
+    removeAllActions = _createHooks.removeAllActions,
+    removeAllFilters = _createHooks.removeAllFilters,
+    doAction = _createHooks.doAction,
+    applyFilters = _createHooks.applyFilters,
+    currentAction = _createHooks.currentAction,
+    currentFilter = _createHooks.currentFilter,
+    doingAction = _createHooks.doingAction,
+    doingFilter = _createHooks.doingFilter,
+    didAction = _createHooks.didAction,
+    didFilter = _createHooks.didFilter,
+    actions = _createHooks.actions,
+    filters = _createHooks.filters;
+
+exports.filters = filters;
+exports.actions = actions;
+exports.didFilter = didFilter;
+exports.didAction = didAction;
+exports.doingFilter = doingFilter;
+exports.doingAction = doingAction;
+exports.currentFilter = currentFilter;
+exports.currentAction = currentAction;
+exports.applyFilters = applyFilters;
+exports.doAction = doAction;
+exports.removeAllFilters = removeAllFilters;
+exports.removeAllActions = removeAllActions;
+exports.hasFilter = hasFilter;
+exports.hasAction = hasAction;
+exports.removeFilter = removeFilter;
+exports.removeAction = removeAction;
+exports.addFilter = addFilter;
+exports.addAction = addAction;
+},{"./createHooks":"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16209,12 +17152,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isRTL = exports._nx = exports._n = exports._x = exports.__ = exports.setLocaleData = void 0;
 
+var _hooks = require("@wordpress/hooks");
+
 var _createI18n = require("./create-i18n");
+
+/**
+ * WordPress dependencies
+ */
 
 /**
  * Internal dependencies
  */
-var i18n = (0, _createI18n.createI18n)();
+var i18n = (0, _createI18n.createI18n)(undefined, undefined, {
+  applyFilters: _hooks.applyFilters
+});
 /*
  * Comments in this file are duplicated from ./i18n due to
  * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
@@ -16319,7 +17270,7 @@ var _nx = i18n._nx.bind(i18n);
 exports._nx = _nx;
 var isRTL = i18n.isRTL.bind(i18n);
 exports.isRTL = isRTL;
-},{"./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
+},{"@wordpress/hooks":"../../../../../node_modules/@wordpress/hooks/build-module/index.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16384,6 +17335,7 @@ var _createI18n = require("./create-i18n");
 Object.keys(_createI18n).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _createI18n[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -16727,7 +17679,134 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../SearchInput":"components/SearchInput.vue"}],"mixins/withStoreBusy.js":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataListingRow":"components/tableDataMenu/DataListingRow.vue","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../SearchInput":"components/SearchInput.vue"}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
+'use strict';
+
+var isMergeableObject = function isMergeableObject(value) {
+  return isNonNullObject(value) && !isSpecial(value);
+};
+
+function isNonNullObject(value) {
+  return !!value && typeof value === 'object';
+}
+
+function isSpecial(value) {
+  var stringValue = Object.prototype.toString.call(value);
+  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+
+
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+  return value.$$typeof === REACT_ELEMENT_TYPE;
+}
+
+function emptyTarget(val) {
+  return Array.isArray(val) ? [] : {};
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+  return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
+}
+
+function defaultArrayMerge(target, source, options) {
+  return target.concat(source).map(function (element) {
+    return cloneUnlessOtherwiseSpecified(element, options);
+  });
+}
+
+function getMergeFunction(key, options) {
+  if (!options.customMerge) {
+    return deepmerge;
+  }
+
+  var customMerge = options.customMerge(key);
+  return typeof customMerge === 'function' ? customMerge : deepmerge;
+}
+
+function getEnumerableOwnPropertySymbols(target) {
+  return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(target).filter(function (symbol) {
+    return target.propertyIsEnumerable(symbol);
+  }) : [];
+}
+
+function getKeys(target) {
+  return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target));
+}
+
+function propertyIsOnObject(object, property) {
+  try {
+    return property in object;
+  } catch (_) {
+    return false;
+  }
+} // Protects from prototype poisoning and unexpected merging up the prototype chain.
+
+
+function propertyIsUnsafe(target, key) {
+  return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
+  && !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
+  && Object.propertyIsEnumerable.call(target, key)); // and also unsafe if they're nonenumerable.
+}
+
+function mergeObject(target, source, options) {
+  var destination = {};
+
+  if (options.isMergeableObject(target)) {
+    getKeys(target).forEach(function (key) {
+      destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+    });
+  }
+
+  getKeys(source).forEach(function (key) {
+    if (propertyIsUnsafe(target, key)) {
+      return;
+    }
+
+    if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+      destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
+    } else {
+      destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+    }
+  });
+  return destination;
+}
+
+function deepmerge(target, source, options) {
+  options = options || {};
+  options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+  options.isMergeableObject = options.isMergeableObject || isMergeableObject; // cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
+  // implementations can use it. The caller may not replace it.
+
+  options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
+  var sourceIsArray = Array.isArray(source);
+  var targetIsArray = Array.isArray(target);
+  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+  if (!sourceAndTargetTypesMatch) {
+    return cloneUnlessOtherwiseSpecified(source, options);
+  } else if (sourceIsArray) {
+    return options.arrayMerge(target, source, options);
+  } else {
+    return mergeObject(target, source, options);
+  }
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+  if (!Array.isArray(array)) {
+    throw new Error('first argument should be an array');
+  }
+
+  return array.reduce(function (prev, next) {
+    return deepmerge(prev, next, options);
+  }, {});
+};
+
+var deepmerge_1 = deepmerge;
+module.exports = deepmerge_1;
+},{}],"mixins/withStoreBusy.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16749,7 +17828,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * @type {Object}
  */
 var withStoreBusy = {
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
+  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['busyStatus'])), {}, {
     isBusy: function isBusy() {
       return this.busyStatus;
     }
@@ -17310,7 +18389,7 @@ var _default = {
       _this.calculateColControlValues();
     });
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData']), {
+  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData'])), {}, {
     colControlStyle: function colControlStyle() {
       return {
         top: this.colStyleValues.top
@@ -17765,14 +18844,14 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData']), {
+  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData'])), {}, {
     infoRowSpan: function infoRowSpan() {
       var _this$parsedData$head, _this$parsedData$head2;
 
       return this.getColCount === 0 ? (_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : (_this$parsedData$head2 = _this$parsedData$head.values) === null || _this$parsedData$head2 === void 0 ? void 0 : _this$parsedData$head2.length : this.getColCount;
     }
   }),
-  methods: _objectSpread({
+  methods: _objectSpread(_objectSpread(_objectSpread({
     generateDefaultRowData: function generateDefaultRowData(rows, cols) {
       var data = []; // eslint-disable-next-line no-plusplus
 
@@ -17896,7 +18975,7 @@ var _default = {
         }, _callee);
       }))();
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId'])), (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy'])), (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -18033,7 +19112,149 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/TextModifyInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    value: {
+      type: String,
+      default: ''
+    }
+  },
+  data: function data() {
+    return {
+      disabled: true
+    };
+  },
+  computed: {
+    inputStyle: function inputStyle() {
+      return {
+        width: "".concat(this.value.length, "ch !important"),
+        textDecoration: this.disabled ? '' : 'underline !important'
+      };
+    }
+  },
+  methods: {
+    enableEdit: function enableEdit() {
+      if (this.disabled) {
+        this.disabled = false;
+      }
+    },
+    handleFocus: function handleFocus(e) {
+      e.target.select();
+    },
+    handleBlur: function handleBlur() {
+      this.disabled = true;
+    }
+  }
+};
+exports.default = _default;
+        var $48c735 = exports.default || module.exports;
+      
+      if (typeof $48c735 === 'function') {
+        $48c735 = $48c735.options;
+      }
+    
+        /* template */
+        Object.assign($48c735, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-text-modify-input",
+      attrs: { "data-wptb-text-modify-disable": _vm.disabled }
+    },
+    [
+      _c("input", {
+        ref: "inputElementRef",
+        staticClass: "wptb-text-modify-custom-input",
+        style: _vm.inputStyle,
+        attrs: { disabled: _vm.disabled },
+        domProps: { value: _vm.value },
+        on: {
+          input: function($event) {
+            return _vm.$emit("update:value", $event.target.value)
+          },
+          focusout: _vm.handleBlur,
+          focusin: _vm.handleFocus,
+          focus: _vm.handleFocus,
+          keydown: [
+            function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              $event.preventDefault()
+              _vm.disabled = true
+            },
+            function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])
+              ) {
+                return null
+              }
+              $event.preventDefault()
+              _vm.disabled = true
+            }
+          ]
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          staticClass: "wptb-text-modify-edit-button",
+          on: { click: _vm.enableEdit }
+        },
+        [_c("span", { staticClass: "dashicons dashicons-edit" })]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18041,11 +19262,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 var _vuex = require("vuex");
 
 var _MenuButton = _interopRequireDefault(require("../MenuButton"));
 
 var _DataManager = _interopRequireDefault(require("../DataManager"));
+
+var _TextModifyInput = _interopRequireDefault(require("../TextModifyInput"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18058,28 +19283,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   components: {
     DataManager: _DataManager.default,
-    MenuButton: _MenuButton.default
+    MenuButton: _MenuButton.default,
+    TextModifyInput: _TextModifyInput.default
   },
   watch: {
     getEditorActiveId: function getEditorActiveId(n) {
-      var _this = this;
-
-      this.resetDataObject();
-
-      if (n !== null) {
-        this.fetchDataObject(n).then(function (resp) {
-          _this.dataObject = resp;
-
-          _this.mergeDataObject(_this.dataObject);
-        }).catch(function () {// do nothing
-        });
-      }
+      this.dataObjectOperations(n);
     }
   },
   data: function data() {
     return {
-      dataObject: null
+      dataObject: null,
+      dataObjectBackup: null
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      if (_this.getEditorActiveId !== null) {
+        _this.dataObjectOperations(_this.getEditorActiveId);
+      }
+    });
   },
   computed: _objectSpread({
     genericDisabledStatus: function genericDisabledStatus() {
@@ -18094,16 +19319,69 @@ var _default = {
     },
     saveDisabledStatus: function saveDisabledStatus() {
       return this.genericDisabledStatus;
+    },
+    dataObjectTitle: {
+      get: function get() {
+        var title = ' ';
+
+        if (this.dataObject && this.dataObject.title) {
+          title = this.dataObject.title;
+        }
+
+        return title;
+      },
+      set: function set(n) {
+        this.dataObject.title = n;
+        this.setAppDirty();
+      }
     }
-  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState'])),
-  methods: _objectSpread({
+  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject'])),
+  methods: _objectSpread(_objectSpread({
+    dataObjectOperations: function dataObjectOperations(dataObjectId) {
+      var _this2 = this;
+
+      this.resetDataObject();
+      this.resetAppDirtyStatus();
+
+      if (dataObjectId !== null) {
+        this.fetchDataObject(dataObjectId).then(function (resp) {
+          _this2.dataObject = resp.data.dataObject; // update data object backup with new data object
+
+          _this2.updateDataObjectBackup();
+
+          _this2.mergeDataObject(_this2.dataObject);
+        }).catch(function () {// do nothing
+        });
+      }
+    },
+    updateDataObjectBackup: function updateDataObjectBackup() {
+      // break reference link between each objects
+      this.dataObjectBackup = (0, _deepmerge.default)({}, this.dataObject);
+    },
+    saveTableData: function saveTableData() {
+      var _this3 = this;
+
+      this.updateDataObjectAjax(this.prepareDataObject(this.dataObject)).then(function (_ref) {
+        var data = _ref.data;
+
+        _this3.setEditorActiveId(data.id);
+
+        _this3.setOkMessage(_this3.translationM('tableDataUpdateMessage'));
+
+        _this3.resetAppDirtyStatus();
+
+        _this3.$emit('dataSaved');
+      }).catch(function () {// do nothing
+      });
+    },
     resetDataObject: function resetDataObject() {
       this.dataObject = null;
     },
     revertDataChanges: function revertDataChanges() {
+      this.dataObject = (0, _deepmerge.default)({}, this.dataObjectBackup);
       this.revertTableData(this.dataObject);
     }
-  }, (0, _vuex.mapActions)(['fetchDataObject', 'mergeDataObject', 'revertTableData']), {}, (0, _vuex.mapMutations)(['dirtySwitchOn', 'dirtySwitchOff']))
+  }, (0, _vuex.mapActions)(['fetchDataObject', 'mergeDataObject', 'revertTableData', 'updateDataObjectAjax'])), (0, _vuex.mapMutations)(['resetAppDirtyStatus', 'setEditorActiveId', 'setOkMessage', 'setAppDirty']))
 };
 exports.default = _default;
         var $bd0480 = exports.default || module.exports;
@@ -18125,7 +19403,25 @@ exports.default = _default;
           _c(
             "div",
             { staticClass: "wptb-table-data-content" },
-            [_c("data-manager", { attrs: { "use-default": false } })],
+            [
+              _c(
+                "div",
+                { staticClass: "wptb-table-data-title" },
+                [
+                  _c("text-modify-input", {
+                    attrs: { value: _vm.dataObjectTitle },
+                    on: {
+                      "update:value": function($event) {
+                        _vm.dataObjectTitle = $event
+                      }
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("data-manager", { attrs: { "use-default": false } })
+            ],
             1
           ),
           _vm._v(" "),
@@ -18148,7 +19444,10 @@ exports.default = _default;
                 _vm._v(" "),
                 _c(
                   "menu-button",
-                  { attrs: { disabled: _vm.saveDisabledStatus } },
+                  {
+                    attrs: { disabled: _vm.saveDisabledStatus },
+                    on: { click: _vm.saveTableData }
+                  },
                   [_vm._v(_vm._s(_vm.translationM("save")))]
                 )
               ],
@@ -18172,13 +19471,15 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue","../TextModifyInput":"components/TextModifyInput.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _vuex = require("vuex");
 
 var _MenuContent = _interopRequireDefault(require("../MenuContent"));
 
@@ -18188,21 +19489,28 @@ var _DataDisplay = _interopRequireDefault(require("./DataDisplay"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _default = {
   components: {
     MenuContent: _MenuContent.default,
     DataListing: _DataListing.default,
     DataDisplay: _DataDisplay.default
-  }
+  },
+  methods: _objectSpread(_objectSpread({
+    handleDataSaved: function handleDataSaved() {
+      var _this = this;
+
+      this.fetchSimpleDataObjects().then(function (resp) {
+        _this.setSimpleDataObjects(resp.data.simpleDataObjects);
+      }).catch(function () {// do nothing
+      });
+    }
+  }, (0, _vuex.mapActions)(['fetchSimpleDataObjects'])), (0, _vuex.mapMutations)(['setSimpleDataObjects']))
 };
 exports.default = _default;
         var $222613 = exports.default || module.exports;
@@ -18224,7 +19532,11 @@ exports.default = _default;
       _c(
         "div",
         { staticClass: "wptb-table-data-section" },
-        [_c("data-listing"), _vm._v(" "), _c("data-display")],
+        [
+          _c("data-listing"),
+          _vm._v(" "),
+          _c("data-display", { on: { dataSaved: _vm.handleDataSaved } })
+        ],
         1
       )
     ]
@@ -18242,7 +19554,46 @@ render._withStripped = true
           };
         })());
       
-},{"../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue"}],"components/tableDataMenu/TableDataSection.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue"}],"components/tableDataMenu/TableDataCreateNewSection.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+var _default = {};
+exports.default = _default;
+        var $6a9af7 = exports.default || module.exports;
+      
+      if (typeof $6a9af7 === 'function') {
+        $6a9af7 = $6a9af7.options;
+      }
+    
+        /* template */
+        Object.assign($6a9af7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("i", [_vm._v("new")])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/tableDataMenu/TableDataSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18253,6 +19604,8 @@ exports.default = void 0;
 var _Sections = _interopRequireDefault(require("../Sections"));
 
 var _TableDataEditorSection = _interopRequireDefault(require("./TableDataEditorSection"));
+
+var _TableDataCreateNewSection = _interopRequireDefault(require("./TableDataCreateNewSection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18268,12 +19621,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _default = {
   components: {
     Sections: _Sections.default,
-    TableDataEditorSection: _TableDataEditorSection.default
+    TableDataEditorSection: _TableDataEditorSection.default,
+    TableDataCreateNewSection: _TableDataCreateNewSection.default
   },
   data: function data() {
     return {
       childSections: {
-        tableDataEditorSection: this.translationM('editor')
+        tableDataEditorSection: this.translationM('editor'),
+        tableDataCreateNewSection: this.translationM('new')
       },
       currentChildSection: 'tableDataEditorSection'
     };
@@ -18305,10 +19660,13 @@ exports.default = _default;
         { attrs: { to: "childSections" } },
         [
           _c("sections", {
-            attrs: {
-              child: true,
-              items: _vm.childSections,
-              "current-section": _vm.currentChildSection
+            attrs: { child: true, items: _vm.childSections },
+            model: {
+              value: _vm.currentChildSection,
+              callback: function($$v) {
+                _vm.currentChildSection = $$v
+              },
+              expression: "currentChildSection"
             }
           })
         ],
@@ -18332,7 +19690,7 @@ render._withStripped = true
           };
         })());
       
-},{"../Sections":"components/Sections.vue","./TableDataEditorSection":"components/tableDataMenu/TableDataEditorSection.vue"}],"components/tableDataMenu/MessageListener.vue":[function(require,module,exports) {
+},{"../Sections":"components/Sections.vue","./TableDataEditorSection":"components/tableDataMenu/TableDataEditorSection.vue","./TableDataCreateNewSection":"components/tableDataMenu/TableDataCreateNewSection.vue"}],"components/tableDataMenu/MessageListener.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18611,6 +19969,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _deepmerge2 = _interopRequireDefault(require("deepmerge"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 /**
  * Table data store getters.
  *
@@ -18696,6 +20058,25 @@ var getters = {
    */
   isDirty: function isDirty(state) {
     return state.app.dirty;
+  },
+
+  /**
+   * Prepare data object by updating various fields from data manager.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to get prepared data object
+   */
+  prepareDataObject: function prepareDataObject(state) {
+    return function (dataObject) {
+      var _deepmerge = (0, _deepmerge2.default)({}, state.dataManager),
+          controls = _deepmerge.controls,
+          tempData = _deepmerge.tempData;
+
+      var preparedDataObject = (0, _deepmerge2.default)({}, dataObject);
+      preparedDataObject.controls = controls;
+      preparedDataObject.content = tempData;
+      return preparedDataObject;
+    };
   }
 };
 /**
@@ -18704,134 +20085,7 @@ var getters = {
 
 var _default = getters;
 exports.default = _default;
-},{}],"../../../../../node_modules/deepmerge/dist/cjs.js":[function(require,module,exports) {
-'use strict';
-
-var isMergeableObject = function isMergeableObject(value) {
-  return isNonNullObject(value) && !isSpecial(value);
-};
-
-function isNonNullObject(value) {
-  return !!value && typeof value === 'object';
-}
-
-function isSpecial(value) {
-  var stringValue = Object.prototype.toString.call(value);
-  return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
-} // see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
-
-
-var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
-var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
-
-function isReactElement(value) {
-  return value.$$typeof === REACT_ELEMENT_TYPE;
-}
-
-function emptyTarget(val) {
-  return Array.isArray(val) ? [] : {};
-}
-
-function cloneUnlessOtherwiseSpecified(value, options) {
-  return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
-}
-
-function defaultArrayMerge(target, source, options) {
-  return target.concat(source).map(function (element) {
-    return cloneUnlessOtherwiseSpecified(element, options);
-  });
-}
-
-function getMergeFunction(key, options) {
-  if (!options.customMerge) {
-    return deepmerge;
-  }
-
-  var customMerge = options.customMerge(key);
-  return typeof customMerge === 'function' ? customMerge : deepmerge;
-}
-
-function getEnumerableOwnPropertySymbols(target) {
-  return Object.getOwnPropertySymbols ? Object.getOwnPropertySymbols(target).filter(function (symbol) {
-    return target.propertyIsEnumerable(symbol);
-  }) : [];
-}
-
-function getKeys(target) {
-  return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target));
-}
-
-function propertyIsOnObject(object, property) {
-  try {
-    return property in object;
-  } catch (_) {
-    return false;
-  }
-} // Protects from prototype poisoning and unexpected merging up the prototype chain.
-
-
-function propertyIsUnsafe(target, key) {
-  return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
-  && !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
-  && Object.propertyIsEnumerable.call(target, key)); // and also unsafe if they're nonenumerable.
-}
-
-function mergeObject(target, source, options) {
-  var destination = {};
-
-  if (options.isMergeableObject(target)) {
-    getKeys(target).forEach(function (key) {
-      destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
-    });
-  }
-
-  getKeys(source).forEach(function (key) {
-    if (propertyIsUnsafe(target, key)) {
-      return;
-    }
-
-    if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
-      destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
-    } else {
-      destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
-    }
-  });
-  return destination;
-}
-
-function deepmerge(target, source, options) {
-  options = options || {};
-  options.arrayMerge = options.arrayMerge || defaultArrayMerge;
-  options.isMergeableObject = options.isMergeableObject || isMergeableObject; // cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
-  // implementations can use it. The caller may not replace it.
-
-  options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
-  var sourceIsArray = Array.isArray(source);
-  var targetIsArray = Array.isArray(target);
-  var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
-
-  if (!sourceAndTargetTypesMatch) {
-    return cloneUnlessOtherwiseSpecified(source, options);
-  } else if (sourceIsArray) {
-    return options.arrayMerge(target, source, options);
-  } else {
-    return mergeObject(target, source, options);
-  }
-}
-
-deepmerge.all = function deepmergeAll(array, options) {
-  if (!Array.isArray(array)) {
-    throw new Error('first argument should be an array');
-  }
-
-  return array.reduce(function (prev, next) {
-    return deepmerge(prev, next, options);
-  }, {});
-};
-
-var deepmerge_1 = deepmerge;
-module.exports = deepmerge_1;
-},{}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"stores/tableDataMenu/actions.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18877,30 +20131,83 @@ var actions = {
   },
 
   /**
-   * Fetch data object properties.
+   * Ajax request for update/creating data object.
    *
    * @param {Object} root store object
    * @param {Object} root.getters store getters
-   * @param {Function} root.commit store commit function
-   * @param {number} id data object id
+   * @param {Function} root.dispatch store action function
+   * @param {Object} dataObject data object to be saved/updated
+   *
+   * @return {Promise} Promise
    */
-  fetchDataObject: function fetchDataObject(_ref3, id) {
+  updateDataObjectAjax: function updateDataObjectAjax(_ref3, dataObject) {
     var getters = _ref3.getters,
-        commit = _ref3.commit;
+        dispatch = _ref3.dispatch;
 
-    var _getters$getSecurityP = getters.getSecurityProps('dataObjectContent'),
+    var _getters$getSecurityP = getters.getSecurityProps('dataObjectUpdate'),
         nonce = _getters$getSecurityP.nonce,
         action = _getters$getSecurityP.action;
 
     var url = getters.getSecurityProps('url');
+    var formData = new FormData();
+    formData.append('nonce', nonce);
+    formData.append('action', action);
+    formData.append('dataObject', btoa(JSON.stringify(dataObject)));
+    return dispatch('genericFetch', {
+      url: url,
+      options: {
+        method: 'POST',
+        body: formData
+      }
+    });
+  },
+
+  /**
+   * Fetch data object properties.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store getters
+   * @param {Function} root.dispatch store action function
+   * @param {number} id data object id
+   */
+  fetchDataObject: function fetchDataObject(_ref4, id) {
+    var getters = _ref4.getters,
+        dispatch = _ref4.dispatch;
+
+    var _getters$getSecurityP2 = getters.getSecurityProps('dataObjectContent'),
+        nonce = _getters$getSecurityP2.nonce,
+        action = _getters$getSecurityP2.action;
+
+    var url = getters.getSecurityProps('url');
+    var ajaxUrl = new URL(url);
+    ajaxUrl.searchParams.append('nonce', nonce);
+    ajaxUrl.searchParams.append('action', action);
+    ajaxUrl.searchParams.append('data_object_id', id);
+    return dispatch('genericFetch', {
+      url: ajaxUrl
+    });
+  },
+
+  /**
+   * Generic fetch function.
+   *
+   * @param {Object} root store object
+   * @param {Function} root.commit store commit function
+   * @param {Object} payload action payload
+   * @param {string} payload.url fetch url
+   * @param {Object} payload.options fetch operation options
+   */
+  genericFetch: function genericFetch(_ref5, _ref6) {
+    var commit = _ref5.commit;
+    var url = _ref6.url,
+        _ref6$options = _ref6.options,
+        options = _ref6$options === void 0 ? {
+      method: 'GET'
+    } : _ref6$options;
     return new Promise(function (resolve, reject) {
-      var ajaxUrl = new URL(url);
-      ajaxUrl.searchParams.append('nonce', nonce);
-      ajaxUrl.searchParams.append('action', action);
-      ajaxUrl.searchParams.append('data_object_id', id);
+      var responseObject = null;
       commit('setBusy');
-      var dataObject = null;
-      fetch(ajaxUrl).then(function (res) {
+      fetch(url, options).then(function (res) {
         if (!res.ok) {
           throw new Error('an error occurred, please try again later');
         }
@@ -18911,14 +20218,38 @@ var actions = {
           throw new Error(resp.error);
         }
 
-        dataObject = resp.data.dataObject;
+        responseObject = resp;
       }).catch(function (err) {
         commit('setErrorMessage', err.message);
       }).finally(function () {
         commit('resetBusy');
-        var resolveFunction = dataObject === null ? reject : resolve;
-        resolveFunction(dataObject);
+        var resolveFunction = responseObject === null ? reject : resolve;
+        resolveFunction(responseObject);
       });
+    });
+  },
+
+  /**
+   * Fetch simple data object properties.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store getters
+   * @param {Function} root.dispatch store action function
+   */
+  fetchSimpleDataObjects: function fetchSimpleDataObjects(_ref7) {
+    var getters = _ref7.getters,
+        dispatch = _ref7.dispatch;
+
+    var _getters$getSecurityP3 = getters.getSecurityProps('simpleDataObjects'),
+        nonce = _getters$getSecurityP3.nonce,
+        action = _getters$getSecurityP3.action;
+
+    var url = getters.getSecurityProps('url');
+    var ajaxUrl = new URL(url);
+    ajaxUrl.searchParams.append('nonce', nonce);
+    ajaxUrl.searchParams.append('action', action);
+    return dispatch('genericFetch', {
+      url: ajaxUrl
     });
   },
 
@@ -18929,8 +20260,8 @@ var actions = {
    * @param {Function} root.commit store mutation function
    * @param {Object} dataObject data object
    */
-  mergeDataObject: function mergeDataObject(_ref4, dataObject) {
-    var commit = _ref4.commit;
+  mergeDataObject: function mergeDataObject(_ref8, dataObject) {
+    var commit = _ref8.commit;
 
     var _deepmerge = (0, _deepmerge2.default)({}, dataObject),
         controls = _deepmerge.controls,
@@ -18948,9 +20279,9 @@ var actions = {
    * @param {Function} root.commit store mutation function
    * @param {Object} dataObject data object
    */
-  revertTableData: function revertTableData(_ref5, dataObject) {
-    var dispatch = _ref5.dispatch,
-        commit = _ref5.commit;
+  revertTableData: function revertTableData(_ref9, dataObject) {
+    var dispatch = _ref9.dispatch,
+        commit = _ref9.commit;
     dispatch('mergeDataObject', dataObject);
     commit('resetAppDirtyStatus');
   }
@@ -19046,6 +20377,16 @@ var mutations = {
    */
   resetAppDirtyStatus: function resetAppDirtyStatus(state) {
     state.app.dirty = false;
+  },
+
+  /**
+   * Set simple data objects
+   *
+   * @param {Object} state table data store state
+   * @param {Array} objects simple data objects array
+   */
+  setSimpleDataObjects: function setSimpleDataObjects(state, objects) {
+    this.state.dataSimple = objects;
   }
 };
 /**
@@ -19066,7 +20407,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -19285,7 +20626,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
       if (Object.prototype.hasOwnProperty.call(source, k)) {
         if (_typeof(source[k]) === 'object') {
           // eslint-disable-next-line no-param-reassign
-          source[k] = _objectSpread({}, source[k], {}, target[k]);
+          source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
         } else {
           // eslint-disable-next-line no-param-reassign
           source[k] = target[k];
@@ -20003,7 +21344,7 @@ var mutations = {
    * @param {Object} dataObject data object
    */
   mergeTempData: function mergeTempData(state, dataObject) {
-    state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
+    state.tempData = _objectSpread(_objectSpread({}, state.tempData), dataObject);
   },
 
   /**
@@ -20252,7 +21593,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -20658,7 +21999,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 

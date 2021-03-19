@@ -1,3 +1,5 @@
+import deepmerge from 'deepmerge';
+
 /**
  * Table data store getters.
  *
@@ -75,6 +77,21 @@ const getters = {
 	 */
 	isDirty(state) {
 		return state.app.dirty;
+	},
+	/**
+	 * Prepare data object by updating various fields from data manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {Function} function to get prepared data object
+	 */
+	prepareDataObject: (state) => (dataObject) => {
+		const { controls, tempData } = deepmerge({}, state.dataManager);
+		const preparedDataObject = deepmerge({}, dataObject);
+
+		preparedDataObject.controls = controls;
+		preparedDataObject.content = tempData;
+
+		return preparedDataObject;
 	},
 };
 

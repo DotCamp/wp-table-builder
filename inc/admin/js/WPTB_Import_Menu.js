@@ -127,8 +127,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.12
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 
@@ -5578,7 +5578,7 @@ Object.defineProperty(Vue.prototype, '$ssrContext', {
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
-Vue.version = '2.6.11';
+Vue.version = '2.6.12';
 /*  */
 // these are reserved for web because they are directly compiled away
 // during template compilation
@@ -7773,7 +7773,7 @@ function updateDOMProps(oldVnode, vnode) {
     } else if ( // skip the update if old and new VDOM state is the same.
     // `value` is handled separately because the DOM value may be temporarily
     // out of sync with VDOM state due to focus, composition and modifiers.
-    // This  #4521 by skipping the unnecesarry `checked` update.
+    // This  #4521 by skipping the unnecessary `checked` update.
     cur !== oldProps[key]) {
       // some property updates can throw
       // e.g. `value` on <progress> w/ non-finite value
@@ -10004,7 +10004,7 @@ function parse(template, options) {
       }
     },
     comment: function comment(text, start, end) {
-      // adding anyting as a sibling to the root node is forbidden
+      // adding anything as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored
       if (currentParent) {
         var child = {
@@ -13037,7 +13037,7 @@ var withMessage = {
     setMessage: function setMessage(options) {
       var _this = this;
 
-      var mergedOptions = _objectSpread({}, defaults, {}, options);
+      var mergedOptions = _objectSpread(_objectSpread({}, defaults), options);
 
       this.withMessageData.message = mergedOptions.message;
       this.withMessageData.type = mergedOptions.type;
@@ -13356,7 +13356,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -13887,7 +13887,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -15975,7 +15975,7 @@ var logErrorOnce = (0, _memize.default)(console.error); // eslint-disable-line n
  * original format string is returned.
  *
  * @param {string}    format The format of the string to generate.
- * @param {...string} args   Arguments to apply to the format.
+ * @param {...*} args Arguments to apply to the format.
  *
  * @see http://www.diveintojavascript.com/projects/javascript-sprintf
  *
@@ -16627,19 +16627,85 @@ var DEFAULT_LOCALE_DATA = {
     }
   }
 };
+/* eslint-disable jsdoc/valid-types */
+
+/**
+ * @typedef {(data?: LocaleData, domain?: string) => void} SetLocaleData
+ * Merges locale data into the Tannin instance by domain. Accepts data in a
+ * Jed-formatted JSON object shape.
+ *
+ * @see http://messageformat.github.io/Jed/
+ */
+
+/**
+ * @typedef {(domain?: string) => string} GetFilterDomain
+ * Retrieve the domain to use when calling domain-specific filters.
+ */
+
+/**
+ * @typedef {(text: string, domain?: string) => string} __
+ *
+ * Retrieve the translation of text.
+ *
+ * @see https://developer.wordpress.org/reference/functions/__/
+ */
+
+/**
+ * @typedef {(text: string, context: string, domain?: string) => string} _x
+ *
+ * Retrieve translated string with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_x/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, domain?: string) => string} _n
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_n/
+ */
+
+/**
+ * @typedef {(single: string, plural: string, number: number, context: string, domain?: string) => string} _nx
+ *
+ * Translates and retrieves the singular or plural form based on the supplied
+ * number, with gettext context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/_nx/
+ */
+
+/**
+ * @typedef {() => boolean} IsRtl
+ *
+ * Check if current locale is RTL.
+ *
+ * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+ * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+ * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+ * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+ */
+
+/**
+ * @typedef {{ applyFilters: (hookName:string, ...args: unknown[]) => unknown}} ApplyFiltersInterface
+ */
+
+/* eslint-enable jsdoc/valid-types */
+
 /**
  * An i18n instance
  *
- * @typedef {Object} I18n
- * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
- *                                    Jed-formatted JSON object shape.
- * @property {Function} __            Retrieve the translation of text.
- * @property {Function} _x            Retrieve translated string with gettext context.
- * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
- *                                    number.
- * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
- *                                    number, with gettext context.
- * @property {Function} isRTL         Check if current locale is RTL.
+ * @typedef I18n
+ * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                         Jed-formatted JSON object shape.
+ * @property {__} __                       Retrieve the translation of text.
+ * @property {_x} _x                       Retrieve translated string with gettext context.
+ * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
+ *                                         number.
+ * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
+ *                                         number, with gettext context.
+ * @property {IsRtl} isRTL                 Check if current locale is RTL.
  */
 
 /**
@@ -16647,32 +16713,25 @@ var DEFAULT_LOCALE_DATA = {
  *
  * @param {LocaleData} [initialData]    Locale data configuration.
  * @param {string}     [initialDomain]  Domain for which configuration applies.
+ * @param {ApplyFiltersInterface} [hooks]     Hooks implementation.
  * @return {I18n}                       I18n instance
  */
 
-var createI18n = function createI18n(initialData, initialDomain) {
+var createI18n = function createI18n(initialData, initialDomain, hooks) {
   /**
    * The underlying instance of Tannin to which exported functions interface.
    *
    * @type {Tannin}
    */
   var tannin = new _tannin.default({});
-  /**
-   * Merges locale data into the Tannin instance by domain. Accepts data in a
-   * Jed-formatted JSON object shape.
-   *
-   * @see http://messageformat.github.io/Jed/
-   *
-   * @param {LocaleData} [data]   Locale data configuration.
-   * @param {string}     [domain] Domain for which configuration applies.
-   */
+  /** @type {SetLocaleData} */
 
   var setLocaleData = function setLocaleData(data) {
     var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
-    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
+    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
     // a plural forms expression).
 
-    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
+    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
   };
   /**
    * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
@@ -16704,86 +16763,141 @@ var createI18n = function createI18n(initialData, initialDomain) {
 
     return tannin.dcnpgettext(domain, context, single, plural, number);
   };
-  /**
-   * Retrieve the translation of text.
-   *
-   * @see https://developer.wordpress.org/reference/functions/__/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated text.
-   */
+  /** @type {GetFilterDomain} */
+
+
+  var getFilterDomain = function getFilterDomain(domain) {
+    if (typeof domain === 'undefined') {
+      return 'default';
+    }
+
+    return domain;
+  };
+  /** @type {__} */
 
 
   var __ = function __(text, domain) {
-    return dcnpgettext(domain, undefined, text);
+    var translation = dcnpgettext(domain, undefined, text);
+    /**
+     * Filters text with its translation.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext', translation, text, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_' + getFilterDomain(domain), translation, text, domain)
+    );
   };
-  /**
-   * Retrieve translated string with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_x/
-   *
-   * @param {string} text     Text to translate.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} Translated context string without pipe.
-   */
+  /** @type {_x} */
 
 
   var _x = function _x(text, context, domain) {
-    return dcnpgettext(domain, context, text);
+    var translation = dcnpgettext(domain, context, text);
+    /**
+     * Filters text with its translation based on context information.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} text        Text to translate.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.gettext_with_context', translation, text, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.gettext_with_context_' + getFilterDomain(domain), translation, text, context, domain)
+    );
   };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_n/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
+  /** @type {_n} */
 
 
   var _n = function _n(single, plural, number, domain) {
-    return dcnpgettext(domain, undefined, single, plural, number);
+    var translation = dcnpgettext(domain, undefined, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext', translation, single, plural, number, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_' + getFilterDomain(domain), translation, single, plural, number, domain)
+    );
   };
-  /**
-   * Translates and retrieves the singular or plural form based on the supplied
-   * number, with gettext context.
-   *
-   * @see https://developer.wordpress.org/reference/functions/_nx/
-   *
-   * @param {string} single   The text to be used if the number is singular.
-   * @param {string} plural   The text to be used if the number is plural.
-   * @param {number} number   The number to compare against to use either the
-   *                          singular or plural form.
-   * @param {string} context  Context information for the translators.
-   * @param {string} [domain] Domain to retrieve the translated text.
-   *
-   * @return {string} The translated singular or plural form.
-   */
+  /** @type {_nx} */
 
 
   var _nx = function _nx(single, plural, number, context, domain) {
-    return dcnpgettext(domain, context, single, plural, number);
+    var translation = dcnpgettext(domain, context, single, plural, number);
+
+    if (typeof hooks === 'undefined') {
+      return translation;
+    }
+    /**
+     * Filters the singular or plural form of a string with gettext context.
+     *
+     * @param {string} translation Translated text.
+     * @param {string} single      The text to be used if the number is singular.
+     * @param {string} plural      The text to be used if the number is plural.
+     * @param {string} number      The number to compare against to use either the singular or plural form.
+     * @param {string} context     Context information for the translators.
+     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
+     */
+
+
+    translation =
+    /** @type {string} */
+
+    /** @type {*} */
+    hooks.applyFilters('i18n.ngettext_with_context', translation, single, plural, number, context, domain);
+    return (
+      /** @type {string} */
+
+      /** @type {*} */
+      hooks.applyFilters('i18n.ngettext_with_context_' + getFilterDomain(domain), translation, single, plural, number, context, domain)
+    );
   };
-  /**
-   * Check if current locale is RTL.
-   *
-   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
-   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
-   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
-   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
-   *
-   * @return {boolean} Whether locale is RTL.
-   */
+  /** @type {IsRtl} */
 
 
   var isRTL = function isRTL() {
@@ -16805,7 +16919,831 @@ var createI18n = function createI18n(initialData, initialDomain) {
 };
 
 exports.createI18n = createI18n;
-},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _classCallCheck;
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Validate a namespace string.
+ *
+ * @param  {string} namespace The namespace to validate - should take the form
+ *                            `vendor/plugin/function`.
+ *
+ * @return {boolean}             Whether the namespace is valid.
+ */
+function validateNamespace(namespace) {
+  if ('string' !== typeof namespace || '' === namespace) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace must be a non-empty string.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
+    // eslint-disable-next-line no-console
+    console.error('The namespace can only contain numbers, letters, dashes, periods, underscores and slashes.');
+    return false;
+  }
+
+  return true;
+}
+
+var _default = validateNamespace;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Validate a hookName string.
+ *
+ * @param  {string} hookName The hook name to validate. Should be a non empty string containing
+ *                           only numbers, letters, dashes, periods and underscores. Also,
+ *                           the hook name cannot begin with `__`.
+ *
+ * @return {boolean}            Whether the hook name is valid.
+ */
+function validateHookName(hookName) {
+  if ('string' !== typeof hookName || '' === hookName) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name must be a non-empty string.');
+    return false;
+  }
+
+  if (/^__/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name cannot begin with `__`.');
+    return false;
+  }
+
+  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
+    // eslint-disable-next-line no-console
+    console.error('The hook name can only contain numbers, letters, dashes, periods and underscores.');
+    return false;
+  }
+
+  return true;
+}
+
+var _default = validateHookName;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback AddHook
+ *
+ * Adds the hook to the appropriate hooks container.
+ *
+ * @param {string}               hookName  Name of hook to add
+ * @param {string}               namespace The unique namespace identifying the callback in the form `vendor/plugin/function`.
+ * @param {import('.').Callback} callback  Function to call when the hook is run
+ * @param {number}               [priority=10]  Priority of this hook
+ */
+
+/**
+ * Returns a function which, when invoked, will add a hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {AddHook} Function that adds a new hook.
+ */
+function createAddHook(hooks, storeKey) {
+  return function addHook(hookName, namespace, callback) {
+    var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    if (!(0, _validateNamespace.default)(namespace)) {
+      return;
+    }
+
+    if ('function' !== typeof callback) {
+      // eslint-disable-next-line no-console
+      console.error('The hook callback must be a function.');
+      return;
+    } // Validate numeric priority
+
+
+    if ('number' !== typeof priority) {
+      // eslint-disable-next-line no-console
+      console.error('If specified, the hook priority must be a number.');
+      return;
+    }
+
+    var handler = {
+      callback: callback,
+      priority: priority,
+      namespace: namespace
+    };
+
+    if (hooksStore[hookName]) {
+      // Find the correct insert index of the new hook.
+      var handlers = hooksStore[hookName].handlers;
+      /** @type {number} */
+
+      var i;
+
+      for (i = handlers.length; i > 0; i--) {
+        if (priority >= handlers[i - 1].priority) {
+          break;
+        }
+      }
+
+      if (i === handlers.length) {
+        // If append, operate via direct assignment.
+        handlers[i] = handler;
+      } else {
+        // Otherwise, insert before index via splice.
+        handlers.splice(i, 0, handler);
+      } // We may also be currently executing this hook.  If the callback
+      // we're adding would come after the current callback, there's no
+      // problem; otherwise we need to increase the execution index of
+      // any other runs by 1 to account for the added element.
+
+
+      hooksStore.__current.forEach(function (hookInfo) {
+        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+          hookInfo.currentIndex++;
+        }
+      });
+    } else {
+      // This is the first hook of its type.
+      hooksStore[hookName] = {
+        handlers: [handler],
+        runs: 0
+      };
+    }
+
+    if (hookName !== 'hookAdded') {
+      hooks.doAction('hookAdded', hookName, namespace, callback, priority);
+    }
+  };
+}
+
+var _default = createAddHook;
+exports.default = _default;
+},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback RemoveHook
+ * Removes the specified callback (or all callbacks) from the hook with a given hookName
+ * and namespace.
+ *
+ * @param {string} hookName  The name of the hook to modify.
+ * @param {string} namespace The unique namespace identifying the callback in the
+ *                           form `vendor/plugin/function`.
+ *
+ * @return {number | undefined} The number of callbacks removed.
+ */
+
+/**
+ * Returns a function which, when invoked, will remove a specified hook or all
+ * hooks by the given name.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [removeAll=false] Whether to remove all callbacks for a hookName,
+ *                                                  without regard to namespace. Used to create
+ *                                                  `removeAll*` functions.
+ *
+ * @return {RemoveHook} Function that removes hooks.
+ */
+function createRemoveHook(hooks, storeKey) {
+  var removeAll = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function removeHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    if (!removeAll && !(0, _validateNamespace.default)(namespace)) {
+      return;
+    } // Bail if no hooks exist by this name
+
+
+    if (!hooksStore[hookName]) {
+      return 0;
+    }
+
+    var handlersRemoved = 0;
+
+    if (removeAll) {
+      handlersRemoved = hooksStore[hookName].handlers.length;
+      hooksStore[hookName] = {
+        runs: hooksStore[hookName].runs,
+        handlers: []
+      };
+    } else {
+      // Try to find the specified callback to remove.
+      var handlers = hooksStore[hookName].handlers;
+
+      var _loop = function _loop(i) {
+        if (handlers[i].namespace === namespace) {
+          handlers.splice(i, 1);
+          handlersRemoved++; // This callback may also be part of a hook that is
+          // currently executing.  If the callback we're removing
+          // comes after the current callback, there's no problem;
+          // otherwise we need to decrease the execution index of any
+          // other runs by 1 to account for the removed element.
+
+          hooksStore.__current.forEach(function (hookInfo) {
+            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
+              hookInfo.currentIndex--;
+            }
+          });
+        }
+      };
+
+      for (var i = handlers.length - 1; i >= 0; i--) {
+        _loop(i);
+      }
+    }
+
+    if (hookName !== 'hookRemoved') {
+      hooks.doAction('hookRemoved', hookName, namespace);
+    }
+
+    return handlersRemoved;
+  };
+}
+
+var _default = createRemoveHook;
+exports.default = _default;
+},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * @callback HasHook
+ *
+ * Returns whether any handlers are attached for the given hookName and optional namespace.
+ *
+ * @param {string} hookName    The name of the hook to check for.
+ * @param {string} [namespace] Optional. The unique namespace identifying the callback
+ *                             in the form `vendor/plugin/function`.
+ *
+ * @return {boolean} Whether there are handlers that are attached to the given hook.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether any handlers are
+ * attached to a particular hook.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {HasHook} Function that returns whether any handlers are
+ *                   attached to a particular hook and optional namespace.
+ */
+function createHasHook(hooks, storeKey) {
+  return function hasHook(hookName, namespace) {
+    var hooksStore = hooks[storeKey]; // Use the namespace if provided.
+
+    if ('undefined' !== typeof namespace) {
+      return hookName in hooksStore && hooksStore[hookName].handlers.some(function (hook) {
+        return hook.namespace === namespace;
+      });
+    }
+
+    return hookName in hooksStore;
+  };
+}
+
+var _default = createHasHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _arrayLikeToArray;
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _arrayWithoutHoles;
+
+var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return (0, _arrayLikeToArray.default)(arr);
+}
+},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _iterableToArray;
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _unsupportedIterableToArray;
+
+var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return (0, _arrayLikeToArray.default)(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0, _arrayLikeToArray.default)(o, minLen);
+}
+},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _nonIterableSpread;
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _toConsumableArray;
+
+var _arrayWithoutHoles = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayWithoutHoles"));
+
+var _iterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/iterableToArray"));
+
+var _unsupportedIterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/unsupportedIterableToArray"));
+
+var _nonIterableSpread = _interopRequireDefault(require("@babel/runtime/helpers/esm/nonIterableSpread"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) {
+  return (0, _arrayWithoutHoles.default)(arr) || (0, _iterableToArray.default)(arr) || (0, _unsupportedIterableToArray.default)(arr) || (0, _nonIterableSpread.default)();
+}
+},{"@babel/runtime/helpers/esm/arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js","@babel/runtime/helpers/esm/iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js","@babel/runtime/helpers/esm/unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js","@babel/runtime/helpers/esm/nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/toConsumableArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Returns a function which, when invoked, will execute all callbacks
+ * registered to a hook of the specified type, optionally returning the final
+ * value of the call chain.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ * @param  {boolean}              [returnFirstArg=false] Whether each hook callback is expected to
+ *                                                       return its first argument.
+ *
+ * @return {(hookName:string, ...args: unknown[]) => unknown} Function that runs hook callbacks.
+ */
+function createRunHook(hooks, storeKey) {
+  var returnFirstArg = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  return function runHooks(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!hooksStore[hookName]) {
+      hooksStore[hookName] = {
+        handlers: [],
+        runs: 0
+      };
+    }
+
+    hooksStore[hookName].runs++;
+    var handlers = hooksStore[hookName].handlers; // The following code is stripped from production builds.
+
+    if ('production' !== "development") {
+      // Handle any 'all' hooks registered.
+      if ('hookAdded' !== hookName && hooksStore.all) {
+        handlers.push.apply(handlers, (0, _toConsumableArray2.default)(hooksStore.all.handlers));
+      }
+    }
+
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    if (!handlers || !handlers.length) {
+      return returnFirstArg ? args[0] : undefined;
+    }
+
+    var hookInfo = {
+      name: hookName,
+      currentIndex: 0
+    };
+
+    hooksStore.__current.push(hookInfo);
+
+    while (hookInfo.currentIndex < handlers.length) {
+      var handler = handlers[hookInfo.currentIndex];
+      var result = handler.callback.apply(null, args);
+
+      if (returnFirstArg) {
+        args[0] = result;
+      }
+
+      hookInfo.currentIndex++;
+    }
+
+    hooksStore.__current.pop();
+
+    if (returnFirstArg) {
+      return args[0];
+    }
+  };
+}
+
+var _default = createRunHook;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Returns a function which, when invoked, will return the name of the
+ * currently running hook, or `null` if no hook of the given type is currently
+ * running.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {() => string | null} Function that returns the current hook name or null.
+ */
+function createCurrentHook(hooks, storeKey) {
+  return function currentHook() {
+    var _hooksStore$__current, _hooksStore$__current2;
+
+    var hooksStore = hooks[storeKey];
+    return (_hooksStore$__current = (_hooksStore$__current2 = hooksStore.__current[hooksStore.__current.length - 1]) === null || _hooksStore$__current2 === void 0 ? void 0 : _hooksStore$__current2.name) !== null && _hooksStore$__current !== void 0 ? _hooksStore$__current : null;
+  };
+}
+
+var _default = createCurrentHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * @callback DoingHook
+ * Returns whether a hook is currently being executed.
+ *
+ * @param  {string} [hookName] The name of the hook to check for.  If
+ *                             omitted, will check for any hook being executed.
+ *
+ * @return {boolean} Whether the hook is being executed.
+ */
+
+/**
+ * Returns a function which, when invoked, will return whether a hook is
+ * currently being executed.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DoingHook} Function that returns whether a hook is currently
+ *                     being executed.
+ */
+function createDoingHook(hooks, storeKey) {
+  return function doingHook(hookName) {
+    var hooksStore = hooks[storeKey]; // If the hookName was not passed, check for any current hook.
+
+    if ('undefined' === typeof hookName) {
+      return 'undefined' !== typeof hooksStore.__current[0];
+    } // Return the __current hook.
+
+
+    return hooksStore.__current[0] ? hookName === hooksStore.__current[0].name : false;
+  };
+}
+
+var _default = createDoingHook;
+exports.default = _default;
+},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * @callback DidHook
+ *
+ * Returns the number of times an action has been fired.
+ *
+ * @param  {string} hookName The hook name to check.
+ *
+ * @return {number | undefined} The number of times the hook has run.
+ */
+
+/**
+ * Returns a function which, when invoked, will return the number of times a
+ * hook has been called.
+ *
+ * @param  {import('.').Hooks}    hooks Hooks instance.
+ * @param  {import('.').StoreKey} storeKey
+ *
+ * @return {DidHook} Function that returns a hook's call count.
+ */
+function createDidHook(hooks, storeKey) {
+  return function didHook(hookName) {
+    var hooksStore = hooks[storeKey];
+
+    if (!(0, _validateHookName.default)(hookName)) {
+      return;
+    }
+
+    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
+  };
+}
+
+var _default = createDidHook;
+exports.default = _default;
+},{"./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports._Hooks = void 0;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/classCallCheck"));
+
+var _createAddHook = _interopRequireDefault(require("./createAddHook"));
+
+var _createRemoveHook = _interopRequireDefault(require("./createRemoveHook"));
+
+var _createHasHook = _interopRequireDefault(require("./createHasHook"));
+
+var _createRunHook = _interopRequireDefault(require("./createRunHook"));
+
+var _createCurrentHook = _interopRequireDefault(require("./createCurrentHook"));
+
+var _createDoingHook = _interopRequireDefault(require("./createDoingHook"));
+
+var _createDidHook = _interopRequireDefault(require("./createDidHook"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/**
+ * Internal class for constructing hooks. Use `createHooks()` function
+ *
+ * Note, it is necessary to expose this class to make its type public.
+ *
+ * @private
+ */
+var _Hooks = function _Hooks() {
+  (0, _classCallCheck2.default)(this, _Hooks);
+  /** @type {import('.').Store} actions */
+
+  this.actions = Object.create(null);
+  this.actions.__current = [];
+  /** @type {import('.').Store} filters */
+
+  this.filters = Object.create(null);
+  this.filters.__current = [];
+  this.addAction = (0, _createAddHook.default)(this, 'actions');
+  this.addFilter = (0, _createAddHook.default)(this, 'filters');
+  this.removeAction = (0, _createRemoveHook.default)(this, 'actions');
+  this.removeFilter = (0, _createRemoveHook.default)(this, 'filters');
+  this.hasAction = (0, _createHasHook.default)(this, 'actions');
+  this.hasFilter = (0, _createHasHook.default)(this, 'filters');
+  this.removeAllActions = (0, _createRemoveHook.default)(this, 'actions', true);
+  this.removeAllFilters = (0, _createRemoveHook.default)(this, 'filters', true);
+  this.doAction = (0, _createRunHook.default)(this, 'actions');
+  this.applyFilters = (0, _createRunHook.default)(this, 'filters', true);
+  this.currentAction = (0, _createCurrentHook.default)(this, 'actions');
+  this.currentFilter = (0, _createCurrentHook.default)(this, 'filters');
+  this.doingAction = (0, _createDoingHook.default)(this, 'actions');
+  this.doingFilter = (0, _createDoingHook.default)(this, 'filters');
+  this.didAction = (0, _createDidHook.default)(this, 'actions');
+  this.didFilter = (0, _createDidHook.default)(this, 'filters');
+};
+/** @typedef {_Hooks} Hooks */
+
+/**
+ * Returns an instance of the hooks object.
+ *
+ * @return {Hooks} A Hooks instance.
+ */
+
+
+exports._Hooks = _Hooks;
+
+function createHooks() {
+  return new _Hooks();
+}
+
+var _default = createHooks;
+exports.default = _default;
+},{"@babel/runtime/helpers/esm/classCallCheck":"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js","./createAddHook":"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js","./createRemoveHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js","./createHasHook":"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js","./createRunHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js","./createCurrentHook":"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js","./createDoingHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js","./createDidHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "createHooks", {
+  enumerable: true,
+  get: function () {
+    return _createHooks2.default;
+  }
+});
+exports.filters = exports.actions = exports.didFilter = exports.didAction = exports.doingFilter = exports.doingAction = exports.currentFilter = exports.currentAction = exports.applyFilters = exports.doAction = exports.removeAllFilters = exports.removeAllActions = exports.hasFilter = exports.hasAction = exports.removeFilter = exports.removeAction = exports.addFilter = exports.addAction = void 0;
+
+var _createHooks2 = _interopRequireDefault(require("./createHooks"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Internal dependencies
+ */
+
+/** @typedef {(...args: any[])=>any} Callback */
+
+/**
+ * @typedef Handler
+ * @property {Callback} callback  The callback
+ * @property {string}   namespace The namespace
+ * @property {number}   priority  The namespace
+ */
+
+/**
+ * @typedef Hook
+ * @property {Handler[]} handlers Array of handlers
+ * @property {number}    runs     Run counter
+ */
+
+/**
+ * @typedef Current
+ * @property {string} name         Hook name
+ * @property {number} currentIndex The index
+ */
+
+/**
+ * @typedef {Record<string, Hook> & {__current: Current[]}} Store
+ */
+
+/**
+ * @typedef {'actions' | 'filters'} StoreKey
+ */
+
+/**
+ * @typedef {import('./createHooks').Hooks} Hooks
+ */
+var _createHooks = (0, _createHooks2.default)(),
+    addAction = _createHooks.addAction,
+    addFilter = _createHooks.addFilter,
+    removeAction = _createHooks.removeAction,
+    removeFilter = _createHooks.removeFilter,
+    hasAction = _createHooks.hasAction,
+    hasFilter = _createHooks.hasFilter,
+    removeAllActions = _createHooks.removeAllActions,
+    removeAllFilters = _createHooks.removeAllFilters,
+    doAction = _createHooks.doAction,
+    applyFilters = _createHooks.applyFilters,
+    currentAction = _createHooks.currentAction,
+    currentFilter = _createHooks.currentFilter,
+    doingAction = _createHooks.doingAction,
+    doingFilter = _createHooks.doingFilter,
+    didAction = _createHooks.didAction,
+    didFilter = _createHooks.didFilter,
+    actions = _createHooks.actions,
+    filters = _createHooks.filters;
+
+exports.filters = filters;
+exports.actions = actions;
+exports.didFilter = didFilter;
+exports.didAction = didAction;
+exports.doingFilter = doingFilter;
+exports.doingAction = doingAction;
+exports.currentFilter = currentFilter;
+exports.currentAction = currentAction;
+exports.applyFilters = applyFilters;
+exports.doAction = doAction;
+exports.removeAllFilters = removeAllFilters;
+exports.removeAllActions = removeAllActions;
+exports.hasFilter = hasFilter;
+exports.hasAction = hasAction;
+exports.removeFilter = removeFilter;
+exports.removeAction = removeAction;
+exports.addFilter = addFilter;
+exports.addAction = addAction;
+},{"./createHooks":"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16813,12 +17751,20 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isRTL = exports._nx = exports._n = exports._x = exports.__ = exports.setLocaleData = void 0;
 
+var _hooks = require("@wordpress/hooks");
+
 var _createI18n = require("./create-i18n");
+
+/**
+ * WordPress dependencies
+ */
 
 /**
  * Internal dependencies
  */
-var i18n = (0, _createI18n.createI18n)();
+var i18n = (0, _createI18n.createI18n)(undefined, undefined, {
+  applyFilters: _hooks.applyFilters
+});
 /*
  * Comments in this file are duplicated from ./i18n due to
  * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
@@ -16923,7 +17869,7 @@ var _nx = i18n._nx.bind(i18n);
 exports._nx = _nx;
 var isRTL = i18n.isRTL.bind(i18n);
 exports.isRTL = isRTL;
-},{"./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
+},{"@wordpress/hooks":"../../../../../node_modules/@wordpress/hooks/build-module/index.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16988,6 +17934,7 @@ var _createI18n = require("./create-i18n");
 Object.keys(_createI18n).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _createI18n[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -17094,7 +18041,7 @@ var _default = {
       return typeof val === 'boolean';
     },
     handleImportFromPlugin: function handleImportFromPlugin(type) {
-      var importOperations = (0, _importOperations.default)(_objectSpread({}, this.options, {
+      var importOperations = (0, _importOperations.default)(_objectSpread(_objectSpread({}, this.options), {}, {
         type: type
       }));
       this.setBusy();
@@ -18059,7 +19006,7 @@ var _default = {
       this.userTables.map(function (t) {
         allSelectedObject[t.ID] = true;
       });
-      this.selectedTables = _objectSpread({}, this.selectedTables, {}, allSelectedObject);
+      this.selectedTables = _objectSpread(_objectSpread({}, this.selectedTables), allSelectedObject);
     },
     deselectAll: function deselectAll() {
       this.selectedTables = {};

@@ -6508,6 +6508,22 @@ thead .wptb-data-manager-table-data-value {
     align-items: center;
 }
 
+.wptb-table-data-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.wptb-table-data-title .wptb-text-modify-custom-input {
+    font-size: 170% !important;
+    color: var(--wptb-plugin-logo-color) !important;
+}
+
+.wptb-table-data-title .wptb-text-modify-custom-input {
+}
+
+
 /*endregion*/
 
 
@@ -6549,6 +6565,40 @@ thead .wptb-data-manager-table-data-value {
 
 .wptb-search-input-clear[data-disabled='true'] {
     color: var(--wptb-plugin-gray-500) !important;
+}
+
+/*endregion*/
+
+/*region text modify input*/
+.wptb-text-modify-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-text-modify-custom-input {
+    border: 0 !important;
+    text-align: center;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+
+.wptb-text-modify-custom-input:focus {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+.wptb-text-modify-custom-input:disabled {
+    color: var(--wptb-plugin-gray-700) !important;
+}
+
+.wptb-text-modify-edit-button {
+    color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-text-modify-input[data-wptb-text-modify-disable='true'] .wptb-text-modify-edit-button {
+    color: var(--wptb-plugin-logo-color) !important;
+    cursor: pointer;
 }
 
 /*endregion*/

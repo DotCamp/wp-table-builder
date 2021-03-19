@@ -69,6 +69,15 @@ const mutations = {
 	resetAppDirtyStatus(state) {
 		state.app.dirty = false;
 	},
+	/**
+	 * Set simple data objects
+	 *
+	 * @param {Object} state table data store state
+	 * @param {Array} objects simple data objects array
+	 */
+	setSimpleDataObjects(state, objects) {
+		this.state.dataSimple = objects;
+	},
 };
 
 /**

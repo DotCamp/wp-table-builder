@@ -20,6 +20,7 @@ use function register_post_type;
 use function trailingslashit;
 use function wp_create_nonce;
 use function wp_localize_script;
+use function wp_reset_query;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -54,8 +55,45 @@ class Data_Object_Manager {
 			add_action( 'wptb_admin_menu', [ __CLASS__, 'register_table_data_menu' ] );
 			add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_menu_scripts' ] );
 			add_action( 'wp_ajax_dataObjectContent', [ __CLASS__, 'ajax_data_object_content' ] );
+			add_action( 'wp_ajax_dataObjectUpdate', [ __CLASS__, 'ajax_update_data_object' ] );
+			add_action( 'wp_ajax_simpleDataObjects', [ __CLASS__, 'ajax_simple_data_objects' ] );
 		}
 	}
+
+	/**
+	 * Simple data objects ajax hook.
+	 */
+	public static function ajax_simple_data_objects() {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && isset( $_GET['nonce'] ) && check_ajax_referer( 'simpleDataObjects', 'nonce', false ) ) {
+			static::get_instance()->append_response_data( static::get_simple_data_objects(), 'simpleDataObjects' );
+		} else {
+			static::get_instance()->set_error( esc_html__( 'invalid request, please check your request and try again', 'wp-table-builder' ) );
+		}
+
+		static::get_instance()->send_json();
+	}
+
+	/**
+	 * Update/create data object ajax hook.
+	 */
+	public static function ajax_update_data_object() {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && isset( $_POST['nonce'] ) && check_ajax_referer( 'dataObjectUpdate', 'nonce', false ) && isset( $_POST['dataObject'] ) ) {
+			$data_object = json_decode( base64_decode( $_POST['dataObject'] ) );
+
+			$data_object_id = static::update_data_object( $data_object );
+
+			if ( $data_object_id === false ) {
+				static::get_instance()->set_error( esc_html__( 'an error ocurred while saving data object, please try again later', 'wp-table-builder' ) );
+			} else {
+				static::get_instance()->append_response_data( $data_object_id, 'id' );
+			}
+		} else {
+			static::get_instance()->set_error( esc_html__( 'invalid request, please check your request and try again', 'wp-table-builder' ) );
+		}
+
+		static::get_instance()->send_json();
+	}
+
 
 	/**
 	 * Get content of a data object.
@@ -93,7 +131,6 @@ class Data_Object_Manager {
 			// enqueue styles
 			Helpers::enqueue_file( $css_path );
 
-
 			$plugin_data = get_plugin_data( NS\PLUGIN__FILE__ );
 			$plugin_info = [
 				'logo'           => trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'assets/images/wptb-logo.png',
@@ -102,13 +139,15 @@ class Data_Object_Manager {
 			];
 
 			$strings = [
-				'homepage'  => esc_html__( 'Homepage', 'wp-table-builder' ),
-				'tableData' => esc_html__( 'Table data', 'wp-table-builder' ),
-				'data'      => esc_html__( 'table data', 'wp-table-builder' ),
-				'editor'    => esc_html__( 'editor', 'wp-table-builder' ),
-				'search'    => esc_html__( 'search', 'wp-table-builder' ),
-				'save'    => esc_html__( 'save', 'wp-table-builder' ),
-				'revert'    => esc_html__( 'revert', 'wp-table-builder' ),
+				'homepage'               => esc_html__( 'Homepage', 'wp-table-builder' ),
+				'tableData'              => esc_html__( 'Table data', 'wp-table-builder' ),
+				'data'                   => esc_html__( 'table data', 'wp-table-builder' ),
+				'editor'                 => esc_html__( 'editor', 'wp-table-builder' ),
+				'search'                 => esc_html__( 'search', 'wp-table-builder' ),
+				'save'                   => esc_html__( 'save', 'wp-table-builder' ),
+				'revert'                 => esc_html__( 'revert', 'wp-table-builder' ),
+				'tableDataUpdateMessage' => esc_html__( 'table data updated', 'wp-table-builder' ),
+				'new' => esc_html__( 'new', 'wp-table-builder' ),
 			];
 
 			$security = [
@@ -116,6 +155,14 @@ class Data_Object_Manager {
 				'dataObjectContent' => [
 					'nonce'  => wp_create_nonce( 'dataObjectContent' ),
 					'action' => 'dataObjectContent'
+				],
+				'dataObjectUpdate'  => [
+					'nonce'  => wp_create_nonce( 'dataObjectUpdate' ),
+					'action' => 'dataObjectUpdate'
+				],
+				'simpleDataObjects' => [
+					'nonce'  => wp_create_nonce( 'simpleDataObjects' ),
+					'action' => 'simpleDataObjects'
 				]
 			];
 

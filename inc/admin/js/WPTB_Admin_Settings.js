@@ -127,8 +127,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
+ * Vue.js v2.6.12
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 
@@ -5578,7 +5578,7 @@ Object.defineProperty(Vue.prototype, '$ssrContext', {
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
-Vue.version = '2.6.11';
+Vue.version = '2.6.12';
 /*  */
 // these are reserved for web because they are directly compiled away
 // during template compilation
@@ -7773,7 +7773,7 @@ function updateDOMProps(oldVnode, vnode) {
     } else if ( // skip the update if old and new VDOM state is the same.
     // `value` is handled separately because the DOM value may be temporarily
     // out of sync with VDOM state due to focus, composition and modifiers.
-    // This  #4521 by skipping the unnecesarry `checked` update.
+    // This  #4521 by skipping the unnecessary `checked` update.
     cur !== oldProps[key]) {
       // some property updates can throw
       // e.g. `value` on <progress> w/ non-finite value
@@ -10004,7 +10004,7 @@ function parse(template, options) {
       }
     },
     comment: function comment(text, start, end) {
-      // adding anyting as a sibling to the root node is forbidden
+      // adding anything as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored
       if (currentParent) {
         var child = {
@@ -12695,7 +12695,7 @@ var withMessage = {
     setMessage: function setMessage(options) {
       var _this = this;
 
-      var mergedOptions = _objectSpread({}, defaults, {}, options);
+      var mergedOptions = _objectSpread(_objectSpread({}, defaults), options);
 
       this.withMessageData.message = mergedOptions.message;
       this.withMessageData.type = mergedOptions.type;
@@ -14615,7 +14615,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -14683,7 +14683,7 @@ var _default = {
         if (_this.sectionsData[section].fields !== undefined && _typeof(_this.sectionsData[section].fields) === 'object') {
           Object.keys(_this.sectionsData[section].fields).map(function (field) {
             if (Object.prototype.hasOwnProperty.call(_this.sectionsData[section].fields, field)) {
-              _this.parsedFields[section].push(_objectSpread({}, _this.sectionsData[section].fields[field], {
+              _this.parsedFields[section].push(_objectSpread(_objectSpread({}, _this.sectionsData[section].fields[field]), {}, {
                 id: field
               }));
             }
