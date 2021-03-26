@@ -4,7 +4,12 @@
 			<div class="wptb-plugin-modal-icon"><span class="dashicons dashicons-warning"></span></div>
 			<div class="wptb-plugin-modal-message">{{ message }}</div>
 			<div class="wptb-plugin-modal-button-container">
-				<material-button size="full-size" :click="callback">{{ okayString }}</material-button>
+				<material-button v-if="okayString !== undefined" :click="innerCallback(true)">{{
+					okayString
+				}}</material-button>
+				<material-button type="danger" v-if="negativeString !== undefined" :click="innerCallback(false)">{{
+					negativeString
+				}}</material-button>
 			</div>
 		</div>
 	</div>
@@ -24,7 +29,6 @@ export default {
 		},
 		relativeRef: {
 			type: HTMLElement,
-			required: true,
 		},
 		callback: {
 			type: Function,
@@ -35,12 +39,25 @@ export default {
 		},
 		okayString: {
 			type: String,
-			default: 'ok',
+		},
+		negativeString: {
+			type: String,
 		},
 	},
 	components: { MaterialButton },
 	mounted() {
-		this.relativeRef.appendChild(this.$refs.mainWrapper);
+		this.$nextTick(() => {
+			if (this.relativeRef) {
+				this.relativeRef.appendChild(this.$refs.mainWrapper);
+			}
+		});
+	},
+	methods: {
+		innerCallback(status) {
+			return () => {
+				this.callback(status);
+			};
+		},
 	},
 	beforeDestroy() {
 		this.$refs.mainWrapper.remove();

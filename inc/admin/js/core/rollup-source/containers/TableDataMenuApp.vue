@@ -15,6 +15,7 @@
 			<menu-footer>
 				<portal-target name="footerButtons"></portal-target>
 			</menu-footer>
+			<modal-window :relative-ref="mainWrapper"></modal-window>
 		</div>
 		<message-listener></message-listener>
 	</div>
@@ -25,6 +26,7 @@ import MenuFooter from '../components/MenuFooter';
 import Sections from '../components/Sections';
 import TableDataSection from '../components/tableDataMenu/TableDataSection';
 import MessageListener from '../components/tableDataMenu/MessageListener';
+import ModalWindow from '../components/modalWindow/ModalWindow';
 
 export default {
 	props: {
@@ -39,7 +41,7 @@ export default {
 			},
 		},
 	},
-	components: { MessageListener, MenuHeader, MenuFooter, Sections, TableDataSection },
+	components: { ModalWindow, MessageListener, MenuHeader, MenuFooter, Sections, TableDataSection },
 	data() {
 		return {
 			sections: {
@@ -51,6 +53,9 @@ export default {
 	computed: {
 		currentSectionComponent() {
 			return 'TableDataSection';
+		},
+		mainWrapper() {
+			return document.querySelector('.wptb-menu-page-wrapper');
 		},
 	},
 };

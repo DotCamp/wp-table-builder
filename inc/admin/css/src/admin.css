@@ -3071,6 +3071,7 @@ wptb_shortcode_container_element {
 }
 
 .wptb-settings-wrapper {
+    position: relative;
     background-color: white;
     max-width: 90%;
     min-width: 90%;
@@ -4132,7 +4133,7 @@ wptb_shortcode_container_element {
     display: grid;
     grid-template-areas:
             "modalIcon message"
-            "buttonContainer buttonContainer";
+            "modalIcon buttonContainer";
     grid-gap: 10px;
 }
 
@@ -4156,6 +4157,16 @@ wptb_shortcode_container_element {
     justify-self: center;
     grid-area: buttonContainer;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-plugin-modal-button-container .wptb-plugin-button-material {
+    min-width: 50px;
+    text-align: center;
+    text-transform: capitalize;
+    margin: 0 10px;
 }
 
 .wptb-plugin-button-material {

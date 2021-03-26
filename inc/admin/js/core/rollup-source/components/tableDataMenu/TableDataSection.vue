@@ -8,25 +8,54 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Sections from '../Sections';
 import TableDataEditorSection from './TableDataEditorSection';
 import TableDataCreateNewSection from './TableDataCreateNewSection';
+import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 
 export default {
 	components: { Sections, TableDataEditorSection, TableDataCreateNewSection },
+	mixins: [withNativeTranslationStore],
 	data() {
 		return {
 			childSections: {
 				tableDataEditorSection: this.translationM('editor'),
 				tableDataCreateNewSection: this.translationM('new'),
 			},
-			currentChildSection: 'tableDataEditorSection',
+			innerCurrentChildSection: 'tableDataEditorSection',
 		};
 	},
 	computed: {
-		sectionComponent() {
-			return this.currentChildSection[0].toUpperCase() + this.currentChildSection.slice(1);
+		currentChildSection: {
+			get() {
+				return this.innerCurrentChildSection;
+			},
+			set(n) {
+				if (this.isDirty) {
+					this['modalWindow/showMessage']({
+						message: this.translationM('sectionDirtyError'),
+						positive: this.translationM('yes'),
+						negative: this.translationM('no'),
+						callback: (status) => {
+							if (status) {
+								this.innerCurrentChildSection = n;
+								this['modalWindow/resetModalWindow']();
+							}
+						},
+					});
+				} else {
+					this.innerCurrentChildSection = n;
+				}
+			},
 		},
+		sectionComponent() {
+			return this.innerCurrentChildSection[0].toUpperCase() + this.innerCurrentChildSection.slice(1);
+		},
+		...mapGetters(['isDirty']),
+	},
+	methods: {
+		...mapActions(['modalWindow/showMessage', 'modalWindow/resetModalWindow']),
 	},
 };
 </script>

@@ -51,8 +51,11 @@ export default {
 		this.innerCurrentSection = this.currentSection || this.items[0];
 	},
 	watch: {
-		innerCurrentSection(n) {
-			this.$emit('updateSection', n);
+		// innerCurrentSection(n) {
+		// 	this.$emit('updateSection', n);
+		// },
+		currentSection(n) {
+			this.innerCurrentSection = n;
 		},
 	},
 	computed: {
@@ -69,7 +72,8 @@ export default {
 	},
 	methods: {
 		handleSectionChange(val) {
-			this.innerCurrentSection = val;
+			// this.innerCurrentSection = val;
+			this.$emit('updateSection', val);
 		},
 		handleActiveSectionElement(el) {
 			this.activeSectionElement = el;

@@ -76,7 +76,7 @@ const mutations = {
 	 * @param {Array} objects simple data objects array
 	 */
 	setSimpleDataObjects(state, objects) {
-		this.state.dataSimple = objects;
+		state.dataSimple = objects;
 	},
 };
 

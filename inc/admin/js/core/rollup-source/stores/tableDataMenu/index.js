@@ -6,6 +6,7 @@ import actions from './actions';
 import mutations from './mutations';
 import tableDataPlugins from './plugins';
 import { createBasicStore, defaultTranslationGetter } from '../general';
+import modalWindow from '../modules/modalWindow';
 
 // use vuex store model
 Vue.use(Vuex);
@@ -21,6 +22,12 @@ const defaultStore = {
 	actions,
 	getters: defaultTranslationGetter(getters),
 	plugins: [tableDataPlugins],
+	modules: {
+		modalWindow: {
+			namespaced: true,
+			...modalWindow,
+		},
+	},
 };
 
 /**

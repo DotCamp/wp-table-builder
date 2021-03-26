@@ -147,7 +147,10 @@ class Data_Object_Manager {
 				'save'                   => esc_html__( 'save', 'wp-table-builder' ),
 				'revert'                 => esc_html__( 'revert', 'wp-table-builder' ),
 				'tableDataUpdateMessage' => esc_html__( 'table data updated', 'wp-table-builder' ),
-				'new' => esc_html__( 'new', 'wp-table-builder' ),
+				'new'                    => esc_html__( 'new', 'wp-table-builder' ),
+				'yes'                    => esc_html__( 'yes', 'wp-table-builder' ),
+				'no'                    => esc_html__( 'no', 'wp-table-builder' ),
+				'sectionDirtyError'                    => esc_html__( 'There are unsaved changes on your table data, continue and discard changes?', 'wp-table-builder' ),
 			];
 
 			$security = [

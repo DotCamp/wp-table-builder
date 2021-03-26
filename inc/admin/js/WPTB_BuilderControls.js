@@ -127,8 +127,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /*!
- * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * Vue.js v2.6.11
+ * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
 
@@ -5578,7 +5578,7 @@ Object.defineProperty(Vue.prototype, '$ssrContext', {
 Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
-Vue.version = '2.6.12';
+Vue.version = '2.6.11';
 /*  */
 // these are reserved for web because they are directly compiled away
 // during template compilation
@@ -7773,7 +7773,7 @@ function updateDOMProps(oldVnode, vnode) {
     } else if ( // skip the update if old and new VDOM state is the same.
     // `value` is handled separately because the DOM value may be temporarily
     // out of sync with VDOM state due to focus, composition and modifiers.
-    // This  #4521 by skipping the unnecessary `checked` update.
+    // This  #4521 by skipping the unnecesarry `checked` update.
     cur !== oldProps[key]) {
       // some property updates can throw
       // e.g. `value` on <progress> w/ non-finite value
@@ -10004,7 +10004,7 @@ function parse(template, options) {
       }
     },
     comment: function comment(text, start, end) {
-      // adding anything as a sibling to the root node is forbidden
+      // adding anyting as a sibling to the root node is forbidden
       // comments should still be allowed, but ignored
       if (currentParent) {
         var child = {
@@ -12067,7 +12067,7 @@ function ControlsManager() {
 
   function updateTableSettings(input) {
     if (input) {
-      tableSettings.settings = _objectSpread(_objectSpread({}, tableSettings.settings), input);
+      tableSettings.settings = _objectSpread({}, tableSettings.settings, {}, input);
       callSubscribers();
     }
   }
@@ -12265,13 +12265,13 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -14205,8 +14205,8 @@ exports.install = install;
 exports.mapState = exports.mapMutations = exports.mapGetters = exports.mapActions = exports.createNamespacedHelpers = exports.Store = exports.default = void 0;
 
 /*!
- * vuex v3.6.2
- * (c) 2021 Evan You
+ * vuex v3.5.1
+ * (c) 2020 Evan You
  * @license MIT
  */
 function applyMixin(Vue) {
@@ -14500,12 +14500,7 @@ ModuleCollection.prototype.unregister = function unregister(path) {
 ModuleCollection.prototype.isRegistered = function isRegistered(path) {
   var parent = this.get(path.slice(0, -1));
   var key = path[path.length - 1];
-
-  if (parent) {
-    return parent.hasChild(key);
-  }
-
-  return false;
+  return parent.hasChild(key);
 };
 
 function update(path, targetModule, newModule) {
@@ -15230,7 +15225,7 @@ var mapState = normalizeNamespace(function (namespace, states) {
 /**
  * Reduce the code which written in Vue.js for committing the mutation
  * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept another params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
  * @return {Object}
  */
 
@@ -15550,7 +15545,7 @@ function pad(num, maxLength) {
 var index = {
   Store: Store,
   install: install,
-  version: '3.6.2',
+  version: '3.5.1',
   mapState: mapState,
   mapMutations: mapMutations,
   mapGetters: mapGetters,
@@ -17490,7 +17485,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     // merge default options with user sent options
     // this.options = { ...responsiveClassDefaultOptions, ...options };
-    this.options = _objectSpread(_objectSpread({}, responsiveClassDefaultOptions), options);
+    this.options = _objectSpread({}, responsiveClassDefaultOptions, {}, options);
     this.elements = Array.from(document.querySelectorAll(this.options.query));
     this.elementObjects = this.elements.map(function (e) {
       return {
@@ -18047,7 +18042,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -19069,6 +19064,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   props: {
     message: {
@@ -19080,8 +19080,7 @@ var _default = {
       default: false
     },
     relativeRef: {
-      type: HTMLElement,
-      required: true
+      type: HTMLElement
     },
     callback: {
       type: Function,
@@ -19091,15 +19090,32 @@ var _default = {
       }
     },
     okayString: {
-      type: String,
-      default: 'ok'
+      type: String
+    },
+    negativeString: {
+      type: String
     }
   },
   components: {
     MaterialButton: _MaterialButton.default
   },
   mounted: function mounted() {
-    this.relativeRef.appendChild(this.$refs.mainWrapper);
+    var _this = this;
+
+    this.$nextTick(function () {
+      if (_this.relativeRef) {
+        _this.relativeRef.appendChild(_this.$refs.mainWrapper);
+      }
+    });
+  },
+  methods: {
+    innerCallback: function innerCallback(status) {
+      var _this2 = this;
+
+      return function () {
+        _this2.callback(status);
+      };
+    }
   },
   beforeDestroy: function beforeDestroy() {
     this.$refs.mainWrapper.remove();
@@ -19144,11 +19160,23 @@ exports.default = _default;
           "div",
           { staticClass: "wptb-plugin-modal-button-container" },
           [
-            _c(
-              "material-button",
-              { attrs: { size: "full-size", click: _vm.callback } },
-              [_vm._v(_vm._s(_vm.okayString))]
-            )
+            _vm.okayString !== undefined
+              ? _c(
+                  "material-button",
+                  { attrs: { click: _vm.innerCallback(true) } },
+                  [_vm._v(_vm._s(_vm.okayString))]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.negativeString !== undefined
+              ? _c(
+                  "material-button",
+                  {
+                    attrs: { type: "danger", click: _vm.innerCallback(false) }
+                  },
+                  [_vm._v(_vm._s(_vm.negativeString))]
+                )
+              : _vm._e()
           ],
           1
         )
@@ -19193,7 +19221,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -21170,7 +21198,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -21389,7 +21417,7 @@ var objectDeepMerge = function objectDeepMerge(source, target) {
       if (Object.prototype.hasOwnProperty.call(source, k)) {
         if (_typeof(source[k]) === 'object') {
           // eslint-disable-next-line no-param-reassign
-          source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
+          source[k] = _objectSpread({}, source[k], {}, target[k]);
         } else {
           // eslint-disable-next-line no-param-reassign
           source[k] = target[k];
@@ -22051,7 +22079,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -23727,7 +23755,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -24115,7 +24143,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -25419,7 +25447,7 @@ var logErrorOnce = (0, _memize.default)(console.error); // eslint-disable-line n
  * original format string is returned.
  *
  * @param {string}    format The format of the string to generate.
- * @param {...*} args Arguments to apply to the format.
+ * @param {...string} args   Arguments to apply to the format.
  *
  * @see http://www.diveintojavascript.com/projects/javascript-sprintf
  *
@@ -26071,85 +26099,19 @@ var DEFAULT_LOCALE_DATA = {
     }
   }
 };
-/* eslint-disable jsdoc/valid-types */
-
-/**
- * @typedef {(data?: LocaleData, domain?: string) => void} SetLocaleData
- * Merges locale data into the Tannin instance by domain. Accepts data in a
- * Jed-formatted JSON object shape.
- *
- * @see http://messageformat.github.io/Jed/
- */
-
-/**
- * @typedef {(domain?: string) => string} GetFilterDomain
- * Retrieve the domain to use when calling domain-specific filters.
- */
-
-/**
- * @typedef {(text: string, domain?: string) => string} __
- *
- * Retrieve the translation of text.
- *
- * @see https://developer.wordpress.org/reference/functions/__/
- */
-
-/**
- * @typedef {(text: string, context: string, domain?: string) => string} _x
- *
- * Retrieve translated string with gettext context.
- *
- * @see https://developer.wordpress.org/reference/functions/_x/
- */
-
-/**
- * @typedef {(single: string, plural: string, number: number, domain?: string) => string} _n
- *
- * Translates and retrieves the singular or plural form based on the supplied
- * number.
- *
- * @see https://developer.wordpress.org/reference/functions/_n/
- */
-
-/**
- * @typedef {(single: string, plural: string, number: number, context: string, domain?: string) => string} _nx
- *
- * Translates and retrieves the singular or plural form based on the supplied
- * number, with gettext context.
- *
- * @see https://developer.wordpress.org/reference/functions/_nx/
- */
-
-/**
- * @typedef {() => boolean} IsRtl
- *
- * Check if current locale is RTL.
- *
- * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
- * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
- * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
- * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
- */
-
-/**
- * @typedef {{ applyFilters: (hookName:string, ...args: unknown[]) => unknown}} ApplyFiltersInterface
- */
-
-/* eslint-enable jsdoc/valid-types */
-
 /**
  * An i18n instance
  *
- * @typedef I18n
- * @property {SetLocaleData} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
- *                                         Jed-formatted JSON object shape.
- * @property {__} __                       Retrieve the translation of text.
- * @property {_x} _x                       Retrieve translated string with gettext context.
- * @property {_n} _n                       Translates and retrieves the singular or plural form based on the supplied
- *                                         number.
- * @property {_nx} _nx                     Translates and retrieves the singular or plural form based on the supplied
- *                                         number, with gettext context.
- * @property {IsRtl} isRTL                 Check if current locale is RTL.
+ * @typedef {Object} I18n
+ * @property {Function} setLocaleData Merges locale data into the Tannin instance by domain. Accepts data in a
+ *                                    Jed-formatted JSON object shape.
+ * @property {Function} __            Retrieve the translation of text.
+ * @property {Function} _x            Retrieve translated string with gettext context.
+ * @property {Function} _n            Translates and retrieves the singular or plural form based on the supplied
+ *                                    number.
+ * @property {Function} _nx           Translates and retrieves the singular or plural form based on the supplied
+ *                                    number, with gettext context.
+ * @property {Function} isRTL         Check if current locale is RTL.
  */
 
 /**
@@ -26157,25 +26119,32 @@ var DEFAULT_LOCALE_DATA = {
  *
  * @param {LocaleData} [initialData]    Locale data configuration.
  * @param {string}     [initialDomain]  Domain for which configuration applies.
- * @param {ApplyFiltersInterface} [hooks]     Hooks implementation.
  * @return {I18n}                       I18n instance
  */
 
-var createI18n = function createI18n(initialData, initialDomain, hooks) {
+var createI18n = function createI18n(initialData, initialDomain) {
   /**
    * The underlying instance of Tannin to which exported functions interface.
    *
    * @type {Tannin}
    */
   var tannin = new _tannin.default({});
-  /** @type {SetLocaleData} */
+  /**
+   * Merges locale data into the Tannin instance by domain. Accepts data in a
+   * Jed-formatted JSON object shape.
+   *
+   * @see http://messageformat.github.io/Jed/
+   *
+   * @param {LocaleData} [data]   Locale data configuration.
+   * @param {string}     [domain] Domain for which configuration applies.
+   */
 
   var setLocaleData = function setLocaleData(data) {
     var domain = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
-    tannin.data[domain] = _objectSpread(_objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA), tannin.data[domain]), data); // Populate default domain configuration (supported locale date which omits
+    tannin.data[domain] = _objectSpread({}, DEFAULT_LOCALE_DATA, {}, tannin.data[domain], {}, data); // Populate default domain configuration (supported locale date which omits
     // a plural forms expression).
 
-    tannin.data[domain][''] = _objectSpread(_objectSpread({}, DEFAULT_LOCALE_DATA['']), tannin.data[domain]['']);
+    tannin.data[domain][''] = _objectSpread({}, DEFAULT_LOCALE_DATA[''], {}, tannin.data[domain]['']);
   };
   /**
    * Wrapper for Tannin's `dcnpgettext`. Populates default locale data if not
@@ -26207,141 +26176,86 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
 
     return tannin.dcnpgettext(domain, context, single, plural, number);
   };
-  /** @type {GetFilterDomain} */
-
-
-  var getFilterDomain = function getFilterDomain(domain) {
-    if (typeof domain === 'undefined') {
-      return 'default';
-    }
-
-    return domain;
-  };
-  /** @type {__} */
+  /**
+   * Retrieve the translation of text.
+   *
+   * @see https://developer.wordpress.org/reference/functions/__/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated text.
+   */
 
 
   var __ = function __(text, domain) {
-    var translation = dcnpgettext(domain, undefined, text);
-    /**
-     * Filters text with its translation.
-     *
-     * @param {string} translation Translated text.
-     * @param {string} text        Text to translate.
-     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
-     */
-
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
-
-    translation =
-    /** @type {string} */
-
-    /** @type {*} */
-    hooks.applyFilters('i18n.gettext', translation, text, domain);
-    return (
-      /** @type {string} */
-
-      /** @type {*} */
-      hooks.applyFilters('i18n.gettext_' + getFilterDomain(domain), translation, text, domain)
-    );
+    return dcnpgettext(domain, undefined, text);
   };
-  /** @type {_x} */
+  /**
+   * Retrieve translated string with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_x/
+   *
+   * @param {string} text     Text to translate.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} Translated context string without pipe.
+   */
 
 
   var _x = function _x(text, context, domain) {
-    var translation = dcnpgettext(domain, context, text);
-    /**
-     * Filters text with its translation based on context information.
-     *
-     * @param {string} translation Translated text.
-     * @param {string} text        Text to translate.
-     * @param {string} context     Context information for the translators.
-     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
-     */
-
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
-
-    translation =
-    /** @type {string} */
-
-    /** @type {*} */
-    hooks.applyFilters('i18n.gettext_with_context', translation, text, context, domain);
-    return (
-      /** @type {string} */
-
-      /** @type {*} */
-      hooks.applyFilters('i18n.gettext_with_context_' + getFilterDomain(domain), translation, text, context, domain)
-    );
+    return dcnpgettext(domain, context, text);
   };
-  /** @type {_n} */
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_n/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
 
 
   var _n = function _n(single, plural, number, domain) {
-    var translation = dcnpgettext(domain, undefined, single, plural, number);
-
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
-    /**
-     * Filters the singular or plural form of a string.
-     *
-     * @param {string} translation Translated text.
-     * @param {string} single      The text to be used if the number is singular.
-     * @param {string} plural      The text to be used if the number is plural.
-     * @param {string} number      The number to compare against to use either the singular or plural form.
-     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
-     */
-
-
-    translation =
-    /** @type {string} */
-
-    /** @type {*} */
-    hooks.applyFilters('i18n.ngettext', translation, single, plural, number, domain);
-    return (
-      /** @type {string} */
-
-      /** @type {*} */
-      hooks.applyFilters('i18n.ngettext_' + getFilterDomain(domain), translation, single, plural, number, domain)
-    );
+    return dcnpgettext(domain, undefined, single, plural, number);
   };
-  /** @type {_nx} */
+  /**
+   * Translates and retrieves the singular or plural form based on the supplied
+   * number, with gettext context.
+   *
+   * @see https://developer.wordpress.org/reference/functions/_nx/
+   *
+   * @param {string} single   The text to be used if the number is singular.
+   * @param {string} plural   The text to be used if the number is plural.
+   * @param {number} number   The number to compare against to use either the
+   *                          singular or plural form.
+   * @param {string} context  Context information for the translators.
+   * @param {string} [domain] Domain to retrieve the translated text.
+   *
+   * @return {string} The translated singular or plural form.
+   */
 
 
   var _nx = function _nx(single, plural, number, context, domain) {
-    var translation = dcnpgettext(domain, context, single, plural, number);
-
-    if (typeof hooks === 'undefined') {
-      return translation;
-    }
-    /**
-     * Filters the singular or plural form of a string with gettext context.
-     *
-     * @param {string} translation Translated text.
-     * @param {string} single      The text to be used if the number is singular.
-     * @param {string} plural      The text to be used if the number is plural.
-     * @param {string} number      The number to compare against to use either the singular or plural form.
-     * @param {string} context     Context information for the translators.
-     * @param {string} domain      Text domain. Unique identifier for retrieving translated strings.
-     */
-
-
-    translation =
-    /** @type {string} */
-
-    /** @type {*} */
-    hooks.applyFilters('i18n.ngettext_with_context', translation, single, plural, number, context, domain);
-    return (
-      /** @type {string} */
-
-      /** @type {*} */
-      hooks.applyFilters('i18n.ngettext_with_context_' + getFilterDomain(domain), translation, single, plural, number, context, domain)
-    );
+    return dcnpgettext(domain, context, single, plural, number);
   };
-  /** @type {IsRtl} */
+  /**
+   * Check if current locale is RTL.
+   *
+   * **RTL (Right To Left)** is a locale property indicating that text is written from right to left.
+   * For example, the `he` locale (for Hebrew) specifies right-to-left. Arabic (ar) is another common
+   * language written RTL. The opposite of RTL, LTR (Left To Right) is used in other languages,
+   * including English (`en`, `en-US`, `en-GB`, etc.), Spanish (`es`), and French (`fr`).
+   *
+   * @return {boolean} Whether locale is RTL.
+   */
 
 
   var isRTL = function isRTL() {
@@ -26363,831 +26277,7 @@ var createI18n = function createI18n(initialData, initialDomain, hooks) {
 };
 
 exports.createI18n = createI18n;
-},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _classCallCheck;
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Validate a namespace string.
- *
- * @param  {string} namespace The namespace to validate - should take the form
- *                            `vendor/plugin/function`.
- *
- * @return {boolean}             Whether the namespace is valid.
- */
-function validateNamespace(namespace) {
-  if ('string' !== typeof namespace || '' === namespace) {
-    // eslint-disable-next-line no-console
-    console.error('The namespace must be a non-empty string.');
-    return false;
-  }
-
-  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace)) {
-    // eslint-disable-next-line no-console
-    console.error('The namespace can only contain numbers, letters, dashes, periods, underscores and slashes.');
-    return false;
-  }
-
-  return true;
-}
-
-var _default = validateNamespace;
-exports.default = _default;
-},{}],"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Validate a hookName string.
- *
- * @param  {string} hookName The hook name to validate. Should be a non empty string containing
- *                           only numbers, letters, dashes, periods and underscores. Also,
- *                           the hook name cannot begin with `__`.
- *
- * @return {boolean}            Whether the hook name is valid.
- */
-function validateHookName(hookName) {
-  if ('string' !== typeof hookName || '' === hookName) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name must be a non-empty string.');
-    return false;
-  }
-
-  if (/^__/.test(hookName)) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name cannot begin with `__`.');
-    return false;
-  }
-
-  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
-    // eslint-disable-next-line no-console
-    console.error('The hook name can only contain numbers, letters, dashes, periods and underscores.');
-    return false;
-  }
-
-  return true;
-}
-
-var _default = validateHookName;
-exports.default = _default;
-},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
-
-var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Internal dependencies
- */
-
-/**
- * @callback AddHook
- *
- * Adds the hook to the appropriate hooks container.
- *
- * @param {string}               hookName  Name of hook to add
- * @param {string}               namespace The unique namespace identifying the callback in the form `vendor/plugin/function`.
- * @param {import('.').Callback} callback  Function to call when the hook is run
- * @param {number}               [priority=10]  Priority of this hook
- */
-
-/**
- * Returns a function which, when invoked, will add a hook.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- *
- * @return {AddHook} Function that adds a new hook.
- */
-function createAddHook(hooks, storeKey) {
-  return function addHook(hookName, namespace, callback) {
-    var priority = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 10;
-    var hooksStore = hooks[storeKey];
-
-    if (!(0, _validateHookName.default)(hookName)) {
-      return;
-    }
-
-    if (!(0, _validateNamespace.default)(namespace)) {
-      return;
-    }
-
-    if ('function' !== typeof callback) {
-      // eslint-disable-next-line no-console
-      console.error('The hook callback must be a function.');
-      return;
-    } // Validate numeric priority
-
-
-    if ('number' !== typeof priority) {
-      // eslint-disable-next-line no-console
-      console.error('If specified, the hook priority must be a number.');
-      return;
-    }
-
-    var handler = {
-      callback: callback,
-      priority: priority,
-      namespace: namespace
-    };
-
-    if (hooksStore[hookName]) {
-      // Find the correct insert index of the new hook.
-      var handlers = hooksStore[hookName].handlers;
-      /** @type {number} */
-
-      var i;
-
-      for (i = handlers.length; i > 0; i--) {
-        if (priority >= handlers[i - 1].priority) {
-          break;
-        }
-      }
-
-      if (i === handlers.length) {
-        // If append, operate via direct assignment.
-        handlers[i] = handler;
-      } else {
-        // Otherwise, insert before index via splice.
-        handlers.splice(i, 0, handler);
-      } // We may also be currently executing this hook.  If the callback
-      // we're adding would come after the current callback, there's no
-      // problem; otherwise we need to increase the execution index of
-      // any other runs by 1 to account for the added element.
-
-
-      hooksStore.__current.forEach(function (hookInfo) {
-        if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
-          hookInfo.currentIndex++;
-        }
-      });
-    } else {
-      // This is the first hook of its type.
-      hooksStore[hookName] = {
-        handlers: [handler],
-        runs: 0
-      };
-    }
-
-    if (hookName !== 'hookAdded') {
-      hooks.doAction('hookAdded', hookName, namespace, callback, priority);
-    }
-  };
-}
-
-var _default = createAddHook;
-exports.default = _default;
-},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _validateNamespace = _interopRequireDefault(require("./validateNamespace.js"));
-
-var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Internal dependencies
- */
-
-/**
- * @callback RemoveHook
- * Removes the specified callback (or all callbacks) from the hook with a given hookName
- * and namespace.
- *
- * @param {string} hookName  The name of the hook to modify.
- * @param {string} namespace The unique namespace identifying the callback in the
- *                           form `vendor/plugin/function`.
- *
- * @return {number | undefined} The number of callbacks removed.
- */
-
-/**
- * Returns a function which, when invoked, will remove a specified hook or all
- * hooks by the given name.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- * @param  {boolean}              [removeAll=false] Whether to remove all callbacks for a hookName,
- *                                                  without regard to namespace. Used to create
- *                                                  `removeAll*` functions.
- *
- * @return {RemoveHook} Function that removes hooks.
- */
-function createRemoveHook(hooks, storeKey) {
-  var removeAll = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  return function removeHook(hookName, namespace) {
-    var hooksStore = hooks[storeKey];
-
-    if (!(0, _validateHookName.default)(hookName)) {
-      return;
-    }
-
-    if (!removeAll && !(0, _validateNamespace.default)(namespace)) {
-      return;
-    } // Bail if no hooks exist by this name
-
-
-    if (!hooksStore[hookName]) {
-      return 0;
-    }
-
-    var handlersRemoved = 0;
-
-    if (removeAll) {
-      handlersRemoved = hooksStore[hookName].handlers.length;
-      hooksStore[hookName] = {
-        runs: hooksStore[hookName].runs,
-        handlers: []
-      };
-    } else {
-      // Try to find the specified callback to remove.
-      var handlers = hooksStore[hookName].handlers;
-
-      var _loop = function _loop(i) {
-        if (handlers[i].namespace === namespace) {
-          handlers.splice(i, 1);
-          handlersRemoved++; // This callback may also be part of a hook that is
-          // currently executing.  If the callback we're removing
-          // comes after the current callback, there's no problem;
-          // otherwise we need to decrease the execution index of any
-          // other runs by 1 to account for the removed element.
-
-          hooksStore.__current.forEach(function (hookInfo) {
-            if (hookInfo.name === hookName && hookInfo.currentIndex >= i) {
-              hookInfo.currentIndex--;
-            }
-          });
-        }
-      };
-
-      for (var i = handlers.length - 1; i >= 0; i--) {
-        _loop(i);
-      }
-    }
-
-    if (hookName !== 'hookRemoved') {
-      hooks.doAction('hookRemoved', hookName, namespace);
-    }
-
-    return handlersRemoved;
-  };
-}
-
-var _default = createRemoveHook;
-exports.default = _default;
-},{"./validateNamespace.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateNamespace.js","./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * @callback HasHook
- *
- * Returns whether any handlers are attached for the given hookName and optional namespace.
- *
- * @param {string} hookName    The name of the hook to check for.
- * @param {string} [namespace] Optional. The unique namespace identifying the callback
- *                             in the form `vendor/plugin/function`.
- *
- * @return {boolean} Whether there are handlers that are attached to the given hook.
- */
-
-/**
- * Returns a function which, when invoked, will return whether any handlers are
- * attached to a particular hook.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- *
- * @return {HasHook} Function that returns whether any handlers are
- *                   attached to a particular hook and optional namespace.
- */
-function createHasHook(hooks, storeKey) {
-  return function hasHook(hookName, namespace) {
-    var hooksStore = hooks[storeKey]; // Use the namespace if provided.
-
-    if ('undefined' !== typeof namespace) {
-      return hookName in hooksStore && hooksStore[hookName].handlers.some(function (hook) {
-        return hook.namespace === namespace;
-      });
-    }
-
-    return hookName in hooksStore;
-  };
-}
-
-var _default = createHasHook;
-exports.default = _default;
-},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _arrayLikeToArray;
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _arrayWithoutHoles;
-
-var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return (0, _arrayLikeToArray.default)(arr);
-}
-},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _iterableToArray;
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _unsupportedIterableToArray;
-
-var _arrayLikeToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayLikeToArray"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return (0, _arrayLikeToArray.default)(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0, _arrayLikeToArray.default)(o, minLen);
-}
-},{"@babel/runtime/helpers/esm/arrayLikeToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js"}],"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _nonIterableSpread;
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-},{}],"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _toConsumableArray;
-
-var _arrayWithoutHoles = _interopRequireDefault(require("@babel/runtime/helpers/esm/arrayWithoutHoles"));
-
-var _iterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/iterableToArray"));
-
-var _unsupportedIterableToArray = _interopRequireDefault(require("@babel/runtime/helpers/esm/unsupportedIterableToArray"));
-
-var _nonIterableSpread = _interopRequireDefault(require("@babel/runtime/helpers/esm/nonIterableSpread"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) {
-  return (0, _arrayWithoutHoles.default)(arr) || (0, _iterableToArray.default)(arr) || (0, _unsupportedIterableToArray.default)(arr) || (0, _nonIterableSpread.default)();
-}
-},{"@babel/runtime/helpers/esm/arrayWithoutHoles":"../../../../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js","@babel/runtime/helpers/esm/iterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js","@babel/runtime/helpers/esm/unsupportedIterableToArray":"../../../../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js","@babel/runtime/helpers/esm/nonIterableSpread":"../../../../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/toConsumableArray"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Returns a function which, when invoked, will execute all callbacks
- * registered to a hook of the specified type, optionally returning the final
- * value of the call chain.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- * @param  {boolean}              [returnFirstArg=false] Whether each hook callback is expected to
- *                                                       return its first argument.
- *
- * @return {(hookName:string, ...args: unknown[]) => unknown} Function that runs hook callbacks.
- */
-function createRunHook(hooks, storeKey) {
-  var returnFirstArg = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  return function runHooks(hookName) {
-    var hooksStore = hooks[storeKey];
-
-    if (!hooksStore[hookName]) {
-      hooksStore[hookName] = {
-        handlers: [],
-        runs: 0
-      };
-    }
-
-    hooksStore[hookName].runs++;
-    var handlers = hooksStore[hookName].handlers; // The following code is stripped from production builds.
-
-    if ('production' !== "development") {
-      // Handle any 'all' hooks registered.
-      if ('hookAdded' !== hookName && hooksStore.all) {
-        handlers.push.apply(handlers, (0, _toConsumableArray2.default)(hooksStore.all.handlers));
-      }
-    }
-
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    if (!handlers || !handlers.length) {
-      return returnFirstArg ? args[0] : undefined;
-    }
-
-    var hookInfo = {
-      name: hookName,
-      currentIndex: 0
-    };
-
-    hooksStore.__current.push(hookInfo);
-
-    while (hookInfo.currentIndex < handlers.length) {
-      var handler = handlers[hookInfo.currentIndex];
-      var result = handler.callback.apply(null, args);
-
-      if (returnFirstArg) {
-        args[0] = result;
-      }
-
-      hookInfo.currentIndex++;
-    }
-
-    hooksStore.__current.pop();
-
-    if (returnFirstArg) {
-      return args[0];
-    }
-  };
-}
-
-var _default = createRunHook;
-exports.default = _default;
-},{"@babel/runtime/helpers/esm/toConsumableArray":"../../../../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * Returns a function which, when invoked, will return the name of the
- * currently running hook, or `null` if no hook of the given type is currently
- * running.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- *
- * @return {() => string | null} Function that returns the current hook name or null.
- */
-function createCurrentHook(hooks, storeKey) {
-  return function currentHook() {
-    var _hooksStore$__current, _hooksStore$__current2;
-
-    var hooksStore = hooks[storeKey];
-    return (_hooksStore$__current = (_hooksStore$__current2 = hooksStore.__current[hooksStore.__current.length - 1]) === null || _hooksStore$__current2 === void 0 ? void 0 : _hooksStore$__current2.name) !== null && _hooksStore$__current !== void 0 ? _hooksStore$__current : null;
-  };
-}
-
-var _default = createCurrentHook;
-exports.default = _default;
-},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * @callback DoingHook
- * Returns whether a hook is currently being executed.
- *
- * @param  {string} [hookName] The name of the hook to check for.  If
- *                             omitted, will check for any hook being executed.
- *
- * @return {boolean} Whether the hook is being executed.
- */
-
-/**
- * Returns a function which, when invoked, will return whether a hook is
- * currently being executed.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- *
- * @return {DoingHook} Function that returns whether a hook is currently
- *                     being executed.
- */
-function createDoingHook(hooks, storeKey) {
-  return function doingHook(hookName) {
-    var hooksStore = hooks[storeKey]; // If the hookName was not passed, check for any current hook.
-
-    if ('undefined' === typeof hookName) {
-      return 'undefined' !== typeof hooksStore.__current[0];
-    } // Return the __current hook.
-
-
-    return hooksStore.__current[0] ? hookName === hooksStore.__current[0].name : false;
-  };
-}
-
-var _default = createDoingHook;
-exports.default = _default;
-},{}],"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _validateHookName = _interopRequireDefault(require("./validateHookName.js"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Internal dependencies
- */
-
-/**
- * @callback DidHook
- *
- * Returns the number of times an action has been fired.
- *
- * @param  {string} hookName The hook name to check.
- *
- * @return {number | undefined} The number of times the hook has run.
- */
-
-/**
- * Returns a function which, when invoked, will return the number of times a
- * hook has been called.
- *
- * @param  {import('.').Hooks}    hooks Hooks instance.
- * @param  {import('.').StoreKey} storeKey
- *
- * @return {DidHook} Function that returns a hook's call count.
- */
-function createDidHook(hooks, storeKey) {
-  return function didHook(hookName) {
-    var hooksStore = hooks[storeKey];
-
-    if (!(0, _validateHookName.default)(hookName)) {
-      return;
-    }
-
-    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
-  };
-}
-
-var _default = createDidHook;
-exports.default = _default;
-},{"./validateHookName.js":"../../../../../node_modules/@wordpress/hooks/build-module/validateHookName.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports._Hooks = void 0;
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/esm/classCallCheck"));
-
-var _createAddHook = _interopRequireDefault(require("./createAddHook"));
-
-var _createRemoveHook = _interopRequireDefault(require("./createRemoveHook"));
-
-var _createHasHook = _interopRequireDefault(require("./createHasHook"));
-
-var _createRunHook = _interopRequireDefault(require("./createRunHook"));
-
-var _createCurrentHook = _interopRequireDefault(require("./createCurrentHook"));
-
-var _createDoingHook = _interopRequireDefault(require("./createDoingHook"));
-
-var _createDidHook = _interopRequireDefault(require("./createDidHook"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Internal dependencies
- */
-
-/**
- * Internal class for constructing hooks. Use `createHooks()` function
- *
- * Note, it is necessary to expose this class to make its type public.
- *
- * @private
- */
-var _Hooks = function _Hooks() {
-  (0, _classCallCheck2.default)(this, _Hooks);
-  /** @type {import('.').Store} actions */
-
-  this.actions = Object.create(null);
-  this.actions.__current = [];
-  /** @type {import('.').Store} filters */
-
-  this.filters = Object.create(null);
-  this.filters.__current = [];
-  this.addAction = (0, _createAddHook.default)(this, 'actions');
-  this.addFilter = (0, _createAddHook.default)(this, 'filters');
-  this.removeAction = (0, _createRemoveHook.default)(this, 'actions');
-  this.removeFilter = (0, _createRemoveHook.default)(this, 'filters');
-  this.hasAction = (0, _createHasHook.default)(this, 'actions');
-  this.hasFilter = (0, _createHasHook.default)(this, 'filters');
-  this.removeAllActions = (0, _createRemoveHook.default)(this, 'actions', true);
-  this.removeAllFilters = (0, _createRemoveHook.default)(this, 'filters', true);
-  this.doAction = (0, _createRunHook.default)(this, 'actions');
-  this.applyFilters = (0, _createRunHook.default)(this, 'filters', true);
-  this.currentAction = (0, _createCurrentHook.default)(this, 'actions');
-  this.currentFilter = (0, _createCurrentHook.default)(this, 'filters');
-  this.doingAction = (0, _createDoingHook.default)(this, 'actions');
-  this.doingFilter = (0, _createDoingHook.default)(this, 'filters');
-  this.didAction = (0, _createDidHook.default)(this, 'actions');
-  this.didFilter = (0, _createDidHook.default)(this, 'filters');
-};
-/** @typedef {_Hooks} Hooks */
-
-/**
- * Returns an instance of the hooks object.
- *
- * @return {Hooks} A Hooks instance.
- */
-
-
-exports._Hooks = _Hooks;
-
-function createHooks() {
-  return new _Hooks();
-}
-
-var _default = createHooks;
-exports.default = _default;
-},{"@babel/runtime/helpers/esm/classCallCheck":"../../../../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js","./createAddHook":"../../../../../node_modules/@wordpress/hooks/build-module/createAddHook.js","./createRemoveHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRemoveHook.js","./createHasHook":"../../../../../node_modules/@wordpress/hooks/build-module/createHasHook.js","./createRunHook":"../../../../../node_modules/@wordpress/hooks/build-module/createRunHook.js","./createCurrentHook":"../../../../../node_modules/@wordpress/hooks/build-module/createCurrentHook.js","./createDoingHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDoingHook.js","./createDidHook":"../../../../../node_modules/@wordpress/hooks/build-module/createDidHook.js"}],"../../../../../node_modules/@wordpress/hooks/build-module/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "createHooks", {
-  enumerable: true,
-  get: function () {
-    return _createHooks2.default;
-  }
-});
-exports.filters = exports.actions = exports.didFilter = exports.didAction = exports.doingFilter = exports.doingAction = exports.currentFilter = exports.currentAction = exports.applyFilters = exports.doAction = exports.removeAllFilters = exports.removeAllActions = exports.hasFilter = exports.hasAction = exports.removeFilter = exports.removeAction = exports.addFilter = exports.addAction = void 0;
-
-var _createHooks2 = _interopRequireDefault(require("./createHooks"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Internal dependencies
- */
-
-/** @typedef {(...args: any[])=>any} Callback */
-
-/**
- * @typedef Handler
- * @property {Callback} callback  The callback
- * @property {string}   namespace The namespace
- * @property {number}   priority  The namespace
- */
-
-/**
- * @typedef Hook
- * @property {Handler[]} handlers Array of handlers
- * @property {number}    runs     Run counter
- */
-
-/**
- * @typedef Current
- * @property {string} name         Hook name
- * @property {number} currentIndex The index
- */
-
-/**
- * @typedef {Record<string, Hook> & {__current: Current[]}} Store
- */
-
-/**
- * @typedef {'actions' | 'filters'} StoreKey
- */
-
-/**
- * @typedef {import('./createHooks').Hooks} Hooks
- */
-var _createHooks = (0, _createHooks2.default)(),
-    addAction = _createHooks.addAction,
-    addFilter = _createHooks.addFilter,
-    removeAction = _createHooks.removeAction,
-    removeFilter = _createHooks.removeFilter,
-    hasAction = _createHooks.hasAction,
-    hasFilter = _createHooks.hasFilter,
-    removeAllActions = _createHooks.removeAllActions,
-    removeAllFilters = _createHooks.removeAllFilters,
-    doAction = _createHooks.doAction,
-    applyFilters = _createHooks.applyFilters,
-    currentAction = _createHooks.currentAction,
-    currentFilter = _createHooks.currentFilter,
-    doingAction = _createHooks.doingAction,
-    doingFilter = _createHooks.doingFilter,
-    didAction = _createHooks.didAction,
-    didFilter = _createHooks.didFilter,
-    actions = _createHooks.actions,
-    filters = _createHooks.filters;
-
-exports.filters = filters;
-exports.actions = actions;
-exports.didFilter = didFilter;
-exports.didAction = didAction;
-exports.doingFilter = doingFilter;
-exports.doingAction = doingAction;
-exports.currentFilter = currentFilter;
-exports.currentAction = currentAction;
-exports.applyFilters = applyFilters;
-exports.doAction = doAction;
-exports.removeAllFilters = removeAllFilters;
-exports.removeAllActions = removeAllActions;
-exports.hasFilter = hasFilter;
-exports.hasAction = hasAction;
-exports.removeFilter = removeFilter;
-exports.removeAction = removeAction;
-exports.addFilter = addFilter;
-exports.addAction = addAction;
-},{"./createHooks":"../../../../../node_modules/@wordpress/hooks/build-module/createHooks.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
+},{"@babel/runtime/helpers/esm/defineProperty":"../../../../../node_modules/@babel/runtime/helpers/esm/defineProperty.js","tannin":"../../../../../node_modules/tannin/index.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/default-i18n.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27195,20 +26285,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.isRTL = exports._nx = exports._n = exports._x = exports.__ = exports.setLocaleData = void 0;
 
-var _hooks = require("@wordpress/hooks");
-
 var _createI18n = require("./create-i18n");
-
-/**
- * WordPress dependencies
- */
 
 /**
  * Internal dependencies
  */
-var i18n = (0, _createI18n.createI18n)(undefined, undefined, {
-  applyFilters: _hooks.applyFilters
-});
+var i18n = (0, _createI18n.createI18n)();
 /*
  * Comments in this file are duplicated from ./i18n due to
  * https://github.com/WordPress/gutenberg/pull/20318#issuecomment-590837722
@@ -27313,7 +26395,7 @@ var _nx = i18n._nx.bind(i18n);
 exports._nx = _nx;
 var isRTL = i18n.isRTL.bind(i18n);
 exports.isRTL = isRTL;
-},{"@wordpress/hooks":"../../../../../node_modules/@wordpress/hooks/build-module/index.js","./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
+},{"./create-i18n":"../../../../../node_modules/@wordpress/i18n/build-module/create-i18n.js"}],"../../../../../node_modules/@wordpress/i18n/build-module/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27378,7 +26460,6 @@ var _createI18n = require("./create-i18n");
 Object.keys(_createI18n).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-  if (key in exports && exports[key] === _createI18n[key]) return;
   Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
@@ -28115,7 +27196,7 @@ var _default = {
     }
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['getIcon'])),
-  methods: _objectSpread(_objectSpread({
+  methods: _objectSpread({
     handleCardClick: function handleCardClick() {
       if (!this.isSelected() && this.proSourceStatus()) {
         this.softSelectCard(this.dataSourceObject.id);
@@ -28137,7 +27218,7 @@ var _default = {
     handleConfirm: function handleConfirm() {
       this.$emit('sourceCardConfirm', this.dataSourceObject.id);
     }
-  }, (0, _vuex.mapActions)(['softSelectCard'])), (0, _vuex.mapGetters)(['getSoftSelectedSourceCardId', 'getProStatus']))
+  }, (0, _vuex.mapActions)(['softSelectCard']), {}, (0, _vuex.mapGetters)(['getSoftSelectedSourceCardId', 'getProStatus']))
 };
 exports.default = _default;
         var $034591 = exports.default || module.exports;
@@ -28698,7 +27779,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * @type {Object}
  */
 var withStoreBusy = {
-  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['busyStatus'])), {}, {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['busyStatus']), {
     isBusy: function isBusy() {
       return this.busyStatus;
     }
@@ -28735,12 +27816,12 @@ var _default = {
     LeftPanelMaterialButton: _LeftPanelMaterialButton.default
   },
   mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
-  computed: _objectSpread(_objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource'])), (0, _vuex.mapState)(['tableIsActive'])), {}, {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['isActiveScreenSourceSetup', 'isSourceDataCreated', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['tableIsActive']), {
     isContinueAvailable: function isContinueAvailable() {
       return this.isBusy || !this.isSourceDataCreated;
     }
   }),
-  methods: _objectSpread(_objectSpread({
+  methods: _objectSpread({
     continueToGenerate: function continueToGenerate() {
       DataTableManagerStatic.getInstance().cleanUp();
       DataTableManagerStatic.getInstance().markTableAsDataTable(); // only call generate component if there is no active table in builder
@@ -28755,7 +27836,7 @@ var _default = {
 
       this.setCurrentSourceAsSelected();
     }
-  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected', 'addOptionsAndDataToSave'])), (0, _vuex.mapMutations)(['setTableDirty']))
+  }, (0, _vuex.mapActions)(['setCurrentScreenToDataSourceSelection', 'setCurrentSourceAsSelected', 'addOptionsAndDataToSave']), {}, (0, _vuex.mapMutations)(['setTableDirty']))
 };
 exports.default = _default;
         var $a2c9cd = exports.default || module.exports;
@@ -29090,7 +28171,7 @@ var _default = {
     newNamesRowButtonVisibility: function newNamesRowButtonVisibility() {
       var _this$parsedData$head;
 
-      return !((_this$parsedData$head = this.parsedData.header[0]) !== null && _this$parsedData$head !== void 0 && _this$parsedData$head.generatedForHeader) && this.getDataManagerControls.indexRow !== null;
+      return !((_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : _this$parsedData$head.generatedForHeader) && this.getDataManagerControls.indexRow !== null;
     },
     firstRowAsColumnName: {
       get: function get() {
@@ -29110,7 +28191,7 @@ var _default = {
       return !active && callerId !== 'selectRowForNames';
     }
   }, (0, _vuex.mapGetters)(['getDataManagerControls', 'parseCellId', 'getSelectOperationData', 'parsedData'])),
-  methods: _objectSpread(_objectSpread(_objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl'])), (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation'])), {}, {
+  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']), {
     selectRowForNames: function selectRowForNames() {
       var _this = this;
 
@@ -29390,7 +28471,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -30282,7 +29363,7 @@ var _default = {
       _this.calculateColControlValues();
     });
   },
-  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData'])), {}, {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData']), {
     colControlStyle: function colControlStyle() {
       return {
         top: this.colStyleValues.top
@@ -30737,14 +29818,14 @@ var _default = {
       deep: true
     }
   },
-  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData'])), {}, {
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['getDataManagerTempData', 'getDataManagerControls', 'getDataManagerRowId', 'getColCount', 'isDataSelectionActive', 'getSelectOperationData', 'formCellId', 'parseCellId', 'getSelectedDataSource', 'parsedData']), {
     infoRowSpan: function infoRowSpan() {
       var _this$parsedData$head, _this$parsedData$head2;
 
       return this.getColCount === 0 ? (_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : (_this$parsedData$head2 = _this$parsedData$head.values) === null || _this$parsedData$head2 === void 0 ? void 0 : _this$parsedData$head2.length : this.getColCount;
     }
   }),
-  methods: _objectSpread(_objectSpread(_objectSpread({
+  methods: _objectSpread({
     generateDefaultRowData: function generateDefaultRowData(rows, cols) {
       var data = []; // eslint-disable-next-line no-plusplus
 
@@ -30868,7 +29949,7 @@ var _default = {
         }, _callee);
       }))();
     }
-  }, (0, _vuex.mapGetters)(['generateUniqueId'])), (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy'])), (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
+  }, (0, _vuex.mapGetters)(['generateUniqueId']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'deleteDataTableRow', 'deleteDataTableCol', 'addRowObjectAsHeader', 'generateRow', 'setUpSelectionIdProxy']), {}, (0, _vuex.mapMutations)(['setSelectId', 'setHoverId', 'setDataManagerControl', 'setParsedData']))
 };
 exports.default = _default;
         var $6edceb = exports.default || module.exports;
@@ -31220,7 +30301,7 @@ var _default = {
     this.setSetupSourceId('csv');
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['getSetupControls'])),
-  methods: _objectSpread(_objectSpread({
+  methods: _objectSpread({
     readCsvFile: function readCsvFile() {
       var _this = this;
 
@@ -31278,7 +30359,7 @@ var _default = {
         csvReader.readAsText(this.currentFile);
       }
     }
-  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId', 'setSetupSourceDataCreatedStatus'])), (0, _vuex.mapActions)(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']))
+  }, (0, _vuex.mapMutations)(['setBusy', 'setSetupSourceId', 'setSetupSourceDataCreatedStatus']), {}, (0, _vuex.mapActions)(['addDataManagerTempData', 'setActiveTabGroupForCurrentSource']))
 };
 exports.default = _default;
         var $69ad22 = exports.default || module.exports;
@@ -31995,7 +31076,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -32115,7 +31196,7 @@ var _default = {
     prepareRowBindings: function prepareRowBindings(target) {
       var _this2 = this;
 
-      this.operatorControls = _objectSpread(_objectSpread({}, this.operatorControls), this.rowBindings);
+      this.operatorControls = _objectSpread({}, this.operatorControls, {}, this.rowBindings);
       this.operatorControls = (0, _general.objectDeepMerge)(this.operatorControls, target);
 
       if (!this.operatorControls.compareColumn) {
@@ -32426,7 +31507,7 @@ var _default = {
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['getIcon'])),
   methods: {
     prepareSortBindings: function prepareSortBindings() {
-      this.sortOptions = _objectSpread(_objectSpread({}, this.sortOptions), this.rowBindings);
+      this.sortOptions = _objectSpread({}, this.sortOptions, {}, this.rowBindings);
     }
   }
 };
@@ -32960,7 +32041,7 @@ var _default = {
     innerIconOptions: {
       handler: function handler(n) {
         var newArray = n.map(function (binding) {
-          return _objectSpread(_objectSpread({}, binding), {}, {
+          return _objectSpread({}, binding, {
             icon: _objectSpread({}, binding.icon)
           });
         });
@@ -33696,7 +32777,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -33756,7 +32837,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (Object.prototype.hasOwnProperty.call(source, k)) {
           if (_typeof(source[k]) === 'object') {
             // eslint-disable-next-line no-param-reassign
-            source[k] = _objectSpread(_objectSpread({}, source[k]), target[k]);
+            source[k] = _objectSpread({}, source[k], {}, target[k]);
           } else {
             // eslint-disable-next-line no-param-reassign
             source[k] = target[k];
@@ -33965,7 +33046,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         notOperation: function notOperation(options) {
           var notOperator = options.operatorType2;
 
-          var notOperatorOptions = _objectSpread(_objectSpread({}, options), {}, {
+          var notOperatorOptions = _objectSpread({}, options, {
             operatorType: notOperator
           }); // execute second operator process to find generated rows for that operator
 
@@ -35012,7 +34093,7 @@ var _default = {
       _this.builderPanel = document.querySelector('.wptb-builder-panel');
     });
   },
-  computed: _objectSpread(_objectSpread({
+  computed: _objectSpread({
     wrapperStyle: function wrapperStyle() {
       this.builderPanelCalculations();
       return {
@@ -35028,7 +34109,7 @@ var _default = {
         transition: 'all 0.2s ease-out'
       };
     }
-  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData', 'getDataManager'])), (0, _vuex.mapState)(['targetTable', 'tableIsActive'])),
+  }, (0, _vuex.mapGetters)(['getIcon', 'getBindings', 'parsedData', 'getDataManager']), {}, (0, _vuex.mapState)(['targetTable', 'tableIsActive'])),
   methods: {
     setComponentBusyState: function setComponentBusyState(state) {
       this.busy = state;
@@ -35281,7 +34362,7 @@ var _default = {
 
     this.syncDataSourceSetup();
   },
-  computed: _objectSpread(_objectSpread({
+  computed: _objectSpread({
     /**
      * Style for main app component.
      *
@@ -35293,7 +34374,7 @@ var _default = {
         height: "calc( 100% - ".concat(this.headerHeight + this.extraPadding, "px)")
       };
     }
-  }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource'])), (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
+  }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
   methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse', 'syncDataSourceSetup']))
 };
 exports.default = _default;
@@ -36464,7 +35545,7 @@ var stateWatchList = {
           controls: store.state.dataManager.controls
         };
 
-        var mergedData = _objectSpread(_objectSpread({}, currentDataObject), mergeData);
+        var mergedData = _objectSpread({}, currentDataObject, {}, mergeData);
 
         store.commit('setDataObject', mergedData);
       };
@@ -37049,7 +36130,7 @@ var mutations = {
    * @param {Object} dataObject data object
    */
   mergeTempData: function mergeTempData(state, dataObject) {
-    state.tempData = _objectSpread(_objectSpread({}, state.tempData), dataObject);
+    state.tempData = _objectSpread({}, state.tempData, {}, dataObject);
   },
 
   /**
@@ -37298,7 +36379,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -37729,7 +36810,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
@@ -37886,11 +36967,11 @@ var _default = {
             decodedOptionsRest = _objectWithoutProperties(decodedOptions, ["dataManager"]); // update extra store options state
 
 
-        extraStoreOptions.state = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, extraStoreOptions.state), decodedOptionsRest), {
+        extraStoreOptions.state = _objectSpread({}, extraStoreOptions.state, {}, decodedOptionsRest, {}, {
           dataSource: {
             dataObject: data.dataObject
           }
-        }), {}, {
+        }, {
           tableIsActive: true
         }); // merge saved data manager options with default ones
 
@@ -38840,7 +37921,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -39294,7 +38375,7 @@ render._withStripped = true
         })());
       
 },{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PrebuiltCardControl":"components/PrebuiltCardControl.vue","./PrebuiltLiveDisplay":"components/PrebuiltLiveDisplay.vue","./PrebuiltCardDeleteModule":"components/PrebuiltCardDeleteModule.vue"}],"../../../../../node_modules/regenerator-runtime/runtime.js":[function(require,module,exports) {
-var define;
+var global = arguments[3];
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -39302,7 +38383,7 @@ var define;
  * LICENSE file in the root directory of this source tree.
  */
 
-var runtime = (function (exports) {
+!(function(global) {
   "use strict";
 
   var Op = Object.prototype;
@@ -39313,23 +38394,22 @@ var runtime = (function (exports) {
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
   var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
 
-  function define(obj, key, value) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-    return obj[key];
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
   }
-  try {
-    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
-    define({}, "");
-  } catch (err) {
-    define = function(obj, key, value) {
-      return obj[key] = value;
-    };
-  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
   function wrap(innerFn, outerFn, self, tryLocsList) {
     // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
@@ -39343,7 +38423,7 @@ var runtime = (function (exports) {
 
     return generator;
   }
-  exports.wrap = wrap;
+  runtime.wrap = wrap;
 
   // Try/catch helper to minimize deoptimizations. Returns a completion
   // record like context.tryEntries[i].completion. This interface could
@@ -39401,23 +38481,20 @@ var runtime = (function (exports) {
     Generator.prototype = Object.create(IteratorPrototype);
   GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
   GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunction.displayName = define(
-    GeneratorFunctionPrototype,
-    toStringTagSymbol,
-    "GeneratorFunction"
-  );
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
 
   // Helper for defining the .next, .throw, and .return methods of the
   // Iterator interface in terms of a single ._invoke method.
   function defineIteratorMethods(prototype) {
     ["next", "throw", "return"].forEach(function(method) {
-      define(prototype, method, function(arg) {
+      prototype[method] = function(arg) {
         return this._invoke(method, arg);
-      });
+      };
     });
   }
 
-  exports.isGeneratorFunction = function(genFun) {
+  runtime.isGeneratorFunction = function(genFun) {
     var ctor = typeof genFun === "function" && genFun.constructor;
     return ctor
       ? ctor === GeneratorFunction ||
@@ -39427,12 +38504,14 @@ var runtime = (function (exports) {
       : false;
   };
 
-  exports.mark = function(genFun) {
+  runtime.mark = function(genFun) {
     if (Object.setPrototypeOf) {
       Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
     } else {
       genFun.__proto__ = GeneratorFunctionPrototype;
-      define(genFun, toStringTagSymbol, "GeneratorFunction");
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
     }
     genFun.prototype = Object.create(Gp);
     return genFun;
@@ -39442,11 +38521,11 @@ var runtime = (function (exports) {
   // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
   // `hasOwn.call(value, "__await")` to determine if the yielded value is
   // meant to be awaited.
-  exports.awrap = function(arg) {
+  runtime.awrap = function(arg) {
     return { __await: arg };
   };
 
-  function AsyncIterator(generator, PromiseImpl) {
+  function AsyncIterator(generator) {
     function invoke(method, arg, resolve, reject) {
       var record = tryCatch(generator[method], generator, arg);
       if (record.type === "throw") {
@@ -39457,24 +38536,32 @@ var runtime = (function (exports) {
         if (value &&
             typeof value === "object" &&
             hasOwn.call(value, "__await")) {
-          return PromiseImpl.resolve(value.__await).then(function(value) {
+          return Promise.resolve(value.__await).then(function(value) {
             invoke("next", value, resolve, reject);
           }, function(err) {
             invoke("throw", err, resolve, reject);
           });
         }
 
-        return PromiseImpl.resolve(value).then(function(unwrapped) {
+        return Promise.resolve(value).then(function(unwrapped) {
           // When a yielded Promise is resolved, its final value becomes
           // the .value of the Promise<{value,done}> result for the
-          // current iteration.
+          // current iteration. If the Promise is rejected, however, the
+          // result for this iteration will be rejected with the same
+          // reason. Note that rejections of yielded Promises are not
+          // thrown back into the generator function, as is the case
+          // when an awaited Promise is rejected. This difference in
+          // behavior between yield and await is important, because it
+          // allows the consumer to decide what to do with the yielded
+          // rejection (swallow it and continue, manually .throw it back
+          // into the generator, abandon iteration, whatever). With
+          // await, by contrast, there is no opportunity to examine the
+          // rejection reason outside the generator function, so the
+          // only option is to throw it from the await expression, and
+          // let the generator function handle the exception.
           result.value = unwrapped;
           resolve(result);
-        }, function(error) {
-          // If a rejected Promise was yielded, throw the rejection back
-          // into the async generator function so it can be handled there.
-          return invoke("throw", error, resolve, reject);
-        });
+        }, reject);
       }
     }
 
@@ -39482,7 +38569,7 @@ var runtime = (function (exports) {
 
     function enqueue(method, arg) {
       function callInvokeWithMethodAndArg() {
-        return new PromiseImpl(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
           invoke(method, arg, resolve, reject);
         });
       }
@@ -39517,20 +38604,17 @@ var runtime = (function (exports) {
   AsyncIterator.prototype[asyncIteratorSymbol] = function () {
     return this;
   };
-  exports.AsyncIterator = AsyncIterator;
+  runtime.AsyncIterator = AsyncIterator;
 
   // Note that simple async functions are implemented on top of
   // AsyncIterator objects; they just return a Promise for the value of
   // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
-    if (PromiseImpl === void 0) PromiseImpl = Promise;
-
+  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
     var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList),
-      PromiseImpl
+      wrap(innerFn, outerFn, self, tryLocsList)
     );
 
-    return exports.isGeneratorFunction(outerFn)
+    return runtime.isGeneratorFunction(outerFn)
       ? iter // If outerFn is a generator, return the full iterator.
       : iter.next().then(function(result) {
           return result.done ? result.value : iter.next();
@@ -39627,8 +38711,7 @@ var runtime = (function (exports) {
       context.delegate = null;
 
       if (context.method === "throw") {
-        // Note: ["return"] must be used for ES3 parsing compatibility.
-        if (delegate.iterator["return"]) {
+        if (delegate.iterator.return) {
           // If the delegate iterator has a return method, give it a
           // chance to clean up.
           context.method = "return";
@@ -39702,7 +38785,7 @@ var runtime = (function (exports) {
   // unified ._invoke helper method.
   defineIteratorMethods(Gp);
 
-  define(Gp, toStringTagSymbol, "Generator");
+  Gp[toStringTagSymbol] = "Generator";
 
   // A Generator should always return itself as the iterator object when the
   // @@iterator function is called on it. Some browsers' implementations of the
@@ -39748,7 +38831,7 @@ var runtime = (function (exports) {
     this.reset(true);
   }
 
-  exports.keys = function(object) {
+  runtime.keys = function(object) {
     var keys = [];
     for (var key in object) {
       keys.push(key);
@@ -39809,7 +38892,7 @@ var runtime = (function (exports) {
     // Return an iterator with no values.
     return { next: doneResult };
   }
-  exports.values = values;
+  runtime.values = values;
 
   function doneResult() {
     return { value: undefined, done: true };
@@ -40014,35 +39097,12 @@ var runtime = (function (exports) {
       return ContinueSentinel;
     }
   };
-
-  // Regardless of whether this script is executing as a CommonJS module
-  // or not, return the runtime object so that we can declare the variable
-  // regeneratorRuntime in the outer scope, which allows this module to be
-  // injected easily by `bin/regenerator --include-runtime script.js`.
-  return exports;
-
-}(
-  // If this script is executing as a CommonJS module, use module.exports
-  // as the regeneratorRuntime namespace. Otherwise create a new empty
-  // object. Either way, the resulting object will be used to initialize
-  // the regeneratorRuntime variable at the top of this file.
-  typeof module === "object" ? module.exports : {}
-));
-
-try {
-  regeneratorRuntime = runtime;
-} catch (accidentalStrictMode) {
-  // This module should not be running in strict mode, so the above
-  // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, we can escape
-  // strict mode using a global Function call. This could conceivably fail
-  // if a Content Security Policy forbids using Function, but in that case
-  // the proper solution is to fix the accidental strict mode problem. If
-  // you've misconfigured your bundler to force strict mode and applied a
-  // CSP to forbid Function, and you're not willing to fix either of those
-  // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
-}
+})(
+  // In sloppy mode, unbound `this` refers to the global object, fallback to
+  // Function constructor if we're in global strict mode. That is sadly a form
+  // of indirect eval which violates Content Security Policy.
+  (function() { return this })() || Function("return this")()
+);
 
 },{}],"containers/GenerateMain.vue":[function(require,module,exports) {
 "use strict";
@@ -40064,7 +39124,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
@@ -40130,7 +39190,7 @@ var _default = {
     this.fixedTables.blank.title = this.strings.blank; // add correct translation of data table generated string at mounted
 
     this.fixedTables.dataTable.generateString = this.strings.start;
-    this.fixedTables = _objectSpread(_objectSpread({}, this.fixedTables), this.prebuiltTables);
+    this.fixedTables = _objectSpread({}, this.fixedTables, {}, this.prebuiltTables);
 
     if (!this.appData.dataTableCardEnabled) {
       delete this.fixedTables.dataTable;
@@ -40724,9 +39784,9 @@ var _default = {
 
     var proData = (_global$wptbGenerateM = global.wptbGenerateMenuProData) !== null && _global$wptbGenerateM !== void 0 ? _global$wptbGenerateM : {};
 
-    var data = _objectSpread(_objectSpread({
+    var data = _objectSpread({
       upsell: ''
-    }, wptbGenerateMenuData), proData); // setup app store
+    }, wptbGenerateMenuData, {}, proData); // setup app store
 
 
     var state = {
