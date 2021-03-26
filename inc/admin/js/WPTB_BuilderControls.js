@@ -36394,6 +36394,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var getters = {
   /**
+   * Get temp data object of data manager.
+   *
+   * @param {Object} state store state
+   * @return {Object} temp data object
+   */
+  getDataManagerTempDataObject: function getDataManagerTempDataObject(state) {
+    return state.tempData;
+  },
+
+  /**
    * Get temp data values of data manager.
    *
    * @param {Object} state store state

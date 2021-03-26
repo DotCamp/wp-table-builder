@@ -5,6 +5,15 @@
  */
 const getters = {
 	/**
+	 * Get temp data object of data manager.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} temp data object
+	 */
+	getDataManagerTempDataObject(state) {
+		return state.tempData;
+	},
+	/**
 	 * Get temp data values of data manager.
 	 *
 	 * @param {Object} state store state

@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 /* eslint-disable no-param-reassign */
 /**
  * Table data store mutations.
@@ -54,7 +55,7 @@ const mutations = {
 		this.state.app.message.content = content;
 	},
 	/**
-	 * Set app to dirty
+	 * Set app to dirty.
 	 *
 	 * @param {Object} state table data store state
 	 */
@@ -62,7 +63,7 @@ const mutations = {
 		state.app.dirty = true;
 	},
 	/**
-	 * Reset app to dirty
+	 * Reset app to dirty.
 	 *
 	 * @param {Object} state table data store state
 	 */
@@ -70,13 +71,27 @@ const mutations = {
 		state.app.dirty = false;
 	},
 	/**
-	 * Set simple data objects
+	 * Set simple data objects.
 	 *
 	 * @param {Object} state table data store state
 	 * @param {Array} objects simple data objects array
 	 */
 	setSimpleDataObjects(state, objects) {
 		state.dataSimple = objects;
+	},
+	/**
+	 * Set backup for table manager data.
+	 *
+	 * @param {Object} state table data store state
+	 * @param {Object} payload mutation payload
+	 * @param {Object} payload.controls data controls
+	 * @param {Object} payload.content data content
+	 */
+	setDataBackup(state, { controls, content }) {
+		state.dataBackup = {
+			controls: deepmerge({}, controls),
+			content: deepmerge({}, content),
+		};
 	},
 };
 

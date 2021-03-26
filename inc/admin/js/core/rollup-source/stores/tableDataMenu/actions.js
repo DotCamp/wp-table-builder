@@ -128,6 +128,7 @@ const actions = {
 
 		commit('setDataManagerControlObject', { ...controls });
 		commit('mergeTempData', { ...content });
+		commit('setDataBackup', dataObject);
 	},
 	/**
 	 * Revert table data to current data object which will strip all changes made.
@@ -139,6 +140,20 @@ const actions = {
 	 */
 	revertTableData({ dispatch, commit }, dataObject) {
 		dispatch('mergeDataObject', dataObject);
+		commit('resetAppDirtyStatus');
+	},
+	/**
+	 * Revert table data to its backup state.
+	 *
+	 * @param {Object} root store object
+	 * @param {Object} root.getters store state getters
+	 * @param {Function} root.dispatch store action function
+	 * @param {Function} root.commit store mutation function
+	 */
+	revertTableDataFromBackup({ getters, dispatch, commit }) {
+		const dataObjectBackup = getters.getDataBackup;
+
+		dispatch('mergeDataObject', dataObjectBackup);
 		commit('resetAppDirtyStatus');
 	},
 };

@@ -17,6 +17,7 @@ const state = {
 	},
 	visibility: true,
 	setupTab: 'dataManager',
+	dataBackup: null,
 };
 
 /**

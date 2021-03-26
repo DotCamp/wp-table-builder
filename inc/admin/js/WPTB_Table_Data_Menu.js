@@ -18705,6 +18705,8 @@ var _default = {
                 _this.innerCurrentChildSection = n;
 
                 _this['modalWindow/resetModalWindow']();
+
+                _this.revertTableDataFromBackup();
               }
             }
           });
@@ -18717,7 +18719,7 @@ var _default = {
       return this.innerCurrentChildSection[0].toUpperCase() + this.innerCurrentChildSection.slice(1);
     }
   }, (0, _vuex.mapGetters)(['isDirty'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['modalWindow/showMessage', 'modalWindow/resetModalWindow']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['modalWindow/showMessage', 'modalWindow/resetModalWindow', 'revertTableDataFromBackup']))
 };
 exports.default = _default;
         var $56370e = exports.default || module.exports;
@@ -19281,7 +19283,8 @@ var state = {
     activeId: null
   },
   visibility: true,
-  setupTab: 'dataManager'
+  setupTab: 'dataManager',
+  dataBackup: null
 };
 /**
  * @module state
@@ -19405,6 +19408,16 @@ var getters = {
       preparedDataObject.content = tempData;
       return preparedDataObject;
     };
+  },
+
+  /**
+   * Get backup for data.
+   *
+   * @param {Object} state store state
+   * @return {Object} data backup
+   */
+  getDataBackup: function getDataBackup(state) {
+    return state.dataBackup;
   }
 };
 /**
@@ -19597,6 +19610,7 @@ var actions = {
 
     commit('setDataManagerControlObject', _objectSpread({}, controls));
     commit('mergeTempData', _objectSpread({}, content));
+    commit('setDataBackup', dataObject);
   },
 
   /**
@@ -19611,6 +19625,23 @@ var actions = {
     var dispatch = _ref9.dispatch,
         commit = _ref9.commit;
     dispatch('mergeDataObject', dataObject);
+    commit('resetAppDirtyStatus');
+  },
+
+  /**
+   * Revert table data to its backup state.
+   *
+   * @param {Object} root store object
+   * @param {Object} root.getters store state getters
+   * @param {Function} root.dispatch store action function
+   * @param {Function} root.commit store mutation function
+   */
+  revertTableDataFromBackup: function revertTableDataFromBackup(_ref10) {
+    var getters = _ref10.getters,
+        dispatch = _ref10.dispatch,
+        commit = _ref10.commit;
+    var dataObjectBackup = getters.getDataBackup;
+    dispatch('mergeDataObject', dataObjectBackup);
     commit('resetAppDirtyStatus');
   }
 };
@@ -19627,6 +19658,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable no-param-reassign */
 
@@ -19690,7 +19725,7 @@ var mutations = {
   },
 
   /**
-   * Set app to dirty
+   * Set app to dirty.
    *
    * @param {Object} state table data store state
    */
@@ -19699,7 +19734,7 @@ var mutations = {
   },
 
   /**
-   * Reset app to dirty
+   * Reset app to dirty.
    *
    * @param {Object} state table data store state
    */
@@ -19708,13 +19743,30 @@ var mutations = {
   },
 
   /**
-   * Set simple data objects
+   * Set simple data objects.
    *
    * @param {Object} state table data store state
    * @param {Array} objects simple data objects array
    */
   setSimpleDataObjects: function setSimpleDataObjects(state, objects) {
     state.dataSimple = objects;
+  },
+
+  /**
+   * Set backup for table manager data.
+   *
+   * @param {Object} state table data store state
+   * @param {Object} payload mutation payload
+   * @param {Object} payload.controls data controls
+   * @param {Object} payload.content data content
+   */
+  setDataBackup: function setDataBackup(state, _ref) {
+    var controls = _ref.controls,
+        content = _ref.content;
+    state.dataBackup = {
+      controls: (0, _deepmerge.default)({}, controls),
+      content: (0, _deepmerge.default)({}, content)
+    };
   }
 };
 /**
@@ -19723,7 +19775,7 @@ var mutations = {
 
 var _default = mutations;
 exports.default = _default;
-},{}],"functions/index.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js"}],"functions/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20130,7 +20182,17 @@ var actionWatchList = {
       setDirty: {
         actions: ['setDataCellValue', 'addRowToDataManager', 'addColumnToDataManager', 'deleteDataTableCol', 'deleteDataTableRow'],
         handler: function handler(payload, state, store) {
-          store.commit('setAppDirty');
+          var currentData = {
+            controls: store.getters.getDataManagerControls,
+            content: store.getters.getDataManagerTempDataObject
+          };
+          var backupData = store.getters.getDataBackup; // compare current data with backup to decide dirty status
+
+          if (JSON.stringify(currentData) !== JSON.stringify(backupData)) {
+            store.commit('setAppDirty');
+          } else {
+            store.commit('resetAppDirtyStatus');
+          }
         }
       }
     }
@@ -21316,6 +21378,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * @type {Object}
  */
 var getters = {
+  /**
+   * Get temp data object of data manager.
+   *
+   * @param {Object} state store state
+   * @return {Object} temp data object
+   */
+  getDataManagerTempDataObject: function getDataManagerTempDataObject(state) {
+    return state.tempData;
+  },
+
   /**
    * Get temp data values of data manager.
    *

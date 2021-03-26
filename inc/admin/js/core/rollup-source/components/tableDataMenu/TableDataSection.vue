@@ -41,6 +41,7 @@ export default {
 							if (status) {
 								this.innerCurrentChildSection = n;
 								this['modalWindow/resetModalWindow']();
+								this.revertTableDataFromBackup();
 							}
 						},
 					});
@@ -55,7 +56,7 @@ export default {
 		...mapGetters(['isDirty']),
 	},
 	methods: {
-		...mapActions(['modalWindow/showMessage', 'modalWindow/resetModalWindow']),
+		...mapActions(['modalWindow/showMessage', 'modalWindow/resetModalWindow', 'revertTableDataFromBackup']),
 	},
 };
 </script>

@@ -93,6 +93,15 @@ const getters = {
 
 		return preparedDataObject;
 	},
+	/**
+	 * Get backup for data.
+	 *
+	 * @param {Object} state store state
+	 * @return {Object} data backup
+	 */
+	getDataBackup(state) {
+		return state.dataBackup;
+	},
 };
 
 /**

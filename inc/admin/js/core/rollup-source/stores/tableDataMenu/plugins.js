@@ -14,7 +14,19 @@ const actionWatchList = {
 					'deleteDataTableRow',
 				],
 				handler: (payload, state, store) => {
-					store.commit('setAppDirty');
+					const currentData = {
+						controls: store.getters.getDataManagerControls,
+						content: store.getters.getDataManagerTempDataObject,
+					};
+
+					const backupData = store.getters.getDataBackup;
+
+					// compare current data with backup to decide dirty status
+					if (JSON.stringify(currentData) !== JSON.stringify(backupData)) {
+						store.commit('setAppDirty');
+					} else {
+						store.commit('resetAppDirtyStatus');
+					}
 				},
 			},
 		},
