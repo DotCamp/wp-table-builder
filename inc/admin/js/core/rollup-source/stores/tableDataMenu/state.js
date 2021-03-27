@@ -13,7 +13,8 @@ const state = {
 		},
 	},
 	editor: {
-		activeId: null,
+		// TODO [erdembircan] change to null for production
+		activeId: 6,
 	},
 	visibility: true,
 	setupTab: 'dataManager',

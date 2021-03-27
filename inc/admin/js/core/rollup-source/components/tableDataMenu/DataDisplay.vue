@@ -4,16 +4,19 @@
 			<div class="wptb-table-data-title">
 				<text-modify-input :value.sync="dataObjectTitle"></text-modify-input>
 			</div>
-			<data-manager :use-default="false"></data-manager>
+			<data-usage :associated-tables="associatedTables"></data-usage>
+			<div class="wptb-table-data-manager-wrapper">
+				<data-manager :use-default="false"></data-manager>
+			</div>
 		</div>
 		<portal to="footerButtons">
 			<div class="wptb-table-data-menu-footer-buttons-container">
-				<menu-button @click="revertDataChanges" :disabled="revertDisableStatus" type="danger">{{
-					translationM('revert')
-				}}</menu-button>
-				<menu-button @click="saveTableData" :disabled="saveDisabledStatus">{{
-					translationM('save')
-				}}</menu-button>
+				<menu-button @click="revertDataChanges" :disabled="revertDisableStatus" type="danger"
+					>{{ translationM('revert') }}
+				</menu-button>
+				<menu-button @click="saveTableData" :disabled="saveDisabledStatus"
+					>{{ translationM('save') }}
+				</menu-button>
 			</div>
 		</portal>
 	</fragment>
@@ -25,9 +28,10 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 import MenuButton from '../MenuButton';
 import DataManager from '../DataManager';
 import TextModifyInput from '../TextModifyInput';
+import DataUsage from './DataUsage';
 
 export default {
-	components: { DataManager, MenuButton, TextModifyInput },
+	components: { DataUsage, DataManager, MenuButton, TextModifyInput },
 	watch: {
 		getEditorActiveId(n) {
 			this.dataObjectOperations(n);
@@ -74,7 +78,10 @@ export default {
 				this.setAppDirty();
 			},
 		},
-		...mapGetters(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject']),
+		associatedTables() {
+			return this.getDataObjectSimple(this.getEditorActiveId).tables;
+		},
+		...mapGetters(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject', 'getDataObjectSimple']),
 	},
 	methods: {
 		dataObjectOperations(dataObjectId) {

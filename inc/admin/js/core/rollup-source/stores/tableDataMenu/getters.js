@@ -17,6 +17,19 @@ const getters = {
 		return state.dataSimple;
 	},
 	/**
+	 * Get simple version of a data object.
+	 *
+	 * @param {Object} state store state
+	 * @return {Function} function to use for get operation
+	 */
+	getDataObjectSimple: (state) => (id) => {
+		const [filteredObjects] = state.dataSimple.filter((data) => {
+			return data.ID === id;
+		});
+
+		return filteredObjects;
+	},
+	/**
 	 * Get app busy status.
 	 *
 	 * @param {Object} state store state

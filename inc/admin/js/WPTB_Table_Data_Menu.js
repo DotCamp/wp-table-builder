@@ -18306,7 +18306,358 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{}],"components/tableDataMenu/UsageListModal.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    visibility: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    closeWindow: function closeWindow() {
+      this.$emit('close');
+    }
+  }
+};
+exports.default = _default;
+        var $8fc8b7 = exports.default || module.exports;
+      
+      if (typeof $8fc8b7 === 'function') {
+        $8fc8b7 = $8fc8b7.options;
+      }
+    
+        /* template */
+        Object.assign($8fc8b7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("transition", { attrs: { name: "wptb-fade" } }, [
+    _vm.visibility
+      ? _c("div", { staticClass: "wptb-data-usage-list-modal" }, [
+          _c("div", { staticClass: "wptb-data-usage-list-modal-window" }, [
+            _c("div", { staticClass: "wptb-data-usage-list-modal-header" }, [
+              _vm._v(_vm._s(_vm.title))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "wptb-data-usage-list-modal-buttons" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "wptb-data-usage-list-modal-close",
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.closeWindow($event)
+                    }
+                  }
+                },
+                [_c("span", { staticClass: "dashicons dashicons-no" })]
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "wptb-data-usage-list-content" },
+              [_vm._t("default", [_c("i", [_vm._v("no content")])])],
+              2
+            )
+          ])
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/tableDataMenu/TableCard.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    title: {
+      type: String,
+      default: 'default title'
+    },
+    id: {
+      type: Number,
+      required: true
+    },
+    link: {
+      type: String,
+      required: true
+    }
+  }
+};
+exports.default = _default;
+        var $f3da54 = exports.default || module.exports;
+      
+      if (typeof $f3da54 === 'function') {
+        $f3da54 = $f3da54.options;
+      }
+    
+        /* template */
+        Object.assign($f3da54, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "a",
+    {
+      staticClass: "wptb-table-data-usage-anchor",
+      attrs: { href: _vm.link, target: "_blank" }
+    },
+    [
+      _c("div", { staticClass: "wptb-table-data-usage-table-card" }, [
+        _c("div", { staticClass: "wptb-table-data-usage-card-title" }, [
+          _vm._v(_vm._s(_vm.title))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "wptb-table-data-usage-card-id" }, [
+          _vm._v("#" + _vm._s(_vm.id))
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/tableDataMenu/DataUsage.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _i18n = require("@wordpress/i18n");
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _UsageListModal = _interopRequireDefault(require("./UsageListModal"));
+
+var _TableCard = _interopRequireDefault(require("./TableCard"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    TableCard: _TableCard.default,
+    UsageListModal: _UsageListModal.default
+  },
+  props: {
+    associatedTables: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
+  mixins: [_withNativeTranslationStore.default],
+  data: function data() {
+    return {
+      listVisibility: false
+    };
+  },
+  computed: _objectSpread({
+    buttonStyle: function buttonStyle() {
+      return {
+        cursor: this.count === 0 ? 'default' : 'pointer'
+      };
+    },
+    count: function count() {
+      return this.associatedTables.length;
+    },
+    message: function message() {
+      if (this.count === 0) {
+        return this.translationM('noTableUsage');
+      }
+
+      return (0, _i18n.sprintf)( // translators: %s: table count
+      (0, _i18n._n)('%s table is using this data.', '%s tables are using this data', this.count, 'wp-table-builder'), this.count);
+    }
+  }, (0, _vuex.mapGetters)(['getSecurityProps'])),
+  methods: {
+    showTableListing: function showTableListing() {
+      if (this.count !== 0) {
+        this.listVisibility = true;
+      }
+    },
+    generateCardLink: function generateCardLink(id) {
+      var url = new URL(this.getSecurityProps('adminUrl'));
+      url.searchParams.append('page', 'wptb-builder');
+      url.searchParams.append('table', id);
+      return url.toString();
+    }
+  }
+};
+exports.default = _default;
+        var $fcd1a7 = exports.default || module.exports;
+      
+      if (typeof $fcd1a7 === 'function') {
+        $fcd1a7 = $fcd1a7.options;
+      }
+    
+        /* template */
+        Object.assign($fcd1a7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-table-data-associated-tables" },
+    [
+      _c(
+        "span",
+        {
+          staticClass: "wptb-table-data-associated-tables-inner-wrapper",
+          style: _vm.buttonStyle,
+          attrs: { title: _vm.message },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.showTableListing($event)
+            }
+          }
+        },
+        [
+          _c(
+            "span",
+            {
+              staticClass: "wptb-table-data-associated-tables-number",
+              attrs: { "data-plural": _vm.count > 0 }
+            },
+            [_vm._v(_vm._s(_vm.count))]
+          ),
+          _vm._v(" "),
+          _c("span", {
+            staticClass:
+              "dashicons dashicons-editor-table wptb-table-data-associated-tables-icon"
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "usage-list-modal",
+        {
+          attrs: {
+            title: _vm.translationM("tables"),
+            visibility: _vm.listVisibility
+          },
+          on: {
+            close: function($event) {
+              _vm.listVisibility = false
+            }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "wptb-data-usage-table-list-wrapper" },
+            _vm._l(_vm.associatedTables, function(table) {
+              return _c("table-card", {
+                key: table.id,
+                attrs: {
+                  title: table.title,
+                  id: table.id,
+                  link: _vm.generateCardLink(table.id)
+                }
+              })
+            }),
+            1
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./UsageListModal":"components/tableDataMenu/UsageListModal.vue","./TableCard":"components/tableDataMenu/TableCard.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18324,6 +18675,8 @@ var _DataManager = _interopRequireDefault(require("../DataManager"));
 
 var _TextModifyInput = _interopRequireDefault(require("../TextModifyInput"));
 
+var _DataUsage = _interopRequireDefault(require("./DataUsage"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -18334,6 +18687,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    DataUsage: _DataUsage.default,
     DataManager: _DataManager.default,
     MenuButton: _MenuButton.default,
     TextModifyInput: _TextModifyInput.default
@@ -18386,8 +18740,11 @@ var _default = {
         this.dataObject.title = n;
         this.setAppDirty();
       }
+    },
+    associatedTables: function associatedTables() {
+      return this.getDataObjectSimple(this.getEditorActiveId).tables;
     }
-  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject'])),
+  }, (0, _vuex.mapGetters)(['getEditorActiveId', 'isDirty', 'getBusyState', 'prepareDataObject', 'getDataObjectSimple'])),
   methods: _objectSpread({
     dataObjectOperations: function dataObjectOperations(dataObjectId) {
       var _this2 = this;
@@ -18472,7 +18829,16 @@ exports.default = _default;
                 1
               ),
               _vm._v(" "),
-              _c("data-manager", { attrs: { "use-default": false } })
+              _c("data-usage", {
+                attrs: { "associated-tables": _vm.associatedTables }
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "wptb-table-data-manager-wrapper" },
+                [_c("data-manager", { attrs: { "use-default": false } })],
+                1
+              )
             ],
             1
           ),
@@ -18491,7 +18857,7 @@ exports.default = _default;
                     },
                     on: { click: _vm.revertDataChanges }
                   },
-                  [_vm._v(_vm._s(_vm.translationM("revert")))]
+                  [_vm._v(_vm._s(_vm.translationM("revert")) + "\n\t\t\t")]
                 ),
                 _vm._v(" "),
                 _c(
@@ -18500,7 +18866,7 @@ exports.default = _default;
                     attrs: { disabled: _vm.saveDisabledStatus },
                     on: { click: _vm.saveTableData }
                   },
-                  [_vm._v(_vm._s(_vm.translationM("save")))]
+                  [_vm._v(_vm._s(_vm.translationM("save")) + "\n\t\t\t")]
                 )
               ],
               1
@@ -18523,7 +18889,7 @@ render._withStripped = true
           };
         })());
       
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue","../TextModifyInput":"components/TextModifyInput.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue","../TextModifyInput":"components/TextModifyInput.vue","./DataUsage":"components/tableDataMenu/DataUsage.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19280,7 +19646,8 @@ var state = {
     }
   },
   editor: {
-    activeId: null
+    // TODO [erdembircan] change to null for production
+    activeId: 6
   },
   visibility: true,
   setupTab: 'dataManager',
@@ -19304,6 +19671,18 @@ var _deepmerge2 = _interopRequireDefault(require("deepmerge"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 /**
  * Table data store getters.
  *
@@ -19319,6 +19698,24 @@ var getters = {
    */
   simpleDataObjects: function simpleDataObjects(state) {
     return state.dataSimple;
+  },
+
+  /**
+   * Get simple version of a data object.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to use for get operation
+   */
+  getDataObjectSimple: function getDataObjectSimple(state) {
+    return function (id) {
+      var _state$dataSimple$fil = state.dataSimple.filter(function (data) {
+        return data.ID === id;
+      }),
+          _state$dataSimple$fil2 = _slicedToArray(_state$dataSimple$fil, 1),
+          filteredObjects = _state$dataSimple$fil2[0];
+
+      return filteredObjects;
+    };
   },
 
   /**

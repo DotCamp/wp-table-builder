@@ -149,12 +149,15 @@ class Data_Object_Manager {
 				'tableDataUpdateMessage' => esc_html__( 'table data updated', 'wp-table-builder' ),
 				'new'                    => esc_html__( 'new', 'wp-table-builder' ),
 				'yes'                    => esc_html__( 'yes', 'wp-table-builder' ),
-				'no'                    => esc_html__( 'no', 'wp-table-builder' ),
-				'sectionDirtyError'                    => esc_html__( 'There are unsaved changes on your table data, continue and discard changes?', 'wp-table-builder' ),
+				'no'                     => esc_html__( 'no', 'wp-table-builder' ),
+				'sectionDirtyError'      => esc_html__( 'There are unsaved changes on your table data, continue and discard changes?', 'wp-table-builder' ),
+				'noTableUsage'           => esc_html__( 'No table is using this data.', 'wp-table-builder' ),
+				'tables'           => esc_html__( 'tables', 'wp-table-builder' ),
 			];
 
 			$security = [
 				'url'               => get_admin_url( null, 'admin-ajax.php' ),
+				'adminUrl'               => get_admin_url( null, 'admin.php' ),
 				'dataObjectContent' => [
 					'nonce'  => wp_create_nonce( 'dataObjectContent' ),
 					'action' => 'dataObjectContent'
@@ -259,7 +262,36 @@ class Data_Object_Manager {
 
 		// unset all disallowed properties to keep post object simple
 		array_walk( $data_objects, function ( $data_object ) {
-			$allowed_properties = [ 'ID', 'post_title' ];
+			$allowed_properties = [ 'ID', 'post_title', 'tables' ];
+
+
+			$associated_tables_query_args = [
+				'post_type'   => 'wptb-tables',
+				'post_status' => 'draft',
+				'meta_query'  => [
+					[
+						'key'     => Data_Table_Manager::TABLE_OBJECT_ID_META,
+						'value'   => $data_object->ID,
+						'compare' => 'EQUAL'
+					]
+				]
+			];
+
+			// get tables that are using this data object
+			$associated_tables_query = new WP_Query( $associated_tables_query_args );
+			$associated_tables       = array_reduce( $associated_tables_query->get_posts(), function ( $carry, $post ) {
+				$formed_assoc_array = [
+					'id'    => $post->ID,
+					'title' => $post->post_title === '' ? sprintf( '%s #%s', esc_html__( 'Table', 'wp-table-builder' ), $post->ID ) : $post->post_title,
+				];
+
+				$carry[] = $formed_assoc_array;
+
+				return $carry;
+			}, [] );
+			wp_reset_query();
+
+			$data_object->tables = $associated_tables;
 
 			foreach ( $data_object as $key => $value ) {
 				if ( ! in_array( $key, $allowed_properties ) ) {
