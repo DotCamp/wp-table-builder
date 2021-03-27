@@ -3,7 +3,7 @@
 		<span
 			:title="message"
 			class="wptb-table-data-associated-tables-inner-wrapper"
-			:style="buttonStyle"
+			:style="{ cursor: count === 0 ? 'default' : 'pointer' }"
 			@click.prevent="showTableListing"
 			><span class="wptb-table-data-associated-tables-number" :data-plural="count > 0">{{ count }}</span>
 			<span class="dashicons dashicons-editor-table wptb-table-data-associated-tables-icon"></span

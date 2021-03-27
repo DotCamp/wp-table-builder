@@ -1,5 +1,5 @@
 <template>
-	<div class="wptb-table-data-listings">
+	<div :style="mainWrapperStyle" class="wptb-table-data-listings" :data-collapse="collapseStatus">
 		<div class="wptb-table-data-listings-header">
 			{{ translationM('data') }}
 		</div>
@@ -11,7 +11,7 @@
 				:disabled="getBusyState"
 			></search-input>
 		</div>
-		<transition-group name="wptb-fade">
+		<transition-group name="wptb-fade" tag="div" style="grid-area: listing; overflow: auto;">
 			<data-listing-row
 				v-for="data in filteredDataObject"
 				:key="data.ID"
@@ -22,6 +22,18 @@
 				:search-clause="searchClause"
 			></data-listing-row>
 		</transition-group>
+		<transition name="wptb-fade">
+			<div class="wptb-table-data-listings-collapsed-cover-icon" v-if="collapseStatus">
+				<span class="dashicons dashicons-list-view"></span>
+			</div>
+		</transition>
+		<div class="wptb-table-data-listings-footer">
+			<div
+				ref="menuCollapseButton"
+				class="wptb-data-listings-footer-collapse-button"
+				@click.prevent="handleMenuCollapse"
+			></div>
+		</div>
 	</div>
 </template>
 
@@ -37,6 +49,7 @@ export default {
 	data() {
 		return {
 			searchClause: '',
+			collapseStatus: false,
 		};
 	},
 	computed: {
@@ -54,7 +67,18 @@ export default {
 				return dataObject.post_title.match(regExp);
 			});
 		},
+		mainWrapperStyle() {
+			const collapseButtonWidth = this.$refs.menuCollapseButton?.getBoundingClientRect().width;
+			return {
+				width: `${this.collapseStatus ? collapseButtonWidth : 200}px`,
+			};
+		},
 		...mapGetters(['simpleDataObjects', 'getBusyState']),
+	},
+	methods: {
+		handleMenuCollapse() {
+			this.collapseStatus = !this.collapseStatus;
+		},
 	},
 };
 </script>

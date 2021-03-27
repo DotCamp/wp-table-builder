@@ -16624,7 +16624,8 @@ var _default = {
   },
   data: function data() {
     return {
-      searchClause: ''
+      searchClause: '',
+      collapseStatus: false
     };
   },
   computed: _objectSpread({
@@ -16646,8 +16647,21 @@ var _default = {
         var regExp = new RegExp("(".concat(_this.searchClause, ")"), 'gi');
         return dataObject.post_title.match(regExp);
       });
+    },
+    mainWrapperStyle: function mainWrapperStyle() {
+      var _this$$refs$menuColla;
+
+      var collapseButtonWidth = (_this$$refs$menuColla = this.$refs.menuCollapseButton) === null || _this$$refs$menuColla === void 0 ? void 0 : _this$$refs$menuColla.getBoundingClientRect().width;
+      return {
+        width: "".concat(this.collapseStatus ? collapseButtonWidth : 200, "px")
+      };
     }
-  }, (0, _vuex.mapGetters)(['simpleDataObjects', 'getBusyState']))
+  }, (0, _vuex.mapGetters)(['simpleDataObjects', 'getBusyState'])),
+  methods: {
+    handleMenuCollapse: function handleMenuCollapse() {
+      this.collapseStatus = !this.collapseStatus;
+    }
+  }
 };
 exports.default = _default;
         var $a45085 = exports.default || module.exports;
@@ -16664,7 +16678,11 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wptb-table-data-listings" },
+    {
+      staticClass: "wptb-table-data-listings",
+      style: _vm.mainWrapperStyle,
+      attrs: { "data-collapse": _vm.collapseStatus }
+    },
     [
       _c("div", { staticClass: "wptb-table-data-listings-header" }, [
         _vm._v("\n\t\t" + _vm._s(_vm.translationM("data")) + "\n\t")
@@ -16694,7 +16712,10 @@ exports.default = _default;
       _vm._v(" "),
       _c(
         "transition-group",
-        { attrs: { name: "wptb-fade" } },
+        {
+          staticStyle: { "grid-area": "listing", overflow: "auto" },
+          attrs: { name: "wptb-fade", tag: "div" }
+        },
         _vm._l(_vm.filteredDataObject, function(data) {
           return _c("data-listing-row", {
             key: data.ID,
@@ -16714,7 +16735,30 @@ exports.default = _default;
           })
         }),
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("transition", { attrs: { name: "wptb-fade" } }, [
+        _vm.collapseStatus
+          ? _c(
+              "div",
+              { staticClass: "wptb-table-data-listings-collapsed-cover-icon" },
+              [_c("span", { staticClass: "dashicons dashicons-list-view" })]
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "wptb-table-data-listings-footer" }, [
+        _c("div", {
+          ref: "menuCollapseButton",
+          staticClass: "wptb-data-listings-footer-collapse-button",
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.handleMenuCollapse($event)
+            }
+          }
+        })
+      ])
     ],
     1
   )
@@ -18366,34 +18410,41 @@ exports.default = _default;
   return _c("transition", { attrs: { name: "wptb-fade" } }, [
     _vm.visibility
       ? _c("div", { staticClass: "wptb-data-usage-list-modal" }, [
-          _c("div", { staticClass: "wptb-data-usage-list-modal-window" }, [
-            _c("div", { staticClass: "wptb-data-usage-list-modal-header" }, [
-              _vm._v(_vm._s(_vm.title))
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "wptb-data-usage-list-modal-buttons" }, [
+          _c(
+            "div",
+            {
+              staticClass:
+                "wptb-data-usage-list-modal-window wptb-plugin-box-shadow-md"
+            },
+            [
+              _c("div", { staticClass: "wptb-data-usage-list-modal-header" }, [
+                _vm._v(_vm._s(_vm.title))
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "wptb-data-usage-list-modal-buttons" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "wptb-data-usage-list-modal-close",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.closeWindow($event)
+                      }
+                    }
+                  },
+                  [_c("span", { staticClass: "dashicons dashicons-no" })]
+                )
+              ]),
+              _vm._v(" "),
               _c(
                 "div",
-                {
-                  staticClass: "wptb-data-usage-list-modal-close",
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.closeWindow($event)
-                    }
-                  }
-                },
-                [_c("span", { staticClass: "dashicons dashicons-no" })]
+                { staticClass: "wptb-data-usage-list-content" },
+                [_vm._t("default", [_c("i", [_vm._v("no content")])])],
+                2
               )
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "wptb-data-usage-list-content" },
-              [_vm._t("default", [_c("i", [_vm._v("no content")])])],
-              2
-            )
-          ])
+            ]
+          )
         ])
       : _vm._e()
   ])
@@ -18584,7 +18635,7 @@ exports.default = _default;
         "span",
         {
           staticClass: "wptb-table-data-associated-tables-inner-wrapper",
-          style: _vm.buttonStyle,
+          style: { cursor: _vm.count === 0 ? "default" : "pointer" },
           attrs: { title: _vm.message },
           on: {
             click: function($event) {

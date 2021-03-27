@@ -6433,12 +6433,63 @@ thead .wptb-data-manager-table-data-value {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: minmax(min-content, max-content) 1fr;
     grid-template-rows: 1fr;
 }
 
 .wptb-table-data-listings {
-    border-right: 2px solid var(--wptb-plugin-gray-400);
+    border-right: 1px solid var(--wptb-plugin-gray-400);
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+    grid-template-areas: 'title' 'search' 'listing' 'footer';
+    transition: all 0.2s ease-out;
+}
+
+.wptb-table-data-listings[data-collapse=true] {
+    background-color: var(--wptb-plugin-gray-200);
+}
+
+.wptb-table-data-listings div {
+    transition: all 0.2s ease-out;
+}
+
+.wptb-table-data-listings-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: var(--wptb-plugin-logo-color);
+    color: var(--wptb-plugin-theme-color-light);
+}
+
+.wptb-table-data-listings-collapsed-cover-icon {
+    grid-row: 1/4;
+    grid-column: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-data-listings-footer-collapse-button {
+    padding: 10px;
+    cursor: pointer;
+    font-family: dashicons;
+    font-size: 200%;
+}
+
+.wptb-data-listings-footer-collapse-button:after {
+    content: '\f341';
+}
+
+[data-collapse='true'] .wptb-data-listings-footer-collapse-button:after {
+    content: '\f345';
+}
+
+[data-collapse='true'] div:not(.wptb-table-data-listings-footer, .wptb-table-data-listings-footer *, .wptb-table-data-listings-collapsed-cover-icon) {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .wptb-data-listing-row {
@@ -6446,6 +6497,7 @@ thead .wptb-data-manager-table-data-value {
     border-bottom: 1px solid var(--wptb-plugin-gray-300);
     cursor: pointer;
     transition: all 0.2s ease-out;
+    word-break: break-all;
 }
 
 .wptb-data-listing-row:hover {
@@ -6483,6 +6535,7 @@ thead .wptb-data-manager-table-data-value {
 
 
 .wptb-table-data-listings-header {
+    grid-area: title;
     text-transform: capitalize;
     font-size: 110% !important;
     display: flex;
@@ -6552,6 +6605,7 @@ thead .wptb-data-manager-table-data-value {
 }
 
 .wptb-table-data-listing-search {
+    grid-area: search;
     padding: 20px 0;
     border-bottom: 1px solid var(--wptb-plugin-gray-300);
     display: flex;
@@ -6621,7 +6675,7 @@ thead .wptb-data-manager-table-data-value {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    padding: 0px 5px;
+    padding: 0 5px;
     color: var(--wptb-plugin-red-500);
     font-weight: bold;
 }
@@ -6693,12 +6747,12 @@ thead .wptb-data-manager-table-data-value {
     grid-template-rows: minmax(min-content, max-content) 1fr;
     grid-template-columns: 1fr;
     grid-template-areas: 'header' 'content';
-    border: 1px solid var(--wptb-plugin-gray-300);
+    border: 1px solid var(--wptb-plugin-gray-400);
 }
 
 .wptb-data-usage-list-modal-header {
     grid-area: header;
-    border-bottom: 1px solid var(--wptb-plugin-gray-300);
+    border-bottom: 1px solid var(--wptb-plugin-gray-400);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6719,7 +6773,7 @@ thead .wptb-data-manager-table-data-value {
 
 .wptb-data-usage-list-modal-buttons div {
     padding: 10px;
-    border-left: 1px solid var(--wptb-plugin-gray-300);
+    border-left: 1px solid var(--wptb-plugin-gray-400);
     transition: all 0.2s ease-out;
     cursor: pointer;
     border-top-right-radius: 5px;
@@ -6736,7 +6790,7 @@ thead .wptb-data-manager-table-data-value {
 .wptb-data-usage-list-content {
     grid-area: content;
     padding: 10px;
-    background-color: var(--wptb-plugin-gray-200);
+    background-color: var(--wptb-plugin-gray-300);
 }
 
 .wptb-data-usage-table-list-wrapper {
@@ -6796,6 +6850,5 @@ thead .wptb-data-manager-table-data-value {
     border: none !important;
     outline: none !important;
 }
-
 
 /*endregion*/

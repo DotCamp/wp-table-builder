@@ -1,7 +1,7 @@
 <template>
 	<transition name="wptb-fade">
 		<div class="wptb-data-usage-list-modal" v-if="visibility">
-			<div class="wptb-data-usage-list-modal-window">
+			<div class="wptb-data-usage-list-modal-window wptb-plugin-box-shadow-md">
 				<div class="wptb-data-usage-list-modal-header">{{ title }}</div>
 				<div class="wptb-data-usage-list-modal-buttons">
 					<div class="wptb-data-usage-list-modal-close" @click.prevent="closeWindow">
