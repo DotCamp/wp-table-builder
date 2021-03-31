@@ -116,6 +116,23 @@ class Settings_Manager {
 	}
 
 	/**
+	 * Get default values for settings controls.
+	 * @return array setting defaults.
+	 */
+	private function get_defaults() {
+		return apply_filters( 'wp-table-builder/filter/settings_defaults', $this->defaults );
+	}
+
+	/**
+	 * Get setting sanitization rules.
+	 * @return array sanitization rules
+	 */
+	private function get_sanitization_rules() {
+		return apply_filters( 'wp-table-builder/filter/settings_sanitization_rules', $this->sanitization_rules );
+	}
+
+
+	/**
 	 * Panel location filter hook callback.
 	 *
 	 * @param string $location current location
@@ -134,12 +151,12 @@ class Settings_Manager {
 	 * @return mixed|null option's value
 	 */
 	public function get_option_value( $option_name ) {
-		$current_options = get_option( $this->options_root, $this->defaults );
+		$current_options = get_option( $this->options_root, $this->get_defaults() );
 		$current_value   = null;
 
 		if ( ! isset( $current_options[ $option_name ] ) ) {
-			if ( isset( $this->defaults[ $option_name ] ) ) {
-				$current_value = $this->defaults[ $option_name ];
+			if ( isset( $this->get_defaults()[ $option_name ] ) ) {
+				$current_value = $this->get_defaults()[ $option_name ];
 			}
 		} else {
 			$current_value = $current_options[ $option_name ];
@@ -162,7 +179,7 @@ class Settings_Manager {
 			$current_user = wp_get_current_user();
 
 			// provide default value for get_option
-			$intersection = array_intersect( get_option( $this->options_root, $this->defaults )['allowed_roles'], $current_user->roles );
+			$intersection = array_intersect( get_option( $this->options_root, $this->get_defaults() )['allowed_roles'], $current_user->roles );
 
 			if ( sizeof( $intersection ) > 0 ) {
 				if ( ! isset( $all_caps[ self::ALLOWED_ROLE_META_CAP ] ) ) {
@@ -256,7 +273,7 @@ class Settings_Manager {
 			];
 
 			// merge defaults with applied options to make sure new option groups are reflected to frontend even though they didn't get saved yet
-			$merged_options = array_merge( $this->defaults, get_option( $this->options_root ) );
+			$merged_options = array_merge( $this->get_defaults(), get_option( $this->options_root ) );
 
 			$frontend_data = [
 				'data'         => [
@@ -340,14 +357,14 @@ class Settings_Manager {
 	}
 
 	/**
-	 * Register plugin settings to options
+	 * Register plugin settings to options.
 	 *
 	 * Called from admin_init action hook
 	 */
 	public function register_plugin_settings() {
 		register_setting( $this->options_root, $this->options_root, [
 			'type'              => 'array',
-			'default'           => $this->defaults,
+			'default'           => $this->get_defaults(),
 			'sanitize_callback' => [
 				$this,
 				'sanitize_options'
@@ -377,13 +394,14 @@ class Settings_Manager {
 	 * @return array sanitized options
 	 */
 	private function batch_sanitize( $input_object ) {
-		$sanitized_object = [];
+		$sanitized_object   = [];
+		$sanitization_rules = $this->get_sanitization_rules();
 		foreach ( $input_object as $key => $value ) {
-			if ( isset( $this->sanitization_rules[ $key ] ) ) {
+			if ( isset( $sanitization_rules[ $key ] ) ) {
 				if ( is_array( $value ) ) {
-					$sanitized_object[ $key ] = array_map( $this->sanitization_rules[ $key ], $value );
+					$sanitized_object[ $key ] = array_map( $sanitization_rules[ $key ], $value );
 				} else {
-					$sanitized_object[ $key ] = call_user_func( $this->sanitization_rules[ $key ], $value );
+					$sanitized_object[ $key ] = call_user_func( $sanitization_rules[ $key ], $value );
 				}
 			}
 		}
