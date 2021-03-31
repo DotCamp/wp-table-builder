@@ -153,6 +153,7 @@ class Data_Object_Manager {
 				'sectionDirtyError'      => esc_html__( 'There are unsaved changes on your table data, continue and discard changes?', 'wp-table-builder' ),
 				'noTableUsage'           => esc_html__( 'No table is using this data.', 'wp-table-builder' ),
 				'tables'           => esc_html__( 'tables', 'wp-table-builder' ),
+				'options'           => esc_html__( 'Options', 'wp-table-builder' ),
 			];
 
 			$security = [

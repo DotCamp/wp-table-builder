@@ -3357,6 +3357,11 @@ wptb_shortcode_container_element {
     opacity: 0;
 }
 
+.wptb-vertical-move-enter, .wptb-vertical-move-leave-to {
+    transform: translateY(-100%);
+}
+
+
 .wptb-menu-file-drop {
     border: 2px dashed #cbd5e0;
     width: 500px;
@@ -6565,21 +6570,46 @@ thead .wptb-data-manager-table-data-value {
     border-top: 1px solid var(--wptb-plugin-gray-300);
     overflow: auto;
     grid-area: content;
+    position: relative;
 }
 
-.wptb-table-data-associated-tables {
+.wptb-table-data-associated-tables:hover {
+    background-color: var(--wptb-plugin-gray-300);
+}
+
+.wptb-window-header-button {
     padding: 0 10px;
-    grid-area: title;
-    justify-self: end;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     border-left: 1px solid var(--wptb-plugin-gray-300);
+    border-right: 1px solid var(--wptb-plugin-gray-300);
     transition: all 0.2s ease-out;
 }
 
-.wptb-table-data-associated-tables:hover {
+[data-button-position=right] .wptb-window-header-button:last-child {
+    border-left: 0 !important;
+}
+
+[data-button-position=right] .wptb-window-header-button:first-child {
+    border-left: 1px solid var(--wptb-plugin-gray-300) !important;
+}
+
+[data-button-position=left] .wptb-window-header-button:last-child {
+    border-right: 0 !important;
+}
+
+[data-button-position=left] .wptb-window-header-button:first-child {
+    border-right: 1px solid var(--wptb-plugin-gray-300) !important;
+}
+
+.wptb-window-header-button:hover {
+    cursor: pointer;
+    background-color: var(--wptb-plugin-gray-300);
+}
+
+.wptb-window-header-button[data-active=true] {
     background-color: var(--wptb-plugin-gray-300);
 }
 
@@ -6590,7 +6620,7 @@ thead .wptb-data-manager-table-data-value {
     align-items: center;
 }
 
-.wptb-table-data-associated-tables-icon {
+.wptb-table-data-header-icon {
     color: var(--wptb-plugin-logo-color) !important;
     padding: 0 5px;
 }
@@ -6598,6 +6628,22 @@ thead .wptb-data-manager-table-data-value {
 .wptb-table-data-associated-tables-number {
     font-weight: bold;
     color: var(--wptb-plugin-red-500);
+}
+
+.wptb-table-data-object-options-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid var(--wptb-plugin-gray-400);
+    border-left: 0;
+    border-bottom-right-radius: 5px;
+    border-top: 0;
+    width: 250px;
+    max-width: 250px;
+    height: 100px;
+    z-index: 10;
+    background-color: var(--wptb-plugin-theme-color-light);
+    transition: all 0.2s ease-out;
 }
 
 .wptb-table-data-associated-tables-number[data-plural='true'] {
@@ -6630,6 +6676,32 @@ thead .wptb-data-manager-table-data-value {
     justify-content: center;
     padding: 10px;
     grid-area: title;
+}
+
+.wptb-data-display-header-button-container {
+    grid-area: title;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.wptb-data-display-header-button-container-left {
+    width: 100%;
+    height: 100%;
+    justify-self: flex-start;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.wptb-data-display-header-button-container-right {
+    width: 100%;
+    height: 100%;
+    justify-self: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .wptb-table-data-title .wptb-text-modify-custom-input {

@@ -18537,6 +18537,66 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/modalWindow/WindowHeaderButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    active: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $8bfa51 = exports.default || module.exports;
+      
+      if (typeof $8bfa51 === 'function') {
+        $8bfa51 = $8bfa51.options;
+      }
+    
+        /* template */
+        Object.assign($8bfa51, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-window-header-button",
+      attrs: { title: _vm.title, "data-active": _vm.active }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/tableDataMenu/DataUsage.vue":[function(require,module,exports) {
 "use strict";
 
@@ -18555,6 +18615,8 @@ var _UsageListModal = _interopRequireDefault(require("./UsageListModal"));
 
 var _TableCard = _interopRequireDefault(require("./TableCard"));
 
+var _WindowHeaderButton = _interopRequireDefault(require("../modalWindow/WindowHeaderButton"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -18565,6 +18627,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    WindowHeaderButton: _WindowHeaderButton.default,
     TableCard: _TableCard.default,
     UsageListModal: _UsageListModal.default
   },
@@ -18628,69 +18691,256 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    { staticClass: "wptb-table-data-associated-tables" },
+    "window-header-button",
+    {
+      style: { cursor: _vm.count === 0 ? "default" : "pointer" },
+      attrs: { title: _vm.message }
+    },
     [
       _c(
-        "span",
-        {
-          staticClass: "wptb-table-data-associated-tables-inner-wrapper",
-          style: { cursor: _vm.count === 0 ? "default" : "pointer" },
-          attrs: { title: _vm.message },
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.showTableListing($event)
-            }
-          }
-        },
+        "div",
+        { staticClass: "wptb-table-data-associated-tables" },
         [
           _c(
             "span",
             {
-              staticClass: "wptb-table-data-associated-tables-number",
-              attrs: { "data-plural": _vm.count > 0 }
+              staticClass: "wptb-table-data-associated-tables-inner-wrapper",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.showTableListing($event)
+                }
+              }
             },
-            [_vm._v(_vm._s(_vm.count))]
+            [
+              _c(
+                "span",
+                {
+                  staticClass: "wptb-table-data-associated-tables-number",
+                  attrs: { "data-plural": _vm.count > 0 }
+                },
+                [_vm._v(_vm._s(_vm.count))]
+              ),
+              _vm._v(" "),
+              _c("span", {
+                staticClass:
+                  "dashicons dashicons-editor-table wptb-table-data-header-icon"
+              })
+            ]
           ),
           _vm._v(" "),
-          _c("span", {
-            staticClass:
-              "dashicons dashicons-editor-table wptb-table-data-associated-tables-icon"
-          })
-        ]
+          _c(
+            "usage-list-modal",
+            {
+              attrs: {
+                title: _vm.translationM("tables"),
+                visibility: _vm.listVisibility
+              },
+              on: {
+                close: function($event) {
+                  _vm.listVisibility = false
+                }
+              }
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "wptb-data-usage-table-list-wrapper" },
+                _vm._l(_vm.associatedTables, function(table) {
+                  return _c("table-card", {
+                    key: table.id,
+                    attrs: {
+                      title: table.title,
+                      id: table.id,
+                      link: _vm.generateCardLink(table.id)
+                    }
+                  })
+                }),
+                1
+              )
+            ]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./UsageListModal":"components/tableDataMenu/UsageListModal.vue","./TableCard":"components/tableDataMenu/TableCard.vue","../modalWindow/WindowHeaderButton":"components/modalWindow/WindowHeaderButton.vue"}],"components/tableDataMenu/DataDisplayHeaderButtonContainer.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {};
+exports.default = _default;
+        var $949da5 = exports.default || module.exports;
+      
+      if (typeof $949da5 === 'function') {
+        $949da5 = $949da5.options;
+      }
+    
+        /* template */
+        Object.assign($949da5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "wptb-data-display-header-button-container" },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "wptb-data-display-header-button-container-left",
+          attrs: { "data-button-position": "left" }
+        },
+        [_vm._t("left")],
+        2
       ),
       _vm._v(" "),
       _c(
-        "usage-list-modal",
+        "div",
         {
-          attrs: {
-            title: _vm.translationM("tables"),
-            visibility: _vm.listVisibility
-          },
-          on: {
-            close: function($event) {
-              _vm.listVisibility = false
-            }
-          }
+          staticClass: "wptb-data-display-header-button-container-right",
+          attrs: { "data-button-position": "right" }
         },
+        [_vm._t("right")],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/tableDataMenu/DataDisplayOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
+
+var _WindowHeaderButton = _interopRequireDefault(require("../modalWindow/WindowHeaderButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    WindowHeaderButton: _WindowHeaderButton.default
+  },
+  data: function data() {
+    return {
+      panelVisibility: false
+    };
+  },
+  methods: {
+    handlePanelVisibility: function handlePanelVisibility() {
+      this.panelVisibility = !this.panelVisibility;
+    }
+  }
+};
+exports.default = _default;
+        var $235860 = exports.default || module.exports;
+      
+      if (typeof $235860 === 'function') {
+        $235860 = $235860.options;
+      }
+    
+        /* template */
+        Object.assign($235860, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "window-header-button",
+    {
+      attrs: {
+        active: _vm.panelVisibility,
+        title: _vm.translationM("options")
+      },
+      nativeOn: {
+        click: function($event) {
+          return _vm.handlePanelVisibility($event)
+        }
+      }
+    },
+    [
+      _c("span", {
+        staticClass:
+          "dashicons dashicons-admin-generic wptb-table-data-header-icon"
+      }),
+      _vm._v(" "),
+      _c(
+        "portal",
+        { attrs: { to: "dataDisplaySection" } },
         [
-          _c(
-            "div",
-            { staticClass: "wptb-data-usage-table-list-wrapper" },
-            _vm._l(_vm.associatedTables, function(table) {
-              return _c("table-card", {
-                key: table.id,
-                attrs: {
-                  title: table.title,
-                  id: table.id,
-                  link: _vm.generateCardLink(table.id)
-                }
-              })
-            }),
-            1
-          )
-        ]
+          _c("transition", { attrs: { name: "wptb-vertical-move" } }, [
+            _vm.panelVisibility
+              ? _c("div", {
+                  staticClass:
+                    "wptb-table-data-object-options-wrapper wptb-plugin-box-shadow-md"
+                })
+              : _vm._e()
+          ])
+        ],
+        1
       )
     ],
     1
@@ -18708,7 +18958,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","@wordpress/i18n":"../../../../../node_modules/@wordpress/i18n/build-module/index.js","../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./UsageListModal":"components/tableDataMenu/UsageListModal.vue","./TableCard":"components/tableDataMenu/TableCard.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../modalWindow/WindowHeaderButton":"components/modalWindow/WindowHeaderButton.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18728,6 +18978,10 @@ var _TextModifyInput = _interopRequireDefault(require("../TextModifyInput"));
 
 var _DataUsage = _interopRequireDefault(require("./DataUsage"));
 
+var _DataDisplayHeaderButtonContainer = _interopRequireDefault(require("./DataDisplayHeaderButtonContainer"));
+
+var _DataDisplayOptions = _interopRequireDefault(require("./DataDisplayOptions"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -18738,6 +18992,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    DataDisplayOptions: _DataDisplayOptions.default,
+    DataDisplayHeaderButtonContainer: _DataDisplayHeaderButtonContainer.default,
     DataUsage: _DataUsage.default,
     DataManager: _DataManager.default,
     MenuButton: _MenuButton.default,
@@ -18880,14 +19136,44 @@ exports.default = _default;
                 1
               ),
               _vm._v(" "),
-              _c("data-usage", {
-                attrs: { "associated-tables": _vm.associatedTables }
+              _c("data-display-header-button-container", {
+                scopedSlots: _vm._u(
+                  [
+                    {
+                      key: "right",
+                      fn: function() {
+                        return [
+                          _c("data-usage", {
+                            attrs: { "associated-tables": _vm.associatedTables }
+                          })
+                        ]
+                      },
+                      proxy: true
+                    },
+                    {
+                      key: "left",
+                      fn: function() {
+                        return [_c("data-display-options")]
+                      },
+                      proxy: true
+                    }
+                  ],
+                  null,
+                  false,
+                  3324147153
+                )
               }),
               _vm._v(" "),
               _c(
                 "div",
                 { staticClass: "wptb-table-data-manager-wrapper" },
-                [_c("data-manager", { attrs: { "use-default": false } })],
+                [
+                  _c("portal-target", {
+                    attrs: { name: "dataDisplaySection" }
+                  }),
+                  _vm._v(" "),
+                  _c("data-manager", { attrs: { "use-default": false } })
+                ],
                 1
               )
             ],
@@ -18940,7 +19226,7 @@ render._withStripped = true
           };
         })());
       
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue","../TextModifyInput":"components/TextModifyInput.vue","./DataUsage":"components/tableDataMenu/DataUsage.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuButton":"components/MenuButton.vue","../DataManager":"components/DataManager.vue","../TextModifyInput":"components/TextModifyInput.vue","./DataUsage":"components/tableDataMenu/DataUsage.vue","./DataDisplayHeaderButtonContainer":"components/tableDataMenu/DataDisplayHeaderButtonContainer.vue","./DataDisplayOptions":"components/tableDataMenu/DataDisplayOptions.vue"}],"components/tableDataMenu/TableDataEditorSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

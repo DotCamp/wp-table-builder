@@ -4,8 +4,16 @@
 			<div class="wptb-table-data-title">
 				<text-modify-input :value.sync="dataObjectTitle"></text-modify-input>
 			</div>
-			<data-usage :associated-tables="associatedTables"></data-usage>
+			<data-display-header-button-container>
+				<template v-slot:right>
+					<data-usage :associated-tables="associatedTables"></data-usage>
+				</template>
+				<template v-slot:left>
+					<data-display-options></data-display-options>
+				</template>
+			</data-display-header-button-container>
 			<div class="wptb-table-data-manager-wrapper">
+				<portal-target name="dataDisplaySection"></portal-target>
 				<data-manager :use-default="false"></data-manager>
 			</div>
 		</div>
@@ -29,9 +37,18 @@ import MenuButton from '../MenuButton';
 import DataManager from '../DataManager';
 import TextModifyInput from '../TextModifyInput';
 import DataUsage from './DataUsage';
+import DataDisplayHeaderButtonContainer from './DataDisplayHeaderButtonContainer';
+import DataDisplayOptions from './DataDisplayOptions';
 
 export default {
-	components: { DataUsage, DataManager, MenuButton, TextModifyInput },
+	components: {
+		DataDisplayOptions,
+		DataDisplayHeaderButtonContainer,
+		DataUsage,
+		DataManager,
+		MenuButton,
+		TextModifyInput,
+	},
 	watch: {
 		getEditorActiveId(n) {
 			this.dataObjectOperations(n);
