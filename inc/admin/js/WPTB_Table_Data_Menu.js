@@ -18848,7 +18848,671 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/tableDataMenu/DataDisplayOptions.vue":[function(require,module,exports) {
+},{}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Base for left panel controls that will be hooked directly to Vue instances.
+ */
+var PanelControlBase = {
+  props: {
+    label: String,
+    value: {
+      type: null
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    dependsValue: {
+      type: null,
+      default: null
+    },
+    dependsCallback: {
+      type: Function,
+      default: function _default(d, c) {
+        return c;
+      }
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: ''
+    };
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('valueChanged', n);
+    },
+    dependsValue: function dependsValue(n) {
+      if (n === null) {
+        return;
+      }
+
+      this.innerValue = this.dependsCallback.call(this, n, this.innerValue);
+    }
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  }
+};
+var _default = PanelControlBase;
+exports.default = _default;
+},{}],"components/PanelToggleControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $f6974b = exports.default || module.exports;
+      
+      if (typeof $f6974b === 'function') {
+        $f6974b = $f6974b.options;
+      }
+    
+        /* template */
+        Object.assign($f6974b, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("label", { staticClass: "wptb-toggle" }, [
+          _c("span", { staticStyle: { "font-size": "16px" } }, [
+            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.innerValue,
+                expression: "innerValue"
+              }
+            ],
+            staticClass: "wptb-element-property",
+            attrs: { type: "checkbox", disabled: _vm.disabled },
+            domProps: {
+              checked: Array.isArray(_vm.innerValue)
+                ? _vm._i(_vm.innerValue, null) > -1
+                : _vm.innerValue
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.innerValue,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.innerValue = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.innerValue = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.innerValue = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("i")
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/MaterialButton.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    click: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('Material button clicked');
+      }
+    },
+    size: {
+      type: String,
+      default: 'fit-content'
+    },
+    type: {
+      type: String,
+      default: 'default'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    buttonClass: function buttonClass() {
+      return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('buttonClicked');
+      this.click();
+    }
+  }
+};
+exports.default = _default;
+        var $48fd91 = exports.default || module.exports;
+      
+      if (typeof $48fd91 === 'function') {
+        $48fd91 = $48fd91.options;
+      }
+    
+        /* template */
+        Object.assign($48fd91, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-plugin-button-material",
+      class: _vm.buttonClass,
+      attrs: { "data-type": _vm.type, "data-disabled": _vm.disabled },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PanelButtonControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _MaterialButton = _interopRequireDefault(require("./MaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    MaterialButton: _MaterialButton.default
+  },
+  inheritAttrs: false,
+  methods: {
+    handleClick: function handleClick() {
+      this.$emit('buttonClick');
+    }
+  }
+};
+exports.default = _default;
+        var $e86179 = exports.default || module.exports;
+      
+      if (typeof $e86179 === 'function') {
+        $e86179 = $e86179.options;
+      }
+    
+        /* template */
+        Object.assign($e86179, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass:
+            "wptb-settings-row wptb-settings-middle-xs wptb-justify-content-center"
+        },
+        [
+          _c(
+            "material-button",
+            _vm._b(
+              {
+                staticClass: "wptb-panel-button-material",
+                attrs: { click: _vm.handleClick }
+              },
+              "material-button",
+              _vm.$attrs,
+              false
+            ),
+            [_vm._t("default")],
+            2
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./MaterialButton":"components/MaterialButton.vue"}],"components/DataManagerCsvOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
+
+var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  props: {
+    isBusy: {
+      type: Boolean,
+      default: false
+    }
+  },
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    PanelToggleControl: _PanelToggleControl.default,
+    PanelButtonControl: _PanelButtonControl.default
+  },
+  computed: _objectSpread({
+    newNamesRowButtonVisibility: function newNamesRowButtonVisibility() {
+      var _this$parsedData$head;
+
+      return !((_this$parsedData$head = this.parsedData.header[0]) === null || _this$parsedData$head === void 0 ? void 0 : _this$parsedData$head.generatedForHeader) && this.getDataManagerControls.indexRow !== null;
+    },
+    firstRowAsColumnName: {
+      get: function get() {
+        return this.getDataManagerControls.firstRowAsColumnName;
+      },
+      set: function set(n) {
+        this.setDataManagerControl({
+          key: 'firstRowAsColumnName',
+          value: n
+        });
+      }
+    },
+    rowForNamesVisibility: function rowForNamesVisibility() {
+      var _this$getSelectOperat = this.getSelectOperationData,
+          active = _this$getSelectOperat.active,
+          callerId = _this$getSelectOperat.callerId;
+      return !active && callerId !== 'selectRowForNames';
+    }
+  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'getSelectOperationData', 'parseCellId', 'parsedData'])),
+  methods: _objectSpread({
+    selectRowForNames: function selectRowForNames() {
+      var _this = this;
+
+      this.startRowSelectOperation('selectRowForNames').then(function (formedId) {
+        if (formedId) {
+          var _this$parseCellId = _this.parseCellId(formedId),
+              rowId = _this$parseCellId.rowId;
+
+          _this.setDataManagerControl({
+            key: 'indexRow',
+            value: rowId
+          }); // turn of first row as column name control if a row is selected as index
+
+
+          if (rowId !== null) {
+            _this.setDataManagerControl({
+              key: 'firstRowAsColumnName',
+              value: false
+            });
+          }
+        }
+      });
+    },
+    resetIndexRow: function resetIndexRow() {
+      this.setDataManagerControl({
+        key: 'firstRowAsColumnName',
+        value: false
+      });
+      this.setDataManagerControl({
+        key: 'indexRow',
+        value: null
+      });
+    }
+  }, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']))
+};
+exports.default = _default;
+        var $dac00f = exports.default || module.exports;
+      
+      if (typeof $dac00f === 'function') {
+        $dac00f = $dac00f.options;
+      }
+    
+        /* template */
+        Object.assign($dac00f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "fragment",
+    [
+      _c("panel-toggle-control", {
+        attrs: {
+          disabled: _vm.isBusy,
+          label: _vm._f("cap")(_vm.translationM("firstRowHeader"))
+        },
+        model: {
+          value: _vm.firstRowAsColumnName,
+          callback: function($$v) {
+            _vm.firstRowAsColumnName = $$v
+          },
+          expression: "firstRowAsColumnName"
+        }
+      }),
+      _vm._v(" "),
+      _vm.rowForNamesVisibility
+        ? _c(
+            "panel-button-control",
+            {
+              attrs: { disabled: _vm.isBusy },
+              on: { buttonClick: _vm.selectRowForNames }
+            },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("selectRowForNames"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.rowForNamesVisibility
+        ? _c(
+            "panel-button-control",
+            {
+              attrs: { type: "danger" },
+              on: { buttonClick: _vm.cancelRowSelectOperation }
+            },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("cancel"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.newNamesRowButtonVisibility
+        ? _c(
+            "panel-button-control",
+            { on: { buttonClick: _vm.resetIndexRow } },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("resetIndexRow"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/tableDataMenu/EditorCsvOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _DataManagerCsvOptions = _interopRequireDefault(require("../DataManagerCsvOptions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var _default = {
+  components: {
+    DataManagerCsvOptions: _DataManagerCsvOptions.default
+  }
+};
+exports.default = _default;
+        var $e89923 = exports.default || module.exports;
+      
+      if (typeof $e89923 === 'function') {
+        $e89923 = $e89923.options;
+      }
+    
+        /* template */
+        Object.assign($e89923, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("data-manager-csv-options")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../DataManagerCsvOptions":"components/DataManagerCsvOptions.vue"}],"components/tableDataMenu/DataObjectTypeOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _EditorCsvOptions = _interopRequireDefault(require("./EditorCsvOptions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    EditorCsvOptions: _EditorCsvOptions.default
+  },
+  computed: _objectSpread({
+    currentComponent: function currentComponent() {
+      return "Editor".concat(this.getCurrentDataObjectType[0].toUpperCase() + this.getCurrentDataObjectType.slice(1), "Options");
+    },
+    optionsVisibility: function optionsVisibility() {
+      return this.getCurrentDataObjectType !== null && Object.keys(this.$options.components).includes(this.currentComponent);
+    }
+  }, (0, _vuex.mapGetters)(['getCurrentDataObjectType']))
+};
+exports.default = _default;
+        var $96b91c = exports.default || module.exports;
+      
+      if (typeof $96b91c === 'function') {
+        $96b91c = $96b91c.options;
+      }
+    
+        /* template */
+        Object.assign($96b91c, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm.optionsVisibility
+        ? _c(_vm.currentComponent, { tag: "component" })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./EditorCsvOptions":"components/tableDataMenu/EditorCsvOptions.vue"}],"components/tableDataMenu/DataDisplayOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18859,6 +19523,8 @@ exports.default = void 0;
 var _withNativeTranslationStore = _interopRequireDefault(require("../../mixins/withNativeTranslationStore"));
 
 var _WindowHeaderButton = _interopRequireDefault(require("../modalWindow/WindowHeaderButton"));
+
+var _DataObjectTypeOptions = _interopRequireDefault(require("./DataObjectTypeOptions"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18878,11 +19544,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
 var _default = {
   mixins: [_withNativeTranslationStore.default],
   components: {
-    WindowHeaderButton: _WindowHeaderButton.default
+    WindowHeaderButton: _WindowHeaderButton.default,
+    DataObjectTypeOptions: _DataObjectTypeOptions.default
   },
   data: function data() {
     return {
@@ -18932,12 +19598,23 @@ exports.default = _default;
         { attrs: { to: "dataDisplaySection" } },
         [
           _c("transition", { attrs: { name: "wptb-vertical-move" } }, [
-            _vm.panelVisibility
-              ? _c("div", {
-                  staticClass:
-                    "wptb-table-data-object-options-wrapper wptb-plugin-box-shadow-md"
-                })
-              : _vm._e()
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.panelVisibility,
+                    expression: "panelVisibility"
+                  }
+                ],
+                staticClass:
+                  "wptb-table-data-object-options-wrapper wptb-plugin-box-shadow-md"
+              },
+              [_c("data-object-type-options")],
+              1
+            )
           ])
         ],
         1
@@ -18958,7 +19635,7 @@ render._withStripped = true
           };
         })());
       
-},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../modalWindow/WindowHeaderButton":"components/modalWindow/WindowHeaderButton.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
+},{"../../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../modalWindow/WindowHeaderButton":"components/modalWindow/WindowHeaderButton.vue","./DataObjectTypeOptions":"components/tableDataMenu/DataObjectTypeOptions.vue"}],"components/tableDataMenu/DataDisplay.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19242,6 +19919,8 @@ var _DataListing = _interopRequireDefault(require("./DataListing"));
 
 var _DataDisplay = _interopRequireDefault(require("./DataDisplay"));
 
+var _MaterialButton = _interopRequireDefault(require("../MaterialButton"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -19252,10 +19931,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    MaterialButton: _MaterialButton.default,
     MenuContent: _MenuContent.default,
     DataListing: _DataListing.default,
     DataDisplay: _DataDisplay.default
   },
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['simpleDataObjects'])),
   methods: _objectSpread({
     handleDataSaved: function handleDataSaved() {
       var _this = this;
@@ -19264,7 +19945,8 @@ var _default = {
         _this.setSimpleDataObjects(resp.data.simpleDataObjects);
       }).catch(function () {// do nothing
       });
-    }
+    },
+    createNewHandler: function createNewHandler() {}
   }, (0, _vuex.mapActions)(['fetchSimpleDataObjects']), {}, (0, _vuex.mapMutations)(['setSimpleDataObjects']))
 };
 exports.default = _default;
@@ -19290,7 +19972,35 @@ exports.default = _default;
         [
           _c("data-listing"),
           _vm._v(" "),
-          _c("data-display", { on: { dataSaved: _vm.handleDataSaved } })
+          _c("data-display", { on: { dataSaved: _vm.handleDataSaved } }),
+          _vm._v(" "),
+          _vm.simpleDataObjects.length === 0
+            ? _c(
+                "div",
+                { staticClass: "wptb-table-data-no-object-wrapper" },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "wptb-table-data-no-object-message" },
+                    [
+                      _c("i", [
+                        _vm._v(_vm._s(_vm.translationM("noDataObjectMessage")))
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "material-button",
+                    {
+                      staticStyle: { padding: "10px !important" },
+                      attrs: { click: _vm.createNewHandler }
+                    },
+                    [_vm._v(_vm._s(_vm.translationM("createNew")))]
+                  )
+                ],
+                1
+              )
+            : _vm._e()
         ],
         1
       )
@@ -19309,7 +20019,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue"}],"components/tableDataMenu/TableDataCreateNewSection.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../MenuContent":"components/MenuContent.vue","./DataListing":"components/tableDataMenu/DataListing.vue","./DataDisplay":"components/tableDataMenu/DataDisplay.vue","../MaterialButton":"components/MaterialButton.vue"}],"components/tableDataMenu/TableDataCreateNewSection.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19556,101 +20266,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withMessage":"mixins/withMessage.js"}],"components/MaterialButton.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default = {
-  props: {
-    click: {
-      type: Function,
-      default: function _default() {
-        // eslint-disable-next-line no-console
-        console.log('Material button clicked');
-      }
-    },
-    size: {
-      type: String,
-      default: 'fit-content'
-    },
-    type: {
-      type: String,
-      default: 'default'
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    buttonClass: function buttonClass() {
-      return ["wptb-plugin-button-material-".concat(this.size)];
-    }
-  },
-  methods: {
-    handleClick: function handleClick() {
-      this.$emit('buttonClicked');
-      this.click();
-    }
-  }
-};
-exports.default = _default;
-        var $48fd91 = exports.default || module.exports;
-      
-      if (typeof $48fd91 === 'function') {
-        $48fd91 = $48fd91.options;
-      }
-    
-        /* template */
-        Object.assign($48fd91, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "wptb-plugin-button-material",
-      class: _vm.buttonClass,
-      attrs: { "data-type": _vm.type, "data-disabled": _vm.disabled },
-      on: {
-        click: function($event) {
-          $event.preventDefault()
-          return _vm.handleClick($event)
-        }
-      }
-    },
-    [_vm._t("default")],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-},{}],"components/modalWindow/ModalWindow.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../../mixins/withMessage":"mixins/withMessage.js"}],"components/modalWindow/ModalWindow.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19983,12 +20599,12 @@ var state = {
     }
   },
   editor: {
-    // TODO [erdembircan] change to null for production
-    activeId: 6
+    activeId: null
   },
   visibility: true,
   setupTab: 'dataManager',
-  dataBackup: null
+  dataBackup: null,
+  dataObject: null
 };
 /**
  * @module state
@@ -20152,6 +20768,18 @@ var getters = {
    */
   getDataBackup: function getDataBackup(state) {
     return state.dataBackup;
+  },
+
+  /**
+   * Get type for data object.
+   *
+   * @param {Object} state store state
+   * @return {string | null} data object type
+   */
+  getCurrentDataObjectType: function getCurrentDataObjectType(state) {
+    var _state$dataBackup;
+
+    return ((_state$dataBackup = state.dataBackup) === null || _state$dataBackup === void 0 ? void 0 : _state$dataBackup.type) || null;
   }
 };
 /**
@@ -20420,10 +21048,12 @@ var mutations = {
    * Set app status to busy.
    *
    * @param {Object} state table data store state
+   * @param {boolean} status busy status
    */
   setBusy: function setBusy(state) {
+    var status = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     // eslint-disable-next-line no-param-reassign
-    state.app.busy = true;
+    state.app.busy = status;
   },
 
   /**
@@ -20490,17 +21120,10 @@ var mutations = {
    * Set backup for table manager data.
    *
    * @param {Object} state table data store state
-   * @param {Object} payload mutation payload
-   * @param {Object} payload.controls data controls
-   * @param {Object} payload.content data content
+   * @param {Object} dataObject data object
    */
-  setDataBackup: function setDataBackup(state, _ref) {
-    var controls = _ref.controls,
-        content = _ref.content;
-    state.dataBackup = {
-      controls: (0, _deepmerge.default)({}, controls),
-      content: (0, _deepmerge.default)({}, content)
-    };
+  setDataBackup: function setDataBackup(state, dataObject) {
+    state.dataBackup = (0, _deepmerge.default)({}, dataObject);
   }
 };
 /**
@@ -20908,6 +21531,45 @@ exports.default = void 0;
 
 var _general = require("../general");
 
+/**
+ * Watch handler for dirty state.
+ *
+ * @param {Object} payload current payload
+ * @param {Object} state store state
+ * @param {Object} store store object
+ */
+var dirtyWatchHandler = function dirtyWatchHandler(payload, state, store) {
+  var currentData = {
+    controls: store.getters.getDataManagerControls,
+    content: store.getters.getDataManagerTempDataObject
+  };
+  var backupData = {
+    controls: store.getters.getDataBackup.controls,
+    content: store.getters.getDataBackup.content
+  }; // compare current data with backup to decide dirty status
+
+  if (JSON.stringify(currentData) !== JSON.stringify(backupData)) {
+    store.commit('setAppDirty');
+  } else {
+    store.commit('resetAppDirtyStatus');
+  }
+};
+/**
+ * Store mutation watch list.
+ *
+ * @type {Object}
+ */
+
+
+var mutationWatchList = {
+  setDataManagerControl: dirtyWatchHandler
+};
+/**
+ * Store action watch list.
+ *
+ * @type {Object}
+ */
+
 var actionWatchList = {
   before: {},
   after: {},
@@ -20915,19 +21577,7 @@ var actionWatchList = {
     after: {
       setDirty: {
         actions: ['setDataCellValue', 'addRowToDataManager', 'addColumnToDataManager', 'deleteDataTableCol', 'deleteDataTableRow'],
-        handler: function handler(payload, state, store) {
-          var currentData = {
-            controls: store.getters.getDataManagerControls,
-            content: store.getters.getDataManagerTempDataObject
-          };
-          var backupData = store.getters.getDataBackup; // compare current data with backup to decide dirty status
-
-          if (JSON.stringify(currentData) !== JSON.stringify(backupData)) {
-            store.commit('setAppDirty');
-          } else {
-            store.commit('resetAppDirtyStatus');
-          }
-        }
+        handler: dirtyWatchHandler
       }
     }
   }
@@ -20940,6 +21590,7 @@ var actionWatchList = {
 
 var subscribe = function subscribe(store) {
   (0, _general.actionWatchFunction)(actionWatchList, store);
+  (0, _general.mutationWatchFunction)(mutationWatchList, store);
 };
 /**
  * @module subscribe
@@ -21767,6 +22418,51 @@ var actions = {
     }; // set proxy for clicked cell id of select operation
 
     commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
+  },
+
+  /**
+   * Start select operation.
+   *
+   * @param {{commit}} vuex store object
+   * @param {string} callerId id of the component that started the operation
+   * @return {Promise} Promise object
+   */
+  startRowSelectOperation: function startRowSelectOperation(_ref17, callerId) {
+    var commit = _ref17.commit;
+    // set app to busy
+    commit('setBusy', true); // reset selection data
+
+    commit('resetSelectData'); // enable row selection
+
+    commit('setSelectionType', 'row'); // enable select operation
+
+    commit('setSelectStatus', true); // set operation caller id
+
+    commit('setSelectCallerId', callerId); // send back a promise object which will be resolved when click operation occurs
+
+    return new Promise(function (res) {
+      commit('setSelectIdResolve', function (val) {
+        // end selection operation
+        commit('setSelectStatus', false);
+        commit('resetSelectData'); // set app to idle
+
+        commit('setBusy', false);
+        res(val);
+      });
+    });
+  },
+
+  /**
+   * Cancel active select operation.
+   *
+   * @param {{state, commit}} vuex store object
+   */
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref18) {
+    var state = _ref18.state,
+        commit = _ref18.commit;
+    commit('setSelectStatus', false);
+    state.select.clickId.resolve(null);
+    commit('resetSelectData');
   }
 };
 /**
@@ -22078,6 +22774,59 @@ var mutations = {
    */
   setClickIdProxy: function setClickIdProxy(state, proxy) {
     state.select.clickId = proxy;
+  },
+
+  /**
+   * Reset select operation data.
+   *
+   * @param {Object} state data table state
+   */
+  resetSelectData: function resetSelectData(state) {
+    state.select.hoverId = null;
+    state.select.clickId.resolve = null;
+    state.select.clickId.id = null;
+    state.select.callerId = null;
+  },
+
+  /**
+   * Set select operation type.
+   * Available types are 'row' and 'col'.
+   *
+   * @param {Object} state data table state
+   * @param {string} type type
+   */
+  setSelectionType: function setSelectionType(state, type) {
+    state.select.type = type;
+  },
+
+  /**
+   * Set status  for select operation.
+   *
+   * @param {Object} state data table state
+   * @param {boolean} status status
+   */
+  setSelectStatus: function setSelectStatus(state, status) {
+    state.select.active = status;
+  },
+
+  /**
+   * Set a unique id for the current select operation.
+   *
+   * @param {Object} state data table state
+   * @param {string} callerId caller id
+   */
+  setSelectCallerId: function setSelectCallerId(state, callerId) {
+    state.select.callerId = callerId;
+  },
+
+  /**
+   * Set a resolve function to signal end for click operation.
+   *
+   * @param {Object} state data table state
+   * @param {Function} resolve resolve function
+   */
+  setSelectIdResolve: function setSelectIdResolve(state, resolve) {
+    state.select.clickId.resolve = resolve;
   }
 };
 /**
@@ -22491,7 +23240,37 @@ var getModuleOptions = function getModuleOptions(extraStoreOptions) {
 
 var _default = getModuleOptions;
 exports.default = _default;
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./actions":"stores/modules/dataManager/actions.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js","./plugin":"stores/modules/dataManager/plugin.js"}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./actions":"stores/modules/dataManager/actions.js","./state":"stores/modules/dataManager/state.js","./mutations":"stores/modules/dataManager/mutations.js","./getters":"stores/modules/dataManager/getters.js","./plugin":"stores/modules/dataManager/plugin.js"}],"plugins/filters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Plugin for reusable.
+ *
+ * @param {Object} Vue Vue instance
+ * @param {Object} options filter options
+ */
+// eslint-disable-next-line no-unused-vars
+function install(Vue, options) {
+  // capitalize filter
+  Vue.filter('cap', function (val) {
+    return val.split(' ').map(function (v) {
+      var _v$;
+
+      return ((_v$ = v[0]) === null || _v$ === void 0 ? void 0 : _v$.toUpperCase()) + v.slice(1);
+    }).join(' ');
+  });
+}
+
+var _default = {
+  install: install
+};
+exports.default = _default;
+},{}],"WPTB_Table_Data_Menu.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -22507,6 +23286,8 @@ var _tableDataMenu = _interopRequireDefault(require("./stores/tableDataMenu"));
 var _withNativeTranslationStore = _interopRequireDefault(require("./mixins/withNativeTranslationStore"));
 
 var _dataManager = require("./stores/modules/dataManager");
+
+var _filters = _interopRequireDefault(require("./plugins/filters"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22531,7 +23312,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // disable production tips
 _vue.default.config.productionTip = false; // use portals
 
-_vue.default.use(_portalVue.default); // translation mixin for all vue components
+_vue.default.use(_portalVue.default); // use general filters
+
+
+_vue.default.use(_filters.default); // translation mixin for all vue components
 
 
 _vue.default.mixin(_withNativeTranslationStore.default); // use fragment
@@ -22570,5 +23354,5 @@ new _vue.default({
     pluginInfo: menuData.pluginInfo
   }
 }).$mount('#wptbTableDataMenuMount');
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./containers/TableDataMenuApp":"containers/TableDataMenuApp.vue","./stores/tableDataMenu":"stores/tableDataMenu/index.js","./mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./stores/modules/dataManager":"stores/modules/dataManager/index.js"}]},{},["WPTB_Table_Data_Menu.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./containers/TableDataMenuApp":"containers/TableDataMenuApp.vue","./stores/tableDataMenu":"stores/tableDataMenu/index.js","./mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./stores/modules/dataManager":"stores/modules/dataManager/index.js","./plugins/filters":"plugins/filters.js"}]},{},["WPTB_Table_Data_Menu.js"], null)
 //# sourceMappingURL=/WPTB_Table_Data_Menu.js.map

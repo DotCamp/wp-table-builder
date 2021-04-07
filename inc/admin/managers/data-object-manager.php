@@ -152,13 +152,19 @@ class Data_Object_Manager {
 				'no'                     => esc_html__( 'no', 'wp-table-builder' ),
 				'sectionDirtyError'      => esc_html__( 'There are unsaved changes on your table data, continue and discard changes?', 'wp-table-builder' ),
 				'noTableUsage'           => esc_html__( 'No table is using this data.', 'wp-table-builder' ),
-				'tables'           => esc_html__( 'tables', 'wp-table-builder' ),
-				'options'           => esc_html__( 'Options', 'wp-table-builder' ),
+				'tables'                 => esc_html__( 'tables', 'wp-table-builder' ),
+				'options'                => esc_html__( 'Options', 'wp-table-builder' ),
+				'firstRowHeader'         => esc_html__( 'First row as column names', 'wp-table-builder' ),
+				'selectRowForNames'                       => esc_html__( 'select a row for column names', 'wp-table-builder' ),
+				'cancel'                       => esc_html__( 'cancel', 'wp-table-builder' ),
+				'resetIndexRow'                       => esc_html__( 'new column names row', 'wp-table-builder' ),
+				'createNew'                       => esc_html__( 'Create New', 'wp-table-builder' ),
+				'noDataObjectMessage'                       => esc_html__( 'No table data found.', 'wp-table-builder' ),
 			];
 
 			$security = [
 				'url'               => get_admin_url( null, 'admin-ajax.php' ),
-				'adminUrl'               => get_admin_url( null, 'admin.php' ),
+				'adminUrl'          => get_admin_url( null, 'admin.php' ),
 				'dataObjectContent' => [
 					'nonce'  => wp_create_nonce( 'dataObjectContent' ),
 					'action' => 'dataObjectContent'

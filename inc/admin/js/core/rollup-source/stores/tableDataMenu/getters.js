@@ -115,6 +115,15 @@ const getters = {
 	getDataBackup(state) {
 		return state.dataBackup;
 	},
+	/**
+	 * Get type for data object.
+	 *
+	 * @param {Object} state store state
+	 * @return {string | null} data object type
+	 */
+	getCurrentDataObjectType(state) {
+		return state.dataBackup?.type || null;
+	},
 };
 
 /**

@@ -28126,7 +28126,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/DataManagerLeftPanel.vue":[function(require,module,exports) {
+},{}],"components/DataManagerCsvOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28136,15 +28136,11 @@ exports.default = void 0;
 
 var _vuex = require("vuex");
 
-var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
-
 var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
 
-var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
-
-var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
-
 var _PanelButtonControl = _interopRequireDefault(require("./PanelButtonControl"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28155,17 +28151,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var _default = {
-  components: {
-    PanelButtonControl: _PanelButtonControl.default,
-    PanelToggleControl: _PanelToggleControl.default,
-    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
-  },
-  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
   props: {
-    currentTab: {
-      type: String,
-      default: 'default'
+    isBusy: {
+      type: Boolean,
+      default: false
     }
+  },
+  mixins: [_withNativeTranslationStore.default],
+  components: {
+    PanelToggleControl: _PanelToggleControl.default,
+    PanelButtonControl: _PanelButtonControl.default
   },
   computed: _objectSpread({
     newNamesRowButtonVisibility: function newNamesRowButtonVisibility() {
@@ -28190,8 +28185,8 @@ var _default = {
           callerId = _this$getSelectOperat.callerId;
       return !active && callerId !== 'selectRowForNames';
     }
-  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'parseCellId', 'getSelectOperationData', 'parsedData'])),
-  methods: _objectSpread({}, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']), {
+  }, (0, _vuex.mapGetters)(['getDataManagerControls', 'getSelectOperationData', 'parseCellId', 'parsedData'])),
+  methods: _objectSpread({
     selectRowForNames: function selectRowForNames() {
       var _this = this;
 
@@ -28225,7 +28220,136 @@ var _default = {
         value: null
       });
     }
-  })
+  }, (0, _vuex.mapMutations)(['setDataManagerControl']), {}, (0, _vuex.mapActions)(['startRowSelectOperation', 'cancelRowSelectOperation']))
+};
+exports.default = _default;
+        var $dac00f = exports.default || module.exports;
+      
+      if (typeof $dac00f === 'function') {
+        $dac00f = $dac00f.options;
+      }
+    
+        /* template */
+        Object.assign($dac00f, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "fragment",
+    [
+      _c("panel-toggle-control", {
+        attrs: {
+          disabled: _vm.isBusy,
+          label: _vm._f("cap")(_vm.translationM("firstRowHeader"))
+        },
+        model: {
+          value: _vm.firstRowAsColumnName,
+          callback: function($$v) {
+            _vm.firstRowAsColumnName = $$v
+          },
+          expression: "firstRowAsColumnName"
+        }
+      }),
+      _vm._v(" "),
+      _vm.rowForNamesVisibility
+        ? _c(
+            "panel-button-control",
+            {
+              attrs: { disabled: _vm.isBusy },
+              on: { buttonClick: _vm.selectRowForNames }
+            },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("selectRowForNames"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.rowForNamesVisibility
+        ? _c(
+            "panel-button-control",
+            {
+              attrs: { type: "danger" },
+              on: { buttonClick: _vm.cancelRowSelectOperation }
+            },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("cancel"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.newNamesRowButtonVisibility
+        ? _c(
+            "panel-button-control",
+            { on: { buttonClick: _vm.resetIndexRow } },
+            [
+              _vm._v(
+                "\n\t\t" +
+                  _vm._s(_vm._f("cap")(_vm.translationM("resetIndexRow"))) +
+                  "\n\t"
+              )
+            ]
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelButtonControl":"components/PanelButtonControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js"}],"components/DataManagerLeftPanel.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelSectionGroupTabbedItem = _interopRequireDefault(require("./PanelSectionGroupTabbedItem"));
+
+var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/withNativeTranslationStore"));
+
+var _withStoreBusy = _interopRequireDefault(require("../mixins/withStoreBusy"));
+
+var _DataManagerCsvOptions = _interopRequireDefault(require("./DataManagerCsvOptions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    DataManagerCsvOptions: _DataManagerCsvOptions.default,
+    PanelSectionGroupTabbedItem: _PanelSectionGroupTabbedItem.default
+  },
+  mixins: [_withNativeTranslationStore.default, _withStoreBusy.default],
+  props: {
+    currentTab: {
+      type: String,
+      default: 'default'
+    }
+  }
 };
 exports.default = _default;
         var $b4a27f = exports.default || module.exports;
@@ -28243,77 +28367,7 @@ exports.default = _default;
   return _c(
     "PanelSectionGroupTabbedItem",
     { attrs: { "active-id": _vm.currentTab, id: "dataManager" } },
-    [
-      _c(
-        "fragment",
-        [
-          _c("panel-toggle-control", {
-            attrs: {
-              disabled: _vm.isBusy,
-              label: _vm._f("cap")(_vm.translationM("firstRowHeader"))
-            },
-            model: {
-              value: _vm.firstRowAsColumnName,
-              callback: function($$v) {
-                _vm.firstRowAsColumnName = $$v
-              },
-              expression: "firstRowAsColumnName"
-            }
-          }),
-          _vm._v(" "),
-          _vm.rowForNamesVisibility
-            ? _c(
-                "panel-button-control",
-                {
-                  attrs: { disabled: _vm.isBusy },
-                  on: { buttonClick: _vm.selectRowForNames }
-                },
-                [
-                  _vm._v(
-                    "\n\t\t\t" +
-                      _vm._s(
-                        _vm._f("cap")(_vm.translationM("selectRowForNames"))
-                      ) +
-                      "\n\t\t"
-                  )
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.rowForNamesVisibility
-            ? _c(
-                "panel-button-control",
-                {
-                  attrs: { type: "danger" },
-                  on: { buttonClick: _vm.cancelRowSelectOperation }
-                },
-                [
-                  _vm._v(
-                    "\n\t\t\t" +
-                      _vm._s(_vm._f("cap")(_vm.translationM("cancel"))) +
-                      "\n\t\t"
-                  )
-                ]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.newNamesRowButtonVisibility
-            ? _c(
-                "panel-button-control",
-                { on: { buttonClick: _vm.resetIndexRow } },
-                [
-                  _vm._v(
-                    "\n\t\t\t" +
-                      _vm._s(_vm._f("cap")(_vm.translationM("resetIndexRow"))) +
-                      "\n\t\t"
-                  )
-                ]
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    ],
+    [_c("data-manager-csv-options", { attrs: { "is-busy": _vm.isBusy } })],
     1
   )
 }
@@ -28329,7 +28383,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","./PanelToggleControl":"components/PanelToggleControl.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js","./PanelButtonControl":"components/PanelButtonControl.vue"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
+},{"./PanelSectionGroupTabbedItem":"components/PanelSectionGroupTabbedItem.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","../mixins/withStoreBusy":"mixins/withStoreBusy.js","./DataManagerCsvOptions":"components/DataManagerCsvOptions.vue"}],"components/CsvSetupLeftPanel.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34655,59 +34709,6 @@ var mutations = {
   },
 
   /**
-   * Set status  for select operation.
-   *
-   * @param {Object} state data table state
-   * @param {boolean} status status
-   */
-  setSelectStatus: function setSelectStatus(state, status) {
-    state.dataManager.select.active = status;
-  },
-
-  /**
-   * Reset select operation data.
-   *
-   * @param {Object} state data table state
-   */
-  resetSelectData: function resetSelectData(state) {
-    state.dataManager.select.hoverId = null;
-    state.dataManager.select.clickId.resolve = null;
-    state.dataManager.select.clickId.id = null;
-    state.dataManager.select.callerId = null;
-  },
-
-  /**
-   * Set select operation type.
-   * Available types are 'row' and 'col'.
-   *
-   * @param {Object} state data table state
-   * @param {string} type type
-   */
-  setSelectionType: function setSelectionType(state, type) {
-    state.dataManager.select.type = type;
-  },
-
-  /**
-   * Set a resolve function to signal end for click operation.
-   *
-   * @param {Object} state data table state
-   * @param {Function} resolve resolve function
-   */
-  setSelectIdResolve: function setSelectIdResolve(state, resolve) {
-    state.dataManager.select.clickId.resolve = resolve;
-  },
-
-  /**
-   * Set a unique id for the current select operation.
-   *
-   * @param {Object} state data table state
-   * @param {string} callerId caller id
-   */
-  setSelectCallerId: function setSelectCallerId(state, callerId) {
-    state.dataManager.select.callerId = callerId;
-  },
-
-  /**
    * Reset a property to its default values if defined.
    *
    * @param {Object} state data table state
@@ -34986,58 +34987,13 @@ var actions = {
   },
 
   /**
-   * Start select operation.
-   *
-   * @param {{commit}} vuex store object
-   * @param {string} callerId id of the component that started the operation
-   * @return {Promise} Promise object
-   */
-  startRowSelectOperation: function startRowSelectOperation(_ref9, callerId) {
-    var commit = _ref9.commit;
-    // set app to busy
-    commit('setBusy', true); // reset selection data
-
-    commit('resetSelectData'); // enable row selection
-
-    commit('setSelectionType', 'row'); // enable select operation
-
-    commit('setSelectStatus', true); // set operation caller id
-
-    commit('setSelectCallerId', callerId); // send back a promise object which will be resolved when click operation occurs
-
-    return new Promise(function (res) {
-      commit('setSelectIdResolve', function (val) {
-        // end selection operation
-        commit('setSelectStatus', false);
-        commit('resetSelectData'); // set app to idle
-
-        commit('setBusy', false);
-        res(val);
-      });
-    });
-  },
-
-  /**
-   * Cancel active select operation.
-   *
-   * @param {{state, commit}} vuex store object
-   */
-  cancelRowSelectOperation: function cancelRowSelectOperation(_ref10) {
-    var state = _ref10.state,
-        commit = _ref10.commit;
-    commit('setSelectStatus', false);
-    state.dataManager.select.clickId.resolve(null);
-    commit('resetSelectData');
-  },
-
-  /**
    * Set current source in setup as selected.
    *
    * @param {{commit, getters}} vuex store object
    */
-  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref11) {
-    var dispatch = _ref11.dispatch,
-        getters = _ref11.getters;
+  setCurrentSourceAsSelected: function setCurrentSourceAsSelected(_ref9) {
+    var dispatch = _ref9.dispatch,
+        getters = _ref9.getters;
     var currentSourceInSetup = getters.getCurrentSourceSetupId; // @deprecated
     // commit('setSelectedDataSource', currentSourceInSetup);
 
@@ -35049,11 +35005,11 @@ var actions = {
    *
    * @param {{state}} vuex store object
    */
-  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref12) {
-    var state = _ref12.state,
-        getters = _ref12.getters;
-    document.addEventListener('wptb:save:before', function (_ref13) {
-      var detail = _ref13.detail;
+  addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref10) {
+    var state = _ref10.state,
+        getters = _ref10.getters;
+    document.addEventListener('wptb:save:before', function (_ref11) {
+      var detail = _ref11.detail;
       var dataManager = state.dataManager; // select data manager properties that will be saved to table
 
       var controls = dataManager.controls,
@@ -35136,21 +35092,21 @@ var actions = {
    * @param {string} query element query
    * @return {HTMLElement|null} found table
    */
-  findMainTable: function findMainTable(_ref14, query) {
-    var commit = _ref14.commit;
+  findMainTable: function findMainTable(_ref12, query) {
+    var commit = _ref12.commit;
     var mainTable = document.querySelector(query);
     commit('setTargetTable', mainTable);
     commit('setTableActiveStatus', mainTable !== null);
     return mainTable;
   },
-  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref15, query) {
+  handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref13, query) {
     return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
       var dispatch, mainTable;
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              dispatch = _ref15.dispatch;
+              dispatch = _ref13.dispatch;
               _context3.next = 3;
               return dispatch('findMainTable', query);
 
@@ -35201,8 +35157,8 @@ var actions = {
    * @param {{commit}} vuex store object
    * @param {HTMLElement} tableElement main table element
    */
-  setUpTableMutationObserver: function setUpTableMutationObserver(_ref17, tableElement) {
-    var commit = _ref17.commit;
+  setUpTableMutationObserver: function setUpTableMutationObserver(_ref15, tableElement) {
+    var commit = _ref15.commit;
     // observer config object
     var config = {
       attributes: true,
@@ -35227,10 +35183,10 @@ var actions = {
    * @param {Object} root store action object
    * @param {Function} root.commit commit function for mutations
    */
-  watchSavedResponse: function watchSavedResponse(_ref18) {
-    var commit = _ref18.commit;
-    document.addEventListener('wptb:saved:response:data', function (_ref19) {
-      var detail = _ref19.detail;
+  watchSavedResponse: function watchSavedResponse(_ref16) {
+    var commit = _ref16.commit;
+    document.addEventListener('wptb:saved:response:data', function (_ref17) {
+      var detail = _ref17.detail;
 
       if (detail.dataTable) {
         if (detail.dataTable.dataObject) {
@@ -35248,9 +35204,9 @@ var actions = {
    * @param {Function} root.commit commit function for mutations
    * @param {Function} root.getters getters store state getters
    */
-  syncDataSourceSetup: function syncDataSourceSetup(_ref20) {
-    var commit = _ref20.commit,
-        getters = _ref20.getters;
+  syncDataSourceSetup: function syncDataSourceSetup(_ref18) {
+    var commit = _ref18.commit,
+        getters = _ref18.getters;
     var _getters$getDataObjec = getters.getDataObject,
         type = _getters$getDataObjec.type,
         controls = _getters$getDataObjec.controls,
@@ -36048,6 +36004,51 @@ var actions = {
     }; // set proxy for clicked cell id of select operation
 
     commit('setClickIdProxy', new Proxy(selectId, clickIdHandler));
+  },
+
+  /**
+   * Start select operation.
+   *
+   * @param {{commit}} vuex store object
+   * @param {string} callerId id of the component that started the operation
+   * @return {Promise} Promise object
+   */
+  startRowSelectOperation: function startRowSelectOperation(_ref17, callerId) {
+    var commit = _ref17.commit;
+    // set app to busy
+    commit('setBusy', true); // reset selection data
+
+    commit('resetSelectData'); // enable row selection
+
+    commit('setSelectionType', 'row'); // enable select operation
+
+    commit('setSelectStatus', true); // set operation caller id
+
+    commit('setSelectCallerId', callerId); // send back a promise object which will be resolved when click operation occurs
+
+    return new Promise(function (res) {
+      commit('setSelectIdResolve', function (val) {
+        // end selection operation
+        commit('setSelectStatus', false);
+        commit('resetSelectData'); // set app to idle
+
+        commit('setBusy', false);
+        res(val);
+      });
+    });
+  },
+
+  /**
+   * Cancel active select operation.
+   *
+   * @param {{state, commit}} vuex store object
+   */
+  cancelRowSelectOperation: function cancelRowSelectOperation(_ref18) {
+    var state = _ref18.state,
+        commit = _ref18.commit;
+    commit('setSelectStatus', false);
+    state.select.clickId.resolve(null);
+    commit('resetSelectData');
   }
 };
 /**
@@ -36359,6 +36360,59 @@ var mutations = {
    */
   setClickIdProxy: function setClickIdProxy(state, proxy) {
     state.select.clickId = proxy;
+  },
+
+  /**
+   * Reset select operation data.
+   *
+   * @param {Object} state data table state
+   */
+  resetSelectData: function resetSelectData(state) {
+    state.select.hoverId = null;
+    state.select.clickId.resolve = null;
+    state.select.clickId.id = null;
+    state.select.callerId = null;
+  },
+
+  /**
+   * Set select operation type.
+   * Available types are 'row' and 'col'.
+   *
+   * @param {Object} state data table state
+   * @param {string} type type
+   */
+  setSelectionType: function setSelectionType(state, type) {
+    state.select.type = type;
+  },
+
+  /**
+   * Set status  for select operation.
+   *
+   * @param {Object} state data table state
+   * @param {boolean} status status
+   */
+  setSelectStatus: function setSelectStatus(state, status) {
+    state.select.active = status;
+  },
+
+  /**
+   * Set a unique id for the current select operation.
+   *
+   * @param {Object} state data table state
+   * @param {string} callerId caller id
+   */
+  setSelectCallerId: function setSelectCallerId(state, callerId) {
+    state.select.callerId = callerId;
+  },
+
+  /**
+   * Set a resolve function to signal end for click operation.
+   *
+   * @param {Object} state data table state
+   * @param {Function} resolve resolve function
+   */
+  setSelectIdResolve: function setSelectIdResolve(state, resolve) {
+    state.select.clickId.resolve = resolve;
   }
 };
 /**

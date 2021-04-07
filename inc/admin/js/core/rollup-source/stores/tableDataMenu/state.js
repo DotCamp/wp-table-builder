@@ -13,12 +13,12 @@ const state = {
 		},
 	},
 	editor: {
-		// TODO [erdembircan] change to null for production
-		activeId: 6,
+		activeId: null,
 	},
 	visibility: true,
 	setupTab: 'dataManager',
 	dataBackup: null,
+	dataObject: null,
 };
 
 /**

@@ -3,18 +3,30 @@
 		<div class="wptb-table-data-section">
 			<data-listing></data-listing>
 			<data-display @dataSaved="handleDataSaved"></data-display>
+			<div v-if="simpleDataObjects.length === 0" class="wptb-table-data-no-object-wrapper">
+				<div class="wptb-table-data-no-object-message">
+					<i>{{ translationM('noDataObjectMessage') }}</i>
+				</div>
+				<material-button :click="createNewHandler" style="padding: 10px !important;">{{
+					translationM('createNew')
+				}}</material-button>
+			</div>
 		</div>
 	</menu-content>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import MenuContent from '../MenuContent';
 import DataListing from './DataListing';
 import DataDisplay from './DataDisplay';
+import MaterialButton from '../MaterialButton';
 
 export default {
-	components: { MenuContent, DataListing, DataDisplay },
+	components: { MaterialButton, MenuContent, DataListing, DataDisplay },
+	computed: {
+		...mapGetters(['simpleDataObjects']),
+	},
 	methods: {
 		handleDataSaved() {
 			this.fetchSimpleDataObjects()
@@ -25,6 +37,9 @@ export default {
 					// do nothing
 				});
 		},
+		createNewHandler() {
+
+    },
 		...mapActions(['fetchSimpleDataObjects']),
 		...mapMutations(['setSimpleDataObjects']),
 	},

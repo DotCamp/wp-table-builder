@@ -6,10 +6,9 @@
 		><span class="dashicons dashicons-admin-generic wptb-table-data-header-icon"></span>
 		<portal to="dataDisplaySection">
 			<transition name="wptb-vertical-move">
-				<div
-					class="wptb-table-data-object-options-wrapper wptb-plugin-box-shadow-md"
-					v-if="panelVisibility"
-				></div>
+				<div class="wptb-table-data-object-options-wrapper wptb-plugin-box-shadow-md" v-show="panelVisibility">
+					<data-object-type-options></data-object-type-options>
+				</div>
 			</transition>
 		</portal>
 	</window-header-button>
@@ -18,10 +17,11 @@
 <script>
 import withNativeTranslationStore from '../../mixins/withNativeTranslationStore';
 import WindowHeaderButton from '../modalWindow/WindowHeaderButton';
+import DataObjectTypeOptions from './DataObjectTypeOptions';
 
 export default {
 	mixins: [withNativeTranslationStore],
-	components: { WindowHeaderButton },
+	components: { WindowHeaderButton, DataObjectTypeOptions },
 	data() {
 		return {
 			panelVisibility: false,

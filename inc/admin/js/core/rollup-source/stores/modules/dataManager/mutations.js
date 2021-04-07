@@ -216,6 +216,54 @@ const mutations = {
 	setClickIdProxy: (state, proxy) => {
 		state.select.clickId = proxy;
 	},
+	/**
+	 * Reset select operation data.
+	 *
+	 * @param {Object} state data table state
+	 */
+	resetSelectData(state) {
+		state.select.hoverId = null;
+		state.select.clickId.resolve = null;
+		state.select.clickId.id = null;
+		state.select.callerId = null;
+	},
+	/**
+	 * Set select operation type.
+	 * Available types are 'row' and 'col'.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} type type
+	 */
+	setSelectionType(state, type) {
+		state.select.type = type;
+	},
+	/**
+	 * Set status  for select operation.
+	 *
+	 * @param {Object} state data table state
+	 * @param {boolean} status status
+	 */
+	setSelectStatus(state, status) {
+		state.select.active = status;
+	},
+	/**
+	 * Set a unique id for the current select operation.
+	 *
+	 * @param {Object} state data table state
+	 * @param {string} callerId caller id
+	 */
+	setSelectCallerId(state, callerId) {
+		state.select.callerId = callerId;
+	},
+	/**
+	 * Set a resolve function to signal end for click operation.
+	 *
+	 * @param {Object} state data table state
+	 * @param {Function} resolve resolve function
+	 */
+	setSelectIdResolve(state, resolve) {
+		state.select.clickId.resolve = resolve;
+	},
 };
 
 /**

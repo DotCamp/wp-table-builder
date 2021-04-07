@@ -102,53 +102,6 @@ const actions = {
 		commit('setActiveControlTabGroup', { sourceId: state.dataSource.setup.sourceId, tabId });
 	},
 	/**
-	 * Start select operation.
-	 *
-	 * @param {{commit}} vuex store object
-	 * @param {string} callerId id of the component that started the operation
-	 * @return {Promise} Promise object
-	 */
-	startRowSelectOperation({ commit }, callerId) {
-		// set app to busy
-		commit('setBusy', true);
-
-		// reset selection data
-		commit('resetSelectData');
-
-		// enable row selection
-		commit('setSelectionType', 'row');
-
-		// enable select operation
-		commit('setSelectStatus', true);
-
-		// set operation caller id
-		commit('setSelectCallerId', callerId);
-
-		// send back a promise object which will be resolved when click operation occurs
-		return new Promise((res) => {
-			commit('setSelectIdResolve', (val) => {
-				// end selection operation
-				commit('setSelectStatus', false);
-				commit('resetSelectData');
-
-				// set app to idle
-				commit('setBusy', false);
-
-				res(val);
-			});
-		});
-	},
-	/**
-	 * Cancel active select operation.
-	 *
-	 * @param {{state, commit}} vuex store object
-	 */
-	cancelRowSelectOperation({ state, commit }) {
-		commit('setSelectStatus', false);
-		state.dataManager.select.clickId.resolve(null);
-		commit('resetSelectData');
-	},
-	/**
 	 * Set current source in setup as selected.
 	 *
 	 * @param {{commit, getters}} vuex store object

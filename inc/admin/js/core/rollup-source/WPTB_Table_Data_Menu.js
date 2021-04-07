@@ -5,12 +5,16 @@ import TableDataMenuApp from './containers/TableDataMenuApp';
 import createStore from './stores/tableDataMenu';
 import withNativeTranslationStore from './mixins/withNativeTranslationStore';
 import { defaultStoreOptions as dataManager } from './stores/modules/dataManager';
+import filters from './plugins/filters';
 
 // disable production tips
 Vue.config.productionTip = false;
 
 // use portals
 Vue.use(PortalVue);
+
+// use general filters
+Vue.use(filters);
 
 // translation mixin for all vue components
 Vue.mixin(withNativeTranslationStore);

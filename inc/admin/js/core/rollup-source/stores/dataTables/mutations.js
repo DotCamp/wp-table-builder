@@ -100,54 +100,6 @@ const mutations = {
 		state.dataManager.tempData.values = data;
 	},
 	/**
-	 * Set status  for select operation.
-	 *
-	 * @param {Object} state data table state
-	 * @param {boolean} status status
-	 */
-	setSelectStatus(state, status) {
-		state.dataManager.select.active = status;
-	},
-	/**
-	 * Reset select operation data.
-	 *
-	 * @param {Object} state data table state
-	 */
-	resetSelectData(state) {
-		state.dataManager.select.hoverId = null;
-		state.dataManager.select.clickId.resolve = null;
-		state.dataManager.select.clickId.id = null;
-		state.dataManager.select.callerId = null;
-	},
-	/**
-	 * Set select operation type.
-	 * Available types are 'row' and 'col'.
-	 *
-	 * @param {Object} state data table state
-	 * @param {string} type type
-	 */
-	setSelectionType(state, type) {
-		state.dataManager.select.type = type;
-	},
-	/**
-	 * Set a resolve function to signal end for click operation.
-	 *
-	 * @param {Object} state data table state
-	 * @param {Function} resolve resolve function
-	 */
-	setSelectIdResolve(state, resolve) {
-		state.dataManager.select.clickId.resolve = resolve;
-	},
-	/**
-	 * Set a unique id for the current select operation.
-	 *
-	 * @param {Object} state data table state
-	 * @param {string} callerId caller id
-	 */
-	setSelectCallerId(state, callerId) {
-		state.dataManager.select.callerId = callerId;
-	},
-	/**
 	 * Reset a property to its default values if defined.
 	 *
 	 * @param {Object} state data table state

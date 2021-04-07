@@ -156,6 +156,7 @@ const actions = {
 		dispatch('mergeDataObject', dataObjectBackup);
 		commit('resetAppDirtyStatus');
 	},
+
 };
 
 /**

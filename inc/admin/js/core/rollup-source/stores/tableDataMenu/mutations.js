@@ -20,10 +20,11 @@ const mutations = {
 	 * Set app status to busy.
 	 *
 	 * @param {Object} state table data store state
+	 * @param {boolean} status busy status
 	 */
-	setBusy(state) {
+	setBusy(state, status = true) {
 		// eslint-disable-next-line no-param-reassign
-		state.app.busy = true;
+		state.app.busy = status;
 	},
 	/**
 	 * Reset app busy status.
@@ -83,15 +84,10 @@ const mutations = {
 	 * Set backup for table manager data.
 	 *
 	 * @param {Object} state table data store state
-	 * @param {Object} payload mutation payload
-	 * @param {Object} payload.controls data controls
-	 * @param {Object} payload.content data content
+	 * @param {Object} dataObject data object
 	 */
-	setDataBackup(state, { controls, content }) {
-		state.dataBackup = {
-			controls: deepmerge({}, controls),
-			content: deepmerge({}, content),
-		};
+	setDataBackup(state, dataObject) {
+		state.dataBackup = deepmerge({}, dataObject);
 	},
 };
 
