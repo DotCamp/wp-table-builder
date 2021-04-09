@@ -155,11 +155,13 @@ class Data_Object_Manager {
 				'tables'                 => esc_html__( 'tables', 'wp-table-builder' ),
 				'options'                => esc_html__( 'Options', 'wp-table-builder' ),
 				'firstRowHeader'         => esc_html__( 'First row as column names', 'wp-table-builder' ),
-				'selectRowForNames'                       => esc_html__( 'select a row for column names', 'wp-table-builder' ),
-				'cancel'                       => esc_html__( 'cancel', 'wp-table-builder' ),
-				'resetIndexRow'                       => esc_html__( 'new column names row', 'wp-table-builder' ),
-				'createNew'                       => esc_html__( 'Create New', 'wp-table-builder' ),
-				'noDataObjectMessage'                       => esc_html__( 'No table data found.', 'wp-table-builder' ),
+				'selectRowForNames'      => esc_html__( 'select a row for column names', 'wp-table-builder' ),
+				'cancel'                 => esc_html__( 'cancel', 'wp-table-builder' ),
+				'resetIndexRow'          => esc_html__( 'new column names row', 'wp-table-builder' ),
+				'createNew'              => esc_html__( 'Create New', 'wp-table-builder' ),
+				'noDataObjectMessage'    => esc_html__( 'No table data found.', 'wp-table-builder' ),
+				'selectDataFromListing'  => esc_html__( 'Select a table data from listing', 'wp-table-builder' ),
+				'or'  => esc_html__( 'or', 'wp-table-builder' ),
 			];
 
 			$security = [

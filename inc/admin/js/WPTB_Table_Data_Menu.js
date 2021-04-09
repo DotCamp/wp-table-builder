@@ -19936,7 +19936,7 @@ var _default = {
     DataListing: _DataListing.default,
     DataDisplay: _DataDisplay.default
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['simpleDataObjects'])),
+  computed: _objectSpread({}, (0, _vuex.mapGetters)(['simpleDataObjects', 'getEditorActiveId'])),
   methods: _objectSpread({
     handleDataSaved: function handleDataSaved() {
       var _this = this;
@@ -19946,8 +19946,10 @@ var _default = {
       }).catch(function () {// do nothing
       });
     },
-    createNewHandler: function createNewHandler() {}
-  }, (0, _vuex.mapActions)(['fetchSimpleDataObjects']), {}, (0, _vuex.mapMutations)(['setSimpleDataObjects']))
+    createNewHandler: function createNewHandler() {
+      this.setTableDataSectionCurrentTab('tableDataCreateNewSection');
+    }
+  }, (0, _vuex.mapActions)(['fetchSimpleDataObjects']), {}, (0, _vuex.mapMutations)(['setSimpleDataObjects', 'setTableDataSectionCurrentTab']))
 };
 exports.default = _default;
         var $222613 = exports.default || module.exports;
@@ -19974,29 +19976,82 @@ exports.default = _default;
           _vm._v(" "),
           _c("data-display", { on: { dataSaved: _vm.handleDataSaved } }),
           _vm._v(" "),
-          _vm.simpleDataObjects.length === 0
+          _vm.getEditorActiveId === null
             ? _c(
                 "div",
                 { staticClass: "wptb-table-data-no-object-wrapper" },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "wptb-table-data-no-object-message" },
-                    [
-                      _c("i", [
-                        _vm._v(_vm._s(_vm.translationM("noDataObjectMessage")))
-                      ])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "material-button",
-                    {
-                      staticStyle: { padding: "10px !important" },
-                      attrs: { click: _vm.createNewHandler }
-                    },
-                    [_vm._v(_vm._s(_vm.translationM("createNew")))]
-                  )
+                  _vm.simpleDataObjects.length === 0
+                    ? _c(
+                        "fragment",
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "wptb-table-data-no-object-message"
+                            },
+                            [
+                              _c("i", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.translationM("noDataObjectMessage")
+                                  )
+                                )
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "material-button",
+                            {
+                              staticStyle: { padding: "10px !important" },
+                              attrs: { click: _vm.createNewHandler }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.translationM("createNew")) +
+                                  "\n\t\t\t\t"
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    : _c(
+                        "fragment",
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "wptb-table-data-no-object-message"
+                            },
+                            [
+                              _c("i", [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.translationM("selectDataFromListing")
+                                  )
+                                )
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "material-button",
+                            {
+                              staticStyle: { padding: "10px !important" },
+                              attrs: { click: _vm.createNewHandler }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.translationM("createNew")) +
+                                  "\n\t\t\t\t"
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
                 ],
                 1
               )
@@ -20096,14 +20151,13 @@ var _default = {
       childSections: {
         tableDataEditorSection: this.translationM('editor'),
         tableDataCreateNewSection: this.translationM('new')
-      },
-      innerCurrentChildSection: 'tableDataEditorSection'
+      }
     };
   },
   computed: _objectSpread({
     currentChildSection: {
       get: function get() {
-        return this.innerCurrentChildSection;
+        return this.getTableDataSectionCurrentTab;
       },
       set: function set(n) {
         var _this = this;
@@ -20115,7 +20169,7 @@ var _default = {
             negative: this.translationM('no'),
             callback: function callback(status) {
               if (status) {
-                _this.innerCurrentChildSection = n;
+                _this.setTableDataSectionCurrentTab(n);
 
                 _this['modalWindow/resetModalWindow']();
 
@@ -20124,15 +20178,15 @@ var _default = {
             }
           });
         } else {
-          this.innerCurrentChildSection = n;
+          this.setTableDataSectionCurrentTab(n);
         }
       }
     },
     sectionComponent: function sectionComponent() {
-      return this.innerCurrentChildSection[0].toUpperCase() + this.innerCurrentChildSection.slice(1);
+      return this.getTableDataSectionCurrentTab[0].toUpperCase() + this.getTableDataSectionCurrentTab.slice(1);
     }
-  }, (0, _vuex.mapGetters)(['isDirty'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['modalWindow/showMessage', 'modalWindow/resetModalWindow', 'revertTableDataFromBackup']))
+  }, (0, _vuex.mapGetters)(['isDirty', 'getTableDataSectionCurrentTab'])),
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['modalWindow/showMessage', 'modalWindow/resetModalWindow', 'revertTableDataFromBackup']), {}, (0, _vuex.mapMutations)(['setTableDataSectionCurrentTab']))
 };
 exports.default = _default;
         var $56370e = exports.default || module.exports;
@@ -20596,6 +20650,9 @@ var state = {
     message: {
       type: 'ok',
       content: ''
+    },
+    tableDataSection: {
+      currentTab: 'tableDataEditorSection'
     }
   },
   editor: {
@@ -20780,6 +20837,16 @@ var getters = {
     var _state$dataBackup;
 
     return ((_state$dataBackup = state.dataBackup) === null || _state$dataBackup === void 0 ? void 0 : _state$dataBackup.type) || null;
+  },
+
+  /**
+   * Get current section tab for table data section.
+   *
+   * @param {Object} state store state
+   * @return {string} current tab
+   */
+  getTableDataSectionCurrentTab: function getTableDataSectionCurrentTab(state) {
+    return state.app.tableDataSection.currentTab;
   }
 };
 /**
@@ -21124,6 +21191,16 @@ var mutations = {
    */
   setDataBackup: function setDataBackup(state, dataObject) {
     state.dataBackup = (0, _deepmerge.default)({}, dataObject);
+  },
+
+  /**
+   * Set current tab for table data section.
+   *
+   * @param {Object} state table data store state
+   * @param {string} tabId tab id
+   */
+  setTableDataSectionCurrentTab: function setTableDataSectionCurrentTab(state, tabId) {
+    state.app.tableDataSection.currentTab = tabId;
   }
 };
 /**

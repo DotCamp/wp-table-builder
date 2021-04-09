@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Sections from '../Sections';
 import TableDataEditorSection from './TableDataEditorSection';
 import TableDataCreateNewSection from './TableDataCreateNewSection';
@@ -23,13 +23,12 @@ export default {
 				tableDataEditorSection: this.translationM('editor'),
 				tableDataCreateNewSection: this.translationM('new'),
 			},
-			innerCurrentChildSection: 'tableDataEditorSection',
 		};
 	},
 	computed: {
 		currentChildSection: {
 			get() {
-				return this.innerCurrentChildSection;
+				return this.getTableDataSectionCurrentTab;
 			},
 			set(n) {
 				if (this.isDirty) {
@@ -39,24 +38,25 @@ export default {
 						negative: this.translationM('no'),
 						callback: (status) => {
 							if (status) {
-								this.innerCurrentChildSection = n;
+								this.setTableDataSectionCurrentTab(n);
 								this['modalWindow/resetModalWindow']();
 								this.revertTableDataFromBackup();
 							}
 						},
 					});
 				} else {
-					this.innerCurrentChildSection = n;
+					this.setTableDataSectionCurrentTab(n);
 				}
 			},
 		},
 		sectionComponent() {
-			return this.innerCurrentChildSection[0].toUpperCase() + this.innerCurrentChildSection.slice(1);
+			return this.getTableDataSectionCurrentTab[0].toUpperCase() + this.getTableDataSectionCurrentTab.slice(1);
 		},
-		...mapGetters(['isDirty']),
+		...mapGetters(['isDirty', 'getTableDataSectionCurrentTab']),
 	},
 	methods: {
 		...mapActions(['modalWindow/showMessage', 'modalWindow/resetModalWindow', 'revertTableDataFromBackup']),
+		...mapMutations(['setTableDataSectionCurrentTab']),
 	},
 };
 </script>

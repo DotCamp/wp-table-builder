@@ -89,6 +89,15 @@ const mutations = {
 	setDataBackup(state, dataObject) {
 		state.dataBackup = deepmerge({}, dataObject);
 	},
+	/**
+	 * Set current tab for table data section.
+	 *
+	 * @param {Object} state table data store state
+	 * @param {string} tabId tab id
+	 */
+	setTableDataSectionCurrentTab(state, tabId) {
+		state.app.tableDataSection.currentTab = tabId;
+	},
 };
 
 /**

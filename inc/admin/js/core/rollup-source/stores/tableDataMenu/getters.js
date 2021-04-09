@@ -124,6 +124,15 @@ const getters = {
 	getCurrentDataObjectType(state) {
 		return state.dataBackup?.type || null;
 	},
+	/**
+	 * Get current section tab for table data section.
+	 *
+	 * @param {Object} state store state
+	 * @return {string} current tab
+	 */
+	getTableDataSectionCurrentTab(state) {
+		return state.app.tableDataSection.currentTab;
+	},
 };
 
 /**

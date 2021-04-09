@@ -3,13 +3,23 @@
 		<div class="wptb-table-data-section">
 			<data-listing></data-listing>
 			<data-display @dataSaved="handleDataSaved"></data-display>
-			<div v-if="simpleDataObjects.length === 0" class="wptb-table-data-no-object-wrapper">
-				<div class="wptb-table-data-no-object-message">
-					<i>{{ translationM('noDataObjectMessage') }}</i>
-				</div>
-				<material-button :click="createNewHandler" style="padding: 10px !important;">{{
-					translationM('createNew')
-				}}</material-button>
+			<div v-if="getEditorActiveId === null" class="wptb-table-data-no-object-wrapper">
+				<fragment v-if="simpleDataObjects.length === 0">
+					<div class="wptb-table-data-no-object-message">
+						<i>{{ translationM('noDataObjectMessage') }}</i>
+					</div>
+					<material-button :click="createNewHandler" style="padding: 10px !important;"
+						>{{ translationM('createNew') }}
+					</material-button>
+				</fragment>
+				<fragment v-else>
+					<div class="wptb-table-data-no-object-message">
+						<i>{{ translationM('selectDataFromListing') }}</i>
+					</div>
+					<material-button :click="createNewHandler" style="padding: 10px !important;"
+						>{{ translationM('createNew') }}
+					</material-button>
+				</fragment>
 			</div>
 		</div>
 	</menu-content>
@@ -25,7 +35,7 @@ import MaterialButton from '../MaterialButton';
 export default {
 	components: { MaterialButton, MenuContent, DataListing, DataDisplay },
 	computed: {
-		...mapGetters(['simpleDataObjects']),
+		...mapGetters(['simpleDataObjects', 'getEditorActiveId']),
 	},
 	methods: {
 		handleDataSaved() {
@@ -38,10 +48,10 @@ export default {
 				});
 		},
 		createNewHandler() {
-
-    },
+			this.setTableDataSectionCurrentTab('tableDataCreateNewSection');
+		},
 		...mapActions(['fetchSimpleDataObjects']),
-		...mapMutations(['setSimpleDataObjects']),
+		...mapMutations(['setSimpleDataObjects', 'setTableDataSectionCurrentTab']),
 	},
 };
 </script>

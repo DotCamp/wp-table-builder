@@ -30504,7 +30504,7 @@ var _default = {
     });
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentScreen', 'getSelectedDataSource'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreen', 'setCurrentScreenFromId']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreen', 'setCurrentScreenFromId', 'startSourceSetup']))
 };
 exports.default = _default;
         var $544610 = exports.default || module.exports;
@@ -30522,7 +30522,18 @@ exports.default = _default;
   return _c(
     "transition",
     { attrs: { name: "wptb-fade", mode: "out-in" } },
-    [_c(_vm.currentScreen, { tag: "component" })],
+    [
+      _vm.currentScreen === "DataSourceSelection"
+        ? _c("data-source-selection", {
+            attrs: { "selected-data-source": _vm.getSelectedDataSource },
+            on: {
+              startSourceSetup: function($event) {
+                return _vm.startSourceSetup($event)
+              }
+            }
+          })
+        : _c(_vm.currentScreen, { tag: "component" })
+    ],
     1
   )
 }

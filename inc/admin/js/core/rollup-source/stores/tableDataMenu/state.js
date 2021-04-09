@@ -11,6 +11,9 @@ const state = {
 			type: 'ok',
 			content: '',
 		},
+		tableDataSection: {
+			currentTab: 'tableDataEditorSection',
+		},
 	},
 	editor: {
 		activeId: null,
