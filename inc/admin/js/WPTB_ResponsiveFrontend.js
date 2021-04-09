@@ -706,6 +706,23 @@
 		});
 
 		/**
+		 * Whether given element's background is transparent or not.
+		 *
+		 * @param {HTMLElement} element html element
+		 * @return {boolean} transparent or not
+		 */
+		const isBackgroundTransparent = (element) => {
+			let status = false;
+			if (element.style.backgroundColor) {
+				const regexp = new RegExp(/^rgba\(\s?0\s?,\s?0\s?,\s?0\s?,\s?0\s?\)$/g);
+
+				status = element.style.backgroundColor.match(regexp) !== null;
+			}
+
+			return status;
+		};
+
+		/**
 		 * Bind rebuilding of tables to window resize event.
 		 */
 		this.bindRebuildToResize = () => {
@@ -850,7 +867,7 @@
 
 							tableObj.appendObjectToRow(b, rowObj.id);
 
-							if (!b.el.style.backgroundColor) {
+							if (!b.el.style.backgroundColor || isBackgroundTransparent(b.el)) {
 								const bgColor = tableObj.rowColors.header
 									? tableObj.rowColors.header
 									: getComputedStyle(rowObj.el).backgroundColor;
@@ -891,7 +908,7 @@
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
 
-								if (!tempCell.el.style.backgroundColor) {
+								if (!tempCell.el.style.backgroundColor || isBackgroundTransparent(tempCell.el)) {
 									// @deprecated
 									// const bgColor =
 									// 	r === 0
@@ -930,7 +947,7 @@
 
 							tableObj.appendObjectToRow(b, rowObj.id);
 
-							if (!b.el.style.backgroundColor) {
+							if (!b.el.style.backgroundColor || isBackgroundTransparent(b.el)) {
 								const bgColor = tableObj.rowColors.header
 									? tableObj.rowColors.header
 									: getComputedStyle(rowObj.el).backgroundColor;
@@ -970,14 +987,14 @@
 								tempCell.setAttribute('colSpan', 1);
 								tempCell.setAttribute('rowSpan', 1);
 
-								if (!tempCell.el.style.backgroundColor) {
-									const bgColor =
+								if (!tempCell.el.style.backgroundColor || isBackgroundTransparent(tempCell.el)) {
+									tempCell.el.style.backgroundColor =
+										// eslint-disable-next-line no-nested-ternary
 										r === 0
 											? tableObj.rowColors.header
 												? tableObj.rowColors.header
 												: getComputedStyle(rowObj.el).backgroundColor
 											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-									tempCell.el.style.backgroundColor = bgColor;
 								}
 							}
 						}
@@ -988,6 +1005,7 @@
 				}
 			}
 		};
+
 
 		/**
 		 * Build table with top row assigned as header.
@@ -1002,7 +1020,7 @@
 			// applying header row color to cells
 			const headerCells = tableObj.getCellsAtRow(0, true).map((h) => {
 				h.resetAllAttributes();
-				if (!h.el.style.backgroundColor) {
+				if (!h.el.style.backgroundColor || isBackgroundTransparent(h.el)) {
 					h.setAttribute('style', `background-color: ${tableObj.rowColors.header}`, true, ';');
 				}
 				return h;
@@ -1037,7 +1055,7 @@
 						// clone header cell to reuse it for multiple rows
 						const cellClone = h.el.cloneNode(true);
 						tableObj.appendElementToRow(cellClone, rowObj.id);
-						if (!cellClone.style.backgroundColor) {
+						if (!cellClone.style.backgroundColor || isBackgroundTransparent(cellClone)) {
 							cellClone.style.backgroundColor = `${getComputedStyle(rowObj.el).backgroundColor}`;
 							if (cellClone.style.backgroundColor) cellClone.style.backgroundColor += ' !important';
 						}
@@ -1090,7 +1108,10 @@
 								}
 
 								if (cellAddStatus) {
-									if (!currentCell.el.style.backgroundColor) {
+									if (
+										!currentCell.el.style.backgroundColor ||
+										isBackgroundTransparent(currentCell.el)
+									) {
 										currentCell.setAttribute(
 											'style',
 											`background-color: ${tableObj.rowColors[c % 2 === 0 ? 'even' : 'odd']}`,
@@ -1134,7 +1155,10 @@
 								clonedHeaderCell.style.backgroundColor = `${tableObj.rowColors.header} !important`;
 								tableObj.appendElementToRow(clonedHeaderCell, rowObj.id);
 
-								if (!clonedHeaderCell.style.backgroundColor) {
+								if (
+									!clonedHeaderCell.style.backgroundColor ||
+									isBackgroundTransparent(clonedHeaderCell)
+								) {
 									clonedHeaderCell.style.backgroundColor = `${
 										getComputedStyle(rowObj.el).backgroundColor
 									}`;
@@ -1196,7 +1220,10 @@
 										colorIndex = currentOriginalRow % 2 === 0 ? 'even' : 'odd';
 									}
 
-									if (!currentCell.el.style.backgroundColor) {
+									if (
+										!currentCell.el.style.backgroundColor ||
+										isBackgroundTransparent(currentCell.el)
+									) {
 										currentCell.setAttribute(
 											'style',
 											`background-color: ${tableObj.rowColors[colorIndex]}`,
