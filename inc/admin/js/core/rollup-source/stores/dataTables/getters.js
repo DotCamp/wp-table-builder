@@ -195,6 +195,15 @@ const getters = {
 	getTempDataObject: (state) => {
 		return state.dataManager.tempData;
 	},
+	/**
+	 * Get data object title.
+	 *
+	 * @param {Object} state store state
+	 * @return {string} current data object title
+	 */
+	getDataObjectTitle: (state) => {
+		return state.dataSource.setup.title;
+	},
 };
 
 export default getters;

@@ -118,7 +118,7 @@ const actions = {
 	 *
 	 * @param {{state}} vuex store object
 	 */
-	addOptionsAndDataToSave({ state, getters }) {
+	async addOptionsAndDataToSave({ state, getters, dispatch }) {
 		document.addEventListener('wptb:save:before', ({ detail }) => {
 			const { dataManager } = state;
 
@@ -191,6 +191,8 @@ const actions = {
 			if (typeof detail === 'object') {
 				/* eslint-disable no-param-reassign */
 				detail.wptbDataTable = true;
+
+				dispatch('syncDataObject');
 
 				const dataObject = { ...getters.getDataObject };
 				// because of a object bug, add data object content here, this is just a workaround, will work for possible fix for this in the future updates
@@ -282,12 +284,34 @@ const actions = {
 	 * @param {Function} root.getters getters store state getters
 	 */
 	syncDataSourceSetup({ commit, getters }) {
-		const { type, controls, content } = getters.getDataObject;
+		const { type, controls, content, title } = getters.getDataObject;
 
 		commit('setSetupSourceId', type);
 		commit('setSetupSourceDataCreatedStatus', type !== null);
 		commit('setDataManagerControlObject', controls);
 		commit('mergeTempData', { ...content });
+		commit('setDataObjectTitle', title);
+	},
+	/**
+	 * Sync data object with certain store properties.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.commit commit function for mutations
+	 * @param {Function} root.getters getters store state getters
+	 * @param {Object} root.state store state object
+	 */
+	syncDataObject({ commit, getters, state }) {
+		const currentDataObject = getters.getDataObject;
+
+		// update data object with various fields from store state
+		const mergeData = {
+			controls: state.dataManager.controls,
+			title: getters.getDataObjectTitle,
+		};
+
+		const mergedData = { ...currentDataObject, ...mergeData };
+
+		commit('setDataObject', mergedData);
 	},
 };
 

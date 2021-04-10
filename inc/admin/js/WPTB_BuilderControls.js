@@ -30140,7 +30140,164 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataManagerCell":"components/DataManagerCell.vue","./DataManagerSelect":"components/DataManagerSelect.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./DataManagerTableAddControls":"components/DataManagerTableAddControls.vue","./DataManagerDataRow":"components/DataManagerDataRow.vue","./DataManagerIndexActions":"components/DataManagerIndexActions.vue"}],"components/TextModifyInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    editAlwaysVisible: {
+      type: Boolean,
+      default: false
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    }
+  },
+  data: function data() {
+    return {
+      disabled: true
+    };
+  },
+  computed: {
+    inputStyle: function inputStyle() {
+      return {
+        width: "".concat(this.value.length === 0 ? this.placeholder.length : this.value.length, "ch !important"),
+        textDecoration: this.disabled ? '' : 'underline !important'
+      };
+    },
+    editButtonStyle: function editButtonStyle() {
+      return {
+        visibility: "".concat(this.editAlwaysVisible ? 'visible' : 'collapse')
+      };
+    }
+  },
+  methods: {
+    enableEdit: function enableEdit() {
+      if (this.disabled) {
+        this.disabled = false;
+      }
+    },
+    handleFocus: function handleFocus(e) {
+      e.target.select();
+    },
+    handleBlur: function handleBlur() {
+      this.disabled = true;
+    }
+  }
+};
+exports.default = _default;
+        var $48c735 = exports.default || module.exports;
+      
+      if (typeof $48c735 === 'function') {
+        $48c735 = $48c735.options;
+      }
+    
+        /* template */
+        Object.assign($48c735, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-text-modify-input",
+      attrs: { "data-wptb-text-modify-disable": _vm.disabled }
+    },
+    [
+      _c("input", {
+        ref: "inputElementRef",
+        staticClass: "wptb-text-modify-custom-input",
+        style: _vm.inputStyle,
+        attrs: { disabled: _vm.disabled, placeholder: _vm.placeholder },
+        domProps: { value: _vm.value },
+        on: {
+          input: function($event) {
+            return _vm.$emit("update:value", $event.target.value)
+          },
+          focusout: _vm.handleBlur,
+          focusin: _vm.handleFocus,
+          focus: _vm.handleFocus,
+          keydown: [
+            function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              $event.preventDefault()
+              _vm.disabled = true
+            },
+            function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "esc", 27, $event.key, ["Esc", "Escape"])
+              ) {
+                return null
+              }
+              $event.preventDefault()
+              _vm.disabled = true
+            }
+          ]
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          staticClass: "wptb-text-modify-edit-button",
+          style: _vm.editButtonStyle,
+          on: { click: _vm.enableEdit }
+        },
+        [_c("span", { staticClass: "dashicons dashicons-edit" })]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/CsvSetupBuilderView.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30157,6 +30314,8 @@ var _withNativeTranslationStore = _interopRequireDefault(require("../mixins/with
 var _StoreMaterialButton = _interopRequireDefault(require("./StoreMaterialButton"));
 
 var _DataManager = _interopRequireDefault(require("./DataManager"));
+
+var _TextModifyInput = _interopRequireDefault(require("./TextModifyInput"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30176,6 +30335,7 @@ var _default = {
     event: 'fileSelected'
   },
   components: {
+    TextModifyInput: _TextModifyInput.default,
     StoreMaterialButton: _StoreMaterialButton.default,
     DragDrop: _DragDrop.default,
     DataManager: _DataManager.default
@@ -30191,12 +30351,21 @@ var _default = {
       this.$emit('fileSelected', n);
     }
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentSetupGroupTab', 'getSelectedDataSource'])),
-  methods: {
+  computed: _objectSpread({
+    dataObjectTitle: {
+      get: function get() {
+        return this.getDataObjectTitle;
+      },
+      set: function set(n) {
+        this.setDataObjectTitle(n);
+      }
+    }
+  }, (0, _vuex.mapGetters)(['currentSetupGroupTab', 'getSelectedDataSource', 'getDataObjectTitle'])),
+  methods: _objectSpread({
     handleCsvImport: function handleCsvImport() {
       this.$emit('csvImport');
     }
-  }
+  }, (0, _vuex.mapMutations)(['setDataObjectTitle']))
 };
 exports.default = _default;
         var $db31ef = exports.default || module.exports;
@@ -30279,24 +30448,43 @@ exports.default = _default;
         1
       ),
       _vm._v(" "),
-      _c("data-manager", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.currentSetupGroupTab("csv") === "dataManager",
-            expression: "currentSetupGroupTab('csv') === 'dataManager'"
-          }
+      _c(
+        "div",
+        [
+          _c("text-modify-input", {
+            staticClass: "wptb-data-table-editor-title-input",
+            attrs: {
+              "edit-always-visible": true,
+              placeholder: _vm.translationM("dataTitlePlaceholder"),
+              value: _vm.dataObjectTitle
+            },
+            on: {
+              "update:value": function($event) {
+                _vm.dataObjectTitle = $event
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("data-manager", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.currentSetupGroupTab("csv") === "dataManager",
+                expression: "currentSetupGroupTab('csv') === 'dataManager'"
+              }
+            ],
+            key: "dataManager",
+            attrs: {
+              "use-default":
+                _vm.getSelectedDataSource === undefined ||
+                _vm.getSelectedDataSource === null
+            }
+          })
         ],
-        key: "dataManager",
-        attrs: {
-          "use-default":
-            _vm.getSelectedDataSource === undefined ||
-            _vm.getSelectedDataSource === null
-        }
-      })
-    ],
-    1
+        1
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -30311,7 +30499,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue"}],"components/CsvSetup.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue","./TextModifyInput":"components/TextModifyInput.vue"}],"components/CsvSetup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30504,7 +30692,7 @@ var _default = {
     });
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['currentScreen', 'getSelectedDataSource'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreen', 'setCurrentScreenFromId', 'startSourceSetup']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setCurrentScreen', 'setCurrentScreenFromId']))
 };
 exports.default = _default;
         var $544610 = exports.default || module.exports;
@@ -30522,18 +30710,7 @@ exports.default = _default;
   return _c(
     "transition",
     { attrs: { name: "wptb-fade", mode: "out-in" } },
-    [
-      _vm.currentScreen === "DataSourceSelection"
-        ? _c("data-source-selection", {
-            attrs: { "selected-data-source": _vm.getSelectedDataSource },
-            on: {
-              startSourceSetup: function($event) {
-                return _vm.startSourceSetup($event)
-              }
-            }
-          })
-        : _c(_vm.currentScreen, { tag: "component" })
-    ],
+    [_c(_vm.currentScreen, { tag: "component" })],
     1
   )
 }
@@ -34561,6 +34738,7 @@ var state = {
   proEnabled: false,
   dataSource: {
     dataObject: {
+      title: '',
       id: null,
       type: null,
       controls: {
@@ -34573,6 +34751,7 @@ var state = {
       softSelectedId: null
     },
     setup: {
+      title: '',
       sourceId: null,
       sourceDataCreated: false,
       csv: {
@@ -34748,10 +34927,10 @@ var mutations = {
    *
    * @param {Object} state data table state
    */
-  setTableDirty: function setTableDirty(state) {// TODO [erdembircan] uncomment for production
-    // if (state.tableIsActive) {
-    // 	new WPTB_TableStateSaveManager().tableStateSet();
-    // }
+  setTableDirty: function setTableDirty(state) {
+    if (state.tableIsActive) {
+      new WPTB_TableStateSaveManager().tableStateSet();
+    }
   },
 
   /**
@@ -34831,6 +35010,17 @@ var mutations = {
    */
   setDataObject: function setDataObject(state, dataObject) {
     state.dataSource.dataObject = dataObject;
+  },
+
+  /**
+   * Set title for current data object.
+   *
+   * @param {Object} state data table store state
+   * @param {string} title title
+   */
+  setDataObjectTitle: function setDataObjectTitle(state) {
+    var title = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    state.dataSource.setup.title = title;
   }
 };
 /** @module mutations */
@@ -35017,83 +35207,97 @@ var actions = {
    * @param {{state}} vuex store object
    */
   addOptionsAndDataToSave: function addOptionsAndDataToSave(_ref10) {
-    var state = _ref10.state,
-        getters = _ref10.getters;
-    document.addEventListener('wptb:save:before', function (_ref11) {
-      var detail = _ref11.detail;
-      var dataManager = state.dataManager; // select data manager properties that will be saved to table
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      var state, getters, dispatch;
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              state = _ref10.state, getters = _ref10.getters, dispatch = _ref10.dispatch;
+              document.addEventListener('wptb:save:before', function (_ref11) {
+                var detail = _ref11.detail;
+                var dataManager = state.dataManager; // select data manager properties that will be saved to table
 
-      var controls = dataManager.controls,
-          select = dataManager.select,
-          tempData = dataManager.tempData,
-          dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select", "tempData"]); // break object reference with store
-
-
-      var dataManagerToSave = _objectSpread({}, dataManagerRest);
-
-      var bindings = dataManagerToSave.bindings;
-      var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table'); // validate bindings and remove invalid ones
-
-      if (bindings && table) {
-        var columnBindings = bindings.column,
-            rowBindings = bindings.row;
-        /**
-         * Validate bindings.
-         *
-         * @param {Object} binding binding object
-         * @param {Function} queryCall function to form a query to check for elements inside table. If query returns an element, it means binding is valid. Function takes binding element id as its only argument
-         * @param {HTMLElement} tableElement table element
-         */
-        // eslint-disable-next-line no-inner-declarations
-
-        function validateBinding(binding, queryCall, tableElement) {
-          // validate column bindings
-          var elementIds = Object.keys(binding).filter(function (key) {
-            return Object.prototype.hasOwnProperty.call(binding, key);
-          }); // eslint-disable-next-line array-callback-return
-
-          elementIds.map(function (elementId) {
-            var formedElementUniqueClassQuery = queryCall(elementId);
-
-            if (!tableElement.querySelector(formedElementUniqueClassQuery)) {
-              // eslint-disable-next-line no-param-reassign
-              delete binding[elementId];
-            }
-          });
-        } // validate column bindings
+                var controls = dataManager.controls,
+                    select = dataManager.select,
+                    tempData = dataManager.tempData,
+                    dataManagerRest = _objectWithoutProperties(dataManager, ["controls", "select", "tempData"]); // break object reference with store
 
 
-        validateBinding(columnBindings, function (bindingId) {
-          return ".wptb-element-".concat(bindingId);
-        }, table); // validate row bindings
+                var dataManagerToSave = _objectSpread({}, dataManagerRest);
 
-        validateBinding(rowBindings, function (bindingId) {
-          return "tr[data-data-table-row-id='".concat(bindingId, "']");
-        }, table);
-      }
+                var bindings = dataManagerToSave.bindings;
+                var table = document.querySelector('.wptb-management_table_container .wptb-table-setup .wptb-preview-table'); // validate bindings and remove invalid ones
 
-      var dataToSave = {
-        dataManager: dataManagerToSave
-      };
-      var stringified = JSON.stringify(dataToSave);
-      var encoded = btoa(stringified);
+                if (bindings && table) {
+                  var columnBindings = bindings.column,
+                      rowBindings = bindings.row;
+                  /**
+                   * Validate bindings.
+                   *
+                   * @param {Object} binding binding object
+                   * @param {Function} queryCall function to form a query to check for elements inside table. If query returns an element, it means binding is valid. Function takes binding element id as its only argument
+                   * @param {HTMLElement} tableElement table element
+                   */
+                  // eslint-disable-next-line no-inner-declarations
 
-      if (table) {
-        table.dataset.wptbDataTableOptions = encoded;
-      }
+                  function validateBinding(binding, queryCall, tableElement) {
+                    // validate column bindings
+                    var elementIds = Object.keys(binding).filter(function (key) {
+                      return Object.prototype.hasOwnProperty.call(binding, key);
+                    }); // eslint-disable-next-line array-callback-return
 
-      if (_typeof(detail) === 'object') {
-        /* eslint-disable no-param-reassign */
-        detail.wptbDataTable = true;
+                    elementIds.map(function (elementId) {
+                      var formedElementUniqueClassQuery = queryCall(elementId);
 
-        var dataObject = _objectSpread({}, getters.getDataObject); // because of a object bug, add data object content here, this is just a workaround, will work for possible fix for this in the future updates
+                      if (!tableElement.querySelector(formedElementUniqueClassQuery)) {
+                        // eslint-disable-next-line no-param-reassign
+                        delete binding[elementId];
+                      }
+                    });
+                  } // validate column bindings
 
 
-        dataObject.content = getters.getTempDataObject;
-        detail.wptbDataObject = btoa(JSON.stringify(dataObject));
-        /* eslint-enable no-param-reassign */
-      }
-    });
+                  validateBinding(columnBindings, function (bindingId) {
+                    return ".wptb-element-".concat(bindingId);
+                  }, table); // validate row bindings
+
+                  validateBinding(rowBindings, function (bindingId) {
+                    return "tr[data-data-table-row-id='".concat(bindingId, "']");
+                  }, table);
+                }
+
+                var dataToSave = {
+                  dataManager: dataManagerToSave
+                };
+                var stringified = JSON.stringify(dataToSave);
+                var encoded = btoa(stringified);
+
+                if (table) {
+                  table.dataset.wptbDataTableOptions = encoded;
+                }
+
+                if (_typeof(detail) === 'object') {
+                  /* eslint-disable no-param-reassign */
+                  detail.wptbDataTable = true;
+                  dispatch('syncDataObject');
+
+                  var dataObject = _objectSpread({}, getters.getDataObject); // because of a object bug, add data object content here, this is just a workaround, will work for possible fix for this in the future updates
+
+
+                  dataObject.content = getters.getTempDataObject;
+                  detail.wptbDataObject = btoa(JSON.stringify(dataObject));
+                  /* eslint-enable no-param-reassign */
+                }
+              });
+
+            case 2:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
   },
 
   /**
@@ -35111,41 +35315,41 @@ var actions = {
     return mainTable;
   },
   handleMainTableDiscoveryProcess: function handleMainTableDiscoveryProcess(_ref13, query) {
-    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
       var dispatch, mainTable;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               dispatch = _ref13.dispatch;
-              _context3.next = 3;
+              _context4.next = 3;
               return dispatch('findMainTable', query);
 
             case 3:
-              mainTable = _context3.sent;
+              mainTable = _context4.sent;
 
               // if main table is not available at the time this action is called, add an event listener to table generated event to find it again
               if (!mainTable) {
-                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                document.addEventListener('wptb:table:generated', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
                   var foundMainTable;
-                  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                  return regeneratorRuntime.wrap(function _callee3$(_context3) {
                     while (1) {
-                      switch (_context2.prev = _context2.next) {
+                      switch (_context3.prev = _context3.next) {
                         case 0:
-                          _context2.next = 2;
+                          _context3.next = 2;
                           return dispatch('findMainTable', query);
 
                         case 2:
-                          foundMainTable = _context2.sent;
+                          foundMainTable = _context3.sent;
                           // set up a mutation observer for main table
                           dispatch('setUpTableMutationObserver', foundMainTable);
 
                         case 4:
                         case "end":
-                          return _context2.stop();
+                          return _context3.stop();
                       }
                     }
-                  }, _callee2);
+                  }, _callee3);
                 })));
               } else {
                 // set up a mutation observer for main table
@@ -35154,10 +35358,10 @@ var actions = {
 
             case 5:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3);
+      }, _callee4);
     }))();
   },
 
@@ -35221,11 +35425,37 @@ var actions = {
     var _getters$getDataObjec = getters.getDataObject,
         type = _getters$getDataObjec.type,
         controls = _getters$getDataObjec.controls,
-        content = _getters$getDataObjec.content;
+        content = _getters$getDataObjec.content,
+        title = _getters$getDataObjec.title;
     commit('setSetupSourceId', type);
     commit('setSetupSourceDataCreatedStatus', type !== null);
     commit('setDataManagerControlObject', controls);
     commit('mergeTempData', _objectSpread({}, content));
+    commit('setDataObjectTitle', title);
+  },
+
+  /**
+   * Sync data object with certain store properties.
+   *
+   * @param {Object} root store action object
+   * @param {Function} root.commit commit function for mutations
+   * @param {Function} root.getters getters store state getters
+   * @param {Object} root.state store state object
+   */
+  syncDataObject: function syncDataObject(_ref19) {
+    var commit = _ref19.commit,
+        getters = _ref19.getters,
+        state = _ref19.state;
+    var currentDataObject = getters.getDataObject; // update data object with various fields from store state
+
+    var mergeData = {
+      controls: state.dataManager.controls,
+      title: getters.getDataObjectTitle
+    };
+
+    var mergedData = _objectSpread({}, currentDataObject, {}, mergeData);
+
+    commit('setDataObject', mergedData);
   }
 };
 /** @module actions */
@@ -35462,6 +35692,16 @@ var getters = {
    */
   getTempDataObject: function getTempDataObject(state) {
     return state.dataManager.tempData;
+  },
+
+  /**
+   * Get data object title.
+   *
+   * @param {Object} state store state
+   * @return {string} current data object title
+   */
+  getDataObjectTitle: function getDataObjectTitle(state) {
+    return state.dataSource.setup.title;
   }
 };
 var _default = getters;
@@ -35475,12 +35715,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _general = require("../general");
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /**
  * Action watch list.
@@ -35503,18 +35737,21 @@ var actionWatchList = {
 
 var stateWatchList = {
   syncDataObject: {
-    watch: ['dataManager.controls', 'dataManager.tempData'],
+    watch: ['dataManager.controls', 'dataManager.tempData', 'dataSource.setup.title'],
     callBack: function callBack(store) {
       return function () {
-        var currentDataObject = store.getters.getDataObject; // update data object with various fields from store state
-
-        var mergeData = {
-          controls: store.state.dataManager.controls
-        };
-
-        var mergedData = _objectSpread({}, currentDataObject, {}, mergeData);
-
-        store.commit('setDataObject', mergedData);
+        store.dispatch('syncDataObject'); // @deprecated
+        // const currentDataObject = store.getters.getDataObject;
+        //
+        // // update data object with various fields from store state
+        // const mergeData = {
+        // 	controls: store.state.dataManager.controls,
+        // 	title: store.getters.getDataObjectTitle,
+        // };
+        //
+        // const mergedData = { ...currentDataObject, ...mergeData };
+        //
+        // store.commit('setDataObject', mergedData);
       };
     }
   },
@@ -36981,7 +37218,8 @@ var _default = {
           elementColumnBasicBindingMessage: (0, _i18n.__)('Selected column data will be applied to table element.', 'wptb-table-builder'),
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),
-          emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder')
+          emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder'),
+          dataTitlePlaceholder: (0, _i18n.__)('Give your data a title', 'wptb-table-builder')
         },
         proUrl: data.proUrl,
         tableIsActive: false

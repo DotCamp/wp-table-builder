@@ -19,19 +19,28 @@
 				</store-material-button>
 			</transition>
 		</div>
-		<data-manager
-			key="dataManager"
-			v-show="currentSetupGroupTab('csv') === 'dataManager'"
-			:use-default="getSelectedDataSource === undefined || getSelectedDataSource === null"
-		></data-manager>
+		<div>
+			<text-modify-input
+				class="wptb-data-table-editor-title-input"
+				:edit-always-visible="true"
+				:placeholder="translationM('dataTitlePlaceholder')"
+				:value.sync="dataObjectTitle"
+			></text-modify-input>
+			<data-manager
+				key="dataManager"
+				v-show="currentSetupGroupTab('csv') === 'dataManager'"
+				:use-default="getSelectedDataSource === undefined || getSelectedDataSource === null"
+			></data-manager>
+		</div>
 	</div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import DragDrop from './DragDrop';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import StoreMaterialButton from './StoreMaterialButton';
 import DataManager from './DataManager';
+import TextModifyInput from './TextModifyInput';
 
 export default {
 	name: 'CsvSetupBuilderView',
@@ -42,7 +51,7 @@ export default {
 		prop: 'currentFile',
 		event: 'fileSelected',
 	},
-	components: { StoreMaterialButton, DragDrop, DataManager },
+	components: { TextModifyInput, StoreMaterialButton, DragDrop, DataManager },
 	mixins: [withNativeTranslationStore],
 	data() {
 		return {
@@ -55,12 +64,21 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(['currentSetupGroupTab', 'getSelectedDataSource']),
+		dataObjectTitle: {
+			get() {
+				return this.getDataObjectTitle;
+			},
+			set(n) {
+				this.setDataObjectTitle(n);
+			},
+		},
+		...mapGetters(['currentSetupGroupTab', 'getSelectedDataSource', 'getDataObjectTitle']),
 	},
 	methods: {
 		handleCsvImport() {
 			this.$emit('csvImport');
 		},
+		...mapMutations(['setDataObjectTitle']),
 	},
 };
 </script>

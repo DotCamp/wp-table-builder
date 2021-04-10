@@ -127,10 +127,9 @@ const mutations = {
 	 * @param {Object} state data table state
 	 */
 	setTableDirty: (state) => {
-		// TODO [erdembircan] uncomment for production
-		// if (state.tableIsActive) {
-		// 	new WPTB_TableStateSaveManager().tableStateSet();
-		// }
+		if (state.tableIsActive) {
+			new WPTB_TableStateSaveManager().tableStateSet();
+		}
 	},
 	/**
 	 * Set column binding of an element with given id and sub index.
@@ -195,6 +194,15 @@ const mutations = {
 	 */
 	setDataObject: (state, dataObject) => {
 		state.dataSource.dataObject = dataObject;
+	},
+	/**
+	 * Set title for current data object.
+	 *
+	 * @param {Object} state data table store state
+	 * @param {string} title title
+	 */
+	setDataObjectTitle: (state, title = '') => {
+		state.dataSource.setup.title = title;
 	},
 };
 

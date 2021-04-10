@@ -18235,9 +18235,18 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
   props: {
     value: {
+      type: String,
+      default: ''
+    },
+    editAlwaysVisible: {
+      type: Boolean,
+      default: false
+    },
+    placeholder: {
       type: String,
       default: ''
     }
@@ -18250,8 +18259,13 @@ var _default = {
   computed: {
     inputStyle: function inputStyle() {
       return {
-        width: "".concat(this.value.length, "ch !important"),
+        width: "".concat(this.value.length === 0 ? this.placeholder.length : this.value.length, "ch !important"),
         textDecoration: this.disabled ? '' : 'underline !important'
+      };
+    },
+    editButtonStyle: function editButtonStyle() {
+      return {
+        visibility: "".concat(this.editAlwaysVisible ? 'visible' : 'collapse')
       };
     }
   },
@@ -18293,7 +18307,7 @@ exports.default = _default;
         ref: "inputElementRef",
         staticClass: "wptb-text-modify-custom-input",
         style: _vm.inputStyle,
-        attrs: { disabled: _vm.disabled },
+        attrs: { disabled: _vm.disabled, placeholder: _vm.placeholder },
         domProps: { value: _vm.value },
         on: {
           input: function($event) {
@@ -18331,6 +18345,7 @@ exports.default = _default;
         "span",
         {
           staticClass: "wptb-text-modify-edit-button",
+          style: _vm.editButtonStyle,
           on: { click: _vm.enableEdit }
         },
         [_c("span", { staticClass: "dashicons dashicons-edit" })]

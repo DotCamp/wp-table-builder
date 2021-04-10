@@ -6378,6 +6378,12 @@ thead .wptb-data-manager-table-data-value {
     color: var(--wptb-plugin-logo-color) !important;
 }
 
+.wptb-data-table-editor-title-input {
+    margin: 20px;
+    font-size: 120% !important;
+    font-weight: bold;
+}
+
 /*endregion*/
 
 .wptb-left-panel-no-bottom-border .wptb-settings-row {
@@ -6786,6 +6792,7 @@ thead .wptb-data-manager-table-data-value {
     text-align: center;
     color: inherit !important;
     box-shadow: none !important;
+    font-size: inherit;
 }
 
 .wptb-text-modify-custom-input:focus {

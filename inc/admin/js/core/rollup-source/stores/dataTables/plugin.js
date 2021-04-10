@@ -21,18 +21,22 @@ const actionWatchList = {
  */
 const stateWatchList = {
 	syncDataObject: {
-		watch: ['dataManager.controls', 'dataManager.tempData'],
+		watch: ['dataManager.controls', 'dataManager.tempData', 'dataSource.setup.title'],
 		callBack: (store) => () => {
-			const currentDataObject = store.getters.getDataObject;
+			store.dispatch('syncDataObject');
 
-			// update data object with various fields from store state
-			const mergeData = {
-				controls: store.state.dataManager.controls,
-			};
-
-			const mergedData = { ...currentDataObject, ...mergeData };
-
-			store.commit('setDataObject', mergedData);
+			// @deprecated
+			// const currentDataObject = store.getters.getDataObject;
+			//
+			// // update data object with various fields from store state
+			// const mergeData = {
+			// 	controls: store.state.dataManager.controls,
+			// 	title: store.getters.getDataObjectTitle,
+			// };
+			//
+			// const mergedData = { ...currentDataObject, ...mergeData };
+			//
+			// store.commit('setDataObject', mergedData);
 		},
 	},
 	dirtyTable: {

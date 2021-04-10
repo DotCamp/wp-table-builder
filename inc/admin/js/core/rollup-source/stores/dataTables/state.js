@@ -20,6 +20,7 @@ const state = {
 	proEnabled: false,
 	dataSource: {
 		dataObject: {
+			title: '',
 			id: null,
 			type: null,
 			controls: {
@@ -32,6 +33,7 @@ const state = {
 			softSelectedId: null,
 		},
 		setup: {
+			title: '',
 			sourceId: null,
 			sourceDataCreated: false,
 			csv: {

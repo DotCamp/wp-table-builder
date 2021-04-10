@@ -127,6 +127,10 @@ export default {
 						'No table found, generate one to preview data table',
 						'wptb-table-builder'
 					),
+					dataTitlePlaceholder: __(
+						'Give your data a title',
+						'wptb-table-builder'
+					)
 				},
 				proUrl: data.proUrl,
 				tableIsActive: false,
