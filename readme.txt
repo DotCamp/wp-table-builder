@@ -91,6 +91,7 @@ That's it. You're done!
 = 1.3.5 =
 
 * FIX: Transparent background color bug that is affecting some tables are fixed.
+* FIX: Block editor 'edit' button is now correctly enabled/disabled .
 * PRO: IMPROVE: Better empty cell functionality.
 
 = 1.3.4 =

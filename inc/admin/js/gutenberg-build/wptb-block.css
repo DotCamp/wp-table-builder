@@ -244,6 +244,12 @@
   cursor: pointer;
   transition: all 0.2s ease-out;
 }
+.wptb-block-tool[data-disabled=true] {
+  color: #CBD5E0 !important;
+}
+.wptb-block-tool[data-disabled=true]:hover {
+  background-color: inherit !important;
+}
 .wptb-block-tool:hover {
   background-color: #E2E8F0 !important;
 }

@@ -612,12 +612,14 @@ var TableBlock = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "openTableEditBuilder",
     value: function openTableEditBuilder() {
-      var url = new URL(this.props.blockData.builderUrl);
-      url.searchParams.append('table', this.state.selectScreen ? this.state.selectedId : this.state.savedId);
-      this.setState({
-        builderUrl: url.toString(),
-        showBuilder: true
-      });
+      if (this.state.savedId > 0) {
+        var url = new URL(this.props.blockData.builderUrl);
+        url.searchParams.append('table', this.state.selectScreen ? this.state.selectedId : this.state.savedId);
+        this.setState({
+          builderUrl: url.toString(),
+          showBuilder: true
+        });
+      }
     }
     /**
      * Render component to DOM.
@@ -657,7 +659,8 @@ var TableBlock = /*#__PURE__*/function (_React$Component) {
       }), this.filteredTables().length > 0 ? Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("div", {
         className: 'wptb-block-tool dashicons dashicons-edit-large',
         title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_8__["__"])('edit table', 'wp-table-builder'),
-        onClick: this.openTableEditBuilder
+        onClick: this.openTableEditBuilder,
+        "data-disabled": !(Number.parseInt(this.state.savedId, 10) > 0)
       }) : '', this.state.savedId >= 0 ? Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])(react__WEBPACK_IMPORTED_MODULE_7__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_6__["createElement"])("div", {
         className: 'wptb-block-tool dashicons dashicons-fullscreen-alt',
         onClick: function onClick() {

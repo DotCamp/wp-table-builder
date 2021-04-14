@@ -207,10 +207,12 @@ class TableBlock extends React.Component {
 	 * Open builder page for table edit.
 	 */
 	openTableEditBuilder() {
-		const url = new URL(this.props.blockData.builderUrl);
-		url.searchParams.append('table', this.state.selectScreen ? this.state.selectedId : this.state.savedId);
+		if (this.state.savedId > 0) {
+			const url = new URL(this.props.blockData.builderUrl);
+			url.searchParams.append('table', this.state.selectScreen ? this.state.selectedId : this.state.savedId);
 
-		this.setState({ builderUrl: url.toString(), showBuilder: true });
+			this.setState({ builderUrl: url.toString(), showBuilder: true });
+		}
 	}
 
 	/**
@@ -250,6 +252,7 @@ class TableBlock extends React.Component {
 									className={'wptb-block-tool dashicons dashicons-edit-large'}
 									title={__('edit table', 'wp-table-builder')}
 									onClick={this.openTableEditBuilder}
+									data-disabled={!(Number.parseInt(this.state.savedId, 10) > 0)}
 								/>
 							) : (
 								''

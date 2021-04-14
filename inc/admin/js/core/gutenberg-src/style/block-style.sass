@@ -242,6 +242,12 @@ $theme-text-default-color: $gray-700
   cursor: pointer
   transition: all 0.2s ease-out
 
+  &[data-disabled='true']
+    color: $gray-400 !important
+
+    &:hover
+      background-color: inherit !important
+
   &:hover
     background-color: $gray-300 !important
 
