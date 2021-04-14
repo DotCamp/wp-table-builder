@@ -91,6 +91,7 @@ That's it. You're done!
 = 1.3.5 =
 
 * FIX: Transparent background color bug that is affecting some tables are fixed.
+* PRO: IMPROVE: Better empty cell functionality.
 
 = 1.3.4 =
 
