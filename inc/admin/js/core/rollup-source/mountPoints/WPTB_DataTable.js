@@ -17,12 +17,14 @@ export default {
 	name: 'DataTable',
 	handler: function dataTableJS(uniqueId) {
 		const data = WPTB_ControlsManager.getControlData('dataTableData');
+		const { iconList, icons, security, proUrl } = data;
 
 		// extra options for store
 		const extraStoreOptions = {
 			state: {
-				iconList: data.iconList,
-				icons: data.icons,
+				iconList,
+				icons,
+				security,
 				strings: {
 					dataSourceHeader: __('Select your data source', 'wp-table-builder'),
 					csvTitle: __('CSV', 'wp-table-builder'),
@@ -127,12 +129,11 @@ export default {
 						'No table found, generate one to preview data table',
 						'wptb-table-builder'
 					),
-					dataTitlePlaceholder: __(
-						'Give your data a title',
-						'wptb-table-builder'
-					)
+					dataTitlePlaceholder: __('Give your data a title', 'wptb-table-builder'),
+					existingTitle: __('existing', 'wptb-table-builder'),
+					existingInfo: __('Select an already created data object.', 'wptb-table-builder'),
 				},
-				proUrl: data.proUrl,
+				proUrl,
 				tableIsActive: false,
 			},
 			getters: {

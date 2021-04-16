@@ -221,6 +221,13 @@ export default {
 			currentUrl.searchParams.append('table', encodeURIComponent(cardId));
 			window.history.pushState(null, null, currentUrl.toString());
 		},
+		startupDataTableSetup() {
+			// load data manager component
+			DataTableManagerStatic.getInstance().forceLoad();
+
+			// destroy generate instance and activate data table menu section
+			WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
+		},
 		cardGenerate(cardId, cols, rows, selectedCells, edit = false) {
 			this.generating = true;
 			if (cardId === 'blank') {
@@ -229,11 +236,7 @@ export default {
 				const wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
 				wptbTableStateSaveManager.tableStateSet();
 			} else if (cardId === 'dataTable') {
-				// load data manager component
-				DataTableManagerStatic.getInstance().forceLoad();
-
-				// destroy generate instance and activate data table menu section
-				WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
+				this.startupDataTableSetup();
 			} else {
 				const tableWrapper = document.querySelector('.wptb-table-setup');
 				tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));

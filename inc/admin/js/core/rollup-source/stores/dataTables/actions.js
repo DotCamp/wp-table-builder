@@ -313,6 +313,47 @@ const actions = {
 
 		commit('setDataObject', mergedData);
 	},
+	/**
+	 * Get simple versions of data objects for information purposes.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.getters store state getters
+	 * @param {Function} root.dispatch dispatch function for store actions
+	 * @param {Function} root.commit commit function for store mutations
+	 */
+	getSimpleDataObjects({ getters, dispatch, commit }) {
+		return new Promise((res, rej) => {
+			const url = new URL(getters.getAjaxUrl);
+			const { action, nonce } = getters.getSecurityData('simpleDataObjects');
+			url.searchParams.append('action', action);
+			url.searchParams.append('nonce', nonce);
+
+			dispatch('genericFetch', {
+				url: url.toString(),
+				options: {
+					method: 'GET',
+				},
+				callbackFunctions: {
+					busyFunction: () => {
+						commit('setBusy', true);
+					},
+					resetBusyFunction: () => {
+						commit('setBusy', false);
+					},
+					errorFunction: (err) => {
+						// TODO [erdembircan] remove for production
+						console.log(err);
+					},
+				},
+			})
+				.then((resp) => {
+					res(resp.data.simpleDataObjects);
+				})
+				.catch((err) => {
+					rej(err);
+				});
+		});
+	},
 };
 
 /** @module actions */

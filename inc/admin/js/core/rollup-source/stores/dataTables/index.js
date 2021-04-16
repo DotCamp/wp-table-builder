@@ -7,6 +7,7 @@ import getters from './getters';
 import subscriptions from './plugin';
 import { objectPropertyFromString } from '../../functions';
 import { createBasicStore } from '../general';
+import ajaxRequest from '../modules/ajaxRequest';
 
 // setup vuex for current vue instance
 Vue.use(Vuex);
@@ -22,6 +23,9 @@ const storeOptions = {
 	actions,
 	getters,
 	plugins: [subscriptions],
+	modules: {
+		ajaxRequest,
+	},
 	strict: true,
 };
 

@@ -204,6 +204,29 @@ const getters = {
 	getDataObjectTitle: (state) => {
 		return state.dataSource.setup.title;
 	},
+	/**
+	 * Get server ajax url.
+	 *
+	 * @param {Object} state store state
+	 * @return {string} ajax url
+	 */
+	getAjaxUrl: (state) => {
+		return state.security.ajaxUrl;
+	},
+	/**
+	 * Get security data of a given security id.
+	 *
+	 * @param {Object} state store state
+	 * @return {Function} function to get specific security data
+	 */
+	getSecurityData: (state) => (dataId) => {
+		let securityData = null;
+		if (state.security[dataId]) {
+			securityData = state.security[dataId];
+		}
+
+		return securityData;
+	},
 };
 
 export default getters;

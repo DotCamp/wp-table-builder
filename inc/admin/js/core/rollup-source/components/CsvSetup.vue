@@ -1,19 +1,19 @@
 <template>
-	<div class="wptb-data-table-csv-setup wptb-plugin-width-full wptb-plugin-height-full">
-		<!--    left panel controls-->
+	<generic-data-source-setup>
 		<CsvSetupLeftPanel :panel-tabs="panelTabs"></CsvSetupLeftPanel>
-		<!--    builder view-->
 		<CsvSetupBuilderView @csvImport="readCsvFile" v-model="currentFile"></CsvSetupBuilderView>
-	</div>
+	</generic-data-source-setup>
 </template>
 <script>
 import { mapMutations, mapGetters, mapActions } from 'vuex';
 import withNativeTranslationStore from '../mixins/withNativeTranslationStore';
 import CsvSetupLeftPanel from './CsvSetupLeftPanel';
 import CsvSetupBuilderView from './CsvSetupBuilderView';
+import GenericDataSourceSetup from './dataTable/GenericDataSourceSetup';
 
 export default {
 	components: {
+		GenericDataSourceSetup,
 		CsvSetupBuilderView,
 		CsvSetupLeftPanel,
 	},

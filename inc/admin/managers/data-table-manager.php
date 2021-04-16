@@ -10,8 +10,10 @@ use function add_action;
 use function add_filter;
 use function add_post_meta;
 use function esc_html__;
+use function get_admin_url;
 use function get_post_meta;
 use function update_post_meta;
+use WP_Table_Builder\Inc\Admin\Managers\Data_Object_Manager;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -219,6 +221,11 @@ class Data_Table_Manager {
 			$data_object = static::get_table_data_object( $table_id );
 		}
 
+		$security = [
+			'ajaxUrl'          => get_admin_url(null, 'admin-ajax.php'),
+			'simpleDataObjects' => Data_Object_Manager::generate_simple_data_object_security_data()
+		];
+
 		$icon_manager = Init::instance()->get_icon_manager();
 		$data_table   = [
 			'iconList'   => $icon_manager->get_icon_list(),
@@ -232,9 +239,11 @@ class Data_Table_Manager {
 				'handPointer'         => $icon_manager->get_icon( 'hand-pointer' ),
 				'sortUp'              => $icon_manager->get_icon( 'sort-alpha-up' ),
 				'cog'                 => $icon_manager->get_icon( 'cog' ),
+				'existing'            => $icon_manager->get_icon( 'folder-open' ),
 			],
 			'proUrl'     => 'https://wptablebuilder.com/',
-			'dataObject' => $data_object
+			'dataObject' => $data_object,
+			'security'   => $security
 		];
 
 		$admin_data['dataTable'] = $data_table;

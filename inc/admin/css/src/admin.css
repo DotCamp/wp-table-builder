@@ -6951,3 +6951,54 @@ thead .wptb-data-manager-table-data-value {
 }
 
 /*endregion*/
+
+/*region existing data object list*/
+
+.wptb-existing-data-object-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.wptb-existing-data-object-list {
+    width: 70%;
+    display: grid;
+    font-size: 90%;
+}
+
+.wptb-existing-table-column {
+    padding: 10px;
+}
+
+.wptb-existing-data-object-table {
+    border-collapse: separate;
+    border: 1px solid var(--wptb-plugin-gray-200);
+    border-spacing: 0px;
+    border-radius: 5px;
+}
+
+.wptb-existing-data-object-table th {
+    padding: 10px;
+    background-color: var(--wptb-plugin-logo-color);
+    color: var(--wptb-plugin-theme-color-light);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.wptb-existing-data-object-table td, .wptb-existing-data-object-table th{
+    border: 1px solid var(--wptb-plugin-gray-200);
+}
+
+.wptb-existing-data-object-table tbody tr{
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.wptb-existing-data-object-table tbody tr:hover{
+    background-color: var(--wptb-plugin-gray-200);
+}
+
+.wptb-existing-data-object-search {
+    margin: 20px;
+}
+/*endregion*/

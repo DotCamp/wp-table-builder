@@ -8,9 +8,10 @@
 import { mapGetters, mapActions } from 'vuex';
 import DataSourceSelection from './DataSourceSelection';
 import CsvSetup from './CsvSetup';
+import ExistingSetup from './dataTable/ExistingSetup';
 
 export default {
-	components: { DataSourceSelection, CsvSetup },
+	components: { DataSourceSelection, CsvSetup, ExistingSetup },
 	mounted() {
 		this.$nextTick(() => {
 			// if no data source is selected on start, load up source selection screen

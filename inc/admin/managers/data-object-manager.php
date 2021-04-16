@@ -161,7 +161,7 @@ class Data_Object_Manager {
 				'createNew'              => esc_html__( 'Create New', 'wp-table-builder' ),
 				'noDataObjectMessage'    => esc_html__( 'No table data found.', 'wp-table-builder' ),
 				'selectDataFromListing'  => esc_html__( 'Select a table data from listing', 'wp-table-builder' ),
-				'or'  => esc_html__( 'or', 'wp-table-builder' ),
+				'or'                     => esc_html__( 'or', 'wp-table-builder' ),
 			];
 
 			$security = [
@@ -175,10 +175,7 @@ class Data_Object_Manager {
 					'nonce'  => wp_create_nonce( 'dataObjectUpdate' ),
 					'action' => 'dataObjectUpdate'
 				],
-				'simpleDataObjects' => [
-					'nonce'  => wp_create_nonce( 'simpleDataObjects' ),
-					'action' => 'simpleDataObjects'
-				]
+				'simpleDataObjects' => static::generate_simple_data_object_security_data()
 			];
 
 			$client_data = [
@@ -190,6 +187,17 @@ class Data_Object_Manager {
 
 			wp_localize_script( $handler, 'wptbTableDataMenu', $client_data );
 		}
+	}
+
+	/**
+	 * Generate security data related to simple data objects ajax endpoint.
+	 * @return array security data
+	 */
+	public static function generate_simple_data_object_security_data() {
+		return [
+			'nonce'  => wp_create_nonce( 'simpleDataObjects' ),
+			'action' => 'simpleDataObjects'
+		];
 	}
 
 	/**
@@ -271,7 +279,7 @@ class Data_Object_Manager {
 
 		// unset all disallowed properties to keep post object simple
 		array_walk( $data_objects, function ( $data_object ) {
-			$allowed_properties = [ 'ID', 'post_title', 'tables' ];
+			$allowed_properties = [ 'ID', 'post_title', 'tables', 'type' ];
 
 
 			$associated_tables_query_args = [
@@ -300,7 +308,11 @@ class Data_Object_Manager {
 			}, [] );
 			wp_reset_query();
 
+			// add associated tables to simple data object
 			$data_object->tables = $associated_tables;
+
+			// add data object type
+			$data_object->type   = ( new Data_Object( [ 'id' => $data_object->ID ] ) )->get_object_data()['type'];
 
 			foreach ( $data_object as $key => $value ) {
 				if ( ! in_array( $key, $allowed_properties ) ) {

@@ -30,7 +30,7 @@ const state = {
 			content: {},
 		},
 		card: {
-			softSelectedId: null,
+			softSelectedId: 'existing',
 		},
 		setup: {
 			title: '',

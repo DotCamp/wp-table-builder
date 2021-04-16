@@ -42,6 +42,12 @@ export default {
 		return {
 			sources: [
 				new DataSourceObject(
+					'existing',
+					this.translationM('existingTitle'),
+					this.translationM('existingInfo'),
+					this.$store.getters.getIcon('existing')
+				),
+				new DataSourceObject(
 					'csv',
 					this.translationM('csvTitle'),
 					this.translationM('csvInfo'),

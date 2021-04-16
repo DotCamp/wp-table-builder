@@ -27445,7 +27445,7 @@ var _default = {
   mixins: [_withNativeTranslationStore.default],
   data: function data() {
     return {
-      sources: [new _DataSourceObject.default('csv', this.translationM('csvTitle'), this.translationM('csvInfo'), this.$store.getters.getIcon('csv')), new _DataSourceObject.default('wordpressPost', this.translationM('wordpressPostTitle'), this.translationM('wordpressPostInfo'), this.$store.getters.getIcon('wordpressPost'), true), new _DataSourceObject.default('database', this.translationM('databaseTitle'), this.translationM('databaseInfo'), this.$store.getters.getIcon('database'), true), new _DataSourceObject.default('remote', this.translationM('remoteTitle'), this.translationM('remoteInfo'), this.$store.getters.getIcon('server'), true)]
+      sources: [new _DataSourceObject.default('existing', this.translationM('existingTitle'), this.translationM('existingInfo'), this.$store.getters.getIcon('existing')), new _DataSourceObject.default('csv', this.translationM('csvTitle'), this.translationM('csvInfo'), this.$store.getters.getIcon('csv')), new _DataSourceObject.default('wordpressPost', this.translationM('wordpressPostTitle'), this.translationM('wordpressPostInfo'), this.$store.getters.getIcon('wordpressPost'), true), new _DataSourceObject.default('database', this.translationM('databaseTitle'), this.translationM('databaseInfo'), this.$store.getters.getIcon('database'), true), new _DataSourceObject.default('remote', this.translationM('remoteTitle'), this.translationM('remoteInfo'), this.$store.getters.getIcon('server'), true)]
     };
   },
   computed: _objectSpread({}, (0, _vuex.mapGetters)(['translation', 'getSelectedDataSource'])),
@@ -30499,7 +30499,58 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue","./TextModifyInput":"components/TextModifyInput.vue"}],"components/CsvSetup.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DragDrop":"components/DragDrop.vue","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./StoreMaterialButton":"components/StoreMaterialButton.vue","./DataManager":"components/DataManager.vue","./TextModifyInput":"components/TextModifyInput.vue"}],"components/dataTable/GenericDataSourceSetup.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  functional: true
+};
+exports.default = _default;
+        var $fd4921 = exports.default || module.exports;
+      
+      if (typeof $fd4921 === 'function') {
+        $fd4921 = $fd4921.options;
+      }
+    
+        /* template */
+        Object.assign($fd4921, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-data-table-csv-setup wptb-plugin-width-full wptb-plugin-height-full"
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/CsvSetup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30515,6 +30566,8 @@ var _CsvSetupLeftPanel = _interopRequireDefault(require("./CsvSetupLeftPanel"));
 
 var _CsvSetupBuilderView = _interopRequireDefault(require("./CsvSetupBuilderView"));
 
+var _GenericDataSourceSetup = _interopRequireDefault(require("./dataTable/GenericDataSourceSetup"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -30525,6 +30578,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    GenericDataSourceSetup: _GenericDataSourceSetup.default,
     CsvSetupBuilderView: _CsvSetupBuilderView.default,
     CsvSetupLeftPanel: _CsvSetupLeftPanel.default
   },
@@ -30617,11 +30671,7 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-data-table-csv-setup wptb-plugin-width-full wptb-plugin-height-full"
-    },
+    "generic-data-source-setup",
     [
       _c("CsvSetupLeftPanel", { attrs: { "panel-tabs": _vm.panelTabs } }),
       _vm._v(" "),
@@ -30651,7 +30701,463 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./CsvSetupLeftPanel":"components/CsvSetupLeftPanel.vue","./CsvSetupBuilderView":"components/CsvSetupBuilderView.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","../mixins/withNativeTranslationStore":"mixins/withNativeTranslationStore.js","./CsvSetupLeftPanel":"components/CsvSetupLeftPanel.vue","./CsvSetupBuilderView":"components/CsvSetupBuilderView.vue","./dataTable/GenericDataSourceSetup":"components/dataTable/GenericDataSourceSetup.vue"}],"components/dataTable/ExistingSetupLeftPanel.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _DataTableLeftPanel = _interopRequireDefault(require("../DataTableLeftPanel"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+var _default = {
+  components: {
+    DataTableLeftPanel: _DataTableLeftPanel.default
+  }
+};
+exports.default = _default;
+        var $bd0408 = exports.default || module.exports;
+      
+      if (typeof $bd0408 === 'function') {
+        $bd0408 = $bd0408.options;
+      }
+    
+        /* template */
+        Object.assign($bd0408, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("data-table-left-panel")
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../DataTableLeftPanel":"components/DataTableLeftPanel.vue"}],"components/dataTable/ExistingTableDataRow.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    id: {
+      type: Number,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    handleRowSelect: function handleRowSelect() {
+      this.$emit('rowSelect', this.id);
+    }
+  }
+};
+exports.default = _default;
+        var $1860f1 = exports.default || module.exports;
+      
+      if (typeof $1860f1 === 'function') {
+        $1860f1 = $1860f1.options;
+      }
+    
+        /* template */
+        Object.assign($1860f1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    {
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleRowSelect($event)
+        }
+      }
+    },
+    [
+      _c("td", { staticClass: "wptb-existing-table-column" }, [
+        _vm._v(_vm._s(_vm.id))
+      ]),
+      _vm._v(" "),
+      _c("td", { staticClass: "wptb-existing-table-column" }, [
+        _vm._v(_vm._s(_vm.title))
+      ]),
+      _vm._v(" "),
+      _c("td", { staticClass: "wptb-existing-table-column" }, [
+        _vm._v(_vm._s(_vm.type))
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/SearchInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: String,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      searchTerm: this.value
+    };
+  },
+  mounted: function mounted() {},
+  watch: {
+    searchTerm: function searchTerm(n) {
+      this.$emit('valueChanged', n);
+    },
+    value: function value(n) {
+      this.searchTerm = n;
+    }
+  },
+  computed: {
+    clearButtonVisibility: function clearButtonVisibility() {
+      return this.searchTerm !== '';
+    }
+  },
+  methods: {
+    clearSearch: function clearSearch() {
+      if (!this.disabled) {
+        this.searchTerm = '';
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $69c79d = exports.default || module.exports;
+      
+      if (typeof $69c79d === 'function') {
+        $69c79d = $69c79d.options;
+      }
+    
+        /* template */
+        Object.assign($69c79d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-search-input-wrapper" }, [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.searchTerm,
+          expression: "searchTerm"
+        }
+      ],
+      staticClass: "wptb-search-input-element",
+      attrs: {
+        disabled: _vm.disabled,
+        type: "text",
+        placeholder: _vm.placeholder
+      },
+      domProps: { value: _vm.searchTerm },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.searchTerm = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _vm.clearButtonVisibility
+      ? _c(
+          "div",
+          {
+            staticClass: "wptb-search-input-clear",
+            attrs: { "data-disabled": _vm.disabled },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.clearSearch($event)
+              }
+            }
+          },
+          [_vm._v("\n\t\tX\n\t")]
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/dataTable/ExistingSetupBuilderView.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _vuex = require("vuex");
+
+var _ExistingTableDataRow = _interopRequireDefault(require("./ExistingTableDataRow"));
+
+var _SearchInput = _interopRequireDefault(require("../SearchInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    SearchInput: _SearchInput.default,
+    ExistingTableDataRow: _ExistingTableDataRow.default
+  },
+  data: function data() {
+    return {
+      dataObjectsList: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.getSimpleDataObjects().then(function (resp) {
+        _this.dataObjectsList = resp;
+      }).catch(function () {// do nothing
+      });
+    });
+  },
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['getSimpleDataObjects']))
+};
+exports.default = _default;
+        var $ba3e81 = exports.default || module.exports;
+      
+      if (typeof $ba3e81 === 'function') {
+        $ba3e81 = $ba3e81.options;
+      }
+    
+        /* template */
+        Object.assign($ba3e81, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-existing-data-object-wrapper" }, [
+    _c(
+      "div",
+      { staticClass: "wptb-existing-data-object-search" },
+      [_c("search-input", { staticStyle: { "font-size": "90%" } })],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "wptb-existing-data-object-list" }, [
+      _c("table", { staticClass: "wptb-existing-data-object-table" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.dataObjectsList, function(ref) {
+            var ID = ref.ID
+            var post_title = ref.post_title
+            var type = ref.type
+            return _c("existing-table-data-row", {
+              key: ID,
+              attrs: { id: ID, title: post_title, type: type }
+            })
+          }),
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("ID")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("title")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("type")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./ExistingTableDataRow":"components/dataTable/ExistingTableDataRow.vue","../SearchInput":"components/SearchInput.vue"}],"components/dataTable/ExistingSetup.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _GenericDataSourceSetup = _interopRequireDefault(require("./GenericDataSourceSetup"));
+
+var _ExistingSetupLeftPanel = _interopRequireDefault(require("./ExistingSetupLeftPanel"));
+
+var _ExistingSetupBuilderView = _interopRequireDefault(require("./ExistingSetupBuilderView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'ExistingSetup',
+  components: {
+    ExistingSetupBuilderView: _ExistingSetupBuilderView.default,
+    ExistingSetupLeftPanel: _ExistingSetupLeftPanel.default,
+    GenericDataSourceSetup: _GenericDataSourceSetup.default
+  }
+};
+exports.default = _default;
+        var $924fe1 = exports.default || module.exports;
+      
+      if (typeof $924fe1 === 'function') {
+        $924fe1 = $924fe1.options;
+      }
+    
+        /* template */
+        Object.assign($924fe1, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "generic-data-source-setup",
+    [
+      _c("existing-setup-left-panel"),
+      _vm._v(" "),
+      _c("existing-setup-builder-view")
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./GenericDataSourceSetup":"components/dataTable/GenericDataSourceSetup.vue","./ExistingSetupLeftPanel":"components/dataTable/ExistingSetupLeftPanel.vue","./ExistingSetupBuilderView":"components/dataTable/ExistingSetupBuilderView.vue"}],"components/DataScreenHandler.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30665,6 +31171,8 @@ var _DataSourceSelection = _interopRequireDefault(require("./DataSourceSelection
 
 var _CsvSetup = _interopRequireDefault(require("./CsvSetup"));
 
+var _ExistingSetup = _interopRequireDefault(require("./dataTable/ExistingSetup"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -30676,7 +31184,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var _default = {
   components: {
     DataSourceSelection: _DataSourceSelection.default,
-    CsvSetup: _CsvSetup.default
+    CsvSetup: _CsvSetup.default,
+    ExistingSetup: _ExistingSetup.default
   },
   mounted: function mounted() {
     var _this = this;
@@ -30726,7 +31235,7 @@ render._withStripped = true
           };
         })());
       
-},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
+},{"vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./DataSourceSelection":"components/DataSourceSelection.vue","./CsvSetup":"components/CsvSetup.vue","./dataTable/ExistingSetup":"components/dataTable/ExistingSetup.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34602,7 +35111,9 @@ var _default = {
 
     this.watchSavedResponse(); // sync data source setup related state according to start up values, especially if builder is started at edit mode so it starts with a data object
 
-    this.syncDataSourceSetup();
+    this.syncDataSourceSetup(); // TODO [erdembircan] remove for production
+
+    this.startSourceSetup('existing');
   },
   computed: _objectSpread({
     /**
@@ -34617,7 +35128,7 @@ var _default = {
       };
     }
   }, (0, _vuex.mapGetters)(['isVisible', 'getSelectedDataSource']), {}, (0, _vuex.mapState)(['leftPanelId', 'devStartupScreen'])),
-  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse', 'syncDataSourceSetup']))
+  methods: _objectSpread({}, (0, _vuex.mapActions)(['setComponentVisibility', 'setCurrentScreen', 'addOptionsAndDataToSave', 'setUpSelectionIdProxy', 'handleMainTableDiscoveryProcess', 'watchSavedResponse', 'syncDataSourceSetup', 'startSourceSetup']))
 };
 exports.default = _default;
         var $d6e744 = exports.default || module.exports;
@@ -34748,7 +35259,7 @@ var state = {
       content: {}
     },
     card: {
-      softSelectedId: null
+      softSelectedId: 'existing'
     },
     setup: {
       title: '',
@@ -35456,6 +35967,52 @@ var actions = {
     var mergedData = _objectSpread({}, currentDataObject, {}, mergeData);
 
     commit('setDataObject', mergedData);
+  },
+
+  /**
+   * Get simple versions of data objects for information purposes.
+   *
+   * @param {Object} root store action object
+   * @param {Function} root.getters store state getters
+   * @param {Function} root.dispatch dispatch function for store actions
+   * @param {Function} root.commit commit function for store mutations
+   */
+  getSimpleDataObjects: function getSimpleDataObjects(_ref20) {
+    var getters = _ref20.getters,
+        dispatch = _ref20.dispatch,
+        commit = _ref20.commit;
+    return new Promise(function (res, rej) {
+      var url = new URL(getters.getAjaxUrl);
+
+      var _getters$getSecurityD = getters.getSecurityData('simpleDataObjects'),
+          action = _getters$getSecurityD.action,
+          nonce = _getters$getSecurityD.nonce;
+
+      url.searchParams.append('action', action);
+      url.searchParams.append('nonce', nonce);
+      dispatch('genericFetch', {
+        url: url.toString(),
+        options: {
+          method: 'GET'
+        },
+        callbackFunctions: {
+          busyFunction: function busyFunction() {
+            commit('setBusy', true);
+          },
+          resetBusyFunction: function resetBusyFunction() {
+            commit('setBusy', false);
+          },
+          errorFunction: function errorFunction(err) {
+            // TODO [erdembircan] remove for production
+            console.log(err);
+          }
+        }
+      }).then(function (resp) {
+        res(resp.data.simpleDataObjects);
+      }).catch(function (err) {
+        rej(err);
+      });
+    });
   }
 };
 /** @module actions */
@@ -35702,6 +36259,34 @@ var getters = {
    */
   getDataObjectTitle: function getDataObjectTitle(state) {
     return state.dataSource.setup.title;
+  },
+
+  /**
+   * Get server ajax url.
+   *
+   * @param {Object} state store state
+   * @return {string} ajax url
+   */
+  getAjaxUrl: function getAjaxUrl(state) {
+    return state.security.ajaxUrl;
+  },
+
+  /**
+   * Get security data of a given security id.
+   *
+   * @param {Object} state store state
+   * @return {Function} function to get specific security data
+   */
+  getSecurityData: function getSecurityData(state) {
+    return function (dataId) {
+      var securityData = null;
+
+      if (state.security[dataId]) {
+        securityData = state.security[dataId];
+      }
+
+      return securityData;
+    };
   }
 };
 var _default = getters;
@@ -35779,7 +36364,117 @@ var subscriptions = function subscriptions(store) {
 
 var _default = subscriptions;
 exports.default = _default;
-},{"../general":"stores/general.js"}],"stores/dataTables/index.js":[function(require,module,exports) {
+},{"../general":"stores/general.js"}],"stores/modules/ajaxRequest/actions.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/**
+ * Ajax request module actions.
+ *
+ * @type {Object}
+ */
+var actions = {
+  /**
+   * Generic fetch function.
+   *
+   * @param {Object} actionObject store object
+   * @param {Object} payload action payload
+   * @param {string} payload.url fetch url
+   * @param {Object} payload.options fetch operation options
+   * @param {Object} payload.callbackFunctions fetch callback functions
+   * @return {Promise} promise object
+   */
+  genericFetch: function genericFetch(actionObject, _ref) {
+    var url = _ref.url,
+        _ref$options = _ref.options,
+        options = _ref$options === void 0 ? {
+      method: 'GET'
+    } : _ref$options,
+        _ref$callbackFunction = _ref.callbackFunctions,
+        callbackFunctions = _ref$callbackFunction === void 0 ? {
+      busyFunction: function busyFunction() {},
+      resetBusyFunction: function resetBusyFunction() {},
+      errorFunction: function errorFunction() {}
+    } : _ref$callbackFunction;
+    return new Promise(function (resolve, reject) {
+      var defaultCallbacks = {
+        busyFunction: function busyFunction() {},
+        resetBusyFunction: function resetBusyFunction() {},
+        errorFunction: function errorFunction() {}
+      };
+
+      var _defaultCallbacks$cal = _objectSpread({}, defaultCallbacks, {}, callbackFunctions),
+          busyFunction = _defaultCallbacks$cal.busyFunction,
+          resetBusyFunction = _defaultCallbacks$cal.resetBusyFunction,
+          errorFunction = _defaultCallbacks$cal.errorFunction;
+
+      var responseObject = null;
+      busyFunction();
+      fetch(url, options).then(function (res) {
+        if (!res.ok) {
+          throw new Error('an error occurred, please try again later');
+        }
+
+        return res.json();
+      }).then(function (resp) {
+        if (resp.error) {
+          throw new Error(resp.error);
+        }
+
+        responseObject = resp;
+      }).catch(function (err) {
+        errorFunction(err.message);
+      }).finally(function () {
+        resetBusyFunction();
+        var resolveFunction = responseObject === null ? reject : resolve;
+        resolveFunction(responseObject);
+      });
+    });
+  }
+};
+/**
+ * @module actions
+ */
+
+var _default = actions;
+exports.default = _default;
+},{}],"stores/modules/ajaxRequest/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _actions = _interopRequireDefault(require("./actions"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Ajax request module options.
+ *
+ * @type {Object}
+ */
+var defaultOptions = {
+  actions: _actions.default
+};
+/**
+ * @module defaultOptions
+ */
+
+var _default = defaultOptions;
+exports.default = _default;
+},{"./actions":"stores/modules/ajaxRequest/actions.js"}],"stores/dataTables/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35804,6 +36499,8 @@ var _plugin = _interopRequireDefault(require("./plugin"));
 var _functions = require("../../functions");
 
 var _general = require("../general");
+
+var _ajaxRequest = _interopRequireDefault(require("../modules/ajaxRequest"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35830,6 +36527,9 @@ var storeOptions = {
   actions: _actions.default,
   getters: _getters.default,
   plugins: [_plugin.default],
+  modules: {
+    ajaxRequest: _ajaxRequest.default
+  },
   strict: true
 };
 /**
@@ -35873,7 +36573,7 @@ var createStore = function createStore() {
 
 var _default = createStore;
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","vuex":"../../../../../node_modules/vuex/dist/vuex.esm.js","./state":"stores/dataTables/state.js","./mutations":"stores/dataTables/mutations.js","./actions":"stores/dataTables/actions.js","./getters":"stores/dataTables/getters.js","./plugin":"stores/dataTables/plugin.js","../../functions":"functions/index.js","../general":"stores/general.js","../modules/ajaxRequest":"stores/modules/ajaxRequest/index.js"}],"stores/modules/dataManager/actions.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -37133,12 +37833,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 var _default = {
   name: 'DataTable',
   handler: function dataTableJS(uniqueId) {
-    var data = WPTB_ControlsManager.getControlData('dataTableData'); // extra options for store
+    var data = WPTB_ControlsManager.getControlData('dataTableData');
+    var iconList = data.iconList,
+        icons = data.icons,
+        security = data.security,
+        proUrl = data.proUrl; // extra options for store
 
     var extraStoreOptions = {
       state: {
-        iconList: data.iconList,
-        icons: data.icons,
+        iconList: iconList,
+        icons: icons,
+        security: security,
         strings: {
           dataSourceHeader: (0, _i18n.__)('Select your data source', 'wp-table-builder'),
           csvTitle: (0, _i18n.__)('CSV', 'wp-table-builder'),
@@ -37219,9 +37924,11 @@ var _default = {
           autoModeActiveMessage: (0, _i18n.__)('Auto row mode is active, element bindings are disabled.', 'wptb-table-builder'),
           autoModeMessage: (0, _i18n.__)('Data will be applied to elements according to their cell order.', 'wptb-table-builder'),
           emptyDataTablePreview: (0, _i18n.__)('No table found, generate one to preview data table', 'wptb-table-builder'),
-          dataTitlePlaceholder: (0, _i18n.__)('Give your data a title', 'wptb-table-builder')
+          dataTitlePlaceholder: (0, _i18n.__)('Give your data a title', 'wptb-table-builder'),
+          existingTitle: (0, _i18n.__)('existing', 'wptb-table-builder'),
+          existingInfo: (0, _i18n.__)('Select an already created data object.', 'wptb-table-builder')
         },
-        proUrl: data.proUrl,
+        proUrl: proUrl,
         tableIsActive: false
       },
       getters: {
@@ -39665,6 +40372,12 @@ var _default = {
       currentUrl.searchParams.append('table', encodeURIComponent(cardId));
       window.history.pushState(null, null, currentUrl.toString());
     },
+    startupDataTableSetup: function startupDataTableSetup() {
+      // load data manager component
+      DataTableManagerStatic.getInstance().forceLoad(); // destroy generate instance and activate data table menu section
+
+      WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
+    },
     cardGenerate: function cardGenerate(cardId, cols, rows, selectedCells) {
       var edit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
       this.generating = true;
@@ -39674,10 +40387,7 @@ var _default = {
         var wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
         wptbTableStateSaveManager.tableStateSet();
       } else if (cardId === 'dataTable') {
-        // load data manager component
-        DataTableManagerStatic.getInstance().forceLoad(); // destroy generate instance and activate data table menu section
-
-        WPTB_Helper.wptbDocumentEventGenerate('wptb:generate:destroy', document, 'data_table_menu');
+        this.startupDataTableSetup();
       } else {
         var tableWrapper = document.querySelector('.wptb-table-setup');
         tableWrapper.appendChild(WPTB_Parser(this.fixedTables[cardId].content));
