@@ -4,11 +4,13 @@
 		:data-disabled="disabled"
 		:data-active-row="isActive"
 		@click="rowClick"
-		v-html="finalTitle"
+		v-html="searchClauseFilteredValue"
 	></div>
 </template>
 
 <script>
+import withSearchClause from '../../mixins/withSearchClause';
+
 export default {
 	props: {
 		id: {
@@ -27,11 +29,8 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		searchClause: {
-			type: String,
-			default: '',
-		},
 	},
+	mixins: [withSearchClause('title')],
 	model: {
 		prop: 'activeId',
 		event: 'rowClicked',
@@ -39,17 +38,6 @@ export default {
 	computed: {
 		isActive() {
 			return this.activeId === this.id;
-		},
-		finalTitle() {
-			if (this.searchClause === '') {
-				return this.title;
-			}
-
-			const regexp = new RegExp(`(${this.searchClause})`, 'gi');
-			return `<span class="wptb-data-listing-row-search-clause-wrap">${this.title.replaceAll(
-				regexp,
-				'<span class="wptb-data-listing-row-search-clause">$&</span>'
-			)}</spanc>`;
 		},
 	},
 	methods: {

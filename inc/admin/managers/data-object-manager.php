@@ -167,10 +167,7 @@ class Data_Object_Manager {
 			$security = [
 				'url'               => get_admin_url( null, 'admin-ajax.php' ),
 				'adminUrl'          => get_admin_url( null, 'admin.php' ),
-				'dataObjectContent' => [
-					'nonce'  => wp_create_nonce( 'dataObjectContent' ),
-					'action' => 'dataObjectContent'
-				],
+				'dataObjectContent' => static::generate_data_object_content_security_data(),
 				'dataObjectUpdate'  => [
 					'nonce'  => wp_create_nonce( 'dataObjectUpdate' ),
 					'action' => 'dataObjectUpdate'
@@ -197,6 +194,17 @@ class Data_Object_Manager {
 		return [
 			'nonce'  => wp_create_nonce( 'simpleDataObjects' ),
 			'action' => 'simpleDataObjects'
+		];
+	}
+
+	/**
+	 * Generate security data related to getting properties of a data object.
+	 * @return array security data
+	 */
+	public static function generate_data_object_content_security_data() {
+		return [
+			'nonce'  => wp_create_nonce( 'dataObjectContent' ),
+			'action' => 'dataObjectContent'
 		];
 	}
 
@@ -272,6 +280,8 @@ class Data_Object_Manager {
 	private static function get_simple_data_objects() {
 		$query_args = [
 			'post_type' => Data_Object::WP_POST_TYPE_NAME,
+			'orderby'   => 'ID',
+			'order'     => 'DESC'
 		];
 
 		$query        = new WP_Query( $query_args );
@@ -312,7 +322,7 @@ class Data_Object_Manager {
 			$data_object->tables = $associated_tables;
 
 			// add data object type
-			$data_object->type   = ( new Data_Object( [ 'id' => $data_object->ID ] ) )->get_object_data()['type'];
+			$data_object->type = ( new Data_Object( [ 'id' => $data_object->ID ] ) )->get_object_data()['type'];
 
 			foreach ( $data_object as $key => $value ) {
 				if ( ! in_array( $key, $allowed_properties ) ) {

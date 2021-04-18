@@ -1,12 +1,15 @@
 <template>
-	<tr @click.prevent="handleRowSelect">
+	<tr @click.prevent="handleRowSelect" class="wptb-existing-table-data-row">
 		<td class="wptb-existing-table-column">{{ id }}</td>
-		<td class="wptb-existing-table-column">{{ title }}</td>
+		<td class="wptb-existing-table-column" v-html="searchClauseFilteredValue"></td>
 		<td class="wptb-existing-table-column">{{ type }}</td>
+		<td class="wptb-existing-table-column">{{ associatedTableCount }}</td>
 	</tr>
 </template>
 
 <script>
+import withSearchClause from '../../mixins/withSearchClause';
+
 export default {
 	props: {
 		id: {
@@ -21,7 +24,12 @@ export default {
 			type: String,
 			required: true,
 		},
+		associatedTableCount: {
+			type: Number,
+			required: true,
+		},
 	},
+	mixins: [withSearchClause('title')],
 	methods: {
 		handleRowSelect() {
 			this.$emit('rowSelect', this.id);

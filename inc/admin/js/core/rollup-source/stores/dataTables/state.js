@@ -36,6 +36,7 @@ const state = {
 			title: '',
 			sourceId: null,
 			sourceDataCreated: false,
+			setupActive: false,
 			csv: {
 				controls: {
 					delimiter: 'comma',

@@ -55,6 +55,11 @@ const stateWatchList = {
 const subscriptions = (store) => {
 	stateWatchFunction(store, stateWatchList);
 	actionWatchFunction(actionWatchList, store);
+
+	store.subscribe((mutation, state) => {
+		// TODO [erdembircan] remove for production
+		console.log(state.dataSource.setup);
+	});
 };
 
 /* @module subscriptions */

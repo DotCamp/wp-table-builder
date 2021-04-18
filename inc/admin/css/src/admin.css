@@ -6470,6 +6470,7 @@ thead .wptb-data-manager-table-data-value {
     grid-template-rows: minmax(min-content, max-content) minmax(min-content, max-content) 1fr minmax(min-content, max-content);
     grid-template-areas: 'title' 'search' 'listing' 'footer';
     transition: all 0.2s ease-out;
+    height: 100%;
 }
 
 .wptb-table-data-listings[data-collapse=true] {
@@ -6973,32 +6974,108 @@ thead .wptb-data-manager-table-data-value {
 .wptb-existing-data-object-table {
     border-collapse: separate;
     border: 1px solid var(--wptb-plugin-gray-200);
-    border-spacing: 0px;
+    border-spacing: 0;
     border-radius: 5px;
 }
 
 .wptb-existing-data-object-table th {
-    padding: 10px;
     background-color: var(--wptb-plugin-logo-color);
     color: var(--wptb-plugin-theme-color-light);
     font-weight: bold;
     text-transform: uppercase;
 }
 
-.wptb-existing-data-object-table td, .wptb-existing-data-object-table th{
+.wptb-existing-data-object-table td, .wptb-existing-data-object-table th {
     border: 1px solid var(--wptb-plugin-gray-200);
 }
 
-.wptb-existing-data-object-table tbody tr{
+.wptb-existing-data-object-table tbody tr {
     cursor: pointer;
     transition: all 0.2s ease-out;
 }
 
-.wptb-existing-data-object-table tbody tr:hover{
+.wptb-existing-data-object-table tbody tr:hover {
     background-color: var(--wptb-plugin-gray-200);
 }
 
 .wptb-existing-data-object-search {
     margin: 20px;
 }
+
+.wptb-existing-table-no-data-row {
+    padding: 20px;
+}
+
+.wptb-existing-table-no-data-row td {
+    padding: 20px;
+    background-color: var(--wptb-plugin-gray-300);
+    color: var(--wptb-plugin-gray-600)
+}
+
+.wptb-existing-data-object-table-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-existing-data-object-table-icon-wrapper svg {
+    width: 15px;
+    fill: currentColor;
+}
+
+.wptb-existing-listing-header-column {
+    padding: 10px;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    cursor: pointer;
+}
+
+.wptb-existing-listing-slot-wrapper {
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.wptb-existing-listing-sort-wrapper {
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: end;
+}
+
+.wptb-sort-component-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-left: 10px;
+}
+
+.wptb-sort-component-wrapper svg {
+    width: 10px;
+    fill: currentColor;
+}
+
+.wptb-sort-component-wrapper[data-sort-direction='descending'] {
+    transform: rotateZ(180deg);
+}
+
+.wptb-existing-table-data-row {
+    background-color: var(--wptb-plugin-theme-color-light);
+    transition: all 0.2s ease-out;
+}
+
+.wptb-existing-table-data-row:hover {
+    background-color: var(--wptb-plugin-gray-400);
+}
+
+.wptb-existing-data-object-table[data-wptb-busy='true'] th {
+    background-color: var(--wptb-plugin-gray-400) !important;
+}
+
+.wptb-existing-data-object-table[data-wptb-busy='true'] {
+    color: var(--wptb-plugin-gray-500) !important;
+}
+
 /*endregion*/

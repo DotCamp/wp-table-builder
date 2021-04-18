@@ -52,22 +52,34 @@ const actions = {
 	 * @param {string} sourceId selected source id
 	 */
 	async startSourceSetup({ commit, dispatch }, sourceId) {
+		commit('setSetupActive');
+
+		let innerSourceId = sourceId;
+		let clear = true;
+
+		if (typeof sourceId === 'object') {
+			innerSourceId = sourceId.sourceId;
+			clear = sourceId.clear !== undefined ? sourceId.clear : true;
+		}
+
 		// set source id
-		commit('setSetupSourceId', sourceId);
+		commit('setSetupSourceId', innerSourceId);
 
-		// reset selected data source
-		// @deprecated
-		// commit('setSelectedDataSource', null);
-		await dispatch('dataSourceChangeOperation', null);
+		if (clear) {
+			// reset selected data source
+			// @deprecated
+			// commit('setSelectedDataSource', null);
+			await dispatch('dataSourceChangeOperation', null);
 
-		// clear temp data manager
-		commit('clearTempDataManager');
+			// clear temp data manager
+			commit('clearTempDataManager');
+		}
 
 		// clear setup
 		commit('resetToDefaults', 'dataSource.setup');
 
 		// set screen
-		dispatch('setCurrentScreenFromId', sourceId);
+		dispatch('setCurrentScreenFromId', innerSourceId);
 	},
 	/**
 	 * Change data source type operation.
@@ -78,7 +90,7 @@ const actions = {
 	 * @param {string} sourceId data source type
 	 */
 	dataSourceChangeOperation({ commit }, sourceId) {
-		commit('resetToDefaults', 'dataSource.dataObject');
+		// commit('resetToDefaults', 'dataSource.dataObject');
 		commit('setSelectedDataSource', sourceId);
 	},
 	/**
@@ -104,14 +116,16 @@ const actions = {
 	/**
 	 * Set current source in setup as selected.
 	 *
-	 * @param {{commit, getters}} vuex store object
+	 * @param {{commit, getters, commit}} vuex store object
 	 */
-	setCurrentSourceAsSelected({ dispatch, getters }) {
+	async setCurrentSourceAsSelected({ dispatch, getters, commit }) {
 		const currentSourceInSetup = getters.getCurrentSourceSetupId;
 
 		// @deprecated
 		// commit('setSelectedDataSource', currentSourceInSetup);
-		dispatch('dataSourceChangeOperation', currentSourceInSetup);
+		await dispatch('dataSourceChangeOperation', currentSourceInSetup);
+
+		commit('resetSetupStatus');
 	},
 	/**
 	 * Mark certain properties of data table for save process.
@@ -353,6 +367,78 @@ const actions = {
 					rej(err);
 				});
 		});
+	},
+	/**
+	 * Fetch properties of data object with the given id.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.dispatch store action dispatch function
+	 * @param {Object} root.getters store state getters
+	 * @param {Function} root.commit store mutation commit function
+	 * @param {number | string} dataObjectId data object id
+	 */
+	fetchDataObject({ dispatch, getters, commit }, dataObjectId) {
+		return new Promise((res, rej) => {
+			const url = new URL(getters.getAjaxUrl);
+			const { nonce, action } = getters.getSecurityData('dataObjectContent');
+
+			url.searchParams.append('nonce', nonce);
+			url.searchParams.append('action', action);
+			url.searchParams.append('data_object_id', dataObjectId);
+
+			dispatch('genericFetch', {
+				url: url.toString(),
+				options: {
+					method: 'GET',
+				},
+				callbackFunctions: {
+					busyFunction: () => {
+						commit('setBusy', true);
+					},
+					resetBusyFunction: () => {
+						commit('setBusy', false);
+					},
+					errorFunction: (err) => {
+						// TODO [erdembircan] remove for production
+						console.log(err);
+					},
+				},
+			})
+				.then((resp) => {
+					res(resp.data.dataObject);
+				})
+				.catch((err) => {
+					rej(err);
+				});
+		});
+	},
+	/**
+	 * Call a function depending on the app busy state.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.getters store state getters
+	 * @param {Function} callback function to call
+	 */
+	busyStatePass({ getters }, callback) {
+		if (!getters.busyStatus) {
+			callback();
+		}
+	},
+	/**
+	 * Start source setup operation from given data object.
+	 *
+	 * @param {Object} root store action object
+	 * @param {Function} root.commit store mutation commit function
+	 * @param {Function} root.dispatch store action dispatch function
+	 * @param {Object} root.getters store state getters
+	 * @param {Object} dataObject data object
+	 */
+	async startSourceSetupFromDataObject({ commit, dispatch, getters }, dataObject) {
+		commit('setDataObject', dataObject);
+
+		await dispatch('syncDataSourceSetup');
+
+		await dispatch('startSourceSetup', { sourceId: getters.getCurrentSourceSetupId, clear: false });
 	},
 };
 

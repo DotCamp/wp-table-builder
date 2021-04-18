@@ -222,8 +222,9 @@ class Data_Table_Manager {
 		}
 
 		$security = [
-			'ajaxUrl'          => get_admin_url(null, 'admin-ajax.php'),
-			'simpleDataObjects' => Data_Object_Manager::generate_simple_data_object_security_data()
+			'ajaxUrl'           => get_admin_url( null, 'admin-ajax.php' ),
+			'simpleDataObjects' => Data_Object_Manager::generate_simple_data_object_security_data(),
+			'dataObjectContent' => Data_Object_Manager::generate_data_object_content_security_data()
 		];
 
 		$icon_manager = Init::instance()->get_icon_manager();
@@ -240,6 +241,8 @@ class Data_Table_Manager {
 				'sortUp'              => $icon_manager->get_icon( 'sort-alpha-up' ),
 				'cog'                 => $icon_manager->get_icon( 'cog' ),
 				'existing'            => $icon_manager->get_icon( 'folder-open' ),
+				'table'               => $icon_manager->get_icon( 'table' ),
+				'caretUp'             => $icon_manager->get_icon( 'caret-up' ),
 			],
 			'proUrl'     => 'https://wptablebuilder.com/',
 			'dataObject' => $data_object,

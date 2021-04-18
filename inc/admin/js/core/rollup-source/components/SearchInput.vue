@@ -46,10 +46,10 @@ export default {
 	mounted() {},
 	watch: {
 		searchTerm(n) {
-			this.$emit('valueChanged', n);
+			this.$emit('valueChanged', n.trim());
 		},
 		value(n) {
-			this.searchTerm = n;
+			this.searchTerm = n.trim();
 		},
 	},
 	computed: {

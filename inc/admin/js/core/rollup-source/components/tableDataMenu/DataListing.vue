@@ -11,7 +11,12 @@
 				:disabled="getBusyState"
 			></search-input>
 		</div>
-		<transition-group name="wptb-fade" tag="div" style="grid-area: listing; overflow: auto;">
+		<transition-group
+			v-if="!collapseStatus"
+			name="wptb-fade"
+			tag="div"
+			style="grid-area: listing; overflow: hidden;"
+		>
 			<data-listing-row
 				v-for="data in filteredDataObject"
 				:key="data.ID"

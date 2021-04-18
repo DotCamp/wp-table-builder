@@ -227,6 +227,9 @@ const getters = {
 
 		return securityData;
 	},
+	getSetupActiveStatus(state) {
+		return state.dataSource.setup.setupActive;
+	},
 };
 
 export default getters;

@@ -26,8 +26,6 @@ const mutations = {
 		state.screen = screenName;
 	},
 	/**
-	 * Set soft selected source card id.
-	 *
 	 * @param {Object} state data table state
 	 * @param {string} sourceId source card id
 	 */
@@ -64,7 +62,7 @@ const mutations = {
 		state.dataSource.setup.csv.controls.delimiter = delimiter;
 	},
 	/**
-	 * Switch to data manaager tab and screen at any source setup.
+	 * Switch to data manager tab and screen at any source setup.
 	 *
 	 * @param {Object} state data table state
 	 * @param {string} sourceId active source setup id
@@ -203,6 +201,22 @@ const mutations = {
 	 */
 	setDataObjectTitle: (state, title = '') => {
 		state.dataSource.setup.title = title;
+	},
+	/**
+	 * Set status of setup process as active.
+	 *
+	 * @param {Object} state data table store state
+	 */
+	setSetupActive: (state) => {
+		state.dataSource.setup.setupActive = true;
+	},
+	/**
+	 * Set status of setup process as not active.
+	 *
+	 * @param {Object} state data table store state
+	 */
+	resetSetupStatus: (state) => {
+		state.dataSource.setup.setupActive = false;
 	},
 };
 

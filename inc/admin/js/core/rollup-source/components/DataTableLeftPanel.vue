@@ -11,7 +11,7 @@
 				>{{ translationM('backToSelection') | cap }}</left-panel-material-button
 			>
 			<left-panel-material-button
-				v-if="getSelectedDataSource === null"
+				v-if="$store.getters.getSetupActiveStatus"
 				type="confirm"
 				:disabled="isContinueAvailable"
 				:click="continueToGenerate"
