@@ -1351,6 +1351,8 @@
 				if (!size) {
 					// eslint-disable-next-line no-param-reassign
 					innerSize = window.innerWidth;
+				// TODO [erdembircan] remove for production
+				console.log(innerSize);
 
 					const directives = this.getDirective(o.el);
 					// calculate size according to relative width directive
