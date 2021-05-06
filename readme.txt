@@ -92,6 +92,7 @@ That's it. You're done!
 
 * FIX: Transparent background color bug that is affecting some tables are fixed.
 * FIX: Block editor 'edit' button is now correctly enabled/disabled .
+* FIX: An issue affecting buttons to not fire attached events in responsive modes.
 * PRO: IMPROVE: Better empty cell functionality.
 
 = 1.3.4 =

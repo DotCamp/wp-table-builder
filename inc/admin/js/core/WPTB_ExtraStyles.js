@@ -98,9 +98,10 @@
 
 			if (extraStylesRaw) {
 				const extraStyles = atob(extraStylesRaw);
+
 				const [, tableId] = tableElement
 					.getAttribute('class')
-					.match(/(?:wptb-element-main-table_setting-)(.+\d)/);
+					.match(/(?:wptb-element-main-table_setting-)(\d+)/);
 
 				const styleId = styleIdPrefix + tableId;
 
@@ -156,7 +157,10 @@
 		this.applyStyles = (mode = this.modes.frontEnd, generalStyles = null) => {
 			this.currentMode = mode;
 			const allTables = Array.from(document.querySelectorAll(tableQueries[mode]));
-			allTables.map(applyExtraStyle);
+
+			if (allTables) {
+				allTables.map(applyExtraStyle);
+			}
 
 			// only apply general styles on client frontend if any general styles are defined
 			if (mode === this.modes.frontEnd && generalStyles) {
