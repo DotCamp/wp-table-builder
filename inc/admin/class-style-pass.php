@@ -122,11 +122,18 @@ class Style_Pass {
 		$style_pass_data   = apply_filters( 'wp-table-builder/filter/style-pass-frontend-data', $style_pass_data );
 		$data['stylePass'] = $style_pass_data;
 
-
 		// general styles frontend data
-		$data['generalStyles'] = get_option( static::GENERAL_STYLES_OPTION_NAME, '' );
+		$data['generalStyles'] = static::get_general_styles();
 
 		return $data;
+	}
+
+	/**
+	 * Get general styles.
+	 * @return string general styles
+	 */
+	public static function get_general_styles() {
+		return get_option( static::GENERAL_STYLES_OPTION_NAME, '' );
 	}
 
 	/**

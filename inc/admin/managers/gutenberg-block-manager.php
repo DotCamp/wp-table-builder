@@ -13,6 +13,7 @@ use function get_current_screen;
 use function get_post_meta;
 use function is_gutenberg_page;
 use function register_block_type;
+use function wp_localize_script;
 use function wp_register_script;
 use function wp_register_style;
 use function wp_reset_query;
@@ -135,12 +136,21 @@ class Gutenberg_Block_Manager {
 
 		$table_css_url = apply_filters( 'wp-table-builder/filter/wptb_gutenberg_preview_css_url', $table_css_url );
 
+		$table_scripts = [
+			'extra-styles' => add_query_arg( [ 'ver' => NS\PLUGIN_VERSION ], NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Block_ExtraStyles.js' )
+		];
+
+		$general_styles = NS\Inc\Admin\Style_Pass::get_general_styles();
+
 		return [
-			'blockName'   => $this->block_name,
-			'icon'        => Init::instance()->get_icon_manager()->get_icon( 'table' ),
-			'tables'      => $tables,
-			'builderUrl'  => $builder_url,
-			'tableCssUrl' => $table_css_url
+			'blockName'    => $this->block_name,
+			'icon'         => Init::instance()->get_icon_manager()->get_icon( 'table' ),
+			'tables'       => $tables,
+			'builderUrl'   => $builder_url,
+			'tableCssUrl'  => $table_css_url,
+			'tableScripts' => $table_scripts,
+			'generalStyles' => $general_styles,
+
 		];
 	}
 }

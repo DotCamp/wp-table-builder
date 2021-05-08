@@ -189,6 +189,11 @@
   transition: all 0.3s;
   opacity: 0;
 }
+.wptb-block-wrapper .wptb-block-main .wptb-table-select .wptb-table-list-wrapper .wptb-table-list .wptb-table-list-row[data-is-active=true] {
+  background-color: #216c95 !important;
+  color: #FFF !important;
+  cursor: default;
+}
 .wptb-block-wrapper .wptb-block-main .wptb-table-select .wptb-table-list-wrapper .wptb-table-list .wptb-table-list-row .wptb-table-list-id {
   -ms-grid-column-align: center;
       justify-self: center;

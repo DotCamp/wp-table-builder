@@ -94,6 +94,7 @@ That's it. You're done!
 * FIX: Block editor 'edit' button is now correctly enabled/disabled .
 * FIX: An issue affecting buttons to not fire attached events in responsive modes.
 * FIX: Table ID not being generated at initial save.
+* IMPROVE: Table gutenberg block previews now reflects extra styles added for them.
 * PRO: IMPROVE: Better empty cell functionality.
 
 = 1.3.4 =

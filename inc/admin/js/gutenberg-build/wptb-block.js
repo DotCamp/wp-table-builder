@@ -86,6 +86,215 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./inc/admin/js/core/WPTB_ExtraStyles.js":
+/*!***********************************************!*\
+  !*** ./inc/admin/js/core/WPTB_ExtraStyles.js ***!
+  \***********************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+/**
+ * Extra styles module to add custom css rules defined for individual tables.
+ */
+(function UMD(key, context, factory) {
+  if ( true && (typeof exports === "undefined" ? "undefined" : _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_2___default()(exports)) === 'object') {
+    module.exports = factory();
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    context[key] = factory();
+  } // eslint-disable-next-line no-restricted-globals
+
+})('WPTB_ExtraStyles', self || global, function () {
+  /**
+   * Extra styles frontend manager.
+   *
+   * This component will be responsible for adding and maintaining extra styles defined for tables.
+   *
+   * @class
+   */
+  // eslint-disable-next-line camelcase
+  function WPTB_ExtraStyles() {
+    var _tableQueries,
+        _this = this;
+
+    /**
+     * Extra styles operation modes
+     *
+     * @type {Object}
+     */
+    this.modes = {
+      builder: 'builder',
+      frontEnd: 'frontEnd',
+      block: 'block'
+    };
+    /**
+     * Base document for DOM operations.
+     *
+     * @type {Document}
+     */
+
+    this.baseDocument = document;
+    /**
+     * Current mode extra styles are operating on.
+     *
+     * @type {string}
+     */
+
+    this.currentMode = this.modes.builder;
+    /**
+     * HTML queries for table element in different plugin modes
+     *
+     * @type {Object}
+     */
+
+    var tableQueries = (_tableQueries = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(_tableQueries, this.modes.builder, '.wptb-table-setup .wptb-preview-table'), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(_tableQueries, this.modes.block, '.wptb-block-table-setup .wptb-preview-table'), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(_tableQueries, this.modes.frontEnd, '.wptb-table-container .wptb-preview-table'), _tableQueries);
+    /**
+     * Format styles.
+     *
+     * @param {string} styles styles
+     * @return {string} formatted styles
+     */
+
+    var formatStyles = function formatStyles(styles) {
+      // remove all newlines, comments and '!important' from style string to make it a one liner
+      var cleaned = styles.replaceAll(/(\r?\n)|(\/\*.+?\*\/)|(\s*!important)/g, ''); // add '!important' to all rules to override default style rules
+
+      return cleaned.replaceAll(';', ' !important;');
+    };
+    /**
+     * Reform style rules so they will only affect given table id.
+     *
+     * @param {number} prefix prefix string that will be added to all rules
+     * @param {string} extraStyles extra styles
+     * @return {string} new style properties prefixed with table id class
+     */
+
+
+    var prefixStyleRules = function prefixStyleRules(prefix, extraStyles) {
+      // reformat styles into a suitable form for our regexp operations
+      var formattedStyles = formatStyles(extraStyles);
+      var splitStyles = formattedStyles.split('}');
+      var prefixedStylesArray = []; // eslint-disable-next-line array-callback-return
+
+      splitStyles.map(function (split) {
+        var regExp = new RegExp(/(.+?)\{/g);
+        var matches = regExp.exec(split);
+
+        if (matches) {
+          prefixedStylesArray.push(split.replace(matches[1], "".concat(prefix, " ").concat(matches[1])));
+        }
+      });
+      return "".concat(prefixedStylesArray.join('}'), "}");
+    };
+    /**
+     * Apply defined extra styles for given table element.
+     *
+     * @param {Element} tableElement table element
+     */
+
+
+    var applyExtraStyle = function applyExtraStyle(tableElement) {
+      var extraStylesRaw = tableElement.dataset.wptbExtraStyles;
+      var styleIdPrefix = 'wptb-extra-styles-';
+
+      if (extraStylesRaw) {
+        var extraStyles = atob(extraStylesRaw);
+
+        var _tableElement$getAttr = tableElement.getAttribute('class').match(/wptb-element-main-table_setting-(?:startedid-)?(\d+)/),
+            _tableElement$getAttr2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_tableElement$getAttr, 2),
+            tableId = _tableElement$getAttr2[1];
+
+        var styleId = styleIdPrefix + tableId;
+
+        var head = _this.baseDocument.querySelector('head'); // since stylesheets are created for frontend only once at startup, checking document head for any created style object will work even with theme disabled tables which at builder, they are not inside a shadow-root
+
+
+        var styleElement = head === null || head === void 0 ? void 0 : head.querySelector("#".concat(styleId)); // if no style element is found, create one
+
+        if (!styleElement) {
+          styleElement = document.createElement('style');
+          styleElement.type = 'text/css';
+          styleElement.id = styleId;
+          var isThemeStylesDisabled = tableElement.dataset.disableThemeStyles; // if theme styles are disabled, it means our table is residing inside a shadow-root, place style element inside shadow-root instead of document head
+
+          if (isThemeStylesDisabled && _this.currentMode === _this.modes.frontEnd || _this.currentMode === _this.modes.block) {
+            tableElement.insertAdjacentElement('beforebegin', styleElement);
+          } else {
+            head.appendChild(styleElement);
+          }
+        }
+
+        var uniqueClass = ".wptb-element-main-table_setting-".concat(tableId); // reform style rules so they will only affect the table they are assigned to
+
+        var prefixedStyles = prefixStyleRules(uniqueClass, extraStyles); // remove previous styles with updated ones
+
+        styleElement.innerHTML = '';
+        styleElement.appendChild(document.createTextNode(prefixedStyles));
+      }
+    };
+    /**
+     * Apply general styles to document.
+     *
+     * @param {string} generalStyles general style rules
+     */
+
+
+    var applyGeneralStyles = function applyGeneralStyles(generalStyles) {
+      var generalStylesheet = document.createElement('style');
+      generalStylesheet.type = 'text/css';
+      generalStylesheet.id = 'wptb-general-styles';
+      var head = _this.currentMode === _this.modes.block ? _this.baseDocument : _this.baseDocument.querySelector('head');
+      head.appendChild(generalStylesheet);
+      var prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
+      generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
+    };
+    /**
+     * Apply extra styles to all available tables on DOM.
+     *
+     * @param {string} mode operation mode to apply styles
+     * @param {string} generalStyles general style rules
+     * @param {Object} baseDocument base document for DOM operations
+     */
+
+
+    this.applyStyles = function () {
+      var mode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.modes.frontEnd;
+      var generalStyles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var baseDocument = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : document;
+      _this.baseDocument = baseDocument;
+      _this.currentMode = mode;
+      var allTables = Array.from(_this.baseDocument.querySelectorAll(tableQueries[mode]));
+
+      if (allTables) {
+        allTables.map(applyExtraStyle);
+      } // only apply general styles on client frontend if any general styles are defined
+
+
+      if ((mode === _this.modes.frontEnd || mode === _this.modes.block) && generalStyles) {
+        applyGeneralStyles(generalStyles);
+      }
+    };
+  } // send a singleton instance of manager
+
+
+  return new WPTB_ExtraStyles();
+});
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../../../../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+
+/***/ }),
+
 /***/ "./inc/admin/js/core/gutenberg-src/components/BlockButton.js":
 /*!*******************************************************************!*\
   !*** ./inc/admin/js/core/gutenberg-src/components/BlockButton.js ***!
@@ -843,12 +1052,17 @@ function TableList(_ref) {
   var tables = _ref.tables,
       rowSelected = _ref.rowSelected,
       selectedId = _ref.selectedId,
-      searchTerm = _ref.searchTerm;
+      searchTerm = _ref.searchTerm,
+      activeId = _ref.activeId;
 
   var indicateFoundTerm = function indicateFoundTerm(value) {
     var parsedVal = "".concat(value);
     var regexp = new RegExp("(".concat(searchTerm, ")"), 'ig');
     return parsedVal.replace(regexp, '<span class="wptb-block-search-indicator">$&</span>');
+  };
+
+  var isActive = function isActive(tableId) {
+    return Number.parseInt(activeId, 10) === Number.parseInt(tableId, 10);
   };
 
   return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
@@ -857,7 +1071,8 @@ function TableList(_ref) {
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
       onClick: rowSelected(table.id),
       className: "wptb-table-list-row wptb-basic-appear-anim ".concat(selectedId === table.id ? 'selected' : ''),
-      key: table.id
+      key: table.id,
+      "data-is-active": isActive(table.id)
     }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", {
       className: 'wptb-table-list-title',
       dangerouslySetInnerHTML: {
@@ -890,14 +1105,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _functions_withContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../functions/withContext */ "./inc/admin/js/core/gutenberg-src/functions/withContext.js");
+/* harmony import */ var _WPTB_ExtraStyles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../WPTB_ExtraStyles */ "./inc/admin/js/core/WPTB_ExtraStyles.js");
 
+
+ // eslint-disable-next-line no-unused-vars
 
 
 
 function TablePreview(_ref) {
   var content = _ref.content,
       scale = _ref.scale,
-      tableCssUrl = _ref.blockData.tableCssUrl;
+      _ref$blockData = _ref.blockData,
+      tableCssUrl = _ref$blockData.tableCssUrl,
+      generalStyles = _ref$blockData.generalStyles;
   var ref = react__WEBPACK_IMPORTED_MODULE_1___default.a.createRef();
   var previewPadding = 40;
 
@@ -910,25 +1130,35 @@ function TablePreview(_ref) {
     root.appendChild(styleSheet);
   }
 
+  function prepareScript(handler, url, root) {
+    var script = document.createElement('script');
+    script.setAttribute('src', url);
+    root.appendChild(script);
+  }
+
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     if (content !== null && tableCssUrl !== undefined) {
       var elem = document.createElement('div');
+      elem.setAttribute('id', 'wptb-block-preview-base');
       elem.attachShadow({
         mode: 'open'
-      }); // eslint-disable-next-line array-callback-return
+      });
+      var shadowRoot = elem.shadowRoot; // prepare styles
+      // eslint-disable-next-line array-callback-return
 
       Object.keys(tableCssUrl).map(function (handler) {
         if (Object.prototype.hasOwnProperty.call(tableCssUrl, handler)) {
-          prepareStylesheet(handler, tableCssUrl[handler], elem.shadowRoot);
+          prepareStylesheet(handler, tableCssUrl[handler], shadowRoot);
         }
       }); // add table content to shadowroot
 
       var range = document.createRange();
       range.setStart(document, 0);
-      var contentElement = range.createContextualFragment(content);
-      elem.shadowRoot.appendChild(contentElement);
+      var contentElement = range.createContextualFragment("<div class=\"wptb-block-table-setup\">".concat(content, "</div>"));
+      shadowRoot.appendChild(contentElement.children[0]);
+      window.WPTB_ExtraStyles.applyStyles(window.WPTB_ExtraStyles.modes.block, generalStyles, shadowRoot);
       var previewWrapper = ref.current;
-      var previewTable = elem.shadowRoot.querySelector('table');
+      var previewTable = shadowRoot.querySelector('table');
       var maxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
       var sumMaxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
       var tableWidth = '700px';
@@ -1083,7 +1313,8 @@ function TableSelect(_ref) {
     searchTerm: searchTerm,
     selectedId: selectedId,
     rowSelected: rowSelected,
-    tables: filteredTables()
+    tables: filteredTables(),
+    activeId: savedId
   })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_TablePreview__WEBPACK_IMPORTED_MODULE_6__["default"], {
     scale: true,
     content: selectedTable ? selectedTable.content : null
@@ -1093,7 +1324,7 @@ function TableSelect(_ref) {
     },
     type: 'negative'
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('cancel', 'wp-table-builder')) : '', Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_BlockButton__WEBPACK_IMPORTED_MODULE_7__["default"], {
-    disabled: !selectedTable,
+    disabled: !selectedTable || savedId === selectedId,
     onClick: saveTable
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('select', 'wp-table-builder'))), footerRightPortal.current) : '');
 }
@@ -1308,7 +1539,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * React context for table data.
  *
- * @type {React.Context<{attributes: {}, savedTable: null, setAttributes: setAttributes, setSavedTable: setSavedTable, blockData: {}}>}
+ * @type {Object}
  */
 
 var TableContext = react__WEBPACK_IMPORTED_MODULE_2___default.a.createContext({
@@ -1321,8 +1552,8 @@ var TableContext = react__WEBPACK_IMPORTED_MODULE_2___default.a.createContext({
 /**
  * HOC for table context.
  *
- * @param {Function | Class} Component react component to be wrapped
- * @return {function(*): *}
+ * @param {Function} Component react component to be wrapped
+ * @return {function(*): *} with context function
  */
 
 function withContext(Component) {
@@ -1794,6 +2025,72 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/harmony-module.js":
+/*!*******************************************!*\
+  !*** (webpack)/buildin/harmony-module.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function(originalModule) {
+	if (!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
 
 /***/ }),
 

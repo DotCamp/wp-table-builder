@@ -2,12 +2,16 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import WptbOverlay from './WptbOverlay';
 
-export default function TableList({ tables, rowSelected, selectedId, searchTerm }) {
+export default function TableList({ tables, rowSelected, selectedId, searchTerm, activeId }) {
 	const indicateFoundTerm = (value) => {
 		const parsedVal = `${value}`;
 		const regexp = new RegExp(`(${searchTerm})`, 'ig');
 
 		return parsedVal.replace(regexp, '<span class="wptb-block-search-indicator">$&</span>');
+	};
+
+	const isActive = (tableId) => {
+		return Number.parseInt(activeId, 10) === Number.parseInt(tableId, 10);
 	};
 
 	return (
@@ -20,6 +24,7 @@ export default function TableList({ tables, rowSelected, selectedId, searchTerm 
 							selectedId === table.id ? 'selected' : ''
 						}`}
 						key={table.id}
+						data-is-active={isActive(table.id)}
 					>
 						<div
 							className={'wptb-table-list-title'}

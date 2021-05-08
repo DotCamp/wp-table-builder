@@ -189,6 +189,11 @@ $theme-text-default-color: $gray-700
             transition: all 0.3s
             opacity: 0
 
+            &[data-is-active='true']
+              background-color: darken($logo-color, 15) !important
+              color: $theme-light !important
+              cursor: default
+
             .wptb-table-list-id
               justify-self: center
 
@@ -204,7 +209,6 @@ $theme-text-default-color: $gray-700
 
   .wptb-block-footer
     width: 100%
-    //height: 100%
     border-top: 1px solid $gray-300
     padding: 10px
     display: flex

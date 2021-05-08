@@ -27,7 +27,15 @@
 		this.modes = {
 			builder: 'builder',
 			frontEnd: 'frontEnd',
+			block: 'block',
 		};
+
+		/**
+		 * Base document for DOM operations.
+		 *
+		 * @type {Document}
+		 */
+		this.baseDocument = document;
 
 		/**
 		 * Current mode extra styles are operating on.
@@ -43,6 +51,7 @@
 		 */
 		const tableQueries = {
 			[this.modes.builder]: '.wptb-table-setup .wptb-preview-table',
+			[this.modes.block]: '.wptb-block-table-setup .wptb-preview-table',
 			[this.modes.frontEnd]: '.wptb-table-container .wptb-preview-table',
 		};
 
@@ -105,8 +114,10 @@
 
 				const styleId = styleIdPrefix + tableId;
 
+				const head = this.baseDocument.querySelector('head');
+
 				// since stylesheets are created for frontend only once at startup, checking document head for any created style object will work even with theme disabled tables which at builder, they are not inside a shadow-root
-				let styleElement = document.head.querySelector(`#${styleId}`);
+				let styleElement = head?.querySelector(`#${styleId}`);
 
 				// if no style element is found, create one
 				if (!styleElement) {
@@ -117,10 +128,13 @@
 					const isThemeStylesDisabled = tableElement.dataset.disableThemeStyles;
 
 					// if theme styles are disabled, it means our table is residing inside a shadow-root, place style element inside shadow-root instead of document head
-					if (isThemeStylesDisabled && this.currentMode === this.modes.frontEnd) {
+					if (
+						(isThemeStylesDisabled && this.currentMode === this.modes.frontEnd) ||
+						this.currentMode === this.modes.block
+					) {
 						tableElement.insertAdjacentElement('beforebegin', styleElement);
 					} else {
-						document.head.appendChild(styleElement);
+						head.appendChild(styleElement);
 					}
 				}
 				const uniqueClass = `.wptb-element-main-table_setting-${tableId}`;
@@ -143,7 +157,10 @@
 			generalStylesheet.type = 'text/css';
 			generalStylesheet.id = 'wptb-general-styles';
 
-			document.head.appendChild(generalStylesheet);
+			const head =
+				this.currentMode === this.modes.block ? this.baseDocument : this.baseDocument.querySelector('head');
+
+			head.appendChild(generalStylesheet);
 			const prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
 			generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
 		};
@@ -153,17 +170,19 @@
 		 *
 		 * @param {string} mode operation mode to apply styles
 		 * @param {string} generalStyles general style rules
+		 * @param {Object} baseDocument base document for DOM operations
 		 */
-		this.applyStyles = (mode = this.modes.frontEnd, generalStyles = null) => {
+		this.applyStyles = (mode = this.modes.frontEnd, generalStyles = null, baseDocument = document) => {
+			this.baseDocument = baseDocument;
 			this.currentMode = mode;
-			const allTables = Array.from(document.querySelectorAll(tableQueries[mode]));
+			const allTables = Array.from(this.baseDocument.querySelectorAll(tableQueries[mode]));
 
 			if (allTables) {
 				allTables.map(applyExtraStyle);
 			}
 
 			// only apply general styles on client frontend if any general styles are defined
-			if (mode === this.modes.frontEnd && generalStyles) {
+			if ((mode === this.modes.frontEnd || mode === this.modes.block) && generalStyles) {
 				applyGeneralStyles(generalStyles);
 			}
 		};

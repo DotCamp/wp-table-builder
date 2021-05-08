@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { withContext } from '../functions/withContext';
+// eslint-disable-next-line no-unused-vars
+import ExtraStyles from '../../WPTB_ExtraStyles';
 
-function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
+function TablePreview({ content, scale, blockData: { tableCssUrl, generalStyles } }) {
 	const ref = React.createRef();
 	const previewPadding = 40;
 
@@ -14,27 +16,41 @@ function TablePreview({ content, scale, blockData: { tableCssUrl } }) {
 		root.appendChild(styleSheet);
 	}
 
+	function prepareScript(handler, url, root) {
+		const script = document.createElement('script');
+		script.setAttribute('src', url);
+		root.appendChild(script);
+	}
+
 	useEffect(() => {
 		if (content !== null && tableCssUrl !== undefined) {
 			const elem = document.createElement('div');
+			elem.setAttribute('id', 'wptb-block-preview-base');
 
 			elem.attachShadow({ mode: 'open' });
 
+			const { shadowRoot } = elem;
+
+			// prepare styles
 			// eslint-disable-next-line array-callback-return
 			Object.keys(tableCssUrl).map((handler) => {
 				if (Object.prototype.hasOwnProperty.call(tableCssUrl, handler)) {
-					prepareStylesheet(handler, tableCssUrl[handler], elem.shadowRoot);
+					prepareStylesheet(handler, tableCssUrl[handler], shadowRoot);
 				}
 			});
 
 			// add table content to shadowroot
 			const range = document.createRange();
 			range.setStart(document, 0);
-			const contentElement = range.createContextualFragment(content);
-			elem.shadowRoot.appendChild(contentElement);
+			const contentElement = range.createContextualFragment(
+				`<div class="wptb-block-table-setup">${content}</div>`
+			);
+			shadowRoot.appendChild(contentElement.children[0]);
+
+			window.WPTB_ExtraStyles.applyStyles(window.WPTB_ExtraStyles.modes.block, generalStyles, shadowRoot);
 
 			const previewWrapper = ref.current;
-			const previewTable = elem.shadowRoot.querySelector('table');
+			const previewTable = shadowRoot.querySelector('table');
 			const maxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
 			const sumMaxWidth = previewTable.dataset.wptbTableContainerMaxWidth;
 

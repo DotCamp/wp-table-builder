@@ -27,6 +27,7 @@ export default function TableSelect({
 					selectedId={selectedId}
 					rowSelected={rowSelected}
 					tables={filteredTables()}
+					activeId={savedId}
 				/>
 			</div>
 			<TablePreview scale={true} content={selectedTable ? selectedTable.content : null} />
@@ -40,7 +41,7 @@ export default function TableSelect({
 							) : (
 								''
 							)}
-							<BlockButton disabled={!selectedTable} onClick={saveTable}>
+							<BlockButton disabled={!selectedTable || savedId === selectedId} onClick={saveTable}>
 								{__('select', 'wp-table-builder')}
 							</BlockButton>
 						</Fragment>,
