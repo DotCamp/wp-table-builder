@@ -101,7 +101,7 @@
 
 				const [, tableId] = tableElement
 					.getAttribute('class')
-					.match(/(?:wptb-element-main-table_setting-)(\d+)/);
+					.match(/wptb-element-main-table_setting-(?:startedid-)?(\d+)/);
 
 				const styleId = styleIdPrefix + tableId;
 

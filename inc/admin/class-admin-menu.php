@@ -2,6 +2,7 @@
 
 namespace WP_Table_Builder\Inc\Admin;
 
+use DOMDocument;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
@@ -78,8 +79,10 @@ class Admin_Menu {
 					'post_status'  => 'draft'
 				] );
 
+				$table_content = $this->add_table_id_to_dom( $params->content, $id );
+
 				// apply table content filter
-				$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
+				$table_content = apply_filters( 'wp-table-builder/table_content', $table_content, $params );
 				add_post_meta( $id, '_wptb_content_', $table_content );
 
 				// new table id filter hook
@@ -117,6 +120,37 @@ class Admin_Menu {
 		} else {
 			wp_die( json_encode( [ 'security_problem', '' ] ) );
 		}
+	}
+
+	/**
+	 * Add necessary data to table content for getting its id from HTML element properties and classes.
+	 *
+	 * @param string $table_content content of table
+	 * @param string $id table id
+	 *
+	 * @return string final table content
+	 */
+	public function add_table_id_to_dom( $table_content, $id ) {
+		$final_table_content = $table_content;
+
+		$dom_handler = new DOMDocument( );
+		$dom_handler->loadHTML( $table_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+
+		$table = $dom_handler->getElementsByTagName( 'table' );
+
+		if ( $table->length !== 0 ) {
+			$table_element = $table->item( 0 );
+			$class_list    = $table_element->getAttribute( 'class' );
+
+			if ( strpos( $class_list, 'wptb-element-main-table_setting-startedid-0' ) !== false ) {
+				$updated_class_list = str_replace( 'wptb-element-main-table_setting-startedid-0', "wptb-element-main-table_setting-{$id}", $class_list );
+				$table_element->setAttribute( 'class', $updated_class_list );
+
+				$final_table_content = $dom_handler->saveHTML();
+			}
+		}
+
+		return $final_table_content;
 	}
 
 	public function get_table() {
@@ -320,7 +354,6 @@ class Admin_Menu {
 			// development version to bypass cache issues
 			$admin_script_dev_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/admin.js' );
 
-			// TODO [erdembircan] change version to plugin version for production
 			wp_register_script( 'wptb-admin-builder-js', plugin_dir_url( __FILE__ ) . 'js/admin.js', array(
 				'jquery',
 				'wptb-admin-builder-tinymce-js',

@@ -135,6 +135,12 @@ class Init {
 	public $settings_manager;
 
 	/**
+	 * Admin menu handler.
+	 * @var object
+	 */
+	public $admin_menu;
+
+	/**
 	 * Icon manager instance
 	 *
 	 * @private
@@ -255,7 +261,7 @@ class Init {
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
 		$tables = new Admin\Tables;
-		$menu   = new Admin\Admin_Menu;
+		$this->admin_menu   = new Admin\Admin_Menu;
 		//$import = new Admin\Import;
 
 		// accessibility initialization

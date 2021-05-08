@@ -29,6 +29,35 @@ class Tables {
 		add_filter( 'manage_wptb-tables_posts_columns', [ $this, 'addHeader' ] );
 		add_filter( 'post_row_actions', [ $this, 'customizeActions' ], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column', [ $this, 'addContent' ], 10, 2 );
+		add_filter( 'get_post_metadata', [ $this, 'post_content_filter' ], 100, 4 );
+	}
+
+	/**
+	 * Add table id unique class to tables without one on meta value fetch.
+	 *
+	 * @param mixed $meta_val metal value to be filtered
+	 * @param int $post_id post id
+	 * @param string $meta_key meta key
+	 * @param boolean $single whether to get single meta value
+	 *
+	 * @return mixed filtered meta value
+	 */
+	public function post_content_filter( $meta_val, $post_id, $meta_key, $single ) {
+		if ( get_post_type( $post_id ) === 'wptb-tables' && $meta_key === '_wptb_content_' ) {
+			global $wpdb;
+
+			$table_content = $wpdb->get_var( "SELECT meta_value FROM {$wpdb->postmeta} where post_id={$post_id}" );
+
+			if ( $table_content ) {
+				$meta_val = Init::instance()->admin_menu->add_table_id_to_dom( $table_content, $post_id );
+
+				if ( ! $single ) {
+					$meta_val = [ $meta_val ];
+				}
+			}
+		}
+
+		return $meta_val;
 	}
 
 	function customizeActions( $actions, $post ) {
@@ -153,25 +182,25 @@ class Tables {
 
 		$post_edit_link   = '';
 		$post_give_credit = '';
-		$after_table = '';
+		$after_table      = '';
 		$settings_manager = Init::instance()->settings_manager;
 
 		if ( current_user_can( 'manage_options' ) && $settings_manager->get_option_value( 'allow_edit_link_frontend' ) ) {
 			$post_edit_link = '<div class="wptb-frontend-table-edit-link">'
-			. '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
+			                  . '<a href="' . admin_url( 'admin.php?page=wptb-builder&table=' . $args['id'] ) . '">' . __( "Edit Table", 'wp-table-builder' ) . '</a></div>';
 		}
-		
+
 		if ( $settings_manager->get_option_value( 'give_credits_to_wp_table_builder' ) ) {
 			$post_give_credit .= '<div class="wptb-frontend-table-powered-by">'
-			. '<small><i>Powered By </i></small>'
-			. '<a href="https://wptablebuilder.com/" target="_blank">' . __( "WP Table Builder", 'wp-table-builder' ) 
-			. '</a></div>';
+			                     . '<small><i>Powered By </i></small>'
+			                     . '<a href="https://wptablebuilder.com/" target="_blank">' . __( "WP Table Builder", 'wp-table-builder' )
+			                     . '</a></div>';
 		}
-		
+
 		if ( $post_edit_link != '' || $post_give_credit != '' ) {
 			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
 		}
-		
+
 		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>' . $after_table;
 
 		return ( $html );
