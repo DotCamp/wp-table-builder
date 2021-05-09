@@ -184,6 +184,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     this.currentMode = this.modes.builder;
     /**
+     * General table styles.
+     *
+     * @type {string}
+     */
+
+    this.generalStyles = '';
+    /**
      * HTML queries for table element in different plugin modes
      *
      * @type {Object}
@@ -229,6 +236,30 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return "".concat(prefixedStylesArray.join('}'), "}");
     };
     /**
+     * Apply general styles to document.
+     *
+     * @param {string} generalStyles general style rules
+     * @param {Node} baseElement element to use as base
+     */
+
+
+    var applyGeneralStyles = function applyGeneralStyles(generalStyles) {
+      var baseElement = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var generalStylesheet = document.createElement('style');
+      generalStylesheet.type = 'text/css';
+      generalStylesheet.id = 'wptb-general-styles';
+
+      if (!baseElement) {
+        var head = _this.currentMode === _this.modes.block ? _this.baseDocument : _this.baseDocument.querySelector('head');
+        head.appendChild(generalStylesheet);
+      } else {
+        baseElement.insertAdjacentElement('beforebegin', generalStylesheet);
+      }
+
+      var prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
+      generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
+    };
+    /**
      * Apply defined extra styles for given table element.
      *
      * @param {Element} tableElement table element
@@ -261,6 +292,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           if (isThemeStylesDisabled && _this.currentMode === _this.modes.frontEnd || _this.currentMode === _this.modes.block) {
             tableElement.insertAdjacentElement('beforebegin', styleElement);
+
+            if (_this.modes.frontEnd && _this.generalStyles) {
+              applyGeneralStyles(_this.generalStyles, tableElement);
+            }
           } else {
             head.appendChild(styleElement);
           }
@@ -273,22 +308,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         styleElement.innerHTML = '';
         styleElement.appendChild(document.createTextNode(prefixedStyles));
       }
-    };
-    /**
-     * Apply general styles to document.
-     *
-     * @param {string} generalStyles general style rules
-     */
-
-
-    var applyGeneralStyles = function applyGeneralStyles(generalStyles) {
-      var generalStylesheet = document.createElement('style');
-      generalStylesheet.type = 'text/css';
-      generalStylesheet.id = 'wptb-general-styles';
-      var head = _this.currentMode === _this.modes.block ? _this.baseDocument : _this.baseDocument.querySelector('head');
-      head.appendChild(generalStylesheet);
-      var prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
-      generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
     };
     /**
      * Apply extra styles to all available tables on DOM.
@@ -305,6 +324,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var baseDocument = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : document;
       _this.baseDocument = baseDocument;
       _this.currentMode = mode;
+      _this.generalStyles = generalStyles;
       var allTables = Array.from(_this.baseDocument.querySelectorAll(tableQueries[mode]));
 
       if (allTables) {

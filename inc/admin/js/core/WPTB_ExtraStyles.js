@@ -45,6 +45,13 @@
 		this.currentMode = this.modes.builder;
 
 		/**
+		 * General table styles.
+		 *
+		 * @type {string}
+		 */
+		this.generalStyles = '';
+
+		/**
 		 * HTML queries for table element in different plugin modes
 		 *
 		 * @type {Object}
@@ -97,6 +104,29 @@
 		};
 
 		/**
+		 * Apply general styles to document.
+		 *
+		 * @param {string} generalStyles general style rules
+		 * @param {Node} baseElement element to use as base
+		 */
+		const applyGeneralStyles = (generalStyles, baseElement = null) => {
+			const generalStylesheet = document.createElement('style');
+			generalStylesheet.type = 'text/css';
+			generalStylesheet.id = 'wptb-general-styles';
+
+			if (!baseElement) {
+				const head =
+					this.currentMode === this.modes.block ? this.baseDocument : this.baseDocument.querySelector('head');
+
+				head.appendChild(generalStylesheet);
+			} else {
+				baseElement.insertAdjacentElement('beforebegin', generalStylesheet);
+			}
+			const prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
+			generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
+		};
+
+		/**
 		 * Apply defined extra styles for given table element.
 		 *
 		 * @param {Element} tableElement table element
@@ -133,6 +163,9 @@
 						this.currentMode === this.modes.block
 					) {
 						tableElement.insertAdjacentElement('beforebegin', styleElement);
+						if (this.modes.frontEnd && this.generalStyles) {
+							applyGeneralStyles(this.generalStyles, tableElement);
+						}
 					} else {
 						head.appendChild(styleElement);
 					}
@@ -148,24 +181,6 @@
 		};
 
 		/**
-		 * Apply general styles to document.
-		 *
-		 * @param {string} generalStyles general style rules
-		 */
-		const applyGeneralStyles = (generalStyles) => {
-			const generalStylesheet = document.createElement('style');
-			generalStylesheet.type = 'text/css';
-			generalStylesheet.id = 'wptb-general-styles';
-
-			const head =
-				this.currentMode === this.modes.block ? this.baseDocument : this.baseDocument.querySelector('head');
-
-			head.appendChild(generalStylesheet);
-			const prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
-			generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
-		};
-
-		/**
 		 * Apply extra styles to all available tables on DOM.
 		 *
 		 * @param {string} mode operation mode to apply styles
@@ -175,6 +190,8 @@
 		this.applyStyles = (mode = this.modes.frontEnd, generalStyles = null, baseDocument = document) => {
 			this.baseDocument = baseDocument;
 			this.currentMode = mode;
+			this.generalStyles = generalStyles;
+
 			const allTables = Array.from(this.baseDocument.querySelectorAll(tableQueries[mode]));
 
 			if (allTables) {
