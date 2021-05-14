@@ -134,7 +134,7 @@ class Admin_Menu {
 		$final_table_content = $table_content;
 
 		$dom_handler = new DOMDocument( );
-		$dom_handler->loadHTML( $table_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+		@$dom_handler->loadHTML( $table_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
 		$table = $dom_handler->getElementsByTagName( 'table' );
 

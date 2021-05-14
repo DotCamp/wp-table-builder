@@ -149,8 +149,9 @@ class Tables {
 			return '[wptb id="' . $args['id'] . '" not found ]';
 		}
 
-		do_action( 'wptb_frontend_enqueue_style' );
-		do_action( 'wptb_frontend_enqueue_script' );
+		// @deprecated
+//		do_action( 'wptb_frontend_enqueue_style' );
+//		do_action( 'wptb_frontend_enqueue_script' );
 		$html = get_post_meta( $args['id'], '_wptb_content_', true );
 
 		if ( preg_match_all( '|<wptb_shortcode_container_element(.+)</wptb_shortcode_container_element>|isU', $html, $arr ) ) {

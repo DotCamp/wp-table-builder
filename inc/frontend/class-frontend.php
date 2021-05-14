@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Frontend;
 
 use WP_Table_Builder as NS;
+use function add_action;
 use function apply_filters;
 use function has_shortcode;
 use function is_a;
@@ -62,28 +63,26 @@ class Frontend {
 		$this->plugin_name        = $plugin_name;
 		$this->version            = $version;
 		$this->plugin_text_domain = $plugin_text_domain;
+
+		add_action( 'pre_do_shortcode_tag', [ $this, 'selective_loading' ], 10, 2 );
+
+		add_action( 'wptb_frontend_enqueue_script', [ $this, 'enqueue_footer_scripts' ] );
+		add_action( 'wptb_frontend_enqueue_style', [ $this, 'unqueue_styles_start' ] );
 	}
 
 	/**
-	 * Selectively load css and js files.
+	 * Selective loading callback for pre shortcode filter.
 	 *
-	 * Load assets if current post has the shortcode or in preview mode.
-	 *
-	 * @return bool load or not
+	 * @param boolean $return short circuit value
+	 * @param string $shortcode_tag shortcode tag
 	 */
-	public function selective_load() {
-		global $post;
-
-		if ( is_admin() ) {
-			return true;
+	public function selective_loading( $return, $shortcode_tag ) {
+		if ( $shortcode_tag === 'wptb' ) {
+			do_action( 'wptb_frontend_enqueue_style' );
+			do_action( 'wptb_frontend_enqueue_script' );
 		}
 
-		if ( get_post_type() === 'wptb-tables' ) {
-			return true;
-		} else {
-			return ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'wptb' ) );
-		}
-
+		return $return;
 	}
 
 	/**
@@ -92,48 +91,12 @@ class Frontend {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		add_action( 'wptb_frontend_enqueue_style', array( $this, 'unqueue_styles_start' ) );
 	}
 
-
 	public function unqueue_styles_start() {
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array('dashicons'), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-table-builder-frontend.css', array( 'dashicons' ), $this->version, 'all' );
 	}
-
-//    /**
-//	 * Register the JavaScript for the public-facing side of the site.
-//	 *
-//	 * @since    1.0.0
-//	 */
-//	public function enqueue_scripts() {
-//
-//		/**
-//		 * This function is provided for demonstration purposes only.
-//		 *
-//		 * An instance of this class should be passed to the run() function
-//		 * defined in Loader as all of the hooks are defined
-//		 * in that particular class.
-//		 *
-//		 * The Loader will then create the relationship
-//		 * between the defined hooks and the functions defined in this
-//		 * class.
-//		 */
-//		add_action( 'wptb_frontend_enqueue_script', array( $this, 'unqueue_script_start' ) );
-//
-//	}
 
 	/**
 	 * Enqueue header scripts.

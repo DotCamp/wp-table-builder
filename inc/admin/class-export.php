@@ -302,7 +302,7 @@ class Export {
 		$table_html_content = get_post_meta( $id, '_wptb_content_', true );
 
 		$dom_table = new DOMDocument( '1.0', 'UTF-8' );
-		$dom_table->loadHTML( utf8_decode( $table_html_content ) );
+		@$dom_table->loadHTML( utf8_decode( $table_html_content ) );
 
 		$table_body     = $dom_table->getElementsByTagName( 'tbody' )[0];
 		$top_level_rows = $table_body->getElementsByTagName( 'tr' );
