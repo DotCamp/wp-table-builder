@@ -53,6 +53,7 @@
     "WPTB_IconManager": true,
     "wptb_admin_object": true,
     "WPTB_ExtraStyles": true,
-    "WPTB_SortableTable": true
+    "WPTB_SortableTable": true,
+    "wptbPluginsWin": true
   }
 }

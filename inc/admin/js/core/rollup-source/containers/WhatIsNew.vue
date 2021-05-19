@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import 'regenerator-runtime/runtime';
+
 export default {
 	props: {
 		notes: {

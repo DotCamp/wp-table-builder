@@ -3,7 +3,10 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder\Inc\Core\Init;
 use function add_filter;
+use function esc_html__;
 use function get_option;
 use function trailingslashit;
 
@@ -36,7 +39,38 @@ class What_Is_New_Manager {
 			static::$initialized = true;
 
 			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'add_frontend_script_data' ] );
+
+			add_filter( 'plugin_row_meta', [ __CLASS__, 'add_win_plugin_row' ], 10, 3 );
 		}
+	}
+
+	/**
+	 * Add what is new link to plugin row.
+	 *
+	 * @param array $row_data plugin row data
+	 * @param string $plugin_file plugin file
+	 * @param array $plugin_data plugin data
+	 *
+	 * @return array filtered plugin row
+	 */
+	public static function add_win_plugin_row( $row_data, $plugin_file, $plugin_data ) {
+		$allowed_slugs = [ 'wp-table-builder' ];
+
+		if ( isset( $plugin_data['slug'] ) && in_array( $plugin_data['slug'], $allowed_slugs ) && in_array( $plugin_file, get_option( 'active_plugins', [] ) ) ) {
+			$row_data[] = '<a id="wptb-what-is-new" target="_self" href="#">' . esc_html__( 'What is new?', 'wp-table-builder' ) . '</a>';
+
+			Helpers::enqueue_file( 'inc/admin/css/admin.css', [], false, 'wp-table-builder-admin-css' );
+
+			Init::instance()->get_icon_manager()->enqueue_icon_manager_assets();
+
+			Helpers::enqueue_file( 'inc/admin/js/WPTB_PluginsWhatIsNew.js', [], true, 'wp-table-builder-win-js' );
+
+			wp_localize_script( 'wp-table-builder-win-js', 'wptbPluginsWin', [
+				'notes' => static::what_is_new_notes()
+			] );
+		}
+
+		return $row_data;
 	}
 
 	/**
@@ -54,7 +88,7 @@ class What_Is_New_Manager {
 		$is_pro_enabled = Addon_Manager::check_pro_status();
 
 		// show an upsell at pro enabled notes if no valid pro license is currently installed
-		$format        = '<div>%s</div>' . ( $isPro && !$is_pro_enabled ? '<a target="_blank" class="wptb-upsells-pro-label" href="%s"><div >%s</div></a>' : '' );
+		$format = '<div>%s</div>' . ( $isPro && ! $is_pro_enabled ? '<a target="_blank" class="wptb-upsells-pro-label" href="%s"><div >%s</div></a>' : '' );
 
 		$prepared_text = sprintf( $format, $text, 'https://wptablebuilder.com/pricing/', esc_html__( 'Get PRO' ) );
 
@@ -82,8 +116,8 @@ class What_Is_New_Manager {
 				static::prepare_what_is_new_note( 'Version sync capability to keep both base and pro versions of plugin in sync with each other at update and downgrade operations.', 'version_sync.png', true ),
 			],
 			'1.3.5' => [
-				static::prepare_what_is_new_note( 'Gutenberg block will now correctly display any extra styles added for tables.', 'block_extra_styles.png' ),
 				static::prepare_what_is_new_note( 'Dynamic asset loading for frontend to improve page performance and load times.', 'selective_asset_loading.png' ),
+				static::prepare_what_is_new_note( 'Gutenberg block will now correctly display any extra styles added for tables.', 'block_extra_styles.png' ),
 			]
 		];
 	}

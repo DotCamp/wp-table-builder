@@ -2,9 +2,13 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Common\Helpers;
 use function path_join;
 use function request_filesystem_credentials;
+use function wp_enqueue_script;
 use function WP_Filesystem;
+use function wp_localize_script;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -43,6 +47,21 @@ class Icon_Manager {
 		$this->icon_dir_url  = $icon_dir_url;
 
 		add_filter( 'wp-table-builder/filter/builder_script_data', [ $this, 'icon_manager_frontend_data' ] );
+	}
+
+	/**
+	 * Enqueue icon manager related assets to frontend.
+	 *
+	 * @param boolean $in_footer whether enqueue script files to footer or not
+	 */
+	public function enqueue_icon_manager_assets( $in_footer = true ) {
+		$script_relative_path = 'inc/admin/js/WPTB_IconManager.js';
+
+		Helpers::enqueue_file( $script_relative_path, [], $in_footer, 'wptb-icon-manager-js' );
+
+		wp_localize_script( 'wptb-icon-manager-js', 'wptb_admin_object', [
+			'iconManager' => $this->get_icon_list()
+		] );
 	}
 
 	/**
