@@ -98,6 +98,7 @@ That's it. You're done!
 * IMPROVE: Table gutenberg block previews now reflects extra styles defined for them.
 * IMPROVE: Better asset loading for frontend.
 * PRO: IMPROVE: Better empty cell functionality.
+* PRO: FIX: Latest Firefox and Chrome updates distorting prebuilt table card previews.
 
 = 1.3.4 =
 

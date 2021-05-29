@@ -35,7 +35,7 @@ export default function TableSelect({
 				? ReactDOM.createPortal(
 						<Fragment>
 							{savedId >= 0 ? (
-								<BlockButton onClick={() => setSelectScreen(false)} type={'negative'}>
+							<BlockButton onClick={() => setSelectScreen(false)} type={'negative'}>
 									{__('cancel', 'wp-table-builder')}
 								</BlockButton>
 							) : (

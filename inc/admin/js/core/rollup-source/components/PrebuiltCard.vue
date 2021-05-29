@@ -230,10 +230,11 @@ export default {
 
 			if (prebuilt) {
 				const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;
+				prebuilt.style.width = 'auto';
 				if (maxWidth) {
-					prebuilt.style.width = `${maxWidth}px`;
+					prebuilt.style.minWidth = `${maxWidth}px`;
 				} else {
-					prebuilt.style.width = `${700}px`;
+					prebuilt.style.minWidth = `${700}px`;
 				}
 
 				const padding = 40;
