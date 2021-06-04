@@ -1,9 +1,11 @@
+import deepmerge from 'deepmerge';
+
 /**
  * Controls manager for builder element's control options
  *
  * It is a singleton class that will always be sending the referenced object to all callers.
  *
- * @return {{setControlData: setControlData, getControlData: (function(*): *), addControlScript: addControlScript, callControlScript: callControlScript}}
+ * @return {Object} controls manager
  * @class
  */
 function ControlsManager() {
@@ -12,6 +14,56 @@ function ControlsManager() {
 	let previousSettings = {};
 	const tableSettings = { settings: {} };
 	const subscribers = [];
+
+	/**
+	 * Subscribers for element controls.
+	 *
+	 * @type {Object}
+	 */
+	const elementControlSubscribers = {};
+
+	/**
+	 * Cached element control values.
+	 *
+	 * @type {Object}
+	 */
+	const cachedElementControls = {
+		previous: {},
+		current: {},
+	};
+
+	/**
+	 * Subscribe to an element's controls.
+	 *
+	 * @param {string} subId unique id for subscriber identification
+	 * @param {string} elementId id of element to subscribe to
+	 * @param {string | Function} controlId if a string control id is supplied will be subscribed to that control of element, if a function is supplied, will be used as callback and subscribed to all element control updates
+	 * @param {Function} callback callback function
+	 * @class
+	 */
+	function ElementSubscriber(subId, elementId, controlId, callback) {
+		/**
+		 * Options for element subscriber instance
+		 *
+		 * @type {Object}
+		 */
+		this.options = {
+			subId,
+			elementId,
+			controlId: typeof controlId === 'function' ? '' : controlId,
+			callback: typeof controlId === 'function' ? controlId : callback,
+		};
+
+		/**
+		 * Call subscriber.
+		 *
+		 * @param {string} id control id
+		 * @param {string | number} newValue new value of control
+		 */
+		this.call = (id, newValue) => {
+			this.options.callback(id, newValue);
+		};
+	}
 
 	/**
 	 * Subscriber object.
@@ -84,6 +136,7 @@ function ControlsManager() {
 		 * @param {Object} settings settings object
 		 * @param {Object} previousSettings previous version of the settings object, this object will be used for control subscribers to decide whether to call them or not by comparing current and previous values of control item
 		 */
+		// eslint-disable-next-line no-shadow
 		this.call = (settings, previousSettings) => {
 			const { controlId, callback, useEventValue } = this.options;
 
@@ -95,7 +148,7 @@ function ControlsManager() {
 					callback(parseSettings(settings, useEventValue));
 				}
 			} else {
-				throw new Error('an invalid type of callback property is defined for subscriber');
+				throw new Error(`an invalid type of callback property is defined for subscriber: ${controlId}`);
 			}
 		};
 	}
@@ -137,6 +190,7 @@ function ControlsManager() {
 	}
 
 	/**
+	 * Subscribe to a table setting control.
 	 *
 	 * @param {string} id subscriber id
 	 * @param {string} controlId id of the control being subscribed to
@@ -147,6 +201,24 @@ function ControlsManager() {
 		const subscriber = new Subscriber({ id, controlId, callback, useEventValue });
 		subscribers.push(subscriber);
 		subscriber.call(tableSettings.settings, previousSettings);
+	}
+
+	/**
+	 * Add element control subscriber to subscriber list.
+	 *
+	 * @param {ElementSubscriber} subscriber element subscriber instance
+	 */
+	function addElementControlSubscriber(subscriber) {
+		const { elementId, controlId } = subscriber.options;
+
+		if (!elementControlSubscribers[elementId]) {
+			elementControlSubscribers[elementId] = {};
+		}
+
+		if (!elementControlSubscribers[elementId][controlId]) {
+			elementControlSubscribers[elementId][controlId] = [];
+		}
+		elementControlSubscribers[elementId][controlId].push(subscriber);
 	}
 
 	/**
@@ -171,6 +243,85 @@ function ControlsManager() {
 	}
 
 	/**
+	 * Get value of an element control.
+	 *
+	 * @param {string} elementId element id
+	 * @param {string} controlId control id
+	 * @param {boolean} previous whether to get previous value of given element control
+	 *
+	 * @return {string|number|null} previous element control value, null for no previous value
+	 */
+	function getElementControlValue(elementId, controlId, previous = false) {
+		let value = null;
+		const base = cachedElementControls[previous ? 'previous' : 'current'];
+
+		if (base[elementId] && base[elementId][controlId] !== undefined) {
+			value = base[elementId][controlId];
+		}
+
+		return value;
+	}
+
+	/**
+	 * Subscribe to a control of an element.
+	 *
+	 * @param {string} subscriberId unique subscriber id
+	 * @param {string} elementId id of element to be subscribed to
+	 * @param {string} controlId id of element control
+	 * @param {Function} callback callback function for update
+	 */
+	function subscribeToElementControl(subscriberId, elementId, controlId, callback) {
+		const elementControlSub = new ElementSubscriber(subscriberId, elementId, controlId, callback);
+		addElementControlSubscriber(elementControlSub);
+
+		const controlValue = getElementControlValue(elementId, controlId);
+		elementControlSub.call(controlId, controlValue);
+	}
+
+	/**
+	 * Call element control subscribers based on updated element control.
+	 *
+	 * @param {string} elementId element id
+	 * @param {string} controlId control id
+	 */
+	function callElementControlSubscribers(elementId, controlId) {
+		const previousValue = getElementControlValue(elementId, controlId, true);
+		const currentValue = getElementControlValue(elementId, controlId);
+
+		if (previousValue !== currentValue) {
+			const subBase = elementControlSubscribers[elementId];
+
+			if (subBase) {
+				const controlBase = subBase[controlId];
+
+				if (controlBase && Array.isArray(controlBase)) {
+					// eslint-disable-next-line array-callback-return
+					controlBase.map((sub) => {
+						sub.call(controlId, currentValue);
+					});
+				}
+			}
+		}
+	}
+
+	/**
+	 * Update cached controls.
+	 *
+	 * @param {string} elementId element id
+	 * @param {string} controlId control id
+	 * @param {string|number} value control value
+	 */
+	function updateCachedControls(elementId, controlId, value) {
+		cachedElementControls.previous = deepmerge({}, cachedElementControls.current);
+
+		cachedElementControls.current = deepmerge(cachedElementControls.current, {
+			[elementId]: { [controlId]: value },
+		});
+
+		callElementControlSubscribers(elementId, controlId);
+	}
+
+	/**
 	 * Attach to table settings changes.
 	 */
 	function attachToSettingChanges() {
@@ -178,6 +329,16 @@ function ControlsManager() {
 			const table = document.querySelector('.wptb-management_table_container .wptb-table-setup table');
 
 			WPTB_Helper.controlsInclude(table, (input) => updateTableSettings(input), true);
+
+			document.addEventListener('wptb-element-control:update', ({ detail }) => {
+				const { controlId, value, elementId } = detail;
+
+				if (!controlId || !value || !elementId) {
+					throw new Error('invalid control update event data generated');
+				}
+
+				updateCachedControls(elementId, controlId, value);
+			});
 		});
 	}
 
@@ -252,6 +413,11 @@ function ControlsManager() {
 		getControlData,
 		subscribe,
 		subscribeToControl,
+		subscribeToElementControl,
+		// TODO [erdembircan] remove for production
+		elementControlSubscribers,
+		// TODO [erdembircan] remove for production
+		cachedElementControls,
 	};
 }
 

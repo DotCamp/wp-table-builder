@@ -1,5 +1,6 @@
 <template>
 	<range-input
+		v-if="componentVisibility"
 		:label="label"
 		:unique-id="uniqueId"
 		:elem-container="elemContainer"

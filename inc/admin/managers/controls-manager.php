@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder\Inc\Admin\Controls\Base_Control as Base_Control;
 use WP_Table_Builder\Inc\Admin\Base\Controls_Stack as Controls_Stack;
+use function apply_filters;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -174,6 +175,11 @@ class Controls_Manager {
 	 */
 	const EXTRA_STYLES = 'extra_styles';
 
+	/**
+	 * Image element size control.
+	 */
+	const IMAGE_SIZE = 'image_size';
+
 	// Control elements query types
 	const CLASSTYPE = 'class';
 	const DATASET = 'dataset';
@@ -237,6 +243,7 @@ class Controls_Manager {
 			self::DIFFERENT_BORDER,
 			self::LOCAL_DEV,
 			self::EXTRA_STYLES,
+			self::IMAGE_SIZE,
 		];
 	}
 
@@ -416,9 +423,10 @@ class Controls_Manager {
 	public function output_control_stacks() {
 		if ( ! is_null( $this->stacks ) && is_array( $this->stacks ) ) {
 			foreach ( $this->stacks as $key => $value ):
+				$final_value = apply_filters( 'wp-table-builder/filter/output_control_stacks_shortcircuit', $value );
 				?>
                 <script type="text/html" id="tmpl-wptb-<?php echo $key; ?>-control-stack">
-					<?php echo json_encode( $value ); ?>
+					<?php echo json_encode( $final_value ); ?>
                 </script>
 			<?php
 			endforeach;

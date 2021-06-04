@@ -4,10 +4,10 @@
 			<label
 				class="wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
 			>
-				<span style="font-size: 16px;">
+				<span style="font-size: 16px">
 					{{ label }}
 				</span>
-				<select :disabled="disabled" v-model="innerValue">
+				<select :disabled="disabled" v-model="innerValue" class="wptb-element-property" :class="uniqueId">
 					<option v-for="(name, key) in options" :key="key" :value="key">{{ name | cap }}</option>
 				</select>
 			</label>
@@ -16,6 +16,7 @@
 </template>
 <script>
 import PanelControlBase from '../mixins/PanelControlBase';
+import { cap } from '../plugins/filters';
 
 export default {
 	props: {
@@ -25,5 +26,8 @@ export default {
 		},
 	},
 	mixins: [PanelControlBase],
+	filters: {
+		cap,
+	},
 };
 </script>

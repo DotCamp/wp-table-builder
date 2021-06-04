@@ -48,23 +48,26 @@ class Control_Range extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-      <#
-      const uniqueItemClass = data.elementControlTargetUnicClass;
-      WPTB_ControlsManager.setControlData(uniqueItemClass, data);
-      const elemContainer = data.elemContainer;
+        <#
+        const uniqueItemClass = data.elementControlTargetUnicClass;
+        WPTB_ControlsManager.setControlData(uniqueItemClass, data);
+        const elemContainer = data.elemContainer;
 
-      if(!data.postFix){
-      data.postFix='';
-      }
-      #>
-      <div id="{{{uniqueItemClass}}}">
-        <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step"
-                       :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
-                       elem-container="{{{elemContainer}}}" :post-fix="postFix"></range-control>
-      </div>
-      <wptb-template-script>
-        WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');
-      </wptb-template-script>
+        if(!data.postFix){
+        data.postFix='';
+        }
+        if(!data.step){
+        data.step=1;
+        }
+        #>
+        <div id="{{{uniqueItemClass}}}">
+            <range-control :label="label" :selectors="selectors" :min="min" :max="max" :step="step"
+                           :default-value="defaultValue" unique-id="{{{uniqueItemClass}}}"
+                           elem-container="{{{elemContainer}}}" :post-fix="postFix"></range-control>
+        </div>
+        <wptb-template-script>
+            WPTB_ControlsManager.callControlScript('ControlRange', '{{{uniqueItemClass}}}');
+        </wptb-template-script>
 		<?php
 	}
 }

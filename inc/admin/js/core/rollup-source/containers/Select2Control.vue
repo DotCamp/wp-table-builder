@@ -1,26 +1,17 @@
 <template>
-	<div class="wptb-settings-row wptb-settings-middle-xs">
-		<div class="wptb-settings-space-between">
-			<p class="wptb-settings-item-title">{{ label }}</p>
-			<div>
-				<select
-					v-model="elementMainValue"
-					class="wptb-element-property"
-					:class="uniqueId"
-					:data-element="elemContainer"
-					data-type="select2"
-					ref="selectElement"
-				>
-					<option v-for="(value, key) in options" :value="key" :key="key">{{ value }}</option>
-				</select>
-			</div>
-		</div>
-	</div>
+	<panel-dropdown-control
+		:label="label"
+		:options="options"
+		v-model="elementMainValue"
+		:unique-id="uniqueId"
+	></panel-dropdown-control>
 </template>
 <script>
 import ControlBase from '../mixins/ControlBase';
+import PanelDropdownControl from '../components/PanelDropdownControl';
 
 export default {
+	components: { PanelDropdownControl },
 	props: {
 		options: Object,
 	},
