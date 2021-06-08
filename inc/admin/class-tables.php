@@ -29,7 +29,7 @@ class Tables {
 		add_filter( 'manage_wptb-tables_posts_columns', [ $this, 'addHeader' ] );
 		add_filter( 'post_row_actions', [ $this, 'customizeActions' ], 10, 2 );
 		add_action( 'manage_wptb-tables_posts_custom_column', [ $this, 'addContent' ], 10, 2 );
-		add_filter( 'get_post_metadata', [ $this, 'post_content_filter' ], 100, 4 );
+//		add_filter( 'get_post_metadata', [ $this, 'post_content_filter' ], 100, 4 );
 	}
 
 	/**

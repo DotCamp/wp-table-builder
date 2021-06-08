@@ -40,7 +40,7 @@ class What_Is_New_Manager {
 
 			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'add_frontend_script_data' ] );
 
-			add_filter( 'plugin_row_meta', [ __CLASS__, 'add_win_plugin_row' ], 10, 3 );
+//			add_filter( 'plugin_row_meta', [ __CLASS__, 'add_win_plugin_row' ], 10, 3 );
 		}
 	}
 

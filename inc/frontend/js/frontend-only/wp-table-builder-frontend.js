@@ -846,11 +846,12 @@
 		});
 		document.dispatchEvent(responsiveFrontReady);
 
+		// apply defined extra styles to tables if there is any
+		WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.frontEnd, WptbFrontendData.generalStyles);
+
 		// rebuild tables according to current responsive mode
 		responsiveFront.rebuildTables();
 
-		// apply defined extra styles to tables if there is any
-		WPTB_ExtraStyles.applyStyles(WPTB_ExtraStyles.modes.frontEnd, WptbFrontendData.generalStyles);
 
 		// initialize style pass
 		WPTB_StylePass.init(WptbFrontendData.stylePass);
