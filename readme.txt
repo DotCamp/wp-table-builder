@@ -53,7 +53,7 @@ You can also import tables from TablePress plugin.
 
 ## Export Tables
 
-Just like importing you can import the tables to CSV or XML files. 
+Just like importing you can export the tables to CSV or XML files. 
 
 If you are looking to move tables created with WP Table Builder to another site, XML is the better choice as it will preserve table settings.
 
