@@ -28,6 +28,7 @@ import MenuButton from '../components/MenuButton.vue';
 import GeneralSettings from './GeneralSettings';
 import VersionControlSettings from '../components/VersionControlSettings';
 import GeneralStylesSettings from '../components/Settings/GeneralStylesSettings';
+import LazyLoadSettings from '../components/LazyLoadSettings';
 
 export default {
 	props: ['sectionsData', 'settings', 'pluginInfo'],
@@ -39,6 +40,7 @@ export default {
 		GeneralSettings,
 		VersionControlSettings,
 		GeneralStylesSettings,
+		LazyLoadSettings,
 	},
 	mixins: [withStore, withMessage],
 	data() {
@@ -91,11 +93,15 @@ export default {
 		});
 
 		// eslint-disable-next-line array-callback-return,consistent-return
-		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
-			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
-				return key;
-			}
-		});
+		// TODO [erdembircan] uncomment for production
+		// [this.currentSection] = Object.keys(this.parsedFields).map((key) => {
+		// 	if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
+		// 		return key;
+		// 	}
+		// });
+
+		// TODO [erdembircan] remove for production
+		this.currentSection = 'lazyLoad';
 	},
 	computed: {
 		sectionData() {

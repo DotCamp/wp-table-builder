@@ -23,6 +23,7 @@ trait Ajax_Response {
 	 * @param string $message message to be sent
 	 */
 	public function set_message( $message ) {
+		http_response_code( 200 );
 		$this->response_data['message'] = $message;
 	}
 
@@ -32,8 +33,8 @@ trait Ajax_Response {
 	 * @param string $error error message to be sent
 	 */
 	public function set_error( $error ) {
+		http_response_code( 400 );
 		$this->response_data['error'] = $error;
-
 	}
 
 	/**

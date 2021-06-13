@@ -31,7 +31,8 @@
 									:key="k"
 									:selected="isVersionSelected(k)"
 									:disabled="k === currentVersion"
-									>{{ k }}
+								>
+									{{ k }}
 								</option>
 							</select>
 						</version-control-row>

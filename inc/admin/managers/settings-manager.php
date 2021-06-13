@@ -2,16 +2,18 @@
 
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
+use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Loader;
 use WP_Table_Builder as NS;
 use function add_filter;
 use function add_submenu_page;
 use function apply_filters;
+use function get_admin_url;
 use function get_option;
 use function json_decode;
 use function json_encode;
 use function register_setting;
-use function wp_enqueue_script;
+use function wp_create_nonce;
 use function wp_get_current_user;
 use function wp_localize_script;
 use function wp_roles;
@@ -110,6 +112,7 @@ class Settings_Manager {
 		Version_Control_Manager::init();
 		Tag_Manager::init();
 		General_Styles_Manager::init();
+		Lazy_Load_Manager::init();
 
 		// subscribe to version sync
 		Version_Control_Manager::instance()->subscribe_to_version_sync();
@@ -238,19 +241,14 @@ class Settings_Manager {
 	 */
 	public function admin_scripts( $hook ) {
 		if ( $hook === $this->settings_menu_slug ) {
-			$script_url  = NS\WP_TABLE_BUILDER_URL . 'inc/admin/js/WPTB_Admin_Settings.js';
-			$script_path = NS\WP_TABLE_BUILDER_DIR . 'inc/admin/js/WPTB_Admin_Settings.js';
+			$script_path = 'inc/admin/js/WPTB_Admin_Settings.js';
+			$style_path  = 'inc/admin/css/admin.css';
 
-			$style_url = NS\WP_TABLE_BUILDER_URL . 'inc/admin/css/admin.css';
-
-
-			$handler        = 'wptb-settings-manager';
-			$plugin_version = NS\PLUGIN_VERSION;
+			$handler = 'wptb-settings-manager';
 
 			// script and style enqueue
-			wp_enqueue_script( $handler, $script_url, [], $plugin_version, true );
-
-			wp_enqueue_style( 'wptb-settings-manager-style', $style_url, [], $plugin_version );
+			Helpers::enqueue_file( $script_path, [], true, $handler );
+			Helpers::enqueue_file( $style_path, [], false, 'wptb-settings-manager-style' );
 
 			$ajax_url = get_admin_url( null, 'admin-ajax.php' );
 			$nonce    = wp_create_nonce( $this->options_root );

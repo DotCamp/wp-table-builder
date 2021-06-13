@@ -58,11 +58,9 @@ class Style_Pass {
 	public static function update_general_styles() {
 		$instance = static::get_instance();
 		if ( current_user_can( 'manage_options' ) && check_admin_referer( static::GENERAL_STYLES_OPTION_NAME, 'nonce' ) && isset( $_POST['styles'] ) ) {
-			http_response_code( 200 );
 			$instance->set_message( esc_html__( 'General styles updated.' ) );
 			update_option( static::GENERAL_STYLES_OPTION_NAME, $_POST['styles'] );
 		} else {
-			http_response_code( 401 );
 			$instance->set_error( esc_html__( 'You are not authorized to use this ajax endpoint.' ) );
 		}
 

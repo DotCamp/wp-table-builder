@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Frontend;
 
 use WP_Table_Builder as NS;
+use WP_Table_Builder\Inc\Common\Helpers;
 use function add_action;
 use function apply_filters;
 use function has_shortcode;
@@ -109,13 +110,7 @@ class Frontend {
 	 * Enqueue footer scripts.
 	 */
 	public function enqueue_footer_scripts() {
-		$dev_test_version = filemtime( plugin_dir_path( __FILE__ ) . 'js/wp-table-builder-frontend.js' );
-
-		// TODO [erdembircan] uncomment for production
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $this->version, false );
-
-		// TODO [erdembircan] comment for production
-//		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-table-builder-frontend.js', array( 'jquery' ), $dev_test_version, false );
+		Helpers::enqueue_file(  'inc/frontend/js/wp-table-builder-frontend.js', [ 'jquery' ], true, $this->plugin_name );
 
 		// prepare data for frontend script
 		$frontend_data = [];

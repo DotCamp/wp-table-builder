@@ -6467,3 +6467,20 @@ wptb_shortcode_container_element {
 }
 
 /*endregion*/
+
+/*region lazy load settings menu*/
+.wptb-lazy-load-wrapper {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+}
+
+.wptb-lazy-load-pro-options {
+    background-color: var(--wptb-plugin-gray-300);
+    color: var(--wptb-plugin-gray-500);
+}
+
+
+/*endregion*/
