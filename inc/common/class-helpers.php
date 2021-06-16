@@ -87,8 +87,8 @@ class Helpers {
 	public static function enqueue_file( $path, $deps = [], $footer = false, $handler = null ) {
 		$path_info = pathinfo( $path );
 
-		$file_path = path_join(NS\WP_TABLE_BUILDER_DIR , $path);
-		$file_url  = path_join(NS\WP_TABLE_BUILDER_URL , $path);
+		$file_path = path_join( NS\WP_TABLE_BUILDER_DIR, $path );
+		$file_url  = path_join( NS\WP_TABLE_BUILDER_URL, $path );
 		$version   = static::is_development() ? filemtime( $file_path ) : NS\PLUGIN_VERSION;
 
 		if ( $handler === null ) {
@@ -104,5 +104,36 @@ class Helpers {
 		}
 
 		return $handler;
+	}
+
+	/**
+	 * Batch sanitize array with defined sanitization rules.
+	 *
+	 * This function not only sanitize the options, also will make sure only option fields defined in ruleset are ended up in the final options array.
+	 *
+	 * @param array $input_object input array
+	 * @param array $sanitization_rules sanitization rule array
+	 *
+	 * @return array sanitized options
+	 */
+	public static function batch_sanitize( $input_object, $sanitization_rules ) {
+		$sanitized_object = [];
+		foreach ( $sanitization_rules as $rule_key => $rule_value ) {
+			if ( isset( $input_object[ $rule_key ] ) ) {
+				$input_value = $input_object[ $rule_key ];
+				if ( is_array( $rule_value ) ) {
+					$sanitized_object[ $rule_key ] = static::batch_sanitize( $input_value, $rule_value );
+				} else {
+					if ( is_array( $input_value ) ) {
+						$sanitized_object[ $rule_key ] = array_map( $rule_value, $input_value );
+					} else {
+						$sanitized_object[ $rule_key ] = call_user_func( $rule_value, $input_value );
+					}
+				}
+			}
+
+		}
+
+		return $sanitized_object;
 	}
 }

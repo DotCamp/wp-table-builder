@@ -148,6 +148,7 @@ export default {
 					if (r.ok) {
 						return r.json();
 					}
+					throw new Error(r.statusText);
 				})
 				.then((resp) => {
 					if (resp.error) {

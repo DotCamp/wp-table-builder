@@ -27,10 +27,11 @@ import MenuContent from './MenuContent';
 import SettingsMenuSection from '../mixins/SettingsMenuSection';
 import FooterButtons from './Settings/FooterButtons';
 import MenuButton from './MenuButton';
+import withMessage from '../mixins/withMessage';
 
 export default {
 	components: { MenuButton, FooterButtons, MenuContent, Fragment },
-	mixins: [SettingsMenuSection],
+	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
 		this.settings = this.sectionData.settings;
 		this.initialSettings = { ...this.settings };
@@ -57,6 +58,8 @@ export default {
 				formData.append('action', action);
 				formData.append('nonce', nonce);
 
+				this.setBusy(true);
+
 				fetch(ajaxUrl, {
 					method: 'POST',
 					body: formData,
@@ -66,10 +69,22 @@ export default {
 						if (res.ok) {
 							return res.json();
 						}
+
+						throw new Error(res.statusText);
 					})
 					.then((resp) => {
-						// TODO [erdembircan] remove for production
-						console.log(resp);
+						this.setMessage({
+							message: resp.message,
+						});
+					})
+					.catch((err) => {
+						this.setMessage({
+							message: err.message,
+							type: 'error',
+						});
+					})
+					.finally(() => {
+						this.setBusy(false);
 					});
 			}
 		},

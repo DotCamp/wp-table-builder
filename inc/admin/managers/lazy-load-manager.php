@@ -3,14 +3,20 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 
+use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
+use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
 use function add_action;
 use function add_filter;
 use function admin_url;
 use function apply_filters;
+use function check_ajax_referer;
+use function current_user_can;
 use function esc_html__;
+use function get_option;
 use function register_setting;
+use function update_option;
 use function wp_create_nonce;
 
 // if called directly, abort
@@ -27,6 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 class Lazy_Load_Manager {
 	use Singleton_Trait;
 	use Ajax_Response;
+	use Init_Once;
 
 	/**
 	 * Update action name.
@@ -39,32 +46,57 @@ class Lazy_Load_Manager {
 	 * @var array
 	 */
 	private static $default_settings = [
-		'enabled' => false
+		'enabled' => false,
 	];
 
 	/**
 	 * Options and settings required for lazy load to work at frontend.
 	 * @var array
 	 */
-	private static $frontend_options = [
+	private static $frontend_options = [];
 
+	/**
+	 * Sanitization rules for lazy load options.
+	 * @var string[]
+	 */
+	private static $sanitization_rules = [
+		'enabled' => 'rest_sanitize_boolean'
 	];
 
 	/**
 	 * Initialize lazy load manager.
 	 */
-	public static function init() {
-		add_filter( 'wp-table-builder/filter/settings_manager_frontend_data', [ __CLASS__, 'add_settings_menu_data' ] );
+	public static function init_process() {
+		add_filter( 'wp-table-builder/filter/settings_manager_frontend_data', [
+			__CLASS__,
+			'add_settings_menu_data'
+		] );
 		add_action( 'wp_ajax_' . static::$settings_update_action, [ __CLASS__, 'update_settings' ] );
-
 		static::register_settings();
+	}
+
+	/**
+	 * Get sanitization rules for lazy load options.
+	 *
+	 * @return array sanitization rules
+	 */
+	private static function get_sanitization_rules() {
+		return apply_filters( 'wp-table-builder/filter/lazy_load_sanitization_rules', static::$sanitization_rules );
+	}
+
+	/**
+	 * Get default settings for lazy load.
+	 * @return array default lazy load settings
+	 */
+	private static function get_default_settings() {
+		return apply_filters( 'wp-table-builder/filter/lazy_load_default_settings', static::$default_settings );
 	}
 
 	/**
 	 * Register lazy load related settings.
 	 */
 	private static function register_settings() {
-		$settings = apply_filters( 'wp-table-builder/filter/lazy_load_default_settings', static::$default_settings );
+		$settings = static::get_default_settings();
 
 		register_setting( static::$settings_update_action, static::$settings_update_action, [
 			'type'              => 'array',
@@ -78,9 +110,11 @@ class Lazy_Load_Manager {
 	 * Sanitize lazy load settings on update.
 	 *
 	 * @param array $settings settings array
+	 *
+	 * @return array sanitized lazy load options
 	 */
 	public static function sanitize_settings( $settings ) {
-
+		return array_merge( get_option( static::$settings_update_action ), Helpers::batch_sanitize( $settings, static::get_sanitization_rules() ) );
 	}
 
 	/**
@@ -89,9 +123,11 @@ class Lazy_Load_Manager {
 	public static function update_settings() {
 		$instance = static::get_instance();
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( static::$settings_update_action, 'nonce', false ) && isset( $_POST['settings'] ) ) {
-
+			$updated_settings = json_decode( wp_kses_stripslashes( $_POST['settings'] ), true );
+			update_option( static::$settings_update_action, $updated_settings );
+			$instance->set_message( esc_html__( 'Lazy load options updated.', 'wp-table-builder' ) );
 		} else {
-			$instance->set_error( esc_html__( 'You are not authorized to use this endpoint.', 'wp-table-builder' ) );
+			$instance->set_error( esc_html__( 'An error occurred with your request, try again later.', 'wp-table-builder' ) );
 		}
 
 		$instance->send_json( true );

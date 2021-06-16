@@ -216,7 +216,8 @@ class Settings_Manager {
 
 		// check for user capabilities and nonce value for security
 		if ( current_user_can( 'manage_options' ) && check_ajax_referer( $this->options_root, 'nonce', false ) && isset( $_POST['options'] ) ) {
-			$encoded_data = json_decode( wp_kses_stripslashes( $_POST['options'] ) );
+			// encode json data as associated data to be compatible with batch sanitize functionality
+			$encoded_data = json_decode( wp_kses_stripslashes( $_POST['options'] ), true );
 
 			// request body validation check
 			if ( $encoded_data === null ) {
@@ -337,7 +338,7 @@ class Settings_Manager {
 	}
 
 	/**
-	 * Adds settings submenu page for the plugin
+	 * Adds settings submenu page for the plugin.
 	 */
 	public function add_settings_menu() {
 		$this->settings_menu_slug = add_submenu_page( 'wptb-overview', esc_html__( 'Settings', 'wp-table-builder' ), esc_html__( 'Settings', 'wp-table-builder' ), 'manage_options', 'wp-table-builder-settings', [
@@ -348,7 +349,7 @@ class Settings_Manager {
 	}
 
 	/**
-	 * Settings page render callback
+	 * Settings page render callback.
 	 */
 	public function settings_page() {
 		require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/wptb-settings-page.php';
@@ -378,18 +379,18 @@ class Settings_Manager {
 	 * @return array sanitized option value
 	 */
 	public function sanitize_options( $raw_value ) {
-		return array_merge( get_option( $this->options_root ), $this->batch_sanitize( $raw_value ) );
+		return array_merge( get_option( $this->options_root ), Helpers::batch_sanitize( $raw_value, $this->get_sanitization_rules() ) );
 	}
-
 
 	/**
 	 * Batch sanitize array with defined sanitization rules.
 	 *
-	 * This function not only sanitize the options, also will make sure only option fields defined in ruleset are ended up in the final options array
+	 * This function not only sanitize the options, also will make sure only option fields defined in ruleset are ended up in the final options array.
 	 *
 	 * @param array $input_object input array
 	 *
 	 * @return array sanitized options
+	 * @deprecated
 	 */
 	private function batch_sanitize( $input_object ) {
 		$sanitized_object   = [];

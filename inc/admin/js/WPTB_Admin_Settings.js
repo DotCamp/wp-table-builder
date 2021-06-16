@@ -25822,6 +25822,8 @@ var _FooterButtons = _interopRequireDefault(require("./Settings/FooterButtons"))
 
 var _MenuButton = _interopRequireDefault(require("./MenuButton"));
 
+var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -25837,7 +25839,7 @@ var _default = {
     MenuContent: _MenuContent.default,
     Fragment: _vueFragment.Fragment
   },
-  mixins: [_SettingsMenuSection.default],
+  mixins: [_SettingsMenuSection.default, _withMessage.default],
   mounted: function mounted() {
     this.settings = this.sectionData.settings;
     this.initialSettings = _objectSpread({}, this.settings);
@@ -25855,6 +25857,8 @@ var _default = {
   },
   methods: {
     updateLazyLoadSettings: function updateLazyLoadSettings() {
+      var _this = this;
+
       if (this.settingsDirtyStatus) {
         var _this$sectionData$sec = this.sectionData.security,
             action = _this$sectionData$sec.action,
@@ -25864,6 +25868,7 @@ var _default = {
         formData.append('settings', JSON.stringify(this.settings));
         formData.append('action', action);
         formData.append('nonce', nonce);
+        this.setBusy(true);
         fetch(ajaxUrl, {
           method: 'POST',
           body: formData
@@ -25872,9 +25877,19 @@ var _default = {
           if (res.ok) {
             return res.json();
           }
+
+          throw new Error(res.statusText);
         }).then(function (resp) {
-          // TODO [erdembircan] remove for production
-          console.log(resp);
+          _this.setMessage({
+            message: resp.message
+          });
+        }).catch(function (err) {
+          _this.setMessage({
+            message: err.message,
+            type: 'error'
+          });
+        }).finally(function () {
+          _this.setBusy(false);
         });
       }
     }
@@ -25989,7 +26004,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26144,6 +26159,8 @@ var _default = {
         if (r.ok) {
           return r.json();
         }
+
+        throw new Error(r.statusText);
       }).then(function (resp) {
         if (resp.error) {
           throw new Error(resp.error);
