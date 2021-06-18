@@ -31,6 +31,7 @@ const gulpConfig = {
 			'./inc/admin/js/core/WPTB_RecalculateIndexes.js',
 			'./inc/admin/js/WPTB_ResponsiveFrontend.js',
 			'./inc/frontend/js/frontend-only/WPTB_StylePass.js',
+			'./inc/frontend/js/frontend-only/WPTB_LazyLoad.js',
 			'./inc/frontend/js/frontend-only/wp-table-builder-frontend.js',
 		],
 		dest: './inc/frontend/js/wp-table-builder-frontend.js',

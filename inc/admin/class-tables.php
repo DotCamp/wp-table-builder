@@ -2,8 +2,8 @@
 
 namespace WP_Table_Builder\Inc\Admin;
 
-use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Core\Init;
+use function apply_filters;
 
 /**
  * All the table stuffs.
@@ -203,6 +203,8 @@ class Tables {
 		}
 
 		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>' . $after_table;
+
+		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode' , $html);
 
 		return ( $html );
 	}

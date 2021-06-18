@@ -3,6 +3,8 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 
+use DOMDocument;
+use DOMXPath;
 use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
@@ -18,6 +20,7 @@ use function get_option;
 use function register_setting;
 use function update_option;
 use function wp_create_nonce;
+use function wp_kses_stripslashes;
 
 // if called directly, abort
 if ( ! defined( 'WPINC' ) ) {
@@ -53,7 +56,10 @@ class Lazy_Load_Manager {
 	 * Options and settings required for lazy load to work at frontend.
 	 * @var array
 	 */
-	private static $frontend_options = [];
+	private static $frontend_options = [
+		'visibilityPercentage' => 100,
+		'backgroundColor' => '#FFFFFF'
+	];
 
 	/**
 	 * Sanitization rules for lazy load options.
@@ -72,7 +78,54 @@ class Lazy_Load_Manager {
 			'add_settings_menu_data'
 		] );
 		add_action( 'wp_ajax_' . static::$settings_update_action, [ __CLASS__, 'update_settings' ] );
+		add_filter( 'wp-table-builder/filter/wptb_frontend_data', [ __CLASS__, 'prepare_frontend_data' ] );
+		add_filter( 'wp-table-builder/filter/table_html_shortcode', [ __CLASS__, 'table_html_shortcode' ] );
 		static::register_settings();
+	}
+
+	/**
+	 * Callback for generating table html at shortcode.
+	 *
+	 * @param string $html table html
+	 *
+	 * @return string table shortcode html
+	 */
+	public static function table_html_shortcode( $html ) {
+		$is_lazy_load_enabled = get_option( static::$settings_update_action )['enabled'];
+
+		if ( $is_lazy_load_enabled ) {
+			$dom_handler   = new DOMDocument();
+			$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED || LIBXML_HTML_NODEFDTD || LIBXML_NOWARNING || LIBXML_NOERROR );
+
+			if ( $handle_status ) {
+				$dom_query      = new DOMXPath( $dom_handler );
+				$image_elements = $dom_query->query( '//div[@class="wptb-image-wrapper"]//img' );
+				foreach ( $image_elements as $img ) {
+					$target_url = $img->getAttribute( 'src' );
+
+					$img->setAttribute( 'data-wptb-lazy-load-target', $target_url );
+					$img->setAttribute( 'src', '' );
+					$img->setAttribute( 'class', join( ' ', [ $img->getAttribute( 'class' ), 'wptb-lazy-load-img' ] ) );
+					$img->setAttribute( 'data-wptb-lazy-load-status', 'false' );
+				}
+				$html = $dom_handler->saveHTML();
+			}
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Prepare frontend data for lazy load.
+	 *
+	 * @param array $data frontend data
+	 *
+	 * @return array frontend data
+	 */
+	public static function prepare_frontend_data( $data ) {
+		$data['lazyLoad'] = array_merge(get_option( static::$settings_update_action ), static::$frontend_options);
+
+		return $data;
 	}
 
 	/**

@@ -852,6 +852,8 @@
 		// rebuild tables according to current responsive mode
 		responsiveFront.rebuildTables();
 
+		// initialize lazy load module
+		WPTB_LazyLoad.init(WptbFrontendData.lazyLoad);
 
 		// initialize style pass
 		WPTB_StylePass.init(WptbFrontendData.stylePass);
