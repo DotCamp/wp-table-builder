@@ -53,6 +53,15 @@
 			return visibilityVariable >= 0 && visibilityVariable <= currentYPos;
 		};
 
+		const imageElementLoadCallback = (e) => {
+			e.target.dataset.wptbLazyLoadStatus = 'true';
+
+			// remove background color for parent anchor node
+			e.target.parentNode.style.backgroundColor = 'unset';
+
+			e.target.removeEventListener('load', imageElementLoadCallback);
+		};
+
 		/**
 		 * Process image element for visibility.
 		 *
@@ -61,14 +70,13 @@
 		 */
 		const processIndividualImageElement = (imgElement, currentYPos) => {
 			if (isElementVisible(imgElement, currentYPos)) {
-				// eslint-disable-next-line no-param-reassign
-				imgElement.dataset.wptbLazyLoadStatus = 'true';
-				// eslint-disable-next-line no-param-reassign
-				imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
+				imgElement.addEventListener('load', imageElementLoadCallback);
 
-				// remove background color for parent anchor node
-				// eslint-disable-next-line no-param-reassign
-				imgElement.parentNode.style.backgroundColor = 'unset';
+				// TODO [erdembircan] remove for production
+				setTimeout(() => {
+					// eslint-disable-next-line no-param-reassign
+					imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
+				}, 2000);
 			}
 		};
 
@@ -169,7 +177,7 @@
 		 */
 		this.init = (initOptions) => {
 			if (initOptions && typeof initOptions === 'object') {
-				options = initOptions;
+				options = { ...options, ...initOptions };
 
 				if (options.enabled) {
 					assignLazyLoadToElements();

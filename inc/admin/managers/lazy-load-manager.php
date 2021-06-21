@@ -57,8 +57,10 @@ class Lazy_Load_Manager {
 	 * @var array
 	 */
 	private static $frontend_options = [
-		'visibilityPercentage' => 100,
-		'backgroundColor' => '#FFFFFF'
+		'visibilityPercentage' => 10,
+		'backgroundColor'      => '#FFFFFF',
+		'animation'            => 'none',
+		'loadIndicator'        => 'none',
 	];
 
 	/**
@@ -123,7 +125,7 @@ class Lazy_Load_Manager {
 	 * @return array frontend data
 	 */
 	public static function prepare_frontend_data( $data ) {
-		$data['lazyLoad'] = array_merge(get_option( static::$settings_update_action ), static::$frontend_options);
+		$data['lazyLoad'] = array_merge( get_option( static::$settings_update_action ), static::$frontend_options );
 
 		return $data;
 	}

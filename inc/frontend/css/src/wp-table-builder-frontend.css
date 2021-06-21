@@ -720,16 +720,12 @@ table.wptb-preview-table {
 /*sortable mode end*/
 
 /*region lazy load*/
-.wptb-lazy-load-img {
-    transition: all 0.5s ease-out;
-}
-
 .wptb-lazy-load-img[data-wptb-lazy-load-status='false'] {
-    /*visibility: hidden;*/
     opacity: 0;
 }
 
 .wptb-lazy-load-img[data-wptb-lazy-load-status='true'] {
     opacity: 1;
 }
+
 /*endregion*/
