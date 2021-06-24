@@ -6482,5 +6482,10 @@ wptb_shortcode_container_element {
     color: var(--wptb-plugin-gray-500);
 }
 
+/*endregion*/
 
+/*region controls for settings*/
+.wptb-controls-for-settings * {
+    font-size: inherit !important;
+}
 /*endregion*/

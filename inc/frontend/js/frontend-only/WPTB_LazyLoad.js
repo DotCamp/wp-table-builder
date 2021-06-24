@@ -45,6 +45,7 @@
 		const isElementVisible = (imgElement, currentYPos) => {
 			const { top, height, bottom } = imgElement.getBoundingClientRect();
 			const { visibilityPercentage } = options;
+
 			const visibilityRangeTop = top + height * (visibilityPercentage / 100);
 			const visibilityRangeBottom = bottom - height * (visibilityPercentage / 100);
 
@@ -72,11 +73,8 @@
 			if (isElementVisible(imgElement, currentYPos)) {
 				imgElement.addEventListener('load', imageElementLoadCallback);
 
-				// TODO [erdembircan] remove for production
-				setTimeout(() => {
-					// eslint-disable-next-line no-param-reassign
-					imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
-				}, 2000);
+				// eslint-disable-next-line no-param-reassign
+				imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
 			}
 		};
 

@@ -8,8 +8,17 @@
 						{{ strings.enableLazyLoad }}
 					</label>
 				</div>
-				<div class="wptb-lazy-load-pro-options wptb-flex wptb-flex-align-center wptb-flex-justify-center">
-					<i>pro options</i>
+				<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
+					<div>
+						<range-input
+							v-model="settings.visibilityPercentage"
+							post-fix="%"
+							:clamp="true"
+							:min="1"
+							:max="100"
+							:label="strings.visibilityPercentage"
+						></range-input>
+					</div>
 				</div>
 			</div>
 		</menu-content>
@@ -28,9 +37,10 @@ import SettingsMenuSection from '../mixins/SettingsMenuSection';
 import FooterButtons from './Settings/FooterButtons';
 import MenuButton from './MenuButton';
 import withMessage from '../mixins/withMessage';
+import RangeInput from './RangeInput';
 
 export default {
-	components: { MenuButton, FooterButtons, MenuContent, Fragment },
+	components: { MenuButton, FooterButtons, MenuContent, Fragment, RangeInput },
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
 		this.settings = this.sectionData.settings;

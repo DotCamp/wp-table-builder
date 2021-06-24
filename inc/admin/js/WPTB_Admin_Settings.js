@@ -25804,7 +25804,527 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"components/LazyLoadSettings.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","../MenuContent":"components/MenuContent.vue","./FooterButtons":"components/Settings/FooterButtons.vue","../MenuButton":"components/MenuButton.vue","../CssCodeInput":"components/CssCodeInput.vue","../../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","../../mixins/withMessage":"mixins/withMessage.js","../BusyRotate":"components/BusyRotate.vue"}],"components/NumberPostfixInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  inheritAttrs: false,
+  props: {
+    postFix: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: null,
+      default: 0
+    },
+    // with this prop is enabled, width of the component will be calculated according to its contents
+    enableDynamicWidth: {
+      type: Boolean,
+      default: false
+    },
+    // extra padding value that will be applied to input element
+    dynamicWidthPadding: {
+      type: Number,
+      default: 3
+    },
+    // only enable data update with enter key down
+    onlyEnter: {
+      type: Boolean,
+      default: false
+    },
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 1000
+    },
+    step: {
+      type: Number,
+      default: 1
+    },
+    enableLimit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: 0
+    };
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  },
+  computed: {
+    /**
+     * Add a post fix to the value.
+     *
+     * Value will be chosen from the component prop.
+     */
+    postFixIt: function postFixIt() {
+      return "".concat(this.innerValue).concat(this.postFix);
+    },
+
+    /**
+     * Calculate width of input element according to its contents.
+     */
+    dynamicWidth: function dynamicWidth() {
+      if (this.enableDynamicWidth) {
+        return {
+          width: "calc(".concat(this.innerValue.toString().length + this.postFix.length + this.dynamicWidthPadding, "ch) !important")
+        };
+      }
+
+      return {};
+    }
+  },
+  methods: {
+    /**
+     * Retrieve integer from a string in the base of 10 and limit it between min/max values of the component.
+     *
+     * @param {number|string} val value
+     * @return {number} retrieved integer
+     */
+    getValue: function getValue(val) {
+      var parsedValue = Number.parseFloat(val); // get rid of unnecessary decimal points by fixing the number based on step value
+
+      var regex = new RegExp(/^([0-9]+)\.([0-9]+)/, 'g');
+      var match = regex.exec(this.step.toString());
+
+      if (match) {
+        var decimalPoint = match[2].length;
+        parsedValue = Number.parseFloat(parsedValue.toFixed(decimalPoint));
+      } // eslint-disable-next-line no-restricted-globals
+
+
+      parsedValue = isNaN(parsedValue) ? 0 : parsedValue;
+      return this.enableLimit ? this.limitValue(parsedValue) : parsedValue;
+    },
+
+    /**
+     * Limit given value between min/max properties of the component.
+     *
+     * @param {number} val value to be limited
+     */
+    limitValue: function limitValue(val) {
+      if (val < this.min) {
+        return this.min;
+      }
+
+      if (val > this.max) {
+        return this.max;
+      }
+
+      return val;
+    },
+
+    /**
+     * Handle input value change.
+     *
+     * @param {Event} e input event
+     */
+    handleOnInput: function handleOnInput(e) {
+      // don't update prop data if only enter key update is enabled
+      if (!this.onlyEnter) {
+        this.$emit('valueChanged', this.getValue(e.target.value));
+      }
+    },
+
+    /**
+     * Handle enter value change.
+     *
+     * @param {Event} e input event
+     */
+    handleEnterInput: function handleEnterInput(e) {
+      // only update prop data if enter key update is enabled
+      if (this.onlyEnter) {
+        this.$emit('valueChanged', this.getValue(e.target.value));
+      }
+    },
+
+    /**
+     * Handle key press event for input
+     *
+     * This callback will give up/down arrow key press incrementation to input.
+     *
+     * @param {string} type type of key
+     */
+    handleKeyPress: function handleKeyPress() {
+      var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'up';
+      var value = this.getValue(this.innerValue);
+
+      switch (type) {
+        case 'up':
+          value += this.step;
+          break;
+
+        case 'down':
+          value -= this.step;
+          break;
+
+        default:
+          value += this.step;
+          break;
+      }
+
+      value = this.getValue(value);
+      this.$emit('valueChanged', value);
+    }
+  }
+};
+exports.default = _default;
+        var $fa7e4a = exports.default || module.exports;
+      
+      if (typeof $fa7e4a === 'function') {
+        $fa7e4a = $fa7e4a.options;
+      }
+    
+        /* template */
+        Object.assign($fa7e4a, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("input", {
+    style: _vm.dynamicWidth,
+    attrs: { type: "text", disabled: _vm.$attrs.disabled },
+    domProps: { value: _vm.postFixIt },
+    on: {
+      input: _vm.handleOnInput,
+      keydown: [
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "up", 38, $event.key, ["Up", "ArrowUp"])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("up")
+        },
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "down", 40, $event.key, [
+              "Down",
+              "ArrowDown"
+            ])
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleKeyPress("down")
+        },
+        function($event) {
+          if (
+            !$event.type.indexOf("key") &&
+            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+          ) {
+            return null
+          }
+          $event.preventDefault()
+          return _vm.handleEnterInput($event)
+        }
+      ]
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/RangeInput.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NumberPostfixInput = _interopRequireDefault(require("./NumberPostfixInput"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    NumberPostfixInput: _NumberPostfixInput.default
+  },
+  props: {
+    label: {
+      type: String,
+      default: ''
+    },
+    uniqueId: {
+      type: String,
+      default: ''
+    },
+    elemContainer: {
+      type: String,
+      default: ''
+    },
+    min: {
+      type: Number,
+      default: 1,
+      required: false
+    },
+    max: {
+      type: Number,
+      default: 10,
+      required: false
+    },
+    step: {
+      type: Number,
+      default: 1,
+      required: false
+    },
+    elementMainValue: {
+      type: null
+    },
+    postFix: {
+      type: String,
+      default: ''
+    },
+    clamp: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  model: {
+    prop: 'elementMainValue',
+    event: 'valueChanged'
+  },
+  data: function data() {
+    return {
+      innerElementMainValue: 0
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.innerElementMainValue = _this.elementMainValue;
+    });
+  },
+  watch: {
+    elementMainValue: function elementMainValue() {
+      this.innerElementMainValue = this.elementMainValue;
+    },
+    innerElementMainValue: function innerElementMainValue(n) {
+      this.$emit('valueChanged', this.clamp ? this.clampValue(n) : n);
+    }
+  },
+  methods: {
+    /**
+     * Clamp the value between min/max range.
+     *
+     * @param {number} val value
+     * @return {number} clamped value
+     */
+    clampValue: function clampValue(val) {
+      if (val < this.min) {
+        return this.min;
+      }
+
+      if (val > this.max) {
+        return this.max;
+      }
+
+      return val;
+    }
+  }
+};
+exports.default = _default;
+        var $2c5af7 = exports.default || module.exports;
+      
+      if (typeof $2c5af7 === 'function') {
+        $2c5af7 = $2c5af7.options;
+      }
+    
+        /* template */
+        Object.assign($2c5af7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-range-input-wrapper" }, [
+    _c(
+      "div",
+      {
+        staticClass: "wptb-settings-item-header wptb-text-transform-cap",
+        attrs: { "data-wptb-text-disabled": _vm.disabled }
+      },
+      [_vm._v("\n\t\t" + _vm._s(_vm.label) + "\n\t")]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+      _c("div", { staticClass: "wptb-settings-col-xs-8" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.innerElementMainValue,
+              expression: "innerElementMainValue"
+            }
+          ],
+          staticClass: "wptb-element-property wptb-size-slider",
+          class: _vm.uniqueId,
+          attrs: {
+            type: "range",
+            "data-element": _vm.elemContainer,
+            "data-type": "range",
+            min: _vm.min,
+            max: _vm.max,
+            step: _vm.step,
+            disabled: _vm.disabled
+          },
+          domProps: { value: _vm.innerElementMainValue },
+          on: {
+            __r: function($event) {
+              _vm.innerElementMainValue = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "wptb-settings-col-xs-4" },
+        [
+          _c("number-postfix-input", {
+            staticClass:
+              "wptb-size-number wptb-number-input wptb-element-property",
+            class: _vm.uniqueId,
+            staticStyle: { "text-align": "center" },
+            attrs: {
+              disabled: _vm.disabled,
+              "post-fix": _vm.postFix,
+              "only-enter": true,
+              min: _vm.min,
+              max: _vm.max,
+              "data-element": _vm.elemContainer,
+              step: _vm.step,
+              "enable-limit": _vm.clamp,
+              "data-type": "range"
+            },
+            model: {
+              value: _vm.innerElementMainValue,
+              callback: function($$v) {
+                _vm.innerElementMainValue = $$v
+              },
+              expression: "innerElementMainValue"
+            }
+          })
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/LazyLoadSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25824,6 +26344,8 @@ var _MenuButton = _interopRequireDefault(require("./MenuButton"));
 
 var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
 
+var _RangeInput = _interopRequireDefault(require("./RangeInput"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -25837,7 +26359,8 @@ var _default = {
     MenuButton: _MenuButton.default,
     FooterButtons: _FooterButtons.default,
     MenuContent: _MenuContent.default,
-    Fragment: _vueFragment.Fragment
+    Fragment: _vueFragment.Fragment,
+    RangeInput: _RangeInput.default
   },
   mixins: [_SettingsMenuSection.default, _withMessage.default],
   mounted: function mounted() {
@@ -25967,9 +26490,32 @@ exports.default = _default;
             "div",
             {
               staticClass:
-                "wptb-lazy-load-pro-options wptb-flex wptb-flex-align-center wptb-flex-justify-center"
+                "wptb-lazy-load-pro-options wptb-controls-for-settings"
             },
-            [_c("i", [_vm._v("pro options")])]
+            [
+              _c(
+                "div",
+                [
+                  _c("range-input", {
+                    attrs: {
+                      "post-fix": "%",
+                      clamp: true,
+                      min: 1,
+                      max: 100,
+                      label: _vm.strings.visibilityPercentage
+                    },
+                    model: {
+                      value: _vm.settings.visibilityPercentage,
+                      callback: function($$v) {
+                        _vm.$set(_vm.settings, "visibilityPercentage", $$v)
+                      },
+                      expression: "settings.visibilityPercentage"
+                    }
+                  })
+                ],
+                1
+              )
+            ]
           )
         ])
       ]),
@@ -26004,7 +26550,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js","./RangeInput":"components/RangeInput.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
