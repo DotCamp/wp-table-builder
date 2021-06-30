@@ -22427,8 +22427,10 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
+      var _document$querySelect;
+
       // event listeners to hide opened color picker on certain DOM events
-      document.querySelector('.wptb-container').addEventListener('click', _this.handleHide);
+      (_document$querySelect = document.querySelector('.wptb-container')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.addEventListener('click', _this.handleHide);
       document.addEventListener('wheel', _this.handleHide, {
         capture: false,
         passive: true
@@ -22529,8 +22531,10 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
+    var _document$querySelect2;
+
     // remove assigned event listeners
-    document.querySelector('.wptb-container').removeEventListener('click', this.handleHide);
+    (_document$querySelect2 = document.querySelector('.wptb-container')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.removeEventListener('click', this.handleHide);
     document.removeEventListener('wheel', this.handleHide, {
       capture: false,
       passive: true

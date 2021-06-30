@@ -200,6 +200,16 @@ var global = arguments[3];
       cachedIcons[iconName] = stringifiedIcon;
     };
     /**
+     * Get a list of all available icons.
+     *
+     * @return {Object} icon list
+     */
+
+
+    this.getIconList = function () {
+      return iconList;
+    };
+    /**
      * Get an icon.
      *
      * Icons sent with this function are wrapped with a 'div' element.

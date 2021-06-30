@@ -25,6 +25,9 @@
 			lastYPosition: 0,
 		};
 
+		const bufferElementClass = 'wptb-lazy-load-buffer-element';
+		const bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
+
 		/**
 		 * Whether user scrolling down or up.
 		 *
@@ -54,11 +57,43 @@
 			return visibilityVariable >= 0 && visibilityVariable <= currentYPos;
 		};
 
+		/**
+		 * Update background color related options for lazy load.
+		 *
+		 * @deprecated
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 * @param {boolean} resetColor whether to reset background color or not
+		 */
+		const updateBackgroundColor = (imgElement, resetColor = false) => {
+			// add background color for parent anchor node
+			// eslint-disable-next-line no-param-reassign
+			imgElement.parentNode.style.backgroundColor = resetColor ? 'unset' : options.backgroundColor;
+		};
+
+		/**
+		 * Add a buffer element to image container.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		const addBufferElement = (imgElement) => {
+			const bufferElement = document.createElement('div');
+			bufferElement.classList.add(bufferElementClass);
+
+			// assign color to buffer element
+			bufferElement.style.backgroundColor = options.backgroundColor;
+
+			// add buffer element adjacent to image element
+			imgElement.insertAdjacentElement('afterend', bufferElement);
+
+			imgElement.parentNode.classList.add(bufferElementContainerClass);
+		};
+
 		const imageElementLoadCallback = (e) => {
 			e.target.dataset.wptbLazyLoadStatus = 'true';
 
 			// remove background color for parent anchor node
-			e.target.parentNode.style.backgroundColor = 'unset';
+			updateBackgroundColor(e.target, true);
 
 			e.target.removeEventListener('load', imageElementLoadCallback);
 		};
@@ -92,8 +127,9 @@
 		 *
 		 * @param {Array} imgElements image elements array
 		 * @param {number} currentYPos current position of page
+		 * @param {boolean} firstTimeProcess whether process is run for the first time or not
 		 */
-		const processImageElements = (imgElements, currentYPos) => {
+		const processImageElements = (imgElements, currentYPos, firstTimeProcess = false) => {
 			// eslint-disable-next-line array-callback-return
 			imgElements
 				.filter((element) => {
@@ -101,11 +137,14 @@
 				})
 				// eslint-disable-next-line array-callback-return
 				.map((img) => {
-					// add background color for parent anchor node
-					// eslint-disable-next-line no-param-reassign
-					img.parentNode.style.backgroundColor = options.backgroundColor;
+					// updateBackgroundColor(img);
 
-					processIndividualImageElement(img, currentYPos);
+					if (firstTimeProcess) {
+						addBufferElement(img);
+					}
+
+					// TODO [erdembircan] uncomment for production
+					// processIndividualImageElement(img, currentYPos);
 				});
 
 			updateLastScrollY(window.scrollY);
@@ -156,7 +195,7 @@
 			const allImages = getAllTableImages(allTables);
 
 			// process image elements on window load
-			processImageElements(allImages, windowCurrentYPosition());
+			processImageElements(allImages, windowCurrentYPosition(), true);
 
 			// eslint-disable-next-line @wordpress/no-global-event-listener
 			window.addEventListener(

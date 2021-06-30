@@ -88,7 +88,7 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			// event listeners to hide opened color picker on certain DOM events
-			document.querySelector('.wptb-container').addEventListener('click', this.handleHide);
+			document.querySelector('.wptb-container')?.addEventListener('click', this.handleHide);
 			document.addEventListener('wheel', this.handleHide, { capture: false, passive: true });
 			document.addEventListener('keyup', this.handleHide);
 
@@ -176,7 +176,7 @@ export default {
 	},
 	beforeDestroy() {
 		// remove assigned event listeners
-		document.querySelector('.wptb-container').removeEventListener('click', this.handleHide);
+		document.querySelector('.wptb-container')?.removeEventListener('click', this.handleHide);
 		document.removeEventListener('wheel', this.handleHide, { capture: false, passive: true });
 		document.removeEventListener('keyup', this.handleHide);
 	},

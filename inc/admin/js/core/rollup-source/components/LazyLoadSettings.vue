@@ -9,7 +9,7 @@
 					</label>
 				</div>
 				<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
-					<div>
+					<control-tip-wrapper :message="strings.visibilityPercentageTip">
 						<range-input
 							v-model="settings.visibilityPercentage"
 							post-fix="%"
@@ -18,7 +18,9 @@
 							:max="100"
 							:label="strings.visibilityPercentage"
 						></range-input>
-					</div>
+					</control-tip-wrapper>
+					<color-picker v-model="settings.backgroundColor" :label="strings.backgroundColor"></color-picker>
+					<panel-icon-select :icons="iconList"></panel-icon-select>
 				</div>
 			</div>
 		</menu-content>
@@ -38,9 +40,21 @@ import FooterButtons from './Settings/FooterButtons';
 import MenuButton from './MenuButton';
 import withMessage from '../mixins/withMessage';
 import RangeInput from './RangeInput';
+import ControlTipWrapper from './ControlTipWrapper';
+import ColorPicker from './ColorPicker';
+import PanelIconSelect from './leftPanel/PanelIconSelect';
 
 export default {
-	components: { MenuButton, FooterButtons, MenuContent, Fragment, RangeInput },
+	components: {
+		PanelIconSelect,
+		ColorPicker,
+		ControlTipWrapper,
+		MenuButton,
+		FooterButtons,
+		MenuContent,
+		Fragment,
+		RangeInput,
+	},
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
 		this.settings = this.sectionData.settings;
@@ -55,6 +69,9 @@ export default {
 	computed: {
 		settingsDirtyStatus() {
 			return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);
+		},
+		iconList() {
+			return WPTB_IconManager.getIconList();
 		},
 	},
 	methods: {
@@ -86,6 +103,7 @@ export default {
 						this.setMessage({
 							message: resp.message,
 						});
+						this.initialSettings = { ...this.settings };
 					})
 					.catch((err) => {
 						this.setMessage({

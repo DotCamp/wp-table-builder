@@ -44,8 +44,8 @@ class Lazy_Load_Manager extends Setting_Base {
 	private static $frontend_options = [
 		'visibilityPercentage' => 10,
 		'backgroundColor'      => '#FFFFFF',
-		'loadIndicator'        => 'none',
-		'icon'                 => 'none'
+		'icon'                 => 'none',
+		'iconColor'      => '#000000',
 	];
 
 	/**
@@ -193,9 +193,11 @@ class Lazy_Load_Manager extends Setting_Base {
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], [
-			'enableLazyLoad'       => esc_html__( 'Enable lazy load for images in tables', 'wp-table-builder' ),
-			'submit'               => esc_html__( 'submit', 'wp-table-builder' ),
-			'visibilityPercentage' => esc_html__( 'visibility percentage', 'wp-table-builder' ),
+			'enableLazyLoad'          => esc_html__( 'Enable lazy load for images in tables', 'wp-table-builder' ),
+			'submit'                  => esc_html__( 'submit', 'wp-table-builder' ),
+			'visibilityPercentage'    => esc_html__( 'visibility percentage', 'wp-table-builder' ),
+			'visibilityPercentageTip' => esc_html__( 'Height of image that is visible on screen to trigger lazy load', 'wp-table-builder' ),
+			'backgroundColor'         => esc_html__( 'background color', 'wp-table-builder' ),
 		] );
 
 		$settings_data['data']['lazyLoad'] = [

@@ -6470,6 +6470,7 @@ wptb_shortcode_container_element {
 
 /*region lazy load settings menu*/
 .wptb-lazy-load-wrapper {
+    max-width: 800px;
     width: 100%;
     height: 100%;
     display: grid;
@@ -6478,8 +6479,16 @@ wptb_shortcode_container_element {
 }
 
 .wptb-lazy-load-pro-options {
-    background-color: var(--wptb-plugin-gray-300);
     color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-lazy-load-pro-options > div {
+    border: 1px solid var(--wptb-plugin-gray-300);
+    border-bottom: 0;
+}
+
+.wptb-lazy-load-pro-options > div:last-of-type {
+    border-bottom: 1px solid var(--wptb-plugin-gray-300);
 }
 
 /*endregion*/
@@ -6487,5 +6496,41 @@ wptb_shortcode_container_element {
 /*region controls for settings*/
 .wptb-controls-for-settings * {
     font-size: inherit !important;
+    color: var(--wptb-plugin-theme-text-color-main) !important;
+    box-sizing: border-box;
 }
+
+/*endregion*/
+
+/*region control tip wrapper*/
+.wptb-control-tip-wrapper {
+    position: relative;
+}
+
+.wptb-tip-popup {
+    position: absolute;
+    border: 2px solid var(--wptb-plugin-gray-300);
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--wptb-plugin-theme-color-light);
+    transition: background-color 0.2s ease-out;
+    top: 5px;
+    right: 5px;
+}
+
+.wptb-tip-popup[data-tip-positon="topRight"] {
+    top: 5px;
+    right: 5px;
+}
+
+.wptb-tip-popup:hover {
+    background-color: var(--wptb-plugin-gray-200);
+}
+
+
 /*endregion*/

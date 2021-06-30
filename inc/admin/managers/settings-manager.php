@@ -3,6 +3,7 @@
 namespace WP_Table_Builder\Inc\Admin\Managers;
 
 use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder\Inc\Core\Init;
 use WP_Table_Builder\Inc\Core\Loader;
 use WP_Table_Builder as NS;
 use function add_filter;
@@ -134,7 +135,6 @@ class Settings_Manager {
 		return apply_filters( 'wp-table-builder/filter/settings_sanitization_rules', $this->sanitization_rules );
 	}
 
-
 	/**
 	 * Panel location filter hook callback.
 	 *
@@ -248,6 +248,8 @@ class Settings_Manager {
 			$handler = 'wptb-settings-manager';
 
 			// script and style enqueue
+			Helpers::enqueue_file( 'inc/admin/js/WPTB_Store.js', [], true );
+			Init::instance()->get_icon_manager()->enqueue_icon_manager_assets( true );
 			Helpers::enqueue_file( $script_path, [], true, $handler );
 			Helpers::enqueue_file( $style_path, [], false, 'wptb-settings-manager-style' );
 
