@@ -96,13 +96,11 @@ export default {
 		});
 
 		this.$nextTick(() => {
-			// @deprecated
-			// const selectedIcon = this.selectedUserIcon;
-			//
-			// this.selectedIcon.name = selectedIcon === '' ? null : selectedIcon;
-			// this.selectedIcon.url = selectedIcon === '' ? null : this.icons[selectedIcon];
-
 			this.selectedIcon = this.selectedUserIcon;
+
+			if (!this.selectedIcon.url) {
+				this.selectedIcon.url = this.icons[this.selectedIcon.name] ? this.icons[this.selectedIcon.name] : null;
+			}
 		});
 	},
 	watch: {

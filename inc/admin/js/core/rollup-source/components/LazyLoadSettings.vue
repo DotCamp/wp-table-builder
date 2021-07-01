@@ -20,7 +20,11 @@
 						></range-input>
 					</control-tip-wrapper>
 					<color-picker v-model="settings.backgroundColor" :label="strings.backgroundColor"></color-picker>
-					<panel-icon-select :icons="iconList"></panel-icon-select>
+					<panel-icon-select
+						v-model="settings.iconName"
+						:label="strings.icon"
+						:icons="iconList"
+					></panel-icon-select>
 				</div>
 			</div>
 		</menu-content>
@@ -34,6 +38,7 @@
 
 <script>
 import { Fragment } from 'vue-fragment';
+import deepmerge from 'deepmerge';
 import MenuContent from './MenuContent';
 import SettingsMenuSection from '../mixins/SettingsMenuSection';
 import FooterButtons from './Settings/FooterButtons';
@@ -58,7 +63,7 @@ export default {
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
 		this.settings = this.sectionData.settings;
-		this.initialSettings = { ...this.settings };
+		this.updateInitialSettings();
 	},
 	data() {
 		return {
@@ -75,6 +80,9 @@ export default {
 		},
 	},
 	methods: {
+		updateInitialSettings() {
+			this.initialSettings = deepmerge({}, this.settings);
+		},
 		updateLazyLoadSettings() {
 			if (this.settingsDirtyStatus) {
 				const { action, nonce, ajaxUrl } = this.sectionData.security;
@@ -103,7 +111,8 @@ export default {
 						this.setMessage({
 							message: resp.message,
 						});
-						this.initialSettings = { ...this.settings };
+
+						this.updateInitialSettings();
 					})
 					.catch((err) => {
 						this.setMessage({

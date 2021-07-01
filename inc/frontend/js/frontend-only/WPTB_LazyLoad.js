@@ -58,21 +58,7 @@
 		};
 
 		/**
-		 * Update background color related options for lazy load.
-		 *
-		 * @deprecated
-		 *
-		 * @param {HTMLElement} imgElement image element
-		 * @param {boolean} resetColor whether to reset background color or not
-		 */
-		const updateBackgroundColor = (imgElement, resetColor = false) => {
-			// add background color for parent anchor node
-			// eslint-disable-next-line no-param-reassign
-			imgElement.parentNode.style.backgroundColor = resetColor ? 'unset' : options.backgroundColor;
-		};
-
-		/**
-		 * Add a buffer element to image container.
+		 * Add a buffer element and associated options to image container.
 		 *
 		 * @param {HTMLElement} imgElement image element
 		 */
@@ -83,17 +69,35 @@
 			// assign color to buffer element
 			bufferElement.style.backgroundColor = options.backgroundColor;
 
+			if (options.icon.svg) {
+				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper">${options.icon.svg}</div>`;
+			}
+
 			// add buffer element adjacent to image element
 			imgElement.insertAdjacentElement('afterend', bufferElement);
 
 			imgElement.parentNode.classList.add(bufferElementContainerClass);
 		};
 
+		/**
+		 * Remove buffer element and associated options.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		const removeBufferElement = (imgElement) => {
+			const { parentNode } = imgElement;
+			const bufferElement = parentNode.querySelector(`.${bufferElementClass}`);
+			if (bufferElement) {
+				parentNode.removeChild(bufferElement);
+				parentNode.classList.remove(bufferElementContainerClass);
+			}
+		};
+
 		const imageElementLoadCallback = (e) => {
 			e.target.dataset.wptbLazyLoadStatus = 'true';
 
-			// remove background color for parent anchor node
-			updateBackgroundColor(e.target, true);
+			// remove buffer element and associated options
+			removeBufferElement(e.target);
 
 			e.target.removeEventListener('load', imageElementLoadCallback);
 		};

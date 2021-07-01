@@ -739,6 +739,14 @@ table.wptb-preview-table {
     width: 100%;
     height: 100%;
     border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper {
+    width: 20px;
+    height: 20px;
 }
 
 /*endregion*/
