@@ -47,7 +47,8 @@ class Lazy_Load_Manager extends Setting_Base {
 		'iconName'             => [
 			'name' => null,
 		],
-		'iconColor'            => '#000000'
+		'iconColor'            => '#000000',
+		'iconSize'             => 20,
 	];
 
 	/**
@@ -201,7 +202,7 @@ class Lazy_Load_Manager extends Setting_Base {
 			'visibilityPercentageTip' => esc_html__( 'Height of image that is visible on screen to trigger lazy load', 'wp-table-builder' ),
 			'backgroundColor'         => esc_html__( 'background color', 'wp-table-builder' ),
 			'icon'                    => esc_html__( 'Icon', 'wp-table-builder' ),
-			'iconColor'                    => esc_html__( 'Icon Color', 'wp-table-builder' ),
+			'iconColor'               => esc_html__( 'Icon Color', 'wp-table-builder' ),
 		] );
 
 		$settings_data['data']['lazyLoad'] = [

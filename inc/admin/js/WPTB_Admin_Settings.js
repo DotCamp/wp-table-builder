@@ -27525,7 +27525,9 @@ var _default = {
             nonce = _this$sectionData$sec.nonce,
             ajaxUrl = _this$sectionData$sec.ajaxUrl;
         var formData = new FormData();
-        formData.append('settings', JSON.stringify(this.settings));
+        var settingsToUpload = (0, _deepmerge.default)({}, this.settings);
+        settingsToUpload.iconSvg = null;
+        formData.append('settings', JSON.stringify(settingsToUpload));
         formData.append('action', action);
         formData.append('nonce', nonce);
         this.setBusy(true);

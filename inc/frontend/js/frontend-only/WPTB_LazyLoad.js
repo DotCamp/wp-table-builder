@@ -71,6 +71,13 @@
 
 			if (options.iconSvg) {
 				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper">${options.iconSvg}</div>`;
+
+				const svgIcon = bufferElement.querySelector('svg');
+
+				if (svgIcon) {
+					// assign icon color
+					svgIcon.style.fill = options.iconColor;
+				}
 			}
 
 			// add buffer element adjacent to image element

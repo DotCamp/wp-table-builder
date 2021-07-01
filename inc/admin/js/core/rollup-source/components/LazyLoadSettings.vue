@@ -84,7 +84,9 @@ export default {
 			return WPTB_IconManager.getIconList();
 		},
 		iconSubOptionsDisableStatus() {
-			return !this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === '';
+			return (
+				!this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === ''
+			);
 		},
 	},
 	methods: {
@@ -97,7 +99,10 @@ export default {
 
 				const formData = new FormData();
 
-				formData.append('settings', JSON.stringify(this.settings));
+				const settingsToUpload = deepmerge({}, this.settings);
+				settingsToUpload.iconSvg = null;
+
+				formData.append('settings', JSON.stringify(settingsToUpload));
 				formData.append('action', action);
 				formData.append('nonce', nonce);
 
