@@ -26682,6 +26682,7 @@ var _functions = require("../functions");
 //
 //
 //
+//
 var _default = {
   props: {
     label: {
@@ -26870,6 +26871,7 @@ exports.default = _default;
           {
             ref: "inputWrapper",
             staticClass: "wptb-color-picker-input-wrapper",
+            attrs: { disabled: _vm.disabled },
             on: {
               "!click": function($event) {
                 $event.stopPropagation()
@@ -27472,6 +27474,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   components: {
     PanelIconSelect: _PanelIconSelect.default,
@@ -27500,6 +27507,9 @@ var _default = {
     },
     iconList: function iconList() {
       return WPTB_IconManager.getIconList();
+    },
+    iconSubOptionsDisableStatus: function iconSubOptionsDisableStatus() {
+      return !this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === '';
     }
   },
   methods: {
@@ -27665,6 +27675,20 @@ exports.default = _default;
                     _vm.$set(_vm.settings, "iconName", $$v)
                   },
                   expression: "settings.iconName"
+                }
+              }),
+              _vm._v(" "),
+              _c("color-picker", {
+                attrs: {
+                  disabled: _vm.iconSubOptionsDisableStatus,
+                  label: _vm.strings.iconColor
+                },
+                model: {
+                  value: _vm.settings.iconColor,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconColor", $$v)
+                  },
+                  expression: "settings.iconColor"
                 }
               })
             ],

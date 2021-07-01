@@ -5625,6 +5625,10 @@ wptb_shortcode_container_element {
     align-items: center;
 }
 
+.wptb-color-picker-input-wrapper[disabled] {
+    pointer-events: none;
+}
+
 .wptb-color-picker-inner-indicator {
     height: 100%;
     padding: 3px;
@@ -5733,6 +5737,14 @@ wptb_shortcode_container_element {
 
 .wptb-color-picker-clear-color svg {
     fill: currentColor;
+}
+
+.wptb-color-picker-input-wrapper[disabled] .wptb-color-picker-logo svg {
+    fill: var(--wptb-plugin-gray-400);
+}
+
+.wptb-color-picker-input-wrapper[disabled] .wptb-color-picker-selected-color {
+    background-color: var(--wptb-plugin-gray-300) !important;
 }
 
 /*endregion*/
@@ -6496,7 +6508,7 @@ wptb_shortcode_container_element {
 /*region controls for settings*/
 .wptb-controls-for-settings * {
     font-size: inherit !important;
-    color: var(--wptb-plugin-theme-text-color-main) !important;
+    color: var(--wptb-plugin-theme-text-color-main);
     box-sizing: border-box;
 }
 

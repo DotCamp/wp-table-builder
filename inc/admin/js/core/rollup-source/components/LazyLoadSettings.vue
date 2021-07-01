@@ -25,6 +25,11 @@
 						:label="strings.icon"
 						:icons="iconList"
 					></panel-icon-select>
+					<color-picker
+						:disabled="iconSubOptionsDisableStatus"
+						v-model="settings.iconColor"
+						:label="strings.iconColor"
+					></color-picker>
 				</div>
 			</div>
 		</menu-content>
@@ -77,6 +82,9 @@ export default {
 		},
 		iconList() {
 			return WPTB_IconManager.getIconList();
+		},
+		iconSubOptionsDisableStatus() {
+			return !this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === '';
 		},
 	},
 	methods: {

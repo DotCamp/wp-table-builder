@@ -7,6 +7,7 @@
 			<div
 				ref="inputWrapper"
 				class="wptb-color-picker-input-wrapper"
+				:disabled="disabled"
 				@click.capture.stop.prevent="toggleVisibility"
 			>
 				<div class="wptb-color-picker-inner-indicator">

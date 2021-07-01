@@ -69,8 +69,8 @@
 			// assign color to buffer element
 			bufferElement.style.backgroundColor = options.backgroundColor;
 
-			if (options.icon.svg) {
-				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper">${options.icon.svg}</div>`;
+			if (options.iconSvg) {
+				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper">${options.iconSvg}</div>`;
 			}
 
 			// add buffer element adjacent to image element

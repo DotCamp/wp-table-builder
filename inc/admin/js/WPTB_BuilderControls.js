@@ -22390,6 +22390,7 @@ var _functions = require("../functions");
 //
 //
 //
+//
 var _default = {
   props: {
     label: {
@@ -22578,6 +22579,7 @@ exports.default = _default;
           {
             ref: "inputWrapper",
             staticClass: "wptb-color-picker-input-wrapper",
+            attrs: { disabled: _vm.disabled },
             on: {
               "!click": function($event) {
                 $event.stopPropagation()
