@@ -1,8 +1,8 @@
 <template>
 	<div class="wptb-settings-row wptb-settings-middle-xs">
 		<div class="wptb-settings-space-between">
-			<p class="wptb-settings-item-title">{{ label }}</p>
-			<div class="wptb-icon-select-wrapper">
+			<p class="wptb-settings-item-title" :data-wptb-text-disabled="disabled">{{ label }}</p>
+			<div class="wptb-icon-select-wrapper" :disabled="disabled">
 				<div class="wptb-icon-select-display">
 					<div class="wptb-icon-select-preview" @click="toggleIconDrawer" ref="iconSelectButton">
 						<img :src="selectedIcon.url" />
@@ -64,6 +64,10 @@ export default {
 				return { url: null, name: null };
 			},
 		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	model: {
 		prop: 'selectedUserIcon',
@@ -104,6 +108,11 @@ export default {
 		});
 	},
 	watch: {
+		disabled(n) {
+			if (n) {
+				this.setDrawerState(false);
+			}
+		},
 		debunkedFilterText(n) {
 			clearTimeout(this.debunkId);
 
@@ -133,14 +142,18 @@ export default {
 				}, {});
 		},
 		toggleIconDrawer() {
-			this.calculateDrawerPosition();
-			this.openDrawer = !this.openDrawer;
-			this.innerDrawerRef = this.$refs.drawerRefElement;
+			if (!this.disabled) {
+				this.calculateDrawerPosition();
+				this.openDrawer = !this.openDrawer;
+				this.innerDrawerRef = this.$refs.drawerRefElement;
+			}
 		},
 		setIcon(iconName, iconUrl) {
-			this.selectedIcon.url = iconUrl;
-			this.selectedIcon.name = iconName;
-			this.toggleIconDrawer();
+			if (!this.disabled) {
+				this.selectedIcon.url = iconUrl;
+				this.selectedIcon.name = iconName;
+				this.toggleIconDrawer();
+			}
 		},
 		observerVisible() {
 			this.paginationIndex += 1;

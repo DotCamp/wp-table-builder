@@ -9,8 +9,14 @@
 					</label>
 				</div>
 				<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
-					<control-tip-wrapper :message="strings.visibilityPercentageTip">
+					<div
+						v-if="!sectionData.proStatus"
+						class="wptb-responsive-disabled-table-overlay"
+						style="opacity: 0.5"
+					></div>
+					<control-tip-wrapper :disabled="generalDisabledStatus" :message="strings.visibilityPercentageTip">
 						<range-input
+							:disabled="generalDisabledStatus"
 							v-model="settings.visibilityPercentage"
 							post-fix="%"
 							:clamp="true"
@@ -19,17 +25,31 @@
 							:label="strings.visibilityPercentage"
 						></range-input>
 					</control-tip-wrapper>
-					<color-picker v-model="settings.backgroundColor" :label="strings.backgroundColor"></color-picker>
+					<color-picker
+						:disabled="generalDisabledStatus"
+						v-model="settings.backgroundColor"
+						:label="strings.backgroundColor"
+					></color-picker>
 					<panel-icon-select
 						v-model="settings.iconName"
 						:label="strings.icon"
 						:icons="iconList"
+						:disabled="generalDisabledStatus"
 					></panel-icon-select>
 					<color-picker
 						:disabled="iconSubOptionsDisableStatus"
 						v-model="settings.iconColor"
 						:label="strings.iconColor"
 					></color-picker>
+					<range-input
+						v-model="settings.iconSize"
+						post-fix="px"
+						:clamp="true"
+						:min="1"
+						:max="100"
+						:label="strings.iconSize"
+						:disabled="iconSubOptionsDisableStatus"
+					></range-input>
 				</div>
 			</div>
 		</menu-content>
@@ -77,6 +97,9 @@ export default {
 		};
 	},
 	computed: {
+		generalDisabledStatus() {
+			return !this.settings.enabled;
+		},
 		settingsDirtyStatus() {
 			return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);
 		},
@@ -85,7 +108,10 @@ export default {
 		},
 		iconSubOptionsDisableStatus() {
 			return (
-				!this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === ''
+				this.generalDisabledStatus ||
+				!this.settings.iconName ||
+				this.settings.iconName.name === null ||
+				this.settings.iconName.name === ''
 			);
 		},
 	},

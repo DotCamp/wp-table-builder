@@ -6,6 +6,7 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use DOMDocument;
 use DOMXPath;
 use WP_Table_Builder\Inc\Admin\Base\Setting_Base;
+use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
@@ -43,7 +44,7 @@ class Lazy_Load_Manager extends Setting_Base {
 	 */
 	private static $frontend_options = [
 		'visibilityPercentage' => 10,
-		'backgroundColor'      => '#FFFFFF',
+		'backgroundColor'      => '#FFFFFF00',
 		'iconName'             => [
 			'name' => null,
 		],
@@ -203,9 +204,11 @@ class Lazy_Load_Manager extends Setting_Base {
 			'backgroundColor'         => esc_html__( 'background color', 'wp-table-builder' ),
 			'icon'                    => esc_html__( 'Icon', 'wp-table-builder' ),
 			'iconColor'               => esc_html__( 'Icon Color', 'wp-table-builder' ),
+			'iconSize'               => esc_html__( 'icon size', 'wp-table-builder' ),
 		] );
 
 		$settings_data['data']['lazyLoad'] = [
+			'proStatus' => Addon_Manager::check_pro_status(),
 			'settings' => static::get_lazy_load_settings(),
 			'security' => [
 				'action'  => $instance->get_settings_id(),

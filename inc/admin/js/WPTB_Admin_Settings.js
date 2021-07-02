@@ -26471,6 +26471,15 @@ var _default = {
     message: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    getMessage: function getMessage() {
+      return this.disabled ? '' : this.message;
     }
   }
 };
@@ -26491,7 +26500,7 @@ exports.default = _default;
     "div",
     {
       staticClass: "wptb-tip-popup wptb-plugin-box-shadow-md",
-      attrs: { "data-tip-position": _vm.position, title: _vm.message }
+      attrs: { "data-tip-position": _vm.position, title: _vm.getMessage }
     },
     [_vm._v("?")]
   )
@@ -26532,6 +26541,10 @@ var _default = {
     message: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -26553,11 +26566,16 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "wptb-control-tip-wrapper" },
+    {
+      staticClass: "wptb-control-tip-wrapper",
+      attrs: { disabled: _vm.disabled }
+    },
     [
       _vm._t("default"),
       _vm._v(" "),
-      _c("tip-popup", { attrs: { message: _vm.message } })
+      _c("tip-popup", {
+        attrs: { disabled: _vm.disabled, message: _vm.message }
+      })
     ],
     2
   )
@@ -27143,6 +27161,10 @@ var _default = {
           name: null
         };
       }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -27187,6 +27209,11 @@ var _default = {
     });
   },
   watch: {
+    disabled: function disabled(n) {
+      if (n) {
+        this.setDrawerState(false);
+      }
+    },
     debunkedFilterText: function debunkedFilterText(n) {
       var _this2 = this;
 
@@ -27218,14 +27245,18 @@ var _default = {
       }, {});
     },
     toggleIconDrawer: function toggleIconDrawer() {
-      this.calculateDrawerPosition();
-      this.openDrawer = !this.openDrawer;
-      this.innerDrawerRef = this.$refs.drawerRefElement;
+      if (!this.disabled) {
+        this.calculateDrawerPosition();
+        this.openDrawer = !this.openDrawer;
+        this.innerDrawerRef = this.$refs.drawerRefElement;
+      }
     },
     setIcon: function setIcon(iconName, iconUrl) {
-      this.selectedIcon.url = iconUrl;
-      this.selectedIcon.name = iconName;
-      this.toggleIconDrawer();
+      if (!this.disabled) {
+        this.selectedIcon.url = iconUrl;
+        this.selectedIcon.name = iconName;
+        this.toggleIconDrawer();
+      }
     },
     observerVisible: function observerVisible() {
       this.paginationIndex += 1;
@@ -27262,132 +27293,147 @@ exports.default = _default;
     { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
     [
       _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c("p", { staticClass: "wptb-settings-item-title" }, [
-          _vm._v(_vm._s(_vm.label))
-        ]),
+        _c(
+          "p",
+          {
+            staticClass: "wptb-settings-item-title",
+            attrs: { "data-wptb-text-disabled": _vm.disabled }
+          },
+          [_vm._v(_vm._s(_vm.label))]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "wptb-icon-select-wrapper" }, [
-          _c("div", { staticClass: "wptb-icon-select-display" }, [
-            _c(
-              "div",
-              {
-                ref: "iconSelectButton",
-                staticClass: "wptb-icon-select-preview",
-                on: { click: _vm.toggleIconDrawer }
-              },
-              [_c("img", { attrs: { src: _vm.selectedIcon.url } })]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.openDrawer,
-                    expression: "openDrawer"
-                  }
-                ],
-                staticClass:
-                  "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
-                style: _vm.drawerPosition
-              },
-              [
-                _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model.trim",
-                        value: _vm.debunkedFilterText,
-                        expression: "debunkedFilterText",
-                        modifiers: { trim: true }
-                      }
-                    ],
-                    attrs: { type: "text", placeholder: "Search for icons..." },
-                    domProps: { value: _vm.debunkedFilterText },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.debunkedFilterText = $event.target.value.trim()
-                      },
-                      blur: function($event) {
-                        return _vm.$forceUpdate()
-                      }
+        _c(
+          "div",
+          {
+            staticClass: "wptb-icon-select-wrapper",
+            attrs: { disabled: _vm.disabled }
+          },
+          [
+            _c("div", { staticClass: "wptb-icon-select-display" }, [
+              _c(
+                "div",
+                {
+                  ref: "iconSelectButton",
+                  staticClass: "wptb-icon-select-preview",
+                  on: { click: _vm.toggleIconDrawer }
+                },
+                [_c("img", { attrs: { src: _vm.selectedIcon.url } })]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.openDrawer,
+                      expression: "openDrawer"
                     }
-                  })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    ref: "drawerRefElement",
-                    staticClass: "wptb-icon-previews"
-                  },
-                  [
-                    _c("div", {
-                      staticClass:
-                        "wptb-icon-select-drawer-preview wptb-icon-reset",
+                  ],
+                  staticClass:
+                    "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
+                  style: _vm.drawerPosition
+                },
+                [
+                  _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model.trim",
+                          value: _vm.debunkedFilterText,
+                          expression: "debunkedFilterText",
+                          modifiers: { trim: true }
+                        }
+                      ],
+                      attrs: {
+                        type: "text",
+                        placeholder: "Search for icons..."
+                      },
+                      domProps: { value: _vm.debunkedFilterText },
                       on: {
-                        click: function($event) {
-                          return _vm.setIcon("", "")
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.debunkedFilterText = $event.target.value.trim()
+                        },
+                        blur: function($event) {
+                          return _vm.$forceUpdate()
                         }
                       }
-                    }),
-                    _vm._v(" "),
-                    _vm._l(_vm.fullIconList(), function(iconUrl, name) {
-                      return _c(
-                        "div",
-                        {
-                          key: name,
-                          staticClass: "wptb-icon-select-drawer-preview",
-                          class: {
-                            "wptb-icon-preview-active":
-                              _vm.selectedIcon.name === name
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      ref: "drawerRefElement",
+                      staticClass: "wptb-icon-previews"
+                    },
+                    [
+                      _c("div", {
+                        staticClass:
+                          "wptb-icon-select-drawer-preview wptb-icon-reset",
+                        on: {
+                          click: function($event) {
+                            return _vm.setIcon("", "")
                           }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._l(_vm.fullIconList(), function(iconUrl, name) {
+                        return _c(
+                          "div",
+                          {
+                            key: name,
+                            staticClass: "wptb-icon-select-drawer-preview",
+                            class: {
+                              "wptb-icon-preview-active":
+                                _vm.selectedIcon.name === name
+                            }
+                          },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: iconUrl,
+                                title: name,
+                                draggable: false
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.setIcon(name, iconUrl)
+                                }
+                              }
+                            })
+                          ]
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "intersection-observer",
+                        {
+                          attrs: {
+                            "relative-element": _vm.innerDrawerRef,
+                            "force-hide": _vm.observerHide
+                          },
+                          on: { visible: _vm.observerVisible }
                         },
                         [
-                          _c("img", {
-                            attrs: {
-                              src: iconUrl,
-                              title: name,
-                              draggable: false
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.setIcon(name, iconUrl)
-                              }
-                            }
+                          _c("div", {
+                            staticClass: "wptb-icon-select-drawer-end"
                           })
                         ]
                       )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "intersection-observer",
-                      {
-                        attrs: {
-                          "relative-element": _vm.innerDrawerRef,
-                          "force-hide": _vm.observerHide
-                        },
-                        on: { visible: _vm.observerVisible }
-                      },
-                      [
-                        _c("div", {
-                          staticClass: "wptb-icon-select-drawer-end"
-                        })
-                      ]
-                    )
-                  ],
-                  2
-                )
-              ]
-            )
-          ])
-        ])
+                    ],
+                    2
+                  )
+                ]
+              )
+            ])
+          ]
+        )
       ])
     ]
   )
@@ -27479,6 +27525,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
     PanelIconSelect: _PanelIconSelect.default,
@@ -27502,6 +27568,9 @@ var _default = {
     };
   },
   computed: {
+    generalDisabledStatus: function generalDisabledStatus() {
+      return !this.settings.enabled;
+    },
     settingsDirtyStatus: function settingsDirtyStatus() {
       return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);
     },
@@ -27509,7 +27578,7 @@ var _default = {
       return WPTB_IconManager.getIconList();
     },
     iconSubOptionsDisableStatus: function iconSubOptionsDisableStatus() {
-      return !this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === '';
+      return this.generalDisabledStatus || !this.settings.iconName || this.settings.iconName.name === null || this.settings.iconName.name === '';
     }
   },
   methods: {
@@ -27634,12 +27703,25 @@ exports.default = _default;
                 "wptb-lazy-load-pro-options wptb-controls-for-settings"
             },
             [
+              !_vm.sectionData.proStatus
+                ? _c("div", {
+                    staticClass: "wptb-responsive-disabled-table-overlay",
+                    staticStyle: { opacity: "0.5" }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "control-tip-wrapper",
-                { attrs: { message: _vm.strings.visibilityPercentageTip } },
+                {
+                  attrs: {
+                    disabled: _vm.generalDisabledStatus,
+                    message: _vm.strings.visibilityPercentageTip
+                  }
+                },
                 [
                   _c("range-input", {
                     attrs: {
+                      disabled: _vm.generalDisabledStatus,
                       "post-fix": "%",
                       clamp: true,
                       min: 1,
@@ -27659,7 +27741,10 @@ exports.default = _default;
               ),
               _vm._v(" "),
               _c("color-picker", {
-                attrs: { label: _vm.strings.backgroundColor },
+                attrs: {
+                  disabled: _vm.generalDisabledStatus,
+                  label: _vm.strings.backgroundColor
+                },
                 model: {
                   value: _vm.settings.backgroundColor,
                   callback: function($$v) {
@@ -27670,7 +27755,11 @@ exports.default = _default;
               }),
               _vm._v(" "),
               _c("panel-icon-select", {
-                attrs: { label: _vm.strings.icon, icons: _vm.iconList },
+                attrs: {
+                  label: _vm.strings.icon,
+                  icons: _vm.iconList,
+                  disabled: _vm.generalDisabledStatus
+                },
                 model: {
                   value: _vm.settings.iconName,
                   callback: function($$v) {
@@ -27691,6 +27780,24 @@ exports.default = _default;
                     _vm.$set(_vm.settings, "iconColor", $$v)
                   },
                   expression: "settings.iconColor"
+                }
+              }),
+              _vm._v(" "),
+              _c("range-input", {
+                attrs: {
+                  "post-fix": "px",
+                  clamp: true,
+                  min: 1,
+                  max: 100,
+                  label: _vm.strings.iconSize,
+                  disabled: _vm.iconSubOptionsDisableStatus
+                },
+                model: {
+                  value: _vm.settings.iconSize,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconSize", $$v)
+                  },
+                  expression: "settings.iconSize"
                 }
               })
             ],

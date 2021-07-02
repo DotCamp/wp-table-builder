@@ -745,8 +745,9 @@ table.wptb-preview-table {
 }
 
 .wptb-lazy-load-buffer-icon-wrapper {
-    width: 20px;
-    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /*endregion*/

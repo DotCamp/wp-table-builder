@@ -3659,6 +3659,11 @@ wptb_shortcode_container_element {
     height: 100%;
 }
 
+.wptb-icon-select-wrapper[disabled] .wptb-icon-select-preview {
+    opacity: 0.2;
+    cursor: default;
+}
+
 .wptb-icon-select-display {
     width: 50px;
     height: 50px;
@@ -6492,6 +6497,8 @@ wptb_shortcode_container_element {
 
 .wptb-lazy-load-pro-options {
     color: var(--wptb-plugin-gray-500);
+    position: relative;
+    height: fit-content;
 }
 
 .wptb-lazy-load-pro-options > div {
@@ -6517,6 +6524,14 @@ wptb_shortcode_container_element {
 /*region control tip wrapper*/
 .wptb-control-tip-wrapper {
     position: relative;
+}
+
+.wptb-control-tip-wrapper[disabled] .wptb-tip-popup {
+    color: var(--wptb-plugin-gray-400);
+}
+
+.wptb-control-tip-wrapper[disabled] .wptb-tip-popup:hover {
+    background-color: inherit !important;
 }
 
 .wptb-tip-popup {
