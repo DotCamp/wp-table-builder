@@ -50,6 +50,7 @@ class Lazy_Load_Manager extends Setting_Base {
 		],
 		'iconColor'            => '#000000',
 		'iconSize'             => 20,
+		'iconAnimation'        => 'none',
 	];
 
 	/**
@@ -204,13 +205,20 @@ class Lazy_Load_Manager extends Setting_Base {
 			'backgroundColor'         => esc_html__( 'background color', 'wp-table-builder' ),
 			'icon'                    => esc_html__( 'Icon', 'wp-table-builder' ),
 			'iconColor'               => esc_html__( 'Icon Color', 'wp-table-builder' ),
-			'iconSize'               => esc_html__( 'icon size', 'wp-table-builder' ),
+			'iconSize'                => esc_html__( 'icon size', 'wp-table-builder' ),
+			'iconAnimation'           => esc_html__( 'Icon Animation', 'wp-table-builder' ),
 		] );
+
+		$extraDataSettingsOptions = [
+			'iconAnimationOptions' => [
+				'none' => esc_html__( 'None', 'wp-table-builder' )
+			]
+		];
 
 		$settings_data['data']['lazyLoad'] = [
 			'proStatus' => Addon_Manager::check_pro_status(),
-			'settings' => static::get_lazy_load_settings(),
-			'security' => [
+			'settings'  => array_merge( static::get_lazy_load_settings(), $extraDataSettingsOptions ),
+			'security'  => [
 				'action'  => $instance->get_settings_id(),
 				'nonce'   => wp_create_nonce( $instance->get_settings_id() ),
 				'ajaxUrl' => admin_url( 'admin-ajax.php' )

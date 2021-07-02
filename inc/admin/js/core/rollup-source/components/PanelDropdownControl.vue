@@ -4,7 +4,7 @@
 			<label
 				class="wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
 			>
-				<span style="font-size: 16px;">
+				<span style="font-size: 16px" :data-wptb-text-disabled="disabled">
 					{{ label }}
 				</span>
 				<select :disabled="disabled" v-model="innerValue">

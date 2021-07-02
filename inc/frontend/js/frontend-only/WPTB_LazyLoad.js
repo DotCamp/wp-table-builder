@@ -79,13 +79,16 @@
 				iconWrapper.style.width = `${options.iconSize}px`;
 				iconWrapper.style.height = `${options.iconSize}px`;
 
+				// assign icon animation related settings
+				iconWrapper.dataset.wptbLazyLoadIconAnimation = options.iconAnimation;
+
 				if (svgIcon) {
 					// assign icon color
 					svgIcon.style.fill = options.iconColor;
 				}
 			}
 
-			// add buffer element adjacent to image element
+			// insert buffer element adjacent to image element
 			imgElement.insertAdjacentElement('afterend', bufferElement);
 
 			imgElement.parentNode.classList.add(bufferElementContainerClass);

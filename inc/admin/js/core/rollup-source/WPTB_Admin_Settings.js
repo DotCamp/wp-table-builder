@@ -6,6 +6,7 @@ import Vue from 'vue';
 import PortalVue from 'portal-vue';
 import SettingsApp from './containers/SettingsApp.vue';
 import withStrings from './plugins/strings.js';
+import filters from './plugins/filters';
 
 const frontendData = { ...wptbAdminSettingsData };
 
@@ -21,6 +22,9 @@ Vue.use(withStrings, {
 
 // vue-portal initialization
 Vue.use(PortalVue);
+
+// general filters for components
+Vue.use(filters);
 
 // Vue instance
 new Vue({

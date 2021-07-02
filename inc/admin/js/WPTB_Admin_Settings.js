@@ -27450,7 +27450,196 @@ render._withStripped = true
           };
         })());
       
-},{"../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"components/LazyLoadSettings.vue":[function(require,module,exports) {
+},{"../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Base for left panel controls that will be hooked directly to Vue instances.
+ */
+var PanelControlBase = {
+  props: {
+    label: String,
+    value: {
+      type: null
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    dependsValue: {
+      type: null,
+      default: null
+    },
+    dependsCallback: {
+      type: Function,
+      default: function _default(d, c) {
+        return c;
+      }
+    }
+  },
+  data: function data() {
+    return {
+      innerValue: ''
+    };
+  },
+  model: {
+    prop: 'value',
+    event: 'valueChanged'
+  },
+  watch: {
+    value: function value(n) {
+      this.innerValue = n;
+    },
+    innerValue: function innerValue(n) {
+      this.$emit('valueChanged', n);
+    },
+    dependsValue: function dependsValue(n) {
+      if (n === null) {
+        return;
+      }
+
+      this.innerValue = this.dependsCallback.call(this, n, this.innerValue);
+    }
+  },
+  mounted: function mounted() {
+    this.innerValue = this.value;
+  }
+};
+var _default = PanelControlBase;
+exports.default = _default;
+},{}],"components/PanelDropdownControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    options: {
+      type: Object,
+      default: function _default() {}
+    }
+  },
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $14a0f3 = exports.default || module.exports;
+      
+      if (typeof $14a0f3 === 'function') {
+        $14a0f3 = $14a0f3.options;
+      }
+    
+        /* template */
+        Object.assign($14a0f3, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c(
+          "label",
+          {
+            staticClass:
+              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
+          },
+          [
+            _c(
+              "span",
+              {
+                staticStyle: { "font-size": "16px" },
+                attrs: { "data-wptb-text-disabled": _vm.disabled }
+              },
+              [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
+            ),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.innerValue,
+                    expression: "innerValue"
+                  }
+                ],
+                attrs: { disabled: _vm.disabled },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.innerValue = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              _vm._l(_vm.options, function(name, key) {
+                return _c("option", { key: key, domProps: { value: key } }, [
+                  _vm._v(_vm._s(_vm._f("cap")(name)))
+                ])
+              }),
+              0
+            )
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/LazyLoadSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27479,6 +27668,8 @@ var _ControlTipWrapper = _interopRequireDefault(require("./ControlTipWrapper"));
 var _ColorPicker = _interopRequireDefault(require("./ColorPicker"));
 
 var _PanelIconSelect = _interopRequireDefault(require("./leftPanel/PanelIconSelect"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27545,8 +27736,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
+    PanelDropdownControl: _PanelDropdownControl.default,
     PanelIconSelect: _PanelIconSelect.default,
     ColorPicker: _ColorPicker.default,
     ControlTipWrapper: _ControlTipWrapper.default,
@@ -27569,7 +27767,7 @@ var _default = {
   },
   computed: {
     generalDisabledStatus: function generalDisabledStatus() {
-      return !this.settings.enabled;
+      return this.isBusy() || !this.settings.enabled;
     },
     settingsDirtyStatus: function settingsDirtyStatus() {
       return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);
@@ -27799,6 +27997,21 @@ exports.default = _default;
                   },
                   expression: "settings.iconSize"
                 }
+              }),
+              _vm._v(" "),
+              _c("panel-dropdown-control", {
+                attrs: {
+                  label: _vm.strings.iconAnimation,
+                  options: _vm.settings.iconAnimationOptions,
+                  disabled: _vm.generalDisabledStatus
+                },
+                model: {
+                  value: _vm.settings.iconAnimation,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconAnimation", $$v)
+                  },
+                  expression: "settings.iconAnimation"
+                }
               })
             ],
             1
@@ -27836,7 +28049,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js","./RangeInput":"components/RangeInput.vue","./ControlTipWrapper":"components/ControlTipWrapper.vue","./ColorPicker":"components/ColorPicker.vue","./leftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js","./RangeInput":"components/RangeInput.vue","./ControlTipWrapper":"components/ControlTipWrapper.vue","./ColorPicker":"components/ColorPicker.vue","./leftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28126,6 +28339,34 @@ var _default = {
   install: install
 };
 exports.default = _default;
+},{}],"plugins/filters.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Plugin for reusable.
+ *
+ * @param {object} Vue Vue instance
+ * @param {object} options filter options
+ */
+// eslint-disable-next-line no-unused-vars
+function install(Vue, options) {
+  // capitalize filter
+  Vue.filter('cap', function (val) {
+    return val.split(' ').map(function (v) {
+      return v[0].toUpperCase() + v.slice(1);
+    }).join(' ');
+  });
+}
+
+var _default = {
+  install: install
+};
+exports.default = _default;
 },{}],"WPTB_Admin_Settings.js":[function(require,module,exports) {
 "use strict";
 
@@ -28136,6 +28377,8 @@ var _portalVue = _interopRequireDefault(require("portal-vue"));
 var _SettingsApp = _interopRequireDefault(require("./containers/SettingsApp.vue"));
 
 var _strings = _interopRequireDefault(require("./plugins/strings.js"));
+
+var _filters = _interopRequireDefault(require("./plugins/filters"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28156,7 +28399,10 @@ _vue.default.use(_strings.default, {
 }); // vue-portal initialization
 
 
-_vue.default.use(_portalVue.default); // Vue instance
+_vue.default.use(_portalVue.default); // general filters for components
+
+
+_vue.default.use(_filters.default); // Vue instance
 
 
 new _vue.default({
@@ -28169,5 +28415,5 @@ new _vue.default({
     pluginInfo: frontendData.pluginInfo
   }
 }).$mount(frontendData.data.mountId);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js"}]},{},["WPTB_Admin_Settings.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js","./plugins/filters":"plugins/filters.js"}]},{},["WPTB_Admin_Settings.js"], null)
 //# sourceMappingURL=/WPTB_Admin_Settings.js.map

@@ -50,6 +50,12 @@
 						:label="strings.iconSize"
 						:disabled="iconSubOptionsDisableStatus"
 					></range-input>
+					<panel-dropdown-control
+						:label="strings.iconAnimation"
+						:options="settings.iconAnimationOptions"
+						v-model="settings.iconAnimation"
+						:disabled="generalDisabledStatus"
+					></panel-dropdown-control>
 				</div>
 			</div>
 		</menu-content>
@@ -73,9 +79,11 @@ import RangeInput from './RangeInput';
 import ControlTipWrapper from './ControlTipWrapper';
 import ColorPicker from './ColorPicker';
 import PanelIconSelect from './leftPanel/PanelIconSelect';
+import PanelDropdownControl from './PanelDropdownControl';
 
 export default {
 	components: {
+		PanelDropdownControl,
 		PanelIconSelect,
 		ColorPicker,
 		ControlTipWrapper,
@@ -98,7 +106,7 @@ export default {
 	},
 	computed: {
 		generalDisabledStatus() {
-			return !this.settings.enabled;
+			return this.isBusy() || !this.settings.enabled;
 		},
 		settingsDirtyStatus() {
 			return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);

@@ -750,4 +750,52 @@ table.wptb-preview-table {
     align-items: center;
 }
 
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='heartBeat'] svg {
+    animation: wptb-beat 1.3s ease-out forwards infinite;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='rotate'] svg {
+    animation: wptb-rotate-simple 1s ease-out forwards infinite;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='jump'] svg {
+    animation: wptb-jump 0.5s ease-out alternate infinite;
+}
+
+@keyframes wptb-jump {
+    0% {
+        transform: translateY(25%);
+    }
+
+    100% {
+        transform: translateY(-25%);
+    }
+}
+
+
+@keyframes wptb-rotate-simple {
+    0% {
+        transform: rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+@keyframes wptb-beat {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.5);
+    }
+    30% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 /*endregion*/

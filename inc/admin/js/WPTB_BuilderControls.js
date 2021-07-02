@@ -19126,9 +19126,14 @@ exports.default = _default;
               "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
           },
           [
-            _c("span", { staticStyle: { "font-size": "16px" } }, [
-              _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
-            ]),
+            _c(
+              "span",
+              {
+                staticStyle: { "font-size": "16px" },
+                attrs: { "data-wptb-text-disabled": _vm.disabled }
+              },
+              [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
+            ),
             _vm._v(" "),
             _c(
               "select",
