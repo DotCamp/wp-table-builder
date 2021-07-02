@@ -19,16 +19,16 @@
 	</div>
 </template>
 <script>
-import withStore from '../mixins/withStore.js';
-import withMessage from '../mixins/withMessage';
-import MenuHeader from '../components/MenuHeader.vue';
-import Sections from '../components/Sections.vue';
-import MenuFooter from '../components/MenuFooter.vue';
-import MenuButton from '../components/MenuButton.vue';
-import GeneralSettings from './GeneralSettings';
-import VersionControlSettings from '../components/VersionControlSettings';
-import GeneralStylesSettings from '../components/Settings/GeneralStylesSettings';
-import LazyLoadSettings from '../components/LazyLoadSettings';
+import withStore from '$Mixins/withStore';
+import withMessage from '$Mixins/withMessage';
+import MenuHeader from '$Components/MenuHeader.vue';
+import Sections from '$Components/Sections.vue';
+import MenuFooter from '$Components/MenuFooter.vue';
+import MenuButton from '$Components/MenuButton.vue';
+import GeneralSettings from '$Containers/GeneralSettings';
+import VersionControlSettings from '$Components/VersionControlSettings';
+import GeneralStylesSettings from '$Components/Settings/GeneralStylesSettings';
+import LazyLoadSettings from '$LazyLoadSettings/LazyLoadSettings';
 
 export default {
 	props: ['sectionsData', 'settings', 'pluginInfo'],

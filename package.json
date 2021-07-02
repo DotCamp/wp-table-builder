@@ -18,7 +18,13 @@
     "preinstall": "npx npm-force-resolutions"
   },
   "alias": {
-    "vue": "./node_modules/vue/dist/vue.esm.js"
+    "vue": "./node_modules/vue/dist/vue.esm.js",
+    "$Components" : "./inc/admin/js/core/rollup-source/components",
+    "$Mixins" : "./inc/admin/js/core/rollup-source/mixins",
+    "$Settings" : "./inc/admin/js/core/rollup-source/components/Settings",
+    "$LeftPanel" : "./inc/admin/js/core/rollup-source/components/leftPanel",
+    "$LazyLoadSettings" : "./inc/admin/js/core/rollup-source/components/lazyLoadSettings",
+    "$Containers" : "./inc/admin/js/core/rollup-source/containers"
   },
   "resolutions": {
     "graceful-fs": "4.2.2"

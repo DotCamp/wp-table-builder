@@ -70,7 +70,7 @@
 			bufferElement.style.backgroundColor = options.backgroundColor;
 
 			if (options.iconSvg) {
-				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper">${options.iconSvg}</div>`;
+				bufferElement.innerHTML = `<div class="wptb-lazy-load-buffer-icon-wrapper wptb-plugin-filter-box-shadow-md">${options.iconSvg}</div>`;
 
 				const svgIcon = bufferElement.querySelector('svg');
 				const iconWrapper = bufferElement.querySelector('.wptb-lazy-load-buffer-icon-wrapper');

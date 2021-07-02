@@ -6493,7 +6493,30 @@ wptb_shortcode_container_element {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr;
+    gap: 10px;
 }
+
+.wptb-lazy-load-left-column {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(min-content, max-content) 1fr;
+    grid-template-areas: 'basic' 'preview';
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.wptb-lazy-load-basic-options {
+    grid-area: basic;
+}
+
+.wptb-lazy-load-preview-container {
+    grid-area: preview;
+    background-color: var(--wptb-plugin-gray-100);
+    width: 100%;
+    height: 100%;
+}
+
 
 .wptb-lazy-load-pro-options {
     color: var(--wptb-plugin-gray-500);

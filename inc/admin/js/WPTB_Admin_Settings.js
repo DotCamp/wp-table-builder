@@ -27639,7 +27639,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/LazyLoadSettings.vue":[function(require,module,exports) {
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/lazyLoadSettings/LazyLoadSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27651,28 +27651,31 @@ var _vueFragment = require("vue-fragment");
 
 var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
-var _MenuContent = _interopRequireDefault(require("./MenuContent"));
+var _MenuContent = _interopRequireDefault(require("$Components/MenuContent"));
 
-var _SettingsMenuSection = _interopRequireDefault(require("../mixins/SettingsMenuSection"));
+var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
 
-var _FooterButtons = _interopRequireDefault(require("./Settings/FooterButtons"));
+var _FooterButtons = _interopRequireDefault(require("$Components/Settings/FooterButtons"));
 
-var _MenuButton = _interopRequireDefault(require("./MenuButton"));
+var _MenuButton = _interopRequireDefault(require("$Components/MenuButton"));
 
-var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
 
-var _RangeInput = _interopRequireDefault(require("./RangeInput"));
+var _RangeInput = _interopRequireDefault(require("$Components/RangeInput"));
 
-var _ControlTipWrapper = _interopRequireDefault(require("./ControlTipWrapper"));
+var _ControlTipWrapper = _interopRequireDefault(require("$Components/ControlTipWrapper"));
 
-var _ColorPicker = _interopRequireDefault(require("./ColorPicker"));
+var _ColorPicker = _interopRequireDefault(require("$Components/ColorPicker"));
 
-var _PanelIconSelect = _interopRequireDefault(require("./leftPanel/PanelIconSelect"));
+var _PanelIconSelect = _interopRequireDefault(require("$LeftPanel/PanelIconSelect"));
 
-var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+var _PanelDropdownControl = _interopRequireDefault(require("$Components/PanelDropdownControl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
 //
 //
 //
@@ -27827,14 +27830,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f21a49 = exports.default || module.exports;
+        var $d7e6f4 = exports.default || module.exports;
       
-      if (typeof $f21a49 === 'function') {
-        $f21a49 = $f21a49.options;
+      if (typeof $d7e6f4 === 'function') {
+        $d7e6f4 = $d7e6f4.options;
       }
     
         /* template */
-        Object.assign($f21a49, (function () {
+        Object.assign($d7e6f4, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -27844,54 +27847,58 @@ exports.default = _default;
     [
       _c("menu-content", { attrs: { center: true } }, [
         _c("div", { staticClass: "wptb-lazy-load-wrapper" }, [
-          _c("div", { staticClass: "wptb-lazy-load-basic-options" }, [
-            _c("label", [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.settings.enabled,
-                    expression: "settings.enabled"
-                  }
-                ],
-                attrs: { type: "checkbox" },
-                domProps: {
-                  checked: Array.isArray(_vm.settings.enabled)
-                    ? _vm._i(_vm.settings.enabled, null) > -1
-                    : _vm.settings.enabled
-                },
-                on: {
-                  change: function($event) {
-                    var $$a = _vm.settings.enabled,
-                      $$el = $event.target,
-                      $$c = $$el.checked ? true : false
-                    if (Array.isArray($$a)) {
-                      var $$v = null,
-                        $$i = _vm._i($$a, $$v)
-                      if ($$el.checked) {
-                        $$i < 0 &&
-                          _vm.$set(_vm.settings, "enabled", $$a.concat([$$v]))
+          _c("div", { staticClass: "wptb-lazy-load-left-column" }, [
+            _c("div", { staticClass: "wptb-lazy-load-basic-options" }, [
+              _c("label", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.settings.enabled,
+                      expression: "settings.enabled"
+                    }
+                  ],
+                  attrs: { type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.settings.enabled)
+                      ? _vm._i(_vm.settings.enabled, null) > -1
+                      : _vm.settings.enabled
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.settings.enabled,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 &&
+                            _vm.$set(_vm.settings, "enabled", $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            _vm.$set(
+                              _vm.settings,
+                              "enabled",
+                              $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                            )
+                        }
                       } else {
-                        $$i > -1 &&
-                          _vm.$set(
-                            _vm.settings,
-                            "enabled",
-                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                          )
+                        _vm.$set(_vm.settings, "enabled", $$c)
                       }
-                    } else {
-                      _vm.$set(_vm.settings, "enabled", $$c)
                     }
                   }
-                }
-              }),
-              _vm._v(
-                "\n\t\t\t\t\t" +
-                  _vm._s(_vm.strings.enableLazyLoad) +
-                  "\n\t\t\t\t"
-              )
-            ])
+                }),
+                _vm._v(
+                  "\n\t\t\t\t\t\t" +
+                    _vm._s(_vm.strings.enableLazyLoad) +
+                    "\n\t\t\t\t\t"
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "wptb-lazy-load-preview-container" })
           ]),
           _vm._v(" "),
           _c(
@@ -28003,7 +28010,7 @@ exports.default = _default;
                 attrs: {
                   label: _vm.strings.iconAnimation,
                   options: _vm.settings.iconAnimationOptions,
-                  disabled: _vm.generalDisabledStatus
+                  disabled: _vm.iconSubOptionsDisableStatus
                 },
                 model: {
                   value: _vm.settings.iconAnimation,
@@ -28049,7 +28056,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","./MenuContent":"components/MenuContent.vue","../mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./Settings/FooterButtons":"components/Settings/FooterButtons.vue","./MenuButton":"components/MenuButton.vue","../mixins/withMessage":"mixins/withMessage.js","./RangeInput":"components/RangeInput.vue","./ControlTipWrapper":"components/ControlTipWrapper.vue","./ColorPicker":"components/ColorPicker.vue","./leftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","$Components/MenuContent":"components/MenuContent.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Components/Settings/FooterButtons":"components/Settings/FooterButtons.vue","$Components/MenuButton":"components/MenuButton.vue","$Mixins/withMessage":"mixins/withMessage.js","$Components/RangeInput":"components/RangeInput.vue","$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue"}],"containers/SettingsApp.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28057,25 +28064,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _withStore = _interopRequireDefault(require("../mixins/withStore.js"));
+var _withStore = _interopRequireDefault(require("$Mixins/withStore"));
 
-var _withMessage = _interopRequireDefault(require("../mixins/withMessage"));
+var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
 
-var _MenuHeader = _interopRequireDefault(require("../components/MenuHeader.vue"));
+var _MenuHeader = _interopRequireDefault(require("$Components/MenuHeader.vue"));
 
-var _Sections = _interopRequireDefault(require("../components/Sections.vue"));
+var _Sections = _interopRequireDefault(require("$Components/Sections.vue"));
 
-var _MenuFooter = _interopRequireDefault(require("../components/MenuFooter.vue"));
+var _MenuFooter = _interopRequireDefault(require("$Components/MenuFooter.vue"));
 
-var _MenuButton = _interopRequireDefault(require("../components/MenuButton.vue"));
+var _MenuButton = _interopRequireDefault(require("$Components/MenuButton.vue"));
 
-var _GeneralSettings = _interopRequireDefault(require("./GeneralSettings"));
+var _GeneralSettings = _interopRequireDefault(require("$Containers/GeneralSettings"));
 
-var _VersionControlSettings = _interopRequireDefault(require("../components/VersionControlSettings"));
+var _VersionControlSettings = _interopRequireDefault(require("$Components/VersionControlSettings"));
 
-var _GeneralStylesSettings = _interopRequireDefault(require("../components/Settings/GeneralStylesSettings"));
+var _GeneralStylesSettings = _interopRequireDefault(require("$Components/Settings/GeneralStylesSettings"));
 
-var _LazyLoadSettings = _interopRequireDefault(require("../components/LazyLoadSettings"));
+var _LazyLoadSettings = _interopRequireDefault(require("$LazyLoadSettings/LazyLoadSettings"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28304,7 +28311,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withStore.js":"mixins/withStore.js","../mixins/withMessage":"mixins/withMessage.js","../components/MenuHeader.vue":"components/MenuHeader.vue","../components/Sections.vue":"components/Sections.vue","../components/MenuFooter.vue":"components/MenuFooter.vue","../components/MenuButton.vue":"components/MenuButton.vue","./GeneralSettings":"containers/GeneralSettings.vue","../components/VersionControlSettings":"components/VersionControlSettings.vue","../components/Settings/GeneralStylesSettings":"components/Settings/GeneralStylesSettings.vue","../components/LazyLoadSettings":"components/LazyLoadSettings.vue"}],"plugins/strings.js":[function(require,module,exports) {
+},{"$Mixins/withStore":"mixins/withStore.js","$Mixins/withMessage":"mixins/withMessage.js","$Components/MenuHeader.vue":"components/MenuHeader.vue","$Components/Sections.vue":"components/Sections.vue","$Components/MenuFooter.vue":"components/MenuFooter.vue","$Components/MenuButton.vue":"components/MenuButton.vue","$Containers/GeneralSettings":"containers/GeneralSettings.vue","$Components/VersionControlSettings":"components/VersionControlSettings.vue","$Components/Settings/GeneralStylesSettings":"components/Settings/GeneralStylesSettings.vue","$LazyLoadSettings/LazyLoadSettings":"components/lazyLoadSettings/LazyLoadSettings.vue"}],"plugins/strings.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

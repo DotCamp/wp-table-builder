@@ -2,11 +2,14 @@
 	<fragment>
 		<menu-content :center="true">
 			<div class="wptb-lazy-load-wrapper">
-				<div class="wptb-lazy-load-basic-options">
-					<label>
-						<input type="checkbox" v-model="settings.enabled" />
-						{{ strings.enableLazyLoad }}
-					</label>
+				<div class="wptb-lazy-load-left-column">
+					<div class="wptb-lazy-load-basic-options">
+						<label>
+							<input type="checkbox" v-model="settings.enabled" />
+							{{ strings.enableLazyLoad }}
+						</label>
+					</div>
+					<div class="wptb-lazy-load-preview-container"></div>
 				</div>
 				<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
 					<div
@@ -54,7 +57,7 @@
 						:label="strings.iconAnimation"
 						:options="settings.iconAnimationOptions"
 						v-model="settings.iconAnimation"
-						:disabled="generalDisabledStatus"
+						:disabled="iconSubOptionsDisableStatus"
 					></panel-dropdown-control>
 				</div>
 			</div>
@@ -70,16 +73,16 @@
 <script>
 import { Fragment } from 'vue-fragment';
 import deepmerge from 'deepmerge';
-import MenuContent from './MenuContent';
-import SettingsMenuSection from '../mixins/SettingsMenuSection';
-import FooterButtons from './Settings/FooterButtons';
-import MenuButton from './MenuButton';
-import withMessage from '../mixins/withMessage';
-import RangeInput from './RangeInput';
-import ControlTipWrapper from './ControlTipWrapper';
-import ColorPicker from './ColorPicker';
-import PanelIconSelect from './leftPanel/PanelIconSelect';
-import PanelDropdownControl from './PanelDropdownControl';
+import MenuContent from '$Components/MenuContent';
+import SettingsMenuSection from '$Mixins/SettingsMenuSection';
+import FooterButtons from '$Components/Settings/FooterButtons';
+import MenuButton from '$Components/MenuButton';
+import withMessage from '$Mixins/withMessage';
+import RangeInput from '$Components/RangeInput';
+import ControlTipWrapper from '$Components/ControlTipWrapper';
+import ColorPicker from '$Components/ColorPicker';
+import PanelIconSelect from '$LeftPanel/PanelIconSelect';
+import PanelDropdownControl from '$Components/PanelDropdownControl';
 
 export default {
 	components: {
