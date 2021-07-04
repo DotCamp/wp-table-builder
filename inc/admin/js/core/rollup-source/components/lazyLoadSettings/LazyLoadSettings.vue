@@ -12,7 +12,10 @@
 					<div
 						class="wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
 					>
-						<lazy-load-preview :default-html="sectionData.previewTable"></lazy-load-preview>
+						<lazy-load-preview
+							:settings="settings"
+							:default-html="sectionData.previewTable"
+						></lazy-load-preview>
 					</div>
 				</div>
 				<lazy-load-pro-options :settings="settings" :template-data="templateData"></lazy-load-pro-options>

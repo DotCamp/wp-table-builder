@@ -1,5 +1,9 @@
 (function assignToGlobal(key, context, factory) {
-	context[key] = factory();
+	if (typeof exports === 'object' && typeof module !== 'undefined') {
+		module.exports = factory();
+	} else {
+		context[key] = factory();
+	}
 	// eslint-disable-next-line no-restricted-globals
 })('WPTB_LazyLoad', self || global, () => {
 	/**
@@ -9,6 +13,16 @@
 	 */
 	// eslint-disable-next-line camelcase
 	function WPTB_LazyLoad() {
+		/**
+		 * Lazy load default options.
+		 *
+		 * @type {Object}
+		 */
+		const defaultOptions = {
+			// this mode will be used to manually load image elements
+			forceMode: false,
+		};
+
 		/**
 		 * Lazy load instance options.
 		 *
@@ -24,6 +38,13 @@
 		const cachedScrollData = {
 			lastYPosition: 0,
 		};
+
+		/**
+		 * All available table image elements.
+		 *
+		 * @type {Array}
+		 */
+		const allImages = [];
 
 		const bufferElementClass = 'wptb-lazy-load-buffer-element';
 		const bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
@@ -124,7 +145,7 @@
 		 * @param {number} currentYPos current position of page
 		 */
 		const processIndividualImageElement = (imgElement, currentYPos) => {
-			if (isElementVisible(imgElement, currentYPos)) {
+			if (options.forceMode || isElementVisible(imgElement, currentYPos)) {
 				imgElement.addEventListener('load', imageElementLoadCallback);
 
 				// eslint-disable-next-line no-param-reassign
@@ -147,8 +168,9 @@
 		 * @param {Array} imgElements image elements array
 		 * @param {number} currentYPos current position of page
 		 * @param {boolean} firstTimeProcess whether process is run for the first time or not
+		 * @param {boolean} forceLoad whether to force load images or not with force mode enabled
 		 */
-		const processImageElements = (imgElements, currentYPos, firstTimeProcess = false) => {
+		const processImageElements = (imgElements, currentYPos, firstTimeProcess = false, forceLoad = false) => {
 			// eslint-disable-next-line array-callback-return
 			imgElements
 				.filter((element) => {
@@ -162,8 +184,9 @@
 						addBufferElement(img);
 					}
 
-					// TODO [erdembircan] uncomment for production
-					// processIndividualImageElement(img, currentYPos);
+					if (!options.forceMode || forceLoad) {
+						processIndividualImageElement(img, currentYPos);
+					}
 				});
 
 			updateLastScrollY(window.scrollY);
@@ -211,19 +234,29 @@
 			);
 
 			const allTables = [...tables, ...shadowTables];
-			const allImages = getAllTableImages(allTables);
+			allImages.push(...getAllTableImages(allTables));
 
 			// process image elements on window load
 			processImageElements(allImages, windowCurrentYPosition(), true);
 
-			// eslint-disable-next-line @wordpress/no-global-event-listener
-			window.addEventListener(
-				'scroll',
-				() => {
-					processImageElements(allImages, windowCurrentYPosition());
-				},
-				{ passive: true }
-			);
+			// only bind to scroll event if force mode is not enabled
+			if (!options.forceMode) {
+				// eslint-disable-next-line @wordpress/no-global-event-listener
+				window.addEventListener(
+					'scroll',
+					() => {
+						processImageElements(allImages, windowCurrentYPosition());
+					},
+					{ passive: true }
+				);
+			}
+		};
+
+		/**
+		 * Force load all images.
+		 */
+		this.forceLoadImages = () => {
+			processImageElements(allImages, null, false, true);
 		};
 
 		/**
@@ -233,7 +266,7 @@
 		 */
 		this.init = (initOptions) => {
 			if (initOptions && typeof initOptions === 'object') {
-				options = { ...options, ...initOptions };
+				options = { ...defaultOptions, ...initOptions };
 
 				if (options.enabled) {
 					assignLazyLoadToElements();

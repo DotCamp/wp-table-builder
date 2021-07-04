@@ -17787,6 +17787,8 @@ exports.default = void 0;
 //
 //
 //
+//
+//
 var _default = {
   props: {
     click: {
@@ -17799,11 +17801,22 @@ var _default = {
     size: {
       type: String,
       default: 'fit-content'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     buttonClass: function buttonClass() {
       return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      if (!this.disabled) {
+        this.click();
+      }
     }
   }
 };
@@ -17825,10 +17838,11 @@ exports.default = _default;
     {
       staticClass: "wptb-plugin-button-material",
       class: _vm.buttonClass,
+      attrs: { disabled: _vm.disabled },
       on: {
         click: function($event) {
           $event.preventDefault()
-          return _vm.click($event)
+          return _vm.handleClick($event)
         }
       }
     },

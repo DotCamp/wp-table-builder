@@ -4150,6 +4150,15 @@ wptb_shortcode_container_element {
     transform: scale(0.95);
 }
 
+.wptb-plugin-button-material[disabled] {
+    background-color: var(--wptb-plugin-gray-400) !important;
+    cursor: not-allowed;
+}
+
+.wptb-plugin-button-material[disabled]:active {
+    transform: none;
+}
+
 .wptb-plugin-button-material-fit-content {
     width: fit-content !important;
 }
@@ -6517,7 +6526,14 @@ wptb_shortcode_container_element {
     height: 100%;
 }
 
-.wptb-lazy-load-preview {
+.wptb-lazy-load-preview img {
+    width: 150px;
+    height: 150px;
+}
+
+.wptb-lazy-load-preview-button-container > div {
+    margin: 10px;
+    /*flex-wrap: nowrap;*/
 }
 
 .wptb-lazy-load-pro-options {
@@ -6525,7 +6541,6 @@ wptb_shortcode_container_element {
     overflow: auto;
     color: var(--wptb-plugin-gray-500);
     position: relative;
-    /*height: fit-content;*/
 }
 
 .wptb-lazy-load-pro-options > div {
@@ -6586,5 +6601,100 @@ wptb_shortcode_container_element {
     background-color: var(--wptb-plugin-gray-200);
 }
 
+
+/*endregion*/
+
+/*region lazy load frontend styles*/
+.wptb-lazy-load-img[data-wptb-lazy-load-status='false'] {
+    opacity: 0;
+}
+
+.wptb-lazy-load-img[data-wptb-lazy-load-status='true'] {
+    opacity: 1;
+}
+
+.wptb-lazy-load-buffer-element-container {
+    position: relative;
+}
+
+.wptb-lazy-load-buffer-element {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='heartBeat'] svg {
+    animation: wptb-beat 1.3s ease-out forwards infinite;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='rotate'] svg {
+    animation: wptb-rotate-simple 1s ease-out forwards infinite;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='jump'] svg {
+    animation: wptb-jump 0.5s ease-out alternate infinite;
+}
+
+.wptb-lazy-load-buffer-icon-wrapper[data-wptb-lazy-load-icon-animation='flip'] svg {
+    animation: wptb-flip 1s ease-out forwards infinite;
+}
+
+@keyframes wptb-flip {
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes wptb-jump {
+    0% {
+        transform: translateY(25%);
+    }
+
+    100% {
+        transform: translateY(-25%);
+    }
+}
+
+
+@keyframes wptb-rotate-simple {
+    0% {
+        transform: rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
+
+@keyframes wptb-beat {
+    0% {
+        transform: scale(1);
+    }
+    15% {
+        transform: scale(1.5);
+    }
+    30% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 /*endregion*/

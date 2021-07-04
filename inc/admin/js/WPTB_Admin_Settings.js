@@ -25931,7 +25931,305 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
-},{}],"components/lazyLoadSettings/LazyLoadPreview.vue":[function(require,module,exports) {
+},{}],"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js":[function(require,module,exports) {
+var global = arguments[3];
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+(function assignToGlobal(key, context, factory) {
+  if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
+    module.exports = factory();
+  } else {
+    context[key] = factory();
+  } // eslint-disable-next-line no-restricted-globals
+
+})('WPTB_LazyLoad', self || global, function () {
+  /**
+   * WPTB Lazy load functionality module.
+   *
+   * @class
+   */
+  // eslint-disable-next-line camelcase
+  function WPTB_LazyLoad() {
+    /**
+     * Lazy load default options.
+     *
+     * @type {Object}
+     */
+    var defaultOptions = {
+      // this mode will be used to manually load image elements
+      forceMode: false
+    };
+    /**
+     * Lazy load instance options.
+     *
+     * @type {Object}
+     */
+
+    var options = {};
+    /**
+     * Scroll related cached data.
+     *
+     * @type {Object}
+     */
+
+    var cachedScrollData = {
+      lastYPosition: 0
+    };
+    /**
+     * All available table image elements.
+     *
+     * @type {Array}
+     */
+
+    var allImages = [];
+    var bufferElementClass = 'wptb-lazy-load-buffer-element';
+    var bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
+    /**
+     * Whether user scrolling down or up.
+     *
+     * @return {boolean} scrolling down or up
+     */
+
+    var isGoingDown = function isGoingDown() {
+      return window.scrollY - cachedScrollData.lastYPosition >= 0;
+    };
+    /**
+     * Calculate visibility of image element depending on current position of page.
+     *
+     * @param {HTMLElement} imgElement image element
+     * @param {number} currentYPos current position of page
+     *
+     * @return {boolean} is element visible or not
+     */
+
+
+    var isElementVisible = function isElementVisible(imgElement, currentYPos) {
+      var _imgElement$getBoundi = imgElement.getBoundingClientRect(),
+          top = _imgElement$getBoundi.top,
+          height = _imgElement$getBoundi.height,
+          bottom = _imgElement$getBoundi.bottom;
+
+      var _options = options,
+          visibilityPercentage = _options.visibilityPercentage;
+      var visibilityRangeTop = top + height * (visibilityPercentage / 100);
+      var visibilityRangeBottom = bottom - height * (visibilityPercentage / 100);
+      var visibilityVariable = isGoingDown() ? visibilityRangeTop : visibilityRangeBottom;
+      return visibilityVariable >= 0 && visibilityVariable <= currentYPos;
+    };
+    /**
+     * Add a buffer element and associated options to image container.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    var addBufferElement = function addBufferElement(imgElement) {
+      var bufferElement = document.createElement('div');
+      bufferElement.classList.add(bufferElementClass); // assign color to buffer element
+
+      bufferElement.style.backgroundColor = options.backgroundColor;
+
+      if (options.iconSvg) {
+        bufferElement.innerHTML = "<div class=\"wptb-lazy-load-buffer-icon-wrapper wptb-plugin-filter-box-shadow-md\">".concat(options.iconSvg, "</div>");
+        var svgIcon = bufferElement.querySelector('svg');
+        var iconWrapper = bufferElement.querySelector('.wptb-lazy-load-buffer-icon-wrapper'); // assign icon size
+
+        iconWrapper.style.width = "".concat(options.iconSize, "px");
+        iconWrapper.style.height = "".concat(options.iconSize, "px"); // assign icon animation related settings
+
+        iconWrapper.dataset.wptbLazyLoadIconAnimation = options.iconAnimation;
+
+        if (svgIcon) {
+          // assign icon color
+          svgIcon.style.fill = options.iconColor;
+        }
+      } // insert buffer element adjacent to image element
+
+
+      imgElement.insertAdjacentElement('afterend', bufferElement);
+      imgElement.parentNode.classList.add(bufferElementContainerClass);
+    };
+    /**
+     * Remove buffer element and associated options.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    var removeBufferElement = function removeBufferElement(imgElement) {
+      var parentNode = imgElement.parentNode;
+      var bufferElement = parentNode.querySelector(".".concat(bufferElementClass));
+
+      if (bufferElement) {
+        parentNode.removeChild(bufferElement);
+        parentNode.classList.remove(bufferElementContainerClass);
+      }
+    };
+
+    var imageElementLoadCallback = function imageElementLoadCallback(e) {
+      e.target.dataset.wptbLazyLoadStatus = 'true'; // remove buffer element and associated options
+
+      removeBufferElement(e.target);
+      e.target.removeEventListener('load', imageElementLoadCallback);
+    };
+    /**
+     * Process image element for visibility.
+     *
+     * @param {HTMLElement} imgElement image element
+     * @param {number} currentYPos current position of page
+     */
+
+
+    var processIndividualImageElement = function processIndividualImageElement(imgElement, currentYPos) {
+      if (options.forceMode || isElementVisible(imgElement, currentYPos)) {
+        imgElement.addEventListener('load', imageElementLoadCallback); // eslint-disable-next-line no-param-reassign
+
+        imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
+      }
+    };
+    /**
+     * Update cached last scroll position.
+     *
+     * @param {number} position y position
+     */
+
+
+    var updateLastScrollY = function updateLastScrollY(position) {
+      cachedScrollData.lastYPosition = position;
+    };
+    /**
+     * Process array of image elements for visibility.
+     *
+     * @param {Array} imgElements image elements array
+     * @param {number} currentYPos current position of page
+     * @param {boolean} firstTimeProcess whether process is run for the first time or not
+     * @param {boolean} forceLoad whether to force load images or not with force mode enabled
+     */
+
+
+    var processImageElements = function processImageElements(imgElements, currentYPos) {
+      var firstTimeProcess = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var forceLoad = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      // eslint-disable-next-line array-callback-return
+      imgElements.filter(function (element) {
+        return element.dataset.wptbLazyLoadStatus === 'false';
+      }) // eslint-disable-next-line array-callback-return
+      .map(function (img) {
+        // updateBackgroundColor(img);
+        if (firstTimeProcess) {
+          addBufferElement(img);
+        }
+
+        if (!options.forceMode || forceLoad) {
+          processIndividualImageElement(img, currentYPos);
+        }
+      });
+      updateLastScrollY(window.scrollY);
+    };
+    /**
+     * Get window current y position.
+     *
+     * @return {number} y position
+     */
+
+
+    var windowCurrentYPosition = function windowCurrentYPosition() {
+      return window.innerHeight;
+    };
+    /**
+     * Get all image elements inside table.
+     *
+     * @param {Array} allTables table array
+     * @return {Array} table image elements
+     */
+
+
+    var getAllTableImages = function getAllTableImages(allTables) {
+      return allTables.reduce(function (carry, tableElement) {
+        var images = Array.from(tableElement.querySelectorAll('.wptb-lazy-load-img'));
+        carry.push.apply(carry, _toConsumableArray(images));
+        return carry;
+      }, []);
+    };
+    /**
+     * Assign lazy load functionality to table elements.
+     */
+
+
+    var assignLazyLoadToElements = function assignLazyLoadToElements() {
+      var tables = Array.from(document.querySelectorAll('.wptb-preview-table')); // tables under shadow roots
+
+      var shadowTables = Array.from(document.querySelectorAll('.wptb-shadow-root-container')).reduce(function (carry, shadowRootContainer) {
+        var table = shadowRootContainer.shadowRoot.querySelector('.wptb-preview-table');
+
+        if (table) {
+          carry.push(table);
+        }
+
+        return carry;
+      }, []);
+      var allTables = [].concat(_toConsumableArray(tables), _toConsumableArray(shadowTables));
+      allImages.push.apply(allImages, _toConsumableArray(getAllTableImages(allTables))); // process image elements on window load
+
+      processImageElements(allImages, windowCurrentYPosition(), true); // only bind to scroll event if force mode is not enabled
+
+      if (!options.forceMode) {
+        // eslint-disable-next-line @wordpress/no-global-event-listener
+        window.addEventListener('scroll', function () {
+          processImageElements(allImages, windowCurrentYPosition());
+        }, {
+          passive: true
+        });
+      }
+    };
+    /**
+     * Force load all images.
+     */
+
+
+    this.forceLoadImages = function () {
+      processImageElements(allImages, null, false, true);
+    };
+    /**
+     * Initialize lazy load.
+     *
+     * @param {Object} initOptions options object
+     */
+
+
+    this.init = function (initOptions) {
+      if (initOptions && _typeof(initOptions) === 'object') {
+        options = _objectSpread(_objectSpread({}, defaultOptions), initOptions);
+
+        if (options.enabled) {
+          assignLazyLoadToElements();
+        }
+      }
+    };
+  } // eslint-disable-next-line camelcase
+
+
+  return new WPTB_LazyLoad();
+});
+},{}],"components/MaterialButton.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25942,11 +26240,114 @@ exports.default = void 0;
 //
 //
 //
+//
 var _default = {
+  props: {
+    click: {
+      type: Function,
+      default: function _default() {
+        // eslint-disable-next-line no-console
+        console.log('Material button clicked');
+      }
+    },
+    size: {
+      type: String,
+      default: 'fit-content'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    buttonClass: function buttonClass() {
+      return ["wptb-plugin-button-material-".concat(this.size)];
+    }
+  },
+  methods: {
+    handleClick: function handleClick() {
+      if (!this.disabled) {
+        this.click();
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $3afa55 = exports.default || module.exports;
+      
+      if (typeof $3afa55 === 'function') {
+        $3afa55 = $3afa55.options;
+      }
+    
+        /* template */
+        Object.assign($3afa55, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "wptb-plugin-button-material",
+      class: _vm.buttonClass,
+      attrs: { disabled: _vm.disabled },
+      on: {
+        click: function($event) {
+          $event.preventDefault()
+          return _vm.handleClick($event)
+        }
+      }
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/lazyLoadSettings/LazyLoadPreview.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _WPTB_LazyLoad = _interopRequireDefault(require("$FrontEndOnly/WPTB_LazyLoad"));
+
+var _MaterialButton = _interopRequireDefault(require("../MaterialButton"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = {
+  components: {
+    MaterialButton: _MaterialButton.default
+  },
   props: {
     defaultHtml: {
       type: String,
       required: true
+    },
+    settings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
     }
   },
   data: function data() {
@@ -25959,7 +26360,55 @@ var _default = {
 
     this.$nextTick(function () {
       _this.previewHtml = _this.defaultHtml;
+
+      _this.reloadPreview();
     });
+  },
+  watch: {
+    reviewHtml: function reviewHtml() {
+      this.reloadPreview();
+    },
+    settings: {
+      handler: function handler() {
+        this.reloadPreview();
+      },
+      deep: true
+    }
+  },
+  computed: {
+    buttonStatus: function buttonStatus() {
+      return !this.settings.enabled;
+    }
+  },
+  methods: {
+    generatePreviewTable: function generatePreviewTable() {
+      var range = document.createRange();
+      range.setStart(this.$refs.previewContainer, 0);
+      var previewTable = range.createContextualFragment(this.previewHtml); // clear contents of container
+
+      if (this.$refs.previewContainer.childNodes[0]) {
+        this.$refs.previewContainer.innerHTML = '';
+      }
+
+      this.$refs.previewContainer.appendChild(previewTable);
+    },
+    reloadPreview: function reloadPreview() {
+      var _this2 = this;
+
+      // // sync current selected icon svg
+      WPTB_IconManager.getIcon(this.settings.iconName.name, null, true).then(function (iconSvg) {
+        _this2.settings.iconSvg = iconSvg;
+
+        _this2.generatePreviewTable();
+
+        _WPTB_LazyLoad.default.init(_objectSpread({
+          forceMode: true
+        }, _this2.settings));
+      });
+    },
+    loadImages: function loadImages() {
+      _WPTB_LazyLoad.default.forceLoadImages();
+    }
   }
 };
 exports.default = _default;
@@ -25975,10 +26424,34 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", {
-    staticClass: "wptb-lazy-load-preview",
-    domProps: { innerHTML: _vm._s(_vm.previewHtml) }
-  })
+  return _c("div", [
+    _c("div", {
+      ref: "previewContainer",
+      staticClass: "wptb-lazy-load-preview wptb-preview-table"
+    }),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass:
+          "wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
+      },
+      [
+        _c(
+          "material-button",
+          { attrs: { disabled: _vm.buttonStatus, click: _vm.reloadPreview } },
+          [_vm._v("Reset")]
+        ),
+        _vm._v(" "),
+        _c(
+          "material-button",
+          { attrs: { disabled: _vm.buttonStatus, click: _vm.loadImages } },
+          [_vm._v("Load Image")]
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -25992,7 +26465,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/TipPopup.vue":[function(require,module,exports) {
+},{"$FrontEndOnly/WPTB_LazyLoad":"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js","../MaterialButton":"components/MaterialButton.vue"}],"components/TipPopup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28241,6 +28714,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
 var _default = {
   components: {
     LazyLoadBasicOptions: _LazyLoadBasicOptions.default,
@@ -28358,7 +28834,10 @@ exports.default = _default;
                 },
                 [
                   _c("lazy-load-preview", {
-                    attrs: { "default-html": _vm.sectionData.previewTable }
+                    attrs: {
+                      settings: _vm.settings,
+                      "default-html": _vm.sectionData.previewTable
+                    }
                   })
                 ],
                 1

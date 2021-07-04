@@ -24,7 +24,8 @@
     "$Settings" : "./inc/admin/js/core/rollup-source/components/Settings",
     "$LeftPanel" : "./inc/admin/js/core/rollup-source/components/leftPanel",
     "$LazyLoadSettings" : "./inc/admin/js/core/rollup-source/components/lazyLoadSettings",
-    "$Containers" : "./inc/admin/js/core/rollup-source/containers"
+    "$Containers" : "./inc/admin/js/core/rollup-source/containers",
+    "$FrontEndOnly" : "./inc/frontend/js/frontend-only"
   },
   "resolutions": {
     "graceful-fs": "4.2.2"
