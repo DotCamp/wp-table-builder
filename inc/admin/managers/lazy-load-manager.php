@@ -10,6 +10,7 @@ use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
+use WP_Table_Builder as NS;
 use function add_action;
 use function add_filter;
 use function admin_url;
@@ -113,12 +114,12 @@ class Lazy_Load_Manager extends Setting_Base {
 	 *
 	 * @return string table shortcode html
 	 */
-	public static function table_html_shortcode( $html ) {
-		$is_lazy_load_enabled = static::get_instance()->get_settings()['enabled'];
+	public static function table_html_shortcode( $html, $force = false ) {
+		$is_lazy_load_enabled = $force || static::get_instance()->get_settings()['enabled'];
 
 		if ( $is_lazy_load_enabled ) {
 			$dom_handler   = new DOMDocument();
-			$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED || LIBXML_HTML_NODEFDTD || LIBXML_NOWARNING || LIBXML_NOERROR );
+			$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
 			if ( $handle_status ) {
 				$dom_query      = new DOMXPath( $dom_handler );
@@ -194,11 +195,11 @@ class Lazy_Load_Manager extends Setting_Base {
 
 		$settings_data['sectionsData']['lazyLoad'] = [
 			'label'    => esc_html__( 'lazy load', 'wp-table-builder' ),
-			'priority' => - 1,
+			'priority' => 10,
 		];
 
 		$settings_data['strings'] = array_merge( $settings_data['strings'], [
-			'enableLazyLoad'          => esc_html__( 'Enable lazy load for images in tables', 'wp-table-builder' ),
+			'enableLazyLoad'          => esc_html__( 'Enable lazy load for table image elements', 'wp-table-builder' ),
 			'submit'                  => esc_html__( 'submit', 'wp-table-builder' ),
 			'visibilityPercentage'    => esc_html__( 'visibility percentage', 'wp-table-builder' ),
 			'visibilityPercentageTip' => esc_html__( 'Height of image that is visible on screen to trigger lazy load', 'wp-table-builder' ),
@@ -207,6 +208,8 @@ class Lazy_Load_Manager extends Setting_Base {
 			'iconColor'               => esc_html__( 'Icon Color', 'wp-table-builder' ),
 			'iconSize'                => esc_html__( 'icon size', 'wp-table-builder' ),
 			'iconAnimation'           => esc_html__( 'Icon Animation', 'wp-table-builder' ),
+			'generalOptions'          => esc_html__( 'general options', 'wp-table-builder' ),
+			'iconOptions'             => esc_html__( 'icon options', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [
@@ -215,14 +218,17 @@ class Lazy_Load_Manager extends Setting_Base {
 			]
 		];
 
+		$settings_preview_table = sprintf( '<div class="wptb-image-wrapper"><img src="%1s"></div>', path_join( NS\WP_TABLE_BUILDER_URL, 'assets/images/wptb-logo-new.png' ) );
+
 		$settings_data['data']['lazyLoad'] = [
-			'proStatus' => Addon_Manager::check_pro_status(),
-			'settings'  => array_merge( static::get_lazy_load_settings(), $extraDataSettingsOptions ),
-			'security'  => [
+			'proStatus'    => Addon_Manager::check_pro_status(),
+			'settings'     => array_merge( static::get_lazy_load_settings(), $extraDataSettingsOptions ),
+			'security'     => [
 				'action'  => $instance->get_settings_id(),
 				'nonce'   => wp_create_nonce( $instance->get_settings_id() ),
 				'ajaxUrl' => admin_url( 'admin-ajax.php' )
-			]
+			],
+			'previewTable' => static::table_html_shortcode( $settings_preview_table, true )
 		];
 
 		return $settings_data;

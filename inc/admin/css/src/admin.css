@@ -6504,6 +6504,7 @@ wptb_shortcode_container_element {
     justify-content: center;
     align-items: center;
     gap: 10px;
+    overflow: auto;
 }
 
 .wptb-lazy-load-basic-options {
@@ -6512,16 +6513,19 @@ wptb_shortcode_container_element {
 
 .wptb-lazy-load-preview-container {
     grid-area: preview;
-    background-color: var(--wptb-plugin-gray-100);
     width: 100%;
     height: 100%;
 }
 
+.wptb-lazy-load-preview {
+}
 
 .wptb-lazy-load-pro-options {
+    padding: 0 10px;
+    overflow: auto;
     color: var(--wptb-plugin-gray-500);
     position: relative;
-    height: fit-content;
+    /*height: fit-content;*/
 }
 
 .wptb-lazy-load-pro-options > div {

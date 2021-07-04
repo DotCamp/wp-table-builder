@@ -4,62 +4,18 @@
 			<div class="wptb-lazy-load-wrapper">
 				<div class="wptb-lazy-load-left-column">
 					<div class="wptb-lazy-load-basic-options">
-						<label>
-							<input type="checkbox" v-model="settings.enabled" />
-							{{ strings.enableLazyLoad }}
-						</label>
+						<lazy-load-basic-options
+							:template-data="templateData"
+							:settings="settings"
+						></lazy-load-basic-options>
 					</div>
-					<div class="wptb-lazy-load-preview-container"></div>
-				</div>
-				<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
 					<div
-						v-if="!sectionData.proStatus"
-						class="wptb-responsive-disabled-table-overlay"
-						style="opacity: 0.5"
-					></div>
-					<control-tip-wrapper :disabled="generalDisabledStatus" :message="strings.visibilityPercentageTip">
-						<range-input
-							:disabled="generalDisabledStatus"
-							v-model="settings.visibilityPercentage"
-							post-fix="%"
-							:clamp="true"
-							:min="1"
-							:max="100"
-							:label="strings.visibilityPercentage"
-						></range-input>
-					</control-tip-wrapper>
-					<color-picker
-						:disabled="generalDisabledStatus"
-						v-model="settings.backgroundColor"
-						:label="strings.backgroundColor"
-					></color-picker>
-					<panel-icon-select
-						v-model="settings.iconName"
-						:label="strings.icon"
-						:icons="iconList"
-						:disabled="generalDisabledStatus"
-					></panel-icon-select>
-					<color-picker
-						:disabled="iconSubOptionsDisableStatus"
-						v-model="settings.iconColor"
-						:label="strings.iconColor"
-					></color-picker>
-					<range-input
-						v-model="settings.iconSize"
-						post-fix="px"
-						:clamp="true"
-						:min="1"
-						:max="100"
-						:label="strings.iconSize"
-						:disabled="iconSubOptionsDisableStatus"
-					></range-input>
-					<panel-dropdown-control
-						:label="strings.iconAnimation"
-						:options="settings.iconAnimationOptions"
-						v-model="settings.iconAnimation"
-						:disabled="iconSubOptionsDisableStatus"
-					></panel-dropdown-control>
+						class="wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
+					>
+						<lazy-load-preview :default-html="sectionData.previewTable"></lazy-load-preview>
+					</div>
 				</div>
+				<lazy-load-pro-options :settings="settings" :template-data="templateData"></lazy-load-pro-options>
 			</div>
 		</menu-content>
 		<footer-buttons>
@@ -78,23 +34,19 @@ import SettingsMenuSection from '$Mixins/SettingsMenuSection';
 import FooterButtons from '$Components/Settings/FooterButtons';
 import MenuButton from '$Components/MenuButton';
 import withMessage from '$Mixins/withMessage';
-import RangeInput from '$Components/RangeInput';
-import ControlTipWrapper from '$Components/ControlTipWrapper';
-import ColorPicker from '$Components/ColorPicker';
-import PanelIconSelect from '$LeftPanel/PanelIconSelect';
-import PanelDropdownControl from '$Components/PanelDropdownControl';
+import LazyLoadPreview from '$LazyLoadSettings/LazyLoadPreview';
+import LazyLoadProOptions from '$LazyLoadSettings/LazyLoadProOptions';
+import LazyLoadBasicOptions from '$LazyLoadSettings/LazyLoadBasicOptions';
 
 export default {
 	components: {
-		PanelDropdownControl,
-		PanelIconSelect,
-		ColorPicker,
-		ControlTipWrapper,
+		LazyLoadBasicOptions,
+		LazyLoadProOptions,
+		LazyLoadPreview,
 		MenuButton,
 		FooterButtons,
 		MenuContent,
 		Fragment,
-		RangeInput,
 	},
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
@@ -108,22 +60,8 @@ export default {
 		};
 	},
 	computed: {
-		generalDisabledStatus() {
-			return this.isBusy() || !this.settings.enabled;
-		},
 		settingsDirtyStatus() {
 			return JSON.stringify(this.settings) !== JSON.stringify(this.initialSettings);
-		},
-		iconList() {
-			return WPTB_IconManager.getIconList();
-		},
-		iconSubOptionsDisableStatus() {
-			return (
-				this.generalDisabledStatus ||
-				!this.settings.iconName ||
-				this.settings.iconName.name === null ||
-				this.settings.iconName.name === ''
-			);
 		},
 	},
 	methods: {
