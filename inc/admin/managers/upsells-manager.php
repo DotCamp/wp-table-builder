@@ -107,19 +107,30 @@ class Upsells_Manager {
 	 *
 	 * @param string $message message
 	 * @param string $url url for the message
+	 * @param boolean $echo whether echo to buffer or get string representation of upsell element
 	 */
-	protected static function prepare_upsell_element( $message, $url ) {
-		?>
-        <a class="wptb-upsells-anchor" href="<?php echo esc_url( $url ); ?>"
-           target="_blank">
-            <div class="wptb-upsells-wrapper">
-                <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
-						"<div>$message</div>",
-						static::$upsell_messages['generic_end']
-					] ); ?></div>
-            </div>
-        </a>
-		<?php
+	public static final function prepare_upsell_element( $message, $url, $echo = true ) {
+		if ( ! Addon_Manager::check_pro_status() ):
+			ob_start();
+			?>
+            <a class="wptb-upsells-anchor" href="<?php echo esc_url( $url ); ?>"
+               target="_blank">
+                <div class="wptb-upsells-wrapper">
+                    <div class="wptb-upsells-message-holder wptb-plugin-box-shadow-md"><?php echo join( ' ', [
+							"<div>$message</div>",
+							static::$upsell_messages['generic_end']
+						] ); ?></div>
+                </div>
+            </a>
+			<?php
+			if ( $echo ) {
+				ob_end_flush();
+			} else {
+				return ob_get_clean();
+			}
+		endif;
+
+		return '';
 	}
 
 	/**

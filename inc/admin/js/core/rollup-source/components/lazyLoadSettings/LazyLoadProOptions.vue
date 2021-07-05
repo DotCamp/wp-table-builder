@@ -3,6 +3,7 @@
 		<lazy-load-pro-disabled-overlay
 			:visibility="!sectionData.proStatus"
 			grid-area="right"
+			v-html="sectionData.upsellsElement"
 		></lazy-load-pro-disabled-overlay>
 		<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
 			<section-group-collapse

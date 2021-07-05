@@ -228,7 +228,8 @@ class Lazy_Load_Manager extends Setting_Base {
 				'nonce'   => wp_create_nonce( $instance->get_settings_id() ),
 				'ajaxUrl' => admin_url( 'admin-ajax.php' )
 			],
-			'previewTable' => static::table_html_shortcode( $settings_preview_table, true )
+			'previewTable' => static::table_html_shortcode( $settings_preview_table, true ),
+			'upsellsElement' => Upsells_Manager::prepare_upsell_element(esc_html__('For more lazy load customizations' ,'wp-table-builder'), 'https://wptablebuilder.com/pricing/' , false)
 		];
 
 		return $settings_data;

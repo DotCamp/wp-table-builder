@@ -1,6 +1,10 @@
 <template>
 	<div class="wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
 		<div class="wptb-lazy-load-preview-header">{{ strings.preview }}</div>
+		<lazy-load-pro-disabled-overlay
+			grid-area="preview"
+			:visibility="!sectionData.proStatus || !sectionData.settings.enabled"
+		></lazy-load-pro-disabled-overlay>
 		<div ref="previewContainer" class="wptb-lazy-load-preview wptb-preview-table"></div>
 		<div class="wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
 			<material-button :disabled="buttonStatus" :click="reloadPreview">Reset</material-button>
@@ -14,9 +18,10 @@
 import WPTB_LazyLoad from '$FrontEndOnly/WPTB_LazyLoad';
 import MaterialButton from '$Components/MaterialButton';
 import SettingsMenuSection from '$Mixins/SettingsMenuSection';
+import LazyLoadProDisabledOverlay from './LazyLoadProDisabledOverlay';
 
 export default {
-	components: { MaterialButton },
+	components: { LazyLoadProDisabledOverlay, MaterialButton },
 	props: {
 		defaultHtml: {
 			type: String,
@@ -39,11 +44,18 @@ export default {
 		reviewHtml() {
 			this.reloadPreview();
 		},
-		settings: {
+		sectionData: {
 			handler() {
 				this.reloadPreview();
 			},
 			deep: true,
+		},
+		'sectionData.settings.enabled': {
+			handler(n) {
+				if (!n) {
+					this.clearPreview();
+				}
+			},
 		},
 	},
 	computed: {
@@ -52,16 +64,19 @@ export default {
 		},
 	},
 	methods: {
+		clearPreview() {
+			// clear contents of container
+			if (this.$refs.previewContainer.childNodes[0]) {
+				this.$refs.previewContainer.innerHTML = '';
+			}
+		},
 		generatePreviewTable() {
 			const range = document.createRange();
 			range.setStart(this.$refs.previewContainer, 0);
 
 			const previewTable = range.createContextualFragment(this.previewHtml);
 
-			// clear contents of container
-			if (this.$refs.previewContainer.childNodes[0]) {
-				this.$refs.previewContainer.innerHTML = '';
-			}
+			this.clearPreview();
 
 			this.$refs.previewContainer.appendChild(previewTable);
 		},

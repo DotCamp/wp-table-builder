@@ -26314,6 +26314,73 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+var _default = {
+  props: {
+    gridArea: {
+      type: String,
+      required: true
+    },
+    visibility: {
+      type: Boolean,
+      default: true
+    }
+  },
+  computed: {
+    style: function style() {
+      return {
+        gridArea: this.gridArea
+      };
+    }
+  }
+};
+exports.default = _default;
+        var $9717ed = exports.default || module.exports;
+      
+      if (typeof $9717ed === 'function') {
+        $9717ed = $9717ed.options;
+      }
+    
+        /* template */
+        Object.assign($9717ed, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.visibility
+    ? _c(
+        "div",
+        {
+          staticClass: "wptb-lazy-load-pro-disabled-overlay",
+          style: _vm.style
+        },
+        [_vm._t("default")],
+        2
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/lazyLoadSettings/LazyLoadPreview.vue":[function(require,module,exports) {
 "use strict";
 
@@ -26328,6 +26395,8 @@ var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton
 
 var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
 
+var _LazyLoadProDisabledOverlay = _interopRequireDefault(require("./LazyLoadProDisabledOverlay"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -26338,6 +26407,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = {
   components: {
+    LazyLoadProDisabledOverlay: _LazyLoadProDisabledOverlay.default,
     MaterialButton: _MaterialButton.default
   },
   props: {
@@ -26365,11 +26435,18 @@ var _default = {
     reviewHtml: function reviewHtml() {
       this.reloadPreview();
     },
-    settings: {
+    sectionData: {
       handler: function handler() {
         this.reloadPreview();
       },
       deep: true
+    },
+    'sectionData.settings.enabled': {
+      handler: function handler(n) {
+        if (!n) {
+          this.clearPreview();
+        }
+      }
     }
   },
   computed: {
@@ -26378,15 +26455,17 @@ var _default = {
     }
   },
   methods: {
-    generatePreviewTable: function generatePreviewTable() {
-      var range = document.createRange();
-      range.setStart(this.$refs.previewContainer, 0);
-      var previewTable = range.createContextualFragment(this.previewHtml); // clear contents of container
-
+    clearPreview: function clearPreview() {
+      // clear contents of container
       if (this.$refs.previewContainer.childNodes[0]) {
         this.$refs.previewContainer.innerHTML = '';
       }
-
+    },
+    generatePreviewTable: function generatePreviewTable() {
+      var range = document.createRange();
+      range.setStart(this.$refs.previewContainer, 0);
+      var previewTable = range.createContextualFragment(this.previewHtml);
+      this.clearPreview();
       this.$refs.previewContainer.appendChild(previewTable);
     },
     reloadPreview: function reloadPreview() {
@@ -26433,6 +26512,14 @@ exports.default = _default;
         _vm._v(_vm._s(_vm.strings.preview))
       ]),
       _vm._v(" "),
+      _c("lazy-load-pro-disabled-overlay", {
+        attrs: {
+          "grid-area": "preview",
+          visibility:
+            !_vm.sectionData.proStatus || !_vm.sectionData.settings.enabled
+        }
+      }),
+      _vm._v(" "),
       _c("div", {
         ref: "previewContainer",
         staticClass: "wptb-lazy-load-preview wptb-preview-table"
@@ -26459,7 +26546,8 @@ exports.default = _default;
         ],
         1
       )
-    ]
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -26474,7 +26562,7 @@ render._withStripped = true
           };
         })());
       
-},{"$FrontEndOnly/WPTB_LazyLoad":"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js","$Components/MaterialButton":"components/MaterialButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js"}],"components/TipPopup.vue":[function(require,module,exports) {
+},{"$FrontEndOnly/WPTB_LazyLoad":"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js","$Components/MaterialButton":"components/MaterialButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","./LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue"}],"components/TipPopup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28294,73 +28382,6 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-//
-//
-//
-//
-var _default = {
-  props: {
-    gridArea: {
-      type: String,
-      required: true
-    },
-    visibility: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    style: function style() {
-      return {
-        gridArea: this.gridArea
-      };
-    }
-  }
-};
-exports.default = _default;
-        var $9717ed = exports.default || module.exports;
-      
-      if (typeof $9717ed === 'function') {
-        $9717ed = $9717ed.options;
-      }
-    
-        /* template */
-        Object.assign($9717ed, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _vm.visibility
-    ? _c(
-        "div",
-        {
-          staticClass: "wptb-lazy-load-pro-disabled-overlay",
-          style: _vm.style
-        },
-        [_vm._t("default")],
-        2
-      )
-    : _vm._e()
-}
-var staticRenderFns = []
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
 },{}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
 "use strict";
 
@@ -28389,6 +28410,7 @@ var _LazyLoadProDisabledOverlay = _interopRequireDefault(require("$LazyLoadSetti
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -28496,7 +28518,8 @@ exports.default = _default;
     "fragment",
     [
       _c("lazy-load-pro-disabled-overlay", {
-        attrs: { visibility: !_vm.sectionData.proStatus, "grid-area": "right" }
+        attrs: { visibility: !_vm.sectionData.proStatus, "grid-area": "right" },
+        domProps: { innerHTML: _vm._s(_vm.sectionData.upsellsElement) }
       }),
       _vm._v(" "),
       _c(
