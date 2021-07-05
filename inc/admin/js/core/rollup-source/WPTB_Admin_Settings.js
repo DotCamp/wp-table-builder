@@ -4,6 +4,7 @@
 
 import Vue from 'vue';
 import PortalVue from 'portal-vue';
+import Fragment from 'vue-fragment';
 import SettingsApp from './containers/SettingsApp.vue';
 import withStrings from './plugins/strings.js';
 import filters from './plugins/filters';
@@ -25,6 +26,9 @@ Vue.use(PortalVue);
 
 // general filters for components
 Vue.use(filters);
+
+// vue fragment initialization
+Vue.use(Fragment.Plugin);
 
 // Vue instance
 new Vue({

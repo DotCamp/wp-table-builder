@@ -12606,7 +12606,136 @@ exports.MountingPortal = MountingPortal;
 exports.Wormhole = wormhole;
 
 
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"mixins/withStore.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js"}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
+
+function _defineProperty(e, n, t) {
+  return n in e ? Object.defineProperty(e, n, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[n] = t, e;
+}
+
+function _objectSpread(e) {
+  for (var n = 1; n < arguments.length; n++) {
+    var t = null != arguments[n] ? arguments[n] : {},
+        r = Object.keys(t);
+    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
+      return Object.getOwnPropertyDescriptor(t, e).enumerable;
+    }))), r.forEach(function (n) {
+      _defineProperty(e, n, t[n]);
+    });
+  }
+
+  return e;
+}
+
+var freeze = function (e, n, t) {
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    get: function () {
+      return t;
+    },
+    set: function (e) {
+      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
+    }
+  });
+},
+    unfreeze = function (e, n) {
+  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    writable: !0,
+    value: t
+  });
+},
+    component = {
+  abstract: !0,
+  name: "Fragment",
+  props: {
+    name: {
+      type: String,
+      default: function () {
+        return Math.floor(Date.now() * Math.random()).toString(16);
+      }
+    }
+  },
+  mounted: function () {
+    var e = this.$el,
+        n = e.parentNode,
+        t = document.createComment("fragment#".concat(this.name, "#head")),
+        r = document.createComment("fragment#".concat(this.name, "#tail"));
+    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.insertBefore = function (t, r) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.removeChild = function (e) {
+      n.removeChild(e), unfreeze(e, "parentNode");
+    }, Array.from(e.childNodes).forEach(function (n) {
+      return e.appendChild(n);
+    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
+    var o = n.insertBefore;
+
+    n.insertBefore = function (r, i) {
+      o.call(n, r, i !== e ? i : t);
+    };
+
+    var i = n.removeChild;
+
+    n.removeChild = function (a) {
+      if (a === e) {
+        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
+
+        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
+      } else i.call(n, a);
+    };
+  },
+  render: function (e) {
+    var n = this,
+        t = this.$slots.default;
+    return t && t.length && t.forEach(function (e) {
+      return e.data = _objectSpread({}, e.data, {
+        attrs: _objectSpread({
+          fragment: n.name
+        }, (e.data || {}).attrs)
+      });
+    }), e("div", {
+      attrs: {
+        fragment: this.name
+      }
+    }, t);
+  }
+};
+
+function ssr(e, n) {
+  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
+}
+
+var Fragment = component,
+    SSR = ssr,
+    Plugin = {
+  install: function (e) {
+    e.component("fragment", component);
+  }
+},
+    index = {
+  Fragment: component,
+  Plugin: Plugin,
+  SSR: ssr
+};
+exports.Plugin = Plugin;
+exports.SSR = SSR;
+exports.Fragment = Fragment;
+var _default = index;
+exports.default = _default;
+},{}],"mixins/withStore.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13362,136 +13491,7 @@ render._withStripped = true
           };
         })());
       
-},{"./MessageDisplay.vue":"components/MessageDisplay.vue","./MenuButton":"components/MenuButton.vue"}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
-
-function _defineProperty(e, n, t) {
-  return n in e ? Object.defineProperty(e, n, {
-    value: t,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : e[n] = t, e;
-}
-
-function _objectSpread(e) {
-  for (var n = 1; n < arguments.length; n++) {
-    var t = null != arguments[n] ? arguments[n] : {},
-        r = Object.keys(t);
-    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
-      return Object.getOwnPropertyDescriptor(t, e).enumerable;
-    }))), r.forEach(function (n) {
-      _defineProperty(e, n, t[n]);
-    });
-  }
-
-  return e;
-}
-
-var freeze = function (e, n, t) {
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    get: function () {
-      return t;
-    },
-    set: function (e) {
-      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
-    }
-  });
-},
-    unfreeze = function (e, n) {
-  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    writable: !0,
-    value: t
-  });
-},
-    component = {
-  abstract: !0,
-  name: "Fragment",
-  props: {
-    name: {
-      type: String,
-      default: function () {
-        return Math.floor(Date.now() * Math.random()).toString(16);
-      }
-    }
-  },
-  mounted: function () {
-    var e = this.$el,
-        n = e.parentNode,
-        t = document.createComment("fragment#".concat(this.name, "#head")),
-        r = document.createComment("fragment#".concat(this.name, "#tail"));
-    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.insertBefore = function (t, r) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.removeChild = function (e) {
-      n.removeChild(e), unfreeze(e, "parentNode");
-    }, Array.from(e.childNodes).forEach(function (n) {
-      return e.appendChild(n);
-    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
-    var o = n.insertBefore;
-
-    n.insertBefore = function (r, i) {
-      o.call(n, r, i !== e ? i : t);
-    };
-
-    var i = n.removeChild;
-
-    n.removeChild = function (a) {
-      if (a === e) {
-        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
-
-        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
-      } else i.call(n, a);
-    };
-  },
-  render: function (e) {
-    var n = this,
-        t = this.$slots.default;
-    return t && t.length && t.forEach(function (e) {
-      return e.data = _objectSpread({}, e.data, {
-        attrs: _objectSpread({
-          fragment: n.name
-        }, (e.data || {}).attrs)
-      });
-    }), e("div", {
-      attrs: {
-        fragment: this.name
-      }
-    }, t);
-  }
-};
-
-function ssr(e, n) {
-  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
-}
-
-var Fragment = component,
-    SSR = ssr,
-    Plugin = {
-  install: function (e) {
-    e.component("fragment", component);
-  }
-},
-    index = {
-  Fragment: component,
-  Plugin: Plugin,
-  SSR: ssr
-};
-exports.Plugin = Plugin;
-exports.SSR = SSR;
-exports.Fragment = Fragment;
-var _default = index;
-exports.default = _default;
-},{}],"components/SettingCard.vue":[function(require,module,exports) {
+},{"./MessageDisplay.vue":"components/MessageDisplay.vue","./MenuButton":"components/MenuButton.vue"}],"components/SettingCard.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26324,7 +26324,9 @@ exports.default = void 0;
 
 var _WPTB_LazyLoad = _interopRequireDefault(require("$FrontEndOnly/WPTB_LazyLoad"));
 
-var _MaterialButton = _interopRequireDefault(require("../MaterialButton"));
+var _MaterialButton = _interopRequireDefault(require("$Components/MaterialButton"));
+
+var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26342,14 +26344,9 @@ var _default = {
     defaultHtml: {
       type: String,
       required: true
-    },
-    settings: {
-      type: Object,
-      default: function _default() {
-        return {};
-      }
     }
   },
+  mixins: [_SettingsMenuSection.default],
   data: function data() {
     return {
       previewHtml: ''
@@ -26377,7 +26374,7 @@ var _default = {
   },
   computed: {
     buttonStatus: function buttonStatus() {
-      return !this.settings.enabled;
+      return !this.sectionData.proStatus || !this.sectionData.settings.enabled;
     }
   },
   methods: {
@@ -26396,14 +26393,15 @@ var _default = {
       var _this2 = this;
 
       // // sync current selected icon svg
-      WPTB_IconManager.getIcon(this.settings.iconName.name, null, true).then(function (iconSvg) {
-        _this2.settings.iconSvg = iconSvg;
+      WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true).then(function (iconSvg) {
+        _this2.sectionData.settings.iconSvg = iconSvg;
 
         _this2.generatePreviewTable();
 
         _WPTB_LazyLoad.default.init(_objectSpread({
           forceMode: true
-        }, _this2.settings));
+        }, _this2.sectionData.settings));
+      }).catch(function () {// do nothing
       });
     },
     loadImages: function loadImages() {
@@ -26424,34 +26422,45 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", {
-      ref: "previewContainer",
-      staticClass: "wptb-lazy-load-preview wptb-preview-table"
-    }),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass:
-          "wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
-      },
-      [
-        _c(
-          "material-button",
-          { attrs: { disabled: _vm.buttonStatus, click: _vm.reloadPreview } },
-          [_vm._v("Reset")]
-        ),
-        _vm._v(" "),
-        _c(
-          "material-button",
-          { attrs: { disabled: _vm.buttonStatus, click: _vm.loadImages } },
-          [_vm._v("Load Image")]
-        )
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
+    },
+    [
+      _c("div", { staticClass: "wptb-lazy-load-preview-header" }, [
+        _vm._v(_vm._s(_vm.strings.preview))
+      ]),
+      _vm._v(" "),
+      _c("div", {
+        ref: "previewContainer",
+        staticClass: "wptb-lazy-load-preview wptb-preview-table"
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass:
+            "wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
+        },
+        [
+          _c(
+            "material-button",
+            { attrs: { disabled: _vm.buttonStatus, click: _vm.reloadPreview } },
+            [_vm._v("Reset")]
+          ),
+          _vm._v(" "),
+          _c(
+            "material-button",
+            { attrs: { disabled: _vm.buttonStatus, click: _vm.loadImages } },
+            [_vm._v("Load Image")]
+          )
+        ],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -26465,7 +26474,7 @@ render._withStripped = true
           };
         })());
       
-},{"$FrontEndOnly/WPTB_LazyLoad":"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js","../MaterialButton":"components/MaterialButton.vue"}],"components/TipPopup.vue":[function(require,module,exports) {
+},{"$FrontEndOnly/WPTB_LazyLoad":"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js","$Components/MaterialButton":"components/MaterialButton.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js"}],"components/TipPopup.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28285,6 +28294,73 @@ render._withStripped = true
           };
         })());
       
+},{}],"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+var _default = {
+  props: {
+    gridArea: {
+      type: String,
+      required: true
+    },
+    visibility: {
+      type: Boolean,
+      default: true
+    }
+  },
+  computed: {
+    style: function style() {
+      return {
+        gridArea: this.gridArea
+      };
+    }
+  }
+};
+exports.default = _default;
+        var $9717ed = exports.default || module.exports;
+      
+      if (typeof $9717ed === 'function') {
+        $9717ed = $9717ed.options;
+      }
+    
+        /* template */
+        Object.assign($9717ed, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.visibility
+    ? _c(
+        "div",
+        {
+          staticClass: "wptb-lazy-load-pro-disabled-overlay",
+          style: _vm.style
+        },
+        [_vm._t("default")],
+        2
+      )
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
 "use strict";
 
@@ -28309,8 +28385,15 @@ var _SectionGroupCollapse = _interopRequireDefault(require("$LeftPanel/SectionGr
 
 var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
 
+var _LazyLoadProDisabledOverlay = _interopRequireDefault(require("$LazyLoadSettings/LazyLoadProDisabledOverlay"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -28375,6 +28458,7 @@ var _default = {
     }
   },
   components: {
+    LazyLoadProDisabledOverlay: _LazyLoadProDisabledOverlay.default,
     ControlTipWrapper: _ControlTipWrapper.default,
     RangeInput: _RangeInput.default,
     ColorPicker: _ColorPicker.default,
@@ -28409,138 +28493,148 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    { staticClass: "wptb-lazy-load-pro-options wptb-controls-for-settings" },
+    "fragment",
     [
-      !_vm.sectionData.proStatus
-        ? _c("div", {
-            staticClass: "wptb-responsive-disabled-table-overlay",
-            staticStyle: { opacity: "0.5" }
-          })
-        : _vm._e(),
+      _c("lazy-load-pro-disabled-overlay", {
+        attrs: { visibility: !_vm.sectionData.proStatus, "grid-area": "right" }
+      }),
       _vm._v(" "),
       _c(
-        "section-group-collapse",
+        "div",
         {
-          attrs: {
-            label: _vm.strings.generalOptions,
-            "start-collapsed": false,
-            sectionId: "lazyLoadProGeneralOptions"
-          }
+          staticClass: "wptb-lazy-load-pro-options wptb-controls-for-settings"
         },
         [
           _c(
-            "control-tip-wrapper",
+            "section-group-collapse",
             {
               attrs: {
-                disabled: _vm.generalDisabledStatus,
-                message: _vm.strings.visibilityPercentageTip
+                label: _vm.strings.generalOptions,
+                "start-collapsed": false,
+                sectionId: "lazyLoadProGeneralOptions"
               }
             },
             [
-              _c("range-input", {
+              _c(
+                "control-tip-wrapper",
+                {
+                  attrs: {
+                    disabled: _vm.generalDisabledStatus,
+                    message: _vm.strings.visibilityPercentageTip
+                  }
+                },
+                [
+                  _c("range-input", {
+                    attrs: {
+                      disabled: _vm.generalDisabledStatus,
+                      "post-fix": "%",
+                      clamp: true,
+                      min: 1,
+                      max: 100,
+                      label: _vm.strings.visibilityPercentage
+                    },
+                    model: {
+                      value: _vm.settings.visibilityPercentage,
+                      callback: function($$v) {
+                        _vm.$set(_vm.settings, "visibilityPercentage", $$v)
+                      },
+                      expression: "settings.visibilityPercentage"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("color-picker", {
                 attrs: {
                   disabled: _vm.generalDisabledStatus,
-                  "post-fix": "%",
-                  clamp: true,
-                  min: 1,
-                  max: 100,
-                  label: _vm.strings.visibilityPercentage
+                  label: _vm.strings.backgroundColor
                 },
                 model: {
-                  value: _vm.settings.visibilityPercentage,
+                  value: _vm.settings.backgroundColor,
                   callback: function($$v) {
-                    _vm.$set(_vm.settings, "visibilityPercentage", $$v)
+                    _vm.$set(_vm.settings, "backgroundColor", $$v)
                   },
-                  expression: "settings.visibilityPercentage"
+                  expression: "settings.backgroundColor"
                 }
               })
             ],
             1
           ),
           _vm._v(" "),
-          _c("color-picker", {
-            attrs: {
-              disabled: _vm.generalDisabledStatus,
-              label: _vm.strings.backgroundColor
+          _c(
+            "section-group-collapse",
+            {
+              attrs: {
+                "start-collapsed": false,
+                label: _vm.strings.iconOptions
+              }
             },
-            model: {
-              value: _vm.settings.backgroundColor,
-              callback: function($$v) {
-                _vm.$set(_vm.settings, "backgroundColor", $$v)
-              },
-              expression: "settings.backgroundColor"
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "section-group-collapse",
-        { attrs: { "start-collapsed": false, label: _vm.strings.iconOptions } },
-        [
-          _c("panel-icon-select", {
-            attrs: {
-              label: _vm.strings.icon,
-              icons: _vm.iconList,
-              disabled: _vm.generalDisabledStatus
-            },
-            model: {
-              value: _vm.settings.iconName,
-              callback: function($$v) {
-                _vm.$set(_vm.settings, "iconName", $$v)
-              },
-              expression: "settings.iconName"
-            }
-          }),
-          _vm._v(" "),
-          _c("color-picker", {
-            attrs: {
-              disabled: _vm.iconSubOptionsDisableStatus,
-              label: _vm.strings.iconColor
-            },
-            model: {
-              value: _vm.settings.iconColor,
-              callback: function($$v) {
-                _vm.$set(_vm.settings, "iconColor", $$v)
-              },
-              expression: "settings.iconColor"
-            }
-          }),
-          _vm._v(" "),
-          _c("range-input", {
-            attrs: {
-              "post-fix": "px",
-              clamp: true,
-              min: 1,
-              max: 100,
-              label: _vm.strings.iconSize,
-              disabled: _vm.iconSubOptionsDisableStatus
-            },
-            model: {
-              value: _vm.settings.iconSize,
-              callback: function($$v) {
-                _vm.$set(_vm.settings, "iconSize", $$v)
-              },
-              expression: "settings.iconSize"
-            }
-          }),
-          _vm._v(" "),
-          _c("panel-dropdown-control", {
-            attrs: {
-              label: _vm.strings.iconAnimation,
-              options: _vm.settings.iconAnimationOptions,
-              disabled: _vm.iconSubOptionsDisableStatus
-            },
-            model: {
-              value: _vm.settings.iconAnimation,
-              callback: function($$v) {
-                _vm.$set(_vm.settings, "iconAnimation", $$v)
-              },
-              expression: "settings.iconAnimation"
-            }
-          })
+            [
+              _c("panel-icon-select", {
+                attrs: {
+                  label: _vm.strings.icon,
+                  icons: _vm.iconList,
+                  disabled: _vm.generalDisabledStatus
+                },
+                model: {
+                  value: _vm.settings.iconName,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconName", $$v)
+                  },
+                  expression: "settings.iconName"
+                }
+              }),
+              _vm._v(" "),
+              _c("color-picker", {
+                attrs: {
+                  disabled: _vm.iconSubOptionsDisableStatus,
+                  label: _vm.strings.iconColor
+                },
+                model: {
+                  value: _vm.settings.iconColor,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconColor", $$v)
+                  },
+                  expression: "settings.iconColor"
+                }
+              }),
+              _vm._v(" "),
+              _c("range-input", {
+                attrs: {
+                  "post-fix": "px",
+                  clamp: true,
+                  min: 1,
+                  max: 100,
+                  label: _vm.strings.iconSize,
+                  disabled: _vm.iconSubOptionsDisableStatus
+                },
+                model: {
+                  value: _vm.settings.iconSize,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconSize", $$v)
+                  },
+                  expression: "settings.iconSize"
+                }
+              }),
+              _vm._v(" "),
+              _c("panel-dropdown-control", {
+                attrs: {
+                  label: _vm.strings.iconAnimation,
+                  options: _vm.settings.iconAnimationOptions,
+                  disabled: _vm.iconSubOptionsDisableStatus
+                },
+                model: {
+                  value: _vm.settings.iconAnimation,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "iconAnimation", $$v)
+                  },
+                  expression: "settings.iconAnimation"
+                }
+              })
+            ],
+            1
+          )
         ],
         1
       )
@@ -28560,7 +28654,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js"}],"components/lazyLoadSettings/LazyLoadBasicOptions.vue":[function(require,module,exports) {
+},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js","$LazyLoadSettings/LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue"}],"components/lazyLoadSettings/LazyLoadBasicOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28572,6 +28666,8 @@ var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuS
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -28601,47 +28697,49 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("label", [
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.settings.enabled,
-          expression: "settings.enabled"
-        }
-      ],
-      attrs: { type: "checkbox" },
-      domProps: {
-        checked: Array.isArray(_vm.settings.enabled)
-          ? _vm._i(_vm.settings.enabled, null) > -1
-          : _vm.settings.enabled
-      },
-      on: {
-        change: function($event) {
-          var $$a = _vm.settings.enabled,
-            $$el = $event.target,
-            $$c = $$el.checked ? true : false
-          if (Array.isArray($$a)) {
-            var $$v = null,
-              $$i = _vm._i($$a, $$v)
-            if ($$el.checked) {
-              $$i < 0 && _vm.$set(_vm.settings, "enabled", $$a.concat([$$v]))
+  return _c("div", { staticClass: "wptb-lazy-load-basic-options" }, [
+    _c("label", [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.settings.enabled,
+            expression: "settings.enabled"
+          }
+        ],
+        attrs: { type: "checkbox" },
+        domProps: {
+          checked: Array.isArray(_vm.settings.enabled)
+            ? _vm._i(_vm.settings.enabled, null) > -1
+            : _vm.settings.enabled
+        },
+        on: {
+          change: function($event) {
+            var $$a = _vm.settings.enabled,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && _vm.$set(_vm.settings, "enabled", $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  _vm.$set(
+                    _vm.settings,
+                    "enabled",
+                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                  )
+              }
             } else {
-              $$i > -1 &&
-                _vm.$set(
-                  _vm.settings,
-                  "enabled",
-                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                )
+              _vm.$set(_vm.settings, "enabled", $$c)
             }
-          } else {
-            _vm.$set(_vm.settings, "enabled", $$c)
           }
         }
-      }
-    }),
-    _vm._v("\n\t" + _vm._s(_vm.strings.enableLazyLoad) + "\n")
+      }),
+      _vm._v("\n\t\t" + _vm._s(_vm.strings.enableLazyLoad) + "\n\t")
+    ])
   ])
 }
 var staticRenderFns = []
@@ -28686,12 +28784,6 @@ var _LazyLoadBasicOptions = _interopRequireDefault(require("$LazyLoadSettings/La
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -28811,38 +28903,26 @@ exports.default = _default;
           "div",
           { staticClass: "wptb-lazy-load-wrapper" },
           [
-            _c("div", { staticClass: "wptb-lazy-load-left-column" }, [
-              _c(
-                "div",
-                { staticClass: "wptb-lazy-load-basic-options" },
-                [
-                  _c("lazy-load-basic-options", {
-                    attrs: {
-                      "template-data": _vm.templateData,
-                      settings: _vm.settings
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass:
-                    "wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
-                },
-                [
-                  _c("lazy-load-preview", {
-                    attrs: {
-                      settings: _vm.settings,
-                      "default-html": _vm.sectionData.previewTable
-                    }
-                  })
-                ],
-                1
-              )
-            ]),
+            _c(
+              "div",
+              { staticClass: "wptb-lazy-load-left-column" },
+              [
+                _c("lazy-load-basic-options", {
+                  attrs: {
+                    "template-data": _vm.templateData,
+                    settings: _vm.settings
+                  }
+                }),
+                _vm._v(" "),
+                _c("lazy-load-preview", {
+                  attrs: {
+                    "template-data": _vm.templateData,
+                    "default-html": _vm.sectionData.previewTable
+                  }
+                })
+              ],
+              1
+            ),
             _vm._v(" "),
             _c("lazy-load-pro-options", {
               attrs: {
@@ -29210,6 +29290,8 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _portalVue = _interopRequireDefault(require("portal-vue"));
 
+var _vueFragment = _interopRequireDefault(require("vue-fragment"));
+
 var _SettingsApp = _interopRequireDefault(require("./containers/SettingsApp.vue"));
 
 var _strings = _interopRequireDefault(require("./plugins/strings.js"));
@@ -29238,7 +29320,10 @@ _vue.default.use(_strings.default, {
 _vue.default.use(_portalVue.default); // general filters for components
 
 
-_vue.default.use(_filters.default); // Vue instance
+_vue.default.use(_filters.default); // vue fragment initialization
+
+
+_vue.default.use(_vueFragment.default.Plugin); // Vue instance
 
 
 new _vue.default({
@@ -29251,5 +29336,5 @@ new _vue.default({
     pluginInfo: frontendData.pluginInfo
   }
 }).$mount(frontendData.data.mountId);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js","./plugins/filters":"plugins/filters.js"}]},{},["WPTB_Admin_Settings.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","portal-vue":"../../../../../node_modules/portal-vue/dist/portal-vue.common.js","vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./containers/SettingsApp.vue":"containers/SettingsApp.vue","./plugins/strings.js":"plugins/strings.js","./plugins/filters":"plugins/filters.js"}]},{},["WPTB_Admin_Settings.js"], null)
 //# sourceMappingURL=/WPTB_Admin_Settings.js.map

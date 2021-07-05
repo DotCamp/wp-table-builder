@@ -1,8 +1,10 @@
 <template>
-	<label>
-		<input type="checkbox" v-model="settings.enabled" />
-		{{ strings.enableLazyLoad }}
-	</label>
+	<div class="wptb-lazy-load-basic-options">
+		<label>
+			<input type="checkbox" v-model="settings.enabled" />
+			{{ strings.enableLazyLoad }}
+		</label>
+	</div>
 </template>
 
 <script>

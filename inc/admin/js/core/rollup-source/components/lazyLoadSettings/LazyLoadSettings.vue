@@ -3,20 +3,14 @@
 		<menu-content :center="true">
 			<div class="wptb-lazy-load-wrapper">
 				<div class="wptb-lazy-load-left-column">
-					<div class="wptb-lazy-load-basic-options">
-						<lazy-load-basic-options
-							:template-data="templateData"
-							:settings="settings"
-						></lazy-load-basic-options>
-					</div>
-					<div
-						class="wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center"
-					>
-						<lazy-load-preview
-							:settings="settings"
-							:default-html="sectionData.previewTable"
-						></lazy-load-preview>
-					</div>
+					<lazy-load-basic-options
+						:template-data="templateData"
+						:settings="settings"
+					></lazy-load-basic-options>
+					<lazy-load-preview
+						:template-data="templateData"
+						:default-html="sectionData.previewTable"
+					></lazy-load-preview>
 				</div>
 				<lazy-load-pro-options :settings="settings" :template-data="templateData"></lazy-load-pro-options>
 			</div>

@@ -6,7 +6,6 @@ namespace WP_Table_Builder\Inc\Admin\Managers;
 use DOMDocument;
 use DOMXPath;
 use WP_Table_Builder\Inc\Admin\Base\Setting_Base;
-use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Init_Once;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
@@ -210,6 +209,7 @@ class Lazy_Load_Manager extends Setting_Base {
 			'iconAnimation'           => esc_html__( 'Icon Animation', 'wp-table-builder' ),
 			'generalOptions'          => esc_html__( 'general options', 'wp-table-builder' ),
 			'iconOptions'             => esc_html__( 'icon options', 'wp-table-builder' ),
+			'preview'             => esc_html__( 'preview', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [

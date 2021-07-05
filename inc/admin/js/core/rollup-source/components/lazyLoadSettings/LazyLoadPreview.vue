@@ -1,5 +1,6 @@
 <template>
-	<div>
+	<div class="wptb-lazy-load-preview-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
+		<div class="wptb-lazy-load-preview-header">{{ strings.preview }}</div>
 		<div ref="previewContainer" class="wptb-lazy-load-preview wptb-preview-table"></div>
 		<div class="wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
 			<material-button :disabled="buttonStatus" :click="reloadPreview">Reset</material-button>
@@ -11,7 +12,8 @@
 <script>
 // eslint-disable-next-line camelcase
 import WPTB_LazyLoad from '$FrontEndOnly/WPTB_LazyLoad';
-import MaterialButton from '../MaterialButton';
+import MaterialButton from '$Components/MaterialButton';
+import SettingsMenuSection from '$Mixins/SettingsMenuSection';
 
 export default {
 	components: { MaterialButton },
@@ -20,13 +22,8 @@ export default {
 			type: String,
 			required: true,
 		},
-		settings: {
-			type: Object,
-			default: () => {
-				return {};
-			},
-		},
 	},
+	mixins: [SettingsMenuSection],
 	data() {
 		return {
 			previewHtml: '',
@@ -51,7 +48,7 @@ export default {
 	},
 	computed: {
 		buttonStatus() {
-			return !this.settings.enabled;
+			return !this.sectionData.proStatus || !this.sectionData.settings.enabled;
 		},
 	},
 	methods: {
@@ -70,13 +67,17 @@ export default {
 		},
 		reloadPreview() {
 			// // sync current selected icon svg
-			WPTB_IconManager.getIcon(this.settings.iconName.name, null, true).then((iconSvg) => {
-				this.settings.iconSvg = iconSvg;
+			WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true)
+				.then((iconSvg) => {
+					this.sectionData.settings.iconSvg = iconSvg;
 
-				this.generatePreviewTable();
+					this.generatePreviewTable();
 
-				WPTB_LazyLoad.init({ forceMode: true, ...this.settings });
-			});
+					WPTB_LazyLoad.init({ forceMode: true, ...this.sectionData.settings });
+				})
+				.catch(() => {
+					// do nothing
+				});
 		},
 		loadImages() {
 			WPTB_LazyLoad.forceLoadImages();
