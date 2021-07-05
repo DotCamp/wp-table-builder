@@ -209,7 +209,8 @@ class Lazy_Load_Manager extends Setting_Base {
 			'iconAnimation'           => esc_html__( 'Icon Animation', 'wp-table-builder' ),
 			'generalOptions'          => esc_html__( 'general options', 'wp-table-builder' ),
 			'iconOptions'             => esc_html__( 'icon options', 'wp-table-builder' ),
-			'preview'             => esc_html__( 'preview', 'wp-table-builder' ),
+			'basicOptions'            => esc_html__( 'basic options', 'wp-table-builder' ),
+			'preview'                 => esc_html__( 'preview', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [
@@ -221,15 +222,15 @@ class Lazy_Load_Manager extends Setting_Base {
 		$settings_preview_table = sprintf( '<div class="wptb-image-wrapper"><img src="%1s"></div>', path_join( NS\WP_TABLE_BUILDER_URL, 'assets/images/wptb-logo-new.png' ) );
 
 		$settings_data['data']['lazyLoad'] = [
-			'proStatus'    => Addon_Manager::check_pro_status(),
-			'settings'     => array_merge( static::get_lazy_load_settings(), $extraDataSettingsOptions ),
-			'security'     => [
+			'proStatus'      => Addon_Manager::check_pro_status(),
+			'settings'       => array_merge( static::get_lazy_load_settings(), $extraDataSettingsOptions ),
+			'security'       => [
 				'action'  => $instance->get_settings_id(),
 				'nonce'   => wp_create_nonce( $instance->get_settings_id() ),
 				'ajaxUrl' => admin_url( 'admin-ajax.php' )
 			],
-			'previewTable' => static::table_html_shortcode( $settings_preview_table, true ),
-			'upsellsElement' => Upsells_Manager::prepare_upsell_element(esc_html__('For more lazy load customizations' ,'wp-table-builder'), 'https://wptablebuilder.com/pricing/' , false)
+			'previewTable'   => static::table_html_shortcode( $settings_preview_table, true ),
+			'upsellsElement' => Upsells_Manager::prepare_upsell_element( esc_html__( 'For more lazy load customizations', 'wp-table-builder' ), 'https://wptablebuilder.com/pricing/', false )
 		];
 
 		return $settings_data;

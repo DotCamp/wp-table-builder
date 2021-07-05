@@ -6569,7 +6569,7 @@ wptb_shortcode_container_element {
     grid-area: right;
 }
 
-.wptb-lazy-load-pro-options > div {
+.wptb-controls-for-settings > div {
     border: 1px solid var(--wptb-plugin-gray-300);
     border-bottom: 0;
 }

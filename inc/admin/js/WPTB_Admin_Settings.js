@@ -28677,7 +28677,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js","$LazyLoadSettings/LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue"}],"components/lazyLoadSettings/LazyLoadBasicOptions.vue":[function(require,module,exports) {
+},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js","$LazyLoadSettings/LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue"}],"components/PanelToggleControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28685,7 +28685,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28698,7 +28698,125 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
+  mixins: [_PanelControlBase.default]
+};
+exports.default = _default;
+        var $bf8d61 = exports.default || module.exports;
+      
+      if (typeof $bf8d61 === 'function') {
+        $bf8d61 = $bf8d61.options;
+      }
+    
+        /* template */
+        Object.assign($bf8d61, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
+    },
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("label", { staticClass: "wptb-toggle" }, [
+          _c("span", { staticStyle: { "font-size": "16px" } }, [
+            _vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.innerValue,
+                expression: "innerValue"
+              }
+            ],
+            staticClass: "wptb-element-property",
+            attrs: { type: "checkbox", disabled: _vm.disabled },
+            domProps: {
+              checked: Array.isArray(_vm.innerValue)
+                ? _vm._i(_vm.innerValue, null) > -1
+                : _vm.innerValue
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.innerValue,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.innerValue = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.innerValue = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.innerValue = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("i")
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/lazyLoadSettings/LazyLoadBasicOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SettingsMenuSection = _interopRequireDefault(require("$Mixins/SettingsMenuSection"));
+
+var _PanelToggleControl = _interopRequireDefault(require("$Components/PanelToggleControl"));
+
+var _SectionGroupCollapse = _interopRequireDefault(require("$LeftPanel/SectionGroupCollapse"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    SectionGroupCollapse: _SectionGroupCollapse.default,
+    PanelToggleControl: _PanelToggleControl.default
+  },
   props: {
     settings: {
       type: Object,
@@ -28720,50 +28838,32 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "wptb-lazy-load-basic-options" }, [
-    _c("label", [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.settings.enabled,
-            expression: "settings.enabled"
-          }
-        ],
-        attrs: { type: "checkbox" },
-        domProps: {
-          checked: Array.isArray(_vm.settings.enabled)
-            ? _vm._i(_vm.settings.enabled, null) > -1
-            : _vm.settings.enabled
+  return _c(
+    "div",
+    { staticClass: "wptb-lazy-load-basic-options wptb-controls-for-settings" },
+    [
+      _c(
+        "section-group-collapse",
+        {
+          attrs: { label: _vm.strings.basicOptions, "start-collapsed": false }
         },
-        on: {
-          change: function($event) {
-            var $$a = _vm.settings.enabled,
-              $$el = $event.target,
-              $$c = $$el.checked ? true : false
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v)
-              if ($$el.checked) {
-                $$i < 0 && _vm.$set(_vm.settings, "enabled", $$a.concat([$$v]))
-              } else {
-                $$i > -1 &&
-                  _vm.$set(
-                    _vm.settings,
-                    "enabled",
-                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                  )
-              }
-            } else {
-              _vm.$set(_vm.settings, "enabled", $$c)
+        [
+          _c("panel-toggle-control", {
+            attrs: { label: _vm.strings.enableLazyLoad },
+            model: {
+              value: _vm.settings.enabled,
+              callback: function($$v) {
+                _vm.$set(_vm.settings, "enabled", $$v)
+              },
+              expression: "settings.enabled"
             }
-          }
-        }
-      }),
-      _vm._v("\n\t\t" + _vm._s(_vm.strings.enableLazyLoad) + "\n\t")
-    ])
-  ])
+          })
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -28777,7 +28877,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js"}],"components/lazyLoadSettings/LazyLoadSettings.vue":[function(require,module,exports) {
+},{"$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$Components/PanelToggleControl":"components/PanelToggleControl.vue","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue"}],"components/lazyLoadSettings/LazyLoadSettings.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
