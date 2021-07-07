@@ -7,8 +7,8 @@
 		></lazy-load-pro-disabled-overlay>
 		<div ref="previewContainer" class="wptb-lazy-load-preview wptb-preview-table"></div>
 		<div class="wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
-			<material-button :disabled="buttonStatus" :click="reloadPreview">Reset</material-button>
-			<material-button :disabled="buttonStatus" :click="loadImages">Load Image</material-button>
+			<material-button :disabled="resetButtonStatus" :click="reloadPreview">Reset</material-button>
+			<material-button :disabled="loadButtonStatus" :click="loadImages">Load Image</material-button>
 		</div>
 	</div>
 </template>
@@ -38,6 +38,7 @@ export default {
 	data() {
 		return {
 			previewHtml: '',
+			imageLoaded: true,
 		};
 	},
 	mounted() {
@@ -47,7 +48,7 @@ export default {
 		});
 	},
 	watch: {
-		reviewHtml() {
+		previewHtml() {
 			this.reloadPreview();
 		},
 		settings: {
@@ -68,6 +69,12 @@ export default {
 		buttonStatus() {
 			return !this.sectionData.proStatus || !this.settings.enabled;
 		},
+		loadButtonStatus() {
+			return this.imageLoaded || this.buttonStatus;
+		},
+		resetButtonStatus() {
+			return !this.imageLoaded || this.buttonStatus;
+		},
 	},
 	methods: {
 		clearPreview() {
@@ -87,6 +94,7 @@ export default {
 			this.$refs.previewContainer.appendChild(previewTable);
 		},
 		reloadPreview() {
+			this.imageLoaded = false;
 			// // sync current selected icon svg
 			WPTB_IconManager.getIcon(this.settings.iconName.name, null, true)
 				.then((iconSvg) => {
@@ -102,6 +110,7 @@ export default {
 				});
 		},
 		loadImages() {
+			this.imageLoaded = true;
 			WPTB_LazyLoad.forceLoadImages();
 		},
 	},

@@ -26425,7 +26425,8 @@ var _default = {
   mixins: [_SettingsMenuSection.default],
   data: function data() {
     return {
-      previewHtml: ''
+      previewHtml: '',
+      imageLoaded: true
     };
   },
   mounted: function mounted() {
@@ -26438,7 +26439,7 @@ var _default = {
     });
   },
   watch: {
-    reviewHtml: function reviewHtml() {
+    previewHtml: function previewHtml() {
       this.reloadPreview();
     },
     settings: {
@@ -26458,6 +26459,12 @@ var _default = {
   computed: {
     buttonStatus: function buttonStatus() {
       return !this.sectionData.proStatus || !this.settings.enabled;
+    },
+    loadButtonStatus: function loadButtonStatus() {
+      return this.imageLoaded || this.buttonStatus;
+    },
+    resetButtonStatus: function resetButtonStatus() {
+      return !this.imageLoaded || this.buttonStatus;
     }
   },
   methods: {
@@ -26477,7 +26484,8 @@ var _default = {
     reloadPreview: function reloadPreview() {
       var _this2 = this;
 
-      // // sync current selected icon svg
+      this.imageLoaded = false; // // sync current selected icon svg
+
       WPTB_IconManager.getIcon(this.settings.iconName.name, null, true).then(function (iconSvg) {
         _this2.settings.iconSvg = iconSvg;
       }).catch(function () {
@@ -26491,6 +26499,8 @@ var _default = {
       });
     },
     loadImages: function loadImages() {
+      this.imageLoaded = true;
+
       _WPTB_LazyLoad.default.forceLoadImages();
     }
   }
@@ -26540,13 +26550,20 @@ exports.default = _default;
         [
           _c(
             "material-button",
-            { attrs: { disabled: _vm.buttonStatus, click: _vm.reloadPreview } },
+            {
+              attrs: {
+                disabled: _vm.resetButtonStatus,
+                click: _vm.reloadPreview
+              }
+            },
             [_vm._v("Reset")]
           ),
           _vm._v(" "),
           _c(
             "material-button",
-            { attrs: { disabled: _vm.buttonStatus, click: _vm.loadImages } },
+            {
+              attrs: { disabled: _vm.loadButtonStatus, click: _vm.loadImages }
+            },
             [_vm._v("Load Image")]
           )
         ],
