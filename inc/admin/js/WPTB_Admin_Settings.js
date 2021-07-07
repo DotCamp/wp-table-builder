@@ -28524,6 +28524,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   props: {
     settings: {
@@ -28585,7 +28593,7 @@ exports.default = _default;
             {
               attrs: {
                 label: _vm.strings.generalOptions,
-                "start-collapsed": false,
+                "start-collapsed": true,
                 sectionId: "lazyLoadProGeneralOptions"
               }
             },
@@ -28640,10 +28648,7 @@ exports.default = _default;
           _c(
             "section-group-collapse",
             {
-              attrs: {
-                "start-collapsed": false,
-                label: _vm.strings.iconOptions
-              }
+              attrs: { "start-collapsed": true, label: _vm.strings.iconOptions }
             },
             [
               _c("panel-icon-select", {
@@ -28705,6 +28710,33 @@ exports.default = _default;
                     _vm.$set(_vm.settings, "iconAnimation", $$v)
                   },
                   expression: "settings.iconAnimation"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "section-group-collapse",
+            {
+              attrs: {
+                "start-collapsed": false,
+                label: _vm.strings.imageLoadOptions
+              }
+            },
+            [
+              _c("panel-dropdown-control", {
+                attrs: {
+                  label: _vm.strings.imageLoadOptions,
+                  options: _vm.settings.imageLoadAnimationOptions,
+                  disabled: _vm.iconSubOptionsDisableStatus
+                },
+                model: {
+                  value: _vm.settings.imageLoadAnimation,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "imageLoadAnimation", $$v)
+                  },
+                  expression: "settings.imageLoadAnimation"
                 }
               })
             ],

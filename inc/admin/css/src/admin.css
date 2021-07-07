@@ -4192,6 +4192,10 @@ wptb_shortcode_container_element {
     width: 95%;
 }
 
+label.wptb-control-row {
+    text-transform: capitalize;
+}
+
 .wptb-builder-content {
     position: relative;
 }

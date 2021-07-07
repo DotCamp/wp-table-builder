@@ -51,6 +51,7 @@ class Lazy_Load_Manager extends Setting_Base {
 		'iconColor'            => '#000000',
 		'iconSize'             => 20,
 		'iconAnimation'        => 'none',
+		'imageLoadAnimation'        => 'none'
 	];
 
 	/**
@@ -204,20 +205,24 @@ class Lazy_Load_Manager extends Setting_Base {
 			'visibilityPercentageTip' => esc_html__( 'Height of image that is visible on screen to trigger lazy load', 'wp-table-builder' ),
 			'backgroundColor'         => esc_html__( 'background color', 'wp-table-builder' ),
 			'icon'                    => esc_html__( 'Icon', 'wp-table-builder' ),
-			'iconColor'               => esc_html__( 'Icon Color', 'wp-table-builder' ),
+			'iconColor'               => esc_html__( 'icon color', 'wp-table-builder' ),
 			'iconSize'                => esc_html__( 'icon size', 'wp-table-builder' ),
-			'iconAnimation'           => esc_html__( 'Icon Animation', 'wp-table-builder' ),
+			'iconAnimation'           => esc_html__( 'icon animation', 'wp-table-builder' ),
 			'generalOptions'          => esc_html__( 'general options', 'wp-table-builder' ),
 			'iconOptions'             => esc_html__( 'icon options', 'wp-table-builder' ),
 			'basicOptions'            => esc_html__( 'basic options', 'wp-table-builder' ),
 			'preview'                 => esc_html__( 'preview', 'wp-table-builder' ),
-			'revert'                 => esc_html__( 'revert', 'wp-table-builder' ),
+			'revert'                  => esc_html__( 'revert', 'wp-table-builder' ),
+			'imageLoadOptions'        => esc_html__( 'image load options', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [
 			'iconAnimationOptions' => [
-				'none' => esc_html__( 'None', 'wp-table-builder' )
-			]
+				'none' => esc_html__( 'none', 'wp-table-builder' )
+			],
+			'imageLoadAnimationOptions' => [
+				'none' => esc_html__( 'none', 'wp-table-builder' )
+			],
 		];
 
 		$settings_preview_table = sprintf( '<div class="wptb-image-wrapper"><img src="%1s"></div>', path_join( NS\WP_TABLE_BUILDER_URL, 'assets/images/wptb-logo-new.png' ) );
