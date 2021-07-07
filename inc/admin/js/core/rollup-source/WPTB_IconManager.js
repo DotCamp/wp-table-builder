@@ -127,6 +127,15 @@
 				return rej(new Error(`no icon found with the given name of [${iconName}]`));
 			});
 		};
+		this.getIconUrl = (iconName) => {
+			let iconUrl = '';
+
+			if (iconList[iconName]) {
+				iconUrl = iconList[iconName];
+			}
+
+			return iconUrl;
+		};
 	}
 
 	// eslint-disable-next-line no-restricted-globals

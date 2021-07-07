@@ -256,6 +256,16 @@ var global = arguments[3];
         return rej(new Error("no icon found with the given name of [".concat(iconName, "]")));
       });
     };
+
+    this.getIconUrl = function (iconName) {
+      var iconUrl = '';
+
+      if (iconList[iconName]) {
+        iconUrl = iconList[iconName];
+      }
+
+      return iconUrl;
+    };
   } // eslint-disable-next-line no-restricted-globals
 
 

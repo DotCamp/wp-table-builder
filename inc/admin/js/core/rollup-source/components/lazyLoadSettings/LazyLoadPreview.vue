@@ -85,13 +85,14 @@ export default {
 			WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true)
 				.then((iconSvg) => {
 					this.sectionData.settings.iconSvg = iconSvg;
-
+				})
+				.catch(() => {
+					this.sectionData.settings.iconSvg = null;
+				})
+				.finally(() => {
 					this.generatePreviewTable();
 
 					WPTB_LazyLoad.init({ forceMode: true, ...this.sectionData.settings });
-				})
-				.catch(() => {
-					// do nothing
 				});
 		},
 		loadImages() {

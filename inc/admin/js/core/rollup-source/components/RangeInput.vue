@@ -25,7 +25,7 @@
 					:post-fix="postFix"
 					:only-enter="true"
 					class="wptb-size-number wptb-number-input wptb-element-property"
-					style="text-align: center;"
+					style="text-align: center"
 					:min="min"
 					:max="max"
 					:class="uniqueId"
@@ -88,6 +88,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		outputAsString: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	model: {
 		prop: 'elementMainValue',
@@ -108,7 +112,13 @@ export default {
 			this.innerElementMainValue = this.elementMainValue;
 		},
 		innerElementMainValue(n) {
-			this.$emit('valueChanged', this.clamp ? this.clampValue(n) : n);
+			let valueToEmit = this.clamp ? this.clampValue(n) : n;
+
+			if (this.outputAsString) {
+				valueToEmit = valueToEmit.toString();
+			}
+
+			this.$emit('valueChanged', valueToEmit);
 		},
 	},
 	methods: {

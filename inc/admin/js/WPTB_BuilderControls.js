@@ -13680,6 +13680,10 @@ var _default = {
     disabled: {
       type: Boolean,
       default: false
+    },
+    outputAsString: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -13703,7 +13707,13 @@ var _default = {
       this.innerElementMainValue = this.elementMainValue;
     },
     innerElementMainValue: function innerElementMainValue(n) {
-      this.$emit('valueChanged', this.clamp ? this.clampValue(n) : n);
+      var valueToEmit = this.clamp ? this.clampValue(n) : n;
+
+      if (this.outputAsString) {
+        valueToEmit = valueToEmit.toString();
+      }
+
+      this.$emit('valueChanged', valueToEmit);
     }
   },
   methods: {

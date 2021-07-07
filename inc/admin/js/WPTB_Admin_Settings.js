@@ -26474,13 +26474,14 @@ var _default = {
       // // sync current selected icon svg
       WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true).then(function (iconSvg) {
         _this2.sectionData.settings.iconSvg = iconSvg;
-
+      }).catch(function () {
+        _this2.sectionData.settings.iconSvg = null;
+      }).finally(function () {
         _this2.generatePreviewTable();
 
         _WPTB_LazyLoad.default.init(_objectSpread({
           forceMode: true
         }, _this2.sectionData.settings));
-      }).catch(function () {// do nothing
       });
     },
     loadImages: function loadImages() {
@@ -27077,6 +27078,10 @@ var _default = {
     disabled: {
       type: Boolean,
       default: false
+    },
+    outputAsString: {
+      type: Boolean,
+      default: false
     }
   },
   model: {
@@ -27100,7 +27105,13 @@ var _default = {
       this.innerElementMainValue = this.elementMainValue;
     },
     innerElementMainValue: function innerElementMainValue(n) {
-      this.$emit('valueChanged', this.clamp ? this.clampValue(n) : n);
+      var valueToEmit = this.clamp ? this.clampValue(n) : n;
+
+      if (this.outputAsString) {
+        valueToEmit = valueToEmit.toString();
+      }
+
+      this.$emit('valueChanged', valueToEmit);
     }
   },
   methods: {
@@ -28945,6 +28956,7 @@ var _default = {
   mixins: [_SettingsMenuSection.default, _withMessage.default],
   mounted: function mounted() {
     this.settings = this.sectionData.settings;
+    this.settings.iconName.url = WPTB_IconManager.getIconUrl(this.settings.iconName.name);
     this.updateInitialSettings();
   },
   data: function data() {

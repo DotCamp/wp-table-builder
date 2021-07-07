@@ -48,6 +48,9 @@ export default {
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
 		this.settings = this.sectionData.settings;
+
+		this.settings.iconName.url = WPTB_IconManager.getIconUrl(this.settings.iconName.name);
+
 		this.updateInitialSettings();
 	},
 	data() {

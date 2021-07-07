@@ -46,7 +46,7 @@ class Lazy_Load_Manager extends Setting_Base {
 		'visibilityPercentage' => 10,
 		'backgroundColor'      => '#FFFFFF00',
 		'iconName'             => [
-			'name' => null,
+			'name' => '',
 		],
 		'iconColor'            => '#000000',
 		'iconSize'             => 20,
