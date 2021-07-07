@@ -3,7 +3,7 @@
 		<div class="wptb-lazy-load-preview-header">{{ strings.preview }}</div>
 		<lazy-load-pro-disabled-overlay
 			grid-area="preview"
-			:visibility="!sectionData.proStatus || !sectionData.settings.enabled"
+			:visibility="!sectionData.proStatus || !settings.enabled"
 		></lazy-load-pro-disabled-overlay>
 		<div ref="previewContainer" class="wptb-lazy-load-preview wptb-preview-table"></div>
 		<div class="wptb-lazy-load-preview-button-container wptb-flex wptb-flex-justify-center wptb-flex-align-center">
@@ -27,6 +27,12 @@ export default {
 			type: String,
 			required: true,
 		},
+		settings: {
+			type: Object,
+			default: () => {
+				return {};
+			},
+		},
 	},
 	mixins: [SettingsMenuSection],
 	data() {
@@ -44,13 +50,13 @@ export default {
 		reviewHtml() {
 			this.reloadPreview();
 		},
-		sectionData: {
+		settings: {
 			handler() {
 				this.reloadPreview();
 			},
 			deep: true,
 		},
-		'sectionData.settings.enabled': {
+		'settings.enabled': {
 			handler(n) {
 				if (!n) {
 					this.clearPreview();
@@ -60,7 +66,7 @@ export default {
 	},
 	computed: {
 		buttonStatus() {
-			return !this.sectionData.proStatus || !this.sectionData.settings.enabled;
+			return !this.sectionData.proStatus || !this.settings.enabled;
 		},
 	},
 	methods: {
@@ -82,17 +88,17 @@ export default {
 		},
 		reloadPreview() {
 			// // sync current selected icon svg
-			WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true)
+			WPTB_IconManager.getIcon(this.settings.iconName.name, null, true)
 				.then((iconSvg) => {
-					this.sectionData.settings.iconSvg = iconSvg;
+					this.settings.iconSvg = iconSvg;
 				})
 				.catch(() => {
-					this.sectionData.settings.iconSvg = null;
+					this.settings.iconSvg = null;
 				})
 				.finally(() => {
 					this.generatePreviewTable();
 
-					WPTB_LazyLoad.init({ forceMode: true, ...this.sectionData.settings });
+					WPTB_LazyLoad.init({ forceMode: true, ...this.settings });
 				});
 		},
 		loadImages() {

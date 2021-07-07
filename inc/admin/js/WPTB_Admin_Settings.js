@@ -26414,6 +26414,12 @@ var _default = {
     defaultHtml: {
       type: String,
       required: true
+    },
+    settings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
     }
   },
   mixins: [_SettingsMenuSection.default],
@@ -26435,13 +26441,13 @@ var _default = {
     reviewHtml: function reviewHtml() {
       this.reloadPreview();
     },
-    sectionData: {
+    settings: {
       handler: function handler() {
         this.reloadPreview();
       },
       deep: true
     },
-    'sectionData.settings.enabled': {
+    'settings.enabled': {
       handler: function handler(n) {
         if (!n) {
           this.clearPreview();
@@ -26451,7 +26457,7 @@ var _default = {
   },
   computed: {
     buttonStatus: function buttonStatus() {
-      return !this.sectionData.proStatus || !this.sectionData.settings.enabled;
+      return !this.sectionData.proStatus || !this.settings.enabled;
     }
   },
   methods: {
@@ -26472,16 +26478,16 @@ var _default = {
       var _this2 = this;
 
       // // sync current selected icon svg
-      WPTB_IconManager.getIcon(this.sectionData.settings.iconName.name, null, true).then(function (iconSvg) {
-        _this2.sectionData.settings.iconSvg = iconSvg;
+      WPTB_IconManager.getIcon(this.settings.iconName.name, null, true).then(function (iconSvg) {
+        _this2.settings.iconSvg = iconSvg;
       }).catch(function () {
-        _this2.sectionData.settings.iconSvg = null;
+        _this2.settings.iconSvg = null;
       }).finally(function () {
         _this2.generatePreviewTable();
 
         _WPTB_LazyLoad.default.init(_objectSpread({
           forceMode: true
-        }, _this2.sectionData.settings));
+        }, _this2.settings));
       });
     },
     loadImages: function loadImages() {
@@ -26516,8 +26522,7 @@ exports.default = _default;
       _c("lazy-load-pro-disabled-overlay", {
         attrs: {
           "grid-area": "preview",
-          visibility:
-            !_vm.sectionData.proStatus || !_vm.sectionData.settings.enabled
+          visibility: !_vm.sectionData.proStatus || !_vm.settings.enabled
         }
       }),
       _vm._v(" "),
@@ -27734,6 +27739,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _deepmerge = _interopRequireDefault(require("deepmerge"));
+
 var _IntersectionObserver = _interopRequireDefault(require("../../components/IntersectionObserver"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -27869,9 +27876,26 @@ var _default = {
         this.$emit('iconSelected', n);
       },
       deep: true
+    },
+    selectedUserIcon: {
+      handler: function handler() {
+        this.assignPropIconValues();
+      },
+      deep: true
     }
   },
   methods: {
+    assignPropIconValues: function assignPropIconValues() {
+      var deepmergedSelectedUserIcon = (0, _deepmerge.default)({}, this.selectedUserIcon);
+
+      if (JSON.stringify(deepmergedSelectedUserIcon) !== JSON.stringify(this.selectedIcon)) {
+        this.selectedIcon = deepmergedSelectedUserIcon;
+
+        if (!this.selectedIcon.url) {
+          this.selectedIcon.url = this.icons[this.selectedIcon.name] ? this.icons[this.selectedIcon.name] : null;
+        }
+      }
+    },
     setDrawerState: function setDrawerState(state) {
       this.openDrawer = state;
     },
@@ -27959,7 +27983,7 @@ exports.default = _default;
                   staticClass: "wptb-icon-select-preview",
                   on: { click: _vm.toggleIconDrawer }
                 },
-                [_c("img", { attrs: { src: _vm.selectedIcon.url } })]
+                [_c("img", { attrs: { src: _vm.selectedIcon.url || "" } })]
               ),
               _vm._v(" "),
               _c(
@@ -28092,7 +28116,7 @@ render._withStripped = true
           };
         })());
       
-},{"../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"mixins/PanelControlBase.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28943,6 +28967,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   components: {
     LazyLoadBasicOptions: _LazyLoadBasicOptions.default,
@@ -28955,7 +28983,7 @@ var _default = {
   },
   mixins: [_SettingsMenuSection.default, _withMessage.default],
   mounted: function mounted() {
-    this.settings = this.sectionData.settings;
+    this.settings = (0, _deepmerge.default)({}, this.sectionData.settings);
     this.settings.iconName.url = WPTB_IconManager.getIconUrl(this.settings.iconName.name);
     this.updateInitialSettings();
   },
@@ -28971,6 +28999,10 @@ var _default = {
     }
   },
   methods: {
+    revertLazyLoadSettings: function revertLazyLoadSettings() {
+      this.$set(this, 'settings', (0, _deepmerge.default)({}, this.initialSettings));
+      this.$set(this.templateData, 'settings', (0, _deepmerge.default)({}, this.initialSettings));
+    },
     updateInitialSettings: function updateInitialSettings() {
       this.initialSettings = (0, _deepmerge.default)({}, this.settings);
     },
@@ -29052,7 +29084,8 @@ exports.default = _default;
                 _c("lazy-load-preview", {
                   attrs: {
                     "template-data": _vm.templateData,
-                    "default-html": _vm.sectionData.previewTable
+                    "default-html": _vm.sectionData.previewTable,
+                    settings: _vm.settings
                   }
                 })
               ],
@@ -29073,6 +29106,15 @@ exports.default = _default;
       _c(
         "footer-buttons",
         [
+          _c(
+            "menu-button",
+            {
+              attrs: { type: "danger", disabled: !_vm.settingsDirtyStatus },
+              on: { click: _vm.revertLazyLoadSettings }
+            },
+            [_vm._v(_vm._s(_vm.strings.revert) + "\n\t\t")]
+          ),
+          _vm._v(" "),
           _c(
             "menu-button",
             {

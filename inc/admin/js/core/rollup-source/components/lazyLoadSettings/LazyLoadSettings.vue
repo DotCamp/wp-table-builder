@@ -10,12 +10,16 @@
 					<lazy-load-preview
 						:template-data="templateData"
 						:default-html="sectionData.previewTable"
+						:settings="settings"
 					></lazy-load-preview>
 				</div>
 				<lazy-load-pro-options :settings="settings" :template-data="templateData"></lazy-load-pro-options>
 			</div>
 		</menu-content>
 		<footer-buttons>
+			<menu-button type="danger" :disabled="!settingsDirtyStatus" @click="revertLazyLoadSettings"
+				>{{ strings.revert }}
+			</menu-button>
 			<menu-button :disabled="!settingsDirtyStatus" @click="updateLazyLoadSettings"
 				>{{ strings.submit }}
 			</menu-button>
@@ -47,7 +51,7 @@ export default {
 	},
 	mixins: [SettingsMenuSection, withMessage],
 	mounted() {
-		this.settings = this.sectionData.settings;
+		this.settings = deepmerge({}, this.sectionData.settings);
 
 		this.settings.iconName.url = WPTB_IconManager.getIconUrl(this.settings.iconName.name);
 
@@ -65,6 +69,10 @@ export default {
 		},
 	},
 	methods: {
+		revertLazyLoadSettings() {
+			this.$set(this, 'settings', deepmerge({}, this.initialSettings));
+			this.$set(this.templateData, 'settings', deepmerge({}, this.initialSettings));
+		},
 		updateInitialSettings() {
 			this.initialSettings = deepmerge({}, this.settings);
 		},

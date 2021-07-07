@@ -258,7 +258,7 @@ var global = arguments[3];
     };
 
     this.getIconUrl = function (iconName) {
-      var iconUrl = '';
+      var iconUrl = null;
 
       if (iconList[iconName]) {
         iconUrl = iconList[iconName];

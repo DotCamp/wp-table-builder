@@ -5,7 +5,7 @@
 			<div class="wptb-icon-select-wrapper" :disabled="disabled">
 				<div class="wptb-icon-select-display">
 					<div class="wptb-icon-select-preview" @click="toggleIconDrawer" ref="iconSelectButton">
-						<img :src="selectedIcon.url" />
+						<img :src="selectedIcon.url || ''" />
 					</div>
 					<div
 						v-show="openDrawer"
@@ -40,6 +40,7 @@
 	</div>
 </template>
 <script>
+import deepmerge from 'deepmerge';
 import IntersectionObserver from '../../components/IntersectionObserver';
 
 export default {
@@ -126,8 +127,26 @@ export default {
 			},
 			deep: true,
 		},
+		selectedUserIcon: {
+			handler() {
+				this.assignPropIconValues();
+			},
+			deep: true,
+		},
 	},
 	methods: {
+		assignPropIconValues() {
+			const deepmergedSelectedUserIcon = deepmerge({}, this.selectedUserIcon);
+			if (JSON.stringify(deepmergedSelectedUserIcon) !== JSON.stringify(this.selectedIcon)) {
+				this.selectedIcon = deepmergedSelectedUserIcon;
+
+				if (!this.selectedIcon.url) {
+					this.selectedIcon.url = this.icons[this.selectedIcon.name]
+						? this.icons[this.selectedIcon.name]
+						: null;
+				}
+			}
+		},
 		setDrawerState(state) {
 			this.openDrawer = state;
 		},

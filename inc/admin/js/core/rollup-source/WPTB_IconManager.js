@@ -128,7 +128,7 @@
 			});
 		};
 		this.getIconUrl = (iconName) => {
-			let iconUrl = '';
+			let iconUrl = null;
 
 			if (iconList[iconName]) {
 				iconUrl = iconList[iconName];

@@ -211,6 +211,7 @@ class Lazy_Load_Manager extends Setting_Base {
 			'iconOptions'             => esc_html__( 'icon options', 'wp-table-builder' ),
 			'basicOptions'            => esc_html__( 'basic options', 'wp-table-builder' ),
 			'preview'                 => esc_html__( 'preview', 'wp-table-builder' ),
+			'revert'                 => esc_html__( 'revert', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [
