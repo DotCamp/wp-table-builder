@@ -23,9 +23,19 @@
 			speed: 8,
 			step: 10,
 			hooks: {},
+			direction: 'left',
 		};
 
 		const instanceOptions = { ...defaults, ...options };
+
+		/**
+		 * Get instance related options.
+		 *
+		 * @return {Object} options
+		 */
+		this.getOptions = () => {
+			return { ...instanceOptions };
+		};
 
 		/**
 		 * Calculate animation duration relative to its supplied speed.
@@ -36,6 +46,17 @@
 		 */
 		this.calculateDuration = (min = 0.1, max = 1) => {
 			return Math.max(min, max) - (Math.abs(max - min) / instanceOptions.step) * instanceOptions.speed;
+		};
+
+		/**
+		 * Calculate animation direction axis.
+		 *
+		 * @return {string} axis name
+		 */
+		this.calculateAnimationDirection = () => {
+			const xAxis = ['left', 'right'];
+
+			return xAxis.includes(instanceOptions.direction) ? 'X' : 'Y';
 		};
 
 		/**
@@ -130,11 +151,17 @@
 			hooks: {
 				beforeAnimation(imageElement) {
 					imageElement.parentNode.style.overflow = 'hidden';
-					imageElement.style.transform = 'translateX(-100%)';
+
+					const positiveConstant = ['left', 'up'];
+					const directionConstant = positiveConstant.includes(this.getOptions().direction) ? 1 : -1;
+
+					imageElement.style.transform = `translate${this.calculateAnimationDirection()}(${
+						directionConstant * 100
+					}%)`;
 				},
 				animate(imageElement) {
 					imageElement.style.transition = `transform ${this.calculateDuration()}s ease-out`;
-					imageElement.style.transform = 'translateX(0)';
+					imageElement.style.transform = `translate${this.calculateAnimationDirection()}(0)`;
 				},
 			},
 		},
@@ -422,6 +449,7 @@
 				if (options.enabled) {
 					animation = animationFactory.getAnimation(options.imageLoadAnimation, {
 						speed: options.imageLoadAnimationSpeed,
+						direction: options.imageLoadAnimationDirection,
 					});
 					assignLazyLoadToElements();
 				}

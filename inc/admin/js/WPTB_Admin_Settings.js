@@ -25979,10 +25979,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       name: '',
       speed: 8,
       step: 10,
-      hooks: {}
+      hooks: {},
+      direction: 'left'
     };
 
     var instanceOptions = _objectSpread(_objectSpread({}, defaults), options);
+    /**
+     * Get instance related options.
+     *
+     * @return {Object} options
+     */
+
+
+    this.getOptions = function () {
+      return _objectSpread({}, instanceOptions);
+    };
     /**
      * Calculate animation duration relative to its supplied speed.
      *
@@ -25996,6 +26007,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.1;
       var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
       return Math.max(min, max) - Math.abs(max - min) / instanceOptions.step * instanceOptions.speed;
+    };
+    /**
+     * Calculate animation direction axis.
+     *
+     * @return {string} axis name
+     */
+
+
+    this.calculateAnimationDirection = function () {
+      var xAxis = ['left', 'right'];
+      return xAxis.includes(instanceOptions.direction) ? 'X' : 'Y';
     };
     /**
      * Get supplied user hook.
@@ -26106,11 +26128,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       hooks: {
         beforeAnimation: function beforeAnimation(imageElement) {
           imageElement.parentNode.style.overflow = 'hidden';
-          imageElement.style.transform = 'translateX(-100%)';
+          var positiveConstant = ['left', 'up'];
+          var directionConstant = positiveConstant.includes(this.getOptions().direction) ? 1 : -1;
+          imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(").concat(directionConstant * 100, "%)");
         },
         animate: function animate(imageElement) {
           imageElement.style.transition = "transform ".concat(this.calculateDuration(), "s ease-out");
-          imageElement.style.transform = 'translateX(0)';
+          imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(0)");
         }
       }
     }
@@ -26388,7 +26412,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (options.enabled) {
           animation = animationFactory.getAnimation(options.imageLoadAnimation, {
-            speed: options.imageLoadAnimationSpeed
+            speed: options.imageLoadAnimationSpeed,
+            direction: options.imageLoadAnimationDirection
           });
           assignLazyLoadToElements();
         }
@@ -27492,6 +27517,10 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   props: {
     label: {
@@ -27522,7 +27551,8 @@ exports.default = _default;
     _vm._b(
       {
         staticClass:
-          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property"
+          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property",
+        attrs: { "data-wptb-disabled": _vm.disabled }
       },
       "div",
       _vm.$attrs,
@@ -28436,7 +28466,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+var _PanelControlBase = _interopRequireDefault(require("$Mixins/PanelControlBase"));
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
@@ -28528,7 +28558,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
+},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28652,7 +28682,377 @@ render._withStripped = true
           };
         })());
       
-},{}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
+},{}],"components/leftPanel/PanelDirectionCadet.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    direction: {
+      type: String,
+      required: true
+    },
+    activeDirection: {
+      type: String,
+      required: true
+    }
+  },
+  data: function data() {
+    return {
+      icon: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      WPTB_IconManager.getIcon("caret-".concat(_this.direction), null, true).then(function (icon) {
+        _this.icon = icon;
+      });
+    });
+  },
+  computed: {
+    active: function active() {
+      return this.direction === this.activeDirection;
+    }
+  }
+};
+exports.default = _default;
+        var $cfef4d = exports.default || module.exports;
+      
+      if (typeof $cfef4d === 'function') {
+        $cfef4d = $cfef4d.options;
+      }
+    
+        /* template */
+        Object.assign($cfef4d, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {
+    staticClass: "wptb-panel-direction-cadet",
+    attrs: {
+      "data-wptb-panel-direction": _vm.direction,
+      "data-wptb-active-direction": _vm.active
+    },
+    domProps: { innerHTML: _vm._s(_vm.icon) },
+    on: {
+      click: function($event) {
+        $event.preventDefault()
+        $event.stopPropagation()
+        return _vm.$emit("directionClick", _vm.direction)
+      }
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/leftPanel/PanelDirectionControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("$Mixins/PanelControlBase"));
+
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
+var _PanelDirectionCadet = _interopRequireDefault(require("$LeftPanel/PanelDirectionCadet"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    value: {
+      type: String,
+      default: 'left'
+    }
+  },
+  components: {
+    PanelDirectionCadet: _PanelDirectionCadet.default,
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default
+  },
+  mixins: [_PanelControlBase.default],
+  data: function data() {
+    return {
+      directions: ['left', 'right', 'up', 'down']
+    };
+  }
+};
+exports.default = _default;
+        var $7273f5 = exports.default || module.exports;
+      
+      if (typeof $7273f5 === 'function') {
+        $7273f5 = $7273f5.options;
+      }
+    
+        /* template */
+        Object.assign($7273f5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "panel2-column-template",
+    { attrs: { disabled: _vm.disabled, label: _vm.label } },
+    [
+      _c(
+        "div",
+        { staticClass: "wptb-panel-direction-control-indicators-container" },
+        [
+          _c("div", { staticClass: "wptb-panel-direction-static" }),
+          _vm._v(" "),
+          _vm._l(_vm.directions, function(direction) {
+            return _c("panel-direction-cadet", {
+              key: direction,
+              attrs: { "active-direction": _vm.value, direction: direction },
+              on: {
+                directionClick: function($event) {
+                  return _vm.$emit("valueChanged", direction)
+                }
+              }
+            })
+          })
+        ],
+        2
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue","$LeftPanel/PanelDirectionCadet":"components/leftPanel/PanelDirectionCadet.vue"}],"mixins/SectionGroup.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Section group collapse mixin.
+ */
+var _default = {
+  props: {
+    settings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    generalDisabledStatus: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+},{}],"components/lazyLoadSettings/ImageLoadOptions.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _SectionGroupCollapse = _interopRequireDefault(require("$LeftPanel/SectionGroupCollapse"));
+
+var _PanelDropdownControl = _interopRequireDefault(require("$Components/PanelDropdownControl"));
+
+var _PanelDirectionControl = _interopRequireDefault(require("$LeftPanel/PanelDirectionControl"));
+
+var _RangeInput = _interopRequireDefault(require("$Components/RangeInput"));
+
+var _SectionGroup = _interopRequireDefault(require("$Mixins/SectionGroup"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    SectionGroupCollapse: _SectionGroupCollapse.default,
+    PanelDropdownControl: _PanelDropdownControl.default,
+    PanelDirectionControl: _PanelDirectionControl.default,
+    RangeInput: _RangeInput.default
+  },
+  mixins: [_SectionGroup.default],
+  data: function data() {
+    return {
+      directionEnabledAnimations: ['slideIn']
+    };
+  }
+};
+exports.default = _default;
+        var $e70826 = exports.default || module.exports;
+      
+      if (typeof $e70826 === 'function') {
+        $e70826 = $e70826.options;
+      }
+    
+        /* template */
+        Object.assign($e70826, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "section-group-collapse",
+    {
+      attrs: { "start-collapsed": false, label: _vm.strings.imageLoadOptions }
+    },
+    [
+      _c("panel-dropdown-control", {
+        attrs: {
+          label: _vm.strings.animation,
+          options: _vm.settings.imageLoadAnimationOptions,
+          disabled: _vm.generalDisabledStatus
+        },
+        model: {
+          value: _vm.settings.imageLoadAnimation,
+          callback: function($$v) {
+            _vm.$set(_vm.settings, "imageLoadAnimation", $$v)
+          },
+          expression: "settings.imageLoadAnimation"
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "transition",
+        { attrs: { name: "wptb-fade", appear: "" } },
+        [
+          _vm.directionEnabledAnimations.includes(
+            _vm.settings.imageLoadAnimation
+          )
+            ? _c("panel-direction-control", {
+                attrs: {
+                  disabled: _vm.generalDisabledStatus,
+                  label: _vm.strings.direction
+                },
+                model: {
+                  value: _vm.settings.imageLoadAnimationDirection,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "imageLoadAnimationDirection", $$v)
+                  },
+                  expression: "settings.imageLoadAnimationDirection"
+                }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("range-input", {
+        attrs: {
+          clamp: true,
+          min: 1,
+          max: 10,
+          label: _vm.strings.speed,
+          disabled:
+            _vm.generalDisabledStatus ||
+            _vm.settings.imageLoadAnimation === "none"
+        },
+        model: {
+          value: _vm.settings.imageLoadAnimationSpeed,
+          callback: function($$v) {
+            _vm.$set(_vm.settings, "imageLoadAnimationSpeed", $$v)
+          },
+          expression: "settings.imageLoadAnimationSpeed"
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$LeftPanel/PanelDirectionControl":"components/leftPanel/PanelDirectionControl.vue","$Components/RangeInput":"components/RangeInput.vue","$Mixins/SectionGroup":"mixins/SectionGroup.js"}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28678,26 +29078,10 @@ var _withMessage = _interopRequireDefault(require("$Mixins/withMessage"));
 
 var _LazyLoadProDisabledOverlay = _interopRequireDefault(require("$LazyLoadSettings/LazyLoadProDisabledOverlay"));
 
+var _ImageLoadOptions = _interopRequireDefault(require("$LazyLoadSettings/ImageLoadOptions"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -28772,6 +29156,7 @@ var _default = {
     }
   },
   components: {
+    ImageLoadOptions: _ImageLoadOptions.default,
     LazyLoadProDisabledOverlay: _LazyLoadProDisabledOverlay.default,
     ControlTipWrapper: _ControlTipWrapper.default,
     RangeInput: _RangeInput.default,
@@ -28948,64 +29333,12 @@ exports.default = _default;
             1
           ),
           _vm._v(" "),
-          _c(
-            "section-group-collapse",
-            {
-              attrs: {
-                "start-collapsed": false,
-                label: _vm.strings.imageLoadOptions
-              }
-            },
-            [
-              _c("panel-dropdown-control", {
-                attrs: {
-                  label: _vm.strings.animation,
-                  options: _vm.settings.imageLoadAnimationOptions,
-                  disabled: _vm.generalDisabledStatus
-                },
-                model: {
-                  value: _vm.settings.imageLoadAnimation,
-                  callback: function($$v) {
-                    _vm.$set(_vm.settings, "imageLoadAnimation", $$v)
-                  },
-                  expression: "settings.imageLoadAnimation"
-                }
-              }),
-              _vm._v(" "),
-              _c("panel-dropdown-control", {
-                attrs: {
-                  label: _vm.strings.direction,
-                  options: _vm.settings.imageLoadAnimationDirectionOptions,
-                  disabled: _vm.generalDisabledStatus
-                },
-                model: {
-                  value: _vm.settings.imageLoadAnimationDirection,
-                  callback: function($$v) {
-                    _vm.$set(_vm.settings, "imageLoadAnimationDirection", $$v)
-                  },
-                  expression: "settings.imageLoadAnimationDirection"
-                }
-              }),
-              _vm._v(" "),
-              _c("range-input", {
-                attrs: {
-                  clamp: true,
-                  min: 1,
-                  max: 10,
-                  label: _vm.strings.speed,
-                  disabled: _vm.generalDisabledStatus
-                },
-                model: {
-                  value: _vm.settings.imageLoadAnimationSpeed,
-                  callback: function($$v) {
-                    _vm.$set(_vm.settings, "imageLoadAnimationSpeed", $$v)
-                  },
-                  expression: "settings.imageLoadAnimationSpeed"
-                }
-              })
-            ],
-            1
-          )
+          _c("image-load-options", {
+            attrs: {
+              "general-disabled-status": _vm.generalDisabledStatus,
+              settings: _vm.settings
+            }
+          })
         ],
         1
       )
@@ -29025,7 +29358,7 @@ render._withStripped = true
           };
         })());
       
-},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js","$LazyLoadSettings/LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue"}],"components/PanelToggleControl.vue":[function(require,module,exports) {
+},{"$Components/ControlTipWrapper":"components/ControlTipWrapper.vue","$Components/RangeInput":"components/RangeInput.vue","$Components/ColorPicker":"components/ColorPicker.vue","$LeftPanel/PanelIconSelect":"components/leftPanel/PanelIconSelect.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Mixins/SettingsMenuSection":"mixins/SettingsMenuSection.js","$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Mixins/withMessage":"mixins/withMessage.js","$LazyLoadSettings/LazyLoadProDisabledOverlay":"components/lazyLoadSettings/LazyLoadProDisabledOverlay.vue","$LazyLoadSettings/ImageLoadOptions":"components/lazyLoadSettings/ImageLoadOptions.vue"}],"components/PanelToggleControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

@@ -53,7 +53,7 @@ class Lazy_Load_Manager extends Setting_Base {
 		'iconAnimation'           => 'none',
 		'imageLoadAnimation'      => 'none',
 		'imageLoadAnimationSpeed' => 8,
-		'imageLoadAnimationDirection' => 'left',
+		'imageLoadAnimationDirection' => 'right',
 	];
 
 	/**
@@ -227,9 +227,6 @@ class Lazy_Load_Manager extends Setting_Base {
 			],
 			'imageLoadAnimationOptions' => [
 				'none' => esc_html__( 'none', 'wp-table-builder' )
-			],
-			'imageLoadAnimationDirectionOptions' => [
-				'left' => esc_html__( 'left', 'wp-table-builder' )
 			],
 		];
 

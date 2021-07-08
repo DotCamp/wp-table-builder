@@ -6,7 +6,7 @@
 	>
 </template>
 <script>
-import PanelControlBase from '../mixins/PanelControlBase';
+import PanelControlBase from '$Mixins/PanelControlBase';
 import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
 
 export default {

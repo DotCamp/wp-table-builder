@@ -56,28 +56,10 @@
 					:disabled="iconSubOptionsDisableStatus"
 				></panel-dropdown-control>
 			</section-group-collapse>
-			<section-group-collapse :start-collapsed="false" :label="strings.imageLoadOptions">
-				<panel-dropdown-control
-					:label="strings.animation"
-					:options="settings.imageLoadAnimationOptions"
-					v-model="settings.imageLoadAnimation"
-					:disabled="generalDisabledStatus"
-				></panel-dropdown-control>
-				<panel-dropdown-control
-					:label="strings.direction"
-					:options="settings.imageLoadAnimationDirectionOptions"
-					v-model="settings.imageLoadAnimationDirection"
-					:disabled="generalDisabledStatus"
-				></panel-dropdown-control>
-				<range-input
-					v-model="settings.imageLoadAnimationSpeed"
-					:clamp="true"
-					:min="1"
-					:max="10"
-					:label="strings.speed"
-					:disabled="generalDisabledStatus"
-				></range-input>
-			</section-group-collapse>
+			<image-load-options
+				:general-disabled-status="generalDisabledStatus"
+				:settings="settings"
+			></image-load-options>
 		</div>
 	</fragment>
 </template>
@@ -92,6 +74,7 @@ import SettingsMenuSection from '$Mixins/SettingsMenuSection';
 import SectionGroupCollapse from '$LeftPanel/SectionGroupCollapse';
 import withMessage from '$Mixins/withMessage';
 import LazyLoadProDisabledOverlay from '$LazyLoadSettings/LazyLoadProDisabledOverlay';
+import ImageLoadOptions from '$LazyLoadSettings/ImageLoadOptions';
 
 export default {
 	props: {
@@ -101,6 +84,7 @@ export default {
 		},
 	},
 	components: {
+		ImageLoadOptions,
 		LazyLoadProDisabledOverlay,
 		ControlTipWrapper,
 		RangeInput,

@@ -19107,6 +19107,10 @@ exports.default = void 0;
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   props: {
     label: {
@@ -19137,7 +19141,8 @@ exports.default = _default;
     _vm._b(
       {
         staticClass:
-          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property"
+          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property",
+        attrs: { "data-wptb-disabled": _vm.disabled }
       },
       "div",
       _vm.$attrs,
@@ -19181,7 +19186,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+var _PanelControlBase = _interopRequireDefault(require("$Mixins/PanelControlBase"));
 
 var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
 
@@ -19273,7 +19278,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
+},{"$Mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
