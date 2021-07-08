@@ -7,6 +7,140 @@
 	// eslint-disable-next-line no-restricted-globals
 })('WPTB_LazyLoad', self || global, () => {
 	/**
+	 * Lazy load animation.
+	 *
+	 * @param {Object} options options
+	 * @class
+	 */
+	function LazyLoadAnimation(options) {
+		/**
+		 * Default options.
+		 *
+		 * @type {Object}
+		 */
+		const defaults = {
+			name: '',
+			speed: 8,
+			step: 10,
+			hooks: {},
+		};
+
+		const instanceOptions = { ...defaults, ...options };
+
+		/**
+		 * Calculate animation duration relative to its supplied speed.
+		 *
+		 * @param {number} min minimum seconds
+		 * @param {number} max maximum seconds
+		 * @return {number} animation duration
+		 */
+		this.calculateDuration = (min = 0.1, max = 1) => {
+			return Math.max(min, max) - (Math.abs(max - min) / instanceOptions.step) * instanceOptions.speed;
+		};
+
+		/**
+		 * Get supplied user hook.
+		 *
+		 * @param {string} key hook name
+		 * @return {null | Function} user hook function
+		 */
+		const getHook = (key) => {
+			if (Object.prototype.hasOwnProperty.call(instanceOptions.hooks, key)) {
+				const userHook = instanceOptions.hooks[key];
+				if (typeof userHook === 'function') {
+					return userHook;
+				}
+			}
+
+			return null;
+		};
+
+		/**
+		 * Call supplied user hook.
+		 *
+		 * @param {string} hookName hook name
+		 * @param {any} args arguments to call hook
+		 */
+		const callHook = (hookName, ...args) => {
+			const userHook = getHook(hookName);
+			if (userHook) {
+				userHook.apply(this, args);
+			}
+		};
+
+		/**
+		 * Delete instance.
+		 */
+		const cleanUp = () => {
+			delete this;
+		};
+
+		/**
+		 * Before animation base lifecycle hook.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		this.beforeAnimation = (imgElement) => {
+			callHook('beforeAnimation', imgElement);
+		};
+
+		/**
+		 * Animate element.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		this.animate = (imgElement) => {
+			callHook('animate', imgElement);
+		};
+
+		/**
+		 * After animation processes and cleanup.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		this.afterAnimation = (imgElement) => {
+			callHook('afterAnimation', imgElement);
+			cleanUp();
+		};
+	}
+
+	/**
+	 * Factory for lazy load animations.
+	 *
+	 * @param {Object} options factory options
+	 * @class
+	 */
+	function LazyLoadAnimationFactory(options) {
+		this.getAnimation = (animationName, extraOptions = {}) => {
+			if (options[animationName]) {
+				return new LazyLoadAnimation({ ...options[animationName], ...extraOptions });
+			}
+
+			return new LazyLoadAnimation({});
+		};
+	}
+
+	/**
+	 * Options for animation factory
+	 *
+	 * @type {Object}
+	 */
+	const factoryOptions = {
+		slideIn: {
+			hooks: {
+				beforeAnimation(imageElement) {
+					imageElement.parentNode.style.overflow = 'hidden';
+					imageElement.style.transform = 'translateX(-100%)';
+				},
+				animate(imageElement) {
+					imageElement.style.transition = `transform ${this.calculateDuration()}s ease-out`;
+					imageElement.style.transform = 'translateX(0)';
+				},
+			},
+		},
+	};
+
+	/**
 	 * WPTB Lazy load functionality module.
 	 *
 	 * @class
@@ -49,6 +183,8 @@
 		const bufferElementClass = 'wptb-lazy-load-buffer-element';
 		const bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
 
+		const animationFactory = new LazyLoadAnimationFactory(factoryOptions);
+
 		/**
 		 * Whether user scrolling down or up.
 		 *
@@ -57,6 +193,8 @@
 		const isGoingDown = () => {
 			return window.scrollY - cachedScrollData.lastYPosition >= 0;
 		};
+
+		let animation = null;
 
 		/**
 		 * Calculate visibility of image element depending on current position of page.
@@ -113,6 +251,8 @@
 			imgElement.insertAdjacentElement('afterend', bufferElement);
 
 			imgElement.parentNode.classList.add(bufferElementContainerClass);
+
+			animation.beforeAnimation(imgElement);
 		};
 
 		/**
@@ -129,13 +269,24 @@
 			}
 		};
 
+		/**
+		 * Function to call when image element is loaded.
+		 *
+		 * @param {Object} e event
+		 */
 		const imageElementLoadCallback = (e) => {
-			e.target.dataset.wptbLazyLoadStatus = 'true';
+			const imageElement = e.target;
+
+			imageElement.dataset.wptbLazyLoadStatus = 'true';
 
 			// remove buffer element and associated options
-			removeBufferElement(e.target);
+			removeBufferElement(imageElement);
 
-			e.target.removeEventListener('load', imageElementLoadCallback);
+			animation.animate(imageElement);
+
+			imageElement.removeEventListener('load', imageElementLoadCallback);
+
+			animation.afterAnimation(imageElement);
 		};
 
 		/**
@@ -269,6 +420,9 @@
 				options = { ...defaultOptions, ...initOptions };
 
 				if (options.enabled) {
+					animation = animationFactory.getAnimation(options.imageLoadAnimation, {
+						speed: options.imageLoadAnimationSpeed,
+					});
 					assignLazyLoadToElements();
 				}
 			}

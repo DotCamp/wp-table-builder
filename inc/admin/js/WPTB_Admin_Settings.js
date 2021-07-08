@@ -25933,12 +25933,6 @@ var deepmerge_1 = deepmerge;
 module.exports = deepmerge_1;
 },{}],"../../../../frontend/js/frontend-only/WPTB_LazyLoad.js":[function(require,module,exports) {
 var global = arguments[3];
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -25951,6 +25945,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function assignToGlobal(key, context, factory) {
@@ -25962,11 +25962,166 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 })('WPTB_LazyLoad', self || global, function () {
   /**
+   * Lazy load animation.
+   *
+   * @param {Object} options options
+   * @class
+   */
+  function LazyLoadAnimation(options) {
+    var _this = this;
+
+    /**
+     * Default options.
+     *
+     * @type {Object}
+     */
+    var defaults = {
+      name: '',
+      speed: 8,
+      step: 10,
+      hooks: {}
+    };
+
+    var instanceOptions = _objectSpread(_objectSpread({}, defaults), options);
+    /**
+     * Calculate animation duration relative to its supplied speed.
+     *
+     * @param {number} min minimum seconds
+     * @param {number} max maximum seconds
+     * @return {number} animation duration
+     */
+
+
+    this.calculateDuration = function () {
+      var min = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.1;
+      var max = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      return Math.max(min, max) - Math.abs(max - min) / instanceOptions.step * instanceOptions.speed;
+    };
+    /**
+     * Get supplied user hook.
+     *
+     * @param {string} key hook name
+     * @return {null | Function} user hook function
+     */
+
+
+    var getHook = function getHook(key) {
+      if (Object.prototype.hasOwnProperty.call(instanceOptions.hooks, key)) {
+        var userHook = instanceOptions.hooks[key];
+
+        if (typeof userHook === 'function') {
+          return userHook;
+        }
+      }
+
+      return null;
+    };
+    /**
+     * Call supplied user hook.
+     *
+     * @param {string} hookName hook name
+     * @param {any} args arguments to call hook
+     */
+
+
+    var callHook = function callHook(hookName) {
+      var userHook = getHook(hookName);
+
+      if (userHook) {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        userHook.apply(_this, args);
+      }
+    };
+    /**
+     * Delete instance.
+     */
+
+
+    var cleanUp = function cleanUp() {
+      delete _this;
+    };
+    /**
+     * Before animation base lifecycle hook.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    this.beforeAnimation = function (imgElement) {
+      callHook('beforeAnimation', imgElement);
+    };
+    /**
+     * Animate element.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    this.animate = function (imgElement) {
+      callHook('animate', imgElement);
+    };
+    /**
+     * After animation processes and cleanup.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    this.afterAnimation = function (imgElement) {
+      callHook('afterAnimation', imgElement);
+      cleanUp();
+    };
+  }
+  /**
+   * Factory for lazy load animations.
+   *
+   * @param {Object} options factory options
+   * @class
+   */
+
+
+  function LazyLoadAnimationFactory(options) {
+    this.getAnimation = function (animationName) {
+      var extraOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      if (options[animationName]) {
+        return new LazyLoadAnimation(_objectSpread(_objectSpread({}, options[animationName]), extraOptions));
+      }
+
+      return new LazyLoadAnimation({});
+    };
+  }
+  /**
+   * Options for animation factory
+   *
+   * @type {Object}
+   */
+
+
+  var factoryOptions = {
+    slideIn: {
+      hooks: {
+        beforeAnimation: function beforeAnimation(imageElement) {
+          imageElement.parentNode.style.overflow = 'hidden';
+          imageElement.style.transform = 'translateX(-100%)';
+        },
+        animate: function animate(imageElement) {
+          imageElement.style.transition = "transform ".concat(this.calculateDuration(), "s ease-out");
+          imageElement.style.transform = 'translateX(0)';
+        }
+      }
+    }
+  };
+  /**
    * WPTB Lazy load functionality module.
    *
    * @class
    */
   // eslint-disable-next-line camelcase
+
   function WPTB_LazyLoad() {
     /**
      * Lazy load default options.
@@ -26002,6 +26157,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var allImages = [];
     var bufferElementClass = 'wptb-lazy-load-buffer-element';
     var bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
+    var animationFactory = new LazyLoadAnimationFactory(factoryOptions);
     /**
      * Whether user scrolling down or up.
      *
@@ -26011,6 +26167,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var isGoingDown = function isGoingDown() {
       return window.scrollY - cachedScrollData.lastYPosition >= 0;
     };
+
+    var animation = null;
     /**
      * Calculate visibility of image element depending on current position of page.
      *
@@ -26019,7 +26177,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      *
      * @return {boolean} is element visible or not
      */
-
 
     var isElementVisible = function isElementVisible(imgElement, currentYPos) {
       var _imgElement$getBoundi = imgElement.getBoundingClientRect(),
@@ -26066,6 +26223,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       imgElement.insertAdjacentElement('afterend', bufferElement);
       imgElement.parentNode.classList.add(bufferElementContainerClass);
+      animation.beforeAnimation(imgElement);
     };
     /**
      * Remove buffer element and associated options.
@@ -26083,12 +26241,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         parentNode.classList.remove(bufferElementContainerClass);
       }
     };
+    /**
+     * Function to call when image element is loaded.
+     *
+     * @param {Object} e event
+     */
+
 
     var imageElementLoadCallback = function imageElementLoadCallback(e) {
-      e.target.dataset.wptbLazyLoadStatus = 'true'; // remove buffer element and associated options
+      var imageElement = e.target;
+      imageElement.dataset.wptbLazyLoadStatus = 'true'; // remove buffer element and associated options
 
-      removeBufferElement(e.target);
-      e.target.removeEventListener('load', imageElementLoadCallback);
+      removeBufferElement(imageElement);
+      animation.animate(imageElement);
+      imageElement.removeEventListener('load', imageElementLoadCallback);
+      animation.afterAnimation(imageElement);
     };
     /**
      * Process image element for visibility.
@@ -26220,6 +26387,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         options = _objectSpread(_objectSpread({}, defaultOptions), initOptions);
 
         if (options.enabled) {
+          animation = animationFactory.getAnimation(options.imageLoadAnimation, {
+            speed: options.imageLoadAnimationSpeed
+          });
           assignLazyLoadToElements();
         }
       }
@@ -27300,6 +27470,94 @@ var getMainBuilderTable = function getMainBuilderTable() {
 };
 
 exports.getMainBuilderTable = getMainBuilderTable;
+},{}],"components/leftPanel/Panel2ColumnTemplate.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    label: {
+      type: String,
+      default: 'panel control label'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $36515e = exports.default || module.exports;
+      
+      if (typeof $36515e === 'function') {
+        $36515e = $36515e.options;
+      }
+    
+        /* template */
+        Object.assign($36515e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    _vm._b(
+      {
+        staticClass:
+          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property"
+      },
+      "div",
+      _vm.$attrs,
+      false
+    ),
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("div", { staticClass: "wptb-settings-space-between" }, [
+          _c(
+            "p",
+            {
+              staticClass: "wptb-settings-item-title wptb-text-transform-cap",
+              attrs: { "data-wptb-text-disabled": _vm.disabled }
+            },
+            [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
+          ),
+          _vm._v(" "),
+          _c("div", [_vm._t("default")], 2)
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
 },{}],"components/ColorPicker.vue":[function(require,module,exports) {
 "use strict";
 
@@ -27312,14 +27570,10 @@ var _vueColor = require("vue-color");
 
 var _functions = require("../functions");
 
-//
-//
-//
-//
-//
-//
-//
-//
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -27385,6 +27639,7 @@ var _default = {
     event: 'colorChanged'
   },
   components: {
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default,
     Sketch: _vueColor.Sketch
   },
   data: function data() {
@@ -27402,15 +27657,17 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      var _document$querySelect;
+      var _ownerDocument$queryS;
 
-      // event listeners to hide opened color picker on certain DOM events
-      (_document$querySelect = document.querySelector('.wptb-container')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.addEventListener('click', _this.handleHide);
-      document.addEventListener('wheel', _this.handleHide, {
+      var ownerDocument = _this.$refs.inputWrapper.ownerDocument; // event listeners to hide opened color picker on certain DOM events
+      // eslint-disable-next-line no-unused-expressions
+
+      (_ownerDocument$queryS = ownerDocument.querySelector('.wptb-container')) === null || _ownerDocument$queryS === void 0 ? void 0 : _ownerDocument$queryS.addEventListener('click', _this.handleHide);
+      ownerDocument.addEventListener('wheel', _this.handleHide, {
         capture: false,
         passive: true
       });
-      document.addEventListener('keyup', _this.handleHide);
+      ownerDocument.addEventListener('keyup', _this.handleHide);
       _this.id = (0, _functions.generateUniqueId)();
       WPTB_IconManager.getIcon('tint-slash', null, true).then(function (resp) {
         _this.icons.noColor = resp;
@@ -27506,15 +27763,17 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
-    var _document$querySelect2;
+    var _ownerDocument$queryS2;
 
-    // remove assigned event listeners
-    (_document$querySelect2 = document.querySelector('.wptb-container')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.removeEventListener('click', this.handleHide);
-    document.removeEventListener('wheel', this.handleHide, {
+    var ownerDocument = this.$refs.inputWrapper.ownerDocument; // remove assigned event listeners
+    // eslint-disable-next-line no-unused-expressions
+
+    (_ownerDocument$queryS2 = ownerDocument.querySelector('.wptb-container')) === null || _ownerDocument$queryS2 === void 0 ? void 0 : _ownerDocument$queryS2.removeEventListener('click', this.handleHide);
+    ownerDocument.removeEventListener('wheel', this.handleHide, {
       capture: false,
       passive: true
     });
-    document.removeEventListener('keyup', this.handleHide);
+    ownerDocument.removeEventListener('keyup', this.handleHide);
   }
 };
 exports.default = _default;
@@ -27531,137 +27790,125 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "panel2-column-template",
     {
-      staticClass:
-        "wptb-color-picker-wrapper wptb-settings-row wptb-settings-middle-xs wptb-element-property",
-      attrs: { id: _vm.id }
+      staticClass: "wptb-color-picker-wrapper",
+      attrs: { id: _vm.id, disabled: _vm.disabled, label: _vm.label }
     },
     [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c(
-          "p",
-          {
-            staticClass: "wptb-settings-item-title wptb-text-transform-cap",
-            attrs: { "data-wptb-text-disabled": _vm.disabled }
-          },
-          [_vm._v("\n\t\t\t" + _vm._s(_vm.label) + "\n\t\t")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            ref: "inputWrapper",
-            staticClass: "wptb-color-picker-input-wrapper",
-            attrs: { disabled: _vm.disabled },
-            on: {
-              "!click": function($event) {
-                $event.stopPropagation()
-                $event.preventDefault()
-                return _vm.toggleVisibility($event)
-              }
+      _c(
+        "div",
+        {
+          ref: "inputWrapper",
+          staticClass: "wptb-color-picker-input-wrapper",
+          attrs: { disabled: _vm.disabled },
+          on: {
+            "!click": function($event) {
+              $event.stopPropagation()
+              $event.preventDefault()
+              return _vm.toggleVisibility($event)
             }
-          },
-          [
-            _c("div", { staticClass: "wptb-color-picker-inner-indicator" }, [
-              _c("div", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.color === "",
-                    expression: "color === ''"
-                  }
-                ],
-                staticClass:
-                  "wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards",
-                domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
-              }),
-              _vm._v(" "),
-              _c("div", {
-                staticClass:
-                  "wptb-color-picker-selected-color wptb-plugin-inner-shadow",
-                style: _vm.colorPickerStyle
-              }),
-              _vm._v(" "),
-              _c("div", {
-                staticClass:
-                  "wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"
-              })
-            ]),
+          }
+        },
+        [
+          _c("div", { staticClass: "wptb-color-picker-inner-indicator" }, [
+            _c("div", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.color === "",
+                  expression: "color === ''"
+                }
+              ],
+              staticClass:
+                "wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards",
+              domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+            }),
             _vm._v(" "),
             _c("div", {
               staticClass:
-                "wptb-color-picker-logo wptb-color-picker-icon-standards",
-              domProps: { innerHTML: _vm._s(_vm.icons.palette) }
+                "wptb-color-picker-selected-color wptb-plugin-inner-shadow",
+              style: _vm.colorPickerStyle
+            }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass:
+                "wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"
             })
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            ref: "tool",
-            staticClass: "wptb-color-picker-tool-wrapper",
-            style: _vm.keepToolInsideWindow,
-            on: {
-              click: function($event) {
-                $event.stopPropagation()
-                _vm.visibility ? _vm.setVisibility(true) : function() {}
-              }
+          ]),
+          _vm._v(" "),
+          _c("div", {
+            staticClass:
+              "wptb-color-picker-logo wptb-color-picker-icon-standards",
+            domProps: { innerHTML: _vm._s(_vm.icons.palette) }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "tool",
+          staticClass: "wptb-color-picker-tool-wrapper",
+          style: _vm.keepToolInsideWindow,
+          on: {
+            click: function($event) {
+              $event.stopPropagation()
+              _vm.visibility ? _vm.setVisibility(true) : function() {}
             }
-          },
-          [
-            _c(
-              "div",
-              { staticClass: "wptb-color-picker-tool-inner-wrapper" },
-              [
-                _c(
-                  "transition",
-                  { attrs: { name: "wptb-fade" } },
-                  [
-                    _c("sketch", {
-                      staticClass: "wptb-color-picker-input",
-                      style: _vm.toolVisibility,
-                      attrs: { value: _vm.color },
-                      on: { input: _vm.handleColorChange }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-color-picker-clear-color-wrapper" },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "wptb-color-picker-clear-color",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.clearColor($event)
-                          }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "wptb-color-picker-tool-inner-wrapper" },
+            [
+              _c(
+                "transition",
+                { attrs: { name: "wptb-fade" } },
+                [
+                  _c("sketch", {
+                    staticClass: "wptb-color-picker-input",
+                    style: _vm.toolVisibility,
+                    attrs: { value: _vm.color },
+                    on: { input: _vm.handleColorChange }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "wptb-color-picker-clear-color-wrapper" },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "wptb-color-picker-clear-color",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.clearColor($event)
                         }
-                      },
-                      [
-                        _c("div", {
-                          staticClass: "wptb-color-picker-icon-standards",
-                          domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
-                        }),
-                        _vm._v(" "),
-                        _c("div", [_vm._v("Clear")])
-                      ]
-                    )
-                  ]
-                )
-              ],
-              1
-            )
-          ]
-        )
-      ])
+                      }
+                    },
+                    [
+                      _c("div", {
+                        staticClass: "wptb-color-picker-icon-standards",
+                        domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", [_vm._v("Clear")])
+                    ]
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ]
+      )
     ]
   )
 }
@@ -27677,7 +27924,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js"}],"components/IntersectionObserver.vue":[function(require,module,exports) {
+},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/IntersectionObserver.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27760,11 +28007,10 @@ var _deepmerge = _interopRequireDefault(require("deepmerge"));
 
 var _IntersectionObserver = _interopRequireDefault(require("../../components/IntersectionObserver"));
 
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
 //
 //
 //
@@ -27838,6 +28084,7 @@ var _default = {
     event: 'iconSelected'
   },
   components: {
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default,
     IntersectionObserver: _IntersectionObserver.default
   },
   data: function data() {
@@ -27972,152 +28219,138 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    { staticClass: "wptb-settings-row wptb-settings-middle-xs" },
+    "panel2-column-template",
+    { attrs: { disabled: _vm.disabled, label: _vm.label } },
     [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c(
-          "p",
-          {
-            staticClass: "wptb-settings-item-title",
-            attrs: { "data-wptb-text-disabled": _vm.disabled }
-          },
-          [_vm._v(_vm._s(_vm.label))]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "wptb-icon-select-wrapper",
-            attrs: { disabled: _vm.disabled }
-          },
-          [
-            _c("div", { staticClass: "wptb-icon-select-display" }, [
-              _c(
-                "div",
-                {
-                  ref: "iconSelectButton",
-                  staticClass: "wptb-icon-select-preview",
-                  on: { click: _vm.toggleIconDrawer }
-                },
-                [_c("img", { attrs: { src: _vm.selectedIcon.url || "" } })]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.openDrawer,
-                      expression: "openDrawer"
-                    }
-                  ],
-                  staticClass:
-                    "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
-                  style: _vm.drawerPosition
-                },
-                [
-                  _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model.trim",
-                          value: _vm.debunkedFilterText,
-                          expression: "debunkedFilterText",
-                          modifiers: { trim: true }
+      _c(
+        "div",
+        {
+          staticClass: "wptb-icon-select-wrapper",
+          attrs: { disabled: _vm.disabled }
+        },
+        [
+          _c("div", { staticClass: "wptb-icon-select-display" }, [
+            _c(
+              "div",
+              {
+                ref: "iconSelectButton",
+                staticClass: "wptb-icon-select-preview",
+                on: { click: _vm.toggleIconDrawer }
+              },
+              [_c("img", { attrs: { src: _vm.selectedIcon.url || "" } })]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.openDrawer,
+                    expression: "openDrawer"
+                  }
+                ],
+                staticClass:
+                  "wptb-icon-select-drawer wptb-plugin-box-shadow-md",
+                style: _vm.drawerPosition
+              },
+              [
+                _c("div", { staticClass: "wptb-icon-search-wrapper" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.trim",
+                        value: _vm.debunkedFilterText,
+                        expression: "debunkedFilterText",
+                        modifiers: { trim: true }
+                      }
+                    ],
+                    attrs: { type: "text", placeholder: "Search for icons..." },
+                    domProps: { value: _vm.debunkedFilterText },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
                         }
-                      ],
-                      attrs: {
-                        type: "text",
-                        placeholder: "Search for icons..."
+                        _vm.debunkedFilterText = $event.target.value.trim()
                       },
-                      domProps: { value: _vm.debunkedFilterText },
+                      blur: function($event) {
+                        return _vm.$forceUpdate()
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    ref: "drawerRefElement",
+                    staticClass: "wptb-icon-previews"
+                  },
+                  [
+                    _c("div", {
+                      staticClass:
+                        "wptb-icon-select-drawer-preview wptb-icon-reset",
                       on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.debunkedFilterText = $event.target.value.trim()
-                        },
-                        blur: function($event) {
-                          return _vm.$forceUpdate()
+                        click: function($event) {
+                          return _vm.setIcon("", "")
                         }
                       }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      ref: "drawerRefElement",
-                      staticClass: "wptb-icon-previews"
-                    },
-                    [
-                      _c("div", {
-                        staticClass:
-                          "wptb-icon-select-drawer-preview wptb-icon-reset",
-                        on: {
-                          click: function($event) {
-                            return _vm.setIcon("", "")
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm._l(_vm.fullIconList(), function(iconUrl, name) {
-                        return _c(
-                          "div",
-                          {
-                            key: name,
-                            staticClass: "wptb-icon-select-drawer-preview",
-                            class: {
-                              "wptb-icon-preview-active":
-                                _vm.selectedIcon.name === name
-                            }
-                          },
-                          [
-                            _c("img", {
-                              attrs: {
-                                src: iconUrl,
-                                title: name,
-                                draggable: false
-                              },
-                              on: {
-                                click: function($event) {
-                                  return _vm.setIcon(name, iconUrl)
-                                }
-                              }
-                            })
-                          ]
-                        )
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "intersection-observer",
+                    }),
+                    _vm._v(" "),
+                    _vm._l(_vm.fullIconList(), function(iconUrl, name) {
+                      return _c(
+                        "div",
                         {
-                          attrs: {
-                            "relative-element": _vm.innerDrawerRef,
-                            "force-hide": _vm.observerHide
-                          },
-                          on: { visible: _vm.observerVisible }
+                          key: name,
+                          staticClass: "wptb-icon-select-drawer-preview",
+                          class: {
+                            "wptb-icon-preview-active":
+                              _vm.selectedIcon.name === name
+                          }
                         },
                         [
-                          _c("div", {
-                            staticClass: "wptb-icon-select-drawer-end"
+                          _c("img", {
+                            attrs: {
+                              src: iconUrl,
+                              title: name,
+                              draggable: false
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.setIcon(name, iconUrl)
+                              }
+                            }
                           })
                         ]
                       )
-                    ],
-                    2
-                  )
-                ]
-              )
-            ])
-          ]
-        )
-      ])
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "intersection-observer",
+                      {
+                        attrs: {
+                          "relative-element": _vm.innerDrawerRef,
+                          "force-hide": _vm.observerHide
+                        },
+                        on: { visible: _vm.observerVisible }
+                      },
+                      [
+                        _c("div", {
+                          staticClass: "wptb-icon-select-drawer-end"
+                        })
+                      ]
+                    )
+                  ],
+                  2
+                )
+              ]
+            )
+          ])
+        ]
+      )
     ]
   )
 }
@@ -28133,7 +28366,7 @@ render._withStripped = true
           };
         })());
       
-},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../../components/IntersectionObserver":"components/IntersectionObserver.vue"}],"mixins/PanelControlBase.js":[function(require,module,exports) {
+},{"deepmerge":"../../../../../node_modules/deepmerge/dist/cjs.js","../../components/IntersectionObserver":"components/IntersectionObserver.vue","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"mixins/PanelControlBase.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28205,6 +28438,8 @@ exports.default = void 0;
 
 var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
 
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //
@@ -28214,16 +28449,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 var _default = {
+  components: {
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default
+  },
   props: {
     options: {
       type: Object,
@@ -28246,67 +28475,44 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
+    "panel2-column-template",
+    { attrs: { disabled: _vm.disabled, label: _vm.label } },
     [
-      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c(
-          "label",
-          {
-            staticClass:
-              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
-          },
-          [
-            _c(
-              "span",
-              {
-                staticStyle: { "font-size": "16px" },
-                attrs: { "data-wptb-text-disabled": _vm.disabled }
-              },
-              [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
-            ),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.innerValue,
-                    expression: "innerValue"
-                  }
-                ],
-                attrs: { disabled: _vm.disabled },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.innerValue = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.options, function(name, key) {
-                return _c("option", { key: key, domProps: { value: key } }, [
-                  _vm._v(_vm._s(_vm._f("cap")(name)))
-                ])
-              }),
-              0
-            )
-          ]
-        )
-      ])
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.innerValue,
+              expression: "innerValue"
+            }
+          ],
+          attrs: { disabled: _vm.disabled },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.innerValue = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        _vm._l(_vm.options, function(name, key) {
+          return _c("option", { key: key, domProps: { value: key } }, [
+            _vm._v(_vm._s(_vm._f("cap")(name)))
+          ])
+        }),
+        0
+      )
     ]
   )
 }
@@ -28322,7 +28528,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/leftPanel/SectionGroupCollapse.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28395,20 +28601,32 @@ exports.default = _default;
       attrs: { id: _vm.sectionId }
     },
     [
-      _c("div", { staticClass: "wptb-panel-toggle" }, [
-        _c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.label))]),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "dashicons toggle-icon",
+      _c(
+        "div",
+        {
+          staticClass: "wptb-panel-toggle",
           on: {
-            "!click": function($event) {
+            click: function($event) {
               $event.preventDefault()
-              $event.stopPropagation()
               return _vm.handleToggle($event)
             }
           }
-        })
-      ]),
+        },
+        [
+          _c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.label))]),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "dashicons toggle-icon",
+            on: {
+              "!click": function($event) {
+                $event.preventDefault()
+                $event.stopPropagation()
+                return _vm.handleToggle($event)
+              }
+            }
+          })
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -28462,6 +28680,20 @@ var _LazyLoadProDisabledOverlay = _interopRequireDefault(require("$LazyLoadSetti
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -28727,9 +28959,9 @@ exports.default = _default;
             [
               _c("panel-dropdown-control", {
                 attrs: {
-                  label: _vm.strings.imageLoadOptions,
+                  label: _vm.strings.animation,
                   options: _vm.settings.imageLoadAnimationOptions,
-                  disabled: _vm.iconSubOptionsDisableStatus
+                  disabled: _vm.generalDisabledStatus
                 },
                 model: {
                   value: _vm.settings.imageLoadAnimation,
@@ -28737,6 +28969,38 @@ exports.default = _default;
                     _vm.$set(_vm.settings, "imageLoadAnimation", $$v)
                   },
                   expression: "settings.imageLoadAnimation"
+                }
+              }),
+              _vm._v(" "),
+              _c("panel-dropdown-control", {
+                attrs: {
+                  label: _vm.strings.direction,
+                  options: _vm.settings.imageLoadAnimationDirectionOptions,
+                  disabled: _vm.generalDisabledStatus
+                },
+                model: {
+                  value: _vm.settings.imageLoadAnimationDirection,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "imageLoadAnimationDirection", $$v)
+                  },
+                  expression: "settings.imageLoadAnimationDirection"
+                }
+              }),
+              _vm._v(" "),
+              _c("range-input", {
+                attrs: {
+                  clamp: true,
+                  min: 1,
+                  max: 10,
+                  label: _vm.strings.speed,
+                  disabled: _vm.generalDisabledStatus
+                },
+                model: {
+                  value: _vm.settings.imageLoadAnimationSpeed,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "imageLoadAnimationSpeed", $$v)
+                  },
+                  expression: "settings.imageLoadAnimationSpeed"
                 }
               })
             ],

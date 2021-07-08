@@ -1,59 +1,52 @@
 <template>
-	<div :id="id" class="wptb-color-picker-wrapper wptb-settings-row wptb-settings-middle-xs wptb-element-property">
-		<div class="wptb-settings-space-between">
-			<p class="wptb-settings-item-title wptb-text-transform-cap" :data-wptb-text-disabled="disabled">
-				{{ label }}
-			</p>
-			<div
-				ref="inputWrapper"
-				class="wptb-color-picker-input-wrapper"
-				:disabled="disabled"
-				@click.capture.stop.prevent="toggleVisibility"
-			>
-				<div class="wptb-color-picker-inner-indicator">
-					<div
-						v-show="color === ''"
-						class="wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards"
-						v-html="icons.noColor"
-					></div>
-					<div
-						class="wptb-color-picker-selected-color wptb-plugin-inner-shadow"
-						:style="colorPickerStyle"
-					></div>
-					<div class="wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"></div>
-				</div>
-				<div class="wptb-color-picker-logo wptb-color-picker-icon-standards" v-html="icons.palette"></div>
+	<panel2-column-template class="wptb-color-picker-wrapper" :id="id" :disabled="disabled" :label="label">
+		<div
+			ref="inputWrapper"
+			class="wptb-color-picker-input-wrapper"
+			:disabled="disabled"
+			@click.capture.stop.prevent="toggleVisibility"
+		>
+			<div class="wptb-color-picker-inner-indicator">
+				<div
+					v-show="color === ''"
+					class="wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards"
+					v-html="icons.noColor"
+				></div>
+				<div class="wptb-color-picker-selected-color wptb-plugin-inner-shadow" :style="colorPickerStyle"></div>
+				<div class="wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"></div>
 			</div>
-			<div
-				ref="tool"
-				@click.stop="visibility ? setVisibility(true) : () => {}"
-				class="wptb-color-picker-tool-wrapper"
-				:style="keepToolInsideWindow"
-			>
-				<div class="wptb-color-picker-tool-inner-wrapper">
-					<transition name="wptb-fade">
-						<sketch
-							class="wptb-color-picker-input"
-							:style="toolVisibility"
-							:value="color"
-							@input="handleColorChange"
-						></sketch>
-					</transition>
-					<div class="wptb-color-picker-clear-color-wrapper">
-						<div @click.prevent="clearColor" class="wptb-color-picker-clear-color">
-							<div class="wptb-color-picker-icon-standards" v-html="icons.noColor"></div>
-							<div>Clear</div>
-						</div>
+			<div class="wptb-color-picker-logo wptb-color-picker-icon-standards" v-html="icons.palette"></div>
+		</div>
+		<div
+			ref="tool"
+			@click.stop="visibility ? setVisibility(true) : () => {}"
+			class="wptb-color-picker-tool-wrapper"
+			:style="keepToolInsideWindow"
+		>
+			<div class="wptb-color-picker-tool-inner-wrapper">
+				<transition name="wptb-fade">
+					<sketch
+						class="wptb-color-picker-input"
+						:style="toolVisibility"
+						:value="color"
+						@input="handleColorChange"
+					></sketch>
+				</transition>
+				<div class="wptb-color-picker-clear-color-wrapper">
+					<div @click.prevent="clearColor" class="wptb-color-picker-clear-color">
+						<div class="wptb-color-picker-icon-standards" v-html="icons.noColor"></div>
+						<div>Clear</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</panel2-column-template>
 </template>
 
 <script>
 import { Sketch } from 'vue-color';
 import { generateUniqueId } from '../functions';
+import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
 
 export default {
 	props: {
@@ -74,7 +67,7 @@ export default {
 		prop: 'color',
 		event: 'colorChanged',
 	},
-	components: { Sketch },
+	components: { Panel2ColumnTemplate, Sketch },
 	data() {
 		return {
 			visibility: false,
@@ -88,10 +81,13 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => {
+			const { ownerDocument } = this.$refs.inputWrapper;
+
 			// event listeners to hide opened color picker on certain DOM events
-			document.querySelector('.wptb-container')?.addEventListener('click', this.handleHide);
-			document.addEventListener('wheel', this.handleHide, { capture: false, passive: true });
-			document.addEventListener('keyup', this.handleHide);
+			// eslint-disable-next-line no-unused-expressions
+			ownerDocument.querySelector('.wptb-container')?.addEventListener('click', this.handleHide);
+			ownerDocument.addEventListener('wheel', this.handleHide, { capture: false, passive: true });
+			ownerDocument.addEventListener('keyup', this.handleHide);
 
 			this.id = generateUniqueId();
 
@@ -176,10 +172,13 @@ export default {
 		},
 	},
 	beforeDestroy() {
+		const { ownerDocument } = this.$refs.inputWrapper;
+
 		// remove assigned event listeners
-		document.querySelector('.wptb-container')?.removeEventListener('click', this.handleHide);
-		document.removeEventListener('wheel', this.handleHide, { capture: false, passive: true });
-		document.removeEventListener('keyup', this.handleHide);
+		// eslint-disable-next-line no-unused-expressions
+		ownerDocument.querySelector('.wptb-container')?.removeEventListener('click', this.handleHide);
+		ownerDocument.removeEventListener('wheel', this.handleHide, { capture: false, passive: true });
+		ownerDocument.removeEventListener('keyup', this.handleHide);
 	},
 };
 </script>

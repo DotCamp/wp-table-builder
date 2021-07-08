@@ -798,7 +798,7 @@ body > img {
     font-size: 14px;
     /*font-weight: 500;*/
     line-height: 14px;
-    padding: 14px 0 14px 10px;
+    padding: 14px 0 14px 15px;
     position: relative;
     /*border: 1px solid #ddd;*/
     background: var(--wptb-plugin-gray-100);
@@ -822,6 +822,7 @@ body > img {
     flex-wrap: wrap;
     align-items: center;
     /*padding-bottom: 25px;*/
+    padding-right: 0 !important;
 }
 
 .wptb-settings-row label {
@@ -1224,6 +1225,7 @@ ul.wptb-tabs {
     justify-content: space-between;
     align-items: center;
     border-bottom: 3px solid var(--wptb-plugin-theme-sidebar-bg);
+    cursor: pointer;
 }
 
 .wptb-element-options .wptb-panel-toggle {

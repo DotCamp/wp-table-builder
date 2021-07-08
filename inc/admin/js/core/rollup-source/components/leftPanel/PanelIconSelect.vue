@@ -1,47 +1,45 @@
 <template>
-	<div class="wptb-settings-row wptb-settings-middle-xs">
-		<div class="wptb-settings-space-between">
-			<p class="wptb-settings-item-title" :data-wptb-text-disabled="disabled">{{ label }}</p>
-			<div class="wptb-icon-select-wrapper" :disabled="disabled">
-				<div class="wptb-icon-select-display">
-					<div class="wptb-icon-select-preview" @click="toggleIconDrawer" ref="iconSelectButton">
-						<img :src="selectedIcon.url || ''" />
+	<panel2-column-template :disabled="disabled" :label="label">
+		<div class="wptb-icon-select-wrapper" :disabled="disabled">
+			<div class="wptb-icon-select-display">
+				<div class="wptb-icon-select-preview" @click="toggleIconDrawer" ref="iconSelectButton">
+					<img :src="selectedIcon.url || ''" />
+				</div>
+				<div
+					v-show="openDrawer"
+					class="wptb-icon-select-drawer wptb-plugin-box-shadow-md"
+					:style="drawerPosition"
+				>
+					<div class="wptb-icon-search-wrapper">
+						<input type="text" placeholder="Search for icons..." v-model.trim="debunkedFilterText" />
 					</div>
-					<div
-						v-show="openDrawer"
-						class="wptb-icon-select-drawer wptb-plugin-box-shadow-md"
-						:style="drawerPosition"
-					>
-						<div class="wptb-icon-search-wrapper">
-							<input type="text" placeholder="Search for icons..." v-model.trim="debunkedFilterText" />
+					<div class="wptb-icon-previews" ref="drawerRefElement">
+						<div class="wptb-icon-select-drawer-preview wptb-icon-reset" @click="setIcon('', '')"></div>
+						<div
+							v-for="(iconUrl, name) in fullIconList()"
+							class="wptb-icon-select-drawer-preview"
+							:class="{ 'wptb-icon-preview-active': selectedIcon.name === name }"
+							:key="name"
+						>
+							<img :src="iconUrl" :title="name" :draggable="false" @click="setIcon(name, iconUrl)" />
 						</div>
-						<div class="wptb-icon-previews" ref="drawerRefElement">
-							<div class="wptb-icon-select-drawer-preview wptb-icon-reset" @click="setIcon('', '')"></div>
-							<div
-								v-for="(iconUrl, name) in fullIconList()"
-								class="wptb-icon-select-drawer-preview"
-								:class="{ 'wptb-icon-preview-active': selectedIcon.name === name }"
-								:key="name"
-							>
-								<img :src="iconUrl" :title="name" :draggable="false" @click="setIcon(name, iconUrl)" />
-							</div>
-							<intersection-observer
-								:relative-element="innerDrawerRef"
-								@visible="observerVisible"
-								:force-hide="observerHide"
-							>
-								<div class="wptb-icon-select-drawer-end"></div>
-							</intersection-observer>
-						</div>
+						<intersection-observer
+							:relative-element="innerDrawerRef"
+							@visible="observerVisible"
+							:force-hide="observerHide"
+						>
+							<div class="wptb-icon-select-drawer-end"></div>
+						</intersection-observer>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</panel2-column-template>
 </template>
 <script>
 import deepmerge from 'deepmerge';
 import IntersectionObserver from '../../components/IntersectionObserver';
+import Panel2ColumnTemplate from '$LeftPanel/Panel2ColumnTemplate';
 
 export default {
 	props: {
@@ -74,7 +72,7 @@ export default {
 		prop: 'selectedUserIcon',
 		event: 'iconSelected',
 	},
-	components: { IntersectionObserver },
+	components: { Panel2ColumnTemplate, IntersectionObserver },
 	data() {
 		return {
 			selectedIcon: {

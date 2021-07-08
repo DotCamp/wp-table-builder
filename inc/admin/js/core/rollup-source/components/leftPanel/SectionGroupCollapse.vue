@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-panel-toggle-group" ref="toggleWrapper" :id="sectionId">
-		<div class="wptb-panel-toggle">
+		<div class="wptb-panel-toggle" @click.prevent="handleToggle">
 			<div class="header">{{ label }}</div>
 			<span class="dashicons toggle-icon" @click.prevent.capture.stop="handleToggle"></span>
 		</div>

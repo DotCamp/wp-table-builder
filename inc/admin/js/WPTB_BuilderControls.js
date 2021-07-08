@@ -19085,19 +19085,13 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/PanelDropdownControl.vue":[function(require,module,exports) {
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/leftPanel/Panel2ColumnTemplate.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
 //
 //
 //
@@ -19114,6 +19108,96 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 var _default = {
+  props: {
+    label: {
+      type: String,
+      default: 'panel control label'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  }
+};
+exports.default = _default;
+        var $36515e = exports.default || module.exports;
+      
+      if (typeof $36515e === 'function') {
+        $36515e = $36515e.options;
+      }
+    
+        /* template */
+        Object.assign($36515e, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    _vm._b(
+      {
+        staticClass:
+          "wptb-element-option wptb-settings-items wptb-plugin-width-full wptb-element-property"
+      },
+      "div",
+      _vm.$attrs,
+      false
+    ),
+    [
+      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
+        _c("div", { staticClass: "wptb-settings-space-between" }, [
+          _c(
+            "p",
+            {
+              staticClass: "wptb-settings-item-title wptb-text-transform-cap",
+              attrs: { "data-wptb-text-disabled": _vm.disabled }
+            },
+            [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
+          ),
+          _vm._v(" "),
+          _c("div", [_vm._t("default")], 2)
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/PanelDropdownControl.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _PanelControlBase = _interopRequireDefault(require("../mixins/PanelControlBase"));
+
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  components: {
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default
+  },
   props: {
     options: {
       type: Object,
@@ -19136,67 +19220,44 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
-    {
-      staticClass:
-        "wptb-element-option wptb-settings-items wptb-plugin-width-full"
-    },
+    "panel2-column-template",
+    { attrs: { disabled: _vm.disabled, label: _vm.label } },
     [
-      _c("div", { staticClass: "wptb-settings-row wptb-settings-middle-xs" }, [
-        _c(
-          "label",
-          {
-            staticClass:
-              "wptb-control-row wptb-flex wptb-flex-row wptb-flex-align-center wptb-flex-justify-space-between"
-          },
-          [
-            _c(
-              "span",
-              {
-                staticStyle: { "font-size": "16px" },
-                attrs: { "data-wptb-text-disabled": _vm.disabled }
-              },
-              [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]
-            ),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.innerValue,
-                    expression: "innerValue"
-                  }
-                ],
-                attrs: { disabled: _vm.disabled },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.innerValue = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.options, function(name, key) {
-                return _c("option", { key: key, domProps: { value: key } }, [
-                  _vm._v(_vm._s(_vm._f("cap")(name)))
-                ])
-              }),
-              0
-            )
-          ]
-        )
-      ])
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.innerValue,
+              expression: "innerValue"
+            }
+          ],
+          attrs: { disabled: _vm.disabled },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.innerValue = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        _vm._l(_vm.options, function(name, key) {
+          return _c("option", { key: key, domProps: { value: key } }, [
+            _vm._v(_vm._s(_vm._f("cap")(name)))
+          ])
+        }),
+        0
+      )
     ]
   )
 }
@@ -19212,7 +19273,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
+},{"../mixins/PanelControlBase":"mixins/PanelControlBase.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"components/ResponsivePanelGeneralControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22367,14 +22428,10 @@ var _vueColor = require("vue-color");
 
 var _functions = require("../functions");
 
-//
-//
-//
-//
-//
-//
-//
-//
+var _Panel2ColumnTemplate = _interopRequireDefault(require("$LeftPanel/Panel2ColumnTemplate"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 //
 //
@@ -22440,6 +22497,7 @@ var _default = {
     event: 'colorChanged'
   },
   components: {
+    Panel2ColumnTemplate: _Panel2ColumnTemplate.default,
     Sketch: _vueColor.Sketch
   },
   data: function data() {
@@ -22457,15 +22515,17 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      var _document$querySelect;
+      var _ownerDocument$queryS;
 
-      // event listeners to hide opened color picker on certain DOM events
-      (_document$querySelect = document.querySelector('.wptb-container')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.addEventListener('click', _this.handleHide);
-      document.addEventListener('wheel', _this.handleHide, {
+      var ownerDocument = _this.$refs.inputWrapper.ownerDocument; // event listeners to hide opened color picker on certain DOM events
+      // eslint-disable-next-line no-unused-expressions
+
+      (_ownerDocument$queryS = ownerDocument.querySelector('.wptb-container')) === null || _ownerDocument$queryS === void 0 ? void 0 : _ownerDocument$queryS.addEventListener('click', _this.handleHide);
+      ownerDocument.addEventListener('wheel', _this.handleHide, {
         capture: false,
         passive: true
       });
-      document.addEventListener('keyup', _this.handleHide);
+      ownerDocument.addEventListener('keyup', _this.handleHide);
       _this.id = (0, _functions.generateUniqueId)();
       WPTB_IconManager.getIcon('tint-slash', null, true).then(function (resp) {
         _this.icons.noColor = resp;
@@ -22561,15 +22621,17 @@ var _default = {
     }
   },
   beforeDestroy: function beforeDestroy() {
-    var _document$querySelect2;
+    var _ownerDocument$queryS2;
 
-    // remove assigned event listeners
-    (_document$querySelect2 = document.querySelector('.wptb-container')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.removeEventListener('click', this.handleHide);
-    document.removeEventListener('wheel', this.handleHide, {
+    var ownerDocument = this.$refs.inputWrapper.ownerDocument; // remove assigned event listeners
+    // eslint-disable-next-line no-unused-expressions
+
+    (_ownerDocument$queryS2 = ownerDocument.querySelector('.wptb-container')) === null || _ownerDocument$queryS2 === void 0 ? void 0 : _ownerDocument$queryS2.removeEventListener('click', this.handleHide);
+    ownerDocument.removeEventListener('wheel', this.handleHide, {
       capture: false,
       passive: true
     });
-    document.removeEventListener('keyup', this.handleHide);
+    ownerDocument.removeEventListener('keyup', this.handleHide);
   }
 };
 exports.default = _default;
@@ -22586,137 +22648,125 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "panel2-column-template",
     {
-      staticClass:
-        "wptb-color-picker-wrapper wptb-settings-row wptb-settings-middle-xs wptb-element-property",
-      attrs: { id: _vm.id }
+      staticClass: "wptb-color-picker-wrapper",
+      attrs: { id: _vm.id, disabled: _vm.disabled, label: _vm.label }
     },
     [
-      _c("div", { staticClass: "wptb-settings-space-between" }, [
-        _c(
-          "p",
-          {
-            staticClass: "wptb-settings-item-title wptb-text-transform-cap",
-            attrs: { "data-wptb-text-disabled": _vm.disabled }
-          },
-          [_vm._v("\n\t\t\t" + _vm._s(_vm.label) + "\n\t\t")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            ref: "inputWrapper",
-            staticClass: "wptb-color-picker-input-wrapper",
-            attrs: { disabled: _vm.disabled },
-            on: {
-              "!click": function($event) {
-                $event.stopPropagation()
-                $event.preventDefault()
-                return _vm.toggleVisibility($event)
-              }
+      _c(
+        "div",
+        {
+          ref: "inputWrapper",
+          staticClass: "wptb-color-picker-input-wrapper",
+          attrs: { disabled: _vm.disabled },
+          on: {
+            "!click": function($event) {
+              $event.stopPropagation()
+              $event.preventDefault()
+              return _vm.toggleVisibility($event)
             }
-          },
-          [
-            _c("div", { staticClass: "wptb-color-picker-inner-indicator" }, [
-              _c("div", {
-                directives: [
-                  {
-                    name: "show",
-                    rawName: "v-show",
-                    value: _vm.color === "",
-                    expression: "color === ''"
-                  }
-                ],
-                staticClass:
-                  "wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards",
-                domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
-              }),
-              _vm._v(" "),
-              _c("div", {
-                staticClass:
-                  "wptb-color-picker-selected-color wptb-plugin-inner-shadow",
-                style: _vm.colorPickerStyle
-              }),
-              _vm._v(" "),
-              _c("div", {
-                staticClass:
-                  "wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"
-              })
-            ]),
+          }
+        },
+        [
+          _c("div", { staticClass: "wptb-color-picker-inner-indicator" }, [
+            _c("div", {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.color === "",
+                  expression: "color === ''"
+                }
+              ],
+              staticClass:
+                "wptb-color-picker-clear-color-indicator wptb-color-picker-icon-standards",
+              domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+            }),
             _vm._v(" "),
             _c("div", {
               staticClass:
-                "wptb-color-picker-logo wptb-color-picker-icon-standards",
-              domProps: { innerHTML: _vm._s(_vm.icons.palette) }
+                "wptb-color-picker-selected-color wptb-plugin-inner-shadow",
+              style: _vm.colorPickerStyle
+            }),
+            _vm._v(" "),
+            _c("div", {
+              staticClass:
+                "wptb-color-picker-alpha-checkerboard wptb-checkerboard-pattern"
             })
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            ref: "tool",
-            staticClass: "wptb-color-picker-tool-wrapper",
-            style: _vm.keepToolInsideWindow,
-            on: {
-              click: function($event) {
-                $event.stopPropagation()
-                _vm.visibility ? _vm.setVisibility(true) : function() {}
-              }
+          ]),
+          _vm._v(" "),
+          _c("div", {
+            staticClass:
+              "wptb-color-picker-logo wptb-color-picker-icon-standards",
+            domProps: { innerHTML: _vm._s(_vm.icons.palette) }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          ref: "tool",
+          staticClass: "wptb-color-picker-tool-wrapper",
+          style: _vm.keepToolInsideWindow,
+          on: {
+            click: function($event) {
+              $event.stopPropagation()
+              _vm.visibility ? _vm.setVisibility(true) : function() {}
             }
-          },
-          [
-            _c(
-              "div",
-              { staticClass: "wptb-color-picker-tool-inner-wrapper" },
-              [
-                _c(
-                  "transition",
-                  { attrs: { name: "wptb-fade" } },
-                  [
-                    _c("sketch", {
-                      staticClass: "wptb-color-picker-input",
-                      style: _vm.toolVisibility,
-                      attrs: { value: _vm.color },
-                      on: { input: _vm.handleColorChange }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "wptb-color-picker-clear-color-wrapper" },
-                  [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "wptb-color-picker-clear-color",
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.clearColor($event)
-                          }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "wptb-color-picker-tool-inner-wrapper" },
+            [
+              _c(
+                "transition",
+                { attrs: { name: "wptb-fade" } },
+                [
+                  _c("sketch", {
+                    staticClass: "wptb-color-picker-input",
+                    style: _vm.toolVisibility,
+                    attrs: { value: _vm.color },
+                    on: { input: _vm.handleColorChange }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "wptb-color-picker-clear-color-wrapper" },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "wptb-color-picker-clear-color",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.clearColor($event)
                         }
-                      },
-                      [
-                        _c("div", {
-                          staticClass: "wptb-color-picker-icon-standards",
-                          domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
-                        }),
-                        _vm._v(" "),
-                        _c("div", [_vm._v("Clear")])
-                      ]
-                    )
-                  ]
-                )
-              ],
-              1
-            )
-          ]
-        )
-      ])
+                      }
+                    },
+                    [
+                      _c("div", {
+                        staticClass: "wptb-color-picker-icon-standards",
+                        domProps: { innerHTML: _vm._s(_vm.icons.noColor) }
+                      }),
+                      _vm._v(" "),
+                      _c("div", [_vm._v("Clear")])
+                    ]
+                  )
+                ]
+              )
+            ],
+            1
+          )
+        ]
+      )
     ]
   )
 }
@@ -22732,7 +22782,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js"}],"containers/DifferentBorderControl.vue":[function(require,module,exports) {
+},{"vue-color":"../../../../../node_modules/vue-color/dist/vue-color.min.js","../functions":"functions/index.js","$LeftPanel/Panel2ColumnTemplate":"components/leftPanel/Panel2ColumnTemplate.vue"}],"containers/DifferentBorderControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29871,20 +29921,32 @@ exports.default = _default;
       attrs: { id: _vm.sectionId }
     },
     [
-      _c("div", { staticClass: "wptb-panel-toggle" }, [
-        _c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.label))]),
-        _vm._v(" "),
-        _c("span", {
-          staticClass: "dashicons toggle-icon",
+      _c(
+        "div",
+        {
+          staticClass: "wptb-panel-toggle",
           on: {
-            "!click": function($event) {
+            click: function($event) {
               $event.preventDefault()
-              $event.stopPropagation()
               return _vm.handleToggle($event)
             }
           }
-        })
-      ]),
+        },
+        [
+          _c("div", { staticClass: "header" }, [_vm._v(_vm._s(_vm.label))]),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "dashicons toggle-icon",
+            on: {
+              "!click": function($event) {
+                $event.preventDefault()
+                $event.stopPropagation()
+                return _vm.handleToggle($event)
+              }
+            }
+          })
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
