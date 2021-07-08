@@ -26137,6 +26137,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(0)");
         }
       }
+    },
+    growSling: {
+      hooks: {
+        beforeAnimation: function beforeAnimation(imageElement) {
+          imageElement.style.transform = 'scale(0.1)';
+        },
+        animate: function animate(imageElement) {
+          imageElement.style.transition = "transform ".concat(this.calculateDuration(), "s cubic-bezier(0.68, -0.55, 0.27, 1.55)");
+          imageElement.style.transform = 'scale(1)';
+        }
+      }
     }
   };
   /**

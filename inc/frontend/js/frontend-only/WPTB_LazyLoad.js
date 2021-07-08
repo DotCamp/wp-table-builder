@@ -165,6 +165,17 @@
 				},
 			},
 		},
+		growSling: {
+			hooks: {
+				beforeAnimation(imageElement) {
+					imageElement.style.transform = 'scale(0.1)';
+				},
+				animate(imageElement) {
+					imageElement.style.transition = `transform ${this.calculateDuration()}s cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
+					imageElement.style.transform = 'scale(1)';
+				},
+			},
+		},
 	};
 
 	/**
