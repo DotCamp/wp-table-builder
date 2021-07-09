@@ -26,7 +26,18 @@
 			direction: 'left',
 		};
 
+		// merged instance options
 		const instanceOptions = { ...defaults, ...options };
+
+		/**
+		 * Style tag id for custom stylesheet rules.
+		 *
+		 * @type {string}
+		 */
+		const styleId = 'wptb-lazy-load-styles';
+
+		const bufferElementClass = 'wptb-lazy-load-buffer-element';
+		const bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
 
 		/**
 		 * Get instance related options.
@@ -97,6 +108,42 @@
 		};
 
 		/**
+		 * Remove buffer element and associated options.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 */
+		this.removeBufferElement = (imgElement) => {
+			const { parentNode } = imgElement;
+			const bufferElement = parentNode.querySelector(`.${bufferElementClass}`);
+			if (bufferElement) {
+				parentNode.removeChild(bufferElement);
+				parentNode.classList.remove(bufferElementContainerClass);
+			}
+		};
+
+		/**
+		 * Add style element to document head.
+		 *
+		 * @param {string} content style content
+		 * @param {HTMLDocument} contentRoot content root
+		 */
+		this.addStylesheet = (content, contentRoot) => {
+			let lazyloadStyleSheet = contentRoot.querySelector(`style[id="${styleId}"]`);
+
+			if (!lazyloadStyleSheet) {
+				lazyloadStyleSheet = contentRoot.createElement('style');
+				lazyloadStyleSheet.id = styleId;
+				lazyloadStyleSheet.type = 'text/css';
+
+				contentRoot.head.appendChild(lazyloadStyleSheet);
+			}
+
+			const styleRules = document.createTextNode(content);
+			lazyloadStyleSheet.innerHTML = '';
+			lazyloadStyleSheet.appendChild(styleRules);
+		};
+
+		/**
 		 * Before animation base lifecycle hook.
 		 *
 		 * @param {HTMLElement} imgElement image element
@@ -147,6 +194,7 @@
 	 * @type {Object}
 	 */
 	const factoryOptions = {
+		/* eslint-disable no-param-reassign */
 		slideIn: {
 			hooks: {
 				beforeAnimation(imageElement) {
@@ -160,6 +208,7 @@
 					}%)`;
 				},
 				animate(imageElement) {
+					this.removeBufferElement(imageElement);
 					imageElement.style.transition = `transform ${this.calculateDuration()}s ease-out`;
 					imageElement.style.transform = `translate${this.calculateAnimationDirection()}(0)`;
 				},
@@ -171,11 +220,43 @@
 					imageElement.style.transform = 'scale(0.1)';
 				},
 				animate(imageElement) {
+					this.removeBufferElement(imageElement);
 					imageElement.style.transition = `transform ${this.calculateDuration()}s cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
 					imageElement.style.transform = 'scale(1)';
 				},
 			},
 		},
+		flash: {
+			hooks: {
+				beforeAnimation(imageElement) {
+					const flashElement = document.createElement('div');
+					flashElement.classList.add('wptb-flash-element');
+
+					imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
+					imageElement.insertAdjacentElement('afterend', flashElement);
+
+					const flashStyle = `@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #FFFFFF}.wptb-flash-animation {animation: wptb-flash ${this.calculateDuration()}s  forwards ease-out}`;
+					this.addStylesheet(flashStyle, imageElement.ownerDocument);
+				},
+				animate(imageElement) {
+					this.removeBufferElement(imageElement);
+					const flashElement = imageElement.parentNode.querySelector('.wptb-flash-element');
+					if (flashElement) {
+						imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
+
+						flashElement.addEventListener('animationend', (e) => {
+							if (e.animationName === 'wptb-flash') {
+								imageElement.parentNode.classList.remove('wptb-lazy-load-buffer-element-container');
+								flashElement.remove();
+							}
+						});
+
+						flashElement.classList.add('wptb-flash-animation');
+					}
+				},
+			},
+		},
+		/* eslint-enable no-param-reassign */
 	};
 
 	/**
@@ -293,19 +374,6 @@
 			animation.beforeAnimation(imgElement);
 		};
 
-		/**
-		 * Remove buffer element and associated options.
-		 *
-		 * @param {HTMLElement} imgElement image element
-		 */
-		const removeBufferElement = (imgElement) => {
-			const { parentNode } = imgElement;
-			const bufferElement = parentNode.querySelector(`.${bufferElementClass}`);
-			if (bufferElement) {
-				parentNode.removeChild(bufferElement);
-				parentNode.classList.remove(bufferElementContainerClass);
-			}
-		};
 
 		/**
 		 * Function to call when image element is loaded.
@@ -316,9 +384,6 @@
 			const imageElement = e.target;
 
 			imageElement.dataset.wptbLazyLoadStatus = 'true';
-
-			// remove buffer element and associated options
-			removeBufferElement(imageElement);
 
 			animation.animate(imageElement);
 

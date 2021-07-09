@@ -25981,15 +25981,24 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       step: 10,
       hooks: {},
       direction: 'left'
-    };
+    }; // merged instance options
 
     var instanceOptions = _objectSpread(_objectSpread({}, defaults), options);
+    /**
+     * Style tag id for custom stylesheet rules.
+     *
+     * @type {string}
+     */
+
+
+    var styleId = 'wptb-lazy-load-styles';
+    var bufferElementClass = 'wptb-lazy-load-buffer-element';
+    var bufferElementContainerClass = 'wptb-lazy-load-buffer-element-container';
     /**
      * Get instance related options.
      *
      * @return {Object} options
      */
-
 
     this.getOptions = function () {
       return _objectSpread({}, instanceOptions);
@@ -26066,6 +26075,44 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       delete _this;
     };
     /**
+     * Remove buffer element and associated options.
+     *
+     * @param {HTMLElement} imgElement image element
+     */
+
+
+    this.removeBufferElement = function (imgElement) {
+      var parentNode = imgElement.parentNode;
+      var bufferElement = parentNode.querySelector(".".concat(bufferElementClass));
+
+      if (bufferElement) {
+        parentNode.removeChild(bufferElement);
+        parentNode.classList.remove(bufferElementContainerClass);
+      }
+    };
+    /**
+     * Add style element to document head.
+     *
+     * @param {string} content style content
+     * @param {HTMLDocument} contentRoot content root
+     */
+
+
+    this.addStylesheet = function (content, contentRoot) {
+      var lazyloadStyleSheet = contentRoot.querySelector("style[id=\"".concat(styleId, "\"]"));
+
+      if (!lazyloadStyleSheet) {
+        lazyloadStyleSheet = contentRoot.createElement('style');
+        lazyloadStyleSheet.id = styleId;
+        lazyloadStyleSheet.type = 'text/css';
+        contentRoot.head.appendChild(lazyloadStyleSheet);
+      }
+
+      var styleRules = document.createTextNode(content);
+      lazyloadStyleSheet.innerHTML = '';
+      lazyloadStyleSheet.appendChild(styleRules);
+    };
+    /**
      * Before animation base lifecycle hook.
      *
      * @param {HTMLElement} imgElement image element
@@ -26124,6 +26171,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
   var factoryOptions = {
+    /* eslint-disable no-param-reassign */
     slideIn: {
       hooks: {
         beforeAnimation: function beforeAnimation(imageElement) {
@@ -26133,6 +26181,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(").concat(directionConstant * 100, "%)");
         },
         animate: function animate(imageElement) {
+          this.removeBufferElement(imageElement);
           imageElement.style.transition = "transform ".concat(this.calculateDuration(), "s ease-out");
           imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(0)");
         }
@@ -26144,11 +26193,41 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           imageElement.style.transform = 'scale(0.1)';
         },
         animate: function animate(imageElement) {
+          this.removeBufferElement(imageElement);
           imageElement.style.transition = "transform ".concat(this.calculateDuration(), "s cubic-bezier(0.68, -0.55, 0.27, 1.55)");
           imageElement.style.transform = 'scale(1)';
         }
       }
+    },
+    flash: {
+      hooks: {
+        beforeAnimation: function beforeAnimation(imageElement) {
+          var flashElement = document.createElement('div');
+          flashElement.classList.add('wptb-flash-element');
+          imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
+          imageElement.insertAdjacentElement('afterend', flashElement);
+          var flashStyle = "@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #FFFFFF}.wptb-flash-animation {animation: wptb-flash ".concat(this.calculateDuration(), "s  forwards ease-out}");
+          this.addStylesheet(flashStyle, imageElement.ownerDocument);
+        },
+        animate: function animate(imageElement) {
+          this.removeBufferElement(imageElement);
+          var flashElement = imageElement.parentNode.querySelector('.wptb-flash-element');
+
+          if (flashElement) {
+            imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
+            flashElement.addEventListener('animationend', function (e) {
+              if (e.animationName === 'wptb-flash') {
+                imageElement.parentNode.classList.remove('wptb-lazy-load-buffer-element-container');
+                flashElement.remove();
+              }
+            });
+            flashElement.classList.add('wptb-flash-animation');
+          }
+        }
+      }
     }
+    /* eslint-enable no-param-reassign */
+
   };
   /**
    * WPTB Lazy load functionality module.
@@ -26261,22 +26340,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       animation.beforeAnimation(imgElement);
     };
     /**
-     * Remove buffer element and associated options.
-     *
-     * @param {HTMLElement} imgElement image element
-     */
-
-
-    var removeBufferElement = function removeBufferElement(imgElement) {
-      var parentNode = imgElement.parentNode;
-      var bufferElement = parentNode.querySelector(".".concat(bufferElementClass));
-
-      if (bufferElement) {
-        parentNode.removeChild(bufferElement);
-        parentNode.classList.remove(bufferElementContainerClass);
-      }
-    };
-    /**
      * Function to call when image element is loaded.
      *
      * @param {Object} e event
@@ -26285,9 +26348,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var imageElementLoadCallback = function imageElementLoadCallback(e) {
       var imageElement = e.target;
-      imageElement.dataset.wptbLazyLoadStatus = 'true'; // remove buffer element and associated options
-
-      removeBufferElement(imageElement);
+      imageElement.dataset.wptbLazyLoadStatus = 'true';
       animation.animate(imageElement);
       imageElement.removeEventListener('load', imageElementLoadCallback);
       animation.afterAnimation(imageElement);

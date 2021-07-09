@@ -103,11 +103,41 @@
 
 		this.prepareAllStylesheets = (stylesheetsObj, root) => {
 			// eslint-disable-next-line array-callback-return
-			Object.keys(stylesheetsObj).map((s) => {
-				if (Object.prototype.hasOwnProperty.call(stylesheetsObj, s)) {
-					this.prepareStylesheet(s, stylesheetsObj[s], root);
+			Object.keys(stylesheetsObj).map((action) => {
+				if (Object.prototype.hasOwnProperty.call(stylesheetsObj, action)) {
+					// eslint-disable-next-line default-case
+					switch (action) {
+						case 'create':
+							// eslint-disable-next-line array-callback-return
+							Object.keys(stylesheetsObj[action]).map((s) => {
+								if (Object.prototype.hasOwnProperty.call(stylesheetsObj[action], s)) {
+									this.prepareStylesheet(s, stylesheetsObj[action][s], root);
+								}
+							});
+							break;
+						case 'copy':
+							// eslint-disable-next-line array-callback-return
+							stylesheetsObj[action].map((query) => {
+								this.copyStylesheet(query, root);
+							});
+							break;
+					}
 				}
 			});
+		};
+
+		/**
+		 * Copy a stylesheet to current root.
+		 *
+		 * @param {string} query query to find stylesheet
+		 * @param {HTMLElement} root root
+		 */
+		this.copyStylesheet = (query, root) => {
+			const styleSheet = document.querySelector(query);
+
+			if (styleSheet) {
+				root.appendChild(styleSheet.cloneNode(true));
+			}
 		};
 
 		this.prepareStylesheet = (handler, url, root) => {

@@ -111,8 +111,10 @@ class Style_Pass {
 
 		$style_pass_data = [
 			'stylesheets' => [
-				'wp-table-builder-css' => static::prepare_stylesheet_url( 'inc/frontend/css/wp-table-builder-frontend.css', $version ),
-
+				'create' => [
+					'wp-table-builder-css' => static::prepare_stylesheet_url( 'inc/frontend/css/wp-table-builder-frontend.css', $version ),
+				],
+				'copy'   => []
 			]
 		];
 
