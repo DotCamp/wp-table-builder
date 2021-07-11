@@ -24,6 +24,7 @@
 			step: 10,
 			hooks: {},
 			direction: 'left',
+			perspective: 1000,
 		};
 
 		// merged instance options
@@ -62,12 +63,30 @@
 		/**
 		 * Calculate animation direction axis.
 		 *
+		 * @param {boolean} invert whether to invert axis
+		 *
 		 * @return {string} axis name
 		 */
-		this.calculateAnimationDirection = () => {
+		this.calculateAnimationDirection = (invert = false) => {
 			const xAxis = ['left', 'right'];
+			const names = ['X', 'Y'];
+			const indexConstant = invert ? 1 : 0;
 
-			return xAxis.includes(instanceOptions.direction) ? 'X' : 'Y';
+			return xAxis.includes(instanceOptions.direction)
+				? names[(0 + indexConstant) % 2]
+				: names[(1 + indexConstant) % 2];
+		};
+
+		/**
+		 * Calculate a direction constant.
+		 *
+		 * @param {boolean} invert whether to invert constant
+		 *
+		 * @return {number} direction constant
+		 */
+		this.calculateDirectionConstant = (invert = false) => {
+			const positiveConstant = ['left', 'up'];
+			return (invert ? -1 : 1) * (positiveConstant.includes(this.getOptions().direction) ? 1 : -1);
 		};
 
 		/**
@@ -108,14 +127,25 @@
 		};
 
 		/**
+		 * Get buffer element.
+		 *
+		 * @param {HTMLElement} imgElement image element
+		 * @return {null | HTMLElement} buffer element
+		 */
+		this.getBufferElement = (imgElement) => {
+			const { parentNode } = imgElement;
+			return parentNode.querySelector(`.${bufferElementClass}`);
+		};
+
+		/**
 		 * Remove buffer element and associated options.
 		 *
 		 * @param {HTMLElement} imgElement image element
 		 */
 		this.removeBufferElement = (imgElement) => {
-			const { parentNode } = imgElement;
-			const bufferElement = parentNode.querySelector(`.${bufferElementClass}`);
+			const bufferElement = this.getBufferElement(imgElement);
 			if (bufferElement) {
+				const { parentNode } = bufferElement;
 				parentNode.removeChild(bufferElement);
 				parentNode.classList.remove(bufferElementContainerClass);
 			}
@@ -195,16 +225,20 @@
 	 */
 	const factoryOptions = {
 		/* eslint-disable no-param-reassign */
+		none: {
+			hooks: {
+				animate(imageElement) {
+					this.removeBufferElement(imageElement);
+				},
+			},
+		},
 		slideIn: {
 			hooks: {
 				beforeAnimation(imageElement) {
 					imageElement.parentNode.style.overflow = 'hidden';
 
-					const positiveConstant = ['left', 'up'];
-					const directionConstant = positiveConstant.includes(this.getOptions().direction) ? 1 : -1;
-
 					imageElement.style.transform = `translate${this.calculateAnimationDirection()}(${
-						directionConstant * 100
+						this.calculateDirectionConstant() * 100
 					}%)`;
 				},
 				animate(imageElement) {
@@ -253,6 +287,47 @@
 
 						flashElement.classList.add('wptb-flash-animation');
 					}
+				},
+			},
+		},
+		flip: {
+			hooks: {
+				beforeAnimation(imageElement) {
+					const parentWrapper = imageElement.parentNode;
+					parentWrapper.classList.add('wptb-lazy-load-card-container');
+					// eslint-disable-next-line no-unused-expressions
+					parentWrapper.parentNode?.classList.add('wptb-lazy-load-perspective-base');
+
+					imageElement.classList.add('wptb-lazy-load-card-back', 'wptb-lazy-load-hidden-backface');
+
+					this.getBufferElement(imageElement).classList.add(
+						'wptb-lazy-load-hidden-backface',
+						'wptb-lazy-load-card-front'
+					);
+
+					const animationDirection = this.calculateAnimationDirection(true);
+					const rotationAmount = `${this.calculateDirectionConstant(true) * 180}deg`;
+
+					const styles = `.wptb-lazy-load-perspective-base{perspective: ${
+						this.getOptions().perspective
+					}px;} .wptb-lazy-load-card-container{ transform-style: preserve-3d; transition: transform ${this.calculateDuration()}s ease-out;  } .wptb-lazy-load-card-container[data-wptb-card-flip='true']{transform: rotate${animationDirection}(${rotationAmount})} [data-wptb-card-flip='true'] .wptb-lazy-load-card-front svg{ animation: none !important;  opacity: 0.2;} .wptb-lazy-load-card-back { transform: rotate${animationDirection}(${rotationAmount})} .wptb-lazy-load-hidden-backface{backface-visibility: hidden;}`;
+					this.addStylesheet(styles, imageElement.ownerDocument);
+				},
+				animate(imageElement) {
+					const parentWrapper = imageElement.parentNode;
+					parentWrapper.addEventListener('transitionend', (e) => {
+						if (e.propertyName === 'transform') {
+							this.removeBufferElement(imageElement);
+						}
+						parentWrapper.classList.remove('wptb-lazy-load-card-container', 'wptb-lazy-load-flip');
+
+						// eslint-disable-next-line no-unused-expressions
+						parentWrapper.parentNode.classList.remove('wptb-lazy-load-perspective-base');
+
+						imageElement.classList.remove('wptb-lazy-load-card-back', 'wptb-lazy-load-hidden-backface');
+					});
+
+					parentWrapper.dataset.wptbCardFlip = 'true';
 				},
 			},
 		},
@@ -374,7 +449,6 @@
 			animation.beforeAnimation(imgElement);
 		};
 
-
 		/**
 		 * Function to call when image element is loaded.
 		 *
@@ -400,7 +474,13 @@
 		 */
 		const processIndividualImageElement = (imgElement, currentYPos) => {
 			if (options.forceMode || isElementVisible(imgElement, currentYPos)) {
-				imgElement.addEventListener('load', imageElementLoadCallback);
+				const delayCallback = () => {
+					setTimeout(() => {
+						imageElementLoadCallback({ target: imgElement });
+					}, options.delay * 1000);
+				};
+
+				imgElement.addEventListener('load', options.delay ? delayCallback : imageElementLoadCallback);
 
 				// eslint-disable-next-line no-param-reassign
 				imgElement.src = imgElement.dataset.wptbLazyLoadTarget;

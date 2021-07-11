@@ -24,13 +24,22 @@ export default {
 			type: String,
 			default: 'left',
 		},
+		enabledAxis: {
+			type: Array,
+			default: () => {
+				return ['X', 'Y'];
+			},
+		},
 	},
 	components: { PanelDirectionCadet, Panel2ColumnTemplate },
 	mixins: [PanelControlBase],
 	data() {
 		return {
-			directions: ['left', 'right', 'up', 'down'],
+			directionsObject: { X: ['left', 'right'], Y: ['up', 'down'] },
 		};
+	},
+	computed: {
+		directions() {},
 	},
 };
 </script>

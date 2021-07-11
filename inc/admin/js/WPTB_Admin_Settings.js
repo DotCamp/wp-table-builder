@@ -25980,7 +25980,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       speed: 8,
       step: 10,
       hooks: {},
-      direction: 'left'
+      direction: 'left',
+      perspective: 1000
     }; // merged instance options
 
     var instanceOptions = _objectSpread(_objectSpread({}, defaults), options);
@@ -26020,13 +26021,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Calculate animation direction axis.
      *
+     * @param {boolean} invert whether to invert axis
+     *
      * @return {string} axis name
      */
 
 
     this.calculateAnimationDirection = function () {
+      var invert = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var xAxis = ['left', 'right'];
-      return xAxis.includes(instanceOptions.direction) ? 'X' : 'Y';
+      var names = ['X', 'Y'];
+      var indexConstant = invert ? 1 : 0;
+      return xAxis.includes(instanceOptions.direction) ? names[(0 + indexConstant) % 2] : names[(1 + indexConstant) % 2];
+    };
+    /**
+     * Calculate a direction constant.
+     *
+     * @param {boolean} invert whether to invert constant
+     *
+     * @return {number} direction constant
+     */
+
+
+    this.calculateDirectionConstant = function () {
+      var invert = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      var positiveConstant = ['left', 'up'];
+      return (invert ? -1 : 1) * (positiveConstant.includes(_this.getOptions().direction) ? 1 : -1);
     };
     /**
      * Get supplied user hook.
@@ -26075,6 +26095,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       delete _this;
     };
     /**
+     * Get buffer element.
+     *
+     * @param {HTMLElement} imgElement image element
+     * @return {null | HTMLElement} buffer element
+     */
+
+
+    this.getBufferElement = function (imgElement) {
+      var parentNode = imgElement.parentNode;
+      return parentNode.querySelector(".".concat(bufferElementClass));
+    };
+    /**
      * Remove buffer element and associated options.
      *
      * @param {HTMLElement} imgElement image element
@@ -26082,10 +26114,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
     this.removeBufferElement = function (imgElement) {
-      var parentNode = imgElement.parentNode;
-      var bufferElement = parentNode.querySelector(".".concat(bufferElementClass));
+      var bufferElement = _this.getBufferElement(imgElement);
 
       if (bufferElement) {
+        var parentNode = bufferElement.parentNode;
         parentNode.removeChild(bufferElement);
         parentNode.classList.remove(bufferElementContainerClass);
       }
@@ -26172,13 +26204,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
   var factoryOptions = {
     /* eslint-disable no-param-reassign */
+    none: {
+      hooks: {
+        animate: function animate(imageElement) {
+          this.removeBufferElement(imageElement);
+        }
+      }
+    },
     slideIn: {
       hooks: {
         beforeAnimation: function beforeAnimation(imageElement) {
           imageElement.parentNode.style.overflow = 'hidden';
-          var positiveConstant = ['left', 'up'];
-          var directionConstant = positiveConstant.includes(this.getOptions().direction) ? 1 : -1;
-          imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(").concat(directionConstant * 100, "%)");
+          imageElement.style.transform = "translate".concat(this.calculateAnimationDirection(), "(").concat(this.calculateDirectionConstant() * 100, "%)");
         },
         animate: function animate(imageElement) {
           this.removeBufferElement(imageElement);
@@ -26223,6 +26260,40 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             });
             flashElement.classList.add('wptb-flash-animation');
           }
+        }
+      }
+    },
+    flip: {
+      hooks: {
+        beforeAnimation: function beforeAnimation(imageElement) {
+          var _parentWrapper$parent;
+
+          var parentWrapper = imageElement.parentNode;
+          parentWrapper.classList.add('wptb-lazy-load-card-container'); // eslint-disable-next-line no-unused-expressions
+
+          (_parentWrapper$parent = parentWrapper.parentNode) === null || _parentWrapper$parent === void 0 ? void 0 : _parentWrapper$parent.classList.add('wptb-lazy-load-perspective-base');
+          imageElement.classList.add('wptb-lazy-load-card-back', 'wptb-lazy-load-hidden-backface');
+          this.getBufferElement(imageElement).classList.add('wptb-lazy-load-hidden-backface', 'wptb-lazy-load-card-front');
+          var animationDirection = this.calculateAnimationDirection(true);
+          var rotationAmount = "".concat(this.calculateDirectionConstant(true) * 180, "deg");
+          var styles = ".wptb-lazy-load-perspective-base{perspective: ".concat(this.getOptions().perspective, "px;} .wptb-lazy-load-card-container{ transform-style: preserve-3d; transition: transform ").concat(this.calculateDuration(), "s ease-out;  } .wptb-lazy-load-card-container[data-wptb-card-flip='true']{transform: rotate").concat(animationDirection, "(").concat(rotationAmount, ")} [data-wptb-card-flip='true'] .wptb-lazy-load-card-front svg{ animation: none !important;  opacity: 0.2;} .wptb-lazy-load-card-back { transform: rotate").concat(animationDirection, "(").concat(rotationAmount, ")} .wptb-lazy-load-hidden-backface{backface-visibility: hidden;}");
+          this.addStylesheet(styles, imageElement.ownerDocument);
+        },
+        animate: function animate(imageElement) {
+          var _this2 = this;
+
+          var parentWrapper = imageElement.parentNode;
+          parentWrapper.addEventListener('transitionend', function (e) {
+            if (e.propertyName === 'transform') {
+              _this2.removeBufferElement(imageElement);
+            }
+
+            parentWrapper.classList.remove('wptb-lazy-load-card-container', 'wptb-lazy-load-flip'); // eslint-disable-next-line no-unused-expressions
+
+            parentWrapper.parentNode.classList.remove('wptb-lazy-load-perspective-base');
+            imageElement.classList.remove('wptb-lazy-load-card-back', 'wptb-lazy-load-hidden-backface');
+          });
+          parentWrapper.dataset.wptbCardFlip = 'true';
         }
       }
     }
@@ -26363,7 +26434,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var processIndividualImageElement = function processIndividualImageElement(imgElement, currentYPos) {
       if (options.forceMode || isElementVisible(imgElement, currentYPos)) {
-        imgElement.addEventListener('load', imageElementLoadCallback); // eslint-disable-next-line no-param-reassign
+        var delayCallback = function delayCallback() {
+          setTimeout(function () {
+            imageElementLoadCallback({
+              target: imgElement
+            });
+          }, options.delay * 1000);
+        };
+
+        imgElement.addEventListener('load', options.delay ? delayCallback : imageElementLoadCallback); // eslint-disable-next-line no-param-reassign
 
         imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
       }
@@ -28526,6 +28605,11 @@ var PanelControlBase = {
   },
   mounted: function mounted() {
     this.innerValue = this.value;
+  },
+  methods: {
+    setInnerValue: function setInnerValue(val) {
+      this.innerValue = val;
+    }
   }
 };
 var _default = PanelControlBase;
@@ -28879,6 +28963,12 @@ var _default = {
     value: {
       type: String,
       default: 'left'
+    },
+    enabledAxis: {
+      type: Array,
+      default: function _default() {
+        return ['X', 'Y'];
+      }
     }
   },
   components: {
@@ -28888,8 +28978,14 @@ var _default = {
   mixins: [_PanelControlBase.default],
   data: function data() {
     return {
-      directions: ['left', 'right', 'up', 'down']
+      directionsObject: {
+        X: ['left', 'right'],
+        Y: ['up', 'down']
+      }
     };
+  },
+  computed: {
+    directions: function directions() {}
   }
 };
 exports.default = _default;
@@ -29027,7 +29123,7 @@ var _default = {
   mixins: [_SectionGroup.default],
   data: function data() {
     return {
-      directionEnabledAnimations: ['slideIn']
+      directionEnabledAnimations: ['slideIn', 'flip']
     };
   }
 };

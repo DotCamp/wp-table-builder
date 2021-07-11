@@ -48,6 +48,11 @@ const PanelControlBase = {
 	mounted() {
 		this.innerValue = this.value;
 	},
+	methods: {
+		setInnerValue(val) {
+			this.innerValue = val;
+		},
+	},
 };
 
 export default PanelControlBase;

@@ -43,17 +43,18 @@ class Lazy_Load_Manager extends Setting_Base {
 	 * @var array
 	 */
 	private static $frontend_options = [
-		'visibilityPercentage'    => 10,
-		'backgroundColor'         => '#FFFFFF00',
-		'iconName'                => [
+		'visibilityPercentage'        => 10,
+		'backgroundColor'             => '#FFFFFF00',
+		'iconName'                    => [
 			'name' => '',
 		],
-		'iconColor'               => '#000000',
-		'iconSize'                => 20,
-		'iconAnimation'           => 'none',
-		'imageLoadAnimation'      => 'none',
-		'imageLoadAnimationSpeed' => 8,
+		'iconColor'                   => '#000000',
+		'iconSize'                    => 20,
+		'iconAnimation'               => 'none',
+		'imageLoadAnimation'          => 'none',
+		'imageLoadAnimationSpeed'     => 8,
 		'imageLoadAnimationDirection' => 'right',
+		'delay'                       => 0
 	];
 
 	/**
@@ -216,9 +217,9 @@ class Lazy_Load_Manager extends Setting_Base {
 			'preview'                 => esc_html__( 'preview', 'wp-table-builder' ),
 			'revert'                  => esc_html__( 'revert', 'wp-table-builder' ),
 			'imageLoadOptions'        => esc_html__( 'image load options', 'wp-table-builder' ),
-			'animation'        => esc_html__( 'animation', 'wp-table-builder' ),
-			'speed'        => esc_html__( 'speed', 'wp-table-builder' ),
-			'direction'        => esc_html__( 'direction', 'wp-table-builder' ),
+			'animation'               => esc_html__( 'animation', 'wp-table-builder' ),
+			'speed'                   => esc_html__( 'speed', 'wp-table-builder' ),
+			'direction'               => esc_html__( 'direction', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [

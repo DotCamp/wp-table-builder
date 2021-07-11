@@ -37,7 +37,7 @@ export default {
 	mixins: [SectionGroup],
 	data() {
 		return {
-			directionEnabledAnimations: ['slideIn'],
+			directionEnabledAnimations: ['slideIn', 'flip'],
 		};
 	},
 };

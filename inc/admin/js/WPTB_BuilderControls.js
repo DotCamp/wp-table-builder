@@ -18970,6 +18970,11 @@ var PanelControlBase = {
   },
   mounted: function mounted() {
     this.innerValue = this.value;
+  },
+  methods: {
+    setInnerValue: function setInnerValue(val) {
+      this.innerValue = val;
+    }
   }
 };
 var _default = PanelControlBase;
