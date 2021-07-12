@@ -118,6 +118,10 @@ class What_Is_New_Manager {
 			'1.3.5' => [
 				static::prepare_what_is_new_note( 'Dynamic asset loading for frontend to improve page performance and load times.', 'selective_asset_loading.png' ),
 				static::prepare_what_is_new_note( 'Gutenberg block will now correctly display any extra styles added for tables.', 'block_extra_styles.png' ),
+			],
+			'1.3.7' => [
+				static::prepare_what_is_new_note( 'Native lazy load option for table image elements.', 'lazy-load-basic.png' ),
+				static::prepare_what_is_new_note( 'Further customization options for lazy load.', 'lazy-load-pro-options.gif', true ),
 			]
 		];
 	}
