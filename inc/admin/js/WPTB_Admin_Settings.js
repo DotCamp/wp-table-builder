@@ -25981,7 +25981,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       step: 10,
       hooks: {},
       direction: 'left',
-      perspective: 1000
+      perspective: 1000,
+      flashColor: '#FFFFFF'
     }; // merged instance options
 
     var instanceOptions = _objectSpread(_objectSpread({}, defaults), options);
@@ -26243,7 +26244,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           flashElement.classList.add('wptb-flash-element');
           imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
           imageElement.insertAdjacentElement('afterend', flashElement);
-          var flashStyle = "@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #FFFFFF}.wptb-flash-animation {animation: wptb-flash ".concat(this.calculateDuration(), "s  forwards ease-out}");
+          var flashStyle = "@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: ".concat(this.getOptions().flashColor, "}.wptb-flash-animation {animation: wptb-flash ").concat(this.calculateDuration(), "s  forwards ease-out}");
           this.addStylesheet(flashStyle, imageElement.ownerDocument);
         },
         animate: function animate(imageElement) {
@@ -26364,10 +26365,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      */
 
     var isElementVisible = function isElementVisible(imgElement, currentYPos) {
-      var _imgElement$getBoundi = imgElement.getBoundingClientRect(),
-          top = _imgElement$getBoundi.top,
-          height = _imgElement$getBoundi.height,
-          bottom = _imgElement$getBoundi.bottom;
+      // check position data of parent node instead of image element since a transformation affecting Y position of element might occurred
+      var _imgElement$parentNod = imgElement.parentNode.getBoundingClientRect(),
+          top = _imgElement$parentNod.top,
+          height = _imgElement$parentNod.height,
+          bottom = _imgElement$parentNod.bottom;
 
       var _options = options,
           visibilityPercentage = _options.visibilityPercentage;
@@ -26419,7 +26421,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     var imageElementLoadCallback = function imageElementLoadCallback(e) {
       var imageElement = e.target;
-      imageElement.dataset.wptbLazyLoadStatus = 'true';
       animation.animate(imageElement);
       imageElement.removeEventListener('load', imageElementLoadCallback);
       animation.afterAnimation(imageElement);
@@ -26440,8 +26441,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               target: imgElement
             });
           }, options.delay * 1000);
-        };
+        }; // eslint-disable-next-line no-param-reassign
 
+
+        imgElement.dataset.wptbLazyLoadStatus = 'true';
         imgElement.addEventListener('load', options.delay ? delayCallback : imageElementLoadCallback); // eslint-disable-next-line no-param-reassign
 
         imgElement.src = imgElement.dataset.wptbLazyLoadTarget;
@@ -26562,10 +26565,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         options = _objectSpread(_objectSpread({}, defaultOptions), initOptions);
 
         if (options.enabled) {
-          animation = animationFactory.getAnimation(options.imageLoadAnimation, {
+          animation = animationFactory.getAnimation(options.imageLoadAnimation, _objectSpread({
             speed: options.imageLoadAnimationSpeed,
-            direction: options.imageLoadAnimationDirection
-          });
+            direction: options.imageLoadAnimationDirection,
+            perspective: options.imageLoadAnimationPerspective
+          }, options));
           assignLazyLoadToElements();
         }
       }
@@ -29132,6 +29136,8 @@ var _RangeInput = _interopRequireDefault(require("$Components/RangeInput"));
 
 var _SectionGroup = _interopRequireDefault(require("$Mixins/SectionGroup"));
 
+var _ColorPicker = _interopRequireDefault(require("$Components/ColorPicker"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -29151,7 +29157,8 @@ var _default = {
     SectionGroupCollapse: _SectionGroupCollapse.default,
     PanelDropdownControl: _PanelDropdownControl.default,
     PanelDirectionControl: _PanelDirectionControl.default,
-    RangeInput: _RangeInput.default
+    RangeInput: _RangeInput.default,
+    ColorPicker: _ColorPicker.default
   },
   mixins: [_SectionGroup.default],
   data: function data() {
@@ -29213,6 +29220,29 @@ exports.default = _default;
         "transition",
         { attrs: { name: "wptb-fade", appear: "" } },
         [
+          _vm.settings.imageLoadAnimation === "flash"
+            ? _c("color-picker", {
+                attrs: {
+                  disabled: _vm.generalDisabledStatus,
+                  label: _vm.strings.color
+                },
+                model: {
+                  value: _vm.settings.flashColor,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "flashColor", $$v)
+                  },
+                  expression: "settings.flashColor"
+                }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "transition",
+        { attrs: { name: "wptb-fade", appear: "" } },
+        [
           _vm.directionEnabledAnimations.includes(
             _vm.settings.imageLoadAnimation
           )
@@ -29228,6 +29258,35 @@ exports.default = _default;
                     _vm.$set(_vm.settings, "imageLoadAnimationDirection", $$v)
                   },
                   expression: "settings.imageLoadAnimationDirection"
+                }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "transition",
+        { attrs: { name: "wptb-fade", appear: "" } },
+        [
+          _vm.settings.imageLoadAnimation === "flip"
+            ? _c("range-input", {
+                attrs: {
+                  clamp: true,
+                  min: 1,
+                  max: 1000,
+                  label: _vm.strings.perspective,
+                  "post-fix": "px",
+                  disabled:
+                    _vm.generalDisabledStatus ||
+                    _vm.settings.imageLoadAnimation === "none"
+                },
+                model: {
+                  value: _vm.settings.imageLoadAnimationPerspective,
+                  callback: function($$v) {
+                    _vm.$set(_vm.settings, "imageLoadAnimationPerspective", $$v)
+                  },
+                  expression: "settings.imageLoadAnimationPerspective"
                 }
               })
             : _vm._e()
@@ -29269,7 +29328,7 @@ render._withStripped = true
           };
         })());
       
-},{"$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$LeftPanel/PanelDirectionControl":"components/leftPanel/PanelDirectionControl.vue","$Components/RangeInput":"components/RangeInput.vue","$Mixins/SectionGroup":"mixins/SectionGroup.js"}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
+},{"$LeftPanel/SectionGroupCollapse":"components/leftPanel/SectionGroupCollapse.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$LeftPanel/PanelDirectionControl":"components/leftPanel/PanelDirectionControl.vue","$Components/RangeInput":"components/RangeInput.vue","$Mixins/SectionGroup":"mixins/SectionGroup.js","$Components/ColorPicker":"components/ColorPicker.vue"}],"components/lazyLoadSettings/LazyLoadProOptions.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29427,7 +29486,7 @@ exports.default = _default;
             {
               attrs: {
                 label: _vm.strings.generalOptions,
-                "start-collapsed": true,
+                "start-collapsed": false,
                 sectionId: "lazyLoadProGeneralOptions"
               }
             },
@@ -29482,7 +29541,10 @@ exports.default = _default;
           _c(
             "section-group-collapse",
             {
-              attrs: { "start-collapsed": true, label: _vm.strings.iconOptions }
+              attrs: {
+                "start-collapsed": false,
+                label: _vm.strings.iconOptions
+              }
             },
             [
               _c("panel-icon-select", {

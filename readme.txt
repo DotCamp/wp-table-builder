@@ -88,6 +88,11 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.7 =
+
+* NEW: Lazy load for plugin image elements.
+* PRO: Lazy load customization options.
+
 = 1.3.6 =
 
 * FIX: An issue with style pass affecting some browsers.

@@ -8,7 +8,7 @@
 		<div class="wptb-lazy-load-pro-options wptb-controls-for-settings">
 			<section-group-collapse
 				:label="strings.generalOptions"
-				:start-collapsed="true"
+				:start-collapsed="false"
 				sectionId="lazyLoadProGeneralOptions"
 			>
 				<control-tip-wrapper :disabled="generalDisabledStatus" :message="strings.visibilityPercentageTip">
@@ -28,7 +28,7 @@
 					:label="strings.backgroundColor"
 				></color-picker>
 			</section-group-collapse>
-			<section-group-collapse :start-collapsed="true" :label="strings.iconOptions">
+			<section-group-collapse :start-collapsed="false" :label="strings.iconOptions">
 				<panel-icon-select
 					v-model="settings.iconName"
 					:label="strings.icon"

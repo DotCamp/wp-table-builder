@@ -43,18 +43,20 @@ class Lazy_Load_Manager extends Setting_Base {
 	 * @var array
 	 */
 	private static $frontend_options = [
-		'visibilityPercentage'        => 10,
-		'backgroundColor'             => '#FFFFFF00',
-		'iconName'                    => [
+		'visibilityPercentage'          => 10,
+		'backgroundColor'               => '#FFFFFF00',
+		'iconName'                      => [
 			'name' => '',
 		],
-		'iconColor'                   => '#000000',
-		'iconSize'                    => 20,
-		'iconAnimation'               => 'none',
-		'imageLoadAnimation'          => 'none',
-		'imageLoadAnimationSpeed'     => 8,
-		'imageLoadAnimationDirection' => 'right',
-		'delay'                       => 0
+		'iconColor'                     => '#000000',
+		'iconSize'                      => 20,
+		'iconAnimation'                 => 'none',
+		'imageLoadAnimation'            => 'none',
+		'imageLoadAnimationSpeed'       => 8,
+		'imageLoadAnimationDirection'   => 'right',
+		'imageLoadAnimationPerspective' => 1000,
+		'flashColor'                    => '#FFFFFF',
+		'delay'                         => 0
 	];
 
 	/**
@@ -220,6 +222,8 @@ class Lazy_Load_Manager extends Setting_Base {
 			'animation'               => esc_html__( 'animation', 'wp-table-builder' ),
 			'speed'                   => esc_html__( 'speed', 'wp-table-builder' ),
 			'direction'               => esc_html__( 'direction', 'wp-table-builder' ),
+			'perspective'             => esc_html__( 'perspective', 'wp-table-builder' ),
+			'color'                   => esc_html__( 'color', 'wp-table-builder' ),
 		] );
 
 		$extraDataSettingsOptions = [

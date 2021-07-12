@@ -7,6 +7,14 @@
 			:disabled="generalDisabledStatus"
 		></panel-dropdown-control>
 		<transition name="wptb-fade" appear>
+			<color-picker
+				:disabled="generalDisabledStatus"
+				v-model="settings.flashColor"
+				:label="strings.color"
+				v-if="settings.imageLoadAnimation === 'flash'"
+			></color-picker>
+		</transition>
+		<transition name="wptb-fade" appear>
 			<panel-direction-control
 				:disabled="generalDisabledStatus"
 				:label="strings.direction"
@@ -14,6 +22,18 @@
 				v-if="directionEnabledAnimations.includes(settings.imageLoadAnimation)"
 				:enabled-axis="axisControlForAnimations"
 			></panel-direction-control>
+		</transition>
+		<transition name="wptb-fade" appear>
+			<range-input
+				v-model="settings.imageLoadAnimationPerspective"
+				:clamp="true"
+				:min="1"
+				:max="1000"
+				:label="strings.perspective"
+				post-fix="px"
+				v-if="settings.imageLoadAnimation === 'flip'"
+				:disabled="generalDisabledStatus || settings.imageLoadAnimation === 'none'"
+			></range-input>
 		</transition>
 		<range-input
 			v-model="settings.imageLoadAnimationSpeed"
@@ -32,9 +52,10 @@ import PanelDropdownControl from '$Components/PanelDropdownControl';
 import PanelDirectionControl from '$LeftPanel/PanelDirectionControl';
 import RangeInput from '$Components/RangeInput';
 import SectionGroup from '$Mixins/SectionGroup';
+import ColorPicker from '$Components/ColorPicker';
 
 export default {
-	components: { SectionGroupCollapse, PanelDropdownControl, PanelDirectionControl, RangeInput },
+	components: { SectionGroupCollapse, PanelDropdownControl, PanelDirectionControl, RangeInput, ColorPicker },
 	mixins: [SectionGroup],
 	data() {
 		return {

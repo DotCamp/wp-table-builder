@@ -25,6 +25,7 @@
 			hooks: {},
 			direction: 'left',
 			perspective: 1000,
+			flashColor: '#FFFFFF',
 		};
 
 		// merged instance options
@@ -269,7 +270,9 @@
 					imageElement.parentNode.classList.add('wptb-lazy-load-buffer-element-container');
 					imageElement.insertAdjacentElement('afterend', flashElement);
 
-					const flashStyle = `@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: #FFFFFF}.wptb-flash-animation {animation: wptb-flash ${this.calculateDuration()}s  forwards ease-out}`;
+					const flashStyle = `@keyframes wptb-flash {0% {opacity:1;}100% {opacity: 0;}}  .wptb-flash-element {position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: ${
+						this.getOptions().flashColor
+					}}.wptb-flash-animation {animation: wptb-flash ${this.calculateDuration()}s  forwards ease-out}`;
 					this.addStylesheet(flashStyle, imageElement.ownerDocument);
 				},
 				animate(imageElement) {
@@ -399,7 +402,8 @@
 		 * @return {boolean} is element visible or not
 		 */
 		const isElementVisible = (imgElement, currentYPos) => {
-			const { top, height, bottom } = imgElement.getBoundingClientRect();
+			// check position data of parent node instead of image element since a transformation affecting Y position of element might occurred
+			const { top, height, bottom } = imgElement.parentNode.getBoundingClientRect();
 			const { visibilityPercentage } = options;
 
 			const visibilityRangeTop = top + height * (visibilityPercentage / 100);
@@ -457,8 +461,6 @@
 		const imageElementLoadCallback = (e) => {
 			const imageElement = e.target;
 
-			imageElement.dataset.wptbLazyLoadStatus = 'true';
-
 			animation.animate(imageElement);
 
 			imageElement.removeEventListener('load', imageElementLoadCallback);
@@ -479,6 +481,9 @@
 						imageElementLoadCallback({ target: imgElement });
 					}, options.delay * 1000);
 				};
+
+				// eslint-disable-next-line no-param-reassign
+				imgElement.dataset.wptbLazyLoadStatus = 'true';
 
 				imgElement.addEventListener('load', options.delay ? delayCallback : imageElementLoadCallback);
 
@@ -606,6 +611,8 @@
 					animation = animationFactory.getAnimation(options.imageLoadAnimation, {
 						speed: options.imageLoadAnimationSpeed,
 						direction: options.imageLoadAnimationDirection,
+						perspective: options.imageLoadAnimationPerspective,
+						...options,
 					});
 					assignLazyLoadToElements();
 				}
