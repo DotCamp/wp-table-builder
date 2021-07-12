@@ -7,7 +7,7 @@
 				v-for="direction in directions"
 				:direction="direction"
 				:key="direction"
-				@directionClick="$emit('valueChanged', direction)"
+				@directionClick="updateDirection(direction)"
 			></panel-direction-cadet>
 		</div>
 	</panel2-column-template>
@@ -36,10 +36,54 @@ export default {
 	data() {
 		return {
 			directionsObject: { X: ['left', 'right'], Y: ['up', 'down'] },
+			normalizedEnabledAxis: [],
 		};
 	},
+	watch: {
+		enabledAxis: {
+			handler(n) {
+				this.normalizeAxis(n);
+				this.assignDefaultDirection();
+			},
+			deep: true,
+		},
+	},
+	mounted() {
+		this.$nextTick(() => {
+			this.normalizeAxis(this.enabledAxis);
+		});
+	},
 	computed: {
-		directions() {},
+		directions() {
+			return this.normalizedEnabledAxis.reduce((carry, current) => {
+				if (this.directionsObject[current]) {
+					carry.push(...this.directionsObject[current]);
+				}
+
+				return carry;
+			}, []);
+		},
+	},
+	methods: {
+		assignDefaultDirection() {
+			if (
+				!this.normalizedEnabledAxis.some((axis) => {
+					return this.directionsObject[axis].includes(this.value);
+				})
+			) {
+				this.updateDirection(this.directionsObject[this.normalizedEnabledAxis[0]][0]);
+			}
+		},
+		updateDirection(direction) {
+			this.$emit('valueChanged', direction);
+		},
+		normalizeAxis(axisArray) {
+			if (!Array.isArray(axisArray)) {
+				// eslint-disable-next-line no-param-reassign
+				axisArray = [axisArray];
+			}
+			this.normalizedEnabledAxis = axisArray.map((axis) => axis.toUpperCase());
+		},
 	},
 };
 </script>

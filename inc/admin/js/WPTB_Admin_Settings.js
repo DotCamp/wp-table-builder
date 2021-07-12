@@ -28943,21 +28943,18 @@ var _PanelDirectionCadet = _interopRequireDefault(require("$LeftPanel/PanelDirec
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var _default = {
   props: {
     value: {
@@ -28981,11 +28978,62 @@ var _default = {
       directionsObject: {
         X: ['left', 'right'],
         Y: ['up', 'down']
-      }
+      },
+      normalizedEnabledAxis: []
     };
   },
+  watch: {
+    enabledAxis: {
+      handler: function handler(n) {
+        this.normalizeAxis(n);
+        this.assignDefaultDirection();
+      },
+      deep: true
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      _this.normalizeAxis(_this.enabledAxis);
+    });
+  },
   computed: {
-    directions: function directions() {}
+    directions: function directions() {
+      var _this2 = this;
+
+      return this.normalizedEnabledAxis.reduce(function (carry, current) {
+        if (_this2.directionsObject[current]) {
+          carry.push.apply(carry, _toConsumableArray(_this2.directionsObject[current]));
+        }
+
+        return carry;
+      }, []);
+    }
+  },
+  methods: {
+    assignDefaultDirection: function assignDefaultDirection() {
+      var _this3 = this;
+
+      if (!this.normalizedEnabledAxis.some(function (axis) {
+        return _this3.directionsObject[axis].includes(_this3.value);
+      })) {
+        this.updateDirection(this.directionsObject[this.normalizedEnabledAxis[0]][0]);
+      }
+    },
+    updateDirection: function updateDirection(direction) {
+      this.$emit('valueChanged', direction);
+    },
+    normalizeAxis: function normalizeAxis(axisArray) {
+      if (!Array.isArray(axisArray)) {
+        // eslint-disable-next-line no-param-reassign
+        axisArray = [axisArray];
+      }
+
+      this.normalizedEnabledAxis = axisArray.map(function (axis) {
+        return axis.toUpperCase();
+      });
+    }
   }
 };
 exports.default = _default;
@@ -29017,7 +29065,7 @@ exports.default = _default;
               attrs: { "active-direction": _vm.value, direction: direction },
               on: {
                 directionClick: function($event) {
-                  return _vm.$emit("valueChanged", direction)
+                  return _vm.updateDirection(direction)
                 }
               }
             })
@@ -29086,33 +29134,18 @@ var _SectionGroup = _interopRequireDefault(require("$Mixins/SectionGroup"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var _default = {
   components: {
     SectionGroupCollapse: _SectionGroupCollapse.default,
@@ -29125,6 +29158,21 @@ var _default = {
     return {
       directionEnabledAnimations: ['slideIn', 'flip']
     };
+  },
+  computed: {
+    axisControlForAnimations: function axisControlForAnimations() {
+      var enabledAxis = [];
+      var enabledAxisRules = {
+        slideIn: ['x', 'y'],
+        flip: ['x']
+      };
+
+      if (enabledAxisRules[this.settings.imageLoadAnimation]) {
+        enabledAxis.push.apply(enabledAxis, _toConsumableArray(enabledAxisRules[this.settings.imageLoadAnimation]));
+      }
+
+      return enabledAxis;
+    }
   }
 };
 exports.default = _default;
@@ -29171,7 +29219,8 @@ exports.default = _default;
             ? _c("panel-direction-control", {
                 attrs: {
                   disabled: _vm.generalDisabledStatus,
-                  label: _vm.strings.direction
+                  label: _vm.strings.direction,
+                  "enabled-axis": _vm.axisControlForAnimations
                 },
                 model: {
                   value: _vm.settings.imageLoadAnimationDirection,

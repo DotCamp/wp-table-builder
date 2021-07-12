@@ -12,6 +12,7 @@
 				:label="strings.direction"
 				v-model="settings.imageLoadAnimationDirection"
 				v-if="directionEnabledAnimations.includes(settings.imageLoadAnimation)"
+				:enabled-axis="axisControlForAnimations"
 			></panel-direction-control>
 		</transition>
 		<range-input
@@ -39,6 +40,22 @@ export default {
 		return {
 			directionEnabledAnimations: ['slideIn', 'flip'],
 		};
+	},
+	computed: {
+		axisControlForAnimations() {
+			const enabledAxis = [];
+
+			const enabledAxisRules = {
+				slideIn: ['x', 'y'],
+				flip: ['x'],
+			};
+
+			if (enabledAxisRules[this.settings.imageLoadAnimation]) {
+				enabledAxis.push(...enabledAxisRules[this.settings.imageLoadAnimation]);
+			}
+
+			return enabledAxis;
+		},
 	},
 };
 </script>
