@@ -12,6 +12,9 @@
 						:default-html="sectionData.previewTable"
 						:settings="settings"
 					></lazy-load-preview>
+					<collapsed-visibility :visible="settings.enabled">
+						<disclaimer :title="strings.important" :message="strings.importantMessage"></disclaimer>
+					</collapsed-visibility>
 				</div>
 				<lazy-load-pro-options :settings="settings" :template-data="templateData"></lazy-load-pro-options>
 			</div>
@@ -38,9 +41,13 @@ import withMessage from '$Mixins/withMessage';
 import LazyLoadPreview from '$LazyLoadSettings/LazyLoadPreview';
 import LazyLoadProOptions from '$LazyLoadSettings/LazyLoadProOptions';
 import LazyLoadBasicOptions from '$LazyLoadSettings/LazyLoadBasicOptions';
+import Disclaimer from '$Settings/Disclaimer';
+import CollapsedVisibility from '$Settings/CollapsedVisibility';
 
 export default {
 	components: {
+		CollapsedVisibility,
+		Disclaimer,
 		LazyLoadBasicOptions,
 		LazyLoadProOptions,
 		LazyLoadPreview,

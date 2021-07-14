@@ -37,10 +37,7 @@
 							</select>
 						</version-control-row>
 					</div>
-					<div class="wptb-version-control-main-row">
-						<div class="wptb-version-control-warning-span">{{ strings.warning }}:</div>
-						<div class="wptb-version-control-warning-info">{{ strings.warningInfo }}</div>
-					</div>
+					<disclaimer :title="strings.warning" :message="strings.warningInfo"></disclaimer>
 				</div>
 				<changelog :version="selectedVersion" :raw-changelog="sectionData.changelog"></changelog>
 			</div>
@@ -69,9 +66,19 @@ import Changelog from './Changelog';
 import withMessage from '../mixins/withMessage';
 import FooterButtons from './Settings/FooterButtons';
 import SettingsMenuSection from '../mixins/SettingsMenuSection';
+import Disclaimer from '$Settings/Disclaimer';
 
 export default {
-	components: { FooterButtons, VersionControlRow, MenuContent, Fragment, MenuButton, VersionIndicator, Changelog },
+	components: {
+		Disclaimer,
+		FooterButtons,
+		VersionControlRow,
+		MenuContent,
+		Fragment,
+		MenuButton,
+		VersionIndicator,
+		Changelog,
+	},
 	mixins: [withMessage, SettingsMenuSection],
 	data() {
 		return {

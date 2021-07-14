@@ -6517,8 +6517,8 @@ label.wptb-control-row {
     grid-area: left;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(min-content, max-content) 1fr;
-    grid-template-areas: 'basic' 'preview';
+    grid-template-rows: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+    grid-template-areas: 'basic' 'preview' 'disclaimer';
     justify-content: center;
     align-items: center;
     gap: 10px;
@@ -6815,3 +6815,34 @@ label.wptb-control-row {
 }
 
 /*endregion*/
+
+/*region disclaimer component*/
+.wptb-disclaimer-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    flex-direction: column;
+}
+
+.wptb-disclaimer-title {
+    color: var(--wptb-plugin-red-600) !important;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.wptb-disclaimer-message p, .wptb-disclaimer-message span {
+    font-size: 90% !important;
+}
+
+/*endregion*/
+
+.wptb-code {
+    font-family: monospace !important;
+    padding: 0 3px;
+    border-radius: 3px;
+    background-color: #FDE68A;
+    border: 1px solid #FCD34D;
+    font-size: inherit !important;
+}

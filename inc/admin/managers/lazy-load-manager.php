@@ -162,9 +162,7 @@ class Lazy_Load_Manager extends Setting_Base {
 	 *
 	 * @return array frontend data
 	 */
-	public static function prepare_frontend_data(
-		$data
-	) {
+	public static function prepare_frontend_data( $data ) {
 		$data['lazyLoad'] = static::get_lazy_load_settings();
 
 		return $data;
@@ -184,8 +182,7 @@ class Lazy_Load_Manager extends Setting_Base {
 	/**
 	 * Update settings through ajax endpoint.
 	 */
-	public
-	static function update_settings() {
+	public static function update_settings() {
 		$instance = static::get_instance();
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( $instance->get_settings_id(), 'nonce', false ) && isset( $_POST['settings'] ) ) {
 			$updated_settings = json_decode( wp_kses_stripslashes( $_POST['settings'] ), true );
@@ -208,9 +205,7 @@ class Lazy_Load_Manager extends Setting_Base {
 	 *
 	 * @return array modified settings menu data with lazy load header info
 	 */
-	public static function add_settings_menu_data(
-		$settings_data
-	) {
+	public static function add_settings_menu_data( $settings_data ) {
 		$instance = static::get_instance();
 
 		$settings_data['sectionsData']['lazyLoad'] = [
@@ -239,6 +234,11 @@ class Lazy_Load_Manager extends Setting_Base {
 			'direction'               => esc_html__( 'direction', 'wp-table-builder' ),
 			'perspective'             => esc_html__( 'perspective', 'wp-table-builder' ),
 			'color'                   => esc_html__( 'color', 'wp-table-builder' ),
+			'important'               => esc_html__( 'important', 'wp-table-builder' ),
+			'importantMessage'        => sprintf(
+			/* translators: 1: class name */
+				esc_html__( 'After enable, if you are getting any conflicts with your third party lazy load plugin, please whitelist table image elements with %1s class name from plugin settings.' )
+				, '<span class="wptb-code">wptb-image-element-target</span>' ),
 		] );
 
 		$extraDataSettingsOptions = [

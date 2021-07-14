@@ -92,6 +92,7 @@ That's it. You're done!
 
 * NEW: Lazy load for plugin image elements.
 * PRO: Lazy load customization options.
+* IMPROVE: Table image element class and filtering.
 
 = 1.3.6 =
 

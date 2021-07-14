@@ -92,6 +92,7 @@ export default {
 			}
 		});
 
+		// TODO [erdembircan] uncomment for production
 		// eslint-disable-next-line array-callback-return,consistent-return
 		[this.currentSection] = Object.keys(this.parsedFields).map((key) => {
 			if (Object.prototype.hasOwnProperty.call(this.parsedFields, key)) {
@@ -99,7 +100,7 @@ export default {
 			}
 		});
 
-		// TODO [erdembircan] remove for production
+		// TODO [erdembircan] comment for production
 		// this.currentSection = 'lazyLoad';
 	},
 	computed: {
