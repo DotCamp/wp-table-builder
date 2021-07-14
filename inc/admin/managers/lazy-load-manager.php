@@ -122,25 +122,35 @@ class Lazy_Load_Manager extends Setting_Base {
 	public static function table_html_shortcode( $html, $force = false ) {
 		$is_lazy_load_enabled = $force || static::get_instance()->get_settings()['enabled'];
 
-		if ( $is_lazy_load_enabled ) {
-			$dom_handler   = new DOMDocument();
-			$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+		$dom_handler   = new DOMDocument();
+		$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
-			if ( $handle_status ) {
-				$dom_query      = new DOMXPath( $dom_handler );
-				$image_elements = $dom_query->query( '//div[@class="wptb-image-wrapper"]//img' );
-				foreach ( $image_elements as $img ) {
+		if ( $handle_status ) {
+			$dom_query      = new DOMXPath( $dom_handler );
+			$image_elements = $dom_query->query( '//div[@class="wptb-image-wrapper"]//img' );
+			foreach ( $image_elements as $img ) {
+				// add image element class list for backward compatibility
+				$image_element_class = 'wptb-image-element-target';
+				$class_list          = $img->getAttribute( 'class' );
+				if ( strpos( $class_list, $image_element_class ) === false ) {
+					$img->setAttribute( 'class', join( ' ', [ $class_list, $image_element_class ] ) );
+				}
+
+				// process lazy load
+				if ( $is_lazy_load_enabled ) {
 					$target_url = $img->getAttribute( 'src' );
 
 					$img->setAttribute( 'data-wptb-lazy-load-target', $target_url );
 					$img->setAttribute( 'src', '' );
-					$img->setAttribute( 'class', join( ' ', [ $img->getAttribute( 'class' ), 'wptb-lazy-load-img' ] ) );
+					$img->setAttribute( 'class', join( ' ', [
+						$img->getAttribute( 'class' ),
+						'wptb-lazy-load-img'
+					] ) );
 					$img->setAttribute( 'data-wptb-lazy-load-status', 'false' );
 				}
-				$html = $dom_handler->saveHTML();
 			}
+			$html = $dom_handler->saveHTML();
 		}
-
 
 		return $html;
 	}
@@ -152,7 +162,9 @@ class Lazy_Load_Manager extends Setting_Base {
 	 *
 	 * @return array frontend data
 	 */
-	public static function prepare_frontend_data( $data ) {
+	public static function prepare_frontend_data(
+		$data
+	) {
 		$data['lazyLoad'] = static::get_lazy_load_settings();
 
 		return $data;
@@ -172,7 +184,8 @@ class Lazy_Load_Manager extends Setting_Base {
 	/**
 	 * Update settings through ajax endpoint.
 	 */
-	public static function update_settings() {
+	public
+	static function update_settings() {
 		$instance = static::get_instance();
 		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && check_ajax_referer( $instance->get_settings_id(), 'nonce', false ) && isset( $_POST['settings'] ) ) {
 			$updated_settings = json_decode( wp_kses_stripslashes( $_POST['settings'] ), true );
@@ -195,7 +208,9 @@ class Lazy_Load_Manager extends Setting_Base {
 	 *
 	 * @return array modified settings menu data with lazy load header info
 	 */
-	public static function add_settings_menu_data( $settings_data ) {
+	public static function add_settings_menu_data(
+		$settings_data
+	) {
 		$instance = static::get_instance();
 
 		$settings_data['sectionsData']['lazyLoad'] = [

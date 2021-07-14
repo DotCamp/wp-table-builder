@@ -45,6 +45,9 @@ let addMedia = function( element, imageChange = false ) {
         img.height = attachment.height;
         img.width = attachment.width;
         img.style.width = '100%';
+
+        // add image element class for easy filtering
+        img.classList.add('wptb-image-element-target');
         
         element.classList.remove( 'wptb-elem-placeholder' );
 
