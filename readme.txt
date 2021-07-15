@@ -13,6 +13,8 @@ Drag and Drop Table Builder Plugin. Build Responsive Tables Easily.
 
 == Description ==
 
+[Plugin Demo](https://wptablebuilder.com/demo-tables/) | [Documentation](https://wptablebuilder.com/docs/) | [Get Pro](https://wptablebuilder.com/pricing/)
+
 WP Table Builder is a drag and drop table builder plugin for WordPress. It's insanely easy to create responsive tables with WP Table Builder.
 
 WP Table Builder is perfect for creating comparison tables, pricing tables, list tables and many more.
