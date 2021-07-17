@@ -8,6 +8,7 @@ use WP_Table_Builder\Inc\Core\Init;
 use function add_filter;
 use function esc_html__;
 use function get_option;
+use function get_plugin_data;
 use function trailingslashit;
 
 // if called directly, abort process
@@ -27,6 +28,12 @@ class What_Is_New_Manager {
 	 * @var string
 	 */
 	protected static $previously_displayed_version_number_option_name = 'wptb_displayed_win_notes';
+
+	/**
+	 * Image folder path relative to plugin root.
+	 * @var string
+	 */
+	private static $image_relative_folder_path = 'assets/images/what-is-new/';
 
 	/**
 	 * Initialize what is new manager.
@@ -94,9 +101,26 @@ class What_Is_New_Manager {
 
 		return [
 			'text'  => $prepared_text,
-			'image' => trailingslashit( NS\WP_TABLE_BUILDER_URL ) . 'assets/images/what-is-new/' . $image,
+			'image' => static::get_image_url( $image ),
 			'isPro' => $isPro
 		];
+	}
+
+	/**
+	 * Get url for given what is new note image.
+	 * This function will provide a default image if supplied file doesn't exist.
+	 *
+	 * @param string $image image filename
+	 *
+	 * @return string image url
+	 */
+	private static function get_image_url( $image ) {
+		WP_Filesystem( true );
+		global $wp_filesystem;
+
+		$image_exists = $wp_filesystem->exists( path_join( NS\WP_TABLE_BUILDER_DIR, trailingslashit( static::$image_relative_folder_path ) . $image ) );
+
+		return trailingslashit( NS\WP_TABLE_BUILDER_URL ) . static::$image_relative_folder_path . ( $image_exists === true ? $image : 'wptb-logo-new.png' );
 	}
 
 	/**
@@ -154,9 +178,20 @@ class What_Is_New_Manager {
 			return version_compare( $a, $b ) * - 1;
 		} );
 
-		$latest_version = array_keys( $notes )[0];
+		$current_version = static::current_version();
 
-		return [ $latest_version => static::add_changelog_link_to_notes( $notes[ $latest_version ] ) ];
+		$current_version_notes = isset( $notes[ $current_version ] ) ? $notes[ $current_version ] : [];
+
+		return [ $current_version => static::add_changelog_link_to_notes( $current_version_notes ) ];
+	}
+
+	/**
+	 * Get current version number of plugin.
+	 *
+	 * @return string version number
+	 */
+	private static function current_version() {
+		return get_plugin_data( NS\PLUGIN__FILE__ )['Version'];
 	}
 
 	/**
@@ -170,7 +205,7 @@ class What_Is_New_Manager {
 	 */
 	public static function add_frontend_script_data( $admin_data ) {
 		$latest_release_notes               = static::what_is_new_notes();
-		$latest_release_notes_version       = array_keys( $latest_release_notes )[0];
+		$latest_release_notes_version       = static::current_version();
 		$previously_displayed_notes_version = get_option( static::$previously_displayed_version_number_option_name, '1.0.0' );
 
 		// only send frontend data if latest release note version is more newer
