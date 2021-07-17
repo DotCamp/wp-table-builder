@@ -128,9 +128,10 @@ class Icon_Manager {
 	 * @return string|void return a string representation of the icon or void depending on to chose to output to buffer
 	 */
 	public function get_icon( $icon_name, $echo_to_output = false, $extension = 'svg' ) {
-		// @deprecated
 		require_once ABSPATH . 'wp-admin/includes/file.php';
-//
+
+		// @deprecated
+
 //		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', true, false );
 //
 //		// check for filesystem credentials

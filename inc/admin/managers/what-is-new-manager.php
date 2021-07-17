@@ -10,6 +10,7 @@ use function esc_html__;
 use function get_option;
 use function get_plugin_data;
 use function trailingslashit;
+use function WP_Filesystem;
 
 // if called directly, abort process
 if ( ! defined( 'WPINC' ) ) {
@@ -115,6 +116,8 @@ class What_Is_New_Manager {
 	 * @return string image url
 	 */
 	private static function get_image_url( $image ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+
 		WP_Filesystem( true );
 		global $wp_filesystem;
 
