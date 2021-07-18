@@ -18,6 +18,8 @@ use function check_ajax_referer;
 use function current_user_can;
 use function do_action;
 use function esc_html__;
+use function get_bloginfo;
+use function mb_convert_encoding;
 use function update_option;
 use function wp_create_nonce;
 use function wp_kses_stripslashes;
@@ -116,40 +118,47 @@ class Lazy_Load_Manager extends Setting_Base {
 	 * Callback for generating table html at shortcode.
 	 *
 	 * @param string $html table html
+	 * @param boolean $force force to use lazy load ignoring its enabled state
 	 *
 	 * @return string table shortcode html
 	 */
 	public static function table_html_shortcode( $html, $force = false ) {
-		$is_lazy_load_enabled = $force || static::get_instance()->get_settings()['enabled'];
+		// ext-mbstring check
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$is_lazy_load_enabled = $force || static::get_instance()->get_settings()['enabled'];
+			$dom_handler          = new DOMDocument();
 
-		$dom_handler   = new DOMDocument();
-		$handle_status = @$dom_handler->loadHTML( $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+			$charset = get_bloginfo( 'charset' );
 
-		if ( $handle_status ) {
-			$dom_query      = new DOMXPath( $dom_handler );
-			$image_elements = $dom_query->query( '//div[@class="wptb-image-wrapper"]//img' );
-			foreach ( $image_elements as $img ) {
-				// add image element class list for backward compatibility
-				$image_element_class = 'wptb-image-element-target';
-				$class_list          = $img->getAttribute( 'class' );
-				if ( strpos( $class_list, $image_element_class ) === false ) {
-					$img->setAttribute( 'class', join( ' ', [ $class_list, $image_element_class ] ) );
+			// need to provide a to_encoding value for mb_convert_encoding since that value is nullable only for PHP 8.0+
+			$handle_status = @$dom_handler->loadHTML( mb_convert_encoding( $html, 'HTML-ENTITIES', $charset ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+
+			if ( $handle_status ) {
+				$dom_query      = new DOMXPath( $dom_handler );
+				$image_elements = $dom_query->query( '//div[@class="wptb-image-wrapper"]//img' );
+				foreach ( $image_elements as $img ) {
+					// add image element class list for backward compatibility
+					$image_element_class = 'wptb-image-element-target';
+					$class_list          = $img->getAttribute( 'class' );
+					if ( strpos( $class_list, $image_element_class ) === false ) {
+						$img->setAttribute( 'class', join( ' ', [ $class_list, $image_element_class ] ) );
+					}
+
+					// process lazy load
+					if ( $is_lazy_load_enabled ) {
+						$target_url = $img->getAttribute( 'src' );
+
+						$img->setAttribute( 'data-wptb-lazy-load-target', $target_url );
+						$img->setAttribute( 'src', '' );
+						$img->setAttribute( 'class', join( ' ', [
+							$img->getAttribute( 'class' ),
+							'wptb-lazy-load-img'
+						] ) );
+						$img->setAttribute( 'data-wptb-lazy-load-status', 'false' );
+					}
 				}
-
-				// process lazy load
-				if ( $is_lazy_load_enabled ) {
-					$target_url = $img->getAttribute( 'src' );
-
-					$img->setAttribute( 'data-wptb-lazy-load-target', $target_url );
-					$img->setAttribute( 'src', '' );
-					$img->setAttribute( 'class', join( ' ', [
-						$img->getAttribute( 'class' ),
-						'wptb-lazy-load-img'
-					] ) );
-					$img->setAttribute( 'data-wptb-lazy-load-status', 'false' );
-				}
+				$html = $dom_handler->saveHTML();
 			}
-			$html = $dom_handler->saveHTML();
 		}
 
 		return $html;
