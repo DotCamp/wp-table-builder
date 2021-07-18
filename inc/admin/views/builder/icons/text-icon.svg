@@ -1,0 +1,37 @@
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xml:space="preserve"
+   height="50"
+   width="80"
+   viewBox="0 0 60 30"
+   y="0px"
+   x="0px"
+   id="text_icon"
+   version="1.1"><metadata
+   id="metadata13"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs11" />
+
+<g
+   transform="translate(0.17284843,-11.082389)"
+   id="g838"><text
+   xml:space="preserve"
+   style="font-style:normal;font-weight:normal;font-size:20px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:currentColor;fill-opacity:1;stroke:none;stroke-width:1.5"
+   x="22.563559"
+   y="34.44915"
+   id="text17"><tspan
+     id="tspan15"
+     x="22.563559"
+     y="34.44915"
+     style="font-size:20px;stroke-width:1.5">Abc</tspan></text>
+
+
+<path
+   d="m 5.9540524,36.54669 0.9425513,-7.699117 -5.5217155,-5.447518 7.613559,-1.482738 3.4745938,-6.934839 3.762887,6.782733 7.669133,1.161552 -5.287967,5.674698 1.265191,7.652718 -7.031031,-3.275577 z"
+   id="path25"
+   style="fill:none;stroke:currentColor;stroke-width:0.83399999;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" /></g></svg>

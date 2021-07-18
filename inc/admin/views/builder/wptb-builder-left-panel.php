@@ -11,7 +11,8 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 
 ?>
 
-<div class="wptb-left-panel" data-wptb-panel-location="<?php echo esc_attr(apply_filters('wp-table-builder/filter/panel_location', 'left')); ?>">
+<div class="wptb-left-panel"
+     data-wptb-panel-location="<?php echo esc_attr( apply_filters( 'wp-table-builder/filter/panel_location', 'left' ) ); ?>">
     <div class="wptb-left-scroll-panel">
         <div class="wptb-panel-left">
             <div class="wptb-panel-brand">
@@ -67,7 +68,8 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 
 									foreach ( $elements as $element ): ?>
                                         <div class="wptb-element" draggable="true"
-                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>" data-wptb-relative-elements="<?php echo esc_attr($element->position_relative()); ?>">
+                                             data-wptb-element="<?php echo esc_attr( $element->get_name(), 'wp-table-builder' ); ?>" <?php if ( $element instanceof NS\Inc\Admin\Element_Classes\Base\Dummy_Element_base ): echo 'data-wptb-dummy="true"'; endif; ?>
+                                             data-wptb-relative-elements="<?php echo esc_attr( $element->position_relative() ); ?>">
                                             <div class="wptb-element-draggable-icon"><span
                                                         class="dashicons dashicons-menu"></span></div>
 											<?php
@@ -97,7 +99,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                                 </div>
                             </div>
 						<?php endforeach ?>
-                      <?php do_action('wp-table-builder/action/after_elements'); ?>
+						<?php do_action( 'wp-table-builder/action/after_elements' ); ?>
                     </div>
                 </div>
             </div>
@@ -112,12 +114,12 @@ use WP_Table_Builder\Inc\Core\Init as Init;
                  data-wptb-section="table_responsive_menu" style="display: none">
 				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-responsive-panel.php'; ?>
             </div>
-          <!--            background settings-->
-          <div class="wptb-responsive-section wptb-left-panel-sidebar-content"
-               data-wptb-section="background_menu" style="display: none">
-	          <?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-background-menu.php'; ?>
-          </div>
-          <!--            element controls-->
+            <!--            background settings-->
+            <div class="wptb-responsive-section wptb-left-panel-sidebar-content"
+                 data-wptb-section="background_menu" style="display: none">
+				<?php require_once NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/wptb-builder-background-menu.php'; ?>
+            </div>
+            <!--            element controls-->
             <div id="element-options-group" class="wptb-tab-content wptb-left-panel-sidebar-content"
                  data-wptb-section="options_group"
                  style="display: none;">
@@ -137,13 +139,13 @@ use WP_Table_Builder\Inc\Core\Init as Init;
             <button class="wptb-table_change_button wptb-table-edit-mode-close"
                     title="<?php esc_attr_e( 'Close Manage Cells Mode', 'wp-table-builder' ); ?>"><?php esc_html_e( 'Close', 'wp-table-builder' ); ?></button>
         </div>
-	    <?php do_action('wp-table-builder/action/after_cell_notselected_left_panel'); ?>
+		<?php do_action( 'wp-table-builder/action/after_cell_notselected_left_panel' ); ?>
     </div>
-  <div id="wptb-left-scroll-panel-cell-settings">
+    <div id="wptb-left-scroll-panel-cell-settings">
         <div id="element-cell-options-group" class="wptb-tab-content" data-wptb-section="cell_settings"
              style="display: none;">
             <!-- here will be cell controls -->
         </div>
-	  <?php do_action('wp-table-builder/action/cell_option'); ?>
-  </div>
+		<?php do_action( 'wp-table-builder/action/cell_option' ); ?>
+    </div>
 </div>

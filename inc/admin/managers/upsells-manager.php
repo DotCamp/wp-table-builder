@@ -47,7 +47,9 @@ class Upsells_Manager {
 				],
 				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
-			add_action( 'wp-table-builder/action/after_elements', [ __CLASS__, 'after_elements_upsell' ], 1 );
+
+//			add_action( 'wp-table-builder/action/after_elements', [ __CLASS__, 'after_elements_upsell' ], 1 );
+
 			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
 				__CLASS__,
 				'cell_management_upsell'
@@ -145,6 +147,7 @@ class Upsells_Manager {
 
 	/**
 	 * Upsell notification after elements at left panel.
+	 * @deprecated
 	 */
 	public static function after_elements_upsell() {
 		extract( static::get_upsell_data( 'after_elements' ) );

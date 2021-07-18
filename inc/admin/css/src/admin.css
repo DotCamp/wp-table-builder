@@ -6846,3 +6846,18 @@ label.wptb-control-row {
     border: 1px solid #FCD34D;
     font-size: inherit !important;
 }
+
+/*region dummy table element*/
+.wptb-element[data-wptb-dummy="true"] {
+    pointer-events: none;
+    color: var(--wptb-plugin-gray-400) !important;
+}
+
+.wptb-element[data-wptb-dummy="true"] svg{
+    fill: currentColor !important;
+}
+
+.wptb-element[data-wptb-dummy="true"] .wptb-element-draggable-icon{
+    color: var(--wptb-plugin-gray-400) !important;
+}
+/*endregion*/

@@ -63,15 +63,38 @@ class Elements_Manager extends Elements_Manager_Base {
 	 *
 	 * @var array
 	 */
-    protected $_build_elements_name = [
+	protected $_build_elements_name = [
 		'text',
 		'button',
 		'image',
 		'list',
 		'star_rating',
 		'custom_html',
-		'shortcode'
+		'shortcode',
 	];
+
+	/**
+	 * Pro elements list to use in dummy display.
+	 * @var string[]
+	 */
+	protected $pro_dummy_elements_name = [
+		'circle_rating',
+		'icon',
+		'ribbon',
+		'styled_list',
+		'text_icon',
+	];
+
+	/**
+	 * Elements_Manager constructor.
+	 */
+	public function __construct() {
+		// add dummy pro elements to elements manager
+		if ( Addon_Manager::check_pro_status() === false ) {
+			$this->_build_elements_name = array_merge( $this->_build_elements_name, $this->pro_dummy_elements_name );
+		}
+	}
+
 
 	/**
 	 * Init Elements.
@@ -87,16 +110,17 @@ class Elements_Manager extends Elements_Manager_Base {
 		do_action( 'wp-table-builder/elements_registered', $this );
 	}
 
-    /**
-     * Element Object Create.
-     *
-     * Return Element Object. Include the necessary element files.
-     *
-     * @param $element_name
-     * @return mixed
-     * @since 1.1.2
-     * @access protected
-     */
+	/**
+	 * Element Object Create.
+	 *
+	 * Return Element Object. Include the necessary element files.
+	 *
+	 * @param $element_name
+	 *
+	 * @return mixed
+	 * @since 1.1.2
+	 * @access protected
+	 */
 	protected function get_element_object( $element_name ) {
 		$class_name = ucfirst( $element_name ) . '_Element';
 
