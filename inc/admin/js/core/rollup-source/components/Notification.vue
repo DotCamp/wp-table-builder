@@ -2,7 +2,7 @@
 	<div
 		@click="handleNotificationClick"
 		ref="wrapper"
-		class="wptb-notification-wrapper"
+		class="wptb-notification-wrapper wptb-plugin-box-shadow-md"
 		:id="`notification#${id}`"
 		:style="style.wrapper"
 	>

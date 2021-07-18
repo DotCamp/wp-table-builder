@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.8 =
 
 * IMPROVE: Decreased plugin file size.
+* IMPROVE: Visual updates to various plugin components.
 * FIX: Encoding issue that is affecting some languages.
 
 = 1.3.7 =
