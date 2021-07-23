@@ -20,6 +20,8 @@ const allowedChildrenTags = [
 	'iframe',
 	'img',
 	'button',
+	'form',
+	'input',
 ];
 
 const innerChildTextArray = Array.from(allowedChildrenTags);

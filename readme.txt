@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.9 =
 
 * NEW: Option to preserve table titles on import operations.
+* NEW: Support for 'form' and 'input' HTML elements for custom html table element.
 
 = 1.3.8 =
 
