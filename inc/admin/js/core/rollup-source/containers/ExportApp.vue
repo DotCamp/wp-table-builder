@@ -40,7 +40,7 @@
 			</div>
 		</div>
 		<div class="wptb-menu-export-card">
-			<div class="wptb-menu-export-control-title" style="text-align: end;">
+			<div class="wptb-menu-export-control-title" style="text-align: end">
 				{{ getTranslation('selected tables') }}
 			</div>
 			<list-table
@@ -54,7 +54,7 @@
 			</empty-cover>
 		</div>
 		<portal to="footerButtons">
-			<a ref="filesave" style="display: none;" :download="filename">_filesave</a>
+			<a ref="filesave" style="display: none" :download="filename">_filesave</a>
 			<div class="wptb-settings-button-container">
 				<menu-button @click="getUserTables" :disabled="isBusy()">{{ getTranslation('refresh') }}</menu-button>
 				<menu-button @click="exportTables" :disabled="exportDisabled">{{ strings.exportSection }}</menu-button>
@@ -63,12 +63,12 @@
 	</div>
 </template>
 <script>
-import MenuButton from '../components/MenuButton';
-import ControlItem from '../components/ControlItem';
-import EmptyCover from '../components/EmptyCover';
-import PopUp from '../components/PopUp';
-import ListTable from '../components/ListTable';
-import withMessage from '../mixins/withMessage';
+import MenuButton from '$Components/MenuButton';
+import ControlItem from '$Components/ControlItem';
+import EmptyCover from '$Components/EmptyCover';
+import PopUp from '$Components/PopUp';
+import ListTable from '$Components/ListTable';
+import withMessage from '$Mixins/withMessage';
 
 export default {
 	props: ['options', 'pluginInfo'],
@@ -214,7 +214,7 @@ export default {
 		 * Parse content-disposition header to extract filename property
 		 *
 		 * @param {string} headerString content-disposition header
-		 * @returns {string} extracted filename
+		 * @return {string} extracted filename
 		 *
 		 * @throws Error an error will be thrown on no match
 		 */

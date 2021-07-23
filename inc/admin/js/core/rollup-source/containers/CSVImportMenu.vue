@@ -12,19 +12,20 @@
 				:field-data="field"
 				:model-bind="field.modelBind"
 				:master-visibility="field.masterVisibility"
+				class="wptb-flex wptb-flex-align-center wptb-flex-justify-center"
 			></control-item>
 		</div>
 		<portal to="footerButtons">
-			<menu-button :disabled="isImportDisabled" @click="importFromFile">{{ strings.importSection }} </menu-button>
+			<menu-button :disabled="isImportDisabled" @click="importFromFile">{{ strings.importSection }}</menu-button>
 		</portal>
 	</div>
 </template>
 <script>
-import DragDrop from '../components/DragDrop.vue';
-import ControlItem from '../components/ControlItem.vue';
-import MenuButton from '../components/MenuButton.vue';
-import ImportOperations from '../functions/importOperations.js';
-import withMessage from '../mixins/withMessage';
+import DragDrop from '$Components/DragDrop.vue';
+import ControlItem from '$Components/ControlItem.vue';
+import MenuButton from '$Components/MenuButton.vue';
+import ImportOperations from '$Functions/importOperations.js';
+import withMessage from '$Mixins/withMessage';
 
 export default {
 	props: ['options'],
@@ -36,6 +37,7 @@ export default {
 				responsiveTables: false,
 				topRowAsHeader: false,
 				csvDelimiter: ',',
+				preserveTableTitle: false,
 			},
 			fieldsData: [],
 			currentFile: null,
@@ -57,23 +59,34 @@ export default {
 			this.setBusy(false);
 		});
 
-		this.fieldsData.push({
-			type: 'dropdown',
-			id: 'csvDelimiter',
-			modelBind: this.settings,
-			label: this.strings.csvDelimiter,
-			options: [
-				{ value: ',', label: ', (comma)' },
-				{ value: ';', label: '; (semicolon)' },
-				{
-					value: 'tab',
-					label: '\\t (tabular)',
+		this.fieldsData.push(
+			{
+				type: 'dropdown',
+				id: 'csvDelimiter',
+				modelBind: this.settings,
+				label: this.strings.csvDelimiter,
+				options: [
+					{ value: ',', label: ', (comma)' },
+					{ value: ';', label: '; (semicolon)' },
+					{
+						value: 'tab',
+						label: '\\t (tabular)',
+					},
+				],
+				masterVisibility: () => {
+					return this.isCurrentFileType('csv');
 				},
-			],
-			masterVisibility: () => {
-				return this.isCurrentFileType('csv');
 			},
-		});
+			{
+				type: 'checkbox',
+				id: 'preserveTableTitle',
+				modelBind: this.settings,
+				label: this.strings.preserveTitles,
+				masterVisibility: () => {
+					return this.isCurrentFileType('xml', 'zip');
+				},
+			}
+		);
 	},
 	computed: {
 		isImportDisabled() {
@@ -84,12 +97,12 @@ export default {
 		},
 	},
 	methods: {
-		isCurrentFileType(typeName) {
+		isCurrentFileType(...typeName) {
 			let status = false;
 
 			if (this.currentFile) {
 				const extension = this.currentFile.name.split('.').pop();
-				status = extension === typeName;
+				status = typeName.includes(extension);
 			}
 
 			return status;
@@ -103,6 +116,7 @@ export default {
 					delimiter: this.settings.csvDelimiter,
 					tableResponsive: this.settings.responsiveTables,
 					topRowAsHeader: this.settings.topRowAsHeader,
+					preserveTitles: this.settings.preserveTableTitle,
 				};
 
 				const operations = ImportOperations(options);

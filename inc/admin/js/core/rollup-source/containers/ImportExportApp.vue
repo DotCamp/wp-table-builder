@@ -22,14 +22,14 @@
 	</div>
 </template>
 <script>
-import MenuHeader from '../components/MenuHeader';
-import Sections from '../components/Sections';
-import SectionItem from '../components/SectionItem';
-import MenuFooter from '../components/MenuFooter';
-import withMessage from '../mixins/withMessage';
-import ImportApp from './ImportApp';
-import ExportApp from './ExportApp';
-import MenuContent from '../components/MenuContent';
+import MenuHeader from '$Components/MenuHeader';
+import Sections from '$Components/Sections';
+import SectionItem from '$Components/SectionItem';
+import MenuFooter from '$Components/MenuFooter';
+import withMessage from '$Mixins/withMessage';
+import ImportApp from '$Containers/ImportApp';
+import ExportApp from '$Containers/ExportApp';
+import MenuContent from '$Components/MenuContent';
 
 export default {
 	props: ['pluginInfo', 'options'],

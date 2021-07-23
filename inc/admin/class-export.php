@@ -3,15 +3,18 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 use DOMDocument;
-use WP_Query;
+use DOMXPath;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder as NS;
 use ZipArchive;
 use function add_action;
 use function current_user_can;
+use function get_plugin_data;
+use function get_post;
 use function get_post_meta;
 use function get_the_title;
+use function mb_convert_encoding;
 use function request_filesystem_credentials;
 use function wp_create_nonce;
 use function wp_kses_stripslashes;
@@ -281,14 +284,30 @@ class Export {
 	}
 
 	/**
-	 * Prepare individual table data as xml format
+	 * Prepare individual table data as xml format.
 	 *
 	 * @param int $id post id
 	 *
-	 * @return mixed table data
+	 * @return string table content
 	 */
 	private function prepare_xml_table( $id ) {
-		return get_post_meta( $id, '_wptb_content_', true );
+		$content = get_post_meta( $id, '_wptb_content_', true );
+
+		$content_to_return = '';
+
+		$dom_handler = new DOMDocument();
+		$status      = @$dom_handler->loadHTML( mb_convert_encoding( $content, 'HTML-ENTITIES', get_bloginfo( 'charset' ) ), LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED );
+
+		if ( $status ) {
+			$table = $dom_handler->documentElement;
+			if ( $table->tagName === 'table' ) {
+				$table->setAttribute( 'data-wptb-table-title', get_post( $id )->post_title );
+				$table->setAttribute( 'data-wptb-export-version', get_plugin_data(NS\PLUGIN__FILE__)['Version']);
+				$content_to_return = $dom_handler->saveHTML();
+			}
+		}
+
+		return $content_to_return;
 	}
 
 	/**

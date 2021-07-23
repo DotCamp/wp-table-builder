@@ -21,6 +21,7 @@
     "vue": "./node_modules/vue/dist/vue.esm.js",
     "$Components": "./inc/admin/js/core/rollup-source/components",
     "$Mixins": "./inc/admin/js/core/rollup-source/mixins",
+    "$Functions": "./inc/admin/js/core/rollup-source/functions",
     "$Settings": "./inc/admin/js/core/rollup-source/components/Settings",
     "$LeftPanel": "./inc/admin/js/core/rollup-source/components/leftPanel",
     "$LazyLoadSettings": "./inc/admin/js/core/rollup-source/components/lazyLoadSettings",

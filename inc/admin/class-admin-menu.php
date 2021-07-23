@@ -133,7 +133,7 @@ class Admin_Menu {
 	public function add_table_id_to_dom( $table_content, $id ) {
 		$final_table_content = $table_content;
 
-		$dom_handler = new DOMDocument( );
+		$dom_handler = new DOMDocument();
 		@$dom_handler->loadHTML( $table_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
 		$table = $dom_handler->getElementsByTagName( 'table' );
@@ -427,6 +427,7 @@ class Admin_Menu {
 				'tableResponsive'    => esc_html__( 'Make Table Responsive', $wptb_text_domain ),
 				'topRowHeader'       => esc_html__( 'Top Row as Header', $wptb_text_domain ),
 				'csvDelimiter'       => esc_html__( 'CSV Delimiter', $wptb_text_domain ),
+				'preserveTitles'     => esc_html__( 'Preserve table titles', $wptb_text_domain ),
 				'fileDropHint'       => esc_html__( 'Drag and Drop Files', $wptb_text_domain ),
 				'browse'             => esc_html__( 'Browse', $wptb_text_domain ),
 				'clear'              => esc_html__( 'Clear', $wptb_text_domain ),

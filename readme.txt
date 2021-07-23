@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.9 =
+
+* NEW: Option to preserve table titles on import operations.
+
 = 1.3.8 =
 
 * IMPROVE: Decreased plugin file size.

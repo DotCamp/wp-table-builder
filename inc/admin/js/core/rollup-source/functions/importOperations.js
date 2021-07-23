@@ -2,8 +2,8 @@
  * ImportOperations class
  *
  * @param {Object} options options object
- * @returns {{importFromFile: importFromFile}}
- * @constructor
+ * @return {{importFromFile: importFromFile}}
+ * @class
  */
 function ImportOperations(options) {
 	function importFromFile() {
@@ -108,6 +108,9 @@ function ImportOperations(options) {
 
 	/**
 	 * run all process for importing tables
+	 *
+	 * @param tableDataCsv
+	 * @param index
 	 */
 	function tablesFromCsvSaveRun(tableDataCsv, index) {
 		if (tableDataCsv && Array.isArray(tableDataCsv)) {
@@ -162,11 +165,17 @@ function ImportOperations(options) {
 			}
 		}
 		code = WPTB_Stringifier(table);
+
+		// remove export operation specific properties from table
+		code.removeAttribute('data-wptb-table-title');
+		code.removeAttribute('data-wptb-export-version');
+
 		code = code.outerHTML;
 
 		let params = {
 			content: code,
 			security_code: options.nonce,
+			title: options.preserveTitles ? (table.dataset.wptbTableTitle || '') : '',
 		};
 
 		if (id) {
@@ -198,6 +207,8 @@ function ImportOperations(options) {
 
 	/**
 	 * create new table from array data
+	 *
+	 * @param tableDataArr
 	 */
 	function createTableFromDataArray(tableDataArr) {
 		if (tableDataArr && Array.isArray(tableDataArr) && tableDataArr.length > 0) {
@@ -323,6 +334,8 @@ function ImportOperations(options) {
 	 * add adaptive table data attribute to set table responsive or not
 	 * add wptb-table-preview-head class to set top row as header if it chosen
 	 * and also other data attributes
+	 *
+	 * @param table
 	 */
 	function addAttributesForTable(table) {
 		if (options.tableResponsive) {
@@ -346,6 +359,9 @@ function ImportOperations(options) {
 
 	/**
 	 * function for parse CSV to array
+	 *
+	 * @param str
+	 * @param separator
 	 */
 	function parseCsv(str, separator) {
 		const arr = [];
@@ -383,6 +399,8 @@ function ImportOperations(options) {
 	/**
 	 * Detect the CSV delimiter, by analyzing some rows to determine the most probable delimiter character.
 	 * return string Most probable delimiter character.
+	 *
+	 * @param data
 	 */
 	function searchDelimiter(data) {
 		const delimiterCollection = {};
@@ -501,6 +519,8 @@ function ImportOperations(options) {
 
 	/**
 	 * function for parse Xml file
+	 *
+	 * @param data
 	 */
 	function wptb_xmlImportFileParse(data) {
 		const xmlDoc = $.parseXML(data);
@@ -526,6 +546,8 @@ function ImportOperations(options) {
 
 	/**
 	 * import table from other plugins
+	 *
+	 * @param event
 	 */
 	function importFromPlugin(event) {
 		if (event) {
@@ -721,6 +743,10 @@ function ImportOperations(options) {
 	 * function for working progress bar
 	 *
 	 * return percent
+	 *
+	 * @param count
+	 * @param commonCount
+	 * @param eventPostfix
 	 */
 	function tableImportingProgressBar(count, commonCount, eventPostfix) {
 		const importProgressBarContainer = document.querySelector('.wptb-importPBarContainer');
@@ -863,6 +889,8 @@ function ImportOperations(options) {
 	/**
 	 * function for replace imported shortcodes in posts
 	 * considering choosing imported shortcodes
+	 *
+	 * @param tbody
 	 */
 	function importedTablesReplaceShortcodes(tbody) {
 		if (tbody && tbody.children && tbody.children.length > 0) {
@@ -976,6 +1004,11 @@ function ImportOperations(options) {
 	/**
 	 * function for change "TablePress" table
 	 * for importing it to WPTB
+	 *
+	 * @param tableDomElem
+	 * @param tableContent
+	 * @param iframe
+	 * @param dataTables
 	 */
 	function tableDomImportingHandler(tableDomElem, tableContent, iframe, dataTables) {
 		if (tableDomElem) {
