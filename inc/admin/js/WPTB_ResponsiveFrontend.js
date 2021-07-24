@@ -1006,7 +1006,6 @@
 			}
 		};
 
-
 		/**
 		 * Build table with top row assigned as header.
 		 *
@@ -1195,7 +1194,7 @@
 								const rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
 								const colSpan = currentCell.getSpan(CellObject.spanTypes.column);
 
-								if (rowSpan > 1) {
+								if (rowSpan > 1 || colSpan > 1) {
 									const remainingItems = itemsPerHeader - r;
 
 									const currentRowSpan = Math.min(rowSpan, remainingItems);

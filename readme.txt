@@ -94,6 +94,7 @@ That's it. You're done!
 
 * NEW: Option to preserve table titles on import operations.
 * NEW: Support for 'form' and 'input' HTML elements for custom html table element.
+* FIX: An issue affecting responsive display of horizontally (colspan) merged cells.
 
 = 1.3.8 =
 
