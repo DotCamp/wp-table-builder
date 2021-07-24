@@ -53,8 +53,12 @@ var WPTB_Initializer = function () {
     WPTB_Helper.registerSections(['elements', 'table_settings', 'cell_settings', 'options_group' , 'table_responsive_menu', 'manage_cells', 'background_menu']);
     WPTB_Helper.setupSectionButtons();
 
+    // TODO [erdembircan] uncomment for production
     // activate elements section for startup
-    WPTB_Helper.activateSection('elements');
+    // WPTB_Helper.activateSection('elements');
+
+    // TODO [erdembircan] comment for production
+    WPTB_Helper.activateSection('table_responsive_menu');
 
     // side bar toggle setup
     WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');

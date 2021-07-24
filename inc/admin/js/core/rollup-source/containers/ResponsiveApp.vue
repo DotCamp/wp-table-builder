@@ -7,7 +7,7 @@
 					:stops="directives.breakpoints"
 					@slide="handleSizeSlideChange"
 					:model-val="appOptions.currentSize"
-					:enable-breakpoint-customization="false"
+					:enable-breakpoint-customization="appOptions.breakpointCustomization"
 				></screen-size-slider>
 			</div>
 			<div class="wptb-responsive-builder-main wptb-checkerboard-pattern wptb-plugin-inset-shadow-md">

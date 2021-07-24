@@ -11,7 +11,7 @@
 		<div v-show="enableBreakpointCustomization">
 			<number-postfix-input
 				class="wptb-size-input"
-				style="font-size: 90%;"
+				style="font-size: 90%"
 				:enable-dynamic-width="true"
 				v-model="innerRawValue"
 				:only-enter="true"

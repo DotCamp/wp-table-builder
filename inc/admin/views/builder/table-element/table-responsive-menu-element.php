@@ -4,6 +4,7 @@ namespace WP_Table_Builder\Inc\Admin\Views\Builder\Table_Element;
 
 use WP_Table_Builder\Inc\Admin\Base\Element_Base_Object as Element_Base_Object;
 use WP_Table_Builder\Inc\Admin\Controls\Control_Section_Group_Collapse;
+use WP_Table_Builder\Inc\Admin\Managers\Addon_Manager;
 use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
 
@@ -104,7 +105,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 			'type'    => Controls_Manager::DATA_MULE,
 			'dataId'  => 'responsiveMenuData',
 			'dataObj' => [
-				'screenSizes'  => [
+				'enableBreakpointCustomization' => Addon_Manager::check_pro_status(),
+				'screenSizes'                   => [
 					'desktop' => [
 						'name'  => __( 'desktop', 'wp-table-builder' ),
 						'width' => 1024
@@ -118,19 +120,19 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 						'width' => 300
 					]
 				],
-				'compareSizes' => [
+				'compareSizes'                  => [
 					'iPad'      => 768,
 					'iPhone X'  => 375,
 					'Pixel 2'   => 411,
 					'Galaxy S5' => 360,
 				],
-				'strings'      => [
+				'strings'                       => [
 					'rebuilding'              => esc_html__( 'rebuilding', 'wp-table-builder' ),
 					'enableResponsive'        => esc_html__( 'enable responsive table', 'wp-table-builder' ),
 					'enableResponsiveHelp'    => esc_html__( 'Enable responsive capabilities of current table', 'wp-table-builder' ),
 					'stackDirection'          => esc_html__( 'Cell stack direction', 'wp-table-builder' ),
 					'topRowHeader'            => esc_html__( 'Top row as header', 'wp-table-builder' ),
-					'repeatMergedHeader'            => esc_html__( 'Repeat merged header', 'wp-table-builder' ),
+					'repeatMergedHeader'      => esc_html__( 'Repeat merged header', 'wp-table-builder' ),
 					'staticTopRow'            => esc_html__( 'Static top row', 'wp-table-builder' ),
 					'identifyCells'           => esc_html__( 'Identify cells', 'wp-table-builder' ),
 					'cellsPerRow'             => esc_html__( 'Cells per row', 'wp-table-builder' ),
@@ -144,8 +146,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'full'                    => esc_html__( 'full', 'wp-table-builder' ),
 					'okay'                    => esc_html__( 'Okay', 'wp-table-builder' ),
 					'relative'                => esc_html__( 'target width', 'wp-table-builder' ),
-					'window'                => esc_html__( 'window', 'wp-table-builder' ),
-					'container'                => esc_html__( 'container', 'wp-table-builder' ),
+					'window'                  => esc_html__( 'window', 'wp-table-builder' ),
+					'container'               => esc_html__( 'container', 'wp-table-builder' ),
 					// for help text of responsive modes, use the format of `{mode_name}Help`, this will be parsed dynamically to change the help text at frontend
 					'autoHelp'                => esc_html__( 'Auto: Table will be reconstructed automatically with the given options by stacking rows/columns.', 'wp-table-builder' ),
 					'patternHelp'             => esc_html__( 'Pattern: Pattern of the topmost selected rows/columns will be applied to the rest of the table.', 'wp-table-builder' ),

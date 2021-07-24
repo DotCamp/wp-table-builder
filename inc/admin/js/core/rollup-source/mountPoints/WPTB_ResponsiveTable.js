@@ -31,6 +31,7 @@ export default {
 			hasLegacyResponsive: false,
 			currentBreakpoint: 'tablet',
 			currentSize: 0,
+			breakpointCustomization: data.enableBreakpointCustomization,
 		};
 
 		// directives for responsive features

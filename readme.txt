@@ -3,7 +3,7 @@ Contributors: wptb, imtiazrayhan, istiakrayhan, ultimateblocks, wpcdplugin, wple
 Tags: table, table builder, drag and drop
 Requires at least: 4.9
 Tested up to: 5.7
-Stable tag: 1.3.9
+Stable tag: 1.3.9-dev
 Requires PHP: 5.6
 License: GPL3+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -92,6 +92,7 @@ That's it. You're done!
 
 = 1.3.9 =
 
+* PRO: Customizable responsive breakpoint widths.
 * NEW: Option to preserve table titles on import operations.
 * NEW: Support for 'form' and 'input' HTML elements for custom html table element.
 * FIX: An issue affecting responsive display of horizontally (colspan) merged cells.
