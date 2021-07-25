@@ -32,6 +32,7 @@ export default {
 			currentBreakpoint: 'tablet',
 			currentSize: 0,
 			breakpointCustomization: data.enableBreakpointCustomization,
+			isPro: data.isPro,
 		};
 
 		// directives for responsive features

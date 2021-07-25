@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.9 =
 
 * PRO: Customizable responsive breakpoint widths.
+* PRO: Option to disable breakpoints to render their desktop counterparts.
 * NEW: Option to preserve table titles on import operations.
 * NEW: Support for 'form' and 'input' HTML elements for custom html table element.
 * FIX: An issue affecting responsive display of horizontally (colspan) merged cells.

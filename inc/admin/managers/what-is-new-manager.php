@@ -135,9 +135,11 @@ class What_Is_New_Manager {
 	 */
 	private static function get_notes() {
 		return [
-			'1.3.9' => [
+			// TODO [erdembircan] change to release version
+			'1.3.9-dev' => [
 				static::prepare_what_is_new_note( 'Option to preserve table titles on import operations.', 'preserve-table-titles.png' ),
-				static::prepare_what_is_new_note( 'Customizable responsive breakpoints.', 'responsive_breakpoint_customization.png', true ),
+				static::prepare_what_is_new_note( 'Customizable responsive breakpoint widths.', 'responsive_breakpoint_customization.png', true ),
+				static::prepare_what_is_new_note( 'Option to disable breakpoints to render their desktop counterparts instead.', 'disabled-responsive-breakpoints.png', true ),
 			]
 		];
 	}

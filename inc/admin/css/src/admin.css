@@ -6876,3 +6876,29 @@ label.wptb-control-row {
 }
 
 /*endregion*/
+
+/*region disabled overlay container*/
+.wptb-disabled-overlay-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-items: center;
+    grid-template-areas: 'content';
+}
+
+.wptb-disabled-overlay {
+    grid-area: content;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, #3299D13C 15px, #3299D13C 30px);
+    cursor: not-allowed;
+}
+
+.wptb-disabled-overlay-slot-wrapper {
+    grid-area: content;
+    z-index: 9;
+}
+/*endregion*/
+

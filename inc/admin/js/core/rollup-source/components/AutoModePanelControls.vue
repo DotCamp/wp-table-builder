@@ -1,11 +1,18 @@
 <template>
 	<fragment>
-		<panel-toggle-control
-			v-model="directives.modeOptions.auto.disabled[appOptions.currentBreakpoint]"
-			:label="strings.disableBreakpoint | cap"
-			:disabled="isDisabledMaster()"
-		>
-		</panel-toggle-control>
+		<div v-if="appOptions.currentBreakpoint !== 'desktop'">
+			<panel-toggle-control
+				v-if="appOptions.isPro"
+				v-model="directives.modeOptions.auto.disabled[appOptions.currentBreakpoint]"
+				:label="strings.disableBreakpoint | cap"
+				:disabled="isDisabledMaster()"
+			>
+			</panel-toggle-control>
+			<disabled-overlay-container v-else :overlay-visibility="true">
+				<panel-toggle-control v-model="dummyData" :label="strings.disableBreakpoint | cap" :disabled="true">
+				</panel-toggle-control>
+			</disabled-overlay-container>
+		</div>
 		<panel-toggle-control
 			v-model="directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
 			:label="strings.topRowHeader | cap"
@@ -67,9 +74,15 @@ import { Fragment } from 'vue-fragment';
 import PanelToggleControl from '$Components/PanelToggleControl';
 import PanelDropdownControl from '$Components/PanelDropdownControl';
 import PanelInputControl from '$Components/PanelInputControl';
+import DisabledOverlayContainer from '$Components/DisabledOverlayContainer';
 
 export default {
-	components: { Fragment, PanelToggleControl, PanelDropdownControl, PanelInputControl },
+	data() {
+		return {
+			dummyData: false,
+		};
+	},
+	components: { DisabledOverlayContainer, Fragment, PanelToggleControl, PanelDropdownControl, PanelInputControl },
 	methods: {
 		isDisabled() {
 			return (

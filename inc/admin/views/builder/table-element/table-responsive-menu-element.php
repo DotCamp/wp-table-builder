@@ -105,6 +105,7 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 			'type'    => Controls_Manager::DATA_MULE,
 			'dataId'  => 'responsiveMenuData',
 			'dataObj' => [
+				'isPro' => Addon_Manager::check_pro_status(),
 				'enableBreakpointCustomization' => Addon_Manager::check_pro_status(),
 				'screenSizes'                   => [
 					'desktop' => [
