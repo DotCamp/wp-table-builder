@@ -9,6 +9,7 @@ Has a functionality to enable updating data on enter keydown instead of value in
 
 <template>
 	<input
+		:data-wptb-text-disabled="$attrs.disabled"
 		type="text"
 		:value="postFixIt"
 		@input="handleOnInput"
