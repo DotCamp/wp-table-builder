@@ -18,7 +18,9 @@
     --wptb-plugin-gray-700: #4A5568;
     --wptb-plugin-green-500: #48BB78;
     --wptb-plugin-yellow-500: #ECC94B;
+    --wptb-plugin-red-300: #FCA5A5;
     --wptb-plugin-red-600: #E53E3E;
+    --wptb-plugin-red-800: #991B1B;
     --wptb-plugin-blue-300: #90CDF4;
     --wptb-plugin-white: #FFF;
     --wptb-plugin-black: #000;
@@ -3880,12 +3882,24 @@ wptb_shortcode_container_element {
     border-radius: 50%;
     margin-bottom: 5px;
     transition: all 0.2s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .wptb-slider-stop-label {
     text-transform: capitalize;
     font-size: 90%;
     color: var(--wptb-plugin-gray-400);
+}
+
+.wptb-slider-stop-knob[data-wptb-knob-disabled="true"] {
+    background-color: var(--wptb-plugin-theme-color-light) !important;
+    border: 2px solid var(--wptb-plugin-red-300) !important;
+}
+
+.wptb-slider-stop-knob[data-wptb-knob-disabled="true"] svg {
+    fill: var(--wptb-plugin-red-600);
 }
 
 .wptb-slider-stop-active .wptb-slider-stop-knob {
@@ -6853,11 +6867,12 @@ label.wptb-control-row {
     color: var(--wptb-plugin-gray-400) !important;
 }
 
-.wptb-element[data-wptb-dummy="true"] svg{
+.wptb-element[data-wptb-dummy="true"] svg {
     fill: currentColor !important;
 }
 
-.wptb-element[data-wptb-dummy="true"] .wptb-element-draggable-icon{
+.wptb-element[data-wptb-dummy="true"] .wptb-element-draggable-icon {
     color: var(--wptb-plugin-gray-400) !important;
 }
+
 /*endregion*/

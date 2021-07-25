@@ -44,6 +44,11 @@ export default {
 			headerFullyMerged: false,
 			modeOptions: {
 				auto: {
+					disabled: {
+						desktop: false,
+						tablet: false,
+						mobile: false,
+					},
 					topRowAsHeader: {
 						desktop: false,
 						tablet: true,

@@ -14646,6 +14646,10 @@ var _default = {
     enableBreakpointCustomization: {
       type: Boolean,
       default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -14657,7 +14661,8 @@ var _default = {
         left: 0,
         top: 0
       },
-      innerRawValue: this.rawValue
+      innerRawValue: this.rawValue,
+      knobDisabledIcon: ''
     };
   },
   watch: {
@@ -14676,7 +14681,16 @@ var _default = {
 
     this.$nextTick(function () {
       _this.calculateStyle();
+
+      return WPTB_IconManager.getIcon('times-circle', null, true).then(function (icon) {
+        _this.knobDisabledIcon = icon;
+      });
     });
+  },
+  computed: {
+    knobContent: function knobContent() {
+      return this.disabled ? this.knobDisabledIcon : '';
+    }
   },
   methods: {
     clickEvent: function clickEvent() {
@@ -14730,7 +14744,12 @@ exports.default = _default;
       }
     },
     [
-      _c("div", { ref: "knob", staticClass: "wptb-slider-stop-knob" }),
+      _c("div", {
+        ref: "knob",
+        staticClass: "wptb-slider-stop-knob",
+        attrs: { "data-wptb-knob-disabled": _vm.disabled },
+        domProps: { innerHTML: _vm._s(_vm.knobContent) }
+      }),
       _vm._v(" "),
       _c(
         "div",
@@ -15036,6 +15055,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 var _default = {
   props: {
     stops: Object,
@@ -15087,6 +15107,9 @@ var _default = {
     }
   },
   methods: {
+    isBreakpointDisabled: function isBreakpointDisabled(breakpointId) {
+      return this.directives.modeOptions[this.directives.responsiveMode].disabled[breakpointId];
+    },
     handleBreakpointChange: function handleBreakpointChange(newSize, breakpointId) {
       var breakpointObj = this.directives.breakpoints;
 
@@ -15136,8 +15159,8 @@ var _default = {
     /**
      * Translate the supplied value into percentage within the context of min/max values of slider.
      *
-     * @param {Number} val value
-     * @returns {number} percent
+     * @param {number} val value
+     * @return {number} percent
      */
     translateIntoPercent: function translateIntoPercent(val) {
       var range = this.max - this.min;
@@ -15168,7 +15191,7 @@ var _default = {
      *
      * @param {number} val value
      * @param {boolean} floor floor the value to nearest integer
-     * @returns {number} limited value
+     * @return {number} limited value
      */
     limitToRange: function limitToRange(val) {
       var floor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -15193,7 +15216,7 @@ var _default = {
      * Calculate if given value represents the active section of the responsive range.
      *
      * @param {number} val value
-     * @returns {boolean} is active
+     * @return {boolean} is active
      */
     isStopActive: function isStopActive(val) {
       var _this = this;
@@ -15270,7 +15293,8 @@ exports.default = _default;
                   "raw-value": width,
                   "stop-id": key,
                   enableBreakpointCustomization:
-                    _vm.enableBreakpointCustomization
+                    _vm.enableBreakpointCustomization,
+                  disabled: _vm.isBreakpointDisabled(key)
                 },
                 on: {
                   click: _vm.slide,
@@ -16851,8 +16875,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var sizeRangeId = _this3.calculateRangeId(size, directive.breakpoints);
 
         if (buildCallable) {
-          var modeOptions = directive.modeOptions[mode];
-          buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj); // eslint-disable-next-line no-undef
+          var modeOptions = directive.modeOptions[mode]; // if current breakpoint is disabled, render default table instead
+
+          if (modeOptions.disabled && modeOptions.disabled[sizeRangeId]) {
+            tableObj.clearTable();
+
+            _this3.buildDefault(tableObj);
+
+            _this3.removeDefaultClasses(el);
+          } else {
+            buildCallable.call(_this3, el, sizeRangeId, modeOptions, tableObj);
+          } // eslint-disable-next-line no-undef
+
 
           WPTB_RecalculateIndexes(el);
           var tabEvent = new CustomEvent('table:rebuilt', {
@@ -19669,14 +19703,20 @@ exports.default = void 0;
 
 var _vueFragment = require("vue-fragment");
 
-var _PanelToggleControl = _interopRequireDefault(require("./PanelToggleControl"));
+var _PanelToggleControl = _interopRequireDefault(require("$Components/PanelToggleControl"));
 
-var _PanelDropdownControl = _interopRequireDefault(require("./PanelDropdownControl"));
+var _PanelDropdownControl = _interopRequireDefault(require("$Components/PanelDropdownControl"));
 
-var _PanelInputControl = _interopRequireDefault(require("./PanelInputControl"));
+var _PanelInputControl = _interopRequireDefault(require("$Components/PanelInputControl"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -19744,6 +19784,9 @@ var _default = {
   },
   methods: {
     isDisabled: function isDisabled() {
+      return this.isDisabledMaster() || this.directives.modeOptions.auto.disabled[this.appOptions.currentBreakpoint];
+    },
+    isDisabledMaster: function isDisabledMaster() {
       return this.appOptions.currentBreakpoint === 'desktop' || !this.directives.responsiveEnabled;
     }
   },
@@ -19769,6 +19812,28 @@ exports.default = _default;
   return _c(
     "fragment",
     [
+      _c("panel-toggle-control", {
+        attrs: {
+          label: _vm._f("cap")(_vm.strings.disableBreakpoint),
+          disabled: _vm.isDisabledMaster()
+        },
+        model: {
+          value:
+            _vm.directives.modeOptions.auto.disabled[
+              _vm.appOptions.currentBreakpoint
+            ],
+          callback: function($$v) {
+            _vm.$set(
+              _vm.directives.modeOptions.auto.disabled,
+              _vm.appOptions.currentBreakpoint,
+              $$v
+            )
+          },
+          expression:
+            "directives.modeOptions.auto.disabled[appOptions.currentBreakpoint]"
+        }
+      }),
+      _vm._v(" "),
       _c("panel-toggle-control", {
         attrs: {
           label: _vm._f("cap")(_vm.strings.topRowHeader),
@@ -19938,7 +20003,7 @@ render._withStripped = true
           };
         })());
       
-},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","./PanelToggleControl":"components/PanelToggleControl.vue","./PanelDropdownControl":"components/PanelDropdownControl.vue","./PanelInputControl":"components/PanelInputControl.vue"}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js","$Components/PanelToggleControl":"components/PanelToggleControl.vue","$Components/PanelDropdownControl":"components/PanelDropdownControl.vue","$Components/PanelInputControl":"components/PanelInputControl.vue"}],"components/ResponsivePanelModeControls.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20117,6 +20182,11 @@ var _default = {
       headerFullyMerged: false,
       modeOptions: {
         auto: {
+          disabled: {
+            desktop: false,
+            tablet: false,
+            mobile: false
+          },
           topRowAsHeader: {
             desktop: false,
             tablet: true,

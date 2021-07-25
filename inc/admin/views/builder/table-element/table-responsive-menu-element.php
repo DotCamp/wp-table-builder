@@ -156,7 +156,8 @@ class Table_Responsive_Menu_Element extends Element_Base_Object {
 					'topRowHeaderHelp'        => esc_html__( 'Use the top most row of table as a header.', 'wp-table-builder' ),
 					'cellsPerRowHelp'         => esc_html__( 'Amount of cells that will be available per row. Can be further customized for different breakpoints.', 'wp-table-builder' ),
 					'legacyResponsiveWarning' => esc_html__( 'Your table has legacy responsive functionality. While it is still supported, enabling newer responsive system will override it. If this is not what you want, do not enable newer version.', 'wp-table-builder' ),
-					'preserveRowColorHelp'    => esc_html__( 'Preserve the original row color for cell, or use even/odd row colors', 'wp-table-builder' )
+					'preserveRowColorHelp'    => esc_html__( 'Preserve the original row color for cell, or use even/odd row colors', 'wp-table-builder' ),
+					'disableBreakpoint'    => esc_html__( 'Disable breakpoint', 'wp-table-builder' )
 				]
 			]
 		] );

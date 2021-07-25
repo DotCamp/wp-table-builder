@@ -22,6 +22,7 @@
 				@click="slide"
 				:enableBreakpointCustomization="enableBreakpointCustomization"
 				@breakpointChange="handleBreakpointChange"
+				:disabled="isBreakpointDisabled(key)"
 				>{{ directives.relativeWidth === 'window' ? name : `${width}px` }}
 			</slider-stop>
 		</div>
@@ -79,6 +80,9 @@ export default {
 		},
 	},
 	methods: {
+		isBreakpointDisabled(breakpointId) {
+			return this.directives.modeOptions[this.directives.responsiveMode].disabled[breakpointId];
+		},
 		handleBreakpointChange(newSize, breakpointId) {
 			const breakpointObj = this.directives.breakpoints;
 			if (breakpointObj[breakpointId]) {
@@ -126,8 +130,8 @@ export default {
 		/**
 		 * Translate the supplied value into percentage within the context of min/max values of slider.
 		 *
-		 * @param {Number} val value
-		 * @returns {number} percent
+		 * @param {number} val value
+		 * @return {number} percent
 		 */
 		translateIntoPercent(val) {
 			const range = this.max - this.min;
@@ -157,7 +161,7 @@ export default {
 		 *
 		 * @param {number} val value
 		 * @param {boolean} floor floor the value to nearest integer
-		 * @returns {number} limited value
+		 * @return {number} limited value
 		 */
 		limitToRange(val, floor = false) {
 			let tempVal = val;
@@ -179,7 +183,7 @@ export default {
 		 * Calculate if given value represents the active section of the responsive range.
 		 *
 		 * @param {number} val value
-		 * @returns {boolean} is active
+		 * @return {boolean} is active
 		 */
 		isStopActive(val) {
 			if (this.currentVal >= val) {

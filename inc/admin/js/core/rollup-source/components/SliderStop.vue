@@ -6,7 +6,7 @@
 		@click.prevent.capture="clickEvent"
 		:class="{ 'wptb-slider-stop-active': active }"
 	>
-		<div ref="knob" class="wptb-slider-stop-knob"></div>
+		<div ref="knob" :data-wptb-knob-disabled="disabled" class="wptb-slider-stop-knob" v-html="knobContent"></div>
 		<div class="wptb-slider-stop-label"><slot></slot></div>
 		<div v-show="enableBreakpointCustomization">
 			<number-postfix-input
@@ -42,12 +42,17 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	components: { NumberPostfixInput },
 	data() {
 		return {
 			wrapperStyle: { left: 0, top: 0 },
 			innerRawValue: this.rawValue,
+			knobDisabledIcon: '',
 		};
 	},
 	watch: {
@@ -64,7 +69,15 @@ export default {
 	mounted() {
 		this.$nextTick(() => {
 			this.calculateStyle();
+			return WPTB_IconManager.getIcon('times-circle', null, true).then((icon) => {
+				this.knobDisabledIcon = icon;
+			});
 		});
+	},
+	computed: {
+		knobContent() {
+			return this.disabled ? this.knobDisabledIcon : '';
+		},
 	},
 	methods: {
 		clickEvent() {

@@ -1321,7 +1321,15 @@
 
 				if (buildCallable) {
 					const modeOptions = directive.modeOptions[mode];
-					buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
+
+					// if current breakpoint is disabled, render default table instead
+					if (modeOptions.disabled && modeOptions.disabled[sizeRangeId]) {
+						tableObj.clearTable();
+						this.buildDefault(tableObj);
+						this.removeDefaultClasses(el);
+					} else {
+						buildCallable.call(this, el, sizeRangeId, modeOptions, tableObj);
+					}
 
 					// eslint-disable-next-line no-undef
 					WPTB_RecalculateIndexes(el);

@@ -1,6 +1,12 @@
 <template>
 	<fragment>
 		<panel-toggle-control
+			v-model="directives.modeOptions.auto.disabled[appOptions.currentBreakpoint]"
+			:label="strings.disableBreakpoint | cap"
+			:disabled="isDisabledMaster()"
+		>
+		</panel-toggle-control>
+		<panel-toggle-control
 			v-model="directives.modeOptions.auto.topRowAsHeader[appOptions.currentBreakpoint]"
 			:label="strings.topRowHeader | cap"
 			:disabled="isDisabled()"
@@ -58,14 +64,19 @@
 </template>
 <script>
 import { Fragment } from 'vue-fragment';
-import PanelToggleControl from './PanelToggleControl';
-import PanelDropdownControl from './PanelDropdownControl';
-import PanelInputControl from './PanelInputControl';
+import PanelToggleControl from '$Components/PanelToggleControl';
+import PanelDropdownControl from '$Components/PanelDropdownControl';
+import PanelInputControl from '$Components/PanelInputControl';
 
 export default {
 	components: { Fragment, PanelToggleControl, PanelDropdownControl, PanelInputControl },
 	methods: {
 		isDisabled() {
+			return (
+				this.isDisabledMaster() || this.directives.modeOptions.auto.disabled[this.appOptions.currentBreakpoint]
+			);
+		},
+		isDisabledMaster() {
 			return this.appOptions.currentBreakpoint === 'desktop' || !this.directives.responsiveEnabled;
 		},
 	},
