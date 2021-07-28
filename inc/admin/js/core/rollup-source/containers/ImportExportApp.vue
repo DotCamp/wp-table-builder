@@ -37,7 +37,8 @@ export default {
 	components: { ExportApp, MenuContent, ImportApp, MenuHeader, SectionItem, Sections, MenuFooter },
 	data() {
 		return {
-			currentSection: 'Import',
+			// TODO [erdembircan] change to 'Import' for production
+			currentSection: 'Export',
 		};
 	},
 	computed: {

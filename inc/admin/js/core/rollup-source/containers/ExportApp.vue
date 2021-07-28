@@ -2,6 +2,11 @@
 	<div class="wptb-menu-export-wrapper">
 		<div class="wptb-menu-export-card">
 			<div class="wptb-menu-export-control-title">{{ getTranslation('all tables') }}</div>
+			<div
+				class="wptb-export-list-table-search wptb-flex-justify-center wptb-flex-align-center wptb-plugin-width-full wptb-flex"
+			>
+				<search-input :placeholder="strings.search" v-model="allFilterSearchClause"></search-input>
+			</div>
 			<list-table
 				:row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
 				:row-data="remainingTables"
@@ -69,15 +74,17 @@ import EmptyCover from '$Components/EmptyCover';
 import PopUp from '$Components/PopUp';
 import ListTable from '$Components/ListTable';
 import withMessage from '$Mixins/withMessage';
+import SearchInput from '$Components/SearchInput';
 
 export default {
 	props: ['options', 'pluginInfo'],
 	mixins: [withMessage],
-	components: { ListTable, PopUp, MenuButton, ControlItem, EmptyCover },
+	components: { SearchInput, ListTable, PopUp, MenuButton, ControlItem, EmptyCover },
 	data() {
 		return {
 			userTables: [],
 			selectedTables: {},
+			allFilterSearchClause: '',
 			exportType: 'CSV',
 			exportTypeControlOptions: {
 				id: 'exportType',

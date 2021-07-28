@@ -19,8 +19,8 @@
 					<td>
 						<input :id="row.ID" type="checkbox" v-model="modelBind[row.ID]" />
 					</td>
-					<td v-for="data in row.fieldDatas" :key="data">
-						<label :for="row.ID">{{ data }}</label>
+					<td v-for="(data, index) in row.fieldDatas" :key="data">
+						<label :class="index === 0 ? 'title-label' : ''" :for="row.ID">{{ data }}</label>
 					</td>
 				</tr>
 			</transition-group>

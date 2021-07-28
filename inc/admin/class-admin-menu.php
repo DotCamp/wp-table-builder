@@ -436,6 +436,7 @@ class Admin_Menu {
 				'operationSuccess'   => esc_html__( 'Tables Imported', $wptb_text_domain ),
 				'replacedShortcodes' => esc_html__( 'Shortcodes Replaced', $wptb_text_domain ),
 				'file'               => esc_html__( 'file', $wptb_text_domain ),
+				'search'             => esc_html__( 'search', $wptb_text_domain ),
 			];
 
 			$import_iframe_url = add_query_arg(
