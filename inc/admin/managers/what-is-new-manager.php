@@ -135,8 +135,7 @@ class What_Is_New_Manager {
 	 */
 	private static function get_notes() {
 		return [
-			// TODO [erdembircan] change to release version
-			'1.3.9-dev' => [
+			'1.3.9' => [
 				static::prepare_what_is_new_note( 'Improvements for element url control tool.', 'url_control_overhaul.png' ),
 				static::prepare_what_is_new_note( 'Affiliate link support for image/text/button table element links.', 'affiliate_link_support.png' ),
 				static::prepare_what_is_new_note( 'Option to preserve table titles on import operations.', 'preserve-table-titles.png' ),
