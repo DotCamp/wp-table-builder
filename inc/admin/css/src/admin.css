@@ -3130,7 +3130,10 @@ wptb_shortcode_container_element {
     align-items: center;
     margin: 5px 0;
     width: 100%;
+}
 
+.wptb-settings-dropdown-row {
+    margin: 10px 0;
 }
 
 .wptb-settings-sections-wrapper.child {

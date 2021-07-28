@@ -92,6 +92,8 @@ That's it. You're done!
 
 = 1.3.9 =
 
+* NEW: Overhaul for link url control.
+* NEW: Support for affiliate links (sponsored) for image/text/button element links.
 * PRO: Customizable responsive breakpoint widths.
 * PRO: Option to disable breakpoints to render their desktop counterparts.
 * NEW: Option to preserve table titles on import operations.

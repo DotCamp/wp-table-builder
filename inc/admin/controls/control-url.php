@@ -1,4 +1,5 @@
 <?php
+
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 use WP_Table_Builder as NS;
@@ -17,13 +18,13 @@ if ( ! defined( 'WPINC' ) ) {
  * @since 1.1.2
  */
 class Control_Url extends Base_Control {
-    /**
+	/**
 	 * Get control type.
 	 *
+	 * @return string Control type.
 	 * @since 1.1.2
 	 * @access public
 	 *
-	 * @return string Control type.
 	 */
 	public function get_type() {
 		return 'url';
@@ -39,7 +40,7 @@ class Control_Url extends Base_Control {
 	 * @access public
 	 */
 	public function enqueue() {
-        
+
 	}
 
 	/**
@@ -74,29 +75,37 @@ class Control_Url extends Base_Control {
             targetInputAddClass = data.elementControlTargetUnicClass;
             let postfixIdFor = targetInputAddClass.replace( 'wptb-el', '' ).toLowerCase();
         #>
-        
+
         <div class="wptb-settings-item-header">
             <p class="wptb-settings-item-title">{{{label}}}</p>
         </div>
         <div class="wptb-settings-row wptb-settings-middle-xs" style="padding-bottom: 10px">
             <div class="wptb-settings-col-xs-8" style="margin: 15px 0;">
-                <input type="text" data-type="element-link" placeholder="<?php esc_attr_e('Insert Link Here', NS\PLUGIN_TEXT_DOMAIN); ?>"
+                <input type="text" data-type="element-link"
+                       placeholder="<?php esc_attr_e( 'Insert Link Here', NS\PLUGIN_TEXT_DOMAIN ); ?>"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
             </div>
-            <div class="wptb-settings-checkbox-row">
-                <input type="checkbox" data-type="element-link-target" id="element-link-target{{{postfixIdFor}}}"
-                       class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-link-target{{{postfixIdFor}}}"><?php esc_html_e('Open Link in New Tab', NS\PLUGIN_TEXT_DOMAIN); ?></label>
+            <div class="wptb-settings-space-between wptb-settings-dropdown-row">
+                <label for="element-rel-{{{postfixIdFor}}}"><?php esc_html_e('Link', 'wp-table-builder'); ?></label>
+                <select data-type="element-rel" id="element-rel-{{{postfixIdFor}}}" class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
+                    <option value="none"><?php esc_html_e('None', 'wp-table-builder'); ?></option>
+                    <option value="sponsored">sponsored</option>
+                    <option value="nofollow">nofollow</option>
+                    <option value="noreferrer">noreferrer</option>
+                </select>
+            </div>
+            <div class="wptb-settings-space-between wptb-settings-dropdown-row">
+                <label for="element-target-{{{postfixIdFor}}}"><?php esc_html_e('Open in', 'wp-table-builder'); ?></label>
+                <select data-type="element-target" id="element-target-{{{postfixIdFor}}}" class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
+                    <option value="_blank"><?php esc_html_e('New tab', 'wp-table-builder'); ?></option>
+                    <option value="_self"><?php esc_html_e('Current window', 'wp-table-builder'); ?></option>
+                </select>
             </div>
             <div class="wptb-settings-checkbox-row">
-                <input type="checkbox" data-type="element-link-nofollow" id="element-link-nofollow{{{postfixIdFor}}}" 
+                <input type="checkbox" data-type="element-link-convert-relative"
+                       id="element-convert-relative{{{postfixIdFor}}}"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-link-nofollow{{{postfixIdFor}}}"><?php esc_html_e('Nofollow Link', NS\PLUGIN_TEXT_DOMAIN); ?></label>
-            </div>
-            <div class="wptb-settings-checkbox-row">
-                <input type="checkbox" data-type="element-link-convert-relative" id="element-convert-relative{{{postfixIdFor}}}"
-                       class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                <label for="element-convert-relative{{{postfixIdFor}}}"><?php esc_html_e('Convert Relative Link to Absolute', NS\PLUGIN_TEXT_DOMAIN); ?></label>
+                <label for="element-convert-relative{{{postfixIdFor}}}"><?php esc_html_e( 'Convert Relative Link to Absolute', NS\PLUGIN_TEXT_DOMAIN ); ?></label>
             </div>
         </div>
 
@@ -120,42 +129,33 @@ class Control_Url extends Base_Control {
                             let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
                             wptbTableStateSaveManager.tableStateSet();
                         }
-                    } else if( targetInputs[i].dataset.type == 'element-link-target' ) {
-                        let linkTarget = selectorElement.getAttribute( 'target' );
-                        if( ! linkTarget || linkTarget == '_self' ) {
-                            targetInputs[i].checked = false;
-                        } else if( linkTarget == '_blank' ) {
-                            targetInputs[i].checked = true;
-                        }
-                        
-                        targetInputs[i].onchange = function() {
-                            if (this.checked == true) {
-                                selectorElement.target = '_blank';
-                            } else {
-                                selectorElement.target = '_self';
+                    } else if( targetInputs[i].dataset.type == 'element-target' ) {
+                        const target = selectorElement.getAttribute('target') || '_self';
+                        const controller = targetInputs[i];
+                        controller.value = target;
+
+                        controller.addEventListener('input', (e) => {
+                            const val = e.target.value;
+                            selectorElement.setAttribute('target', val);
+                            new WPTB_TableStateSaveManager().tableStateSet();
+                        });
+                    } else if(targetInputs[i].dataset.type === 'element-rel') {
+                        const linkRel = selectorElement.getAttribute('rel') || 'none';
+                        const controller = targetInputs[i];
+                        controller.value = linkRel;
+
+                        controller.addEventListener('input', (e) => {
+                            const val = e.target.value;
+                            if(val === 'none') {
+                                selectorElement.removeAttribute('rel');
+                            }else{
+                                selectorElement.setAttribute('rel', e.target.value);
+
                             }
-                            
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    } else if( targetInputs[i].dataset.type == 'element-link-nofollow' ) {
-                        let linkRel = selectorElement.getAttribute( 'rel' );
-                        if( linkRel && linkRel == 'nofollow' ) {
-                            targetInputs[i].checked = true;
-                        } else {
-                            targetInputs[i].checked = false;
-                        }
-                        targetInputs[i].onchange = function() {
-                            if ( this.checked == true ) {
-                                selectorElement.rel = 'nofollow';
-                            } else {
-                                selectorElement.removeAttribute( 'rel' );
-                            }
-                            
-                            let wptbTableStateSaveManager = new WPTB_TableStateSaveManager();
-                            wptbTableStateSaveManager.tableStateSet();
-                        }
-                    } else if(targetInputs[i].dataset.type === 'element-link-convert-relative'){
+                            new WPTB_TableStateSaveManager().tableStateSet();
+                        });
+                    }
+            else if(targetInputs[i].dataset.type === 'element-link-convert-relative'){
 
             const currentCheckbox = targetInputs[i];
             const relativeDataValue = selectorElement.dataset.wptbLinkEnableConvertRelative;

@@ -16,6 +16,7 @@ const tinyMceInitStart = function () {
 			{ title: 'None', value: '' },
 			{ title: 'nofollow', value: 'nofollow' },
 			{ title: 'noreferrer', value: 'noreferrer' },
+			{ title: 'sponsored', value: 'sponsored' },
 		],
 		convert_urls: false,
 		setup(ed) {
