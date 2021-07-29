@@ -53,25 +53,25 @@ class Control_Url extends Base_Control {
 	 */
 	public function content_template() {
 		?>
-        <#  
+        <#
             let label,
                 selector,
                 dataElement;
-            
+
             if( data.label ) {
                 label = data.label;
             }
-            
+
             if( data.selector ) {
                 selector = data.selector;
             }
-            
+
             if( selector ) {
                 let selectorArr = selector.replace( '.', '' ).split( ' ' );
                 let infArr = selectorArr[0].match( /wptb-element-((.+-)\d+)/i );
                 let dataElement = 'wptb-options-' + infArr[1];
             }
-            
+
             targetInputAddClass = data.elementControlTargetUnicClass;
             let postfixIdFor = targetInputAddClass.replace( 'wptb-el', '' ).toLowerCase();
         #>
@@ -85,14 +85,30 @@ class Control_Url extends Base_Control {
                        placeholder="<?php esc_attr_e( 'Insert Link Here', NS\PLUGIN_TEXT_DOMAIN ); ?>"
                        class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
             </div>
-            <div class="wptb-settings-space-between wptb-settings-dropdown-row">
-                <label for="element-rel-{{{postfixIdFor}}}"><?php esc_html_e('Link', 'wp-table-builder'); ?></label>
-                <select data-type="element-rel" id="element-rel-{{{postfixIdFor}}}" class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
-                    <option value="none"><?php esc_html_e('None', 'wp-table-builder'); ?></option>
-                    <option value="sponsored">sponsored</option>
-                    <option value="nofollow">nofollow</option>
-                    <option value="noreferrer">noreferrer</option>
-                </select>
+            <div class="wptb-plugin-width-full" style="border:solid var(--wptb-plugin-gray-300); border-width: 1px 0 1px 0; padding: 10px 0;">
+                <div class="wptb-settings-space-between wptb-settings-dropdown-row">
+                    <label><?php esc_html_e( 'Link', 'wp-table-builder' ); ?></label>
+                    <!--                <select data-type="element-rel" id="element-rel-{{{postfixIdFor}}}" class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">-->
+                    <!--                    <option value="none">-->
+			        <?php //esc_html_e('None', 'wp-table-builder'); ?><!--</option>-->
+                    <!--                    <option value="sponsored">sponsored</option>-->
+                    <!--                    <option value="nofollow">nofollow</option>-->
+                    <!--                    <option value="noreferrer">noreferrer</option>-->
+                    <!--                </select>-->
+                </div>
+                <?php
+                $supported_rel_values = ['sponsored', 'nofollow', 'noreferrer'];
+
+                foreach ($supported_rel_values as $rel):
+                ?>
+                <div class="wptb-settings-checkbox-row">
+                    <input type="checkbox" data-type="element-rel"
+                           value="<?php esc_attr_e($rel);?>"
+                           id="element-rel-{{{postfixIdFor}}}"
+                           class="wptb-element-property {{{targetInputAddClass}}}" data-element="{{{dataElement}}}">
+                    <label for="element-rel-{{{postfixIdFor}}}"><?php echo $rel;?></label>
+                </div>
+                <?php endforeach; ?>
             </div>
             <div class="wptb-settings-space-between wptb-settings-dropdown-row">
                 <label for="element-target-{{{postfixIdFor}}}"><?php esc_html_e('Open in', 'wp-table-builder'); ?></label>
@@ -140,17 +156,30 @@ class Control_Url extends Base_Control {
                             new WPTB_TableStateSaveManager().tableStateSet();
                         });
                     } else if(targetInputs[i].dataset.type === 'element-rel') {
-                        const linkRel = selectorElement.getAttribute('rel') || 'none';
-                        const controller = targetInputs[i];
-                        controller.value = linkRel;
+                        const rels  = (selectorElement.getAttribute('rel') || '').split(' ');
+                        const currentControl = targetInputs[i];
+                        const currentValue = currentControl.value;
 
-                        controller.addEventListener('input', (e) => {
-                            const val = e.target.value;
-                            if(val === 'none') {
-                                selectorElement.removeAttribute('rel');
-                            }else{
-                                selectorElement.setAttribute('rel', e.target.value);
+                        if(rels.includes(currentValue)){
+                            currentControl.checked = true;
+                        }
 
+                        currentControl.addEventListener('input', (e) => {
+                            const currentRels = (selectorElement.getAttribute('rel') || '').split(' ');
+                            const index = currentRels.indexOf(currentValue);
+
+                            if(e.target.checked){
+                                if(index < 0){
+                                    currentRels.push(currentValue);
+                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
+                                }
+                            }else {
+                                currentRels.splice(index, 1);
+                                if(currentRels.length === 0) {
+                                    selectorElement.removeAttribute('rel');
+                                }else{
+                                    selectorElement.setAttribute('rel', currentRels.join(' ').trim());
+                                }
                             }
                             new WPTB_TableStateSaveManager().tableStateSet();
                         });
