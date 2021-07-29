@@ -52,7 +52,7 @@ use WP_Table_Builder\Inc\Core\Init as Init;
 						foreach ( $element_objects_by_type as $type => $elements ):
 
 							?>
-                            <div class="wptb-panel-toggle-group">
+                            <div class="wptb-panel-toggle-group" id="<?php esc_attr_e( $type ); ?>">
                                 <div class="wptb-panel-toggle">
                                     <div class="header"><?php
 										/* translators: dynamic value here is one of element types that is defined in elements-manager.php as a constant */

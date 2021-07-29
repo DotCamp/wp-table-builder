@@ -48,8 +48,6 @@ class Upsells_Manager {
 				'generic_end'     => wp_sprintf( '<br><div>%s %s %s</div>', esc_html_x( 'Get the', 'start of the "Get the Pro Add-On" sentence', 'wp-table-builder' ), '<span class="wptb-upsells-pro-label">PRO</span>', esc_html__( 'Add-On.', 'wp-table-builder' ) )
 			];
 
-//			add_action( 'wp-table-builder/action/after_elements', [ __CLASS__, 'after_elements_upsell' ], 1 );
-
 			add_action( 'wp-table-builder/action/after_cell_notselected_left_panel', [
 				__CLASS__,
 				'cell_management_upsell'
@@ -59,7 +57,28 @@ class Upsells_Manager {
 				'cell_management_upsell'
 			], 1 );
 			add_filter( 'wp-table-builder/filter/generate_data', [ __CLASS__, 'generate_data_filter' ], 1, 1 );
+
+			add_filter( 'wp-table-builder/filter/builder_script_data', [ __CLASS__, 'builder_data' ], 10, 1 );
 		}
+	}
+
+
+	/**
+	 * Add upsell related data to builder scripts.
+	 *
+	 * @param array $data builder data
+	 *
+	 * @return array filtered builder data
+	 */
+	public static function builder_data( $data ) {
+		$data['upsells'] = [
+			'pro'      => Addon_Manager::check_pro_status(),
+			'elements' => [
+				'leftPanel' => static::after_elements_upsell()
+			]
+		];
+
+		return $data;
 	}
 
 	/**
@@ -93,11 +112,8 @@ class Upsells_Manager {
 	 * @return array modified generate data
 	 */
 	public static function generate_data_filter( $generate_data ) {
-		ob_start();
 		extract( static::get_upsell_data( 'generate_menu' ) );
-		static::prepare_upsell_element( $message, $url );
-		$upsell_element = ob_get_contents();
-		ob_end_clean();
+		$upsell_element  =static::prepare_upsell_element( $message, $url ,false);
 
 		$generate_data['upsell'] = $upsell_element;
 
@@ -147,10 +163,12 @@ class Upsells_Manager {
 
 	/**
 	 * Upsell notification after elements at left panel.
-	 * @deprecated
+	 *
+	 * @return string upsell elements
 	 */
 	public static function after_elements_upsell() {
 		extract( static::get_upsell_data( 'after_elements' ) );
-		static::prepare_upsell_element( $message, $url );
+
+		return static::prepare_upsell_element( $message, $url, false );
 	}
 }

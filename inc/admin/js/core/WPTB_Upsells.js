@@ -2,15 +2,16 @@
  * Add upsell related scripts.
  */
 (function upsellsHooks() {
-	// make left panel upsells visible when table is generated
-	document.addEventListener('wptb:table:generated', () => {
-		const leftPanelUpsells = Array.from(document.querySelectorAll('.wptb-left-panel .wptb-upsells-anchor'));
-		// eslint-disable-next-line array-callback-return
-		leftPanelUpsells.map((u) => {
-			if (u) {
-				// eslint-disable-next-line no-param-reassign
-				u.style.display = 'unset';
-			}
-		});
-	});
+	// add pro upsells to dummy pro table elements container
+	if (wptb_admin_object.upsells && !wptb_admin_object.upsells.pro) {
+		const dummyWrapper = document.querySelector('.wptb-panel-toggle-group[id="pro"] .wptb-panel-toggle-target');
+
+		const upsellContainer = document.createElement('div');
+		upsellContainer.classList.add('wptb-upsells-pro-overlay');
+
+		upsellContainer.innerHTML = wptb_admin_object.upsells.elements.leftPanel;
+
+		dummyWrapper.style.position = 'relative';
+		dummyWrapper.appendChild(upsellContainer);
+	}
 })();

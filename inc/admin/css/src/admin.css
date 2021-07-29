@@ -5928,7 +5928,7 @@ label.wptb-control-row {
 }
 
 .wptb-panel-left .wptb-upsells-anchor {
-    display: none;
+    font-size: 125%;
 }
 
 .wptb-upsells-message-holder {
@@ -6903,5 +6903,19 @@ label.wptb-control-row {
     grid-area: content;
     z-index: 9;
 }
+
 /*endregion*/
+
+.wptb-upsells-pro-overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, #3299D13C 15px, #3299D13C 30px);
+}
+
 
