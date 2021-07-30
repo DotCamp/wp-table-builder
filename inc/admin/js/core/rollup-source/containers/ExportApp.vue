@@ -11,7 +11,8 @@
 				:row-labels="['Title', 'Created', 'ID'].map(getTranslation)"
 				:row-data="remainingTables"
 				:model-bind="selectedTables"
-				:sort-type="{ 1: 'date' }"
+				:sort-type="{ 1: 'date', 2: 'number' }"
+				:search-clause="allFilterSearchClause"
 			></list-table>
 			<empty-cover v-show="!userTables.length > 0">
 				{{ getTranslation('no tables found') }}

@@ -3063,6 +3063,7 @@ wptb_shortcode_container_element {
 .wptb-settings-wrapper {
     background-color: white;
     min-width: 90%;
+    max-width: 90%;
     height: 90%;
     display: grid;
     grid-template-columns: 1fr;
@@ -6912,6 +6913,18 @@ label.wptb-control-row {
     z-index: 9;
 }
 
+/*endregion*/
+
+/*region data listing*/
+.wptb-data-listing-row-search-clause-wrap {
+    color: var(--wptb-plugin-gray-500);
+
+}
+
+.wptb-data-listing-row-search-clause {
+    color: var(--wptb-plugin-logo-color) !important;
+    font-weight: bold !important;
+}
 /*endregion*/
 
 /*region search input component*/

@@ -90,6 +90,10 @@ That's it. You're done!
 
 == Changelog ==
 
+= 1.3.10 =
+
+* IMPROVE: Export menu table search functionality.
+
 = 1.3.9 =
 
 * PRO: Customizable responsive breakpoint widths.
