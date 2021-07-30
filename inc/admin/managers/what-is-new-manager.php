@@ -135,12 +135,8 @@ class What_Is_New_Manager {
 	 */
 	private static function get_notes() {
 		return [
-			'1.3.9' => [
-				static::prepare_what_is_new_note( 'Improvements for element url control tool.', 'url_control_overhaul.png' ),
-				static::prepare_what_is_new_note( 'Affiliate link support for image/text/button table element links.', 'affiliate_link_support.png' ),
-				static::prepare_what_is_new_note( 'Option to preserve table titles on import operations.', 'preserve-table-titles.png' ),
-				static::prepare_what_is_new_note( 'Customizable responsive breakpoint widths.', 'responsive_breakpoint_customization.png', true ),
-				static::prepare_what_is_new_note( 'Option to disable breakpoints to render their desktop counterparts instead.', 'disabled-responsive-breakpoints.png', true ),
+			'1.3.10' => [
+				static::prepare_what_is_new_note( 'Search functionality for export menu table listing.', 'export_menu_search.png' ),
 			]
 		];
 	}
