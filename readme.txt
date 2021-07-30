@@ -92,6 +92,8 @@ That's it. You're done!
 
 = 1.3.10 =
 
+* IMPROVE: Export menu table search functionality.
+
 = 1.3.9 =
 
 * NEW: Overhaul for link url control.

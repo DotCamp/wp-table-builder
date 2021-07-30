@@ -14,31 +14,33 @@
 					></column-sort>
 				</tr>
 			</thead>
-			<transition-group tag="tbody" name="wptb-fade" mode="out-in">
-				<tr v-for="row in innerRowData" :key="row.ID">
-					<td>
-						<input :id="row.ID" type="checkbox" v-model="modelBind[row.ID]" />
-					</td>
-					<td v-for="data in row.fieldDatas" :key="data">
-						<label :for="row.ID">{{ data }}</label>
-					</td>
-				</tr>
-			</transition-group>
+			<!--			<transition-group tag="tbody" name="wptb-fade" mode="out-in">-->
+			<tbody>
+				<list-table-row
+					v-for="row in innerRowData"
+					:model-bind="modelBind"
+					:row="row"
+					:key="row.ID"
+					:search-clause="searchClause"
+				></list-table-row>
+			</tbody>
+			<!--			</transition-group>-->
 		</table>
 	</div>
 </template>
 <script>
-import ColumnSort from './ColumnSort';
+import ColumnSort from '$Components/ColumnSort';
+import ListTableRow from '$Components/ListTableRow';
 
 export default {
-	// props: ['rowLabels', 'rowData', 'modelBind', 'sortType'],
 	props: {
 		rowLabels: Array,
 		rowData: Array,
 		modelBind: Object,
 		sortType: Object,
+		searchClause: String,
 	},
-	components: { ColumnSort },
+	components: { ListTableRow, ColumnSort },
 	data() {
 		return {
 			innerRowData: [],
@@ -66,8 +68,8 @@ export default {
 		/**
 		 * Sort column data
 		 *
-		 * @param {int} index index of fieldData array of element
-		 * @param {int}direction negative/positive integer to depict the direction of sort (ascending/descending)
+		 * @param {number} index index of fieldData array of element
+		 * @param {number} direction negative/positive integer to depict the direction of sort (ascending/descending)
 		 */
 		sort(index, direction) {
 			// store latest sort data to use it at reactive updates of component data (field selection/deselection)
@@ -89,6 +91,12 @@ export default {
 					}
 
 					return status * direction;
+				},
+				numberSort(a, b) {
+					return (
+						(Number.parseInt(a.fieldDatas[index], 10) - Number.parseInt(b.fieldDatas[index], 10)) *
+						direction
+					);
 				},
 				// default sort based on alphabetical/number sorting
 				defaultSort(a, b) {
