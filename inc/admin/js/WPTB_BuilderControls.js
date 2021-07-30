@@ -13074,30 +13074,33 @@ var ControlBase = {
     });
   },
   methods: {
-    calculateComponentVisibilityOnDependentControls: function calculateComponentVisibilityOnDependentControls(controlId, value) {
-      // TODO [erdembircan] remove for production
-      console.log(controlId, value);
+    calculateComponentVisibilityOnDependentControls: function calculateComponentVisibilityOnDependentControls(valueToExpect) {
+      var _this2 = this;
+
+      return function (controlId, value) {
+        _this2.componentVisibility = valueToExpect === value;
+      };
     },
     subscribeToDependentControls: function subscribeToDependentControls() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.$root.$data.dependsOnElementControl) {
         var dependsData = this.$root.$data.dependsOnElementControl; // eslint-disable-next-line array-callback-return
 
         Object.keys(dependsData).map(function (controlId) {
           if (Object.prototype.hasOwnProperty.call(dependsData, controlId)) {
-            WPTB_ControlsManager.subscribeToElementControl(_this2.uniqueId, _this2.$root.$data.elemContainer, controlId, _this2.calculateComponentVisibilityOnDependentControls);
+            WPTB_ControlsManager.subscribeToElementControl(_this3.uniqueId, _this3.$root.$data.elemContainer, controlId, _this3.calculateComponentVisibilityOnDependentControls(dependsData[controlId]));
           }
         });
       }
     },
     calculateComponentVisibility: function calculateComponentVisibility() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.componentVisibility = Object.keys(this.appearDependOnControl).every(function (controlName) {
-        if (Object.prototype.hasOwnProperty.call(_this3.appearDependOnControl, controlName)) {
-          if (Object.keys(_this3.cachedDependedValues).includes(controlName)) {
-            return _this3.cachedDependedValues[controlName] === _this3.appearDependOnControl[controlName];
+        if (Object.prototype.hasOwnProperty.call(_this4.appearDependOnControl, controlName)) {
+          if (Object.keys(_this4.cachedDependedValues).includes(controlName)) {
+            return _this4.cachedDependedValues[controlName] === _this4.appearDependOnControl[controlName];
           }
 
           return false;
@@ -13107,7 +13110,7 @@ var ControlBase = {
       });
     },
     getInputLoadedValues: function getInputLoadedValues() {
-      var _this4 = this;
+      var _this5 = this;
 
       var leftPanel = document.querySelector('.wptb-panel-left');
       var allInputs = Array.from(leftPanel.querySelectorAll('.wptb-element-property')); // eslint-disable-next-line array-callback-return
@@ -13115,7 +13118,7 @@ var ControlBase = {
       allInputs.map(function (input) {
         var classList = input.getAttribute('class'); // eslint-disable-next-line array-callback-return
 
-        Object.keys(_this4.appearDependOnControl).map(function (d) {
+        Object.keys(_this5.appearDependOnControl).map(function (d) {
           if (classList) {
             if (classList.includes(d)) {
               var val = input.value;
@@ -13124,21 +13127,21 @@ var ControlBase = {
                 val = input.checked ? 'checked' : 'unchecked';
               }
 
-              _this4.$set(_this4.cachedDependedValues, d, val);
+              _this5.$set(_this5.cachedDependedValues, d, val);
             }
           }
         });
       });
     },
     updateComponentVisibility: function updateComponentVisibility() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.tableSettings.settings) {
         // eslint-disable-next-line array-callback-return
         Object.keys(this.tableSettings.settings).map(function (s) {
-          if (Object.prototype.hasOwnProperty.call(_this5.tableSettings.settings, s)) {
-            if (Object.keys(_this5.appearDependOnControl).includes(s)) {
-              _this5.$set(_this5.cachedDependedValues, s, _this5.tableSettings.settings[s]);
+          if (Object.prototype.hasOwnProperty.call(_this6.tableSettings.settings, s)) {
+            if (Object.keys(_this6.appearDependOnControl).includes(s)) {
+              _this6.$set(_this6.cachedDependedValues, s, _this6.tableSettings.settings[s]);
             }
           }
         });
@@ -13167,13 +13170,13 @@ var ControlBase = {
      * @param {any} value value to be emitted
      */
     generateChangeEvent: function generateChangeEvent(value) {
-      var _this6 = this;
+      var _this7 = this;
 
       // eslint-disable-next-line array-callback-return
       this.targetElements.map(function (t) {
         // eslint-disable-next-line array-callback-return
         t.elements.map(function (el) {
-          WPTB_Helper.wptbDocumentEventGenerate("wptb-control:".concat(_this6.uniqueId), el, {
+          WPTB_Helper.wptbDocumentEventGenerate("wptb-control:".concat(_this7.uniqueId), el, {
             value: value
           });
         });

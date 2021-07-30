@@ -79,9 +79,10 @@ const ControlBase = {
 		});
 	},
 	methods: {
-		calculateComponentVisibilityOnDependentControls(controlId, value) {
-			// TODO [erdembircan] remove for production
-			console.log(controlId, value);
+		calculateComponentVisibilityOnDependentControls(valueToExpect) {
+			return (controlId, value) => {
+				this.componentVisibility = valueToExpect === value;
+			};
 		},
 		subscribeToDependentControls() {
 			if (this.$root.$data.dependsOnElementControl) {
@@ -93,7 +94,7 @@ const ControlBase = {
 							this.uniqueId,
 							this.$root.$data.elemContainer,
 							controlId,
-							this.calculateComponentVisibilityOnDependentControls
+							this.calculateComponentVisibilityOnDependentControls(dependsData[controlId])
 						);
 					}
 				});
