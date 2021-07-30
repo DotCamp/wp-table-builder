@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.10 =
 
 * IMPROVE: Export menu table search functionality.
+* IMPROVE: Overall security of plugin.
 
 = 1.3.9 =
 

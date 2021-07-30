@@ -509,7 +509,7 @@ class Admin_Menu {
 			$table_list->views();
 			?>
             <form method="get">
-                <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>"/>
+                <input type="hidden" name="page" value="<?php esc_attr_e($_REQUEST['page']); ?>"/>
 				<?php
 				$table_list->search_box( 'Search Tables', 'search_tables' );
 				$table_list->display(); ?>
