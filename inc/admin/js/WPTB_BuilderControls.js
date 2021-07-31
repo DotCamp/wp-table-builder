@@ -14195,7 +14195,60 @@ render._withStripped = true
           };
         })());
       
-},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"containers/RangeControl.vue":[function(require,module,exports) {
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/ControlWrapper.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    visibility: {
+      type: Boolean,
+      default: true
+    }
+  }
+};
+exports.default = _default;
+        var $0017c5 = exports.default || module.exports;
+      
+      if (typeof $0017c5 === 'function') {
+        $0017c5 = $0017c5.options;
+      }
+    
+        /* template */
+        Object.assign($0017c5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "transition",
+    { attrs: { name: "wptb-fade", mode: "out-in" } },
+    [_vm.visibility ? _vm._t("default") : _vm._e()],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"containers/RangeControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14207,8 +14260,11 @@ var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
 
 var _RangeInput = _interopRequireDefault(require("../components/RangeInput"));
 
+var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -14252,6 +14308,7 @@ var _default = {
   },
   mixins: [_ControlBase.default],
   components: {
+    ControlWrapper: _ControlWrapper.default,
     RangeInput: _RangeInput.default
   },
   mounted: function mounted() {
@@ -14280,8 +14337,11 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.componentVisibility
-    ? _c("range-input", {
+  return _c(
+    "control-wrapper",
+    { attrs: { visibility: _vm.componentVisibility } },
+    [
+      _c("range-input", {
         attrs: {
           label: _vm.label,
           "unique-id": _vm.uniqueId,
@@ -14300,7 +14360,9 @@ exports.default = _default;
           expression: "elementMainValue"
         }
       })
-    : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -14314,7 +14376,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/RangeInput":"components/RangeInput.vue"}],"mountPoints/WPTB_RangeControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/RangeInput":"components/RangeInput.vue","../components/ControlWrapper":"components/ControlWrapper.vue"}],"mountPoints/WPTB_RangeControl.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
