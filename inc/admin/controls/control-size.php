@@ -10,7 +10,7 @@ if ( ! defined( 'WPINC' ) ) {
  * WP Table Builder size control.
  *
  * A control class for creating size control objects
- * for showing size field on the left panel. This fiels set css value for html tag.
+ * for showing size field on the left panel. This fields set css value for html tag.
  * When this control adds for element, there is opportunity to point css type (width or fontSize ...)
  * and also to point dimension of value
  *

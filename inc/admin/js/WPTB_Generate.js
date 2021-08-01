@@ -14566,9 +14566,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.cap = void 0;
 
 var cap = function cap(val) {
-  return val.split(' ').map(function (v) {
+  return val.length > 0 ? val.split(' ').map(function (v) {
     return v[0].toUpperCase() + v.slice(1);
-  }).join(' ');
+  }).join(' ') : val;
 };
 /**
  * Plugin for reusable.

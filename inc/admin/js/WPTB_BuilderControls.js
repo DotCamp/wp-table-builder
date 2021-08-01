@@ -12726,7 +12726,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  *
  * @param {HTMLElement} element html element
  * @param {string} type element attribute/property type
- * @returns {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
+ * @return {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
  */
 function operationSelect(element, type) {
   var operation = null;
@@ -12761,7 +12761,7 @@ function operationSelect(element, type) {
  * Supported value types: dataset, style, classList
  *
  * @param {string} selector query string for element search
- * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
+ * @return {{value: *, elements: *[]}}  returns an object of elements and its queried value
  */
 
 
@@ -12830,7 +12830,7 @@ function getTargetValue(selector) {
 /**
  * Set value for an individual selector object.
  *
- * @param {object} selector selector object
+ * @param {Object} selector selector object
  * @param {any} value value to be assigned to selector element
  */
 
@@ -12903,7 +12903,7 @@ function setTargetValue(selector, value) {
 /**
  * Set values of target selectors.
  *
- * @param {array} selectors an array of selector objects
+ * @param {Array} selectors an array of selector objects
  * @param {any} value value to be assigned to selector elements
  */
 
@@ -12917,8 +12917,8 @@ function setAllValues(selectors, value) {
 /**
  * Get all values from an array of selectors.
  *
- * @param {array} selectors an array of selector objects
- * @returns {{startupValue: null, elements: []}} object with selector values
+ * @param {Array} selectors an array of selector objects
+ * @return {{startupValue: null, elements: []}} object with selector values
  */
 
 
@@ -14486,9 +14486,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.cap = void 0;
 
 var cap = function cap(val) {
-  return val.split(' ').map(function (v) {
+  return val.length > 0 ? val.split(' ').map(function (v) {
     return v[0].toUpperCase() + v.slice(1);
-  }).join(' ');
+  }).join(' ') : val;
 };
 /**
  * Plugin for reusable.
@@ -21080,7 +21080,7 @@ var _filters = _interopRequireDefault(require("../plugins/filters"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Sides control
+ * Sides control.
  */
 // eslint-disable-next-line camelcase
 var _default = {
@@ -42282,7 +42282,64 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/ExtraStylesControl":"containers/ExtraStylesControl.vue"}],"containers/ImageSizeControl.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/ExtraStylesControl":"containers/ExtraStylesControl.vue"}],"components/Size2ControlColumn.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  }
+};
+exports.default = _default;
+        var $7a98e5 = exports.default || module.exports;
+      
+      if (typeof $7a98e5 === 'function') {
+        $7a98e5 = $7a98e5.options;
+      }
+    
+        /* template */
+        Object.assign($7a98e5, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-size2-control-input-component" }, [
+    _c("div", { staticClass: "wptb-size2-input-header" }, [
+      _vm._v(_vm._s(_vm._f("cap")(_vm.title)))
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "wptb-size2-input" }, [_vm._t("default")], 2)
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{}],"components/SizeControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42290,13 +42347,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
-
-var _PanelDropdownControl = _interopRequireDefault(require("../components/PanelDropdownControl"));
-
 var _withTranslation = _interopRequireDefault(require("../mixins/withTranslation"));
 
-var _filters = require("../plugins/filters");
+var _Size2ControlColumn = _interopRequireDefault(require("./Size2ControlColumn"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42306,34 +42359,367 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
-  name: 'ImageSizeControl',
   components: {
-    PanelDropdownControl: _PanelDropdownControl.default
+    Size2ControlColumn: _Size2ControlColumn.default
   },
-  mixins: [_ControlBase.default, _withTranslation.default],
-  filters: {
-    cap: _filters.cap
+  props: {
+    label: {
+      type: String,
+      default: 'Size Control'
+    },
+    strings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    size: {
+      type: Object,
+      default: function _default() {
+        return {
+          width: 0,
+          height: 0,
+          unit: 'px'
+        };
+      }
+    }
+  },
+  mixins: [_withTranslation.default],
+  data: function data() {
+    return {
+      icons: {
+        link: '',
+        unlink: ''
+      },
+      aspectLocked: true,
+      aspectRatio: 1
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$nextTick(function () {
+      WPTB_IconManager.getIcon('link', 'wptb-svg-inherit-color', true).then(function (icon) {
+        _this.icons.link = icon;
+      });
+      WPTB_IconManager.getIcon('unlink', 'wptb-svg-inherit-color', true).then(function (icon) {
+        _this.icons.unlink = icon;
+      });
+    });
+  },
+  computed: {
+    linkIcon: function linkIcon() {
+      return this.icons[this.aspectLocked ? 'link' : 'unlink'];
+    }
+  },
+  methods: {
+    toggleAspectLock: function toggleAspectLock() {
+      this.aspectLocked = !this.aspectLocked;
+    }
   }
 };
 exports.default = _default;
-        var $df357c = exports.default || module.exports;
+        var $1a7ac8 = exports.default || module.exports;
       
-      if (typeof $df357c === 'function') {
-        $df357c = $df357c.options;
+      if (typeof $1a7ac8 === 'function') {
+        $1a7ac8 = $1a7ac8.options;
       }
     
         /* template */
-        Object.assign($df357c, (function () {
+        Object.assign($1a7ac8, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "wptb-size2-control-container" }, [
+    _c(
+      "div",
+      { staticClass: "wptb-settings-item-header wptb-text-transform-cap" },
+      [_vm._v("\n\t\t" + _vm._s(_vm.label) + "\n\t")]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass:
+          "wptb-settings-row wptb-settings-middle-xs wptb-size2-control-input-wrapper"
+      },
+      [
+        _c(
+          "size2-control-column",
+          { attrs: { title: _vm.translation("width") } },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.size.width,
+                  expression: "size.width"
+                }
+              ],
+              attrs: { type: "number" },
+              domProps: { value: _vm.size.width },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.size, "width", $event.target.value)
+                }
+              }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("size2-control-column", [
+          _c("div", {
+            staticClass: "wptb-size2-aspect-icon wptb-svg-inherit-color",
+            attrs: {
+              title: _vm.aspectLocked
+                ? _vm.strings.aspectLocked
+                : _vm.strings.aspectUnlocked,
+              "data-wptb-linked": _vm.aspectLocked
+            },
+            domProps: { innerHTML: _vm._s(_vm.linkIcon) },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.toggleAspectLock($event)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "size2-control-column",
+          { attrs: { title: _vm.translation("height") } },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.size.height,
+                  expression: "size.height"
+                }
+              ],
+              attrs: { disabled: _vm.aspectLocked, type: "number" },
+              domProps: { value: _vm.size.height },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.size, "height", $event.target.value)
+                }
+              }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("size2-control-column", [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.size.unit,
+                  expression: "size.unit"
+                }
+              ],
+              staticClass: "wptb-size2-unit-dropdown",
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.size,
+                    "unit",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "px" } }, [_vm._v("px")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "%" } }, [_vm._v("%")])
+            ]
+          )
+        ])
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+},{"../mixins/withTranslation":"mixins/withTranslation.js","./Size2ControlColumn":"components/Size2ControlColumn.vue"}],"containers/Size2Control.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ControlBase = _interopRequireDefault(require("../mixins/ControlBase"));
+
+var _ControlWrapper = _interopRequireDefault(require("../components/ControlWrapper"));
+
+var _SizeControl = _interopRequireDefault(require("../components/SizeControl"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _wrapRegExp(re, groups) { _wrapRegExp = function _wrapRegExp(re, groups) { return new BabelRegExp(re, undefined, groups); }; var _RegExp = _wrapNativeSuper(RegExp); var _super = RegExp.prototype; var _groups = new WeakMap(); function BabelRegExp(re, flags, groups) { var _this = _RegExp.call(this, re, flags); _groups.set(_this, groups || _groups.get(re)); return _this; } _inherits(BabelRegExp, _RegExp); BabelRegExp.prototype.exec = function (str) { var result = _super.exec.call(this, str); if (result) result.groups = buildGroups(result, this); return result; }; BabelRegExp.prototype[Symbol.replace] = function (str, substitution) { if (typeof substitution === "string") { var groups = _groups.get(this); return _super[Symbol.replace].call(this, str, substitution.replace(/\$<([^>]+)>/g, function (_, name) { return "$" + groups[name]; })); } else if (typeof substitution === "function") { var _this = this; return _super[Symbol.replace].call(this, str, function () { var args = []; args.push.apply(args, arguments); if (_typeof(args[args.length - 1]) !== "object") { args.push(buildGroups(args, _this)); } return substitution.apply(this, args); }); } else { return _super[Symbol.replace].call(this, str, substitution); } }; function buildGroups(result, re) { var g = _groups.get(re); return Object.keys(g).reduce(function (groups, name) { groups[name] = result[g[name]]; return groups; }, Object.create(null)); } return _wrapRegExp.apply(this, arguments); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var _default = {
+  props: {
+    strings: {
+      type: Object,
+      default: function _default() {
+        return {};
+      }
+    },
+    defaultValue: {
+      type: String,
+      default: '100px:100px'
+    },
+    defaultUnit: {
+      type: String,
+      default: 'px'
+    }
+  },
+  components: {
+    SizeControl: _SizeControl.default,
+    ControlWrapper: _ControlWrapper.default
+  },
+  mixins: [_ControlBase.default],
+  data: function data() {
+    return {
+      size: {
+        width: 0,
+        height: 0,
+        unit: this.defaultUnit
+      }
+    };
+  },
+  mounted: function mounted() {
+    this.assignDefaultValue();
+  },
+  watch: {
+    size: {
+      handler: function handler(n) {
+        this.elementMainValue = "".concat(n.width).concat(n.unit, ":").concat(n.height).concat(n.unit);
+        this.basicValueUpdate(this.elementMainValue, true);
+      },
+      deep: true
+    },
+    elementMainValue: function elementMainValue(n) {
+      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+)(.*)(?::)([0-9]+)/, {
+        width: 1,
+        unit: 2,
+        height: 3
+      }));
+
+      if (match) {
+        var _match$groups = match.groups,
+            width = _match$groups.width,
+            height = _match$groups.height,
+            unit = _match$groups.unit;
+
+        if (width && height && unit) {
+          this.size.width = width;
+          this.size.height = height;
+          this.size.unit = unit;
+        }
+      }
+    }
+  }
+};
+exports.default = _default;
+        var $90eb0a = exports.default || module.exports;
+      
+      if (typeof $90eb0a === 'function') {
+        $90eb0a = $90eb0a.options;
+      }
+    
+        /* template */
+        Object.assign($90eb0a, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "control-wrapper",
+    { attrs: { visibility: _vm.componentVisibility } },
     [
-      _c("panel-dropdown-control", {
-        attrs: { label: _vm._f("cap")(_vm.translation("relativeLabel")) }
+      _c("size-control", {
+        attrs: { size: _vm.size, strings: _vm.strings, label: _vm.label }
       })
     ],
     1
@@ -42351,7 +42737,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/PanelDropdownControl":"components/PanelDropdownControl.vue","../mixins/withTranslation":"mixins/withTranslation.js","../plugins/filters":"plugins/filters.js"}],"mountPoints/WPTB_ImageSizeControl.js":[function(require,module,exports) {
+},{"../mixins/ControlBase":"mixins/ControlBase.js","../components/ControlWrapper":"components/ControlWrapper.vue","../components/SizeControl":"components/SizeControl.vue"}],"mountPoints/WPTB_Size2Control.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42361,24 +42747,32 @@ exports.default = void 0;
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _ImageSizeControl = _interopRequireDefault(require("../containers/ImageSizeControl"));
+var _Size2Control = _interopRequireDefault(require("../containers/Size2Control"));
+
+var _filters = _interopRequireDefault(require("../plugins/filters"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Size2 control.
+ */
 var _default = {
-  name: 'ImageSize',
-  handler: function imageSizeControlJs(uniqueId) {
-    var data = WPTB_ControlsManager.getControlData(uniqueId);
+  name: 'ControlSize2',
+  handler: function size2ControlJS(uniqueId) {
+    var data = WPTB_ControlsManager.getControlData(uniqueId); // use filters
+
+    _vue.default.use(_filters.default);
+
     new _vue.default({
-      data: data,
       components: {
-        ImageSizeControl: _ImageSizeControl.default
-      }
+        Size2Control: _Size2Control.default
+      },
+      data: data
     }).$mount("#".concat(uniqueId));
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/ImageSizeControl":"containers/ImageSizeControl.vue"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../containers/Size2Control":"containers/Size2Control.vue","../plugins/filters":"plugins/filters.js"}],"WPTB_BuilderControls.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -42416,7 +42810,7 @@ var _WPTB_BackgroundMenu = _interopRequireDefault(require("./mountPoints/WPTB_Ba
 
 var _WPTB_ExtraStylesControl = _interopRequireDefault(require("./mountPoints/WPTB_ExtraStylesControl"));
 
-var _WPTB_ImageSizeControl = _interopRequireDefault(require("./mountPoints/WPTB_ImageSizeControl"));
+var _WPTB_Size2Control = _interopRequireDefault(require("./mountPoints/WPTB_Size2Control"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42436,7 +42830,7 @@ global.WPTB_ControlsManager = _WPTB_ControlsManager.default;
 
 _WPTB_ControlsManager.default.init();
 
-var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_ImageSizeControl.default];
+var controls = [_WPTB_IconSelectControl.default, _WPTB_RangeControl.default, _WPTB_ControlsManager.default, _WPTB_Select2Control.default, _WPTB_MediaSelectControl.default, _WPTB_ResponsiveTable.default, _WPTB_SidesControl.default, _WPTB_NamedToggleControl.default, _WPTB_TagControl.default, _WPTB_DifferentBorderControl.default, _WPTB_LocalDevFileControl.default, _WPTB_NotificationManagerView.default, _WPTB_NotificationManagerDevTool.default, _WPTB_WhatIsNew.default, _WPTB_BackgroundMenu.default, _WPTB_ExtraStylesControl.default, _WPTB_Size2Control.default];
 /**
  * Register control element.
  *
@@ -42448,5 +42842,5 @@ function registerControl(controlObject) {
 }
 
 controls.map(registerControl);
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","./mountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","./mountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","./mountPoints/WPTB_ImageSizeControl":"mountPoints/WPTB_ImageSizeControl.js"}]},{},["WPTB_BuilderControls.js"], null)
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","./mountPoints/WPTB_IconSelectControl":"mountPoints/WPTB_IconSelectControl.js","./mountPoints/WPTB_RangeControl":"mountPoints/WPTB_RangeControl.js","./mountPoints/WPTB_Select2Control":"mountPoints/WPTB_Select2Control.js","./mountPoints/WPTB_MediaSelectControl":"mountPoints/WPTB_MediaSelectControl.js","./functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","./mountPoints/WPTB_ResponsiveTable":"mountPoints/WPTB_ResponsiveTable.js","./mountPoints/WPTB_SidesControl":"mountPoints/WPTB_SidesControl.js","./mountPoints/WPTB_NamedToggleControl":"mountPoints/WPTB_NamedToggleControl.js","./mountPoints/WPTB_TagControl":"mountPoints/WPTB_TagControl.js","./mountPoints/WPTB_DifferentBorderControl":"mountPoints/WPTB_DifferentBorderControl.js","./mountPoints/WPTB_LocalDevFileControl":"mountPoints/WPTB_LocalDevFileControl.js","./mountPoints/WPTB_NotificationManagerView":"mountPoints/WPTB_NotificationManagerView.js","./mountPoints/WPTB_NotificationManagerDevTool":"mountPoints/WPTB_NotificationManagerDevTool.js","./mountPoints/WPTB_WhatIsNew":"mountPoints/WPTB_WhatIsNew.js","./mountPoints/WPTB_BackgroundMenu":"mountPoints/WPTB_BackgroundMenu.js","./mountPoints/WPTB_ExtraStylesControl":"mountPoints/WPTB_ExtraStylesControl.js","./mountPoints/WPTB_Size2Control":"mountPoints/WPTB_Size2Control.js"}]},{},["WPTB_BuilderControls.js"], null)
 //# sourceMappingURL=/WPTB_BuilderControls.js.map

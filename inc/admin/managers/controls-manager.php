@@ -166,6 +166,11 @@ class Controls_Manager {
 	const DIFFERENT_BORDER = 'different_border';
 
 	/**
+	 * Upgraded size control.
+	 */
+	const SIZE2 = 'size2';
+
+	/**
 	 * Adding different border control.
 	 */
 	const LOCAL_DEV = 'local_dev_file';
@@ -174,11 +179,6 @@ class Controls_Manager {
 	 * Adding different border control.
 	 */
 	const EXTRA_STYLES = 'extra_styles';
-
-	/**
-	 * Image element size control.
-	 */
-	const IMAGE_SIZE = 'image_size';
 
 	// Control elements query types
 	const CLASSTYPE = 'class';
@@ -243,7 +243,7 @@ class Controls_Manager {
 			self::DIFFERENT_BORDER,
 			self::LOCAL_DEV,
 			self::EXTRA_STYLES,
-			self::IMAGE_SIZE,
+			self::SIZE2,
 		];
 	}
 

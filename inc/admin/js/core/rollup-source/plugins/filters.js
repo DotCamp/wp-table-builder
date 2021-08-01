@@ -1,8 +1,12 @@
 export const cap = function cap(val) {
-	return val
-		.split(' ')
-		.map((v) => v[0].toUpperCase() + v.slice(1))
-		.join(' ');
+	return val.length > 0
+		? val
+				.split(' ')
+				.map((v) => {
+					return v[0].toUpperCase() + v.slice(1);
+				})
+				.join(' ')
+		: val;
 };
 
 /**

@@ -15,7 +15,7 @@
  *
  * @param {HTMLElement} element html element
  * @param {string} type element attribute/property type
- * @returns {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
+ * @return {DOMStringMap|(function(): *)| string} suitable operation for supplied arguments
  */
 function operationSelect(element, type) {
 	let operation = null;
@@ -46,7 +46,7 @@ function operationSelect(element, type) {
  * Supported value types: dataset, style, classList
  *
  * @param {string} selector query string for element search
- * @returns {{value: *, elements: *[]}}  returns an object of elements and its queried value
+ * @return {{value: *, elements: *[]}}  returns an object of elements and its queried value
  */
 function getTargetValue(selector) {
 	const { query, type, key, format } = selector;
@@ -99,7 +99,7 @@ function getTargetValue(selector) {
 /**
  * Set value for an individual selector object.
  *
- * @param {object} selector selector object
+ * @param {Object} selector selector object
  * @param {any} value value to be assigned to selector element
  */
 function setTargetValue(selector, value) {
@@ -154,7 +154,7 @@ function setTargetValue(selector, value) {
 /**
  * Set values of target selectors.
  *
- * @param {array} selectors an array of selector objects
+ * @param {Array} selectors an array of selector objects
  * @param {any} value value to be assigned to selector elements
  */
 function setAllValues(selectors, value) {
@@ -167,8 +167,8 @@ function setAllValues(selectors, value) {
 /**
  * Get all values from an array of selectors.
  *
- * @param {array} selectors an array of selector objects
- * @returns {{startupValue: null, elements: []}} object with selector values
+ * @param {Array} selectors an array of selector objects
+ * @return {{startupValue: null, elements: []}} object with selector values
  */
 function getAllValues(selectors) {
 	const allObj = {
