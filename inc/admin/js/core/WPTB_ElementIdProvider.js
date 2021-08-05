@@ -28,7 +28,7 @@
 		const initializeElementIdForType = (elementType) => {
 			const elements = Array.from(document.querySelectorAll('.wptb-ph-element'));
 
-			const regex = new RegExp(`wptb-element-${elementType}-(\\d.+)`, 'i');
+			const regex = new RegExp(`wptb-element-${elementType}-(\\d+)`, 'i');
 
 			return elements.reduce((carry, current) => {
 				const matchArray = regex.exec(current.className);

@@ -78,6 +78,7 @@ const ControlBase = {
 	},
 	methods: {
 		calculateComponentVisibility() {
+			// eslint-disable-next-line array-callback-return,consistent-return
 			this.componentVisibility = Object.keys(this.appearDependOnControl).every((controlName) => {
 				if (Object.prototype.hasOwnProperty.call(this.appearDependOnControl, controlName)) {
 					if (Object.keys(this.cachedDependedValues).includes(controlName)) {
