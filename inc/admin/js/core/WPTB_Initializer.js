@@ -56,7 +56,6 @@ var WPTB_Initializer = function () {
     // activate elements section for startup
     WPTB_Helper.activateSection('elements');
 
-
     // side bar toggle setup
     WPTB_Helper.setupSidebarToggle('.wptb-panel-toggle-section .wptb-panel-drawer-icon');
 

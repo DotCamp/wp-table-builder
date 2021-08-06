@@ -164,7 +164,7 @@
 		 * Create a cell element.
 		 *
 		 * @private
-		 * @return {HTMLTableDataCellElement}
+		 * @return {HTMLTableDataCellElement} created cell element
 		 */
 		this.createCellElement = () => {
 			return document.createElement('td');
@@ -430,7 +430,7 @@
 		/**
 		 * Parse row colors of original table for futures uses.
 		 *
-		 * @param {[HTMLElement]} rows html row elements
+		 * @param {Array} rows html row elements
 		 * @private
 		 */
 		this.parseRowColors = (rows) => {
@@ -548,7 +548,7 @@
 		/**
 		 * Get the number of maximum available column count in the table.
 		 *
-		 * @param mergedHeader
+		 * @param {boolean}  mergedHeader whether header is merged or not
 		 * @return {number} maximum available column count
 		 */
 		this.maxColumns = (mergedHeader) => {
@@ -726,6 +726,7 @@
 		 * Bind rebuilding of tables to window resize event.
 		 */
 		this.bindRebuildToResize = () => {
+			// eslint-disable-next-line @wordpress/no-global-event-listener
 			window.addEventListener('resize', () => {
 				this.rebuildTables();
 			});
@@ -860,9 +861,12 @@
 
 						const baseCells = topCells.filter((c) => !c.isReference());
 
+						if (baseCells.length > 0) {
+							rowStartIndex += 1;
+						}
+
 						// eslint-disable-next-line array-callback-return
 						baseCells.map((b) => {
-							rowStartIndex += 1;
 							const rowObj = tableObj.addRow('wptb-row');
 
 							tableObj.appendObjectToRow(b, rowObj.id);
@@ -909,14 +913,6 @@
 								tempCell.setAttribute('rowSpan', 1);
 
 								if (!tempCell.el.style.backgroundColor || isBackgroundTransparent(tempCell.el)) {
-									// @deprecated
-									// const bgColor =
-									// 	r === 0
-									// 		? tableObj.rowColors.header
-									// 			? tableObj.rowColors.header
-									// 			: getComputedStyle(rowObj.el).backgroundColor
-									// 		: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
-
 									const currentTableColor =
 										tableObj.rowColors[(rowStartIndex + r) % 2 === 0 ? 'odd' : 'even'];
 									tempCell.el.style.backgroundColor =
@@ -940,19 +936,21 @@
 
 						const baseCells = topCells.filter((t) => !t.isReference());
 
+						if (baseCells.length > 0) {
+							rowStartIndex += 1;
+						}
+
 						// eslint-disable-next-line array-callback-return
 						baseCells.map((b) => {
-							rowStartIndex += 1;
 							const rowObj = tableObj.addRow('wptb-row');
 
 							tableObj.appendObjectToRow(b, rowObj.id);
 
 							if (!b.el.style.backgroundColor || isBackgroundTransparent(b.el)) {
-								const bgColor = tableObj.rowColors.header
+								// eslint-disable-next-line no-param-reassign
+								b.el.style.backgroundColor = tableObj.rowColors.header
 									? tableObj.rowColors.header
 									: getComputedStyle(rowObj.el).backgroundColor;
-								// eslint-disable-next-line no-param-reassign
-								b.el.style.backgroundColor = bgColor;
 							}
 							rowObj.el.style.backgroundColor = '#ffffff00';
 
@@ -988,13 +986,10 @@
 								tempCell.setAttribute('rowSpan', 1);
 
 								if (!tempCell.el.style.backgroundColor || isBackgroundTransparent(tempCell.el)) {
+									const currentTableColor =
+										tableObj.rowColors[(rowStartIndex + r) % 2 === 0 ? 'odd' : 'even'];
 									tempCell.el.style.backgroundColor =
-										// eslint-disable-next-line no-nested-ternary
-										r === 0
-											? tableObj.rowColors.header
-												? tableObj.rowColors.header
-												: getComputedStyle(rowObj.el).backgroundColor
-											: tableObj.rowColors[r % 2 === 0 ? 'odd' : 'even'];
+										currentTableColor || getComputedStyle(rowObj.el).backgroundColor;
 								}
 							}
 						}
@@ -1092,6 +1087,7 @@
 								let cellAddStatus = true;
 
 								const rowSpan = currentCell.getSpan(CellObject.spanTypes.row);
+								// eslint-disable-next-line no-unused-vars
 								const colSpan = currentCell.getSpan(CellObject.spanTypes.column);
 
 								if (rowSpan > 1) {

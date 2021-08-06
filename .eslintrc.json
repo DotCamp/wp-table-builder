@@ -55,6 +55,9 @@
     "WPTB_ExtraStyles": true,
     "WPTB_SortableTable": true,
     "WPTB_LazyLoad": true,
-    "wptbPluginsWin": true
+    "wptbPluginsWin": true,
+    "CellObject": true,
+    "TableObject": true,
+    "HTMLTableDataCellElement": true
   }
 }

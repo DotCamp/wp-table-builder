@@ -95,6 +95,7 @@ That's it. You're done!
 * IMPROVE: Export menu table search functionality.
 * IMPROVE: Overall security of plugin.
 * FIX: Table element id bug affecting some tables.
+* FIX: Static top row responsive option bug affecting tables with non-merged header cells.
 
 = 1.3.9 =
 
