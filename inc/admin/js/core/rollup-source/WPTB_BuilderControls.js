@@ -21,6 +21,7 @@ import WPTB_NotificationManagerDevTool from './mountPoints/WPTB_NotificationMana
 import WPTB_WhatIsNew from './mountPoints/WPTB_WhatIsNew';
 import WPTB_BackgroundMenu from './mountPoints/WPTB_BackgroundMenu';
 import WPTB_ExtraStylesControl from './mountPoints/WPTB_ExtraStylesControl';
+import WPTB_MultiCheckboxControl from './mountPoints/WPTB_MultiCheckboxControl';
 import WPTB_Size2Control from './mountPoints/WPTB_Size2Control';
 
 // turn off Vue production message at console
@@ -51,6 +52,7 @@ const controls = [
 	WPTB_WhatIsNew,
 	WPTB_BackgroundMenu,
 	WPTB_ExtraStylesControl,
+	WPTB_MultiCheckboxControl,
 	WPTB_Size2Control,
 ];
 

@@ -133,6 +133,19 @@ class Text_Element extends Element_Base {
                 'dimension' => 'px'
 			]
 		);
+
+		$this->add_control(
+			'link_rel',
+			[
+				'label' => __( 'Link Rel', 'wp_table_builder' ),
+				'type' => Controls_Manager::MULTI_CHECKBOX,
+                'checkboxes' => [
+                        'sponsored' => 'sponsored',
+                        'nofollow' => 'nofollow',
+                        'noreferrer' => 'noreferrer',
+                ]
+			]
+		);
 	}
     
     /**

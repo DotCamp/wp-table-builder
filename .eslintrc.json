@@ -61,5 +61,6 @@
     "HTMLTableDataCellElement": true,
     "ElementSubscriber": true,
     "ProxyArray": true
+    "tinyMCE": true
   }
 }

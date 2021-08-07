@@ -20,7 +20,7 @@ const tinyMceInitStart = function () {
 		],
 		convert_urls: false,
 		setup(ed) {
-			ed.on('change', function (e) {
+			ed.on('change', function () {
 				const row = WPTB_Helper.findAncestor(element, 'wptb-row');
 				if (WPTB_Helper.rowIsTop(row)) {
 					const table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');
@@ -78,6 +78,14 @@ const tinyMceInitStart = function () {
 		},
 		init_instance_callback(editor) {
 			window.currentEditor = editor;
+
+			editor.on('NodeChange', (e) => {
+				if (e.element.nodeName === 'A') {
+					// TODO [erdembircan] remove for production
+					console.log('link found');
+				}
+			});
+
 			editor.on('focus', function (e) {
 				const totalWidth = document.getElementsByClassName('wptb-builder-panel')[0].offsetWidth;
 				if (
@@ -116,6 +124,7 @@ observer.observe(element, config);
 
 function controlsChange(inputs, element) {
 	if (inputs && typeof inputs === 'object') {
+		// eslint-disable-next-line no-prototype-builtins
 		if (inputs.hasOwnProperty('color')) {
 			const row = WPTB_Helper.findAncestor(element, 'wptb-row');
 			const table = WPTB_Helper.findAncestor(row, 'wptb-preview-table');

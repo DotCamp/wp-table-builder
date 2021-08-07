@@ -1,0 +1,57 @@
+<template>
+	<div class="wptb-multi-checkbox-wrapper">
+		<div class="wptb-settings-item-header wptb-text-transform-cap" :data-wptb-text-disabled="disabled">
+			{{ label }}
+		</div>
+		<div class="wptb-settings-row wptb-settings-middle-xs">
+			<div class="wptb-settings-checkbox-row" v-for="(label, key) in checkboxes" :key="key">
+				<div>
+					<input :id="key" type="checkbox" :value="key" v-model="selectedValues" />
+				</div>
+				<label :for="key">{{ label }}</label>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+export default {
+	props: {
+		label: {
+			type: String,
+			default: 'Multi checkbox',
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		checkboxes: {
+			type: Object,
+			default: () => {},
+		},
+		values: {
+			type: Array,
+			default: () => [],
+		},
+	},
+	model: {
+		prop: 'values',
+		event: 'valueChanged',
+	},
+	data() {
+		return {
+			selectedValues: [],
+		};
+	},
+	mounted() {
+		this.$nextTick(() => {
+			this.selectedValues = [...this.values];
+		});
+	},
+	watch: {
+		selectedValues(n) {
+			this.$emit('valueChanged', n);
+		},
+	},
+};
+</script>

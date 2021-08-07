@@ -171,14 +171,19 @@ class Controls_Manager {
 	const SIZE2 = 'size2';
 
 	/**
-	 * Adding different border control.
+	 * Adding local development files.
 	 */
 	const LOCAL_DEV = 'local_dev_file';
 
 	/**
-	 * Adding different border control.
+	 * Adding extra styles control.
 	 */
 	const EXTRA_STYLES = 'extra_styles';
+
+	/**
+	 * Adding multiple checkbox control.
+	 */
+	const MULTI_CHECKBOX = 'multi_checkbox';
 
 	// Control elements query types
 	const CLASSTYPE = 'class';
@@ -243,6 +248,7 @@ class Controls_Manager {
 			self::DIFFERENT_BORDER,
 			self::LOCAL_DEV,
 			self::EXTRA_STYLES,
+			self::MULTI_CHECKBOX
 			self::SIZE2,
 		];
 	}
