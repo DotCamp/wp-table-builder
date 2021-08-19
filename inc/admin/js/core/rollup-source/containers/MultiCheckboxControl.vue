@@ -1,10 +1,13 @@
 <template>
-	<multi-checkbox :checkboxes="checkboxes" v-model="selectedValues" :label="label"></multi-checkbox>
+	<control-wrapper>
+		<multi-checkbox :checkboxes="checkboxes" v-model="selectedValues" :label="label"></multi-checkbox>
+	</control-wrapper>
 </template>
 
 <script>
-import ControlBase from '../mixins/ControlBase';
-import MultiCheckbox from '../components/MultiCheckbox';
+import ControlBase from '$Mixins/ControlBase';
+import MultiCheckbox from '$Components/MultiCheckbox';
+import ControlWrapper from '$Components/ControlWrapper';
 
 export default {
 	props: {
@@ -13,7 +16,7 @@ export default {
 			default: () => {},
 		},
 	},
-	components: { MultiCheckbox },
+	components: { ControlWrapper, MultiCheckbox },
 	mixins: [ControlBase],
 	data() {
 		return {
