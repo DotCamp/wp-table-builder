@@ -80,7 +80,12 @@ const tinyMceInitStart = function () {
 			window.currentEditor = editor;
 
 			editor.on('NodeChange', (e) => {
-				if (e.element.nodeName === 'A') {
+				if (
+					e.element.nodeName.toLowerCase() === 'a' ||
+					e.parents.some((parent) => {
+						return parent.nodeName.toLowerCase() === 'a';
+					})
+				) {
 					// TODO [erdembircan] remove for production
 					console.log('link found');
 				}
