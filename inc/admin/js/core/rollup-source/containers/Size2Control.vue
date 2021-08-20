@@ -1,5 +1,11 @@
 <template>
-	<control-wrapper :visibility="componentVisibility">
+	<control-wrapper
+		:compatibility-mode="true"
+		:elem-container="elemContainer"
+		:visibility="componentVisibility"
+		:unique-id="uniqueId"
+		:main-value="elementMainValue"
+	>
 		<size-control :size="size" :strings="strings" :label="label"></size-control>
 	</control-wrapper>
 </template>

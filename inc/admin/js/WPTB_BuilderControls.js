@@ -14195,13 +14195,156 @@ render._withStripped = true
           };
         })());
       
-},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"components/ControlWrapper.vue":[function(require,module,exports) {
+},{"./NumberPostfixInput":"components/NumberPostfixInput.vue"}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
+
+function _defineProperty(e, n, t) {
+  return n in e ? Object.defineProperty(e, n, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[n] = t, e;
+}
+
+function _objectSpread(e) {
+  for (var n = 1; n < arguments.length; n++) {
+    var t = null != arguments[n] ? arguments[n] : {},
+        r = Object.keys(t);
+    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
+      return Object.getOwnPropertyDescriptor(t, e).enumerable;
+    }))), r.forEach(function (n) {
+      _defineProperty(e, n, t[n]);
+    });
+  }
+
+  return e;
+}
+
+var freeze = function (e, n, t) {
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    get: function () {
+      return t;
+    },
+    set: function (e) {
+      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
+    }
+  });
+},
+    unfreeze = function (e, n) {
+  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
+  Object.defineProperty(e, n, {
+    configurable: !0,
+    writable: !0,
+    value: t
+  });
+},
+    component = {
+  abstract: !0,
+  name: "Fragment",
+  props: {
+    name: {
+      type: String,
+      default: function () {
+        return Math.floor(Date.now() * Math.random()).toString(16);
+      }
+    }
+  },
+  mounted: function () {
+    var e = this.$el,
+        n = e.parentNode,
+        t = document.createComment("fragment#".concat(this.name, "#head")),
+        r = document.createComment("fragment#".concat(this.name, "#tail"));
+    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.insertBefore = function (t, r) {
+      n.insertBefore(t, r), freeze(t, "parentNode", e);
+    }, e.removeChild = function (e) {
+      n.removeChild(e), unfreeze(e, "parentNode");
+    }, Array.from(e.childNodes).forEach(function (n) {
+      return e.appendChild(n);
+    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
+    var o = n.insertBefore;
+
+    n.insertBefore = function (r, i) {
+      o.call(n, r, i !== e ? i : t);
+    };
+
+    var i = n.removeChild;
+
+    n.removeChild = function (a) {
+      if (a === e) {
+        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
+
+        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
+      } else i.call(n, a);
+    };
+  },
+  render: function (e) {
+    var n = this,
+        t = this.$slots.default;
+    return t && t.length && t.forEach(function (e) {
+      return e.data = _objectSpread({}, e.data, {
+        attrs: _objectSpread({
+          fragment: n.name
+        }, (e.data || {}).attrs)
+      });
+    }), e("div", {
+      attrs: {
+        fragment: this.name
+      }
+    }, t);
+  }
+};
+
+function ssr(e, n) {
+  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
+}
+
+var Fragment = component,
+    SSR = ssr,
+    Plugin = {
+  install: function (e) {
+    e.component("fragment", component);
+  }
+},
+    index = {
+  Fragment: component,
+  Plugin: Plugin,
+  SSR: ssr
+};
+exports.Plugin = Plugin;
+exports.SSR = SSR;
+exports.Fragment = Fragment;
+var _default = index;
+exports.default = _default;
+},{}],"components/ControlWrapper.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _vueFragment = require("vue-fragment");
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -14213,7 +14356,25 @@ var _default = {
     visibility: {
       type: Boolean,
       default: true
+    },
+    compatibilityMode: {
+      type: Boolean,
+      default: false
+    },
+    uniqueId: {
+      type: String,
+      default: ''
+    },
+    elemContainer: {
+      type: String,
+      default: ''
+    },
+    mainValue: {
+      type: null
     }
+  },
+  components: {
+    Fragment: _vueFragment.Fragment
   }
 };
 exports.default = _default;
@@ -14232,8 +14393,26 @@ exports.default = _default;
   return _c(
     "transition",
     { attrs: { name: "wptb-fade", mode: "out-in" } },
-    [_vm.visibility ? _vm._t("default") : _vm._e()],
-    2
+    [
+      _c(
+        "fragment",
+        [
+          _vm.visibility ? _vm._t("default") : _vm._e(),
+          _vm._v(" "),
+          _vm.compatibilityMode
+            ? _c("input", {
+                staticClass: "wptb-element-property",
+                class: _vm.uniqueId,
+                staticStyle: { display: "none" },
+                attrs: { type: "text", "data-element": _vm.elemContainer },
+                domProps: { value: _vm.mainValue }
+              })
+            : _vm._e()
+        ],
+        2
+      )
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -14248,7 +14427,7 @@ render._withStripped = true
           };
         })());
       
-},{}],"containers/RangeControl.vue":[function(require,module,exports) {
+},{"vue-fragment":"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js"}],"containers/RangeControl.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19345,135 +19524,6 @@ function install(Vue, options) {
 var _default = {
   install: install
 };
-exports.default = _default;
-},{}],"../../../../../node_modules/vue-fragment/dist/vue-fragment.esm.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Plugin = exports.SSR = exports.Fragment = exports.default = void 0;
-
-function _defineProperty(e, n, t) {
-  return n in e ? Object.defineProperty(e, n, {
-    value: t,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : e[n] = t, e;
-}
-
-function _objectSpread(e) {
-  for (var n = 1; n < arguments.length; n++) {
-    var t = null != arguments[n] ? arguments[n] : {},
-        r = Object.keys(t);
-    "function" == typeof Object.getOwnPropertySymbols && (r = r.concat(Object.getOwnPropertySymbols(t).filter(function (e) {
-      return Object.getOwnPropertyDescriptor(t, e).enumerable;
-    }))), r.forEach(function (n) {
-      _defineProperty(e, n, t[n]);
-    });
-  }
-
-  return e;
-}
-
-var freeze = function (e, n, t) {
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    get: function () {
-      return t;
-    },
-    set: function (e) {
-      console.warn("tried to set frozen property ".concat(n, " with ").concat(e));
-    }
-  });
-},
-    unfreeze = function (e, n) {
-  var t = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : null;
-  Object.defineProperty(e, n, {
-    configurable: !0,
-    writable: !0,
-    value: t
-  });
-},
-    component = {
-  abstract: !0,
-  name: "Fragment",
-  props: {
-    name: {
-      type: String,
-      default: function () {
-        return Math.floor(Date.now() * Math.random()).toString(16);
-      }
-    }
-  },
-  mounted: function () {
-    var e = this.$el,
-        n = e.parentNode,
-        t = document.createComment("fragment#".concat(this.name, "#head")),
-        r = document.createComment("fragment#".concat(this.name, "#tail"));
-    n.insertBefore(t, e), n.insertBefore(r, e), e.appendChild = function (t) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.insertBefore = function (t, r) {
-      n.insertBefore(t, r), freeze(t, "parentNode", e);
-    }, e.removeChild = function (e) {
-      n.removeChild(e), unfreeze(e, "parentNode");
-    }, Array.from(e.childNodes).forEach(function (n) {
-      return e.appendChild(n);
-    }), n.removeChild(e), freeze(e, "parentNode", n), freeze(e, "nextSibling", r.nextSibling);
-    var o = n.insertBefore;
-
-    n.insertBefore = function (r, i) {
-      o.call(n, r, i !== e ? i : t);
-    };
-
-    var i = n.removeChild;
-
-    n.removeChild = function (a) {
-      if (a === e) {
-        for (; t.nextSibling !== r;) e.removeChild(t.nextSibling);
-
-        n.removeChild(t), n.removeChild(r), unfreeze(e, "parentNode"), n.insertBefore = o, n.removeChild = i;
-      } else i.call(n, a);
-    };
-  },
-  render: function (e) {
-    var n = this,
-        t = this.$slots.default;
-    return t && t.length && t.forEach(function (e) {
-      return e.data = _objectSpread({}, e.data, {
-        attrs: _objectSpread({
-          fragment: n.name
-        }, (e.data || {}).attrs)
-      });
-    }), e("div", {
-      attrs: {
-        fragment: this.name
-      }
-    }, t);
-  }
-};
-
-function ssr(e, n) {
-  "production" !== "development" && console.warn("v-fragment SSR is not implemented yet.");
-}
-
-var Fragment = component,
-    SSR = ssr,
-    Plugin = {
-  install: function (e) {
-    e.component("fragment", component);
-  }
-},
-    index = {
-  Fragment: component,
-  Plugin: Plugin,
-  SSR: ssr
-};
-exports.Plugin = Plugin;
-exports.SSR = SSR;
-exports.Fragment = Fragment;
-var _default = index;
 exports.default = _default;
 },{}],"components/PanelToggleControl.vue":[function(require,module,exports) {
 "use strict";
@@ -42716,7 +42766,15 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _c(
     "control-wrapper",
-    { attrs: { visibility: _vm.componentVisibility } },
+    {
+      attrs: {
+        "compatibility-mode": true,
+        "elem-container": _vm.elemContainer,
+        visibility: _vm.componentVisibility,
+        "unique-id": _vm.uniqueId,
+        "main-value": _vm.elementMainValue
+      }
+    },
     [
       _c("size-control", {
         attrs: { size: _vm.size, strings: _vm.strings, label: _vm.label }
