@@ -28,14 +28,15 @@ class Control_Size2 extends Base_Control {
 	 * @access public
 	 */
 	public function content_template() {
-	    $strings = [
-	            'width' => esc_html__('width', 'wp-table-builder'),
-	            'height' => esc_html__('height', 'wp-table-builder'),
-	            'aspectLocked' => esc_html__('aspect ratio locked', 'wp-table-builder'),
-	            'aspectUnlocked' => esc_html__('aspect ratio unlocked', 'wp-table-builder'),
-        ];
+		$strings = [
+			'width'          => esc_html__( 'width', 'wp-table-builder' ),
+			'height'         => esc_html__( 'height', 'wp-table-builder' ),
+			'aspectLocked'   => esc_html__( 'aspect ratio locked', 'wp-table-builder' ),
+			'aspectUnlocked' => esc_html__( 'aspect ratio unlocked', 'wp-table-builder' ),
+			'originalAspectRatio'   => esc_html__( 'aspect ratio', 'wp-table-builder' ),
+		];
 
-	    $json_strings = json_encode($strings);
+		$json_strings = json_encode( $strings );
 		?>
         <#
         const uniqueItemClass = data.elementControlTargetUnicClass;
@@ -45,7 +46,8 @@ class Control_Size2 extends Base_Control {
         data.strings = JSON.parse('<?php echo $json_strings; ?>');
         #>
         <div id="{{{uniqueItemClass}}}">
-            <size2-control :selectors="selectors" :label="label" elem-container="{{{elemContainer}}}" unique-id="{{{uniqueItemClass}}}" :strings="strings"></size2-control>
+            <size2-control :selectors="selectors" :label="label" elem-container="{{{elemContainer}}}"
+                           unique-id="{{{uniqueItemClass}}}" :strings="strings"></size2-control>
         </div>
         <wptb-template-script>
             WPTB_ControlsManager.callControlScript('ControlSize2', '{{{uniqueItemClass}}}');

@@ -6471,7 +6471,7 @@ wptb_shortcode_container_element {
 .wptb-size2-control-input-wrapper {
     display: grid;
     grid-template-columns: 1.2fr 20px 1.2fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 1fr auto;
     justify-content: center;
     align-content: center;
     grid-gap: 10px;
@@ -6523,6 +6523,14 @@ wptb_shortcode_container_element {
 .wptb-size2-unit-dropdown {
     border: 1.5px solid var(--wptb-plugin-gray-400) !important;
     border-radius: 3px !important;
+}
+
+.wptb-size-control-aspect-ratio-info-container {
+    padding: 10px;
+    grid-column: 1/-1;
+    justify-self: center;
+    color: var(--wptb-plugin-gray-500);
+    user-select: none;
 }
 
 /*endregion*/

@@ -42439,6 +42439,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
 var _default = {
   components: {
     Size2ControlColumn: _Size2ControlColumn.default
@@ -42636,7 +42640,22 @@ exports.default = _default;
               _c("option", { attrs: { value: "%" } }, [_vm._v("%")])
             ]
           )
-        ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "wptb-size-control-aspect-ratio-info-container" },
+          [
+            _vm._v(
+              "\n\t\t\t" +
+                _vm._s(_vm._f("cap")(_vm.translation("originalAspectRatio"))) +
+                ":\n\t\t\t"
+            ),
+            _c("span", { staticStyle: { "font-weight": "bold" } }, [
+              _vm._v(_vm._s(_vm.aspectRatio))
+            ])
+          ]
+        )
       ],
       1
     )

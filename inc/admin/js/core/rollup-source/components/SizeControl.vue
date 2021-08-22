@@ -25,6 +25,10 @@
 					<option value="%">%</option>
 				</select>
 			</size2-control-column>
+			<div class="wptb-size-control-aspect-ratio-info-container">
+				{{ translation('originalAspectRatio') | cap }}:
+				<span style="font-weight: bold">{{ aspectRatio }}</span>
+			</div>
 		</div>
 	</div>
 </template>
