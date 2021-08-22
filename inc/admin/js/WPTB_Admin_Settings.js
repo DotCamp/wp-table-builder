@@ -12737,14 +12737,14 @@ var _default = {
   props: ['logoSrc', 'logoAlt', 'pluginName']
 };
 exports.default = _default;
-        var $4cf727 = exports.default || module.exports;
+        var $987f1e = exports.default || module.exports;
       
-      if (typeof $4cf727 === 'function') {
-        $4cf727 = $4cf727.options;
+      if (typeof $987f1e === 'function') {
+        $987f1e = $987f1e.options;
       }
     
         /* template */
-        Object.assign($4cf727, (function () {
+        Object.assign($987f1e, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12837,14 +12837,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $71f038 = exports.default || module.exports;
+        var $690c6d = exports.default || module.exports;
       
-      if (typeof $71f038 === 'function') {
-        $71f038 = $71f038.options;
+      if (typeof $690c6d === 'function') {
+        $690c6d = $690c6d.options;
       }
     
         /* template */
-        Object.assign($71f038, (function () {
+        Object.assign($690c6d, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -12918,14 +12918,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f51a52 = exports.default || module.exports;
+        var $31f6d3 = exports.default || module.exports;
       
-      if (typeof $f51a52 === 'function') {
-        $f51a52 = $f51a52.options;
+      if (typeof $31f6d3 === 'function') {
+        $31f6d3 = $31f6d3.options;
       }
     
         /* template */
-        Object.assign($f51a52, (function () {
+        Object.assign($31f6d3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13034,14 +13034,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $753605 = exports.default || module.exports;
+        var $121c13 = exports.default || module.exports;
       
-      if (typeof $753605 === 'function') {
-        $753605 = $753605.options;
+      if (typeof $121c13 === 'function') {
+        $121c13 = $121c13.options;
       }
     
         /* template */
-        Object.assign($753605, (function () {
+        Object.assign($121c13, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13102,14 +13102,14 @@ render._withStripped = true
       
 },{"./SectionItem":"components/SectionItem.vue","./ActiveSectionIndicator":"components/ActiveSectionIndicator.vue"}],"components/BusyRotate.vue":[function(require,module,exports) {
 
-        var $ce1bb2 = exports.default || module.exports;
+        var $ac8ef1 = exports.default || module.exports;
       
-      if (typeof $ce1bb2 === 'function') {
-        $ce1bb2 = $ce1bb2.options;
+      if (typeof $ac8ef1 === 'function') {
+        $ac8ef1 = $ac8ef1.options;
       }
     
         /* template */
-        Object.assign($ce1bb2, (function () {
+        Object.assign($ac8ef1, (function () {
           var render = function(_h, _vm) {
   var _c = _vm._c
   return _c("span", {
@@ -13159,14 +13159,14 @@ var _default = {
   mixins: [_withMessage.default]
 };
 exports.default = _default;
-        var $deb181 = exports.default || module.exports;
+        var $a5c956 = exports.default || module.exports;
       
-      if (typeof $deb181 === 'function') {
-        $deb181 = $deb181.options;
+      if (typeof $a5c956 === 'function') {
+        $a5c956 = $a5c956.options;
       }
     
         /* template */
-        Object.assign($deb181, (function () {
+        Object.assign($a5c956, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13242,14 +13242,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $1a6fd1 = exports.default || module.exports;
+        var $358d10 = exports.default || module.exports;
       
-      if (typeof $1a6fd1 === 'function') {
-        $1a6fd1 = $1a6fd1.options;
+      if (typeof $358d10 === 'function') {
+        $358d10 = $358d10.options;
       }
     
         /* template */
-        Object.assign($1a6fd1, (function () {
+        Object.assign($358d10, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13309,14 +13309,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $56ff9b = exports.default || module.exports;
+        var $89b5d8 = exports.default || module.exports;
       
-      if (typeof $56ff9b === 'function') {
-        $56ff9b = $56ff9b.options;
+      if (typeof $89b5d8 === 'function') {
+        $89b5d8 = $89b5d8.options;
       }
     
         /* template */
-        Object.assign($56ff9b, (function () {
+        Object.assign($89b5d8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13508,14 +13508,14 @@ var _default = {
   props: ['title']
 };
 exports.default = _default;
-        var $a7dee5 = exports.default || module.exports;
+        var $a818cd = exports.default || module.exports;
       
-      if (typeof $a7dee5 === 'function') {
-        $a7dee5 = $a7dee5.options;
+      if (typeof $a818cd === 'function') {
+        $a818cd = $a818cd.options;
       }
     
         /* template */
-        Object.assign($a7dee5, (function () {
+        Object.assign($a818cd, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13604,14 +13604,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $4ff3ac = exports.default || module.exports;
+        var $4a98c8 = exports.default || module.exports;
       
-      if (typeof $4ff3ac === 'function') {
-        $4ff3ac = $4ff3ac.options;
+      if (typeof $4a98c8 === 'function') {
+        $4a98c8 = $4a98c8.options;
       }
     
         /* template */
-        Object.assign($4ff3ac, (function () {
+        Object.assign($4a98c8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13831,14 +13831,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $2740ac = exports.default || module.exports;
+        var $9ac5fb = exports.default || module.exports;
       
-      if (typeof $2740ac === 'function') {
-        $2740ac = $2740ac.options;
+      if (typeof $9ac5fb === 'function') {
+        $9ac5fb = $9ac5fb.options;
       }
     
         /* template */
-        Object.assign($2740ac, (function () {
+        Object.assign($9ac5fb, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13867,14 +13867,14 @@ render._withStripped = true
       
 },{}],"components/Settings/FooterButtons.vue":[function(require,module,exports) {
 
-        var $3a4095 = exports.default || module.exports;
+        var $cacfe3 = exports.default || module.exports;
       
-      if (typeof $3a4095 === 'function') {
-        $3a4095 = $3a4095.options;
+      if (typeof $cacfe3 === 'function') {
+        $cacfe3 = $cacfe3.options;
       }
     
         /* template */
-        Object.assign($3a4095, (function () {
+        Object.assign($cacfe3, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -13968,14 +13968,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $e42a46 = exports.default || module.exports;
+        var $d51089 = exports.default || module.exports;
       
-      if (typeof $e42a46 === 'function') {
-        $e42a46 = $e42a46.options;
+      if (typeof $d51089 === 'function') {
+        $d51089 = $d51089.options;
       }
     
         /* template */
-        Object.assign($e42a46, (function () {
+        Object.assign($d51089, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14078,14 +14078,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $ee329d = exports.default || module.exports;
+        var $014f53 = exports.default || module.exports;
       
-      if (typeof $ee329d === 'function') {
-        $ee329d = $ee329d.options;
+      if (typeof $014f53 === 'function') {
+        $014f53 = $014f53.options;
       }
     
         /* template */
-        Object.assign($ee329d, (function () {
+        Object.assign($014f53, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14158,14 +14158,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $4f7aaf = exports.default || module.exports;
+        var $4e3c2f = exports.default || module.exports;
       
-      if (typeof $4f7aaf === 'function') {
-        $4f7aaf = $4f7aaf.options;
+      if (typeof $4e3c2f === 'function') {
+        $4e3c2f = $4e3c2f.options;
       }
     
         /* template */
-        Object.assign($4f7aaf, (function () {
+        Object.assign($4e3c2f, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14249,14 +14249,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $3b15e1 = exports.default || module.exports;
+        var $c49878 = exports.default || module.exports;
       
-      if (typeof $3b15e1 === 'function') {
-        $3b15e1 = $3b15e1.options;
+      if (typeof $c49878 === 'function') {
+        $c49878 = $c49878.options;
       }
     
         /* template */
-        Object.assign($3b15e1, (function () {
+        Object.assign($c49878, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -14465,14 +14465,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $122b21 = exports.default || module.exports;
+        var $6515b5 = exports.default || module.exports;
       
-      if (typeof $122b21 === 'function') {
-        $122b21 = $122b21.options;
+      if (typeof $6515b5 === 'function') {
+        $6515b5 = $6515b5.options;
       }
     
         /* template */
-        Object.assign($122b21, (function () {
+        Object.assign($6515b5, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -25421,14 +25421,14 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
 
 },{"../../lib/codemirror":"../../../../../node_modules/codemirror/lib/codemirror.js"}],"components/EmptyCover.vue":[function(require,module,exports) {
 
-        var $f21d9e = exports.default || module.exports;
+        var $9b2461 = exports.default || module.exports;
       
-      if (typeof $f21d9e === 'function') {
-        $f21d9e = $f21d9e.options;
+      if (typeof $9b2461 === 'function') {
+        $9b2461 = $9b2461.options;
       }
     
         /* template */
-        Object.assign($f21d9e, (function () {
+        Object.assign($9b2461, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -25543,14 +25543,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $dfad9c = exports.default || module.exports;
+        var $4a3317 = exports.default || module.exports;
       
-      if (typeof $dfad9c === 'function') {
-        $dfad9c = $dfad9c.options;
+      if (typeof $4a3317 === 'function') {
+        $4a3317 = $4a3317.options;
       }
     
         /* template */
-        Object.assign($dfad9c, (function () {
+        Object.assign($4a3317, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -25707,14 +25707,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $f7cc77 = exports.default || module.exports;
+        var $e68cfd = exports.default || module.exports;
       
-      if (typeof $f7cc77 === 'function') {
-        $f7cc77 = $f7cc77.options;
+      if (typeof $e68cfd === 'function') {
+        $e68cfd = $e68cfd.options;
       }
     
         /* template */
-        Object.assign($f7cc77, (function () {
+        Object.assign($e68cfd, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
@@ -25986,14 +25986,14 @@ var _default = {
   }
 };
 exports.default = _default;
-        var $652e1e = exports.default || module.exports;
+        var $503eb8 = exports.default || module.exports;
       
-      if (typeof $652e1e === 'function') {
-        $652e1e = $652e1e.options;
+      if (typeof $503eb8 === 'function') {
+        $503eb8 = $503eb8.options;
       }
     
         /* template */
-        Object.assign($652e1e, (function () {
+        Object.assign($503eb8, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement

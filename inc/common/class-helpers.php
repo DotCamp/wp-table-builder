@@ -49,8 +49,6 @@ class Helpers {
 	 *
 	 */
 	static function wptb_get_table_preview_url( $table_id ) {
-
-
 		$url = add_query_arg(
 			array(
 				'post_type' => 'wptb-tables',
@@ -87,8 +85,8 @@ class Helpers {
 	public static function enqueue_file( $path, $deps = [], $footer = false, $handler = null ) {
 		$path_info = pathinfo( $path );
 
-		$file_path = path_join(NS\WP_TABLE_BUILDER_DIR , $path);
-		$file_url  = path_join(NS\WP_TABLE_BUILDER_URL , $path);
+		$file_path = path_join( NS\WP_TABLE_BUILDER_DIR, $path );
+		$file_url  = path_join( NS\WP_TABLE_BUILDER_URL, $path );
 		$version   = static::is_development() ? filemtime( $file_path ) : NS\PLUGIN_VERSION;
 
 		if ( $handler === null ) {

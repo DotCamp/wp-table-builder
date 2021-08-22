@@ -10,6 +10,7 @@
 				:data-element="elemContainer"
 				style="display: none"
 				:value="mainValue"
+				disabled="true"
 			/>
 		</fragment>
 	</transition>
