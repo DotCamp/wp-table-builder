@@ -40,7 +40,7 @@ class WPTB_Listing extends \WP_List_Table {
 		return $status_links;
 	}
 
-	public static function get_tables( $per_page = 5, $page_number = 1, $search_text, $current_user = false ) {
+	public static function get_tables( $search_text, $per_page = 5, $page_number = 1, $current_user = false ) {
 
 		global $wpdb, $post;
 
@@ -281,11 +281,11 @@ class WPTB_Listing extends \WP_List_Table {
 
 		$per_page     = $this->get_items_per_page( 'tables_per_page', 10 );
 		$current_page = $this->get_pagenum();
-		
+
 		// checking if Restrict Users Access to Their Tables Only
 		$builder_settings = get_option( 'wp_table_builder_settings' );
-		$current_user = $builder_settings['restrict_users_to_their_tables'] ? true : false;
-		
+		$current_user     = $builder_settings['restrict_users_to_their_tables'] ? true : false;
+
 		$search_text = '';
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
 			$search_text = sanitize_text_field( $_REQUEST['s'] );
@@ -296,7 +296,7 @@ class WPTB_Listing extends \WP_List_Table {
 			'total_items' => $total_items, //WE have to calculate the total number of items
 			'per_page'    => $per_page //WE have to determine how many items to show on a page
 		] );
-		$this->items = $this->get_tables( $per_page, $current_page, $search_text, $current_user );
+		$this->items = $this->get_tables( $search_text, $per_page, $current_page, $current_user );
 	}
 
 	public function request_url_clear() {
@@ -319,9 +319,9 @@ class WPTB_Listing extends \WP_List_Table {
 			} else {
 				$this->duplicate_table( absint( $_GET['table_id'] ) );
 				?>
-              <div class="notice notice-success is-dismissible">
-                <p><?php esc_html_e( 'Table duplicate successfully.', 'wp-table-builder' ); ?></p>
-              </div>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Table duplicate successfully.', 'wp-table-builder' ); ?></p>
+                </div>
 				<?php
 			}
 		}
@@ -333,9 +333,9 @@ class WPTB_Listing extends \WP_List_Table {
 			} else {
 				$this->delete_table( absint( $_GET['table_id'] ) );
 				?>
-              <div class="notice notice-success is-dismissible">
-                <p><?php esc_html_e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
-              </div>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Table deleted successfully.', 'wp-table-builder' ); ?></p>
+                </div>
 				<?php
 			}
 
@@ -356,19 +356,19 @@ class WPTB_Listing extends \WP_List_Table {
 				}
 
 				?>
-              <div class="notice notice-success is-dismissible">
-                <p><?php esc_html_e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
-              </div>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e( 'Bulk Delete Performed Successfully.', 'wp-table-builder' ); ?></p>
+                </div>
 				<?php
 			}
 		}
 		$this->request_url_clear();
 		?>
-      <script>
-          // with sub-folder WordPress installations, this function adding extra invalid url paths to browser history, thus changing all the links that formats themselves according to current url. since the url it created is invalid, most of the links on the page become invalid and broken too.
-          // @deprecated
-          //window.history.pushState( null, null, "<?php //echo home_url() . $_SERVER['REQUEST_URI']; ?>//" );
-      </script>
+        <script>
+            // with sub-folder WordPress installations, this function adding extra invalid url paths to browser history, thus changing all the links that formats themselves according to current url. since the url it created is invalid, most of the links on the page become invalid and broken too.
+            // @deprecated
+            //window.history.pushState( null, null, "<?php //echo home_url() . $_SERVER['REQUEST_URI']; ?>//" );
+        </script>
 		<?php
 	}
 }

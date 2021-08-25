@@ -94,6 +94,7 @@ That's it. You're done!
 
 * IMPROVE: Export menu table search functionality.
 * IMPROVE: Overall security of plugin.
+* IMPROVE: Php 8.0 compatibility updates.
 * FIX: Table element id bug affecting some tables.
 * FIX: Static top row responsive option bug affecting tables with non-merged header cells.
 

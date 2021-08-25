@@ -29,7 +29,7 @@ abstract class Version_Sync_Base {
 	 * Check availability of version sync manager.
 	 * @return bool status
 	 */
-	private final function check_version_sync_manager_availability() {
+	private function check_version_sync_manager_availability() {
 		return class_exists( '\WP_Table_Builder\Inc\Admin\Managers\Version_Sync_Manager' );
 	}
 
