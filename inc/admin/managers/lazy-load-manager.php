@@ -118,7 +118,7 @@ class Lazy_Load_Manager extends Setting_Base {
 	 * Callback for generating table html at shortcode.
 	 *
 	 * @param string $html table html
-	 * @param boolean $force force to use lazy load ignoring its enabled state
+	 * @param boolean $force force using lazy load ignoring its enabled state
 	 *
 	 * @return string table shortcode html
 	 */

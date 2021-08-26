@@ -9,8 +9,10 @@ use WP_Table_Builder\Inc\Common\Helpers;
 use function add_query_arg;
 use function admin_url;
 use function apply_filters;
+use function get_bloginfo;
 use function get_plugins;
 use function current_user_can;
+use function mb_convert_encoding;
 use function wp_create_nonce;
 use function wp_localize_script;
 
@@ -133,20 +135,29 @@ class Admin_Menu {
 	public function add_table_id_to_dom( $table_content, $id ) {
 		$final_table_content = $table_content;
 
-		$dom_handler = new DOMDocument();
-		@$dom_handler->loadHTML( $table_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
+		// ext-mbstring check
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$dom_handler = new DOMDocument();
 
-		$table = $dom_handler->getElementsByTagName( 'table' );
+			$charset = get_bloginfo( 'charset' );
 
-		if ( $table->length !== 0 ) {
-			$table_element = $table->item( 0 );
-			$class_list    = $table_element->getAttribute( 'class' );
+			// need to provide a to_encoding value for mb_convert_encoding since that value is nullable only for PHP 8.0+
+			$handler_status = @$dom_handler->loadHTML( mb_convert_encoding( $table_content, 'HTML-ENTITIES', $charset ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_NOWARNING | LIBXML_NOERROR );
 
-			if ( strpos( $class_list, 'wptb-element-main-table_setting-startedid-0' ) !== false ) {
-				$updated_class_list = str_replace( 'wptb-element-main-table_setting-startedid-0', "wptb-element-main-table_setting-{$id}", $class_list );
-				$table_element->setAttribute( 'class', $updated_class_list );
+			// check dom handler load status
+			if ( $handler_status ) {
+				$table = $dom_handler->getElementsByTagName( 'table' );
+				if ( $table->length !== 0 ) {
+					$table_element = $table->item( 0 );
+					$class_list    = $table_element->getAttribute( 'class' );
 
-				$final_table_content = $dom_handler->saveHTML();
+					if ( strpos( $class_list, 'wptb-element-main-table_setting-startedid-0' ) !== false ) {
+						$updated_class_list = str_replace( 'wptb-element-main-table_setting-startedid-0', "wptb-element-main-table_setting-{$id}", $class_list );
+						$table_element->setAttribute( 'class', $updated_class_list );
+
+						$final_table_content = $dom_handler->saveHTML();
+					}
+				}
 			}
 		}
 
@@ -509,7 +520,7 @@ class Admin_Menu {
 			$table_list->views();
 			?>
             <form method="get">
-                <input type="hidden" name="page" value="<?php esc_attr_e($_REQUEST['page']); ?>"/>
+                <input type="hidden" name="page" value="<?php esc_attr_e( $_REQUEST['page'] ); ?>"/>
 				<?php
 				$table_list->search_box( 'Search Tables', 'search_tables' );
 				$table_list->display(); ?>
