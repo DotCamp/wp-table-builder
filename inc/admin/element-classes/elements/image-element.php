@@ -184,6 +184,7 @@ class Image_Element extends Element_Base {
                     </svg>
                     <span>Insert Image</span>
                 </span>
+                <img class="wptb-image-element-dummy">
             </a>
         </div>
 		<?php

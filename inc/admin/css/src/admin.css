@@ -6538,3 +6538,7 @@ wptb_shortcode_container_element {
 .wptb-svg-inherit-color svg {
     fill: currentColor;
 }
+
+.wptb-image-element-dummy {
+    display: none !important;
+}
