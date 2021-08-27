@@ -27,7 +27,7 @@
 			</size2-control-column>
 			<div class="wptb-size-control-aspect-ratio-info-container">
 				{{ translation('originalAspectRatio') | cap }}:
-				<span style="font-weight: bold">{{ aspectRatio }}</span>
+				<span style="font-weight: bold">{{ humanReadableAspectRatio }}</span>
 			</div>
 		</div>
 	</div>
@@ -86,12 +86,35 @@ export default {
 			});
 		});
 	},
+	watch: {
+		'size.width': {
+			handler() {
+				this.size.height = this.calculateHeight();
+			},
+		},
+		aspectLocked(n) {
+			if (n) {
+				this.size.height = this.calculateHeight();
+			}
+		},
+	},
 	computed: {
+		humanReadableAspectRatio() {
+			return this.aspectRatio.toFixed(2);
+		},
 		linkIcon() {
 			return this.icons[this.aspectLocked ? 'link' : 'unlink'];
 		},
 	},
 	methods: {
+		calculateHeight() {
+			let calculatedHeight = this.size.height;
+			if (this.aspectLocked && this.aspectRatio !== 0) {
+				calculatedHeight = this.size.width / this.aspectRatio;
+			}
+
+			return calculatedHeight;
+		},
 		toggleAspectLock() {
 			this.aspectLocked = !this.aspectLocked;
 		},

@@ -42495,12 +42495,36 @@ var _default = {
       });
     });
   },
+  watch: {
+    'size.width': {
+      handler: function handler() {
+        this.size.height = this.calculateHeight();
+      }
+    },
+    aspectLocked: function aspectLocked(n) {
+      if (n) {
+        this.size.height = this.calculateHeight();
+      }
+    }
+  },
   computed: {
+    humanReadableAspectRatio: function humanReadableAspectRatio() {
+      return this.aspectRatio.toFixed(2);
+    },
     linkIcon: function linkIcon() {
       return this.icons[this.aspectLocked ? 'link' : 'unlink'];
     }
   },
   methods: {
+    calculateHeight: function calculateHeight() {
+      var calculatedHeight = this.size.height;
+
+      if (this.aspectLocked && this.aspectRatio !== 0) {
+        calculatedHeight = this.size.width / this.aspectRatio;
+      }
+
+      return calculatedHeight;
+    },
     toggleAspectLock: function toggleAspectLock() {
       this.aspectLocked = !this.aspectLocked;
     }
@@ -42655,7 +42679,7 @@ exports.default = _default;
                 ":\n\t\t\t"
             ),
             _c("span", { staticStyle: { "font-weight": "bold" } }, [
-              _vm._v(_vm._s(_vm.aspectRatio))
+              _vm._v(_vm._s(_vm.humanReadableAspectRatio))
             ])
           ]
         )
@@ -42796,7 +42820,7 @@ var _default = {
     },
     calculateAspectRatio: function calculateAspectRatio() {
       if (this.targetElement) {
-        this.defaultAspectRatio = +(this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height')).toFixed(2);
+        this.defaultAspectRatio = this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height');
       }
     },
     imageSourceChanged: function imageSourceChanged() {
@@ -42808,6 +42832,7 @@ var _default = {
       if (this.targetElement) {
         this.size.width = this.targetElement.getAttribute('width');
         this.size.height = this.targetElement.getAttribute('height');
+        this.size.unit = '%';
       }
     },
     findTargetElement: function findTargetElement() {

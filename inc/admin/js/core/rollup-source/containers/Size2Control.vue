@@ -85,9 +85,8 @@ export default {
 		},
 		calculateAspectRatio() {
 			if (this.targetElement) {
-				this.defaultAspectRatio = +(
-					this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height')
-				).toFixed(2);
+				this.defaultAspectRatio =
+					this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height');
 			}
 		},
 		imageSourceChanged() {
@@ -99,6 +98,7 @@ export default {
 			if (this.targetElement) {
 				this.size.width = this.targetElement.getAttribute('width');
 				this.size.height = this.targetElement.getAttribute('height');
+				this.size.unit = '%';
 			}
 		},
 		findTargetElement() {
