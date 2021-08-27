@@ -42448,6 +42448,10 @@ var _default = {
     Size2ControlColumn: _Size2ControlColumn.default
   },
   props: {
+    aspectRatio: {
+      type: Number,
+      default: 1
+    },
     label: {
       type: String,
       default: 'Size Control'
@@ -42476,8 +42480,7 @@ var _default = {
         link: '',
         unlink: ''
       },
-      aspectLocked: true,
-      aspectRatio: 1
+      aspectLocked: true
     };
   },
   mounted: function mounted() {
@@ -42726,6 +42729,9 @@ var _default = {
     defaultUnit: {
       type: String,
       default: 'px'
+    },
+    target: {
+      type: String
     }
   },
   components: {
@@ -42739,11 +42745,19 @@ var _default = {
         width: 0,
         height: 0,
         unit: this.defaultUnit
-      }
+      },
+      targetElement: null,
+      defaultAspectRatio: 0,
+      observer: null
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     this.assignDefaultValue();
+    this.$nextTick(function () {
+      _this.calculateStartupProcessVariables();
+    });
   },
   watch: {
     size: {
@@ -42773,6 +42787,66 @@ var _default = {
         }
       }
     }
+  },
+  methods: {
+    calculateStartupProcessVariables: function calculateStartupProcessVariables() {
+      this.findTargetElement();
+      this.calculateAspectRatio();
+      this.observeTarget();
+    },
+    calculateAspectRatio: function calculateAspectRatio() {
+      if (this.targetElement) {
+        this.defaultAspectRatio = +(this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height')).toFixed(2);
+      }
+    },
+    imageSourceChanged: function imageSourceChanged() {
+      this.updateNewSizeValues();
+      this.calculateAspectRatio();
+      this.observeTarget();
+    },
+    updateNewSizeValues: function updateNewSizeValues() {
+      if (this.targetElement) {
+        this.size.width = this.targetElement.getAttribute('width');
+        this.size.height = this.targetElement.getAttribute('height');
+      }
+    },
+    findTargetElement: function findTargetElement() {
+      var _document$querySelect;
+
+      this.targetElement = (_document$querySelect = document.querySelector(".".concat(this.elemContainer))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.querySelector(this.target);
+    },
+    observeTarget: function observeTarget() {
+      var _this2 = this;
+
+      var config = {
+        attributes: true,
+        childList: false,
+        subtree: false
+      };
+      this.observer = new MutationObserver(function (mutationList) {
+        // eslint-disable-next-line array-callback-return
+        Array.from(mutationList).map(function (_ref) {
+          var type = _ref.type,
+              attributeName = _ref.attributeName;
+
+          if (type === 'attributes' && attributeName === 'src') {
+            _this2.imageSourceChanged();
+          }
+        });
+      });
+
+      if (this.targetElement) {
+        this.observer.observe(this.targetElement, config);
+      }
+    },
+    disconnectObserver: function disconnectObserver() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.disconnectObserver();
   }
 };
 exports.default = _default;
@@ -42801,7 +42875,12 @@ exports.default = _default;
     },
     [
       _c("size-control", {
-        attrs: { size: _vm.size, strings: _vm.strings, label: _vm.label }
+        attrs: {
+          "aspect-ratio": _vm.defaultAspectRatio,
+          size: _vm.size,
+          strings: _vm.strings,
+          label: _vm.label
+        }
       })
     ],
     1

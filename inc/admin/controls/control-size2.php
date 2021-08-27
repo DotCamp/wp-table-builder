@@ -3,7 +3,17 @@
 namespace WP_Table_Builder\Inc\Admin\Controls;
 
 /**
- * Upgraded size control.
+ * Class Control_Size2
+ *
+ * Size control for table elements.
+ *
+ * Accepted options
+ *  label => label for control element
+ *  selectors => selector array to get/set certain values to html elements
+ *  dependsOnElementControl => array of control values that will affect visibility of that control
+ *  target => target HTML element query relative to element container whose size will be used for internal control operations and calculations (default img)
+ *
+ * @package WP_Table_Builder\Inc\Admin\Controls
  */
 class Control_Size2 extends Base_Control {
 
@@ -43,10 +53,12 @@ class Control_Size2 extends Base_Control {
         WPTB_ControlsManager.setControlData(uniqueItemClass, data);
         const elemContainer = data.elemContainer;
 
+        data.target = data.target? data.target : 'img';
+
         data.strings = JSON.parse('<?php echo $json_strings; ?>');
         #>
         <div id="{{{uniqueItemClass}}}">
-            <size2-control :selectors="selectors" :label="label" elem-container="{{{elemContainer}}}"
+            <size2-control :target="target" :selectors="selectors" :label="label" elem-container="{{{elemContainer}}}"
                            unique-id="{{{uniqueItemClass}}}" :strings="strings"></size2-control>
         </div>
         <wptb-template-script>

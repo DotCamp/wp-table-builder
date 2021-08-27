@@ -52,10 +52,11 @@ const addMedia = function (element, imageChange = false) {
 		if (Array.isArray(linkArr) && linkArr.length > 0) {
 			linkClean = linkArr[linkArr.length - 1];
 		}
-		img.src = linkClean;
+
 		img.height = attachment.height;
 		img.width = attachment.width;
 		img.style.width = '100%';
+		img.src = linkClean;
 
 		element.classList.remove('wptb-elem-placeholder');
 

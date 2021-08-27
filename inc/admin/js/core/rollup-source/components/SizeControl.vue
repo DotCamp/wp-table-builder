@@ -40,6 +40,10 @@ import Size2ControlColumn from './Size2ControlColumn';
 export default {
 	components: { Size2ControlColumn },
 	props: {
+		aspectRatio: {
+			type: Number,
+			default: 1,
+		},
 		label: {
 			type: String,
 			default: 'Size Control',
@@ -69,7 +73,6 @@ export default {
 				unlink: '',
 			},
 			aspectLocked: true,
-			aspectRatio: 1,
 		};
 	},
 	mounted() {
