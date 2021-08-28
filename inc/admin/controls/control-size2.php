@@ -39,11 +39,12 @@ class Control_Size2 extends Base_Control {
 	 */
 	public function content_template() {
 		$strings = [
-			'width'          => esc_html__( 'width', 'wp-table-builder' ),
-			'height'         => esc_html__( 'height', 'wp-table-builder' ),
-			'aspectLocked'   => esc_html__( 'aspect ratio locked', 'wp-table-builder' ),
-			'aspectUnlocked' => esc_html__( 'aspect ratio unlocked', 'wp-table-builder' ),
-			'originalAspectRatio'   => esc_html__( 'aspect ratio', 'wp-table-builder' ),
+			'width'               => esc_html__( 'width', 'wp-table-builder' ),
+			'height'              => esc_html__( 'height', 'wp-table-builder' ),
+			'aspectLocked'        => esc_html__( 'aspect ratio locked', 'wp-table-builder' ),
+			'aspectUnlocked'      => esc_html__( 'aspect ratio unlocked', 'wp-table-builder' ),
+			'originalAspectRatio' => esc_html__( 'aspect ratio', 'wp-table-builder' ),
+			'resetToOriginal'     => esc_html__( 'reset to original size', 'wp-table-builder' ),
 		];
 
 		$json_strings = json_encode( $strings );

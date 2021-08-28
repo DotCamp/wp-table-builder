@@ -1,6 +1,6 @@
 <template>
 	<div class="wptb-size2-control-input-component">
-		<div class="wptb-size2-input-header">{{ title | cap }}</div>
+		<div class="wptb-size2-input-header wptb-unselectable">{{ title | cap }}</div>
 		<div class="wptb-size2-input">
 			<slot></slot>
 		</div>

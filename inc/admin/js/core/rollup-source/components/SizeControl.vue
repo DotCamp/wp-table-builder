@@ -1,7 +1,17 @@
 <template>
 	<div class="wptb-size2-control-container">
-		<div class="wptb-settings-item-header wptb-text-transform-cap">
-			{{ label }}
+		<div class="wptb-settings-item-header-include-right wptb-text-transform-cap">
+			<div class="wptb-settings-space-between">
+				<div>
+					{{ label }}
+				</div>
+				<div
+					@click.prevent="resetToOriginalSize"
+					:title="translation('resetToOriginal')"
+					class="wptb-settings-generic-icon wptb-svg-inherit-color wptb-settings-reset-size2-control"
+					v-html="icons.reset"
+				></div>
+			</div>
 		</div>
 		<div class="wptb-settings-row wptb-settings-middle-xs wptb-size2-control-input-wrapper">
 			<size2-control-column :title="translation('width')">
@@ -64,6 +74,15 @@ export default {
 				};
 			},
 		},
+		originals: {
+			type: Object,
+			default: () => {
+				return {
+					width: 0,
+					height: 0,
+				};
+			},
+		},
 	},
 	mixins: [withTranslation],
 	data() {
@@ -71,6 +90,7 @@ export default {
 			icons: {
 				link: '',
 				unlink: '',
+				reset: '',
 			},
 			aspectLocked: true,
 		};
@@ -83,6 +103,10 @@ export default {
 
 			WPTB_IconManager.getIcon('unlink', 'wptb-svg-inherit-color', true).then((icon) => {
 				this.icons.unlink = icon;
+			});
+
+			WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then((icon) => {
+				this.icons.reset = icon;
 			});
 		});
 	},
@@ -110,13 +134,17 @@ export default {
 		calculateHeight() {
 			let calculatedHeight = this.size.height;
 			if (this.aspectLocked && this.aspectRatio !== 0) {
-				calculatedHeight = this.size.width / this.aspectRatio;
+				calculatedHeight = this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio;
 			}
 
 			return calculatedHeight;
 		},
 		toggleAspectLock() {
 			this.aspectLocked = !this.aspectLocked;
+		},
+		resetToOriginalSize() {
+			this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
+			this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
 		},
 	},
 };

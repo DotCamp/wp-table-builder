@@ -6465,6 +6465,7 @@ wptb_shortcode_container_element {
     fill: var(--wptb-plugin-yellow-500);
 }
 
+
 /*endregion*/
 
 /*region size2 control*/
@@ -6533,6 +6534,14 @@ wptb_shortcode_container_element {
     user-select: none;
 }
 
+.wptb-settings-reset-size2-control {
+    transition: all 0.2s ease-out;
+}
+
+.wptb-settings-reset-size2-control:active {
+    transform: rotateZ(-180deg);
+}
+
 /*endregion*/
 
 .wptb-svg-inherit-color svg {
@@ -6541,4 +6550,10 @@ wptb_shortcode_container_element {
 
 .wptb-image-element-dummy {
     display: none !important;
+}
+
+.wptb-settings-generic-icon {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }

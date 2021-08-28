@@ -42375,7 +42375,7 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "wptb-size2-control-input-component" }, [
-    _c("div", { staticClass: "wptb-size2-input-header" }, [
+    _c("div", { staticClass: "wptb-size2-input-header wptb-unselectable" }, [
       _vm._v(_vm._s(_vm._f("cap")(_vm.title)))
     ]),
     _vm._v(" "),
@@ -42443,6 +42443,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   components: {
     Size2ControlColumn: _Size2ControlColumn.default
@@ -42471,6 +42481,15 @@ var _default = {
           unit: 'px'
         };
       }
+    },
+    originals: {
+      type: Object,
+      default: function _default() {
+        return {
+          width: 0,
+          height: 0
+        };
+      }
     }
   },
   mixins: [_withTranslation.default],
@@ -42478,7 +42497,8 @@ var _default = {
     return {
       icons: {
         link: '',
-        unlink: ''
+        unlink: '',
+        reset: ''
       },
       aspectLocked: true
     };
@@ -42492,6 +42512,9 @@ var _default = {
       });
       WPTB_IconManager.getIcon('unlink', 'wptb-svg-inherit-color', true).then(function (icon) {
         _this.icons.unlink = icon;
+      });
+      WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then(function (icon) {
+        _this.icons.reset = icon;
       });
     });
   },
@@ -42520,13 +42543,17 @@ var _default = {
       var calculatedHeight = this.size.height;
 
       if (this.aspectLocked && this.aspectRatio !== 0) {
-        calculatedHeight = this.size.width / this.aspectRatio;
+        calculatedHeight = this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio;
       }
 
       return calculatedHeight;
     },
     toggleAspectLock: function toggleAspectLock() {
       this.aspectLocked = !this.aspectLocked;
+    },
+    resetToOriginalSize: function resetToOriginalSize() {
+      this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
+      this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
     }
   }
 };
@@ -42546,8 +42573,28 @@ exports.default = _default;
   return _c("div", { staticClass: "wptb-size2-control-container" }, [
     _c(
       "div",
-      { staticClass: "wptb-settings-item-header wptb-text-transform-cap" },
-      [_vm._v("\n\t\t" + _vm._s(_vm.label) + "\n\t")]
+      {
+        staticClass:
+          "wptb-settings-item-header-include-right wptb-text-transform-cap"
+      },
+      [
+        _c("div", { staticClass: "wptb-settings-space-between" }, [
+          _c("div", [_vm._v("\n\t\t\t\t" + _vm._s(_vm.label) + "\n\t\t\t")]),
+          _vm._v(" "),
+          _c("div", {
+            staticClass:
+              "wptb-settings-generic-icon wptb-svg-inherit-color wptb-settings-reset-size2-control",
+            attrs: { title: _vm.translation("resetToOriginal") },
+            domProps: { innerHTML: _vm._s(_vm.icons.reset) },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.resetToOriginalSize($event)
+              }
+            }
+          })
+        ])
+      ]
     ),
     _vm._v(" "),
     _c(
@@ -42770,6 +42817,10 @@ var _default = {
         height: 0,
         unit: this.defaultUnit
       },
+      originals: {
+        width: 0,
+        height: 0
+      },
       targetElement: null,
       defaultAspectRatio: 0,
       observer: null
@@ -42813,26 +42864,35 @@ var _default = {
     }
   },
   methods: {
+    genericCalculationProcess: function genericCalculationProcess() {
+      this.calculateAspectRatio();
+      this.updateOriginals();
+      this.observeTarget();
+    },
     calculateStartupProcessVariables: function calculateStartupProcessVariables() {
       this.findTargetElement();
-      this.calculateAspectRatio();
-      this.observeTarget();
+      this.genericCalculationProcess();
+    },
+    imageSourceChanged: function imageSourceChanged() {
+      this.updateNewSizeValues();
+      this.genericCalculationProcess();
+    },
+    updateOriginals: function updateOriginals() {
+      if (this.targetElement) {
+        this.originals.width = this.targetElement.getAttribute('width');
+        this.originals.height = this.targetElement.getAttribute('height');
+      }
     },
     calculateAspectRatio: function calculateAspectRatio() {
       if (this.targetElement) {
         this.defaultAspectRatio = this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height');
       }
     },
-    imageSourceChanged: function imageSourceChanged() {
-      this.updateNewSizeValues();
-      this.calculateAspectRatio();
-      this.observeTarget();
-    },
     updateNewSizeValues: function updateNewSizeValues() {
       if (this.targetElement) {
         this.size.width = this.targetElement.getAttribute('width');
         this.size.height = this.targetElement.getAttribute('height');
-        this.size.unit = '%';
+        this.size.unit = 'px';
       }
     },
     findTargetElement: function findTargetElement() {
@@ -42901,6 +42961,7 @@ exports.default = _default;
     [
       _c("size-control", {
         attrs: {
+          originals: _vm.originals,
           "aspect-ratio": _vm.defaultAspectRatio,
           size: _vm.size,
           strings: _vm.strings,

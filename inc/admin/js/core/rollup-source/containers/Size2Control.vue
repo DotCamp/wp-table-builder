@@ -6,7 +6,13 @@
 		:unique-id="uniqueId"
 		:main-value="elementMainValue"
 	>
-		<size-control :aspect-ratio="defaultAspectRatio" :size="size" :strings="strings" :label="label"></size-control>
+		<size-control
+			:originals="originals"
+			:aspect-ratio="defaultAspectRatio"
+			:size="size"
+			:strings="strings"
+			:label="label"
+		></size-control>
 	</control-wrapper>
 </template>
 <script>
@@ -43,6 +49,10 @@ export default {
 				height: 0,
 				unit: this.defaultUnit,
 			},
+			originals: {
+				width: 0,
+				height: 0,
+			},
 			targetElement: null,
 			defaultAspectRatio: 0,
 			observer: null,
@@ -78,10 +88,24 @@ export default {
 		},
 	},
 	methods: {
+		genericCalculationProcess() {
+			this.calculateAspectRatio();
+			this.updateOriginals();
+			this.observeTarget();
+		},
 		calculateStartupProcessVariables() {
 			this.findTargetElement();
-			this.calculateAspectRatio();
-			this.observeTarget();
+			this.genericCalculationProcess();
+		},
+		imageSourceChanged() {
+			this.updateNewSizeValues();
+			this.genericCalculationProcess();
+		},
+		updateOriginals() {
+			if (this.targetElement) {
+				this.originals.width = this.targetElement.getAttribute('width');
+				this.originals.height = this.targetElement.getAttribute('height');
+			}
 		},
 		calculateAspectRatio() {
 			if (this.targetElement) {
@@ -89,16 +113,11 @@ export default {
 					this.targetElement.getAttribute('width') / this.targetElement.getAttribute('height');
 			}
 		},
-		imageSourceChanged() {
-			this.updateNewSizeValues();
-			this.calculateAspectRatio();
-			this.observeTarget();
-		},
 		updateNewSizeValues() {
 			if (this.targetElement) {
 				this.size.width = this.targetElement.getAttribute('width');
 				this.size.height = this.targetElement.getAttribute('height');
-				this.size.unit = '%';
+				this.size.unit = 'px';
 			}
 		},
 		findTargetElement() {
