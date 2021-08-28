@@ -74,7 +74,7 @@ export default {
 			deep: true,
 		},
 		elementMainValue(n) {
-			const match = n.match(/(?<width>\d+)(?<unit>.*)(?::)(?<height>\d+)/);
+			const match = n.match(/(?<width>\d+\.?\d+?)(?<unit>.*)(?::)(?<height>\d+\.?\d+?)/);
 
 			if (match) {
 				const { width, height, unit } = match.groups;

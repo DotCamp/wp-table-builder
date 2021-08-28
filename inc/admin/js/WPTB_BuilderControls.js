@@ -42500,7 +42500,8 @@ var _default = {
         unlink: '',
         reset: ''
       },
-      aspectLocked: true
+      aspectLocked: true,
+      fractionDigits: 0
     };
   },
   mounted: function mounted() {
@@ -42522,7 +42523,14 @@ var _default = {
     'size.width': {
       handler: function handler() {
         this.size.height = this.calculateHeight();
-      }
+      },
+      deep: true
+    },
+    'size.unit': {
+      handler: function handler(n) {
+        this.convertToUnit(n);
+      },
+      deep: true
     },
     aspectLocked: function aspectLocked(n) {
       if (n) {
@@ -42554,6 +42562,24 @@ var _default = {
     resetToOriginalSize: function resetToOriginalSize() {
       this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
       this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
+    },
+    toFixed: function toFixed(val) {
+      return val.toFixed ? val.toFixed(this.fractionDigits) : val;
+    },
+    convertToUnit: function convertToUnit(unitType) {
+      if (unitType === '%') {
+        this.size.width = this.toFixed(this.size.width / this.originals.width * 100);
+
+        if (!this.aspectLocked) {
+          this.size.height = this.toFixed(this.size.height / this.originals.height * 100);
+        }
+      } else {
+        this.size.width = this.toFixed(this.originals.width / 100 * this.size.width);
+
+        if (!this.aspectLocked) {
+          this.size.height = this.toFixed(this.originals.height / 100 * this.size.height);
+        }
+      }
     }
   }
 };
@@ -42617,7 +42643,7 @@ exports.default = _default;
                   expression: "size.width"
                 }
               ],
-              attrs: { type: "number" },
+              attrs: { min: "1", type: "number" },
               domProps: { value: _vm.size.width },
               on: {
                 input: function($event) {
@@ -42663,7 +42689,7 @@ exports.default = _default;
                   expression: "size.height"
                 }
               ],
-              attrs: { disabled: _vm.aspectLocked, type: "number" },
+              attrs: { min: "1", disabled: _vm.aspectLocked, type: "number" },
               domProps: { value: _vm.size.height },
               on: {
                 input: function($event) {
@@ -42843,7 +42869,7 @@ var _default = {
       deep: true
     },
     elementMainValue: function elementMainValue(n) {
-      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+)(.*)(?::)([0-9]+)/, {
+      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]+?)(.*)(?::)([0-9]+\.?[0-9]+?)/, {
         width: 1,
         unit: 2,
         height: 3

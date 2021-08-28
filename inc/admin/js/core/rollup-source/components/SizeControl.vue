@@ -15,7 +15,7 @@
 		</div>
 		<div class="wptb-settings-row wptb-settings-middle-xs wptb-size2-control-input-wrapper">
 			<size2-control-column :title="translation('width')">
-				<input type="number" v-model="size.width" />
+				<input min="1" type="number" v-model="size.width" />
 			</size2-control-column>
 			<size2-control-column>
 				<div
@@ -27,7 +27,7 @@
 				></div>
 			</size2-control-column>
 			<size2-control-column :title="translation('height')">
-				<input :disabled="aspectLocked" type="number" v-model="size.height" />
+				<input min="1" :disabled="aspectLocked" type="number" v-model="size.height" />
 			</size2-control-column>
 			<size2-control-column>
 				<select class="wptb-size2-unit-dropdown" v-model="size.unit">
@@ -93,6 +93,7 @@ export default {
 				reset: '',
 			},
 			aspectLocked: true,
+			fractionDigits: 0,
 		};
 	},
 	mounted() {
@@ -115,6 +116,13 @@ export default {
 			handler() {
 				this.size.height = this.calculateHeight();
 			},
+			deep: true,
+		},
+		'size.unit': {
+			handler(n) {
+				this.convertToUnit(n);
+			},
+			deep: true,
 		},
 		aspectLocked(n) {
 			if (n) {
@@ -145,6 +153,24 @@ export default {
 		resetToOriginalSize() {
 			this.size.width = this.size.unit === 'px' ? this.originals.width : 100;
 			this.size.height = this.size.unit === 'px' ? this.originals.height : 100;
+		},
+		toFixed(val) {
+			return val.toFixed ? val.toFixed(this.fractionDigits) : val;
+		},
+		convertToUnit(unitType) {
+			if (unitType === '%') {
+				this.size.width = this.toFixed((this.size.width / this.originals.width) * 100);
+
+				if (!this.aspectLocked) {
+					this.size.height = this.toFixed((this.size.height / this.originals.height) * 100);
+				}
+			} else {
+				this.size.width = this.toFixed((this.originals.width / 100) * this.size.width);
+
+				if (!this.aspectLocked) {
+					this.size.height = this.toFixed((this.originals.height / 100) * this.size.height);
+				}
+			}
 		},
 	},
 };
