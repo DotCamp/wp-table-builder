@@ -51,7 +51,7 @@ class Image_Element extends Element_Base {
 	 * @return string Directory Element icon.
 	 */
 	public function get_directory_icon() {
-		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.svg'; ;
+		return NS\WP_TABLE_BUILDER_DIR . 'inc/admin/views/builder/icons/image.svg';
 	}
     
     /**
@@ -116,7 +116,28 @@ class Image_Element extends Element_Base {
                 ]
 			]
 		);
-        
+
+		$this->add_control(
+			'imageAlignmentCheckboxTest',
+			[
+				'label' => __( 'Image Alignment', 'wp_table_builder' ),
+				'type' => Controls_Manager::NAMED_TOGGLE,
+                'items' => [
+                        'left' =>  esc_html__('Left', 'wp-table-builder'),
+                        'center' =>  esc_html__('Center', 'wp-table-builder'),
+                        'right' =>  esc_html__('Right', 'wp-table-builder'),
+                ],
+                'selectors' => [
+                        [
+	                        'query'  => '{{{data.container}}}',
+	                        'type'   => Controls_Manager::DATASET,
+	                        'key'    => 'wptbImageAlignment',
+                        ]
+                ],
+                'defaultValue' => 'center'
+			]
+		);
+
 		$this->add_control(
 			'imageSize',
 			[

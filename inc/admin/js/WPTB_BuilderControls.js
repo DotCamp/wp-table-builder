@@ -12594,10 +12594,7 @@ function ControlsManager() {
     subscribe: subscribe,
     subscribeToControl: subscribeToControl,
     subscribeToElementControl: subscribeToElementControl,
-    // TODO [erdembircan] remove for production
-    elementControlSubscribers: elementControlSubscribers,
-    // TODO [erdembircan] remove for production
-    cachedElementControls: cachedElementControls
+    getElementControlValue: getElementControlValue
   };
 }
 /**
@@ -42501,7 +42498,8 @@ var _default = {
         reset: ''
       },
       aspectLocked: true,
-      fractionDigits: 0
+      fractionDigits: 0,
+      mountedState: false
     };
   },
   mounted: function mounted() {
@@ -42517,6 +42515,7 @@ var _default = {
       WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then(function (icon) {
         _this.icons.reset = icon;
       });
+      _this.mountedState = true;
     });
   },
   watch: {
@@ -42528,7 +42527,9 @@ var _default = {
     },
     'size.unit': {
       handler: function handler(n) {
-        this.convertToUnit(n);
+        if (this.mountedState) {
+          this.convertToUnit(n);
+        }
       },
       deep: true
     },
@@ -42551,7 +42552,7 @@ var _default = {
       var calculatedHeight = this.size.height;
 
       if (this.aspectLocked && this.aspectRatio !== 0) {
-        calculatedHeight = this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio;
+        calculatedHeight = this.toFixed(this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio);
       }
 
       return calculatedHeight;
@@ -42869,7 +42870,7 @@ var _default = {
       deep: true
     },
     elementMainValue: function elementMainValue(n) {
-      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]+?)(.*)(?::)([0-9]+\.?[0-9]+?)/, {
+      var match = n.match( /*#__PURE__*/_wrapRegExp(/([0-9]+\.?[0-9]*)(.+)(?::)([0-9]+\.?[0-9]*)/, {
         width: 1,
         unit: 2,
         height: 3

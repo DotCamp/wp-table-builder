@@ -94,6 +94,7 @@ export default {
 			},
 			aspectLocked: true,
 			fractionDigits: 0,
+			mountedState: false,
 		};
 	},
 	mounted() {
@@ -109,6 +110,8 @@ export default {
 			WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then((icon) => {
 				this.icons.reset = icon;
 			});
+
+			this.mountedState = true;
 		});
 	},
 	watch: {
@@ -120,7 +123,9 @@ export default {
 		},
 		'size.unit': {
 			handler(n) {
-				this.convertToUnit(n);
+				if (this.mountedState) {
+					this.convertToUnit(n);
+				}
 			},
 			deep: true,
 		},
@@ -142,7 +147,9 @@ export default {
 		calculateHeight() {
 			let calculatedHeight = this.size.height;
 			if (this.aspectLocked && this.aspectRatio !== 0) {
-				calculatedHeight = this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio;
+				calculatedHeight = this.toFixed(
+					this.size.unit === '%' ? this.size.width : this.size.width / this.aspectRatio
+				);
 			}
 
 			return calculatedHeight;

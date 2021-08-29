@@ -69,12 +69,13 @@ export default {
 		size: {
 			handler(n) {
 				this.elementMainValue = `${n.width}${n.unit}:${n.height}${n.unit}`;
+
 				this.basicValueUpdate(this.elementMainValue, true);
 			},
 			deep: true,
 		},
 		elementMainValue(n) {
-			const match = n.match(/(?<width>\d+\.?\d+?)(?<unit>.*)(?::)(?<height>\d+\.?\d+?)/);
+			const match = n.match(/(?<width>\d+\.?\d*)(?<unit>.+)(?::)(?<height>\d+\.?\d*)/);
 
 			if (match) {
 				const { width, height, unit } = match.groups;

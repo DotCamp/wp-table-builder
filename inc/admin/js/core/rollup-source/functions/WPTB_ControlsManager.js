@@ -414,10 +414,7 @@ function ControlsManager() {
 		subscribe,
 		subscribeToControl,
 		subscribeToElementControl,
-		// TODO [erdembircan] remove for production
-		elementControlSubscribers,
-		// TODO [erdembircan] remove for production
-		cachedElementControls,
+		getElementControlValue,
 	};
 }
 
