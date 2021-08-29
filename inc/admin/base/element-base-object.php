@@ -42,7 +42,8 @@ abstract class Element_Base_Object extends Controls_Stack {
 	 * Output a js line including script data as a variable to be used within the context of element's script.
 	 * Included data will be in JSON format and will follow the naming convention of 'wptb${camelCasedElementName}Data'.
 	 *
-     * @private
+	 * @private
+	 *
 	 * @param bool $echoToOut whether to echo to output buffer or return the value
 	 *
 	 * @return string script data if $echoToOut is false
@@ -81,7 +82,7 @@ abstract class Element_Base_Object extends Controls_Stack {
 		if ( $directory_script && file_exists( $directory_script ) ) {
 			?>
             <script type="text/javascript">
-                WPTB_ElementsScriptsLauncher['<?php echo $this->get_name(); ?>'] = function (element) {
+                WPTB_ElementsScriptsLauncher['<?php echo $this->get_name(); ?>'] = function (element, elementId) {
 					<?php $this->output_script_data(); ?>
 					<?php include $directory_script; ?>
 					<?php

@@ -367,7 +367,9 @@ var WPTB_Helper = {
 
 			//                element.parentNode.removeChild( scriptNew );
 			if (kind in WPTB_ElementsScriptsLauncher) {
-				WPTB_ElementsScriptsLauncher[kind](element);
+				const elementIdMatch = element.getAttribute('class').match(/(wptb-element-\D+-\d+\b)/);
+				const elementId = elementIdMatch ? elementIdMatch[0] : null;
+				WPTB_ElementsScriptsLauncher[kind](element, elementId);
 			}
 		}
 	},
