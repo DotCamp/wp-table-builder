@@ -16479,7 +16479,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
      * Create a cell element.
      *
      * @private
-     * @return {HTMLTableDataCellElement}
+     * @return {HTMLElement} table data cell element
      */
 
 
@@ -16767,7 +16767,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Parse row colors of original table for futures uses.
      *
-     * @param {[HTMLElement]} rows html row elements
+     * @param {Array<HTMLElement>} rows html row elements
      * @private
      */
 
@@ -16887,7 +16887,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     /**
      * Get the number of maximum available column count in the table.
      *
-     * @param mergedHeader
+     * @param {boolean} mergedHeader if header is merged or not
      * @return {number} maximum available column count
      */
 

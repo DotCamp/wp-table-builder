@@ -164,7 +164,7 @@
 		 * Create a cell element.
 		 *
 		 * @private
-		 * @return {HTMLTableDataCellElement}
+		 * @return {HTMLElement} table data cell element
 		 */
 		this.createCellElement = () => {
 			return document.createElement('td');
@@ -430,7 +430,7 @@
 		/**
 		 * Parse row colors of original table for futures uses.
 		 *
-		 * @param {[HTMLElement]} rows html row elements
+		 * @param {Array<HTMLElement>} rows html row elements
 		 * @private
 		 */
 		this.parseRowColors = (rows) => {
@@ -548,7 +548,7 @@
 		/**
 		 * Get the number of maximum available column count in the table.
 		 *
-		 * @param mergedHeader
+		 * @param {boolean} mergedHeader if header is merged or not
 		 * @return {number} maximum available column count
 		 */
 		this.maxColumns = (mergedHeader) => {
@@ -1005,7 +1005,6 @@
 				}
 			}
 		};
-
 
 		/**
 		 * Build table with top row assigned as header.

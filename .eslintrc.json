@@ -55,6 +55,8 @@
     "WPTB_ExtraStyles": true,
     "WPTB_SortableTable": true,
     "wptbPluginsWin": true,
-    "ElementSubscriber": true
+    "ElementSubscriber": true,
+    "CellObject": true,
+    "TableObject": true
   }
 }
