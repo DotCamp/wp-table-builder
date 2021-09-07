@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-import PanelControlBase from '../mixins/PanelControlBase';
+import PanelControlBase from '$Mixins/PanelControlBase';
 
 export default {
 	mixins: [PanelControlBase],

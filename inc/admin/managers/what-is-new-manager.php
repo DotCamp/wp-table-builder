@@ -137,6 +137,7 @@ class What_Is_New_Manager {
 		return [
 			'1.3.10' => [
 				static::prepare_what_is_new_note( 'Search functionality for export menu table listing.', 'export_menu_search.png' ),
+				static::prepare_what_is_new_note( 'Disable theme styles for all tables setting.', 'disable_theme_styles_for_all_tables.png' ),
 			]
 		];
 	}

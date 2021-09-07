@@ -7,6 +7,7 @@ use WP_Table_Builder\Inc\Admin\Managers\Controls_Manager;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Common\Traits\Ajax_Response;
 use WP_Table_Builder\Inc\Common\Traits\Singleton_Trait;
+use WP_Table_Builder\Inc\Core\Init;
 use function add_action;
 use function add_filter;
 use function add_query_arg;
@@ -115,6 +116,9 @@ class Style_Pass {
 					'wp-table-builder-css' => static::prepare_stylesheet_url( 'inc/frontend/css/wp-table-builder-frontend.css', $version ),
 				],
 				'copy'   => []
+			],
+			'settings'    => [
+				'disableThemeStylesForAll' => filter_var( Init::instance()->settings_manager->get_option_value( 'disable_theme_styles_for_all' ), FILTER_VALIDATE_BOOLEAN )
 			]
 		];
 
@@ -179,6 +183,12 @@ class Style_Pass {
 				"defaultValue" => base64_encode( ( '/* Enter your custom CSS rules here */' ) )
 			]
 		];
+
+		// remove disable theme styles control if site wide option is enabled
+		$disableThemeStylesForAll = Init::instance()->settings_manager->get_option_value( 'disable_theme_styles_for_all' );
+		if ( filter_var( $disableThemeStylesForAll, FILTER_VALIDATE_BOOLEAN ) ) {
+			unset( $style_pass_controls['disableThemeStyles'] );
+		}
 
 		Control_Section_Group_Collapse::add_section( 'style_pass_settings', esc_html__( 'styles', 'wp-table-builder' ), $style_pass_controls, [
 			$context,

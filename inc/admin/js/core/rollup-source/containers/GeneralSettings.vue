@@ -1,7 +1,7 @@
 <template>
 	<fragment>
 		<menu-content>
-			<setting-card v-for="field in currentFields" :key="field.id" :title="field.label">
+			<setting-card v-for="field in currentFields" :key="field.id" :title="field.title || field.label">
 				<control-item :field-data="field" :modelBind="store"></control-item>
 			</setting-card>
 		</menu-content>

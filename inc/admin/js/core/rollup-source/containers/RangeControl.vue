@@ -49,14 +49,7 @@ export default {
 	},
 	watch: {
 		elementMainValue(n) {
-			const clampedValue = n;
-
-			this.setAllValues(clampedValue);
-
-			// check to see if this update occurs from startup data retrieval, if it is, don't mark table as dirty
-			this.generateChangeEvent(clampedValue);
-
-			this.setTableDirty(true);
+			this.basicValueUpdate(n, true);
 		},
 	},
 };

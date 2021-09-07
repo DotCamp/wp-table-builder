@@ -59,6 +59,7 @@ class Settings_Manager {
 		'allow_edit_link_frontend'         => false,
 		'give_credits_to_wp_table_builder' => false,
 		'restrict_users_to_their_tables'   => false,
+		'disable_theme_styles_for_all'     => false,
 	];
 
 	/**
@@ -71,6 +72,7 @@ class Settings_Manager {
 		'allow_edit_link_frontend'         => 'sanitize_text_field',
 		'give_credits_to_wp_table_builder' => 'sanitize_text_field',
 		'restrict_users_to_their_tables'   => 'sanitize_text_field',
+		'disable_theme_styles_for_all'     => 'sanitize_text_field',
 	];
 
 	const ALLOWED_ROLE_META_CAP = "wptb_allowed_cap";
@@ -323,6 +325,12 @@ class Settings_Manager {
 								'type'    => 'checkbox',
 								'section' => 'general',
 								'label'   => esc_html__( 'Restrict Users Access to Their Tables Only', 'wp-table-builder' )
+							],
+							'disable_theme_styles_for_all'     => [
+								'type'    => 'checkbox',
+								'section' => 'general',
+								'title'   => esc_html__( 'Disable theme styles', 'wp-table-builder' ),
+								'label'   => esc_html__( 'Disable theme styles for all tables', 'wp-table-builder' )
 							],
 						]
 					],

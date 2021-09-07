@@ -76,7 +76,7 @@
 		 */
 		this.checkTableEligibility = (tableContainer) => {
 			const table = tableContainer.querySelector('table');
-			return table ? table.dataset.disableThemeStyles : false;
+			return table ? this.options.settings.disableThemeStylesForAll || table.dataset.disableThemeStyles : false;
 		};
 
 		/**
