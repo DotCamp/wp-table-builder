@@ -4656,6 +4656,21 @@ label.wptb-control-row {
     border-radius: 5px 5px 0 0;
 }
 
+.wptb-prebuilt-card .wptb-settings-fetching {
+    grid-area: main;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--wptb-plugin-gray-500);
+}
+
+.wptb-prebuilt-card-preview table {
+    transition: opacity 0.2s ease-out;
+}
+
 .wptb-team-prebuilt {
     border: var(--wptb-prebuilt-card-border-size) solid var(--wptb-plugin-logo-color) !important;
 }
@@ -6940,6 +6955,7 @@ label.wptb-control-row {
     color: var(--wptb-plugin-logo-color) !important;
     font-weight: bold !important;
 }
+
 /*endregion*/
 
 /*region search input component*/

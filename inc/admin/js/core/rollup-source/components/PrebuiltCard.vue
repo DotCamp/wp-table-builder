@@ -1,5 +1,6 @@
 <template>
 	<div class="wptb-prebuilt-card" @click="setCardActive" :class="{ 'wptb-prebuilt-card-active': isActive }">
+		<busy-rotate v-if="previewBusy"></busy-rotate>
 		<div class="wptb-prebuilt-card-preview">
 			<div
 				ref="tablePreview"
@@ -77,6 +78,7 @@
 import PrebuiltCardControl from './PrebuiltCardControl';
 import PrebuiltLiveDisplay from './PrebuiltLiveDisplay';
 import PrebuiltCardDeleteModule from './PrebuiltCardDeleteModule';
+import BusyRotate from './BusyRotate';
 
 export default {
 	props: {
@@ -119,33 +121,7 @@ export default {
 			default: '',
 		},
 	},
-	components: { PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
-	data() {
-		return {
-			rows: 1,
-			columns: 1,
-			initial: {
-				rows: 1,
-				columns: 1,
-			},
-			min: {
-				rows: 1,
-				cols: 1,
-			},
-			max: {
-				rows: 30,
-				cols: 30,
-			},
-			selectedCells: {
-				rowOperation: [],
-				colOperation: [],
-			},
-			controlStep: {
-				row: 1,
-				col: 1,
-			},
-		};
-	},
+	components: { BusyRotate, PrebuiltCardControl, PrebuiltLiveDisplay, PrebuiltCardDeleteModule },
 	watch: {
 		selectedCells: {
 			handler() {
@@ -174,6 +150,95 @@ export default {
 			},
 			deep: true,
 		},
+	},
+	data() {
+		return {
+			previewBusy: false,
+			rows: 1,
+			columns: 1,
+			initial: {
+				rows: 1,
+				columns: 1,
+			},
+			min: {
+				rows: 1,
+				cols: 1,
+			},
+			max: {
+				rows: 30,
+				cols: 30,
+			},
+			selectedCells: {
+				rowOperation: [],
+				colOperation: [],
+			},
+			controlStep: {
+				row: 1,
+				col: 1,
+			},
+		};
+	},
+	mounted() {
+		this.$nextTick(() => {
+			this.initial.rows = this.rows;
+
+			const { tablePreview } = this.$refs;
+
+			const prebuilt = tablePreview.querySelector('table');
+
+			if (prebuilt) {
+				const images = Array.from(prebuilt.querySelectorAll('img'));
+
+				if (images.length > 0) {
+					const vm = this;
+
+					// eslint-disable-next-line no-inner-declarations
+					function scaleCallback() {
+						images.splice(images.indexOf(this), 1);
+
+						if (images.length === 0) {
+							vm.scalePrebuiltPreview(prebuilt);
+							vm.previewBusy = false;
+							prebuilt.style.opacity = 'unset';
+						}
+					}
+
+					this.previewBusy = true;
+					prebuilt.style.opacity = '0';
+
+					// eslint-disable-next-line array-callback-return
+					images.map((image) => {
+						image.addEventListener('load', scaleCallback);
+						image.addEventListener('error', scaleCallback);
+					});
+				} else {
+					this.scalePrebuiltPreview(prebuilt);
+				}
+
+				if (this.id !== 'blank') {
+					const tableRows = Array.from(prebuilt.querySelectorAll('tr'));
+					const totalRows = tableRows.length;
+					this.rows = totalRows;
+					this.min.rows = totalRows;
+
+					let minCols = 1;
+
+					// eslint-disable-next-line array-callback-return
+					tableRows.map((t) => {
+						const totalCells = t.querySelectorAll('td').length;
+						if (minCols < totalCells) {
+							minCols = totalCells;
+						}
+					});
+
+					this.min.cols = minCols;
+					this.columns = minCols;
+
+					this.initial.columns = this.columns;
+					this.initial.rows = this.rows;
+				}
+			}
+		});
 	},
 	computed: {
 		transformedName() {
@@ -218,71 +283,43 @@ export default {
 			return this.selectedCells.colOperation.length === 0 && this.selectedCells.rowOperation.length === 0;
 		},
 	},
-	mounted() {
-		this.$nextTick(() => {
-			this.initial.rows = this.rows;
 
+	methods: {
+		scalePrebuiltPreview(prebuilt) {
 			const { tablePreview } = this.$refs;
-			// eslint-disable-next-line no-unused-vars
 			const { width: wrapperWidth, height: wrapperHeight } = tablePreview.getBoundingClientRect();
 
-			const prebuilt = tablePreview.querySelector('table');
+			const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;
 
-			if (prebuilt) {
-				const maxWidth = prebuilt.dataset.wptbTableContainerMaxWidth;
-				prebuilt.style.width = 'auto';
-				if (maxWidth) {
-					prebuilt.style.minWidth = `${maxWidth}px`;
-				} else {
-					prebuilt.style.minWidth = `${700}px`;
-				}
-
-				const padding = 40;
-				const { width: prebuiltWidth, height: prebuiltHeight } = prebuilt.getBoundingClientRect();
-				const widthScale = wrapperWidth / (prebuiltWidth + padding);
-				const heightScale = 125 / (prebuiltHeight + padding);
-
-				prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
-
-				// @deprecated
-				// seems like google fixed this issue with latest version
-				// fix for chrome browsers where table previews are distorted for tables with separated columns and row
-				// if (window.navigator.vendor.includes('Google')) {
-				// 	const borderCollapseType = prebuilt.style.borderCollapse;
-				// 	if (borderCollapseType === 'separate') {
-				// 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
-				// 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
-				//
-				// 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
-				// 	}
-				// }
-
-				if (this.id !== 'blank') {
-					const tableRows = Array.from(prebuilt.querySelectorAll('tr'));
-					const totalRows = tableRows.length;
-					this.rows = totalRows;
-					this.min.rows = totalRows;
-
-					let minCols = 1;
-
-					// eslint-disable-next-line array-callback-return
-					tableRows.map((t) => {
-						const totalCells = t.querySelectorAll('td').length;
-						if (minCols < totalCells) {
-							minCols = totalCells;
-						}
-					});
-
-					this.min.cols = minCols;
-					this.columns = minCols;
-
-					this.initial.columns = this.columns;
-					this.initial.rows = this.rows;
-				}
+			/* eslint-disable no-param-reassign */
+			prebuilt.style.width = 'auto';
+			if (maxWidth) {
+				prebuilt.style.minWidth = `${maxWidth}px`;
+			} else {
+				prebuilt.style.minWidth = `${700}px`;
 			}
-		});
-	},
-	methods: {
+
+			const padding = 40;
+			const { width: prebuiltWidth, height: prebuiltHeight } = prebuilt.getBoundingClientRect();
+			const widthScale = wrapperWidth / (prebuiltWidth + padding);
+			const heightScale = 125 / (prebuiltHeight + padding);
+
+			prebuilt.style.transform = `scale(${Math.min(widthScale, heightScale)})`;
+			/* eslint-enable no-param-reassign */
+
+			// @deprecated
+			// seems like google fixed this issue with latest version
+			// fix for chrome browsers where table previews are distorted for tables with separated columns and row
+			// if (window.navigator.vendor.includes('Google')) {
+			// 	const borderCollapseType = prebuilt.style.borderCollapse;
+			// 	if (borderCollapseType === 'separate') {
+			// 		const borderHorizontalSpacing = parseInt(prebuilt.dataset.borderSpacingColumns, 10);
+			// 		const cellCount = parseInt(prebuilt.dataset.wptbCellsWidthAutoCount, 10);
+			//
+			// 		prebuilt.style.marginLeft = `${(cellCount + 1) * borderHorizontalSpacing * -1}px`;
+			// 	}
+			// }
+		},
 		setCardActive() {
 			if (!this.isActive) {
 				this.$emit('cardActive', this.id);
