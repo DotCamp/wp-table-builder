@@ -148,28 +148,31 @@ export default {
 		sortedTables: function* sortedTables() {
 			const ids = Object.keys(this.filteredTables());
 
-			ids.sort((a, b) => {
+			const sortedIds = ids.sort((a, b) => {
 				if (a === 'blank') {
 					return -1;
 				}
 				if (b === 'blank') {
 					return 1;
 				}
-				if (a.startsWith('wptb_team')) {
-					return -1;
-				}
-				if (b.startsWith('wptb_team')) {
+
+				const aTitle = this.fixedTables[a].title.replaceAll(' ', '');
+				const bTitle = this.fixedTables[b].title.replaceAll(' ', '');
+
+				if (aTitle > bTitle) {
 					return 1;
 				}
-				const aTitle = this.fixedTables[a].name;
-				const bTitle = this.fixedTables[b].name;
 
-				return aTitle - bTitle;
+				if (aTitle < bTitle) {
+					return -1;
+				}
+
+				return 0;
 			});
 
-			for (let i = 0; i < ids.length; i += 1) {
-				const currentTable = this.fixedTables[ids[i]];
-				currentTable.id = ids[i];
+			for (let i = 0; i < sortedIds.length; i += 1) {
+				const currentTable = this.fixedTables[sortedIds[i]];
+				currentTable.id = sortedIds[i];
 				yield currentTable;
 			}
 		},

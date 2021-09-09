@@ -14254,13 +14254,13 @@ var _default = {
     sortedTables: /*#__PURE__*/regeneratorRuntime.mark(function sortedTables() {
       var _this3 = this;
 
-      var ids, i, currentTable;
+      var ids, sortedIds, i, currentTable;
       return regeneratorRuntime.wrap(function sortedTables$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               ids = Object.keys(this.filteredTables());
-              ids.sort(function (a, b) {
+              sortedIds = ids.sort(function (a, b) {
                 if (a === 'blank') {
                   return -1;
                 }
@@ -14269,28 +14269,30 @@ var _default = {
                   return 1;
                 }
 
-                if (a.startsWith('wptb_team')) {
-                  return -1;
-                }
+                var aTitle = _this3.fixedTables[a].title.replaceAll(' ', '');
 
-                if (b.startsWith('wptb_team')) {
+                var bTitle = _this3.fixedTables[b].title.replaceAll(' ', '');
+
+                if (aTitle > bTitle) {
                   return 1;
                 }
 
-                var aTitle = _this3.fixedTables[a].name;
-                var bTitle = _this3.fixedTables[b].name;
-                return aTitle - bTitle;
+                if (aTitle < bTitle) {
+                  return -1;
+                }
+
+                return 0;
               });
               i = 0;
 
             case 3:
-              if (!(i < ids.length)) {
+              if (!(i < sortedIds.length)) {
                 _context.next = 11;
                 break;
               }
 
-              currentTable = this.fixedTables[ids[i]];
-              currentTable.id = ids[i];
+              currentTable = this.fixedTables[sortedIds[i]];
+              currentTable.id = sortedIds[i];
               _context.next = 8;
               return currentTable;
 
