@@ -93,6 +93,7 @@ That's it. You're done!
 = 1.3.10 =
 
 * NEW: Disable theme styles for all tables setting.
+* PRO: New prebuilt tables.
 * IMPROVE: Export menu table search functionality.
 * IMPROVE: Overall security of plugin.
 * IMPROVE: Php 8.0 compatibility updates.

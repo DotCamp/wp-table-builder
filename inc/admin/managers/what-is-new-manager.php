@@ -136,6 +136,7 @@ class What_Is_New_Manager {
 	private static function get_notes() {
 		return [
 			'1.3.10' => [
+				static::prepare_what_is_new_note( 'New prebuilt tables.', 'new_prebuilts.png', true ),
 				static::prepare_what_is_new_note( 'Search functionality for export menu table listing.', 'export_menu_search.png' ),
 				static::prepare_what_is_new_note( 'Disable theme styles for all tables setting.', 'disable_theme_styles_for_all_tables.png' ),
 			]
@@ -158,7 +159,7 @@ class What_Is_New_Manager {
 	}
 
 	/**
-	 * Get latest release what is new notes.
+	 * Get the latest release what is new notes.
 	 *
 	 * @return array release notes array
 	 */
@@ -200,11 +201,11 @@ class What_Is_New_Manager {
 		$latest_release_notes_version       = static::current_version();
 		$previously_displayed_notes_version = get_option( static::$previously_displayed_version_number_option_name, '1.0.0' );
 
-		// only send frontend data if latest release note version is more newer
+		// only send frontend data if latest release note version is newer
 		if ( version_compare( $latest_release_notes_version, $previously_displayed_notes_version, '>' ) ) {
 			$admin_data['whatIsNew'] = $latest_release_notes;
 
-			// update latest displayed version number option at database
+			// update the latest displayed version number option at database
 			update_option( static::$previously_displayed_version_number_option_name, $latest_release_notes_version );
 		}
 
