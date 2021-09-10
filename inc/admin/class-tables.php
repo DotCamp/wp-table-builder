@@ -202,9 +202,9 @@ class Tables {
 			$after_table = '<div class="wptb-frontend-table-after">' . $post_edit_link . $post_give_credit . '</div>';
 		}
 
-		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix">' . $html . '</div></div>' . $after_table;
+		$html = '<div class="wptb-table-container wptb-table-' . $args['id'] . '"><div class="wptb-table-container-matrix" id="wptb-table-id-' . esc_attr( $args['id'] ) . '">' . $html . '</div></div>' . $after_table;
 
-		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode' , $html);
+		$html = apply_filters( 'wp-table-builder/filter/table_html_shortcode', $html );
 
 		return ( $html );
 	}

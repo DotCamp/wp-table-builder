@@ -122,7 +122,7 @@
 			} else {
 				baseElement.insertAdjacentElement('beforebegin', generalStylesheet);
 			}
-			const prefixedStyleRules = prefixStyleRules('.wptb-preview-table', generalStyles);
+			const prefixedStyleRules = prefixStyleRules(generalStyles.parentPrefix, generalStyles.styles);
 			generalStylesheet.appendChild(document.createTextNode(prefixedStyleRules));
 		};
 

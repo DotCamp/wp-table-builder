@@ -126,8 +126,14 @@ class Style_Pass {
 		$style_pass_data   = apply_filters( 'wp-table-builder/filter/style-pass-frontend-data', $style_pass_data );
 		$data['stylePass'] = $style_pass_data;
 
-		// general styles frontend data
-		$data['generalStyles'] = static::get_general_styles();
+		$generalStylesCode = static::get_general_styles();
+
+		if ( ! empty( $generalStylesCode ) ) { // general styles frontend data
+			$data['generalStyles'] = [
+				'styles'       => $generalStylesCode,
+				'parentPrefix' => '.wptb-table-container'
+			];
+		}
 
 		return $data;
 	}

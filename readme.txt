@@ -95,6 +95,7 @@ That's it. You're done!
 * NEW: Disable theme styles for all tables setting.
 * PRO: New prebuilt tables.
 * IMPROVE: Export menu table search functionality.
+* IMPROVE: Broadened scope of general styles so that actual table element and its container can be selected.
 * IMPROVE: Overall security of plugin.
 * IMPROVE: Php 8.0 compatibility updates.
 * FIX: A bug affecting new created tables' encoding.
