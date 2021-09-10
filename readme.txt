@@ -99,6 +99,7 @@ That's it. You're done!
 * IMPROVE: Overall security of plugin.
 * IMPROVE: Php 8.0 compatibility updates.
 * FIX: A bug affecting new created tables' encoding.
+* FIX: Restrict user access bug affecting some WordPress servers.
 * FIX: Table element id bug affecting some tables.
 * FIX: Static top row responsive option bug affecting tables with non-merged header cells.
 

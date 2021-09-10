@@ -3,7 +3,10 @@
 namespace WP_Table_Builder\Inc\Admin;
 
 
+use WP_Query;
+use WP_Table_Builder\Inc\Core\Init;
 use function apply_filters;
+use function wp_reset_postdata;
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	die( 'NOT?' );
@@ -59,15 +62,18 @@ class WPTB_Listing extends \WP_List_Table {
 
 		$params = apply_filters( 'wp-table-builder/get_tables_args', $params );
 
-		$loop   = new \WP_Query( $params );
+		$loop   = new WP_Query( $params );
 		$result = [];
 		while ( $loop->have_posts() ) {
 			$loop->the_post();
 			$result[] = $post;
 		}
 
-		return $result;
+		if ( ! empty( $result ) ) {
+			wp_reset_postdata();
+		}
 
+		return $result;
 	}
 
 	public static function duplicate_table( $id ) {
@@ -136,7 +142,7 @@ class WPTB_Listing extends \WP_List_Table {
 		$params['orderby'] = isset( $_REQUEST['orderby'] ) && ! empty( sanitize_text_field( $_REQUEST['orderby'] ) ) ? sanitize_text_field( $_REQUEST['orderby'] ) : 'date';
 		$params['order']   = isset( $_REQUEST['order'] ) && ! empty( sanitize_text_field( $_REQUEST['order'] ) ) ? sanitize_text_field( $_REQUEST['order'] ) : 'DESC';
 
-		$loop = new \WP_Query( $params );
+		$loop = new WP_Query( $params );
 
 		return $loop->found_posts;
 
@@ -282,9 +288,8 @@ class WPTB_Listing extends \WP_List_Table {
 		$per_page     = $this->get_items_per_page( 'tables_per_page', 10 );
 		$current_page = $this->get_pagenum();
 
-		// checking if Restrict Users Access to Their Tables Only
-		$builder_settings = get_option( 'wp_table_builder_settings' );
-		$current_user     = $builder_settings['restrict_users_to_their_tables'] ? true : false;
+		// option check to limit users to their own tables
+		$current_user = filter_var( Init::instance()->settings_manager->get_option_value( 'restrict_users_to_their_tables' ), FILTER_VALIDATE_BOOLEAN );
 
 		$search_text = '';
 		if ( isset( $_REQUEST['s'] ) && ! empty( $_REQUEST['s'] ) ) {
