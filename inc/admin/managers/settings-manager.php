@@ -6,11 +6,14 @@ use WP_Table_Builder\Inc\Common\Helpers;
 use WP_Table_Builder\Inc\Core\Init;
 use WP_Table_Builder\Inc\Core\Loader;
 use WP_Table_Builder as NS;
+use function absint;
 use function add_filter;
 use function add_submenu_page;
 use function apply_filters;
 use function get_admin_url;
+use function get_current_user_id;
 use function get_option;
+use function get_post;
 use function json_decode;
 use function json_encode;
 use function register_setting;
@@ -379,6 +382,30 @@ class Settings_Manager {
 				'sanitize_options'
 			]
 		] );
+	}
+
+	/**
+	 * Check if current user if allowed for modifications on the given post id.
+	 *
+	 * @param integer $post_id post id
+	 *
+	 * @return boolean allowed or not
+	 */
+	public function current_user_allowed_for_modifications( $post_id ) {
+		$settings_control_value = filter_var( $this->get_option_value( 'restrict_users_to_their_tables' ), FILTER_VALIDATE_BOOLEAN );
+
+		$status = ! $settings_control_value;
+
+		if ( $settings_control_value ) {
+			$post = get_post( absint( $post_id ) );
+			if ( $post ) {
+				$original_author = intval( $post->post_author );
+
+				$status = get_current_user_id() === $original_author;
+			}
+		}
+
+		return $status;
 	}
 
 	/**

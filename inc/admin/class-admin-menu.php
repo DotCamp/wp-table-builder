@@ -6,6 +6,7 @@ use DOMDocument;
 use WP_Table_Builder as NS;
 use WP_Table_Builder\Inc\Admin\Managers\Settings_Manager;
 use WP_Table_Builder\Inc\Common\Helpers;
+use WP_Table_Builder\Inc\Core\Init;
 use function add_query_arg;
 use function admin_url;
 use function apply_filters;
@@ -165,10 +166,10 @@ class Admin_Menu {
 	}
 
 	public function get_table() {
-		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) ) {
+		if ( current_user_can( Settings_Manager::ALLOWED_ROLE_META_CAP ) && Init::instance()->settings_manager->current_user_allowed_for_modifications( $_REQUEST['id'] ) ) {
 			$post       = get_post( absint( $_REQUEST['id'] ) );
 			$table_html = get_post_meta( absint( $_REQUEST['id'] ), '_wptb_content_', true );
-			$name       = $post->post_title;//$html = json_decode( $html );
+			$name       = $post->post_title;
 			die( json_encode( [ $name, $table_html ] ) );
 		}
 	}
