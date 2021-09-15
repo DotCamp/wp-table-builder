@@ -96,28 +96,29 @@ class Admin_Menu {
 
 				wp_die( json_encode( [ 'saved', $id ] ) );
 			} else {
-				wp_update_post( [
-					'ID'           => absint( $params->id ),
-					'post_title'   => sanitize_text_field( $params->title ),
-					'post_content' => '',
-					'post_type'    => 'wptb-tables',
-					'post_status'  => 'draft'
-				] );
+				if (Init::instance()->settings_manager->current_user_allowed_for_modifications(absint($params->id))) {
+					wp_update_post( [
+						'ID'           => absint( $params->id ),
+						'post_title'   => sanitize_text_field( $params->title ),
+						'post_content' => '',
+						'post_type'    => 'wptb-tables',
+						'post_status'  => 'draft'
+					] );
+					if ( isset( $params->preview_saving ) && ! empty( (int) $params->preview_saving ) ) {
+						update_post_meta( absint( $params->id ), '_wptb_preview_id_', $params->preview_saving );
+						update_post_meta( absint( $params->id ), '_wptb_content_preview_', $params->content );
 
-				if ( isset( $params->preview_saving ) && ! empty( (int) $params->preview_saving ) ) {
-					update_post_meta( absint( $params->id ), '_wptb_preview_id_', $params->preview_saving );
-					update_post_meta( absint( $params->id ), '_wptb_content_preview_', $params->content );
+						wp_die( json_encode( [ 'preview_edited' ] ) );
+					} else {
+						// apply table content filter
+						$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
+						update_post_meta( absint( $params->id ), '_wptb_content_', $table_content );
 
-					wp_die( json_encode( [ 'preview_edited' ] ) );
-				} else {
-					// apply table content filter
-					$table_content = apply_filters( 'wp-table-builder/table_content', $params->content, $params );
-					update_post_meta( absint( $params->id ), '_wptb_content_', $table_content );
+						// table edited action hook
+						do_action( 'wp-table-builder/table_edited', $params->id, $params );
 
-					// table edited action hook
-					do_action( 'wp-table-builder/table_edited', $params->id, $params );
-
-					wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
+						wp_die( json_encode( [ 'edited', absint( $params->id ) ] ) );
+					}
 				}
 			}
 		} else {

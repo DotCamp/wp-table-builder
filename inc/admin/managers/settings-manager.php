@@ -187,14 +187,13 @@ class Settings_Manager {
 			$current_user = wp_get_current_user();
 
 			// provide default value for get_option
-			$intersection = array_intersect( get_option( $this->options_root, $this->get_defaults() )['allowed_roles'], $current_user->roles );
+			$intersection = array_intersect( $this->get_option_value( 'allowed_roles' ), $current_user->roles );
 
 			if ( sizeof( $intersection ) > 0 ) {
 				if ( ! isset( $all_caps[ self::ALLOWED_ROLE_META_CAP ] ) ) {
 					$all_caps[ self::ALLOWED_ROLE_META_CAP ] = true;
 				}
 			}
-
 		}
 
 		return $all_caps;
