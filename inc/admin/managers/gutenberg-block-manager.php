@@ -142,6 +142,12 @@ class Gutenberg_Block_Manager {
 
 		$general_styles = NS\Inc\Admin\Style_Pass::get_general_styles();
 
+		if(!empty($general_styles)){
+			// override default parent prefix value for gutenberg block table preview
+			$general_styles['parentPrefix'] = '.wptb-block-table-setup';
+		}
+
+
 		return [
 			'blockName'    => $this->block_name,
 			'icon'         => Init::instance()->get_icon_manager()->get_icon( 'table' ),

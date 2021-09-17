@@ -163,7 +163,7 @@
 						this.currentMode === this.modes.block
 					) {
 						tableElement.insertAdjacentElement('beforebegin', styleElement);
-						if (this.modes.frontEnd && this.generalStyles) {
+						if (this.currentMode === this.modes.frontEnd && this.generalStyles) {
 							applyGeneralStyles(this.generalStyles, tableElement);
 						}
 					} else {

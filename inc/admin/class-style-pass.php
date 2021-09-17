@@ -129,10 +129,7 @@ class Style_Pass {
 		$generalStylesCode = static::get_general_styles();
 
 		if ( ! empty( $generalStylesCode ) ) { // general styles frontend data
-			$data['generalStyles'] = [
-				'styles'       => $generalStylesCode,
-				'parentPrefix' => '.wptb-table-container'
-			];
+			$data['generalStyles'] = $generalStylesCode;
 		}
 
 		return $data;
@@ -140,10 +137,19 @@ class Style_Pass {
 
 	/**
 	 * Get general styles.
-	 * @return string general styles
+	 * @return array general styles
 	 */
 	public static function get_general_styles() {
-		return get_option( static::GENERAL_STYLES_OPTION_NAME, '' );
+		$general_style_rules = get_option( static::GENERAL_STYLES_OPTION_NAME, '' );
+
+		if ( ! empty( $general_style_rules ) ) { // general styles frontend data
+			return [
+				'styles'       => $general_style_rules,
+				'parentPrefix' => '.wptb-table-container'
+			];
+		}
+
+		return null;
 	}
 
 	/**
