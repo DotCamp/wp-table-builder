@@ -10,6 +10,7 @@ use WP_Table_Builder as NS;
 use ZipArchive;
 use function add_action;
 use function current_user_can;
+use function get_bloginfo;
 use function get_plugin_data;
 use function get_post;
 use function get_post_meta;
@@ -302,7 +303,7 @@ class Export {
 			$table = $dom_handler->documentElement;
 			if ( $table->tagName === 'table' ) {
 				$table->setAttribute( 'data-wptb-table-title', get_post( $id )->post_title );
-				$table->setAttribute( 'data-wptb-export-version', get_plugin_data(NS\PLUGIN__FILE__)['Version']);
+				$table->setAttribute( 'data-wptb-export-version', get_plugin_data( NS\PLUGIN__FILE__ )['Version'] );
 				$content_to_return = $dom_handler->saveHTML();
 			}
 		}
@@ -320,8 +321,14 @@ class Export {
 	private function prepare_csv_table( $id ) {
 		$table_html_content = get_post_meta( $id, '_wptb_content_', true );
 
+		if ( function_exists( 'mb_convert_encoding' ) ) {
+			$charset = get_bloginfo( 'charset' );
+
+			$table_html_content = mb_convert_encoding( $table_html_content, 'HTML-ENTITIES', $charset );
+		}
+
 		$dom_table = new DOMDocument( '1.0', 'UTF-8' );
-		@$dom_table->loadHTML( utf8_decode( $table_html_content ) );
+		@$dom_table->loadHTML( $table_html_content );
 
 		$table_body     = $dom_table->getElementsByTagName( 'tbody' )[0];
 		$top_level_rows = $table_body->getElementsByTagName( 'tr' );
