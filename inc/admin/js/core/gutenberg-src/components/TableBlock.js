@@ -7,6 +7,7 @@ import Builder from './Builder';
 import { withContext } from '../functions/withContext';
 import BusyOverlay from './BusyOverlay';
 import TableBlockInspector from './TableInspectorControls';
+import PortalTarget from './PortalTarget';
 
 /**
  * TableBlock component.
@@ -45,6 +46,8 @@ class TableBlock extends React.Component {
 
 		this.mainRef = React.createRef();
 		this.footerRightPortal = React.createRef();
+
+		this.portalTargetEditor = document.body.appendChild(document.createElement('div'));
 	}
 
 	/**
@@ -317,12 +320,14 @@ class TableBlock extends React.Component {
 					/>
 					<TablePreview content={this.props.savedTable ? this.props.savedTable.content : null} />
 				</div>
-				<Builder
-					builderVisibility={this.setBuilderVisibility}
-					show={this.state.showBuilder}
-					builderUrl={this.state.builderUrl}
-					updateSelection={this.updateSelection}
-				/>
+				<PortalTarget id={'wptbEditorPortal'} targetEl={this.portalTargetEditor}>
+					<Builder
+						builderVisibility={this.setBuilderVisibility}
+						show={this.state.showBuilder}
+						builderUrl={this.state.builderUrl}
+						updateSelection={this.updateSelection}
+					/>
+				</PortalTarget>
 			</Fragment>
 		);
 	}

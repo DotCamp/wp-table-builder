@@ -94,7 +94,7 @@ class Gutenberg_Block_Manager {
 
 			register_block_type( $this->block_name, [
 				'editor_script' => 'wptb_block_editor_script',
-				'editor_style'  => [ 'wptb_block_editor_style' ]
+				'editor_style'  => 'wptb_block_editor_style'
 			] );
 		}
 	}
@@ -142,19 +142,19 @@ class Gutenberg_Block_Manager {
 
 		$general_styles = NS\Inc\Admin\Style_Pass::get_general_styles();
 
-		if(!empty($general_styles)){
+		if ( ! empty( $general_styles ) ) {
 			// override default parent prefix value for gutenberg block table preview
 			$general_styles['parentPrefix'] = '.wptb-block-table-setup';
 		}
 
 
 		return [
-			'blockName'    => $this->block_name,
-			'icon'         => Init::instance()->get_icon_manager()->get_icon( 'table' ),
-			'tables'       => $tables,
-			'builderUrl'   => $builder_url,
-			'tableCssUrl'  => $table_css_url,
-			'tableScripts' => $table_scripts,
+			'blockName'     => $this->block_name,
+			'icon'          => Init::instance()->get_icon_manager()->get_icon( 'table' ),
+			'tables'        => $tables,
+			'builderUrl'    => $builder_url,
+			'tableCssUrl'   => $table_css_url,
+			'tableScripts'  => $table_scripts,
 			'generalStyles' => $general_styles,
 
 		];

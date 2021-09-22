@@ -104,6 +104,8 @@ That's it. You're done!
 * FIX: Static top row responsive option bug affecting tables with non-merged header cells.
 * FIX: Restrict users to their tables option now correctly limit access via builder table url search parameter.
 * FIX: An encoding issue affecting some languages on exporting tables as csv.
+* FIX: Gutenberg block style asset error on startup.
+* FIX: Gutenberg block new/edit table popup style issue.
 
 = 1.3.9 =
 
