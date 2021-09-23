@@ -94,6 +94,7 @@ That's it. You're done!
 
 * NEW: Disable theme styles for all tables setting.
 * PRO: New prebuilt tables.
+* IMPROVE: Sorting functionality for table listing page columns (title, created, id).
 * IMPROVE: Export menu table search functionality.
 * IMPROVE: Broadened scope of general styles so that actual table element and its container can be selected.
 * IMPROVE: Overall security of plugin.

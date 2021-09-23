@@ -256,13 +256,11 @@ class WPTB_Listing extends \WP_List_Table {
 	}
 
 	public function get_sortable_columns() {
-
-		$sortable_columns = array(
-			'title' => array( 'title', true )
-		);
-
-		return $sortable_columns;
-
+		return [
+			'name'    => [ 'title', 'asc' ],
+			'id'      => [ 'ID', 'asc' ],
+			'created' => [ 'post_date', 'asc' ],
+		];
 	}
 
 	public function get_bulk_actions() {
