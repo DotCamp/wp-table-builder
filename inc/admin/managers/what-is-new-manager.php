@@ -127,6 +127,19 @@ class What_Is_New_Manager {
 	}
 
 	/**
+	 * Read data file related to this component.
+	 * @return array data array
+	 */
+	private final static function read_data_file() {
+		ob_start();
+		require( trailingslashit( NS\WP_TABLE_BUILDER_DIR ) . 'inc/admin/data/what-is-new.json' );
+		$contents = ob_get_contents();
+		ob_end_clean();
+
+		return json_decode( $contents, true );
+	}
+
+	/**
 	 * Get notes for versions.
 	 *
 	 * Add version notes here for upcoming versions.
@@ -134,13 +147,17 @@ class What_Is_New_Manager {
 	 * @return array notes array
 	 */
 	private static function get_notes() {
-		return [
-			'1.3.10' => [
-				static::prepare_what_is_new_note( 'New prebuilt tables.', 'new_prebuilts.png', true ),
-				static::prepare_what_is_new_note( 'Search functionality for export menu table listing.', 'export_menu_search.png' ),
-				static::prepare_what_is_new_note( 'Disable theme styles for all tables setting.', 'disable_theme_styles_for_all_tables.png' ),
-			]
-		];
+		$component_data = static::read_data_file();
+
+		return array_reduce( array_keys( $component_data ), function ( $carry, $version_tag ) use ( $component_data ) {
+			$version_data = $component_data[ $version_tag ];
+
+			foreach ( $version_data as $note_args ) {
+				$carry[ $version_tag ][] = call_user_func_array( '\WP_Table_Builder\Inc\Admin\Managers\What_Is_New_Manager::prepare_what_is_new_note', $note_args );
+			}
+
+			return $carry;
+		}, [] );
 	}
 
 	/**
