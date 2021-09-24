@@ -42334,7 +42334,54 @@ var _default = {
   }
 };
 exports.default = _default;
-},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/ExtraStylesControl":"containers/ExtraStylesControl.vue"}],"components/Size2ControlColumn.vue":[function(require,module,exports) {
+},{"vue":"../../../../../node_modules/vue/dist/vue.esm.js","../functions/WPTB_ControlsManager":"functions/WPTB_ControlsManager.js","../containers/ExtraStylesControl":"containers/ExtraStylesControl.vue"}],"mixins/withIcons.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+
+/**
+ * Mixin for WPTB_IconManager icon fetch operation.
+ *
+ * @param {Array | string} iconList icon list
+ * @return {Function} mixin object
+ */
+function _default(iconList) {
+  if (!Array.isArray(iconList)) {
+    // eslint-disable-next-line no-param-reassign
+    iconList = [iconList];
+  }
+
+  var dataObject = iconList.reduce(function (carry, item) {
+    // eslint-disable-next-line no-param-reassign
+    carry.icons[item] = '';
+    return carry;
+  }, {
+    icons: {}
+  });
+  return {
+    data: function data() {
+      return dataObject;
+    },
+    mounted: function mounted() {
+      var _this = this;
+
+      this.$nextTick(function () {
+        // eslint-disable-next-line array-callback-return
+        Object.keys(_this.icons).map(function (name) {
+          if (Object.prototype.hasOwnProperty.call(_this.icons, name)) {
+            WPTB_IconManager.getIcon(name, 'wptb-svg-inherit-color', true).then(function (icon) {
+              _this.icons[name] = icon;
+            });
+          }
+        });
+      });
+    }
+  };
+}
+},{}],"components/Size2ControlColumn.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42400,6 +42447,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _withTranslation = _interopRequireDefault(require("../mixins/withTranslation"));
+
+var _withIcons = _interopRequireDefault(require("../mixins/withIcons"));
 
 var _Size2ControlColumn = _interopRequireDefault(require("./Size2ControlColumn"));
 
@@ -42489,14 +42538,9 @@ var _default = {
       }
     }
   },
-  mixins: [_withTranslation.default],
+  mixins: [_withTranslation.default, (0, _withIcons.default)(['link', 'unlink', 'undo-alt'])],
   data: function data() {
     return {
-      icons: {
-        link: '',
-        unlink: '',
-        reset: ''
-      },
       aspectLocked: true,
       fractionDigits: 0,
       mountedState: false
@@ -42506,15 +42550,6 @@ var _default = {
     var _this = this;
 
     this.$nextTick(function () {
-      WPTB_IconManager.getIcon('link', 'wptb-svg-inherit-color', true).then(function (icon) {
-        _this.icons.link = icon;
-      });
-      WPTB_IconManager.getIcon('unlink', 'wptb-svg-inherit-color', true).then(function (icon) {
-        _this.icons.unlink = icon;
-      });
-      WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then(function (icon) {
-        _this.icons.reset = icon;
-      });
       _this.mountedState = true;
     });
   },
@@ -42612,7 +42647,7 @@ exports.default = _default;
             staticClass:
               "wptb-settings-generic-icon wptb-svg-inherit-color wptb-settings-reset-size2-control",
             attrs: { title: _vm.translation("resetToOriginal") },
-            domProps: { innerHTML: _vm._s(_vm.icons.reset) },
+            domProps: { innerHTML: _vm._s(_vm.icons["undo-alt"]) },
             on: {
               click: function($event) {
                 $event.preventDefault()
@@ -42774,7 +42809,7 @@ render._withStripped = true
           };
         })());
       
-},{"../mixins/withTranslation":"mixins/withTranslation.js","./Size2ControlColumn":"components/Size2ControlColumn.vue"}],"containers/Size2Control.vue":[function(require,module,exports) {
+},{"../mixins/withTranslation":"mixins/withTranslation.js","../mixins/withIcons":"mixins/withIcons.js","./Size2ControlColumn":"components/Size2ControlColumn.vue"}],"containers/Size2Control.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

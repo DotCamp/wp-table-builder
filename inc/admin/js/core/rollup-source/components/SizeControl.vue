@@ -9,7 +9,7 @@
 					@click.prevent="resetToOriginalSize"
 					:title="translation('resetToOriginal')"
 					class="wptb-settings-generic-icon wptb-svg-inherit-color wptb-settings-reset-size2-control"
-					v-html="icons.reset"
+					v-html="icons['undo-alt']"
 				></div>
 			</div>
 		</div>
@@ -45,6 +45,7 @@
 
 <script>
 import withTranslation from '../mixins/withTranslation';
+import withIcons from '../mixins/withIcons';
 import Size2ControlColumn from './Size2ControlColumn';
 
 export default {
@@ -84,14 +85,9 @@ export default {
 			},
 		},
 	},
-	mixins: [withTranslation],
+	mixins: [withTranslation, withIcons(['link', 'unlink', 'undo-alt'])],
 	data() {
 		return {
-			icons: {
-				link: '',
-				unlink: '',
-				reset: '',
-			},
 			aspectLocked: true,
 			fractionDigits: 0,
 			mountedState: false,
@@ -99,18 +95,6 @@ export default {
 	},
 	mounted() {
 		this.$nextTick(() => {
-			WPTB_IconManager.getIcon('link', 'wptb-svg-inherit-color', true).then((icon) => {
-				this.icons.link = icon;
-			});
-
-			WPTB_IconManager.getIcon('unlink', 'wptb-svg-inherit-color', true).then((icon) => {
-				this.icons.unlink = icon;
-			});
-
-			WPTB_IconManager.getIcon('undo-alt', 'wptb-svg-inherit-color', true).then((icon) => {
-				this.icons.reset = icon;
-			});
-
 			this.mountedState = true;
 		});
 	},
